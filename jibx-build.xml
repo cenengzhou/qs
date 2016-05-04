@@ -1,0 +1,1284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="createDirs-server" xmlns:oracle="antlib:oracle" xmlns="antlib:org.apache.tools.ant" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<property file="build.properties" />
+	<!--
+    ============================================================================
+    == properties
+    ============================================================================
+    -->
+	<xmlproperty file="pom.xml" keepRoot="false"/>
+	<!-- directories -->
+	<property name="src.dir" value="src/main/java" />
+	<property name="build.dir" value="target/classes" />
+	<property name="webservice.dir" value="com/gammon/qs/webservice" />
+	<property name="jar.dir" value="JAR" />
+	<property name="webContent.dir" value="target/pcms" />
+	<property name="jibx-home" value="C:\dev\jibx126\" />
+
+	<!--
+    ============================================================================
+    == class path
+    ============================================================================
+    -->
+	<path id="class.path">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${webContent.dir}/WEB-INF/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement path="${build.dir}" />
+	</path>
+
+	<path id="jibx.class.path">
+		<fileset dir="${webContent.dir}/WEB-INF/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<path id="jibx.classpath">
+		<fileset dir="${jibx-home}/lib" includes="*.jar" />
+		<pathelement location="${build.dir}" />
+	</path>
+
+	<target name="#compile">
+		<echo message="Compiling Java source code" />
+		<delete quiet="true" dir="${basedir}/${build.dir}" />
+		<mkdir dir="${basedir}/${build.dir}" />
+
+		<javac srcdir="${basedir}/${src.dir}" destdir="${basedir}/${build.dir}" debug="on">
+			<classpath refid="class.path" />
+		</javac>
+
+		<!-- jibx - web service - REQUESTS -->
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AccountBalanceByDateRangeManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AccountIDListByJobManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AccountLedgerManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AddressBookQueryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AddressBookQueryManager-getAddressBookWithSCStatus.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AddUpdateAttachmentLinkManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-AddUpdateTextManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-BUMasterUpdateManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-BusinessUnitMasterManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetCertReciDataAsAtDateManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetPerformanceAppraisalsListManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetPORecordsManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetSCWorkScopeManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-JobAdditionalInfoUserManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-PaymentHistoryEnquiryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UpdateSCWorkScopeManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-ChartTypeQueryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-PlainTextManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-DeleteAttachmentLinkManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-DeleteTextMediaObjectManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetMediaObjectListManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetAttachmentLinkManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-getCurrentRepackagingStatus-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UnitDescriptionListQueryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-createApprovalRoute-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetAAIAccountManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetUpdateAccMasterUsingCodeTypeCodeManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-CallBatchR04110ZAManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-MainCertReceiveDateQueryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-InsertJournalEntryTransactionsManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-InsertVoucherTransactionsManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetNextNumberManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetPeriodYearManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-ValidateAccNumManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-ValidateAAICompletelyManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-CallCustomJEPostingManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetInsurancePercentageByJobManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-CheckAwardValidationManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UserAccessRights-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UserAccessJobs-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UserCompanySet-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-PostMainCertToARManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-InsertMainCertContraChargeManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-InsertRepackagingBudgetManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-DeleteRepackagingBudgetManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetSubContractorWorkScopeQueryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-CurrencyValidationManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-IPAInsertManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-MainCertificateAsAtDateInsert-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetAPRecordsManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetAPRecordsEnquiryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetCurrencyCodeOfBUManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetARRecordsEnquiryManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetSupplierTaxAreaF0401Manager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetAccountMasterManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetJobAddtionalInformationManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-MainCertificateInsert-binding.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-SCHeaderInsertManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-InsertSingleSignOnKeyF58100Manager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-SCPaymentHeaderInsertManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-GetSupplierMasterManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-UpdateOrderStatusManager.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+
+		<!-- END: jibx - web service - REQUESTS -->
+
+		<!-- jibx - web service - PROVIDED -->
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-AwardSCPackage.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-CompleteAddendumApproval.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-CompleteSCPayment.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-CompleteSplitTerminate.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-CompleteMainCertApproval.xml">
+			<classpathset dir="${build.dir}" />
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-CheckJobIsConverted.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForPaymentCert.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForPayment.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForAddendum.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForAward.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForSplitTerminate.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-MakeHTMLStrForMainCert.xml">
+			<classpathset dir="${build.dir}" />
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-GetAttachmentList.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<jibx-bind verbose="true" load="true" binding="src/jibx-wsProvider-GetTextAttachment.xml">
+			<classpathset dir="${build.dir}"/>
+		</jibx-bind>
+		<!-- END: jibx - web service - PROVIDED -->
+	</target>
+	<target name="#bindgen-MakeNewWSProvider">
+		<echo message="Running BindGen tool" />
+		<java classpathref="jibx.classpath" fork="true" failonerror="true" classname="org.jibx.binding.generator.BindGen">
+			<arg value="-t" />
+			<arg value="gen"/>
+			<arg value="-b" />
+			<arg value="bind-MakeNewWSProvider.xml" />
+			<arg value="-m" />
+			<arg value="-s" />
+			<arg value="${basedir}/src" />
+			<arg value="com.gammon.qs.webservice.serviceProvider.makeNewWSProvider.MakeNewWSProviderRequest" />
+			<arg value="com.gammon.qs.webservice.serviceProvider.makeNewWSProvider.MakeNewWSProviderResponse" />
+		</java>
+	</target>
+
+	<target name="#bindgen-getAccountBalanceByDateRangeList">
+		<echo message="Running BindGen tool" />
+		<java classpathref="jibx.classpath" fork="true" failonerror="true" classname="org.jibx.binding.generator.BindGen">
+			<arg value="-t" />
+			<arg value="gen" />
+			<arg value="-b" />
+			<arg value="bind-AccountBalanceByDateRangeManager.xml" />
+			<arg value="-m" />
+			<arg value="-s" />
+			<arg value="${basedir}/src" />
+			<arg value="com.gammon.qs.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeRequestObj" />
+			<arg value="com.gammon.qs.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListRequestObj" />
+			<arg value="com.gammon.qs.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeResponseObj" />
+			<arg value="com.gammon.qs.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListResponseObj" />
+		</java>
+	</target>
+
+	<target name="#codegen-getAccountBalanceByDateRangeList">
+		<echo message="Running code generation from schema" />
+		<delete quiet="true" dir="${basedir}/gen/com/gammon/qs/webservice/serviceRequester/AccountBalanceByDateRangeManager/getAccountBalanceByDateRangeList" />
+		<java classname="org.jibx.schema.codegen.CodeGen" fork="yes" classpathref="jibx.classpath" failonerror="true">
+			<arg value="-b" />
+			<arg value="codegen-AccountBalanceByDateRangeManager.xml" />
+			<arg value="-d" />
+			<arg value="gen/data-AccountBalanceByDateRangeManager.xml" />
+			<arg value="-m" />
+			<arg value="gen/model-AccountBalanceByDateRangeManager.xml" />
+			<arg value="-p" />
+			<arg value="com.gammon.qs.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList" />
+			<arg value="-t" />
+			<arg value="${basedir}/gen/src" />
+			<arg value="xsd/AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.xsd" />
+		</java>
+	</target>
+	<!--
+	============================================================================
+    == Task Definition
+    ============================================================================
+	-->
+	<taskdef name="jibx-bind" classname="org.jibx.binding.ant.CompileTask" classpathref="jibx.class.path" />
+
+	<!--
+    ============================================================================
+    == createDirs-server
+    ============================================================================
+    -->
+	<target name="createDirs-server">
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<!--
+    ============================================================================
+    == clean-server
+    ============================================================================
+    -->
+	<target name="clean-server">
+		<delete quiet="true">
+			<fileset dir="${build.dir}" includes="**/*" />
+		</delete>
+	</target>
+
+	<!--
+    ============================================================================
+    == serviceRequester
+    ============================================================================
+    -->
+	<target name="(zipJar)">
+		<zip destfile="AllWebServices.jar">
+			<zipgroupfileset dir="JAR" includes="*.jar" />
+		</zip>
+	</target>
+
+	<target name="(All-serviceRequester)">
+		<record name="_All-serviceRequester.log" loglevel="verbose" />
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceRequester/" includes="**/*" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${jar.dir}/serviceRequester" includes="**/*.jar" />
+		</delete>
+		<antcall target="AccountBalanceByDateRangeManager" />
+		<antcall target="AccountIDListByJobManager" />
+		<antcall target="AccountLedgerManager" />
+		<antcall target="AddressBookQueryManager" />
+		<antcall target="AddUpdateAttachmentLinkManager_Refactor" />
+		<antcall target="AddUpdateTextManager_Refactor" />
+		<antcall target="approvalRequest" />
+		<antcall target="BUMasterUpdateManager" />
+		<antcall target="BusinessUnitMasterManager" />
+		<antcall target="CallBatchR04110ZAManager" />
+		<antcall target="CallCustomJEPostingManager" />
+		<antcall target="ChartTypeQueryManager" />
+		<antcall target="CheckAwardValidationManager" />
+		<antcall target="CurrencyValidationManager_Refactor" />
+		<antcall target="currentRepackagingStatusQueryManager" />
+		<antcall target="DeleteAttachmentLinkManager_Refactor" />
+		<antcall target="DeleteRepackagingBudgetManager" />
+		<antcall target="DeleteTextMediaObjectManager_Refactor" />
+		<antcall target="GetAAIAccountManager" />
+		<antcall target="GetAccountMasterManager" />
+		<antcall target="GetAPRecordsEnquiryManager" />
+		<antcall target="GetAPRecordsManager" />
+		<antcall target="GetARRecordsEnquiryManager" />
+		<antcall target="GetAttachmentLinkManager_Refactor" />
+		<antcall target="GetCertReciDataAsAtDateManager" />
+		<antcall target="GetCurrencyCodeOfBUManager" />
+		<antcall target="GetInsurancePercentageByJobManager" />
+		<antcall target="GetJobAddtionalInformationManager_Refactor" />
+		<antcall target="GetMediaObjectListManager_Refactor" />
+		<antcall target="GetNextNumberManager" />
+		<antcall target="GetPerformanceAppraisalsListManager" />
+		<antcall target="GetPeriodYearManager" />
+		<antcall target="GetPORecordsManager" />
+		<antcall target="getSCWorkScopeManager" />
+		<antcall target="GetSubcontractorWorkScopeQueryManager" />
+		<antcall target="GetSupplierMasterManager_Refactor" />
+		<antcall target="GetSupplierTaxAreaF0401Manager_Refactor" />
+		<antcall target="GetUpdateAccMasterUsingCodeTypeCodeManager" />
+		<antcall target="InsertJournalEntryTransactionsManager" />
+		<antcall target="InsertMainCertContraChargeManager" />
+		<antcall target="InsertRepackagingBudgetManager" />
+		<antcall target="InsertSingleSignOnKeyF58100Manager" />
+		<antcall target="InsertVoucherTransactionsManager" />
+		<antcall target="IPAInsertManager" />
+		<antcall target="MainCertificateInsertManager" />
+		<antcall target="MainCertReceiveDateQueryManager" />
+		<antcall target="PaymentHistoryEnquiryManager" />
+		<antcall target="PlainTextManager_Refactor" />
+		<antcall target="PostMainCertToARManager" />
+		<antcall target="SCHeaderInsertManager_Refactor" />
+		<antcall target="SCPaymentHeaderInsertManager" />
+		<antcall target="UnitDescriptionListQueryManager" />
+		<antcall target="UpdateOrderStatusManager" />
+		<antcall target="UpdateSCWorkScopeManager" />
+		<antcall target="UserAccessJobs" />
+		<antcall target="userAccessRights" />
+		<antcall target="userCompanySet" />
+		<antcall target="ValidateAAICompletelyManager" />
+		<antcall target="ValidateAccNumManager" />
+		<!-- JobAdditionalInfoUserManager need to be last one because Factory class generate in serviceRequester folder-->
+		<antcall target="JobAdditionalInfoUserManager" />
+		<property name="jar.file" value="ws-AllServiceRequester.jar" />
+		<jar destfile="${jar.dir}/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceRequester/**/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceRequester/**/*.java" />
+		</jar>
+	</target>
+	<target name="-serviceRequester" depends="createDirs-server">
+		<property name="jar.file" value="ws-${targetName}.jar" />
+		<antcall target="-serviceRequester-delete-file">
+			<param name="targetName" value="${targetName}" />
+			<param name="jar.file" value="${jar.file}" />
+		</antcall>
+		<antcall target="-serviceRequester-compile-class">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceRequester-jibx">
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+		<antcall target="-serviceRequester-jar">
+			<param name="targetName" value="${targetName}" />
+			<param name="jar.file" value="${jar.file}" />
+		</antcall>
+	</target>
+	<target name="-serviceRequester-delete-file">
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceRequester/${targetName}" includes="**/*" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceRequester/" includes="*.class" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${jar.dir}/serviceRequester" includes="${jar.file}" />
+		</delete>
+	</target>
+	<target name="-serviceRequester-compile-class">
+		<javac verbose="false" srcdir="${src.dir}/${webservice.dir}/serviceRequester" destdir="${build.dir}" debug="true" debuglevel="lines,vars,source" includes="*.java" classpathref="class.path" />
+		<javac verbose="false" srcdir="${src.dir}/${webservice.dir}/serviceRequester/${targetName}" destdir="${build.dir}" debug="true" debuglevel="lines,vars,source" includes="**/*.java" classpathref="class.path" />
+	</target>
+	<target name="-serviceRequester-jibx">
+		<jibx-bind verbose="true" load="true" binding="${jibxFileName}">
+			<classpathset dir="${build.dir}" />
+		</jibx-bind>
+	</target>
+	<target name="-serviceRequester-jar">
+		<jar destfile="${jar.dir}/serviceRequester/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceRequester/${targetName}/**/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceRequester/${targetName}/**/*.java" />
+		</jar>
+		<jar update="true" destfile="${jar.dir}/serviceRequester/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceRequester/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceRequester/*.java" />
+		</jar>
+	</target>
+
+	<!-- jibx - web service - REQUESTS -->
+	<target name="AccountBalanceByDateRangeManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="AccountIDListByJobManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="AccountLedgerManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="AddressBookQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jar.file" value="ws-${targetName}.jar" />
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester-delete-file">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceRequester-compile-class">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceRequester-jibx">
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+		<antcall target="-serviceRequester-jibx">
+			<param name="jibxFileName" value="src/jibx-AddressBookQueryManager-getAddressBookWithSCStatus.xml" />
+		</antcall>
+		<antcall target="-serviceRequester-jar">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+	</target>
+
+	<target name="AddUpdateAttachmentLinkManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-AddUpdateAttachmentLinkManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="AddUpdateTextManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-AddUpdateTextManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="approvalRequest" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-createApprovalRoute-binding.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="BUMasterUpdateManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="BusinessUnitMasterManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="CallBatchR04110ZAManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="CallCustomJEPostingManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="ChartTypeQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="CheckAwardValidationManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="CurrencyValidationManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-CurrencyValidationManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="currentRepackagingStatusQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-getCurrentRepackagingStatus-binding.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="DeleteAttachmentLinkManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-DeleteAttachmentLinkManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="DeleteRepackagingBudgetManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="DeleteTextMediaObjectManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-DeleteTextMediaObjectManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetAAIAccountManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetAccountMasterManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetAPRecordsEnquiryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetAPRecordsManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetARRecordsEnquiryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetAttachmentLinkManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-GetAttachmentLinkManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetCertReciDataAsAtDateManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetCurrencyCodeOfBUManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetInsurancePercentageByJobManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetJobAddtionalInformationManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-GetJobAddtionalInformationManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetMediaObjectListManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-GetMediaObjectListManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetNextNumberManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetPerformanceAppraisalsListManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetPeriodYearManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetPORecordsManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="getSCWorkScopeManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetSubcontractorWorkScopeQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		</antcall>
+	</target>
+
+	<target name="GetSupplierMasterManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-GetSupplierMasterManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetSupplierTaxAreaF0401Manager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-GetSupplierTaxAreaF0401Manager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="GetUpdateAccMasterUsingCodeTypeCodeManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="InsertJournalEntryTransactionsManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="InsertMainCertContraChargeManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="InsertRepackagingBudgetManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="InsertSingleSignOnKeyF58100Manager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="InsertVoucherTransactionsManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="IPAInsertManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="JobAdditionalInfoUserManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="MainCertificateInsertManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jar.file" value="ws-${targetName}.jar" />
+		<antcall target="-serviceRequester-delete-file">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceRequester-compile-class">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceRequester-jibx">
+			<param name="jibxFileName" value="src/jibx-MainCertificateAsAtDateInsert-binding.xml" />
+		</antcall>
+		<antcall target="-serviceRequester-jibx">
+			<param name="jibxFileName" value="src/jibx-MainCertificateInsert-binding.xml" />
+		</antcall>
+		<antcall target="-serviceRequester-jar">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+	</target>
+
+	<target name="MainCertReceiveDateQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="PaymentHistoryEnquiryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="PlainTextManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-PlainTextManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="PostMainCertToARManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="SCHeaderInsertManager_Refactor" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-SCHeaderInsertManager.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="SCPaymentHeaderInsertManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="UnitDescriptionListQueryManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="UpdateOrderStatusManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="UpdateSCWorkScopeManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="UserAccessJobs" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-UserAccessJobs-binding.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="userAccessRights" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-UserAccessRights-binding.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="userCompanySet" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-UserCompanySet-binding.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="ValidateAAICompletelyManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="ValidateAccNumManager" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-${targetName}.xml" />
+		<antcall target="-serviceRequester">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+	<!-- END: jibx - web service - REQUESTS -->
+
+	<!--
+    ============================================================================
+    == serviceProvider
+    ============================================================================
+    -->
+
+	<target name="(All-serviceProvider)">
+		<record name="_All-serviceProvider.log" loglevel="verbose" />
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceProvider" includes="**/*" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${jar.dir}/serviceProvider" includes="**/*.jar" />
+		</delete>
+		<antcall target="awardSCPackage" />
+		<antcall target="checkJobIsConverted" />
+		<antcall target="completeAddendumApproval" />
+		<antcall target="completeMainCertApproval" />
+		<antcall target="completeSCPayment" />
+		<antcall target="completeSplitTerminate" />
+		<antcall target="getAttachmentList" />
+		<antcall target="getTextAttachment" />
+		<antcall target="makeHTMLStrForAddendumService" />
+		<antcall target="makeHTMLStrForAwardService" />
+		<antcall target="makeHTMLStrForMainCertService" />
+		<antcall target="makeHTMLStrForPaymentCertService" />
+		<antcall target="makeHTMLStrForPaymentService" />
+		<antcall target="makeHTMLStrForSplitTerminateService" />
+		<property name="jar.file" value="ws-AllServiceProvider.jar" />
+		<jar destfile="${jar.dir}/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceProvider/**/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceProvider/**/*.java" />
+		</jar>
+	</target>
+
+	<target name="-serviceProvider" depends="createDirs-server">
+		<property name="jar.file" value="ws-${targetName}.jar" />
+		<antcall target="-serviceProvider-delete-file">
+			<param name="targetName" value="${targetName}" />
+			<param name="jar.file" value="${jar.file}" />
+		</antcall>
+		<antcall target="-serviceProvider-compile-class">
+			<param name="targetName" value="${targetName}" />
+		</antcall>
+		<antcall target="-serviceProvider-jibx">
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+		<antcall target="-serviceProvider-jar">
+			<param name="targetName" value="${targetName}" />
+			<param name="jar.file" value="${jar.file}" />
+		</antcall>
+	</target>
+	<target name="-serviceProvider-delete-file">
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceProvider/{targetName}" includes="**/*" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${build.dir}/${webservice.dir}/serviceProvider/" includes="*.class" />
+		</delete>
+		<delete quiet="true">
+			<fileset dir="${jar.dir}/serviceProvider" includes="${jar.file}" />
+		</delete>
+	</target>
+	<target name="-serviceProvider-compile-class">
+		<javac verbose="false" srcdir="${src.dir}/${webservice.dir}/serviceProvider" destdir="${build.dir}" debug="true" debuglevel="lines,vars,source" includes="*.java" classpathref="class.path" />
+		<javac verbose="false" srcdir="${src.dir}/${webservice.dir}/serviceProvider/${targetName}" destdir="${build.dir}" debug="true" debuglevel="lines,vars,source" includes="**/*.java" classpathref="class.path" />
+	</target>
+	<target name="-serviceProvider-jibx">
+		<jibx-bind verbose="true" load="true" binding="${jibxFileName}">
+			<classpathset dir="${build.dir}" />
+		</jibx-bind>
+	</target>
+	<target name="-serviceProvider-jar">
+		<jar destfile="${jar.dir}/serviceProvider/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceProvider/${targetName}/**/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceProvider/${targetName}/**/*.java" />
+		</jar>
+		<jar update="true" destfile="${jar.dir}/serviceProvider/${jar.file}">
+			<fileset dir="${build.dir}" includes="${webservice.dir}/serviceProvider/*.class" />
+			<fileset dir="${src.dir}" includes="${webservice.dir}/serviceProvider/*.java" />
+		</jar>
+	</target>
+
+	<!-- jibx - web service - PROVIDED -->
+
+	<target name="awardSCPackage" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-AwardSCPackage.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="checkJobIsConverted" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-CheckJobIsConverted.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="completeAddendumApproval" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-CompleteAddendumApproval.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="completeMainCertApproval" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-CompleteMainCertApproval.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="completeSCPayment" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-CompleteSCPayment.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="completeSplitTerminate" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-CompleteSplitTerminate.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="getAttachmentList" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-GetAttachmentList.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="getTextAttachment" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-GetTextAttachment.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForAddendumService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForAddendum.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForAwardService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForAward.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForMainCertService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForMainCert.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForPaymentCertService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForPaymentCert.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForPaymentService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForPayment.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeHTMLStrForSplitTerminateService" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeHTMLStrForSplitTerminate.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+
+	<target name="makeNewWSProvider" depends="createDirs-server">
+		<script language="javascript">project.setNewProperty("targetName", self.getOwningTarget());</script>
+		<property name="jibxFileName" value="src/jibx-wsProvider-MakeNewWSProvider.xml" />
+		<antcall target="-serviceProvider">
+			<param name="targetName" value="${targetName}" />
+			<param name="jibxFileName" value="${jibxFileName}" />
+		</antcall>
+	</target>
+	<!-- END: jibx - web service - PROVIDED -->
+</project>

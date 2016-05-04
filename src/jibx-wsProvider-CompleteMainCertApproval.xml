@@ -1,0 +1,13 @@
+<binding>
+	<mapping name="completeMainCertApprovalRequest" class="com.gammon.qs.webservice.serviceProvider.completeMainCertApproval.CompleteMainCertApprovalRequest" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.completeMainCertApproval/types/" default="elements"/>
+		<value name="jobNumber" field="jobNumber" nillable="false"/>
+		<value name="mainCertNo" field="mainCertNo" nillable="false"/>
+		<value name="approvalDecision" field="approvalDecision" nillable="false"/>
+	</mapping>
+	<mapping name="completeMainCertApprovalResponse" class="com.gammon.qs.webservice.serviceProvider.completeMainCertApproval.CompleteMainCertApprovalResponse" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.completeMainCertApproval/types/" default="elements"/>
+		<value name="completed" field="completed" nillable="false"/>
+	</mapping>
+</binding>
+	

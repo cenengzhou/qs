@@ -1,0 +1,14 @@
+<binding>
+	<mapping name="completeSplitTerminateRequest" class="com.gammon.qs.webservice.serviceProvider.completeSplitTerminate.CompleteSplitTerminateRequest" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.completeSplitTerminate/types/" default="elements"/>
+		<value name="jobNumber" field="jobNumber" nillable="false"/>
+		<value name="packageNo" field="packageNo" nillable="false"/>
+		<value name="approvedOrRejected" field="approvedOrRejected" nillable="false"/>
+		<value name="splitOrTerminate" field="splitOrTerminate" nillable="false"/>
+	</mapping>
+	<mapping name="completeSplitTerminateResponse" class="com.gammon.qs.webservice.serviceProvider.completeSplitTerminate.CompleteSplitTerminateResponse" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.completeSplitTerminate/types/" default="elements"/>
+		<value name="completed" field="completed" nillable="true"/>
+	</mapping>
+</binding>
+	

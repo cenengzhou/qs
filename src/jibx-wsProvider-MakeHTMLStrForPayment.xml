@@ -1,0 +1,13 @@
+<binding>
+	<mapping name="makeHTMLStrForPaymentServiceRequest" class="com.gammon.qs.webservice.serviceProvider.makeHTMLStrForPaymentService.makeHTMLStrForPaymentServiceRequest" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.makeHTMLStrForPayment/types/" default="elements"/>
+		<value name="jobNumber" field="jobNumber" nillable="false"/>
+		<value name="packageNo" field="packageNo" nillable="false"/>
+		<value name="htmlVersion" field="htmlVersion" nillable="false"/>
+	</mapping>
+	<mapping name="makeHTMLStrForPaymentServiceResponse" class="com.gammon.qs.webservice.serviceProvider.makeHTMLStrForPaymentService.makeHTMLStrForPaymentServiceResponse" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.makeHTMLStrForPayment/types/" default="elements"/>
+		<value name="htmlStr" field="htmlStr" nillable="false"/>
+	</mapping>
+</binding>
+	

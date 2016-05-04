@@ -1,0 +1,1080 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.gammon</groupId>
+	<artifactId>pcms</artifactId>
+	<version>2016-05-05</version>
+	<packaging>war</packaging>
+	
+	<!-- ========================================== REPOSITORIES ================================================ -->
+	<repositories>
+		<repository>
+			<id>PcmsRepo</id>
+			<name>Project based repository</name>
+			<url>file://${basedir}/lib/</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
+	
+	<!-- ========================================== PROPERTIES ================================================= -->
+	<properties>
+		<!-- START: Customize the following properties after checking out the project -->
+		<!-- Java -->
+		<java.version>1.7</java.version>
+		<java.home>C:\Program Files\Java\jdk1.7.0_79</java.home>
+		<!-- END -->
+		
+		<!-- Maven -->
+		<m2eclipse.wtp.contextRoot>QS</m2eclipse.wtp.contextRoot>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<!-- ====== Versions for Project ====== -->
+		<!-- Version - Hosted by Maven -->
+		<aspectj.version>1.8.7</aspectj.version>
+		<axiom.version>1.2.15</axiom.version>
+		<cglib.version>3.2.0</cglib.version>
+		<commons-fileupload.version>1.3.1</commons-fileupload.version>
+		<commons-io.version>2.4</commons-io.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-validator.version>1.4.1</commons-validator.version>
+		<cxf.version>3.1.0</cxf.version>
+		<freemarker.version>2.3.23</freemarker.version>
+		<groovy.version>2.1.9</groovy.version>
+		<gson.version>2.4</gson.version>
+		<gwt.version>2.7.0</gwt.version>
+		<hibernate.version>4.3.11.Final</hibernate.version>
+		<hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
+		<jackson.version>2.6.4</jackson.version>
+		<jasperreports.version>6.2.0</jasperreports.version>
+		<javax.annotation.version>1.2</javax.annotation.version>
+		<javax.mail.version>1.4.7</javax.mail.version>
+		<jibx.version>1.2.6</jibx.version>
+		<jsp-api.version>2.3.1</jsp-api.version>
+		<jstl.version>1.2</jstl.version>
+		<junit.version>4.12</junit.version>
+		<poi.version>3.13</poi.version>
+		<quartz.version>2.2.0</quartz.version>
+		<rome.version>1.5.1</rome.version>
+		<servlet-api.version>3.0.1</servlet-api.version>
+		<spring.version>4.2.3.RELEASE</spring.version>
+		<spring-kerberos.version>1.0.1.RELEASE</spring-kerberos.version>
+		<spring-ldap.version>2.0.4.RELEASE</spring-ldap.version>
+		<spring-security.version>4.0.3.RELEASE</spring-security.version>
+		<spring-ws.version>2.2.4.RELEASE</spring-ws.version>
+		<surefire.version>2.19</surefire.version>
+		<taglibs-std.version>1.1.2</taglibs-std.version>
+		<woodstox-asl.version>4.4.1</woodstox-asl.version>
+		<wsdl4j.version>1.6.3</wsdl4j.version>
+		<wss4j.version>1.6.19</wss4j.version>
+		<xerces.version>2.10.0</xerces.version>
+		<xml-apis.version>2.0.2</xml-apis.version>
+		
+		<!-- Version - Hosted locally -->
+		<gwtext.version>2.0.5</gwtext.version>
+		<gwt-widgets.version>0.2.0</gwt-widgets.version>
+		<ojdbc.version>10.2.0.4.0</ojdbc.version>
+		<wadl.version>1.1-SNAPSHOT</wadl.version>
+		<beanlib.version>6.0.0</beanlib.version>
+		<gilead.version>2.1.0</gilead.version>
+		<jasperreports-fonts.version>6.2.0</jasperreports-fonts.version>
+		
+		<!-- === Version for Project Building Tools === -->
+		<!-- Version - Hosted by Maven -->
+		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
+		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+		<maven-plugin.version>3.3</maven-plugin.version>
+		<maven-war-plugin.version>2.6</maven-war-plugin.version>
+	</properties>
+
+	<!-- Bill of material for version management on framework dependency -->
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>${spring-security.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt</artifactId>
+				<version>${gwt.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- ========================================== DEPENDENCIES ================================================= -->
+	<dependencies>
+		<!-- Oracle JDBC driver: transferring the query and result between client and database -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>${ojdbc.version}</version>
+		</dependency>
+
+		<!-- Servlet API: principle communicate over HTTP client–server protocol -->
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>${jsp-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- GWT: building and optimizing complex browser-based applications -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>asm</artifactId>
+					<groupId>org.ow2.asm</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- GWT: user-interface library  -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-widgets</artifactId>
+			<version>${gwt-widgets.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gwtext</groupId>
+			<artifactId>gwtext</artifactId>
+			<version>${gwtext.version}</version>
+		</dependency>
+
+		<!-- GWT: to quickly recompile code and see the results in a browser -->	
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-codeserver</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Gilead: Persistent POJO outside the JVM for GWT -->
+		<dependency>
+			<groupId>net.sf.gilead</groupId>
+			<artifactId>gilead-core</artifactId>
+			<version>${gilead.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.gilead</groupId>
+			<artifactId>gilead4gwt</artifactId>
+			<version>${gilead.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.gilead</groupId>
+			<artifactId>gilead-hibernate</artifactId>
+			<version>${gilead.version}</version>
+		</dependency>
+		
+		<!-- Beanlib: used by Gilead to reuse the same pojo classes for both persistence and data transfer objects -->
+		<dependency>
+			<groupId>net.sf.beanlib</groupId>
+			<artifactId>beanlib</artifactId>
+			<version>${beanlib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.beanlib</groupId>
+			<artifactId>beanlib-hibernate</artifactId>
+			<version>${beanlib.version}</version>
+		</dependency>
+		
+		<!-- Spring: application framework and inversion of control container -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		
+		<!-- Spring: web model-view-controller (MVC) framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		
+		<!-- Spring: integration classes for JPA, Hibernate to be used following Spring principles of configuration -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		
+		<!-- Spring: Object/XML Mapping of converting an XML document to and from an object -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+		</dependency>
+		
+		<!-- Spring: SOAP and XML payload -->
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>${spring-ws.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-security</artifactId>
+			<version>${spring-ws.version}</version>
+		</dependency>
+	
+		<!-- Spring: Security Framework -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+
+		<!-- Spring LDAP for userDetails from LDAP server -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+		
+		<!-- Spring security Kerberos Extension for SSO with Windows Authentication -->
+		<dependency>
+			<groupId>org.springframework.security.kerberos</groupId>
+			<artifactId>spring-security-kerberos-web</artifactId>
+			<version>${spring-kerberos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security.kerberos</groupId>
+			<artifactId>spring-security-kerberos-client</artifactId>
+			<version>${spring-kerberos.version}</version>
+		</dependency>
+		
+		<!-- Spring: intergate with unit test framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+		<!-- Hibernate: framework for mapping an object-oriented domain model to a relational database-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- Hibernate: integate with unit test framework -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-testing</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- Hibernate: express and validate application constraints -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+		
+		<!-- Hibernate: auditing and versioning of persistent classes -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- ====== Utilities ====== -->
+		<!-- Quartz Scheduler for scheduling tasks -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+
+		<!-- Apache POI: For processing or generating Microsoft Excel -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		
+		<!-- Apache Commons: extra functionality for classes in java.lang -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+		
+		<!-- Apache Commons: Collection of I/O utilities -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		
+		<!-- Apache Commons: define validators and validation rules in an xml file -->
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>${commons-validator.version}</version>
+		</dependency>
+
+		<!--  Apache Commons: File upload capability for servlets and web applications -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
+		
+		<!-- Apache WS: implementation of the primary security standards for Web Services -->
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>${wss4j.version}</version>
+		</dependency>
+		
+		<!-- Apache Axiom: provides an XML Infoset compliant object model implementation which supports on-demand building of the object tree -->
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>${axiom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>${axiom.version}</version>
+		</dependency>
+				
+		<!-- Aspect weaver: aspect-oriented languages designed to take instructions specified by aspects -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
+		<!-- Google Gson: serialize and deserialize Java objects to (and from) JSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+
+		<!-- JasperReports: reporting tool that can write to a variety of targets -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasperreports.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>${jasperreports-fonts.version}</version>
+		</dependency>
+		
+		<!-- Apache Groovy: optionally typed and dynamic language, with static-typing and static compilation capabilities -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
+
+		<!-- Java API: send and receive email via SMTP -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${javax.mail.version}</version>
+		</dependency>
+		
+		<!-- Java API: a form of syntactic metadata that can be added to Java source code -->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>${javax.annotation.version}</version>
+		</dependency>
+		
+		<!-- Java API: Bean Validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+
+		<!-- Web Services Description Language for Java Toolkit-->
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>${wsdl4j.version}</version>
+		</dependency>
+		
+		<!-- JSP standard Tag Library -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>${taglibs-std.version}</version>
+		</dependency>
+		
+		<!-- Jibx: tool for binding XML data to Java objects  -->
+		<dependency>
+			<groupId>org.jibx</groupId>
+			<artifactId>jibx-bind</artifactId>
+			<version>${jibx.version}</version>
+		</dependency>
+
+		<!-- cglib: Code Generation Library used to extend JAVA classes and implements interfaces at runtime -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${cglib.version}</version>
+		</dependency>
+		
+		<!-- Freemarker as HTML template for generating HTML / Strings -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>${freemarker.version}</version>
+		</dependency>
+		
+		<!-- JUnit for uniting test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- FasterXML: full-featured XML processor implements Streaming XML API, Stax -->
+		<dependency>
+			<groupId>org.codehaus.woodstox</groupId>
+			<artifactId>woodstox-core-asl</artifactId>
+			<version>${woodstox-asl.version}</version>
+		</dependency>
+		
+		<!-- FasterXML: standard JSON library for Java -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- FasterXML: core annotations to configure how Data Mapping/Binding works -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<!--  FasterXML: annotations that are tied to types defined in databind package -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- FasterXML: Extension for Jackson JSON processor that adds support for serializing POJOs as XML as an alternative to JSON-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<!-- Rometools: usee by spring REST HttpMessageConverter -->
+		<dependency>
+			<groupId>com.rometools</groupId>
+			<artifactId>rome</artifactId>
+			<version>${rome.version}</version>
+		</dependency>
+
+		<!-- ====== Local Dependencies ====== -->
+		<!-- WADL Project from https://github.com/autentia/wadl-tools since Spring 
+		does not follow JSR311 and does not provide WADL generation tool, 3rd party 
+		generator is needed -->
+		<dependency>
+			<groupId>com.autentia.web.rest</groupId>
+			<artifactId>spring-wadl-generator</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
+		
+		<!-- JDE Web Services for PCMS to access JDE Web Services -->
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AccountBalanceByDateRangeManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AccountIDListByJobManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AccountLedgerManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AddressBookQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AddUpdateAttachmentLinkManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-AddUpdateTextManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-BUMasterUpdateManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-BusinessUnitMasterManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-CallBatchR04110ZAManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-CallCustomJEPostingManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-ChartTypeQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-CheckAwardValidationManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-createApprovalRoute</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-CurrencyValidationManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-CurrentRepackagingStatusQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-DeleteAttachmentLinkManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-DeleteRepackagingBudgetManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-DeleteTextMediaObjectManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetAAIAccountManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetAccountMasterManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetAPRecordsEnquiryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetAPRecordsManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetARRecordsEnquiryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetAttachmentLinkManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetCertReciDataAsAtDateManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetCurrencyCodeOfBUManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetInsurancePercentageByJobManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetJobAddtionalInformationmanager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetMediaObjectListManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetNextNumberManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetPerformanceAppraisalsListManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetPeriodYearManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetPORecordsManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetSCWorkScopeManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetSubContractorWorkScopeQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetSupplierMasterManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetSupplierTaxAreaF0401Manager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-GetUpdateAccMasterUsingCodeTypeCodeManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-InsertJournalEntryTransactionsManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-InsertMainCertContraChargeManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-InsertRepackagingBudgetmanager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-InsertSingleSignOnKeyF58100Manager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-InsertVoucherTransactionsManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-IPAInsertManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-JobAdditionalInfoUserManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-MainCertificateInsertManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-MainCertReceiveDateQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-PaymentHistoryEnquiryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-PlainTextManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-PostMainCertToARManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-SCHeaderInsertManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-SCPaymentHeaderInsertManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-UnitDescriptionListQueryManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-UpdateOrderStatusManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-UpdateSCWorkScopeManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-userAccessJobs</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-userAccessRights</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-userCompanySet</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-ValidateAAICompletelyManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.jde</groupId>
+			<artifactId>JDE-ValidateAccNumManager</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- SOAP Web Service for PCMS to serve as service provider -->
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-awardSCPackage</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-checkJobIsConverted</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-completeAddendumApproval</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-completeMainCertApproval</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-completeSCPayment</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-completeSplitTerminate</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-getAttachmentList</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-getTextAttachment</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForAddendumService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForAwardService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForMainCertService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForPaymentCertService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForPaymentService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gammon.ws</groupId>
+			<artifactId>ws-makeHTMLStrForSplitTerminateService</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+	
+	<!-- ========================================== BUILD ================================================= -->
+	<build>
+		<finalName>PCMS</finalName>	
+		<!-- ====== Step 1: Define directories to be included / excluded ====== -->
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+					<exclude>**/.svn/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+		<plugins>
+			<!-- ====== Step 2: Compile .java to .class by Maven plug-in ====== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-plugin.version}</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<executable>"${java.home}\bin\javac.exe"</executable>
+					<compilerVersion>${java.version}</compilerVersion>
+					<excludes>
+						<exclude>com/gammon/qs/webservice/serviceProvider/</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			
+			<!-- ====== Step 3: Compile GWT by ANT plug-in ====== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>del-gwt</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target> 
+								<delete dir="${basedir}/src/main/gwt-unitCache" includeemptydirs="true"/> 
+								<delete dir="${basedir}/src/main/webapp/gammonqs" includeemptydirs="true"/> 
+								<delete dir="${basedir}/src/main/webapp/WEB-INF/deploy/gammonqs" includeemptydirs="true"/> 
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-gwt</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							 <target> 
+								<exec executable="cmd" dir="${basedir}" spawn="false"> 
+								<arg value="/c" /> 
+								<arg value="Main-compile.cmd" /> 
+								</exec> 
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>file-copy</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete
+									dir="${project.build.outputDirectory}/com/gammon/qs/webservice/serviceProvider"
+									includeemptydirs="true" />
+								<copy file="src/main/java/com/gammon/qs/GammonQS.gwt.xml"
+									tofile="${project.build.directory}/${project.build.finalName}/WEB-INF/classes/com/gammon/qs/GammonQS.gwt.xml" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- ====== Step 4: Package the project as WAR file ====== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven-war-plugin.version}</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<!-- <warSourceExcludes>**/web.xml</warSourceExcludes> -->
+					<!-- <attachClasses>true</attachClasses> -->
+				</configuration>
+			</plugin>
+			
+		</plugins>
+		
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>${lifecycle-mapping.version}</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-antrun-plugin</artifactId>
+										<versionRange>[${maven-antrun-plugin.version},)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

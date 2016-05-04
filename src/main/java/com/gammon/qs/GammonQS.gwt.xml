@@ -1,0 +1,58 @@
+<module rename-to='gammonqs'>
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.json.JSON' />
+
+	# add logging module
+	<inherits name="com.google.gwt.logging.Logging" />
+	# To change the default logLevel
+	<set-property name="gwt.logging.logLevel" value="SEVERE" />
+	# To enable logging
+	<set-property name="gwt.logging.enabled" value="TRUE" />
+
+	<!-- Other module inherits -->
+	<inherits name="com.gwtext.GwtExt" />
+	<inherits name='com.google.gwt.i18n.I18N' />
+	<inherits name="org.gwtwidgets.WidgetLibrary" />
+	<!-- inherits name="com.googlecode.gwt.math.Math" / <== included in gwt-user -->
+
+	<!-- Specify the application entry point class -->
+	<entry-point class='com.gammon.qs.client.Main' />
+
+	<!-- Embedded CSS & JS -->
+	<stylesheet src="js/ext/resources/css/ext-all.css" />
+	<stylesheet src="css/style.css" />
+
+	<set-configuration-property name='xsiframe.failIfScriptTag'
+		value='FALSE' />
+	<!-- Included in GWT compilation - translatable code -->
+	<source path="client" />
+	<source path="shared" />
+	<source path="domain" />
+	<source path="wrapper" />
+	<source path="application" />
+
+	<!-- Browser-sensitive code should use the 'user.agent' property -->
+	<set-property name="user.agent" value="gecko1_8,safari,ie8"/>
+	<!-- Set to false to avoid runtime warnings for mismatched runtime and -->
+	<!-- compile time user.agent values -->
+	<set-configuration-property name="user.agent.runtimeWarning" value="true" />
+	<!-- 
+	If set to "modern", GWT widgets will sometimes attempt to use new web 
+	API's that aren't yet standardized (such as prefixed API's). The "stable" 
+	setting turns this off. If recompiling and redeploying your GWT app when 
+	someone reports a browser bug would be a problem, you should choose "stable". 
+	-->
+	<set-property name="webApiUsage" value="stable" />
+	<!-- Asserts that the compile time user.agent value matches the runtime -->
+	<!-- user.agent value if user.agent.runtimeWarning is true -->
+	<entry-point class="com.google.gwt.useragent.client.UserAgentAsserter" />
+	<generate-with class="com.google.gwt.useragent.rebind.UserAgentAsserterGenerator">
+		<when-type-is class="com.google.gwt.useragent.client.UserAgentAsserter" />
+	</generate-with>
+	<generate-with class="com.google.gwt.useragent.rebind.UserAgentGenerator">
+		<when-type-assignable class="com.google.gwt.useragent.client.UserAgent" />
+	</generate-with>
+	<!-- Deferred binding to optimize Core based on user agent. -->
+	<inherits name="com.google.gwt.core.CoreWithUserAgent" />	
+</module>

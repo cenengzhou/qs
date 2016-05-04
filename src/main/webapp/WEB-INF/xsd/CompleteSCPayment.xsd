@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:pas="http://com.gammon.qs.ph3.service.completeSCPayment/types/"
+        xmlns:this="/WebContent/WEB-INF/xsd/CompleteSCPayment.xsd"
+        elementFormDefault="qualified"
+        targetNamespace="http://com.gammon.qs.ph3.service.completeSCPayment/types/">
+    <xsd:element name="completeSCPaymentRequest">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="jobNumber" type="xsd:string"/>
+                <xsd:element name="packageNo" type="xsd:string"/>
+                <xsd:element name="approvalDecision" type="xsd:string"/>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="completeSCPaymentResponse">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="completed" type="xsd:boolean"/>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+</xsd:schema>

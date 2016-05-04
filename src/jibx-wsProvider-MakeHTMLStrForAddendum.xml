@@ -1,0 +1,13 @@
+<binding>
+	<mapping name="makeHTMLStrForAddendumServiceRequest" class="com.gammon.qs.webservice.serviceProvider.makeHTMLStrForAddendumService.makeHTMLStrForAddendumServiceRequest" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.makeHTMLStrForAddendum/types/" default="elements"/>
+		<value name="jobNumber" field="jobNumber" nillable="false"/>
+		<value name="packageNo" field="packageNo" nillable="false"/>
+		<value name="htmlVersion" field="htmlVersion" nillable="false"/>
+	</mapping>
+	<mapping name="makeHTMLStrForAddendumServiceResponse" class="com.gammon.qs.webservice.serviceProvider.makeHTMLStrForAddendumService.makeHTMLStrForAddendumServiceResponse" flexible="true" ordered="false">
+		<namespace uri="http://com.gammon.qs.ph3.service.makeHTMLStrForAddendum/types/" default="elements"/>
+		<value name="htmlStr" field="htmlStr" nillable="false"/>
+	</mapping>
+</binding>
+	
