@@ -1,0 +1,211 @@
+<div class="hold-transition skin-blue layout-top-nav">
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				{{jobNo}} <small>{{jobDescription}}</small>
+			</h1>
+			<ol class="breadcrumb">
+				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Dashboard</li>
+			</ol>
+		</section>
+	
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+					<div class="col-md-12">
+						<div class="box  box-default">
+							<div class="box-header with-border">
+								<h3 class="box-title">Transit</h3>
+							</div>
+							
+							<div class="col-md-12">
+				                  <div class="progress-group">
+				                  	<span class="progress-text"><b>Progress</span>
+				                    <span class="progress-number"><b>40%</span>
+				
+				                    <div class="progress">
+				                      <div class="progress-bar progress-bar-aqua progress-bar-striped" style="width: 40%"></div>
+				                    </div>
+				                  </div>
+				            </div>
+						
+							<div class="stepwizard">
+							    <div class="stepwizard-row">
+							        <div class="liner"></div>
+							        <div class="stepwizard-step">
+							            <a class="btn icon-btn btn-info" href="#"><span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-info"></span>Create Transit Header</a>
+							        </div>
+							        <div class="stepwizard-step">
+							            <a class="btn icon-btn btn-info" href="#"><span class="glyphicon btn-glyphicon glyphicon-import img-circle text-info"></span>Import BQ & Resources</a>
+							            <p>
+							                <small class="text-muted"><i class="glyphicon glyphicon-file"></i><a href=""><strong>Transit Template</strong></a></small>
+							            </p>
+							        </div>
+							        <div class="stepwizard-step">
+							            <a class="btn icon-btn bg-gray" href="#"><span	class="glyphicon btn-glyphicon glyphicon-check img-circle text-gray"></span>Confirm Resources</a>
+							        </div>
+							        <div class="stepwizard-step">
+							            <a class="btn icon-btn bg-gray" href="#"><span class="glyphicon btn-glyphicon glyphicon-print img-circle text-gray"></span>Print Report</a>
+							            <!-- <p>
+							                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>300</strong></small>
+							            </p> -->
+							        </div>
+							        <div class="stepwizard-step">
+							            <a class="btn icon-btn bg-gray" href="#"><span class="glyphicon btn-glyphicon glyphicon-ok img-circle text-gray"></span>Complete Transit</a>
+							            <!-- <p>
+							                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>200</strong></small>
+							            </p> -->
+							        </div>
+							        <!-- <div class="stepwizard-step">
+							            <a class="btn icon-btn btn-danger" href="#"><span class="glyphicon btn-glyphicon glyphicon-saved img-circle text-danger"></span>Post Budget</a>
+							        </div> -->
+							    </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			
+				<!-- Bar Chart  -->
+				<div class="row">
+					<div class="col-md-4">
+						<!-- TABLE: LATEST ORDERS -->
+						<div class="box box-info">
+							<div class="box-header with-border">
+								<h3 class="box-title">Selling vs ECA</h3>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-2"></div>
+									<div class="col-md-8">
+										<canvas id="bar" class="chart chart-bar"
+											chart-data="barChartParameters.data" 
+											chart-labels="barChartParameters.labels"
+											chart-colours="barChartParameters.colours"
+											chart-series ="barChartParameters.series"
+											chart-options="barChartParameters.options"
+												height="360">
+										</canvas>
+									</div>
+									<div class="col-md-2"></div>
+									<div class="row">
+										<div class="col-md-12">
+											<ul class="chart-legend clearfix">
+												<li><i class="fa fa-circle text-red"></i> 
+													<label>{{barChartParameters.series[0]}}:$3000,000,000</label></li>
+													<!-- <label>{{barChartParameters.series[0]}}:{{barChartParameters.data[0]}}</label></li> -->
+												<li><i class="fa fa-circle text-aqua"></i>
+													<label>{{barChartParameters.series[1]}}:$2800,000,000</label></li>
+													<!-- <label>{{barChartParameters.series[1]}}:{{barChartParameters.data[1]}}</label></li> -->
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+					</div>
+					
+					<div class="col-md-4">
+						<!-- TABLE: LATEST ORDERS -->
+						<div class="box box-info">
+							<div class="box-header with-border">
+								<h3 class="box-title">Selling Distribution</h3>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<canvas id="pie" class="chart chart-pie"
+											chart-data="selling.data" chart-labels="selling.labels"
+												chart-colours="selling.colours"
+												height="200">
+										</canvas>
+									</div>
+									<div class="col-md-12">
+										 <ul class="chart-legend clearfix">
+											<li><i class="fa fa-circle text-red"></i> <label>{{selling.labels[0]}}: {{selling.data[0] | currency}}</label></li>
+											<li><i class="fa fa-circle text-aqua"></i> <label>{{selling.labels[1]}}: {{selling.data[1] | currency}}</label></li>
+											<li><i class="fa fa-circle text-green"></i> <label>{{selling.labels[2]}}: {{selling.data[2] | currency}}</label></li>
+											<li><i class="fa fa-circle text-purple"></i> <label>{{selling.labels[3]}}: {{selling.data[3] | currency}}</label></li>
+											<li><i class="fa fa-circle text-gray"></i> <label>{{selling.labels[4]}}: {{selling.data[4] | currency}}</label></li>											
+								  		</ul>
+									</div><!-- /.col -->
+								</div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+					</div>
+					
+					<div class="col-md-4">
+						<!-- TABLE: LATEST ORDERS -->
+						<div class="box box-info">
+							<div class="box-header with-border">
+								<h3 class="box-title">ECA Distribution</h3>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<canvas id="pie" class="chart chart-pie"
+											chart-data="selling.data" chart-labels="selling.labels"
+												chart-colours="selling.colours"
+												height="200">
+										</canvas>
+									</div>
+									<div class="col-md-12">
+										 <ul class="chart-legend clearfix">
+											<li><i class="fa fa-circle text-red"></i> <label>{{selling.labels[0]}}: {{selling.data[0] | currency}}</label></li>
+											<li><i class="fa fa-circle text-aqua"></i> <label>{{selling.labels[1]}}: {{selling.data[1] | currency}}</label></li>
+											<li><i class="fa fa-circle text-green"></i> <label>{{selling.labels[2]}}: {{selling.data[2] | currency}}</label></li>
+											<li><i class="fa fa-circle text-purple"></i> <label>{{selling.labels[3]}}: {{selling.data[3] | currency}}</label></li>
+											<li><i class="fa fa-circle text-gray"></i> <label>{{selling.labels[4]}}: {{selling.data[4] | currency}}</label></li>											
+								  		</ul>
+									</div><!-- /.col -->
+								</div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			<!-- Pie Chart  END-->
+			
+			
+	
+			<!-- Small boxes (Stat box) -->
+			<!-- <div class="box">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title">Enquiry</h3>
+	
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool"
+								data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							
+						</div>
+					</div>
+				</div>
+			</div> -->
+			
+			
+			
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
+</div>

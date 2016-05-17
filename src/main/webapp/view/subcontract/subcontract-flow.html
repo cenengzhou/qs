@@ -1,0 +1,228 @@
+<div class="hold-transition skin-blue layout-top-nav">
+
+	<div class="content-wrapper animated fadeIn">
+		<section class="content-header">
+			<h1>
+				{{jobNo}} <small>{{jobDescription}}</small>
+			</h1>
+			<ol class="breadcrumb">
+				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i>	Home</a></li>
+				<li class="active">Dashboard</li>
+			</ol>
+		</section>
+
+
+		<section class="content">
+			<!-- 			<div class="container"> -->
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Non-Awarded Subcontract {{packageno}}</h3>
+				</div>
+				<div class="box-body">
+
+					<div class="row">
+
+						<div class="col-md-12">
+							<div class="progress-group">
+								<span class="progress-text"><b>Progress</span> <span
+									class="progress-number"><b>{{progress}}%</span>
+
+								<div class="progress">
+									<div
+										class="progress-bar progress-bar-success progress-bar-striped"
+										style="width: {{progress}}%"></div>
+								</div>
+							</div>
+						</div>
+						<div class="process col-md-12">
+							<div class="process-row">
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.scpackage}"
+										ng-click="click('scpackage')">
+										<i class="fa fa-pencil-square-o fa-3x"></i>
+									</button>
+									<p>
+										<label>Edit Package</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.assignResources}"
+										ng-click="click('assignResources')">
+										<i class="fa fa-pencil-square-o fa-3x"></i>
+									</button>
+									<p>
+										<label>Assign Resources</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.ta}"
+										ng-click="click('ta')">
+										<i class="fa fa-file-text-o fa-3x"></i>
+									</button>
+									<p>
+										<label>Tender Analysis</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.vendor}"
+										ng-click="click('vendor')">
+										<i class="fa fa-pencil-square-o fa-3x"></i>
+									</button>
+									<p>
+										<label>Add/Edit Vendor</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.compare}"
+										ng-click="click('compare')">
+										<i class="fa fa-balance-scale fa-3x"></i>
+									</button>
+									<p>
+										<label>Compare Vendor</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.requisition}"
+										ng-click="click('requisition')">
+										<i class="fa fa-money fa-3x"></i>
+									</button>
+									<p>
+										<label>Payment Requisition</label>
+									</p>
+								</div>
+								<div class="process-step">
+									<button type="button" class="btn btn-circle"
+										ng-class="{'btn-info': display.award}"
+										ng-click="click('award')">
+										<i class="fa fa-check fa-3x"></i>
+									</button>
+									<p>
+										<label>Award Subcontract</label>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="box">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title">Estimated Subcontract Revenue</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool"
+								data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="row">
+
+							<div class="col-md-3">
+				              <div class="sc-panel">
+				                <div class="sc-panel-header bg-yellow-gradient">
+				                  <div class="sc-panel-icon"> 
+				                    <span class="glyphicon glyphicon-piggy-bank"></span>
+				                  </div>
+				                  <h3 class="sc-panel-name"><b>{{budget | currency}}</b></h3>
+				                  <h5 class="sc-panel-desc">Budget</h5>
+				                </div>
+				              </div>
+				              
+				            </div>
+	
+							<div class="col-md-1">
+								<h1 class="text-center">-</h1>
+							</div>
+	
+							<div class="col-md-3">
+				              <div class="sc-panel">
+				                <div class="sc-panel-header bg-light-blue-gradient">
+				                  <div class="sc-panel-icon"> 
+				                    <span class="glyphicon glyphicon-piggy-bank"></span>
+				                  </div>
+				                  <h3 class="sc-panel-name"><b>{{taBudget | currency}}</b></h3>
+				                  <h5 class="sc-panel-desc">Tender Budget</h5>
+				                </div>
+				              </div>
+				              
+				            </div>
+
+							
+
+							<div class="col-md-1">
+								<h1 class="text-center">=</h1>
+							</div>
+							
+							<div class="col-md-3" ng-show="revenue >= 0">
+				              <div class="sc-panel">
+				                <div class="sc-panel-header bg-yellow-gradient">
+				                  <div class="sc-panel-icon"> 
+				                    <span class="glyphicon glyphicon-piggy-bank"></span>
+				                  </div>
+				                  <h3 class="sc-panel-name"><b>{{revenue | currency}}</b></h3>
+				                  <h5 class="sc-panel-desc">Revenue</h5>
+				                </div>
+				              </div>
+				            </div>
+				            
+				            <div class="col-md-3" ng-show="revenue < 0">
+				              <div class="sc-panel">
+				                <div class="sc-panel-header bg-maroon-gradient">
+				                  <div class="sc-panel-icon"> 
+				                    <span class="glyphicon glyphicon-piggy-bank"></span>
+				                  </div>
+				                  <h3 class="sc-panel-name"><b>{{revenue | currency}}</b></h3>
+				                  <h5 class="sc-panel-desc">Loss</h5>
+				                </div>
+				              </div>
+				            </div>
+
+						</div>
+					</div>
+					<div class="box-footer">
+					</div>
+					
+				</div>
+			</div>
+			
+			<!-- Attachment -->
+			<div class="box" >
+				<div class="box-header with-border">
+					<h3 class="box-title">Subcontract Package Attachment</h3>
+	
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				
+				<div class="box-body" ng-style="{height: 100 + 'px'}">
+					<form id="my-awesome-dropzone" class="dropzone" action="#">
+						<div class="dropzone-previews"></div>
+						<!-- <button type="submit" class="btn btn-primary pull-right">Upload</button> -->
+					</form>
+				</div>
+				
+				<div class="box-footer">
+					<a class="btn btn-twitter btn-block" ui-sref="cert-all-details">Upload <i class="fa fa-save"></i></a>
+				</div>
+			</div>
+			
+			
+		</section>
+	</div>
+</div>

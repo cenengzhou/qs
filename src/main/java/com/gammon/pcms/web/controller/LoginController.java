@@ -1,5 +1,12 @@
 package com.gammon.pcms.web.controller;
 
+import java.security.Principal;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/*package com.gammon.pcms.web.controller;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,9 +26,24 @@ public class LoginController {
 		String forwardUrl = (String) request.getAttribute("javax.servlet.forward.servlet_path");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String mavPath = "login";
-		if(forwardUrl != null && (forwardUrl.equals("/") || forwardUrl.equals("/index.htm"))){
+		if(forwardUrl != null && (forwardUrl.equals("/") || forwardUrl.equals("/homeindex.html"))){
 			request.setAttribute("bypassNTLMCheck", "true");
 		}
 		return new ModelAndView(mavPath);
 	}
+}
+*/
+
+@RestController
+public class LoginController {
+  
+  @RequestMapping("/user")
+  public Principal user(Principal user) {
+	  System.out.println("Authenticating.............");
+	  System.out.println("User name: "+user.getName());
+    return user;
+  }
+
+
+
 }

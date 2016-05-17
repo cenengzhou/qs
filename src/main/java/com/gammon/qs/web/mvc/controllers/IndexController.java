@@ -1,4 +1,4 @@
-package com.gammon.qs.web.mvc.controllers;
+/*package com.gammon.qs.web.mvc.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,13 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class IndexController extends BaseController {
 
-	@RequestMapping(value={"index.htm",""},method = RequestMethod.GET)
+	@RequestMapping(value={"homeindex.html",""},method = RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest httpRequest) throws Exception {
 
-		ModelAndView mav = new ModelAndView("index");
+		ModelAndView mav = new ModelAndView("homeindex");
 		mav.addAllObjects(getDefaultModel(httpRequest));
 		
 		return mav;
 	}
 
 }
+*/

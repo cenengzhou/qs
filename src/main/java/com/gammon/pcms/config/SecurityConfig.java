@@ -26,7 +26,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
 import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
-import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
@@ -35,8 +34,13 @@ import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.gammon.pcms.web.filter.CsrfHeaderFilter;
 import com.gammon.pcms.web.filter.HeaderAuthenticationFilter;
 import com.gammon.pcms.web.security.handler.KerberosLoginFailureHandler;
 import com.gammon.pcms.web.security.handler.LoginFailureHandler;
@@ -158,7 +162,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.headers()
+			http
+			.httpBasic()
+			.and()
+			.authorizeRequests()
+			.antMatchers("/index.html","/login", "/").permitAll()
+			.anyRequest().authenticated().and()
+			.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+			.csrf().csrfTokenRepository(csrfTokenRepository())
+			.and().logout()
+			.invalidateHttpSession(true)
+			.deleteCookies("JSESSIONID")
+			.logoutSuccessUrl("/")
+			.and().exceptionHandling().accessDeniedPage("/403.html")
+			.and().addFilterAfter(spnegoAuthenticationProcessingFilter, BasicAuthenticationFilter.class);
+			//.logoutRequestMatcher(new AntPathRequestMatcher("/403"));;
+			
+			/*http.headers()
 			.cacheControl().and()
 			.frameOptions().sameOrigin().and()
 			.csrf().disable()
@@ -180,7 +200,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.deleteCookies("JSESSIONID")
 			.logoutSuccessUrl(securityConfig.getLoginPath()).and()
 			.exceptionHandling().accessDeniedPage("/403.html").and()
-			.addFilterAfter(spnegoAuthenticationProcessingFilter, BasicAuthenticationFilter.class);
+			.addFilterAfter(spnegoAuthenticationProcessingFilter, BasicAuthenticationFilter.class);*/
 		}
 		
 		/**
@@ -207,6 +227,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		}
 	}
 
+	/** tell Spring Security to expect the CSRF token in the format that Angular wants to send it back 
+	 * (a header called “X-XRSF-TOKEN” instead of the default “X-CSRF-TOKEN”)
+	 * */
+	private static CsrfTokenRepository csrfTokenRepository() {
+		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+		repository.setHeaderName("X-XSRF-TOKEN");
+		return repository;
+	}
+	
 	@Bean
 	public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter() throws Exception {
 		SpnegoAuthenticationProcessingFilter filter = new SpnegoAuthenticationProcessingFilter();
@@ -303,7 +332,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler(servletContext.getContextPath()+"/index.htm", false);
+		//return new LoginSuccessHandler(servletContext.getContextPath()+"/index.html", false);
+		return new LoginSuccessHandler(servletContext.getContextPath()+"/homeindex.html", false);
 	}
 
 	@Bean

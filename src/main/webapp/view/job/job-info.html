@@ -1,0 +1,402 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>
+			{{JobNo}} <small>{{JobDescription}}</small>
+		</h1>
+		<ol class="breadcrumb">
+			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+			<li class="active">Dashboard</li>
+		</ol>
+	</section>
+
+	<section class="content">
+		<div class="row">
+			<!-- Certificate Info -->
+			<div class="col-md-12">
+				<!-- Horizontal Form -->
+				<div class="box box-info">
+					<div class="box-body">
+						<span
+							class="profile-user-img img-responsive icofont icofont-newspaper icofont-4x text-blue"></span>
+						<h3 class="profile-username text-center">{{jobNo}}</h3>
+						<p class="text-muted text-center">{{jobDescription}}</p>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Company</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{company}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Customer No.</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{customerNo}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Contact Type</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{contactType}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Division</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{division}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Department</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{department}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Solo/JV</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{soloJV}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Completion Status</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{completionStatus}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Insurance CAR</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{insuranceCAR}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Insurance ECI</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{insuranceECI}}</label>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="col-md-6">
+									<label>Insurance TPL</label>
+								</div>
+								<div class="col-md-6">
+									<label>{{insuranceTPL}}</label>
+								</div>
+							</div>
+						</div>
+
+						<br>
+
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<label class="col-md-4">Major Information</label>
+
+									<div class="row col-md-8">
+										<div class="form-group col-md-6">
+											<label>Original Contract Value</label>
+											<div class="input-group col-md-12">
+												<span class="input-group-addon">$</span> 
+												<input type="number" class="form-control">
+											</div>
+										</div>
+
+										<div class="form-group col-md-6">
+											<label>Projected Contract Value</label>
+											<div class="input-group col-md-12">
+												<span class="input-group-addon">$</span> <input
+													type="number" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group col-md-6">
+											<label>Original Nominated SC Contract Value</label>
+											<div class="input-group col-md-12">
+												<span class="input-group-addon">$</span> <input
+													type="number" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group col-md-6">
+											<label>Tender GP</label>
+											<div class="input-group col-md-12">
+												<span class="input-group-addon">$</span> 
+												<input type="number" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group col-md-6">
+											<label>Client Contract Number</label>
+											<div class="input-group col-md-12">
+												<input type="number" class="form-control">
+											</div>
+										</div>
+										
+										<div class="form-group col-md-6">
+											<label>JV Partner Number</label>
+											<div class="input-group col-md-12">
+												<input type="number" class="form-control">
+											</div>
+										</div>
+										
+										<div class="form-group col-md-6">
+											<label>JV %</label>
+											<div class="input-group col-md-12">
+												<input type="number" class="form-control">
+											</div>
+										</div>
+
+									</div>
+									
+
+								</div>
+							</div>
+						</div>
+
+						<!-- Levy -->
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<label class="col-md-4">Levy</label>
+
+									<div class="row col-md-8">
+										<div class="col-md-12">
+											<!-- <label> Subject to CPF  </label> -->
+											<input type="checkbox" data-ios-toggle="toggle"
+												data-style="ios" data-onstyle="primary"
+												data-offstyle="warning" data-on="Applicable"
+												data-off="Not-Applicable" ng-model="selectedLevy">
+										</div>
+
+										<div class="col-md-6">
+											<form name="levyPeriodForm" novalidate>
+												<div class="form-group" ng-show="selectedLevy == true"
+													ng-class="{ 'has-error': levyPeriodForm.levyPeriod.$touched && levyPeriodForm.levyPeriod.$invalid }">
+													<label>Levy CITA %</label>
+													<div class="input-group col-md-12">
+														<input type="number" class="form-control"
+															name="levyPeriod" ng-model="levyPeriod" required>
+														<div class="help-block"
+															ng-messages="levyPeriodForm.levyPeriod.$error"
+															ng-if="levyPeriodForm.levyPeriod.$touched">
+															<p ng-message="required">This field is required.</p>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group" ng-show="selectedLevy == true">
+												<label>Levy PCFB %</label>
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control" name="cpfYear"
+														required>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<!-- CPF -->
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<label class="col-md-4">CPF</label>
+
+									<div class="row col-md-8">
+										<div class="col-md-12">
+											<!-- <label> Subject to CPF  </label> -->
+											<input type="checkbox" data-ios-toggle="toggle"
+												data-style="ios" data-onstyle="primary"
+												data-offstyle="warning" data-on="Subject to CPF"
+												data-off="No CPF" ng-model="selectedCPF">
+											<!-- <div class="col-md-12"><label><input type="radio" ng-model="selectedCPF" value="No CPF" ng-icheck /> Not Subject to CPF</label></div>
+									                   <div class="col-md-12"><label><input type="radio" ng-model="selectedCPF" value="CPF" ng-icheck /> Subject to CPF</label></div> -->
+										</div>
+
+										<div class="col-md-6">
+											<form name="cpfForm" novalidate>
+												<div class="form-group" ng-show="selectedCPF == true"
+													ng-class="{ 'has-error': cpfForm.cpfPeriod.$touched && cpfForm.cpfPeriod.$invalid }">
+													<label>CPF Base Period</label>
+													<div class="input-group col-md-12">
+														<input type="number" class="form-control" name="cpfPeriod"
+															ng-model="cpfPeriod" required>
+														<div class="help-block"
+															ng-show="cpfForm.cpfPeriod.$error.required">
+															<p>This field is required.</p>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group" ng-show="selectedCPF == true">
+												<label>CPF Base Year</label>
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control" name="cpfYear"
+														required>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+
+						<!-- Retention -->
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<label class="col-md-4">Retention</label>
+
+									<div class="row col-md-8">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Max Retention %</label>
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control" name="" required>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Interim Retention %</label>
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control" name="" required>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<label class="col-md-4">General Information</label>
+
+									<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>Value of BS work</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Billing Currency</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Gross Floor Area</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Gross Floor Area Unit</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Payment Terms for Nominated SC</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Defect Provision %</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Forecast End Year</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Forecast End Period</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control">
+										</div>
+									</div>
+									
+									
+									</div>
+								</div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+
+
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<a class="btn btn-twitter btn-block" ng-click="saveJobInfo()">Save
+							<i class="fa fa-floppy-o"></i>
+						</a>
+					</div>
+					<!-- /.box-footer -->
+					<!-- </form> -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+		<!-- /.row -->
+	</section>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+

@@ -95,7 +95,6 @@
 		<ojdbc.version>10.2.0.4.0</ojdbc.version>
 		<wadl.version>1.1-SNAPSHOT</wadl.version>
 		<beanlib.version>6.0.0</beanlib.version>
-		<gilead.version>2.1.0</gilead.version>
 		<jasperreports-fonts.version>6.2.0</jasperreports-fonts.version>
 		
 		<!-- === Version for Project Building Tools === -->
@@ -205,35 +204,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Gilead: Persistent POJO outside the JVM for GWT -->
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead-core</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead4gwt</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead-hibernate</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		
-		<!-- Beanlib: used by Gilead to reuse the same pojo classes for both persistence and data transfer objects -->
-		<dependency>
-			<groupId>net.sf.beanlib</groupId>
-			<artifactId>beanlib</artifactId>
-			<version>${beanlib.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.beanlib</groupId>
-			<artifactId>beanlib-hibernate</artifactId>
-			<version>${beanlib.version}</version>
-		</dependency>
-		
+				
 		<!-- Spring: application framework and inversion of control container -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -997,7 +968,7 @@
 			</plugin>
 			
 			<!-- ====== Step 3: Compile GWT by ANT plug-in ====== -->
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
@@ -1048,7 +1019,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			
 			<!-- ====== Step 4: Package the project as WAR file ====== -->
 			<plugin>
@@ -1063,7 +1034,7 @@
 			</plugin>
 			
 			<!-- ====== Step 5: Deploy to WebLogic by T3 protocol (OPTIONAL) ====== -->
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.oracle.weblogic</groupId>
 				<artifactId>weblogic-maven-plugin</artifactId>
 				<version>${weblogic.maven.plugin.version}</version>
@@ -1088,7 +1059,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 		
 		<pluginManagement>

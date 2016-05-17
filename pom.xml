@@ -25,11 +25,11 @@
 		<!-- START: Customize the following properties after checking out the project -->
 		<!-- Java -->
 		<java.version>1.7</java.version>
-		<java.home>C:\Program Files\Java\jdk1.7.0_79</java.home>
+		<java.home>C:\Program Files\Java\jdk1.7.0_65</java.home>
 		<!-- END -->
 		
 		<!-- Maven -->
-		<m2eclipse.wtp.contextRoot>QS</m2eclipse.wtp.contextRoot>
+		<m2eclipse.wtp.contextRoot>pcms</m2eclipse.wtp.contextRoot>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,12 +47,12 @@
 		<freemarker.version>2.3.23</freemarker.version>
 		<groovy.version>2.1.9</groovy.version>
 		<gson.version>2.4</gson.version>
-		<gwt.version>2.7.0</gwt.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
 		<hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
 		<jackson.version>2.6.4</jackson.version>
 		<jasperreports.version>6.2.0</jasperreports.version>
 		<javax.annotation.version>1.2</javax.annotation.version>
+		<javax.validation.version>1.0.0.GA</javax.validation.version>
 		<javax.mail.version>1.4.7</javax.mail.version>
 		<jibx.version>1.2.6</jibx.version>
 		<jsp-api.version>2.3.1</jsp-api.version>
@@ -76,12 +76,9 @@
 		<xml-apis.version>2.0.2</xml-apis.version>
 		
 		<!-- Version - Hosted locally -->
-		<gwtext.version>2.0.5</gwtext.version>
-		<gwt-widgets.version>0.2.0</gwt-widgets.version>
 		<ojdbc.version>10.2.0.4.0</ojdbc.version>
 		<wadl.version>1.1-SNAPSHOT</wadl.version>
 		<beanlib.version>6.0.0</beanlib.version>
-		<gilead.version>2.1.0</gilead.version>
 		<jasperreports-fonts.version>6.2.0</jasperreports-fonts.version>
 		
 		<!-- === Version for Project Building Tools === -->
@@ -114,13 +111,6 @@
 				<scope>import</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt</artifactId>
-				<version>${gwt.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -148,75 +138,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- GWT: building and optimizing complex browser-based applications -->
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>asm</artifactId>
-					<groupId>org.ow2.asm</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		
-		<!-- GWT: user-interface library  -->
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-widgets</artifactId>
-			<version>${gwt-widgets.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gwtext</groupId>
-			<artifactId>gwtext</artifactId>
-			<version>${gwtext.version}</version>
-		</dependency>
-
-		<!-- GWT: to quickly recompile code and see the results in a browser -->	
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-codeserver</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Gilead: Persistent POJO outside the JVM for GWT -->
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead-core</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead4gwt</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.gilead</groupId>
-			<artifactId>gilead-hibernate</artifactId>
-			<version>${gilead.version}</version>
-		</dependency>
-		
-		<!-- Beanlib: used by Gilead to reuse the same pojo classes for both persistence and data transfer objects -->
-		<dependency>
-			<groupId>net.sf.beanlib</groupId>
-			<artifactId>beanlib</artifactId>
-			<version>${beanlib.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.beanlib</groupId>
-			<artifactId>beanlib-hibernate</artifactId>
-			<version>${beanlib.version}</version>
-		</dependency>
-		
+	
 		<!-- Spring: application framework and inversion of control container -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -462,10 +384,11 @@
 			<version>${javax.annotation.version}</version>
 		</dependency>
 		
-		<!-- Java API: Bean Validation -->
+		<!-- Java API: Bean Validation (Hibernate validator 4.3.x is an implementation of javax.validation 1.0) -->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
+			<version>${javax.validation.version}</version>
 		</dependency>
 
 		<!-- Web Services Description Language for Java Toolkit-->
@@ -980,7 +903,7 @@
 			</plugin>
 			
 			<!-- ====== Step 3: Compile GWT by ANT plug-in ====== -->
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
@@ -1031,7 +954,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			
 			<!-- ====== Step 4: Package the project as WAR file ====== -->
 			<plugin>

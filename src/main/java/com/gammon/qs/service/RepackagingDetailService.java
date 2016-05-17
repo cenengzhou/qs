@@ -26,7 +26,6 @@ import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.User;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.client.ui.util.RoundingUtil;
 import com.gammon.qs.dao.BQResourceSummaryHBDao;
 import com.gammon.qs.dao.RepackagingDetailHBDao;
 import com.gammon.qs.dao.RepackagingEntryHBDao;
@@ -38,6 +37,7 @@ import com.gammon.qs.domain.RepackagingEntry;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.service.admin.MailService;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -124,7 +124,7 @@ public class RepackagingDetailService implements Serializable {
 			repackagingDetail.setUnit(resourceSummary.getUnit());
 			Double quantity = resourceSummary.getQuantity();
 			Double rate = resourceSummary.getRate();
-			Double amount = quantity != null && rate != null ? Double.valueOf(RoundingUtil.round(quantity * rate,4)) : Double.valueOf(0);
+			Double amount = quantity != null && rate != null ? Double.valueOf(CalculationUtil.round(quantity * rate,4)) : Double.valueOf(0);
 			if(!resourceSummary.getSubsidiaryCode().startsWith("9"))
 				totalAmount += amount; //total Amount is budget only - don't include markup lines
 			repackagingDetail.setQuantity(quantity);

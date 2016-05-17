@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.gammon.pcms.config.ApplicationConfig;
@@ -26,12 +25,12 @@ public class WebInitializer extends
 		
 		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR, DispatcherType.ASYNC);
 		
-		DelegatingFilterProxy baseInformationFilter = new DelegatingFilterProxy("baseInformationFilter");
+		/*DelegatingFilterProxy baseInformationFilter = new DelegatingFilterProxy("baseInformationFilter");
 		baseInformationFilter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
 		baseInformationFilter.setServletContext(servletContext);
 		FilterRegistration.Dynamic baseInformationFilterRegistration = servletContext.addFilter("baseInformationFilter", baseInformationFilter);
 		baseInformationFilterRegistration.setAsyncSupported(true);
-		baseInformationFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
+		baseInformationFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");*/
 
 		OpenSessionInViewFilter hibernateSessionFilter = new OpenSessionInViewFilter();
 		hibernateSessionFilter.setServletContext(servletContext);

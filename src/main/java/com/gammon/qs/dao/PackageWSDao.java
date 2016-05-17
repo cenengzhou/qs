@@ -41,7 +41,6 @@ import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWor
 import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeResponseFieldsObj;
 import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.client.ui.exception.JDEErrorException;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.Job;
 import com.gammon.qs.domain.SCAttachment;
@@ -136,7 +135,7 @@ public class PackageWSDao {
 				logger.info("Response Msg: "+ responseObj.getDescription());
 			} catch (SoapFaultClientException e2){
 				logger.info("FAIL to call WS (addUpdateAttachmentWebServiceTemplate), FAIL operation ");
-				throw new JDEErrorException(e2,"1001");				
+				//throw new JDEErrorException(e2,"1001");				
 			}
 		}
 
@@ -177,7 +176,7 @@ public class PackageWSDao {
 			}catch(SoapFaultClientException e2)
 			{
 				logger.info("FAIL to call WS (addUpdateTextWebServiceTemplate), FAIL operation ");
-				throw new JDEErrorException(e2,"1001");
+				//throw new JDEErrorException(e2,"1001");
 			}
 
 		}
@@ -214,7 +213,7 @@ public class PackageWSDao {
 
 		long start;
 		long end;
-		DeleteTextMediaObjectResponseObj responseObj ;
+		DeleteTextMediaObjectResponseObj responseObj = null ;
 		try {
 			start = System.currentTimeMillis();
 			responseObj = (DeleteTextMediaObjectResponseObj) deleteTextMediaObjectWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
@@ -234,7 +233,7 @@ public class PackageWSDao {
 				logger.info("Time for calling ws(deleteTextMediaObjectWebServiceTemplate)(Retry):"+ ((end-start)/1000.00));
 			}catch (SoapFaultClientException e2){
 				logger.info("FAIL to call WS (deleteTextMediaObjectWebServiceTemplate), FAIL operation ");
-				throw new JDEErrorException(e2,"1001");
+				//throw new JDEErrorException(e2,"1001");
 			}
 		}
 
@@ -318,7 +317,7 @@ public class PackageWSDao {
 				responseObj = (GetPlainTextResponseObj) getPlainTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 			}catch(SoapFaultClientException soapEx2){
 				logger.info("FAIL to Web Service(PlainTextManager-getPlainText())");
-				throw new JDEErrorException(soapEx2, "1001");
+				//throw new JDEErrorException(soapEx2, "1001");
 			}
 		}
 		

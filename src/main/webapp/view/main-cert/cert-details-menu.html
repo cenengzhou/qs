@@ -1,0 +1,28 @@
+
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+		<!-- sidebar menu: : style can be found in sidebar.less -->
+		<ul class="sidebar-menu">
+			<li class="header">{{jobNo}}{{jobDescription}}</li>
+			<li class="active treeview"><a ui-sref="cert-dashboard"><i class="fa fa-dashboard"></i> <span>Main Cert Dashboard</span></a></li>
+			<li class="active treeview"><a ui-sref="cert-all-details"><i class="fa fa-dashboard"></i> <span>Main Contract Certificates</span></a></li>
+			<li class="active treeview">
+				<a href=""> 
+					<i class="fa fa-dashboard"></i> <span>General</span> 
+					<!-- <i class="fa fa-angle-left pull-right"></i> -->
+				</a>
+				<ul class="treeview-menu">
+					<li><a ><i	class="fa fa-info-circle"></i> Account Receivable Details</a></li>
+					<li><a ><i	class="fa fa-circle-o"></i> Contra Charge</a></li>
+					<li><a href=""><i class="fa fa-files-o"></i> Attachment</a></li>
+				</ul>
+				</li>
+		</ul>
+	</section>
+	<!-- /.sidebar -->
+</aside>
+
+<div ui-view></div>
+

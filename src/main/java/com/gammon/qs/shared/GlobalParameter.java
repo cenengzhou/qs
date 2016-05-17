@@ -4,160 +4,11 @@ import java.util.Map;
 
 import com.gammon.qs.domain.MainContractCertificate;
 import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
 import com.gammon.qs.domain.SystemConstant;
-import com.google.gwt.core.client.GWT;
-import com.gwtext.client.data.SimpleStore;
-import com.gwtext.client.data.Store;
+
 
 public class GlobalParameter {
-	public static final String BASED_URL = GWT.getModuleBaseURL(); 
 	
-	
-	
-	//URL 
-	public static final String ACCOUNT_BALANCE_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountBalanceExcelDownload.smvc";
-	public static final String ACCOUNT_BALANCE_PDF_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountBalancePDFDownload.smvc";
-	public static final String IV_POSTING_HISTORY_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "ivPostingHistoryExcelDownload.smvc";
-	public static final String SC_PROVISION_HISTORY_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "scProvisionHistoryExcelDownload.smvc";
-	public static final String REPACKAGING_DETAIL_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "repackagingDetailExcelDownload.smvc";
-	public static final String WORK_SCOPE_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "workScopeExcelDownload.smvc";
-	public static final String ACCOUNT_CODE_OBJECT_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountCodeObjectExcelDownload.rpt";
-	public static final String ACCOUNT_CODE_SUBSIDIARY_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountCodeSubsidiaryExcelDownload.rpt";
-	public static final String PERFORMANCE_APPRAISAL_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "performanceAppraisalExcelDownload.smvc";
-	public static final String BQ_REPOSITORY_URL = GWT.getModuleBaseURL() + "bq.smvc";
-	public static final String FORECAST_REPOSITORY_URL = GWT.getModuleBaseURL() +"forecast.smvc";
-	public static final String PAYMENT_REPOSITORY_URL = GWT.getModuleBaseURL() + "payment.smvc";
-	public static final String MASTER_LIST_REPOSITORY_URL = GWT.getModuleBaseURL() + "masterList.smvc";
-	public static final String JOB_REPOSITORY_URL = GWT.getModuleBaseURL() + "job.smvc";
-	public static final String PACKAGE_REPOSITORY_URL = GWT.getModuleBaseURL() + "package.smvc";
-	public static final String FORECAST_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "forecastExcelDownload.smvc";
-	public static final String FORECAST_TEMPLATE_DOWNLOAD_URL = GWT.getModuleBaseURL() + "forecastTemplateDownload.smvc";
-	public static final String IV_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "ivExcelDownload.smvc";
-	public static final String BQ_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "bqExcelDownload.smvc";
-	public static final String IV_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "ivExcelUpload.smvc";
-	public static final String FORECAST_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "forecastExcelUpload.smvc";
-	public static final String SCDETAIL_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "scDetailExcelUpload.smvc";
-	public static final String SCLIAB_N_PAYMENT_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "scLiabilitiesAndPaymentDownload.smvc";
-	public static final String SCDETAILS_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "scDetailsDownload.smvc";
-	public static final String SCPAMENT_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "scPaymentDownload.smvc";
-	public static final String SCPAMENTCERT_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "scPaymentCertDownload.smvc";
-	public static final String PRINT_UNPAID_PAYMENT_CERTIFICATE_REPORT_PDF = GWT.getModuleBaseURL() + "printUnpaidPaymentCertificateReportPdf.rpt";
-	public static final String PRINT_PAYMENT_CERTIFICATE_REPORT_PDF = GWT.getModuleBaseURL() + "printPaymentCertificateReportPdf.rpt";
-	public static final String USER_SERVICE_URL = GWT.getModuleBaseURL() + "user.smvc";
-	public static final String UPLOAD_SC_ATTACHMENT_URL = GWT.getModuleBaseURL() + "scAttachmentUpload.smvc";
-	public static final String DOWNLOAD_SC_ATTACHMENT_URL = GWT.getModuleBaseURL() + "scAttachmentDownload.smvc";
-	public static final String SYSTEM_MESSAGE_URL = GWT.getModuleBaseURL()+ "systemMessage.smvc";
-	public static final String UNITOFMEASUREMENT_URL = GWT.getModuleBaseURL()+ "unit.smvc";
-	public static final String JOBCOST_REPOSITORY_URL = GWT.getModuleBaseURL() + "jobcost.smvc";
-	public static final String REPACKAGING_ENTRY_REPOSITORY_URL = GWT.getModuleBaseURL() + "repackagingEntry.smvc";
-	public static final String REPACKAGING_DETAIL_REPOSITORY_URL = GWT.getModuleBaseURL() + "repackagingDetail.smvc";
-	public static final String REPACKAGING_ATTACHMENT_DOWNLOAD_URL = GWT.getModuleBaseURL() + "repackagingAttachmentDownload.smvc";
-	public static final String REPACKAGING_ATTACHMENT_UPLOAD_URL = GWT.getModuleBaseURL() + "repackagingAttachmentUpload.smvc";
-	public static final String BQ_RESOURCE_SUMMARY_REPOSITORY_URL = GWT.getModuleBaseURL() + "bqResourceSummary.smvc";
-	public static final String BQ_RESOURCE_SUMMARY_IV_DOWNLOAD_URL = GWT.getModuleBaseURL() + "bqResourceSummaryIVDownload.smvc";
-	public static final String BQ_RESOURCE_SUMMARY_IV_UPLOAD_URL = GWT.getModuleBaseURL() + "bqResourceSummaryIVUpload.smvc";
-	public static final String BQITEM_IV_DOWNLOAD_URL = GWT.getModuleBaseURL() + "bqItemIVDownload.smvc";
-	public static final String BQITEM_IV_UPLOAD_URL = GWT.getModuleBaseURL() + "bqItemIVUpload.smvc";
-	public static final String RESOURCE_IV_DOWNLOAD_URL = GWT.getModuleBaseURL() + "resourceIVDownload.smvc";
-	public static final String RESOURCE_IV_UPLOAD_URL = GWT.getModuleBaseURL() + "resourceIVUpload.smvc";
-	public static final String MAINCONTRACTCERTIFICATE_REPOSITORY_URL = GWT.getModuleBaseURL() + "mainContractCertificate.smvc";
-	public static final String MAINCERTIFICATE_ATTACHMENT_UPLOAD_URL = GWT.getModuleBaseURL() + "mainCertificateAttachmentUpload.smvc";
-	public static final String MAINCERTIFICATE_ATTACHMENT_DOWNLOAD_URL = GWT.getModuleBaseURL() + "mainCertificateAttachmentDownload.smvc";
-	public static final String TENDER_ANALYSIS_REPOSITORY_URL = GWT.getModuleBaseURL() + "tenderAnalysis.smvc";
-	public static final String TENDER_ANALYSIS_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "tenderAnalysisExcelUpload.smvc";
-	public static final String TENDER_ANALYSIS_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "tenderAnalysisExcelDownload.smvc";
-	public static final String TENDER_ANALYSIS_VENDOR_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "tenderAnalysisVendorExcelUpload.smvc";
-	public static final String TENDER_ANALYSIS_VENDOR_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "tenderAnalysisVendorExcelDownload.smvc";
-	public static final String USER_ACCESS_RIGHTS_REPOSITORY_URL = GWT.getModuleBaseURL() +"userAccessRights.smvc";
-	public static final String USER_ACCESS_JOBS_REPOSITORY_URL = GWT.getModuleBaseURL() +"userAccessJobs.smvc";
-	public static final String SYSTEM_ADMIN_REPOSITORY_URL = GWT.getModuleBaseURL() + "systemAdmin.smvc";
-	public static final String ENVIRONMENT_CONFIG_URL = GWT.getModuleBaseURL() + "environmentConfig.smvc";
-	public static final String IV_POSTING_HISTORY_REPOSITORY_URL = GWT.getModuleBaseURL() + "ivPostingHistory.smvc";
-	public static final String SINGLESIGNONKEY_REPOSITORY_URL = GWT.getModuleBaseURL() +"singleSignOnKey.smvc";
-	public static final String FINANCE_SUBCONTRACT_LIST_DOWNLOAD_URL = GWT.getModuleBaseURL()+ "financeSubcontractListDownload.smvc";
-	public static final String QRTZ_TRIGGER_REPOSITORY_URL = GWT.getModuleBaseURL()+ "qrtzTrigger.smvc";
-	public static final String TRANSIT_REPOSITORY_URL = GWT.getModuleBaseURL() + "transitRepository.smvc";
-	public static final String TRANSIT_UPLOAD_URL = GWT.getModuleBaseURL() + "transitUpload.smvc";
-	public static final String TRANSIT_DOWNLOAD_URL = GWT.getModuleBaseURL() + "transitDownload.smvc";
-	public static final String BUDGET_POSTING_URL = GWT.getModuleBaseURL() + "budgetPostingService.smvc";
-	public static final String PRINT_BQ_MASTER_RECONCILIATION_REPORT = GWT.getModuleBaseURL() + "printBQMasterReconciliationReport.smvc";
-	public static final String PRINT_BQ_RECOURSE_RECONCILIATION_REPORT = GWT.getModuleBaseURL() + "printBQRecourseReconciliationReport.smvc";
-	public static final String ACCOUNT_LEDGER_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountLedgerExcelDownload.smvc";
-	public static final String ACCOUNT_LEDGER_PDF_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountLedgerPDFDownload.smvc";
-	public static final String ACCOUNT_CUSTOMER_LEDGER_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountCustomerLedgerExcelDownload.smvc";
-	public static final String ACCOUNT_CUSTOMER_LEDGER_PDF_DOWNLOAD_URL = GWT.getModuleBaseURL() + "accountCustomerLedgerPDFDownload.smvc";
-	public static final String RETENTION_RELEASE_SCHEDULE_REPOSITORY_URL = GWT.getModuleBaseURL() + "retentionReleaseSchedule.smvc";;
-	public static final String RETENTION_RELEASE_SCHEDULE_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL()+"retentionReleaseScheduleExcelDownload.smvc";
-	public static final String RETENTION_RELEASE_SCHEDULE_REPORT_DOWNLOAD_URL = GWT.getModuleBaseURL()+"retentionReleaseScheduleReportDownload.rpt";
-	public static final String ACCOUNT_PAYABLE_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL()+"accountPayableExcelDownload.smvc";
-	public static final String ACCOUNT_PAYABLE_PDF_DOWNLOAD_URL = GWT.getModuleBaseURL()+"accountPayablePDFDownload.smvc";
-	public static final String SCDETAILS_EXCEL_DOWNLOAD_FOR_JOB_URL = GWT.getModuleBaseURL()+"scDetailForJobDownload.smvc";
-	public static final String UI_ERROR_MESSAGE_LOG_URL = GWT.getModuleBaseURL()+"uiErrorMessageLog.smvc";
-	public static final String SC_PAYMENT_EXCEPTION_REPORT_DOWNLOAD_URL = GWT.getModuleBaseURL()+"scPaymentExceptionReportDownload.smvc";
-	public static final String ACCOUNT_LEDGER_URL = GWT.getModuleBaseURL()+"accountLedger.smvc";
-	public static final String APPLICATION_CONTEXT_PROPERTIES_URL = GWT.getModuleBaseURL()+"properties.smvc";
-	public static final String BUDGET_FORECAST_EXCEL_UPLOAD_URL = GWT.getModuleBaseURL() + "budgetForecastExcelUpload.smvc";
-	public static final String BUDGET_FORECAST_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "budgetForecastExcelDownload.smvc";
-	public static final String SUBCONTRACTOR_REPOSITORY_URL = GWT.getModuleBaseURL() + "subcontractor.smvc";
-
-	public static final String PAYMENT_CERTIFICATE_ENQUIRY_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "paymentCertificateEnquiryExcelExport.smvc";
-
-	public static final String CONTRA_CHARGE_ENQUIRY_REPORT_PDF_URL = GWT.getModuleBaseURL() + "contraChargeEnquiryReportPDFExport.rpt";
-	public static final String CONTRA_CHARGE_ENQUIRY_REPORT_EXCEL_URL = GWT.getModuleBaseURL() + "contraChargeEnquiryReportExcelExport.rpt";
-
-	public static final String MAIN_CERTIFICATE_ENQUIRY_REPORT_EXCEL_URL = GWT.getModuleBaseURL() + "mainCertificateEnquiryReportExcelExport.smvc";
-	public static final String MAIN_CERTIFICATE_ENQUIRY_REPORT_PDF_URL = GWT.getModuleBaseURL() + "mainCertificateEnquiryReportPDFExport.rpt";
-	public static final String MAIN_CERTIFICATE_ENQUIRY_EXCEL_URL = GWT.getModuleBaseURL() + "mainCertificateEnquiryExcelExport.smvc";
-	public static final String MAIN_CERTIFICATE_ENQUIRY_PDF_URL = GWT.getModuleBaseURL() + "mainCertificateEnquiryPDFExport.rpt";
-
-	public static final String MAIN_CERTIFICATE_ENQUIRY_URL = GWT.getModuleBaseURL() + "mainContractCertificateEnquiryExport.rpt";
-	public static final String CONTRACT_RECEIVABLE_ENQUIRY_URL = GWT.getModuleBaseURL() + "contractReceivableEnquiry.rpt";
-	
-	public static final String MESSAGE_BOARD_REPOSITORY_URL = GWT.getModuleBaseURL()+"messageBoard.smvc";
-	public static final String MESSAGE_BOARD_ATTACH_REPOSITORY_URL = GWT.getModuleBaseURL()+"messageBoardAttachment.smvc";
-	public static final String ATTACHMENT_REPOSITORY_URL = GWT.getModuleBaseURL()+"attachment.smvc";
-	public static final String SCPAYMENTCERT_REPOSITORY_URL = GWT.getModuleBaseURL()+"scpaymentcert.smvc";
-	public static final String SCWORKSCOPE_REPOSITORY_URL = GWT.getModuleBaseURL()+"scworkscope.smvc";
-	public static final String PAGE_REPOSITORY_URL = GWT.getModuleBaseURL()+"page.smvc";
-	public static final String RESOURCE_REPOSITORY_URL = GWT.getModuleBaseURL()+"resource.smvc";
-	public static final String TENDERANALYSISDETAIL_REPOSITORY_URL = GWT.getModuleBaseURL()+"tenderanalysisdetail.smvc";
-	public static final String MAINCERTIFICATEATTACHMENT_REPOSITORY_URL = GWT.getModuleBaseURL()+"maincertificateattachment.smvc";
-	public static final String SUBCONTRACT_PAYMENT_ENQUIRY_EXCEL_DOWNLOAD_URL = GWT.getModuleBaseURL() + "subcontractPaymentExcelDownload.smvc";
-	
-	//Report
-	public static final String SUBCONTRACTOR_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractorExcelExport.rpt";
-	public static final String AWARDED_SUBCONTRACTS_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "awardedSubcontractsExcelExport.rpt";
-
-	/**
-	 * @author added by heisonwong for purchase order
-	 * **/
-	public static final String PURCHASE_ORDER_EXCEL_URL = GWT.getModuleBaseURL()+ "purchaseOrderExcelExport.rpt";
-	public static final String PURCHASE_ORDER_REPORT_URL = GWT.getModuleBaseURL()+ "purchaseOrderReportExport.rpt";
-	
-	public static final String SUBCONTRACT_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractExcelExport.rpt";
-	public static final String SUBCONTRACT_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractReportExport.rpt";
-	public static final String SUBCONTRACT_LIABILITY_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractLiabilityExcelExport.rpt";
-	public static final String SUBCONTRACT_LIABILITY_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractLiabilityReportExport.rpt";
-	public static final String SUBCONTRACTOR_ANALYSIS_EXCEL_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractorAnalysisExcelExport.rpt";
-	public static final String SUBCONTRACTOR_ANALYSIS_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "subcontractorAnalysisReportExport.rpt";
-	public static final String ACCOUNT_BALANCE_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "accountBalanceReportExport.rpt";
-	public static final String ACCOUNT_LEDGER_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "accountLedgerReportExport.rpt";
-	public static final String ACCOUNT_PAYABLE_REPORT_EXPORT_URL = GWT.getModuleBaseURL()+"accountPayableReportExport.rpt";
-	public static final String ACCOUNT_CUSTOMER_LEDGER_REPORT_EXPORT_URL = GWT.getModuleBaseURL() + "accountCustomerLedgerReportExport.rpt";
-	
-	//Image Upload
-	public static final String IMAGE_UPLOAD_URL = GWT.getModuleBaseURL()+"imageUpload.smvc";
-	//Image Download
-	public static final String IMAGE_DOWNLOAD_URL = GWT.getModuleBaseURL()+"imageDownload.smvc";
-
-	
-	/**
-	 * @author matthewatc
-	 * 16:52:46 29 Dec 2011 (UTC+8)
-	 * added URL for the object subsidiary rule repository
-	 */
-	public static final String OBJ_SUB_REPOSITORY_URL =  GWT.getModuleBaseURL() + "objectSubsidiaryRule.smvc";
 	
 	//UI config
 	public static final String NULL_REPLACEMENT = "N/A";
@@ -215,8 +66,6 @@ public class GlobalParameter {
     public final static String TRANSIT_ERROR = "TERROR";
     public final static String TRANSIT_SUCCESS_WITH_WARNING = "SUCCESS_WITH_WARNING"; // added by brian on 20110225
 
-	public final static Store SC_PAYMENT_TERMS_STORE = new SimpleStore(new String[]{"termsValue", "termsDisplay"}, getPaymentTerms(false));
-	
 	public static String[][] getContraChargeLineType(boolean withDefault){
 		if(withDefault)
 			return new String[][]{
@@ -303,37 +152,7 @@ public class GlobalParameter {
 	}
 	*/
 
-	public final static Store RETENTION_TERMS_STORE = new SimpleStore(new String[]{"termsValue","termDescription"},
-		new String [][]{
-				new String[]{"", "No Retention"},
-				new String[]{SCPackage.RETENTION_LUMPSUM,SCPackage.RETENTION_LUMPSUM},
-				new String[]{SCPackage.RETENTION_ORIGINAL,SCPackage.RETENTION_ORIGINAL},
-				new String[]{SCPackage.RETENTION_REVISED,SCPackage.RETENTION_REVISED}
-		}
-	);
 	
-	public final static Store FORM_OF_SUBCONTRACT_STORE = new SimpleStore(new String[]{"value","description"},
-		new String[][]{
-			new String[]{SCPackage.MAJOR,SCPackage.MAJOR},
-			new String[]{SCPackage.MINOR,SCPackage.MINOR},
-			new String[]{SCPackage.CONSULTANCY_AGREEMENT,SCPackage.CONSULTANCY_AGREEMENT},
-			new String[]{SCPackage.INTERNAL_TRADING,SCPackage.INTERNAL_TRADING}
-		}
-	);
-
-	public final static Store SCPAYMENTCERT_INTRIM_FINAL_PAYMENT_STORE = new SimpleStore(new String[]{"value","description"},
-		new String[][]{
-			new String[]{"I",SCPaymentCert.INTERIM_PAYMENT},
-			new String[]{"F",SCPaymentCert.FINAL_PAYMENT}
-		}
-	);
-	public final static Store SCPAYMENTCERT_DIRECTPAYMENT_STORE = new SimpleStore(new String[]{"value","description"},
-			new String[][]{
-				new String[]{SCPaymentCert.DIRECT_PAYMENT,"Direct Payment"},
-				new String[]{SCPaymentCert.NON_DIRECT_PAYMENT,"Normal Payment"
-			}
-		}
-	);
 	private static Map<String, String> performanceGroupMap;
 
 	public static Map<String, String> getPerformanceGroupMap() {
@@ -354,17 +173,6 @@ public class GlobalParameter {
 		GlobalParameter.scStatusCodeMap = scStatusCodeMap;
 	}
 	
-	public final static Store DIRECTPAYMENT_EXCEPTIONAL_ENQUIRY_SC_STATUS_STORE = new SimpleStore(new String[]{"value","description"},
-			new String[][]{
-			new String[]{"all","All Status"},
-			new String[]{"awarded","Awarded SC [Status:500]"},
-			new String[]{"nonawarded","Non-awarded SC [Status:0,100,160,330,340]"},
-			new String[]{"submitted","Submitted SC Award [Status:330]"},
-			new String[]{"notsubmitted","Not Submitted SC Award Yet [Status:0,100,160,340]"}
-		}
-	);   
-	
-	public final static Store MAIN_CERTIFICATE_STATUS_STORE = new SimpleStore(new String[]{"statusValue", "statusDisplay"}, getMainCertficateStatuses());
 	
 	public final static String[][] getMainCertficateStatuses(){
 		return new String[][]{

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.client.ui.util.RoundingUtil;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.BQHBDao;
 import com.gammon.qs.dao.BQResourceSummaryHBDao;
@@ -40,6 +39,7 @@ import com.gammon.qs.domain.TenderAnalysisDetail;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisDetailWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisVendorWrapper;
@@ -553,8 +553,8 @@ public class TenderAnalysisService implements Serializable {
 					errorMessage += "</br>Omitted account code: " + accountCode;
 				}
 				
-				logger.info("Account Code : " + accountCode + " dbTotal: " + RoundingUtil.round(bqAccountAmounts.get(accountCode),2) + " excelTotal : " + RoundingUtil.round(excelAccountAmounts.get(accountCode),2));
-				if(RoundingUtil.round(bqAccountAmounts.get(accountCode),2)!= RoundingUtil.round(excelAccountAmounts.get(accountCode),2)){
+				logger.info("Account Code : " + accountCode + " dbTotal: " + CalculationUtil.round(bqAccountAmounts.get(accountCode),2) + " excelTotal : " + CalculationUtil.round(excelAccountAmounts.get(accountCode),2));
+				if(CalculationUtil.round(bqAccountAmounts.get(accountCode),2)!= CalculationUtil.round(excelAccountAmounts.get(accountCode),2)){
 					logger.info("Amounts are not balanced for account:" + accountCode);
 					errorMessage += "</br>Amounts are not balanced for account:" + accountCode;
 				}

@@ -1,4 +1,4 @@
-package com.gammon.qs.web.servlet;
+/*package com.gammon.qs.web.servlet;
 
 import java.io.IOException;
 
@@ -48,3 +48,4 @@ public class BaseInformationFilter implements Filter {
 
 	public void init(FilterConfig filterCfg) throws ServletException {}
 }
+*/

@@ -1,0 +1,30 @@
+
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+		<!-- sidebar menu: : style can be found in sidebar.less -->
+		<ul class="sidebar-menu">
+			<li class="header">{{jobNo}}{{jobDescription}}</li>
+			
+			
+			<li ng-class="{active : activeIVSideMenu == 'IVUpdate'}">
+				<a ui-sref="iv.update" ng-click="activeIVSideMenu = 'IVUpdate'">
+					<i class="fa fa-dashboard"></i> 
+					<span>IV Update</span>
+				</a>
+			</li>
+			<li ng-class="{active : activeIVSideMenu == 'IVPost'}">
+				<a ui-sref="iv.post" ng-click="activeIVSideMenu = 'IVPost'">
+					<i class="fa fa-calendar-check-o"></i>
+					<span>IV Post</span>
+				</a>
+			</li>
+
+		</ul>
+	</section>
+	<!-- /.sidebar -->
+</aside>
+
+<div ui-view></div>
+

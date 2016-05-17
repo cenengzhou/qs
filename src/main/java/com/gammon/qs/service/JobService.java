@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.client.ui.util.WildCardStringFinder;
 import com.gammon.qs.dao.JobHBDao;
 import com.gammon.qs.dao.JobWSDao;
 import com.gammon.qs.dao.SCPackageHBDao;
 import com.gammon.qs.domain.Job;
 import com.gammon.qs.domain.JobDates;
 import com.gammon.qs.util.RoundingUtil;
+import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.job.JobDatesWrapper;
 
 @Service

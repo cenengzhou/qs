@@ -1,0 +1,163 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>
+			{{jobNo}} <small>{{jobDescription}}</small>
+		</h1>
+		<ol class="breadcrumb">
+			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+			<li class="active">Dashboard</li>
+		</ol>
+	</section>
+
+	<section class="content">
+		<div class="row">
+			<!-- Contractual Date  -->
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Job Dates</h3>
+					</div>
+					<div class="box-body">
+						<div class="row">
+
+							<!-- JDE Dates  -->	
+							<div class="col-md-6">
+								<div class="col-md-8"><label>Planned Start Date</label></div>
+								<div class="form-group col-md-4">
+									 <div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="plannedStartDate">
+				                    </div>
+								</div>
+								
+								
+								<div class="col-md-8"><label>Planned End Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="plannedEndDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Actual Start Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="actualStartDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Actual End Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="actualEndDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Anticipated Completion Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="anticipatedCompletionDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Revised Completion Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="revisedCompletionDate">
+				                    </div>
+								</div>
+							
+							</div>
+							
+							<!-- QS Dates  -->	
+							<div class="col-md-6">
+								<div class="col-md-8"><label>Actual PCC Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="actualPCCDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Actual Making Good Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="actualMakingGoodDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Defect Liability Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="defectLiabilityDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Final A/C Settlement Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="financialEndDate">
+				                    </div>
+								</div>
+								
+								<div class="col-md-8"><label>Subcontractor Start on-site Date</label></div>
+								<div class="form-group col-md-4">
+									<div class="input-group date">
+				                      <div class="input-group-addon">
+				                        <i class="fa fa-calendar"></i>
+				                      </div>
+				                      <input type="text" class="form-control pull-right"   ng-model="finalACSettlementDate">
+				                    </div>
+								</div>
+							
+							</div>
+							
+						</div>
+						<!-- /.row -->
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<button class="btn btn-twitter btn-block" type="button"
+							ng-click="saveDates()">
+							<span class="fa fa-save"></span> Save
+						</button>
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+		<!-- /.row -->
+	</section>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+

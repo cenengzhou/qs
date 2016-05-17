@@ -1,0 +1,70 @@
+
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+		<!-- sidebar menu: : style can be found in sidebar.less -->
+		<ul class="sidebar-menu">
+			<li class="header">{{jobNo}}{{jobDescription}}</li>
+			<li ng-class="{active : activeSubcontractSideMenu == 'SubcontractDashboard'}">
+				<a ui-sref="subcontract.dashboard" ng-click="activeSubcontractSideMenu = 'SubcontractDashboard'">
+					<i class="fa fa-dashboard"></i> 
+					<span>Subcontact Dashboard</span>
+				</a>
+			</li>
+			<li ng-class="{active : activeSubcontractSideMenu == 'Timeline'}">
+				<a href="" ng-click="activeSubcontractSideMenu = 'Timeline'">
+					<i class="fa fa-calendar-check-o"></i>
+					<span>Timeline</span>
+				</a>
+			</li>
+
+			<li class="treeview">
+				<a href=""><i class="fa fa-dashboard"></i><span>General</span><i class="fa fa-angle-left pull-right"></i></a>
+				<ul class="treeview-menu menu-open" style="display: block">
+					<li ng-class="{active : activeSubcontractSideMenu == 'Header'}">
+						<a ui-sref="subcontract.header" ng-click="activeSubcontractSideMenu = 'Header'">
+							<i class="fa fa-info-circle"></i> Subcontract Header</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Details'}">
+						<a ui-sref="subcontract.details" ng-click="activeSubcontractSideMenu = 'Details'">
+							<i	class="fa fa-info-circle"></i> Subcontract Details</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Date'}">
+						<a ui-sref="subcontract.dates" ng-click="activeSubcontractSideMenu = 'Date'">
+						<i class="fa fa-calendar"></i> Date</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'taDetails'}">
+						<a ui-sref="subcontract.taDetails" ng-click="activeSubcontractSideMenu = 'taDetails'">
+						<i class="fa fa-circle-o"></i> Tender Analysis Details</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Attachment'}">
+						<a ui-sref="subcontract.attachment" ng-click="activeSubcontractSideMenu = 'Attachment'">
+						<i class="fa fa-files-o"></i> Attachment</a></li>
+				</ul></li>
+
+			<li class="treeview"><a href=""> <i class="fa fa-desktop"></i>
+					<span>Operation</span> <i class="fa fa-angle-left pull-right"></i>
+			</a>
+				<ul class="treeview-menu menu-open" style = "display: block">
+					<li ng-class="{active : activeSubcontractSideMenu == 'Addendum'}">
+						<a href="" ng-click="activeSubcontractSideMenu = 'Addendum'">
+						<i class="fa fa-circle-o"></i> Addendum</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'WD'}">
+						<a ui-sref="subcontract.workdone" ng-click="activeSubcontractSideMenu = 'WD'">
+						<i class="fa fa-circle-o"></i> Work Done</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Split'}">
+						<a ui-sref="subcontract.split" ng-click="activeSubcontractSideMenu = 'Split'">
+						<i class="fa fa-circle-o"></i> Split</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Terminate'}">
+						<a ui-sref="subcontract.terminate" ng-click="activeSubcontractSideMenu = 'Terminate'">
+						<i class="fa fa-circle-o"></i> Terminate</a></li>
+					<li ng-class="{active : activeSubcontractSideMenu == 'Payment'}">
+						<a ui-sref="subcontract.payment" ng-click="activeSubcontractSideMenu = 'Payment'">
+						<i class="fa fa-circle-o"></i> Payment</a></li>
+				</ul></li>
+
+
+		</ul>
+	</section>
+	<!-- /.sidebar -->
+</aside>
+
+<div ui-view></div>
+

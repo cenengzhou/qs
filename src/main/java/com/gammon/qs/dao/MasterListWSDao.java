@@ -40,7 +40,6 @@ import com.gammon.jde.webservice.serviceRequester.GetUpdateAccMasterUsingCodeTyp
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.client.ui.exception.JDEErrorException;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
@@ -515,7 +514,7 @@ public class MasterListWSDao{
 				logger.info("time for calling ws(CheckAwardValidation):()(Retry)"+ ((end-start)/1000.00));
 			}catch (SoapFaultClientException e2){
 				logger.info("FAIL to call WS (CheckAwardValidation), FAIL operation ");
-				throw new JDEErrorException(e2,"1001");								
+				//throw new JDEErrorException(e2,"1001");								
 			}
 		}
 		return responseObj.getDescription();

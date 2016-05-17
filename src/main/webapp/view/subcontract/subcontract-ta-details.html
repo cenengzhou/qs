@@ -1,0 +1,65 @@
+<div class="content-wrapper">
+   <section class="content-header">
+     <h1>
+       {{jobNo}}
+       <small>{{jobDescription}}</small>
+     </h1>
+     <ol class="breadcrumb">
+       <li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+       <li class="active">Dashboard</li>
+     </ol>
+   </section>
+
+	<!-- Main content -->
+   <section class="content">
+  		<div class="row">
+		    <div class="col-lg-3 col-xs-12">
+		      <!-- small box -->
+		      <div class="small-box bg-aqua">
+		        <div class="inner">
+		          <h3>{{budgetAmount | currency}}</h3>
+		
+		          <p>Budget Amount</p>
+		        </div>
+		        <div class="icon">
+		          <i class="ion ion-social-usd"></i>
+		        </div>
+		      </div>
+		    </div>
+		    <!-- ./col -->
+		    <div class="col-lg-3 col-xs-12">
+		      <!-- small box -->
+		      <div class="small-box bg-green">
+		        <div class="inner">
+		          <h3>{{vo | currency}}</h3>
+		          <p>VO</p>
+		        </div>
+		        <div class="icon">
+		          <i class="ion ion-social-usd"></i>
+		        </div>
+		      </div>
+		    </div>
+		   
+  		</div>
+	  
+	  		<div class="row">
+		  		<div class = "col-md-12">
+					<div id="" ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-cellnav class="grid"  style="height:400px;  width=: 1600px"></div>
+				</div>
+				
+				<div class="col-md-12">
+					<div class="box box-info">
+						<div class="box-body"></div>
+					</div>
+				</div>
+		
+				<div class="col-md-12">
+					<div id="" ui-grid="gridOptions" ui-grid-resize-columns ui-grid-exporter ui-grid-auto-resize class="grid" style="height: 400px; width =: 1600px"></div>
+				</div>
+				
+				
+			</div>	
+	
+	</section>
+
+</div>

@@ -1,8 +1,0 @@
-#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
-#Thu Dec 17 02:29:33 CST 2015
-http\://repo.maven.apache.org/maven2/.lastUpdated=1446517322566
-@default-https\://maven.oracle.com/.lastUpdated=1446797117342
-https\://maven.oracle.com/.error=Could not transfer artifact net.sf.gilead\:gilead4gwt\:jar\:sources\:1.2.3.823 from/to maven.oracle.com (https\://maven.oracle.com)\: Access denied to https\://maven.oracle.com/net/sf/gilead/gilead4gwt/1.2.3.823/gilead4gwt-1.2.3.823-sources.jar. Error code 401, Authorization Required
-https\://repo.maven.apache.org/maven2/.lastUpdated=1450290573456
-http\://repo.maven.apache.org/maven2/.error=
-https\://repo.maven.apache.org/maven2/.error=

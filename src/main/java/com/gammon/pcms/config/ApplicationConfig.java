@@ -64,14 +64,14 @@ public class ApplicationConfig {
 		return bean;
 	}
 
-	@Bean
+	/*@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver bean = new InternalResourceViewResolver();
 		bean.setPrefix("/WEB-INF/jsp/");
 		bean.setSuffix(".jsp");
 		bean.setViewClass(org.springframework.web.servlet.view.JstlView.class);
 		return bean;
-	}
+	}*/
 
 	public String getConfigDirectory() {
 		return configDirectory;

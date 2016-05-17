@@ -27,12 +27,12 @@ import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.g
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.client.ui.util.RoundingUtil;
 import com.gammon.qs.dao.BQHBDao;
 import com.gammon.qs.dao.BQResourceSummaryHBDao;
 import com.gammon.qs.dao.ResourceHBDao;
 import com.gammon.qs.domain.Job;
 import com.gammon.qs.service.admin.EnvironmentConfig;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -177,7 +177,7 @@ public class IVPostingService  {
 		
 		for(AccountIVWrapper accountIV : accountIVs){
 			//Filter out accounts with no movement
-			Double ivMovement = accountIV.getIvMovement() == null ? null : RoundingUtil.round(accountIV.getIvMovement(), 2);
+			Double ivMovement = accountIV.getIvMovement() == null ? null : CalculationUtil.round(accountIV.getIvMovement(), 2);
 			if(ivMovement == null || ivMovement.equals(Double.valueOf(0)))
 				continue;
 			
@@ -259,7 +259,7 @@ public class IVPostingService  {
 		}
 		//Margin
 		if(marginAmount != null)
-			marginAmount = RoundingUtil.round(marginAmount, 2);
+			marginAmount = CalculationUtil.round(marginAmount, 2);
 		logger.info("Margin: " + marginAmount);
 		if(marginAmount != null && !marginAmount.equals(Double.valueOf(0))){
 			InsertJournalEntryTransactionsRequestObj journalEntry = createAAJournalEntry(job, username, marginItemNumber, batchNumber, postingDate, glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++, documentNumber,postingTime);
@@ -309,7 +309,7 @@ public class IVPostingService  {
 		InsertJournalEntryTransactionsRequestObj journalEntry;
 		
 		if(workDoneAmount != null)
-			workDoneAmount = RoundingUtil.round(workDoneAmount, 2);
+			workDoneAmount = CalculationUtil.round(workDoneAmount, 2);
 		logger.info("Work Done: " + workDoneAmount);
 		if(workDoneAmount != null && !workDoneAmount.equals(Double.valueOf(0))){
 			//Work Done
@@ -342,7 +342,7 @@ public class IVPostingService  {
 				if(job.getLevyCITAPercentage() != null && !job.getLevyCITAPercentage().equals(Double.valueOf(0))){
 					journalEntry = createAAJournalEntry(job, username, citaLevyItemNumber,batchNumber,postingDate,glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++,documentNumber,postingTime);
 					if(journalEntry != null){
-						Double citaExpense = RoundingUtil.round(levyWorkDone*job.getLevyCITAPercentage()/100.0, 2);
+						Double citaExpense = CalculationUtil.round(levyWorkDone*job.getLevyCITAPercentage()/100.0, 2);
 						logger.info("CITA Expense: " + citaExpense);
 						journalEntry.setAmountField(citaExpense);
 						journalEntry.setNameRemarkExplanation(levyRemark);
@@ -354,7 +354,7 @@ public class IVPostingService  {
 				if(job.getLevyPCFBPercentage() != null && !job.getLevyPCFBPercentage().equals(Double.valueOf(0))){
 					journalEntry = createAAJournalEntry(job, username, pcfbLevyItemNumber,batchNumber,postingDate,glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++,documentNumber,postingTime);
 					if(journalEntry != null){
-						Double pcfbExpense = RoundingUtil.round(levyWorkDone*job.getLevyPCFBPercentage()/100.0, 2);
+						Double pcfbExpense = CalculationUtil.round(levyWorkDone*job.getLevyPCFBPercentage()/100.0, 2);
 						logger.info("PCFB Expense: " + pcfbExpense);
 						journalEntry.setAmountField(pcfbExpense);
 						journalEntry.setNameRemarkExplanation(levyRemark);
@@ -363,7 +363,7 @@ public class IVPostingService  {
 					}
 				}
 				//Levy Provision
-				levyProvision = RoundingUtil.round(levyProvision, 2);
+				levyProvision = CalculationUtil.round(levyProvision, 2);
 				if(!levyProvision.equals(Double.valueOf(0))){
 					journalEntry = createAAJournalEntry(job, username, levyProvisionItemNumber,batchNumber,postingDate,glDate, periodNumber, century, fiscalYear, currencyCode, lineNumber++,documentNumber,postingTime);
 					if(journalEntry != null){

@@ -1,6 +1,7 @@
 package com.gammon.qs.domain;
 
 import java.util.Date;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
@@ -311,11 +313,13 @@ public class SCPackage extends BasePersistedObject{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qs_sc_package_gen")
 	public Long getId(){return super.getId();}
 
+	@JsonProperty("packageNo")
 	@Column(name = "packageNo", length = 10)
 	public String getPackageNo() {
 		return packageNo;
 	}
 
+	@JsonProperty("description")
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
 	}
@@ -338,6 +342,7 @@ public class SCPackage extends BasePersistedObject{
 		this.packageType = packageType;
 	}
 
+	@JsonProperty("vendorNo")
 	@Column(name = "vendorNo")
 	public String getVendorNo() {
 		return vendorNo;
@@ -356,6 +361,7 @@ public class SCPackage extends BasePersistedObject{
 		this.packageStatus = packageStatus;
 	}
 
+	@JsonProperty("scStatus")
 	@Column(name = "scStatus")
 	public Integer getSubcontractStatus() {
 		return subcontractStatus;
@@ -373,6 +379,7 @@ public class SCPackage extends BasePersistedObject{
 		this.subcontractorNature = subcontractorNature;
 	}
 
+	@JsonProperty("originalSCSum")
 	@Column(name = "originalSCSum")
 	public Double getOriginalSubcontractSum() {
 		return (originalSubcontractSum!=null?CalculationUtil.round(originalSubcontractSum, 2):0.00);

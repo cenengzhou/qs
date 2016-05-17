@@ -1,0 +1,89 @@
+<div class="hold-transition skin-blue layout-top-nav">
+    
+	<div class="content-wrapper">
+		<section class="content-header">
+			<h1>
+				{{jobNo}} <small>{{jobDescription}}</small>
+			</h1>
+			<ol class="breadcrumb">
+				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Dashboard</li>
+			</ol>
+			
+			<br>
+			
+			<div class="row">
+				<div class="col-xs-3">
+					<div class="btn-group">
+	                  <button type="button" class="btn bg-teal-gradient disabled"><span class="pcms-icon fa-check-circle">Award</span></button>
+	                  <button type="button" class="btn bg-teal-gradient disabled"><span class="pcms-icon fa-remove">Non-Award</span></button>
+	                  <button type="button" class="btn bg-teal-gradient"><span class="pcms-icon fa-th">All</span></button>
+	                </div>
+				</div>
+				<div class="col-xs-6">
+					<div class="input-group">
+						<input ng-model="searchquery" placeholder="Search Subcontract here.." class="form-control" ng-click="removeDefaultAnimation()"/> 
+						<span class="input-group-btn">
+							<button class="btn btn-flat bg-teal-gradient" ng-click='filter()'><span class="fa fa-search"></span></button>
+						</span>
+					</div>
+				</div>
+				
+				<div class="col-xs-3">
+					<!-- <button type="button" class="btn bg-teal-gradient" ui-sref="subcontract-create"><span class="glyphicon glyphicon-star">Create</span></button> -->
+					<button type="button" class="btn bg-teal-gradient pull-right" ng-click="openSubcontractCreateModal()"><span class="pcms-icon fa-star">Create</span></button>
+				</div>
+			</div>
+			
+		</section>
+
+		<br>
+
+		<section class="content fixed-container">
+				<div class="row">
+					<!-- <div class="col-md-3 animated flipInX" ng-repeat="sc in subcontracts | filter:{packageNo:'1007'}"> -->
+					<div class="col-md-4 col-lg-3 animated flipInX" ng-repeat="sc in subcontracts | filter:{scStatus:'500'} | filter:searchquery">
+		              <div class="box box-widget sc-panel">
+		                <a ui-sref="subcontract.dashboard({packageno: sc.packageNo})">
+			                <div class="sc-panel-header bg-teal-gradient">
+			                  <div class="sc-panel-icon"> 
+			                    <span class="glyphicon glyphicon-ok-sign"></span>
+			                  </div>
+			                  <h3 class="sc-panel-name"><b>{{sc.packageNo}}</b></h3>
+			                  <h5 class="sc-panel-desc">{{sc.description}}<span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></h5>
+			                </div>
+		                </a>
+		                <div class="box-footer no-padding">
+		                  <ul class="nav nav-stacked">
+		                    <li><a ui-sref="subcontract.dashboard">{{sc.vendorName}}<span class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
+		                  </ul>
+		                </div>
+		              </div>
+		            </div><!-- /.col -->
+		        </div><!-- /.row -->    
+	        
+		        <div class="row"><!-- animated flipInX -->
+		        	 <div class="col-md-4 col-lg-3 animated flipInX" ng-repeat="sc in subcontracts | filter:{scStatus:'!500'} | filter:searchquery">
+		              <div class="sc-panel">
+		                <a ui-sref="subcontract-flow">
+			                <div class="sc-panel-header bg-purple-gradient">
+			                  <div class="sc-panel-icon"> 
+			                    <span class="glyphicon glyphicon-remove-sign"></span>
+			                  </div>
+			                  <h3 class="sc-panel-name"><b>{{sc.packageNo}}</b></h3>
+			                  <h5 class="sc-panel-desc">{{sc.description}}<span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></h5>
+			                </div>
+		                </a>
+		                <div class="box-footer no-padding">
+		                  <ul class="nav nav-stacked">
+		                    <li><a ui-sref="subcontract-flow">{{sc.vendorName}}<span class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
+		                  </ul>
+		                </div>
+		              </div>
+		              
+		            </div><!-- /.col -->
+		        </div>
+        
+     </section><!-- /.content -->
+   </div><!-- /.content-wrapper -->
+</div>
