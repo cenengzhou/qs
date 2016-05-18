@@ -30,7 +30,7 @@ var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAni
 mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider/*, modalStateProvider*/) {
 	
 	// For any unmatched url, redirect to /state1
-	$urlRouterProvider.otherwise("/job/dashboard");  
+	$urlRouterProvider.otherwise("select-job");  
 
 	
 	$stateProvider
@@ -48,8 +48,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('logout', {
 		url: "/logout",
 		templateUrl: "logout.html",
-		//controller: 'NavMenuCtrl'
-		controller: 'LogoutCtrl'
+		controller: 'NavMenuCtrl'
 
 	})
 	
