@@ -7,49 +7,22 @@
 <head>
 <title>Gammon ERP - QS Modules</title>
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE8" />
-<style>
-div.center {
-	background-color:#ffffff;
-	border-width:1px;
-	border-style:solid;
-	border-color:#666666;
-	width:800px;
-	height:400px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-top: auto;
-	margin-bottom: auto;
-}
-h4.title {
-	color:#333366;
-	text-decoration: italic;
-	font-family: Verdana, Arial;
-	text-align: right;
-	line-height: 10%;
-}
-p.description {
-	color:#333366;
-	font-size: 10px;
-	font-family: Verdana, Arial;
-}
-p.versionDate {
-	color:#333366;
-	font-size: 8px;
-	font-family: Verdana, Arial;
-}
-span.error {
-	color:#ff0000;
-	font-size: 10px;
-	font-family: Verdana, Arial;
-}
-span.label {
-	font-size: 13px;
-	color:#333366;
-	font-weight: bold;
-	font-family: Verdana, Arial;
-	text-align: right;
+	<link rel="icon" type="image/gif" href="image/gammon.gif" sizes="128x128"/>
+	<!-- Bootstrap 3.3.5 -->
+	<link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="plugins/adminLte/2.3.0/css/AdminLTE.min.css">
+
+
+<style type="text/css">
+body {
+	background-image: url("image/background.png");
+	background-position: absolute;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 </style>
+
 <script type="text/javascript" language="javascript">
 
 <%
@@ -117,9 +90,7 @@ if(domainString.equals("GAMSKA")){
 } else {
 	disableTextBox = false;
 }
-//out.println("//domain: " + domainString);
-//out.println("//username: " + usernameString);
-//out.println("//disableTextBox:" + disableTextBox);
+
 %>
 function unifyCharacters(){
 	window.document.getElementById("username").value = <%= getElementString%>.toLowerCase();
@@ -127,59 +98,57 @@ function unifyCharacters(){
 document.execCommand("ClearAuthenticationCache"); 
 </script>
 
-<link rel="stylesheet" type="text/css"
-	href="<%=request.getContextPath()%>/resources/styles/apple/main.css" />
 </head>
-<body class="login">
-<div class="center">
-<table style="margin-left: auto; margin-right:auto;margin-top:8%;border-collapse:collapse;border-spacing:0px;" height="200" width="600">
-	<tr>
-		<td valign="top" style="text-align:right;border-width:0px 1px 0px 0px;border-style:dotted;border-color:#666666;padding-top:10px;padding-right:30px;">
-			<img src="<c:url value="/resources/images/gammon_logo.gif"/>"/>
-			<br/>
-			<h4 class="title">Gammon ERP - QS Modules</h4>
-			<p class="description">[<b>${jdeEnvironment}</b>|<b>${serverEnvironment}</b>]
-			<p class="description">To begin, please enter your Windows username and password.<br/><br/></p>
-			<br><br>
-			<p class="versionDate">${versionDescription}</p>
-			
-		</td>
-		<td valign="top" style="padding-left:30px;padding-top:10px;">
+<body>
+	<br>
+	<img alt="Brand" src="image/gammon.png" style="width: 128px">
+	<div class="login-box">
+		<div class="login-logo">
+			<font color="white"><b>Project Cost Management System</b></font>
+		</div>
+		<!-- /.login-logo -->
+		<div class="login-box-body">
+			<div align="center">
+				<img class="img-circle" id="img_logo" src="image/profile.png" style="width: 128px">
+			</div>
+			<br>
 			<form method="POST" action="<c:url value="/formlogin"/>" onsubmit="unifyCharacters()">
 				<c:if test="${not empty param.error }">
-					<span class="error">Login Failed. <br/>
+					<span class="text">Login Failed. <br/>
 					${sessionScope["A_SPRING_SECURITY_LAST_EXCEPTION"].message}
 					</span>
 				</c:if>
-				<table>
-					<tr>
-						<td><span class="label">Username</span></td>
-					</tr>
-					<tr>
-						<td><input id="username" type="text" name="username" class="g-input-form-text" <% if(disableTextBox){ out.print("readonly"); out.print(" value=\""+usernameString+"\"");}%>/></td>
-					</tr>
-					<tr>
-						<td><span class="label">Password</span></td>
-					</tr>
-					<tr>
-						<td><input type="password" id="password" name="password" class="g-input-form-text"/></td>
-					</tr>
-					<tr>
-						<td align="right">
-							<input type="submit" value="Login"/>
-							<input type="reset" value="Reset"/>
-						</td>
-					</tr>
-				</table>
+				<div class="form-group has-feedback">
+					<input id="username" type="text" name="username" class="form-control" <% if(disableTextBox){ out.print("readonly"); out.print(" value=\""+usernameString+"\"");}%> 
+					<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input type="password" id="password" name="password" class="form-control"> 
+					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<button type="submit" class="btn btn-info btn-block">Sign In</button>
+					</div>
+				</div>
+				<!-- <div class="col-md-6">
+					<button type="reset" class="btn btn-info btn-block">Reset</button>
+				</div> -->
 			</form>
-		</td>
-	</tr>
-</table>
-</div>
+
+
+			<br>
+			<div align="center">
+				<a href="" class="text-center">Create account</a> or <a href="#">Forgot
+					password</a>
+			</div>
+		</div>
+	</div>
+
 
 <script language="javascript">
 window.document.getElementById('<% if(disableTextBox){out.print("password");} else {out.print("username");}%>').focus();
 </script>
-
 </body>
+
 </html>

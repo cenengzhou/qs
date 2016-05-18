@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private Logger logger = Logger.getLogger(getClass());
-	private String loginSuccessPath = "/homeindex.html";
+	private String loginSuccessPath = "/index.html";
 	private boolean forwardUponSuccess = true;
 
 	public LoginSuccessHandler(String loginSuccessPath, boolean forwardUponSuccess) {
