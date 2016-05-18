@@ -8,7 +8,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', function($htt
     $scope.logout = function() {
     	console.log("Call logout function");
     	$http.post('logout', {}).success(function() {
-    		
+    		$location.path("/logout");
     		
     	}).error(function(data) {
     		//$rootScope.authenticated = false;

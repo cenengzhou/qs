@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap','ngCookies',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
@@ -30,7 +30,7 @@ var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAni
 mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider/*, modalStateProvider*/) {
 	
 	// For any unmatched url, redirect to /state1
-	$urlRouterProvider.otherwise("select-job");  
+	$urlRouterProvider.otherwise("/job/dashboard");  
 
 	
 	$stateProvider
@@ -38,18 +38,12 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	    templateUrl: 'navigation-menu.html',
 	    abstract: true,
 	  })
+	  
 	
-	 .state('login', {
-		url: "/login",
-		templateUrl: "login.html",
-		controller: 'LoginCtrl',
-		 authenticate: false
-	}) 
 	.state('logout', {
 		url: "/logout",
 		templateUrl: "logout.html",
 		controller: 'NavMenuCtrl'
-
 	})
 	
 	.state('select-job', {
@@ -295,7 +289,7 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
  * Check authentication and user role if location changed
  */
 mainApp.run(['$rootScope', '$location', function ($rootScope, $location) {
-  $rootScope.$on('$locationChangeStart', function(event, next, current) {
+  /*$rootScope.$on('$locationChangeStart', function(event, next, current) {
 
 	 // console.log('$location.path(): '+$location.path());
 	  var isLogin = $location.path() === "/login";
@@ -314,7 +308,7 @@ mainApp.run(['$rootScope', '$location', function ($rootScope, $location) {
           event.preventDefault();
           $location.path('/login');
       }
-  });
+  });*/
 	
 	
 
@@ -338,18 +332,6 @@ mainApp.run(function($rootScope,$location, $uibModalStack){
 	      }
 	    }
 	  });*/
-	
-	/*$rootScope.$on('$locationChangeStart', function(event, next, current, $uibModalStack){
-		    // Here you can take the control and call your own functions:
-		    //alert('Sorry ! Back Button is disabled');
-		    
-		    console.log("modal: "+!!$uibModalStack.getTop());
-		    
-		    // Prevent the browser default action (Going back):
-		    event.preventDefault();            
-		});	*/
-	
-	
 	
 	/*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
 	      event.preventDefault();

@@ -9,14 +9,14 @@
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE8" />
 	<link rel="icon" type="image/gif" href="image/gammon.gif" sizes="128x128"/>
 	<!-- Bootstrap 3.3.5 -->
-	<link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/bootstrap/3.3.6/css/bootstrap.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="plugins/adminLte/2.3.0/css/AdminLTE.min.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/adminLte/2.3.0/css/AdminLTE.min.css">
 
 
 <style type="text/css">
 body {
-	background-image: url("image/background.png");
+	background-image: url("resources/images/background.png");
 	background-position: absolute;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -101,7 +101,7 @@ document.execCommand("ClearAuthenticationCache");
 </head>
 <body>
 	<br>
-	<img alt="Brand" src="image/gammon.png" style="width: 128px">
+	<img alt="Brand" src="resources/images/gammon.png" style="width: 128px">
 	<div class="login-box">
 		<div class="login-logo">
 			<font color="white"><b>Project Cost Management System</b></font>
@@ -109,7 +109,7 @@ document.execCommand("ClearAuthenticationCache");
 		<!-- /.login-logo -->
 		<div class="login-box-body">
 			<div align="center">
-				<img class="img-circle" id="img_logo" src="image/profile.png" style="width: 128px">
+				<img class="img-circle" id="img_logo" src="resources/images/profile.png" style="width: 128px">
 			</div>
 			<br>
 			<form method="POST" action="<c:url value="/formlogin"/>" onsubmit="unifyCharacters()">

@@ -103,7 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				"/spring-ws/*", 
 				"/resources/**",
 				"/plugins/**",
-				"/image/**",
 				"/gammonqs/systemMessage.smvc", 
 				"/gammonqs/uiErrorMessageLog.smvc",
 				"/badCredentials.jsp",
