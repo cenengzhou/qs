@@ -1,171 +1,164 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-	</section>
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-	<!-- Main content -->
-	<section class="content">
-		<div class="row">
-			
-			<div class="col-md-6">
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
 
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">Before Split</h3>
-					</div>
 
-					<div class="box-body">
-			 			<div class="row">
-				            <div class="col-md-6 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Subcontract Sum</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                    BQ, B1
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
-				            <div class="col-md-6 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Approved Addendum Amount</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                    V1, V2, V3, L1, L2, D1, D2, CF
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
-				          
-					</div>
+	<div class="row">
+
+		<div class="col-md-6">
+
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Before Split</h3>
 				</div>
-				</div>
-				</div>
-				
-				<div class="col-md-6">
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">After Split</h3>
-					</div>
 
-					<div class="box-body">
-
-						<div class="row">
-							<div class="col-md-6 col-sm-6 col-xs-12">
-								<div class="info-box bg-green">
-									<span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-									<div class="info-box-content">
-										<span class="info-box-text">Subcontract Sum</span> <span
-											class="info-box-number">41,410</span>
-										<div class="progress">
-											<div class="progress-bar" style="width: 100%"></div>
-										</div>
-										<span class="progress-description"> BQ, B1 </span>
-									</div>
-									<!-- /.info-box-content -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-bookmark-o"></i>
 								</div>
-								<!-- /.info-box -->
-							</div>
-							<!-- /.col -->
-							<div class="col-md-6 col-sm-6 col-xs-12">
-								<div class="info-box bg-green">
-									<span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
-									<div class="info-box-content">
-										<span class="info-box-text">Approved Addendum Amount</span> <span
-											class="info-box-number">41,410</span>
-										<div class="progress">
-											<div class="progress-bar" style="width: 100%"></div>
-										</div>
-										<span class="progress-description"> V1, V2, V3, L1, L2,
-											D1, D2, CF </span>
-									</div>
-									<!-- /.info-box-content -->
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Subcontract Sum</div>
+									<div class="widget-stat-number">41,410</div>
 								</div>
-								<!-- /.info-box -->
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">BQ, B1</div>
 							</div>
-							<!-- /.col -->
-
-							<!-- <div class="col-md-12">
-								<div id="" ui-grid="gridOptions" ui-grid-pagination
-									ui-grid-selection ui-grid-cellnav class="grid"
-									style="height: 300px; width =: 1600px"></div>
-							</div>
-							<div class="col-md-12">
-								<a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a>
-								<button type="button" class="btn bg-blue btn-block"><i class="fa fa-floppy-o"></i> Update</button>
-							</div>	 -->
 						</div>
-						<!-- /.row -->
+
+
+
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-thumbs-o-up"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Approved Addendum Amount</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">V1, V2, V3, L1,
+									L2, D1, D2, CF</div>
+							</div>
+						</div>
+
+
 					</div>
-
 				</div>
-
-
 			</div>
 		</div>
 
+		<div class="col-md-6">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">After Split</h3>
+				</div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div id="" ui-grid="gridOptions" ui-grid-pagination
-					ui-grid-selection ui-grid-cellnav class="grid"
-					style="height: 450px; width =: 1600px"></div>
-			</div>
-		
-			<div class="col-md-6">
-				<a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a>
-			</div>	
-			<div class="col-md-6">
-				<a class="btn btn-twitter btn-block">Submit for Split Approval <i class="fa fa-floppy-o"></i></a>
-			</div>
-		</div>
-		
-		<!-- <div class="row">
-				<div class = "col-md-12">
-					<div class="box">
-						<div class="box-header with-border">
-							<h3 class="box-title">Subcontract Split Attachment</h3>
-			
-							<div class="box-tools pull-right">
-								<button type="button" class="btn btn-box-tool"
-									data-widget="collapse">
-									<i class="fa fa-minus"></i>
-								</button>
+				<div class="box-body">
+
+					<div class="row">
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-green-gradient text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-bookmark-o"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Subcontract Sum</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">BQ, B1</div>
 							</div>
 						</div>
-			
-						<div class="box-body" ng-style="{height: 80 + 'px'}">
-							<form id="my-awesome-dropzone" class="dropzone" action="#">
-								<div class="dropzone-previews"></div>
-								<button type="submit" class="btn btn-primary pull-right">Upload</button>
-							</form>
+
+
+
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-green-gradient text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-thumbs-o-up"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Approved Addendum Amount</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">V1, V2, V3, L1,
+									L2, D1, D2, CF</div>
+							</div>
 						</div>
-			
-						<div class="box-footer">
-							<a class="btn btn-twitter btn-block" ui-sref="cert-all-details">Upload
-								<i class="fa fa-save"></i>
-							</a>
-						</div>
+
 					</div>
 				</div>
+
+			</div>
+
+
+		</div>
+
+
+
+	<div class="col-md-12">
+
+
+		<div class="box box-info">
+			<!-- <div class="box-header with-border">
+				<h3 class="box-title"></h3>
 			</div> -->
 
-	</section>
+			<div class="box-body">
+				<div class="col-md-12">
+					<div id="" ui-grid="gridOptions" ui-grid-pagination
+						ui-grid-selection ui-grid-cellnav class="grid"
+						></div>
+				</div>
+
+				<div class="col-md-6">
+					<a class="btn btn-primary btn-block">Update <i
+						class="fa fa-floppy-o"></i></a>
+				</div>
+				<div class="col-md-6">
+					<a class="btn btn-primary btn-block">Submit for Split Approval
+						<i class="fa fa-floppy-o"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
 
 </div>

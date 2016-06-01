@@ -1,15 +1,17 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-	</section>
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-	<section class="content">
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+
 		<div class="row">
 			<!-- Contractual Date  -->
 			<div class="col-md-12">
@@ -93,9 +95,12 @@
 				                      <div class="input-group-addon">
 				                        <i class="fa fa-calendar"></i>
 				                      </div>
-				                      <input type="text" class="form-control pull-right"   ng-model="actualPCCDate">
+				                     <!-- <input type="text" class="form-control pull-right" value = "{{ actualPCCDate | jsonDate : 'dd-MM-yyyy' }}"> -->
+									<input type="datetime" class="form-control pull-right"  data-date-format="dd-mm-yyyy" ng-model="actualPCCDate">
 				                    </div>
 								</div>
+
+				                      <h5></h5>
 								
 								<div class="col-md-8"><label>Actual Making Good Date</label></div>
 								<div class="form-group col-md-4">
@@ -107,17 +112,17 @@
 				                    </div>
 								</div>
 								
-								<div class="col-md-8"><label>Defect Liability Date</label></div>
+								<div class="col-md-8"><label>Defect List Issued Date</label></div>
 								<div class="form-group col-md-4">
 									<div class="input-group date">
 				                      <div class="input-group-addon">
 				                        <i class="fa fa-calendar"></i>
 				                      </div>
-				                      <input type="text" class="form-control pull-right"   ng-model="defectLiabilityDate">
+				                      <input type="text" class="form-control pull-right"   ng-model="defectListIssuedDate">
 				                    </div>
 								</div>
 								
-								<div class="col-md-8"><label>Final A/C Settlement Date</label></div>
+								<div class="col-md-8"><label>Financial End Date</label></div>
 								<div class="form-group col-md-4">
 									<div class="input-group date">
 				                      <div class="input-group-addon">
@@ -127,7 +132,7 @@
 				                    </div>
 								</div>
 								
-								<div class="col-md-8"><label>Subcontractor Start on-site Date</label></div>
+								<div class="col-md-8"><label>Final A/C Settlement Date</label></div>
 								<div class="form-group col-md-4">
 									<div class="input-group date">
 				                      <div class="input-group-addon">
@@ -144,7 +149,7 @@
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer">
-						<button class="btn btn-twitter btn-block" type="button"
+						<button class="btn btn-primary btn-block" type="button"
 							ng-click="saveDates()">
 							<span class="fa fa-save"></span> Save
 						</button>
@@ -156,8 +161,6 @@
 
 		</div>
 		<!-- /.row -->
-	</section>
-	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 

@@ -37,7 +37,7 @@ mainApp.controller('LoginCtrl', ['$rootScope', '$scope', '$http', '$location',
 			if ($rootScope.authenticated) {
 				//authenticationService.setCredentials($scope.credentials.username, $scope.credentials.password);
 				console.log("Authenticated and go to Index page");
-				$location.path("/select-job");
+				$location.path("/job-select");
 				$scope.error = false;
 			} else {
 				console.log(" Not authenticated and go to Login page");

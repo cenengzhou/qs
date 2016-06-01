@@ -7,7 +7,7 @@
 <head>
 <title>Gammon ERP - QS Modules</title>
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE8" />
-	<link rel="icon" type="image/gif" href="image/gammon.gif" sizes="128x128"/>
+	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
 	<!-- Bootstrap 3.3.5 -->
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/bootstrap/3.3.6/css/bootstrap.min.css">
 	<!-- Theme style -->
@@ -113,11 +113,6 @@ document.execCommand("ClearAuthenticationCache");
 			</div>
 			<br>
 			<form method="POST" action="<c:url value="/formlogin"/>" onsubmit="unifyCharacters()">
-				<c:if test="${not empty param.error }">
-					<span class="text">Login Failed. <br/>
-					${sessionScope["A_SPRING_SECURITY_LAST_EXCEPTION"].message}
-					</span>
-				</c:if>
 				<div class="form-group has-feedback">
 					<input id="username" type="text" name="username" class="form-control" <% if(disableTextBox){ out.print("readonly"); out.print(" value=\""+usernameString+"\"");}%> 
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -127,10 +122,18 @@ document.execCommand("ClearAuthenticationCache");
 					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 				</div>
 				<div class="row">
+				<%-- <p class="">[<b>${jdeEnvironment}</b>|<b>${serverEnvironment}</b>]
+				<p class="">${versionDescription}</p> --%>
 					<div class="col-md-12">
 						<button type="submit" class="btn btn-info btn-block">Sign In</button>
 					</div>
 				</div>
+				<c:if test="${not empty param.error }">
+					<div align="center">
+						<p class="text-red">Login Failed.</p> 
+						<p class="text-red">${sessionScope["A_SPRING_SECURITY_LAST_EXCEPTION"].message}</p>
+					</div>
+				</c:if>
 				<!-- <div class="col-md-6">
 					<button type="reset" class="btn btn-info btn-block">Reset</button>
 				</div> -->

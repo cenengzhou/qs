@@ -1,154 +1,149 @@
-	<div class="content-wrapper">
-		<section class="content-header">
-			<h1>
-				{{jobNo}} <small>{{jobDescription}}</small>
-			</h1>
-			<!-- <button class = "btn btn-primary pull-right" ng-click="expand = { true: false, false:true}[expand]">Expand</button> -->
-			<a ui-sref = "subcontract.paymentdetails"><button class = "btn btn-primary">Create</button></a>
-			<ol class="breadcrumb">
-				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-				<li class="active" >Dashboard</li>
-				
-			</ol>
-		</section>
-		
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-		<section class="content fixed-container">
-          <div class="row" ng-show = "expand">
-            <div class="col-md-12 animated fadeInUp" ng-repeat="payment in payments | orderBy:'paymentNo':true">
-              <!-- The time line -->
-              <ul class="timeline">
-                <!-- timeline time label -->
-                <li class="time-label">
-                  <span ng-class="{'bg-red' : payment.status=='Posted to Finance', 'bg-green' : payment.status!='Posted to Finance'}">
-                    Certificate No. {{payment.paymentNo}}
-                  </span>
-                </li>
-                <!-- /.timeline-label -->
-                <!-- timeline item -->
-                <li ng-show = "payment.certIssueDate != null">
-                  <i class="fa fa-calendar-check-o bg-blue"></i>
-                  <div class="timeline-item">
-                    <!-- <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span> -->
-                    <h3 class="timeline-header no-border">Payment has been <b><font color = "red">Posted to Finance</font></b> on <b><font color = "red">{{payment.certIssueDate}}</font></b></h3>
-                  </div>
-                </li>
-                <!-- END timeline item -->
-                <!-- timeline item -->
-                <li ng-show = "payment.submittedDate != null">
-                  <i class="fa fa-send-o bg-aqua"></i>
-                   <div class="timeline-item">
-                    <h3 class="timeline-header no-border">Payment has been <b class = "blue">submitted to Approval System</b> on <b class = "blue">{{payment.submittedDate}}</b></h3>
-                  </div>
-                </li>
-                <!-- END timeline item -->
-                <!-- timeline item -->
-                <li>
-                  <i class="fa fa-info bg-purple"></i>
-                  
-                  <div class="timeline-item">
-                    <!-- <h3 class="timeline-header">Status: 
-                    	<span ng-class="{'red' : payment.status=='Posted to Finance', 'green' : payment.status!='Posted to Finance'}">
-                    		<b>{{payment.status}}</b>
-                    	</span>
-                    </h3> -->
-                    
-                     <div class = "box box-info" ng-class="{'collapsed-box': payment.paymentNo != maxPaymentNo}">
-			           <div class="box-header with-border">
-			             <h3 class="box-title">Certificate Amount {{payment.paymentAmount | currency}}</h3>
-			
-			             <div class="box-tools pull-right">
-			               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i ng-class="payment.paymentNo != maxPaymentNo ? 'fa fa-plus': 'fa fa-minus'"></i>
-			               </button>
-			             </div>
-			           </div>
-			           <!-- /.box-header -->
-			           <div class="box-body">
-                    
-                    <!-- <div class="timeline-body"> -->
-							<!-- <div> -->
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="m-b-md">
-											<a class=" btn bg-purple pull-right" ui-sref="subcontract.paymentdetails">View details</a>
-											<!-- <h3>Certificate Amount {{payment.paymentAmount | currency}}</h3> -->
-										</div>
-										<dl class="dl-horizontal">
-											<dt>Status:</dt> <dd><span class="label label-primary">{{payment.status}}</span></dd>
-										</dl>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-5">
-										<dl class="dl-horizontal">
-						
-											<!-- <dt>Created by:</dt> <dd>Koey Yeung</dd> -->
-											<dt>Main Certificate No.:</dt> <dd>  {{payment.maincertNo}}</dd>
-											<dt>Due Date:</dt> <dd>{{payment.dueDate}} </dd>
-											<dt>As At Date:</dt> <dd>{{payment.asAtDate}} </dd>
-										</dl>
-									</div>
-									<div class="col-lg-7">
-										<dl class="dl-horizontal" >
-											<dt>Payment Type:</dt> <dd>{{payment.paymentType}}</dd>
-											<dt ng-show = "payment.invoiceReceivedDate != null">Invoice Received Date:</dt> <dd>{{payment.invoiceReceivedDate}}</dd>
-											<dt>Payment Requisition:</dt> <dd>{{payment.requisition}}</dd>
-										</dl>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<dl class="dl-horizontal">
-											<dt>Completed:</dt>
-											<dd>
-												<div class="progress progress-striped active m-b-sm">
-													<!-- <div style="width: 60%;" class="progress-bar"></div> -->
-													<!-- <div ng-style="progress_bar(payment.status)" class="progress-bar"></div> -->
-													<div ng-style="{width: progress_bar(payment.status)}" class="progress-bar"></div>
-												</div>
-												<small>Payment completed in <strong>{{progress_bar(payment.status)}}</strong>.</small>
-											</dd>
-										</dl>
-									</div>
-								</div>
-							</div>	
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{packageNo}}<small> {{packageDescription}}
+	</h1>
+
+	<!-- <button class = "btn btn-primary pull-right" ng-click="expand = { true: false, false:true}[expand]">Expand</button> -->
+	<br>
+	<div class="col-lg-6">
+
+		<div class="widget widget-stat text-white bg-primary">
+			<div class="widget-stat-btn">
+				<a href="javascript:;" data-click="widget-reload"><i
+					class="fa fa-repeat"></i></a>
+			</div>
+			<div class="widget-stat-content">
+				<div class="widget-stat-title">
+					<h4><i class="fa fa-trophy fa-fw"></i> Total Posted Certificate Amount</h4>
+				</div>
+				<div class="widget-stat-text m-b-10">
+					Payment Terms: {{paymentTerms}} - Pay when Paid + 14 days
+				</div>
+				<div class="widget-stat-number m-b-10">1,302,493</div>
+				<div class="widget-stat-chart">
+					<div id="sparkline-line-chart"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="fullcalendar vertical-box ">
+
+			<div class="fullcalendar-container vertical-box-column">
+				<div id='calendar'></div>
+			</div>
+		</div>
+	</div>
 
 
+	<div class="col-lg-6">
+		<div class="fixed-container">
+			<div class="col-lg-12"
+				ng-show="latestPaymentStatus=='Posted to Finance'">
+				<a ui-sref="subcontract.paymentdetails"
+					class="btn btn-danger btn-block"> <i
+					class="fa fa-plus-circle fa-2x "></i> Create New Payment
+				</a> <br> <br>
+			</div>
+			<div class="col-lg-12 animated fadeInUp"
+				ng-repeat="payment in payments | orderBy:'paymentNo':true">
+
+				<div class="panel"	ng-class="{'panel-grey' : payment.status=='Posted to Finance', 'panel-primary' : payment.status!='Posted to Finance'}">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-inverse"
+								data-click="panel-collapse"> <i class="fa fa-minus"></i>
+							</a>
+						</div>
+						<h3 class="panel-title">Certificate No. {{payment.paymentNo}}
+							- Certificate Amount {{payment.paymentAmount| currency}}</h3>
+
+					</div>
+					<!-- /.box-header -->
+					<div class="panel-body"
+						ng-style="{display: (payment.paymentNo != maxPaymentNo ? 'none' : 'block')}">
+
+						<!-- <div class="timeline-body"> -->
+						<!-- <div> -->
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="m-b-md pull-right">
+									<a class="btn" ui-sref="subcontract.paymentdetails" 
+									ng-class="{'btn-grey' : payment.status=='Posted to Finance', 'btn-primary' : payment.status!='Posted to Finance'}">
+									View details</a>
+									<!-- <h3>Certificate Amount {{payment.paymentAmount | currency}}</h3> -->
+								</div>
+								<dl class="dl-horizontal">
+									<dt>Status:</dt>
+									<dd>
+										<span class="label label-primary">{{payment.status}}</span>
+									</dd>
+								</dl>
 							</div>
-                   <!--  <div class="timeline-footer">
-                      <a class=" btn bg-purple" ui-sref="subcontract.paymentdetails">View details</a>
-                    </div> -->
-                  </div>
-                  
-                  
-                  
-                </li>
-                <!-- END timeline item -->
- 				<li>
-                  <i class="fa fa-clock-o bg-gray"></i>
-                </li>
-              </ul>
-			</div>
-		</div>
-		
-		
-		<div class="row" ng-show = "!expand">
-            <div class="col-md-12 animated fadeInUp" ng-repeat="payment in payments | orderBy:'paymentNo':true">
-              <ul class="timeline">
-                <li class="time-label">
-                  <span ng-class="{'bg-red' : payment.status=='Posted to Finance', 'bg-green' : payment.status!='Posted to Finance'}">
-                    Certificate No. {{payment.paymentNo}}
-                  </span>
-                </li>
-                <li>
-                  <i class="fa fa-clock-o bg-gray"></i>
-                </li>
-              </ul>
-			</div>
-		</div>
-		
-	
-     </section><!-- /.content -->
-   </div><!-- /.content-wrapper -->
+						</div>
+						<div class="row">
+							<div class="col-lg-5">
+								<dl class="dl-horizontal">
 
-  
+									<!-- <dt>Created by:</dt> <dd>Koey Yeung</dd> -->
+									<dt>Main Certificate No.:</dt>
+									<dd>{{payment.maincertNo}}</dd>
+									<dt>Due Date:</dt>
+									<dd>{{payment.dueDate}}</dd>
+									<dt>As At Date:</dt>
+									<dd>{{payment.asAtDate}}</dd>
+								</dl>
+							</div>
+							<div class="col-lg-7">
+								<dl class="dl-horizontal">
+									<dt>Payment Type:</dt>
+									<dd>{{payment.paymentType}}</dd>
+									<dt ng-show="payment.invoiceReceivedDate != null">Invoice
+										Received Date:</dt>
+									<dd>{{payment.invoiceReceivedDate}}</dd>
+									<dt>Payment Requisition:</dt>
+									<dd>{{payment.requisition}}</dd>
+								</dl>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<dl class="dl-horizontal">
+									<dt>Completed:</dt>
+									<dd>
+										<div class="progress progress-striped  m-b-sm"
+										ng-class="{'active' : payment.status!='Posted to Finance'}">
+											<div class="progress-bar" 
+												ng-style="{width: progress_bar(payment.status)}"
+												ng-class="{'progress-bar-grey' : payment.status=='Posted to Finance'}">
+											{{progress_bar(payment.status)}}</div>
+										</div>
+									</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+</div>
+
+<!-- /.content -->

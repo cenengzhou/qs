@@ -1,0 +1,504 @@
+<div id="content" class="content">
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{packageNo}}<small> {{packageDescription}} 
+	</h1>
+
+	<!-- begin form-wizard -->
+	<form action="/" method="POST" data-parsley-validate="true"
+		name="form-wizard" class="form-input-flat">
+		<!-- begin #wizard -->
+		<div id="wizard">
+			<ol>
+				<li>Add Addendum <small>Variation Order, Day Work,
+						Labour, CPF</small>
+				</li>
+				<li>Addendum Details <small>View Addendum Details here</small>
+				</li>
+				<li>Addendum Summary <small>View Addendum Summary here</small>
+				</li>
+				<li>Add Attachment <small>Add attachment here</small>
+				</li>
+				<li>Submit Addendum Successfully <small></small>
+				</li>
+			</ol>
+			<!-- begin wizard step-1 -->
+			<div class="wizard-step-1">
+				<fieldset>
+					<div class="row">
+						<div class="col-md-6 col-md-offset-3">
+							<h3 class="form-header form-header-lg m-b-10">
+								<span class="icon text-primary"><i
+									class="fa fa-shopping-cart"></i></span> New Addendum
+							</h3>
+							<p class="m-b-20">Please input all required fields below.</p>
+							<div class="form-group">
+								<label>SC Line Type</label>
+								<div class="controls">
+									<select class="form-control " ng-model="lineTypes.selected"
+										ng-options="o as o for o in lineTypes.options"></select> 
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Description</label>
+								<div class="controls">
+									<input type="text" name="card_name" placeholder=""	class="form-control " data-parsley-group="wizard-step-1" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Object Code</label>
+										<div class="controls">
+											<input type="text" name="card_number" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Subsidiary Code</label>
+										<div class="controls">
+											<input type="text" name="expiry_date" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Unit</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Quantity</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>SC Rate</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Total Amount</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Corresponding SC No.</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" data-ng-required="" />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Alternative Object Code</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="form-group">
+										<label>Remark</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-1" required />
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="f-s-11 text-muted">
+								<div><span class="text-danger">*</span> Corresponding SC No. must be provided for D2 and L2.</div>
+								<div><span class="text-danger">*</span> Alternative Object Code must be provided for D1.</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!-- end wizard step-1 -->
+			<!-- begin wizard step-2 -->
+			<div class="wizard-step-2">
+				<fieldset>
+					<!-- begin row -->
+					<div class="row">
+						<!-- begin col-6 -->
+						<div class="col-md-6 col-md-offset-3">
+							<h3 class="form-header form-header-lg m-b-10">
+								<span class="icon text-success"><i
+									class="fa fa-credit-card"></i></span> Your basic information
+							</h3>
+							<p class="m-b-20">Aliquam tempus vehicula tortor, nec lacinia
+								massa congue eu. Nulla ac dictum ante.</p>
+
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>First Name</label> <input type="text" name="first_name"
+											placeholder="" class="form-control "
+											data-parsley-group="wizard-step-2" required />
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Last Name</label> <input type="text" name="last_name"
+											placeholder="" class="form-control "
+											data-parsley-group="wizard-step-2" required />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Your Age</label> <select name="age"
+									class="form-control "
+									data-parsley-group="wizard-step-2" required>
+									<option value="">Select Your Age</option>
+									<option value="below 18">below 18</option>
+									<option value="18 or older">18 or older</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label>Company Name</label> <input type="text" name="last_name"
+									placeholder="" class="form-control "
+									data-parsley-group="wizard-step-2" required />
+							</div>
+							<div class="f-s-11 text-muted">
+								<span class="text-danger">*</span> Nullam faucibus mi eu
+								suscipit hendrerit. In hac habitasse platea dictumst. Proin
+								semper eleifend vehicula. Morbi sit amet lectus iaculis,
+								ultricies massa vel, lobortis magna.
+							</div>
+						</div>
+						<!-- end col-6 -->
+					</div>
+					<!-- end row -->
+				</fieldset>
+			</div>
+			<!-- end wizard step-2 -->
+			<!-- begin wizard step-3 -->
+			<div class="wizard-step-3">
+				<fieldset>
+					<!-- begin row -->
+					<div class="row">
+						<!-- begin col-6 -->
+						<div class="col-md-6 col-md-offset-3">
+							<h3 class="form-header form-header-lg m-b-10">
+								<span class="icon text-danger"><i class="fa fa-lock"></i></span>
+								Login account information
+							</h3>
+							<p class="m-b-20">Ut eu eros neque. Donec aliquet augue
+								nulla, vitae fermentum leo aliquam eget. Suspendisse ultricies
+								ut ante ut tincidunt.</p>
+							<div class="form-group">
+								<label>Email address</label>
+								<div class="controls">
+									<input type="email" name="email" placeholder=""
+										class="form-control "
+										data-parsley-group="wizard-step-3" data-parsley-input="email"
+										required />
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Password</label>
+								<div class="controls">
+									<input type="password" name="password" placeholder=""
+										class="form-control "
+										data-parsley-group="wizard-step-3" required />
+								</div>
+							</div>
+							<div class="f-s-11 text-muted">
+								<span class="text-danger">*</span> Nullam faucibus mi eu
+								suscipit hendrerit. In hac habitasse platea dictumst. Proin
+								semper eleifend vehicula. Morbi sit amet lectus iaculis,
+								ultricies massa vel, lobortis magna.
+							</div>
+						</div>
+						<!-- end col-6 -->
+					</div>
+					<!-- end row -->
+				</fieldset>
+			</div>
+			<!-- end wizard step-3 -->
+			<!-- begin wizard step-4 -->
+			<div class="wizard-step-4">
+				<fieldset>
+					<!-- begin row -->
+					<div class="row">
+						<!-- begin col-6 -->
+						<div class="col-md-6 col-md-offset-3">
+							<h3 class="form-header form-header-lg m-b-10">
+								<span class="icon text-primary"><i
+									class="fa fa-shopping-cart"></i></span> Payment information
+							</h3>
+							<p class="m-b-20">Ut eu eros neque. Donec aliquet augue
+								nulla, vitae fermentum leo aliquam eget. Suspendisse ultricies
+								ut ante ut tincidunt.</p>
+							<div class="form-group">
+								<label>Payment Type</label>
+								<div class="controls">
+									<select name="payment_type" class="form-control "
+										data-parsley-group="wizard-step-4" required>
+										<option value="">Select payment type</option>
+										<option value="Credit Card">Credit Card</option>
+										<option value="Paypal">Paypal</option>
+										<option value="Online Bank-In">Online Bank-In</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Cardholder Name</label>
+								<div class="controls">
+									<input type="text" name="card_name" placeholder=""
+										class="form-control "
+										data-parsley-group="wizard-step-4" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Card Number</label>
+										<div class="controls">
+											<input type="text" name="card_number" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-4" required />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										<label>Expiry Date</label>
+										<div class="controls">
+											<input type="text" name="expiry_date" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-4" required />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										<label>CSV</label>
+										<div class="controls">
+											<input type="text" name="csv" placeholder=""
+												class="form-control "
+												data-parsley-group="wizard-step-4" required />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="f-s-11 text-muted">
+								<span class="text-danger">*</span> Nullam faucibus mi eu
+								suscipit hendrerit. In hac habitasse platea dictumst. Proin
+								semper eleifend vehicula. Morbi sit amet lectus iaculis,
+								ultricies massa vel, lobortis magna.
+							</div>
+						</div>
+						<!-- end col-6 -->
+					</div>
+					<!-- end row -->
+				</fieldset>
+			</div>
+			<!-- end wizard step-4 -->
+			<!-- begin wizard step-5 -->
+			<div class="wizard-step-5 text-center">
+				<h2>
+					<i class="fa fa-check-square-o text-success fa-3x"></i><br />
+					Signup Successfully
+				</h2>
+				<p class="m-b-20">Lorem ipsum dolor sit amet, consectetur
+					adipiscing elit. Mauris consequat commodo porttitor. Vivamus
+					eleifend, arcu in tincidunt semper, lorem odio molestie lacus, sed
+					malesuada est lacus ac ligula. Aliquam bibendum felis id purus
+					ullamcorper, quis luctus leo sollicitudin.</p>
+				<p>
+					<a href="javascript:;" class="btn btn-success btn-lg">Click
+						here to login</a>
+				</p>
+			</div>
+			<!-- end wizard step-5 -->
+		</div>
+		<!-- end #wizard -->
+	</form>
+	<!-- end form-wizard -->
+
+</div>
+<!-- end #content -->
+
+
+
+<script>
+	$(document).ready(function() {
+	    App.initPageWizard();
+	});
+</script>
+
+
+<!-- <div id="content" class="content">
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Package {{packageNo}}<small>
+			{{packageDescription}} 
+	</h1>
+
+	<div class="row">
+		<div class="col-md-12">
+			Horizontal Form
+			<div class="box box-success">
+				<div class="box-header with-border">
+					<h3 class="box-title">Addendum No. 6</h3>
+					<a href="javascript:;" onclick="window.print()"
+						class="btn btn-sm width-100 btn-rounded btn-danger pull-right"><i
+						class="fa fa-print m-r-3"></i> Print</a>
+				</div>
+				
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-10">
+
+							<div class="form-group col-md-4">
+								<label>Addendum Title</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value="16">
+								</div>
+							</div>
+
+							<div class="form-group col-md-4">
+								<label>Interim/Final Payment</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value="Interim">
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<label>Payment Requisition</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value="No">
+								</div>
+							</div>
+
+							<div class="form-group col-md-4">
+								<label>Submission Date</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value="29/03/2016">
+								</div>
+							</div>
+
+							<div class="form-group col-md-4">
+								<label>Approved Date</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value="29/03/2016">
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<label>Certificate Issue Date</label>
+								<div class="input-group">
+									<input type="text" class="form-control " value={{}}>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-md-2">
+							<div class="widget widget-stat bg-primary text-white">
+								<div class="widget-stat-text">Addendum Amount</div>
+								<div class="widget-stat-number">$39,000</div>
+							</div>
+						</div>
+
+
+
+
+
+						<div class="col-md-12">
+							<div id="" ui-grid="gridOptions" ui-grid-pagination
+								ui-grid-selection ui-grid-cellnav class="grid"
+								style="height: 300px; width =: 1600px"></div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+	<br>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Subcontract Details Attachment</h3>
+
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="box-body" ng-style="{height: 80 + 'px'}">
+					<form id="my-awesome-dropzone" class="dropzone" action="#">
+								<div class="dropzone-previews"></div>
+								<button type="submit" class="btn btn-primary pull-right">Upload</button>
+							</form>
+				</div>
+
+				<div class="box-footer">
+					<a class="btn btn-primary btn-block" ui-sref="cert-all-details">Upload
+						<i class="fa fa-save"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+ -->

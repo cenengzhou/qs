@@ -12,6 +12,9 @@ mainApp.constant("colorCode", {
     purple: "#605ca8",
     lightPurple: "#9996C6",
     pink: "#f94877",
-    lightPink: "#f71752"
+    lightPink: "#f71752",
+    primary:"#2184DA",
+   	lime:"#65C56F",
+   	white:"#fff"
 });
 //#ffaaaa - Pink

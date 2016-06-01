@@ -1,5 +1,5 @@
-
 mainApp.controller('IVUpdateCtrl', ['$scope' , '$http', 'colorCode', function($scope , $http, colorCode) {
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -52,7 +52,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , '$http', 'colorCode', function($s
 	}
 	
 	
-	$http.get('http://localhost:8080/QSrevamp2/data/iv.json')
+	$http.get('http://localhost:8080/pcms/data/iv.json')
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 	});

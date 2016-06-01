@@ -1,42 +1,68 @@
-<div class="hold-transition skin-blue layout-top-nav">
-	<div class="content-wrapper">
-		<section class="content-header">
-			<h1>
-				{{jobNo}} <small>{{jobDescription}}</small>
-			</h1>
-			<ol class="breadcrumb">
-				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-				<li class="active">Dashboard</li>
-			</ol>
-		</section>
-		
-		<section class="content">
-			<!-- <div class="tab_content"> -->
-			 <!-- <button type="button" class="btn btn-success" ng-click="getCurrentFocus()">Get Current focused cell</button>  <span ng-bind="currentFocused"></span> -->
-				<div class="row">
-					<div class="col-xs-6">
-						<button id="button_ipa" class="btn btn-green dim" ng-click="showIPA()">&nbsp;&nbsp;&nbsp;&nbsp;IPA&nbsp;&nbsp;&nbsp;&nbsp;</button>
-						<button id="button_ipc" class="btn btn-green dim" ng-click="showIPC()">&nbsp;&nbsp;&nbsp;&nbsp;IPC&nbsp;&nbsp;&nbsp;&nbsp;</button>
-						<button id="button_posting_amount" class="btn btn-green dim" ng-click="showPostingAmount()">Posting Amount</button>
-					</div>
-					<div class="col-xs-6">
-						<div class="input-group margin">
-							<input ng-model='filterValue' class="form-control"
-								   ng-paste="filter()"
-						           ng-change="filter()"
-							/> 
-							<span class="input-group-btn">
-								<button class="btn btn-info btn-flat" ng-click='filter()'>Filter</button>
-							</span>
-													
-						</div>
-					</div>
-				 			<!-- <input ng-model='filterValue'/><button ng-click='filter()'>Filter</button> -->
-				</div>
-			<!-- </div> -->
-			<div id="ipa_grid" ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-cellnav class="grid"  style="height:500px;  width=: 1600px"></div>
-			<a class="btn btn-twitter btn-block" ui-sref="cert.details">Add New Main Contract Certificate <i class="fa fa-arrow-circle-right"></i></a>
-	    </section>
+<div class="m-t-20 m-l-20 m-r-20">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+
+	<!-- <div class="row">
+		<div class="col-xs-6">
+			<div class="btn-group">
+				<button class="btn btn-primary" id="button_ipa" ng-click="showIPA()">IPA</button>
+				<button class="btn btn-primary" id="button_ipc" ng-click="showIPC()">IPC</button>
+				<button class="btn btn-primary" id="button_posting_amount"
+					ng-click="showPostingAmount()">Posting Amount</button>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="input-group margin">
+				<input ng-model='filterValue' class="form-control"
+					ng-paste="filter()" ng-change="filter()" /> <span
+					class="input-group-btn">
+					<button class="btn btn-primary btn-flat" ng-click='filter()'>Filter</button>
+				</span>
+
+			</div>
+		</div>
+	</div> -->
+
+	<div class="box">
+		<div class="box-header with-border">
+			<div class="row">
+		<div class="col-xs-6">
+			<div class="btn-group">
+				<button class="btn btn-primary" id="button_ipa" ng-click="showIPA()">IPA</button>
+				<button class="btn btn-primary" id="button_ipc" ng-click="showIPC()">IPC</button>
+				<button class="btn btn-primary" id="button_posting_amount"
+					ng-click="showPostingAmount()">Posting Amount</button>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="input-group">
+				<input ng-model='filterValue' class="form-control"
+					ng-paste="filter()" ng-change="filter()" /> <span
+					class="input-group-btn">
+					<button class="btn btn-primary btn-flat" ng-click='filter()'>Filter</button>
+				</span>
+
+			</div>
+		</div>
+	</div>
+		</div>
+		<div class="box-body">
+			<div id="ipa_grid" ui-grid="gridOptions" ui-grid-pagination
+				ui-grid-selection ui-grid-cellnav class="grid"
+				style="height: 500px; width =: 1600px"></div>
+			<a class="btn btn-primary btn-block" ui-sref="cert.details">Add
+				New Main Contract Certificate <i class="fa fa-arrow-circle-right"></i>
+			</a>
+		</div>
 	</div>
 </div>
 

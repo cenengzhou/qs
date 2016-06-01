@@ -1,20 +1,28 @@
 <!-- IV Menu Bar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu">
-			<li class="header">{{jobNo}}{{jobDescription}}</li>
-			<!-- <li ng-class="{active : activeSubcontractSideMenu == 'SubcontractDashboard'}">
-				<a ui-sref="subcontract.dashboard" ng-click="activeSubcontractSideMenu = 'SubcontractDashboard'">
-					<i class="fa fa-dashboard"></i> 
-					<span>Internal Valuation</span>
-				</a>
+
+<!-- begin #sidebar -->
+<div id="sidebar" class="sidebar sidebar-highlight-primary sidebar-light">
+	<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			<li class="nav-header">{{jobNo}}{{jobDescription}}</li>
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
 			</li>
- -->
-			<li class="treeview">
-				<a href=""><i class="fa fa-desktop"></i><span>Package No.</span><i class="fa fa-angle-left pull-right"></i></a>
-					<form method="get" class="sidebar-form">
+						
+						
+						
+			<li class="has-sub active">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-info-circle"></i>
+				    <span>Subcontract No.</span>
+			    </a>
+			    <ul class="sub-menu">
+			   		<li>
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Search..."
 								   ng-model='packageNofilterValue' 
@@ -28,76 +36,114 @@
 								</button>
 							</span>
 						</div>
-					</form>
-				</li>
-
-			<li class="treeview"><a href=""> <i class="fa fa-desktop"></i>
-					<span>Object Code</span> <i class="fa fa-angle-left pull-right"></i>
-			</a>
-					<form class="sidebar-form">
-						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search..."
-								   ng-model='objectCodefilterValue' 
-								   ng-paste="filter()"
-						           ng-change="filter()"
-							/>
-							<span class="input-group-btn">
-								<button name="search" id="search-btn"
-									class="btn btn-flat" ng-click="filter()">
-									<i class="fa fa-search"></i>
-								</button>
-							</span>
-						</div>
-					</form>
-			</li>
+					</li>
+			    </ul>
+			</li>		
 			
-			<li class="treeview"><a href=""> <i class="fa fa-desktop"></i>
-					<span>Subsidiary Code</span> <i class="fa fa-angle-left pull-right"></i>
-			</a>
-					<form action="#" method="get" class="sidebar-form">
-						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search..."
-								   ng-model='subsiCodefilterValue' 
-								   ng-paste="filter()"
-						           ng-change="filter()"
-							/>
-							<span class="input-group-btn">
-								<button type="submit" name="search" id="search-btn"
-									class="btn btn-flat">
-									<i class="fa fa-search"></i>
-								</button>
-							</span>
-						</div>
-					</form>
-			</li>
+			<li class="has-sub active">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-info-circle"></i>
+				    <span>Object Code.</span>
+			    </a>
+			    <ul class="sub-menu">
+			    	<li>
+				        <form class="sidebar-form">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Search..."
+									   ng-model='objectCodefilterValue' 
+									   ng-paste="filter()"
+							           ng-change="filter()"
+								/>
+								<span class="input-group-btn">
+									<button name="search" id="search-btn"
+										class="btn btn-flat" ng-click="filter()">
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+							</div>
+						</form>
+					</li>
+			    </ul>
+			</li>		
 			
-			<li class="treeview"><a href=""> <i class="fa fa-desktop"></i>
-					<span>Description</span> <i class="fa fa-angle-left pull-right"></i>
-			</a>
-				<!-- <ul class="treeview-menu menu-open" style = "display: block"> -->
-					<form action="#" method="get" class="sidebar-form">
-						<div class="input-group">
-							<!-- <input type="text" class="form-control" placeholder="Search..."
-								   ng-model='filterValue' 
-								   ng-paste="filter()"
-						           ng-change="filter()"
-							/> -->
-							<span class="input-group-btn">
-								<button type="submit" name="search" id="search-btn"
-									class="btn btn-flat">
-									<i class="fa fa-search"></i>
-								</button>
-							</span>
-						</div>
-					</form>
-				<!-- </ul> -->
+			
+			<li class="has-sub active">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-info-circle"></i>
+				    <span>Subsidiary Code</span>
+			    </a>
+			    <ul class="sub-menu">
+				    <li>
+				       <form action="#" method="get" class="sidebar-form">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Search..."
+									   ng-model='subsiCodefilterValue' 
+									   ng-paste="filter()"
+							           ng-change="filter()"
+								/>
+								<span class="input-group-btn">
+									<button type="submit" name="search" id="search-btn"
+										class="btn btn-flat">
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+							</div>
+						</form>
+					</li>
+			    </ul>
+			</li>		
+			
+			
+			<li class="has-sub active">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-info-circle"></i>
+				    <span>Description</span>
+			    </a>
+			    <ul class="sub-menu">
+			    	<li>
+				        <form action="#" method="get" class="sidebar-form">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Search..."
+									   ng-model='filterValue' 
+									   ng-paste="filter()"
+							           ng-change="filter()"
+								/>
+								<span class="input-group-btn">
+									<button type="submit" name="search" id="search-btn"
+										class="btn btn-flat">
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+							</div>
+						</form>
+					</li>
+			    </ul>
+			</li>			
+			
+						
+						
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
 			</li>
-
-
 		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
+		<!-- end sidebar nav -->
+	</div>
+	<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>
+<!-- end #sidebar -->
+
+<script>
+	$(document).ready(function() {
+		handleSidebarMinify();
+		handleSidebarMenu();
+	});
+</script>
 
 
 <!-- IV Grid Content -->
@@ -124,68 +170,90 @@
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-3 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Posted IV</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                   
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-bookmark-o"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Posted IV</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left"></div>
+							</div>
 
-							<div class="col-md-3 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Cumulative IV</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                    
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
 
-							<div class="col-md-3 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Movement</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                    Non - Finalized Package
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
-				            
-				            <div class="col-md-3 col-sm-6 col-xs-12">
-				              <div class="info-box bg-aqua">
-				                <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-				                <div class="info-box-content">
-				                  <span class="info-box-text">Movement</span>
-				                  <span class="info-box-number">41,410</span>
-				                  <div class="progress">
-				                    <div class="progress-bar" style="width: 100%"></div>
-				                  </div>
-				                  <span class="progress-description">
-				                    Final Package
-				                  </span>
-				                </div><!-- /.info-box-content -->
-				              </div><!-- /.info-box -->
-				            </div><!-- /.col -->
+						</div>
+						<!-- /.col -->
+
+						<div class="col-md-3 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-calculator"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Cumulative IV</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left"></div>
+							</div>
+						</div>
+						<!-- /.col -->
+
+						<div class="col-md-3 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-calculator"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Movement</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">Non - Finalized
+									Subcontract</div>
+							</div>
+
+						</div>
+						<!-- /.col -->
+
+						<div class="col-md-3 col-sm-6 col-xs-12">
+							<div
+								class="widget widget-stat widget-stat-right bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-calculator"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Movement</div>
+									<div class="widget-stat-number">41,410</div>
+								</div>
+								<div class="widget-stat-progress">
+									<div class="progress">
+										<div class="progress-bar" style="width: 100%"></div>
+									</div>
+								</div>
+								<div class="widget-stat-footer text-left">Final Subcontract</div>
+							</div>
+
+
+						</div>
+						<!-- /.col -->
 
 
 
@@ -212,3 +280,4 @@
 	</section>
 
 </div>
+S

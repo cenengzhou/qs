@@ -108,7 +108,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'colorCode', 'm
 	  }
 
 	    
-	/*$http.get('http://localhost:8080/QSrevamp2/data/iv.json')
+	/*$http.get('http://localhost:8080/pcms/data/iv.json')
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 	});*/

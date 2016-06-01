@@ -1,20 +1,15 @@
-<div class="hold-transition skin-blue layout-top-nav">
+<div class="m-t-20 m-l-20 m-r-20">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-	<div class="content-wrapper animated fadeIn">
-		<section class="content-header">
-			<h1>
-				{{jobNo}} <small>{{jobDescription}}</small>
-			</h1>
-			<ol class="breadcrumb">
-				<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-				<li class="active">Dashboard</li>
-			</ol>
-		</section>
-
-
-		<section class="content">
-			<!-- 			<div class="container"> -->
-
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
 			<div class="row">
 
 				<div class="col-md-12">
@@ -29,7 +24,7 @@
 								<div class="process col-md-12">
 									<div class="process-row">
 										<div class="process-step">
-											<button type="button" class="btn btn-circle"
+											<button type="button" class="btn btn-big-circle"
 												ng-class="{'btn-info': display.unlock}"
 												ng-click="click('unlock')">
 												<i class="fa fa-unlock-alt fa-3x"></i>
@@ -39,7 +34,7 @@
 											</p>
 										</div>
 										<div class="process-step">
-											<button type="button" class="btn btn-circle"
+											<button type="button" class="btn btn-big-circle"
 												ng-class="{'btn-info': display.reset}"
 												ng-click="click('reset')">
 												<i class="fa fa-refresh fa-3x"></i>
@@ -49,7 +44,7 @@
 											</p>
 										</div>
 										<div class="process-step">
-											<button type="button" class="btn btn-circle"
+											<button type="button" class="btn btn-big-circle"
 												ng-class="{'btn-info': display.update}"
 												ng-click="click('update')">
 												<i class="fa fa-save fa-3x"></i>
@@ -59,7 +54,7 @@
 											</p>
 										</div>
 										<div class="process-step">
-											<button type="button" class="btn btn-circle"
+											<button type="button" class="btn btn-big-circle"
 												ng-class="{'btn-info': display.snapshot}"
 												ng-click="click('snapshot')">
 												<i class="fa fa-camera fa-3x"></i>
@@ -69,7 +64,7 @@
 											</p>
 										</div>
 										<div class="process-step">
-											<button type="button" class="btn btn-circle"
+											<button type="button" class="btn btn-big-circle"
 												ng-class="{'btn-info': display.confirm}"
 												ng-click="click('confirm')">
 												<i class="fa fa-check-square-o fa-3x"></i>
@@ -215,6 +210,4 @@
 
 
 			</div>
-		</section>
-	</div>
 </div>

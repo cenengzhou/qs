@@ -1,6 +1,9 @@
-mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', '$log', 'modalService', '$animate', 'subcontractService', 
-                                             function($scope, $uibModal, $log, modalService, $animate, subcontractService) {
-    
+mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', '$log', 'modalService', '$animate', 'subcontractService', '$cookieStore',
+                                             function($scope, $uibModal, $log, modalService, $animate, subcontractService, $cookieStore) {
+	
+	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
+	
     loadSubcontractList();
     
     function loadSubcontractList() {

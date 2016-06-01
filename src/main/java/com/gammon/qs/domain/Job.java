@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
@@ -139,6 +140,7 @@ public class Job extends BasePersistedObject {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qs_job_gen")
 	public Long getId(){return super.getId();}
 
+	@JsonProperty("legacyJob")
 	@Column(name = "legacyJob", length = 1)
 	public String getLegacyJob() {
 		return legacyJob;
@@ -152,6 +154,7 @@ public class Job extends BasePersistedObject {
 		}
 	}
 
+	@JsonProperty("jobNo")
 	@Column(name = "jobNo", length = 12)
 	public String getJobNumber() {
 		return this.jobNumber;
@@ -160,7 +163,8 @@ public class Job extends BasePersistedObject {
 	public void setJobNumber(String jobNumber) {
 		this.jobNumber = jobNumber;
 	}
-
+	
+	@JsonProperty("description")
 	@Column(name = "description")
 	public String getDescription() {
 		return this.description;
@@ -179,6 +183,7 @@ public class Job extends BasePersistedObject {
 		this.accountMasterList = accountMasterList;
 	}
 
+	@JsonProperty("company")
 	@Column(name = "company", length = 12)
 	public String getCompany() {
 		return company;
@@ -188,6 +193,7 @@ public class Job extends BasePersistedObject {
 		this.company = company;
 	}
 
+	@JsonProperty("employer")
 	@Column(name = "employer", length = 12)
 	public String getEmployer() {
 		return employer;
@@ -197,6 +203,7 @@ public class Job extends BasePersistedObject {
 		this.employer = employerAddress;
 	}
 
+	@JsonProperty("contractType")
 	@Column(name = "contractType", length = 10)
 	public String getContractType() {
 		return contractType;
@@ -206,6 +213,7 @@ public class Job extends BasePersistedObject {
 		this.contractType = contractType;
 	}
 
+	@JsonProperty("division")
 	@Column(name = "division", length = 10)
 	public String getDivision() {
 		return division;
@@ -215,6 +223,7 @@ public class Job extends BasePersistedObject {
 		this.division = division;
 	}
 
+	@JsonProperty("department")
 	@Column(name = "department", length = 10)
 	public String getDepartment() {
 		return department;
@@ -224,6 +233,7 @@ public class Job extends BasePersistedObject {
 		this.department = department;
 	}
 
+	@JsonProperty("internalJob")
 	@Column(name = "internalJob", length = 3)
 	public String getInternalJob() {
 		return internalJob;
@@ -233,6 +243,7 @@ public class Job extends BasePersistedObject {
 		this.internalJob = internalJob;
 	}
 
+	@JsonProperty("soloJV")
 	@Column(name = "soloJV", length = 4)
 	public String getSoloJV() {
 		return soloJV;
@@ -242,6 +253,7 @@ public class Job extends BasePersistedObject {
 		this.soloJV = soloJV;
 	}
 
+	@JsonProperty("completionStatus")
 	@Column(name = "completionStatus", length = 1)
 	public String getCompletionStatus() {
 		return completionStatus;
@@ -251,6 +263,7 @@ public class Job extends BasePersistedObject {
 		this.completionStatus = completionStatus;
 	}
 
+	@JsonProperty("insuranceCAR")
 	@Column(name = "insuranceCAR", length = 10)
 	public String getInsuranceCAR() {
 		return insuranceCAR;
@@ -260,6 +273,7 @@ public class Job extends BasePersistedObject {
 		this.insuranceCAR = insuranceCAR;
 	}
 
+	@JsonProperty("insuranceTPL")
 	@Column(name = "insuranceTPL", length = 10)
 	public String getInsuranceTPL() {
 		return insuranceTPL;
@@ -269,6 +283,7 @@ public class Job extends BasePersistedObject {
 		this.insuranceTPL = insuranceTPL;
 	}
 	
+	@JsonProperty("insuranceECI")
 	@Column(name = "insuranceECI", length = 10)
 	public String getInsuranceECI() {
 		return insuranceECI;
@@ -278,6 +293,7 @@ public class Job extends BasePersistedObject {
 		this.insuranceECI = insuranceECI;
 	}
 
+	@JsonProperty("clientContractNo")
 	@Column(name = "clientContractNo", length = 20)
 	public String getClientContractNo() {
 		return clientContractNo;
@@ -287,6 +303,7 @@ public class Job extends BasePersistedObject {
 		this.clientContractNo = clientContractNo;
 	}
 
+	@JsonProperty("parentJobNo")
 	@Column(name = "parentJobNo", length = 12)
 	public String getParentJobNo() {
 		return parentJobNo;
@@ -296,6 +313,7 @@ public class Job extends BasePersistedObject {
 		this.parentJobNo = parentJobNo;
 	}
 
+	@JsonProperty("jvPartnerNo")
 	@Column(name = "jvPartnerNo", length = 12)
 	public String getJvPartnerNo() {
 		return jvPartnerNo;
@@ -305,6 +323,7 @@ public class Job extends BasePersistedObject {
 		this.jvPartnerNo = jvPartnerNo;
 	}
 
+	@JsonProperty("jvPercentage")
 	@Column(name = "jvPercentage")
 	public Double getJvPercentage() {
 		return jvPercentage;
@@ -314,6 +333,7 @@ public class Job extends BasePersistedObject {
 		this.jvPercentage = jvPercentage;
 	}
 
+	@JsonProperty("originalContractValue")
 	@Column(name = "originalContractValue")
 	public Double getOriginalContractValue() {
 		return originalContractValue;
@@ -323,6 +343,7 @@ public class Job extends BasePersistedObject {
 		this.originalContractValue = originalContractValue;
 	}
 
+	@JsonProperty("projectedContractValue")
 	@Column(name = "projectedContractValue")
 	public Double getProjectedContractValue() {
 		return projectedContractValue;
@@ -332,6 +353,7 @@ public class Job extends BasePersistedObject {
 		this.projectedContractValue = projectedContractValue;
 	}
 
+	@JsonProperty("orginalNSCContractValue")
 	@Column(name = "orginalNSCContractValue")
 	public Double getOrginalNominatedSCContractValue() {
 		return orginalNominatedSCContractValue;
@@ -342,6 +364,7 @@ public class Job extends BasePersistedObject {
 		this.orginalNominatedSCContractValue = orginalNominatedSCContractValue;
 	}
 
+	@JsonProperty("tenderGP")
 	@Column(name = "tenderGP")
 	public Double getTenderGP() {
 		return tenderGP;
@@ -351,6 +374,7 @@ public class Job extends BasePersistedObject {
 		this.tenderGP = tenderGP;
 	}
 
+	@JsonProperty("forecastEndYear")
 	@Column(name = "forecastEndYear")
 	public Integer getForecastEndYear() {
 		return forecastEndYear;
@@ -360,6 +384,7 @@ public class Job extends BasePersistedObject {
 		this.forecastEndYear = forecastEndYear;
 	}
 
+	@JsonProperty("forecastEndPeriod")
 	@Column(name = "forecastEndPeriod")
 	public Integer getForecastEndPeriod() {
 		return forecastEndPeriod;
@@ -369,6 +394,7 @@ public class Job extends BasePersistedObject {
 		this.forecastEndPeriod = forecastEndPeriod;
 	}
 
+	@JsonProperty("maxRetPercent")
 	@Column(name = "maxRetPercent")
 	public Double getMaxRetentionPercentage() {
 		return maxRetentionPercentage;
@@ -378,6 +404,7 @@ public class Job extends BasePersistedObject {
 		this.maxRetentionPercentage = maxRetentionPercentage;
 	}
 
+	@JsonProperty("interimRetPercent")
 	@Column(name = "interimRetPercent")
 	public Double getInterimRetentionPercentage() {
 		return interimRetentionPercentage;
@@ -387,6 +414,7 @@ public class Job extends BasePersistedObject {
 		this.interimRetentionPercentage = interimRetentionPercentage;
 	}
 
+	@JsonProperty("mosRetPercent")
 	@Column(name = "mosRetPercent")
 	public Double getMosRetentionPercentage() {
 		return mosRetentionPercentage;
@@ -396,6 +424,7 @@ public class Job extends BasePersistedObject {
 		this.mosRetentionPercentage = mosRetentionPercentage;
 	}
 
+	@JsonProperty("valueOfBSWork")
 	@Column(name = "valueOfBSWork")
 	public Double getValueOfBSWork() {
 		return valueOfBSWork;
@@ -405,6 +434,7 @@ public class Job extends BasePersistedObject {
 		this.valueOfBSWork = valueOfBSWork;
 	}
 
+	@JsonProperty("grossFloorArea")
 	@Column(name = "grossFloorArea")
 	public Double getGrossFloorArea() {
 		return grossFloorArea;
@@ -414,6 +444,7 @@ public class Job extends BasePersistedObject {
 		this.grossFloorArea = grossFloorArea;
 	}
 
+	@JsonProperty("grossFloorAreaUnit")
 	@Column(name = "grossFloorAreaUnit", length = 10)
 	public String getGrossFloorAreaUnit() {
 		return grossFloorAreaUnit;
@@ -423,6 +454,7 @@ public class Job extends BasePersistedObject {
 		this.grossFloorAreaUnit = grossFloorAreaUnit;
 	}
 
+	@JsonProperty("billingCurrency")
 	@Column(name = "billingCurrency", length = 10)
 	public String getBillingCurrency() {
 		return billingCurrency;
@@ -432,6 +464,7 @@ public class Job extends BasePersistedObject {
 		this.billingCurrency = billingCurrency;
 	}
 
+	@JsonProperty("paymentTermForNSC")
 	@Column(name = "paymentTermForNSC", length = 10)
 	public String getPaymentTermsForNominatedSC() {
 		return paymentTermsForNominatedSC;
@@ -441,6 +474,7 @@ public class Job extends BasePersistedObject {
 		this.paymentTermsForNominatedSC = paymentTermsForNominatedSC;
 	}
 
+	@JsonProperty("defectProvisionPercent")
 	@Column(name = "defectProvisionPercent")
 	public Double getDefectProvisionPercentage() {
 		return defectProvisionPercentage;
@@ -450,6 +484,7 @@ public class Job extends BasePersistedObject {
 		this.defectProvisionPercentage = defectProvisionPercentage;
 	}
 
+	@JsonProperty("cpfApplicable")
 	@Column(name = "cpfApplicable", length = 3)
 	public String getCpfApplicable() {
 		return cpfApplicable;
@@ -459,6 +494,7 @@ public class Job extends BasePersistedObject {
 		this.cpfApplicable = cpfApplicable;
 	}
 
+	@JsonProperty("cpfIndexName")
 	@Column(name = "cpfIndexName", length = 12)
 	public String getCpfIndexName() {
 		return cpfIndexName;
@@ -468,6 +504,7 @@ public class Job extends BasePersistedObject {
 		this.cpfIndexName = cpfIndexName;
 	}
 
+	@JsonProperty("cpfBaseYear")
 	@Column(name = "cpfBaseYear")
 	public Integer getCpfBaseYear() {
 		return cpfBaseYear;
@@ -477,6 +514,7 @@ public class Job extends BasePersistedObject {
 		this.cpfBaseYear = cpfBaseYear;
 	}
 
+	@JsonProperty("cpfBasePeriod")
 	@Column(name = "cpfBasePeriod")
 	public Integer getCpfBasePeriod() {
 		return cpfBasePeriod;
@@ -486,6 +524,7 @@ public class Job extends BasePersistedObject {
 		this.cpfBasePeriod = cpfBasePeriod;
 	}
 
+	@JsonProperty("levyApplicable")
 	@Column(name = "levyApplicable", length = 3)
 	public String getLevyApplicable() {
 		return levyApplicable;
@@ -495,6 +534,7 @@ public class Job extends BasePersistedObject {
 		this.levyApplicable = levyApplicable;
 	}
 
+	@JsonProperty("levyCITAPercent")
 	@Column(name = "levyCITAPercent")
 	public Double getLevyCITAPercentage() {
 		return levyCITAPercentage;
@@ -504,6 +544,7 @@ public class Job extends BasePersistedObject {
 		this.levyCITAPercentage = levyCITAPercentage;
 	}
 
+	@JsonProperty("levyPCFBPercent")
 	@Column(name = "levyPCFBPercent")
 	public Double getLevyPCFBPercentage() {
 		return levyPCFBPercentage;
@@ -513,6 +554,7 @@ public class Job extends BasePersistedObject {
 		this.levyPCFBPercentage = levyPCFBPercentage;
 	}
 
+	@JsonProperty("expectedPCCDate")
 	@Column(name = "expectedPCCDate")
 	public Date getExpectedPCCDate() {
 		return expectedPCCDate;
@@ -522,6 +564,7 @@ public class Job extends BasePersistedObject {
 		this.expectedPCCDate = expectedPCCDate;
 	}
 
+	@JsonProperty("actualPCCDate")
 	@Column(name = "actualPCCDate")
 	public Date getActualPCCDate() {
 		return actualPCCDate;
@@ -531,6 +574,7 @@ public class Job extends BasePersistedObject {
 		this.actualPCCDate = actualPCCDate;
 	}
 
+	@JsonProperty("expectedMakingGoodDate")
 	@Column(name = "expectedMakingGoodDate")
 	public Date getExpectedMakingGoodDate() {
 		return expectedMakingGoodDate;
@@ -540,6 +584,7 @@ public class Job extends BasePersistedObject {
 		this.expectedMakingGoodDate = expectedMakingGoodDate;
 	}
 
+	@JsonProperty("actualMakingGoodDate")
 	@Column(name = "actualMakingGoodDate")
 	public Date getActualMakingGoodDate() {
 		return actualMakingGoodDate;
@@ -549,6 +594,7 @@ public class Job extends BasePersistedObject {
 		this.actualMakingGoodDate = actualMakingGoodDate;
 	}
 
+	@JsonProperty("defectLiabilityPeriod")
 	@Column(name = "defectLiabilityPeriod")
 	public Integer getDefectLiabilityPeriod() {
 		return defectLiabilityPeriod;
@@ -558,6 +604,7 @@ public class Job extends BasePersistedObject {
 		this.defectLiabilityPeriod = defectLiabilityPeriod;
 	}
 
+	@JsonProperty("defectListIssuedDate")
 	@Column(name = "defectListIssuedDate")
 	public Date getDefectListIssuedDate() {
 		return defectListIssuedDate;
@@ -567,6 +614,7 @@ public class Job extends BasePersistedObject {
 		this.defectListIssuedDate = defectListIssuedDate;
 	}
 
+	@JsonProperty("financialEndDate")
 	@Column(name = "financialEndDate")
 	public Date getFinancialEndDate() {
 		return financialEndDate;
@@ -576,6 +624,7 @@ public class Job extends BasePersistedObject {
 		this.financialEndDate = financialEndDate;
 	}
 
+	@JsonProperty("dateFinalACSettlement")
 	@Column(name = "dateFinalACSettlement")
 	public Date getDateFinalACSettlement() {
 		return dateFinalACSettlement;
@@ -585,6 +634,7 @@ public class Job extends BasePersistedObject {
 		this.dateFinalACSettlement = dateFinalACSettlement;
 	}
 
+	@JsonProperty("yearOfCompletion")
 	@Column(name = "yearOfCompletion")
 	public Integer getYearOfCompletion() {
 		return yearOfCompletion;
@@ -594,6 +644,7 @@ public class Job extends BasePersistedObject {
 		this.yearOfCompletion = yearOfCompletion;
 	}
 
+	@JsonProperty("bqFinalizedFlag")
 	@Column(name = "bqFinalizedFlag")
 	public String getBqFinalizedFlag() {
 		return bqFinalizedFlag;
@@ -603,6 +654,7 @@ public class Job extends BasePersistedObject {
 		this.bqFinalizedFlag = bqFinalizedFlag;
 	}
 
+	@JsonProperty("manualInputSCWD")
 	@Column(name = "manualInputSCWD", length = 1)
 	public String getAllowManualInputSCWorkDone() {
 		return allowManualInputSCWorkDone;
@@ -616,6 +668,7 @@ public class Job extends BasePersistedObject {
 		this.conversionStatus = conversionStatus;
 	}
 
+	@JsonProperty("conversionStatus")
 	@Column(name = "conversionStatus", length = 3)
 	public String getConversionStatus() {
 		return conversionStatus;
@@ -625,11 +678,13 @@ public class Job extends BasePersistedObject {
 		this.repackagingType = repackagingType;
 	}
 
+	@JsonProperty("repackagingType")
 	@Column(name = "repackagingType", length = 1)
 	public String getRepackagingType() {
 		return repackagingType;
 	}
 
+	@JsonProperty("finQS0Review")
 	@Column(name = "finQS0Review", length = 3)
 	public String getFinQS0Review() {
 		return finQS0Review;

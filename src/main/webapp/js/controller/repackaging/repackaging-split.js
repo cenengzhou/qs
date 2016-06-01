@@ -44,7 +44,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$http', '$location',
 	};
 
 	
-	$http.get("http://localhost:8080/QSrevamp2/data/vendor-compare.json")
+	$http.get("http://localhost:8080/pcms/data/vendor-compare.json")
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 		

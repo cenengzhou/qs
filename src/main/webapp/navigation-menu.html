@@ -1,218 +1,202 @@
-
 <div ng-controller="NavMenuCtrl">
-	<div class="wrapper">
-
-		<header class="main-header">
-
-			<!-- Logo -->
-			<a class="logo" ui-sref="job.dashboard" ng-click="activeMenu = ''">
-				<img alt="Brand" src="image/gammon.png" style="width: 128px">
-			</a>
-
-			<!-- Header Navbar: style can be found in header.less -->
-			<nav class="navbar navbar-static-top" role="navigation">
-				<!-- Sidebar toggle button-->
-				<a href="" class="sidebar-toggle" data-toggle="offcanvas"
-					role="button"> <span class="sr-only">Toggle navigation</span>
-				</a>
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar-collapse">
-					<i class="fa fa-bars"></i>
-				</button>
-
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-					<ul class="nav navbar-nav">
-						<li ng-class="{active : activeMenu == 'Repackaging'}"><a
-							ui-sref="repackaging" class="pcms-icon fa-codepen"
-							ng-click="activeMenu = 'Repackaging'"> Repackaging </a></li>
-						<li ng-class="{active : activeMenu == 'Certificate'}"><a
-							ui-sref="cert-dashboard" class="pcms-icon fa-certificate"
-							ng-click="activeMenu = 'Certificate'"> Main Contract
-								Certificate </a></li>
-						<!-- ui-sref-opts="{location:false}" -->
-						<li ng-class="{active : activeMenu == 'Subcontract'}"><a
-							ui-sref="subcontract-select" class="pcms-icon fa-trophy"
-							ng-click="activeMenu = 'Subcontract'"> Subcontract </a></li>
-						<li ng-class="{active : activeMenu == 'IV'}"><a
-							ui-sref="iv.update" class="pcms-icon fa-line-chart"
-							ng-click="activeMenu = 'IV'"> Internal Valuation </a></li>
-						<li ng-class="{active : activeMenu == 'Enquiry'}"><a
-							ui-sref="enquiry" class="pcms-icon fa-info-circle"
-							ng-click="activeMenu = 'Enquiry'"> Enquiry </a></li>
-						<li ng-class="{active : activeMenu == 'Transit'}"><a
-							ui-sref="transit" class="pcms-icon fa-file-text"
-							ng-click="activeMenu = 'Transit'"> Transit </a></li>
-					</ul>
+		<!-- begin #header -->
+		<div id="header" class="header navbar navbar-primary navbar-fixed-top">
+			<!-- begin container-fluid -->
+			<div class="container-fluid">
+				<!-- begin mobile sidebar expand / collapse button -->
+				<div class="navbar-header">
+					<a ui-sref="job.dashboard" class="navbar-brand" ng-click="activeMenu = ''">
+						<img src="image/gammon.png" class="logo"  style="width: 128px"/>
+					</a>
+					
+					<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
 				</div>
+			<!-- end mobile sidebar expand / collapse button -->
 
-				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">
-						<!-- User Account: style can be found in dropdown.less -->
-						<li class="dropdown user user-menu"><a href=""
-							class="dropdown-toggle" data-toggle="dropdown"> <img
-								src="image/horace.jpg" class="user-image" alt="User Image">
-								<span class="hidden-xs">Horace Chu</span>
+				<ul class="nav navbar-nav">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging'}" >
+						<a ui-sref="repackaging" ng-click="activeMenu = 'Repackaging'"> 
+							<i class="fa fa-codepen"></i> <span>Repackaging</span>
 						</a>
-							<ul class="dropdown-menu">
-								<!-- User image -->
-								<li class="user-header"><img src="image/horace.jpg"
-									class="img-circle" alt="User Image">
-
-									<p>
-										Horace Chu <small>Head of IMS</small>
-									</p></li>
-								<!-- Menu Body -->
-								<li class="user-body">
-									<div class="row">
-										<div class="col-xs-12">
-											<a href="#">Last login time:</a>
-										</div>
-										<!--  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div> -->
-									</div>
-									<div class="row">
-										<div class="col-xs-12">
-											<a href="#">10:03 AM, February 29, 2016</a>
-										</div>
-									</div> <!-- /.row -->
-								</li>
-								<!-- Menu Footer-->
-								<li class="user-footer">
-									<!-- <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                </div> -->
-									<div class="pull-right">
-										<a class="btn btn-default btn-flat" ng-click="logout()">Sign out</a>
-										<!-- <a class="btn btn-default btn-flat" href="#" onclick="location.href='<c:url value="/logout">Sign out</a> -->
-									</div>
-								</li>
-							</ul></li>
-						<!-- Control Sidebar Toggle Button -->
-						<li><a href="#" data-toggle="control-sidebar"><i
-								class="fa fa-gears"></i></a></li>
-					</ul>
-				</div>
-
-			</nav>
-		</header>
-
-
-		<!-- Control Sidebar -->
-		<aside class="control-sidebar control-sidebar-light">
-			<!-- Create the tabs -->
-			<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-				<li class="active"><a href="#control-sidebar-home-tab"
-					data-toggle="tab" target="_self"><i class="fa fa-home"></i></a></li>
-				<li><a href="#control-sidebar-system-tab" data-toggle="tab"
-					target="_self"><i class="fa fa-gears"></i></a></li>
-			</ul>
-			<!-- Tab panes -->
-			<div class="tab-content">
-				<!-- Home tab content -->
-				<div class="tab-pane active" id="control-sidebar-home-tab">
-					<h3 class="control-sidebar-heading">Useful Links</h3>
-					<ul class="control-sidebar-menu">
-						<li><a href="http://helpdesk/helpdesk.aspx?System=QS"> <i
-								class="menu-icon fa fa-question bg-red"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Helpdesk</h4>
-									<p>Description</p>
-								</div>
+					</li>
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}">
+						<a 	ui-sref="cert-dashboard" ng-click="activeMenu = 'Certificate'">
+							<i class="fa fa-certificate"></i>
+							<span> Main Contract Certificate</span>
+						</a>
+					</li>
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract'}">
+						<a	ui-sref="subcontract-select" ng-click="activeMenu = 'Subcontract'"> 	
+							<i class="fa fa-trophy"></i>
+							<span>Subcontract</span>
 						</a></li>
-						<li><a href="http://gammon/hk/ims/Pages/QSELearning.aspx">
-								<i class="menu-icon fa fa-book bg-yellow"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">User Manual</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="javascript::;"> <i
-								class="menu-icon fa fa-bullhorn bg-light-blue"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Announcement</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="javascript::;"> <i
-								class="menu-icon fa fa-code-fork bg-green"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Workflow</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="javascript::;"> <i
-								class="menu-icon fa fa-lightbulb-o bg-purple"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Tips</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-					</ul>
-					<!-- /.control-sidebar-menu -->
-				</div>
-				<!-- /.tab-pane -->
-
-				<!-- Settings tab content -->
-				<div class="tab-pane" id="control-sidebar-system-tab">
-					<h3 class="control-sidebar-heading">Systems</h3>
-					<ul class="control-sidebar-menu">
-						<li><a href="http://erpwls02:7105/ap"> <i
-								class="menu-icon fa fa-question bg-red"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Approval System</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="http://eportal/IDMS/?name=IDMS"> <i
-								class="menu-icon fa fa-book bg-yellow"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">IDMS</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="http://gammon/hk/ims/Pages/QSELearning.aspx">
-								<i class="menu-icon fa fa-bullhorn bg-light-blue"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">GEP</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="http://erp/jde/?name=JDE"> <i
-								class="menu-icon fa fa-code-fork bg-green"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">JDE</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-						<li><a href="javascript::;"> <i
-								class="menu-icon fa fa-lightbulb-o bg-purple"></i>
-								<div class="menu-info">
-									<h4 class="control-sidebar-subheading">Invoice Enquiry</h4>
-									<p>Description</p>
-								</div>
-						</a></li>
-					</ul>
-				</div>
-				<!-- /.tab-pane -->
+					<li ng-class="{'bg-primary-light' : activeMenu == 'IV'}">
+						<a ui-sref="iv.update" ng-click="activeMenu = 'IV'"> 
+							<i class="fa fa-line-chart"></i>
+							<span>Internal Valuation</span>
+						</a>
+					</li>
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}">
+						<a ui-sref="enquiry" ng-click="activeMenu = 'Enquiry'"> 
+							<i class="fa fa-info-circle"></i>
+							<span>Enquiry</span>
+						</a>
+					</li>
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}">
+						<a ui-sref="transit" ng-click="activeMenu = 'Transit'"> 
+							<i class="fa fa-file-text"></i>
+							<span>Transit</span> 
+						</a>
+					</li>
+				</ul>
+				
+				<!-- begin navbar-right -->
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown navbar-user">
+		                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+		                    <span class="image"><img src="image/horace.jpg" alt="" /></span>
+		                    <span class="hidden-xs">Horace Chu</span> <b class="caret"></b>
+		                </a>
+		                <ul class="dropdown-menu pull-right">
+		                    <li><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
+		                    <li class="divider"></li>
+		                    <li><a href="javascript:;" ng-click="logout()">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>
+		                </ul>
+		            </li>
+					<li>
+						<a href="javascript:;" data-click="right-sidebar-toggled">
+							<i class="fa fa-align-left"></i>
+						</a>
+					</li>
+				</ul>
+				<!-- end navbar-right -->
 			</div>
-		</aside>
-		<!-- /.control-sidebar -->
-		<!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-		<div class="control-sidebar-bg"></div>
-		<!--  <div id="main">    
-       // angular templating : This is where content will be injected    
-        <div ng-view></div>
-    </div>   -->
+			<!-- end container-fluid -->
+			
+			
+			
+		</div>
+		<!-- end #header -->
+		
 
-		<div ui-view></div>
+		<!-- begin #sidebar-right -->
+			<div id="sidebar-right" class="sidebar sidebar-right sidebar-highlight-primary sidebar-light" >
+		    <!-- begin sidebar scrollbar -->
+		    <div data-scrollbar="true" data-height="100%">
+		        <!-- begin sidebar-nav -->
+		        <ul class="nav nav-tabs" role="tablist">
+		            <li class="width-half active"><a href="#" data-target="#today" data-toggle="tab" target="_self">Today</a></li>
+		            <li class="width-half"><a href="#" data-target="#notifications" data-toggle="tab" target="_self">Notifications</a></li>
+		        </ul>
+		        <div class="tab-content">
+		            <div class="tab-pane active" id="today">
+		                <ul class="nav">
+		                    <li class="nav-header">Useful Links</li>
+		                    <li>
+		                        <ul class="notification-list">
+		                         	<li>
+		                                <div class="media bg-danger-light"><i class="fa fa-question text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://helpdesk/helpdesk.aspx?System=QS">Helpdesk</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                             <li>
+		                                <div class="media bg-success-light"><i class="fa fa-book text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://gammon/hk/ims/Pages/QSELearning.aspx">User Manual</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-lime-light"><i class="fa fa-bullhorn text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="javascript::;">Announcement</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-primary-light"><i class="fa fa-shield text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="javascript::;">Workflow</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-purple-light"><i class="fa fa-user-plus text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="javascript:;">Tips</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                        </ul>
+		                    </li>
+		                    <li class="divider"></li>
+		                </ul>
+		            </div>
+		            <div class="tab-pane" id="notifications">
+		                <ul class="nav">
+		                    <li class="nav-header">Useful Systems</li>
+		                    <li>
+		                        <ul class="notification-list">
+		                         	<li>
+		                                <div class="media bg-danger-light"><i class="fa fa-question text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://erpwls02:7105/ap">Approval System</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                             <li>
+		                                <div class="media bg-success-light"><i class="fa fa-book text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://eportal/IDMS/?name=IDMS">IDMS</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-lime-light"><i class="fa fa-cog text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://gammon/hk/ims/Pages/QSELearning.aspx">GEP</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-primary-light"><i class="fa fa-shield text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="http://erp/jde/?name=JDE">JDE</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-purple-light"><i class="fa fa-user-plus text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title"><a href="javascript:;">Invoice Enquiry</a></div>
+		                                    <div class="desc">Description</div>
+		                                </div>
+		                            </li>
+		                        </ul>
+		                    </li>
+		                    <li class="divider"></li>
+		                </ul>
+		            </div>
+		        </div>
+		        <!-- end sidebar-nav -->
+		    </div>
+		    <!-- end sidebar scrollbar -->
+		</div>
+		<div class="sidebar-bg sidebar-right"></div>
+		<!-- end #sidebar-right -->
+		
 	</div>
-</div>
 
-<!-- AdminLTE App -->
-<script src="plugins/adminLte/2.3.0/js/app.min.js"></script>
+<script>
+	$(document).ready(function() {
+		App.initSidebar();
+	});
+</script>
+
+<div ui-view></div>

@@ -1,4 +1,4 @@
-mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location','$cookieStore', function ($scope, $http, $location, $cookieStore) {
 	 /*$scope.showInfo = function(row) {
 	     var modalInstance = $modal.open({
 	          controller: 'InfoController',
@@ -16,7 +16,8 @@ mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location', functi
 	       $log.info('Modal dismissed at: ' + new Date());
 	     });
 	  }*/
-	
+	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
 	
 	var today = new Date();
     $scope.gridOptions = {
@@ -79,7 +80,7 @@ mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location', functi
       }
    */
     
-    $http.get('http://localhost:8080/QSrevamp2/data/cert-data.json')
+    $http.get('http://localhost:8080/pcms/data/cert-data.json')
       .success(function(data) {
         $scope.gridOptions.data = data;
        // $scope.gridOptions.data[0].age = -5;
@@ -161,7 +162,7 @@ mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location', functi
 	  }
 	  
 	 
-	  $http.get('http://localhost:8080/QSrevamp2/data/500_complex.json')
+	  $http.get('http://localhost:8080/pcms/data/500_complex.json')
 	    .success(function(data) {
 	      $scope.gridOptions.data = data;
 	    });*/

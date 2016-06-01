@@ -1,12 +1,14 @@
-
-<!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu">
-			<li class="header">{{jobNo}}{{jobDescription}}</li>
-			
+<div id="sidebar" class="sidebar sidebar-highlight-primary sidebar-light">
+	<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			<li class="nav-header">{{jobNo}} {{jobDescription}}</li>
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
 			
 			<li ng-class="{active : activeIVSideMenu == 'IVUpdate'}">
 				<a ui-sref="iv.update" ng-click="activeIVSideMenu = 'IVUpdate'">
@@ -20,11 +22,27 @@
 					<span>IV Post</span>
 				</a>
 			</li>
-
+			
+						
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
 		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
+		<!-- end sidebar nav -->
+	</div>
+	<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>
+
+<script>
+	$(document).ready(function() {
+		handleSidebarMinify();
+		handleSidebarMenu();
+	});
+</script>
+
 
 <div ui-view></div>
 

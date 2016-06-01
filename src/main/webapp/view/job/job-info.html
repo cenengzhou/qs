@@ -1,15 +1,17 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{JobNo}} <small>{{JobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-	</section>
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-	<section class="content">
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+
 		<div class="row">
 			<!-- Certificate Info -->
 			<div class="col-md-12">
@@ -125,7 +127,7 @@
 											<label>Original Contract Value</label>
 											<div class="input-group col-md-12">
 												<span class="input-group-addon">$</span> 
-												<input type="number" class="form-control">
+												<input type="number" class="form-control" ng-model = "originalContractValue" rea-time-currency>
 											</div>
 										</div>
 
@@ -133,7 +135,7 @@
 											<label>Projected Contract Value</label>
 											<div class="input-group col-md-12">
 												<span class="input-group-addon">$</span> <input
-													type="number" class="form-control">
+													type="number" class="form-control" ng-model = "projectedContractValue">
 											</div>
 										</div>
 
@@ -142,7 +144,7 @@
 											<label>Original Nominated SC Contract Value</label>
 											<div class="input-group col-md-12">
 												<span class="input-group-addon">$</span> <input
-													type="number" class="form-control">
+													type="number" class="form-control" ng-model = "orginalNominatedSCContractValue">
 											</div>
 										</div>
 
@@ -151,29 +153,35 @@
 											<label>Tender GP</label>
 											<div class="input-group col-md-12">
 												<span class="input-group-addon">$</span> 
-												<input type="number" class="form-control">
+												<input type="number" class="form-control" ng-model = "tenderGP">
 											</div>
 										</div>
 
+										<div class="form-group col-md-6">
+											<label>Parent Job Number</label>
+											<div class="input-group col-md-12">
+												<input type="text" class="form-control" ng-model = "parentJobNo">
+											</div>
+										</div>
 
 										<div class="form-group col-md-6">
 											<label>Client Contract Number</label>
 											<div class="input-group col-md-12">
-												<input type="number" class="form-control">
+												<input type="text" class="form-control" ng-model = "clientContractNo">
 											</div>
 										</div>
 										
 										<div class="form-group col-md-6">
 											<label>JV Partner Number</label>
 											<div class="input-group col-md-12">
-												<input type="number" class="form-control">
+												<input type="text" class="form-control" ng-model = "parentJobNo">
 											</div>
 										</div>
 										
 										<div class="form-group col-md-6">
 											<label>JV %</label>
 											<div class="input-group col-md-12">
-												<input type="number" class="form-control">
+												<input type="number" class="form-control" ng-model = "jvPercentage">
 											</div>
 										</div>
 
@@ -196,12 +204,12 @@
 											<input type="checkbox" data-ios-toggle="toggle"
 												data-style="ios" data-onstyle="primary"
 												data-offstyle="warning" data-on="Applicable"
-												data-off="Not-Applicable" ng-model="selectedLevy">
+												data-off="Not-Applicable" ng-model="levyApplicable">
 										</div>
 
 										<div class="col-md-6">
 											<form name="levyPeriodForm" novalidate>
-												<div class="form-group" ng-show="selectedLevy == true"
+												<div class="form-group" ng-show="levyApplicable == true"
 													ng-class="{ 'has-error': levyPeriodForm.levyPeriod.$touched && levyPeriodForm.levyPeriod.$invalid }">
 													<label>Levy CITA %</label>
 													<div class="input-group col-md-12">
@@ -218,7 +226,7 @@
 										</div>
 
 										<div class="col-md-6">
-											<div class="form-group" ng-show="selectedLevy == true">
+											<div class="form-group" ng-show="levyApplicable == true">
 												<label>Levy PCFB %</label>
 												<div class="input-group col-md-12">
 													<input type="number" class="form-control" name="cpfYear"
@@ -245,21 +253,21 @@
 											<input type="checkbox" data-ios-toggle="toggle"
 												data-style="ios" data-onstyle="primary"
 												data-offstyle="warning" data-on="Subject to CPF"
-												data-off="No CPF" ng-model="selectedCPF">
-											<!-- <div class="col-md-12"><label><input type="radio" ng-model="selectedCPF" value="No CPF" ng-icheck /> Not Subject to CPF</label></div>
-									                   <div class="col-md-12"><label><input type="radio" ng-model="selectedCPF" value="CPF" ng-icheck /> Subject to CPF</label></div> -->
+												data-off="No CPF" ng-model="cpfApplicable">
+											<!-- <div class="col-md-12"><label><input type="radio" ng-model="cpfApplicable" value="No CPF" ng-icheck /> Not Subject to CPF</label></div>
+									                   <div class="col-md-12"><label><input type="radio" ng-model="cpfApplicable" value="CPF" ng-icheck /> Subject to CPF</label></div> -->
 										</div>
 
 										<div class="col-md-6">
 											<form name="cpfForm" novalidate>
-												<div class="form-group" ng-show="selectedCPF == true"
-													ng-class="{ 'has-error': cpfForm.cpfPeriod.$touched && cpfForm.cpfPeriod.$invalid }">
+												<div class="form-group" ng-show="cpfApplicable == true"
+													ng-class="{ 'has-error': cpfForm.cpfBasePeriod.$touched && cpfForm.cpfBasePeriod.$invalid }">
 													<label>CPF Base Period</label>
 													<div class="input-group col-md-12">
-														<input type="number" class="form-control" name="cpfPeriod"
-															ng-model="cpfPeriod" required>
+														<input type="number" class="form-control" name="cpfBasePeriod"
+															ng-model="cpfBasePeriod" required>
 														<div class="help-block"
-															ng-show="cpfForm.cpfPeriod.$error.required">
+															ng-show="cpfForm.cpfBasePeriod.$error.required">
 															<p>This field is required.</p>
 														</div>
 													</div>
@@ -268,14 +276,23 @@
 										</div>
 
 										<div class="col-md-6">
-											<div class="form-group" ng-show="selectedCPF == true">
+											<div class="form-group" ng-show="cpfApplicable == true">
 												<label>CPF Base Year</label>
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control" name="cpfYear"
-														required>
+													<input type="number" class="form-control" name="cpfBaseYear" ng-model="cpfBaseYear" required>
 												</div>
 											</div>
 										</div>
+										
+										<div class="col-md-6">
+											<div class="form-group" ng-show="cpfApplicable == true">
+												<label>CPF Index Name</label>
+												<div class="input-group col-md-12">
+													<input type="text" class="form-control" name="cpfIndexName" ng-model="cpfIndexName" required>
+												</div>
+											</div>
+										</div>
+										
 									</div>
 
 								</div>
@@ -296,7 +313,7 @@
 											<div class="form-group">
 												<label>Max Retention %</label>
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control" name="" required>
+													<input type="text" class="form-control" ng-model = "maxRetPercent">
 												</div>
 											</div>
 										</div>
@@ -305,7 +322,16 @@
 											<div class="form-group">
 												<label>Interim Retention %</label>
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control" name="" required>
+													<input type="number" class="form-control" ng-model = "interimRetPercent">
+												</div>
+											</div>
+										</div>
+										
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>MOS Retention %</label>
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control" ng-model = "mosRetPercent">
 												</div>
 											</div>
 										</div>
@@ -326,49 +352,49 @@
 									<div class="form-group col-md-6">
 										<label>Value of BS work</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control">
+											<input type="number" class="form-control" ng-model = "valueOfBSWork">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Billing Currency</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control">
+											<input type="text" class="form-control" ng-model = "billingCurrency">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Gross Floor Area</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control">
+											<input type="number" class="form-control" ng-model = "grossFloorArea">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Gross Floor Area Unit</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control">
+											<input type="text" class="form-control" ng-model = "grossFloorAreaUnit">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Payment Terms for Nominated SC</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control">
+											<input type="text" class="form-control" ng-model = "paymentTermsForNominatedSC">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Defect Provision %</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control">
+											<input type="number" class="form-control" ng-model = "defectProvisionPercentage">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Forecast End Year</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control">
+											<input type="number" class="form-control" ng-model = "forecastEndYear">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Forecast End Period</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control">
+											<input type="number" class="form-control" ng-model = "forecastEndPeriod">
 										</div>
 									</div>
 									
@@ -384,7 +410,7 @@
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer">
-						<a class="btn btn-twitter btn-block" ng-click="saveJobInfo()">Save
+						<a class="btn btn-primary btn-block" ng-click="saveJobInfo()">Save
 							<i class="fa fa-floppy-o"></i>
 						</a>
 					</div>
@@ -395,8 +421,6 @@
 			</div>
 		</div>
 		<!-- /.row -->
-	</section>
-	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 

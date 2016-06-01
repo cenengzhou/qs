@@ -18,9 +18,7 @@
   <!-- Iconfont -->
   <link rel="stylesheet" href="plugins/iconfont/1.0.0/css/icofont.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="plugins/adminLte/2.3.0/css/AdminLTE.css">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="plugins/adminLte/2.3.0/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="css/adminLTE.css">
   <link rel="stylesheet" href="plugins/angular-chart/0.8.8/angular-chart.css">
   <link rel="stylesheet" href="plugins/ui-grid/3.1.1/ui-grid.min.css">
   <!-- daterange picker -->
@@ -32,6 +30,13 @@
   <!-- Bootstrap Toggle -->
   <link rel="stylesheet" href="plugins/bootstrap-toggle/2.2.1/bootstrap-toggle.css">
   
+  <!-- Fullcalendar -->
+  <link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.min.css">
+  
+  <!-- Bootstrap-Wizard  -->
+  <link href="plugins/bootstrap-wizard/css/bwizard.css" rel="stylesheet" />
+  <link href="plugins/parsley/src/parsley.css" rel="stylesheet" />
+  
   <!-- Dropzone -->
   <link rel="stylesheet" href="plugins/dropzone/basic.css">
   <link rel="stylesheet" href="plugins/dropzone/dropzone.css">
@@ -39,29 +44,46 @@
   <link rel="stylesheet" href="css/pcms.css">
   <link href="css/animate.css" rel="stylesheet">
   <!-- <link href="css/angular-animate.css" rel="stylesheet"> -->
-  <!-- <link href="css/style.css" rel="stylesheet"> -->
+  <!-- <link href="http://fonts.googleapis.com/css?family=Nunito:400,300,700" rel="stylesheet" id="fontFamilySrc" /> -->
+  <link href="css/font.css" rel="stylesheet" id="fontFamilySrc" />
+  <link href="css/style.css" rel="stylesheet" />
 
 
   
 </head>
-<body class="hold-transition skin-blue-light sidebar-mini" ng-cloak>
-   <div ui-view=""></div>  
+<body ng-cloak ng-controller="AppCtrl">
+
+	<div id="page-loader" class="page-loader fade in"><span class="spinner">Loading...</span></div>
+	<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar">
+		<!-- ng-class="{
+		        'page-sidebar-minified': setting.layout.pageSidebarMinified,
+		        'page-content-full-height': setting.layout.pageContentFullHeight,
+		        'page-footer-fixed': setting.layout.pageFixedFooter,
+		        'page-with-right-sidebar': setting.layout.pageRightSidebar,
+		        'page-sidebar-minified': setting.layout.pageSidebarMinified,
+		        'page-with-two-sidebar': setting.layout.pageTwoSidebar,
+		        'page-right-sidebar-toggled': setting.layout.pageTwoSidebar,
+		        'page-with-top-menu': setting.layout.pageTopMenu,
+		        'page-without-sidebar': setting.layout.pageWithoutSidebar
+		    }"> -->
+		<div ui-view=""></div>  
+		
+   	</div>
 
 <!-- JavaScript Library -->
 <!-- jQuery 2.1.4 -->
-<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="plugins/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <!-- Bootstrap Toggle 2.2.1 -->
 <script src="plugins/bootstrap-toggle/2.2.1/bootstrap-toggle.min.js"></script>
 
-<!-- angularJS 1.3.15 -->
+<!-- angularJS 1.4.9 -->
 <script src="plugins/angularjs/1.4.9/angular.min.js"></script>
+<script src="plugins/angular-cookies/1.4.9/angular-cookies.min.js"></script>
 <script src="plugins/ui-router/0.2.17/ui-router.min.js"></script>
+<script src="plugins/angularjs/ocLazyLoad.min.js"></script>
 
-
-<!-- AdminLTE App -->
-<!-- <script src="plugins/adminLte/2.3.0/js/app.min.js"></script> -->
 <!-- ChartJS 1.0.2 -->
 <script src="plugins/chartjs/1.0.2/chart.min.js"></script>
 <!-- Angular-Chart 0.8.8 -->
@@ -87,6 +109,17 @@
  <!-- Dropzone -->
  <script src="plugins/dropzone/dropzone.js"></script> 
 
+
+
+<!-- Source Admin -->
+<script src="plugins/sourceAdmin/apps.js"></script>
+<script src="plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="plugins/pace/1.0.0/pace.min.js"></script>
+<script src="plugins/fullcalendar/lib/moment.min.js"></script>
+<script src="plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="plugins/bootstrap-wizard/js/bwizard.js"></script>
+<script src="plugins/parsley/dist/parsley.js"></script>
+
 <!-- Routing  -->
 <script src="js/app.js"></script>
 
@@ -100,70 +133,20 @@
 
 
 <!-- Controller  -->
+<script src="js/controller/setting.js"></script>
 <script src="js/controller/nav-menu.js"></script>
-<script src="js/controller/job/job-dashboard.js"></script>
-<script src="js/controller/job/job-info.js"></script>
-
-<script src="js/controller/subcontract/subcontract-dashboard.js"></script>
-<script src="js/controller/subcontract/subcontract-select.js"></script>
-<script src="js/controller/subcontract/subcontract-create.js"></script>
-<script src="js/controller/subcontract/subcontract-flow.js"></script>
-<script src="js/controller/subcontract/subcontract-ta.js"></script>
-<script src="js/controller/subcontract/subcontract-ta-details.js"></script>
-<script src="js/controller/subcontract/subcontract-vendor.js"></script>
-<script src="js/controller/subcontract/subcontract-vendor-feedback.js"></script>
-<script src="js/controller/subcontract/subcontract-vendor-compare.js"></script>
-<script src="js/controller/subcontract/subcontract-award.js"></script>
-<script src="js/controller/subcontract/subcontract-header.js"></script>
-<script src="js/controller/subcontract/subcontract-details.js"></script>
-<script src="js/controller/subcontract/subcontract-dates.js"></script>
-<script src="js/controller/subcontract/subcontract-workdone.js"></script>
-<script src="js/controller/subcontract/payment-select.js"></script>
-<script src="js/controller/subcontract/payment-details.js"></script>
-<script src="js/controller/subcontract/subcontract-split.js"></script>
 
 
-<script src="js/controller/main-cert/cert-dashboard.js"></script>
-<script src="js/controller/main-cert/cert-all-details.js"></script>
-<script src="js/controller/main-cert/cert-details.js"></script>
-
-<script src="js/controller/repackaging/repackaging.js"></script>
-<script src="js/controller/repackaging/repackaging-update.js"></script>
 <script src="js/controller/repackaging/repackaging-split.js"></script>
 <script src="js/controller/repackaging/repackaging-merge.js"></script>
 <script src="js/controller/repackaging/repackaging-add.js"></script>
 
-<script src="js/controller/transit/transit-dashboard.js"></script>
-<script src="js/controller/iv/iv-update.js"></script>
-<script src="js/controller/iv/iv-post.js"></script>
-<script src="js/controller/enquiry/enquiry.js"></script>
-<script src="js/controller/attachment.js"></script>
 
 
 <!-- Service  -->
 <script src="js/service/global-service.js"></script>
-<script src="js/service/job-service.js"></script>
-<script src="js/service/subcontact-service.js"></script>
-<script src="js/service/repackaging-service.js"></script>
-<script src="js/service/iv-service.js"></script>
-<script src="js/service/main-cert-service.js"></script>
 
 
- 
-  
- 
-<!-- Compatibility 
-Angular Chart 0.8.8
-Dependency:
-AngularJS (tested with 1.2.x, 1.3.x and 1.4.x although it probably works with older versions)
-Chart.js (requires Chart.js 1.0, tested with version 1.0.1 and 1.0.2).
-
-Angular UI
-1. UI Grid
-2. UI Router 0.2.17 -- > AngularJS 1.x-1.5.0
-3. UI Bootstrap 1.2.1 -- >  AngularJS 1.4.x - 1.5.0 (Same version with Angular-animate, Angular-touch)
-   UI Bootstrap 0.14.3 -- >  AngularJS 1.3.x
- -->
   
 </body>
 </html>

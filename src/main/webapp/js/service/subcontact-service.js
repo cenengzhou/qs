@@ -6,7 +6,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	
     });
 	
-    function obtainSubcontractList() {console.log("YESS");
+    function obtainSubcontractList() {
     	var myHeaders = {
     	        "Accept": "application/json",
     	        "Content-Type": "application/json",
@@ -16,7 +16,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "post",
             //headers: myHeaders,
-            //url: "ws/ObtainSubcontractList.json",
             url: "service/GetSubcontractList.json",
             dataType: "application/json;charset=UTF-8",
             params: {

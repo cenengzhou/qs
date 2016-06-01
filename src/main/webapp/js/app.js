@@ -1,36 +1,13 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
-/*mainApp.config(function ($httpProvider){  
-	$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-	var interceptor = ['$rootScope', '$q', function (scope, $q) {  
-	    function success(response) { return response; } 
-	    function error(response) { 
-	        var status = response.status; 
-	        if (status === 401) {
-	        	console.log("HEY 401");
-	            var deferred = $q.defer(); 
-	            var req = { 
-	                config: response.config, deferred: deferred 
-	        }; 
-	        //scope.requests401.push(req); 
-	        scope.$broadcast('event:auth-loginRequired'); 
-	        return deferred.promise; 
-	    } 
-	    // otherwise return $q.reject(response); 
-	    } 
-	    return function (promise) { 
-	            return promise.then(success, error); 
-	        } 
-	    }]; $httpProvider.responseInterceptors.push(interceptor); 
-	});*/
 
 // configure our routes    
 mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider/*, modalStateProvider*/) {
 	
 	// For any unmatched url, redirect to /state1
-	$urlRouterProvider.otherwise("/job/dashboard");  
+	$urlRouterProvider.otherwise("/job-select");  
 
 	
 	$stateProvider
@@ -42,13 +19,26 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	
 	.state('logout', {
 		url: "/logout",
-		templateUrl: "logout.html",
-		controller: 'NavMenuCtrl'
+		templateUrl: "logout.html"
 	})
 	
-	.state('select-job', {
-		url: "/select-job",
-		templateUrl: "view/select-job.html"
+	.state('job-select', {
+		url: "/job-select",
+		//parent: "navigation",
+		templateUrl: "view/job-select.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/job/job-select.js',
+                           'js/service/job-service.js'
+                    ] 
+                });
+            }]
+        },
+		controller: 'JobSelectCtrl',
+		
 	}) 
 	  
 	
@@ -62,12 +52,30 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('job', {
 		url: "/job",
 		parent: "navigation",
-		templateUrl: "view/job/job-menu.html"
+		templateUrl: "view/job/job-menu.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/job/job-dashboard.js',
+                           'js/controller/job/job-select.js',
+                           'js/controller/job/job-info.js',
+                           'js/service/job-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
 	})
 	.state('job.dashboard', {
 		url: "/dashboard",
 		templateUrl: "view/job/job-dashboard.html",
-		controller: 'JobCtrl'  
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: 'JobDashboardCtrl'  
 	})
 	.state('job.info', {
 		url: "/info",
@@ -86,6 +94,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/subcontract-select",
 		parent: "navigation",
 		templateUrl: "view/subcontract/subcontract-select.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-select.js',
+                           'js/controller/subcontract/subcontract-create.js',
+                           'js/service/subcontact-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'SubcontractSelectCtrl'
 	})
 	
@@ -93,19 +113,61 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/subcontract-flow",
 		parent: "navigation",
 		templateUrl: "view/subcontract/subcontract-flow.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-flow.js',
+                           'js/controller/subcontract/subcontract-create.js',
+                           'js/controller/subcontract/subcontract-ta.js',
+                           'js/controller/subcontract/subcontract-ta-details.js',
+                           'js/controller/subcontract/subcontract-vendor.js',
+                           'js/controller/subcontract/subcontract-vendor-feedback.js',
+                           'js/controller/subcontract/subcontract-vendor-compare.js',
+                           'js/controller/subcontract/subcontract-award.js',
+                           'js/service/subcontact-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'SubcontractFlowCtrl'
 	})
 	
 	.state('subcontract', {
 		url: "/subcontract",
 		parent: "navigation",
-		templateUrl: "view/subcontract/subcontract-menu.html"
+		templateUrl: "view/subcontract/subcontract-menu.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-dashboard.js',
+                           'js/controller/subcontract/subcontract-header.js',
+                           'js/controller/subcontract/subcontract-details.js',
+                           'js/controller/subcontract/subcontract-dates.js',
+                           'js/controller/subcontract/subcontract-workdone.js',
+                           'js/controller/subcontract/addendum-select.js',
+                           'js/controller/subcontract/addendum-details.js',
+                           'js/controller/subcontract/payment-select.js',
+                           'js/controller/subcontract/payment-details.js',
+                           'js/controller/subcontract/subcontract-split.js',
+                           
+                           'js/controller/attachment.js',
+                           'js/service/subcontact-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
 	})
 	.state('subcontract.dashboard', {
 		url: "/dashboard",
 		templateUrl: "view/subcontract/subcontract-dashboard.html",
 		"params": {
-			"packageno": null
+			"packageNo": null,
+			"packageDescription": null
 		},
 		controller: 'SubcontractCtrl'
 		
@@ -140,13 +202,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		templateUrl: "view/subcontract/subcontract-workdone.html",
 		controller: 'SubcontractWorkdoneCtrl'
 	})
+	.state('subcontract.addendum', {
+		url: "/addendum",
+		templateUrl: "view/subcontract/addendum-select.html",
+		controller: 'AddendumCtrl'
+	})
+	.state('subcontract.addendumDetails', {
+		url: "/addendum/details",
+		templateUrl: "view/subcontract/addendum-details.html",
+		controller: 'AddendumDetailsCtrl'
+	})
 	.state('subcontract.payment', {
 		url: "/payment",
 		templateUrl: "view/subcontract/payment-select.html",
 		controller: 'SubcontractPaymentCtrl'
 	})
 	.state('subcontract.paymentdetails', {
-		url: "/paymentdetails",
+		url: "/payment/details",
 		templateUrl: "view/subcontract/payment-details.html",
 		controller: 'SubcontractPaymentDetailsCtrl'
 	})
@@ -161,24 +233,58 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		controller: 'SubcontractSplitCtrl'
 	})
 	
+	
 	//Main Cert
 	.state('cert-dashboard', {
 		url: "/cert-dashboard",
 		parent: "navigation",
 		templateUrl: "view/main-cert/cert-dashboard.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/main-cert/cert-dashboard.js',
+                           'js/service/main-cert-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'CertCtrl'
 	})
 	.state('cert-all-details', {
 		url: "/cert-all-details",
 		parent: "navigation",
 		templateUrl: "view/main-cert/cert-all-details.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/main-cert/cert-all-details.js',
+                           'js/service/main-cert-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'CertAllDetailsCtrl'
 	})
 	.state('cert', {
 		url: "/cert",
 		parent: "navigation",
 		templateUrl: "view/main-cert/cert-details-menu.html",
-		controller: 'CertDetailsCtrl'
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/main-cert/cert-details.js',
+                           'js/service/main-cert-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
 	})
 	.state('cert.details', {
 		url: "/details",
@@ -191,12 +297,34 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/repackaging",
 		parent: "navigation",
 		templateUrl: "view/repackaging/repackaging.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/repackaging/repackaging.js',
+                           'js/service/repackaging-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'RepackagingCtrl'
 	})
 	.state('repackaging-update', {
 		url: "/repackaging-update",
 		parent: "navigation",
 		templateUrl: "view/repackaging/repackaging-update.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/repackaging/repackaging-update.js',
+                           'js/service/repackaging-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: 'RepackagingUpdateCtrl'
 	})
 	
@@ -205,6 +333,16 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/transit",
 		parent: "navigation",
 		templateUrl: "view/transit/transit-dashboard.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/transit/transit-dashboard.js'
+                    ] 
+                });
+            }]
+        },
 		controller: "TransitCtrl"
 	})
 	
@@ -212,7 +350,19 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state("iv", {
 		url: "/iv",
 		parent: "navigation",
-		templateUrl: "view/iv/iv-menu.html"
+		templateUrl: "view/iv/iv-menu.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [	'js/controller/iv/iv-update.js',
+               	         	'js/controller/iv/iv-post.js',
+               	         	'js/service/iv-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
 	})
 	.state("iv.update", {
 		url: "/update",
@@ -230,45 +380,40 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/enquiry",
 		parent: "navigation",
 		templateUrl: "view/enquiry/enquiry.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [	'js/controller/enquiry/enquiry.js'
+                    ] 
+                });
+            }]
+        },
 		controller: "EnquiryCtrl"
 	})
 	
 
 	/**The custom “X-Requested-With” is a conventional header sent by browser clients, and it used to be the default in Angular but they took it out in 1.3.0. 
 	 * Spring Security responds to it by not sending a “WWW-Authenticate” header in a 401 response, and thus the browser will not pop up an authentication dialog**/
-	 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+	 //$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 	
 	
 	
-}]);
-/*.factory('authHttpResponseInterceptor',['$q','$location',function($q,$location){
-    return {
-        response: function(response){
-            if (response.status === 401) {
-                console.log("Response 401");
-            }
-            return response || $q.when(response);
-        },
-        responseError: function(rejection) {
-            if (rejection.status === 401) {
-                console.log("Response Error 401",rejection);
-                $location.path('/login').search('returnTo', $location.path());
-            }
-            return $q.reject(rejection);
-        }
-    }
 }])
-.config(['$httpProvider',function($httpProvider) {
-    //Http Intercpetor to check auth failures for xhr requests
-    $httpProvider.interceptors.push('authHttpResponseInterceptor');
-}]);*/
+.filter('jsonDate', ['$filter', function ($filter) {
+	return function (input, format) {
+		return (input) 
+		? $filter('date')(parseInt(input.substr(6)), format) 
+				: '';
+	};
+}]);
 
 
 //Config color code for charts
 mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, colorCode) {
-	Chart.defaults.global.tooltipTemplate = function (label) {
+	/*Chart.defaults.global.tooltipTemplate = function (label) {
 	    return label.datasetLabel + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	}; 
+	}; */
 	Chart.defaults.global.multiTooltipTemplate = function (label) {
 	    return label.datasetLabel + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}; 
@@ -282,6 +427,42 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
       datasetFill: false
     });
   }]);
+
+/**Http intercepter: Convert Json date to javascript date object**/
+/*mainApp.config(["$httpProvider", function ($httpProvider) {
+    $httpProvider.defaults.transformResponse.push(function(responseData){
+       convertDateStringsToDates(responseData);
+       return responseData;
+   });
+}]);*/
+
+var regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/;
+
+function convertDateStringsToDates(input) {
+    // Ignore things that aren't objects.
+    if (typeof input !== "object") return input;
+
+    for (var key in input) {
+        if (!input.hasOwnProperty(key)) continue;
+
+        var value = input[key];
+        var match;
+        // Check for string properties which look like dates.
+        // TODO: Improve this regex to better match ISO 8601 date strings.
+        if (typeof value === "string" && (match = value.match(regexIso8601))) {
+            // Assume that Date.parse can parse ISO 8601 strings, or has been shimmed in older browsers to do so.
+            var milliseconds = Date.parse(match[0]);
+            if (!isNaN(milliseconds)) {
+                input[key] = new Date(milliseconds);
+            }
+        } else if (typeof value === "object") {
+            // Recurse into object
+            convertDateStringsToDates(value);
+        }
+    }
+}
+
+
 
 
 
@@ -301,7 +482,7 @@ mainApp.run(['$rootScope', '$location', function ($rootScope, $location) {
 	  
       if ($rootScope.authenticated) {
     	  console.log('ALLOW');
-          //$location.path('/select-job');
+          //$location.path('/job-select');
       }
       else {
     	  console.log('DENY');
@@ -339,15 +520,19 @@ mainApp.run(function($rootScope,$location, $uibModalStack){
 	});*/
 		
 	})
+
+
 	
+	
+/**Compatibility 
+Angular Chart 0.8.8
+Dependency:
+AngularJS (tested with 1.2.x, 1.3.x and 1.4.x although it probably works with older versions)
+Chart.js (requires Chart.js 1.0, tested with version 1.0.1 and 1.0.2).
 
-
-/*Notes
- * 
- * $log.info('name: ' + $scope.value);
- * console.log('name', $scope.value);
- * window.alert('Hello');
- * 
- * 
- * */
-
+Angular UI
+1. UI Grid
+2. UI Router 0.2.17 -- > AngularJS 1.x-1.5.0
+3. UI Bootstrap 1.2.1 -- >  AngularJS 1.4.x - 1.5.0 (Same version with Angular-animate, Angular-touch)
+   UI Bootstrap 0.14.3 -- >  AngularJS 1.3.x
+**/

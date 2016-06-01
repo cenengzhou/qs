@@ -24,7 +24,7 @@ mainApp.controller('EnquiryCtrl', ['$scope' , '$http', 'colorCode', function($sc
 				$scope.gridApi.grid.registerRowsProcessor( $scope.singleFilter);
 			},*/
 			columnDefs: [
-			             { field: 'packageNo', enableCellEdit: false, width:80, displayName:"Package No."},
+			             { field: 'packageNo', enableCellEdit: false, width:80, displayName:"Subcontract No."},
 			             { field: 'objectCode', enableCellEdit: false , width:100},
 			             { field: 'subsidiaryCode',enableCellEdit: false},
 			             { field: 'description', enableCellEdit: false },
@@ -64,7 +64,7 @@ mainApp.controller('EnquiryCtrl', ['$scope' , '$http', 'colorCode', function($sc
 	
 	
 	
-	$http.get('http://localhost:8080/QSrevamp2/data/iv.json')
+	$http.get('http://localhost:8080/pcms/data/iv.json')
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 	});

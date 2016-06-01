@@ -1,28 +1,66 @@
 
-<!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu">
-			<li class="header">{{jobNo}}{{jobDescription}}</li>
-			<li class="active treeview"><a ui-sref="cert-dashboard"><i class="fa fa-dashboard"></i> <span>Main Cert Dashboard</span></a></li>
-			<li class="active treeview"><a ui-sref="cert-all-details"><i class="fa fa-dashboard"></i> <span>Main Contract Certificates</span></a></li>
-			<li class="active treeview">
-				<a href=""> 
-					<i class="fa fa-dashboard"></i> <span>General</span> 
-					<!-- <i class="fa fa-angle-left pull-right"></i> -->
+<!-- begin #sidebar -->
+<div id="sidebar" class="sidebar sidebar-highlight-primary sidebar-light">
+	<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			<li class="nav-header">{{jobNo}} {{jobDescription}}</li>
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
+			
+			<li>
+				<a ui-sref="cert-dashboard">
+					<i class="fa fa-dashboard"></i> 
+					<span>Main Cert Dashboard</span>
 				</a>
-				<ul class="treeview-menu">
-					<li><a ><i	class="fa fa-info-circle"></i> Account Receivable Details</a></li>
+			</li>
+			<li>
+				<a ui-sref="cert-all-details">
+					<i class="fa fa-calendar-check-o"></i>
+					<span>Main Contract Certificates</span>
+				</a>
+			</li>
+			
+			
+						
+			<li class="has-sub">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-home"></i>
+				    <span>Operation</span>
+			    </a>
+			    <ul class="sub-menu">
+			        <li><a ><i	class="fa fa-info-circle"></i> Account Receivable Details</a></li>
 					<li><a ><i	class="fa fa-circle-o"></i> Contra Charge</a></li>
 					<li><a href=""><i class="fa fa-files-o"></i> Attachment</a></li>
-				</ul>
-				</li>
+			    </ul>
+			</li>			
+						
+						
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
 		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
+		<!-- end sidebar nav -->
+	</div>
+	<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>
+<!-- end #sidebar -->
+
+<script>
+	$(document).ready(function() {
+		handleSidebarMinify();
+		handleSidebarMenu();
+	});
+</script>
+
 
 <div ui-view></div>
 

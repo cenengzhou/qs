@@ -1,34 +1,61 @@
-
-<!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-	<!-- sidebar: style can be found in sidebar.less -->
-	<section class="sidebar">
-		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<ul class="sidebar-menu">
-			<li class="header">{{jobNo}}{{jobDescription}}</li>
-			<li ng-class="{active : activeJobSideMenu == 'JobDashboard'}">
-				<a ui-sref="job.dashboard" ng-click="activeJobSideMenu = 'JobDashboard'">
+<!-- begin #sidebar -->
+<div id="sidebar" class="sidebar sidebar-highlight-primary sidebar-light">
+	<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			<li class="nav-header">{{jobNo}} {{jobDescription}}</li>
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
+			
+			<li ng-class="{active : activeJobSideMenu == '/job/dashboard'}">
+				<a ui-sref="job.dashboard" ng-click="activeJobSideMenu = '/job/dashboard'">
 					<i class="fa fa-dashboard active"></i>
 					<span>Job Dashboard</span>
 				</a>
 			</li>
-			<li ><a href="view/selectJob.html"><i class="fa fa-hand-o-right"></i> <span>Select Job</span></a></li>
-			<li ng-class="{active : activeJobSideMenu == 'JobInfo'}">
-				<a ui-sref="job.info" ng-click="activeJobSideMenu = 'JobInfo'">
+			
+			<li>
+				<a ui-sref="job-select">
+					<i class="fa fa-hand-o-right"></i>
+					<span>Select Job</span>
+				</a>
+			</li>
+			
+			<li ng-class="{active : activeJobSideMenu == '/job/info'}">
+				<a ui-sref="job.info" ng-click="activeJobSideMenu = '/job/info'">
 					<i class="fa fa-book"></i> 
 					<span>Job Information</span>
 				</a>
 			</li>
-			<li ng-class="{active : activeJobSideMenu == 'JobDates'}">
-				<a ui-sref="job.dates" ng-click="activeJobSideMenu = 'JobDates'">
+			<li ng-class="{active : activeJobSideMenu == '/job/dates'}">
+				<a ui-sref="job.dates" ng-click="activeJobSideMenu = '/job/dates'">
 					<i class="fa fa-calendar"></i> 
 					<span>Job Dates</span>
 				</a>
 			</li>
+			
+			<li class="divider has-minify-btn">
+                      <!-- begin sidebar minify button -->
+                      <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
+                      <!-- end sidebar minify button -->
+			</li>
 		</ul>
-	</section>
-	<!-- /.sidebar -->
-</aside>
+		<!-- end sidebar nav -->
+	</div>
+	<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>
+<!-- end #sidebar -->
 
 <div ui-view></div>
 
+<script>
+	$(document).ready(function() {
+		handleSidebarMinify();
+		handleSidebarMenu();
+	});
+</script>

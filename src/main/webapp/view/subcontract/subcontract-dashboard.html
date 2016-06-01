@@ -1,40 +1,22 @@
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-	<!-- Content Header (Page header) -->
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
+<div id="content" class="content">
+		<!-- begin breadcrumb -->
+		<ol class="breadcrumb pull-right">
 			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
 			<li class="active">Dashboard</li>
 		</ol>
-	</section>
-
-	<!-- Main content -->
-	<section class="content">
+		<!-- end breadcrumb -->
+		
+		<h1 class="page-header">{{jobNo}}<small> {{jobDescription}}</small></h1>
 		<div class="row">
 			<div class="col-md-7">
 
-				<!-- <div class="col-md-12">
-					<div class="small-box bg-aqua">
-						<div class="inner">
-							<h3>{{subcontractSum | currency}}</h3>
-
-							<p>Revised Subcontract Sum</p>
-						</div>
-						<div class="icon">
-							<i class="ion ion-calculator"></i>
-						</div>
-					</div>
-				</div> -->
-	
+				
 				
 				<div class="col-md-12">
 					<div class="box">
 						<div class="box-header with-border">
 							<h3 class="box-title">
-								<b>Subcontract {{packageNo}} - DrivenH Piling Works</b>
+								<b>Subcontract {{packageNo}} - {{packageDescription}}</b>
 							</h3>
 						</div>
 						<!-- /.box-header -->
@@ -61,28 +43,18 @@
 								<br>
 								
 								<div class="col-md-12 col-xs-12">
-									<!-- <p class="text-center">
-									<strong>Goal Completion</strong>
-								</p> -->
+										<span>Work Done Amount</span> 
+										<span class="pull-right"><b>$400K</b> out of $53895K</span>
 
-									<div class="progress-group">
-										<span class="progress-text">Work Done Amount</span> <span
-											class="progress-number"><b>$400K</b> out of $53895K</span>
+										<div class="progress m-b-10">
+					                        <div class="progress-bar progress-bar-aqua" style="width: 40%"></div>
+					                    </div>
+										<span>Payment Amount</span> 
+										<span class="pull-right"><b>$280K</b> out of $53895K</span>
 
-										<div class="progress sm">
-											<div class="progress-bar progress-bar-aqua"
-												style="width: 40%"></div>
-										</div>
-									</div>
-									<!-- /.progress-group -->
-									<div class="progress-group">
-										<span class="progress-text">Payment Amount</span> <span
-											class="progress-number"><b>$280K</b> out of $53895K</span>
-
-										<div class="progress sm">
-											<div class="progress-bar progress-bar-red" style="width: 80%"></div>
-										</div>
-									</div>
+										<div class="progress m-b-10">
+					                        <div class="progress-bar progress-bar-danger" style="width: 80%"></div>
+					                    </div>
 								</div>
 								<!-- /.col -->
 							</div>
@@ -103,7 +75,7 @@
 			<div class="col-md-5 connectedSortable">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="small-box bg-aqua">
+						<div class="small-box bg-primary">
 							<div class="inner">
 								<h3>{{subcontractSum | currency}}</h3>
 		
@@ -208,7 +180,7 @@
 			</div>
 
 		</div>
-	</section>
-	<!-- /.content -->
+		
+				
+		
 </div>
-<!-- /.content-wrapper -->

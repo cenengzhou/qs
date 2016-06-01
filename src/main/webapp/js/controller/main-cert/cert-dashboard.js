@@ -1,5 +1,9 @@
-mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', function($scope, $http, colorCode) {
+mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', '$cookieStore', function($scope, $http, colorCode, $cookieStore) {
     
+	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
+	
+	
     $scope.linChartParameters = {
     	    'labels' : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     	    'series' : ['IPA', 'IPC', 'CC(IPA)', 'CC(IPC)'],
@@ -12,7 +16,7 @@ mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', function($scope,
     	    'options' : {
     	        'showScale' : true,
     	        'showTooltips' : true,
-    	        'responsive' : false,
+    	        'responsive' : true,
     	        'maintainAspectRatio' : true,
     	        'pointDot' : true,
     	        'bezierCurve' : true,
@@ -89,7 +93,7 @@ mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', function($scope,
       ]
     };
    
-    $http.get('http://localhost:8080/QSrevamp2/data/500_complex.json')
+    $http.get('http://localhost:8080/pcms/data/500_complex.json')
       .success(function(data) {
         $scope.gridOptions.data = data;
         $scope.gridOptions1.data = data;

@@ -1,10 +1,35 @@
 mainApp.service('jobService', ['$http', function($http){
 	// Return public API.
     return({
+    	getJob: getJob,
+    	getJobList: getJobList,
     	obtainJobInfo: obtainJobInfo,
     	obtainJobDashboardData: obtainJobDashboardData,
     });
 	
+    function getJob(jobNo) {
+        var request = $http({
+            method: "post",
+            //headers: myHeaders,
+            url: "service/getJob.json",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getJobList() {
+        var request = $http({
+            method: "post",
+            //headers: myHeaders,
+            url: "service/getJobList.json",
+            dataType: "application/json;charset=UTF-8"
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     function obtainJobInfo() {
         var request = $http({
             method: "get",
@@ -46,25 +71,6 @@ mainApp.service('jobService', ['$http', function($http){
         return( response.data );
     }
 }]);
-
-
-
-
-/*mainApp.service('jobService', ['$http', function($http){
-    var job = [{
-        'jobNo': '13362',
-        'jobDescription': 'Pak Shek Kok, Tai Po, TPTL201'
-    }];
-    
-	//simply returns the contacts list
-    this.jobList = function () {
-        return job;
-    }
-	
-	 this.jobNumber= function(){
-	        return "13362";
-	    };    
-}]);*/
 
 
 
