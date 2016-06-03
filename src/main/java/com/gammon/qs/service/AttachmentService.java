@@ -49,7 +49,8 @@ import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
  * Refactored on Mar 21, 201410:45:32 AM
  */
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class AttachmentService {
 	@Autowired

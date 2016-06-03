@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${TenderAnalysisRepositoryControllerTestData.properties}")
 public class TenderAnalysisRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = TenderAnalysisRepositoryController.class;
+	private Class<?> serviceClass;// = TenderAnalysisRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.TenderAnalysisRepositoryController#updateTenderAnalysisDetails(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer, java.lang.String, java.lang.Double, java.util.List, boolean)}.

@@ -30,7 +30,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 		
 		User user = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNumber", jobNumber));
 			
 			user = (User) criteria.uniqueResult();
@@ -45,7 +45,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 	public List<JobDivisionInfo> searchByJobNumber(String jobNumber) throws DatabaseOperationException {
 		List<JobDivisionInfo> results = new LinkedList<JobDivisionInfo>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.ilike("jobNumber", jobNumber, MatchMode.ANYWHERE));
 			
 			results = criteria.list();
@@ -60,7 +60,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 	public JobDivisionInfo obtainJobDivisionInfoByJobNumber(String jobNumber) {
 		JobDivisionInfo jobDivisionInfo = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNumber", jobNumber));
 			
 			jobDivisionInfo = (JobDivisionInfo)criteria.uniqueResult();
@@ -76,7 +76,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 	public JobDivisionInfo getJobByNumberAndDivision(String jobNumber, String division) throws DatabaseOperationException {
 		JobDivisionInfo result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			if (jobNumber!=null && !"".equals(jobNumber.trim()));
 				criteria.add(Restrictions.eq("jobNumber", jobNumber));
 			
@@ -98,7 +98,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 	public List<JobDivisionInfo> getJobListByRangeAndDivision(String jobNumberFrom, String jobNumberTo, String division) throws DatabaseOperationException {
 		List<JobDivisionInfo> results = new LinkedList<JobDivisionInfo>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			if (jobNumberFrom!=null && !"".equals(jobNumberFrom.trim()));
 				criteria.add(Restrictions.ge("jobNumber", jobNumberFrom));
 			if (jobNumberTo!=null && !"".equals(jobNumberTo.trim()));
@@ -121,7 +121,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 		
 		List<JobDivisionInfo> results = new LinkedList<JobDivisionInfo>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("poApprovalStatus", "INACTIVE"));
 			criteria.add(Restrictions.eq("scApprovalStatus", "INACTIVE"));
 			
@@ -141,7 +141,7 @@ public class JobDivisionInfoHBDao extends BaseHibernateDao<JobDivisionInfo> {
 		
 		List<JobDivisionInfo> results = new LinkedList<JobDivisionInfo>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			Disjunction divisionDisjunction = Restrictions.disjunction();
 			

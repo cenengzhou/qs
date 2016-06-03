@@ -29,7 +29,7 @@ import com.gammon.qs.service.RepackagingEntryService;
 @PropertySource("file:${BQResourceSummaryRepositoryControllerTestData.properties}")
 @Transactional(rollbackFor = Exception.class)
 public class BQResourceSummaryRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = BQResourceSummaryRepositoryController.class;
+	private Class<?> serviceClass;// = BQResourceSummaryRepositoryController.class;
 	
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testCreateResourceSummary_sql}")
 	String testCreateResourceSummary_sql;

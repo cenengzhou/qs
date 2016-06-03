@@ -56,7 +56,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 		if (scPaymentCert == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
 			criteria.add(Restrictions.eq("lineType", lineType));
 			return (List<SCPaymentDetail>) criteria.list();
@@ -71,7 +71,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 		if (scPaymentDetail == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scSeqNo", scPaymentDetail.getScSeqNo()));
 			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(scPaymentDetail.getScPaymentCert()).getId() + "'")));
 			return (SCPaymentDetail) criteria.uniqueResult();
@@ -87,7 +87,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 		if (jobNumber == null || packageNo == null || paymentCertNo == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
 			return (List<SCPaymentDetail>) criteria.list();
 
@@ -119,7 +119,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double getCertCpfAmount(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "CF"));
 			criteria.setProjection(Projections.sum("movementAmount"));
@@ -132,7 +132,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainPaymentRetentionAmount(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.in("lineType", new String[] { "RT", "RA" }));
 			criteria.setProjection(Projections.sum("movementAmount"));
@@ -145,7 +145,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainPaymentRetentionReleasedAmount(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "RR"));
 			criteria.setProjection(Projections.sum("movementAmount"));
@@ -158,7 +158,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainPaymentGstPayable(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "GP"));
 			criteria.setProjection(Projections.sum("movementAmount"));
@@ -171,7 +171,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainPaymentGstReceivable(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "GR"));
 			criteria.setProjection(Projections.sum("movementAmount"));
@@ -185,7 +185,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 	@SuppressWarnings("unchecked")
 	public List<AccountMovementWrapper> obtainPaymentAccountMovements(SCPaymentCert paymentCert) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.not(Restrictions.in("lineType", new Object[] { "CF", "RT", "RA", "RR", "GP", "GR", "MR" })));
 			criteria.setProjection(Projections.projectionList()
@@ -203,7 +203,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainAccountMaterialRetention(SCPaymentCert paymentCert, String objectCode, String subsidiaryCode) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
 			criteria.add(Restrictions.eq("objectCode", objectCode));
 			if (subsidiaryCode != null)
@@ -221,7 +221,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	@SuppressWarnings("unchecked")
 	public List<SCPaymentCert> getSCPaymentDetail(String jobNumber, String packageNo) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SCPaymentCert.class);
+		Criteria criteria = getSession().createCriteria(SCPaymentCert.class);
 		criteria.createAlias("scPackage", "scPackage");
 		criteria.createAlias("scPackage.job", "job");
 		criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
@@ -232,7 +232,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	@SuppressWarnings("unchecked")
 	public List<SCPaymentCert> getSCPaymentDetail(SCPackage scPackage) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SCPaymentCert.class);
+		Criteria criteria = getSession().createCriteria(SCPaymentCert.class);
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
 		return (List<SCPaymentCert>) criteria.list();
@@ -248,7 +248,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 			throw new NullPointerException("scPaymentCert is Null");
 		
 		SCPaymentDetail scPaymentDetail = null;
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		try{
 		criteria.createAlias("scPaymentCert", "scPaymentCert");
@@ -271,7 +271,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 	
 	@SuppressWarnings("unchecked")
 	public List<SCPaymentDetail> obtainSCPaymentDetailBySCPaymentCert(SCPaymentCert scPaymentCert){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SCPaymentDetail.class);
+		Criteria criteria = getSession().createCriteria(SCPaymentDetail.class);
 		criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
 		return criteria.list();
 	}
@@ -279,16 +279,16 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 	public long deleteDetailByJobSCPaymentNo(String jobNumber, Integer packageNo, Integer paymentCertNo) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		SCPaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
-		this.getSessionFactory().getCurrentSession().merge(obtainSCPaymentDetailBySCPaymentCert(scPaymentCert));
-		Query query = this.getSessionFactory().getCurrentSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + scPaymentCert.getId());
+		getSession().merge(obtainSCPaymentDetailBySCPaymentCert(scPaymentCert));
+		Query query = getSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + scPaymentCert.getId());
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}
 
 	public long deleteDetailByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
-		this.getSessionFactory().getCurrentSession().clear();
-		Query query = this.getSessionFactory().getCurrentSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + paymentCertID);
+		getSession().clear();
+		Query query = getSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + paymentCertID);
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}
@@ -317,7 +317,7 @@ public class SCPaymentDetailHBDao extends BaseHibernateDao<SCPaymentDetail> {
 
 	public Double obtainAccumulatedPostedCertQtyByDetail(Long scDetail_id) throws DatabaseOperationException{
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPaymentCert", "scPaymentCert");
 			criteria.add(Restrictions.eq("scPaymentCert.paymentStatus", SCPaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
 			criteria.createAlias("scDetail", "scDetail");

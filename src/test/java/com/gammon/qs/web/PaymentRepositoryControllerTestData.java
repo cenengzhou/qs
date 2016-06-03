@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${PaymentRepositoryControllerTestData.properties}")
 public class PaymentRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = PaymentRepositoryController.class;
+	private Class<?> serviceClass;// = PaymentRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.PaymentRepositoryController#obtainPackageListForSCPaymentPanel(java.lang.String)}.

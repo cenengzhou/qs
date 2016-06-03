@@ -33,7 +33,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	@SuppressWarnings("unchecked")
 	public List<TransitBQ> getTransitBQItems(String jobNumber) throws Exception{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("transitHeader", "transitHeader");
 			criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
 			criteria.addOrder(Order.asc("sequenceNo"));
@@ -46,7 +46,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	
 	@SuppressWarnings("unchecked")
 	public List<TransitBQ> getTransitBqByHeaderNoCommentLines(TransitHeader header){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("transitHeader", header));
 		criteria.add(Restrictions.isNotNull("itemNo"));
 		criteria.addOrder(Order.asc("billNo"));
@@ -58,7 +58,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	
 	public void deleteTransitBqItemsByHeader(TransitHeader header) throws Exception{
 		String hqlDelete = "delete TransitBQ bq where bq.transitHeader = :header";
-		Query deleteQuery = this.getSessionFactory().getCurrentSession().createQuery(hqlDelete);
+		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
 		logger.info(numDeleted + " transit bq items deleted");
@@ -66,7 +66,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	
 	public void deleteTransitBqBill80ByHeader(TransitHeader header) throws Exception{
 		String hqlDelete = "delete TransitBQ bq where bq.transitHeader = :header and bq.billNo = '80'";
-		Query deleteQuery = this.getSessionFactory().getCurrentSession().createQuery(hqlDelete);
+		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
 		logger.info(numDeleted + " transit bq items deleted");
@@ -75,7 +75,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	@SuppressWarnings("unchecked")
 	public List<TransitBQ> getTransitBQItems(String jobNumber, String billNo, String subBillNo, 
 			String pageNo, String itemNo, String description) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitHeader", "transitHeader");
 		criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
 		if(billNo != null && billNo.trim().length() != 0){
@@ -121,7 +121,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 	// construct the list of BQ Master Transit Report Fields by using Hibernate Projections
 	@SuppressWarnings("unchecked")
 	public List<TransitBQMasterReconciliationReportRecordWrapper> getBQMasterTransitReportFields(String jobNumber){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitHeader", "transitHeader");
 		criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
 		//Order the java objects later
@@ -176,7 +176,7 @@ public class TransitBQHBDao extends BaseHibernateDao<TransitBQ> {
 
 	@SuppressWarnings("unchecked")
 	public List<TransitBQ> obtainTransitBQByTransitHeader(TransitHeader transitHeader) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("transitHeader", transitHeader));
 		return criteria.list();
 	}

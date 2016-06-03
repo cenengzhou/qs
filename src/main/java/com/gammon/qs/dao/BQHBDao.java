@@ -53,7 +53,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		logger.info("STARTED ->getBQItemByJob() \n"+"J#"+jobNumber);
 		List<BQItem> resultList = new LinkedList<BQItem>();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("page", "page");
 			criteria.createAlias("page.bill", "bill");
 			criteria.createAlias("bill.job", "job");
@@ -79,7 +79,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 	public BQItem getBQItem(BQItem bqItem) throws DatabaseOperationException{
 		try{
 			logger.log(levelSetting, "Start: getBQItem(BQItem bqItem)");
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("bill.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",bqItem.getPage().getBill().getJob().getJobNumber().trim()));
 
@@ -149,7 +149,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 
 		List<BQItem> resultList = new LinkedList<BQItem>();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("bill.job", "job");
 
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
@@ -191,7 +191,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 	public BQItem getBQItemByRef(String refJobNumber, String refBillNo, String refSubBillNo, String refSectionNo, String refPageNo, String itemNo) throws DatabaseOperationException{
 		logger.info("getBQItemByRef - jobNo: " + refJobNumber + ", bill: " + refBillNo + ", subbill: " + refSubBillNo + ", section: " + refSectionNo + ", page: " + refPageNo + ", item: " + itemNo);
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("refJobNumber", refJobNumber));
 			if(refBillNo == null || refBillNo.trim().length() == 0)
 				criteria.add(Restrictions.isNull("refBillNo"));
@@ -254,7 +254,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		bqDesc = bqDesc==null?"":bqDesc.replace("*", "%");
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("bill.job", "job");
 			if(jobNumber.contains("%")){
 				criteria.add(Restrictions.like("job.jobNumber", jobNumber));
@@ -326,7 +326,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 	@SuppressWarnings("unchecked")
 	public RepackagingPaginationWrapper<BQItem> searchBQItemsByRefByPage(	String jobNumber, String billNo, String subBillNo, String pageNo,
 																			String itemNo, String description, int pageNum) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("refJobNumber", jobNumber));
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		//by Tiky Wong on 20110530
@@ -376,7 +376,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		criteria.setMaxResults(PAGE_SIZE);
 		List<BQItem> bqItems = criteria.list();
 		
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("refJobNumber", jobNumber));
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		//by Tiky Wong on 20110530
@@ -438,7 +438,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 	}
 	
 	public String getNextItemNoForBill(String jobNumber, String billNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		criteria.add(Restrictions.eq("refJobNumber", jobNumber));
 		criteria.add(Restrictions.eq("refBillNo", billNo));
@@ -466,7 +466,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		if(bqItems == null)
 			return;
 		
-//		Session session = this.getSessionFactory().getCurrentSession();
+//		Session session = getSession();
 //		Transaction tx = session.beginTransaction(); // TransactionException: nested transactions not supported in Junit
 		SessionFactoryImplementor sfi = (SessionFactoryImplementor) getSessionFactory();
 		Session session = sfi.openSession();
@@ -493,7 +493,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		if(bqItems == null)
 			return;
 		
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		
 		for(int i = 0; i < bqItems.size(); i++){
@@ -517,7 +517,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 													String pageNo, String itemNo, String bqDescription) throws DatabaseOperationException {
 		List<BQItem> resultList = new ArrayList<BQItem>();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 
 			if (!GenericValidator.isBlankOrNull(jobNumber))
@@ -551,7 +551,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 		logger.info("J#:"+jobNumber+" Username:"+username);
 		try{
 			String hql = "UPDATE BQItem SET ivPostedAmount = ivCumAmount, ivPostedQty = ivCumQty, lastModifiedUser = :user, lastModifiedDate = :date WHERE refJobNumber = :jobNumber  AND ivPostedAmount != ivCumAmount";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setString("user", username);
 			query.setString("jobNumber", jobNumber);
 			query.setDate("date", new Date());
@@ -572,7 +572,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 	public BQItem searchBQItem(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String bqDescription, Double costRate, String unit) throws DatabaseOperationException {
 		BQItem result = new BQItem();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 
 			if (!GenericValidator.isBlankOrNull(jobNumber))
@@ -612,7 +612,7 @@ public class BQHBDao extends BaseHibernateDao<BQItem> {
 			Double updatedIVCumulativeQuantity = bqItem.getIvCumQty();
 
 			String hql = "UPDATE BQItem SET ivCumAmount = :updatedIVCumulativeAmount, ivCumQty = :updatedIVCumulativeQuantity, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :bqItemID AND refJobNumber = :jobNumber";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 
 			query.setDouble("updatedIVCumulativeAmount", updatedIVCumulativeAmount);
 			query.setDouble("updatedIVCumulativeQuantity", updatedIVCumulativeQuantity);

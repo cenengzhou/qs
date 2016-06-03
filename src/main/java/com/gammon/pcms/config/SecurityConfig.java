@@ -5,7 +5,6 @@ import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -14,15 +13,15 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
 import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
@@ -100,16 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers(
-				"/spring-ws/*", 
-				"/resources/**",
-				"/plugins/**",
-				"/gammonqs/systemMessage.smvc", 
-				"/gammonqs/uiErrorMessageLog.smvc",
-				"/badCredentials.jsp",
-				"/favicon.ico",
-				"/403.html",
-				"/login.htm*",
-				"/logout.htm*"
+
 				);
 		web.debug(StringUtils.isEmpty(springSecurityDebug)?false:new Boolean(springSecurityDebug));
 	}
@@ -156,7 +146,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		private AuthenticationFailureHandler loginFailureHandler;
 		@Autowired
 		private SecurityConfig securityConfig;
-		
+		@Autowired
+		private SessionRegistry sessionRegistry;
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
@@ -165,8 +156,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.frameOptions().sameOrigin().and()
 			.csrf().disable()
 			.sessionManagement()
+			.invalidSessionUrl(securityConfig.getLoginPath())
+			.maximumSessions(-1)
+			.expiredUrl(securityConfig.getLoginPath())
+			.sessionRegistry(sessionRegistry).and()
 			.sessionFixation().migrateSession().and()
 			.authorizeRequests()
+			.antMatchers(
+					"/spring-ws/*", 
+					"/resources/**",
+					"/plugins/**",
+					"/image/**",
+					"/badCredentials.jsp",
+					"/favicon.ico",
+					"/403.html",
+					"/login.htm*",
+					"/logout.htm*"
+					).permitAll()
 			.antMatchers("/**").hasAnyRole(securityConfig.getRoleQsQs(), securityConfig.getRoleQsEnquiry(), securityConfig.getRoleQsApprover(), securityConfig.getRoleQsAdmin()).and()
 			.exceptionHandling()
 			.authenticationEntryPoint(new SpnegoEntryPoint(securityConfig.getLoginPath())).and()
@@ -185,30 +191,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterAfter(spnegoAuthenticationProcessingFilter, BasicAuthenticationFilter.class);
 		}
 		
-		/**
-		 * for weblogic publishing which classloader does not set
-		 * objectPostProcessor, context and authenticationConfiguration and cause NPE
-		 * (no need when use weblogic maven plugin)
-		 */
-		@Override
-		@Autowired
-		public void setObjectPostProcessor(ObjectPostProcessor<Object> objectPostProcessor) {
-			super.setObjectPostProcessor(objectPostProcessor);
-		}
-
-		@Override
-		@Autowired
-		public void setApplicationContext(ApplicationContext context) {
-			super.setApplicationContext(context);
-		}
-
-		@Override
-		@Autowired
-		public void setAuthenticationConfiguration(AuthenticationConfiguration authenticationConfiguration) {
-			super.setAuthenticationConfiguration(authenticationConfiguration);
-		}
 	}
-
+	
+	@Bean 
+	public SessionRegistry sessionRegistry(){
+		SessionRegistry bean = new SessionRegistryImpl();
+		return bean;
+	}
+	
 	@Bean
 	public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter() throws Exception {
 		SpnegoAuthenticationProcessingFilter filter = new SpnegoAuthenticationProcessingFilter();
@@ -305,7 +295,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler(servletContext.getContextPath()+"/home.html", false);
+		return new LoginSuccessHandler(servletContext.getContextPath()+"/index.html", false);
 	}
 
 	@Bean

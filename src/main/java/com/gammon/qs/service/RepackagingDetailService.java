@@ -46,7 +46,8 @@ import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 import com.google.gson.Gson;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class RepackagingDetailService implements Serializable {
 	

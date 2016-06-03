@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
-import com.gammon.qs.domain.QuartzId;
-
 @Entity
 @Table(name = "qrtz_cron_triggers")
 @IdClass(QuartzId.class)

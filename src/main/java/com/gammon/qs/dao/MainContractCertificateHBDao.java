@@ -47,7 +47,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			throw new IllegalArgumentException("Job number is null or empty");
 		MainContractCertificate result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.add(Restrictions.eq("certificateNumber", mainCertNumber));
 			result = (MainContractCertificate) criteria.uniqueResult();
@@ -62,7 +62,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			throw new IllegalArgumentException("Job number is null or empty");
 		MainContractCertificate result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.add(Restrictions.eq("certificateNumber", mainCertNumber));
 			criteria.setFetchMode("contraChargeList", FetchMode.JOIN);
@@ -80,7 +80,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			throw new IllegalArgumentException("Job number is null or empty");
 		List<MainContractCertificate> result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.addOrder(Order.asc("certificateNumber"));
 			result = criteria.list();
@@ -115,7 +115,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 		
 		subquery.setProjection(Property.forName("jobNumber"));
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(ContractReceivableWrapper.class);
+		Criteria criteria = getSession().createCriteria(ContractReceivableWrapper.class);
 		criteria.add(Subqueries.propertyIn("jobNo", subquery));
 		criteria.addOrder(Order.asc("division")).addOrder(Order.asc("company")).addOrder(Order.asc("jobNo"));
 		
@@ -139,7 +139,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			
 			subquery.setProjection(Property.forName("jobNumber"));
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Subqueries.propertyIn("jobNo", subquery));
 			if(!searchWrapper.getStatus().trim().contentEquals(""))
 				criteria.add(Restrictions.and(Restrictions.eq("certificateStatus", searchWrapper.getStatus()), Subqueries.propertyIn("jobNo", subquery)));
@@ -165,7 +165,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 		PaginationWrapper<MainContractCertificate> wrapper = new PaginationWrapper<MainContractCertificate>();
 		try {
 			// get total number of records
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.addOrder(Order.desc("certificateNumber"));
 			criteria.setProjection(Projections.rowCount());
@@ -176,7 +176,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			wrapper.setTotalPage((count + RECORDS_PER_PAGE - 1) / RECORDS_PER_PAGE);
 
 			// fetch current page
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.addOrder(Order.desc("certificateNumber"));
 			criteria.setFirstResult(pageNum * RECORDS_PER_PAGE);
@@ -214,7 +214,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			throw new IllegalArgumentException("Job number is null or empty");
 		MainContractCertificate result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.add(Restrictions.eq("certificateNumber", mainCertNumber));
 			result = (MainContractCertificate) criteria.uniqueResult();
@@ -228,7 +228,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public MainContractCertificate searchLatestPostedCert(String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNo", jobNumber));
 		criteria.add(Restrictions.ge("certificateStatus", "300"));
 		// criteria.setProjection(Projections.max("certificateNumber"));
@@ -250,7 +250,7 @@ public class MainContractCertificateHBDao extends BaseHibernateDao<MainContractC
 			throw new IllegalArgumentException("Job number is null or empty");
 		List<MainContractCertificate> result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 			criteria.add(Restrictions.gt("certifiedContraChargeAmount", 0.0));
 						

@@ -33,7 +33,7 @@ public class SCDetailProvisionHistoryHBDao extends
 //		String strSQL = "from SCDetailProvisionHistory scp where scp.scDetail_ID = (select id from SCDetails scd where scd.jobNo = "+jobNumber+"";
 //		String strSQL = "from SCDetailProvisionHistory scp ,SCDetails scd, SCPackgae scpk where scp.scDetails=scd and scd.jobNo = '"+jobNumber
 //			+"' and scd.scPackage=scpk and scpk.packageNo='"+packageNo+"' and postedYr='"+year+"' and postedMonth='"+month+"'";
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 //		criteria.createAlias("scDetails", "scDetails");
 //		criteria.createAlias("scDetails.scPackage", "scPackage");
 //		criteria.createAlias("scPackage.job", "job");
@@ -43,7 +43,7 @@ public class SCDetailProvisionHistoryHBDao extends
 		criteria.add(Restrictions.eq("packageNo", packageNo));
 		criteria.add(Restrictions.eq("postedYr", year));
 		criteria.add(Restrictions.eq("postedMonth", month));
-		//return this.getSessionFactory().getCurrentSession().createQuery(strSQL).list();
+		//return getSession().createQuery(strSQL).list();
 		return criteria.list();
 	}
 	
@@ -55,7 +55,7 @@ public class SCDetailProvisionHistoryHBDao extends
 		
 		logger.info("[SCDetailProvisionHistoryHBDaoImpl][searchSCDetailProvision]");
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNo",jobNumber));
 		if(!GenericValidator.isBlankOrNull(packageNo))
 			criteria.add(Restrictions.eq("packageNo", packageNo));
@@ -77,7 +77,7 @@ public class SCDetailProvisionHistoryHBDao extends
 	}
 	
 	public SCDetailProvisionHistory getSCDetailProvision(String jobNumber, String packageNo, Integer year, Integer month,SCDetails scDetail){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNo",jobNumber));
 		criteria.add(Restrictions.eq("packageNo", packageNo));
 		criteria.add(Restrictions.eq("postedYr", year));
@@ -112,7 +112,7 @@ public class SCDetailProvisionHistoryHBDao extends
 	@SuppressWarnings("unchecked")
 	public List<SCDetailProvisionHistory> obtainSCDetailProvisionGroupedByAccountCode(String jobNumber, String packageNo, Integer postYr, Integer postMonth) {
 		List<SCDetailProvisionHistory> resultList = new ArrayList<SCDetailProvisionHistory>();
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 
 		criteria.add(Restrictions.eq("jobNo",jobNumber));
 		criteria.add(Restrictions.eq("packageNo", packageNo));

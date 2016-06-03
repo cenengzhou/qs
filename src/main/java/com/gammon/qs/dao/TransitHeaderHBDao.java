@@ -23,7 +23,7 @@ public class TransitHeaderHBDao extends BaseHibernateDao<TransitHeader> {
 	
 	public TransitHeader getTransitHeader(String jobNumber) throws Exception{
 		logger.info("getTransitHeader: " + jobNumber);
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));
 		return (TransitHeader)criteria.uniqueResult();
 	}
@@ -37,7 +37,7 @@ public class TransitHeaderHBDao extends BaseHibernateDao<TransitHeader> {
 		else
 			logger.info("getAllTransitHeaders: " + "status not inputted");
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus","ACTIVE"));
 		criteria.addOrder(Order.asc("jobNumber"));
 		if(!GenericValidator.isBlankOrNull(status)){

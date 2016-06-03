@@ -22,7 +22,8 @@ import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.job.JobDatesWrapper;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class JobService {	
 	private Logger logger = Logger.getLogger(this.getClass().getName());

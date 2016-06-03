@@ -10,23 +10,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import com.gammon.junit.testbase.TestBase;
 import com.gammon.pcms.helper.JunitHelper;
-import com.gammon.qs.domain.BQResourceSummary;
-import com.gammon.qs.service.BQResourceSummaryService;
-import com.gammon.qs.web.BQResourceSummaryRepositoryController;
-import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 
 @Configuration
 @PropertySource("file:${BQResourceSummaryRepositoryControllerTestData.properties}")
 public class LazyInitTestCase extends TestBase{
 
-	@Autowired
-	private ApplicationContext applicationContext;
+//	@Autowired
+//	private ApplicationContext applicationContext;
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -66,17 +61,17 @@ public class LazyInitTestCase extends TestBase{
 	public void testSaveResourceSummary() {
 		init();
 		resultMessage.setDescription("Error");
-		resultMessage.setClassName(BQResourceSummaryRepositoryController.class.getSimpleName());
+		//resultMessage.setClassName(BQResourceSummaryRepositoryController.class.getSimpleName());
 		resultMessage.setMethodName(methodName);
 		int resultSize = 0;
-		BQResourceSummaryRepositoryController bqResourceSummaryRepositoryController = applicationContext.getBean("bqResourceSummaryRepositoryController", BQResourceSummaryRepositoryController.class);
-		BQResourceSummaryService bqResourceSummaryService = applicationContext.getBean(BQResourceSummaryService.class);
-		BQResourceSummary bqResourceSummary = null;
-		BQResourceSummaryWrapper resultObject = null;
+		//BQResourceSummaryRepositoryController bqResourceSummaryRepositoryController = applicationContext.getBean("bqResourceSummaryRepositoryController", BQResourceSummaryRepositoryController.class);
+//		BQResourceSummaryService bqResourceSummaryService = applicationContext.getBean(BQResourceSummaryService.class);
+//		BQResourceSummary bqResourceSummary = null;
+//		BQResourceSummaryWrapper resultObject = null;
 		try{
-			bqResourceSummary = bqResourceSummaryService.getResourceSummary(testSaveResourceSummary_jobNumber, testSaveResourceSummary_packageNo, testSaveResourceSummary_objectCode, testSaveResourceSummary_subsidiaryCode, testSaveResourceSummary_resourceDescription, testSaveResourceSummary_unit, new Double(testSaveResourceSummary_rate));
-			 resultObject = bqResourceSummaryRepositoryController.saveResourceSummary(bqResourceSummary, new Long(testSaveResourceSummary_repackagingEntryId));
-			 resultSize = resultObject.getResourceSummaries().size();
+//			bqResourceSummary = bqResourceSummaryService.getResourceSummary(testSaveResourceSummary_jobNumber, testSaveResourceSummary_packageNo, testSaveResourceSummary_objectCode, testSaveResourceSummary_subsidiaryCode, testSaveResourceSummary_resourceDescription, testSaveResourceSummary_unit, new Double(testSaveResourceSummary_rate));
+//			 resultObject = bqResourceSummaryRepositoryController.saveResourceSummary(bqResourceSummary, new Long(testSaveResourceSummary_repackagingEntryId));
+//			 resultSize = resultObject.getResourceSummaries().size();
 		} catch (Exception e){ 
 			e.printStackTrace();
 			resultMessage.setDescription(e.toString());

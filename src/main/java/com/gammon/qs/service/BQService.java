@@ -71,7 +71,8 @@ import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.UpdateIVByResourceUpdateWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class BQService implements Serializable {
 	private static final long serialVersionUID = 6521439591143450718L;

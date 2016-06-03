@@ -17,7 +17,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${PropertiesControllerTestData.properties}")
 public class PropertiesRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = PropertiesRepositoryController.class;
+	private Class<?> serviceClass;// = PropertiesRepositoryController.class;
 
 	@Value("${PropertiesControllerTestData.obtainMailReceiverAddress_sql}")
 	String obtainMailReceiverAddress_sql;

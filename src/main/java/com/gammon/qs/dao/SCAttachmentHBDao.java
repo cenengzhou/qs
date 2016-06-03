@@ -26,7 +26,7 @@ public class SCAttachmentHBDao extends BaseHibernateDao<SCAttachment> {
 	public List<SCAttachment> getSCAttachment(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "sPackage");
 			criteria.createAlias("sPackage.job", "job");
 			criteria.add(Restrictions.eq("sPackage.packageNo", subcontractNo));		
@@ -44,7 +44,7 @@ public class SCAttachmentHBDao extends BaseHibernateDao<SCAttachment> {
 	public List<SCAttachment> getSCAttachment(SCPackage scPackage) throws DatabaseOperationException{
 		try{
 			List<SCAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPackage", scPackage));		
 			resultList = criteria.list();
 			return resultList;
@@ -55,7 +55,7 @@ public class SCAttachmentHBDao extends BaseHibernateDao<SCAttachment> {
 	
 	public SCAttachment obtainSCFileAttachment(String jobNumber, String subcontractNo, Integer sequenceNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));

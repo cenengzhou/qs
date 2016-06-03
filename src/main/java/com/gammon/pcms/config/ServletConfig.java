@@ -18,13 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
 
 import com.gammon.qs.web.mvc.interceptors.DisplayTagParamInterceptor;
-import com.gammon.qs.web.mvc.interceptors.SessionTrackingInterceptor;
 
 @Configuration
 public class ServletConfig extends WebMvcConfigurerAdapter {
 
-	@Autowired
-	private SessionTrackingInterceptor sessionTrackingInterceptor;
 	@Autowired
 	private DisplayTagParamInterceptor displayTagParamInterceptor;
 	@Autowired
@@ -61,8 +58,7 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(sessionTrackingInterceptor);
-		registry.addInterceptor(displayTagParamInterceptor);
+//		registry.addInterceptor(displayTagParamInterceptor);
 	}
 
 	@Bean

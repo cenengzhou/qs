@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${QrtzTriggerControllerTestData.properties}")
 public class QrtzTriggerControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = QrtzTriggerController.class;
+	private Class<?> serviceClass;// = QrtzTriggerController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.QrtzTriggerController#getAllTriggers()}.

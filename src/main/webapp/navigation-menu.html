@@ -52,6 +52,12 @@
 							<span>Transit</span> 
 						</a>
 					</li>
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}">
+						<a ui-sref="admin.session" ng-click="activeMenu = 'Admin'"> 
+							<i class="fa fa-file-text"></i>
+							<span>Admin</span> 
+						</a>
+					</li>
 				</ul>
 				
 				<!-- begin navbar-right -->

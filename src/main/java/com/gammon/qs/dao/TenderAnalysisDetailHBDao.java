@@ -29,7 +29,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	public TenderAnalysisDetail getTenderAnalysisDetail(String jobNumber,
 			String packageNo, Integer venderNo, Integer sequenceNo) throws DatabaseOperationException {
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("tenderAnalysis", "tenderAnalysis");
 			criteria.add(Restrictions.eq("tenderAnalysis.jobNo", jobNumber.trim()));
 			criteria.add(Restrictions.eq("tenderAnalysis.packageNo", packageNo.trim()));
@@ -45,7 +45,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	@SuppressWarnings("unchecked")
 	public List<TenderAnalysisDetail> getTenderAnalysisDetails(String jobNumber, String packageNo, Integer venderNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("tenderAnalysis", "tenderAnalysis");
 			criteria.add(Restrictions.eq("tenderAnalysis.jobNo", jobNumber.trim()));
 			criteria.add(Restrictions.eq("tenderAnalysis.packageNo", packageNo.trim()));
@@ -70,7 +70,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	}
 	
 	public TenderAnalysisDetail getTenderAnalysisDetail(TenderAnalysis tenderAnalysis, String billItem, Integer resourceNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 		criteria.add(Restrictions.eq("billItem", billItem));
 		criteria.add(Restrictions.eq("resourceNo", resourceNo));
@@ -78,7 +78,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	}
 	
 	public Integer getNextSequenceNoForTA(TenderAnalysis tenderAnalysis) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 		criteria.setProjection(Projections.max("sequenceNo"));
 		Integer maxSequenceNo = Integer.valueOf(criteria.uniqueResult().toString());
@@ -90,7 +90,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	public TenderAnalysisDetail obtainTADetail(TenderAnalysis tenderAnalysis, String objectCode, 
 			String subsidiaryCode, String description, String unit, Double rate) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 			
@@ -124,7 +124,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	}
 	
 	public TenderAnalysisDetail obtainTADetailByID(Long ID) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		
 		if(ID == null)
@@ -144,7 +144,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	@SuppressWarnings("unchecked")
 	public List<TenderAnalysisDetail> obtainTADetailByResourceNo(TenderAnalysis tenderAnalysis, Integer resourceNo) throws DatabaseOperationException{
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 			
@@ -163,7 +163,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	@SuppressWarnings("unchecked")
 	public List<TenderAnalysisDetail> obtainTenderAnalysisDetailByTenderAnalysis(TenderAnalysis tenderAnalysis) throws DatabaseOperationException{
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 
@@ -183,7 +183,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 												String objectCode, String subsidiaryCode, Integer resourceNo
 												) throws DatabaseOperationException{
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 
@@ -209,7 +209,7 @@ public class TenderAnalysisDetailHBDao extends BaseHibernateDao<TenderAnalysisDe
 	@SuppressWarnings("unchecked")
 	public void deleteByTenderAnalysis(TenderAnalysis tenderAnalysis) {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("tenderAnalysis", tenderAnalysis));
 			List<TenderAnalysisDetail> tenderAnalysisDetailList = criteria.list();
 			for(TenderAnalysisDetail tenderAnalysisDetail: tenderAnalysisDetailList){

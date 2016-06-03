@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${RepackagingEntryRepositoryControllerTestData.properties}")
 public class RepackagingEntryRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = RepackagingEntryRepositoryController.class;
+	private Class<?> serviceClass;// = RepackagingEntryRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.RepackagingEntryRepositoryController#getRepackagingEntriesByJob(com.gammon.qs.domain.Job)}.

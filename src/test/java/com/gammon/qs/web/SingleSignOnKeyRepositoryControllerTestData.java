@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${SingleSignOnKeyRepositoryControllerTestData.properties}")
 public class SingleSignOnKeyRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = SingleSignOnKeyRepositoryController.class;
+	private Class<?> serviceClass;// = SingleSignOnKeyRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.SingleSignOnKeyRepositoryController#getSingleSignOnKey(java.lang.String, java.lang.String)}.

@@ -48,7 +48,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 	}
 	
 	public boolean billsExistUnderJob(Job job){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job", job));
 		criteria.setProjection(Projections.rowCount());
 		Integer count = Integer.valueOf(criteria.uniqueResult().toString());
@@ -59,7 +59,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 		if (bill==null)
 			throw new NullPointerException("Bill is Null");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", bill.getJob().getJobNumber().trim()));
 			criteria.add(Restrictions.eq("billNo", bill.getBillNo().trim()));
@@ -79,7 +79,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 	}
 	
 	public Bill getBill(String jobNumber, String billNo, String subBillNo, String sectionNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("job", "job");
 		criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 		criteria.add(Restrictions.eq("billNo", billNo));
@@ -99,7 +99,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 			throw new NullPointerException("Job Number is Null");
 		try {
 //			logger.info("Original Criteria");
-//			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+//			Criteria criteria = getSession().createCriteria(this.getType());
 //			criteria.createAlias("job", "job");
 //			criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
 //			criteria.addOrder(Order.asc("billNo"));
@@ -123,7 +123,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 		String sql = "select job_ID, bill_ID, billNo, subBillNo, sectionNo, pageNo from "+schema+".qs_job,"+schema +".qs_bill, "
 		+schema +".qs_page where qs_job.id=qs_bill.job_id and qs_bill.id=qs_page.bill_id and jobNumber='"+jobNumber
 		+"' order by billno, subbillno, pageno";// 
-		List<BillPageWrapper> result = this.getSessionFactory().getCurrentSession().createSQLQuery(sql)
+		List<BillPageWrapper> result = getSession().createSQLQuery(sql)
 		.addScalar("job_ID", LongType.INSTANCE).addScalar("bill_ID", LongType.INSTANCE)
 		.addScalar("billNo").addScalar("subBillNo").addScalar("sectionNo").addScalar("pageNo")
 		.setResultTransformer(Transformers.aliasToBean(BillPageWrapper.class)).list();
@@ -159,7 +159,7 @@ public class BillHBDao extends BaseHibernateDao<Bill> {
 	public List<Bill> getBillListWithPagesByJob(Job job)  throws Exception{
 //		logger.info("SEARCH: getBillListWithPagesByJob() - J#"+job.getJobNumber());
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.addOrder(Order.asc("billNo"));
 			criteria.addOrder(Order.asc("subBillNo"));

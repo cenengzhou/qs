@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${JobCostRepositoryControllerTestData.properties}")
 public class JobCostRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = JobCostRepositoryController.class;
+	private Class<?> serviceClass;// = JobCostRepositoryController.class;
 	
 	@Value("${JobCostRepositoryControllerTestData.testObtainAPRecordPaginationWrapper_jobNumber}")
 	String testObtainAPRecordPaginationWrapper_jobNumber;
@@ -58,9 +58,9 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	 * Test data for {@link com.gammon.qs.web.JobCostRepositoryController#getAPRecordPaginationWrapperByPage(java.lang.Integer)}.
 	 */
 	public void initGetAPRecordPaginationWrapperByPage(){
-		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
+//		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
 		try {
-			jobCostRepositoryController.obtainAPRecordPaginationWrapper(testObtainAPRecordPaginationWrapper_jobNumber, testObtainAPRecordPaginationWrapper_invoiceNumber, testObtainAPRecordPaginationWrapper_supplierNumber, testObtainAPRecordPaginationWrapper_documentNumber, testObtainAPRecordPaginationWrapper_documentType, testObtainAPRecordPaginationWrapper_subledger, testObtainAPRecordPaginationWrapper_subledgerType);
+//			jobCostRepositoryController.obtainAPRecordPaginationWrapper(testObtainAPRecordPaginationWrapper_jobNumber, testObtainAPRecordPaginationWrapper_invoiceNumber, testObtainAPRecordPaginationWrapper_supplierNumber, testObtainAPRecordPaginationWrapper_documentNumber, testObtainAPRecordPaginationWrapper_documentType, testObtainAPRecordPaginationWrapper_subledger, testObtainAPRecordPaginationWrapper_subledgerType);
 		} catch (Exception e) {e.printStackTrace();
 		}
 	}
@@ -165,8 +165,8 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	 * Test data for {@link com.gammon.qs.web.JobCostRepositoryController#getPurchaseOrderEnquiryWrapperByPage(java.lang.Integer)}.
 	 */
 	public void initGetPurchaseOrderEnquiryWrapperByPageInteger(){
-		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
-		jobCostRepositoryController.getPurchaseOrderEnquiryWrapperByPage(testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_jobNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_orderNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_orderType, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_supplierNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_description, new Integer(testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_pageNum));
+//		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
+//		jobCostRepositoryController.getPurchaseOrderEnquiryWrapperByPage(testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_jobNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_orderNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_orderType, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_supplierNumber, testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_description, new Integer(testGetPurchaseOrderEnquiryWrapperByPageStringStringStringStringStringInt_pageNum));
 	}
 	public Map<String, Object> testGetPurchaseOrderEnquiryWrapperByPageInteger() {
 		init();
@@ -251,9 +251,9 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	 * Test data for {@link com.gammon.qs.web.JobCostRepositoryController#getAccountBalanceByDateRangePaginationWrapperByPage(java.lang.Integer)}.
 	 */
 	public void initGetAccountBalanceByDateRangePaginationWrapperByPage(){
-		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
+//		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
 		try {
-			jobCostRepositoryController.getAccountBalanceByDateRangeList(testGetAccountBalanceByDateRangeList_jobNumber, testGetAccountBalanceByDateRangeList_subLedger, testGetAccountBalanceByDateRangeList_subLedgerType, testGetAccountBalanceByDateRangeList_postFlag, testGetAccountBalanceByDateRangeList_postFlag, new Date(testGetAccountBalanceByDateRangeList_fromDate), new Date(testGetAccountBalanceByDateRangeList_thruDate), testGetAccountBalanceByDateRangeList_year, testGetAccountBalanceByDateRangeList_period);
+//			jobCostRepositoryController.getAccountBalanceByDateRangeList(testGetAccountBalanceByDateRangeList_jobNumber, testGetAccountBalanceByDateRangeList_subLedger, testGetAccountBalanceByDateRangeList_subLedgerType, testGetAccountBalanceByDateRangeList_postFlag, testGetAccountBalanceByDateRangeList_postFlag, new Date(testGetAccountBalanceByDateRangeList_fromDate), new Date(testGetAccountBalanceByDateRangeList_thruDate), testGetAccountBalanceByDateRangeList_year, testGetAccountBalanceByDateRangeList_period);
 		} catch (Exception e) {e.printStackTrace();
 		}
 	}
@@ -360,9 +360,9 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	 * Test data for {@link com.gammon.qs.web.JobCostRepositoryController#getAccountLedgerPaginationWrapperByPage(java.lang.Integer)}.
 	 */
 	public void initGetAccountLedgerPaginationWrapperByPage(){
-		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
+//		JobCostRepositoryController jobCostRepositoryController = applicationContext.getBean(JobCostRepositoryController.class);
 		try {
-			jobCostRepositoryController.getAccountLedgerByAccountCodeList(testGetAccountLedgerByAccountCodeList_accountCode, testGetAccountLedgerByAccountCodeList_postFlag, testGetAccountLedgerByAccountCodeList_ledgerType, new Date(testGetAccountLedgerByAccountCodeList_fromDate), new Date(testGetAccountLedgerByAccountCodeList_thruDate), testGetAccountLedgerByAccountCodeList_subLedgerType, subLedtestGetAccountLedgerByAccountCodeList_subLedgerger);
+//			jobCostRepositoryController.getAccountLedgerByAccountCodeList(testGetAccountLedgerByAccountCodeList_accountCode, testGetAccountLedgerByAccountCodeList_postFlag, testGetAccountLedgerByAccountCodeList_ledgerType, new Date(testGetAccountLedgerByAccountCodeList_fromDate), new Date(testGetAccountLedgerByAccountCodeList_thruDate), testGetAccountLedgerByAccountCodeList_subLedgerType, subLedtestGetAccountLedgerByAccountCodeList_subLedgerger);
 		} catch (Exception e) {e.printStackTrace();
 		}
 	}

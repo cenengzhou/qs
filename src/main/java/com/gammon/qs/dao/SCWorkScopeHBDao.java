@@ -22,14 +22,14 @@ public class SCWorkScopeHBDao extends BaseHibernateDao<SCWorkScope> {
 
 	@SuppressWarnings("unchecked")
 	public List<SCWorkScope> obtainSCWorkScopeListByPackage(SCPackage scPackage) throws DatabaseOperationException{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPackage", scPackage));
 			return (List<SCWorkScope>) criteria.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void deleteSCWorkScopeBySCPackage(SCPackage scPackage) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		for(SCWorkScope scWorkScope: (List<SCWorkScope>) criteria.list()){
 			delete(scWorkScope);

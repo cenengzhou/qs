@@ -18,7 +18,7 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 	}
 	
 	public String saveAll(List<TransitCodeMatch> codeMatches) throws Exception{
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSession();
 		int i = 0;
 		try{
 			for(; i < codeMatches.size(); i++){
@@ -37,7 +37,7 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 	}
 	
 	public TransitCodeMatch getTransitCodeMatchByResourceCode(String matchingType, String resourceCode) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("matchingType", matchingType));
 		criteria.add(Restrictions.eq("resourceCode", resourceCode));
 		return (TransitCodeMatch)criteria.uniqueResult();
@@ -45,7 +45,7 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getCodeMatchesByType(String matchingType) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("matchingType", matchingType));
 		criteria.setProjection(Projections.projectionList().add(Projections.property("resourceCode"))
 				.add(Projections.property("objectCode"))
@@ -56,7 +56,7 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 	@SuppressWarnings("unchecked")
 	public List<TransitCodeMatch> searchTransitCodeMatches(String matchingType, String resourceCode, 
 			String objectCode, String subsidiaryCode) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if(!GenericValidator.isBlankOrNull(matchingType))
 			criteria.add(Restrictions.eq("matchingType", matchingType));
 		if(!GenericValidator.isBlankOrNull(resourceCode)){

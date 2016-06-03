@@ -17,7 +17,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${BudgetPostingRepositoryControllerTestData.properties}")
 public class BudgetPostingRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = BudgetPostingRepositoryController.class;
+	private Class<?> serviceClass;// = BudgetPostingRepositoryController.class;
 	
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testPostBudget_jobNumber}")
 	String testPostBudget_jobNumber;

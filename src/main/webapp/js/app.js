@@ -392,12 +392,55 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		controller: "EnquiryCtrl"
 	})
 	
+	//Admin
+	.state("admin", {
+		url: "/admin",
+		parent: "navigation",
+		templateUrl: "view/admin/admin-menu.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/admin/admin-session.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
+	})
+	.state("admin.session",{
+		url: "/session",
+		templateUrl: "view/admin/admin-session.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminSessionCtrl"
+	})
 
 	/**The custom “X-Requested-With” is a conventional header sent by browser clients, and it used to be the default in Angular but they took it out in 1.3.0. 
 	 * Spring Security responds to it by not sending a “WWW-Authenticate” header in a 401 response, and thus the browser will not pop up an authentication dialog**/
 	 //$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 	
-	
+	$httpProvider.interceptors.push(function ($q) {
+        return {
+            'response': function (response) {
+                if (response.status === 401) {
+                    console.log("Response 401.");
+                    window.location = "login.htm"
+                }
+                return response || $q.when(response);
+            },
+            'responseError': function (rejection) {
+                if (rejection.status === 401) {
+                    console.log("Response Error 401.");
+                    window.location = "login.htm"
+                }
+                return $q.reject(rejection);
+            }
+        };
+    });
 	
 }])
 .filter('jsonDate', ['$filter', function ($filter) {
@@ -469,7 +512,7 @@ function convertDateStringsToDates(input) {
 /**
  * Check authentication and user role if location changed
  */
-mainApp.run(['$rootScope', '$location', function ($rootScope, $location) {
+mainApp.run(['$rootScope', '$location', '$http', function ($rootScope, $location, $http) {
   /*$rootScope.$on('$locationChangeStart', function(event, next, current) {
 
 	 // console.log('$location.path(): '+$location.path());
@@ -491,7 +534,16 @@ mainApp.run(['$rootScope', '$location', function ($rootScope, $location) {
       }
   });*/
 	
-	
+	window.onbeforeunload = function(authenticate)
+	{
+		$http({
+		    method: "get",
+		    url: "logout",
+		    })
+			.success(function(data) {
+				console.log("logout...");
+			});
+	};
 
 }]);
 

@@ -19,7 +19,7 @@
 		<property name="name" column="NAME" not-null="true"/>
 	</class>
 	
-	<class name="ActiveSession" table="QS_APP_ACTIVE_SESSION" optimistic-lock="none" >
+	<!-- <class name="ActiveSession" table="QS_APP_ACTIVE_SESSION" optimistic-lock="none" >
 		<id name="id" column="ID" unsaved-value="0" >
 			<generator class="sequence" >
 				<param name="sequence" >app_active_session_seq</param>
@@ -37,7 +37,7 @@
 		<property name="loginDateTime" column="LOGIN_DATETIME" not-null="true"/>
 		<property name="lastAccessDateTime" column="LAST_ACCESS_DATETIME" not-null="true"/>
 		<property name="sessionId" column="SESSION_ID" not-null="true"/>
-	</class>
+	</class> -->
 	
 	<class name="SystemMessage" table="QS_SYSTEM_MESSAGE" lazy="false" >
 		<id name="id" column="ID" unsaved-value="0">

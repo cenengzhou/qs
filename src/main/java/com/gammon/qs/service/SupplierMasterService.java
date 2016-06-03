@@ -20,7 +20,8 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.SupplierMasterWSDao;
 import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class SupplierMasterService  {
 	private Logger logger = Logger.getLogger(this.getClass().getName());

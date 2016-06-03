@@ -44,7 +44,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetails> obtainSCDetails(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			criteria.createAlias("scPackage", "scPackage");
 
@@ -67,7 +67,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetailsBQ> obtainSCDetailsBQ(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetailsBQ> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			criteria.createAlias("scPackage", "scPackage");
 
@@ -91,7 +91,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 		PaginationWrapper<SCDetails> wrapper = new PaginationWrapper<SCDetails>();
 		
 		//Get count
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		if(!GenericValidator.isBlankOrNull(billItem)){
@@ -114,7 +114,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 		logger.info("Total Records: "+wrapper.getTotalRecords()+" Current Page: "+wrapper.getCurrentPage()+" Total Page: "+wrapper.getTotalPage());
 		
 		//Get page of records
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		if(!GenericValidator.isBlankOrNull(billItem)){
@@ -186,14 +186,14 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	
 	@SuppressWarnings("unchecked")
 	public List<SCDetails> getSCDetails(SCPackage scPackage) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		return (List<SCDetails>)criteria.list();
 	}
 	
 	public Integer obtainSCDetailsMaxSeqNo(String jobNumber, String subcontractNo) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("scPackage", "scPackage");
 		criteria.add(Restrictions.eq("jobNo",jobNumber));
 		criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
@@ -214,7 +214,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetails> getBQSCDetails(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.add(Restrictions.eq("jobNo",jobNumber));
 			criteria.add(Restrictions.or(
@@ -237,7 +237,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetails> getSCDetails_Deleted(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.add(Restrictions.eq("jobNo",jobNumber));
 			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
@@ -252,7 +252,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public SCDetails obtainSCDetail(String jobNumber, String subcontractNo,String sequenceNo) throws DatabaseOperationException{
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
@@ -268,7 +268,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	
 	public SCDetails getSCDetail(SCPackage scPackage, String sequenceNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("scPackage", scPackage));
 			criteria.add(Restrictions.eq("sequenceNo", new Integer(sequenceNo)));
@@ -279,7 +279,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	}
 	
 	public SCDetails getSCDetail(SCPackage scPackage, String billItem, Integer resourceNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		criteria.add(Restrictions.or(Restrictions.eq("billItem", billItem), Restrictions.like("billItem", billItem + " %")));
@@ -292,7 +292,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	 * Apr 12, 2011 4:49:25 PM
 	 */
 	public SCDetails getSCDetail(String jobNumber, String packageNo, String billItem, String objectCode, String subsidiaryCode, Integer resourceNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		criteria.createAlias("scPackage", "scPackage");
 		
@@ -315,7 +315,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public SCDetails getSCDetail(SCDetails scDetails) throws DatabaseOperationException{
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",scDetails.getScPackage().getJob().getJobNumber()));
@@ -378,7 +378,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetails> getSCDetails(String jobNumber, String subcontractNo,String lineType) throws Exception{
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
@@ -404,7 +404,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	public List<SCDetails> getAddendumDetails(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SCDetailsBQ.class);
+			Criteria criteria = getSession().createCriteria(SCDetailsBQ.class);
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
@@ -422,7 +422,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	@SuppressWarnings("unchecked")
 	public List<SCDetails> getSCDetailByResourceNo(SCPackage scpackage,Integer resourceNo) throws DatabaseOperationException {
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPackage", scpackage));
 			criteria.add(Restrictions.eq("resourceNo", resourceNo));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
@@ -434,7 +434,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	}
 	
 	public Integer getNextSequenceNo(SCPackage scPackage) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("scPackage", scPackage));
 		criteria.setProjection(Projections.max("sequenceNo"));
 		Integer maxSequenceNo = (Integer)criteria.uniqueResult();
@@ -454,7 +454,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 			if(scDetails==null)
 				return;
 			
-			Session session = this.getSessionFactory().getCurrentSession();
+			Session session = getSession();
 			Transaction tx = session.beginTransaction();
 			
 			for(int i=0; i<scDetails.size(); i++){
@@ -494,7 +494,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 			Double updatedCumulativeWorkdoneQuantity = scDetail.getCumWorkDoneQuantity();
 
 			String hql = "UPDATE SCDetails SET cumWorkDoneQuantity = :updatedCumulativeWorkdoneQuantity, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :scDetailID AND jobNo = :jobNumber";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			
 			query.setDouble("updatedCumulativeWorkdoneQuantity", updatedCumulativeWorkdoneQuantity);
 			query.setString("jobNumber", jobNumber);
@@ -540,7 +540,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 			throws DatabaseOperationException {
 		List<SCDetails> resultList = new LinkedList<SCDetails>();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 
 			if (jobNo!=null && !jobNo.equals("")){
 				criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
@@ -574,7 +574,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 
 	@SuppressWarnings("unchecked")
 	public List<AccountCodeWrapper> getAccountCodeListByJob(String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
 		criteria.setProjection(Projections.projectionList()
 				.add(Projections.groupProperty("objectCode"),"objectAccount")
@@ -591,7 +591,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	 * **/
 	public SCDetailsBQ obtainSCDetailsByResourceNo(String jobNo,String packageNo, Integer resourceNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
 			
@@ -619,7 +619,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 												String objectCode, String subsidiaryCode, Integer resourceNo
 												) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
 			
@@ -651,7 +651,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	 * **/
 	public SCDetailsBQ obtainSCDetailsByTADetailID(String jobNo,String packageNo, Long tenderAnalysisDetail_ID) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
 			
@@ -675,7 +675,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	@SuppressWarnings("unchecked")
 	public List<SCDetails> obtainSCDetailsObjectCodeList(String jobNo,String packageNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
 			
@@ -698,7 +698,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 	@SuppressWarnings("unchecked")
 	public List<SCDetailsBQ> obtainSCDetailsByObjectCode(String jobNo,String packageNo, String objectCode, String subsidiaryCode) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
 
@@ -726,7 +726,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 			throws DatabaseOperationException {
 		try{
 			List<SCDetails> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			criteria.createAlias("scPackage", "scPackage");
 
@@ -764,7 +764,7 @@ public class SCDetailsHBDao extends BaseHibernateDao<SCDetails> {
 			throws DatabaseOperationException {
 		try{
 			List<String> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.setProjection(Projections.distinct(Projections.property(fieldName)));

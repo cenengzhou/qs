@@ -17,7 +17,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${AccountLedgerControllerTestData.properties}")
 public class AccountLedgerControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = AccountLedgerController.class;
+	private Class<?> serviceClass ;//= AccountLedgerController.class;
 	
 	@Value("${AccountLedgerControllerTestData.testObtainAccountLedgersByJobNo_jobNo}")
 	String testObtainAccountLedgersByJobNo_jobNo;

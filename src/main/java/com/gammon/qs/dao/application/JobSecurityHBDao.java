@@ -39,7 +39,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 	
 	@SuppressWarnings("unchecked")
 	public List<JobSecurity> getJobSecurityByJob(String jobNumber){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job_No", jobNumber.trim()));
 		return (List<JobSecurity>) criteria.list();
 	}
@@ -50,7 +50,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 
 	@SuppressWarnings("unchecked")
 	public List<JobSecurity> getJobSecurityByUser(String username) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("user", "user");
 		criteria.add(Restrictions.eq("user.username", username.trim()));
 		return (List<JobSecurity>) criteria.list();
@@ -58,7 +58,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 	
 	@SuppressWarnings("unchecked")
 	public List<JobSecurity> getJobSecurityByRoleName(String roleName) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("roleName", roleName.trim()));
 		return ((List<JobSecurity>) criteria.list());
 	}
@@ -77,7 +77,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 	//added Rolename for JobSecurity searching (Kafu Wong March 17, 2010)
 	public JobSecurity getJobSecurity(String username, String roleName, String company,
 			String division, String department, String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("user", "user");
 		if (username==null||username.trim().length()<1)
 			criteria.add(Restrictions.isNull("user.username"));
@@ -120,7 +120,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 			
 			String message = "";
 			for(Authority authority: authorities){
-				Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+				Criteria criteria = getSession().createCriteria(this.getType());
 				
 				String role_JOB = authority.getName();
 				if (!GenericValidator.isBlankOrNull(role_JOB) && role_JOB.startsWith("JOB")){
@@ -158,7 +158,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 			}
 			
 			//Job Security by Role (JOB_ALL, JOB_HKG, etc...)
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.in("roleName", rolelist.toArray()));
 			criteria.add(Restrictions.in("job_No", new Object[]{jobNumber.trim(),"NA"}));
 			criteria.add(Restrictions.in("company", new Object[]{company,"NA"}));
@@ -170,7 +170,7 @@ public class JobSecurityHBDao extends BaseHibernateDao<JobSecurity> {
 				return true;
 			
 			//Job Security by User
-			Criteria criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria2 = getSession().createCriteria(this.getType());
 			criteria2.createAlias("user", "user");
 			criteria2.add(Restrictions.eq("user.username", username.trim()));
 			criteria2.add(Restrictions.in("job_No", new Object[]{jobNumber.trim(),"NA"}));

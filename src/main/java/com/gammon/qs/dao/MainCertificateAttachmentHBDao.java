@@ -25,7 +25,7 @@ public class MainCertificateAttachmentHBDao extends BaseHibernateDao<MainCertifi
 	}
 
 	public MainCertificateAttachment obtainAttachment(Long mainCertID, Integer sequenceNo) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		try{
 		criteria.add(Restrictions.eq("mainCertificate.id", mainCertID));
@@ -38,7 +38,7 @@ public class MainCertificateAttachmentHBDao extends BaseHibernateDao<MainCertifi
 	}
 
 	public MainCertificateAttachment obtainMainCertAttachment(MainContractCertificate mainContractCertificate, Integer sequenceNo) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		try{
 		criteria.add(Restrictions.eq("mainCertificate", mainContractCertificate));		
@@ -54,7 +54,7 @@ public class MainCertificateAttachmentHBDao extends BaseHibernateDao<MainCertifi
 	public List<MainCertificateAttachment> obtainMainCertAttachmentList(MainContractCertificate mainContractCertificate) throws DatabaseOperationException{
 		try{
 			List<MainCertificateAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("mainCertificate", mainContractCertificate));		
 			resultList = criteria.list();
 			return resultList;

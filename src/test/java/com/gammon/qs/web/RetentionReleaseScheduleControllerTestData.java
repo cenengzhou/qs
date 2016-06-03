@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${RetentionReleaseScheduleControllerTestData.properties}")
 public class RetentionReleaseScheduleControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = RetentionReleaseScheduleController.class;
+	private Class<?> serviceClass;// = RetentionReleaseScheduleController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.RetentionReleaseScheduleController#obtainCumulativeRetentionReleaseByJob(com.gammon.qs.domain.MainContractCertificate)}.

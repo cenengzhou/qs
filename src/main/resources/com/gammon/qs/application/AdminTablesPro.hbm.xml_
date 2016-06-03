@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.gammon.qs.application" schema="qsadmin">
+
+	<class name="Authority" table="QS_APP_AUTHORITY" >
+		<id name="id" column="ID" unsaved-value="0">
+			<generator class="sequence">
+				<param name="sequence">app_authority_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<property name="name" column="NAME" not-null="true"/>
+	</class>
+	
+	<!-- <class name="ActiveSession" table="QS_APP_ACTIVE_SESSION" optimistic-lock="none" >
+		<id name="id" column="ID" unsaved-value="0" >
+			<generator class="sequence" >
+				<param name="sequence" >app_active_session_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<many-to-one name="user" class="com.gammon.qs.application.User" column="USER_ID" cascade="none" lazy="false" not-null="true"/>
+		<property name="remoteAddress" column="REMOTE_ADDR" not-null="true"/>
+		<property name="hostname" column="HOST_NAME" not-null="true"/>
+		<property name="loginDateTime" column="LOGIN_DATETIME" not-null="true"/>
+		<property name="lastAccessDateTime" column="LAST_ACCESS_DATETIME" not-null="true"/>
+		<property name="sessionId" column="SESSION_ID" not-null="true"/>
+	</class> -->
+	
+	<class name="SystemMessage" table="QS_SYSTEM_MESSAGE" lazy="false" >
+		<id name="id" column="ID" unsaved-value="0">
+			<generator class="sequence">
+				<param name="sequence">system_message_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<property name="username" column="USERNAME" not-null="true"/>
+		<property name="message" column="MESSAGE" not-null="false"/>
+		<property name="scheduledDate" column="SCHEDULED_DATE" not-null="false"/>
+		
+	</class>
+	
+	<class name="User" table="QS_APP_USER" lazy="false" >
+		<id name="id" column="ID" unsaved-value="0">
+			<generator class="sequence">
+				<param name="sequence">app_user_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<property name="username" column="USERNAME" not-null="true"/>
+		<property name="fullname" column="FULLNAME" not-null="false"/>
+		<property name="email" column="EMAIL" not-null="false"/>
+		<set name="authorities" table="QS_LINK_USER_AUTHORITY" lazy="false" >
+			<key column="USER_ID"/>
+			<many-to-many class="Authority" column="AUTHORITY_ID"/>
+		</set>
+		<map name="screenPreferences" table="QS_USER_SCREEN_PREFERENCES" cascade="all-delete-orphan" lazy="false" >
+			<key column="USER_ID"/>
+			<map-key column="SCREEN_NAME" type="string"/>
+			<element type="string" column="PREFERENCE" not-null="true" length="1024"/>
+		</map>
+		<map name="generalPreferences" 
+			table="QS_USER_GENERAL_PREFERENCES" cascade="all-delete-orphan" lazy="false" >
+			<key column="USER_ID"/>
+			<map-key column="PREFERENCE_KEY" type="string"/>
+			<element type="string" column="PREFERENCE_VALUE" not-null="false" length="256"/>
+		</map>
+	</class>
+	
+	<class name="JobSecurity" table="QS_APP_JOB_SECURITY">
+		<id name="id" column="ID" unsaved-value="0">
+			<generator class="sequence">
+				<param name="sequence">app_job_security_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<many-to-one name="user" class="com.gammon.qs.application.User" column="USER_ID" foreign-key="FK_JobSecurityUser_PK"/>
+		<property name="roleName" column="ROLENAME" not-null="false" length="20"/>
+		<property name="company" column="COMPANY" not-null="false" length="5"/>
+		<property name="division" column="DIVISION" not-null="false" length="3"/>
+		<property name="department" column="DEPT" not-null="false" length="3"/>
+		<property name="job_No" column="JOB_NO" not-null="false" length="12"/>
+	</class>
+	
+	<class name="JobDivisionInfo" table="QS_APP_JOB">
+		<id name="id" column="ID" unsaved-value="0">
+			<generator class="sequence">
+				<param name="sequence">app_job_seq</param>
+			</generator>
+		</id>
+		<timestamp name="lastModifiedDate" column="LAST_MODIFIED_DATE"/>
+		<property name="lastModifiedUser" column="LAST_MODIFIED_USER" length="50" not-null="false"/>
+		<property name="createdDate" column="CREATED_DATE" not-null="true"/>
+		<property name="createdUser" column="CREATED_USER" not-null="true" length="50"/>
+		<property name="systemStatus" column="SYSTEM_STATUS" length="20" not-null="true"/>
+		
+		<property name="description" column="DESCRIPTION" not-null="false" length="512"/>
+		<property name="jobNumber" column="JOB_NUMBER" not-null="true"/>
+		<property name="company" column="COMPANY" not-null="false" length="20"/>
+		<property name="division" column="DIVISION" not-null="false" length="20"/>
+		<property name="department" column="DEPARTMENT" not-null="false" length="20"/>
+	</class>
+	
+</hibernate-mapping>
+

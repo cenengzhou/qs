@@ -17,7 +17,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 	
 	@SuppressWarnings("unchecked")
 	public List<QrtzTriggers> getAllTriggers(){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		return criteria.list();
 	}
 	
@@ -41,7 +41,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 		
 		List<ActiveSession> results = new LinkedList<ActiveSession>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("hostname", hostname));
 			
 			results = criteria.list();
@@ -59,7 +59,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 		
 		ActiveSession result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("hostname", hostname));
 			criteria.add(Restrictions.eq("sessionId", sessionId));
 			
@@ -77,7 +77,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 		
 		List<ActiveSession> results = new LinkedList<ActiveSession>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("user", "user");
 			criteria.add(Restrictions.eq("user.username", username));
 			
@@ -96,7 +96,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 		
 		ActiveSession result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("user", "user");
 			criteria.add(Restrictions.eq("user.username", username));
 			criteria.add(Restrictions.eq("remoteAddress", remoteAddress));

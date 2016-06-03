@@ -20,7 +20,7 @@ public class RetentionReleaseScheduleHBDao extends BaseHibernateDao<RetentionRel
 
 	@SuppressWarnings("unchecked")
 	public List<RetentionRelease> obtainRetentionReleaseScheduleByJob(String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("jobNumber", jobNumber));
 		criteria.addOrder(Order.asc("status")).addOrder(Order.asc("mainCertNo")).addOrder(Order.asc("dueDate")).addOrder(Order.asc("id"));
@@ -28,7 +28,7 @@ public class RetentionReleaseScheduleHBDao extends BaseHibernateDao<RetentionRel
 	}
 	
 	public RetentionRelease obtainActualRetentionReleaseByMainCertNo(String jobNumber, Integer mainCertNo) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("jobNumber", jobNumber));
 		criteria.add(Restrictions.eq("mainCertNo", mainCertNo));
@@ -57,7 +57,7 @@ public class RetentionReleaseScheduleHBDao extends BaseHibernateDao<RetentionRel
 	}
 	
 	private RetentionRelease internalSelectByJobSeq(String jobNumber,Integer seqNo ){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("jobNumber", jobNumber));
 		criteria.add(Restrictions.eq("sequenceNo",seqNo));
@@ -66,7 +66,7 @@ public class RetentionReleaseScheduleHBDao extends BaseHibernateDao<RetentionRel
 
 	@SuppressWarnings("unchecked")
 	public List<RetentionRelease> searchByJobList(List<String> jobList) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.in("jobNumber", jobList.toArray()));
 		criteria.addOrder(Order.asc("jobNumber"));

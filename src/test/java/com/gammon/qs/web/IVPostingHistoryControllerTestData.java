@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${IVPostingHistoryControllerTestData.properties}")
 public class IVPostingHistoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = IVPostingHistoryController.class;
+	private Class<?> serviceClass;// = IVPostingHistoryController.class;
 	
 	@Value("${IVPostingHistoryControllerTestData.testObtainIVPostingHistory_jobNumber}")
 	String testObtainIVPostingHistory_jobNumber;
@@ -68,9 +68,9 @@ public class IVPostingHistoryControllerTestData extends ControllerTestCase.TestD
 	 * Test data for {@link com.gammon.qs.web.IVPostingHistoryController#getIVPostingHistoryByPage(int)}.
 	 */
 	public void initGetIVPostingHistoryByPage(){
-		IVPostingHistoryController ivPostingHistoryController = applicationContext.getBean("ivPostingHistoryController", IVPostingHistoryController.class);
+//		IVPostingHistoryController ivPostingHistoryController = applicationContext.getBean("ivPostingHistoryController", IVPostingHistoryController.class);
 		try {
-			ivPostingHistoryController.obtainIVPostingHistory(testGetIVPostingHistoryByPage_jobNumber, testGetIVPostingHistoryByPage_packageNo, testGetIVPostingHistoryByPage_objectCode, testGetIVPostingHistoryByPage_subsidiaryCode, new Date(testGetIVPostingHistoryByPage_fromDate), new Date(testGetIVPostingHistoryByPage_toDate));
+//			ivPostingHistoryController.obtainIVPostingHistory(testGetIVPostingHistoryByPage_jobNumber, testGetIVPostingHistoryByPage_packageNo, testGetIVPostingHistoryByPage_objectCode, testGetIVPostingHistoryByPage_subsidiaryCode, new Date(testGetIVPostingHistoryByPage_fromDate), new Date(testGetIVPostingHistoryByPage_toDate));
 		} catch (Exception e) {e.printStackTrace();
 		}
 	}

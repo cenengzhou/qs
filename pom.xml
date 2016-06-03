@@ -62,11 +62,14 @@
 		<quartz.version>2.2.0</quartz.version>
 		<rome.version>1.5.1</rome.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
-		<spring.version>4.2.3.RELEASE</spring.version>
+		<spring.version>4.2.5.RELEASE</spring.version>
 		<spring-kerberos.version>1.0.1.RELEASE</spring-kerberos.version>
 		<spring-ldap.version>2.0.4.RELEASE</spring-ldap.version>
-		<spring-security.version>4.0.3.RELEASE</spring-security.version>
+		<spring-security.version>4.1.0.RELEASE</spring-security.version>
 		<spring-ws.version>2.2.4.RELEASE</spring-ws.version>
+		<spring-data-releasetrain.version>Hopper-SR1</spring-data-releasetrain.version>
+		<spring-data-oracle.version>1.2.1.RELEASE</spring-data-oracle.version>
+		<spring-session.version>1.2.0.RELEASE</spring-session.version>
 		<surefire.version>2.19</surefire.version>
 		<taglibs-std.version>1.1.2</taglibs-std.version>
 		<woodstox-asl.version>4.4.1</woodstox-asl.version>
@@ -74,9 +77,10 @@
 		<wss4j.version>1.6.19</wss4j.version>
 		<xerces.version>2.10.0</xerces.version>
 		<xml-apis.version>2.0.2</xml-apis.version>
+		<slf4j.version>1.7.19</slf4j.version>
 		
 		<!-- Version - Hosted locally -->
-		<ojdbc.version>10.2.0.4.0</ojdbc.version>
+		<ojdbc.version>11.2.0.4.0</ojdbc.version>
 		<wadl.version>1.1-SNAPSHOT</wadl.version>
 		<beanlib.version>6.0.0</beanlib.version>
 		<jasperreports-fonts.version>6.2.0</jasperreports-fonts.version>
@@ -111,16 +115,43 @@
 				<scope>import</scope>
 			</dependency>
 
+			<dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-releasetrain</artifactId>
+                <version>${spring-data-releasetrain.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
 		</dependencies>
 	</dependencyManagement>
 
 	<!-- ========================================== DEPENDENCIES ================================================= -->
 	<dependencies>
+		<!-- redirect all log from tomcat to log4j -->
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>jcl-over-slf4j</artifactId>
+		  <version>${slf4j.version}</version>
+		  <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-api</artifactId>
+		  <version>${slf4j.version}</version>
+		  <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-log4j12</artifactId>
+		  <version>${slf4j.version}</version>
+		  <scope>runtime</scope>
+		</dependency>
+		
 		<!-- Oracle JDBC driver: transferring the query and result between client and database -->
 		<dependency>
 			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
+			<artifactId>ojdbc6_g</artifactId>
 			<version>${ojdbc.version}</version>
 		</dependency>
 
@@ -138,11 +169,16 @@
 			<scope>provided</scope>
 		</dependency>
 		
-	
 		<!-- Spring: application framework and inversion of control container -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -176,11 +212,23 @@
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
 			<version>${spring-ws.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-security</artifactId>
 			<version>${spring-ws.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	
 		<!-- Spring: Security Framework -->
@@ -210,6 +258,12 @@
 			<groupId>org.springframework.security.kerberos</groupId>
 			<artifactId>spring-security-kerberos-client</artifactId>
 			<version>${spring-kerberos.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- Spring: intergate with unit test framework -->
@@ -217,7 +271,40 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
-
+		
+		<!--  Spring: Spring Data -->
+       <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-webmvc</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.springframework.data</groupId>
+           <artifactId>spring-data-oracle</artifactId>
+           <version>${spring-data-oracle.version}</version>
+       </dependency>
+       
+	   <!-- Spring: Spring Session -->
+	   <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session</artifactId>
+                <version>${spring-session.version}</version>
+                <exclusions>
+                	<exclusion>
+                		<artifactId>commons-logging</artifactId>
+                		<groupId>commons-logging</groupId>
+                	</exclusion>
+                </exclusions>
+	   </dependency>
+         <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-jdbc</artifactId>
+                <version>${spring-session.version}</version>
+        </dependency>
+        
 		<!-- Hibernate: framework for mapping an object-oriented domain model to a relational database-->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -295,6 +382,12 @@
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>${commons-validator.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--  Apache Commons: File upload capability for servlets and web applications -->
@@ -309,6 +402,12 @@
 			<groupId>org.apache.ws.security</groupId>
 			<artifactId>wss4j</artifactId>
 			<version>${wss4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- Apache Axiom: provides an XML Infoset compliant object model implementation which supports on-demand building of the object tree -->
@@ -316,11 +415,23 @@
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-api</artifactId>
 			<version>${axiom.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-impl</artifactId>
 			<version>${axiom.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 				
 		<!-- Aspect weaver: aspect-oriented languages designed to take instructions specified by aspects -->
@@ -354,6 +465,10 @@
 				<exclusion>
 					<artifactId>jackson-annotations</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -903,40 +1018,11 @@
 			</plugin>
 			
 			<!-- ====== Step 3: Compile GWT by ANT plug-in ====== -->
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
 				<executions>
-					<execution>
-						<id>del-gwt</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target> 
-								<delete dir="${basedir}/src/main/gwt-unitCache" includeemptydirs="true"/> 
-								<delete dir="${basedir}/src/main/webapp/gammonqs" includeemptydirs="true"/> 
-								<delete dir="${basedir}/src/main/webapp/WEB-INF/deploy/gammonqs" includeemptydirs="true"/> 
-							</target>
-						</configuration>
-					</execution>
-					<execution>
-						<id>compile-gwt</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							 <target> 
-								<exec executable="cmd" dir="${basedir}" spawn="false"> 
-								<arg value="/c" /> 
-								<arg value="Main-compile.cmd" /> 
-								</exec> 
-							</target>
-						</configuration>
-					</execution>
 					<execution>
 						<id>file-copy</id>
 						<phase>compile</phase>
@@ -948,13 +1034,11 @@
 								<delete
 									dir="${project.build.outputDirectory}/com/gammon/qs/webservice/serviceProvider"
 									includeemptydirs="true" />
-								<copy file="src/main/java/com/gammon/qs/GammonQS.gwt.xml"
-									tofile="${project.build.directory}/${project.build.finalName}/WEB-INF/classes/com/gammon/qs/GammonQS.gwt.xml" />
 							</target>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin> 
 			
 			<!-- ====== Step 4: Package the project as WAR file ====== -->
 			<plugin>

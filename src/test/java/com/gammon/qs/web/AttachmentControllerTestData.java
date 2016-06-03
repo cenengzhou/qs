@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${AttachmentControllerTestData.properties}")
 public class AttachmentControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = AttachmentController.class;
+	private Class<?> serviceClass;// = AttachmentController.class;
 	
 	@Value("${AttachmentControllerTestData.testAddRepackagingTextAttachment_repackagingEntryID}")
 	String testAddRepackagingTextAttachment_repackagingEntryID;

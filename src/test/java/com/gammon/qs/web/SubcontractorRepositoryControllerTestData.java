@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${SubcontractorRepositoryControllerTestData.properties}")
 public class SubcontractorRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = SubcontractorRepositoryController.class;
+	private Class<?> serviceClass;// = SubcontractorRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.SubcontractorRepositoryController#obtainSubcontractorPaginationWrapper(java.lang.String, java.lang.String)}.

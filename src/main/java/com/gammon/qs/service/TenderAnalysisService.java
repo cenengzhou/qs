@@ -44,7 +44,8 @@ import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisDetailWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisVendorWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class TenderAnalysisService implements Serializable {
 	private static final long serialVersionUID = -3750073286095069814L;

@@ -17,7 +17,7 @@ public class CronTriggerHBDao extends BaseHibernateDao<CronTriggers> {
 	
 	@SuppressWarnings("unchecked")
 	public List<CronTriggers> getAllTriggers(){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		return criteria.list();
 	}
 	

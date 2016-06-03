@@ -51,7 +51,7 @@ public class PageHBDao extends BaseHibernateDao<Page> {
 		if (page==null)
 			throw new NullPointerException("Page is Null");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			if (page.getPageNo()==null ||page.getPageNo().trim().length()<1 )
 				criteria.add(Restrictions.isNull("pageNo"));
 			else
@@ -76,7 +76,7 @@ public class PageHBDao extends BaseHibernateDao<Page> {
 	}
 	
 	public Page getPage(String jobNumber, String billNo, String subBillNo, String sectionNo, String pageNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("bill", "bill");
 		criteria.createAlias("bill.job", "job");
 		criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
@@ -104,7 +104,7 @@ public class PageHBDao extends BaseHibernateDao<Page> {
 		if (jobNumber==null)
 			throw new NullPointerException("Job number is Null");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("bill.job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
 			criteria.addOrder(Order.asc("pageNo"));
@@ -119,14 +119,14 @@ public class PageHBDao extends BaseHibernateDao<Page> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Page> obtainPageListByBill(Bill bill) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("bill", bill));
 		criteria.addOrder(Order.asc("pageNo"));
 		return (List<Page>) criteria.list();
 	}
 //	public List<Page> getPageSQL(String jobNumber) throws DatabaseOperationException{
 //		String sql = "select job_id, bill_id, billNo, subBillNo, pageNo from job, bill, page where job.id=bill.job_id and bill.id=page.bill_id and jobNumber="+jobNumber+" group by order by billno, subbillno, pageno";
-//		List<BillPageWrapper> result = this.getSessionFactory().getCurrentSession().createSQLQuery(sql).addEntity(BillPageWrapper.class).list();
+//		List<BillPageWrapper> result = getSession().createSQLQuery(sql).addEntity(BillPageWrapper.class).list();
 //		for (BillPageWrapper billPage: result)
 //			logger.info(billPage.getBillNo()+"/"+billPage.getSubBillNo()+"//"+billPage.getPageNo());
 //		return null;

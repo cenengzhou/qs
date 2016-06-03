@@ -32,7 +32,7 @@ public class BQItemHBDao extends BaseHibernateDao<BQItem> {
 
 		List<BQItem> resultList = new LinkedList<BQItem>();
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 
 			criteria.createAlias("page", "page");
 

@@ -113,7 +113,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	}
 	
 	public Resource getResourceWithBQItem(Long id) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("id", id));
 		Resource resource = (Resource) criteria.uniqueResult();
 		Hibernate.initialize(resource.getBqItem());
@@ -121,7 +121,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	}
 	
 	public Integer getNextResourceNoForBQItem(BQItem bqItem) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		criteria.add(Restrictions.eq(BQITEM, bqItem));
 		criteria.setProjection(Projections.max(RESOURCE_NUMBER));
@@ -138,7 +138,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		
 		
 			try{
-				Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+				Criteria criteria = getSession().createCriteria(this.getType());
 				criteria.createAlias("bill.job", "job");
 				if (jobNumber!=null &&  jobNumber.length()>0)
 					criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
@@ -180,7 +180,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 			throw new NullPointerException();
 		}
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(RESOURCE_NUMBER, resource.getResourceNo()));
 			criteria.createAlias(BQITEM, BQITEM);
 			if (resource.getBqItem().getItemNo()==null || resource.getBqItem().getItemNo().trim().length()<1)
@@ -272,7 +272,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	@SuppressWarnings("unchecked")
 	public List<Resource> getAllResourcesByJobNumber(String jobNumber)  throws Exception {
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 			criteria.createAlias("bqItem.page.bill.job", "job");
 			if (jobNumber!=null &&  jobNumber.length()>0)
@@ -353,7 +353,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		List<Resource> resultList = new LinkedList<Resource>();
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 			criteria.createAlias("bqItem.page", "page");
 			criteria.createAlias("page.bill", "bill");
@@ -438,7 +438,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Resource> getResourcesByBQItem(BQItem bqItem) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		criteria.add(Restrictions.eq(BQITEM, bqItem));
 		return criteria.list();
@@ -446,7 +446,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Resource> getResourcesByBQItemId(Long id) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias(BQITEM, BQITEM);
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		criteria.add(Restrictions.eq("bqItem.id", id));
@@ -456,7 +456,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	@SuppressWarnings("unchecked")
 	public RepackagingPaginationWrapper<Resource> searchResourcesByPage(String jobNumber, String billNo, String subBillNo, String pageNo,
 			String itemNo, String packageNo, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		if(billNo != null && billNo.trim().length() != 0){
@@ -527,7 +527,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		criteria.setMaxResults(PAGE_SIZE);
 		List<Resource> resources = criteria.list();
 		
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		if(billNo != null && billNo.trim().length() != 0){
@@ -597,7 +597,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Resource> getResourcesByPackage(String jobNumber, String packageNo) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.eq(PACKAGE_NO, packageNo));
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
@@ -611,7 +611,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	}
 	
 	public Resource getResourceByBqItemAndResourceNo(BQItem bqItem, Integer resourceNo){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(BQITEM, bqItem));
 		criteria.add(Restrictions.eq(RESOURCE_NUMBER, resourceNo));
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
@@ -624,7 +624,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		String[] bpiSplit = bpi.split("/");
 		if(bpiSplit.length != 5)
 			return null;
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.eq(REF_BILL_NO, bpiSplit[0]));
@@ -651,7 +651,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	public Double getBudgetForPackage(String jobNumber, String packageNo) throws DatabaseOperationException{
 		logger.info("getBudgetForPackage(Job job, String packageNo)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 			criteria.add(Restrictions.eq(PACKAGE_NO, packageNo));
@@ -666,7 +666,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	
 	@SuppressWarnings("unchecked")
 	public List<BudgetPostingWrapper> getAccountAmountsForOcLedger(String jobNumber) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.ne("this.subsidiaryCode", "99019999"));
@@ -678,7 +678,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	}
 	
 	public Double getMarkupForObLedger(String jobNumber) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
 		criteria.add(Restrictions.eq(SUBSIDIARY_CODE, "99019999"));
@@ -711,7 +711,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 			packageNo = packageNo.replace("*","%");
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 			
 			if (!GenericValidator.isBlankOrNull(jobNumber))
@@ -768,7 +768,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		double totalResourceAmount = 0.00;
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 			
 			if (!GenericValidator.isBlankOrNull(jobNumber))
@@ -807,7 +807,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		logger.info("J#:"+jobNumber+" Username:"+username);
 		try{
 			String hql = "UPDATE Resource SET ivPostedAmount = ivCumAmount, ivPostedQuantity = ivCumQuantity, ivMovementAmount = 0, lastModifiedUser = :user, lastModifiedDate = :date WHERE jobNumber = :jobNumber AND ivPostedAmount != ivCumAmount";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setString("user", username);
 			query.setString(JOB_NUMBER, jobNumber);
 			query.setDate("date", new Date());
@@ -834,7 +834,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 		Resource result = new Resource();
 		
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq(SYSTEM_STATUS, BasePersistedAuditObject.ACTIVE));
 			
 			if (!GenericValidator.isBlankOrNull(jobNumber))
@@ -880,7 +880,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	public List<IVBQItemGroupedByIDWrapper> groupResourcesToBQItems(String jobNumber) throws DatabaseOperationException {
 		logger.info("GROUP RESOURCE TO BQITEM BY: BQItem ID for J#"+jobNumber);
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		List<IVBQItemGroupedByIDWrapper> result = new ArrayList<IVBQItemGroupedByIDWrapper>();
 		
 		try{
@@ -915,7 +915,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	@SuppressWarnings("unchecked")
 	public List<IVBQResourceSummaryGroupedBySCWrapper> groupResourcesToBQResourceSummariesForSC(String jobNumber) throws DatabaseOperationException, ValidateBusinessLogicException {
 		logger.info("GROUP RESOURCE TO BQRESOURCESUMMARY BY: Subcontract for J#"+jobNumber);
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		List<IVBQResourceSummaryGroupedBySCWrapper> result = new ArrayList<IVBQResourceSummaryGroupedBySCWrapper>();
 		
 		try{
@@ -951,12 +951,12 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	@SuppressWarnings("unchecked")
 	public List<IVBQResourceSummaryGroupedBySCWrapper> groupResourcesToBQResourceSummariesForNonSC(String jobNumber) throws DatabaseOperationException, ValidateBusinessLogicException {
 		logger.info("GROUP RESOURCE TO BQRESOURCESUMMARY BY: Non-Subcontract for J#"+jobNumber);
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		List<IVBQResourceSummaryGroupedBySCWrapper> result = new ArrayList<IVBQResourceSummaryGroupedBySCWrapper>();
 		
 		try{		
 			//Non-Subcontract
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			criteria = getSession().createCriteria(this.getType());
 			
 			//where
 			criteria.add(Restrictions.eq(JOB_NUMBER, jobNumber));
@@ -991,7 +991,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Resource> obtainSCResources(String jobNumber) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		List<Resource> result = new ArrayList<Resource>();
 		try{
 			//where
@@ -1026,7 +1026,7 @@ public class ResourceHBDao extends BaseHibernateDao<Resource> {
 			Double updatedIVMovementAmount = resource.getIvMovementAmount();
 
 			String hql = "UPDATE Resource SET ivCumAmount = :updatedIVCumulativeAmount, ivCumQuantity = :updatedIVCumulativeQuantity, ivMovementAmount = :updatedIVMovementAmount, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :resourceID AND jobNumber = :jobNumber";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 
 			query.setDouble("updatedIVCumulativeAmount", updatedIVCumulativeAmount);
 			query.setDouble("updatedIVCumulativeQuantity", updatedIVCumulativeQuantity);

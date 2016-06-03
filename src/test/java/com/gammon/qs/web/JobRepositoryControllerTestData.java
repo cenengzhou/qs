@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${JobRepositoryControllerTestData.properties}")
 public class JobRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = JobRepositoryController.class;
+	private Class<?> serviceClass;// = JobRepositoryController.class;
 	
 	/**
 	 * Test data for {@link com.gammon.qs.web.JobRepositoryController#getAllJobList()}.

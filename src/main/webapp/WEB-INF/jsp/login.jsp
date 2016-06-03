@@ -24,7 +24,6 @@ body {
 </style>
 
 <script type="text/javascript" language="javascript">
-
 <%
 request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 String domainString="";
@@ -96,6 +95,9 @@ function unifyCharacters(){
 	window.document.getElementById("username").value = <%= getElementString%>.toLowerCase();
 }
 document.execCommand("ClearAuthenticationCache"); 
+if(new String(window.location).indexOf("/login.htm")<0){
+	window.location = "login.htm";
+};
 </script>
 
 </head>
@@ -114,7 +116,7 @@ document.execCommand("ClearAuthenticationCache");
 			<br>
 			<form method="POST" action="<c:url value="/formlogin"/>" onsubmit="unifyCharacters()">
 				<div class="form-group has-feedback">
-					<input id="username" type="text" name="username" class="form-control" <% if(disableTextBox){ out.print("readonly"); out.print(" value=\""+usernameString+"\"");}%> 
+					<input id="username" type="text" name="username" class="form-control" <% if(disableTextBox){ out.print("readonly"); out.print(" value=\""+usernameString+"\"");}%>> 
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">

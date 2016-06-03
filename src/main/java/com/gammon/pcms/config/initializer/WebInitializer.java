@@ -9,13 +9,12 @@ import javax.servlet.ServletException;
 
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.gammon.pcms.config.ApplicationConfig;
 import com.gammon.pcms.config.ServletConfig;
-import com.gammon.qs.web.servlet.ActiveSessionListener;
 
 public class WebInitializer extends
 		AbstractAnnotationConfigDispatcherServletInitializer {
@@ -39,13 +38,17 @@ public class WebInitializer extends
 		hibernateSessionFilterRegistration.setAsyncSupported(true);
 		hibernateSessionFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
 		
+		RequestContextFilter requestContextFilter = new RequestContextFilter();
+		requestContextFilter.setServletContext(servletContext);
+		FilterRegistration.Dynamic requestContextFilterRegistration = servletContext.addFilter("requestContextFilter", requestContextFilter);
+		requestContextFilterRegistration.setAsyncSupported(true);
+		requestContextFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
+
 		System.setProperty("UseSunHttpHandler", "true");
 	}
 
 	@Override
 	protected void registerContextLoaderListener(ServletContext servletContext) {
-		servletContext.addListener(new RequestContextListener());
-		servletContext.addListener(new ActiveSessionListener());
 		servletContext.addListener(new HttpSessionEventPublisher());
 		super.registerContextLoaderListener(servletContext);
 	}

@@ -1,5 +1,8 @@
 package com.gammon.pcms.config;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,6 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -15,7 +19,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@EnableTransactionManagement
 @ComponentScan(scopedProxy = ScopedProxyMode.TARGET_CLASS, basePackages = {"com.gammon"})
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @PropertySource("classpath:application.properties")
@@ -57,7 +60,16 @@ public class ApplicationConfig {
 	private String uatConfigDirectory;
 	@Value("${PROConfigDirectory}")
 	private String proConfigDirectory;
-
+//	@Autowired
+//	private JdbcOperationsSessionRepository jdbcOperationsSessionRepository;
+	@Autowired
+	private HibernateConfig hibernateConfig;
+	
+	@PostConstruct
+	public void init(){
+//		jdbcOperationsSessionRepository.setTableName(hibernateConfig.getHibernateDefault_schema() +".SPRING_SESSION");
+	}
+	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer bean = new PropertySourcesPlaceholderConfigurer();

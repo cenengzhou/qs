@@ -34,7 +34,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 
 	public void deleteResourcesByHeader(TransitHeader header) throws Exception{
 		String hqlDelete = "delete TransitResource res where res.transitBQ in (from TransitBQ bq where bq.transitHeader = :header)";
-		Query deleteQuery = this.getSessionFactory().getCurrentSession().createQuery(hqlDelete);
+		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
 		logger.info(numDeleted + " transit resources deleted");
@@ -44,7 +44,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		if(resources == null)
 			return;
 
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSession();
 		for(int i = 0; i < resources.size(); i++){
 			session.save(resources.get(i));
 			if(i % 20 == 0){
@@ -55,7 +55,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	}
 	
 	public boolean dummyAccountCodesExist(TransitHeader header){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
 		criteria.add(Restrictions.or(Restrictions.eq("objectCode", "000000"), Restrictions.eq("subsidiaryCode", "00000000")));
@@ -72,7 +72,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		
 //		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
-		Criteria countCriteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria countCriteria = getSession().createCriteria(this.getType());
 		countCriteria.createAlias("transitBQ", "bq");
 		countCriteria.add(Restrictions.eq("bq.transitHeader", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
@@ -145,7 +145,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 //		wrapper.setTotalRecords(count);
 //		wrapper.setTotalPage((count + TransitRepositoryHBImpl.RECORDS_PER_PAGE - 1)/TransitRepositoryHBImpl.RECORDS_PER_PAGE);
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
@@ -236,7 +236,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
 		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
-		Criteria countCriteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria countCriteria = getSession().createCriteria(this.getType());
 		countCriteria.createAlias("transitBQ", "bq");
 		countCriteria.add(Restrictions.eq("bq.transitHeader", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
@@ -308,7 +308,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		wrapper.setTotalRecords(count);
 		wrapper.setTotalPage((count + TransitService.RECORDS_PER_PAGE - 1)/TransitService.RECORDS_PER_PAGE);
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
@@ -397,7 +397,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	// Last modified: Brian Tse
 	@SuppressWarnings("unchecked")
 	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(TransitHeader header){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
 		criteria.addOrder(Order.asc("type"));
@@ -419,7 +419,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 
 	@SuppressWarnings("unchecked")
 	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBQ transitBQ) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("transitBQ", transitBQ));
 		return criteria.list();
 	}

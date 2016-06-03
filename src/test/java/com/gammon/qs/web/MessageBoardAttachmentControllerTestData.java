@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${MessageBoardAttachmentControllerTestData.properties}")
 public class MessageBoardAttachmentControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = MessageBoardAttachmentController.class;
+	private Class<?> serviceClass;// = MessageBoardAttachmentController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.MessageBoardAttachmentController#obtainAttachmentListByMessageID(long)}.

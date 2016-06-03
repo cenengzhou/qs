@@ -10,21 +10,31 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.PathResource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.hibernate4.support.OpenSessionInterceptor;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.gammon.qs.aspect.AuditAspectHibernateInterceptor;
 
 @Configuration
 @PropertySource("file:${hibernate.properties}")
+//@EnableJdbcHttpSession
+@EnableJpaRepositories(basePackages = {"com.gammon.pcms.dao"})
+@EnableSpringDataWebSupport
+@EnableTransactionManagement
 public class HibernateConfig {
-	
-	@Value("${Context.INITIAL_CONTEXT_FACTORY}")
+
+//	@Value("${Context.INITIAL_CONTEXT_FACTORY}")
 	private String ContextINITIAL_CONTEXT_FACTORY;
-	@Value("${jndi.datasource}")
+//	@Value("${jndi.datasource}")
 	private String jndiDatasource;
 	@Value("${hibernate.hbm2ddl.auto}")
 	private String hibernateHbm2DdlAuto;
@@ -58,23 +68,41 @@ public class HibernateConfig {
 		dataSource.setPassword(jdbcConfig.getPassword());
 		return dataSource;
 	}
-	
+
+	@Bean
+	public LocalContainerEntityManagerFactoryBean  entityManagerFactory() {
+
+		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+		vendorAdapter.setGenerateDdl(true);
+
+		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+		factory.setJpaVendorAdapter(vendorAdapter);
+		factory.setPackagesToScan("com.gammon.pcms.model", "com.gammon.qs.domain");
+		factory.setDataSource(jdbcDataSource());
+		factory.setJpaProperties(databaseProperties());
+		factory.setPersistenceUnitName("PersistenceUnit");
+		factory.afterPropertiesSet();
+		return factory;//.getObject();
+	}
+
 	@Bean(name = "sessionFactory")
-	public LocalSessionFactoryBean sessionFactory() {
-		LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
-		bean.setConfigLocations(new PathResource(qsadminConfig));
-		bean.setDataSource(jdbcDataSource());
-		bean.setHibernateProperties(databaseProperties());
-		bean.setPackagesToScan("com.gammon.qs.domain");
-		bean.setEntityInterceptor(hibernateEntityInterceptor());
+	public HibernateJpaSessionFactoryBean sessionFactory() {
+		HibernateJpaSessionFactoryBean bean = new HibernateJpaSessionFactoryBean();
+		bean.setEntityManagerFactory(entityManagerFactory().getObject());
+		// bean.setConfigLocations(new PathResource(qsadminConfig));
+		// bean.setDataSource(jdbcDataSource());
+		// bean.setHibernateProperties(databaseProperties());
+		// bean.setPackagesToScan("com.gammon.pcms.model","com.gammon.qs.domain");
+		// bean.setEntityInterceptor(hibernateEntityInterceptor());
 		return bean;
 	}
-	
+
 	@Bean(name = "transactionManager")
-	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-		HibernateTransactionManager bean = new HibernateTransactionManager();
-		bean.setSessionFactory(sessionFactory);
-		return bean;
+	public PlatformTransactionManager transactionManager() {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+		return transactionManager;
 	}
 
 	@Bean(name = "hibernateEntityInterceptor")
@@ -103,6 +131,76 @@ public class HibernateConfig {
 		properties.setProperty("hibernate.jdbc.fetch_size", hibernateJdbcFetch_size);
 		properties.setProperty("current_session_context_class", current_session_context_class);
 		return properties;
+	}
+
+	/**
+	 * @return the contextINITIAL_CONTEXT_FACTORY
+	 */
+	public String getContextINITIAL_CONTEXT_FACTORY() {
+		return ContextINITIAL_CONTEXT_FACTORY;
+	}
+
+	/**
+	 * @return the hibernateHbm2DdlAuto
+	 */
+	public String getHibernateHbm2DdlAuto() {
+		return hibernateHbm2DdlAuto;
+	}
+
+	/**
+	 * @return the hibernateDialect
+	 */
+	public String getHibernateDialect() {
+		return hibernateDialect;
+	}
+
+	/**
+	 * @return the hibernateDefault_schema
+	 */
+	public String getHibernateDefault_schema() {
+		return hibernateDefault_schema;
+	}
+
+	/**
+	 * @return the hibernateShow_sql
+	 */
+	public String getHibernateShow_sql() {
+		return hibernateShow_sql;
+	}
+
+	/**
+	 * @return the hibernateMax_fetch_depth
+	 */
+	public String getHibernateMax_fetch_depth() {
+		return hibernateMax_fetch_depth;
+	}
+
+	/**
+	 * @return the hibernateFormat_sql
+	 */
+	public String getHibernateFormat_sql() {
+		return hibernateFormat_sql;
+	}
+
+	/**
+	 * @return the hibernateJdbcBatch_size
+	 */
+	public String getHibernateJdbcBatch_size() {
+		return hibernateJdbcBatch_size;
+	}
+
+	/**
+	 * @return the hibernateJdbcFetch_size
+	 */
+	public String getHibernateJdbcFetch_size() {
+		return hibernateJdbcFetch_size;
+	}
+
+	/**
+	 * @return the current_session_context_class
+	 */
+	public String getCurrent_session_context_class() {
+		return current_session_context_class;
 	}
 
 }

@@ -19,7 +19,7 @@ public class BQResourceSummaryHBDaoSA extends BaseHibernateDao<BQResourceSummary
 
 	@SuppressWarnings("unchecked")
 	public List<AccountCodeWrapper> getAccountCodeListByJob(String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("job", "job");
 		criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
 		criteria.setProjection(Projections.projectionList()

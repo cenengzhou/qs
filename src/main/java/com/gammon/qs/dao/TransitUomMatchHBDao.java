@@ -21,7 +21,7 @@ public class TransitUomMatchHBDao extends BaseHibernateDao<TransitUomMatch> {
 	}
 	
 	public String saveAll(List<TransitUomMatch> codeMatches) throws Exception{
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSession();
 		int i = 0;
 		try{
 			for(; i < codeMatches.size(); i++){
@@ -42,7 +42,7 @@ public class TransitUomMatchHBDao extends BaseHibernateDao<TransitUomMatch> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getAllUomMatches() throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.setProjection(Projections.projectionList().add(Projections.property("causewayUom"))
 				.add(Projections.property("jdeUom")));
 		return criteria.list();
@@ -50,7 +50,7 @@ public class TransitUomMatchHBDao extends BaseHibernateDao<TransitUomMatch> {
 	
 	@SuppressWarnings("unchecked")
 	public List<TransitUomMatch> searchTransitUomMatches(String causewayUom, String jdeUom) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if(!GenericValidator.isBlankOrNull(causewayUom)){
 			causewayUom = causewayUom.trim().toUpperCase().replace("*", "%");
 			if(causewayUom.contains("%"))

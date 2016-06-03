@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${SystemMessageControllerTestData.properties}")
 public class SystemMessageControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = SystemMessageController.class;
+	private Class<?> serviceClass;// = SystemMessageController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.SystemMessageController#getGlobalAlertMessage()}.

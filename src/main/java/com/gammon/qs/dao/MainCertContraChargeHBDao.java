@@ -21,7 +21,7 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 	public MainCertificateContraCharge obtainMainCertContraCharge(String objectCode, String subsidCode, MainContractCertificate mainCert) throws DatabaseOperationException{
 		MainCertificateContraCharge result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("mainCertificate", mainCert));
 			criteria.add(Restrictions.eq("objectCode", objectCode));
 			criteria.add(Restrictions.eq("subsidiary", subsidCode));
@@ -37,7 +37,7 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 	public List<MainCertificateContraCharge> obtainMainCertContraChargeList(String jobNumber) throws DatabaseOperationException{
 		List<MainCertificateContraCharge> result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType(),"cc");
+			Criteria criteria = getSession().createCriteria(this.getType(),"cc");
 			criteria.createAlias("cc.mainCertificate", "mc")
 			   .add(Restrictions.eq("mc.jobNo", jobNumber))
 			   .add(Restrictions.gt("mc.certifiedContraChargeAmount", 0.0));
@@ -53,7 +53,7 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 	public List<MainCertificateContraCharge> obtainMainCertContraChargeList(MainContractCertificate mainCert) throws DatabaseOperationException{
 		List<MainCertificateContraCharge> result = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("mainCertificate", mainCert));
 			result = criteria.list();
 		}catch (HibernateException ex){

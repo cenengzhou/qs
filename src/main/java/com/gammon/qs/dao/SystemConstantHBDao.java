@@ -30,7 +30,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 		SystemConstant result;
 		try{
 			logger.info(systemCode+"-"+company);
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("systemCode", systemCode));
 			criteria.add(Restrictions.eq("company", company));
@@ -51,7 +51,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 		try{
 			logger.info("Company: "+company);
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("company", company));
 			systemConstant = (SystemConstant) criteria.uniqueResult();
@@ -74,7 +74,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 					+ "', scMaxRetentionPercent = '" + scMaxRetentionPercent + "', scInterimRetentionPercent = '" + scInterimRetentionPercent
 					+ "', scMOSRetentionPercent = '" + scMOSRetentionPercent + "', retentionType = '" + retentionType + "', finQS0Review = '" + finQS0Review + "'");
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 		
 			if(systemCode != null) 					{ criteria.add(Restrictions.eq("systemCode", 				systemCode)); }
 			if(company != null) 					{ criteria.add(Restrictions.eq("company", 					company)); }
@@ -104,7 +104,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 			logger.info("Generate System Constant Searching field candidates of "+fieldName);
 			
 			if(isValidField(fieldName)){		
-				Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+				Criteria criteria = getSession().createCriteria(this.getType());
 				@SuppressWarnings("unchecked")
 				List<String> data = criteria
 										.add(Restrictions.eq("systemStatus", "ACTIVE"))
@@ -166,7 +166,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 	
 	public Boolean createSystemConstant(SystemConstant request, String user)  throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemCode", request.getSystemCode()));
 			criteria.add(Restrictions.eq("company", request.getCompany()));
 			SystemConstant result = (SystemConstant)criteria.uniqueResult();
@@ -175,7 +175,7 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 			request.setCreatedDate(new Date());
 			request.setCreatedUser(user);
 			
-			Session session = this.getSessionFactory().getCurrentSession();
+			Session session = getSession();
 			
 		
 			session.save(request);
@@ -188,12 +188,12 @@ public class SystemConstantHBDao extends BaseHibernateDao<SystemConstant>{
 
 	public Boolean inactivateSystemConstant(SystemConstant request, String user) throws DatabaseOperationException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			SystemConstant record = (SystemConstant) criteria.add(Restrictions.eq("systemCode", request.getSystemCode()))
 					.add(Restrictions.eq("company", request.getCompany()))
 					.uniqueResult();
 			record.setSystemStatus("INACTIVE");
-			this.getSessionFactory().getCurrentSession().save(record);
+			getSession().save(record);
 		} catch(HibernateException he) {
 			logger.info("Failed to create system constant with HibernateException: " + he.getMessage());
 			throw new DatabaseOperationException(he);

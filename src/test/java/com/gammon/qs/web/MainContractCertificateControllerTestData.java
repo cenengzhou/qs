@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${MainContractCertificateControllerTestData.properties}")
 public class MainContractCertificateControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = MainContractCertificateController.class;
+	private Class<?> serviceClass;// = MainContractCertificateController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#addMainContractCert(com.gammon.qs.domain.MainContractCertificate)}.

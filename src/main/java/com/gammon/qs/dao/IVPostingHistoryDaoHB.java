@@ -23,7 +23,7 @@ public class IVPostingHistoryDaoHB extends BaseHibernateDao<IVPostingHistory> {
 	public List<IVPostingHistory> obtainIVPostingHistory(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, Date fromDate, Date toDate) throws Exception{
 		List<IVPostingHistory> resultList = new ArrayList<IVPostingHistory>();
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		criteria.add(Restrictions.eq("jobNumber", jobNumber));
 		

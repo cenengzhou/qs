@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${ObjectSubsidiaryRuleRepositoryControllerTestData.properties}")
 public class ObjectSubsidiaryRuleRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = ObjectSubsidiaryRuleRepositoryController.class;
+	private Class<?> serviceClass;// = ObjectSubsidiaryRuleRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.ObjectSubsidiaryRuleRepositoryController#findObjectSubsidiaryRuleByPage(java.lang.Integer, java.lang.String, java.lang.String, java.lang.String)}.

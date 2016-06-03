@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${UserAccessJobsRepositoryControllerTestData.properties}")
 public class UserAccessJobsRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = UserAccessJobsRepositoryController.class;
+	private Class<?> serviceClass;// = UserAccessJobsRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.UserAccessJobsRepositoryController#canAccessJob(java.lang.String, java.lang.String)}.

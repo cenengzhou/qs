@@ -19,7 +19,7 @@ public class ResourceHBDaoSA extends BaseHibernateDao<Resource>{
 
 	@SuppressWarnings("unchecked")
 	public List<AccountCodeWrapper> getAccountCodeListByJob(String jobNumber) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));
 		criteria.setProjection(Projections.projectionList()
 				.add(Projections.groupProperty("objectCode"),"objectAccount")

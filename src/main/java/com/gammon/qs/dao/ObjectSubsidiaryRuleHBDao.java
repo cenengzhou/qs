@@ -28,7 +28,7 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 
 	@SuppressWarnings("unchecked")
 	public List<ObjectSubsidiaryRule> getObjectSubsidiaryRule(ObjectSubsidiaryRule searchingObj){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if (searchingObj.getCostCategory()!=null)
 			criteria.add(Restrictions.eq("costCategory", searchingObj.getCostCategory()));
 		if (searchingObj.getMainTrade()!=null)
@@ -42,15 +42,15 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 	
 	public Boolean updateObjectSubsidiaryRule(ObjectSubsidiaryRule oldRule, ObjectSubsidiaryRule newRule) throws DatabaseOperationException {
 		try {
-			Session session = this.getSessionFactory().getCurrentSession();
+			Session session = getSession();
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			applyRestrictions(criteria, newRule.getResourceType(), newRule.getCostCategory(), newRule.getMainTrade());
 			criteria.add(Restrictions.eq("applicable", newRule.getApplicable()));
 			ObjectSubsidiaryRule osr = (ObjectSubsidiaryRule)criteria.uniqueResult();
 			if(osr != null) { throw new DatabaseOperationException("Updating rule " + newRule.getResourceType() + "/" + newRule.getCostCategory() + "/" + newRule.getMainTrade() + " failed: Update would create duplicate Object Subsidiary Rule"); }
 					
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			criteria = getSession().createCriteria(this.getType());
 			applyRestrictions(criteria, oldRule.getResourceType(), oldRule.getCostCategory(), oldRule.getMainTrade());
 			criteria.add(Restrictions.eq("applicable", oldRule.getApplicable()));
 			osr = (ObjectSubsidiaryRule)criteria.uniqueResult();
@@ -87,7 +87,7 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 			response.updated = false;
 			try {
 				boolean skip = false;
-				Session session = this.getSessionFactory().getCurrentSession();
+				Session session = getSession();
 				Criteria criteria;
 				ObjectSubsidiaryRule osr;
 			
@@ -135,12 +135,12 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 	
 	public Boolean createObjectSubsidiaryRule(ObjectSubsidiaryRule osr) throws DatabaseOperationException {
 		try {
-				Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+				Criteria criteria = getSession().createCriteria(this.getType());
 				applyRestrictions(criteria, osr.getResourceType(), osr.getCostCategory(), osr.getMainTrade());
 				ObjectSubsidiaryRule res = (ObjectSubsidiaryRule)criteria.uniqueResult();
 				if(res != null) { throw new DatabaseOperationException("An identical Object Subsidiary Rule already exists"); }
 			
-				Session session = this.getSessionFactory().getCurrentSession();
+				Session session = getSession();
 				//session.beginTransaction();
 				
 				session.save(osr);
@@ -161,7 +161,7 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 	public PaginationWrapper<ObjectSubsidiaryRule> findObjectSubsidiaryRuleByPage(Integer pageNum, String resource, String costCategory, String mainTrade) throws DatabaseOperationException {
 		PaginationWrapper<ObjectSubsidiaryRule> wrapper = new PaginationWrapper<ObjectSubsidiaryRule>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			applyRestrictions(criteria, resource, costCategory, mainTrade);
 			criteria.setFirstResult(pageNum * RECORDS_PER_PAGE);
 			criteria.setMaxResults(RECORDS_PER_PAGE); 
@@ -171,7 +171,7 @@ public class ObjectSubsidiaryRuleHBDao extends BaseHibernateDao<ObjectSubsidiary
 			criteria.addOrder(Order.asc("mainTrade"));
 			wrapper.setCurrentPageContentList(criteria.list());
 			
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			criteria = getSession().createCriteria(this.getType());
 			applyRestrictions(criteria, resource, costCategory, mainTrade);
 			criteria.setProjection(Projections.rowCount());
 			Integer count = Integer.valueOf(criteria.uniqueResult().toString());

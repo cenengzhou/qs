@@ -27,7 +27,7 @@ public class SCDetailAttachmentHBDao extends BaseHibernateDao<SCDetailsAttachmen
 	public List<SCDetailsAttachment> getSCDetailsAttachment(String jobNumber, String subcontractNo, String scDetailSequenceNo) throws DatabaseOperationException{
 		try{
 			List<SCDetailsAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scDetails.scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.createAlias("scDetails", "scDetails");
@@ -46,7 +46,7 @@ public class SCDetailAttachmentHBDao extends BaseHibernateDao<SCDetailsAttachmen
 	public List<SCDetailsAttachment> getSCDetailsAttachment(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		try{
 			List<SCDetailsAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scDetails.scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.createAlias("scDetails", "scDetails");
@@ -65,7 +65,7 @@ public class SCDetailAttachmentHBDao extends BaseHibernateDao<SCDetailsAttachmen
 	public List<SCDetailsAttachment> getSCDetailsAttachment(SCDetails scDetail) throws DatabaseOperationException{
 		try{
 			List<SCDetailsAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scDetails", scDetail));		
 			resultList = criteria.list();
 			return resultList;
@@ -77,7 +77,7 @@ public class SCDetailAttachmentHBDao extends BaseHibernateDao<SCDetailsAttachmen
 	public List<SCDetailsAttachment> getSCDetailsAttachment(SCPackage scPackage) throws DatabaseOperationException{
 		try{
 			List<SCDetailsAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scDetails", "scDetails");
 			criteria.createAlias("scDetails.scPackage", "scPackage");
 			criteria.add(Restrictions.eq("scPackage", scPackage));		
@@ -90,7 +90,7 @@ public class SCDetailAttachmentHBDao extends BaseHibernateDao<SCDetailsAttachmen
 
 	public SCDetailsAttachment getSCDetailsAttachment(SCDetails scDetails, Integer attachmentSequenceNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scDetails",scDetails));
 			criteria.add(Restrictions.eq("sequenceNo", attachmentSequenceNo));
 			return (SCDetailsAttachment)criteria.uniqueResult();

@@ -36,7 +36,7 @@ public class SystemMessageHBDao extends BaseHibernateDao<SystemMessage> {
 		List<SystemMessage> systemMessageList = null;
 		
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SystemMessage.class);
+			Criteria criteria = getSession().createCriteria(SystemMessage.class);
 			
 			List<String> searchUserNameList = new LinkedList<String>();
 			
@@ -73,7 +73,7 @@ public class SystemMessageHBDao extends BaseHibernateDao<SystemMessage> {
 		List<SystemMessage> systemMessageList = null;
 		
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SystemMessage.class);
+			Criteria criteria = getSession().createCriteria(SystemMessage.class);
 			
 			String searchUsername = "ALL";
 			
@@ -101,7 +101,7 @@ public class SystemMessageHBDao extends BaseHibernateDao<SystemMessage> {
 		
 			
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SystemMessage.class);
+			Criteria criteria = getSession().createCriteria(SystemMessage.class);
 			
 			List<String> searchUserNameList = new LinkedList<String>();
 			

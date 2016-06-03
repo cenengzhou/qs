@@ -53,7 +53,8 @@ import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class BQResourceSummaryService implements Serializable {
 

@@ -17,7 +17,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 @Configuration
 @PropertySource("file:${EnvironmentConfigControllerTestData.properties}")
 public class EnvironmentConfigControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = EnvironmentConfigController.class;
+	private Class<?> serviceClass;// = EnvironmentConfigController.class;
 	
 	@Value("${EnvironmentConfigControllerTestData.testGetApprovalSystemPath_sql}")
 	String testGetApprovalSystemPath_sql;

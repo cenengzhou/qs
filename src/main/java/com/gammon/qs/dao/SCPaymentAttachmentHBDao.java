@@ -27,7 +27,7 @@ public class SCPaymentAttachmentHBDao extends BaseHibernateDao<SCPaymentAttachme
 	public List<SCPaymentAttachment> getSCPaymentAttachment(String jobNumber, String subcontractNo, String paymentCertNo) throws DatabaseOperationException{
 		try{
 			List<SCPaymentAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.createAlias("scPaymentCert", "scPaymentCert");
@@ -50,7 +50,7 @@ public class SCPaymentAttachmentHBDao extends BaseHibernateDao<SCPaymentAttachme
 			dbObj.setJobNo(scPaymentCert.getScPackage().getJob().getJobNumber());
 			dbObj.setPackageNo(scPaymentCert.getScPackage().getPackageNo());
 			dbObj.setPaymentCertNo(scPaymentCert.getPaymentCertNo());
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			/*criteria.createAlias("scPaymentCert.scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");*/
 			//criteria.createAlias("scPaymentCert", "scPaymentCert");
@@ -70,7 +70,7 @@ public class SCPaymentAttachmentHBDao extends BaseHibernateDao<SCPaymentAttachme
 	public List<SCPaymentAttachment> getSCPaymentAttachment(SCPaymentCert scPaymentCert) throws DatabaseOperationException{
 		try{
 			List<SCPaymentAttachment> resultList;
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));		
 			resultList = criteria.list();
 			return resultList;
@@ -81,7 +81,7 @@ public class SCPaymentAttachmentHBDao extends BaseHibernateDao<SCPaymentAttachme
 	
 	public SCPaymentAttachment getSCPaymentAttachment(String jobNumber, String subcontractNo,String paymentCertNo, Integer sequenceNo) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("scPaymentCert.scPackage", "scPackage");
 			criteria.createAlias("scPackage.job", "job");
 			criteria.createAlias("scPaymentCert", "scPaymentCert");
@@ -139,8 +139,8 @@ public class SCPaymentAttachmentHBDao extends BaseHibernateDao<SCPaymentAttachme
 	
 	public long deleteAttachmentByByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
-		this.getSessionFactory().getCurrentSession().clear();
-		Query query = this.getSessionFactory().getCurrentSession().createQuery("delete from SCPaymentAttachment scPaymentAttachment where scPaymentCert_ID =" + paymentCertID);
+		getSession().clear();
+		Query query = getSession().createQuery("delete from SCPaymentAttachment scPaymentAttachment where scPaymentCert_ID =" + paymentCertID);
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}

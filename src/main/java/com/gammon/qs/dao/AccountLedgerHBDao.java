@@ -30,7 +30,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 	@SuppressWarnings("unchecked")
 	public List<AccountLedger> obtainAccountLedgersByJobNo(String jobNo, String ledgerType) throws DatabaseOperationException {
 		Criteria criteria = null;
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", jobNo));
 		criteria.add(Restrictions.eq("ledgerType", ledgerType));
@@ -45,7 +45,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 	@SuppressWarnings("unchecked")
 	public List<BudgetForecastWrapper> obtainAccountLedgersByJobNo(String jobNo, Integer year) throws DatabaseOperationException {
 		Criteria criteria = null;
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("this.jobNo", jobNo));
 		// sqlRestriction() is used due to Hibernate bug - normal restriction will result in invalid identifier generated in SQL
@@ -70,7 +70,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 
 	public AccountLedger obtainAccountLedgerByAccountLedger(AccountLedger accountLedger) throws DatabaseOperationException {
 		Criteria criteria = null;
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", accountLedger.getJobNo()));
 		criteria.add(Restrictions.eq("objectCode", accountLedger.getObjectCode()));
@@ -99,7 +99,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 		List<AccountLedger> accountLedgerList = new ArrayList<AccountLedger>();
 		
 		Criteria criteria = null;
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", budgetForecastWrapper.getJobNo()));
 		criteria.add(Restrictions.eq("objectCode", budgetForecastWrapper.getObjectCode()));
@@ -124,7 +124,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 		
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", budgetForecastWrapper.getJobNo()));
 		criteria.add(Restrictions.eq("objectCode", budgetForecastWrapper.getObjectCode()));
@@ -148,7 +148,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 			accountLedgerList.addAll(ob);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", budgetForecastWrapper.getJobNo()));
 		criteria.add(Restrictions.eq("objectCode", budgetForecastWrapper.getObjectCode()));
@@ -178,7 +178,7 @@ public class AccountLedgerHBDao extends BaseHibernateDao<AccountLedger> {
 	@SuppressWarnings("unchecked")
 	public List<AccountLedger> obtainAccountLedgersByLedgerType(String jobNo, String ledgerType) throws DatabaseOperationException {
 		Criteria criteria = null;
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE ));
 		criteria.add(Restrictions.eq("jobNo", jobNo));
 		criteria.add(Restrictions.eq("ledgerType", ledgerType));

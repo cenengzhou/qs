@@ -3,6 +3,10 @@ package com.gammon.qs.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,9 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+    @PersistenceContext
+    protected EntityManager entityManager;
+    
 	public BaseHibernateDao(Class<T> type) {
 		this.type = type;
 	}
@@ -26,7 +33,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	 */
 	public void insert(T object) throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().save(object);
+			getSession().save(object);
 			flush();
 		} catch (Exception ex) {
 			throw new DatabaseOperationException(ex);
@@ -35,7 +42,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void saveOrUpdate(T object) throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().saveOrUpdate(object);
+			getSession().saveOrUpdate(object);
 			flush();
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
@@ -48,7 +55,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	 */
 	public void update(T object) throws DatabaseOperationException {
 		try{
-			this.sessionFactory.getCurrentSession().update(object);
+			getSession().update(object);
 			flush();
 		}catch (Exception ex){
 			throw new DatabaseOperationException(ex);
@@ -57,7 +64,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void updateAndFlush(T object) throws DatabaseOperationException {
 		try{
-			this.sessionFactory.getCurrentSession().update(object);
+			getSession().update(object);
 			flush();
 		}catch (Exception ex){
 			throw new DatabaseOperationException(ex);
@@ -66,7 +73,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void updateFlushClear(T object) throws DatabaseOperationException {
 		try{
-			this.sessionFactory.getCurrentSession().update(object);
+			getSession().update(object);
 			flush();
 			clear();
 		}catch (Exception ex){
@@ -76,7 +83,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void merge(T object) throws DatabaseOperationException {
 		try{
-			this.sessionFactory.getCurrentSession().merge(object);
+			getSession().merge(object);
 			flush();
 		}catch (Exception ex){
 			throw new DatabaseOperationException(ex);
@@ -87,7 +94,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	public T get(Long id) throws DatabaseOperationException {
 		T result = null;
 		try {
-			result = (T) this.sessionFactory.getCurrentSession().get(type, id);
+			result = (T) getSession().get(type, id);
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
 		}
@@ -98,7 +105,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	public List<T> getAll() throws DatabaseOperationException {
 		List<T> result = new ArrayList<T>();
 		try {
-			result = this.sessionFactory.getCurrentSession().createCriteria(type).list();
+			result = getSession().createCriteria(type).list();
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
 		}
@@ -109,7 +116,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	public List<T> getAllActive() throws DatabaseOperationException {
 		List<T> result = new ArrayList<T>();
 		try {
-			result = this.sessionFactory.getCurrentSession().createCriteria(type).add(Restrictions.eq("systemStatus", BasePersistedObject.ACTIVE)).list();
+			result = getSession().createCriteria(type).add(Restrictions.eq("systemStatus", BasePersistedObject.ACTIVE)).list();
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
 		}
@@ -118,7 +125,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void delete(T persistentObject) throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().delete(persistentObject);
+			getSession().delete(persistentObject);
 			flush();
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
@@ -128,7 +135,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	public void flushAndDelete(T persistentObject) throws DatabaseOperationException {
 		try {
 			flush();
-			this.sessionFactory.getCurrentSession().delete(persistentObject);
+			getSession().delete(persistentObject);
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
 		}
@@ -136,7 +143,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	
 	public void deleteById(Long id) throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().delete(this.get(id));
+			getSession().delete(this.get(id));
 			flush();
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
@@ -166,7 +173,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	 */
 	public void flush() throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().flush();
+			getSession().flush();
 		} catch (Exception ex) {
 			throw new DatabaseOperationException(ex);
 		}
@@ -181,7 +188,7 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	 */
 	public void clear() throws DatabaseOperationException {
 		try {
-			this.sessionFactory.getCurrentSession().clear();
+			getSession().clear();
 		} catch (Exception ex) {
 			throw new DatabaseOperationException(ex);
 		}
@@ -215,4 +222,8 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	public Session getSession(){
+		Session session = entityManager.unwrap(Session.class);
+		return session;
+	}
 }

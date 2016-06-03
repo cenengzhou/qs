@@ -25,7 +25,7 @@ public class MessageBoardAttachmentHBDao extends BaseHibernateDao<MessageBoardAt
 
 	@SuppressWarnings("unchecked")
 	public List<MessageBoardAttachment> obtainAttachmentListByMessageID(long messageBoardID)	throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("docType", MessageBoardAttachment.IMAGE_DOC_TYPE));
 		criteria.createAlias("messageBoard", "messageBoard");
@@ -37,7 +37,7 @@ public class MessageBoardAttachmentHBDao extends BaseHibernateDao<MessageBoardAt
 
 	@SuppressWarnings("unchecked")
 	public List<MessageBoardAttachment> obtainAttachmentListByID(long messageBoardID) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.createAlias("messageBoard", "messageBoard");
 		criteria.add(Restrictions.eq("messageBoard.id", messageBoardID));
@@ -47,7 +47,7 @@ public class MessageBoardAttachmentHBDao extends BaseHibernateDao<MessageBoardAt
 	}
 
 	public Integer obtainAttachmentSeqNoByID(long messageBoardID) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.createAlias("messageBoard", "messageBoard");
 		criteria.add(Restrictions.eq("messageBoard.id", messageBoardID));
@@ -58,7 +58,7 @@ public class MessageBoardAttachmentHBDao extends BaseHibernateDao<MessageBoardAt
 	}
 
 	public MessageBoardAttachment obtainAttachmentByFilename(long messageBoardID, String filename) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.createAlias("messageBoard", "messageBoard");
 		criteria.add(Restrictions.eq("messageBoard.id", messageBoardID));

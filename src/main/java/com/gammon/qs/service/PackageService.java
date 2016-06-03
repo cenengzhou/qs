@@ -127,7 +127,8 @@ import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
 
 import net.sf.jasperreports.engine.JRException;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class PackageService {
 	private transient Logger logger = Logger.getLogger(PackageService.class.getName());

@@ -19,7 +19,8 @@ import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.jobCost.IvPostingHistoryExcelGenerator;
 import com.gammon.qs.wrapper.IVHistoryPaginationWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class IVPostingHistoryService implements Serializable{
 	private transient Logger logger = Logger.getLogger(IVPostingHistoryService.class.getName());

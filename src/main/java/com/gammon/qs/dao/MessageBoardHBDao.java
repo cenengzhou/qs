@@ -24,7 +24,7 @@ public class MessageBoardHBDao extends BaseHibernateDao<MessageBoard> {
 
 	@SuppressWarnings("unchecked")
 	public List<MessageBoard> obtainAllDisplayMessages() {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("isDisplay", "Y"));
 		criteria.addOrder(Order.desc("deliveryDate"));
@@ -34,7 +34,7 @@ public class MessageBoardHBDao extends BaseHibernateDao<MessageBoard> {
 
 	@SuppressWarnings("unchecked")
 	public List<MessageBoard> obtainDisplayMessagesByType(MessageBoard messageBoard) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		if(messageBoard.getMessageType()!=null && !"".equals(messageBoard.getMessageType()))
 			criteria.add(Restrictions.eq("messageType", messageBoard.getMessageType()));

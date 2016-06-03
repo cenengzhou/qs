@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${MasterListRepositoryControllerTestData.properties}")
 public class MasterListRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = MasterListRepositoryController.class;
+	private Class<?> serviceClass;// = MasterListRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.MasterListRepositoryController#searchObjectList(java.lang.String)}.

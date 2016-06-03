@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${TransitRepositoryControllerTestData.properties}")
 public class TransitRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = TransitRepositoryController.class;
+	private Class<?> serviceClass;// = TransitRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.TransitRepositoryController#createOrUpdateTransitHeader(java.lang.String, java.lang.String, java.lang.String, boolean)}.

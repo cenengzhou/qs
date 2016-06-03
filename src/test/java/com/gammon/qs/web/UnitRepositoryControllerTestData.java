@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${UnitRepositoryControllerTestData.properties}")
 public class UnitRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = UnitRepositoryController.class;
+	private Class<?> serviceClass;// = UnitRepositoryController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.UnitRepositoryController#getUnitOfMeasurementList()}.

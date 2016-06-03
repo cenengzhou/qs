@@ -39,7 +39,7 @@ public class SCPackageSnapshotHBDao extends BaseHibernateDao<SCPackageSnapshot> 
 	public List<SCPackageSnapshot> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber, String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> companyList, Integer status, String month, String year, String reportType) throws DatabaseOperationException {
 		List<SCPackageSnapshot> result = null;
 		try{			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.createAlias("job", "job");
 			if (company!=null && !"".equals(company))
@@ -109,7 +109,7 @@ public class SCPackageSnapshotHBDao extends BaseHibernateDao<SCPackageSnapshot> 
 		Date startDate = DateUtil.parseDate("01-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
 		Date endDate = DateUtil.parseDate("31-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.ge("snapshotDate",startDate));
 		criteria.add(Restrictions.lt("snapshotDate",endDate));

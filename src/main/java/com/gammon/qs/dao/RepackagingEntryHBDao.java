@@ -32,7 +32,7 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	public List<RepackagingEntry> getRepackagingEntriesByJobNumber(String jobNumber) throws DatabaseOperationException{
 		List<RepackagingEntry> repackagingEntries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.addOrder(Order.asc("repackagingVersion"));
 			repackagingEntries = criteria.list();
@@ -48,7 +48,7 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	public List<RepackagingEntry> getRepackagingEntriesByJob(Job job) throws DatabaseOperationException{
 		List<RepackagingEntry> repackagingEntries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.addOrder(Order.desc("repackagingVersion"));
 			repackagingEntries = criteria.list();
@@ -61,14 +61,14 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	}
 	
 	public RepackagingEntry getRepackagingEntry(Job job, Integer version) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.eq("repackagingVersion", version));
 		return (RepackagingEntry)criteria.uniqueResult();
 	}
 	
 	public RepackagingEntry getRepackagingEntryWithJob(Long repackagingEntryID) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("id", repackagingEntryID));
 		RepackagingEntry repackagingEntry = (RepackagingEntry)criteria.uniqueResult();
 		Hibernate.initialize(repackagingEntry.getJob());
@@ -83,11 +83,11 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	public RepackagingEntry getLatestRepackagingEntry(Job job) throws Exception{
 		RepackagingEntry repackagingEntry = null;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.setProjection(Projections.max("repackagingVersion"));
 			Integer latestVersion = (Integer)criteria.uniqueResult();
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("repackagingVersion", latestVersion));
 			repackagingEntry = (RepackagingEntry)criteria.uniqueResult();
@@ -100,11 +100,11 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	}
 	
 	public Long getIdOfLatestRepackagingEntry(Job job) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job", job));
 		criteria.setProjection(Projections.max("repackagingVersion"));
 		Integer latestVersion = (Integer)criteria.uniqueResult();
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.eq("repackagingVersion", latestVersion));
 		criteria.setProjection(Projections.property("id"));
@@ -112,7 +112,7 @@ public class RepackagingEntryHBDao extends BaseHibernateDao<RepackagingEntry> {
 	}
 	
 	public RepackagingEntry clearDetailsFromEntry(Long id){
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("id", id));
 		RepackagingEntry entryInDB = (RepackagingEntry)criteria.uniqueResult();
 		for(RepackagingDetail repackagingDetail : repackagingDetailHBDao.obtainRepackagingDetail(entryInDB)){

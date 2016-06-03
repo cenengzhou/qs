@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${PackageRepositoryControllerTestData.properties}")
 public class PackageRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = PackageRepositoryController.class;
+	private Class<?> serviceClass;// = PackageRepositoryController.class;
 	
 	/**
 	 * Test data for {@link com.gammon.qs.web.PackageRepositoryController#getNotAwardedPackage(java.lang.String, java.lang.String, java.lang.String)}.

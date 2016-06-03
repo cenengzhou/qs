@@ -42,7 +42,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 
 		List<Job> result;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.property("jobNumber"),"jobNumber")
 					.add(Projections.property("description"),"description")
@@ -69,7 +69,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 
 		List<Job> result = new ArrayList<Job>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.addOrder(Order.asc("jobNumber"));
 			result = (List<Job>) criteria.list();
@@ -82,7 +82,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	
 	public Job obtainJob(String jobNumber) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());			
+			Criteria criteria = getSession().createCriteria(this.getType());			
 			criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));
 			return (Job)criteria.uniqueResult();
 		}catch (HibernateException he){
@@ -93,7 +93,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 
 	public String obtainJobCompany(String jobNumber) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));
 			criteria.setProjection(Projections.property("company"));
 			return (String)criteria.uniqueResult();
@@ -108,7 +108,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Job> obtainJobsByDivCoJob(String division, String company, String jobNo) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if (jobNo!=null && !"".equals(jobNo.trim()))
 			criteria.add(Restrictions.eq("jobNumber", jobNo));
 		if (company!=null && !"".equals(company.trim()))
@@ -130,7 +130,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Job> obtainJobsByDivCoJobList(String division, String company, List<String> jobNoSearchList) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if (jobNoSearchList!=null && jobNoSearchList.size()>0)
 			criteria.add(Restrictions.in("jobNumber", jobNoSearchList));
 		if (company!=null && !"".equals(company.trim()))
@@ -147,7 +147,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Job> obtainJobsLikeByDivCoJob(String division, String company, String jobNo) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		if (jobNo!=null && !"".equals(jobNo.trim()))
 			criteria.add(Restrictions.ilike("jobNumber", jobNo, MatchMode.START));
 		if (company!=null && !"".equals(company.trim()))
@@ -165,7 +165,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	public List<String> obtainAllJobDivision() throws DatabaseOperationException{
 		List<String> result = new ArrayList<String>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection( Projections.distinct( Projections.property( "division" )));
 			result =  criteria.list();
 		} catch (HibernateException e) {
@@ -181,7 +181,7 @@ public class JobHBDao extends BaseHibernateDao<Job> {
 	public List<String> obtainAllJobCompany() throws DatabaseOperationException{
 		List<String> result = new ArrayList<String>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection( Projections.distinct( Projections.property( "company" )));
 			result =  criteria.list();
 		} catch (HibernateException e) {

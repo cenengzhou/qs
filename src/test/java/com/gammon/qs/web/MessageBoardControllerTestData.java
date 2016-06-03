@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${MessageBoardControllerTestData.properties}")
 public class MessageBoardControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = MessageBoardController.class;
+	private Class<?> serviceClass;// = MessageBoardController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.MessageBoardController#obtainAllDisplayMessages()}.

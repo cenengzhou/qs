@@ -25,7 +25,7 @@ import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 @Configuration
 @PropertySource("file:${BQRepositoryControllerTestData.properties}")
 public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = BQRepositoryController.class;
+	private Class<?> serviceClass;// = BQRepositoryController.class;
 	
 	@Value("${BQRepositoryControllerTestData.testGetBQItemListByBPI_jobNumber}")
 	String testGetBQItemListByBPI_jobNumber;

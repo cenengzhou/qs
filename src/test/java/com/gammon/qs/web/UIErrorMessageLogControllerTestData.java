@@ -14,7 +14,7 @@ import com.gammon.junit.testcase.ControllerTestCase;
 //@Configuration
 //@PropertySource("file:${UIErrorMessageLogControllerTestData.properties}")
 public class UIErrorMessageLogControllerTestData extends ControllerTestCase.TestDataBase {
-	private Class<?> serviceClass = UIErrorMessageLogController.class;
+	private Class<?> serviceClass;// = UIErrorMessageLogController.class;
 
 	/**
 	 * Test data for {@link com.gammon.qs.web.UIErrorMessageLogController#logError(java.lang.String, java.lang.Throwable)}.

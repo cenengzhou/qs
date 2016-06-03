@@ -33,7 +33,8 @@ import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.BudgetForecastExcelWrapper;
 import com.gammon.qs.wrapper.BudgetForecastWrapper;
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//SpringSession workaround: change "session" to "request"
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class)
 public class AccountLedgerService {
 	private Logger						logger	= Logger.getLogger(this.getClass().getName());

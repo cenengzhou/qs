@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.BaseHibernateDao;
 @Repository
 public class UserHBDao extends BaseHibernateDao<User> {
+    
 	public UserHBDao() {
 		super(User.class);
 	}
@@ -24,7 +26,8 @@ public class UserHBDao extends BaseHibernateDao<User> {
 		
 		User user = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Session session = entityManager.unwrap(Session.class);
+			Criteria criteria = session.createCriteria(this.getType());
 			criteria.add(Restrictions.eq("username", username));
 			
 			user = (User) criteria.uniqueResult();
@@ -40,7 +43,8 @@ public class UserHBDao extends BaseHibernateDao<User> {
 		
 		List<User> users = new ArrayList<User>();
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Session session = entityManager.unwrap(Session.class);
+			Criteria criteria = session.createCriteria(this.getType());
 			criteria.add(Restrictions.ilike("username", username, MatchMode.ANYWHERE));
 			
 			users = criteria.list();
@@ -57,7 +61,8 @@ public class UserHBDao extends BaseHibernateDao<User> {
 	 * to determine who can receive email */
 	@SuppressWarnings("unchecked")
 	public List<User> obtainUserByAuthorities(String authorityName) throws DatabaseOperationException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Session session = entityManager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(this.getType());
 		criteria.createAlias("authorities", "authorities");
 //		criteria.add(Restrictions.isNotNull("authorities.name"));
 		criteria.add(Restrictions.eq("authorities.name",authorityName));
@@ -75,7 +80,8 @@ public class UserHBDao extends BaseHibernateDao<User> {
 			throw new IllegalArgumentException("email is null or empty");
 		User user = null;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Session session = entityManager.unwrap(Session.class);
+			Criteria criteria = session.createCriteria(this.getType());
 			criteria.add(Restrictions.eq("email", email));
 			List<User> users = criteria.list();
 			if(users.size()>0)

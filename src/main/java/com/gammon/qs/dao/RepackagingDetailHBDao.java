@@ -25,7 +25,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	@SuppressWarnings("unchecked")
 	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(	RepackagingEntry repackagingEntry, String packageNo,
 																				String objectCode, String subsidiaryCode) throws Exception {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntry.getId()));
 		if(!GenericValidator.isBlankOrNull(packageNo)){
 			packageNo = packageNo.replace("*", "%");
@@ -66,7 +66,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	@SuppressWarnings("unchecked")
 	public List<InsertRepackagingBudgetRequestObj> preparePostingOfRepackagingDetails(RepackagingEntry repackagingEntry) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntry.getId()));
 			criteria.setProjection(Projections.projectionList().add(Projections.groupProperty("objectCode"), "objectAccount")
 					.add(Projections.groupProperty("subsidiaryCode"), "subsidiary")
@@ -81,7 +81,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 
 	@SuppressWarnings("unchecked")
 	public List<RepackagingDetail> obtainRepackagingDetail(RepackagingEntry repackagingEntry) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("repackagingEntry", repackagingEntry));
 		return criteria.list();
 	}

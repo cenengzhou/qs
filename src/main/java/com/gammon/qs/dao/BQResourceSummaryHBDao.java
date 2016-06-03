@@ -52,7 +52,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<BQResourceSummary> obtainSCResourceSummariesByJobNumber(String jobNumber) throws DatabaseOperationException{
 		List<BQResourceSummary> resourceSummaries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -72,7 +72,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<BQResourceSummary> getResourceSummariesByJobNumber(String jobNumber) throws DatabaseOperationException{
 		List<BQResourceSummary> resourceSummaries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -89,7 +89,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<BQResourceSummary> getResourceSummariesByJob(Job job) throws DatabaseOperationException{
 		List<BQResourceSummary> resourceSummaries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			resourceSummaries = criteria.list();
@@ -107,7 +107,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + job.getJobNumber());
 		List<BQResourceSummary> resourceSummaries;
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
@@ -151,7 +151,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			RepackagingPaginationWrapper<BQResourceSummary> paginationWrapper = new RepackagingPaginationWrapper<BQResourceSummary>();
 			paginationWrapper.setCurrentPage(pageNum);
 			//Get total number of records (pages)
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
@@ -259,7 +259,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				hql += String.format(" and excludeDefect='%s'", defectExcluded.equals("Y")?1:0);
 			}
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setEntity("job", job);
 			query.setFirstResult(pageNum * RECORDS_PER_PAGE);
 			query.setMaxResults(RECORDS_PER_PAGE);
@@ -276,7 +276,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	
 	public Double getMarkupAmountInSearch(Job job, String packageNo, String objectCode, 
 			String subsidiaryCode, String description) throws DatabaseOperationException{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		criteria.add(Restrictions.like("subsidiaryCode", "9%"));
@@ -323,7 +323,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			IVInputPaginationWrapper paginationWrapper = new IVInputPaginationWrapper();
 			paginationWrapper.setCurrentPage(pageNum);
 			//Get total number of records (pages)
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
@@ -411,7 +411,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 					hql += " and lower(resourceDescription) like '%" + description.toLowerCase() + "%'";
 			}
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setEntity("job", job);
 			query.setFirstResult(pageNum * RECORDS_PER_PAGE);
 			query.setMaxResults(RECORDS_PER_PAGE);
@@ -436,7 +436,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 					"Unit:"+unit+" "+
 					"Rate:"+rate);
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("job", job));
 			//packageNo
@@ -478,7 +478,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		logger.info("Grouping Resource into ResourceSummary...");
 		try{
 			//Check if resoureSummaries already exist
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			if(criteria.list().size() > 0)
 				return Boolean.FALSE;
@@ -486,7 +486,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			//Non SC resources (object code does not start with 14)
 			//Get list of resources
 			logger.info("Grouping Non-SC Resource...");
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+			criteria = getSession().createCriteria(Resource.class);
 			criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
@@ -521,13 +521,13 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
 //				logger.info("Created Non-SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				this.getSessionFactory().getCurrentSession().saveOrUpdate(resourceSummary);
+				getSession().saveOrUpdate(resourceSummary);
 			}
 			
 			//SC resources (object code starts with 14)
 			//Get list of resources
 			logger.info("Grouping SC Resource...");
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+			criteria = getSession().createCriteria(Resource.class);
 			criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.like("this.objectCode", "14%"));
@@ -567,7 +567,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
 //				logger.info("Created SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				this.getSessionFactory().getCurrentSession().saveOrUpdate(resourceSummary);
+				getSession().saveOrUpdate(resourceSummary);
 			}
 		}
 		catch(HibernateException ex){
@@ -591,7 +591,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		logger.info("Grouping Resource into ResourceSummary...");
 		try{
 			//Check if resoureSummaries already exist
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			if(criteria.list().size() > 0)
 				return Boolean.FALSE;
@@ -599,7 +599,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			//Non SC resources (object code does not start with 14)
 			//Get list of resources
 			logger.info("Grouping Non-SC Resource...");
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+			criteria = getSession().createCriteria(Resource.class);
 			criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
@@ -635,13 +635,13 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
 //				logger.info("Created Non-SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				this.getSessionFactory().getCurrentSession().saveOrUpdate(resourceSummary);
+				getSession().saveOrUpdate(resourceSummary);
 			}
 			
 			//SC resources (object code starts with 14)
 			//Get list of resources
 			logger.info("Grouping SC Resource...");
-			criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+			criteria = getSession().createCriteria(Resource.class);
 			criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.like("this.objectCode", "14%"));
@@ -681,7 +681,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
 //				logger.info("Created SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				this.getSessionFactory().getCurrentSession().saveOrUpdate(resourceSummary);
+				getSession().saveOrUpdate(resourceSummary);
 			}
 		}
 		catch(HibernateException ex){
@@ -696,7 +696,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		//Non SC resources (object code does not start with 14)
 		//Group by object, subsid, package, description, unit, rate
 		//Sum quantity (remeasuredFactor * quantity)
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+		Criteria criteria = getSession().createCriteria(Resource.class);
 		criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
@@ -724,7 +724,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		//SC resources (object code starts with 14)
 		//Group by object, subsid, package
 		//Sum amount as quantity, set rate as 1, unit as 'AM', description as package description (if it is found)
-		criteria = this.getSessionFactory().getCurrentSession().createCriteria(Resource.class);
+		criteria = getSession().createCriteria(Resource.class);
 		criteria.add(Restrictions.eq("jobNumber", job.getJobNumber()));
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.like("this.objectCode", "14%"));
@@ -773,7 +773,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<AccountIVWrapper> obtainIVPostingAmounts(Job job, boolean finalized) throws DatabaseOperationException{
 		logger.info("obtainIVPostingAmounts(Job job)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			
@@ -819,7 +819,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	 * Add parameter: finalized**/
 	public Double obtainLevyAmount(Job job, boolean finalized) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.or(Restrictions.isNull("excludeLevy"), Restrictions.eq("excludeLevy", Boolean.FALSE)));
@@ -859,7 +859,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	 * Add parameter: finalized**/
 	public Double obtainDefectAmount(Job job, boolean finalized) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.or(Restrictions.isNull("excludeDefect"), Restrictions.eq("excludeDefect", Boolean.FALSE)));
@@ -896,7 +896,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public Double getIVcpfMovement(Job job, char first, char third, char fourth) throws DatabaseOperationException{
 		logger.info("getIVMovementMargin(Job job)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.like("subsidiaryCode", first + "_" + third + fourth + "%"));
@@ -931,7 +931,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 								.add(Property.forName("packageNo").in(detachedCriteria))
 								.setProjection(Projections.property("id"));
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
@@ -975,7 +975,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		logger.info("updateBQResourceSummariesAfterPosting(Job job, String username)");
 		try{
 			String hql = "UPDATE BQResourceSummary SET postedIVAmount = currIVAmount, lastModifiedUser = :user, lastModifiedDate = :date WHERE job = :job AND postedIVAmount != currIVAmount";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setString("user", username);
 			query.setDate("date", new Date());
 			query.setEntity("job", job);
@@ -990,7 +990,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public Double getTotalAccountAmount(Job job, String packageNo, String objectCode, String subsidiaryCode) throws DatabaseOperationException{
 		logger.info("getTotalAmountForAccount(Job job, String packageNo, String objectCode, String subsidiaryCode)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
@@ -1014,7 +1014,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<BQResourceSummary> getResourceSummariesForAccount(Job job, String packageNo, String objectCode, String subsidiaryCode) throws DatabaseOperationException{
 //		logger.info("SEARCH: J#"+job.getJobNumber()+" Package#"+packageNo+" Object:"+objectCode+" Subsidiary:"+subsidiaryCode);
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			
@@ -1041,7 +1041,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	}
 	
 	public Integer getCountOfSCSplitResources(Job job, String packageNo, String objectCode, String subsidiaryCode) throws Exception{
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.isNull("packageNo"));
@@ -1060,7 +1060,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public Double getBudgetForPackage(Job job, String packageNo) throws DatabaseOperationException{
 		logger.info("getBudgetForPackage(Job job, String packageNo)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
@@ -1082,7 +1082,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public void createIVPostingHistory(Job job, Integer documentNo, Integer ediBatchNo, boolean finalized) throws DatabaseOperationException{
 		logger.info("createIVPostingHistory(Job job, String documentNo, String ediBatchNo, boolean finalized)");
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.eq("job", job));
 			criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
@@ -1128,7 +1128,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 				post.setJobNumber(job.getJobNumber());
 				post.setDocumentNo(documentNo);
 				post.setEdiBatchNo(ediBatchNo);
-				this.getSessionFactory().getCurrentSession().saveOrUpdate(post);
+				getSession().saveOrUpdate(post);
 			}
 		}catch (Exception he){
 			logger.info("createIVPostingHistory(Job job, String documentNo, String ediBatchNo, boolean finalized)");
@@ -1139,7 +1139,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public void resetIVAmountofPackage(Job job, String packageNo) throws DatabaseOperationException {
 		String hql = "Update BQResourceSummary set currIVAmount = 0 where systemStatus = 'ACTIVE' and job = :job and packageNo = :packageNo and objectCode like '14%'";
 		try {
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 			query.setEntity("job", job);
 			query.setString("packageNo", packageNo);
 			query.executeUpdate();
@@ -1149,7 +1149,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	}
 	
 	public void saveAudit(AuditResourceSummary audit){
-		this.getSessionFactory().getCurrentSession().saveOrUpdate(audit);
+		getSession().saveOrUpdate(audit);
 	}
 
 	public void setScPackageDao(SCPackageHBDao scPackageDao) {
@@ -1167,7 +1167,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	 * May 11, 2011 3:56:28 PM
 	 */
 	public Double getIVMovementOfJob(Job job) {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
@@ -1199,7 +1199,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 							.setProjection(Projections.property("id"));
 		
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("job", job));
 		criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
@@ -1228,7 +1228,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 		if(bqResourceSummaries==null)
 			return;
 		
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		
 		for(int i=0; i<bqResourceSummaries.size(); i++){
@@ -1256,7 +1256,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			Double updatedIVCumulativeAmount = bqResourceSummary.getCurrIVAmount();
 
 			String hql = "UPDATE BQResourceSummary SET currIVAmount = :updatedIVCumulativeAmount, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :bqResourceSummaryID AND job = :job";
-			Query query = this.getSessionFactory().getCurrentSession().createQuery(hql);
+			Query query = getSession().createQuery(hql);
 
 			query.setDouble("updatedIVCumulativeAmount", updatedIVCumulativeAmount);
 			query.setString("username", username);
@@ -1279,7 +1279,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 
 		List<BQResourceSummary> resourceSummaries;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -1325,7 +1325,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public List<BQResourceSummary> obtainBQResourceSummaries(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, String description) throws DatabaseOperationException {
 		List<BQResourceSummary> resourceSummaries;
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -1393,7 +1393,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			detachedCriteria.setProjection(Projections.property("packageNo"));
 			
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -1466,7 +1466,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 			detachedCriteria.setProjection(Projections.property("packageNo"));
 			
 			
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("job", "job");
 			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -1518,7 +1518,7 @@ public class BQResourceSummaryHBDao extends BaseHibernateDao<BQResourceSummary> 
 	public BQResourceSummary obtainResourceSummary(Job job, String packageNo, String objectCode, String subsidiaryCode, 
 													String resourceDescription, String unit, Double rate) throws DatabaseOperationException{
 		try{
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(this.getType());
+			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("job", job));
 			//packageNo
