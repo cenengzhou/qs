@@ -114,7 +114,46 @@ mainApp.factory('Base64', function() {
 	};
 });
 
-
+mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHelperFactory($http, $rootScope, $q){
+	var defer = $q.defer();
+	return{
+		getCurrentSessionId: function(){
+		return $http.post('service/GetCurrentSessionId')
+		    .then(function(response){
+		    	if(typeof response.data === 'string'){
+		    		return response.data;
+		    	} else {
+		    		return $q.reject(response.data);
+		    	}
+		    }, function(response){
+		    	return $q.reject(response.data);
+		    });
+		},
+		validateSession: function(){
+		return $http.post('service/ValidateCurrentSession')
+		    .then(function(response){
+		    	if(typeof response.data === 'boolean'){
+		    		return response.data;
+		    	} else {
+		    		return $q.reject(response.data);
+		    	}
+		    }, function(response){
+		    	return $q.reject(response.data);
+		    });
+		},
+		invalidateSessionList: function(sessionIds){
+			 $http({
+			        method: "post",
+			        url: "service/InvalidateSessionList",
+			        data: sessionIds
+			    })
+				.success(function(data) {
+					defer.resolve(data)
+				});
+			 return defer.promise;
+		}
+	}
+}]);
 /*mainApp.factory('modalUtils', function ($uibModalStack) {
      return {
        modalsExist: function () {

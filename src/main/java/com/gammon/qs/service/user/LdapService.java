@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LdapService {
 	@Autowired
-	@Qualifier("ldapTemplate")
 	private LdapTemplate ldapTemplate;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

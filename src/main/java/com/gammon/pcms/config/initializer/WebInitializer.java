@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -43,13 +42,12 @@ public class WebInitializer extends
 		FilterRegistration.Dynamic requestContextFilterRegistration = servletContext.addFilter("requestContextFilter", requestContextFilter);
 		requestContextFilterRegistration.setAsyncSupported(true);
 		requestContextFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
-
+		
 		System.setProperty("UseSunHttpHandler", "true");
 	}
 
 	@Override
 	protected void registerContextLoaderListener(ServletContext servletContext) {
-		servletContext.addListener(new HttpSessionEventPublisher());
 		super.registerContextLoaderListener(servletContext);
 	}
 

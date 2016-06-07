@@ -13,6 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
 import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
@@ -44,18 +46,14 @@ import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.LdapUserDetailsContextMapper;
 import com.gammon.qs.service.security.UserDetailsServiceImpl;
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @PropertySource("file:${security.properties}")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	// Baisc auth setting for web service can be found at web.xml and weblogic.xml
 	
 	@Autowired
 	private AdminService adminService;
-	@Autowired
-	private ServletContext servletContext;
 	@Autowired
 	private LdapConfig ldapConfig;
 	@Autowired
@@ -79,6 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String roleQsApprover;
 	@Value("${role.qs-admin}")
 	private String roleQsAdmin;
+	@Value("${defaultMaxInactiveInterval}")
+	private int defaultMaxInactiveInterval;
 	
 	// Kerberos
 	@Value("${kerberos.service-principal}")
@@ -91,19 +91,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
-		.authenticationProvider(formAuthenticationProvider())
-		.authenticationProvider(kerberosTicketAuthenticationProvider())
-		.inMemoryAuthentication().withUser(webServiceConfig.getQsWsUsername()).password(webServiceConfig.getQsWsPassword()).authorities("ROLE_"+rolePcmsWs);
+		.authenticationProvider(ldapAuthenticationProvider())
+		.authenticationProvider(kerberosServiceAuthenticationProvider())
+		.inMemoryAuthentication().withUser(webServiceConfig.getQsWsUsername()).password(webServiceConfig.getQsWsPassword()).authorities("ROLE_"+getRolePcmsWs());
 	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers(
-
-				);
+		web.ignoring().antMatchers();
 		web.debug(StringUtils.isEmpty(springSecurityDebug)?false:new Boolean(springSecurityDebug));
 	}
-
 
 	/**
 	 * For Web Service Login
@@ -111,9 +108,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Configuration
 	@Order(1)
 	public static class RsSecurityConfig extends WebSecurityConfigurerAdapter {
-		// Role
-		@Value("${role.pcms-ws}")
-		private String rolePcmsWs;
+
+		@Autowired
+		private SecurityConfig securityConfig;
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
@@ -123,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.frameOptions().sameOrigin().and()
 			.csrf().disable()
 			.antMatcher("/ws/**").authorizeRequests()
-			.anyRequest().hasAnyRole(rolePcmsWs).and()
+			.anyRequest().hasAnyRole(securityConfig.getRolePcmsWs()).and()
 			.exceptionHandling().and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.httpBasic().and()
@@ -138,16 +135,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Configuration
 	@Order(2)
 	public static class KerberosSecurityConfig extends WebSecurityConfigurerAdapter {
+
 		@Autowired
-		private SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter;
-		@Autowired
-		private AuthenticationSuccessHandler loginSuccessHandler;
-		@Autowired
-		private AuthenticationFailureHandler loginFailureHandler;
+		private ServletContext servletContext;
 		@Autowired
 		private SecurityConfig securityConfig;
-		@Autowired
-		private SessionRegistry sessionRegistry;
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
@@ -156,11 +148,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.frameOptions().sameOrigin().and()
 			.csrf().disable()
 			.sessionManagement()
+			.enableSessionUrlRewriting(false)
+			.sessionAuthenticationErrorUrl(securityConfig.getLoginPath())
 			.invalidSessionUrl(securityConfig.getLoginPath())
 			.maximumSessions(-1)
 			.expiredUrl(securityConfig.getLoginPath())
-			.sessionRegistry(sessionRegistry).and()
-			.sessionFixation().migrateSession().and()
+			.sessionRegistry(securityConfig.sessionRegistry()).and()
+			.sessionFixation().newSession().and()
 			.authorizeRequests()
 			.antMatchers(
 					"/spring-ws/*", 
@@ -168,12 +162,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/plugins/**",
 					"/image/**",
 					"/badCredentials.jsp",
+					"/index.html",
+//					"/service/GetCurrentSessionId",
+					"/service/ValidateCurrentSession",
+//					"/js/**/*.js",
+//					"/view/**",
 					"/favicon.ico",
 					"/403.html",
 					"/login.htm*",
 					"/logout.htm*"
 					).permitAll()
-			.antMatchers("/**").hasAnyRole(securityConfig.getRoleQsQs(), securityConfig.getRoleQsEnquiry(), securityConfig.getRoleQsApprover(), securityConfig.getRoleQsAdmin()).and()
+			.antMatchers("/**/*").hasAnyRole(securityConfig.getRoleQsQs(), securityConfig.getRoleQsEnquiry(), securityConfig.getRoleQsApprover(), securityConfig.getRoleQsAdmin()).and()
 			.exceptionHandling()
 			.authenticationEntryPoint(new SpnegoEntryPoint(securityConfig.getLoginPath())).and()
 			.formLogin()
@@ -181,44 +180,55 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.usernameParameter("username")
 			.passwordParameter("password")
 			.loginProcessingUrl("/formlogin").permitAll()
-			.successHandler(loginSuccessHandler)
-			.failureHandler(loginFailureHandler).and()
+			.successHandler(loginSuccessHandler())
+			.failureHandler(loginFailureHandler()).and()
 			.logout().permitAll()
 			.invalidateHttpSession(true)
 			.deleteCookies("JSESSIONID")
 			.logoutSuccessUrl(securityConfig.getLoginPath()).and()
 			.exceptionHandling().accessDeniedPage("/403.html").and()
-			.addFilterAfter(spnegoAuthenticationProcessingFilter, BasicAuthenticationFilter.class);
+			.addFilterAfter(spnegoAuthenticationProcessingFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
+		}
+
+		@Bean
+		public AuthenticationSuccessHandler loginSuccessHandler() {
+			return new LoginSuccessHandler(servletContext.getContextPath()+"/index.html", false);
+		}
+
+		@Bean
+		public AuthenticationFailureHandler loginFailureHandler() {
+			return new LoginFailureHandler(securityConfig.loginPath);
+		}
+
+		@Bean
+		public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
+			SpnegoAuthenticationProcessingFilter filter = new SpnegoAuthenticationProcessingFilter();
+			filter.setFailureHandler(kerberosLoginFailureHandler());
+			filter.setAuthenticationManager(authenticationManager);
+			return filter;
 		}
 		
-	}
+		@Bean
+		public AuthenticationFailureHandler kerberosLoginFailureHandler() {
+			return new KerberosLoginFailureHandler(securityConfig.loginPath);
+		}
+	}	
 	
-	@Bean 
-	public SessionRegistry sessionRegistry(){
-		SessionRegistry bean = new SessionRegistryImpl();
-		return bean;
-	}
-	
-	@Bean
-	public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter() throws Exception {
-		SpnegoAuthenticationProcessingFilter filter = new SpnegoAuthenticationProcessingFilter();
-		filter.setFailureHandler(kerberosLoginFailureHandler());
-		filter.setAuthenticationManager(authenticationManager());
-		return filter;
-	}
-	
-	@Bean
-	public AuthenticationFailureHandler kerberosLoginFailureHandler() {
-		return new KerberosLoginFailureHandler(loginPath);
-	}
-	
-	@Bean(name = "formAuthenticationProvider")
-	public LdapAuthenticationProvider formAuthenticationProvider() {
+	//ldapAuthenticationProvider
+	@Bean(name = "ldapAuthenticationProvider")
+	public LdapAuthenticationProvider ldapAuthenticationProvider() {
 		LdapAuthenticationProvider bean = new LdapAuthenticationProvider(bindAuthenticator(), userDetailsServiceLdapAuthoritiesPopulator());
 		bean.setUserDetailsContextMapper(userDetailsContextMapper());
 		return bean;
 	}
 
+	@Bean(name = "userDetailsContextMapper")
+	public LdapUserDetailsContextMapper userDetailsContextMapper() {
+		LdapUserDetailsContextMapper bean = new LdapUserDetailsContextMapper();
+		bean.setAdminService(adminService);
+		return bean;
+	}
+	
 	@Bean(name = "bindAuthernticator")
 	public BindAuthenticator bindAuthenticator() {
 		BindAuthenticator bean = new BindAuthenticator(authenticationLdapContextSource());
@@ -246,38 +256,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		UserDetailsServiceLdapAuthoritiesPopulator bean = new UserDetailsServiceLdapAuthoritiesPopulator(userDetailsService());
 		return bean;
 	}
-	
+    
 	@Bean(name = "userDetailsService")
-	public UserDetailsServiceImpl userDetailsService() {
+	public UserDetailsService userDetailsService() {
 		UserDetailsServiceImpl bean = new UserDetailsServiceImpl();
 		return bean;
 	}
-
-	@Bean(name = "userDetailsContextMapper")
-	public LdapUserDetailsContextMapper userDetailsContextMapper() {
-		LdapUserDetailsContextMapper bean = new LdapUserDetailsContextMapper();
-		bean.setAdminService(adminService);
-		return bean;
-	}
 	
-	@Bean(name = "ldapContextSource")
-	public LdapContextSource ldapContextSource() {
-		LdapContextSource bean = new LdapContextSource();
-		bean.setUrl(ldapConfig.getLdapServerUrl());
-		bean.setBase(ldapConfig.getLdapServerBase());
-		bean.setUserDn(ldapConfig.getLdapServerUsername());
-		bean.setPassword(ldapConfig.getLdapServerPassword());
-		return bean;
-	}
-
-	@Bean(name = "ldapTemplate")
-	public LdapTemplate ldapTemplate(ContextSource ldapContextSource) {
-		LdapTemplate bean = new LdapTemplate(ldapContextSource);
-		return bean;
-	}
-
+	//kerberosServiceAuthenticationProvider
 	@Bean
-	public KerberosServiceAuthenticationProvider kerberosTicketAuthenticationProvider() {
+	public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
 		KerberosServiceAuthenticationProvider provider = new KerberosServiceAuthenticationProvider();
 		provider.setTicketValidator(sunJaasKerberosTicketValidator());
 		provider.setUserDetailsService(userDetailsService());
@@ -287,22 +275,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
 		SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-		ticketValidator.setServicePrincipal(kerberosServicePrincipal);
-		ticketValidator.setKeyTabLocation(new FileSystemResource(kerberosKeytabLocation));
-		ticketValidator.setDebug(kerberosDebug);
+		ticketValidator.setServicePrincipal(getKerberosServicePrincipal());
+		ticketValidator.setKeyTabLocation(new FileSystemResource(getKerberosKeytabLocation()));
+		ticketValidator.setDebug(getKerberosDebug());
 		return ticketValidator;
 	}
 	
-	@Bean
-	public AuthenticationSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler(servletContext.getContextPath()+"/index.html", false);
-	}
-
-	@Bean
-	public AuthenticationFailureHandler loginFailureHandler() {
-		return new LoginFailureHandler(loginPath);
-	}
-
 	/**
 	 * to keep Spring Security updated about session lifecycle events
 	 * @return
@@ -313,8 +291,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return bean;
 	}
 
-	public ServletContext getServletContext() {
-		return servletContext;
+	@Bean 
+	public SessionRegistry sessionRegistry(){
+		SessionRegistry bean = new SessionRegistryImpl();
+		return bean;
+	}
+	
+	@Bean
+	public LdapTemplate ldapTemplate(ContextSource ldapContextSource) {
+		LdapTemplate bean = new LdapTemplate(ldapContextSource);
+		return bean;
+	}
+
+	@Bean(name = "ldapContextSource")
+	public LdapContextSource ldapContextSource() {
+		LdapContextSource bean = new LdapContextSource();
+		bean.setUrl(ldapConfig.getLdapServerUrl());
+		bean.setBase(ldapConfig.getLdapServerBase());
+		bean.setUserDn(ldapConfig.getLdapServerUsername());
+		bean.setPassword(ldapConfig.getLdapServerPassword());
+		return bean;
+	}
+
+	//getter
+	public boolean getKerberosDebug() {
+		return kerberosDebug;
 	}
 
 	public String getSpringSecurityDebug() {
@@ -359,5 +360,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	public boolean isKerberosDebug() {
 		return kerberosDebug;
+	}
+
+	/**
+	 * @return the defaultMaxInactiveInterval
+	 */
+	public int getDefaultMaxInactiveInterval() {
+		return defaultMaxInactiveInterval;
 	}
 }

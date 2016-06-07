@@ -18,7 +18,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -26,16 +25,11 @@ import com.gammon.qs.aspect.AuditAspectHibernateInterceptor;
 
 @Configuration
 @PropertySource("file:${hibernate.properties}")
-//@EnableJdbcHttpSession
 @EnableJpaRepositories(basePackages = {"com.gammon.pcms.dao"})
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
 public class HibernateConfig {
 
-//	@Value("${Context.INITIAL_CONTEXT_FACTORY}")
-	private String ContextINITIAL_CONTEXT_FACTORY;
-//	@Value("${jndi.datasource}")
-	private String jndiDatasource;
 	@Value("${hibernate.hbm2ddl.auto}")
 	private String hibernateHbm2DdlAuto;
 	@Value("${hibernate.dialect}")
@@ -131,13 +125,6 @@ public class HibernateConfig {
 		properties.setProperty("hibernate.jdbc.fetch_size", hibernateJdbcFetch_size);
 		properties.setProperty("current_session_context_class", current_session_context_class);
 		return properties;
-	}
-
-	/**
-	 * @return the contextINITIAL_CONTEXT_FACTORY
-	 */
-	public String getContextINITIAL_CONTEXT_FACTORY() {
-		return ContextINITIAL_CONTEXT_FACTORY;
 	}
 
 	/**

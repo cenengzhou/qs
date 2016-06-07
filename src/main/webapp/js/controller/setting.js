@@ -1,4 +1,4 @@
-mainApp.controller('AppCtrl', ['$http', '$scope', '$location', function($http, $scope, $location) {
+mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', function($http, $scope, $location, $window) {
 	   
     $scope.$on('$includeContentLoaded', function() {
         App.initComponent();
@@ -32,6 +32,7 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', function($http, $
         Pace.stop();
     });
     $scope.$on('$stateChangeError', function() {
+    	$window.location.href = 'login.htm';
         Pace.stop();
     });
     

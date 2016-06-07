@@ -3,6 +3,7 @@ package com.gammon.pcms.config;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -15,15 +16,15 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
-
-import com.gammon.qs.web.mvc.interceptors.DisplayTagParamInterceptor;
 
 @Configuration
 public class ServletConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	private DisplayTagParamInterceptor displayTagParamInterceptor;
+	@Qualifier("SessionInterceptor")
+	private HandlerInterceptorAdapter sessionInterceptor;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 	
@@ -59,6 +60,7 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 //		registry.addInterceptor(displayTagParamInterceptor);
+		registry.addInterceptor(sessionInterceptor);
 	}
 
 	@Bean

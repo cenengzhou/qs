@@ -3,7 +3,6 @@ package com.gammon.qs.application;
 import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 @MappedSuperclass
 public abstract class BasePersistedObject extends BasePersistedAuditObject {
 	
@@ -18,7 +17,6 @@ public abstract class BasePersistedObject extends BasePersistedAuditObject {
 		return "BasePersistedObject [id=" + id + ", toString()=" + super.toString() + "]";
 	}
 	
-	@Transient
 	public Long getId() {
 		return id;
 	}
