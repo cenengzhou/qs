@@ -17,7 +17,7 @@
   clear: both;
 }
 .ui-grid {
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
   box-sizing: content-box;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
@@ -41,15 +41,15 @@
   background-color: transparent;
 }
 .ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar {
-  background-color: #d4d4d4;
+  background-color: #1e77c4;
 }
 .ui-grid-cell:not(:last-child) .ui-grid-vertical-bar {
-  background-color: #d4d4d4;
+  background-color: #d9d9d9;
 }
 .ui-grid-header-cell:last-child .ui-grid-vertical-bar {
   right: -1px;
   width: 1px;
-  background-color: #d4d4d4;
+  background-color: #1e77c4;
 }
 .ui-grid-clearfix:before,
 .ui-grid-clearfix:after {
@@ -78,27 +78,27 @@
   border: 0;
 }
 .ui-grid-top-panel-background {
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #eeeeee);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+  background: #3C454D;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #3C454D), color-stop(1, #3C454D));
+  background: -ms-linear-gradient(bottom, #3C454D, #3C454D);
+  background: -moz-linear-gradient(center bottom, #3C454D 0%, #3C454D 100%);
+  background: -o-linear-gradient(#3C454D, #3C454D);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3C454D', endColorstr='#3C454D', GradientType=0);
 }
 .ui-grid-header {
-  border-bottom: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d9d9d9;
   box-sizing: border-box;
 }
 .ui-grid-top-panel {
   position: relative;
   overflow: hidden;
   font-weight: bold;
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #eeeeee);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+  background: #3C454D;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #3C454D), color-stop(1, #3C454D));
+  background: -ms-linear-gradient(bottom, #3C454D, #3C454D);
+  background: -moz-linear-gradient(center bottom, #3C454D 0%, #3C454D 100%);
+  background: -o-linear-gradient(#3C454D, #3C454D);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3C454D', endColorstr='#3C454D', GradientType=0);
   -webkit-border-top-right-radius: -1px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -142,7 +142,7 @@
   box-sizing: border-box;
   background-color: inherit;
   border-right: 1px solid;
-  border-color: #d4d4d4;
+  border-color: #1e77c4;
   display: table-cell;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -270,7 +270,7 @@ input[type="text"].ui-grid-filter-input {
   margin: 0;
   border: 0;
   width: 100%;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
   -webkit-border-top-right-radius: 0px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -288,14 +288,14 @@ input[type="text"].ui-grid-filter-input {
   background-clip: padding-box;
 }
 input[type="text"].ui-grid-filter-input:hover {
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
 }
 select.ui-grid-filter-select {
   padding: 0;
   margin: 0;
   border: 0;
   width: 90%;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
   -webkit-border-top-right-radius: 0px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -313,7 +313,7 @@ select.ui-grid-filter-select {
   background-clip: padding-box;
 }
 select.ui-grid-filter-select:hover {
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
 }
 .ui-grid-filter-cancel-button-hidden select.ui-grid-filter-select {
   width: 100%;
@@ -353,13 +353,13 @@ select.ui-grid-filter-select:hover {
   padding-top: 1px;
 }
 .ui-grid-row:nth-child(odd) .ui-grid-cell {
-  background-color: #fdfdfd;
+  background-color: #fff;
 }
 .ui-grid-row:nth-child(even) .ui-grid-cell {
-  background-color: #f3f3f3;
+  background-color: #f2f2f2;
 }
 .ui-grid-row:last-child .ui-grid-cell {
-  border-bottom-color: #d4d4d4;
+  border-bottom-color: #d9d9d9;
   border-bottom-style: solid;
 }
 .ui-grid-no-row-overlay {
@@ -369,12 +369,12 @@ select.ui-grid-filter-select:hover {
   left: 0;
   right: 0;
   margin: 10%;
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #eeeeee);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+  background: #3C454D;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #3C454D), color-stop(1, #3C454D));
+  background: -ms-linear-gradient(bottom, #3C454D, #3C454D);
+  background: -moz-linear-gradient(center bottom, #3C454D 0%, #3C454D 100%);
+  background: -o-linear-gradient(#3C454D, #3C454D);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3C454D', endColorstr='#3C454D', GradientType=0);
   -webkit-border-top-right-radius: 0px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -390,7 +390,7 @@ select.ui-grid-filter-select:hover {
   -moz-background-clip: padding-box;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
   font-size: 2em;
   text-align: center;
 }
@@ -405,12 +405,35 @@ select.ui-grid-filter-select:hover {
   right: 0;
   opacity: 0.66;
 }
+/* This file contains variable declarations (do not remove this line) */
+/*-- VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
+/**
+* @section Grid styles
+*/
+/**
+* @section Header styles
+*/
+/** @description Colors for header gradient */
+/**
+* @section Grid body styles
+*/
+/** @description Colors used for row alternation */
+/**
+* @section Sort arrow colors
+*/
+/**
+* @section Scrollbar styles
+*/
+/**
+* @section font library path
+*/
+/*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .ui-grid-cell {
   overflow: hidden;
   float: left;
   background-color: inherit;
   border-right: 1px solid;
-  border-color: #d4d4d4;
+  border-color: #d9d9d9;
   box-sizing: border-box;
 }
 .ui-grid-cell:last-child {
@@ -435,29 +458,29 @@ select.ui-grid-filter-select:hover {
   display: none;
 }
 .ui-grid-row .ui-grid-cell.ui-grid-row-header-cell {
-  background-color: #f0f0ee;
-  border-bottom: solid 1px #d4d4d4;
+  background-color: #ffffff;
+  border-bottom: solid 1px #d9d9d9;
 }
 .ui-grid-footer-panel-background {
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #eeeeee);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+  background: #fff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(1, #fff));
+  background: -ms-linear-gradient(bottom, #fff, #fff);
+  background: -moz-linear-gradient(center bottom, #fff 0%, #fff 100%);
+  background: -o-linear-gradient(#fff, #fff);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#fff', GradientType=0);
 }
 .ui-grid-footer-panel {
   position: relative;
-  border-bottom: 1px solid #d4d4d4;
-  border-top: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
   overflow: hidden;
   font-weight: bold;
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #eeeeee);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+  background: #fff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(1, #fff));
+  background: -ms-linear-gradient(bottom, #fff, #fff);
+  background: -moz-linear-gradient(center bottom, #fff 0%, #fff 100%);
+  background: -o-linear-gradient(#fff, #fff);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#fff', GradientType=0);
   -webkit-border-top-right-radius: -1px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -506,7 +529,7 @@ select.ui-grid-filter-select:hover {
   overflow: hidden;
   background-color: inherit;
   border-right: 1px solid;
-  border-color: #d4d4d4;
+  border-color: #d9d9d9;
   box-sizing: border-box;
   display: table-cell;
 }
@@ -518,7 +541,7 @@ input[type="text"].ui-grid-filter-input {
   margin: 0;
   border: 0;
   width: 100%;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
   -webkit-border-top-right-radius: 0px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -536,15 +559,15 @@ input[type="text"].ui-grid-filter-input {
   background-clip: padding-box;
 }
 input[type="text"].ui-grid-filter-input:hover {
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
 }
 .ui-grid-menu-button {
   z-index: 2;
   position: absolute;
   right: 0;
   top: 0;
-  background: #f3f3f3;
-  border: 1px solid #d4d4d4;
+  background: #fff;
+  border: 1px solid #3C454D;
   cursor: pointer;
   height: 31px;
   font-weight: normal;
@@ -557,7 +580,7 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid {
   overflow: scroll;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #d9d9d9;
 }
 .ui-grid-menu {
   z-index: 2;
@@ -567,8 +590,8 @@ input[type="text"].ui-grid-filter-input:hover {
   box-sizing: border-box;
 }
 .ui-grid-menu .ui-grid-menu-inner {
-  background: #f3f3f3;
-  border: 1px solid #d4d4d4;
+  background: #fff;
+  border: 1px solid #3C454D;
   position: relative;
   white-space: nowrap;
   -webkit-border-radius: 0px;
@@ -651,16 +674,16 @@ fieldset[disabled] a.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button
   border-color: rgba(0, 0, 0, 0);
 }
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:hover {
-  color: transparent;
-  background-color: rgba(0, 0, 0, 0);
-  border-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  background-color: #fff;/* Koey  */
+  border-color: #fff;
 }
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:active,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.active,
 .open > .dropdown-toggle.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button {
-  color: transparent;
-  background-color: rgba(0, 0, 0, 0);
-  border-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  background-color: #fff;
+  border-color:#fff;
 }
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:active:hover,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.active:hover,
@@ -671,9 +694,9 @@ fieldset[disabled] a.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:active.focus,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.active.focus,
 .open > .dropdown-toggle.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.focus {
-  color: transparent;
-  background-color: rgba(0, 0, 0, 0);
-  border-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  background-color: #fff;
+  border-color: #fff;
 }
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:active,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.active,
@@ -698,7 +721,7 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
 }
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button > i {
   opacity: 0.75;
-  color: black;
+  color: #3C454D;
 }
 .ui-grid-menu .ui-grid-menu-inner ul {
   margin: 0;
@@ -725,10 +748,10 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
   -webkit-box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.2);
-  background-color: #cecece;
+  background-color: #af6017;
 }
 .ui-grid-menu .ui-grid-menu-inner ul li:not(:last-child) > button {
-  border-bottom: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d9d9d9;
 }
 .ui-grid-sortarrow {
   right: 5px;
@@ -812,7 +835,7 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
 }
 .ui-grid[dir=rtl] .ui-grid-cell:last-child,
 .ui-grid[dir=rtl] .ui-grid-header-cell:last-child {
-  border-right: 1px solid #d4d4d4;
+  border-right: 1px solid #d9d9d9;
   border-left: 0;
 }
 .ui-grid[dir=rtl] .ui-grid-header-cell:first-child .ui-grid-vertical-bar,
@@ -825,8 +848,8 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
   position: absolute;
   left: 0;
   right: auto;
-  background: #f3f3f3;
-  border: 1px solid #d4d4d4;
+  background: #3C454D;
+  border: 1px solid #d9d9d9;
   cursor: pointer;
   min-height: 27px;
   font-weight: normal;
@@ -929,6 +952,26 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+.ui-grid {
+  color: #242729;
+}
+.ui-grid-header,
+.ui-grid-column-menu {
+  color: #fff;
+  font-family: sans-serif;
+  font-weight: lighter;
+}
+
+
+
+
+
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
 /* This file contains variable declarations (do not remove this line) */
 /*-- VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 /**
@@ -992,7 +1035,7 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
 }
 .ui-grid-cell-focus {
   outline: 0;
-  background-color: #b3c4c7;
+  background-color: #d2e7f9;
 }
 .ui-grid-focuser {
   position: absolute;
@@ -1797,7 +1840,7 @@ select[multiple].ui-grid-pager-row-count-picker select {
 */
 /*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
-  background-color: #c9dde1;
+  background-color: #d2e7f9;
 }
 .ui-grid-disable-selection {
   -webkit-touch-callout: none;
@@ -1907,92 +1950,92 @@ div.ui-grid-cell-contents.invalid {
 .ui-grid-icon-plus-squared:before {
   content: '\c350';
 }
-/* '썐' */
+/* '���' */
 .ui-grid-icon-minus-squared:before {
   content: '\c351';
 }
-/* '썑' */
+/* '���' */
 .ui-grid-icon-search:before {
   content: '\c352';
 }
-/* '썒' */
+/* '���' */
 .ui-grid-icon-cancel:before {
   content: '\c353';
 }
-/* '썓' */
+/* '���' */
 .ui-grid-icon-info-circled:before {
   content: '\c354';
 }
-/* '썔' */
+/* '���' */
 .ui-grid-icon-lock:before {
   content: '\c355';
 }
-/* '썕' */
+/* '���' */
 .ui-grid-icon-lock-open:before {
   content: '\c356';
 }
-/* '썖' */
+/* '���' */
 .ui-grid-icon-pencil:before {
   content: '\c357';
 }
-/* '썗' */
+/* '���' */
 .ui-grid-icon-down-dir:before {
   content: '\c358';
 }
-/* '썘' */
+/* '���' */
 .ui-grid-icon-up-dir:before {
   content: '\c359';
 }
-/* '썙' */
+/* '���' */
 .ui-grid-icon-left-dir:before {
   content: '\c35a';
 }
-/* '썚' */
+/* '���' */
 .ui-grid-icon-right-dir:before {
   content: '\c35b';
 }
-/* '썛' */
+/* '���' */
 .ui-grid-icon-left-open:before {
   content: '\c35c';
 }
-/* '썜' */
+/* '���' */
 .ui-grid-icon-right-open:before {
   content: '\c35d';
 }
-/* '썝' */
+/* '���' */
 .ui-grid-icon-angle-down:before {
   content: '\c35e';
 }
-/* '썞' */
+/* '���' */
 .ui-grid-icon-filter:before {
   content: '\c35f';
 }
-/* '썟' */
+/* '���' */
 .ui-grid-icon-sort-alt-up:before {
   content: '\c360';
 }
-/* '썠' */
+/* '���' */
 .ui-grid-icon-sort-alt-down:before {
   content: '\c361';
 }
-/* '썡' */
+/* '�' */
 .ui-grid-icon-ok:before {
   content: '\c362';
 }
-/* '썢' */
+/* '�' */
 .ui-grid-icon-menu:before {
   content: '\c363';
 }
-/* '썣' */
+/* '�' */
 .ui-grid-icon-indent-left:before {
   content: '\e800';
 }
-/* '' */
+/* '��' */
 .ui-grid-icon-indent-right:before {
   content: '\e801';
 }
-/* '' */
+/* '���' */
 .ui-grid-icon-spin5:before {
   content: '\ea61';
 }
-/* '' */
+/* '謕�' */
