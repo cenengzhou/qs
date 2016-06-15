@@ -63,9 +63,9 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		List<Tender> result;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
+			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+			criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("SUBCONTRACT.jobNumber", jobNumber.trim()));
 			criteria.add(Restrictions.eq("scPackage.packageNo", packageNo.trim()));
 			criteria.addOrder(Order.asc("vendorNo"));
 			result = criteria.list();
@@ -118,14 +118,14 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
+	public List<Tender> obtainTenderAnalysisList(JobInfo jobInfo, String packageNo) throws Exception{
 
 		List<Tender> result;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPackage", "scPackage");
-			criteria.add(Restrictions.eq("scPackage.job", job));
-			criteria.add(Restrictions.eq("scPackage.packageNo", packageNo.trim()));
+			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+			criteria.add(Restrictions.eq("SUBCONTRACT.jobInfo", jobInfo));
+			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.trim()));
 			criteria.addOrder(Order.asc("vendorNo"));
 			result = criteria.list();
 		}catch (HibernateException he){
@@ -136,14 +136,14 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisListExceptBudgetTender(JobInfo job, String packageNo) throws Exception{
+	public List<Tender> obtainTenderAnalysisListExceptBudgetTender(JobInfo jobInfo, String packageNo) throws Exception{
 		//Return only vendor tender analyses (vendorNo != 0) 
 		List<Tender> result;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPackage", "scPackage");
-			criteria.add(Restrictions.eq("scPackage.job", job));
-			criteria.add(Restrictions.eq("scPackage.packageNo", packageNo.trim()));
+			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+			criteria.add(Restrictions.eq("SUBCONTRACT.jobInfo", jobInfo));
+			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.trim()));
 			criteria.add(Restrictions.ne("vendorNo", 0));
 			criteria.addOrder(Order.asc("vendorNo"));
 			result = criteria.list();
@@ -155,12 +155,12 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisListWithDetails(Subcontract scPackage) throws DatabaseOperationException{
+	public List<Tender> obtainTenderAnalysisListWithDetails(Subcontract subcontract) throws DatabaseOperationException{
 
 		List<Tender> tenderAnalyses;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPackage", scPackage));
+			criteria.add(Restrictions.eq("SUBCONTRACT", subcontract));
 			criteria.addOrder(Order.asc("vendorNo"));
 			tenderAnalyses = criteria.list();
 		}catch (HibernateException he){
@@ -171,14 +171,14 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Boolean removeTenderAnalysisListExceptBudgetTender(JobInfo job, String packageNo) throws Exception{
+	public Boolean removeTenderAnalysisListExceptBudgetTender(JobInfo jobInfo, String packageNo) throws Exception{
 		//Delete all the vendor details - keep the base details (vendorNo = 0)
 		List<Tender> tenderAnalyses;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPackage", "scPackage");
-			criteria.add(Restrictions.eq("scPackage.job", job));
-			criteria.add(Restrictions.eq("scPackage.packageNo", packageNo.trim()));
+			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+			criteria.add(Restrictions.eq("SUBCONTRACT.jobInfo", jobInfo));
+			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.trim()));
 			criteria.add(Restrictions.ne("vendorNo", 0)); 
 			tenderAnalyses = criteria.list();
 			for(Tender tenderAnalysis : tenderAnalyses){
@@ -223,13 +223,13 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	@SuppressWarnings("unchecked")
 	public List<Tender> obtainTenderAnalysisByVendorNo(Integer vendorNo, String division, String jobNumber, String packageNumber, String tenderStatus) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("scPackage", "scPackage");
-		criteria.createAlias("scPackage.job", "job");
+		criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+		criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
 		
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("vendorNo", vendorNo));
 		if (division!=null && !"".equals(division))
-			criteria.add(Restrictions.eq("job.division", division));
+			criteria.add(Restrictions.eq("jobInfo.division", division));
 		if (jobNumber!=null && !"".equals(jobNumber))
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 		if (packageNumber!=null && !"".equals(packageNumber))

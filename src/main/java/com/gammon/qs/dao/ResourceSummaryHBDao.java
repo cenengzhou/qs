@@ -54,8 +54,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.like("objectCode", "14%"));
 			criteria.add(Restrictions.ne("packageNo", "0"));
@@ -74,8 +74,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			resourceSummaries = criteria.list();
 			return resourceSummaries;
@@ -1281,8 +1281,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
@@ -1327,8 +1327,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
@@ -1381,8 +1381,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try {
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
 			detachedCriteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			detachedCriteria.createAlias("job", "job");
-			detachedCriteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			detachedCriteria.createAlias("jobInfo", "jobInfo");
+			detachedCriteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
 				if (packageNo.contains("%")) {
@@ -1395,8 +1395,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			
 			
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
@@ -1454,8 +1454,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try {
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
 			detachedCriteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			detachedCriteria.createAlias("job", "job");
-			detachedCriteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			detachedCriteria.createAlias("jobInfo", "jobInfo");
+			detachedCriteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
 				if (packageNo.contains("%")) {
@@ -1468,8 +1468,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			
 			
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("job", "job");
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if (!GenericValidator.isBlankOrNull(packageNo)) {
 				packageNo = packageNo.replace("*", "%");
@@ -1551,8 +1551,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	@SuppressWarnings("unchecked")
 	public List<AccountCodeWrapper> getAccountCodeListByJob(String jobNumber) {
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("job", "job");
-		criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
+		criteria.createAlias("jobInfo", "jobInfo");
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
 		criteria.setProjection(Projections.projectionList()
 				.add(Projections.groupProperty("objectCode"),"objectAccount")
 				.add(Projections.groupProperty("subsidiaryCode"),"subsidiary"));

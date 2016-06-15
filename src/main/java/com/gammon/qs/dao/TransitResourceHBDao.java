@@ -56,8 +56,8 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	
 	public boolean dummyAccountCodesExist(Transit header){
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitBQ", "bq");
-		criteria.add(Restrictions.eq("bq.transitHeader", header));
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.add(Restrictions.eq("transitBpi.transit", header));
 		criteria.add(Restrictions.or(Restrictions.eq("objectCode", "000000"), Restrictions.eq("subsidiaryCode", "00000000")));
 		criteria.setProjection(Projections.rowCount());
 		Integer count = Integer.valueOf(criteria.uniqueResult().toString());
@@ -73,39 +73,39 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 //		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
 		Criteria countCriteria = getSession().createCriteria(this.getType());
-		countCriteria.createAlias("transitBQ", "bq");
-		countCriteria.add(Restrictions.eq("bq.transitHeader", header));
+		countCriteria.createAlias("transitBpi", "transitBpi");
+		countCriteria.add(Restrictions.eq("transitBpi.transit", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			billNo = billNo.replace("*", "%");
 			if(billNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.billNo", billNo));
+				countCriteria.add(Restrictions.like("transitBpi.billNo", billNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.billNo", billNo));
+				countCriteria.add(Restrictions.eq("transitBpi.billNo", billNo));
 		}
 		if(!GenericValidator.isBlankOrNull(subBillNo)){
 			subBillNo = subBillNo.replace("*", "%");
 			if(subBillNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.subBillNo", subBillNo));
+				countCriteria.add(Restrictions.like("transitBpi.subBillNo", subBillNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.subBillNo", subBillNo));
+				countCriteria.add(Restrictions.eq("transitBpi.subBillNo", subBillNo));
 		}
 		if(!GenericValidator.isBlankOrNull(pageNo)){
 			pageNo = pageNo.replace("*", "%");
 			if(pageNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.pageNo", pageNo));
+				countCriteria.add(Restrictions.like("transitBpi.pageNo", pageNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.pageNo", pageNo));
+				countCriteria.add(Restrictions.eq("transitBpi.pageNo", pageNo));
 		}
 		if(!GenericValidator.isBlankOrNull(itemNo)){
 			itemNo = itemNo.replace("*", "%");
 			if(itemNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.itemNo", itemNo));
+				countCriteria.add(Restrictions.like("transitBpi.itemNo", itemNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.itemNo", itemNo));
+				countCriteria.add(Restrictions.eq("transitBpi.itemNo", itemNo));
 		}
 		if(!GenericValidator.isBlankOrNull(resourceCode)){
 			resourceCode = resourceCode.replace("*", "%");
@@ -146,35 +146,35 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 //		wrapper.setTotalPage((count + TransitRepositoryHBImpl.RECORDS_PER_PAGE - 1)/TransitRepositoryHBImpl.RECORDS_PER_PAGE);
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitBQ", "bq");
-		criteria.add(Restrictions.eq("bq.transitHeader", header));
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.add(Restrictions.eq("transitBpi.transit", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			if(billNo.contains("%")){
-				criteria.add(Restrictions.like("bq.billNo", billNo));
+				criteria.add(Restrictions.like("transitBpi.billNo", billNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.billNo", billNo));
+				criteria.add(Restrictions.eq("transitBpi.billNo", billNo));
 		}
 		if(!GenericValidator.isBlankOrNull(subBillNo)){
 			if(subBillNo.contains("%")){
-				criteria.add(Restrictions.like("bq.subBillNo", subBillNo));
+				criteria.add(Restrictions.like("transitBpi.subBillNo", subBillNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.subBillNo", subBillNo));
+				criteria.add(Restrictions.eq("transitBpi.subBillNo", subBillNo));
 		}
 		if(!GenericValidator.isBlankOrNull(pageNo)){
 			if(pageNo.contains("%")){
-				criteria.add(Restrictions.like("bq.pageNo", pageNo));
+				criteria.add(Restrictions.like("transitBpi.pageNo", pageNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.pageNo", pageNo));
+				criteria.add(Restrictions.eq("transitBpi.pageNo", pageNo));
 		}
 		if(!GenericValidator.isBlankOrNull(itemNo)){
 			if(itemNo.contains("%")){
-				criteria.add(Restrictions.like("bq.itemNo", itemNo));
+				criteria.add(Restrictions.like("transitBpi.itemNo", itemNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.itemNo", itemNo));
+				criteria.add(Restrictions.eq("transitBpi.itemNo", itemNo));
 		}
 		if(!GenericValidator.isBlankOrNull(resourceCode)){
 			if(resourceCode.contains("%")){
@@ -205,10 +205,10 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 				criteria.add(Restrictions.ilike("this.description", description, MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.projectionList().add(Projections.property("id"), "id")
-				.add(Projections.property("bq.billNo"), "billNo")
-				.add(Projections.property("bq.subBillNo"), "subBillNo")
-				.add(Projections.property("bq.pageNo"), "pageNo")
-				.add(Projections.property("bq.itemNo"), "itemNo")
+				.add(Projections.property("transitBpi.billNo"), "billNo")
+				.add(Projections.property("transitBpi.subBillNo"), "subBillNo")
+				.add(Projections.property("transitBpi.pageNo"), "pageNo")
+				.add(Projections.property("transitBpi.itemNo"), "itemNo")
 				.add(Projections.property("resourceCode"), "resourceCode")
 				.add(Projections.property("objectCode"), "objectCode")
 				.add(Projections.property("subsidiaryCode"), "subsidiaryCode")
@@ -237,39 +237,39 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
 		Criteria countCriteria = getSession().createCriteria(this.getType());
-		countCriteria.createAlias("transitBQ", "bq");
-		countCriteria.add(Restrictions.eq("bq.transitHeader", header));
+		countCriteria.createAlias("transitBpi", "transitBpi");
+		countCriteria.add(Restrictions.eq("transitBpi.transit", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			billNo = billNo.replace("*", "%");
 			if(billNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.billNo", billNo));
+				countCriteria.add(Restrictions.like("transitBpi.billNo", billNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.billNo", billNo));
+				countCriteria.add(Restrictions.eq("transitBpi.billNo", billNo));
 		}
 		if(!GenericValidator.isBlankOrNull(subBillNo)){
 			subBillNo = subBillNo.replace("*", "%");
 			if(subBillNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.subBillNo", subBillNo));
+				countCriteria.add(Restrictions.like("transitBpi.subBillNo", subBillNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.subBillNo", subBillNo));
+				countCriteria.add(Restrictions.eq("transitBpi.subBillNo", subBillNo));
 		}
 		if(!GenericValidator.isBlankOrNull(pageNo)){
 			pageNo = pageNo.replace("*", "%");
 			if(pageNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.pageNo", pageNo));
+				countCriteria.add(Restrictions.like("transitBpi.pageNo", pageNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.pageNo", pageNo));
+				countCriteria.add(Restrictions.eq("transitBpi.pageNo", pageNo));
 		}
 		if(!GenericValidator.isBlankOrNull(itemNo)){
 			itemNo = itemNo.replace("*", "%");
 			if(itemNo.contains("%")){
-				countCriteria.add(Restrictions.like("bq.itemNo", itemNo));
+				countCriteria.add(Restrictions.like("transitBpi.itemNo", itemNo));
 			}
 			else
-				countCriteria.add(Restrictions.eq("bq.itemNo", itemNo));
+				countCriteria.add(Restrictions.eq("transitBpi.itemNo", itemNo));
 		}
 		if(!GenericValidator.isBlankOrNull(resourceCode)){
 			resourceCode = resourceCode.replace("*", "%");
@@ -309,35 +309,35 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		wrapper.setTotalPage((count + TransitService.RECORDS_PER_PAGE - 1)/TransitService.RECORDS_PER_PAGE);
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitBQ", "bq");
-		criteria.add(Restrictions.eq("bq.transitHeader", header));
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.add(Restrictions.eq("transitBpi.transitHeader", header));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			if(billNo.contains("%")){
-				criteria.add(Restrictions.like("bq.billNo", billNo));
+				criteria.add(Restrictions.like("transitBpi.billNo", billNo));
 			}
 			else
 				criteria.add(Restrictions.eq("bq.billNo", billNo));
 		}
 		if(!GenericValidator.isBlankOrNull(subBillNo)){
 			if(subBillNo.contains("%")){
-				criteria.add(Restrictions.like("bq.subBillNo", subBillNo));
+				criteria.add(Restrictions.like("transitBpi.subBillNo", subBillNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.subBillNo", subBillNo));
+				criteria.add(Restrictions.eq("transitBpi.subBillNo", subBillNo));
 		}
 		if(!GenericValidator.isBlankOrNull(pageNo)){
 			if(pageNo.contains("%")){
-				criteria.add(Restrictions.like("bq.pageNo", pageNo));
+				criteria.add(Restrictions.like("transitBpi.pageNo", pageNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.pageNo", pageNo));
+				criteria.add(Restrictions.eq("transitBpi.pageNo", pageNo));
 		}
 		if(!GenericValidator.isBlankOrNull(itemNo)){
 			if(itemNo.contains("%")){
-				criteria.add(Restrictions.like("bq.itemNo", itemNo));
+				criteria.add(Restrictions.like("transitBpi.itemNo", itemNo));
 			}
 			else
-				criteria.add(Restrictions.eq("bq.itemNo", itemNo));
+				criteria.add(Restrictions.eq("transitBpi.itemNo", itemNo));
 		}
 		if(!GenericValidator.isBlankOrNull(resourceCode)){
 			if(resourceCode.contains("%")){
@@ -368,10 +368,10 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 				criteria.add(Restrictions.ilike("this.description", description, MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.projectionList().add(Projections.property("id"), "id")
-				.add(Projections.property("bq.billNo"), "billNo")
-				.add(Projections.property("bq.subBillNo"), "subBillNo")
-				.add(Projections.property("bq.pageNo"), "pageNo")
-				.add(Projections.property("bq.itemNo"), "itemNo")
+				.add(Projections.property("transitBpi.billNo"), "billNo")
+				.add(Projections.property("transitBpi.subBillNo"), "subBillNo")
+				.add(Projections.property("transitBpi.pageNo"), "pageNo")
+				.add(Projections.property("transitBpi.itemNo"), "itemNo")
 				.add(Projections.property("resourceCode"), "resourceCode")
 				.add(Projections.property("objectCode"), "objectCode")
 				.add(Projections.property("subsidiaryCode"), "subsidiaryCode")
@@ -382,7 +382,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 				.add(Projections.property("totalQuantity"), "totalQuantity")
 				.add(Projections.property("rate"), "rate")
 				.add(Projections.property("value"), "value"));
-		criteria.addOrder(Order.asc("bq.sequenceNo"));
+		criteria.addOrder(Order.asc("transitBpi.sequenceNo"));
 		criteria.addOrder(Order.asc("resourceNo"));
 		criteria.setFirstResult(TransitService.RECORDS_PER_PAGE * pageNum);
 		criteria.setMaxResults(TransitService.RECORDS_PER_PAGE);
@@ -398,8 +398,8 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	@SuppressWarnings("unchecked")
 	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(Transit header){
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitBQ", "bq");
-		criteria.add(Restrictions.eq("bq.transitHeader", header));
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.add(Restrictions.eq("transitBpi.transitHeader", header));
 		criteria.addOrder(Order.asc("type"));
 		criteria.addOrder(Order.asc("objectCode"));
 		criteria.addOrder(Order.asc("resourceCode"));
@@ -418,9 +418,9 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBpi transitBQ) {
+	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBpi transitBpi) {
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("transitBQ", transitBQ));
+		criteria.add(Restrictions.eq("transitBpi", transitBpi));
 		return criteria.list();
 	}
 	

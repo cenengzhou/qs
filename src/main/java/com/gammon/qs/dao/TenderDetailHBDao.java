@@ -30,10 +30,10 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 			String packageNo, Integer venderNo, Integer sequenceNo) throws DatabaseOperationException {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("tenderAnalysis", "tenderAnalysis");
-			criteria.add(Restrictions.eq("tenderAnalysis.jobNo", jobNumber.trim()));
-			criteria.add(Restrictions.eq("tenderAnalysis.packageNo", packageNo.trim()));
-			criteria.add(Restrictions.eq("tenderAnalysis.vendorNo", venderNo));
+			criteria.createAlias("TENDER", "TENDER");
+			criteria.add(Restrictions.eq("TENDER.jobNo", jobNumber.trim()));
+			criteria.add(Restrictions.eq("TENDER.packageNo", packageNo.trim()));
+			criteria.add(Restrictions.eq("TENDER.vendorNo", venderNo));
 			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 			return (TenderDetail) criteria.uniqueResult();
 		}catch (HibernateException he){
@@ -46,13 +46,13 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	public List<TenderDetail> getTenderAnalysisDetails(String jobNumber, String packageNo, Integer venderNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("tenderAnalysis", "tenderAnalysis");
-			criteria.add(Restrictions.eq("tenderAnalysis.jobNo", jobNumber.trim()));
-			criteria.add(Restrictions.eq("tenderAnalysis.packageNo", packageNo.trim()));
+			criteria.createAlias("TENDER", "TENDER");
+			criteria.add(Restrictions.eq("TENDER.jobNo", jobNumber.trim()));
+			criteria.add(Restrictions.eq("TENDER.packageNo", packageNo.trim()));
 			if(venderNo!=null)
-				criteria.add(Restrictions.eq("tenderAnalysis.vendorNo", venderNo));
+				criteria.add(Restrictions.eq("TENDER.vendorNo", venderNo));
 			else
-				criteria.addOrder(Order.asc("tenderAnalysis.vendorNo"));
+				criteria.addOrder(Order.asc("TENDER.vendorNo"));
 			criteria.addOrder(Order.asc("sequenceNo"));
 			return criteria.list(); 
 		}catch (HibernateException he){

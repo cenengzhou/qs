@@ -34,9 +34,9 @@ public class ProvisionPostingHistHBDao extends
 //		String strSQL = "from SCDetailProvisionHistory scp ,SCDetails scd, SCPackgae scpk where scp.scDetails=scd and scd.jobNo = '"+jobNumber
 //			+"' and scd.scPackage=scpk and scpk.packageNo='"+packageNo+"' and postedYr='"+year+"' and postedMonth='"+month+"'";
 		Criteria criteria = getSession().createCriteria(this.getType());
-//		criteria.createAlias("scDetails", "scDetails");
-//		criteria.createAlias("scDetails.scPackage", "scPackage");
-//		criteria.createAlias("scPackage.job", "job");
+//		criteria.createAlias("subcontractDetail", "subcontractDetail");
+//		criteria.createAlias("subcontractDetail.subcontract", "subcontract");
+//		criteria.createAlias("subcontract.jobInfo", "jobInfo");
 //		criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
 //		criteria.add(Restrictions.eq("scPackage.packageNo", packageNo));
 		criteria.add(Restrictions.eq("jobNo",jobNumber));

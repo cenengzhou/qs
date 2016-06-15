@@ -222,10 +222,10 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	@SuppressWarnings("unchecked")
 	public List<PaymentCert> getSCPaymentDetail(String jobNumber, String packageNo) {
 		Criteria criteria = getSession().createCriteria(PaymentCert.class);
-		criteria.createAlias("scPackage", "scPackage");
-		criteria.createAlias("scPackage.job", "job");
-		criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
-		criteria.add(Restrictions.eq("scPackage.packageNo", packageNo));
+		criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+		criteria.createAlias("SUBCONTRACT.jobInfo", "job");
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+		criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
 		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
 		return (List<PaymentCert>) criteria.list();
 	}
@@ -243,22 +243,22 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	 * @author tikywong
 	 * created on Feb 21, 2014 2:19:03 PM
 	 */
-	public PaymentCertDetail obtainPaymentDetail(PaymentCert scPaymentCert, SubcontractDetail scDetail){
-		if (scPaymentCert == null)
+	public PaymentCertDetail obtainPaymentDetail(PaymentCert paymentCert, SubcontractDetail subcontractDetail){
+		if (paymentCert == null)
 			throw new NullPointerException("scPaymentCert is Null");
 		
 		PaymentCertDetail scPaymentDetail = null;
 		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		try{
-		criteria.createAlias("scPaymentCert", "scPaymentCert");
-		criteria.createAlias("scDetail", "scDetail");
+		criteria.createAlias("paymentCert", "paymentCert");
+		criteria.createAlias("subcontractDetail", "subcontractDetail");
 			
-		criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
-		criteria.add(Restrictions.eq("scDetail", scDetail));
-		criteria.add(Restrictions.eq("this.objectCode", scDetail.getObjectCode()));
-		criteria.add(Restrictions.eq("this.subsidiaryCode", scDetail.getSubsidiaryCode()));
-		criteria.add(Restrictions.eq("this.billItem", scDetail.getBillItem()));
+		criteria.add(Restrictions.eq("paymentCert", paymentCert));
+		criteria.add(Restrictions.eq("subcontractDetail", subcontractDetail));
+		criteria.add(Restrictions.eq("this.objectCode", subcontractDetail.getObjectCode()));
+		criteria.add(Restrictions.eq("this.subsidiaryCode", subcontractDetail.getSubsidiaryCode()));
+		criteria.add(Restrictions.eq("this.billItem", subcontractDetail.getBillItem()));
 		
 		scPaymentDetail = (PaymentCertDetail) criteria.uniqueResult();
 		}catch(Exception he){
@@ -318,10 +318,10 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainAccumulatedPostedCertQtyByDetail(Long scDetail_id) throws DatabaseOperationException{
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPaymentCert", "scPaymentCert");
-			criteria.add(Restrictions.eq("scPaymentCert.paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
-			criteria.createAlias("scDetail", "scDetail");
-			criteria.add(Restrictions.eq("scDetail.id", scDetail_id));
+			criteria.createAlias("paymentCert", "paymentCert");
+			criteria.add(Restrictions.eq("paymentCert.paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
+			criteria.createAlias("subcontractDetail", "subcontractDetail");
+			criteria.add(Restrictions.eq("subcontractDetail.id", scDetail_id));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
 		} catch (Exception he) {

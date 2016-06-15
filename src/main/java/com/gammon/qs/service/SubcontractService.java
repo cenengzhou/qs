@@ -1621,7 +1621,7 @@ public class SubcontractService {
 
 		// added by brian on 20110414 - end
 
-		subcontractHBDao.updateSCPackage(scPackage);
+		subcontractHBDao.updateSubcontract(scPackage);
 		return responseObj;
 	}
 
@@ -2812,7 +2812,7 @@ public class SubcontractService {
 				}
 			}
 
-			subcontractHBDao.updateSCPackage(scPackage);
+			subcontractHBDao.updateSubcontract(scPackage);
 
 			// update Work Scope in JDE
 			try {
@@ -2849,7 +2849,7 @@ public class SubcontractService {
 			//Rejected Package
 			scPackage.setSubcontractStatus(340);
 			//Update Package
-			subcontractHBDao.updateSCPackage(scPackage);
+			subcontractHBDao.updateSubcontract(scPackage);
 		}
 		return true;
 	}
@@ -3035,7 +3035,7 @@ public class SubcontractService {
 				return message;
 			}
 		}
-		subcontractHBDao.updateSCPackage(scPackage);
+		subcontractHBDao.updateSubcontract(scPackage);
 
 		String currencyCode = getCompanyBaseCurrency(jobNumber);
 		String company = scPackage.getJobInfo().getCompany();
@@ -3056,7 +3056,7 @@ public class SubcontractService {
 				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_SUBMITTED);
 			else
 				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_SUBMITTED);
-			subcontractHBDao.updateSCPackage(scPackage);
+			subcontractHBDao.updateSubcontract(scPackage);
 		}else{
 			message ="The request is failed to be submitted. \n" + message;
 			logger.info(message);
@@ -3440,7 +3440,7 @@ public class SubcontractService {
 						scPackage.setLastModifiedUser(userID);
 						scPackage.setScAwardApprovalRequestSentDate(new Date());
 						try{
-							subcontractHBDao.updateSCPackage(scPackage);
+							subcontractHBDao.updateSubcontract(scPackage);
 						}catch(Exception e){
 							e.printStackTrace();
 						}
@@ -3666,7 +3666,7 @@ public class SubcontractService {
 				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_REJECTED);
 		}
 
-		subcontractHBDao.updateSCPackage(scPackage);
+		subcontractHBDao.updateSubcontract(scPackage);
 		message = null;	//reset message
 
 		return message;	//return null means the split/termination has done successfully
@@ -3729,7 +3729,7 @@ public class SubcontractService {
 				scPackage.setSplitTerminateStatus(Subcontract.TERMINATE_REJECTED);
 		}
 
-		subcontractHBDao.updateSCPackage(scPackage);
+		subcontractHBDao.updateSubcontract(scPackage);
 		return message;
 	}
 
@@ -5208,7 +5208,7 @@ public class SubcontractService {
 						tenderAnalysis.setSubcontract(scPackage);
 					}
 					logger.info("Step 2.3: Update Package");
-					subcontractHBDao.updateSCPackage(scPackage);
+					subcontractHBDao.updateSubcontract(scPackage);
 				}
 				
 			}else{
@@ -5293,7 +5293,7 @@ public class SubcontractService {
 							addSCDetails(scPackage, ta, budgetTA, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, false);
 						}
 						//Step 3.4: Update Package
-						subcontractHBDao.updateSCPackage(scPackage);
+						subcontractHBDao.updateSubcontract(scPackage);
 						logger.info("Step 3.4: Update Package");
 					}else{
 						return "Vendor must be matched with the one in previous Payment Requisition.";

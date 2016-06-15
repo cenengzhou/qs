@@ -41,17 +41,17 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.createAlias("job", "job");
+			criteria.createAlias("jobInfo", "jobInfo");
 			if (company!=null && !"".equals(company))
-				criteria.add(Restrictions.eq("job.company", company));
+				criteria.add(Restrictions.eq("jobInfo.company", company));
 			else if (companyList!=null)
-				criteria.add(Restrictions.in("job.company", companyList));
+				criteria.add(Restrictions.in("jobInfo.company", companyList));
 			if (division!=null && !"".equals(division))
-				criteria.add(Restrictions.eq("job.division", division));
+				criteria.add(Restrictions.eq("jobInfo.division", division));
 			if (jobNumber!=null && !"".equals(jobNumber))
-				criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			if (clientNo!=null && !"".equals(clientNo))
-				criteria.add(Restrictions.eq("job.employer", clientNo));
+				criteria.add(Restrictions.eq("jobInfo.employer", clientNo));
 			if (subcontractNumber!=null && !"".equals(subcontractNumber))
 				criteria.add(Restrictions.eq("packageNo", subcontractNumber));
 			if (subcontractorNumber!=null && !"".equals(subcontractorNumber))
@@ -75,8 +75,8 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			
 			
 			if(workScope!=null && !"".equals(workScope)){
-				criteria.createAlias("scPackage", "scPackage");
-				criteria.createAlias("scPackage.scWorkscope", "scWorkscope");
+				criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+				criteria.createAlias("SUBCONTRACT.scWorkscope", "scWorkscope");
 				criteria.add(Restrictions.eq("scWorkscope.workScope", workScope));
 			}
 			if(status!=null && !"".equals(status)){
@@ -92,9 +92,9 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			if(reportType!=null && "SubcontractorAnalysisReport".equals(reportType))
 				criteria.addOrder(Order.asc("vendorNo"));
 			else{
-				criteria.addOrder(Order.asc("job.company"))
-						.addOrder(Order.asc("job.division"))
-						.addOrder(Order.asc("job.jobNumber"))
+				criteria.addOrder(Order.asc("jobInfo.company"))
+						.addOrder(Order.asc("jobInfo.division"))
+						.addOrder(Order.asc("jobInfo.jobNumber"))
 						.addOrder(Order.asc("packageNo"));
 			}
 			

@@ -100,13 +100,13 @@ public class BpiBillHBDao extends BaseHibernateDao<BpiBill> {
 		try {
 //			logger.info("Original Criteria");
 //			Criteria criteria = getSession().createCriteria(this.getType());
-//			criteria.createAlias("job", "job");
-//			criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
+//			criteria.createAlias("jobInfo", "jobInfo");
+//			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
 //			criteria.addOrder(Order.asc("billNo"));
 //			criteria.addOrder(Order.asc("subBillNo"));
 //			criteria.addOrder(Order.asc("sectionNo"));
-//			criteria.createAlias("pages", "pages");
-//			criteria.addOrder(Order.asc("pages.pageNo"));
+//			criteria.createAlias("bpiPage", "bpiPage");
+//			criteria.addOrder(Order.asc("bpiPage.pageNo"));
 
 			return (List<BpiBill>) getPageSQL(jobNumber);//criteria.list();
 		}catch (HibernateException he){

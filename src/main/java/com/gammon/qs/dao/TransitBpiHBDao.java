@@ -34,8 +34,8 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	public List<TransitBpi> getTransitBQItems(String jobNumber) throws Exception{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("transitHeader", "transitHeader");
-			criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
+			criteria.createAlias("transit", "transit");
+			criteria.add(Restrictions.eq("transit.jobNumber", jobNumber.trim()));
 			criteria.addOrder(Order.asc("sequenceNo"));
 			return criteria.list();
 		}catch (HibernateException he){
@@ -76,8 +76,8 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	public List<TransitBpi> getTransitBQItems(String jobNumber, String billNo, String subBillNo, 
 			String pageNo, String itemNo, String description) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitHeader", "transitHeader");
-		criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
+		criteria.createAlias("transit", "transit");
+		criteria.add(Restrictions.eq("transit.jobNumber", jobNumber.trim()));
 		if(billNo != null && billNo.trim().length() != 0){
 			billNo = billNo.replace("*", "%");
 			if(billNo.contains("%"))
@@ -122,8 +122,8 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	@SuppressWarnings("unchecked")
 	public List<TransitBQMasterReconciliationReportRecordWrapper> getBQMasterTransitReportFields(String jobNumber){
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("transitHeader", "transitHeader");
-		criteria.add(Restrictions.eq("transitHeader.jobNumber", jobNumber.trim()));
+		criteria.createAlias("transit", "transit");
+		criteria.add(Restrictions.eq("transit.jobNumber", jobNumber.trim()));
 		//Order the java objects later
 		//pageNo is stored as String, so '10' comes before '2' using sql order by
 //		criteria.addOrder(Order.asc("billNo"));

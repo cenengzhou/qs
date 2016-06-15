@@ -64,6 +64,7 @@ public class TomcatSessionController {
 		Manager tomcatManager = getTomcatManager(request.getSession().getServletContext());
 		for(String sessionId : sessionIdList){
 			try {
+				if(sessionId.equalsIgnoreCase(request.getSession().getId())) continue;
 				Session session = tomcatManager.findSession(sessionId);
 				if(session != null){
 					session.expire();

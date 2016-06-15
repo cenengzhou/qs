@@ -28,12 +28,12 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 		try{
 			List<AttachSubcontractDetail> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scDetails.scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");
-			criteria.createAlias("scDetails", "scDetails");
-			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
-			criteria.add(Restrictions.eq("scDetails.sequenceNo", new Integer (scDetailSequenceNo)));
+			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
+			criteria.createAlias("subcontractDetail", "subcontractDetail");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontractDetail.sequenceNo", new Integer (scDetailSequenceNo)));
 			resultList = criteria.list();
 			if(resultList == null)
 				resultList = new ArrayList<AttachSubcontractDetail>();
@@ -47,11 +47,11 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 		try{
 			List<AttachSubcontractDetail> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scDetails.scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");
-			criteria.createAlias("scDetails", "scDetails");
-			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
+			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
+			criteria.createAlias("subcontractDetail", "subcontractDetail");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			resultList = criteria.list();
 			if(resultList == null)
 				resultList = new ArrayList<AttachSubcontractDetail>();
@@ -62,11 +62,11 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachSubcontractDetail> getSCDetailsAttachment(SubcontractDetail scDetail) throws DatabaseOperationException{
+	public List<AttachSubcontractDetail> getSCDetailsAttachment(SubcontractDetail subcontractDetail) throws DatabaseOperationException{
 		try{
 			List<AttachSubcontractDetail> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scDetails", scDetail));		
+			criteria.add(Restrictions.eq("subcontractDetail", subcontractDetail));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
@@ -74,13 +74,13 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 		}
 	}
 	@SuppressWarnings("unchecked")
-	public List<AttachSubcontractDetail> getSCDetailsAttachment(Subcontract scPackage) throws DatabaseOperationException{
+	public List<AttachSubcontractDetail> getSCDetailsAttachment(Subcontract subcontract) throws DatabaseOperationException{
 		try{
 			List<AttachSubcontractDetail> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scDetails", "scDetails");
-			criteria.createAlias("scDetails.scPackage", "scPackage");
-			criteria.add(Restrictions.eq("scPackage", scPackage));		
+			criteria.createAlias("subcontractDetail", "subcontractDetail");
+			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
+			criteria.add(Restrictions.eq("subcontract", subcontract));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
@@ -88,10 +88,10 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 		}
 	}
 
-	public AttachSubcontractDetail getSCDetailsAttachment(SubcontractDetail scDetails, Integer attachmentSequenceNo) throws DatabaseOperationException{
+	public AttachSubcontractDetail getSCDetailsAttachment(SubcontractDetail subcontractDetail, Integer attachmentSequenceNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scDetails",scDetails));
+			criteria.add(Restrictions.eq("subcontractDetail",subcontractDetail));
 			criteria.add(Restrictions.eq("sequenceNo", attachmentSequenceNo));
 			return (AttachSubcontractDetail)criteria.uniqueResult();
 		}catch (HibernateException he) {
@@ -131,14 +131,14 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 		saveOrUpdate(scDetailsAttachment);
 		return true;
 	}
-	public boolean addUpdateSCTextAttachment(AttachSubcontractDetail SCDetailsAttachment, String user) throws Exception{
+	public boolean addUpdateSCTextAttachment(AttachSubcontractDetail attachSubcontractDetail, String user) throws Exception{
 
 		try {
-			SCDetailsAttachment.setLastModifiedUser(user);
-			return saveSCDetailsAttachment(SCDetailsAttachment);
+			attachSubcontractDetail.setLastModifiedUser(user);
+			return saveSCDetailsAttachment(attachSubcontractDetail);
 		}catch (DatabaseOperationException dbe){
-			SCDetailsAttachment.setCreatedUser(user);
-			return addSCAttachment(SCDetailsAttachment);
+			attachSubcontractDetail.setCreatedUser(user);
+			return addSCAttachment(attachSubcontractDetail);
 		}
 	}
 }

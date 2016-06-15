@@ -277,7 +277,7 @@ public class PaymentPostingService {
 							SCPaymentLogic.updateSCDetailandPackageAfterPostingToFinance(scPackage, scDetailsHBDao.getSCDetails(scPackage));
 						}
 
-						scPackageHBDao.updateSCPackage(scPackage);
+						scPackageHBDao.updateSubcontract(scPackage);
 
 						// add a web service to insert it into F58011 for finance department to reference
 						int NumOfRowInserted = paymentWSDao.insertSCPaymentHeader(paymentCert);

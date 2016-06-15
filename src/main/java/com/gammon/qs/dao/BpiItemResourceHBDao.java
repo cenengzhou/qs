@@ -140,31 +140,31 @@ public class BpiItemResourceHBDao extends BaseHibernateDao<BpiItemResource> {
 		
 			try{
 				Criteria criteria = getSession().createCriteria(this.getType());
-				criteria.createAlias("bill.job", "job");
+				criteria.createAlias("bpiBill.jobInfo", "jobInfo");
 				if (jobNumber!=null &&  jobNumber.length()>0)
-					criteria.add(Restrictions.eq("job.jobNumber", jobNumber.trim()));
+					criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
 				else
 					throw new DatabaseOperationException("Job Number cannot be null");
-				criteria.createAlias("bqItem.page", "page");
+				criteria.createAlias("bpiItem.bpiPage", "bpiPage");
 				if (pageNo==null || pageNo.trim().length()<1)
-					criteria.add(Restrictions.isNull("page.pageNo"));
+					criteria.add(Restrictions.isNull("bpiPage.pageNo"));
 				else
-					criteria.add(Restrictions.eq("page.pageNo", pageNo));
+					criteria.add(Restrictions.eq("bpiPage.pageNo", pageNo));
 				
 				if (billNo==null||billNo.trim().length()<1) 
-					criteria.add(Restrictions.isNull("bill.billNo"));
+					criteria.add(Restrictions.isNull("bpiBill.billNo"));
 				else
-					criteria.add(Restrictions.eq("bill.billNo", billNo));
-				criteria.createAlias("page.bill", "bill");
+					criteria.add(Restrictions.eq("bpiBill.billNo", billNo));
+				criteria.createAlias("bpiPage.bpiBill", "bpiBill");
 				
 				if (subBillNo==null||subBillNo.trim().length()<1) 
-					criteria.add(Restrictions.isNull("bill.subBillNo"));
+					criteria.add(Restrictions.isNull("bpiBill.subBillNo"));
 				else 
-					criteria.add(Restrictions.eq("bill.subBillNo",subBillNo));
+					criteria.add(Restrictions.eq("bpiBill.subBillNo",subBillNo));
 				if (sectionNo==null||sectionNo.trim().length()<1) 
-					criteria.add(Restrictions.isNull("bill.sectionNo"));
+					criteria.add(Restrictions.isNull("bpiBill.sectionNo"));
 				else
-					criteria.add(Restrictions.eq("bill.sectionNo",sectionNo));
+					criteria.add(Restrictions.eq("bpiBill.sectionNo",sectionNo));
 				criteria.createAlias(BpiITEM, BpiITEM);
 				criteria.add(Restrictions.eq("bqItem.itemNo", itemNo.trim()));
 				criteria.add(Restrictions.eq(SYSTEM_STATUS, "ACTIVE"));

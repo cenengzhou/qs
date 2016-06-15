@@ -28,11 +28,11 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");
-			criteria.createAlias("scPaymentCert", "scPaymentCert");
-			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
+			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
+			criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
+			criteria.createAlias("paymentCert", "paymentCert");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("scPaymentCert.paymentCertNo", new Integer(paymentCertNo)));
 			resultList = criteria.list();
 			if(resultList == null)
@@ -43,21 +43,21 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		}
 	}
 	
-	public AttachPayment getSCPaymentAttachment(PaymentCert scPaymentCert, Integer attachmentSequenceNo) throws DatabaseOperationException{
+	public AttachPayment getSCPaymentAttachment(PaymentCert paymentCert, Integer attachmentSequenceNo) throws DatabaseOperationException{
 		try{
 			PaymentCert dbObj = new PaymentCert();
 			//dbObj = scPaymentCert;
-			dbObj.setJobNo(scPaymentCert.getSubcontract().getJobInfo().getJobNumber());
-			dbObj.setPackageNo(scPaymentCert.getSubcontract().getPackageNo());
-			dbObj.setPaymentCertNo(scPaymentCert.getPaymentCertNo());
+			dbObj.setJobNo(paymentCert.getSubcontract().getJobInfo().getJobNumber());
+			dbObj.setPackageNo(paymentCert.getSubcontract().getPackageNo());
+			dbObj.setPaymentCertNo(paymentCert.getPaymentCertNo());
 			Criteria criteria = getSession().createCriteria(this.getType());
-			/*criteria.createAlias("scPaymentCert.scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");*/
-			//criteria.createAlias("scPaymentCert", "scPaymentCert");
-			/*criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
+			/*criteria.createAlias("paymentCert.subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");*/
+			//criteria.createAlias("paymentCert", "paymentCert");
+			/*criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("scPaymentCert.paymentCertNo", new Integer (paymentCertNo)));*/
-			criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("sequenceNo", attachmentSequenceNo));
 			return (AttachPayment)criteria.uniqueResult();
 		}catch (HibernateException he) {
@@ -82,12 +82,12 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	public AttachPayment getSCPaymentAttachment(String jobNumber, String subcontractNo,String paymentCertNo, Integer sequenceNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("scPaymentCert.scPackage", "scPackage");
-			criteria.createAlias("scPackage.job", "job");
-			criteria.createAlias("scPaymentCert", "scPaymentCert");
-			criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
-			criteria.add(Restrictions.eq("scPaymentCert.paymentCertNo", new Integer (paymentCertNo)));
+			criteria.createAlias("paymentCert.subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
+			criteria.createAlias("paymentCert", "paymentCert");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("paymentCert.paymentCertNo", new Integer (paymentCertNo)));
 			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 			return (AttachPayment)criteria.uniqueResult();
 		}catch (HibernateException he) {
