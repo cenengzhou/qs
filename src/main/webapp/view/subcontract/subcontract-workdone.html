@@ -1,16 +1,17 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-	</section>
+<div class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}
+	</h1>
 
 
-	<section class="content">
 		<div class="row">
 		    <div class="col-md-6 col-xs-12">
 		      <!-- small box -->
@@ -18,7 +19,7 @@
 		        <div class="inner">
 		          <h3>{{workdone | currency}}</h3>
 		
-		          <p>WorkDone Total Amount</p>
+		          <p>Work Done Total Amount</p>
 		        </div>
 		        <div class="icon">
 		          <i class="ion ion-social-usd"></i>
@@ -77,10 +78,9 @@
 		<!-- /.row -->
 
 
-		<button class="btn btn-twitter btn-block" type="button"	ng-click="save()">
+		<button class="btn btn-primary btn-block" type="button"	ng-click="save()">
 			<span class="fa fa-save"></span> Save
 		</button>
 		
-	</section>
 </div>
 

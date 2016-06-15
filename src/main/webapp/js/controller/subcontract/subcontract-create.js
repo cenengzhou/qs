@@ -1,4 +1,4 @@
-mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance', '$location', '$log', function ($scope, $uibModalInstance, $location, $log) {
+mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance', '$location',  function ($scope, $uibModalInstance, $location) {
 	$scope.packageNo = "";
 	$scope.description = "";
 	$scope.workscope = "";
@@ -43,20 +43,20 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
     //Save Function
 	$scope.save = function () {
 		$scope.saveBoolean = true;
-		$log.info("packageNo: " + $scope.packageNo);
-		$log.info("description: " + $scope.description);
-		$log.info("workscope: " + $scope.workscope);
-		$log.info("approvalSubType: " + $scope.approvalSubType);
-		$log.info("subcontractorNature: " + $scope.subcontractorNature);
-		$log.info("checkedLabour: " + $scope.checkedLabour);
-		$log.info("checkedPlant: " + $scope.checkedPlant);
-		$log.info("checkedMaterial: " + $scope.checkedMaterial);
-		$log.info("subcontractTerm: " + $scope.subcontractTerm);
-		$log.info("formOfSubcontract: " + $scope.formOfSubcontract);
-		$log.info("internalJobNo: " + $scope.internalJobNo);
-		$log.info("selectedCPF: " + $scope.selectedCPF);
-		$log.info("cpfPeriod: " + $scope.cpfPeriod);
-		$log.info("scope.saveBoolean:" + $scope.saveBoolean);
+		console.log("packageNo: " + $scope.packageNo);
+		console.log("description: " + $scope.description);
+		console.log("workscope: " + $scope.workscope);
+		console.log("approvalSubType: " + $scope.approvalSubType);
+		console.log("subcontractorNature: " + $scope.subcontractorNature);
+		console.log("checkedLabour: " + $scope.checkedLabour);
+		console.log("checkedPlant: " + $scope.checkedPlant);
+		console.log("checkedMaterial: " + $scope.checkedMaterial);
+		console.log("subcontractTerm: " + $scope.subcontractTerm);
+		console.log("formOfSubcontract: " + $scope.formOfSubcontract);
+		console.log("internalJobNo: " + $scope.internalJobNo);
+		console.log("selectedCPF: " + $scope.selectedCPF);
+		console.log("cpfPeriod: " + $scope.cpfPeriod);
+		console.log("scope.saveBoolean:" + $scope.saveBoolean);
 		$location.path("/subcontract-flow");
 		$uibModalInstance.close();//($scope.selected.item);
 

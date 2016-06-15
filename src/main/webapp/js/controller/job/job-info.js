@@ -1,11 +1,11 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$log', '$cookieStore',
-                                   function($scope, jobService, $log, $cookieStore) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$cookieStore',
+                                   function($scope, jobService, $cookieStore) {
 
 	$(".date").datepicker({
 		format: "dd-mm-yyyy",
-		todayHighlight: true,
+		//todayHighlight: true,
 		autoclose: true,
-		todayBtn: "linked"
+		//todayBtn: "linked"
 	});
 
 	loadJobInfo();
@@ -77,8 +77,8 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$log', '$cookieStore'
 					$scope.cpfIndexName = data.cpfIndexName;
 
 					console.log("data.actualPCCDate: "+data.actualPCCDate);
-					//$scope.actualPCCDate = '\/Date('+data.actualPCCDate+')\/';
-					$scope.actualPCCDate = "12-02-2012";
+					$scope.actualPCCDate = data.actualPCCDate;
+					//$scope.actualPCCDate = new Date("12-02-2012");
 					$scope.actualMakingGoodDate = data.actualMakingGoodDate;
 					$scope.dateFinalACSettlement = data.dateFinalACSettlement;
 					$scope.defectListIssuedDate = data.defectListIssuedDate;
@@ -101,13 +101,13 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$log', '$cookieStore'
 
 	//Save Function
 	$scope.saveJobInfo = function () {
-		$log.info("levyCITAPercentage: " + $scope.levyCITAPercentage);
-		$log.info("cpfPeriod: " + $scope.cpfPeriod);
+		console.log("levyCITAPercentage: " + $scope.levyCITAPercentage);
+		console.log("cpfPeriod: " + $scope.cpfPeriod);
 
 	};
 
 	$scope.saveDates = function () {
-		$log.info("plannedStartDate: " + $scope.plannedStartDate);
+		console.log("plannedStartDate: " + $scope.plannedStartDate);
 
 
 	};

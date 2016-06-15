@@ -1,16 +1,8 @@
-mainApp.controller('SubcontractCtrl', ['$scope', '$stateParams', 'colorCode', '$stateParams', '$cookieStore',  
-                                       function($scope , $stateParams, colorCode, $stateParams, $cookieStore) {
+mainApp.controller('SubcontractCtrl', ['$scope', '$stateParams', 'colorCode',   
+                                       function($scope , $stateParams, colorCode) {
 	$scope.subcontractSum = 53895000;
 	$scope.paymentAmount = 100256;
 
-
-	if($stateParams.packageNo){
-	$cookieStore.put('packageNo', $stateParams.packageNo);
-	$cookieStore.put('packageDescription', $stateParams.packageDescription);
-	}
-
-	$scope.packageNo = $cookieStore.get("packageNo");
-	$scope.packageDescription = $cookieStore.get("packageDescription");
 
 	$scope.lineChartParameters = {
 			labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

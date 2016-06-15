@@ -785,6 +785,10 @@ a:focus {
 .modal {
   background: rgba(0, 0, 0, 0.3);
 }
+.modal-message .modal-dialog {
+    width: 100%;
+    margin: 0;
+}
 .modal-content {
   border-radius: 0;
   -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
@@ -1293,3 +1297,4 @@ a:focus {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e73f7c', endColorstr='#d81b60', GradientType=0) !important;
   color: #fff;
 }
+

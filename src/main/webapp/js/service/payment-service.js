@@ -1,12 +1,11 @@
-mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
+mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	obtainSubcontractList: obtainSubcontractList,
-    	obtainVendorInfo: obtainVendorInfo
+    	getSCPaymentCertList: getSCPaymentCertList,
     	
     });
 	
-    function obtainSubcontractList(jobNo) {
+    function getSCPaymentCertList(jobNo, subcontractNo) {
     	var myHeaders = {
     	        "Accept": "application/json",
     	        "Content-Type": "application/json",
@@ -16,40 +15,17 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "post",
             //headers: myHeaders,
-            url: "service/getPackageList.json",
+            url: "service/getSCPaymentCertList.json",
             dataType: "application/json;charset=UTF-8",
             params: {
-            	jobNo: jobNo
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
             }
-    	/*var request = $http({
-            method: "get",
-            url: "/gammonqs/subcontractReportExport.rpt",
-            params: {
-            	jobNumber: "13362",
-            	subcontractNumber:"",
-            	subcontractorNumber:"",
-            	subcontractorNature:"",
-            	paymentType:"",
-            	workScope:"",
-            	clientNo:"",
-            	includeJobCompletionDate:"",
-            	splitTerminateStatus:"",
-            	month:"",
-            	year:""
-            },
-            responseType: 'arraybuffer'
-            */
+    
         });
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function obtainVendorInfo() {
-        var request = $http({
-            method: "get",
-            url: "data/vendor-info.json"
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
     
     // ---
     // PRIVATE METHODS.

@@ -8138,7 +8138,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 .invoice-logo {
     font-size: 20px;
     line-height: 36px;
-    text-align: right;
+    text-align: left;
 }
 .invoice-logo img {
     height: 36px;
@@ -8148,7 +8148,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     text-align: right;
 }
 .invoice-title {
-    font-size: 28px;
+    font-size: 18px;
     line-height: 36px;
     margin-top: 0;
     margin-bottom: 20px;
@@ -8160,7 +8160,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     padding: 20px 0 40px;
 }
 .invoice .table {
-    margin-bottom: 80px;
+    margin-bottom: 10px;
 }
 .invoice .table thead th {
     font-size: 12px;
@@ -8169,24 +8169,32 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     padding-top: 12px;
 }
 .invoice .table tbody td {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: none;
 }
 .invoice .table tbody .tax td {
     border: none;
 }
 .invoice .table tbody .total td {
-    border-top-width: 2px;
-    border-bottom-width: 2px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
     border-top-color: transparent !important;
 }
-.invoice .table tbody .total td.text,
 .invoice .table tbody .total td.value {
     border-top-color: #ebeced !important;
-    border-bottom: 2px solid #ebeced !important;
+    border-bottom: 4px solid #ebeced !important;
 }
 .invoice .table tbody .subtotal td {
     padding-bottom: 0;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-top-color: transparent !important;
+}
+.invoice .table tbody .subtotal td.text,
+.invoice .table tbody .subtotal td.value {
+    border-top-color: #ebeced !important;
+    border-top: 2px solid #ebeced !important;
 }
 .invoice-note {
     font-size: 11px;

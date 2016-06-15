@@ -1,4 +1,5 @@
-mainApp.controller('SubcontractFlowCtrl', ['$scope', '$log', '$location', 'colorCode', 'modalService', function($scope, $log, $location, colorCode, modalService) {
+mainApp.controller('SubcontractFlowCtrl', ['$scope', '$location', 'colorCode', 'modalService',
+                                           function($scope, $location, colorCode, modalService) {
 
 	$scope.packageno = 1004;
 	$scope.budget = 226789000;
@@ -17,14 +18,12 @@ mainApp.controller('SubcontractFlowCtrl', ['$scope', '$log', '$location', 'color
 	};
 
 	$scope.click = function(view) {
-		//console.log("view: "+view);
 		$scope.display.scpackage = (view == "scpackage");
 		$scope.display.ta = (view == "ta");
 		$scope.display.vendor = (view == "vendor");
 		$scope.display.compare = (view == "compare");
 		$scope.display.requisition = (view == "requisition");
 		$scope.display.award = (view == "award");
-
 
 		if(view=="scpackage"){
 			modalService.open('lg', 'view/subcontract/modal/subcontract-create.html', 'SubcontractCreateModalCtrl');

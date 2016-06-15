@@ -13,23 +13,13 @@
 
 .loading { border:1px solid #ddd; padding:20px; margin:40px 5px; width:80px;}
 
-/*Fa Library setting  */
-/* .pcms-icon::before {
-    display: inline-block;
-    margin-right: .5em;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transform: translate(0, 0);
-} */
 
 .fixed-container {
-  height: 700px;
-  wirth:100%;
+  height: 650px;
+  width:100%;
   overflow-y: scroll;
 }
+
 
 /* Font color */
 .blue {color:#0073b7}
@@ -392,4 +382,5 @@ button.dim:active:before {
 .select-trigger .vendor-header {
     height: 86px;
 }
+
 

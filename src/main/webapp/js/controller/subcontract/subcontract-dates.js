@@ -1,4 +1,4 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', '$log', function($scope, $log) {
+mainApp.controller('SubcontractDatesCtrl', ['$scope',  function($scope) {
 
 	$(".date").datepicker({
 		format: "dd-mm-yyyy",
@@ -27,7 +27,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', '$log', function($scope, $
 
 //	Save Function
 	$scope.save = function () {
-		$log.info("subcontractRequisitionApprovedDate: " + $scope.subcontractRequisitionApprovedDate);
+		console.log("subcontractRequisitionApprovedDate: " + $scope.subcontractRequisitionApprovedDate);
 
 	};
 

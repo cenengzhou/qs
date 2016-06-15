@@ -2,6 +2,7 @@
 mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
     return {
         open: function(size, templateUrl, controller) {
+        	
         		var modalInstance = $uibModal.open({
         			animation: true,
         			templateUrl: templateUrl,
@@ -12,7 +13,7 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
         			backdrop: false
         			/*resolve: {
         				items: function () {
-        					return $scope.items;
+        					return $scope.message;
         				}
         			}*/
         		});
@@ -25,6 +26,26 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
         		});*/
             
             
+        }
+    };
+}]);
+
+mainApp.factory('modalMessageService', ['$uibModal', function( $uibModal) {
+    return {
+        open: function(templateUrl, controller, message) {
+        		var modalInstance = $uibModal.open({
+        			animation: true,
+        			templateUrl: templateUrl,
+        			controller: controller,
+        			size: 'md',
+        			keyboard: true,
+        			backdrop: true,
+        			resolve: {
+        				items: function () {
+        					return message;
+        				}
+        			}
+        		});
         }
     };
 }]);
@@ -114,6 +135,7 @@ mainApp.factory('Base64', function() {
 	};
 });
 
+
 mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHelperFactory($http, $rootScope, $q){
 	var defer = $q.defer();
 	return{
@@ -168,10 +190,6 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
      };
    }
  );*/
-
-
-
-
 
 
 

@@ -1,4 +1,4 @@
-mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', function($http, $scope, $location, $window) {
+mainApp.controller('AppCtrl', ['$http', '$scope', '$location', function($http, $scope, $location) {
 	   
     $scope.$on('$includeContentLoaded', function() {
         App.initComponent();
@@ -7,17 +7,6 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', functi
         App.initComponent();
     });
     $scope.$on('$stateChangeStart', function() {
-        // reset layout setting
-        /*$rootScope.setting.layout.pageSidebarMinified = false;
-        $rootScope.setting.layout.pageFixedFooter = false;
-        $rootScope.setting.layout.pageRightSidebar = true;
-        $rootScope.setting.layout.pageTwoSidebar = false;
-        $rootScope.setting.layout.pageTopMenu = false;
-        $rootScope.setting.layout.pageBoxedLayout = false;
-        $rootScope.setting.layout.pageWithoutSidebar = false;
-        $rootScope.setting.layout.pageContentFullHeight = false;
-        $rootScope.setting.layout.pageContentWithoutPadding = false;
-        $rootScope.setting.layout.paceTop = false;*/
     	App.initComponent();
         App.scrollTop();
         $('.pace .pace-progress').addClass('hide');
@@ -32,7 +21,6 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', functi
         Pace.stop();
     });
     $scope.$on('$stateChangeError', function() {
-    	$window.location.href = 'login.htm';
         Pace.stop();
     });
     

@@ -1,0 +1,40 @@
+@media print {
+    .header,
+    .sidebar,
+    .footer,
+    .page-header,
+    .breadcrumb,
+    .pace {
+        display: none;
+    }
+    .page-container,
+    .content,
+    .invoice {
+        margin: 0;
+        padding: 0;
+    }
+    .invoice {
+        padding-top: 10px;
+    }
+    .invoice-title {    
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ebeced;
+        margin-bottom: 20px;
+    }
+    .invoice-header {
+        margin-bottom: 10px;
+    }
+    .invoice-header .col-md-3 {
+        float: left;
+    }
+    .invoice-header .col-md-6 {
+        float: right;
+    }
+    .invoice-header .dl-horizontal dt {
+        float: left;
+        width: 150px;
+    }
+    .invoice-header .dl-horizontal dd {
+        margin-left: 20px;
+    }
+}

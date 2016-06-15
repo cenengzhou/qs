@@ -9,12 +9,10 @@
 	<!-- end breadcrumb -->
 
 	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{packageNo}}<small> {{packageDescription}}
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}
 	</h1>
 
-	<!-- <button class = "btn btn-primary pull-right" ng-click="expand = { true: false, false:true}[expand]">Expand</button> -->
-	<br>
-	<div class="col-lg-6">
+	<div class="col-xs-12 col-md-12 col-lg-6">
 
 		<div class="widget widget-stat text-white bg-primary">
 			<div class="widget-stat-btn">
@@ -36,7 +34,6 @@
 		</div>
 
 		<div class="fullcalendar vertical-box ">
-
 			<div class="fullcalendar-container vertical-box-column">
 				<div id='calendar'></div>
 			</div>
@@ -44,19 +41,19 @@
 	</div>
 
 
-	<div class="col-lg-6">
+	<div class="col-xs-12 col-md-12 col-lg-6">
 		<div class="fixed-container">
 			<div class="col-lg-12"
-				ng-show="latestPaymentStatus=='Posted to Finance'">
+				ng-show="latestPaymentStatus=='APR'">
 				<a ui-sref="subcontract.paymentdetails"
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Payment
 				</a> <br> <br>
 			</div>
 			<div class="col-lg-12 animated fadeInUp"
-				ng-repeat="payment in payments | orderBy:'paymentNo':true">
+				ng-repeat="payment in payments | orderBy:'paymentCertNo':true">
 
-				<div class="panel"	ng-class="{'panel-grey' : payment.status=='Posted to Finance', 'panel-primary' : payment.status!='Posted to Finance'}">
+				<div class="panel"	ng-class="{'panel-grey' : payment.paymentStatus=='APR', 'panel-primary' : payment.paymentStatus!='APR'}">
 					<div class="panel-heading">
 						<div class="panel-heading-btn">
 							<a href="javascript:;"
@@ -64,13 +61,13 @@
 								data-click="panel-collapse"> <i class="fa fa-minus"></i>
 							</a>
 						</div>
-						<h3 class="panel-title">Certificate No. {{payment.paymentNo}}
-							- Certificate Amount {{payment.paymentAmount| currency}}</h3>
+						<h3 class="panel-title">Certificate No. {{payment.paymentCertNo}}
+							- Certificate Amount {{payment.certAmount| currency}}</h3>
 
 					</div>
 					<!-- /.box-header -->
 					<div class="panel-body"
-						ng-style="{display: (payment.paymentNo != maxPaymentNo ? 'none' : 'block')}">
+						ng-style="{display: (payment.paymentCertNo != maxPaymentNo ? 'none' : 'block')}">
 
 						<!-- <div class="timeline-body"> -->
 						<!-- <div> -->
@@ -78,40 +75,40 @@
 							<div class="col-lg-12">
 								<div class="m-b-md pull-right">
 									<a class="btn" ui-sref="subcontract.paymentdetails" 
-									ng-class="{'btn-grey' : payment.status=='Posted to Finance', 'btn-primary' : payment.status!='Posted to Finance'}">
+									ng-class="{'btn-grey' : payment.paymentStatus=='APR', 'btn-primary' : payment.paymentStatus!='APR'}">
 									View details</a>
-									<!-- <h3>Certificate Amount {{payment.paymentAmount | currency}}</h3> -->
+									<!-- <h3>Certificate Amount {{payment.certAmount | currency}}</h3> -->
 								</div>
 								<dl class="dl-horizontal">
 									<dt>Status:</dt>
 									<dd>
-										<span class="label label-primary">{{payment.status}}</span>
+										<span class="label label-primary">{{payment.paymentStatus}}</span>
 									</dd>
 								</dl>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-lg-5">
+							<div class="col-xs-12 col-md-12 col-lg-5">
 								<dl class="dl-horizontal">
 
 									<!-- <dt>Created by:</dt> <dd>Koey Yeung</dd> -->
 									<dt>Main Certificate No.:</dt>
-									<dd>{{payment.maincertNo}}</dd>
+									<dd>{{payment.mainContractPaymentCertNo}}</dd>
 									<dt>Due Date:</dt>
-									<dd>{{payment.dueDate}}</dd>
+									<dd>{{payment.dueDate | jsonDate : 'ddMMM,yyyy'}}</dd>
 									<dt>As At Date:</dt>
-									<dd>{{payment.asAtDate}}</dd>
+									<dd>{{payment.asAtDate | jsonDate : 'ddMMM,yyyy'}}</dd>
 								</dl>
 							</div>
-							<div class="col-lg-7">
+							<div class="col-xs-12 col-md-12 col-lg-7">
 								<dl class="dl-horizontal">
 									<dt>Payment Type:</dt>
-									<dd>{{payment.paymentType}}</dd>
-									<dt ng-show="payment.invoiceReceivedDate != null">Invoice
+									<dd>{{payment.intermFinalPayment==='F' ? 'Final':'Interim'}}</dd>
+									<dt ng-show="payment.ipaOrInvoiceReceivedDate != null">Invoice
 										Received Date:</dt>
-									<dd>{{payment.invoiceReceivedDate}}</dd>
+									<dd>{{payment.ipaOrInvoiceReceivedDate}}</dd>
 									<dt>Payment Requisition:</dt>
-									<dd>{{payment.requisition}}</dd>
+									<dd>{{payment.directPayment==='N' ? 'No':'Yes'}}</dd>
 								</dl>
 							</div>
 						</div>
@@ -121,11 +118,11 @@
 									<dt>Completed:</dt>
 									<dd>
 										<div class="progress progress-striped  m-b-sm"
-										ng-class="{'active' : payment.status!='Posted to Finance'}">
+										ng-class="{'active' : payment.paymentStatus!='APR'}">
 											<div class="progress-bar" 
-												ng-style="{width: progress_bar(payment.status)}"
-												ng-class="{'progress-bar-grey' : payment.status=='Posted to Finance'}">
-											{{progress_bar(payment.status)}}</div>
+												ng-style="{width: progress_bar(payment.paymentStatus)}"
+												ng-class="{'progress-bar-grey' : payment.paymentStatus=='APR'}">
+											{{progress_bar(payment.paymentStatus)}}</div>
 										</div>
 									</dd>
 								</dl>

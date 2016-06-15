@@ -11,7 +11,7 @@
 	<!-- Bootstrap 3.3.5 -->
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/bootstrap/3.3.6/css/bootstrap.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/adminLte/2.3.0/css/AdminLTE.min.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/adminLTE.css">
 
 
 <style type="text/css">

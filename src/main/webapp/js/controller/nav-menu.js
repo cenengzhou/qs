@@ -9,8 +9,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	$scope.jobDescription = $cookieStore.get("jobDescription");
 
 	
-	$scope.packageNo = $cookieStore.get("packageNo");
-	$scope.packageDescription = $cookieStore.get("packageDescription");
+	$scope.subcontractNo = $cookieStore.get("subcontractNo");
+	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
 
 	$scope.currentPath = $location.path();
 

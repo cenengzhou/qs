@@ -1,4 +1,4 @@
-mainApp.controller('SubcontractAwardeModalCtrl', ['$scope', '$log', '$uibModalInstance', '$location', 'modalService', function($scope, $log, $uibModalInstance, $location, modalService) {
+mainApp.controller('SubcontractAwardeModalCtrl', ['$scope', '$uibModalInstance', '$location', 'modalService', function($scope,  $uibModalInstance, $location, modalService) {
 
 	$scope.packageNo = 1004;
 	$scope.budget = 226789000;

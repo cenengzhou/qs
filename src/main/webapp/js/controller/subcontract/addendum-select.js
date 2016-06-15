@@ -1,5 +1,5 @@
-mainApp.controller('AddendumCtrl', ['$scope', '$uibModal', '$log', 'modalService', '$animate', 'colorCode',
-                                    function($scope, $uibModal, $log, modalService, $animate, colorCode) {
+mainApp.controller('AddendumCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'colorCode',
+                                    function($scope, $uibModal, modalService, $animate, colorCode) {
 	$scope.paymentTerms = "QS2";
 	$scope.expand = true;
 	$scope.maxPaymentNo = "5";

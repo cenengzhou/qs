@@ -1,4 +1,4 @@
-mainApp.controller("SubcontractHeaderCtrl", ['$scope', '$log', function ($scope, $log) {
+mainApp.controller("SubcontractHeaderCtrl", ['$scope', function ($scope) {
 	/*	$http.get("json/questions.json").success(function (data) {
     //all questions
     $scope.questions = data;

@@ -20,42 +20,42 @@
 				<ul class="nav navbar-nav">
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging'}" >
 						<a ui-sref="repackaging" ng-click="activeMenu = 'Repackaging'"> 
-							<i class="fa fa-codepen"></i> <span>Repackaging</span>
+							<i class="fa fa-codepen"></i> Repackaging
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}">
 						<a 	ui-sref="cert-dashboard" ng-click="activeMenu = 'Certificate'">
 							<i class="fa fa-certificate"></i>
-							<span> Main Contract Certificate</span>
+							Main Contract Certificate
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract'}">
 						<a	ui-sref="subcontract-select" ng-click="activeMenu = 'Subcontract'"> 	
 							<i class="fa fa-trophy"></i>
-							<span>Subcontract</span>
+							Subcontract
 						</a></li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'IV'}">
 						<a ui-sref="iv.update" ng-click="activeMenu = 'IV'"> 
 							<i class="fa fa-line-chart"></i>
-							<span>Internal Valuation</span>
+							Internal Valuation
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}">
 						<a ui-sref="enquiry" ng-click="activeMenu = 'Enquiry'"> 
 							<i class="fa fa-info-circle"></i>
-							<span>Enquiry</span>
+							Enquiry
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}">
 						<a ui-sref="transit" ng-click="activeMenu = 'Transit'"> 
 							<i class="fa fa-file-text"></i>
-							<span>Transit</span> 
+							Transit 
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}">
 						<a ui-sref="admin.session" ng-click="activeMenu = 'Admin'"> 
-							<i class="fa fa-file-text"></i>
-							<span>Admin</span> 
+							<i class="fa fa-user"></i>
+							Admin 
 						</a>
 					</li>
 				</ul>
@@ -95,11 +95,11 @@
 		    <div data-scrollbar="true" data-height="100%">
 		        <!-- begin sidebar-nav -->
 		        <ul class="nav nav-tabs" role="tablist">
-		            <li class="width-half active"><a href="#" data-target="#today" data-toggle="tab" target="_self">Today</a></li>
-		            <li class="width-half"><a href="#" data-target="#notifications" data-toggle="tab" target="_self">Notifications</a></li>
+		            <li class="width-half active"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
+		            <li class="width-half"><a href="#" data-target="#systems" data-toggle="tab" target="_self">Systems</a></li>
 		        </ul>
 		        <div class="tab-content">
-		            <div class="tab-pane active" id="today">
+		            <div class="tab-pane active" id="links">
 		                <ul class="nav">
 		                    <li class="nav-header">Useful Links</li>
 		                    <li>
@@ -144,7 +144,7 @@
 		                    <li class="divider"></li>
 		                </ul>
 		            </div>
-		            <div class="tab-pane" id="notifications">
+		            <div class="tab-pane" id="systems">
 		                <ul class="nav">
 		                    <li class="nav-header">Useful Systems</li>
 		                    <li>

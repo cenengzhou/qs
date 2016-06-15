@@ -1,4 +1,4 @@
-mainApp.controller('SubcontractVendorModalCtrl', ['$scope', '$log', '$uibModalInstance', '$location', 'modalService', function($scope, $log, $uibModalInstance, $location, modalService) {
+mainApp.controller('SubcontractVendorModalCtrl', ['$scope', '$uibModalInstance', '$location', 'modalService', function($scope, $uibModalInstance, $location, modalService) {
 	var vendorJson = [
 		    {
 		        "vendorNo": "31347",

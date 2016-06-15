@@ -24,7 +24,7 @@
 
 	<div class="fixed-container">
 		<div class="row">
-			<div class="col-md-4 col-lg-3 animated flipInX"
+			<div class="col-md-4 col-lg-3 animated fadeIn"
 				ng-repeat="job in jobs | filter:searchquery">
 				<div class="box box-widget sc-panel">
 					<a
@@ -37,7 +37,7 @@
 								<b>{{job.jobNo}}</b>
 							</h3>
 							<h5 class="sc-panel-desc">
-								{{job.description}}<span class="pull-right badge bg-blue">Gammon</span>
+								{{job.description}}<!-- <span class="pull-right badge bg-blue">Gammon</span> -->
 							</h5>
 						</div>
 					</a>

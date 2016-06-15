@@ -1,4 +1,4 @@
-mainApp.controller('CertDetailsCtrl', ['$scope', '$http', '$location','$log',  function ($scope, $http, $location, $log) {
+mainApp.controller('CertDetailsCtrl', ['$scope', '$http', '$location',  function ($scope, $http, $location) {
 
 	$scope.certNo = "10";
 	$scope.clientCertNo = "10";
@@ -28,7 +28,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', '$http', '$location','$log',  f
    
  //Save Function
 	$scope.save = function () {
-		$log.info("ipaSubmissionDate: " + $scope.ipaSubmissionDate);
+		console.log("ipaSubmissionDate: " + $scope.ipaSubmissionDate);
 
 	};
 	

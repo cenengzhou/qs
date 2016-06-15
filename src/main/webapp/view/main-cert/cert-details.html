@@ -1,15 +1,14 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-	</section>
+<div class="content">
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
 	
-	<section class="content">
 		<div class="row">
 		
 			<div class="stepwizard">
@@ -22,22 +21,22 @@
 			            </p>
 			        </div>
 			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-success" href="#"><span class="glyphicon btn-glyphicon glyphicon-ok img-circle text-success"></span>Confirm</a>
+			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-ok img-circle text-primary"></span>Confirm</a>
 			            <p>
 			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>150</strong></small>
 			            </p>
 			        </div>
 			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-info" href="#"><span	class="glyphicon btn-glyphicon glyphicon-refresh img-circle text-info"></span>Reset</a>
+			            <a class="btn icon-btn btn-primary" href="#"><span	class="glyphicon btn-glyphicon glyphicon-refresh img-circle text-primary"></span>Reset</a>
 			        </div>
 			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-warning" href="#"><span class="glyphicon btn-glyphicon glyphicon-check img-circle text-warning"></span>Send out Approval</a>
+			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-check img-circle text-primary"></span>Send out Approval</a>
 			            <p>
 			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>200</strong></small>
 			            </p>
 			        </div>
 			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-danger" href="#"><span class="glyphicon btn-glyphicon glyphicon-saved img-circle text-danger"></span>Post</a>
+			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-saved img-circle text-primary"></span>Post</a>
 			            <p>
 			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>300</strong></small>
 			            </p>
@@ -475,7 +474,6 @@
 	         </div>
 	         
         </div><!-- /.row -->    
-        <a class="btn btn-twitter btn-block" ui-sref="cert.details" ng-click="save()">Save <i class="fa fa-floppy-o"></i></a>
-     </section><!-- /.content -->
+        <a class="btn btn-primary btn-block" ui-sref="cert.details" ng-click="save()">Save <i class="fa fa-floppy-o"></i></a>
    </div><!-- /.content-wrapper -->
 

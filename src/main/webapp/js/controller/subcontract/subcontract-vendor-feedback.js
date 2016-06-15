@@ -71,7 +71,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$http', '$l
 	};
 
 	
-	$http.get("http://localhost:8080/QSrevamp2/data/vendor-feedback.json")
+	$http.get("http://localhost:8080/pcms/data/vendor-feedback.json")
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 	});
