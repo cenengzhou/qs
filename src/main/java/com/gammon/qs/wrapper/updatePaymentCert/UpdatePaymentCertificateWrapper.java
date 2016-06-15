@@ -3,7 +3,7 @@ package com.gammon.qs.wrapper.updatePaymentCert;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.domain.JobInfo;
 
 public class UpdatePaymentCertificateWrapper implements Serializable {
 
@@ -23,7 +23,7 @@ public class UpdatePaymentCertificateWrapper implements Serializable {
 	private String jobNumber;
 	private String packageNo;
 	private Integer paymentCertNo;
-	private Job job;
+	private JobInfo job;
 	
 	public UpdatePaymentCertificateWrapper() {
 	}
@@ -95,11 +95,11 @@ public class UpdatePaymentCertificateWrapper implements Serializable {
 		this.paymentTerm = paymentTerm;
 	}
 
-	public void setJob(Job job) {
+	public void setJob(JobInfo job) {
 		this.job = job;
 	}
 
-	public Job getJob() {
+	public JobInfo getJob() {
 		return job;
 	}
 }

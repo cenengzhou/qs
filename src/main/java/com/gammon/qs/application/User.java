@@ -1,30 +1,40 @@
 package com.gammon.qs.application;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class User extends BasePersistedObject {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.gammon.qs.application.gsf.GetRole;
+import com.gammon.qs.application.gsf.UserRole;
+
+public class User implements UserDetails, Serializable {
 	
 	private static final long serialVersionUID = 823107936017935057L;
+
+	private String emailAddress;
+	private String staffId;
 	private String username;
 	private String fullname;
-	private Set<Authority> authorities;
-	private Map<String, String> screenPreferences;
-	private Map<String, String> generalPreferences;
-	
-	private String email; // added by irischau on 22 Apr 2014 for email function
+	private List<UserRole> userRoles;
 	
 	public User() {
-		this.authorities = new HashSet<Authority>();
-		this.screenPreferences = new HashMap<String, String>();
-		this.generalPreferences = new HashMap<String, String>();
+		this.userRoles = new ArrayList<UserRole>();
 	}
 	
-	public boolean hasRole(String role) {
-		for (Authority authority:this.authorities) {
-			if (authority.getName().equalsIgnoreCase(role)) {
+	public User(GetRole.Result result){
+		this.emailAddress = result.getEmailAddress();
+		this.staffId = result.getStaffId();
+		this.username = result.getUserName();
+		this.userRoles = (result.getUserRole() == null ? new ArrayList<UserRole>() : result.getUserRole());
+	}
+	
+	public boolean hasRole(String rolename) {
+		for (UserRole role:userRoles) {
+			if (role.getRoleName().equalsIgnoreCase(rolename)) {
 				return true;
 			}
 		}
@@ -32,67 +42,121 @@ public class User extends BasePersistedObject {
 	}
 
 	@Override
-	public String toString() {
-		return "User [username=" + username + ", fullname=" + fullname + ", authorities=" + authorities
-				+ ", screenPreferences=" + screenPreferences + ", generalPreferences=" + generalPreferences + ", email="
-				+ email + ", toString()=" + super.toString() + "]";
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return userRoles;
 	}
-	
+
 	@Override
-	public Long getId(){return super.getId();}
-	
-	public void addAuthority(Authority authority) {
-		this.authorities.add(authority);
+	public String getPassword() {
+		return null;
 	}
-	
+
+	@Override
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", username=" + username + ", fullname="
+				+ fullname + ", userRoles=" + userRoles + "]";
+	}
+	
+	public void addRole(UserRole role) {
+		this.userRoles.add(role);
+	}
+
+	/**
+	 * @return the emailAddress
+	 */
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	/**
+	 * @param emailAddress the emailAddress to set
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	/**
+	 * @return the staffId
+	 */
+	public String getStaffId() {
+		return staffId;
+	}
+
+	/**
+	 * @param staffId the staffId to set
+	 */
+	public void setStaffId(String staffId) {
+		this.staffId = staffId;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String username) {
 		this.username = username;
 	}
 
+	/**
+	 * @return the fullname
+	 */
 	public String getFullname() {
 		return fullname;
 	}
 
+	/**
+	 * @param fullname the fullname to set
+	 */
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
 
-	public String getEmail() {
-		return email;
+	/**
+	 * @return the userRoles
+	 */
+	public List<UserRole> getUserRoles() {
+		return userRoles;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public Set<Authority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(Set<Authority> authorities) {
-		this.authorities = authorities;
-	}
-	
-	public Map<String, String> getScreenPreferences() {
-		if (this.screenPreferences == null) return new HashMap<String, String>();
-		return screenPreferences;
+	/**
+	 * @param userRoles the userRoles to set
+	 */
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
 	}
 
-	public void setScreenPreferences(Map<String, String> screenPreferences) {
-		this.screenPreferences = screenPreferences;
-	}
-
-	public Map<String, String> getGeneralPreferences() {
-		if (this.generalPreferences == null) return new HashMap<String, String>();
-		return generalPreferences;
-	}
-
-	public void setGeneralPreferences(Map<String, String> generalPreferences) {
-		this.generalPreferences = generalPreferences;
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.TransactionTestCase;
 public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDataBase {
 	
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#getRepackagingEntriesByJob(com.gammon.qs.domain.Job)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#getRepackagingEntriesByJob(com.gammon.qs.domain.Job)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetRepackagingEntriesByJob() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -45,7 +45,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#getRepackagingEntriesByJobNumber(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#getRepackagingEntriesByJobNumber(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetRepackagingEntriesByJobNumber() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -72,7 +72,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#getRepackagingEntry(java.lang.Long)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#getRepackagingEntry(java.lang.Long)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetRepackagingEntry() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -99,7 +99,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#createRepackagingEntry(java.lang.Integer, com.gammon.qs.domain.Job, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#createRepackagingEntry(java.lang.Integer, com.gammon.qs.domain.Job, java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testCreateRepackagingEntry() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -126,7 +126,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#removeRepackagingEntry(com.gammon.qs.domain.RepackagingEntry)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#removeRepackagingEntry(com.gammon.qs.domain.RepackagingEntry)}.
 	 */
 	public TransactionTestCase.TestDataMethod testRemoveRepackagingEntry() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -153,7 +153,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#saveRepackagingEntry(com.gammon.qs.domain.RepackagingEntry)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#saveRepackagingEntry(com.gammon.qs.domain.RepackagingEntry)}.
 	 */
 	public TransactionTestCase.TestDataMethod testSaveRepackagingEntry() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -180,7 +180,7 @@ public class RepackagingEntryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.RepackagingEntryService#getLatestRepackagingEntry(com.gammon.qs.domain.Job)}.
+	 * Test method for {@link com.gammon.qs.service.RepackagingService#getLatestRepackagingEntry(com.gammon.qs.domain.Job)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetLatestRepackagingEntry() {
 		return new TransactionTestCase.TestDataMethod() {

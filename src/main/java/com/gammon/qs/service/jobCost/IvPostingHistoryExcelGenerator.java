@@ -4,21 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.gammon.qs.domain.IVPostingHistory;
+import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelFile;
 
 public class IvPostingHistoryExcelGenerator {
 	private ExcelFile excelFile;
 	ExcelWorkbook excelDoc;
-	private List<IVPostingHistory> ivPostingHistoryList;
+	private List<IVPostingHist> ivPostingHistoryList;
 	private String jobNumber;
 	private SimpleDateFormat dateFormatter;
 	
 	
 	private final static int NUMBER_OF_COLUMNS = 10;
 	
-	public IvPostingHistoryExcelGenerator(List<IVPostingHistory> ivPostingHistoryList, String jobNumber) {
+	public IvPostingHistoryExcelGenerator(List<IVPostingHist> ivPostingHistoryList, String jobNumber) {
 		this.ivPostingHistoryList = ivPostingHistoryList;
 		this.jobNumber = jobNumber;
 		
@@ -51,7 +51,7 @@ public class IvPostingHistoryExcelGenerator {
 		excelDoc.setCellFontBold(0, 0, 0, NUMBER_OF_COLUMNS); //(start row, start column, end row, end column)
 		
 		//insert content rows
-		for(IVPostingHistory ivPostingHistory : ivPostingHistoryList) {
+		for(IVPostingHist ivPostingHistory : ivPostingHistoryList) {
 			excelDoc.insertRow(createContentRow(ivPostingHistory, NUMBER_OF_COLUMNS));
 		}
 		
@@ -69,7 +69,7 @@ public class IvPostingHistoryExcelGenerator {
 
 	}
 	
-	private String[] createContentRow(IVPostingHistory ivPostingHistory, int sheetSize){
+	private String[] createContentRow(IVPostingHist ivPostingHistory, int sheetSize){
 		String[] contentRow = new String[sheetSize];
 				
 		contentRow[0] = ivPostingHistory.getCreatedDate() != null ? dateFormatter.format(ivPostingHistory.getCreatedDate()) : "";

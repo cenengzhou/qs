@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.service.JobService;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.JobInfoService;
 
 @RestController
 @RequestMapping(value = "service",
@@ -29,11 +28,11 @@ public class JobController {
 	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
-	private JobService jobService;
+	private JobInfoService jobService;
 	
 	@RequestMapping(value = "getJobList.json")
-	public List<Job> getJobList(){
-		List<Job> jobList = null;
+	public List<JobInfo> getJobList(){
+		List<JobInfo> jobList = null;
 		try{
 			jobList = jobService.getAllJobNoAndDescription();
 			logger.info("----------------------------SERVER: jobList Size: "+jobList.size());
@@ -44,8 +43,8 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "getJob.json")
-	public Job getJob(@RequestParam(name="jobNo") String jobNo){
-		Job job = null;
+	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo){
+		JobInfo job = null;
 		try{
 			job = jobService.obtainJob(jobNo);
 		}catch (Exception e) {

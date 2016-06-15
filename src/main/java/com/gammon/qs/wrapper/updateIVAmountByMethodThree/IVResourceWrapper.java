@@ -9,7 +9,7 @@ package com.gammon.qs.wrapper.updateIVAmountByMethodThree;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.Resource;
+import com.gammon.qs.domain.BpiItemResource;
 
 /**
  * @author tikywong
@@ -23,23 +23,23 @@ public class IVResourceWrapper implements Serializable{
 	 * @author tikywong
 	 */
 	
-	private Resource resource;	
+	private BpiItemResource resource;	
 	private Double updatedIVCumQuantity = Double.valueOf(0.00);
 	private Double updatedIVCumAmount = Double.valueOf(0.00);
 	private Double updatedIVMovementAmount = Double.valueOf(0.00);
 	
 	
-	public IVResourceWrapper(Resource resource){
+	public IVResourceWrapper(BpiItemResource resource){
 		this.resource = resource;
 		this.updatedIVCumAmount = resource.getIvCumAmount();
 		this.updatedIVCumQuantity = resource.getIvCumQuantity();
 		this.updatedIVMovementAmount = resource.getIvMovementAmount();
 	}
 	
-	public Resource getResource() {
+	public BpiItemResource getResource() {
 		return resource;
 	}
-	public void setResource(Resource resource) {
+	public void setResource(BpiItemResource resource) {
 		this.resource = resource;
 	}
 	public Double getUpdatedIVCumQuantity() {

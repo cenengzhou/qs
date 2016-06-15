@@ -55,8 +55,6 @@ public class ApplicationConfig {
 	private String uatConfigDirectory;
 	@Value("${PROConfigDirectory}")
 	private String proConfigDirectory;
-	@Value("${springsession.properties}")
-	private String springsessionProperties;
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -143,13 +141,6 @@ public class ApplicationConfig {
 
 	public String getProConfigDirectory() {
 		return proConfigDirectory;
-	}
-
-	/**
-	 * @return the springsessionProperties
-	 */
-	public String getSpringsessionProperties() {
-		return springsessionProperties;
 	}
 
 }

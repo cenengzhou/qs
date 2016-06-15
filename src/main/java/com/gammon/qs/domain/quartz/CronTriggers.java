@@ -9,7 +9,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "qrtz_cron_triggers")
+@Table(name = "QRTZ_CRON_TRIGGERS")
 @IdClass(QuartzId.class)
 public class CronTriggers implements Serializable {
 	private static final long serialVersionUID = -7053630897975136443L;

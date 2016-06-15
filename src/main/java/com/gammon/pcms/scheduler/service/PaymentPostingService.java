@@ -14,21 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.BQResourceSummaryHBDao;
-import com.gammon.qs.dao.MainContractCertificateWSDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.PaymentPostingWSDao;
 import com.gammon.qs.dao.PaymentWSDao;
-import com.gammon.qs.dao.ResourceHBDao;
-import com.gammon.qs.dao.SCDetailsHBDao;
-import com.gammon.qs.dao.SCPackageHBDao;
-import com.gammon.qs.dao.SCPaymentCertHBDao;
-import com.gammon.qs.dao.SCPaymentDetailHBDao;
-import com.gammon.qs.domain.BQResourceSummary;
-import com.gammon.qs.domain.Resource;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsBQ;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.PaymentCertDetailHBDao;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.businessLogic.SCPaymentLogic;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
@@ -41,27 +41,27 @@ public class PaymentPostingService {
 	private Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
-	private SCPaymentCertHBDao scPaymentCertDao;
+	private PaymentCertHBDao scPaymentCertDao;
 	@Autowired
-	private SCPaymentDetailHBDao scPaymentDetailDao;
+	private PaymentCertDetailHBDao scPaymentDetailDao;
 	@Autowired
 	private PaymentPostingWSDao paymentPostingDao;
 	@Autowired
-	private SCPackageHBDao scPackageHBDao;
+	private SubcontractHBDao scPackageHBDao;
 	@Autowired
-	private SCDetailsHBDao scDetailDao;
+	private SubcontractDetailHBDao scDetailDao;
 	@Autowired
-	private BQResourceSummaryHBDao bqResourceSummaryDao;
+	private ResourceSummaryHBDao bqResourceSummaryDao;
 	@Autowired
-	private ResourceHBDao resourceHBDao;
+	private BpiItemResourceHBDao resourceHBDao;
 	@Autowired
 	private PaymentWSDao paymentWSDao;
 	@Autowired
-	private MainContractCertificateWSDao mainContractCertificateWSDao;
+	private MainCertWSDao mainContractCertificateWSDao;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 	@Autowired
-	private SCDetailsHBDao scDetailsHBDao;
+	private SubcontractDetailHBDao scDetailsHBDao;
 	/**
 	 * To run payment posting
 	 *
@@ -88,8 +88,8 @@ public class PaymentPostingService {
 	 */
 	public Boolean postPayments(String usernameJDESOA3) throws Exception {
 		usernameJDESOA3 = usernameJDESOA3.toUpperCase();
-		List<SCPaymentCert> paymentCerts = scPaymentCertDao.getSCPaymentCertsPCS();
-		for (SCPaymentCert paymentCert : paymentCerts) {
+		List<PaymentCert> paymentCerts = scPaymentCertDao.getSCPaymentCertsPCS();
+		for (PaymentCert paymentCert : paymentCerts) {
 			try {
 				//Update invalid Due Date
 				if (paymentCert.getDueDate() == null)
@@ -148,13 +148,13 @@ public class PaymentPostingService {
 						// Update 1.Payment Certificate, 2.Package, 3a.Details (normal Payment), 3b. Payment Details (Direct Payment)
 						//1. Update Payment Certificate
 						logger.info("Payment Posted!");
-						paymentCert.setPaymentStatus(SCPaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE);
+						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE);
 						paymentCert.setCertIssueDate(new Date());
 						paymentCert.populate(usernameJDESOA3);
 						scPaymentCertDao.saveOrUpdate(paymentCert);
 						
 						//2. Update Package
-						SCPackage scPackage = paymentCert.getScPackage();
+						Subcontract scPackage = paymentCert.getSubcontract();
 						if (scPackage == null)
 							scPackage = scPackageHBDao.obtainSCPackage(paymentCert.getJobNo(), paymentCert.getPackageNo());
 						scPackage.setLastPaymentCertIssuedDate(new Date());
@@ -171,11 +171,11 @@ public class PaymentPostingService {
 							 * Payment Requisition Revamp
 							 * Cum Work Done will be mirrored from Cum IV under payment requisition 
 							 * **/
-							if(SCPaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "1".equals(paymentCert.getScPackage().getJob().getRepackagingType())){
+							if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "1".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
 								try {
-									List<SCDetailsBQ> scDetailList = scDetailDao.obtainSCDetailsBQ(paymentCert.getJobNo(), paymentCert.getPackageNo());
-									for(SCDetailsBQ scDetails: scDetailList){
-										BQResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(scPackage.getJob(), scPackage.getPackageNo(), 
+									List<SubcontractDetailBQ> scDetailList = scDetailDao.obtainSCDetailsBQ(paymentCert.getJobNo(), paymentCert.getPackageNo());
+									for(SubcontractDetailBQ scDetails: scDetailList){
+										ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), 
 												scDetails.getObjectCode(), scDetails.getSubsidiaryCode(), 
 												scDetails.getDescription(), scDetails.getUnit(), scDetails.getCostRate());
 										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!=null && resourceSummary.getCurrIVAmount()!= 0.0){
@@ -186,21 +186,21 @@ public class PaymentPostingService {
 								}catch (Exception e) {
 									e.printStackTrace();
 								}
-							}else if(SCPaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "2".equals(paymentCert.getScPackage().getJob().getRepackagingType())){
+							}else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "2".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
 								try {
-									List<SCDetails> accountCodeList = scDetailDao.obtainSCDetailsObjectCodeList(paymentCert.getJobNo(), paymentCert.getPackageNo());
-									for(SCDetails accountCode: accountCodeList){
-										BQResourceSummary resourceSummary = bqResourceSummaryDao.obtainResourceSummary(scPackage.getJob(), scPackage.getPackageNo(), accountCode.getObjectCode(), 
+									List<SubcontractDetail> accountCodeList = scDetailDao.obtainSCDetailsObjectCodeList(paymentCert.getJobNo(), paymentCert.getPackageNo());
+									for(SubcontractDetail accountCode: accountCodeList){
+										ResourceSummary resourceSummary = bqResourceSummaryDao.obtainResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), accountCode.getObjectCode(), 
 																														accountCode.getSubsidiaryCode(), null, null, null);
 										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!= null && resourceSummary.getCurrIVAmount()!= 0.0){
 											double cumIVQuantity = resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4);
 											double remainingQuantity = cumIVQuantity;
 											
 											if(cumIVQuantity!=0.0){
-												List<SCDetailsBQ> scDetailList = scDetailDao.obtainSCDetailsByObjectCode(paymentCert.getJobNo(), paymentCert.getPackageNo(), accountCode.getObjectCode(), accountCode.getSubsidiaryCode());
+												List<SubcontractDetailBQ> scDetailList = scDetailDao.obtainSCDetailsByObjectCode(paymentCert.getJobNo(), paymentCert.getPackageNo(), accountCode.getObjectCode(), accountCode.getSubsidiaryCode());
 
 												int counter = 0;
-												for(SCDetailsBQ scDetails: scDetailList){
+												for(SubcontractDetailBQ scDetails: scDetailList){
 													double cumWorkDoneQuantity = 0.0;
 													if(scDetails.getQuantity()!=0.0 && resourceSummary.getQuantity() != 0.0)
 														cumWorkDoneQuantity = CalculationUtil.round((scDetails.getQuantity()/resourceSummary.getQuantity()*cumIVQuantity), 4);
@@ -220,10 +220,10 @@ public class PaymentPostingService {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-							}else if(SCPaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "3".equals(paymentCert.getScPackage().getJob().getRepackagingType())){
+							}else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "3".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
 								try {
-									List<SCDetailsBQ> scDetailList = scDetailDao.obtainSCDetailsBQ(paymentCert.getJobNo(), paymentCert.getPackageNo());
-									for(SCDetailsBQ scDetails: scDetailList){
+									List<SubcontractDetailBQ> scDetailList = scDetailDao.obtainSCDetailsBQ(paymentCert.getJobNo(), paymentCert.getPackageNo());
+									for(SubcontractDetailBQ scDetails: scDetailList){
 										if(scDetails.getBillItem() != null || scDetails.getResourceNo() != null){
 											//Split bill item ref
 											String[] bpi = scDetails.getBillItem().trim().split("/");
@@ -234,7 +234,7 @@ public class PaymentPostingService {
 												String pageNo = bpi[3].length() == 0 ? null : bpi[3];
 												String itemNo = bpi[4].length() == 0 ? null : bpi[4];
 												
-												Resource resource = resourceHBDao.obtainResource(	paymentCert.getJobNo(), billNo, subBillNo, pageNo, itemNo, 
+												BpiItemResource resource = resourceHBDao.obtainResource(	paymentCert.getJobNo(), billNo, subBillNo, pageNo, itemNo, 
 																									paymentCert.getPackageNo(), scDetails.getObjectCode(), 
 																									scDetails.getSubsidiaryCode(), null, scDetails.getCostRate(), 
 																									scDetails.getUnit(), scDetails.getResourceNo());
@@ -254,25 +254,25 @@ public class PaymentPostingService {
 						//Fix: Should only set SCPackage "Payment Status"='F'  when payment cert status is APR
 						if("F".equals(paymentCert.getIntermFinalPayment())){
 							scPackage.setFinalPaymentIssuedDate(new Date());
-							scPackage.setPaymentStatus(SCPackage.FINAL_PAYMENT);
+							scPackage.setPaymentStatus(Subcontract.FINAL_PAYMENT);
 						}
 						//Payment Requisition
-						else if(SCPaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
-							scPackage.setPaymentStatus(SCPackage.DIRECT_PAYMENT);
+						else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
+							scPackage.setPaymentStatus(Subcontract.DIRECT_PAYMENT);
 						}
 						//Payment No.1 - X except Final Payment
 						else
-							scPackage.setPaymentStatus(SCPackage.INTERIM_PAYMENT);
+							scPackage.setPaymentStatus(Subcontract.INTERIM_PAYMENT);
 						
 						
-						paymentCert.setScPackage(scPackage);
+						paymentCert.setSubcontract(scPackage);
 						
 						
 						//Update SCPackage Details
-						List<SCDetails> scDetails = scDetailDao.getSCDetails(scPackage);
+						List<SubcontractDetail> scDetails = scDetailDao.getSCDetails(scPackage);
 						if(scDetails!=null && scDetails.size()>0){
-							for(SCDetails scDetail : scDetails){
-								scDetail.setScPackage(scPackage);;	//Handle Active Detail lines only
+							for(SubcontractDetail scDetail : scDetails){
+								scDetail.setSubcontract(scPackage);;	//Handle Active Detail lines only
 							}
 							SCPaymentLogic.updateSCDetailandPackageAfterPostingToFinance(scPackage, scDetailsHBDao.getSCDetails(scPackage));
 						}
@@ -292,16 +292,16 @@ public class PaymentPostingService {
 		return Boolean.TRUE;
 	}
 
-	public SCPaymentCert calculateAndUpdatePaymentDueDate(SCPaymentCert paymentCert) throws ValidateBusinessLogicException {
-		if (paymentCert == null || paymentCert.getScPackage() == null || paymentCert.getScPackage().getJob() == null)
-			throw new ValidateBusinessLogicException(paymentCert == null ? ("Payment Certificate is null") : (paymentCert.getScPackage() == null ? ("Package is null") : ("Job is null")));
+	public PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert) throws ValidateBusinessLogicException {
+		if (paymentCert == null || paymentCert.getSubcontract() == null || paymentCert.getSubcontract().getJobInfo() == null)
+			throw new ValidateBusinessLogicException(paymentCert == null ? ("Payment Certificate is null") : (paymentCert.getSubcontract() == null ? ("Package is null") : ("Job is null")));
 
-		logger.info("Job: " + paymentCert.getScPackage().getJob().getJobNumber() + " " +
-					"Package: " + paymentCert.getScPackage().getPackageNo() + " " +
+		logger.info("Job: " + paymentCert.getSubcontract().getJobInfo().getJobNumber() + " " +
+					"Package: " + paymentCert.getSubcontract().getPackageNo() + " " +
 					"Payment Certificate No.: " + paymentCert.getPaymentCertNo());
 
-		PaymentDueDateAndValidationResponseWrapper wrapper = calculatePaymentDueDate(paymentCert.getScPackage().getJob().getJobNumber(),
-																					paymentCert.getScPackage().getPackageNo(),
+		PaymentDueDateAndValidationResponseWrapper wrapper = calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
+																					paymentCert.getSubcontract().getPackageNo(),
 																					paymentCert.getMainContractPaymentCertNo(),
 																					paymentCert.getAsAtDate(),
 																					paymentCert.getIpaOrInvoiceReceivedDate(),
@@ -330,7 +330,7 @@ public class PaymentPostingService {
 	 */
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, Date asAtDate, Date ipaOrInvoiceDate, Date dueDate) {
 		PaymentDueDateAndValidationResponseWrapper responseWrapper = new PaymentDueDateAndValidationResponseWrapper();
-		SCPackage scPackage = null;
+		Subcontract scPackage = null;
 
 		try {
 			scPackage = scPackageHBDao.obtainSCPackage(jobNumber, packageNo);

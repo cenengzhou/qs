@@ -57,7 +57,7 @@ public class MakeHTMLStrForAwardController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		MakeHTMLStrForAwardServiceResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/makeHTMLStrForAward", requestObj, MakeHTMLStrForAwardServiceResponse.class);

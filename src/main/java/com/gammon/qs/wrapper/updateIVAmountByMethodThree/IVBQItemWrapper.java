@@ -9,7 +9,7 @@ package com.gammon.qs.wrapper.updateIVAmountByMethodThree;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.BQItem;
+import com.gammon.qs.domain.BpiItem;
 
 /**
  * @author tikywong
@@ -23,7 +23,7 @@ public class IVBQItemWrapper  implements Serializable{
 	 * Apr 26, 2011 1:49:44 PM
 	 * @author tikywong
 	 */
-	private BQItem bqItem;
+	private BpiItem bqItem;
 	
 	private Double updatedIVCumulativeQuantity = Double.valueOf(0.00);
 	private Double updatedIVCumulativeAmount = Double.valueOf(0.00);
@@ -32,16 +32,16 @@ public class IVBQItemWrapper  implements Serializable{
 		super();
 	}
 	
-	public IVBQItemWrapper(BQItem bqItem){
+	public IVBQItemWrapper(BpiItem bqItem){
 		this.bqItem = bqItem;
 		this.updatedIVCumulativeAmount = bqItem.getIvCumAmount();
 		this.updatedIVCumulativeQuantity = bqItem.getIvCumQty();
 	}
 	
-	public BQItem getBqItem() {
+	public BpiItem getBqItem() {
 		return bqItem;
 	}
-	public void setBqItem(BQItem bqItem) {
+	public void setBqItem(BpiItem bqItem) {
 		this.bqItem = bqItem;
 	}
 	public Double getUpdatedIVCumulativeQuantity() {

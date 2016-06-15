@@ -2,9 +2,9 @@ package com.gammon.qs.wrapper;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.BQResourceSummary;
+import com.gammon.qs.domain.ResourceSummary;
 
-public class IVInputPaginationWrapper extends PaginationWrapper<BQResourceSummary> implements Serializable {
+public class IVInputPaginationWrapper extends PaginationWrapper<ResourceSummary> implements Serializable {
 
 	private static final long serialVersionUID = -8111467290268834292L;
 	private Double ivPostedTotal;

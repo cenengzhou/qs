@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import com.gammon.junit.testcase.ControllerTestCase;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.BQItem;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.Resource;
-import com.gammon.qs.service.BQService;
-import com.gammon.qs.service.JobService;
+import com.gammon.qs.domain.BpiItem;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.service.BpiItemService;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 
 /**
@@ -68,7 +68,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testObtainBQItem_sql}")
 	String testObtainBQItem_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#obtainBQItem(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#obtainBpiItem(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	public Map<String, Object> testObtainBQItem() {
 		init();
@@ -86,13 +86,13 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testGetBillListWithPagesByJob_sql}")
 	String testGetBillListWithPagesByJob_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBillListWithPagesByJob(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBillListWithPagesByJob(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testGetBillListWithPagesByJob() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetBillListWithPagesByJob_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -151,15 +151,15 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testUpdateBQItemQuantities_sql}")
 	String testUpdateBQItemQuantities_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#updateBQItemQuantities(com.gammon.qs.domain.Job, java.util.List)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#updateBQItemQuantities(com.gammon.qs.domain.JobInfo, java.util.List)}.
 	 */
 	public Map<String, Object> testUpdateBQItemQuantities() {
 		init();		
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		BQService bqService = applicationContext.getBean(BQService.class);
-		Job job = null;
-		List<BQItem> bqItems= null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		JobInfo job = null;
+		List<BpiItem> bqItems= null;
 		try {
 			job = jobService.obtainJob(testGetBillListWithPagesByJob_jobNumber);
 			bqItems = bqService.obtainBQItemList(testUpdateBQItemQuantities_jobNumber, testUpdateBQItemQuantities_billNo, testUpdateBQItemQuantities_subBillNo, testUpdateBQItemQuantities_pageNo, testUpdateBQItemQuantities_itemNo, testUpdateBQItemQuantities_bqDesc);
@@ -168,7 +168,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {job, bqItems});
-		data.put("clazz", new Class<?>[]{Job.class,List.class});
+		data.put("clazz", new Class<?>[]{JobInfo.class,List.class});
 		data.put("sql", testUpdateBQItemQuantities_sql);
 		post();
 		return data;
@@ -239,8 +239,8 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testSaveResourceUpdates() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean( BQService.class);
-		List<Resource> resources = null;
+		BpiItemService bqService = applicationContext.getBean( BpiItemService.class);
+		List<BpiItemResource> resources = null;
 		try {
 			resources = bqService.getResourcesByBqItemId(new Long(testSaveResourceUpdates_id));
 		} catch (Exception e) {e.printStackTrace();
@@ -266,9 +266,9 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testSaveSplitMergeResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean( BQService.class);
-		List<Resource> oldResources = null;
-		List<Resource> newResources = null;
+		BpiItemService bqService = applicationContext.getBean( BpiItemService.class);
+		List<BpiItemResource> oldResources = null;
+		List<BpiItemResource> newResources = null;
 		try {
 			oldResources = bqService.getResourcesByBqItemId(new Long(testSaveSplitMergeResources_oldId));
 			newResources = bqService.getResourcesByBqItemId(new Long(testSaveSplitMergeResources_newId));
@@ -303,7 +303,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBqItemsByPage(int)}.
 	 */
 	public void initGetBqItemsByPage(){
-		BQService bqService = applicationContext.getBean(BQService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
 		try {//cachedBQEnquiry first
 			bqService.obtainBQItem(testGetBqItemsByPage_jobNumber, testGetBqItemsByPage_billNo, testGetBqItemsByPage_subbillNo, testGetBqItemsByPage_pageNo, testGetBqItemsByPage_itemNo, testGetBqItemsByPage_bqDesc);
 		} catch (Exception e) {e.printStackTrace();
@@ -334,8 +334,8 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testSaveBalancedResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean(BQService.class);
-		List<Resource> resources = null;
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		List<BpiItemResource> resources = null;
 		try {
 			resources = bqService.getResourcesByBqItemId(new Long(testSaveBalancedResources_id));
 		} catch (Exception e) {e.printStackTrace();
@@ -356,13 +356,13 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testGetBillItemFieldsForChangeOrder_sql}")
 	String testGetBillItemFieldsForChangeOrder_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBillItemFieldsForChangeOrder(com.gammon.qs.domain.Job, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBillItemFieldsForChangeOrder(com.gammon.qs.domain.JobInfo, java.lang.String)}.
 	 */
 	public Map<String, Object> testGetBillItemFieldsForChangeOrder() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetBillItemFieldsForChangeOrder_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -382,15 +382,15 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testValidateBqItemChangeOrder_sql}")
 	String testValidateBqItemChangeOrder_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#validateBqItemChangeOrder(com.gammon.qs.domain.BQItem)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#validateBqItemChangeOrder(com.gammon.qs.domain.BpiItem)}.
 	 */
 	public Map<String, Object> testValidateBqItemChangeOrder() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		BQService bqService = applicationContext.getBean(BQService.class);
-		Job job = null;
-		BQItem bqItem = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		JobInfo job = null;
+		BpiItem bqItem = null;
 		try {
 			job = jobService.obtainJob(testValidateBqItemChangeOrder_jobNumber);
 			bqItem = bqService.getBillItemFieldsForChangeOrder(job, testValidateBqItemChangeOrder_bqType);
@@ -409,13 +409,13 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testSaveChangeOrderBqAndResources_sql}")
 	String testSaveChangeOrderBqAndResources_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#saveChangeOrderBqAndResources(com.gammon.qs.domain.BQItem)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#saveChangeOrderBqAndResources(com.gammon.qs.domain.BpiItem)}.
 	 */
 	public Map<String, Object> testSaveChangeOrderBqAndResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean(BQService.class);
-		BQItem bqItem = null;
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		BpiItem bqItem = null;
 		try {
 			bqItem = bqService.getBqItemWithResources(new Long(testSaveChangeOrderBqAndResources_id));
 		} catch (Exception e) {e.printStackTrace();
@@ -433,7 +433,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testGetBqItemWithResources_sql}")
 	String testGetBqItemWithResources_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBqItemWithResources(java.lang.Long)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBpiItemWithResources(java.lang.Long)}.
 	 */
 	public Map<String, Object> testGetBqItemWithResources() {
 		init();
@@ -456,8 +456,8 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testSaveResourceSubcontractAddendums() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean(BQService.class);
-		List<Resource> resources = null;
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		List<BpiItemResource> resources = null;
 		try {
 			resources = bqService.getResourcesByBqItemId(new Long(testSaveResourceSubcontractAddendums_id));
 		} catch (Exception e) {e.printStackTrace();
@@ -539,7 +539,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBQItemsForIVInputByPage(int)}.
 	 */
 	public void initGetBQItemsForIVInputByPage(){
-		BQService bqService = applicationContext.getBean(BQService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
 		try {//create ivInputByBQItemPaginationWrapper
 			bqService.searchBQItemsForIVInput(testGetBQItemsForIVInputByPage_jobNumber, testGetBQItemsForIVInputByPage_billNo, testGetBQItemsForIVInputByPage_subBillNo, testGetBQItemsForIVInputByPage_pageNo, testGetBQItemsForIVInputByPage_itemNo, testGetBQItemsForIVInputByPage_bqDescription);
 		} catch (Exception e) {e.printStackTrace();
@@ -618,7 +618,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getResourcesForIVInputByPage(int)}.
 	 */
 	public void initGetResourceForIVInputByPage(){
-		BQService bqService = applicationContext.getBean(BQService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
 		try {//create ivInputByBQItemPaginationWrapper
 			bqService.searchResourcesForIVInput(testGetResourcesForIVInputByPage_jobNumber, testGetResourcesForIVInputByPage_billNo, testGetResourcesForIVInputByPage_subBillNo, testGetResourcesForIVInputByPage_pageNo, testGetResourcesForIVInputByPage_itemNo, testGetResourcesForIVInputByPage_resourceDescription, testGetResourcesForIVInputByPage_objectCode, testGetResourcesForIVInputByPage_subsidiaryCode, testGetResourcesForIVInputByPage_packageNo);
 		} catch (Exception e) {e.printStackTrace();
@@ -659,8 +659,8 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testUpdateBQItemsIVAmount() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean(BQService.class);
-		List<BQItem> bqItems = null;
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		List<BpiItem> bqItems = null;
 		try {
 			bqItems = bqService.obtainBQItemList(testUpdateBQItemsIVAmount_jobNumber, testUpdateBQItemsIVAmount_billNo, testUpdateBQItemsIVAmount_subbillNo, testUpdateBQItemsIVAmount_pageNo, testUpdateBQItemsIVAmount_itemNo, testUpdateBQItemsIVAmount_bqDesc);
 		} catch (Exception e) {e.printStackTrace();
@@ -686,8 +686,8 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	public Map<String, Object> testUpdateResourcesIVAmount() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQService bqService = applicationContext.getBean(BQService.class);
-		List<Resource> resources = null;
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
+		List<BpiItemResource> resources = null;
 		try {
 			resources = bqService.getResourcesByBqItemId(new Long(testUpdateResourcesIVAmount_id));
 		} catch (Exception e) {e.printStackTrace();
@@ -735,7 +735,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	String testObtainResourcesByWrapper_objectCode;
 	@Value("${BQRepositoryControllerTestData.testObtainResourcesByWrapper_resDescription}")
 	String testObtainResourcesByWrapper_resDescription;
-	@Value("${BQRepositoryControllerTestData.testObtainResourcesByWrapper_packageNo")
+	@Value("${BQRepositoryControllerTestData.testObtainResourcesByWrapper_packageNo}")
 	String testObtainResourcesByWrapper_packageNo;
 	@Value("${BQRepositoryControllerTestData.testObtainResourcesByWrapper_packageType}")
 	String testObtainResourcesByWrapper_packageType;
@@ -805,7 +805,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 		resourceWrapper.setResDescription(testObtainResourcesByWrapper_resDescription);
 		resourceWrapper.setPackageNo(testObtainResourcesByWrapper_packageNo);
 		resourceWrapper.setPackageType(testObtainResourcesByWrapper_packageType);
-		BQService bqService = applicationContext.getBean(BQService.class);
+		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
 		try {//create cachedResourceEnquiry
 			bqService.obtainResourcesByWrapper(resourceWrapper);
 		} catch (Exception e) {e.printStackTrace();
@@ -829,13 +829,13 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	@Value("${BQRepositoryControllerTestData.testObtainUneditableResources_sql}")
 	String testObtainUneditableResources_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#obtainUneditableResources(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#obtainUneditableResources(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testObtainUneditableResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testObtainUneditableResources_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();

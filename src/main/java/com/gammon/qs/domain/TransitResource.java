@@ -19,15 +19,15 @@ import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
-@Table(name = "QS_TransitResource")
+@Table(name = "TRANSIT_RESOURCE")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "qs_transitResource_gen", sequenceName = "qs_transitResource_seq", allocationSize = 1)
+@SequenceGenerator(name = "TRANSIT_RESOURCE_GEN", sequenceName = "TRANSIT_RESOURCE_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class TransitResource extends BasePersistedObject {
 
 	private static final long serialVersionUID = -8874886674242129989L;
 	
-	private TransitBQ transitBQ;
+	private TransitBpi transitBpi;
 	private Integer resourceNo = Integer.valueOf(0);
 	private String resourceCode;
 	private String type;
@@ -47,7 +47,7 @@ public class TransitResource extends BasePersistedObject {
 	
 	@Override
 	public String toString() {
-		return "TransitResource [transitBQ=" + transitBQ + ", resourceNo=" + resourceNo + ", resourceCode="
+		return "TransitResource [transitBpi=" + transitBpi + ", resourceNo=" + resourceNo + ", resourceCode="
 				+ resourceCode + ", type=" + type + ", description=" + description + ", waste=" + waste
 				+ ", totalQuantity=" + totalQuantity + ", unit=" + unit + ", rate=" + rate + ", value=" + value
 				+ ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", packageNo=" + packageNo
@@ -56,7 +56,7 @@ public class TransitResource extends BasePersistedObject {
 
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qs_transitResource_gen")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TRANSIT_RESOURCE_GEN")
 	public Long getId(){return super.getId();}
 	
 	@Column(name = "resourceNo")
@@ -156,12 +156,12 @@ public class TransitResource extends BasePersistedObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "transitBQ_ID", foreignKey = @ForeignKey(name = "FK_TransitHeaderTransitRes_PK"))
-	public TransitBQ getTransitBQ() {
-		return transitBQ;
+	@JoinColumn(name = "Transit_Bpi_ID", foreignKey = @ForeignKey(name = "FK_TransitResource_TransitBpi_PK"))
+	public TransitBpi getTransitBpi() {
+		return transitBpi;
 	}
-	public void setTransitBQ(TransitBQ transitBQ) {
-		this.transitBQ = transitBQ;
+	public void setTransitBpi(TransitBpi transitBpi) {
+		this.transitBpi = transitBpi;
 	}
 
 }

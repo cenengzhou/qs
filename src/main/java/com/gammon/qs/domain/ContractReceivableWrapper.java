@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "V_CONTRACT_RECEIVABLE_RPT")
@@ -94,6 +95,7 @@ public class ContractReceivableWrapper implements Serializable{
 	public void setClientNo(String clientNo) {
 		this.clientNo = clientNo;
 	}
+	@Transient
 	public String getClientName() {
 		return clientName;
 	}

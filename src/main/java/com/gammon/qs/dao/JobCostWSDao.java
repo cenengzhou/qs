@@ -15,9 +15,9 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.AccountLedgerWrapper;
+import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 import com.gammon.qs.domain.AccountMaster;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -97,7 +97,7 @@ public class JobCostWSDao {
 						" JobNumber: "+requestObj.getJobNumber());
 			GetAccountIDListByJobResponseListObj responseListObj = (GetAccountIDListByJobResponseListObj) getAccountIDListByJobWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 	
-			Job job = new Job();
+			JobInfo job = new JobInfo();
 			job.setJobNumber(jobNumber);
 
 			for(GetAccountIDListByJobResponseObj responseObj : responseListObj.getGetAccountIDListByJobResponseObjList()){
@@ -105,7 +105,7 @@ public class JobCostWSDao {
 				
 				curAccountMaster.setAccountID(responseObj.getAccountId());
 				curAccountMaster.setDescription(responseObj.getDescription());
-				curAccountMaster.setJob(job);
+				curAccountMaster.setJobInfo(job);
 				//Fixing: Handle invalid object / subsidiary codes (example: 1.999999)
 				try{
 					curAccountMaster.setSubsidiaryCode((responseObj.getSubsidaryCode()!=null && !"".equals(responseObj.getSubsidaryCode().trim() )?responseObj.getSubsidaryCode().trim():""));
@@ -128,8 +128,8 @@ public class JobCostWSDao {
 		return resultList;
 	}
 
-	public List<AccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) {
-		List<AccountLedgerWrapper> resultList = new LinkedList<AccountLedgerWrapper>();
+	public List<JdeAccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) {
+		List<JdeAccountLedgerWrapper> resultList = new LinkedList<JdeAccountLedgerWrapper>();
 		try{
 
 			GetAccountLedgerRequestObj requestObj  = new GetAccountLedgerRequestObj();
@@ -151,7 +151,7 @@ public class JobCostWSDao {
 			
 			for(GetAccountLedgerResponseObj responseObj : responseListObj.getGetAccountLedgerResponseObjList())
 			{
-				AccountLedgerWrapper curAccountLedger = new AccountLedgerWrapper();
+				JdeAccountLedgerWrapper curAccountLedger = new JdeAccountLedgerWrapper();
 
 				curAccountLedger.setAmount(responseObj.getAmount()!=null && !"".equals(responseObj.getAmount().toString().trim())?responseObj.getAmount():new Double(0));
 				curAccountLedger.setCurrencyCode(responseObj.getCurrencyCode()!=null && !"".equals(responseObj.getCurrencyCode().trim())?responseObj.getCurrencyCode().trim():"");
@@ -456,8 +456,8 @@ public class JobCostWSDao {
 				requestObj.setcPostedFlag(postFlag.trim());
 			
 			//By another WS-AccountIDListByJob
-			if(accountMaster.getJob().getCompany()!=null && accountMaster.getJob().getCompany().trim().length()>0)
-				requestObj.setSzCompany(accountMaster.getJob().getCompany().trim());
+			if(accountMaster.getJobInfo().getCompany()!=null && accountMaster.getJobInfo().getCompany().trim().length()>0)
+				requestObj.setSzCompany(accountMaster.getJobInfo().getCompany().trim());
 			
 			if(fromDate!=null)
 				requestObj.setJdStartPeriod(fromDate);

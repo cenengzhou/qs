@@ -42,7 +42,6 @@ import com.gammon.pcms.web.filter.HeaderAuthenticationFilter;
 import com.gammon.pcms.web.security.handler.KerberosLoginFailureHandler;
 import com.gammon.pcms.web.security.handler.LoginFailureHandler;
 import com.gammon.pcms.web.security.handler.LoginSuccessHandler;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.LdapUserDetailsContextMapper;
 import com.gammon.qs.service.security.UserDetailsServiceImpl;
 
@@ -52,8 +51,6 @@ import com.gammon.qs.service.security.UserDetailsServiceImpl;
 @PropertySource("file:${security.properties}")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Autowired
-	private AdminService adminService;
 	@Autowired
 	private LdapConfig ldapConfig;
 	@Autowired
@@ -193,7 +190,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		@Bean
 		public AuthenticationSuccessHandler loginSuccessHandler() {
-			return new LoginSuccessHandler(servletContext.getContextPath()+"/index.html", false);
+			return new LoginSuccessHandler(servletContext.getContextPath()+"/home.html", false);
 		}
 
 		@Bean
@@ -226,7 +223,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean(name = "userDetailsContextMapper")
 	public LdapUserDetailsContextMapper userDetailsContextMapper() {
 		LdapUserDetailsContextMapper bean = new LdapUserDetailsContextMapper();
-		bean.setAdminService(adminService);
 		return bean;
 	}
 	

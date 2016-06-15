@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.TransactionTestCase;
 public class AccountLedgerServiceTestData extends TransactionTestCase.TestDataBase {
 	
 	/**
-	 * Test method for {@link com.gammon.qs.service.AccountLedgerService#obtainAccountLedgersByLedgerType(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JdeAccountLedgerService#obtainAccountLedgersByLedgerType(java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainAccountLedgersByLedgerType() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -45,7 +45,7 @@ public class AccountLedgerServiceTestData extends TransactionTestCase.TestDataBa
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.AccountLedgerService#obtainAccountLedgersByJobNo(java.lang.String, java.lang.Integer, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.JdeAccountLedgerService#obtainAccountLedgersByJobNo(java.lang.String, java.lang.Integer, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainAccountLedgersByJobNo() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -72,7 +72,7 @@ public class AccountLedgerServiceTestData extends TransactionTestCase.TestDataBa
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.AccountLedgerService#uploadBudgetForecastExcel(java.lang.String, java.lang.String, byte[])}.
+	 * Test method for {@link com.gammon.qs.service.JdeAccountLedgerService#uploadBudgetForecastExcel(java.lang.String, java.lang.String, byte[])}.
 	 */
 	public TransactionTestCase.TestDataMethod testUploadBudgetForecastExcel() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -99,7 +99,7 @@ public class AccountLedgerServiceTestData extends TransactionTestCase.TestDataBa
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.AccountLedgerService#downloadBudgetForecastExcel(java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.JdeAccountLedgerService#downloadBudgetForecastExcel(java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testDownloadBudgetForecastExcel() {
 		return new TransactionTestCase.TestDataMethod() {

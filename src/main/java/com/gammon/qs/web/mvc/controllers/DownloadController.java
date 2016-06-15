@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,24 +21,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ContractReceivableWrapper;
-import com.gammon.qs.domain.TransitHeader;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.AccountLedgerService;
+import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.BQResourceSummaryService;
-import com.gammon.qs.service.BQService;
-import com.gammon.qs.service.IVPostingHistoryService;
+import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.BpiItemService;
+import com.gammon.qs.service.IVPostingHistService;
 import com.gammon.qs.service.JobCostService;
-import com.gammon.qs.service.MainContractCertificateService;
+import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.MasterListService;
-import com.gammon.qs.service.MessageBoardAttachmentService;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.RepackagingDetailService;
-import com.gammon.qs.service.RetentionReleaseScheduleService;
+import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.SubcontractorService;
-import com.gammon.qs.service.TenderAnalysisService;
+import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.DateUtil;
@@ -69,31 +67,29 @@ public class DownloadController{
 	@Autowired
 	private SubcontractorService subcontractorRepository;
 	@Autowired
-	private PackageService packageRepository;
-	@Autowired
-	private MessageBoardAttachmentService messageBoardAttachmentRepository;
+	private SubcontractService packageRepository;
 	@Autowired
 	private JobCostService jobCostRepository;
 	@Autowired
-	private BQService bqRepository;
+	private BpiItemService bqRepository;
 	@Autowired
-	private BQResourceSummaryService bqResourceSummaryRepository;
+	private ResourceSummaryService bqResourceSummaryRepository;
 	@Autowired
-	private AccountLedgerService accountLedgerRepository;
+	private JdeAccountLedgerService accountLedgerRepository;
 	@Autowired
-	private IVPostingHistoryService ivPostingHistoryRepository;
+	private IVPostingHistService ivPostingHistoryRepository;
 	@Autowired
 	private RepackagingDetailService repackagingDetailRepository;
 	@Autowired
-	private RetentionReleaseScheduleService retentionReleaseScheduleRepository;
+	private MainCertRetentionReleaseService retentionReleaseScheduleRepository;
 	@Autowired
 	private PaymentService paymentRepository;
 	@Autowired
-	private TenderAnalysisService tenderAnalysisRepository;
+	private TenderService tenderAnalysisRepository;
 	@Autowired
 	private TransitService transitRepository;
 	@Autowired
-	private MainContractCertificateService mainContractCertificateRepository;
+	private MainCertService mainContractCertificateRepository;
 	@Autowired
 	private AttachmentService attachmentRepository;
 	@Autowired
@@ -415,38 +411,39 @@ public class DownloadController{
 	public void downloadImage(@RequestParam(required=true, value="imageID") String imageID,
 							  @RequestParam(required=true, value="filename") String filename,
 							  HttpServletRequest request, HttpServletResponse response){
-		
-		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-		String mimeType = mimeTypesMap.getContentType(filename);
-		response.setContentType(mimeType);
-		
-		byte[] fileBytes = messageBoardAttachmentRepository.generateBytesForImage(Long.parseLong(imageID));
-		if(fileBytes!=null){
-			try {
-				response.getOutputStream().write(fileBytes);
-				response.getOutputStream().flush();
-			}
-			catch(IOException e) {
-				e.printStackTrace();
-				logger.info("Error: "+e.getLocalizedMessage());
-				showAttachmentError(response);
-			} finally{
-				try {
-					response.getOutputStream().close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		else{
-			logger.info("No image was found.");
-			showAttachmentError(response);
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}		
+		throw new RuntimeException("remove entity | messageBoardAttachment | remark downloadImage(...)");
+		//TODO: remove entity | messageBoardAttachment | remark downloadImage(...) 
+//		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+//		String mimeType = mimeTypesMap.getContentType(filename);
+//		response.setContentType(mimeType);
+//		
+//		byte[] fileBytes = messageBoardAttachmentRepository.generateBytesForImage(Long.parseLong(imageID));
+//		if(fileBytes!=null){
+//			try {
+//				response.getOutputStream().write(fileBytes);
+//				response.getOutputStream().flush();
+//			}
+//			catch(IOException e) {
+//				e.printStackTrace();
+//				logger.info("Error: "+e.getLocalizedMessage());
+//				showAttachmentError(response);
+//			} finally{
+//				try {
+//					response.getOutputStream().close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		else{
+//			logger.info("No image was found.");
+//			showAttachmentError(response);
+//			try {
+//				response.getOutputStream().close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}		
 	}
 	
 	@RequestMapping(value="/gammonqs/accountBalanceExcelDownload.smvc",method=RequestMethod.GET)
@@ -1969,8 +1966,8 @@ public class DownloadController{
 		logger.info("generatePrintBQMasterReconciliationReport");
 
 		try {
-			TransitHeader header = transitRepository.getTransitHeader(jobNumber);
-			if (TransitHeader.RESOURCES_CONFIRMED.equals(header.getStatus()) || TransitHeader.REPORT_PRINTED.equals(header.getStatus()) || TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())) {
+			Transit header = transitRepository.getTransitHeader(jobNumber);
+			if (Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()) || Transit.TRANSIT_COMPLETED.equals(header.getStatus())) {
 				ByteArrayOutputStream outputStream = transitRepository.GenerateTransitBQMasterReconciliationJasperReport(jobNumber);
 				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
 				response.setContentLength(outputStream.size());
@@ -2004,8 +2001,8 @@ public class DownloadController{
 		logger.info("generatePrintBQResourceRecociliationReport");
 
 		try {
-			TransitHeader header = transitRepository.getTransitHeader(jobNumber);
-			if(TransitHeader.RESOURCES_CONFIRMED.equals(header.getStatus()) || TransitHeader.REPORT_PRINTED.equals(header.getStatus()) || TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
+			Transit header = transitRepository.getTransitHeader(jobNumber);
+			if(Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()) || Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
 				ByteArrayOutputStream outputStream = transitRepository.GenerateTransitBQResourceReconciliationJasperReport(jobNumber);
 
 				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);

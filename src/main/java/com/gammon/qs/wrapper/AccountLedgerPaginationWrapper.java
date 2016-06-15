@@ -2,9 +2,9 @@ package com.gammon.qs.wrapper;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.AccountLedgerWrapper;
+import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 
-public class AccountLedgerPaginationWrapper extends PaginationWrapper<AccountLedgerWrapper> implements Serializable{
+public class AccountLedgerPaginationWrapper extends PaginationWrapper<JdeAccountLedgerWrapper> implements Serializable{
 	
 	private static final long serialVersionUID = 8050082368890009967L;
 	private Double totalAmount = 0.00;

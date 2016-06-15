@@ -1,18 +1,16 @@
 package com.gammon.qs.webservice.serviceProvider.awardSCPackage;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.Marshaller;
 import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.service.SubcontractService;
 
 public class MarshallingAwardSCPackageEndpoint extends
 		AbstractMarshallingPayloadEndpoint {
 
-	private PackageService packageRepository;
+	private SubcontractService packageRepository;
 	
-	public MarshallingAwardSCPackageEndpoint(PackageService packageRepository, Marshaller marshaller){
+	public MarshallingAwardSCPackageEndpoint(SubcontractService packageRepository, Marshaller marshaller){
 		super(marshaller);
 		this.packageRepository = packageRepository;
 	}

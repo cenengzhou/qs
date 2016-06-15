@@ -21,8 +21,8 @@ import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactions
 import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactionsManager.getInsertJournalEntryTransactions.InsertJournalEntryTransactionsRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
@@ -78,7 +78,7 @@ public class CreateGLWSDao {
 	 * @author	tikywong
 	 * @since	Mar 30, 2016 10:17:43 AM
 	 */
-	public Integer insertProvisionToGLByJob(Job job, List<ProvisionWrapper> provisionList, Date glDate, String user, String ediBatchNumber, Integer lastEdiTransactionNumber) throws Exception {
+	public Integer insertProvisionToGLByJob(JobInfo job, List<ProvisionWrapper> provisionList, Date glDate, String user, String ediBatchNumber, Integer lastEdiTransactionNumber) throws Exception {
 		logger.info("EDI Batch Number: " + ediBatchNumber + " Job: " + job.getJobNumber());
 
 		// For calling web service to insert the records to JDE GL
@@ -187,7 +187,7 @@ public class CreateGLWSDao {
 	 * @author	tikywong
 	 * @since	Apr 11, 2016 12:08:08 PM
 	 */
-	public Integer insertProvisionToGLByPackage(Job job, SCPackage scPackage, List<ProvisionWrapper> provisionList, Date glDate, String user, String ediBatchNumber, Integer lastEdiTransactionNumber) throws Exception {
+	public Integer insertProvisionToGLByPackage(JobInfo job, Subcontract scPackage, List<ProvisionWrapper> provisionList, Date glDate, String user, String ediBatchNumber, Integer lastEdiTransactionNumber) throws Exception {
 		logger.info("EDI Batch Number: " + ediBatchNumber + " Job: " + job.getJobNumber() + " Package: " + scPackage.getPackageNo());
 
 		// For calling web service to insert the records to JDE GL

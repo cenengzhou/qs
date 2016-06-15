@@ -17,8 +17,8 @@ import org.hibernate.type.DoubleType;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Repository;
 
-import com.gammon.qs.domain.TransitBQ;
-import com.gammon.qs.domain.TransitHeader;
+import com.gammon.qs.domain.TransitBpi;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.wrapper.PaginationWrapper;
@@ -32,7 +32,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 
 	private Logger logger = Logger.getLogger(TransitResourceHBDao.class.getName());
 
-	public void deleteResourcesByHeader(TransitHeader header) throws Exception{
+	public void deleteResourcesByHeader(Transit header) throws Exception{
 		String hqlDelete = "delete TransitResource res where res.transitBQ in (from TransitBQ bq where bq.transitHeader = :header)";
 		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
@@ -54,7 +54,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		}
 	}
 	
-	public boolean dummyAccountCodesExist(TransitHeader header){
+	public boolean dummyAccountCodesExist(Transit header){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
@@ -67,7 +67,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	// modified by brian on 20110120
 	// change to return the search result from PaginationWrapper<TransitResourceWrapper> to List<TransitResourceWrapper>
 	@SuppressWarnings("unchecked")
-	public List<TransitResourceWrapper> searchTransitResources(TransitHeader header, String billNo, String subBillNo,
+	public List<TransitResourceWrapper> searchTransitResources(Transit header, String billNo, String subBillNo,
 			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
 		
 //		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
@@ -232,7 +232,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PaginationWrapper<TransitResourceWrapper> searchTransitResourcesByPage(TransitHeader header, String billNo, String subBillNo,
+	public PaginationWrapper<TransitResourceWrapper> searchTransitResourcesByPage(Transit header, String billNo, String subBillNo,
 			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
 		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
@@ -396,7 +396,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	
 	// Last modified: Brian Tse
 	@SuppressWarnings("unchecked")
-	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(TransitHeader header){
+	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(Transit header){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBQ", "bq");
 		criteria.add(Restrictions.eq("bq.transitHeader", header));
@@ -418,7 +418,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBQ transitBQ) {
+	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBpi transitBQ) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("transitBQ", transitBQ));
 		return criteria.list();

@@ -34,9 +34,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.HTMLStringForApprovalContentService;
-import com.gammon.qs.service.JobService;
-import com.gammon.qs.service.MainContractCertificateService;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.MainCertService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.serviceProvider.awardSCPackage.AwardSCPackageRequest;
@@ -111,6 +111,12 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	private String pcmsApiPassword;
 	@Value("${qs.keystore}")
 	private String qsKeystore;
+	@Value("${gsf.getRole.url}")
+	private String gsfGetRoleUrl;
+	@Value("${gsf.getFunctionSecurity.url}")
+	private String gsfGetFunctionSecurityUrl;
+	@Value("${gsf.applicationCode}")
+	private String gsfApplicationCode;
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
@@ -269,7 +275,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	
 	@Bean(name = "marshallingCompleteAddendumApprovalEndpoint")
 	public MarshallingCompleteAddendumApprovalEndpoint marshallingCompleteAddendumApprovalEndpoint(
-			PackageService packageHBRepository,
+			SubcontractService packageHBRepository,
 			@Qualifier("completeAddendumApprovalMarshaller") JibxMarshaller marshaller,
 			@Qualifier("completeAddendumApprovalUnmarshaller") JibxMarshaller unmarshaller)
 			throws Exception {
@@ -352,7 +358,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingCompleteMainCertApprovalEndpoint")
 	public MarshallingCompleteMainCertApprovalEndpoint marshallingCompleteMainCertApprovalEndpoint(
-			MainContractCertificateService mainContractCertificateRepository,
+			MainCertService mainContractCertificateRepository,
 			@Qualifier("completeMainCertApprovalMarshaller") JibxMarshaller marshaller,
 			@Qualifier("completeMainCertApprovalUnmarshaller") JibxMarshaller unmarshaller) {
 		marshaller.setTargetClass(CompleteMainCertApprovalRequest.class);
@@ -393,7 +399,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingAwardSCPackageEndpoint")
 	public MarshallingAwardSCPackageEndpoint marshallingAwardSCPackageEndpoint(
-			PackageService packageService,
+			SubcontractService packageService,
 			@Qualifier("awardSCPackageMarshaller") JibxMarshaller marshaller,
 			@Qualifier("awardSCPackageUnmarshaller") JibxMarshaller unmarshaller) {
 		MarshallingAwardSCPackageEndpoint bean = new MarshallingAwardSCPackageEndpoint(
@@ -433,7 +439,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingCompleteSplitTerminateEndpoint")
 	public MarshallingCompleteSplitTerminateEndpoint marshallingCompleteSplitTerminateEndpoint(
-			PackageService packageHBRepository,
+			SubcontractService packageHBRepository,
 			@Qualifier("completeSplitTerminateMarshaller") JibxMarshaller marshaller,
 			@Qualifier("completeSplitTerminateUnmarshaller") JibxMarshaller unmarshaller) {
 		MarshallingCompleteSplitTerminateEndpoint bean = new MarshallingCompleteSplitTerminateEndpoint(
@@ -473,7 +479,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingCheckJobIsConvertedEndpoint")
 	public MarshallingCheckJobIsConvertedEndpoint marshallingCheckJobIsConvertedEndpoint(
-			JobService jobService,
+			JobInfoService jobService,
 			@Qualifier("checkJobIsConvertedMarshaller") JibxMarshaller marshaller,
 			@Qualifier("checkJobIsConvertedUnmarshaller") JibxMarshaller unmarshaller) {
 		MarshallingCheckJobIsConvertedEndpoint bean = new MarshallingCheckJobIsConvertedEndpoint(
@@ -865,6 +871,27 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	public String getQsKeystore() {
 		return qsKeystore;
+	}
+
+	/**
+	 * @return the gsfGetRoleUrl
+	 */
+	public String getGsfGetRoleUrl() {
+		return gsfGetRoleUrl;
+	}
+
+	/**
+	 * @return the gsfGetFunctionSecurityUrl
+	 */
+	public String getGsfGetFunctionSecurityUrl() {
+		return gsfGetFunctionSecurityUrl;
+	}
+
+	/**
+	 * @return the gsfApplicationCode
+	 */
+	public String getGsfApplicationCode() {
+		return gsfApplicationCode;
 	}
 
 }

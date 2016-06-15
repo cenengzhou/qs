@@ -15,9 +15,9 @@ import org.hibernate.annotations.OptimisticLocking;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
-@Table(name = "QS_TransitCodeMatch")
+@Table(name = "APP_TRANSIT_RESOURCE_CODE")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "qs_transitCodeMatch_gen", sequenceName = "qs_transitCodeMatch_seq", allocationSize = 1)
+@SequenceGenerator(name = "APP_TRANSIT_RESOURCE_CODE_GEN", sequenceName = "APP_TRANSIT_RESOURCE_CODE_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class TransitCodeMatch extends BasePersistedObject {
 	private static final long serialVersionUID = 1111139262431427762L;
@@ -39,7 +39,7 @@ public class TransitCodeMatch extends BasePersistedObject {
 
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qs_transitCodeMatch_gen")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APP_TRANSIT_RESOURCE_CODE_GEN")
 	public Long getId(){return super.getId();}
 
 	@Column(name = "matchingType", length = 2)

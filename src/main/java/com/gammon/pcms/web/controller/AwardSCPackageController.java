@@ -14,13 +14,13 @@ import org.springframework.web.client.RestTemplate;
 import com.gammon.pcms.dto.rs.provider.request.AwardSCPackageRequest;
 import com.gammon.pcms.dto.rs.provider.response.AwardSCPackageResponse;
 import com.gammon.pcms.helper.RestTemplateHelper;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.service.SubcontractService;
 
 @RestController
 @RequestMapping(path = "ws")
 public class AwardSCPackageController {
 	@Autowired
-	private PackageService packageService;
+	private SubcontractService packageService;
 	@Autowired
 	RestTemplateHelper restTemplateHelper;
 	private RestTemplate restTemplate;
@@ -57,7 +57,7 @@ public class AwardSCPackageController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvedOrRejected);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		AwardSCPackageResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/awardSCPackage", requestObj, AwardSCPackageResponse.class);

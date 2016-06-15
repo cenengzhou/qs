@@ -9,14 +9,14 @@ package com.gammon.qs.wrapper.updateIVAmountByMethodThree;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.Resource;
+import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.wrapper.PaginationWrapper;
 
 /**
  * @author tikywong
  * Apr 7, 2011 11:01:10 AM
  */
-public class IVInputByResourcePaginationWrapper extends PaginationWrapper<Resource> implements Serializable {
+public class IVInputByResourcePaginationWrapper extends PaginationWrapper<BpiItemResource> implements Serializable {
 
 	private static final long serialVersionUID = 6089096473560985938L;
 	/**

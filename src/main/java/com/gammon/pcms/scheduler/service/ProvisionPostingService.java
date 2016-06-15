@@ -20,17 +20,17 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.CreateGLWSDao;
 import com.gammon.qs.dao.JobCostWSDao;
-import com.gammon.qs.dao.JobHBDao;
-import com.gammon.qs.dao.JobWSDao;
-import com.gammon.qs.dao.SCDetailProvisionHistoryHBDao;
-import com.gammon.qs.dao.SCDetailsHBDao;
-import com.gammon.qs.dao.SCPackageHBDao;
+import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.JobInfoWSDao;
+import com.gammon.qs.dao.ProvisionPostingHistHBDao;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.AccountMaster;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCDetailProvisionHistory;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsOA;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.ProvisionPostingHist;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailOA;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -45,9 +45,9 @@ public class ProvisionPostingService {
 	private final String NSC_PROVISION_AAI_ITEM = "SCNPV";
 	
 	@Autowired
-	private JobHBDao jobHBDao;
+	private JobInfoHBDao jobHBDao;
 	@Autowired
-	private JobWSDao jobWSDao;
+	private JobInfoWSDao jobWSDao;
 	@Autowired
 	private MailContentGenerator mailContentGenerator;
 	@Autowired
@@ -55,13 +55,13 @@ public class ProvisionPostingService {
 	@Autowired
 	private JobCostWSDao jobCostDao;
 	@Autowired
-	private SCPackageHBDao packageHBDao;
+	private SubcontractHBDao packageHBDao;
 	@Autowired
 	private CreateGLWSDao createGLDao;
 	@Autowired
-	private SCDetailsHBDao scDetailsHBDao;
+	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
-	private SCDetailProvisionHistoryHBDao scDetailProvisionHistoryDao;
+	private ProvisionPostingHistHBDao scDetailProvisionHistoryDao;
 	@Autowired
 	private MasterListService masterListRepository;
 
@@ -187,7 +187,7 @@ public class ProvisionPostingService {
 	 * modified on Jan 21, 2014 1:55:05 PM
 	 * @throws Exception 
 	 */
-	public void postProvisionByJobs(List<Job> jobList, Date glDate, boolean overwritePreviousProvisionPosting, String username) throws Exception {
+	public void postProvisionByJobs(List<JobInfo> jobList, Date glDate, boolean overwritePreviousProvisionPosting, String username) throws Exception {
 		// Global setup
 		if (this.startTime == null)
 			this.startTime = new Date();
@@ -211,7 +211,7 @@ public class ProvisionPostingService {
 		// --------------------- END: Setup ---------------------
 
 		// Calculate provision job by job
-		for (Job job : jobList) {
+		for (JobInfo job : jobList) {
 			logger.info("Start Job: " + job.getJobNumber() + " Company: " + job.getCompany());
 			try {
 				calculateAndInsertProvisionByJob(job);
@@ -242,7 +242,7 @@ public class ProvisionPostingService {
 	 */
 	@Transactional(	propagation = Propagation.REQUIRES_NEW,
 					rollbackFor = { Exception.class })
-	private void calculateAndInsertProvisionByJob(Job job) throws Exception {
+	private void calculateAndInsertProvisionByJob(JobInfo job) throws Exception {
 		// Provision records
 		List<ProvisionWrapper> listOfProvision = new ArrayList<ProvisionWrapper>();
 		
@@ -258,9 +258,9 @@ public class ProvisionPostingService {
 		List<AccountMaster> accountMasterList = jobCostDao.getAccountIDListByJob(job.getJobNumber());
 
 		// Obtain awarded packages for current job
-		List<SCPackage> packages = packageHBDao.obtainPackagesForProvisionPosting(job.getJobNumber());
+		List<Subcontract> packages = packageHBDao.obtainPackagesForProvisionPosting(job.getJobNumber());
 		if (packages != null && packages.size() > 0) {
-			for (SCPackage currentPackage : packages) {
+			for (Subcontract currentPackage : packages) {
 				logger.info("Job No.:" + job.getJobNumber() + " - Package No.: " + currentPackage.getPackageNo());
 
 				// Calculate provision for each package, each wrapper represents a provision record (i.e. 13518.140299.29999999 of SC1009)
@@ -302,23 +302,23 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Apr 11, 2016 4:14:48 PM
 	 */
-	private List<ProvisionWrapper> calculateProvisionByPackage(SCPackage scPackage, Integer postYr, Integer postMonth, boolean overwriteOldProvisionHistory, List<AccountMaster> accountMasterList) throws DatabaseOperationException, ValidateBusinessLogicException{
+	private List<ProvisionWrapper> calculateProvisionByPackage(Subcontract scPackage, Integer postYr, Integer postMonth, boolean overwriteOldProvisionHistory, List<AccountMaster> accountMasterList) throws DatabaseOperationException, ValidateBusinessLogicException{
 		//1. Obtain a list of ACTIVE SCDetail of package
-		List<SCDetails> scDetailList = scDetailsHBDao.obtainSCDetails(scPackage.getJob().getJobNumber(), scPackage.getPackageNo());
-		for(SCDetails scDetails : scDetailList){	
-			scDetails.setScPackage(scPackage);
+		List<SubcontractDetail> scDetailList = scDetailsHBDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+		for(SubcontractDetail scDetails : scDetailList){	
+			scDetails.setSubcontract(scPackage);
 		}
 		
 		//2. Clear out existing provision history of package if overwriting
 		if (overwriteOldProvisionHistory)
-			logger.info("Delete Provision History \n" + "Job: " + scPackage.getJob().getJobNumber() + " Package: " + scPackage.getPackageNo() + "\n" + 
+			logger.info("Delete Provision History \n" + "Job: " + scPackage.getJobInfo().getJobNumber() + " Package: " + scPackage.getPackageNo() + "\n" + 
 						"Posting Period: " + postYr + "-" + postMonth + "\n" + 
-						"No of Record deleted: " + scDetailProvisionHistoryDao.delete(scPackage.getJob().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth));
+						"No of Record deleted: " + scDetailProvisionHistoryDao.delete(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth));
 		else {
 			// Throw exception and exit if not overwriting
-			List<SCDetailProvisionHistory> checkProvisionHistList = scDetailProvisionHistoryDao.getSCDetailProvision(scPackage.getJob().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth);
+			List<ProvisionPostingHist> checkProvisionHistList = scDetailProvisionHistoryDao.getSCDetailProvision(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth);
 			if (checkProvisionHistList != null && checkProvisionHistList.size() > 0) 
-				throw new ValidateBusinessLogicException("Provision of " + postMonth + "/" + postYr + " in Job:" + scPackage.getJob().getJobNumber() + " SC:" + scPackage.getPackageNo() + " posted already.");
+				throw new ValidateBusinessLogicException("Provision of " + postMonth + "/" + postYr + " in Job:" + scPackage.getJobInfo().getJobNumber() + " SC:" + scPackage.getPackageNo() + " posted already.");
 		}
 		
 		// 3. Insert Provision Histories
@@ -340,18 +340,18 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Apr 11, 2016 4:14:34 PM
 	 */
-	private List<ProvisionWrapper> validateAndGroupByAccountCode(SCPackage scPackage, Integer postYr, Integer postMonth, List<AccountMaster> accountMasterList) throws ValidateBusinessLogicException{
+	private List<ProvisionWrapper> validateAndGroupByAccountCode(Subcontract scPackage, Integer postYr, Integer postMonth, List<AccountMaster> accountMasterList) throws ValidateBusinessLogicException{
 		List<ProvisionWrapper> provisionWrapperList = new ArrayList<ProvisionWrapper>();
-		List<SCDetailProvisionHistory> groupedProvisionHistoryList = scDetailProvisionHistoryDao.obtainSCDetailProvisionGroupedByAccountCode(scPackage.getJob().getJobNumber(),scPackage.getPackageNo(), postYr, postMonth);
+		List<ProvisionPostingHist> groupedProvisionHistoryList = scDetailProvisionHistoryDao.obtainSCDetailProvisionGroupedByAccountCode(scPackage.getJobInfo().getJobNumber(),scPackage.getPackageNo(), postYr, postMonth);
 		
 		Double provisionSum = 0.0;
 
 		//Go through the Provision History List to obtain from DB
-		for (SCDetailProvisionHistory groupedProvisionHistory : groupedProvisionHistoryList) {
+		for (ProvisionPostingHist groupedProvisionHistory : groupedProvisionHistoryList) {
 			// Calculate Provision of a specific account code
 			double provisionOfAccountCodeInHistory = CalculationUtil.round(groupedProvisionHistory.getCumLiabilitiesAmount() - groupedProvisionHistory.getPostedCertAmount(), 2);
 
-			ProvisionWrapper provisionWrapper = new ProvisionWrapper(scPackage.getJob().getJobNumber(), scPackage.getPackageNo(), groupedProvisionHistory.getObjectCode(), groupedProvisionHistory.getSubsidiaryCode(), provisionOfAccountCodeInHistory);
+			ProvisionWrapper provisionWrapper = new ProvisionWrapper(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), groupedProvisionHistory.getObjectCode(), groupedProvisionHistory.getSubsidiaryCode(), provisionOfAccountCodeInHistory);
 			provisionWrapperList.add(provisionWrapper);
 			provisionSum += provisionOfAccountCodeInHistory;
 
@@ -366,7 +366,7 @@ public class ProvisionPostingService {
 
 				// Create Account Code if it doesn't
 				if (!accountCodeExist)
-					errorMessage = masterListRepository.validateAndCreateAccountCode(scPackage.getJob().getJobNumber(), groupedProvisionHistory.getObjectCode(), groupedProvisionHistory.getSubsidiaryCode());
+					errorMessage = masterListRepository.validateAndCreateAccountCode(scPackage.getJobInfo().getJobNumber(), groupedProvisionHistory.getObjectCode(), groupedProvisionHistory.getSubsidiaryCode());
 
 				if (errorMessage != null)
 					throw new ValidateBusinessLogicException(errorMessage);
@@ -392,14 +392,14 @@ public class ProvisionPostingService {
 			} else
 				logger.info("Invalid Subcontractor Nature: " + scPackage.getSubcontractorNature());
 			
-			provisionWrapperList.add(new ProvisionWrapper(scPackage.getJob().getJobNumber(), scPackage.getPackageNo(), accountCodeWrapper.getObjectAccount(), accountCodeWrapper.getSubsidiary(), -1*provisionSum));
+			provisionWrapperList.add(new ProvisionWrapper(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), accountCodeWrapper.getObjectAccount(), accountCodeWrapper.getSubsidiary(), -1*provisionSum));
 			
 //			logger.info("No of provision records to be posted: " + provisionWrapperList.size() + " for Job: " + scPackage.getJob().getJobNumber() + " Package: " + scPackage.getPackageNo());
 			return provisionWrapperList;
 		}
 		
 		//No provision to be posted for the package
-		logger.info("No provision to be posted for Job: " + scPackage.getJob().getJobNumber() + " Package: " + scPackage.getPackageNo());
+		logger.info("No provision to be posted for Job: " + scPackage.getJobInfo().getJobNumber() + " Package: " + scPackage.getPackageNo());
 		return provisionWrapperList;
 	}
 
@@ -414,22 +414,22 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Mar 30, 2016 4:36:17 PM
 	 */
-	private void insertProvisionHistories(List<SCDetails> scDetailList, Integer postYear, Integer postMonth) throws ValidateBusinessLogicException, DatabaseOperationException {
-		List<SCDetailProvisionHistory> scDetailProvisionHistoryList = new ArrayList<SCDetailProvisionHistory>();
+	private void insertProvisionHistories(List<SubcontractDetail> scDetailList, Integer postYear, Integer postMonth) throws ValidateBusinessLogicException, DatabaseOperationException {
+		List<ProvisionPostingHist> scDetailProvisionHistoryList = new ArrayList<ProvisionPostingHist>();
 
-		for (SCDetails scDetails : scDetailList) {
+		for (SubcontractDetail scDetails : scDetailList) {
 			// BQ, B1, V1, V2, V3, L1, L2, D1, D2, CF, OA
-			if (scDetails instanceof SCDetailsOA) {
+			if (scDetails instanceof SubcontractDetailOA) {
 				// Generate Provision History
 				if (scDetails.getProvision() != null && scDetails.getProvision() != 0) {
-					SCDetailProvisionHistory scDetailProvisionHistory = new SCDetailProvisionHistory(scDetails, postYear, postMonth);
+					ProvisionPostingHist scDetailProvisionHistory = new ProvisionPostingHist(scDetails, postYear, postMonth);
 					if (scDetailProvisionHistory.getObjectCode() == null || "".equals(scDetailProvisionHistory.getObjectCode().trim()) || scDetailProvisionHistory.getSubsidiaryCode() == null || "".equals(scDetailProvisionHistory.getSubsidiaryCode().trim()))
 						throw new ValidateBusinessLogicException("Object/Subsidiary code is missing in " + scDetailProvisionHistory.getJobNo() + "/" + scDetailProvisionHistory.getPackageNo() + "-" + scDetailProvisionHistory.getObjectCode() + "." + scDetailProvisionHistory.getSubsidiaryCode());
 					scDetailProvisionHistoryDao.insert(scDetailProvisionHistory);
 					scDetailProvisionHistoryList.add(scDetailProvisionHistory);
 				}
 				// Update Posted Work Done Quantity = Cumulative Work Done Quantity for all SCDetail with Work Done
-				((SCDetailsOA) scDetails).setPostedWorkDoneQuantity(((SCDetailsOA) scDetails).getCumWorkDoneQuantity());
+				((SubcontractDetailOA) scDetails).setPostedWorkDoneQuantity(((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());
 				scDetailsHBDao.update(scDetails);
 			}
 		}
@@ -453,7 +453,7 @@ public class ProvisionPostingService {
 	 */
 	@Transactional(	propagation = Propagation.REQUIRES_NEW,
 					rollbackFor = Exception.class)
-	private Date obtainGLDate(Job job) throws Exception {
+	private Date obtainGLDate(JobInfo job) throws Exception {
 		// call from scheduler that do not have GL Date
 		if (companyGLDateCachedMap != null) {
 			// Update the cached map
@@ -481,7 +481,7 @@ public class ProvisionPostingService {
 	 * @since Mar 31, 2016 4:59:30 PM
 	 */
 	private void updateCompany(String jobNo) throws DatabaseOperationException {
-		Job job = jobHBDao.obtainJob(jobNo);
+		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
 //		logger.info("job: " + job.getJobNumber() + " company: " + job.getCompany());
 
 		// Obtain job's company from JDE

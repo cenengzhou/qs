@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.SCPaymentCertHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.service.admin.MailContentGenerator;
 @Component
 @Transactional(rollbackFor = Exception.class)
@@ -20,7 +20,7 @@ public class JDEF58011SynchronizationService {
 	@Autowired
 	private MailContentGenerator mailContentGenerator;
 	@Autowired
-	private SCPaymentCertHBDao scPaymentCertDao;
+	private PaymentCertHBDao scPaymentCertDao;
 
 	/**@author koeyyeung
 	 * created on 24th Apr, 2015**/

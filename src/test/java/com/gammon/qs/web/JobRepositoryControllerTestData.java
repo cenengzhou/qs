@@ -45,7 +45,7 @@ public class JobRepositoryControllerTestData extends ControllerTestCase.TestData
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.JobRepositoryController#obtainJob(java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.JobRepositoryController#obtainJobInfo(java.lang.String)}.
 	 */
 	public Map<String, Object> testObtainJob() {
 		init();

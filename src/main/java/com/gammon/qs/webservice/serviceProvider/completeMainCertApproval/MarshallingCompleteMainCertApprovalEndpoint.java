@@ -1,17 +1,16 @@
 package com.gammon.qs.webservice.serviceProvider.completeMainCertApproval;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.Marshaller;
 import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 
-import com.gammon.qs.service.MainContractCertificateService;
+import com.gammon.qs.service.MainCertService;
 
 public class MarshallingCompleteMainCertApprovalEndpoint  extends AbstractMarshallingPayloadEndpoint{
 
-	private MainContractCertificateService mainContractCertificateRepository;
+	private MainCertService mainContractCertificateRepository;
 	
 	
-	public MarshallingCompleteMainCertApprovalEndpoint(MainContractCertificateService mainContractCertificateRepository, Marshaller marshaller) {
+	public MarshallingCompleteMainCertApprovalEndpoint(MainCertService mainContractCertificateRepository, Marshaller marshaller) {
 		super(marshaller);
 		this.mainContractCertificateRepository = mainContractCertificateRepository;
 	}

@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class AccountMaster implements Serializable{
 
 	private static final long serialVersionUID = -6134548598311969196L;
-	private Job job;
+	private JobInfo jobInfo;
 	private List<AccountBalances> accountBalancesList;
 	
 	private String accountID;
@@ -27,12 +27,12 @@ public class AccountMaster implements Serializable{
 		this.accountBalancesList = accountBalancesList;
 	}
 	
-	public Job getJob() {
-		return job;
+	public JobInfo getJobInfo() {
+		return jobInfo;
 	}
 	
-	public void setJob(Job job) {
-		this.job = job;
+	public void setJobInfo(JobInfo jobInfo) {
+		this.jobInfo = jobInfo;
 	}
 	
 	public String getAccountID() {

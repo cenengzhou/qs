@@ -18,16 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.jde.webservice.serviceRequester.PaymentHistoryEnquiryManager.getPaymentHistoriesList.GetPaymentHistoriesResponseObj;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.BQResourceSummaryHBDaoSA;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.JobCostWSDao;
-import com.gammon.qs.dao.JobHBDao;
-import com.gammon.qs.dao.ResourceHBDaoSA;
-import com.gammon.qs.dao.SCDetailsHBDao;
+import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.AccountLedgerWrapper;
+import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 import com.gammon.qs.domain.AccountMaster;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.jobCost.AccountBalanceExcelGenerator;
@@ -51,13 +51,13 @@ public class JobCostService implements Serializable {
 	@Autowired
 	private transient JobCostWSDao jobCostDao;
 	@Autowired
-	private transient JobHBDao jobHBDao;
+	private transient JobInfoHBDao jobHBDao;
 	@Autowired
-	private transient ResourceHBDaoSA resourceDao;
+	private transient BpiItemResourceHBDao resourceDao;
 	@Autowired
-	private transient BQResourceSummaryHBDaoSA resourceSummaryDao;
+	private transient ResourceSummaryHBDao resourceSummaryDao;
 	@Autowired
-	private transient SCDetailsHBDao scDetailsDao;
+	private transient SubcontractDetailHBDao scDetailsDao;
 	//Repositories
 	@Autowired
 	private transient MasterListService masterListRepository;
@@ -79,7 +79,7 @@ public class JobCostService implements Serializable {
 	private APRecordPaginationWrapper apRecordPaginationWrapper;
 	
 	//Account Ledger
-	private List<AccountLedgerWrapper> listOfAccountLedger;												//WHOLE list of Account Ledger to be displayed
+	private List<JdeAccountLedgerWrapper> listOfAccountLedger;												//WHOLE list of Account Ledger to be displayed
 	private AccountLedgerPaginationWrapper accountLedgerPaginationWrapper;
 	
 	private List<PORecord> pORecordList = null;
@@ -120,11 +120,11 @@ public class JobCostService implements Serializable {
 		this.listOfAccountBalanceByDateRangeBackup = listOfAccountBalanceByDateRangeCache;
 	}
 
-	public List<AccountLedgerWrapper> getListOfAccountLedger() {
+	public List<JdeAccountLedgerWrapper> getListOfAccountLedger() {
 		return listOfAccountLedger;
 	}
 
-	public void setListOfAccountLedger(List<AccountLedgerWrapper> listOfAccountLedger) {
+	public void setListOfAccountLedger(List<JdeAccountLedgerWrapper> listOfAccountLedger) {
 		this.listOfAccountLedger = listOfAccountLedger;
 	}
 
@@ -154,7 +154,7 @@ public class JobCostService implements Serializable {
 	}
 
 
-	public List<AccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) throws Exception{
+	public List<JdeAccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) throws Exception{
 		return this.jobCostDao.getAccountLedger(accountId, postedCode, ledgerType, glDate1, glDate2, subledgerType,subledger);
 
 	}
@@ -648,7 +648,7 @@ public class JobCostService implements Serializable {
 	
 	// last modified: brian tse
 	// get the whole list of account ledger according to the search criteria for export excel in Account Ledger Enquiry window
-	public List<AccountLedgerWrapper> getAccountLedgerListByAccountCodeList(String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger)throws Exception {
+	public List<JdeAccountLedgerWrapper> getAccountLedgerListByAccountCodeList(String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger)throws Exception {
 		ArrayList<String> accountCodeAL = new ArrayList<String>(); //[JobNumber,ObjectCode,SubsidiaryCode]	
 		StringTokenizer st = new StringTokenizer(accountCode, ".");
 		
@@ -674,7 +674,7 @@ public class JobCostService implements Serializable {
 			if(accountCodeAL.size()==3 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()) && accountMaster.getSubsidiaryCode().trim().equals(accountCodeAL.get(2).trim()))
 				filteredAccountMasterWithSubsidiaryList.add(accountMaster);
 		}	
-		List<AccountLedgerWrapper> accountLedgerList = new ArrayList<AccountLedgerWrapper>();
+		List<JdeAccountLedgerWrapper> accountLedgerList = new ArrayList<JdeAccountLedgerWrapper>();
 		//Web Service - get Account Ledgers of the Account IDs
 		if(accountCodeAL.size()==3){
 			for(AccountMaster accountMaster:filteredAccountMasterWithSubsidiaryList)
@@ -739,7 +739,7 @@ public class JobCostService implements Serializable {
 		accountLedgerPaginationWrapper.setTotalRecords(listOfAccountLedger.size());
 		
 		Double tempTotalAmount = accountLedgerPaginationWrapper.getTotalAmount();
-		for(AccountLedgerWrapper accountLedger:listOfAccountLedger)
+		for(JdeAccountLedgerWrapper accountLedger:listOfAccountLedger)
 			tempTotalAmount+=accountLedger.getAmount();
 		
 		accountLedgerPaginationWrapper.setTotalAmount(tempTotalAmount);
@@ -772,9 +772,9 @@ public class JobCostService implements Serializable {
 			end = listOfAccountLedger.size();
 		
 		if(listOfAccountLedger.size()==0)
-			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<AccountLedgerWrapper>());
+			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<JdeAccountLedgerWrapper>());
 		else
-			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<AccountLedgerWrapper>(listOfAccountLedger.subList(start, end)));
+			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<JdeAccountLedgerWrapper>(listOfAccountLedger.subList(start, end)));
 		
 		logger.info("RETURNED ACCOUNT LEDGER RECORDS(PAGINATION) SIZE: " + accountLedgerPaginationWrapper.getCurrentPageContentList().size());
 		return accountLedgerPaginationWrapper;
@@ -859,7 +859,7 @@ public class JobCostService implements Serializable {
 		List<AccountBalanceByDateRangeWrapper> accountBalanceList = listOfAccountBalanceByDateRangeBackup!=null?listOfAccountBalanceByDateRangeBackup:new ArrayList<AccountBalanceByDateRangeWrapper>();
 		
 		logger.info("DOWNLOAD PDF - ACCOUNT BALANCE RECORDS SIZE:"+ accountBalanceList.size());
-		Job job = jobHBDao.obtainJob(jobNumber);
+		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 		if(accountBalanceList==null || accountBalanceList.size()==0)
 			return null;
 		String jasperTemplate = jasperConfig.getTemplatePath();
@@ -892,9 +892,9 @@ public class JobCostService implements Serializable {
 	 */
 
 	public ByteArrayOutputStream downloadAccountLedgerReportFile(	String jobNumber, String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger,String jasperReportName,String fileType) throws Exception {
-		List<AccountLedgerWrapper> accountLedgerList = getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
+		List<JdeAccountLedgerWrapper> accountLedgerList = getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
 		logger.info("DOWNLOAD PDF - ACCOUNT LEDGER RECORDS SIZE:"+ accountLedgerList.size());
-		Job job = jobHBDao.obtainJob(jobNumber);
+		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 		if(accountLedgerList==null || accountLedgerList.size()==0)
 			return null;
 		String jasperTemplate = jasperConfig.getTemplatePath();
@@ -934,7 +934,7 @@ public class JobCostService implements Serializable {
 			String jasperTemplate = jasperConfig.getTemplatePath();
 			String fileFullPath = jasperTemplate +jasperReportName;
 			Date asOfDate = new Date();
-			Job job = jobHBDao.obtainJob(jobNumber);
+			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 			HashMap<String,Object> parameters = new HashMap<String, Object>();
 			parameters.put("IMAGE_PATH", jasperTemplate);
 			parameters.put("AS_OF_DATE", asOfDate);
@@ -966,7 +966,7 @@ public class JobCostService implements Serializable {
 				String jasperTemplate = jasperConfig.getTemplatePath();
 				String fileFullPath = jasperTemplate +jasperReportName;
 				Date asOfDate = new Date();
-				Job job = jobHBDao.obtainJob(jobNumber);
+				JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 				HashMap<String,Object> parameters = new HashMap<String, Object>();
 				parameters.put("IMAGE_PATH", jasperTemplate);
 				parameters.put("AS_OF_DATE", asOfDate);

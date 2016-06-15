@@ -11,36 +11,36 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
 
 public class SCPaymentCertsWrapper implements Serializable {
 	
 	private static final long serialVersionUID = -6878471471513718252L;
-	private Job job;
-	private SCPackage scPackage;
+	private JobInfo job;
+	private Subcontract scPackage;
 	private SupplierMasterWrapper supplierMasterWrapper;
 	private Double totalCertificateAmount = new Double(0.00);
 	private Double totalGSTPayableAmount = new Double(0.00);
 	private Double totalGSTReceivableAmount = new Double(0.00);
 	private Boolean isInternalJob;
 	
-	private List<SCPaymentCertWithGSTWrapper> scPaymentCertWithGSTWrapperList = new ArrayList<SCPaymentCertWithGSTWrapper>();
+	private List<PaymentCertWithGSTWrapper> scPaymentCertWithGSTWrapperList = new ArrayList<PaymentCertWithGSTWrapper>();
 
-	public Job getJob() {
+	public JobInfo getJob() {
 		return job;
 	}
 
-	public void setJob(Job job) {
+	public void setJob(JobInfo job) {
 		this.job = job;
 	}
 
-	public SCPackage getScPackage() {
+	public Subcontract getScPackage() {
 		return scPackage;
 	}
 
-	public void setScPackage(SCPackage scPackage) {
+	public void setScPackage(Subcontract scPackage) {
 		this.scPackage = scPackage;
 	}
 
@@ -76,11 +76,11 @@ public class SCPaymentCertsWrapper implements Serializable {
 		this.totalGSTReceivableAmount = totalGSTReceivableAmount;
 	}
 
-	public List<SCPaymentCertWithGSTWrapper> getScPaymentCertWithGSTWrapperList() {
+	public List<PaymentCertWithGSTWrapper> getScPaymentCertWithGSTWrapperList() {
 		return scPaymentCertWithGSTWrapperList;
 	}
 
-	public void setScPaymentCertWithGSTWrapperList(List<SCPaymentCertWithGSTWrapper> scPaymentCertWithGSTWrapperList) {
+	public void setScPaymentCertWithGSTWrapperList(List<PaymentCertWithGSTWrapper> scPaymentCertWithGSTWrapperList) {
 		this.scPaymentCertWithGSTWrapperList = scPaymentCertWithGSTWrapperList;
 	}
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetRequestObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.RepackagingDetail;
-import com.gammon.qs.domain.RepackagingEntry;
+import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 @Repository
 public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> {
@@ -23,7 +23,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(	RepackagingEntry repackagingEntry, String packageNo,
+	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(	Repackaging repackagingEntry, String packageNo,
 																				String objectCode, String subsidiaryCode) throws Exception {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntry.getId()));
@@ -64,7 +64,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<InsertRepackagingBudgetRequestObj> preparePostingOfRepackagingDetails(RepackagingEntry repackagingEntry) throws DatabaseOperationException{
+	public List<InsertRepackagingBudgetRequestObj> preparePostingOfRepackagingDetails(Repackaging repackagingEntry) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntry.getId()));
@@ -80,7 +80,7 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RepackagingDetail> obtainRepackagingDetail(RepackagingEntry repackagingEntry) {
+	public List<RepackagingDetail> obtainRepackagingDetail(Repackaging repackagingEntry) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("repackagingEntry", repackagingEntry));
 		return criteria.list();

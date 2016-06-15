@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.TransactionTestCase;
 public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getJobHBDao()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getJobHBDao()}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetJobHBDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -45,7 +45,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#setJobHBDao(com.gammon.qs.dao.JobHBDao)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#setJobHBDao(com.gammon.qs.dao.JobHBDao)}.
 	 */
 	public TransactionTestCase.TestDataMethod testSetJobHBDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -72,7 +72,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getJobWSDao()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getJobWSDao()}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetJobWSDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -99,7 +99,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#setJobWSDao(com.gammon.qs.dao.JobWSDao)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#setJobWSDao(com.gammon.qs.dao.JobWSDao)}.
 	 */
 	public TransactionTestCase.TestDataMethod testSetJobWSDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -126,7 +126,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getPackageHBDao()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getPackageHBDao()}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetPackageHBDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -153,7 +153,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#setPackageHBDao(com.gammon.qs.dao.SCPackageHBDao)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#setPackageHBDao(com.gammon.qs.dao.SCPackageHBDao)}.
 	 */
 	public TransactionTestCase.TestDataMethod testSetPackageHBDao() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -180,7 +180,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getAllJobList()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getAllJobList()}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetAllJobList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -207,7 +207,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getJobListBySearchStr(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getJobListBySearchStr(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetJobListBySearchStr() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -234,7 +234,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainJob(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainJob(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainJob() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -261,7 +261,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getCurrentRepackagingStatusByJobNumber(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getCurrentRepackagingStatusByJobNumber(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetCurrentRepackagingStatusByJobNumber() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -288,7 +288,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#updateJob(com.gammon.qs.domain.Job)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#updateJob(com.gammon.qs.domain.Job)}.
 	 */
 	public TransactionTestCase.TestDataMethod testUpdateJob() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -315,7 +315,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#createNewJob(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#createNewJob(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testCreateNewJob() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -342,7 +342,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#getJobDatesByJobNumber(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#getJobDatesByJobNumber(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetJobDatesByJobNumber() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -369,7 +369,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#updateJobDates(com.gammon.qs.wrapper.job.JobDatesWrapper, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#updateJobDates(com.gammon.qs.wrapper.job.JobDatesWrapper, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testUpdateJobDates() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -396,7 +396,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#isChildJobWithSingleParentJob(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#isChildJobWithSingleParentJob(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testIsChildJobWithSingleParentJob() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -423,7 +423,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainParentJobList(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainParentJobList(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainParentJobList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -450,7 +450,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainJobListByDivision(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainJobListByDivision(java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainJobListByDivision() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -477,7 +477,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainAllJobDivision()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainAllJobDivision()}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainAllJobDivision() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -504,7 +504,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainAllJobCompany()}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainAllJobCompany()}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainAllJobCompany() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -531,7 +531,7 @@ public class JobServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.JobService#obtainJobsLikeByDivCoJob(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.JobInfoService#obtainJobsLikeByDivCoJob(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainJobsLikeByDivCoJob() {
 		return new TransactionTestCase.TestDataMethod() {

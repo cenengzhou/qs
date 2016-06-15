@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.gammon.qs.domain.SCDetailProvisionHistory;
+import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 
@@ -67,10 +67,10 @@ public class ScProvisionHistoryExcelGenerator {
 
 	private ExcelFile excelFile;
 	private ExcelWorkbook excelDoc;
-	private List<SCDetailProvisionHistory> provisionHistoryList;
+	private List<ProvisionPostingHist> provisionHistoryList;
 	private String jobNumber;
 
-	public ScProvisionHistoryExcelGenerator(List<SCDetailProvisionHistory> provisionHistoriesList,
+	public ScProvisionHistoryExcelGenerator(List<ProvisionPostingHist> provisionHistoriesList,
 			String jobNumber) {
 		this.provisionHistoryList	= provisionHistoriesList;
 		this.jobNumber				= jobNumber;
@@ -119,7 +119,7 @@ public class ScProvisionHistoryExcelGenerator {
 
 	}
 
-	private String[] createContentRow(SCDetailProvisionHistory hist) {
+	private String[] createContentRow(ProvisionPostingHist hist) {
 		List<String> contents = new ArrayList<String>();
 
 		contents.add(jobNumber != null ? jobNumber : "");

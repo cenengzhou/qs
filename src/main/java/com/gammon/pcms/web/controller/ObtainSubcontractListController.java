@@ -24,7 +24,7 @@ import com.gammon.pcms.dto.rs.provider.request.ObtainSubcontractListRequest;
 import com.gammon.pcms.dto.rs.provider.response.ObtainSubcontractListResponse;
 import com.gammon.pcms.dto.rs.provider.response.QSServiceResponse;
 import com.gammon.pcms.helper.RestTemplateHelper;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
@@ -37,7 +37,7 @@ public class ObtainSubcontractListController {
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
 	@Autowired
-	private PackageService packageService;
+	private SubcontractService packageService;
 	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired
@@ -105,7 +105,7 @@ public class ObtainSubcontractListController {
 	public QSServiceResponse obtainSubcontractList(HttpServletRequest request, @PathVariable String jobNumber) {
 		ObtainSubcontractListRequest requestObj = new ObtainSubcontractListRequest();
 		requestObj.setJobNumber(jobNumber);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		QSServiceResponse serviceResponse = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/ObtainSubcontractList", requestObj, QSServiceResponse.class);

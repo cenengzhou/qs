@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.jde.webservice.serviceRequester.GetSupplierMasterManager_Refactor.getSupplierMaster.SupplierMasterResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MasterListWSDao;
-import com.gammon.qs.dao.SCPackageHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.SupplierMasterWSDao;
-import com.gammon.qs.dao.TenderAnalysisHBDao;
+import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.TenderAnalysis;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.Tender;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.security.SecurityService;
@@ -52,16 +52,16 @@ public class SubcontractorService{
 	private SupplierMasterWSDao supplierMasterDao;
 	//Tender Analysis
 	@Autowired
-	private TenderAnalysisHBDao tenderAnalysisDao;
+	private TenderHBDao tenderAnalysisDao;
 	//SC Package
 	@Autowired
-	private SCPackageHBDao scPackageDao;
+	private SubcontractHBDao scPackageDao;
 	
 
 	//pagination cache
 	private List<SubcontractorWrapper> cachedSuncontractorWrapperList = new ArrayList<SubcontractorWrapper>();
 	private List<SubcontractorWrapper> cachedClientWrapperList = new ArrayList<SubcontractorWrapper>();
-	private List<SCPackage> cachedSCPackageList = new ArrayList<SCPackage>();
+	private List<Subcontract> cachedSCPackageList = new ArrayList<Subcontract>();
 	private List<SubcontractorTenderAnalysisWrapper> cachedTenderAnalysisList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
 	private static final int RECORDS_PER_PAGE = 50;
 	
@@ -256,7 +256,7 @@ public class SubcontractorService{
 			noOfAward = tenderAnalysisDao.obtainNoOfAward(Integer.valueOf(subcontractorNo));
 		}
 		logger.info("date: "+startDate);
-		SCPackage scPackage = scPackageDao.obtainPackageStatistics(subcontractorNo, startDate);
+		Subcontract scPackage = scPackageDao.obtainPackageStatistics(subcontractorNo, startDate);
 		revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null? 0.0:scPackage.getRemeasuredSubcontractSum())+ (scPackage.getApprovedVOAmount()==null? 0.0:scPackage.getApprovedVOAmount());
 		totalCumWorkDoneAmount = scPackage.getTotalCumWorkDoneAmount()==null? 0.0:scPackage.getTotalCumWorkDoneAmount();
 		balanceToComplete = revisedSCSum - totalCumWorkDoneAmount;
@@ -271,15 +271,15 @@ public class SubcontractorService{
 	}
 
 
-	public List<SCPackage> obtainPackagesByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
+	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
 		return scPackageDao.obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
 	}
 
 
-	public PaginationWrapper<SCPackage> obtainPackagesByVendorNoPaginationWrapper(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
+	public PaginationWrapper<Subcontract> obtainPackagesByVendorNoPaginationWrapper(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
 		logger.info("obtainPackagesByVendorNo - STARTED");
 		logger.info("vendorNo : " + vendorNo + " division : " + division + " jobNumber : " + jobNumber + " packageNo : " + packageNumber + " paymentTerm : " + paymentTerm + " paymentType : " + paymentType);
-		List<SCPackage> packageList = obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
+		List<Subcontract> packageList = obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
 		logger.info("packageList.size() ; " + packageList.size());
 		cachedSCPackageList = packageList;
 		if (cachedSCPackageList == null)
@@ -288,8 +288,8 @@ public class SubcontractorService{
 			return obtainPackagesByPage(0);
 	}
 
-	public PaginationWrapper<SCPackage> obtainPackagesByPage(int pageNum) {
-		PaginationWrapper<SCPackage>  wrapper = new PaginationWrapper<SCPackage>();
+	public PaginationWrapper<Subcontract> obtainPackagesByPage(int pageNum) {
+		PaginationWrapper<Subcontract>  wrapper = new PaginationWrapper<Subcontract>();
 		wrapper.setCurrentPage(pageNum);
 		int size = cachedSCPackageList.size();
 		wrapper.setTotalRecords(size);
@@ -298,7 +298,7 @@ public class SubcontractorService{
 		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
 		if(toInd > cachedSCPackageList.size())
 			toInd = cachedSCPackageList.size();
-		ArrayList<SCPackage> packages = new ArrayList<SCPackage>();
+		ArrayList<Subcontract> packages = new ArrayList<Subcontract>();
 		packages.addAll(cachedSCPackageList.subList(fromInd, toInd));
 		wrapper.setCurrentPageContentList(packages);
 		
@@ -339,16 +339,16 @@ public class SubcontractorService{
 
 		if(vendorNo!=null && vendorNo.length()>1){
 			vendorNo = vendorNo.trim();
-			List<TenderAnalysis> tenderAnalysisList = tenderAnalysisDao.obtainTenderAnalysisByVendorNo(Integer.valueOf(vendorNo), division, jobNumber, packageNumber, tenderStatus);
-			for (TenderAnalysis tenderAnalysis: tenderAnalysisList){
+			List<Tender> tenderAnalysisList = tenderAnalysisDao.obtainTenderAnalysisByVendorNo(Integer.valueOf(vendorNo), division, jobNumber, packageNumber, tenderStatus);
+			for (Tender tenderAnalysis: tenderAnalysisList){
 				SubcontractorTenderAnalysisWrapper tenderAnalysisWrapper = new SubcontractorTenderAnalysisWrapper();
 				tenderAnalysisWrapper.setJobNo(tenderAnalysis.getJobNo());
 				tenderAnalysisWrapper.setPackageNo(tenderAnalysis.getPackageNo());
 				tenderAnalysisWrapper.setQuotedAmount(tenderAnalysis.getBudgetAmount());
 				tenderAnalysisWrapper.setStatus(tenderAnalysis.getStatus());
-				tenderAnalysisWrapper.setDivision(tenderAnalysis.getScPackage().getJob().getDivision());
+				tenderAnalysisWrapper.setDivision(tenderAnalysis.getSubcontract().getJobInfo().getDivision());
 
-				TenderAnalysis tender = tenderAnalysisDao.obtainTenderAnalysis(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
+				Tender tender = tenderAnalysisDao.obtainTenderAnalysis(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
 				tenderAnalysisWrapper.setBudgetAmount((tender==null || tender.getBudgetAmount()==null)?0.0:tender.getBudgetAmount());
 
 				tenderAnalysisWrapperList.add(tenderAnalysisWrapper);
@@ -471,7 +471,7 @@ public class SubcontractorService{
 		logger.info("STARTED -> subcontractorExcelExport");
 		logger.info("vendorNo : " + vendorNo + " division : " + division + " jobNumber : " + jobNumber + " packageNo : " + packageNumber + " paymentTerm : " + paymentTerm + " paymentType : " + paymentType);
 
-		List<SCPackage> packageList = obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
+		List<Subcontract> packageList = obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
 
 		ExcelFile excelFile = scPackageExcelFile(packageList);
 
@@ -479,7 +479,7 @@ public class SubcontractorService{
 		return excelFile;
 	}
 	
-	private ExcelFile scPackageExcelFile(List<SCPackage> packageList) {
+	private ExcelFile scPackageExcelFile(List<Subcontract> packageList) {
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
 		String filename = "AwardedSubcontracts-"+DateUtil.formatDate(new Date(),"yyyy-MM-dd")+ExcelFile.EXTENSION;
@@ -506,12 +506,12 @@ public class SubcontractorService{
 		logger.info("Inserting rows of Excel file: "+filename);
 		int row = 1;
 		
-		for(SCPackage scPackage: packageList){
+		for(Subcontract scPackage: packageList){
 			double revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null?0.0:scPackage.getRemeasuredSubcontractSum())+(scPackage.getApprovedVOAmount()==null?0.0:scPackage.getApprovedVOAmount());
 			doc.insertRow(new String[10]);
 			
-			doc.setCellValue(row, 0, scPackage.getJob().getJobNumber(), true);
-			doc.setCellValue(row, 1, scPackage.getJob().getDescription(), true);
+			doc.setCellValue(row, 0, scPackage.getJobInfo().getJobNumber(), true);
+			doc.setCellValue(row, 1, scPackage.getJobInfo().getDescription(), true);
 			doc.setCellValue(row, 2, scPackage.getPackageNo(), true);
 			doc.setCellValue(row, 3, scPackage.getDescription(), true);
 			doc.setCellValue(row, 4, scPackage.getPaymentTerms(), true);

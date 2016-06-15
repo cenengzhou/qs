@@ -6,7 +6,7 @@
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
 			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
 			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@erpodadev-scan.gamska.com:1521/jded_srv_dev"/>
-			<property name="hibernate.default_schema" value="qsdatadev"/>
+			<property name="hibernate.default_schema" value="pcmsdatadev"/>
 			<property name="hibernate.connection.username" value="qsuser3"/>
 			<property name="hibernate.connection.password" value="soa321"/>
 		</properties>

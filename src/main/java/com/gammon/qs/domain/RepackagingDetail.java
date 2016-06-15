@@ -18,14 +18,14 @@ import org.hibernate.annotations.OptimisticLocking;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
-@Table(name = "QS_REPACKAGING_DETAIL")
+@Table(name = "REPACKAGING_DETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "qs_repackagingdetail_gen", sequenceName = "qs_repackagingdetail_seq", allocationSize = 1)
+@SequenceGenerator(name = "REPACKAGING_DETAIL_GEN", sequenceName = "REPACKAGING_DETAIL_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class RepackagingDetail extends BasePersistedObject {
 
 	private static final long serialVersionUID = 849683106166860061L;
-	private RepackagingEntry repackagingEntry;
+	private Repackaging repackaging;
 	private String packageNo;
 	private String objectCode;
 	private String subsidiaryCode;
@@ -45,7 +45,7 @@ public class RepackagingDetail extends BasePersistedObject {
 	
 	@Override
 	public String toString() {
-		return "RepackagingDetail [repackagingEntry=" + repackagingEntry + ", packageNo=" + packageNo + ", objectCode="
+		return "RepackagingDetail [repackaging=" + repackaging + ", packageNo=" + packageNo + ", objectCode="
 				+ objectCode + ", subsidiaryCode=" + subsidiaryCode + ", resourceDescription=" + resourceDescription
 				+ ", unit=" + unit + ", quantity=" + quantity + ", rate=" + rate + ", amount=" + amount
 				+ ", resourceType=" + resourceType + ", excludeLevy=" + excludeLevy + ", excludeDefect=" + excludeDefect
@@ -54,7 +54,7 @@ public class RepackagingDetail extends BasePersistedObject {
 
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qs_repackagingdetail_gen")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REPACKAGING_DETAIL_GEN")
 	public Long getId(){return super.getId();}
 	
 	@Column(name = "packageNo", length = 10)
@@ -154,11 +154,11 @@ public class RepackagingDetail extends BasePersistedObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "RepackagingEntry_ID", foreignKey = @ForeignKey(name = "FK_RepackDetailRepackEntry_PK"))
-	public RepackagingEntry getRepackagingEntry() {
-		return repackagingEntry;
+	@JoinColumn(name = "Repackaging_ID", foreignKey = @ForeignKey(name = "FK_RepackagingDetail_Repackaging_PK"))
+	public Repackaging getRepackaging() {
+		return repackaging;
 	}
-	public void setRepackagingEntry(RepackagingEntry repackagingEntry) {
-		this.repackagingEntry = repackagingEntry;
+	public void setRepackaging(Repackaging repackaging) {
+		this.repackaging = repackaging;
 	}
 }

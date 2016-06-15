@@ -8,7 +8,7 @@ public abstract class AbstractPackage extends BasePersistedObject implements Ser
 
 	private static final long serialVersionUID = 8076084193609350844L;
 
-	private Job job;
+	private JobInfo jobInfo;
 	
 	private String packageNo;
 	private String description;
@@ -16,11 +16,11 @@ public abstract class AbstractPackage extends BasePersistedObject implements Ser
 	private String vendorNo;
 	private String packageStatus;
 	
-	public Job getJob() {
-		return job;
+	public JobInfo getJobInfo() {
+		return jobInfo;
 	}
-	public void setJob(Job job) {
-		this.job = job;
+	public void setJobInfo(JobInfo jobInfo) {
+		this.jobInfo = jobInfo;
 	}
 	public String getPackageNo() {
 		return packageNo;

@@ -1,7 +1,6 @@
 package com.gammon.qs.webservice.serviceProvider.makeHTMLStrForSplitTerminateService;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class makeHTMLStrForSplitTerminateServiceRequest  implements Serializable{
 

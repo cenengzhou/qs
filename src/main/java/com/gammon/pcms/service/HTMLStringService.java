@@ -16,27 +16,27 @@ import org.springframework.stereotype.Service;
 
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.BQResourceSummaryHBDao;
-import com.gammon.qs.dao.JobHBDao;
-import com.gammon.qs.dao.MainContractCertificateHBDao;
-import com.gammon.qs.dao.MainContractCertificateWSDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.MainCertHBDao;
+import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.MasterListWSDao;
-import com.gammon.qs.dao.SCDetailsHBDao;
-import com.gammon.qs.dao.SCPackageHBDao;
-import com.gammon.qs.dao.SCPaymentCertHBDao;
-import com.gammon.qs.dao.TenderAnalysisDetailHBDao;
-import com.gammon.qs.dao.TenderAnalysisHBDao;
-import com.gammon.qs.domain.BQResourceSummary;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.MainContractCertificate;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.TenderDetailHBDao;
+import com.gammon.qs.dao.TenderHBDao;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsBQ;
-import com.gammon.qs.domain.SCDetailsVO;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
-import com.gammon.qs.domain.TenderAnalysis;
-import com.gammon.qs.domain.TenderAnalysisDetail;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailVO;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.Tender;
+import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
@@ -51,36 +51,36 @@ public class HTMLStringService implements Serializable{
 	@Autowired
 	private MasterListWSDao masterListDao;
 	@Autowired
-	private JobHBDao jobHBDao;
+	private JobInfoHBDao jobHBDao;
 	@Autowired
-	private SCPackageHBDao packageHBDao;
+	private SubcontractHBDao packageHBDao;
 	@Autowired
-	private SCPaymentCertHBDao paymentHBDao;
+	private PaymentCertHBDao paymentHBDao;
 	@Autowired
-	private	TenderAnalysisHBDao taHBDao;
+	private	TenderHBDao taHBDao;
 	@Autowired
-	private MainContractCertificateHBDao mainCertHBDao;
+	private MainCertHBDao mainCertHBDao;
 	@Autowired
-	private BQResourceSummaryHBDao bqResourceSummaryHBDao;
+	private ResourceSummaryHBDao bqResourceSummaryHBDao;
 	@Autowired
 	private PaymentService paymentService;
 	@Autowired
-	private MainContractCertificateWSDao mainCertWSDao;
+	private MainCertWSDao mainCertWSDao;
 	@Autowired
 	private MasterListService masterListService;
 	@Autowired
-	private SCDetailsHBDao scDetailsHBDao;
+	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
-	private TenderAnalysisDetailHBDao tenderAnalysisDetailHBDao;
+	private TenderDetailHBDao tenderAnalysisDetailHBDao;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
 		
 		String strHTMLCodingContent = "";
-		Job job = new Job();
-		SCPackage scPackage = new SCPackage();
+		JobInfo job = new JobInfo();
+		Subcontract scPackage = new Subcontract();
 		Double clientCertAmount = new Double(0);
 		PaymentCertViewWrapper paymentCertViewWrapper = new PaymentCertViewWrapper();
-		List<SCPaymentCert> scPaymentCertList = null;
+		List<PaymentCert> scPaymentCertList = null;
 		
 
 		String strPaymentDueDate = null;
@@ -92,7 +92,7 @@ public class HTMLStringService implements Serializable{
 		int currentPaymentNo = 0;
 		logger.info("Input parameter: jobNo["+jobNumber+"] - Package No["+subcontractNumber+"] - PaymentNo["+paymentNo+"]");
 		try {
-			job = jobHBDao.obtainJob(jobNumber);
+			job = jobHBDao.obtainJobInfo(jobNumber);
 			  
 			if(paymentNo==null || "".equals(paymentNo.trim()) || paymentNo.trim().length()==0){// check the paymentNo
 				logger.info("Payment number is null --> Max. Payment No. will be used.");
@@ -132,7 +132,7 @@ public class HTMLStringService implements Serializable{
 		}
 		
 		try {
-			List<BQResourceSummary> resourceList = new ArrayList<BQResourceSummary>();
+			List<ResourceSummary> resourceList = new ArrayList<ResourceSummary>();
 			resourceList = bqResourceSummaryHBDao.getResourceSummariesSearch(job, subcontractNumber, "14*", null);
 			
 			for (int i=0; i<resourceList.size(); i++) {
@@ -166,7 +166,7 @@ public class HTMLStringService implements Serializable{
 	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
 		
 		String strHTMLCodingContent = "";
-		List<TenderAnalysis> listTenderAnalysis = new ArrayList<TenderAnalysis>();
+		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
 		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
 			try {
 				listTenderAnalysis = taHBDao.obtainTenderAnalysis(jobNumber, subcontractNumber);
@@ -177,18 +177,18 @@ public class HTMLStringService implements Serializable{
 			}
 		
 			@SuppressWarnings("unused")
-			List<SCDetails> scDetailsList = new ArrayList<SCDetails>();
-			Job jobHeaderInfo = new Job();
+			List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
+			JobInfo jobHeaderInfo = new JobInfo();
 			String vendorName = "";
 			Double totalSubcontractSum = new Double(0);
 			List<String> vendorNameList = null;
 			List<Double> totalSubcontractSumList = null;
 			List<Boolean> vendorNumZero = null;
 			
-			SCPackage scPackage = new SCPackage();
+			Subcontract scPackage = new Subcontract();
 			
 			try {
-				jobHeaderInfo = jobHBDao.obtainJob(jobNumber);
+				jobHeaderInfo = jobHBDao.obtainJobInfo(jobNumber);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -223,10 +223,10 @@ public class HTMLStringService implements Serializable{
 				
 				for(int i=0; i < listTenderAnalysis.size();  i++ )
 				{
-					TenderAnalysis curTenderAnalysis = listTenderAnalysis.get(i);
+					Tender curTenderAnalysis = listTenderAnalysis.get(i);
 					if (curTenderAnalysis.getVendorNo().equals(0)){
 						try {
-							for(TenderAnalysisDetail curTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
+							for(TenderDetail curTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
 								comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic()*curTenderAnalysisDetail.getQuantity();
 							}
 						} catch (DatabaseOperationException e) {
@@ -249,7 +249,7 @@ public class HTMLStringService implements Serializable{
 						}
 							logger.info("RecommendVendor: " + recommendVendor);
 							
-						List<TenderAnalysisDetail> listTenderAnalysisDetails = new ArrayList<TenderAnalysisDetail>();
+						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
 						try {
 							listTenderAnalysisDetails = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);//taHBDao.getTenderAnalysisDetail(jobNumber, new Integer(curTenderAnalysis.getVendorNo().toString()), new Integer(subcontractNumber));
 						} catch (NumberFormatException e) {
@@ -258,7 +258,7 @@ public class HTMLStringService implements Serializable{
 							e.printStackTrace();
 						}
 						for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-							TenderAnalysisDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
+							TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
 							if (curTenderAnalysisDetail.getFeedbackRateDomestic()!=null && curTenderAnalysisDetail.getQuantity()!=null)
 								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getFeedbackRateDomestic();
 						}
@@ -284,7 +284,7 @@ public class HTMLStringService implements Serializable{
 				
 				for(int i=0; i < listTenderAnalysis.size();  i++ )
 				{
-					TenderAnalysis curTenderAnalysis = listTenderAnalysis.get(i);
+					Tender curTenderAnalysis = listTenderAnalysis.get(i);
 					if (!curTenderAnalysis.getVendorNo().equals(0)){
 						try {
 							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
@@ -296,7 +296,7 @@ public class HTMLStringService implements Serializable{
 						if ("RCM".equals(curTenderAnalysis.getStatus()) || "AWD".equals(curTenderAnalysis.getStatus()))
 							recommendVendor=vendorName;
 
-						List<TenderAnalysisDetail> listTenderAnalysisDetails = new ArrayList<TenderAnalysisDetail>();
+						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
 
 						try {
 							listTenderAnalysisDetails = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);				} catch (NumberFormatException e) {
@@ -306,7 +306,7 @@ public class HTMLStringService implements Serializable{
 							}
 
 							for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-								TenderAnalysisDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
+								TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
 
 								if (curTenderAnalysisDetail.getFeedbackRateDomestic()!=null)
 									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getFeedbackRateDomestic());
@@ -329,7 +329,7 @@ public class HTMLStringService implements Serializable{
 						 */
 						else {
 							try {
-								for (TenderAnalysisDetail curTenderAnalysisDetail : tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
+								for (TenderDetail curTenderAnalysisDetail : tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
 									comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic() * curTenderAnalysisDetail.getQuantity();
 								}
 							} catch (DatabaseOperationException e) {
@@ -355,19 +355,19 @@ public class HTMLStringService implements Serializable{
 	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){
 
 		String strHTMLCodingContent = "";
-		List<SCDetails> scDetailsList = new ArrayList<SCDetails>();
+		List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
 		boolean boolChangedLine = false;
 		boolean highlight = true;
 		Double totalToBeApprovedValue = new Double(0.0);
 		Double totalThisAddendumValue = new Double(0.0);
 		Double totalToBeApprovedVOValue = new Double(0.0);
 		Double totalToBeApprovedRemeasuredSCSumValue = new Double(0.0);
-		Job jobHeaderInfo = new Job();
+		JobInfo jobHeaderInfo = new JobInfo();
 		String vendorName = "";
-		SCPackage scPackage = new SCPackage();
+		Subcontract scPackage = new Subcontract();
 		
 		try {
-			jobHeaderInfo = jobHBDao.obtainJob(jobNumber);
+			jobHeaderInfo = jobHBDao.obtainJobInfo(jobNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -403,13 +403,13 @@ public class HTMLStringService implements Serializable{
 		if (htmlVersion.equals("W")) {
 			List<Boolean> boolChangedLineList = new ArrayList<Boolean>();
 			for(int i=0; i < scDetailsList.size();  i++ ){
-			SCDetails curaddendumEnquiryList = scDetailsList.get(i);
+			SubcontractDetail curaddendumEnquiryList = scDetailsList.get(i);
 			//Equal to Yellow of AddendumEnquiryYellowAquaQuantityRenderer
 			if ("A".equals(curaddendumEnquiryList.getSourceType()) && !"OA".equals(curaddendumEnquiryList.getLineType())) {
-				if (SCDetails.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SCDetails.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {	
+				if (SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SubcontractDetail.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {	
 					
 					totalToBeApprovedVOValue += curaddendumEnquiryList.getToBeApprovedAmount();
-					if (Math.abs(curaddendumEnquiryList.getTotalAmount()-curaddendumEnquiryList.getToBeApprovedAmount())>0 || !SCDetails.APPROVED.equals(curaddendumEnquiryList.getApproved())) {
+					if (Math.abs(curaddendumEnquiryList.getTotalAmount()-curaddendumEnquiryList.getToBeApprovedAmount())>0 || !SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved())) {
 							boolChangedLine = true;  
 					} else {
 						boolChangedLine = false;
@@ -419,7 +419,7 @@ public class HTMLStringService implements Serializable{
 				}
 			//Equal to Aqua of AddendumEnquiryYellowAquaQuantityRenderer
 			} else if ("B1".equals(curaddendumEnquiryList.getLineType()) || "BQ".equals(curaddendumEnquiryList.getLineType())) {
-				if(SCDetails.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
+				if(SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
 					totalToBeApprovedRemeasuredSCSumValue += curaddendumEnquiryList.getToBeApprovedAmount();
 				//Bug fix - Approval Content - Addendum Approval Request
 				//By Peter Chan 2009-12-18
@@ -432,7 +432,7 @@ public class HTMLStringService implements Serializable{
 			}
 			if (boolChangedLine==true) {	
 				totalToBeApprovedValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount()-(SCDetails.APPROVED.equals(curaddendumEnquiryList.getApproved())?curaddendumEnquiryList.getTotalAmount():0.0));
+				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount()-(SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved())?curaddendumEnquiryList.getTotalAmount():0.0));
 			}
 			boolChangedLineList.add(boolChangedLine);
 		}
@@ -450,12 +450,12 @@ public class HTMLStringService implements Serializable{
 		totalToBeApprovedRemeasuredSCSumValue = 0.0;
 		totalToBeApprovedVOValue = 0.0;
 		for(int i=0; i < scDetailsList.size();  i++ ){
-			SCDetails curaddendumEnquiryList = scDetailsList.get(i);		
+			SubcontractDetail curaddendumEnquiryList = scDetailsList.get(i);		
 			//Equal to Yellow of AddendumEnquiryYellowAquaQuantityRenderer
-			if (SCDetails.APPROVED.equals(curaddendumEnquiryList.getSourceType()) && !"OA".equals(curaddendumEnquiryList.getLineType())) {
-				if (SCDetails.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SCDetails.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {
+			if (SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getSourceType()) && !"OA".equals(curaddendumEnquiryList.getLineType())) {
+				if (SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SubcontractDetail.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {
 					totalToBeApprovedVOValue += curaddendumEnquiryList.getToBeApprovedAmount();
-					if (Math.abs(curaddendumEnquiryList.getTotalAmount() - curaddendumEnquiryList.getToBeApprovedAmount()) > 0 || !SCDetails.APPROVED.equals(curaddendumEnquiryList.getApproved()))
+					if (Math.abs(curaddendumEnquiryList.getTotalAmount() - curaddendumEnquiryList.getToBeApprovedAmount()) > 0 || !SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved()))
 						boolChangedLine = true;
 					else
 						boolChangedLine = false;
@@ -463,7 +463,7 @@ public class HTMLStringService implements Serializable{
 					boolChangedLine = false;
 			//Equal to Aqua of AddendumEnquiryYellowAquaQuantityRenderer
 			} else if ("B1".equals(curaddendumEnquiryList.getLineType()) || "BQ".equals(curaddendumEnquiryList.getLineType())) {
-				if(SCDetails.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
+				if(SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
 					totalToBeApprovedRemeasuredSCSumValue += curaddendumEnquiryList.getToBeApprovedAmount();
 				//Bug fix - Approval Content - Addendum Approval Request
 				//By Peter Chan 2009-12-18
@@ -476,7 +476,7 @@ public class HTMLStringService implements Serializable{
 			}
 			if (boolChangedLine == true) {
 				totalToBeApprovedValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount() - (SCDetails.APPROVED.equals(curaddendumEnquiryList.getApproved()) ? curaddendumEnquiryList.getTotalAmount() : 0.0));
+				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount() - (SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved()) ? curaddendumEnquiryList.getTotalAmount() : 0.0));
 			}
 			boolChangedLineList.add(boolChangedLine);
 		}
@@ -495,16 +495,16 @@ public class HTMLStringService implements Serializable{
 
 	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){
 		
-		Job jobHeaderInfo = new Job();
+		JobInfo jobHeaderInfo = new JobInfo();
 		double newSCSum = 0.00;
 		String strHTMLCodingContent = "";
 		try {
-			SCPackage scPackage;
+			Subcontract scPackage;
 			scPackage = packageHBDao.obtainSCPackage(jobNumber, subcontractNumber);
-			for (SCDetails scDetail: scDetailsHBDao.getSCDetails(scPackage)){
+			for (SubcontractDetail scDetail: scDetailsHBDao.getSCDetails(scPackage)){
 //				if (scDetail instanceof SCDetailsBQ && !(scDetail instanceof SCDetailsVO)){
-				if (scDetail instanceof SCDetailsBQ && SCDetails.APPROVED.equals(scDetail.getApproved()) && scDetail.getSystemStatus().equals(SCDetails.ACTIVE)){
-					if ((!(scDetail instanceof SCDetailsVO))||Math.abs(((SCDetailsBQ)scDetail).getCostRate()==null?0:((SCDetailsBQ)scDetail).getCostRate())>0)
+				if (scDetail instanceof SubcontractDetailBQ && SubcontractDetail.APPROVED.equals(scDetail.getApproved()) && scDetail.getSystemStatus().equals(SubcontractDetail.ACTIVE)){
+					if ((!(scDetail instanceof SubcontractDetailVO))||Math.abs(((SubcontractDetailBQ)scDetail).getCostRate()==null?0:((SubcontractDetailBQ)scDetail).getCostRate())>0)
 						newSCSum = newSCSum + ((scDetail.getNewQuantity()!=null?scDetail.getNewQuantity():0)*scDetail.getScRate());
 					else
 						newSCSum = newSCSum + ((scDetail.getQuantity()!=null?scDetail.getQuantity():0)*scDetail.getScRate());
@@ -520,10 +520,10 @@ public class HTMLStringService implements Serializable{
 		}
 		String vendorName = "";
 		
-		SCPackage scPackage = new SCPackage();
+		Subcontract scPackage = new Subcontract();
 		
 		try {
-			jobHeaderInfo = jobHBDao.obtainJob(jobNumber);
+			jobHeaderInfo = jobHBDao.obtainJobInfo(jobNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -569,7 +569,7 @@ public class HTMLStringService implements Serializable{
 		logger.info("makeHTMLStringForSCMainCert --> Input parameter: jobNo["+jobNumber+"] - Main Cert No["+mainCertNo+"]");
 		if(!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)){
 			try {
-				Job job = jobHBDao.obtainJob(jobNumber);
+				JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 				
 				List<MasterListVendor> clientList = null;
 				try {
@@ -578,10 +578,10 @@ public class HTMLStringService implements Serializable{
 					e.printStackTrace();
 				}
 				
-				MainContractCertificate mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo));
-				MainContractCertificate previousCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo)-1);
+				MainCert mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo));
+				MainCert previousCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo)-1);
 				if(previousCert==null)
-					previousCert = new MainContractCertificate();
+					previousCert = new MainCert();
 				
 				if(mainCert!=null){
 					Map<String, Object> data = new HashMap<String, Object>();

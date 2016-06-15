@@ -19,8 +19,8 @@ import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.i
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderRequestObj;
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCPaymentCert;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.webservice.WSConfig;
@@ -30,7 +30,7 @@ import com.gammon.qs.wrapper.paymentCertView.PaymentCertHeaderWrapper;
 @Repository
 public class PaymentWSDao{
 
-	private Logger logger = Logger.getLogger(PackageWSDao.class.getName());
+	private Logger logger = Logger.getLogger(SubcontractWSDao.class.getName());
 	@Autowired
 	@Qualifier("getAPRecordWSTemplate")
 	private WebServiceTemplate getAPRecordWSTemplate;
@@ -43,7 +43,7 @@ public class PaymentWSDao{
 	@Autowired
 	private EnvironmentConfig environmentConfig;
 	@Autowired
-	private JobHBDao jobHBDao;
+	private JobInfoHBDao jobHBDao;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 
@@ -84,7 +84,7 @@ public class PaymentWSDao{
 					wrapper.setForeignOpen(foreignOpen == 0.00? null:foreignOpen);
 					wrapper.setInvoiceNo(responseObj.getInvoiceNo());
 					wrapper.setDueDate(date2String(responseObj.getDueDate()));
-					Job job = jobHBDao.obtainJob(responseObj.getJobNumber());
+					JobInfo job = jobHBDao.obtainJobInfo(responseObj.getJobNumber());
 					if (job != null && job.getConversionStatus() != null)
 						if (supplierNumber != null && supplierNumber.length() > 0) {
 							if (responseObj.getSupplierNumber().equals(supplierNumber))
@@ -106,7 +106,7 @@ public class PaymentWSDao{
 	 * revised on February 13, 2014
 	 */
 	// JDE web service insert SC Payment Header into F58011
-	public int insertSCPaymentHeader(SCPaymentCert paymentCert) throws Exception {
+	public int insertSCPaymentHeader(PaymentCert paymentCert) throws Exception {
 		logger.info("Insert SC Payment Header to JDE");
 		
 		InsertSCPaymentHeaderRequestListObj headerRequestListObj = new InsertSCPaymentHeaderRequestListObj();

@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsOA;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
-import com.gammon.qs.domain.SCPaymentDetail;
-import com.gammon.qs.domain.SystemConstant;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailOA;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.PaymentCertDetail;
+import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.util.RoundingUtil;
 
 public class SCPaymentLogic {
@@ -28,7 +28,7 @@ public class SCPaymentLogic {
 	public static final int PAYMENT_TERM_DATE_QS7=60;
 
 	@SuppressWarnings("static-access")
-	public static final boolean ableToSubmit(SCPaymentCert scPaymentCert, List<SCPaymentCert> scPaymentCertList, List<SCDetails> scDetailsList, List<SCPaymentDetail> scPaymentDetailList) throws ValidateBusinessLogicException{
+	public static final boolean ableToSubmit(PaymentCert scPaymentCert, List<PaymentCert> scPaymentCertList, List<SubcontractDetail> scDetailsList, List<PaymentCertDetail> scPaymentDetailList) throws ValidateBusinessLogicException{
 		logger.info("SCPaymentLogic.ableToSubmit");
 		
 		// Validation 1 - Payment Status that can submit for payment
@@ -36,25 +36,25 @@ public class SCPaymentLogic {
 			throw new ValidateBusinessLogicException("SC Payment Status is not Pending or not to be Reviewed by Finance");
 		
 		// Validation 2 - Check on any pending addendum
-		String checkResult=SCPackageLogic.ableToSubmitAddendum(scPaymentCert.getScPackage(), scPaymentCertList);
+		String checkResult=SCPackageLogic.ableToSubmitAddendum(scPaymentCert.getSubcontract(), scPaymentCertList);
 		if (checkResult!=null)
 			throw new ValidateBusinessLogicException("SC status invalid:"+checkResult);
 
 		// Validation 3 - No further payment to be submitted if Final Paid
-		if ("F".equals(scPaymentCert.getScPackage().getPaymentStatus()))
+		if ("F".equals(scPaymentCert.getSubcontract().getPaymentStatus()))
 			throw new ValidateBusinessLogicException("Subcontract was Final Paid");
 		
 		//Validation 4 - Calculate Retention Amount
 		double retentionAmount=0.00;
-		for (SCPaymentDetail scPaymentDetail: scPaymentDetailList){
+		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
 			if ("RR".equals(scPaymentDetail.getLineType().trim()) || "RA".equals(scPaymentDetail.getLineType().trim()) || "RT".equals(scPaymentDetail.getLineType().trim()))
 				retentionAmount+=scPaymentDetail.getCumAmount();
 		}
 		
 		//RT + RA + RR must be less than or equal to maximum retention amount (round to 2 d.p. for comparison)
 		int roundingDP = 2;
-		if (!SCPaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
-			if (RoundingUtil.round(scPaymentCert.getScPackage().getRetentionAmount(), roundingDP) < RoundingUtil.round(retentionAmount, roundingDP))
+		if (!PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
+			if (RoundingUtil.round(scPaymentCert.getSubcontract().getRetentionAmount(), roundingDP) < RoundingUtil.round(retentionAmount, roundingDP))
 				throw new ValidateBusinessLogicException("Cum Retention exceed Retention Amount(limited)");
 		
 		Calendar currentPeriod = Calendar.getInstance();
@@ -70,7 +70,7 @@ public class SCPaymentLogic {
 		else
 			currentPeriod.set(currentPeriod.DATE, 25);
 
-		if ("QS0".equals(scPaymentCert.getScPackage().getPaymentTerms())&& scPaymentCert.getDueDate()==null )
+		if ("QS0".equals(scPaymentCert.getSubcontract().getPaymentTerms())&& scPaymentCert.getDueDate()==null )
 			throw new ValidateBusinessLogicException("Due Date cannot be null");
 		
 		// for check if AsAtDate is null
@@ -79,20 +79,20 @@ public class SCPaymentLogic {
 		else if(scPaymentCert.getAsAtDate().after(currentPeriod.getTime()))
 			throw new ValidateBusinessLogicException("As at Date should be on or before current period");
 
-		if (retentionAmount<0 && !SCPaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
+		if (retentionAmount<0 && !PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
 			throw new ValidateBusinessLogicException("Retention Balance is less than zero");
 
 		//Validation 5 - Final Payment (To be submitted one)
 		if ("F".equals(scPaymentCert.getIntermFinalPayment())){
-			for (SCDetails scDetail:scDetailsList){
+			for (SubcontractDetail scDetail:scDetailsList){
 				//Skip inactive line
-				if (SCDetails.INACTIVE.equals(scDetail.getSystemStatus())){
+				if (SubcontractDetail.INACTIVE.equals(scDetail.getSystemStatus())){
 					logger.info("SKIPPED - Line Type: "+scDetail.getLineType()+" ID: "+scDetail.getId()+"System Status: "+scDetail.getSystemStatus());
 					continue;
 				}
 				//No provision allowed
-				if (scDetail instanceof SCDetailsOA){ 
-					if (Math.abs(scDetail.getScRate()*(((SCDetailsOA)scDetail).getCumCertifiedQuantity()-((SCDetailsOA)scDetail).getCumWorkDoneQuantity()))>0)
+				if (scDetail instanceof SubcontractDetailOA){ 
+					if (Math.abs(scDetail.getScRate()*(((SubcontractDetailOA)scDetail).getCumCertifiedQuantity()-((SubcontractDetailOA)scDetail).getCumWorkDoneQuantity()))>0)
 						throw new ValidateBusinessLogicException("Provision existed in "+scDetail.getSequenceNo());
 				}
 			}
@@ -221,15 +221,15 @@ public class SCPaymentLogic {
 	 * modified on May 18, 2012 9:20:47 AM
 	 * Enhancement for SCPayment Review by Finance
 	 */
-	public static final SCPackage toCompleteApprovalProcess(SCPaymentCert scPaymentCert, SystemConstant systemConstant, String approvalDecision)throws Exception{		
+	public static final Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, AppSubcontractStandardTerms systemConstant, String approvalDecision)throws Exception{		
 		if(scPaymentCert==null || systemConstant==null || approvalDecision==null)
 			throw new DatabaseOperationException(scPaymentCert==null?"SCPayment Certificate = null":(systemConstant==null?"System Constant = null":"Approval Decision = null"));
 		
-		SCPackage scPackage = scPaymentCert.getScPackage();
+		Subcontract scPackage = scPaymentCert.getSubcontract();
 		if(scPackage==null)
 			throw new DatabaseOperationException("SC:"+scPaymentCert.getPackageNo()+" does not exist.");
 		
-		Job job = scPaymentCert.getScPackage().getJob();
+		JobInfo job = scPaymentCert.getSubcontract().getJobInfo();
 		if(job==null)
 			throw new DatabaseOperationException("Job:"+scPaymentCert.getJobNo()+" does not exist.");
 		
@@ -242,38 +242,38 @@ public class SCPaymentLogic {
 			
 			//SBM --> UFR / PCS
 			if(scPaymentCert.getPaymentStatus().equals("SBM")){
-				if(	scPaymentCert.getScPackage().getPaymentTerms().trim().equals("QS0") && 
-					(job.getFinQS0Review().equals(Job.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(Job.FINQS0REVIEW_D)) &&
-					(systemConstant.getFinQS0Review().equals(SystemConstant.FINQS0REVIEW_Y)))	
+				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") && 
+					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
+					(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))	
 					scPaymentCert.setPaymentStatus("UFR");
 				else	
 					scPaymentCert.setPaymentStatus("PCS");
 				
-				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+SCPaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
 			}
 			//UFR --> PCS
-			else if(scPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)){
-				scPaymentCert.setPaymentStatus(SCPaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
+			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)){
+				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 				
-				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+SCPaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW+"-->"+scPaymentCert.getPaymentStatus());
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW+"-->"+scPaymentCert.getPaymentStatus());
 			}
 			
-			return scPaymentCert.getScPackage(); 
+			return scPaymentCert.getSubcontract(); 
 		}
 		//Rejected
 		else{
 			logger.info("SCPayment Certificate Approval - REJECTED");
 			//SBM --> PND
-			if(scPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)){
-				scPaymentCert.setPaymentStatus(SCPaymentCert.PAYMENTSTATUS_PND_PENDING);
+			if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)){
+				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
 				
-				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+SCPaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
 			}
 			//UFR --> remain UFR and send error message back to Approval System
-			else if(scPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW))
+			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW))
 				throw new ValidateBusinessLogicException("Payment cannot be rejected as it is going through the [Under Review by Finance] UFR process.");
 			
-			return scPaymentCert.getScPackage();
+			return scPaymentCert.getSubcontract();
 		}
 	}
 
@@ -282,20 +282,20 @@ public class SCPaymentLogic {
 	 * @author tikywong
 	 * refactored on Nov 28, 2013 12:11:11 PM
 	 */
-	public static final void updateSCDetailandPackageAfterPostingToFinance(SCPackage scPackage, List<SCDetails> scDetailsList){
-		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+scPackage.getJob().getJobNumber()+" Package: "+scPackage.getPackageNo());
+	public static final void updateSCDetailandPackageAfterPostingToFinance(Subcontract scPackage, List<SubcontractDetail> scDetailsList){
+		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
 		
 		Double totalPostedCert = 0.0;
 		Double totalCCPostedCert =0.0;
 		Double totalMOSPostedCert = 0.0;
 		
-		for(SCDetails scDetails : scDetailsList){
+		for(SubcontractDetail scDetails : scDetailsList){
 			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 				//1. update package detail
 				scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
 				// Payment Requisition: Not approved but paid
-				if("BQ".equals(scDetails.getLineType()) && SCDetails.NOT_APPROVED.equals(scDetails.getApproved()))
-					scDetails.setApproved(SCDetails.NOT_APPROVED_BUT_PAID);
+				if("BQ".equals(scDetails.getLineType()) && SubcontractDetail.NOT_APPROVED.equals(scDetails.getApproved()))
+					scDetails.setApproved(SubcontractDetail.NOT_APPROVED_BUT_PAID);
 
 				//calculate total for package
 				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) &&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) && !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType()))

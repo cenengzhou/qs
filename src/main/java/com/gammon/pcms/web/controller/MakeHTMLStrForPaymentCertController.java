@@ -59,7 +59,7 @@ public class MakeHTMLStrForPaymentCertController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setPaymentNo(paymentNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		MakeHTMLStrForPaymentCertServiceResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/makeHTMLStrForPaymentCert", requestObj, MakeHTMLStrForPaymentCertServiceResponse.class);

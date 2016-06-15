@@ -14,13 +14,13 @@ import org.springframework.web.client.RestTemplate;
 import com.gammon.pcms.dto.rs.provider.request.CompleteMainCertApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.response.CompleteMainCertApprovalResponse;
 import com.gammon.pcms.helper.RestTemplateHelper;
-import com.gammon.qs.service.MainContractCertificateService;
+import com.gammon.qs.service.MainCertService;
 
 @RestController
 @RequestMapping(path = "ws")
 public class CompleteMainCertApprovalController {
 	@Autowired
-	private MainContractCertificateService mainContractCertificateService;
+	private MainCertService mainContractCertificateService;
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
 	private RestTemplate restTemplate;
@@ -58,7 +58,7 @@ public class CompleteMainCertApprovalController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNo(mainCertNo);
 		requestObj.setApprovalDecision(approvalDecision);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		CompleteMainCertApprovalResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/completeMainCertApproval", requestObj, CompleteMainCertApprovalResponse.class);

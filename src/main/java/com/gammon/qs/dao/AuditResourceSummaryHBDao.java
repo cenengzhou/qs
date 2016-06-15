@@ -2,13 +2,13 @@ package com.gammon.qs.dao;
 
 import org.springframework.stereotype.Repository;
 
-import com.gammon.qs.domain.AuditResourceSummary;
+import com.gammon.qs.domain.ResourceSummaryAuditCustom;
 @Repository
 public class AuditResourceSummaryHBDao extends
-		BaseHibernateDao<AuditResourceSummary> {
+		BaseHibernateDao<ResourceSummaryAuditCustom> {
 
 	public AuditResourceSummaryHBDao() {
-		super(AuditResourceSummary.class);
+		super(ResourceSummaryAuditCustom.class);
 	}
 	
 }

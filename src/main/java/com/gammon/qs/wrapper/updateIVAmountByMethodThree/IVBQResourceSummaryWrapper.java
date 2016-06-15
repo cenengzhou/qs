@@ -9,7 +9,7 @@ package com.gammon.qs.wrapper.updateIVAmountByMethodThree;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.BQResourceSummary;
+import com.gammon.qs.domain.ResourceSummary;
 
 /**
  * @author tikywong
@@ -23,21 +23,21 @@ public class IVBQResourceSummaryWrapper implements Serializable{
 	 * @author tikywong
 	 */
 	
-	private BQResourceSummary bqResourceSummary;
+	private ResourceSummary bqResourceSummary;
 	private Double updatedCurrentIVAmount = Double.valueOf(0.00);
 	
 	public IVBQResourceSummaryWrapper(){
 		super();
 	}
 	
-	public IVBQResourceSummaryWrapper(BQResourceSummary bqResourceSummary){
+	public IVBQResourceSummaryWrapper(ResourceSummary bqResourceSummary){
 		this.bqResourceSummary = bqResourceSummary;
 		this.updatedCurrentIVAmount = bqResourceSummary.getCurrIVAmount();
 	}
-	public BQResourceSummary getBqResourceSummary() {
+	public ResourceSummary getBqResourceSummary() {
 		return bqResourceSummary;
 	}
-	public void setBqResourceSummary(BQResourceSummary bqResourceSummary) {
+	public void setBqResourceSummary(ResourceSummary bqResourceSummary) {
 		this.bqResourceSummary = bqResourceSummary;
 	}
 	public Double getUpdatedCurrentIVAmount() {

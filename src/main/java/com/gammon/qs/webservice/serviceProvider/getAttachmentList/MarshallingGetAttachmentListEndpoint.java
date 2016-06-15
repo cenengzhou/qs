@@ -8,9 +8,9 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 
 import com.gammon.qs.domain.AbstractAttachment;
-import com.gammon.qs.domain.SCAttachment;
-import com.gammon.qs.domain.SCDetailsAttachment;
-import com.gammon.qs.domain.SCPaymentAttachment;
+import com.gammon.qs.domain.AttachSubcontract;
+import com.gammon.qs.domain.AttachSubcontractDetail;
+import com.gammon.qs.domain.AttachPayment;
 import com.gammon.qs.service.AttachmentService;
 
 public class MarshallingGetAttachmentListEndpoint extends AbstractMarshallingPayloadEndpoint {
@@ -28,11 +28,11 @@ public class MarshallingGetAttachmentListEndpoint extends AbstractMarshallingPay
 		getAttachmentListResponseList responseListObj = new getAttachmentListResponseList();
 		
 		List<? extends AbstractAttachment> attachmentList;
-		if(SCAttachment.SCDetailsNameObject.equals(requestObj.getNameObject())){
+		if(AttachSubcontract.SCDetailsNameObject.equals(requestObj.getNameObject())){
 			logger.info("Web Service called by AP: SCDetail Attachments");
 			attachmentList = attachmentRepository.getAddendumAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
 		}
-		else if(SCAttachment.SCPaymentNameObject.equals(requestObj.getNameObject())){
+		else if(AttachSubcontract.SCPaymentNameObject.equals(requestObj.getNameObject())){
 			logger.info("Web Service called by AP: SCPayment Attachments");
 			attachmentList = attachmentRepository.getPaymentAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
 		}
@@ -46,10 +46,10 @@ public class MarshallingGetAttachmentListEndpoint extends AbstractMarshallingPay
 			
 			for(AbstractAttachment attachment:attachmentList){
 				getAttachmentListResponse responseObj = new getAttachmentListResponse();
-				if (attachment instanceof SCDetailsAttachment)
-					responseObj.setTextKey(requestObj.getTextKey()+"|"+((SCDetailsAttachment) attachment).getScDetails().getSequenceNo());
-				else if(attachment instanceof SCPaymentAttachment)
-					responseObj.setTextKey(requestObj.getTextKey()+"|"+((SCPaymentAttachment) attachment).getScPaymentCert().getPaymentCertNo().toString());
+				if (attachment instanceof AttachSubcontractDetail)
+					responseObj.setTextKey(requestObj.getTextKey()+"|"+((AttachSubcontractDetail) attachment).getSubcontractDetail().getSequenceNo());
+				else if(attachment instanceof AttachPayment)
+					responseObj.setTextKey(requestObj.getTextKey()+"|"+((AttachPayment) attachment).getPaymentCert().getPaymentCertNo().toString());
 				else
 					responseObj.setTextKey(requestObj.getTextKey());
 				

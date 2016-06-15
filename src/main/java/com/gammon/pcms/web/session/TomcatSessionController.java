@@ -15,7 +15,6 @@ import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ApplicationContextFacade;
 import org.apache.catalina.core.StandardContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,6 @@ import com.gammon.pcms.helper.JsonHelper;
 
 @RestController
 @Transactional
-@Profile(value = "TOMCAT_SESSION")
 @RequestMapping(value = "service", method = RequestMethod.POST)
 public class TomcatSessionController {
 

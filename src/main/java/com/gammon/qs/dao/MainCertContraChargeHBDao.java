@@ -9,23 +9,23 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.MainCertificateContraCharge;
-import com.gammon.qs.domain.MainContractCertificate;
+import com.gammon.qs.domain.MainCertContraCharge;
+import com.gammon.qs.domain.MainCert;
 @Repository
-public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateContraCharge> {
+public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertContraCharge> {
 
 	public MainCertContraChargeHBDao() {
-		super(MainCertificateContraCharge.class);
+		super(MainCertContraCharge.class);
 	}
 	
-	public MainCertificateContraCharge obtainMainCertContraCharge(String objectCode, String subsidCode, MainContractCertificate mainCert) throws DatabaseOperationException{
-		MainCertificateContraCharge result = null;
+	public MainCertContraCharge obtainMainCertContraCharge(String objectCode, String subsidCode, MainCert mainCert) throws DatabaseOperationException{
+		MainCertContraCharge result = null;
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("mainCertificate", mainCert));
 			criteria.add(Restrictions.eq("objectCode", objectCode));
 			criteria.add(Restrictions.eq("subsidiary", subsidCode));
-			result = (MainCertificateContraCharge)criteria.uniqueResult();
+			result = (MainCertContraCharge)criteria.uniqueResult();
 		}catch (HibernateException ex){
 			throw new DatabaseOperationException(ex);
 		}
@@ -34,8 +34,8 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MainCertificateContraCharge> obtainMainCertContraChargeList(String jobNumber) throws DatabaseOperationException{
-		List<MainCertificateContraCharge> result = null;
+	public List<MainCertContraCharge> obtainMainCertContraChargeList(String jobNumber) throws DatabaseOperationException{
+		List<MainCertContraCharge> result = null;
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType(),"cc");
 			criteria.createAlias("cc.mainCertificate", "mc")
@@ -50,8 +50,8 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MainCertificateContraCharge> obtainMainCertContraChargeList(MainContractCertificate mainCert) throws DatabaseOperationException{
-		List<MainCertificateContraCharge> result = null;
+	public List<MainCertContraCharge> obtainMainCertContraChargeList(MainCert mainCert) throws DatabaseOperationException{
+		List<MainCertContraCharge> result = null;
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("mainCertificate", mainCert));
@@ -62,23 +62,23 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 		return result;
 	}
 	
-	public boolean addMainCertContraCharge(MainCertificateContraCharge obj) throws DatabaseOperationException{
+	public boolean addMainCertContraCharge(MainCertContraCharge obj) throws DatabaseOperationException{
 
 		if (obtainMainCertContraCharge(obj.getObjectCode(),obj.getSubsidiary(),obj.getMainCertificate())!=null)
 			throw new DatabaseOperationException("Main Cert Contra Charge was existed already.");
 		super.saveOrUpdate(obj);
 		return true;
 	}
-	public boolean saveMainCertContraCharge(MainCertificateContraCharge obj) throws DatabaseOperationException{
+	public boolean saveMainCertContraCharge(MainCertContraCharge obj) throws DatabaseOperationException{
 		if (obtainMainCertContraCharge(obj.getObjectCode(),obj.getSubsidiary(),obj.getMainCertificate())==null)
 			throw new DatabaseOperationException("Main Cert Contra Charge does not exist.");
-		MainCertificateContraCharge dbObj = this.obtainMainCertContraCharge(obj.getObjectCode(), obj.getSubsidiary(), obj.getMainCertificate());
+		MainCertContraCharge dbObj = this.obtainMainCertContraCharge(obj.getObjectCode(), obj.getSubsidiary(), obj.getMainCertificate());
 		dbObj.setCurrentAmount(obj.getCurrentAmount());
 		dbObj.setPostAmount(obj.getPostAmount());
 		super.saveOrUpdate(dbObj);
 		return true;
 	}
-	public boolean addUpdate(MainCertificateContraCharge obj) throws DatabaseOperationException{
+	public boolean addUpdate(MainCertContraCharge obj) throws DatabaseOperationException{
 		try {
 			return saveMainCertContraCharge(obj);
 		}catch (DatabaseOperationException dbe){
@@ -88,10 +88,10 @@ public class MainCertContraChargeHBDao extends BaseHibernateDao<MainCertificateC
 //		return true;
 	}
 
-	public Integer deleteMainCertContraCharge(MainContractCertificate mainContractCertificate) throws DatabaseOperationException {
-		List<MainCertificateContraCharge> mainCertificateContraChargeList = obtainMainCertContraChargeList(mainContractCertificate);
+	public Integer deleteMainCertContraCharge(MainCert mainContractCertificate) throws DatabaseOperationException {
+		List<MainCertContraCharge> mainCertificateContraChargeList = obtainMainCertContraChargeList(mainContractCertificate);
 		int count = 0;
-		for(MainCertificateContraCharge mainCertificateContraCharge : mainCertificateContraChargeList){
+		for(MainCertContraCharge mainCertificateContraCharge : mainCertificateContraChargeList){
 			delete(mainCertificateContraCharge);
 			count++;
 		}

@@ -22,7 +22,7 @@ import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
  */
 @Repository
 public class AccountCodeWSDao {
-	private Logger logger = Logger.getLogger(AccountCodeWSDao.class.getName());
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 	@Autowired
 	@Qualifier("webservicePasswordConfig")
 	private WSConfig wsConfig;

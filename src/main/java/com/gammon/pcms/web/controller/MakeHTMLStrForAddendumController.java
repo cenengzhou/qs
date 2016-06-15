@@ -57,7 +57,7 @@ public class MakeHTMLStrForAddendumController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		MakeHTMLStrForAddendumServiceResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/makeHTMLStrForAddendum", requestObj, MakeHTMLStrForAddendumServiceResponse.class);

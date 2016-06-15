@@ -16,15 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.gammon.qs.service.AccountLedgerService;
+import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.BQResourceSummaryService;
-import com.gammon.qs.service.BQService;
-import com.gammon.qs.service.MessageBoardAttachmentService;
-import com.gammon.qs.service.PackageService;
-import com.gammon.qs.service.TenderAnalysisService;
-import com.gammon.qs.service.scDetails.UploadSCDetailByExcelResponse;
+import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.BpiItemService;
+import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
+import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
 import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.util.FileUtil;
@@ -42,53 +41,53 @@ public class UploadController {
 	private String RESPONSE_HEADER_VALUE_NO_CACHE = "no-cache";
 
 	@Autowired
-	private AccountLedgerService accountLedgerRepository;
+	private JdeAccountLedgerService accountLedgerRepository;
 	@Autowired
-	private BQService bqRepository;
+	private BpiItemService bqRepository;
 	@Autowired
-	private PackageService packageRepository;
+	private SubcontractService packageRepository;
 	@Autowired
-	private TenderAnalysisService tenderAnalysisRepository;
+	private TenderService tenderAnalysisRepository;
 	@Autowired
 	private TransitService transitRepository;
 	@Autowired
-	private BQResourceSummaryService bqResourceSummaryRepository;
+	private ResourceSummaryService bqResourceSummaryRepository;
 	@Autowired
 	private AttachmentService attachmentRepository;
-	@Autowired
-	private MessageBoardAttachmentService messageBoardAttachmentRepository;
 	
 	@RequestMapping(value="/gammonqs/imageUpload.smvc",method=RequestMethod.POST)
 	public void uploadAttachment(@RequestParam(required=true,value="messageBoardID") String messageBoardID,
 								 @RequestParam(required=true,value="docType") String docType,
 								HttpServletRequest request, HttpServletResponse response ) throws Exception{
-		logger.info("Upload Attachment - START");
-		
-		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
-		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
-		
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
-		
-		for (MultipartFile multipartFile : multipartFiles) {
-			byte[] file = multipartFile.getBytes();
-			if (file != null) {
-				String error = messageBoardAttachmentRepository.uploadAttachment(file, multipartFile.getOriginalFilename(), messageBoardID, docType);
-				
-				Map<String, Object> resultMap = new HashMap<String, Object>();
-				if(error==null){
-					resultMap.put("success", true);
-					logger.info("Upload Attachment: success.");
-				}
-				else{
-					resultMap.put("success", false);
-					resultMap.put("error", error);
-					logger.info("error: "+error);
-				}
-
-				response.getWriter().print((new Gson()).toJson(resultMap));
-				logger.info("Upload Attachment -END");
-			}
-		}
+		throw new RuntimeException("remove entity | messageBoardAttachment | remark uploadAttachment(...)");
+		//TODO: remove entity | messageBoardAttachment | remark uploadAttachment(...)
+//		logger.info("Upload Attachment - START");
+//		
+//		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+//		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+//		
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		
+//		for (MultipartFile multipartFile : multipartFiles) {
+//			byte[] file = multipartFile.getBytes();
+//			if (file != null) {
+//				String error = messageBoardAttachmentRepository.uploadAttachment(file, multipartFile.getOriginalFilename(), messageBoardID, docType);
+//				
+//				Map<String, Object> resultMap = new HashMap<String, Object>();
+//				if(error==null){
+//					resultMap.put("success", true);
+//					logger.info("Upload Attachment: success.");
+//				}
+//				else{
+//					resultMap.put("success", false);
+//					resultMap.put("error", error);
+//					logger.info("error: "+error);
+//				}
+//
+//				response.getWriter().print((new Gson()).toJson(resultMap));
+//				logger.info("Upload Attachment -END");
+//			}
+//		}
 	}
 	
 	@RequestMapping(value = "/gammonqs/bqItemIVUpload.smvc", method = RequestMethod.POST)
@@ -248,7 +247,7 @@ public class UploadController {
 		Integer packageNumber = Integer.parseInt(packageNumberString);
 
 		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
-		UploadSCDetailByExcelResponse uploadFileResponse = null;
+		UploadSubcontractDetailByExcelResponse uploadFileResponse = null;
 		
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();

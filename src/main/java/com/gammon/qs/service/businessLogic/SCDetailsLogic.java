@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsAP;
-import com.gammon.qs.domain.SCDetailsBQ;
-import com.gammon.qs.domain.SCDetailsCC;
-import com.gammon.qs.domain.SCDetailsOA;
-import com.gammon.qs.domain.SCDetailsRT;
-import com.gammon.qs.domain.SCDetailsVO;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailAP;
+import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailCC;
+import com.gammon.qs.domain.SubcontractDetailOA;
+import com.gammon.qs.domain.SubcontractDetailRT;
+import com.gammon.qs.domain.SubcontractDetailVO;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 
@@ -28,10 +28,10 @@ public class SCDetailsLogic {
 	 * @throws ValidateBusinessLogicException
 	 * @since Feb 11, 2015 4:30:16 PM
 	 */
-	public static final boolean updateSCDetails(SCDetails scDetails, UpdateAddendumWrapper wrapper) throws ValidateBusinessLogicException {
+	public static final boolean updateSCDetails(SubcontractDetail scDetails, UpdateAddendumWrapper wrapper) throws ValidateBusinessLogicException {
 		double postedWDQty = 0;
-		if (scDetails instanceof SCDetailsOA) {
-			postedWDQty = ((SCDetailsOA) scDetails).getPostedWorkDoneQuantity();
+		if (scDetails instanceof SubcontractDetailOA) {
+			postedWDQty = ((SubcontractDetailOA) scDetails).getPostedWorkDoneQuantity();
 		}
 
 		if (scDetails.getCostRate() != null && (Math.abs(scDetails.getCostRate()) > 0))
@@ -39,7 +39,7 @@ public class SCDetailsLogic {
 				throw new ValidateBusinessLogicException("Cannot change the quantity of VO line with budget!");
 
 		if (Math.abs(scDetails.getPostedCertifiedQuantity()) > 0 || Math.abs(postedWDQty) > 0) {
-			if (scDetails instanceof SCDetailsVO) {
+			if (scDetails instanceof SubcontractDetailVO) {
 				if (RoundingUtil.round(Math.abs(wrapper.getToBeApprovedRate() - scDetails.getToBeApprovedRate()), 7) > 0)
 					throw new ValidateBusinessLogicException("posted Cert Qty and posted Workdone Qty must be zero!");
 				if (Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getCumCertifiedQuantity()) < 0 || Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getPostedCertifiedQuantity()) < 0)
@@ -52,7 +52,7 @@ public class SCDetailsLogic {
 				if (wrapper.getToBeApprovedRate() != null)
 					scDetails.setToBeApprovedRate(wrapper.getToBeApprovedRate());
 			}
-			if (!(scDetails instanceof SCDetailsBQ)) {
+			if (!(scDetails instanceof SubcontractDetailBQ)) {
 				if (wrapper.getBqQuantity() != null)
 					scDetails.setQuantity(wrapper.getBqQuantity());
 				/* 
@@ -79,15 +79,15 @@ public class SCDetailsLogic {
 
 			scDetails.setObjectCode(wrapper.getObject());
 			scDetails.setSubsidiaryCode(wrapper.getSubsidiary());
-			if (scDetails instanceof SCDetailsBQ) {
-				((SCDetailsBQ) scDetails).setToBeApprovedQuantity(wrapper.getToBeApprovedQty());
+			if (scDetails instanceof SubcontractDetailBQ) {
+				((SubcontractDetailBQ) scDetails).setToBeApprovedQuantity(wrapper.getToBeApprovedQty());
 			} else
 				scDetails.setQuantity(wrapper.getBqQuantity());
-			if (scDetails instanceof SCDetailsVO) {
-				((SCDetailsVO) scDetails).setToBeApprovedRate(wrapper.getToBeApprovedRate());
-				if (!SCDetails.APPROVED.equals(scDetails.getApproved()))
+			if (scDetails instanceof SubcontractDetailVO) {
+				((SubcontractDetailVO) scDetails).setToBeApprovedRate(wrapper.getToBeApprovedRate());
+				if (!SubcontractDetail.APPROVED.equals(scDetails.getApproved()))
 					scDetails.setScRate(wrapper.getToBeApprovedRate());
-			} else if (!(scDetails instanceof SCDetailsBQ))
+			} else if (!(scDetails instanceof SubcontractDetailBQ))
 				scDetails.setScRate(wrapper.getScRate());
 		}
 		if (wrapper.getAltObjectCode() != null && !"".equals(wrapper.getAltObjectCode().trim()) && !wrapper.getAltObjectCode().startsWith(
@@ -96,18 +96,18 @@ public class SCDetailsLogic {
 		return true;
 	}
 		
-	public static final boolean isToBeApprovedLine(SCDetails scDetails){
+	public static final boolean isToBeApprovedLine(SubcontractDetail scDetails){
 		
-		if (!SCDetails.SUSPEND.equals(scDetails.getApproved())&& 
-			!SCDetails.APPROVED.equals(scDetails.getApproved()))
+		if (!SubcontractDetail.SUSPEND.equals(scDetails.getApproved())&& 
+			!SubcontractDetail.APPROVED.equals(scDetails.getApproved()))
 			return true;
 		
-		if (scDetails instanceof SCDetailsVO){
-			if (Math.abs(((SCDetailsVO)scDetails).getTotalAmount()-((SCDetailsVO)scDetails).getToBeApprovedAmount())>=0.01)
+		if (scDetails instanceof SubcontractDetailVO){
+			if (Math.abs(((SubcontractDetailVO)scDetails).getTotalAmount()-((SubcontractDetailVO)scDetails).getToBeApprovedAmount())>=0.01)
 				return true;
 		}
-		else if (scDetails instanceof SCDetailsBQ){
-			if (Math.abs(((SCDetailsBQ)scDetails).getTotalAmount()-((SCDetailsBQ)scDetails).getToBeApprovedAmount())>=0.01)
+		else if (scDetails instanceof SubcontractDetailBQ){
+			if (Math.abs(((SubcontractDetailBQ)scDetails).getTotalAmount()-((SubcontractDetailBQ)scDetails).getToBeApprovedAmount())>=0.01)
 				return true;
 		}
 		return false;
@@ -285,7 +285,7 @@ public class SCDetailsLogic {
 //		return null;
 //	}
 
-	public static String generateBillItem(SCPackage scPackage, String scLineType, Integer maxSeqNo) {
+	public static String generateBillItem(Subcontract scPackage, String scLineType, Integer maxSeqNo) {
 		String maxSeqNoStr="";
 		String billItemMid="/ /"+scLineType.trim()+"/";
 		for (int i=0;i<4-maxSeqNo.toString().length();i++)
@@ -317,34 +317,34 @@ public class SCDetailsLogic {
 		return maxSeqNo;
 	}*/
 
-	public static SCDetails createSCDetailByLineType(String scLineType) {
+	public static SubcontractDetail createSCDetailByLineType(String scLineType) {
 		if ("V1".equals(scLineType)||"V2".equals(scLineType)|| "V3".equals(scLineType)||
 			"D1".equals(scLineType)||"D2".equals(scLineType)||
 			"L1".equals(scLineType)||"L2".equals(scLineType)||
 			"CF".equals(scLineType) )
-			return new SCDetailsVO();
+			return new SubcontractDetailVO();
 		if ("C1".equals(scLineType)||"C2".equals(scLineType))
-			return new SCDetailsCC();
+			return new SubcontractDetailCC();
 		if ("RA".equals(scLineType)||"RR".equals(scLineType))
-			return new SCDetailsRT();
+			return new SubcontractDetailRT();
 		if ("OA".equals(scLineType))
-			return new SCDetailsOA();
+			return new SubcontractDetailOA();
 		if ("AP".equals(scLineType)||"MS".equals(scLineType))
-			return new SCDetailsAP();
+			return new SubcontractDetailAP();
 		if ("BQ".equals(scLineType)||"B1".equals(scLineType))
-			return new SCDetailsBQ();
+			return new SubcontractDetailBQ();
 		return null;
 	}	
 
-	public static String validateAddendumApproval(SCPackage scPackage, List<SCDetails> scDetailsList){
+	public static String validateAddendumApproval(Subcontract scPackage, List<SubcontractDetail> scDetailsList){
 		if ("1".equalsIgnoreCase(scPackage.getSubmittedAddendum().trim())){
 			return "Cannot submit the Request. Addendum approval request submitted already.";
 		}else {
-			for(SCDetails scDetails:scDetailsList){
-				if(scDetails instanceof SCDetailsBQ && BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
+			for(SubcontractDetail scDetails:scDetailsList){
+				if(scDetails instanceof SubcontractDetailBQ && BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 					if(scDetails.getApproved()==null || "".equalsIgnoreCase(scDetails.getApproved().trim())){
 						return null;
-					}else if(SCDetails.APPROVED.equalsIgnoreCase(scDetails.getApproved().trim())){
+					}else if(SubcontractDetail.APPROVED.equalsIgnoreCase(scDetails.getApproved().trim())){
 						if(!scDetails.getQuantity().equals(scDetails.getToBeApprovedQuantity()) || !scDetails.getScRate().equals(scDetails.getToBeApprovedRate())){
 							return null;
 						}
@@ -376,8 +376,8 @@ public class SCDetailsLogic {
 //		return scDetailProvisionHistoryList;
 //	}
 	
-	public static final Boolean splitSCPackage(List<SCDetails> scDetailsList) throws Exception{
-		for(SCDetails scDetails: scDetailsList){
+	public static final Boolean splitSCPackage(List<SubcontractDetail> scDetailsList) throws Exception{
+		for(SubcontractDetail scDetails: scDetailsList){
 			if("BQ".trim().equalsIgnoreCase(scDetails.getLineType().trim())){
 				if(scDetails.getCumWorkDoneQuantity()>scDetails.getNewQuantity())
 					throw new Exception("New Quantity has to be larger than current Work Done");
@@ -387,8 +387,8 @@ public class SCDetailsLogic {
 		}
 		return null;
 	}
-	public void toTerminate(List<SCDetails> scDetailsList){
-		for(SCDetails scDetails: scDetailsList){
+	public void toTerminate(List<SubcontractDetail> scDetailsList){
+		for(SubcontractDetail scDetails: scDetailsList){
 			scDetails.setNewQuantity(scDetails.getCumWorkDoneQuantity());
 		}
 	}

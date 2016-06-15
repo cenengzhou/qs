@@ -3,9 +3,9 @@ package com.gammon.qs.wrapper;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.gammon.qs.domain.SCPaymentDetail;
+import com.gammon.qs.domain.PaymentCertDetail;
 
-public class PaymentPaginationWrapper extends PaginationWrapper<SCPaymentDetail> implements Serializable {
+public class PaymentPaginationWrapper extends PaginationWrapper<PaymentCertDetail> implements Serializable {
 
 	private static final long serialVersionUID = -3542218882955779800L;
 	private Double totalMovementAmount;

@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.Subcontract;
 
-public interface SCPackageSPDao extends CrudRepository<SCPackage, Long> {
+public interface SCPackageSPDao extends CrudRepository<Subcontract, Long> {
 
-	List<SCPackage> findByJob_JobNumberAndSubcontractStatusAndSystemStatus(String jobNumber, Integer scStatus, String systemStatus) throws DatabaseOperationException;
+	List<Subcontract> findByJobInfo_JobNumberAndSubcontractStatusAndSystemStatus(String jobNumber, Integer scStatus, String systemStatus) throws DatabaseOperationException;
 }

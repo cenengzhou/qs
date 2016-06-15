@@ -1,7 +1,6 @@
 package com.gammon.qs.webservice.serviceProvider.makeHTMLStrForAddendumService;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class makeHTMLStrForAddendumServiceRequest  implements Serializable{
 

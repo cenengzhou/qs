@@ -7,8 +7,6 @@ import java.util.Date;
 import org.apache.catalina.Session;
 import org.springframework.security.core.session.SessionInformation;
 
-import com.gammon.pcms.model.SpringSession;
-
 public class SessionDTO implements Serializable {
 
 	private static final long serialVersionUID = -7722958623903645268L;
@@ -31,28 +29,11 @@ public class SessionDTO implements Serializable {
 		setBySession(session);
 	}
 
-	public SessionDTO(SessionInformation sessionInformation, SpringSession springSession) {
-		setBySessionInformation(sessionInformation);
-		setBySpringSession(springSession);
-	}
-
-	public SessionDTO(SpringSession springSession) {
-		setBySpringSession(springSession);
-	}
-
 	public SessionDTO(Session session, SessionInformation sessionInformation) {
 		setBySession(session);
 		setBySessionInformation(sessionInformation);
 	}
 
-	public void setBySpringSession(SpringSession springSession){
-		this.creationTime = springSession.getCreationTime();
-		this.lastAccessedTime = springSession.getLastAccessTime();
-		this.maxInactiveInterval = springSession.getMaxInactiveInterval();
-		this.principal = springSession.getPrincipalName();
-		this.sessionId = springSession.getSessionId();
-	}
-	
 	public void setBySessionInformation(SessionInformation sessionInformation){
 		this.expired = sessionInformation.isExpired();
 		this.lastRequest = sessionInformation.getLastRequest();

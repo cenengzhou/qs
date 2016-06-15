@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.SCPaymentCert;
+import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.PaymentService;
 
 @RestController
@@ -33,8 +33,8 @@ public class PaymentController {
 	
 	
 	@RequestMapping(value = "getSCPaymentCertList.json")
-	public List<SCPaymentCert> getSCPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
-		List<SCPaymentCert> paymentCertList = null;
+	public List<PaymentCert> getSCPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+		List<PaymentCert> paymentCertList = null;
 		try{
 			paymentCertList = paymentService.obtainSCPaymentCertListByPackageNo(jobNo, Integer.valueOf(subcontractNo));
 		}catch(DatabaseOperationException databaseOperationException){

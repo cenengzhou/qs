@@ -10,70 +10,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.TenderAnalysisDetailHBDao;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCDetailsAP;
-import com.gammon.qs.domain.SCDetailsBQ;
-import com.gammon.qs.domain.SCDetailsCC;
-import com.gammon.qs.domain.SCDetailsOA;
-import com.gammon.qs.domain.SCDetailsRT;
-import com.gammon.qs.domain.SCDetailsVO;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
-import com.gammon.qs.domain.TenderAnalysis;
-import com.gammon.qs.domain.TenderAnalysisDetail;
+import com.gammon.qs.dao.TenderDetailHBDao;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailAP;
+import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailCC;
+import com.gammon.qs.domain.SubcontractDetailOA;
+import com.gammon.qs.domain.SubcontractDetailRT;
+import com.gammon.qs.domain.SubcontractDetailVO;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.Tender;
+import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.util.RoundingUtil;
 
 public class SCPackageLogic {
 
 	@Autowired
-	private static TenderAnalysisDetailHBDao tenderAnalysisDetailHBDao;
+	private static TenderDetailHBDao tenderAnalysisDetailHBDao;
 
 	@PostConstruct
 	public void init(){
 		SCPackageLogic.setTenderAnalysisDetailHBDao(tenderAnalysisDetailHBDao);
 	}
 	
-	public static final String OriginalSCSum = SCPackage.RETENTION_ORIGINAL;
-	public static final String RevisedSCSum = SCPackage.RETENTION_REVISED;
-	public static final String LumpSum= SCPackage.RETENTION_LUMPSUM;
+	public static final String OriginalSCSum = Subcontract.RETENTION_ORIGINAL;
+	public static final String RevisedSCSum = Subcontract.RETENTION_REVISED;
+	public static final String LumpSum= Subcontract.RETENTION_LUMPSUM;
 	
-	public static final String ableToSubmitAddendum(SCPackage scPackage, List<SCPaymentCert> scPaymentCertList){
+	public static final String ableToSubmitAddendum(Subcontract scPackage, List<PaymentCert> scPaymentCertList){
 		if ("1".equals(scPackage.getSubmittedAddendum()))
 			return "Addendum Submitted";
-		for (SCPaymentCert paymentCert:scPaymentCertList)
+		for (PaymentCert paymentCert:scPaymentCertList)
 			if (!"APR".equals(paymentCert.getPaymentStatus()) && !"PND".equals(paymentCert.getPaymentStatus()))
 				return "Payment Submitted";
 		return null;
 	}
 
-	public static SCDetails createSCDetailByLineType(String scLineType) {
+	public static SubcontractDetail createSCDetailByLineType(String scLineType) {
 		if ("V1".equals(scLineType)||"V2".equals(scLineType)||"D1".equals(scLineType)||
 			"D2".equals(scLineType)||"L1".equals(scLineType)||"L2".equals(scLineType)||"CF".equals(scLineType))
-			return new SCDetailsVO();
+			return new SubcontractDetailVO();
 		if ("C1".equals(scLineType))
-			return new SCDetailsCC();
+			return new SubcontractDetailCC();
 		if ("RA".equals(scLineType)||"RR".equals(scLineType))
-			return new SCDetailsRT();
+			return new SubcontractDetailRT();
 		if ("OA".equals(scLineType))
-			return new SCDetailsOA();
+			return new SubcontractDetailOA();
 		if ("AP".equals(scLineType)||"MS".equals(scLineType))
-			return new SCDetailsAP();
+			return new SubcontractDetailAP();
 		if ("BQ".equals(scLineType)||"B1".equals(scLineType))
-			return new SCDetailsBQ();
+			return new SubcontractDetailBQ();
 		return null;
 	}
 
 	
-	public static SCPackage updateApprovedAddendum(SCPackage scPackage, List<SCDetails> scDetailsList, String approvalResult){
+	public static Subcontract updateApprovedAddendum(Subcontract scPackage, List<SubcontractDetail> scDetailsList, String approvalResult){
 		Double cum = new Double(0);
 		BigDecimal remeasureSum = new BigDecimal(0);
-		scPackage.setSubmittedAddendum(SCPackage.ADDENDUM_NOT_SUBMITTED);
+		scPackage.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
 		if (!"A".equals(approvalResult))
 			return scPackage;
-		for(SCDetails scDetails: scDetailsList){
-			if(scDetails instanceof SCDetailsVO){
-				if(scDetails.getSystemStatus().equals(BasePersistedAuditObject.ACTIVE) && (scDetails.getApproved()==null || !(SCDetails.SUSPEND.equalsIgnoreCase(scDetails.getApproved().trim())))){
+		for(SubcontractDetail scDetails: scDetailsList){
+			if(scDetails instanceof SubcontractDetailVO){
+				if(scDetails.getSystemStatus().equals(BasePersistedAuditObject.ACTIVE) && (scDetails.getApproved()==null || !(SubcontractDetail.SUSPEND.equalsIgnoreCase(scDetails.getApproved().trim())))){
 					if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
 						scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
 					if(scDetails.getToBeApprovedRate() != scDetails.getScRate())
@@ -84,10 +84,10 @@ public class SCPackageLogic {
 						else
 							scDetails.setScRate(scDetails.getToBeApprovedRate());
 					
-					scDetails.setApproved(SCDetails.APPROVED);
+					scDetails.setApproved(SubcontractDetail.APPROVED);
 					cum+=scDetails.getTotalAmount();
 				}
-			}else if (scDetails instanceof SCDetailsBQ){
+			}else if (scDetails instanceof SubcontractDetailBQ){
 				if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
 					scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
 				remeasureSum=remeasureSum.add(BigDecimal.valueOf(scDetails.getTotalAmount()));
@@ -98,47 +98,47 @@ public class SCPackageLogic {
 			 * 16th Apr, 2015
 			 * **/
 			scDetails.setNewQuantity(scDetails.getQuantity());
-			scDetails.setJobNo(scPackage.getJob().getJobNumber());
+			scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
 		}
 		scPackage.setLatestAddendumValueUpdatedDate(new Date());
 		scPackage.setApprovedVOAmount(cum);
-		if (scPackage.getJob().getRepackagingType()!=null &&("2".equals(scPackage.getJob().getRepackagingType().trim())||"3".equals(scPackage.getJob().getRepackagingType().trim())))
+		if (scPackage.getJobInfo().getRepackagingType()!=null &&("2".equals(scPackage.getJobInfo().getRepackagingType().trim())||"3".equals(scPackage.getJobInfo().getRepackagingType().trim())))
 			scPackage.setRemeasuredSubcontractSum(remeasureSum.doubleValue());
 		if(scPackage.getRetentionTerms() == null){
 			scPackage.setRetentionAmount(0.00);
-		}else if(SCPackage.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms().trim())){
+		}else if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms().trim())){
 			scPackage.setRetentionAmount(RoundingUtil.round(scPackage.getMaxRetentionPercentage()*(scPackage.getApprovedVOAmount()+scPackage.getRemeasuredSubcontractSum())/100.00,2));
-		}else if(SCPackage.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms().trim())){
+		}else if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms().trim())){
 			scPackage.setRetentionAmount(RoundingUtil.round(scPackage.getMaxRetentionPercentage()*scPackage.getOriginalSubcontractSum()/100.00,2));
 		}
 		return scPackage;
 	}
-	public static SCPackage awardSCPackage(SCPackage scPackage, List<TenderAnalysis> tenderAnalysisList){
-		SCDetailsBQ scDetails;
+	public static Subcontract awardSCPackage(Subcontract scPackage, List<Tender> tenderAnalysisList){
+		SubcontractDetailBQ scDetails;
 		Double scSum = 0.00;
-		TenderAnalysis budgetTA = null;
-		for (TenderAnalysis TA: tenderAnalysisList){
+		Tender budgetTA = null;
+		for (Tender TA: tenderAnalysisList){
 			if (Integer.valueOf(0).equals(TA.getVendorNo())){
 				budgetTA = TA;
 			}
 		}
-		for(TenderAnalysis TA: tenderAnalysisList){
+		for(Tender TA: tenderAnalysisList){
 			if(TA.getStatus()!=null && "RCM".equalsIgnoreCase(TA.getStatus().trim())){
 				TA.setStatus("AWD");
 				scPackage.setVendorNo(TA.getVendorNo().toString());
 				scPackage.setPaymentCurrency(TA.getCurrencyCode().trim());
 				scPackage.setExchangeRate(TA.getExchangeRate());
-				try { //TODO: static injection
-					for(TenderAnalysisDetail TADetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA)){
+				try { //
+					for(TenderDetail TADetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA)){
 						scSum = scSum + (TADetails.getQuantity()*TADetails.getFeedbackRateDomestic());
-						scDetails = new SCDetailsBQ();
-						scDetails.setScPackage(scPackage);
+						scDetails = new SubcontractDetailBQ();
+						scDetails.setSubcontract(scPackage);
 						scDetails.setSequenceNo(TADetails.getSequenceNo());
 						scDetails.setResourceNo(TADetails.getResourceNo());
 						if("BQ".equalsIgnoreCase(TADetails.getLineType())){
 							if (budgetTA!=null)
 								try {
-									for (TenderAnalysisDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
+									for (TenderDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
 										if (TADetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
 											scDetails.setCostRate(budgetTADetail.getFeedbackRateDomestic());
 										}
@@ -159,12 +159,12 @@ public class SCPackageLogic {
 						scDetails.setLineType(TADetails.getLineType());
 						scDetails.setUnit(TADetails.getUnit());
 						scDetails.setRemark(TADetails.getRemark());
-						scDetails.setApproved(SCDetails.APPROVED);
+						scDetails.setApproved(SubcontractDetail.APPROVED);
 						scDetails.setNewQuantity(TADetails.getQuantity());
-						scDetails.setJobNo(scPackage.getJob().getJobNumber());
+						scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
 						scDetails.setTenderAnalysisDetail_ID(TADetails.getId());
 						scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
-						scDetails.setScPackage(scPackage);;
+						scDetails.setSubcontract(scPackage);;
 					}
 				} catch (DatabaseOperationException e) {
 					e.printStackTrace();
@@ -191,24 +191,24 @@ public class SCPackageLogic {
 		return scPackage;
 	}
 	
-	public static SCPackage toCompleteSplitTerminate(SCPackage scPackage, List<SCDetails> scDetailsIncludingInactive){
+	public static Subcontract toCompleteSplitTerminate(Subcontract scPackage, List<SubcontractDetail> scDetailsIncludingInactive){
 		Double scSum = 0.00;
 		Double approvedVO = 0.00;
 		
-		for (SCDetails scDetail: scDetailsIncludingInactive){
-			if(scDetail==null || scDetail.getSystemStatus().equals(SCDetails.INACTIVE))
+		for (SubcontractDetail scDetail: scDetailsIncludingInactive){
+			if(scDetail==null || scDetail.getSystemStatus().equals(SubcontractDetail.INACTIVE))
 				continue;
 			
-			if (scDetail instanceof SCDetailsBQ){
+			if (scDetail instanceof SubcontractDetailBQ){
 				// if Qty <> newQty and either it is BQ/B1 or has budget(cost Rate >0)
 				if (scDetail.getCostRate()!=null && 
-					((!(scDetail instanceof SCDetailsVO)) || Math.abs(scDetail.getCostRate())>0) && 
+					((!(scDetail instanceof SubcontractDetailVO)) || Math.abs(scDetail.getCostRate())>0) && 
 					!scDetail.getNewQuantity().equals(scDetail.getQuantity())){
-					((SCDetailsBQ)scDetail).setQuantity(scDetail.getNewQuantity());
-					((SCDetailsBQ)scDetail).setToBeApprovedQuantity(scDetail.getNewQuantity());
+					((SubcontractDetailBQ)scDetail).setQuantity(scDetail.getNewQuantity());
+					((SubcontractDetailBQ)scDetail).setToBeApprovedQuantity(scDetail.getNewQuantity());
 				}
-				if (scDetail instanceof SCDetailsVO){
-					if (SCDetails.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
+				if (scDetail instanceof SubcontractDetailVO){
+					if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
 						approvedVO = approvedVO + (scDetail.getQuantity()*scDetail.getScRate());
 				}
 				else
@@ -220,19 +220,19 @@ public class SCPackageLogic {
 		scPackage.setRemeasuredSubcontractSum(scSum);
 		scPackage.setApprovedVOAmount(approvedVO);
 		
-		if(SCPackage.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms()))
+		if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms()))
 			scPackage.setRetentionAmount(RoundingUtil.round(scSum * scPackage.getMaxRetentionPercentage()/100.00,2));	
-		if(SCPackage.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms()))
+		if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms()))
 			scPackage.setRetentionAmount(RoundingUtil.round((scSum+approvedVO) * scPackage.getMaxRetentionPercentage()/100.00,2));
 		
 		return scPackage;
 	}
 
-	public TenderAnalysisDetailHBDao getTenderAnalysisDetailHBDao() {
+	public TenderDetailHBDao getTenderAnalysisDetailHBDao() {
 		return tenderAnalysisDetailHBDao;
 	}
 
-	public static void setTenderAnalysisDetailHBDao(TenderAnalysisDetailHBDao tenderAnalysisDetailHBDao) {
+	public static void setTenderAnalysisDetailHBDao(TenderDetailHBDao tenderAnalysisDetailHBDao) {
 		SCPackageLogic.tenderAnalysisDetailHBDao = tenderAnalysisDetailHBDao;
 	}
 }

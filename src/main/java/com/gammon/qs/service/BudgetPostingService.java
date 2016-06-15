@@ -16,9 +16,9 @@ import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactions
 import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.getValidateAAICompletely.ValidateAAICompletelyResponseObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.dao.BudgetPostingWSDao;
-import com.gammon.qs.dao.JobWSDao;
-import com.gammon.qs.dao.ResourceHBDao;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.dao.JobInfoWSDao;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
@@ -28,13 +28,13 @@ import com.gammon.qs.wrapper.BudgetPostingWrapper;
 public class BudgetPostingService {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired
-	private ResourceHBDao resourceDao;
+	private BpiItemResourceHBDao resourceDao;
 	@Autowired
 	private BudgetPostingWSDao budgetPostingDao;
 	@Autowired
 	private MasterListService masterListRepository;
 	@Autowired
-	private JobWSDao jobWsDao;
+	private JobInfoWSDao jobWsDao;
 	@Autowired
 	private EnvironmentConfig environmentConfig;
 	@Autowired
@@ -69,7 +69,7 @@ public class BudgetPostingService {
 		if (jobWsDao.checkConvertedStatusInJDE(jobNumber)==null)
 			return "Job Additional Information has not been created. Please contact IMS to set [Conversion Status] in JDE.";
 		
-		Job job = jobWsDao.obtainJob(jobNumber);
+		JobInfo job = jobWsDao.obtainJob(jobNumber);
 		if(job.getBudgetPosted() != null && "Y".equals(job.getBudgetPosted().toUpperCase()))
 			return "The budget for this job has already been posted.";
 		
@@ -195,7 +195,7 @@ public class BudgetPostingService {
 		return null;
 	}
 	
-	private InsertJournalEntryTransactionsRequestObj createJournalEntry(Job job, String username){
+	private InsertJournalEntryTransactionsRequestObj createJournalEntry(JobInfo job, String username){
 		InsertJournalEntryTransactionsRequestObj journalEntry = new InsertJournalEntryTransactionsRequestObj();
 		journalEntry.setEdiUserId(username);
 		journalEntry.setEdiLineNumber(lineNumber++);

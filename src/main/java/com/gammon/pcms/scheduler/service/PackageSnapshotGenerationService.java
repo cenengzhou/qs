@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.JobHBDao;
-import com.gammon.qs.dao.SCDetailsHBDao;
-import com.gammon.qs.dao.SCPackageHBDao;
-import com.gammon.qs.dao.SCPackageSnapshotHBDao;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.dao.SubcontractSnapshotHBDao;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.shared.util.CalculationUtil;
 @Component
@@ -28,28 +28,28 @@ public class PackageSnapshotGenerationService {
 	@Autowired
 	private MailContentGenerator mailContentGenerator;
 	@Autowired
-	private SCPackageSnapshotHBDao scPackageSnapshotDao;
+	private SubcontractSnapshotHBDao scPackageSnapshotDao;
 	@Autowired
-	private JobHBDao jobHBDao;
+	private JobInfoHBDao jobHBDao;
 	@Autowired
-	private SCPackageHBDao scPackageHBDao;
+	private SubcontractHBDao scPackageHBDao;
 	@Autowired
-	private SCDetailsHBDao scDetailsHBDao;
+	private SubcontractDetailHBDao scDetailsHBDao;
 	
 	/**
 	 * @author koeyyeung
 	 * created on 26 Aug, 2014
 	 * **/
-	//duplicate all the records in QS_SC_PACKAGE to QS_SC_PACKAGE_SNAPSHOT on 26th of every month at 7:30am
+	//duplicate all the records in SUBCONTRACT to SUBCONTRACT_SNAPSHOT on 26th of every month at 7:30am
 	public void generateSCPackageSnapshot(){
 		logger.info("------------------------generateSCPackageSnapshot(START)----------------------------");
 		String content="";
 		Date startTime = new Date();
 		
-		List<Job> jobList;
+		List<JobInfo> jobList;
 		try {
 			jobList = jobHBDao.getAllActive();
-			for (Job job : jobList)
+			for (JobInfo job : jobList)
 				calculateTotalWDAmountByJob(job.getJobNumber());
 
 		} catch (DatabaseOperationException e) {
@@ -103,16 +103,16 @@ public class PackageSnapshotGenerationService {
 	public Boolean calculateTotalWDAmountByJob(String jobNumber) {
 		logger.info("STARTED -> recalculateTotalWDAmountByJob()");
 		try {
-			List<SCPackage> scPackages = scPackageHBDao.obtainPackageList(jobNumber);
+			List<Subcontract> scPackages = scPackageHBDao.obtainPackageList(jobNumber);
 
 			// calculate the total work done amount for each subcontract of the specified job
-			for (SCPackage scPackage : scPackages) {
+			for (Subcontract scPackage : scPackages) {
 				if (scPackage.isAwarded()) {
-					List<SCDetails> scDetails = scDetailsHBDao.getSCDetails(scPackage);
+					List<SubcontractDetail> scDetails = scDetailsHBDao.getSCDetails(scPackage);
 					double totalCumWorkDoneAmount = 0.00;
 					double totalPostedWorkDoneAmount = 0.00;
 
-					for (SCDetails scDetail : scDetails) {
+					for (SubcontractDetail scDetail : scDetails) {
 						if (BasePersistedAuditObject.ACTIVE.equals(scDetail.getSystemStatus())) {
 							boolean toBeUpdated = !"C1".equals(scDetail.getLineType()) && !"C2".equals(scDetail.getLineType()) && !"MS".equals(scDetail.getLineType()) && !"RR".equals(scDetail.getLineType()) && !"RA".equals(scDetail.getLineType());
 

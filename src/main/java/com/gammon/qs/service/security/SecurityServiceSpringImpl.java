@@ -27,8 +27,8 @@ public class SecurityServiceSpringImpl implements SecurityService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && !authentication.getPrincipal().equals("anonymousUser") 
 				&& authentication.getAuthorities().size() > 0 && !(((GrantedAuthority) authentication.getAuthorities().toArray()[0]).getAuthority().equals("ROLE_"+env.getProperty("role.pcms-ws")))) {
-			SpringSecurityUser user = (SpringSecurityUser)authentication.getPrincipal();
-			return user.getUser();
+			User user = (User)authentication.getPrincipal();
+			return user;
 		}
 
 		return null;

@@ -3,7 +3,7 @@ package com.gammon.qs.wrapper;
 import java.io.Serializable;
 
 import com.gammon.qs.application.BasePersistedObject;
-import com.gammon.qs.domain.SCDetails;
+import com.gammon.qs.domain.SubcontractDetail;
 
 public class SCDetailProvisionHistoryWrapper extends BasePersistedObject
 		implements Serializable {
@@ -21,13 +21,13 @@ public class SCDetailProvisionHistoryWrapper extends BasePersistedObject
 	private Double cumLiabilitiesQty;
 	private Double cumulativeCertifiedQuantity;
 	private Double scRate;
-	private SCDetails scDetails;
+	private SubcontractDetail scDetails;
 	private String createdUser;
 
 	public SCDetailProvisionHistoryWrapper() {
 	}
 
-	public SCDetailProvisionHistoryWrapper(SCDetails scDetails,
+	public SCDetailProvisionHistoryWrapper(SubcontractDetail scDetails,
 			Integer postedYr, Integer postedMonth,
 			String objectCode, String subsidiaryCode,
 			Double postedCertAmount, Double cumLiabilitiesAmount,
@@ -46,7 +46,7 @@ public class SCDetailProvisionHistoryWrapper extends BasePersistedObject
 		this.scRate = scRate;
 	}
 
-	public SCDetailProvisionHistoryWrapper(SCDetails scDetails,
+	public SCDetailProvisionHistoryWrapper(SubcontractDetail scDetails,
 			Integer postedYr, Integer postedMonth, String objectCode,
 			String subsidiaryCode, Double postedCertQty,
 			Double cumLiabilitiesQty, Double scRate) {
@@ -63,11 +63,11 @@ public class SCDetailProvisionHistoryWrapper extends BasePersistedObject
 		this.scRate = scRate;
 	}
 
-	public SCDetails getScDetails() {
+	public SubcontractDetail getScDetails() {
 		return scDetails;
 	}
 
-	public void setScDetails(SCDetails scDetails) {
+	public void setScDetails(SubcontractDetail scDetails) {
 		this.scDetails = scDetails;
 	}
 

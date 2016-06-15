@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dao.SCPackageSPDao;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.SCPackageHBDao;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.service.SubcontractService;
 
 @RestController
 @RequestMapping(value = "service",
@@ -31,16 +32,16 @@ public class SubcontractController {
 	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
-	private PackageService packageService;
+	private SubcontractService subcontractService;
 	@Autowired
 	private SCPackageSPDao scPackageSPDao;
 	
 	@RequestMapping(value = "GetSubcontractList.json")
 //	public void getSubcontractList(@RequestBody GetSubcontractListRequest request){
-	public List<SCPackage> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
-		List<SCPackage> subcontractList = null;
+	public List<Subcontract> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
+		List<Subcontract> subcontractList = null;
 		try{
-			subcontractList = scPackageSPDao.findByJob_JobNumberAndSubcontractStatusAndSystemStatus(jobNo, 500, "ACTIVE");
+			subcontractList = scPackageSPDao.findByJobInfo_JobNumberAndSubcontractStatusAndSystemStatus(jobNo, 500, "ACTIVE");
 		}catch(DatabaseOperationException databaseOperationException){
 			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();
@@ -49,10 +50,10 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "getPackageList.json")
-	public List<SCPackage> getPackageList(@RequestParam(name="jobNo") String jobNo){
-		List<SCPackage> subcontractList = null;
+	public List<Subcontract> getPackageList(@RequestParam(name="jobNo") String jobNo){
+		List<Subcontract> subcontractList = null;
 		try{
-			subcontractList = packageService.obtainPackageList(jobNo);
+			subcontractList = subcontractService.obtainSubcontractList(jobNo);
 		}catch(DatabaseOperationException databaseOperationException){
 			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();

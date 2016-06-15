@@ -2,9 +2,9 @@ package com.gammon.qs.shared;
 
 import java.util.Map;
 
-import com.gammon.qs.domain.MainContractCertificate;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SystemConstant;
+import com.gammon.qs.domain.MainCert;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.AppSubcontractStandardTerms;
 
 
 public class GlobalParameter {
@@ -84,7 +84,7 @@ public class GlobalParameter {
 	public static String[][] getPaymentTerms(boolean withDefault){
 		if(withDefault)
 			return new String[][]{
-					new String[]{"",SystemConstant.CONST_ALL},
+					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
 					new String[]{"QS0", "QS0 - Manual Input Due Date"},
 					new String[]{"QS1", "QS1 - Pay when Paid + 7 days"},
 					new String[]{"QS2", "QS2 - Pay when Paid + 14 days"},
@@ -110,30 +110,30 @@ public class GlobalParameter {
 	public static String[][] getRetentionType(boolean withDefault){
 		if(withDefault)
 			return new String[][]{
-					new String[]{"",SystemConstant.CONST_ALL},
-					new String[]{SCPackage.RETENTION_LUMPSUM,SCPackage.RETENTION_LUMPSUM},
-					new String[]{SCPackage.RETENTION_ORIGINAL,SCPackage.RETENTION_ORIGINAL},
-					new String[]{SCPackage.RETENTION_REVISED,SCPackage.RETENTION_REVISED}
+					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
+					new String[]{Subcontract.RETENTION_LUMPSUM,Subcontract.RETENTION_LUMPSUM},
+					new String[]{Subcontract.RETENTION_ORIGINAL,Subcontract.RETENTION_ORIGINAL},
+					new String[]{Subcontract.RETENTION_REVISED,Subcontract.RETENTION_REVISED}
 		};
 		else
 		return new String[][]{
-				new String[]{SCPackage.RETENTION_LUMPSUM,SCPackage.RETENTION_LUMPSUM},
-				new String[]{SCPackage.RETENTION_ORIGINAL,SCPackage.RETENTION_ORIGINAL},
-				new String[]{SCPackage.RETENTION_REVISED,SCPackage.RETENTION_REVISED}
+				new String[]{Subcontract.RETENTION_LUMPSUM,Subcontract.RETENTION_LUMPSUM},
+				new String[]{Subcontract.RETENTION_ORIGINAL,Subcontract.RETENTION_ORIGINAL},
+				new String[]{Subcontract.RETENTION_REVISED,Subcontract.RETENTION_REVISED}
 		};
 	}
 
 	public static String[][] getReviewedByFinance(boolean withDefault){
 		if(withDefault)
 			return new String[][]{
-					new String[]{"",SystemConstant.CONST_ALL},
-					new String[]{SystemConstant.FINQS0REVIEW_Y,SystemConstant.FINQS0REVIEW_Y},
-					new String[]{SystemConstant.FINQS0REVIEW_N,SystemConstant.FINQS0REVIEW_N}
+					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
+					new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_Y,AppSubcontractStandardTerms.FINQS0REVIEW_Y},
+					new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_N,AppSubcontractStandardTerms.FINQS0REVIEW_N}
 		};
 		else
 		return new String[][]{
-				new String[]{SystemConstant.FINQS0REVIEW_Y,SystemConstant.FINQS0REVIEW_Y},
-				new String[]{SystemConstant.FINQS0REVIEW_N,SystemConstant.FINQS0REVIEW_N}
+				new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_Y,AppSubcontractStandardTerms.FINQS0REVIEW_Y},
+				new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_N,AppSubcontractStandardTerms.FINQS0REVIEW_N}
 		};
 	}
 
@@ -176,11 +176,11 @@ public class GlobalParameter {
 	
 	public final static String[][] getMainCertficateStatuses(){
 		return new String[][]{
-				new String[]{MainContractCertificate.CERT_CREATED, 					MainContractCertificate.CERT_CREATED_DESC},
-				new String[]{MainContractCertificate.IPA_SENT, 						MainContractCertificate.IPA_SENT_DESC},
-				new String[]{MainContractCertificate.CERT_CONFIRMED, 				MainContractCertificate.CERT_CONFIRMED_DESC},
-				new String[]{MainContractCertificate.CERT_WAITING_FOR_APPROVAL, 	MainContractCertificate.CERT_WAITING_FOR_APPROVAL_DESC},
-				new String[]{MainContractCertificate.CERT_POSTED, 					MainContractCertificate.CERT_POSTED_DESC}
+				new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
+				new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
+				new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
+				new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
+				new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC}
 		};
 	}
 	
@@ -188,21 +188,21 @@ public class GlobalParameter {
 		if(withOptions){
 			return new String[][]{
 					new String[]{"", 													"All"},
-					new String[]{MainContractCertificate.CERT_CREATED, 					MainContractCertificate.CERT_CREATED_DESC},
-					new String[]{MainContractCertificate.IPA_SENT, 						MainContractCertificate.IPA_SENT_DESC},
-					new String[]{MainContractCertificate.CERT_CONFIRMED, 				MainContractCertificate.CERT_CONFIRMED_DESC},
-					new String[]{MainContractCertificate.CERT_WAITING_FOR_APPROVAL, 	MainContractCertificate.CERT_WAITING_FOR_APPROVAL_DESC},
-					new String[]{MainContractCertificate.CERT_POSTED, 					MainContractCertificate.CERT_POSTED_DESC},
+					new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
+					new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
+					new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
+					new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
+					new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC},
 					new String[]{"400", 												"Payment Received"}
 			};
 		}
 		else
 			return new String[][]{
-					new String[]{MainContractCertificate.CERT_CREATED, 					MainContractCertificate.CERT_CREATED_DESC},
-					new String[]{MainContractCertificate.IPA_SENT, 						MainContractCertificate.IPA_SENT_DESC},
-					new String[]{MainContractCertificate.CERT_CONFIRMED, 				MainContractCertificate.CERT_CONFIRMED_DESC},
-					new String[]{MainContractCertificate.CERT_WAITING_FOR_APPROVAL, 	MainContractCertificate.CERT_WAITING_FOR_APPROVAL_DESC},
-					new String[]{MainContractCertificate.CERT_POSTED, 					MainContractCertificate.CERT_POSTED_DESC},
+					new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
+					new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
+					new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
+					new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
+					new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC},
 					new String[]{"400", 												"Payment Received"}
 			};
 	}

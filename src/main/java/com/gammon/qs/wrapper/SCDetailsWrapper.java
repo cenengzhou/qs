@@ -3,8 +3,8 @@ package com.gammon.qs.wrapper;
 import java.io.Serializable;
 
 import com.gammon.qs.application.BasePersistedObject;
-import com.gammon.qs.domain.SCDetails;
-import com.gammon.qs.domain.SCPackage;
+import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 public class SCDetailsWrapper extends BasePersistedObject implements Serializable {
@@ -15,7 +15,7 @@ public class SCDetailsWrapper extends BasePersistedObject implements Serializabl
 
 	private String				jobNo;
 
-	private SCPackage			scPackage;
+	private Subcontract			scPackage;
 
 	private Integer				sequenceNo;
 	private Integer				resourceNo;
@@ -123,11 +123,11 @@ public class SCDetailsWrapper extends BasePersistedObject implements Serializabl
 		this.originalQuantity = (originalQuantity != null ? CalculationUtil.round(originalQuantity, 4) : 0.00);
 	}
 
-	public SCPackage getScPackage() {
+	public Subcontract getScPackage() {
 		return scPackage;
 	}
 
-	public void setScPackage(SCPackage scPackage) {
+	public void setScPackage(Subcontract scPackage) {
 		this.scPackage = scPackage;
 	}
 
@@ -268,8 +268,8 @@ public class SCDetailsWrapper extends BasePersistedObject implements Serializabl
 	}
 
 	public boolean equals(Object object) {
-		if (object instanceof SCDetails) {
-			if (this.billItem.equals(((SCDetails) object).getBillItem()) && this.getScPackage().getJob().getJobNumber().equals(((SCDetails) object).getScPackage().getJob().getJobNumber()) && this.getScPackage().getPackageNo().equals(((SCDetails) object).getScPackage().getPackageNo()) && this.getSequenceNo().equals(((SCDetails) object).getSequenceNo()))
+		if (object instanceof SubcontractDetail) {
+			if (this.billItem.equals(((SubcontractDetail) object).getBillItem()) && this.getScPackage().getJobInfo().getJobNumber().equals(((SubcontractDetail) object).getSubcontract().getJobInfo().getJobNumber()) && this.getScPackage().getPackageNo().equals(((SubcontractDetail) object).getSubcontract().getPackageNo()) && this.getSequenceNo().equals(((SubcontractDetail) object).getSequenceNo()))
 				return true;
 			else
 				return false;
@@ -360,9 +360,9 @@ public class SCDetailsWrapper extends BasePersistedObject implements Serializabl
 		return sourceType;
 	}
 
-	public void updateSCWrapper(SCDetails scDetail) {
+	public void updateSCWrapper(SubcontractDetail scDetail) {
 		this.setJobNo(scDetail.getJobNo());
-		this.setScPackage(scDetail.getScPackage());
+		this.setScPackage(scDetail.getSubcontract());
 		this.setSequenceNo(scDetail.getSequenceNo());
 		this.setResourceNo(scDetail.getResourceNo());
 		this.setBillItem(scDetail.getBillItem());

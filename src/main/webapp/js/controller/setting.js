@@ -1,26 +1,36 @@
-mainApp.controller('AppCtrl', ['$http', '$scope', '$location', function($http, $scope, $location) {
+mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'SessionHelper', function($http, $scope, $location, $window, SessionHelper) {
 	   
-    $scope.$on('$includeContentLoaded', function() {
+    $scope.$on('$includeContentLoaded', function(event) {
         App.initComponent();
     });
-    $scope.$on('$viewContentLoaded', function() {
+    $scope.$on('$viewContentLoaded', function(event, viewConfig) {
         App.initComponent();
     });
-    $scope.$on('$stateChangeStart', function() {
+    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+    	SessionHelper.validateSession()
+    	.then(function(data){
+    		if(data){
+    			console.log('validate session:' + data);
+    		}else{
+    			if(toState.name != 'logout'){
+    				$window.location.href = 'login.htm';
+    			}
+    		}
+    		});
     	App.initComponent();
         App.scrollTop();
         $('.pace .pace-progress').addClass('hide');
         $('.pace').removeClass('pace-inactive');
     });
-    $scope.$on('$stateChangeSuccess', function() {
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         Pace.restart();
         App.initPageLoad();
         //App.initSidebarSelection();
     });
-    $scope.$on('$stateNotFound', function() {
+    $scope.$on('$stateNotFound', function(event, unfoundState, fromState, fromParams) {
         Pace.stop();
     });
-    $scope.$on('$stateChangeError', function() {
+    $scope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
         Pace.stop();
     });
     
@@ -28,12 +38,8 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', function($http, $
     //Logout
     $scope.logout = function() {
     	console.log("Call logout function");
-    	$http.post('logout', {}).success(function() {
-    		$location.path("/logout");
-    		
-    	}).error(function(data) {
-    		//$rootScope.authenticated = false;
-    	});
+    	$location.path("/logout");
+    	
     }
   
 }]);

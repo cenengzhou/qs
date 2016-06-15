@@ -27,10 +27,10 @@ import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.g
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.BQHBDao;
-import com.gammon.qs.dao.BQResourceSummaryHBDao;
-import com.gammon.qs.dao.ResourceHBDao;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.dao.BpiItemHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
@@ -42,11 +42,11 @@ import com.gammon.qs.wrapper.ivPosting.AccountIVWrapper;
 public class IVPostingService  {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired
-	private BQResourceSummaryHBDao bqResourceSummaryDao;
+	private ResourceSummaryHBDao bqResourceSummaryDao;
 	@Autowired
-	private BQHBDao bqHBDao;
+	private BpiItemHBDao bqItemHBDao;
 	@Autowired
-	private ResourceHBDao resourceHBDao;
+	private BpiItemResourceHBDao resourceHBDao;
 	@Autowired
 	@Qualifier("getNextNumberWebServiceTemplate")
 	private WebServiceTemplate getJDENextNumberWebServiceTemplate;
@@ -71,7 +71,7 @@ public class IVPostingService  {
 	@Autowired
 	private MasterListService masterListRepository;
 	@Autowired
-	private JobService jobRepository;
+	private JobInfoService jobRepository;
 	@Autowired
 	@Qualifier("webservicePasswordConfig")
 	private WSConfig wsConfig;
@@ -118,7 +118,7 @@ public class IVPostingService  {
 	private static final String versionJI = "GCL0003";
 	private static final String version10 = "GCL0001";
 	
-	public Boolean postIVAmounts(Job job, String username, boolean finalized) throws Exception{
+	public Boolean postIVAmounts(JobInfo job, String username, boolean finalized) throws Exception{
 		return postIVAmounts(job, username, null, finalized);
 	}
 	
@@ -127,7 +127,7 @@ public class IVPostingService  {
 	 * modified on 3rdJune, 2015
 	 * Separate IV posting for final package
 	 * Add parameter: finalized**/
-	public Boolean postIVAmounts(Job job, String username,Date glDate, boolean finalized) throws Exception{
+	public Boolean postIVAmounts(JobInfo job, String username,Date glDate, boolean finalized) throws Exception{
 		logger.info("postIVAmounts(Job: "+job.getJobNumber()+" - Username: "+username +" - finalized: "+finalized);
 		
 		job = jobRepository.obtainJob(job.getJobNumber());
@@ -493,7 +493,7 @@ public class IVPostingService  {
 		//(currIV -> postedIV)
 		updatedPostedIVInDB = updatedPostedIVInDB && bqResourceSummaryDao.updateBQResourceSummariesAfterPosting(job, username, finalized);
 		if(job.getRepackagingType().equals("3")){
-			updatedPostedIVInDB = updatedPostedIVInDB && bqHBDao.updateBQItemsAfterPosting(job, username);
+			updatedPostedIVInDB = updatedPostedIVInDB && bqItemHBDao.updateBpiItemsAfterPosting(job, username);
 			updatedPostedIVInDB = updatedPostedIVInDB && resourceHBDao.updateResourcesAfteringPosting(job, username);
 			bqResourceSummaryDao.updateBQResourceSummariesAfterPostingForRepackaging3(job, username);
 		}
@@ -501,7 +501,7 @@ public class IVPostingService  {
 		return updatedPostedIVInDB;
 	}
 	
-	private InsertJournalEntryTransactionsRequestObj createBaseJournalEntry(Job job, String username,String batchNumber,Date postingDate,Date glDate,Integer periodNumber,Integer century, Integer fiscalYear, String currencyCode, Double lineNumber, String documentNumber, int postingTime){
+	private InsertJournalEntryTransactionsRequestObj createBaseJournalEntry(JobInfo job, String username,String batchNumber,Date postingDate,Date glDate,Integer periodNumber,Integer century, Integer fiscalYear, String currencyCode, Double lineNumber, String documentNumber, int postingTime){
 		InsertJournalEntryTransactionsRequestObj journalEntry = new InsertJournalEntryTransactionsRequestObj();
 		journalEntry.setEdiUserId(username);
 		journalEntry.setEdiTransactNumber(transactionNumber);
@@ -538,7 +538,7 @@ public class IVPostingService  {
 		return journalEntry;
 	}
 	
-	public String getNextIndexNumber(Job job, String productCode, Integer indexNumber){
+	public String getNextIndexNumber(JobInfo job, String productCode, Integer indexNumber){
 		logger.info("getNextIndexNumber: " + productCode + indexNumber);
 		GetNextNumberRequestObj requestObj = new GetNextNumberRequestObj();
 		requestObj.setProductCode(productCode);
@@ -552,7 +552,7 @@ public class IVPostingService  {
 		return responseObj.getNextNumberRange1().toString();
 	}
 	
-	private InsertJournalEntryTransactionsRequestObj createAAJournalEntry(Job job, String username, String itemNumber, String batchNumber,Date postingDate,Date glDate,Integer periodNumber,Integer century, Integer fiscalYear, String currencyCode,Double lineNumber, String documentNumber,int postingTime) throws Exception{
+	private InsertJournalEntryTransactionsRequestObj createAAJournalEntry(JobInfo job, String username, String itemNumber, String batchNumber,Date postingDate,Date glDate,Integer periodNumber,Integer century, Integer fiscalYear, String currencyCode,Double lineNumber, String documentNumber,int postingTime) throws Exception{
 		//Get the account from AAI
 		ValidateAAICompletelyRequestObj aaiRequest = new ValidateAAICompletelyRequestObj();
 		aaiRequest.setBusinessUnit(job.getJobNumber());

@@ -58,7 +58,7 @@ public class GetTextAttachmentController {
 		requestObj.setNameObject(nameObject);
 		requestObj.setTextKey(textKey);
 		requestObj.setSequenceNo(sequenceNo);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		GetTextAttachmentResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/getTextAttachment", requestObj, GetTextAttachmentResponse.class);

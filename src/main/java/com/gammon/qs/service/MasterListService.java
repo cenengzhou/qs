@@ -16,11 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddressBookWithSCStatus.GetAddressBookWithSCStatusRequestObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MasterListWSDao;
-import com.gammon.qs.dao.ObjectSubsidiaryRuleHBDao;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.domain.ObjectSubsidiaryRule;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.admin.AdminService;
@@ -35,8 +33,6 @@ public class MasterListService{
 	private MasterListWSDao masterListDao;
 	@Autowired
 	private AdminService adminService;
-	@Autowired
-	private ObjectSubsidiaryRuleHBDao objectSubsidiaryRuleDao;
 	
 	//server cache
 	private List<MasterListVendor> vendorList;
@@ -575,29 +571,29 @@ public class MasterListService{
 		logger.info(message);
 		return message;
 	}
-	
 	public boolean validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode ){
-		ObjectSubsidiaryRule checkingObj = new ObjectSubsidiaryRule();
-		if (objectCode!=null)
-			checkingObj.setResourceType(objectCode.substring(0, 2));
-		if (subsidiaryCode!=null){
-			checkingObj.setCostCategory(subsidiaryCode.substring(0,1));
-			checkingObj.setMainTrade(subsidiaryCode.substring(2,4));
-		}
-		logger.info("ObjectSubsidiaryRule:ResourceType:"+checkingObj.getResourceType()+"-CostCategory:"+checkingObj.getCostCategory()+"-MainTrade:"+checkingObj.getMainTrade()+"-"+checkingObj.getApplicable());		
-		List<ObjectSubsidiaryRule> returnObject = objectSubsidiaryRuleDao.getObjectSubsidiaryRule(checkingObj);
-		if (returnObject==null || returnObject.size()<1){
-			logger.info("result:Null");
-			return false;
-		}
-		for (ObjectSubsidiaryRule aRule:returnObject)
-			if (aRule.getApplicable()==null||!"Y".equalsIgnoreCase(aRule.getApplicable().trim())){
-				logger.info("aRule.getApplicable():"+aRule.getApplicable());
-				return false;				
-			}
-		logger.info("Found");
-		return true;
-				
+		throw new RuntimeException("remove entity | ObjectSubsidiaryRule | remark validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode )");
+		//TODO: remove entity | ObjectSubsidiaryRule | remark validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode )
+//		ObjectSubsidiaryRule checkingObj = new ObjectSubsidiaryRule();
+//		if (objectCode!=null)
+//			checkingObj.setResourceType(objectCode.substring(0, 2));
+//		if (subsidiaryCode!=null){
+//			checkingObj.setCostCategory(subsidiaryCode.substring(0,1));
+//			checkingObj.setMainTrade(subsidiaryCode.substring(2,4));
+//		}
+//		logger.info("ObjectSubsidiaryRule:ResourceType:"+checkingObj.getResourceType()+"-CostCategory:"+checkingObj.getCostCategory()+"-MainTrade:"+checkingObj.getMainTrade()+"-"+checkingObj.getApplicable());		
+//		List<ObjectSubsidiaryRule> returnObject = objectSubsidiaryRuleDao.getObjectSubsidiaryRule(checkingObj);
+//		if (returnObject==null || returnObject.size()<1){
+//			logger.info("result:Null");
+//			return false;
+//		}
+//		for (ObjectSubsidiaryRule aRule:returnObject)
+//			if (aRule.getApplicable()==null||!"Y".equalsIgnoreCase(aRule.getApplicable().trim())){
+//				logger.info("aRule.getApplicable():"+aRule.getApplicable());
+//				return false;				
+//			}
+//		logger.info("Found");
+//		return true;
 	}
 	
 	/**

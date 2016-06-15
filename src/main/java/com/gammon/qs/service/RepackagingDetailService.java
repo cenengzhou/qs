@@ -25,15 +25,13 @@ import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.User;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.BQResourceSummaryHBDao;
 import com.gammon.qs.dao.RepackagingDetailHBDao;
-import com.gammon.qs.dao.RepackagingEntryHBDao;
-import com.gammon.qs.dao.application.UserHBDao;
-import com.gammon.qs.domain.BQResourceSummary;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.dao.RepackagingHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.RepackagingDetail;
-import com.gammon.qs.domain.RepackagingEntry;
+import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.service.admin.MailService;
@@ -44,7 +42,6 @@ import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.EmailMessage;
 import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
-import com.google.gson.Gson;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -56,9 +53,9 @@ public class RepackagingDetailService implements Serializable {
 	@Autowired
 	private transient RepackagingDetailHBDao repackagingDetailDao;
 	@Autowired
-	private transient RepackagingEntryHBDao repackagingEntryDao;
+	private transient RepackagingHBDao repackagingEntryDao;
 	@Autowired
-	private transient BQResourceSummaryHBDao bqResourceSummaryDao;
+	private transient ResourceSummaryHBDao bqResourceSummaryDao;
 	@Autowired
 	@Qualifier("insertRepackagingBudgetWebServiceTemplate")
 	private transient WebServiceTemplate insertRepackagingBudgetTemplate;
@@ -74,8 +71,6 @@ public class RepackagingDetailService implements Serializable {
 	private transient EnvironmentConfig environmentConfig; 	
 	@Autowired
 	private MailService mailService;
-	@Autowired
-	private UserHBDao userDao;
 	
 	private List<RepackagingDetailComparisonWrapper> cachedResults = new ArrayList<RepackagingDetailComparisonWrapper>();
 	private Double totalBudget;
@@ -86,9 +81,9 @@ public class RepackagingDetailService implements Serializable {
 	static final int RECORDS_PER_PAGE = 200;  
 	private static final String ROLE_QS_APPROVER_ID = "ROLE_QS_APPROVER";
 
-	public RepackagingEntry generateResourceSummaries(Job job) throws Exception {
-		RepackagingEntry entry = new RepackagingEntry();
-		entry.setJob(job);
+	public Repackaging generateResourceSummaries(JobInfo job) throws Exception {
+		Repackaging entry = new Repackaging();
+		entry.setJobInfo(job);
 		entry.setRepackagingVersion(Integer.valueOf(1));
 		entry.setCreateDate(new Date());
 		entry.setRemarks("Generated resource summaries");
@@ -101,21 +96,21 @@ public class RepackagingDetailService implements Serializable {
 		return entry;
 	}
 	
-	public Double prepareRepackagingDetails(RepackagingEntry repackagingEntry)
+	public Double prepareRepackagingDetails(Repackaging repackagingEntry)
 			throws Exception {
 		logger.info("Generating resource snapshot");
 
-		RepackagingEntry entryInDB;
+		Repackaging entryInDB;
 		
 		if(repackagingEntry.getRepackagingVersion()==1)
 			entryInDB = repackagingEntry;
 		else
 			entryInDB = repackagingEntryDao.clearDetailsFromEntry(repackagingEntry.getId());
 
-		List<BQResourceSummary> resourceSummaries = bqResourceSummaryDao.getResourceSummariesByJob(entryInDB.getJob());
+		List<ResourceSummary> resourceSummaries = bqResourceSummaryDao.getResourceSummariesByJob(entryInDB.getJobInfo());
 
 		Double totalAmount = Double.valueOf(0);
-		for(BQResourceSummary resourceSummary : resourceSummaries){
+		for(ResourceSummary resourceSummary : resourceSummaries){
 			RepackagingDetail repackagingDetail = new RepackagingDetail();
 			repackagingDetail.setResourceSummaryId(resourceSummary.getId());
 			repackagingDetail.setPackageNo(resourceSummary.getPackageNo());
@@ -134,7 +129,7 @@ public class RepackagingDetailService implements Serializable {
 			repackagingDetail.setResourceType(resourceSummary.getResourceType());
 			repackagingDetail.setExcludeLevy(resourceSummary.getExcludeLevy());
 			repackagingDetail.setExcludeDefect(resourceSummary.getExcludeDefect());
-			repackagingDetail.setRepackagingEntry(entryInDB);
+			repackagingDetail.setRepackaging(entryInDB);
 		}
 		entryInDB.setTotalResourceAllowance(totalAmount);
 		entryInDB.setStatus("300");
@@ -142,11 +137,11 @@ public class RepackagingDetailService implements Serializable {
 		return totalAmount;
 	}
 	
-	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(RepackagingEntry repackagingEntry, String packageNo, String objectCode, String subsidiaryCode) throws Exception {
+	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(Repackaging repackagingEntry, String packageNo, String objectCode, String subsidiaryCode) throws Exception {
 		return repackagingDetailDao.searchRepackagingDetails(repackagingEntry, packageNo, objectCode, subsidiaryCode);
 	}
 
-	public RepackagingPaginationWrapper<RepackagingDetailComparisonWrapper> getRepackagingDetailsNewSearch(RepackagingEntry repackagingEntry, String packageNo,
+	public RepackagingPaginationWrapper<RepackagingDetailComparisonWrapper> getRepackagingDetailsNewSearch(Repackaging repackagingEntry, String packageNo,
 			String objectCode, String subsidiaryCode, boolean changesOnly) throws Exception {
 		setCachedResults(new ArrayList<RepackagingDetailComparisonWrapper>());
 		totalBudget = Double.valueOf(0);
@@ -163,7 +158,7 @@ public class RepackagingDetailService implements Serializable {
 			wrappers.put(detail.keyCode().hashCode(),detail);			
 		}
 		if(repackagingEntry.getRepackagingVersion() > 1){
-			RepackagingEntry previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJob(), repackagingEntry.getRepackagingVersion() - 1);
+			Repackaging previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJobInfo(), repackagingEntry.getRepackagingVersion() - 1);
 			List<RepackagingDetailComparisonWrapper> previousDetails = searchRepackagingDetails(previousEntry, packageNo, 
 					objectCode, subsidiaryCode);
 			if(previousDetails != null){
@@ -242,7 +237,7 @@ public class RepackagingDetailService implements Serializable {
 	public ExcelFile downloadRepackagingDetailExcelFile(String repackagingEntryId, String packageNo, String objectCode, String subsidiaryCode, boolean changesOnly) throws Exception  {
 		List<RepackagingDetailComparisonWrapper> resultList = new ArrayList<RepackagingDetailComparisonWrapper>();
 		
-		RepackagingEntry repackagingEntry = repackagingEntryDao.getRepackagingEntryWithJob(Long.parseLong(repackagingEntryId));
+		Repackaging repackagingEntry = repackagingEntryDao.getRepackagingEntryWithJob(Long.parseLong(repackagingEntryId));
 		if(repackagingEntry == null) {
 			return null;
 		}
@@ -258,7 +253,7 @@ public class RepackagingDetailService implements Serializable {
 		}
 		
 		if(repackagingEntry.getRepackagingVersion() > 1) {
-			RepackagingEntry previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJob(), repackagingEntry.getRepackagingVersion() - 1);
+			Repackaging previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJobInfo(), repackagingEntry.getRepackagingVersion() - 1);
 			List<RepackagingDetailComparisonWrapper> previousDetails = searchRepackagingDetails(previousEntry, packageNo, objectCode, subsidiaryCode);
 			if(previousDetails != null) {
 				for(RepackagingDetailComparisonWrapper detail : previousDetails) {
@@ -306,12 +301,12 @@ public class RepackagingDetailService implements Serializable {
 		return Boolean.TRUE;
 	}
 	
-	public Boolean postRepackagingDetails(RepackagingEntry repackagingEntry, String username) throws Exception{
-		logger.info("Posting repackaging details. Job: " + repackagingEntry.getJob().getJobNumber() + "; Version: " + repackagingEntry.getRepackagingVersion());
+	public Boolean postRepackagingDetails(Repackaging repackagingEntry, String username) throws Exception{
+		logger.info("Posting repackaging details. Job: " + repackagingEntry.getJobInfo().getJobNumber() + "; Version: " + repackagingEntry.getRepackagingVersion());
 		//Delete old repackaging details from jde
 		logger.info("Deleting old details from jde");
 		DeleteRepackagingBudgetRequestObj deleteRequest = new DeleteRepackagingBudgetRequestObj();
-		deleteRequest.setCostCenter(repackagingEntry.getJob().getJobNumber());
+		deleteRequest.setCostCenter(repackagingEntry.getJobInfo().getJobNumber());
 		DeleteRepackagingBudgetResponseObj deleteResponse = (DeleteRepackagingBudgetResponseObj)deleteRepackagingBudgetTemplate.marshalSendAndReceive(deleteRequest,
 				new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		if(deleteResponse.getE1MessageList() != null && deleteResponse.getE1MessageList().size() != 0){
@@ -328,7 +323,7 @@ public class RepackagingDetailService implements Serializable {
 		Calendar cal = Calendar.getInstance();
 		int postingTime = 10000 * cal.get(Calendar.HOUR_OF_DAY) + 100 * cal.get(Calendar.MINUTE) + cal.get(Calendar.SECOND);
 		for(InsertRepackagingBudgetRequestObj insertRequest : insertRequestList){
-			insertRequest.setCostCenter(repackagingEntry.getJob().getJobNumber());
+			insertRequest.setCostCenter(repackagingEntry.getJobInfo().getJobNumber());
 			if(insertRequest.getSubledger() != null && insertRequest.getSubledger().trim().length() != 0)
 				insertRequest.setSubledgerType("X");
 			insertRequest.setProgramId(WSPrograms.JP59140I_InsertRepackagingBudgetManager);
@@ -364,32 +359,36 @@ public class RepackagingDetailService implements Serializable {
 	
 	public String sendRepackagingConfirmationEmail (EmailMessage emailMessage){
 		logger.info("sendRepackagingConfirmationEmail(STARTED)");
-		@SuppressWarnings("unused")
-		List<User> user = new ArrayList<User>();
-		try {
-			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
-			//logger.info(new Gson().toJson(user));
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		//logger.info("Test to send email" + user.size());
-		Boolean emailSent = mailService.sendEmail(emailMessage);
-		if(emailSent){
-			return null;
-		}else{
-			return "Fail to send out the email. Please check the recipient address.";
-		}
+		throw new RuntimeException("GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.sendRepackagingConfirmationEmail (EmailMessage emailMessage)");
+		//TODO: GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.sendRepackagingConfirmationEmail (EmailMessage emailMessage);
+//		@SuppressWarnings("unused")
+//		List<User> user = new ArrayList<User>();
+//		try {
+//			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
+//			//logger.info(new Gson().toJson(user));
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
+//		//logger.info("Test to send email" + user.size());
+//		Boolean emailSent = mailService.sendEmail(emailMessage);
+//		if(emailSent){
+//			return null;
+//		}else{
+//			return "Fail to send out the email. Please check the recipient address.";
+//		}
 	}
 	
 	public List<User> obtainRepackagingEmailRecipients() {
-		List<User> user = new ArrayList<User>();
-		try {
-			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		logger.info(new Gson().toJson(user));
-		return user;
+		throw new RuntimeException("GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.obtainRepackagingEmailRecipients()");
+		//TODO: GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.obtainRepackagingEmailRecipients()
+//		List<User> user = new ArrayList<User>();
+//		try {
+//			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
+//		logger.info(new Gson().toJson(user));
+//		return user;
 	}
 
 	/**
@@ -397,20 +396,22 @@ public class RepackagingDetailService implements Serializable {
 	 * 05-Nov-2014
 	 */
 	public List<String> obtainUsernamesByEmails(List<String> emailAddressList) {
-		List<String> usernames = new ArrayList<String>();
-		for (int i=0; i<emailAddressList.size(); i++){
-			User user = null;
-			try {
-				user = userDao.obtainByEmail(emailAddressList.get(i));
-			} catch (DatabaseOperationException e) {
-				e.printStackTrace();
-			}
-			if(user!=null)
-				usernames.add(user.getUsername());
-			else
-				usernames.add(null);
-		}
-		return usernames;
+		throw new RuntimeException("GSF | User obtainByEmail(emailAddress) | remark RepackagingDetailService.obtainUsernamesByEmails(List<String> emailAddressList)");
+		//TODO: GSF | User obtainByEmail(emailAddress) | remark RepackagingDetailService.obtainUsernamesByEmails(List<String> emailAddressList);
+//		List<String> usernames = new ArrayList<String>();
+//		for (int i=0; i<emailAddressList.size(); i++){
+//			User user = null;
+//			try {
+//				user = userDao.obtainByEmail(emailAddressList.get(i));
+//			} catch (DatabaseOperationException e) {
+//				e.printStackTrace();
+//			}
+//			if(user!=null)
+//				usernames.add(user.getUsername());
+//			else
+//				usernames.add(null);
+//		}
+//		return usernames;
 	}
 
 	public void setCachedResults(List<RepackagingDetailComparisonWrapper> cachedResults) {

@@ -32,10 +32,10 @@ import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.g
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.Job;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.SCPaymentCert;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -51,9 +51,9 @@ public class PaymentPostingWSDao {
 	@Autowired
 	private MasterListService masterListRepositoryImpl;
 	@Autowired
-	private JobHBDao jobDao;
+	private JobInfoHBDao jobDao;
 	@Autowired
-	private JobWSDao jobWSDao;
+	private JobInfoWSDao jobWSDao;
 	@Autowired
 	@Qualifier("getNextNumberWebServiceTemplate")
 	private WebServiceTemplate getJDENextNumberWebServiceTemplate;
@@ -87,9 +87,9 @@ public class PaymentPostingWSDao {
 	@Autowired
 	private EnvironmentConfig environmentConfig;
 
-	private SCPaymentCert paymentCert;
-	private Job job;
-	private SCPackage scPackage;
+	private PaymentCert paymentCert;
+	private JobInfo job;
+	private Subcontract scPackage;
 	//Journal Entry defaults
 	private static final String transactionNumber = "1";
 	private static final String sendReceiveIndicator = "";
@@ -141,13 +141,13 @@ public class PaymentPostingWSDao {
 	 * @author tikywong
 	 * reviewed on February 13, 2014 2:31:26 PM
 	 */
-	public Boolean postPayments(SCPaymentCert paymentCert, Double cpfAmount, Double retentionAmount, Double gstPayable, Double gstReceivable, List<AccountMovementWrapper> accountMovements, String username) throws Exception{
+	public Boolean postPayments(PaymentCert paymentCert, Double cpfAmount, Double retentionAmount, Double gstPayable, Double gstReceivable, List<AccountMovementWrapper> accountMovements, String username) throws Exception{
 		InsertJournalEntryTransactionsRequestListObj journalEntryList = new InsertJournalEntryTransactionsRequestListObj();
 		
 		//Set up variables for paymentCert
 		this.paymentCert = paymentCert;
-		scPackage = paymentCert.getScPackage();
-		job = scPackage.getJob();
+		scPackage = paymentCert.getSubcontract();
+		job = scPackage.getJobInfo();
 		this.username = username;
 		lineNumber = Double.valueOf(1);
 		transactionType = (scPackage.getInternalJobNo()!=null && scPackage.getInternalJobNo().trim().length()>0 ? transactionTypeInternal : transactionTypeOther);
@@ -222,7 +222,7 @@ public class PaymentPostingWSDao {
 			String objectCode = cpfObjOther;
 			if(scPackage.getLabourIncludedContract() && !scPackage.getPlantIncludedContract() && !scPackage.getMaterialIncludedContract())
 				objectCode = cpfObjLabourOnly;
-			else if(SCPackage.CONSULTANCY_AGREEMENT.equals(scPackage.getFormOfSubcontract()))
+			else if(Subcontract.CONSULTANCY_AGREEMENT.equals(scPackage.getFormOfSubcontract()))
 				objectCode = cpfObjConsultant;
 			accNumRequestObj.setObjectAccount(objectCode);
 			accNumRequestObj.setSubsidiary(cpfSubsid);
@@ -317,7 +317,7 @@ public class PaymentPostingWSDao {
 			if(scPackage.getInternalJobNo() != null&&scPackage.getInternalJobNo().trim().length()>0){
 				String internalJobCompany = jobDao.obtainJobCompany(scPackage.getInternalJobNo().trim());
 				if(internalJobCompany == null || internalJobCompany.length() == 0){
-					Job internalJob = jobWSDao.obtainJob(scPackage.getInternalJobNo().trim());
+					JobInfo internalJob = jobWSDao.obtainJob(scPackage.getInternalJobNo().trim());
 					if(internalJob == null){
 						//return null;
 					}

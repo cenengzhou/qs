@@ -57,7 +57,7 @@ public class MakeHTMLStrForMainCertController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNo(mainCertNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		MakeHTMLStrForMainCertServiceResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/makeHTMLStrForMainCert", requestObj, MakeHTMLStrForMainCertServiceResponse.class);

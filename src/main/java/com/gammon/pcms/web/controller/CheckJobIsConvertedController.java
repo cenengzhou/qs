@@ -14,14 +14,14 @@ import org.springframework.web.client.RestTemplate;
 import com.gammon.pcms.dto.rs.provider.request.CheckJobIsConvertedRequest;
 import com.gammon.pcms.dto.rs.provider.response.CheckJobIsConvertedResponse;
 import com.gammon.pcms.helper.RestTemplateHelper;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.service.JobService;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.JobInfoService;
 
 @RestController
 @RequestMapping(path = "ws")
 public class CheckJobIsConvertedController {
 	@Autowired
-	private JobService jobService;
+	private JobInfoService jobService;
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
 	private RestTemplate restTemplate;
@@ -40,7 +40,7 @@ public class CheckJobIsConvertedController {
 			throws Exception {
 		if(result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CheckJobIsConvertedResponse responseObj = new CheckJobIsConvertedResponse();
-		Job job = jobService.obtainJob(requestObj.getJobNumber());
+		JobInfo job = jobService.obtainJob(requestObj.getJobNumber());
 		if (job !=null && job.getConversionStatus() != null)
 			responseObj.setConverted(true);
 		else
@@ -60,7 +60,7 @@ public class CheckJobIsConvertedController {
 	public CheckJobIsConvertedResponse checkJobIsConverted(HttpServletRequest request, @PathVariable String jobNumber) {
 		CheckJobIsConvertedRequest requestObj = new CheckJobIsConvertedRequest();
 		requestObj.setJobNumber(jobNumber);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		CheckJobIsConvertedResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/checkJobIsConverted",
 				requestObj, CheckJobIsConvertedResponse.class);

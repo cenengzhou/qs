@@ -860,72 +860,72 @@
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-awardSCPackage</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-checkJobIsConverted</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-completeAddendumApproval</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-completeMainCertApproval</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-completeSCPayment</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-completeSplitTerminate</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-getAttachmentList</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-getTextAttachment</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForAddendumService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForAwardService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForMainCertService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForPaymentCertService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForPaymentService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForSplitTerminateService</artifactId>
-			<version>1.0.0</version>
+			<version>2016-06-14</version>
 		</dependency>
 	</dependencies>
 	

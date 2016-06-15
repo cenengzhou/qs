@@ -31,13 +31,13 @@ public class AccountBalances implements Serializable {
 	private Double netPosting013;
 	private Double netPosting014;
 
-	private List<AccountLedgerWrapper> accountLedgerList;
+	private List<JdeAccountLedgerWrapper> accountLedgerList;
 
-	public List<AccountLedgerWrapper> getAccountLedgerList() {
+	public List<JdeAccountLedgerWrapper> getAccountLedgerList() {
 		return accountLedgerList;
 	}
 
-	public void setAccountLedgerList(List<AccountLedgerWrapper> accountLedgerList) {
+	public void setAccountLedgerList(List<JdeAccountLedgerWrapper> accountLedgerList) {
 		this.accountLedgerList = accountLedgerList;
 	}
 

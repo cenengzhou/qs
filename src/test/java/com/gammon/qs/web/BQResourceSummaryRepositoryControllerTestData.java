@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.junit.testcase.ControllerTestCase;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.BQResourceSummaryHBDao;
-import com.gammon.qs.domain.BQResourceSummary;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.RepackagingEntry;
-import com.gammon.qs.service.BQResourceSummaryService;
-import com.gammon.qs.service.JobService;
-import com.gammon.qs.service.RepackagingEntryService;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.RepackagingService;
 
 /**
  * @author paulnpyiu
@@ -34,7 +34,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testCreateResourceSummary_sql}")
 	String testCreateResourceSummary_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#createResourceSummary(com.gammon.qs.domain.Job, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#createResourceSummary(com.gammon.qs.domain.JobInfo, java.lang.String)}.
 	 * empty method
 	 */
 	public Map<String, Object> testCreateResourceSummary() {
@@ -42,7 +42,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
-		data.put("params", new Object[] {new Job(),new String()});
+		data.put("params", new Object[] {new JobInfo(),new String()});
 		data.put("sql", testCreateResourceSummary_sql);
 		post();
 		return data;
@@ -53,13 +53,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGetResourceSummariesByJob_sql}")
 	String testGetResourceSummariesByJob_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getResourceSummariesByJob(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getResourceSummariesByJob(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testGetResourceSummariesByJob() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetResourceSummariesByJob_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -101,13 +101,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGetResourceSummariesSearch_sql}")
 	String testGetResourceSummariesSearch_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getResourceSummariesSearch(com.gammon.qs.domain.Job, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getResourceSummariesSearch(com.gammon.qs.domain.JobInfo, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	public Map<String, Object> testGetResourceSummariesSearch() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetResourceSummariesSearch_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -141,13 +141,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testObtainResourceSummariesSearchByPage_sql}")
 	String testObtainResourceSummariesSearchByPage_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainResourceSummariesSearchByPage(com.gammon.qs.domain.Job, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainResourceSummariesSearchByPage(com.gammon.qs.domain.JobInfo, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)}.
 	 */
 	public Map<String, Object> testObtainResourceSummariesSearchByPage() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testObtainResourceSummariesSearchByPage_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -155,7 +155,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {job, testObtainResourceSummariesSearchByPage_packageNo, testObtainResourceSummariesSearchByPage_objectCode, testObtainResourceSummariesSearchByPage_subsidiaryCode, testObtainResourceSummariesSearchByPage_description, testObtainResourceSummariesSearchByPage_type, testObtainResourceSummariesSearchByPage_levyExcluded, testObtainResourceSummariesSearchByPage_defectExcluded, new Integer(testObtainResourceSummariesSearchByPage_pageNum)});
-		data.put("clazz", new Class<?>[]{Job.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, int.class});
+		data.put("clazz", new Class<?>[]{JobInfo.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, int.class});
 		data.put("sql", testObtainResourceSummariesSearchByPage_sql);
 		post();
 		return data;
@@ -178,13 +178,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testObtainResourceSummariesSearchByPageForIVInput_sql}")
 	String testObtainResourceSummariesSearchByPageForIVInput_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainResourceSummariesSearchByPageForIVInput(com.gammon.qs.domain.Job, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, boolean)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainResourceSummariesSearchByPageForIVInput(com.gammon.qs.domain.JobInfo, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, boolean)}.
 	 */
 	public Map<String, Object> testObtainResourceSummariesSearchByPageForIVInput() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetResourceSummariesByJob_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -192,7 +192,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {job, testObtainResourceSummariesSearchByPageForIVInput_packageNo, testObtainResourceSummariesSearchByPageForIVInput_objectCode, testObtainResourceSummariesSearchByPageForIVInput_subsidiaryCode, testObtainResourceSummariesSearchByPageForIVInput_description, new Integer(testObtainResourceSummariesSearchByPageForIVInput_pageNum), new Boolean(testObtainResourceSummariesSearchByPageForIVInput_finalizedPackage)});
-		data.put("clazz", new Class<?>[]{Job.class, String.class, String.class, String.class, String.class, int.class, boolean.class});
+		data.put("clazz", new Class<?>[]{JobInfo.class, String.class, String.class, String.class, String.class, int.class, boolean.class});
 		data.put("sql", testObtainResourceSummariesSearchByPageForIVInput_sql);
 		post();
 		return data;
@@ -216,14 +216,14 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	String testSaveResourceSummary_repackagingEntryId;
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testSaveResourceSummary_sql}")
 	String testSaveResourceSummary_sql;
-	public BQResourceSummary bqResourceSummary = null;
+	public ResourceSummary bqResourceSummary = null;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#saveResourceSummary(com.gammon.qs.domain.BQResourceSummary, java.lang.Long)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#saveResourceSummary(com.gammon.qs.domain.ResourceSummary, java.lang.Long)}.
 	 */
 	public Map<String, Object> testSaveResourceSummary() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryService bqResourceSummaryService = applicationContext.getBean(BQResourceSummaryService.class);
+		ResourceSummaryService bqResourceSummaryService = applicationContext.getBean(ResourceSummaryService.class);
 		
 		try{
 			bqResourceSummary = bqResourceSummaryService.getResourceSummary(testSaveResourceSummary_jobNumber, testSaveResourceSummary_packageNo, testSaveResourceSummary_objectCode, testSaveResourceSummary_subsidiaryCode, testSaveResourceSummary_resourceDescription, testSaveResourceSummary_unit, new Double(testSaveResourceSummary_rate));
@@ -249,8 +249,8 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testSaveResourceSummaries() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try{
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testSaveResourceSummaries_jobNumber);
 		} catch (DatabaseOperationException e){ e.printStackTrace();
@@ -274,8 +274,8 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testUpdateResourceSummariesIVAmount() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try{
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testUpdateResourceSummariesIVAmount_jobNumber);
 		} catch (DatabaseOperationException e){ e.printStackTrace();
@@ -303,9 +303,9 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testSplitOrMergeResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryOldList = null;
-		List<BQResourceSummary> bqResourceSummaryNewList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryOldList = null;
+		List<ResourceSummary> bqResourceSummaryNewList = null;
 		try{
 			bqResourceSummaryOldList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testSplitOrMergeResources_oldResources);
 			bqResourceSummaryNewList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testSplitOrMergeResources_newResources);
@@ -325,13 +325,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGroupResourcesIntoSummaries_sql}")
 	String testGroupResourcesIntoSummaries_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#groupResourcesIntoSummaries(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#groupResourcesIntoSummaries(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testGroupResourcesIntoSummaries() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGroupResourcesIntoSummaries_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -353,13 +353,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testPostIVAmounts_sql}")
 	String testPostIVAmounts_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#postIVAmounts(com.gammon.qs.domain.Job, java.lang.String, boolean)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#postIVAmounts(com.gammon.qs.domain.JobInfo, java.lang.String, boolean)}.
 	 */
 	public Map<String, Object> testPostIVAmounts() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testPostIVAmounts_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -367,7 +367,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {job, testPostIVAmounts_username, new Boolean(testPostIVAmounts_finalized)});
-		data.put("clazz", new Class<?>[]{Job.class, String.class, boolean.class});
+		data.put("clazz", new Class<?>[]{JobInfo.class, String.class, boolean.class});
 		data.put("sql", testPostIVAmounts_sql);
 		post();
 		return data;
@@ -380,15 +380,15 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGenerateSnapshotMethodTwo_sql}")
 	String testGenerateSnapshotMethodTwo_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#generateSnapshotMethodTwo(com.gammon.qs.domain.Job, com.gammon.qs.domain.RepackagingEntry)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#generateSnapshotMethodTwo(com.gammon.qs.domain.JobInfo, com.gammon.qs.domain.Repackaging)}.
 	 */
 	public Map<String, Object> testGenerateSnapshotMethodTwo() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		RepackagingEntryService repackagingEntryService = applicationContext.getBean(RepackagingEntryService.class);
-		Job job = null;
-		RepackagingEntry repackagingEntry = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		RepackagingService repackagingEntryService = applicationContext.getBean(RepackagingService.class);
+		JobInfo job = null;
+		Repackaging repackagingEntry = null;
 		try {
 			job = jobService.obtainJob(testGenerateSnapshotMethodTwo_jobNumber);
 			repackagingEntry = repackagingEntryService.getRepackagingEntry(new Long(testGenerateSnapshotMethodTwo_repackagingEntry));
@@ -412,8 +412,8 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testDeleteVoResources() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try{
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testDeleteVoResources_jobNumber);
 		} catch (DatabaseOperationException e){ e.printStackTrace();
@@ -439,8 +439,8 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testSaveResourceSummariesScAddendum() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try{
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testSaveResourceSummariesScAddendum_jobNumber);
 		} catch (DatabaseOperationException e){ e.printStackTrace();
@@ -459,15 +459,15 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testCheckForDuplicates_sql}")
 	String testCheckForDuplicates_sql;	
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#checkForDuplicates(java.util.List, com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#checkForDuplicates(java.util.List, com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testCheckForDuplicates() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		Job job = null;
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		JobInfo job = null;
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try {
 			job = jobService.obtainJob(testCheckForDuplicates_jobNumber);
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testCheckForDuplicates_jobNumber);
@@ -476,7 +476,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {bqResourceSummaryList, job});
-		data.put("clazz", new Class<?>[]{List.class, Job.class});
+		data.put("clazz", new Class<?>[]{List.class, JobInfo.class});
 		data.put("sql", testCheckForDuplicates_sql);
 		post();
 		return data;
@@ -489,15 +489,15 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGenerateSnapshotMethodThree_sql}")
 	String testGenerateSnapshotMethodThree_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#generateSnapshotMethodThree(com.gammon.qs.domain.Job, com.gammon.qs.domain.RepackagingEntry)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#generateSnapshotMethodThree(com.gammon.qs.domain.JobInfo, com.gammon.qs.domain.Repackaging)}.
 	 */
 	public Map<String, Object> testGenerateSnapshotMethodThree() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		RepackagingEntryService repackagingEntryService = applicationContext.getBean(RepackagingEntryService.class);
-		Job job = null;
-		RepackagingEntry repackagingEntry = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		RepackagingService repackagingEntryService = applicationContext.getBean(RepackagingService.class);
+		JobInfo job = null;
+		Repackaging repackagingEntry = null;
 		try {
 			job = jobService.obtainJob(testGenerateSnapshotMethodThree_jobNumber);
 			repackagingEntry = repackagingEntryService.getRepackagingEntry(new Long(testGenerateSnapshotMethodThree_repackagingEntry));
@@ -516,13 +516,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testGetIVMovementOfJobFromResourceSummary_sql}")
 	String testGetIVMovementOfJobFromResourceSummary_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getIVMovementOfJobFromResourceSummary(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#getIVMovementOfJobFromResourceSummary(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testGetIVMovementOfJobFromResourceSummary() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testGetIVMovementOfJobFromResourceSummary_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -540,13 +540,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testObtainUneditableResourceSummaries_sql}")
 	String testObtainUneditableResourceSummaries_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainUneditableResourceSummaries(com.gammon.qs.domain.Job)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainUneditableResourceSummaries(com.gammon.qs.domain.JobInfo)}.
 	 */
 	public Map<String, Object> testObtainUneditableResourceSummaries() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testObtainUneditableResourceSummaries_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -569,8 +569,8 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	public Map<String, Object> testUpdateResourceSummariesIVAmountForFinalizedPackage() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		BQResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(BQResourceSummaryHBDao.class);
-		List<BQResourceSummary> bqResourceSummaryList = null;
+		ResourceSummaryHBDao bqResourceSummaryHBDao = applicationContext.getBean(ResourceSummaryHBDao.class);
+		List<ResourceSummary> bqResourceSummaryList = null;
 		try{
 			bqResourceSummaryList = bqResourceSummaryHBDao.obtainSCResourceSummariesByJobNumber(testUpdateResourceSummariesIVAmountForFinalizedPackage_jobNumber);
 		} catch (DatabaseOperationException e){ e.printStackTrace();
@@ -591,13 +591,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testObtainIVMovementByJob_sql}")
 	String testObtainIVMovementByJob_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainIVMovementByJob(com.gammon.qs.domain.Job, boolean)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#obtainIVMovementByJob(com.gammon.qs.domain.JobInfo, boolean)}.
 	 */
 	public Map<String, Object> testObtainIVMovementByJob() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testObtainIVMovementByJob_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();
@@ -605,7 +605,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
 		data.put("params", new Object[] {job, new Boolean(testObtainIVMovementByJob_finalized)});
-		data.put("clazz", new Class<?>[]{Job.class, boolean.class});
+		data.put("clazz", new Class<?>[]{JobInfo.class, boolean.class});
 		data.put("sql", testObtainIVMovementByJob_sql);
 		post();
 		return data;
@@ -624,13 +624,13 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 	@Value("${BQResourceSummaryRepositoryControllerTestData.testRecalculateResourceSummaryIVForFinalizedPackage_sql}")
 	String testRecalculateResourceSummaryIVForFinalizedPackage_sql;
 	/**
-	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#recalculateResourceSummaryIVForFinalizedPackage(com.gammon.qs.domain.Job, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.BQResourceSummaryRepositoryController#recalculateResourceSummaryIVForFinalizedPackage(com.gammon.qs.domain.JobInfo, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	public Map<String, Object> testRecalculateResourceSummaryIVForFinalizedPackage() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		JobService jobService = applicationContext.getBean("jobService",JobService.class);
-		Job job = null;
+		JobInfoService jobService = applicationContext.getBean("jobService",JobInfoService.class);
+		JobInfo job = null;
 		try {
 			job = jobService.obtainJob(testRecalculateResourceSummaryIVForFinalizedPackage_jobNumber);
 		} catch (DatabaseOperationException e) {e.printStackTrace();

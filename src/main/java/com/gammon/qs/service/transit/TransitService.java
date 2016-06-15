@@ -24,30 +24,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.JasperConfig;
-import com.gammon.qs.dao.BQHBDao;
-import com.gammon.qs.dao.BillHBDao;
-import com.gammon.qs.dao.PageHBDao;
-import com.gammon.qs.dao.SCPackageHBDao;
-import com.gammon.qs.dao.TransitBQHBDao;
+import com.gammon.qs.dao.BpiItemHBDao;
+import com.gammon.qs.dao.BpiBillHBDao;
+import com.gammon.qs.dao.BpiPageHBDao;
+import com.gammon.qs.dao.SubcontractHBDao;
+import com.gammon.qs.dao.TransitBpiHBDao;
 import com.gammon.qs.dao.TransitCodeMatchHBDao;
-import com.gammon.qs.dao.TransitHeaderHBDao;
+import com.gammon.qs.dao.TransitHBDao;
 import com.gammon.qs.dao.TransitResourceHBDao;
-import com.gammon.qs.dao.TransitUomMatchHBDao;
-import com.gammon.qs.domain.BQItem;
-import com.gammon.qs.domain.Bill;
-import com.gammon.qs.domain.Job;
-import com.gammon.qs.domain.Page;
-import com.gammon.qs.domain.Resource;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.domain.TransitBQ;
+import com.gammon.qs.dao.AppTransitUomHBDao;
+import com.gammon.qs.domain.BpiBill;
+import com.gammon.qs.domain.BpiItem;
+import com.gammon.qs.domain.BpiPage;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitCodeMatch;
-import com.gammon.qs.domain.TransitHeader;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitResource;
-import com.gammon.qs.domain.TransitUomMatch;
+import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
-import com.gammon.qs.service.JobService;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.JasperReportHelper;
@@ -70,11 +70,11 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public class TransitService implements Serializable {
 	private static final long serialVersionUID = -1930185573387732835L;
 	@Autowired
-	private transient JobService jobRepository;
+	private transient JobInfoService jobRepository;
 	@Autowired
-	private transient TransitHeaderHBDao transitHeaderDao;
+	private transient TransitHBDao transitHeaderDao;
 	@Autowired
-	private transient TransitBQHBDao transitBqDao;
+	private transient TransitBpiHBDao transitBqDao;
 	@Autowired
 	private transient TransitResourceHBDao transitResourceDao;
 	@Autowired
@@ -84,39 +84,39 @@ public class TransitService implements Serializable {
 	@Autowired
 	private transient TransitCodeMatchHBDao transitCodeMatchDao;
 	@Autowired
-	private transient TransitUomMatchHBDao transitUomMatchDao;
+	private transient AppTransitUomHBDao transitUomMatchDao;
 	@Autowired
-	private transient BillHBDao billDao;
+	private transient BpiBillHBDao billDao;
 	@Autowired
-	private transient PageHBDao pageDao;
+	private transient BpiPageHBDao pageDao;
 	@Autowired
-	private transient BQHBDao bqItemDao;
+	private transient BpiItemHBDao bqItemDao;
 	@Autowired
-	private transient SCPackageHBDao scPackageDao;
+	private transient SubcontractHBDao scPackageDao;
 	@Autowired
 	private transient JasperConfig jasperConfig;
 	
-	private List<TransitBQ> bqCache;
+	private List<TransitBpi> bqCache;
 	private List<TransitCodeMatch> codeMatchCache;
-	private List<TransitUomMatch> uomMatchCache;
+	private List<AppTransitUom> uomMatchCache;
 	private List<String> errorList;
 	private List<String> warningList; // added by brian on 20110224
-	private TransitHeader header;
+	private Transit header;
 	
 	public static final int RECORDS_PER_PAGE = 200;
 	
 	private transient Logger logger = Logger.getLogger(TransitService.class.getName());
 	
-	public TransitHeader getTransitHeader(String jobNumber) throws Exception {
+	public Transit getTransitHeader(String jobNumber) throws Exception {
 		return transitHeaderDao.getTransitHeader(jobNumber);
 	}
 	
 	public TransitHeaderResultWrapper createOrUpdateTransitHeader(String jobNumber, String estimateNo, String matchingCode, 
 			boolean newJob) throws Exception{
 		TransitHeaderResultWrapper result = new TransitHeaderResultWrapper();
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
 		if(header == null){
-			Job job = jobRepository.obtainJob(jobNumber);
+			JobInfo job = jobRepository.obtainJob(jobNumber);
 			//If job doesn't exist, create it.
 			if(job == null){
 				job = jobRepository.createNewJob(jobNumber);
@@ -136,18 +136,18 @@ public class TransitService implements Serializable {
 				return result;
 			}
 			
-			header = new TransitHeader();
+			header = new Transit();
 			header.setJobNumber(jobNumber);
 			header.setJobDescription(job.getDescription());
 			header.setCompany(job.getCompany());
-			header.setStatus(TransitHeader.HEADER_CREATED);
+			header.setStatus(Transit.HEADER_CREATED);
 		}
 		else if(newJob){
 			result.setError("This job already exists. Please open the job before continuing the transit process.");
 			return result;
 		}
 		//make sure transit has not been completed
-		else if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
+		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
 			result.setError("Transit for the job has already been completed.");
 			return result;
 		}
@@ -158,7 +158,7 @@ public class TransitService implements Serializable {
 		return result;
 	}
 	
-	public PaginationWrapper<TransitBQ> getTransitBQItemsNewSearch(String jobNumber, String billNo, String subBillNo, 
+	public PaginationWrapper<TransitBpi> getTransitBQItemsNewSearch(String jobNumber, String billNo, String subBillNo, 
 			String pageNo, String itemNo, String description) throws Exception{
 		bqCache = transitBqDao.getTransitBQItems(jobNumber, billNo, subBillNo, pageNo, itemNo, description);
 		// add the total line to bqCache
@@ -168,7 +168,7 @@ public class TransitService implements Serializable {
 	
 	// added by brian on 20110120
 	// add the total line to bqCache
-	private void addBQTotalLine(List<TransitBQ> bqList){
+	private void addBQTotalLine(List<TransitBpi> bqList){
 		if(bqList == null)
 			return;
 		else{
@@ -176,15 +176,15 @@ public class TransitService implements Serializable {
 			for(int i = 0; i < bqList.size(); i++)
 				total += bqList.get(i).getValue();
 			
-			TransitBQ totalLine = new TransitBQ();
+			TransitBpi totalLine = new TransitBpi();
 			totalLine.setDescription("TOTAL:");
 			totalLine.setValue(total);
 			bqList.add(totalLine);
 		}
 	}
 	
-	public PaginationWrapper<TransitBQ> getTransitBQItemsByPage(int pageNum){
-		PaginationWrapper<TransitBQ> wrapper = new PaginationWrapper<TransitBQ>();
+	public PaginationWrapper<TransitBpi> getTransitBQItemsByPage(int pageNum){
+		PaginationWrapper<TransitBpi> wrapper = new PaginationWrapper<TransitBpi>();
 		wrapper.setCurrentPage(pageNum);
 		if(bqCache == null)
 			return wrapper;
@@ -195,7 +195,7 @@ public class TransitService implements Serializable {
 		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
 		if(toInd > bqCache.size())
 			toInd = bqCache.size();
-		wrapper.setCurrentPageContentList(new ArrayList<TransitBQ>(bqCache.subList(fromInd, toInd)));
+		wrapper.setCurrentPageContentList(new ArrayList<TransitBpi>(bqCache.subList(fromInd, toInd)));
 		return wrapper;
 	}
 	
@@ -264,8 +264,8 @@ public class TransitService implements Serializable {
 //	}
 	
 	public String saveTransitResources(String jobNumber, List<TransitResource> resources) throws Exception{
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus()))
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
 			return "Transit for this job has already been completed";
 		StringBuilder sbError = new StringBuilder();
 		//Validate 
@@ -288,7 +288,7 @@ public class TransitService implements Serializable {
 				resourceInDb.setDescription(resource.getDescription().trim());
 				transitResourceDao.saveOrUpdate(resourceInDb);
 			}
-			header.setStatus(TransitHeader.RESOURCES_UPDATED);
+			header.setStatus(Transit.RESOURCES_UPDATED);
 			transitHeaderDao.saveOrUpdate(header);
 			return null;
 		}
@@ -298,26 +298,26 @@ public class TransitService implements Serializable {
 	
 	public String confirmResourcesAndCreatePackages(String jobNumber) throws Exception{	
 		logger.info("TRANSIT: confirming resources for job " + jobNumber);
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
 		if(header == null)
 			return "Please create a transit header";
-		else if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus()))
+		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
 			return "Transit for this job has already been completed";
 		// modified by brian on 20110117
 		// for change the error message prompted when confirming resources
 //		else if(!(TransitHeader.RESOURCES_IMPORTED.equals(header.getStatus()) || TransitHeader.RESOURCES_UPDATED.equals(header.getStatus())))
 //			return "Please import resources";
-		else if(TransitHeader.RESOURCES_CONFIRMED.equals(header.getStatus()) || TransitHeader.REPORT_PRINTED.equals(header.getStatus()))
+		else if(Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()))
 			return "Transit Resources for this job has already been confirmed.";
 		
 		//Check that there are no dummy account numbers (obj and sub codes all 0s)
 		if(transitResourceDao.dummyAccountCodesExist(header))
 			return "There are resources with dummy account codes (all '0's). Please update these to valid account codes before confirming resources.";
-		List<TransitBQ> markupBqs = transitBqDao.getTransitBQItems(jobNumber, "80", null, null, null, null);
-		for(TransitBQ markupBq : markupBqs)
+		List<TransitBpi> markupBqs = transitBqDao.getTransitBQItems(jobNumber, "80", null, null, null, null);
+		for(TransitBpi markupBq : markupBqs)
 			transitBqDao.delete(markupBq); //child resources are deleted too
 
-		List<TransitBQ> bqItems = transitBqDao.getTransitBqByHeaderNoCommentLines(header);
+		List<TransitBpi> bqItems = transitBqDao.getTransitBqByHeaderNoCommentLines(header);
 		Set<String> accountCodes = new HashSet<String>();
 		
 		Map<String, String> packages = new HashMap<String, String>();
@@ -329,7 +329,7 @@ public class TransitService implements Serializable {
 		
 		StringBuilder errorMsg = new StringBuilder();
 
-		for(TransitBQ bqItem : bqItems){
+		for(TransitBpi bqItem : bqItems){
 			double totalResourceValue = 0;
 			List<TransitResource> resources = transitResourceDao.obtainTransitResourceListByTransitBQ(bqItem);
 			//Iterate through resources. Get bq cost rate (total resource value / bq quant) and assign package no.s
@@ -380,8 +380,8 @@ public class TransitService implements Serializable {
 		totalMarkup = RoundingUtil.round(totalMarkup, 4);
 		
 		//BILL 80 - Genuine Markup
-		TransitBQ markupBq = new TransitBQ();
-		markupBq.setTransitHeader(header);
+		TransitBpi markupBq = new TransitBpi();
+		markupBq.setTransit(header);
 		markupBq.setBillNo("80");
 		markupBq.setPageNo("1");
 		markupBq.setItemNo("A");
@@ -392,7 +392,7 @@ public class TransitService implements Serializable {
 		markupBq.setSellingRate(new Double(1));
 		markupBq.setUnit("NO");
 		TransitResource markupResource = new TransitResource();
-		markupResource.setTransitBQ(markupBq);
+		markupResource.setTransitBpi(markupBq);
 		markupResource.setResourceNo(Integer.valueOf(1));
 		markupResource.setObjectCode("199999");
 		markupResource.setSubsidiaryCode("99019999");
@@ -403,8 +403,8 @@ public class TransitService implements Serializable {
 		transitBqDao.saveOrUpdate(markupBq);
 		transitResourceDao.saveOrUpdate(markupResource);
 		//BILL 80 - Genuine Markup Change Order
-		TransitBQ markupBqCo = new TransitBQ();
-		markupBqCo.setTransitHeader(header);
+		TransitBpi markupBqCo = new TransitBpi();
+		markupBqCo.setTransit(header);
 		markupBqCo.setBillNo("80");
 		markupBqCo.setPageNo("2");
 		markupBqCo.setItemNo("A");
@@ -412,7 +412,7 @@ public class TransitService implements Serializable {
 		markupBqCo.setDescription("Genuine Markup of Change Order");
 		markupBqCo.setUnit("NO");
 		TransitResource markupResourceCo = new TransitResource();
-		markupResourceCo.setTransitBQ(markupBqCo);
+		markupResourceCo.setTransitBpi(markupBqCo);
 		markupResourceCo.setResourceNo(Integer.valueOf(1));
 		markupResourceCo.setObjectCode("199999");
 		markupResourceCo.setSubsidiaryCode("99019999");
@@ -422,7 +422,7 @@ public class TransitService implements Serializable {
 		transitBqDao.saveOrUpdate(markupBqCo);
 		transitResourceDao.saveOrUpdate(markupResourceCo);
 		
-		header.setStatus(TransitHeader.RESOURCES_CONFIRMED);
+		header.setStatus(Transit.RESOURCES_CONFIRMED);
 		transitHeaderDao.saveOrUpdate(header); //cascades down to bq items and resources
 		return null;
 	}
@@ -430,19 +430,19 @@ public class TransitService implements Serializable {
 	
 	public String completeTransit(String jobNumber) throws Exception{
 		logger.info("TRANSIT: complete transit for job " + jobNumber);
-		Job job = jobRepository.obtainJob(jobNumber);
+		JobInfo job = jobRepository.obtainJob(jobNumber);
 		job.setAllowManualInputSCWorkDone("Y");
 		job.setConversionStatus("Y");
 		jobRepository.updateJob(job);
 		
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus()))
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
 			return "Transit for this job has already been completed";
-		else if(!header.getStatus().equals(TransitHeader.REPORT_PRINTED))
+		else if(!header.getStatus().equals(Transit.REPORT_PRINTED))
 			return "Please confirm resources and create reports before completing the transit process.";
-		List<TransitBQ> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
-		Collections.sort(transitBqItems, new Comparator<TransitBQ>(){
-			public int compare(TransitBQ bq1, TransitBQ bq2) {
+		List<TransitBpi> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
+		Collections.sort(transitBqItems, new Comparator<TransitBpi>(){
+			public int compare(TransitBpi bq1, TransitBpi bq2) {
 				int billComp = bq1.getBillNo().compareTo(bq2.getBillNo());
 				if(billComp != 0)
 					return billComp;
@@ -458,55 +458,55 @@ public class TransitService implements Serializable {
 		String billNo = "";
 		String subBillNo = "";
 		String pageNo = "";
-		Bill bill = null;
-		Page page = null;
+		BpiBill bill = null;
+		BpiPage page = null;
 		Set<String> packageNos = new HashSet<String>();
-		List<BQItem> bqItems = new ArrayList<BQItem>();
-		for(TransitBQ transitBq : transitBqItems){
+		List<BpiItem> bqItems = new ArrayList<BpiItem>();
+		for(TransitBpi transitBq : transitBqItems){
 			//Create bill, page if necessary
 			if(!billNo.equals(transitBq.getBillNo()) || 
 					(subBillNo != null && !subBillNo.equals(transitBq.getSubBillNo())) || 
 					(subBillNo == null && transitBq.getSubBillNo() != null)){
 				billNo = transitBq.getBillNo();
 				subBillNo = transitBq.getSubBillNo();
-				bill = new Bill();
+				bill = new BpiBill();
 				bill.setBillNo(billNo);
 				bill.setSubBillNo(subBillNo);
-				bill.setJob(job);
+				bill.setJobInfo(job);
 				billDao.saveOrUpdate(bill);
 			}
-			if(page == null || page.getBill() != bill || 
+			if(page == null || page.getBpiBill() != bill || 
 					(pageNo != null && !pageNo.equals(transitBq.getPageNo())) ||
 					(pageNo == null && transitBq.getPageNo() != null)){
 				pageNo = transitBq.getPageNo();
-				page = new Page();
+				page = new BpiPage();
 				page.setPageNo(pageNo);
-				page.setBill(bill);
+				page.setBpiBill(bill);
 				pageDao.saveOrUpdate(page);
 			}
 			//create BQItem from transitBQ
-			BQItem bqItem = bqItemFromTransit(transitBq);
+			BpiItem bqItem = bqItemFromTransit(transitBq);
 			bqItem.setRefJobNumber(jobNumber);
-			bqItem.setPage(page);
+			bqItem.setBpiPage(page);
 			bqItems.add(bqItem);
 			for(TransitResource transitResource : transitResourceDao.obtainTransitResourceListByTransitBQ(transitBq)){
-				Resource resource = resourceFromTransit(transitResource);
-				resource.setBqItem(bqItem);
+				BpiItemResource resource = resourceFromTransit(transitResource);
+				resource.setBpiItem(bqItem);
 				resource.setJobNumber(jobNumber);
 				resource.setRefBillNo(billNo);
 				resource.setRefSubBillNo(subBillNo);
 				resource.setRefPageNo(pageNo);
 				resource.setRefItemNo(bqItem.getItemNo());
-				resource.setBqItem(bqItem);
+				resource.setBpiItem(bqItem);
 				if(resource.getPackageNo() != null && !resource.getPackageNo().equals("0"))
 					packageNos.add(resource.getPackageNo());
 			}
 		}
 		logger.info("saving bqItems");
-		bqItemDao.saveBQItems(bqItems);
+		bqItemDao.saveBpiItems(bqItems);
 		for(String packageNo : packageNos){
-			SCPackage scPackage = new SCPackage();
-			scPackage.setJob(job);
+			Subcontract scPackage = new Subcontract();
+			scPackage.setJobInfo(job);
 			scPackage.setPackageNo(packageNo);
 			scPackage.setDescription("Subcontract " + packageNo);
 			if(packageNo.startsWith("1")){
@@ -527,14 +527,14 @@ public class TransitService implements Serializable {
 			}
 			scPackageDao.saveOrUpdate(scPackage);
 		}
-		header.setStatus(TransitHeader.TRANSIT_COMPLETED);
+		header.setStatus(Transit.TRANSIT_COMPLETED);
 		transitHeaderDao.saveOrUpdate(header);
 		return null;
 	}
 	
-	private BQItem bqItemFromTransit(TransitBQ transitBq){
+	private BpiItem bqItemFromTransit(TransitBpi transitBq){
 //		logger.info("bqItemFromTransit: " + transitBq.getId());
-		BQItem bqItem = new BQItem();
+		BpiItem bqItem = new BpiItem();
 		bqItem.setRefBillNo(transitBq.getBillNo());
 		bqItem.setRefSubBillNo(transitBq.getSubBillNo());
 		bqItem.setRefPageNo(transitBq.getPageNo());
@@ -555,9 +555,9 @@ public class TransitService implements Serializable {
 		return bqItem;
 	}
 	
-	private Resource resourceFromTransit(TransitResource transitResource){
+	private BpiItemResource resourceFromTransit(TransitResource transitResource){
 //		logger.info("resourceFromTransit: " + transitResource.getId());
-		Resource resource = new Resource();
+		BpiItemResource resource = new BpiItemResource();
 		String obj = transitResource.getObjectCode();
 		resource.setObjectCode(obj);
 		if(obj.startsWith("11"))
@@ -626,12 +626,12 @@ public class TransitService implements Serializable {
 		// added by brian on 20110224
 		warningList = new ArrayList<String>();
 		
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
 		if(header == null){
 			response.setMessage("Please create a header before importing items");
 			return response;
 		}
-		else if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
+		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
 			response.setMessage("Transit for this job has already been completed");
 			return response;
 		}
@@ -653,9 +653,9 @@ public class TransitService implements Serializable {
 			excelFileProcessor.readLine(0);
 			
 			//Map to hold the bqItems (does not include headers), to check for duplicates - maps item to line number
-			HashMap<TransitBQ, Integer> bqItemMap = new HashMap<TransitBQ, Integer>();
+			HashMap<TransitBpi, Integer> bqItemMap = new HashMap<TransitBpi, Integer>();
 			//temp list to store the headers before you can fill bill/subBill/page, then move to headersList
-			ArrayList<TransitBQ> headersTempList = new ArrayList<TransitBQ>(); 
+			ArrayList<TransitBpi> headersTempList = new ArrayList<TransitBpi>(); 
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
 				String[] row = excelFileProcessor.readLine(8);
 				if(isRowEmpty(row))
@@ -674,8 +674,8 @@ public class TransitService implements Serializable {
 					continue;
 				}
 				
-				TransitBQ bqItem = new TransitBQ();
-				bqItem.setTransitHeader(header);
+				TransitBpi bqItem = new TransitBpi();
+				bqItem.setTransit(header);
 				bqItem.setDescription(description);
 				bqItem.setSequenceNo(sequenceNo++);
 				importBQCount += 1;
@@ -788,7 +788,7 @@ public class TransitService implements Serializable {
 					
 					//Check if header fields need to be filled
 					if(headersTempList.size() != 0){
-						for(TransitBQ bqHeader : headersTempList){
+						for(TransitBpi bqHeader : headersTempList){
 							bqHeader.setBillNo(billNo);
 							bqHeader.setSubBillNo(subBillNo);
 							bqHeader.setPageNo(pageNo);
@@ -808,7 +808,7 @@ public class TransitService implements Serializable {
 		}
 		
 		if(errorList.size() == 0){
-			header.setStatus(TransitHeader.BQ_IMPORTED);
+			header.setStatus(Transit.BQ_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
 //			response.setNumRecordImported(sequenceNo);
 			// modified by brian on 20110118
@@ -835,8 +835,8 @@ public class TransitService implements Serializable {
 	public TransitImportResponse importTransitResources(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
 			response.setMessage("Transit for this job has already been completed");
 			return response;
 		}
@@ -847,11 +847,11 @@ public class TransitService implements Serializable {
 		
 		transitResourceDao.deleteResourcesByHeader(header);
 		transitBqDao.deleteTransitBqBill80ByHeader(header);
-		List<TransitBQ> transitBQList = transitBqDao.obtainTransitBQByTransitHeader(header);
-		Map<String, TransitBQ> bqItemMap = new HashMap<String, TransitBQ>(transitBQList.size());
+		List<TransitBpi> transitBQList = transitBqDao.obtainTransitBQByTransitHeader(header);
+		Map<String, TransitBpi> bqItemMap = new HashMap<String, TransitBpi>(transitBQList.size());
 		String matchingType = header.getMatchingCode();
 		
-		for(TransitBQ bqItem : transitBQList){
+		for(TransitBpi bqItem : transitBQList){
 			if(bqItem.getItemNo() != null){
 				String bpi = bqItem.getBillNo() + "/" + (bqItem.getSubBillNo() != null ? bqItem.getSubBillNo() : "") + 
 							"//" + (bqItem.getPageNo() != null ? bqItem.getPageNo() : "") + "/" + bqItem.getItemNo();
@@ -875,7 +875,7 @@ public class TransitService implements Serializable {
 				codeMap.put((String)codeMatch[0], (String)codeMatch[1] + "." + (String)codeMatch[2]);
 			Set<String> accountCodes = new HashSet<String>();
 			
-			TransitBQ bqItem = null;
+			TransitBpi bqItem = null;
 			//Open file
 			excelFileProcessor.openFile(file);
 			//skip the header line
@@ -952,17 +952,17 @@ public class TransitService implements Serializable {
 				}
 				
 				TransitResource resource = new TransitResource();
-				resource.setTransitBQ(bqItem);
+				resource.setTransitBpi(bqItem);
 				resource.setResourceNo(resourceNo);
 				resource.setResourceCode(resourceCode);
 				resource.setType(type);
 				resource.setDescription(description);
 				
 				// For ERROR Report
-				String bpi = resource.getTransitBQ().getBillNo() + "/" 
-				+ resource.getTransitBQ().getSubBillNo() + "//" 
-				+ resource.getTransitBQ().getPageNo() + "/" 
-				+ resource.getTransitBQ().getItemNo();
+				String bpi = resource.getTransitBpi().getBillNo() + "/" 
+				+ resource.getTransitBpi().getSubBillNo() + "//" 
+				+ resource.getTransitBpi().getPageNo() + "/" 
+				+ resource.getTransitBpi().getItemNo();
 				
 				// Old Transit Resource logic for calculate total value, total qty and rate (rate can get from value/qty)
 				
@@ -1186,7 +1186,7 @@ public class TransitService implements Serializable {
 		
 		if(errorList.size() == 0){
 			transitResourceDao.saveResources(resources);
-			header.setStatus(TransitHeader.RESOURCES_IMPORTED);
+			header.setStatus(Transit.RESOURCES_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
 			response.setSuccess(true);
 			response.setNumRecordImported(count);
@@ -1284,7 +1284,7 @@ public class TransitService implements Serializable {
 	
 	private TransitImportResponse importUomMatching(byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
-		List<TransitUomMatch> uomCodeMatches;
+		List<AppTransitUom> uomCodeMatches;
 		int i = 0;
 		try{
 			//Open file
@@ -1292,10 +1292,10 @@ public class TransitService implements Serializable {
 			//skip the header line
 			excelFileProcessor.readLine(0);
 			
-			uomCodeMatches = new ArrayList<TransitUomMatch>(excelFileProcessor.getNumRow());
+			uomCodeMatches = new ArrayList<AppTransitUom>(excelFileProcessor.getNumRow());
 			//Iterate through the rows
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
-				TransitUomMatch codeMatch = new TransitUomMatch();
+				AppTransitUom codeMatch = new AppTransitUom();
 				String[] row = excelFileProcessor.readLine(2);
 				
 				codeMatch.setCausewayUom(row[0].trim().toUpperCase());
@@ -1374,18 +1374,18 @@ public class TransitService implements Serializable {
 		return excel;
 	}
 	
-	public PaginationWrapper<TransitUomMatch> searchTransitUomMatches(String causewayUom, String jdeUom) throws Exception{
+	public PaginationWrapper<AppTransitUom> searchTransitUomMatches(String causewayUom, String jdeUom) throws Exception{
 		uomMatchCache = transitUomMatchDao.searchTransitUomMatches(causewayUom, jdeUom);
-		Collections.sort(uomMatchCache, new Comparator<TransitUomMatch>(){
-			public int compare(TransitUomMatch o1, TransitUomMatch o2) {
+		Collections.sort(uomMatchCache, new Comparator<AppTransitUom>(){
+			public int compare(AppTransitUom o1, AppTransitUom o2) {
 				return o1.getCausewayUom().compareTo(o2.getCausewayUom());
 			}
 		});
 		return searchTransitUomMatchesByPage(0);
 	}
 	
-	public PaginationWrapper<TransitUomMatch> searchTransitUomMatchesByPage(int pageNum){
-		PaginationWrapper<TransitUomMatch> wrapper = new PaginationWrapper<TransitUomMatch>();
+	public PaginationWrapper<AppTransitUom> searchTransitUomMatchesByPage(int pageNum){
+		PaginationWrapper<AppTransitUom> wrapper = new PaginationWrapper<AppTransitUom>();
 		wrapper.setCurrentPage(pageNum);
 		if(uomMatchCache == null)
 			return wrapper;
@@ -1396,7 +1396,7 @@ public class TransitService implements Serializable {
 		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
 		if(toInd > uomMatchCache.size())
 			toInd = uomMatchCache.size();
-		wrapper.setCurrentPageContentList(new ArrayList<TransitUomMatch>(uomMatchCache.subList(fromInd, toInd)));
+		wrapper.setCurrentPageContentList(new ArrayList<AppTransitUom>(uomMatchCache.subList(fromInd, toInd)));
 		return wrapper;
 	}
 	
@@ -1410,7 +1410,7 @@ public class TransitService implements Serializable {
 		doc.setCurrentSheetName(name);
 		doc.insertRow(new String[]{"Causeway Unit Code", "JDE Unit Code"});
 		doc.setCellFontBold(0, 0, 0, 1);
-		for(TransitUomMatch codeMatch : uomMatchCache){
+		for(AppTransitUom codeMatch : uomMatchCache){
 			doc.insertRow(new String[]{
 					codeMatch.getCausewayUom(),
 					codeMatch.getJdeUom()
@@ -1449,12 +1449,12 @@ public class TransitService implements Serializable {
 	public ByteArrayOutputStream GenerateTransitBQResourceReconciliationJasperReport(String jobNumber)throws Exception{
 		logger.info("Generating TransitBQ Resource Reconciliation JasperReport");
 		// get the transit header of the job
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
 		List<TransitBQResourceReconciliationReportRecordWrapper> reportWrapperList = transitResourceDao.getBQResourceTransitReportFields(header);
 		if(reportWrapperList != null){
 			// changed by brian on 20110208 because change to allow print after complete so won't change status if completed
-			if(!TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
-				header.setStatus(TransitHeader.REPORT_PRINTED);
+			if(!Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
+				header.setStatus(Transit.REPORT_PRINTED);
 				transitHeaderDao.saveOrUpdate(header);
 			}
 		}
@@ -1466,12 +1466,12 @@ public class TransitService implements Serializable {
 	public ByteArrayOutputStream GenerateTransitBQMasterReconciliationJasperReport(String jobNumber)throws Exception{
 		logger.info("Generating TransitBQ Master Reconciliation JasperReport");
 		// get the transit header of the job
-		TransitHeader header = transitHeaderDao.getTransitHeader(jobNumber);
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
 		List<TransitBQMasterReconciliationReportRecordWrapper> reportWrapperList = transitBqDao.getBQMasterTransitReportFields(jobNumber);
 		if(reportWrapperList != null){
 			// changed by brian on 20110208 because change to allow print after complete so won't change status if completed
-			if(!TransitHeader.TRANSIT_COMPLETED.equals(header.getStatus())){
-				header.setStatus(TransitHeader.REPORT_PRINTED);
+			if(!Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
+				header.setStatus(Transit.REPORT_PRINTED);
 				transitHeaderDao.saveOrUpdate(header);
 			}
 		}
@@ -1620,13 +1620,13 @@ public class TransitService implements Serializable {
 	@SuppressWarnings("unused")
 	public Boolean allowPrint(String jobNumber) {
 		try{
-			TransitHeader tempHeader = this.transitHeaderDao.getTransitHeader(jobNumber);
+			Transit tempHeader = this.transitHeaderDao.getTransitHeader(jobNumber);
 			
 			logger.info("TransitRepositoryHBImpl -- checking Transit Header status");
 			logger.info("Header's Status : " + tempHeader.getStatus());
 			
 			if(tempHeader != null)
-				return Boolean.valueOf(((TransitHeader.RESOURCES_CONFIRMED.equals(tempHeader.getStatus())) || (TransitHeader.REPORT_PRINTED.equals(tempHeader.getStatus()))) || (TransitHeader.TRANSIT_COMPLETED.equals(tempHeader.getStatus()))); // modified on 20110117 by brian
+				return Boolean.valueOf(((Transit.RESOURCES_CONFIRMED.equals(tempHeader.getStatus())) || (Transit.REPORT_PRINTED.equals(tempHeader.getStatus()))) || (Transit.TRANSIT_COMPLETED.equals(tempHeader.getStatus()))); // modified on 20110117 by brian
 			else
 				return Boolean.FALSE;
 		}
@@ -1639,7 +1639,7 @@ public class TransitService implements Serializable {
 	// added by brian on 20110228
 	// get all transits information according to status
 	// if status == "" or null, get all transits
-	public List<TransitHeader> getAllTransitHeaders(String status) {
+	public List<Transit> getAllTransitHeaders(String status) {
 		try {
 			return transitHeaderDao.getAllTransitHeaders(status);
 		} catch (Exception e) {

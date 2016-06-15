@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.TransactionTestCase;
 public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataBase {
 	
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainUneditableTADetailIDs(java.lang.String, java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainUneditableTADetailIDs(java.lang.String, java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainUneditableTADetailIDs() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -45,7 +45,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#updateTenderAnalysisDetails(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer, java.lang.String, java.lang.Double, java.util.List, boolean)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#updateTenderAnalysisDetails(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer, java.lang.String, java.lang.Double, java.util.List, boolean)}.
 	 */
 	public TransactionTestCase.TestDataMethod testUpdateTenderAnalysisDetails() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -72,7 +72,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#insertTenderAnalysisDetailForVendor(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#insertTenderAnalysisDetailForVendor(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testInsertTenderAnalysisDetailForVendor() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -99,7 +99,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainTenderAnalysisDetailList(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainTenderAnalysisDetailList(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainTenderAnalysisDetailList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -126,7 +126,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainTenderAnalysisForRateInput(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainTenderAnalysisForRateInput(com.gammon.qs.domain.Job, java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainTenderAnalysisForRateInput() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -153,7 +153,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainTenderAnalysisList(com.gammon.qs.domain.Job, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainTenderAnalysisList(com.gammon.qs.domain.Job, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainTenderAnalysisList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -180,7 +180,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#removeTenderAnalysisList(com.gammon.qs.domain.Job, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#removeTenderAnalysisList(com.gammon.qs.domain.Job, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testRemoveTenderAnalysisList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -207,7 +207,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainTenderAnalysisComparison(com.gammon.qs.domain.Job, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainTenderAnalysisComparison(com.gammon.qs.domain.Job, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainTenderAnalysisComparison() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -234,7 +234,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#uploadTenderAnalysisDetailsFromExcel(java.lang.String, java.lang.String, byte[])}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#uploadTenderAnalysisDetailsFromExcel(java.lang.String, java.lang.String, byte[])}.
 	 */
 	public TransactionTestCase.TestDataMethod testUploadTenderAnalysisDetailsFromExcel() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -261,7 +261,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#uploadTenderAnalysisVendorDetailsFromExcel(byte[])}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#uploadTenderAnalysisVendorDetailsFromExcel(byte[])}.
 	 */
 	public TransactionTestCase.TestDataMethod testUploadTenderAnalysisVendorDetailsFromExcel() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -288,7 +288,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#downloadTenderAnalysisDetailsExcel(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#downloadTenderAnalysisDetailsExcel(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testDownloadTenderAnalysisDetailsExcel() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -315,7 +315,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#removeTenderAnalysis(java.lang.String, java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#removeTenderAnalysis(java.lang.String, java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testRemoveTenderAnalysis() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -342,7 +342,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#createOrUpdateTADetailFromResource(com.gammon.qs.domain.Resource)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#createOrUpdateTADetailFromResource(com.gammon.qs.domain.Resource)}.
 	 */
 	public TransactionTestCase.TestDataMethod testCreateOrUpdateTADetailFromResource() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -369,7 +369,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#deleteTADetailFromResource(com.gammon.qs.domain.Resource)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#deleteTADetailFromResource(com.gammon.qs.domain.Resource)}.
 	 */
 	public TransactionTestCase.TestDataMethod testDeleteTADetailFromResource() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -396,7 +396,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainUploadCache()}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainUploadCache()}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainUploadCache() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -423,7 +423,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#setUploadCache(java.util.List)}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#setUploadCache(java.util.List)}.
 	 */
 	public TransactionTestCase.TestDataMethod testSetUploadCache() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -450,7 +450,7 @@ public class TenderAnalysisServiceTestData extends TransactionTestCase.TestDataB
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.TenderAnalysisService#obtainVendorTACache()}.
+	 * Test method for {@link com.gammon.qs.service.TenderService#obtainVendorTACache()}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainVendorTACache() {
 		return new TransactionTestCase.TestDataMethod() {

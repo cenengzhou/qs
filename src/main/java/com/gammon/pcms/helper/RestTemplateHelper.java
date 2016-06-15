@@ -16,23 +16,22 @@ import com.gammon.pcms.config.WebServiceConfig;
 public class RestTemplateHelper {
 
 	@Autowired
-	List<HttpMessageConverter<?>> restMessageConverters;
+	private List<HttpMessageConverter<?>> restMessageConverters;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 		
-	public RestTemplate getLocalRestTemplateForWS(String hostname) {
-		return getLocalRestTemplate(hostname, webServiceConfig.getQsWsUsername(), webServiceConfig.getQsWsPassword());
+	public RestTemplate getRestTemplateForWS(String hostname) {
+		return getRestTemplate(hostname, webServiceConfig.getQsWsUsername(), webServiceConfig.getQsWsPassword());
 	}
 	
-	public RestTemplate getLocalRestTemplateForAPI(String hostname) {
-		return getLocalRestTemplate(hostname, webServiceConfig.getPcmsApiUsername(), webServiceConfig.getPcmsApiPassword());
+	public RestTemplate getRestTemplateForAPI(String hostname) {
+		return getRestTemplate(hostname, webServiceConfig.getPcmsApiUsername(), webServiceConfig.getPcmsApiPassword());
 	}
 	
-	public RestTemplate getLocalRestTemplate(String hostname, String username, String password) {
+	public RestTemplate getRestTemplate(String hostname, String username, String password) {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpHost host = new HttpHost(hostname);
-		AuthHttpComponentsClientHttpRequestFactory requestFactory = new AuthHttpComponentsClientHttpRequestFactory(
-				httpClient, host, username, password);
+		AuthHttpComponentsClientHttpRequestFactory requestFactory = new AuthHttpComponentsClientHttpRequestFactory(httpClient, host, username, password);
 
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
 		restTemplate.setMessageConverters(restMessageConverters);

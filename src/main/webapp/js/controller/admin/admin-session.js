@@ -21,7 +21,7 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 				return true;
 			},
 			columnDefs: [
-			             { field: 'principal.user.fullname', displayName: "Name", enableCellEdit: false },
+			             { field: 'principal.fullname', displayName: "Name", enableCellEdit: false },
 			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
 			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
 			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},

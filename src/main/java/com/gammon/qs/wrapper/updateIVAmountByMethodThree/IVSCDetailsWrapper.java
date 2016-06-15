@@ -9,7 +9,7 @@ package com.gammon.qs.wrapper.updateIVAmountByMethodThree;
 
 import java.io.Serializable;
 
-import com.gammon.qs.domain.SCDetails;
+import com.gammon.qs.domain.SubcontractDetail;
 
 /**
  * @author tikywong
@@ -24,20 +24,20 @@ public class IVSCDetailsWrapper implements Serializable{
 	 * @author tikywong
 	 */
 
-	private SCDetails scDetail;
+	private SubcontractDetail scDetail;
 	
 	private Double updatedCumulativeWDQuantity = Double.valueOf(0);
 	
-	public IVSCDetailsWrapper(SCDetails scDetail){
+	public IVSCDetailsWrapper(SubcontractDetail scDetail){
 		this.scDetail = scDetail;
 		this.updatedCumulativeWDQuantity = scDetail.getCumWorkDoneQuantity();
 	}
 
-	public SCDetails getScDetail() {
+	public SubcontractDetail getScDetail() {
 		return scDetail;
 	}
 
-	public void setScDetail(SCDetails scDetail) {
+	public void setScDetail(SubcontractDetail scDetail) {
 		this.scDetail = scDetail;
 	}
 

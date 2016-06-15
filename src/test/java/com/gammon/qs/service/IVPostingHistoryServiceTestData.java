@@ -18,7 +18,7 @@ import com.gammon.junit.testcase.TransactionTestCase;
 public class IVPostingHistoryServiceTestData extends TransactionTestCase.TestDataBase {
 	
 	/**
-	 * Test method for {@link com.gammon.qs.service.IVPostingHistoryService#obtainIVPostingHistory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)}.
+	 * Test method for {@link com.gammon.qs.service.IVPostingHistService#obtainIVPostingHistory(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainIVPostingHistory() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -45,7 +45,7 @@ public class IVPostingHistoryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.IVPostingHistoryService#downloadIvPostingHistoryExcelFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)}.
+	 * Test method for {@link com.gammon.qs.service.IVPostingHistService#downloadIvPostingHistoryExcelFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)}.
 	 */
 	public TransactionTestCase.TestDataMethod testDownloadIvPostingHistoryExcelFile() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -72,7 +72,7 @@ public class IVPostingHistoryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.IVPostingHistoryService#obtainIVPostingHistoryByPage(int)}.
+	 * Test method for {@link com.gammon.qs.service.IVPostingHistService#obtainIVPostingHistoryByPage(int)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainIVPostingHistoryByPage() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -99,7 +99,7 @@ public class IVPostingHistoryServiceTestData extends TransactionTestCase.TestDat
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.IVPostingHistoryService#clearCache()}.
+	 * Test method for {@link com.gammon.qs.service.IVPostingHistService#clearCache()}.
 	 */
 	public TransactionTestCase.TestDataMethod testClearCache() {
 		return new TransactionTestCase.TestDataMethod() {

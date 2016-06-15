@@ -19,7 +19,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	
 	.state('logout', {
 		url: "/logout",
-		templateUrl: "logout.html"
+		templateUrl: "logout.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/logout.js'
+                    ] 
+                });
+            }]
+        },
+		controller: 'LogoutCtrl'
 	})
 	
 	.state('job-select', {

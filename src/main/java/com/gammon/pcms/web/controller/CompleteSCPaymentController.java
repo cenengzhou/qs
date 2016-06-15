@@ -57,7 +57,7 @@ public class CompleteSCPaymentController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovalDecision(approvedOrRejected);
-		restTemplate = restTemplateHelper.getLocalRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		CompleteSCPaymentResponse responseObj = restTemplate.postForObject(
 				"http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() 
 				+ "/ws/completeSCPayment", requestObj, CompleteSCPaymentResponse.class);
