@@ -23,7 +23,7 @@ public class HttpSessionCreatedEventListener implements ApplicationListener<Http
 	public void onApplicationEvent(HttpSessionCreatedEvent event) {
 		HttpSession session = event.getSession();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		session.setMaxInactiveInterval(securityConfig.getDefaultMaxInactiveInterval());
+		session.setMaxInactiveInterval(Integer.valueOf(securityConfig.getDefaultMaxInactiveInterval()));
 		String username = authentication != null ? authentication.getName() : " {NULL}";
 	    logger.info("Session create:" + username + " | " + session.getId());
 	}		

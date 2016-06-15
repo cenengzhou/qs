@@ -5684,4 +5684,11 @@ public class PackageService {
 		return null;
 	}
 	
+	/***************************************NEW FUNCTIONS FOR PCMS**************************************************************/
+	public List<SCPackage> obtainPackageList (String jobNo) throws DatabaseOperationException{
+		List<SCPackage> packageList = packageHBDao.obtainPackageList(jobNo);
+		return packageList;	
+	}
+	/***************************************NEW FUNCTIONS FOR PCMS - END**************************************************************/
+	
 }

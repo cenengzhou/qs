@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${role.qs-admin}")
 	private String roleQsAdmin;
 	@Value("${defaultMaxInactiveInterval}")
-	private int defaultMaxInactiveInterval;
+	private String defaultMaxInactiveInterval;
 	
 	// Kerberos
 	@Value("${kerberos.service-principal}")
@@ -160,6 +160,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/spring-ws/*", 
 					"/resources/**",
 					"/plugins/**",
+					"/css/**",
 					"/image/**",
 					"/badCredentials.jsp",
 					"/index.html",
@@ -365,7 +366,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	/**
 	 * @return the defaultMaxInactiveInterval
 	 */
-	public int getDefaultMaxInactiveInterval() {
+	public String getDefaultMaxInactiveInterval() {
 		return defaultMaxInactiveInterval;
 	}
 }

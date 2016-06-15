@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dao.SCPackageSPDao;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.SCPackageHBDao;
 import com.gammon.qs.domain.SCPackage;
 import com.gammon.qs.service.PackageService;
 
@@ -39,9 +40,19 @@ public class SubcontractController {
 	public List<SCPackage> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
 		List<SCPackage> subcontractList = null;
 		try{
-//			subcontractList = packageService.obtainSubcontractList(null, null, jobNo, null, null, null, null, null, null, null, null, null);
 			subcontractList = scPackageSPDao.findByJob_JobNumberAndSubcontractStatusAndSystemStatus(jobNo, 500, "ACTIVE");
-			logger.info("----------------------------SERVER: getSubcontractList Size: "+subcontractList.size());
+		}catch(DatabaseOperationException databaseOperationException){
+			logger.error("Database Exception: ");
+			databaseOperationException.printStackTrace();
+		}
+		return subcontractList;
+	}
+	
+	@RequestMapping(value = "getPackageList.json")
+	public List<SCPackage> getPackageList(@RequestParam(name="jobNo") String jobNo){
+		List<SCPackage> subcontractList = null;
+		try{
+			subcontractList = packageService.obtainPackageList(jobNo);
 		}catch(DatabaseOperationException databaseOperationException){
 			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();

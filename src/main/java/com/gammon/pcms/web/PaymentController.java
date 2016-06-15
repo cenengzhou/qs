@@ -1,9 +1,9 @@
 /**
  * pcms-tc
  * com.gammon.pcms.web.controller
- * SubcontractController.java
- * @since May 9, 2016 4:46:10 PM
- * @author tikywong
+ * PaymentController.java
+ * @since Jun 14, 2016 6:04:10 PM
+ * @author koeyyeung
  */
 package com.gammon.pcms.web;
 
@@ -17,31 +17,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.SCPackage;
-import com.gammon.qs.service.PackageService;
+import com.gammon.qs.domain.SCPaymentCert;
+import com.gammon.qs.service.PaymentService;
 
 @RestController
 @RequestMapping(value = "service",
 				method = RequestMethod.POST/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
-public class PackageController {
+public class PaymentController {
 	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
-	private PackageService packageService;
+	private PaymentService paymentService;
 	
-	/*@RequestMapping(value = "GetSubcontractList.json")
-//	public void getSubcontractList(@RequestBody GetSubcontractListRequest request){
-	public List<SCPackage> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
-		List<SCPackage> subcontractList = null;
+	
+	@RequestMapping(value = "getSCPaymentCertList.json")
+	public List<SCPaymentCert> getSCPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+		List<SCPaymentCert> paymentCertList = null;
 		try{
-			subcontractList = packageService.obtainSubcontractList(null, null, jobNo, null, null, null, null, null, null, null, null, null);
-			logger.info("----------------------------SERVER: getSubcontractList Size: "+subcontractList.size());
+			paymentCertList = paymentService.obtainSCPaymentCertListByPackageNo(jobNo, Integer.valueOf(subcontractNo));
 		}catch(DatabaseOperationException databaseOperationException){
 			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();
 		}
-		return subcontractList;
-	}*/
+		return paymentCertList;
+	}
 }
