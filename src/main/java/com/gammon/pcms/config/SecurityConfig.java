@@ -138,6 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		@Autowired
 		private SecurityConfig securityConfig;
 		
+		//TODO: Add role security to Swagger page
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.headers()
