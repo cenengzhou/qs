@@ -13,7 +13,8 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
     			console.log('validate session:' + data);
     		}else{
     			if(toState.name != 'logout'){
-    				$window.location.href = 'login.htm';
+//    				console.log("login.htm?validateSession=stateChangeStart");
+    				$window.location.href = 'login.htm?InavlidSession';
     			}
     		}
     		});
@@ -31,6 +32,7 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
         Pace.stop();
     });
     $scope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+    	$window.location.href = 'login.htm?StateChangeError';
         Pace.stop();
     });
     

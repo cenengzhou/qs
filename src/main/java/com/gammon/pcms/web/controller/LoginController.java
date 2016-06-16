@@ -19,8 +19,11 @@ public class LoginController {
 		String forwardUrl = (String) request.getAttribute("javax.servlet.forward.servlet_path");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String mavPath = "login";
-		if(forwardUrl != null && (forwardUrl.equals("/") || forwardUrl.equals("/index.html"))){
+		if(forwardUrl != null && (forwardUrl.endsWith(".css") || forwardUrl.endsWith(".js") || forwardUrl.contains(".woff2") 
+				||forwardUrl.equals("/") || forwardUrl.startsWith("/index.html") || forwardUrl.startsWith("/home.html"))){
 			request.setAttribute("bypassNTLMCheck", "true");
+		} else if (forwardUrl != null){
+			request.setAttribute("bypassNTLMCheck", "false");
 		}
 		return new ModelAndView(mavPath);
 	}

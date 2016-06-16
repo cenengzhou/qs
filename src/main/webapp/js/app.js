@@ -615,7 +615,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					var status = rejection.status;
 					var deferred = $q.defer();
 					if(status === 401 || status === 405) {
-						$window.location.href = 'login.htm';
+						$window.location.href = 'login.htm?status=' + status;
 					}
 					deferred.reject(rejection);
 					return deferred.promise;

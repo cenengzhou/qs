@@ -41,10 +41,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		RestTemplate restTemplate = restTemplateHelper.getRestTemplate(gsf.getHost(), null, null);
 		GetRole.Request request = new GetRole.Request();
 		request.setApplicationCode(webServiceConfig.getGsfApplicationCode());
-		request.setUserADAccount("gamska\\" + username );
+		request.setUserADAccount("gamska\\" + username.replace("@GAMSKA.COM", "") );
 		ResponseEntity<Response> response = restTemplate.postForEntity(gsf.toString(), request, GetRole.Response.class);
 		
 		User user = new User(response.getBody().getResult());
+		user.setUsername(username);
 		//TODO: Testing GSF | add ROLE_QS_ENQUIRY for all login
 		UserRole role = new UserRole("QS Enquiry", "ROLE_QS_ENQUIRY");
 		user.addRole(role);

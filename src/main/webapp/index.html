@@ -16,18 +16,29 @@
 var initApp = angular.module('initApp', []);  
 initApp.run(['$http', '$window', function($http,$window){
 
+	var userAgent = $window.navigator.userAgent;
+    var browsers = {chrome: /chrome/i, safari: /safari/i, firefox: /firefox/i, ie: /Trident/i};
+    
 	var validateSession = function(){
 		console.log("init");
 		$http.post('service/ValidateCurrentSession')
 		.then(function(data){
-			if(data){
-				$window.location.href = 'login.htm';
-			} else {
+			if(data.data){
 				$window.location.href = 'home.html';
+			} else {
+				$window.location.href = 'login.htm?ValidateCurrentSession';
 			}
+		}, function(data){
+			$window.location.href = 'login.htm';
 		});
 	};
-	validateSession();
+	
+	if (browsers['ie'].test(userAgent) || browsers['chrome'].test(userAgent)) {
+    	window.location.href = 'home.html';
+    } else {
+    	validateSession();
+    }
+	
 }]); 
 
 </script>

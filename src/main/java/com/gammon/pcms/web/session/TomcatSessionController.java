@@ -57,7 +57,7 @@ public class TomcatSessionController {
 	}
 	
 	@RequestMapping(value = "InvalidateSessionList")
-	public void invalidateSessionList(@RequestParam(required = false)List<String> sessionIdList, HttpServletRequest request, HttpServletResponse response){
+	public boolean invalidateSessionList(@RequestParam(required = false)List<String> sessionIdList, HttpServletRequest request, HttpServletResponse response){
 		JavaType valueType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
 		sessionIdList = JsonHelper.getRequestParam(sessionIdList, valueType, objectMapper, request);
 		GeneralSessionController.invalidateSessionList(sessionIdList, sessionRegistry);
@@ -71,8 +71,10 @@ public class TomcatSessionController {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	public static Manager getTomcatManager(ServletContext servletContext){

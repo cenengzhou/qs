@@ -39,7 +39,12 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 			for(var i=0; i<selectedRows.length;i++){
 				sessionIds[i] = selectedRows[i].sessionId;
 			}
-			SessionHelper.invalidateSessionList(sessionIds).then($scope.loadGridData);
+			SessionHelper.invalidateSessionList(sessionIds)
+			.then(function(data){
+				if(data){
+					$scope.loadGridData();
+				}
+			});
 		}
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
