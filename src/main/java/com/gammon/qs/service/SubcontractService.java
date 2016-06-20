@@ -2888,29 +2888,7 @@ public class SubcontractService {
 		return scPackage;
 	}
 
-	public String saveOrUpdateSCPackage(Subcontract scPackage) throws Exception{
-		logger.info("Job: " + scPackage.getJobInfo().getJobNumber() + " SCPackage: " + scPackage.getPackageNo());
-		//Validate internal job number
-		if(Subcontract.INTERNAL_TRADING.equalsIgnoreCase(scPackage.getFormOfSubcontract())){
-			if(scPackage.getInternalJobNo() == null || scPackage.getInternalJobNo().trim().length() == 0)
-				return "Invalid internal job number";
-			JobInfo job = jobHBDao.obtainJobInfo(scPackage.getInternalJobNo());
-			if(job == null){
-				job = jobWSDao.obtainJob(scPackage.getInternalJobNo());
-				if(job == null)
-					return "Invalid internal job number: " + scPackage.getInternalJobNo();
-			}
-		}
-
-		if(scPackage.getId() == null){
-			Subcontract packageInDB = subcontractHBDao.obtainPackage(scPackage.getJobInfo(), scPackage.getPackageNo());
-			if(packageInDB != null)
-				return "The package number " + scPackage.getPackageNo() + " is already used";
-		}
-
-		subcontractHBDao.saveOrUpdate(scPackage);
-		return null;
-	}
+	
 
 
 
@@ -5678,11 +5656,58 @@ public class SubcontractService {
 		return null;
 	}
 	
-	/***************************************NEW FUNCTIONS FOR PCMS**************************************************************/
+	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public List<Subcontract> obtainSubcontractList (String jobNo) throws DatabaseOperationException{
 		List<Subcontract> packageList = subcontractHBDao.obtainPackageList(jobNo);
 		return packageList;	
 	}
-	/***************************************NEW FUNCTIONS FOR PCMS - END**************************************************************/
+	
+	public String saveOrUpdateSCPackage(String jobNo, Subcontract subcontract) throws Exception{
+		logger.info("Job: " + jobNo + " SCPackage: " + subcontract.getPackageNo());
+		//Validate internal job number
+		if(Subcontract.INTERNAL_TRADING.equalsIgnoreCase(subcontract.getFormOfSubcontract())){
+			if(subcontract.getInternalJobNo() == null || subcontract.getInternalJobNo().trim().length() == 0)
+				return "Invalid internal job number";
+			JobInfo job = jobHBDao.obtainJobInfo(subcontract.getInternalJobNo());
+			if(job == null){
+				job = jobWSDao.obtainJob(subcontract.getInternalJobNo());
+				if(job == null)
+					return "Invalid internal job number: " + subcontract.getInternalJobNo();
+			}
+		}
+
+		
+		if(subcontract.getId() == null){
+			Subcontract packageInDB = subcontractHBDao.obtainPackage(jobNo, subcontract.getPackageNo());
+			if(packageInDB != null)
+				return "The package number " + subcontract.getPackageNo() + " is already used";
+			
+				Subcontract newSubcontract = new Subcontract();
+				newSubcontract.setJobInfo(jobHBDao.obtainJobInfo(jobNo));
+				newSubcontract.setPackageNo(subcontract.getPackageNo());
+				
+				newSubcontract.setDescription(subcontract.getDescription());
+				newSubcontract.setSubcontractorNature(subcontract.getSubcontractorNature());
+				newSubcontract.setSubcontractTerm(subcontract.getSubcontractTerm());
+				newSubcontract.setFormOfSubcontract(subcontract.getFormOfSubcontract());
+				newSubcontract.setInternalJobNo(subcontract.getInternalJobNo());
+				newSubcontract.setRetentionTerms(subcontract.getRetentionTerms());
+				newSubcontract.setPaymentTerms(subcontract.getPaymentTerms());
+				newSubcontract.setRetentionAmount(subcontract.getRetentionAmount());
+				newSubcontract.setPaymentTermsDescription(subcontract.getPaymentTermsDescription());
+				newSubcontract.setMaxRetentionPercentage(subcontract.getMaxRetentionPercentage());
+				newSubcontract.setInterimRentionPercentage(subcontract.getInterimRentionPercentage());
+				newSubcontract.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
+				
+				subcontractHBDao.addSCPackage(newSubcontract);
+		}else{
+			//Subcontract packageInDB = subcontractHBDao.obtainPackage(jobNo, subcontract.getPackageNo());
+			//subcontractHBDao.
+		}
+
+		//subcontractHBDao.saveOrUpdate(subcontract);
+		return null;
+	}
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 }

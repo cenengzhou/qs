@@ -1,5 +1,5 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad',
-                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker',
+                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
 
@@ -139,7 +139,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                            'js/controller/subcontract/subcontract-select.js',
                            'js/controller/subcontract/subcontract-create.js',
-                           'js/service/subcontact-service.js'
+                           'js/service/subcontract-service.js'
                     ] 
                 });
             }]
@@ -164,7 +164,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/subcontract/subcontract-vendor-feedback.js',
                            'js/controller/subcontract/subcontract-vendor-compare.js',
                            'js/controller/subcontract/subcontract-award.js',
-                           'js/service/subcontact-service.js'
+                           'js/service/subcontract-service.js'
                     ] 
                 });
             }]
@@ -181,7 +181,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/subcontact-service.js'
+                           'js/service/subcontract-service.js'
                     ] 
                 });
             }]
@@ -335,13 +335,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('subcontract.paymentdetails', {
 		url: "/payment/details",
 		templateUrl: "view/subcontract/payment-details.html",
+		"params": {
+			"payment": null, 
+			"paymentTerms": null
+		},
 		controller: 'PaymentDetailsCtrl',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/payment-details.js'
+                           'js/controller/subcontract/payment-details.js',
+                           'js/service/payment-service.js'
                     ] 
                 });
             }]
@@ -616,7 +621,13 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					var deferred = $q.defer();
 					if(status === 401 || status === 405) {
 						$window.location.href = 'login.htm?status=' + status;
+					}else if (status === 403){
+						$window.location.href = '403.html';
 					}
+					/*else if (status === 404){
+						console.log("Status 404");
+						$window.location.href = 'logout.html?=404';
+					}*/
 					deferred.reject(rejection);
 					return deferred.promise;
 				}
@@ -644,42 +655,6 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
       datasetFill: false
     });
   }]);
-
-/**Http intercepter: Convert Json date to javascript date object**/
-/*mainApp.config(["$httpProvider", function ($httpProvider) {
-    $httpProvider.defaults.transformResponse.push(function(responseData){
-       convertDateStringsToDates(responseData);
-       return responseData;
-   });
-}]);*/
-
-var regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/;
-
-function convertDateStringsToDates(input) {
-    // Ignore things that aren't objects.
-    if (typeof input !== "object") return input;
-
-    for (var key in input) {
-        if (!input.hasOwnProperty(key)) continue;
-
-        var value = input[key];
-        var match;
-        // Check for string properties which look like dates.
-        // TODO: Improve this regex to better match ISO 8601 date strings.
-        if (typeof value === "string" && (match = value.match(regexIso8601))) {
-            // Assume that Date.parse can parse ISO 8601 strings, or has been shimmed in older browsers to do so.
-            var milliseconds = Date.parse(match[0]);
-            if (!isNaN(milliseconds)) {
-                input[key] = new Date(milliseconds);
-            }
-        } else if (typeof value === "object") {
-            // Recurse into object
-            convertDateStringsToDates(value);
-        }
-    }
-}
-
-
 
 
 

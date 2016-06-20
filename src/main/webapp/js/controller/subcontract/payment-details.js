@@ -1,10 +1,6 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http',  function($scope , $http) {
-
-
-	$scope.status = "yes";
-
-
-	$scope.interimFinal = "Interim";
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 
+                                          function($scope , $http, $stateParams, $cookieStore, paymentService) {
+	$scope.disableButtons = true;
 
 	$scope.mainCertNo = {
 			options: [
@@ -16,31 +12,53 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http',  function($scope ,
 			          selected: "1"
 	};
 
+	if($stateParams.payment){
+		$cookieStore.put('paymentCertNo', $stateParams.payment.paymentCertNo);
+		$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
+
+	}
+	$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
+	$scope.paymentTerms = $cookieStore.get('paymentTerms');
 
 
-	/*
-	 //By using jquery json parser
-	 var obj = $.parseJSON('{"name": "", "skills": "", "jobtitel": "Entwickler", "res_linkedin": "GwebSearch"}');
-	alert(obj['jobtitel']);
+	$scope.payment = $stateParams.payment;
+	if($scope.payment==null){
+		console.log("GET PAYMENT FROM SERVER");
+		loadPaymentCert();
 
-	//By using javasript json parser
-	var t = JSON.parse('{"name": "", "skills": "", "jobtitel": "Entwickler", "res_linkedin": "GwebSearch"}');
-	alert(t['jobtitel'])
-	 */
+	}else{
+		initTab();
+	}
 
-	$scope.payment = {
-			dueDate: new Date("05/06/2016"),
-			asAtDate: "",
-			invoiceReceivedDate: "",
-			gstPayable: 0,
-			gstReceivable: 0,
-			certificateAmount: 1000000000,
-			paymentTerms: "QS2",
-			paymentRequisition: "No",
-			paymentStatus:"Pending",
-			certIssueDate: ""
-	};
+	function loadPaymentCert() {
+		paymentService.getSCPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		.then(
+				function( data ) {
+					//console.log(data);
+					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
+					$scope.payment = data;
 
+					initTab();
+				});
+	}
+
+	function loadPaymentDetails() {
+		paymentService.getPaymentDetailList($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		.then(
+				function( data ) {
+					$scope.gridOptions.data = data;
+					$scope.gridApi.grid.refresh();
+				});
+	}
+
+	function loadSCPaymentCertSummary() {
+		paymentService.getSCPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.paymentCertSummary = data;
+				});
+	}
 
 	$scope.units = {
 			"V1": "V1 - External VO - No Budget" , 
@@ -59,101 +77,52 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http',  function($scope ,
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableRowSelection: true,
-			//enableSelectAll: true,
+			enableSelectAll: true,
 			//enableFullRowSelection: true,
-			multiSelect: false,
-			showGridFooter : true,
+			multiSelect: true,
+			enableCellEditOnFocus : true,
+			showGridFooter : false,
 			//showColumnFooter : true,
-			//fastWatch : true,
 
 
 			columnDefs: [
-			             { field: 'lineType', width:80},
-			             { field: 'bqItem',  width:100 },
-			             { field: 'costRate',  width:100 },
-			             { field: 'ScRate' ,  width:100 },
-			             { field: 'Quantity' ,  width:100 },
-			             { field: 'BudgetAmount' ,  width:100 },
-			             { field: 'toBeApprovedCostRate' ,  width:100 },
-			             {field: 'toBeApprovedScRate' ,  width:100 },
-			             {field: 'toBeApprovedQuantity' ,  width:100 },
-			             {field: 'toBeApprovedBudgetAmount' ,  width:100 },
-			             {field: 'MovementAmount' ,  width:100 },
-			             {field: 'ObjectCode' ,  width:100 },
-			             {field: 'SubsidiaryCode' ,  width:100 },
-			             {field: 'Description' ,  width:100 },
-			             {field: 'Unit' ,  width:100 },
-			             {field: 'Remarks' ,  width:100 },
+			             { field: 'lineType', enableCellEdit: false},
+			             { field: 'billItem', enableCellEdit: false},
+			             { field: 'movementAmount', cellClass: "grid-theme-blue"},
+			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue"},
+			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false},
+			             { field: 'description', enableCellEdit: false},
+			             { field: 'scSeqNo', displayName: "Sequence No", enableCellEdit: false},
+			             { field: 'objectCode', enableCellEdit: false},
+			             {field: 'subsidiaryCode', enableCellEdit: false}
 			             ]
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 
-		gridApi.selection.on.rowSelectionChanged($scope,function(row){
-			var msg = 'row selected ' + row.isSelected;
-			console.log(row.entity.lineType);
+		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+
+			//Alert to show what info about the edit is available
+			//alert('Column: ' + colDef.name + ' feedbackRate: ' + rowEntity.feedbackRate);
+			//rowEntity.feedbackRateHK = rowEntity.feedbackRate * $scope.exchangeRate;
 		});
 
-
-		/*gridApi.selection.on.rowSelectionChanged($scope,function(row){
-			  var removeRowIndex = $scope.grid_Options.data.indexOf(row.entity);
-         });*/
 	}
 
-	
-	$http.get('http://localhost:8080/pcms/data/payment.json')
-	.success(function(data) {
-		$scope.gridOptions.data = data;
-	});
-
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
-	};
-
-
-	$scope.edit = function(){
-		$scope.selectedRows  = $scope.gridApi.selection.getSelectedRows();
-
-		if($scope.selectedRows.length == 0){
-			modalMessageService.open('view/message-modal.html', 'MessageModalCtrl', "Please select a row to edit.");
-			return false;
-		}
-
-
-		$scope.payment.description = $scope.selectedRows[0]['Description'];
-		$scope.payment.objectCode = $scope.selectedRows[0]['ObjectCode'];
-		$scope.payment.subsidiaryCode = $scope.selectedRows[0]['SubsidiaryCode'];
-		$scope.payment.unit = $scope.selectedRows[0]['Unit'];
-		//$scope.payment.quantity = $scope.selectedRows[0]['toBeApprovedQuantity'];
-		//$scope.payment.scRate = $scope.selectedRows[0]['toBeApprovedScRate'];
-		//s$scope.payment.totalAmount = $scope.selectedRows[0]['MovementAmount'];
-		//$scope.payment.invoiceReceivedDate = $scope.selectedRows[0]['Description'];
-		//$scope.payment.altObjectCode = $scope.selectedRows[0]['Unit'];
-		$scope.payment.remark = $scope.selectedRows[0]['Remarks'];
-
-
-		/*var arrayLength = $scope.selectedRows.length;
-		for (var i = 0; i < arrayLength; i++) {
-			console.log($scope.selectedRows[i]['lineType']);
-		}*/
-		$('ul.setup-panel li a[href="#step2"]').trigger('click');	    
-	}
-
-
-	//Form validation
-	$(document).ready(function() {
+	function initTab (){
+		$(document).ready(function() {console.log("Init Tab");
 
 		var navListItems = $('ul.setup-panel li a'),
 		allWells = $('.setup-content');
 
 		allWells.hide();
 
-		navListItems.click(function(e)
-				{
+		navListItems.click(function(e){
 			e.preventDefault();
 			var $target = $($(this).attr('href')),
 			$item = $(this).closest('li');
+
 
 			if (!$item.hasClass('disabled')) {
 				navListItems.closest('li').removeClass('active');
@@ -161,18 +130,33 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http',  function($scope ,
 				allWells.hide();
 				$target.show();
 			}
-				});
+
+			if($item.context.hash == "#step2"){
+				loadPaymentDetails();
+			}else if($item.context.hash == "#step3"){
+
+			}else if($item.context.hash == "#step4"){
+				loadSCPaymentCertSummary();
+			}
+
+
+		});
 
 
 		$('ul.setup-panel li.active a').trigger('click');
 
-		if($scope.status == "yes"){
+
+		if($scope.payment.paymentStatus != "PND"){
 			$('ul.setup-panel li:eq(1)').removeClass('disabled');
 			$('ul.setup-panel li:eq(2)').removeClass('disabled');
 			$('ul.setup-panel li:eq(3)').removeClass('disabled');
-			$('ul.setup-panel li a[href="#step2"]').trigger('click');	    
-		}
 
+			//$('ul.setup-panel li a[href="#step2"]').trigger('click');
+
+			$scope.disableButtons = true;
+		}else{
+			$scope.disableButtons = false;
+		}
 
 		$('#activate-step-2').on('click', function(e) {
 			// step-1 validation
@@ -193,57 +177,23 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http',  function($scope ,
 			$('ul.setup-panel li a[href="#step4"]').trigger('click');
 		})  
 
-	});
+		});
+	};
 
-
-
-	/* $scope.gridOptions = {
-    	      enableFiltering: true,
-    	      enableColumnResizing : true,
-    	      enableGridMenu : true,
-    	      enableRowSelection: true,
-    	      enableFullRowSelection: true,
-    	      multiSelect: false,
-    	      //showGridFooter : true,
-    	      //showColumnFooter : true,
-    	      //fastWatch : true,
-
-    	     enableCellEditOnFocus : true,
-
-    	     paginationPageSizes: [50],
-    	      paginationPageSize: 50,
-
-
-    	      //Single Filter
-    	      onRegisterApi: function(gridApi){
-    	        $scope.gridApi = gridApi;
-    	      },
-    	      columnDefs: [
-    	        { field: 'certNo', width:80, displayName:"Cert No.",
-    	         cellTemplate: '<div style="text-decoration:underline;color:blue;text-align:right;cursor:pointer" ng-click="grid.appScope.rowClick(row)">{{COL_FIELD}}</div>'},
-    	        //cellTemplate: '<div class="ui-grid-cell-contents"><span><a ng-click="clicker(row)">{{COL_FIELD}}</a></span></div>' },
-    	         { field: 'clientCertNo', enableCellEdit: false , width:100 },
-    	        { field: 'mainContractorAmt', cellFilter: 'mapGender' },
-    	        { field: 'nscAmt' },
-    	        { field: 'mosAmt' },
-    	        { field: 'retention' },
-    	        { field: 'mosRetention' },
-    	        {field: 'contraChargeAmt' },
-    	        {field: 'adjustmentAmt' },
-    	        {field: 'advancedPayment' },
-    	        {field: 'cpfAmt' },
-    	      ]
-
-    	    };
-
-    	    $http.get('http://localhost:8080/QSrevamp2/data/cert-data.json')
-    	      .success(function(data) {
-    	        $scope.gridOptions.data = data;
-    	      });
-
-    	    $scope.filter = function() {
-    	      $scope.gridApi.grid.refresh();
-    	    };*/
-
+	$scope.convertPaymentStatus = function(status){
+		if(status!=null){
+			if (status.localeCompare('PND') == 0) {
+				return "Pending";
+			}else if (status.localeCompare('SBM') == 0) {
+				return "Submitted";
+			}else if (status.localeCompare('UFR') == 0) {
+				return { width: "Under Finance Review" }
+			}else if (status.localeCompare('PCS') == 0) {
+				return { width: "Waiting For Posting" }
+			}else if (status.localeCompare('APR') == 0) {
+				return "Posted To Finance";
+			}
+		}
+	}
 
 }]);

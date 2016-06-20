@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractCtrl', ['$scope', '$stateParams', 'colorCode',   
-                                       function($scope , $stateParams, colorCode) {
+mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode',   
+                                       function($scope, colorCode) {
 	$scope.subcontractSum = 53895000;
 	$scope.paymentAmount = 100256;
 

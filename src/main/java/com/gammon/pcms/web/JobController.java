@@ -20,8 +20,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 
 @RestController
-@RequestMapping(value = "service",
-				method = RequestMethod.POST/*,
+@RequestMapping(value = "service"/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class JobController {
@@ -30,7 +29,7 @@ public class JobController {
 	@Autowired
 	private JobInfoService jobService;
 	
-	@RequestMapping(value = "getJobList.json")
+	@RequestMapping(value = "getJobList", method = RequestMethod.GET)
 	public List<JobInfo> getJobList(){
 		List<JobInfo> jobList = null;
 		try{
@@ -42,7 +41,7 @@ public class JobController {
 		return jobList;
 	}
 	
-	@RequestMapping(value = "getJob.json")
+	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo){
 		JobInfo job = null;
 		try{

@@ -39,7 +39,7 @@
 				</span>
 			</div>
 		</div>
-
+		
 		<div class="col-xs-3">
 			<!-- <button type="button" class="btn bg-teal-gradient" ui-sref="subcontract-create"><span class="glyphicon glyphicon-star">Create</span></button> -->
 			<button type="button" class="btn bg-teal-gradient pull-right"
@@ -54,9 +54,13 @@
 
 	<div class="fixed-container">
 		<div class="row ">
+			<!-- <div class="col-md-4 col-lg-3 animated flipInX"
+				ng-repeat="sc in (filteredItems = (subcontracts  | filter:{scStatus:'500'} | filter:searchquery))"
+				ng-hide ="subcontractStatus=='nonAward'"> -->
 			<div class="col-md-4 col-lg-3 animated flipInX"
 				ng-repeat="sc in subcontracts | filter:{scStatus:'500'} | filter:searchquery"
 				ng-hide ="subcontractStatus=='nonAward'">
+				
 				<div class="box box-widget sc-panel">
 					<a ui-sref="subcontract.dashboard"
 						ng-click="updateSubcontractNo(sc.packageNo, sc.description)">
@@ -66,10 +70,11 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
+								<small><span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></small>
 							</h3>
 							<h5 class="sc-panel-desc">
-								{{sc.description}}<span class="pull-right badge bg-blue">{{sc.originalSCSum
-									| currency}}</span>
+								{{sc.description}}
+								
 							</h5>
 						</div>
 					</a>
@@ -90,7 +95,7 @@
 			<div class="col-md-4 col-lg-3 animated flipInX"
 				ng-repeat="sc in subcontracts | filter:{scStatus:'!500'} | filter:searchquery"
 				ng-hide ="subcontractStatus=='Award'">
-				<div class="sc-panel">
+				<div class="box box-widget sc-panel">
 					<a ui-sref="subcontract-flow">
 						<div class="sc-panel-header bg-purple-gradient">
 							<div class="sc-panel-icon">
@@ -98,10 +103,10 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
+								<small><span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></small>
 							</h3>
 							<h5 class="sc-panel-desc">
-								{{sc.description}}<span class="pull-right badge bg-blue">{{sc.originalSCSum
-									| currency}}</span>
+								{{sc.description}}
 							</h5>
 						</div>
 					</a>
@@ -116,6 +121,8 @@
 			</div>
 			<!-- /.col -->
 		</div>
+
+		<!-- <div>{{filteredItems}}</div> -->
 
 	</div>
 </div>

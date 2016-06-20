@@ -1286,4 +1286,13 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryDao.getIVMovementOfJob(job);
 	}
 
+	
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	public List<ResourceSummary> getResourceSummaries(String jobNo) throws Exception {
+		JobInfo job = jobDao.obtainJobInfo(jobNo);
+		return bqResourceSummaryDao.getResourceSummariesSearch(job, null, null, null);
+	}
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	
+	
 }

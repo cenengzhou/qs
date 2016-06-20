@@ -17,7 +17,7 @@
 					<span class="label badge-inverse">1</span> Payment Certificate 
 					<small>Add/Edit	Payment Certificate here</small>
 				</a></li>
-				<li class="disabled"><a href="#step2"> <span class="label">2</span>
+				<li class="disabled" ng-click="triggerPaymentDetails()"><a href="#step2"> <span class="label">2</span>
 						Payment Details<small>Input movement amount here</small>
 				</a></li>
 				<li class="disabled"><a href="#step3"> <span class="label">3</span>
@@ -39,7 +39,7 @@
 							<div class="col-md-11 col-md-offset-1">
 								<h3 class="form-header form-header-lg m-b-10">
 									<span class="icon text-primary"><i
-										class="fa fa-shopping-cart"></i></span> Payment
+										class="fa fa-shopping-cart"></i></span> Payment  <small>Certificate No.{{paymentCertNo}}</small>
 								</h3>
 
 								<p class="m-b-20">Please input the required fields below.</p>
@@ -51,11 +51,11 @@
 										<label>Payment Type</label>
 										<div class="btn-group btn-group-justified">
 											<label class="btn"
-												ng-class="{'btn-primary' : interimFinal == 'Interim', 'btn-inverse' : interimFinal != 'Interim'}"
-												ng-model="interimFinal" uib-btn-radio="'Interim'">Interim</label>
+												ng-class="{'btn-primary' : payment.intermFinalPayment == 'I', 'btn-inverse' : payment.intermFinalPayment != 'I'}"
+												ng-model="payment.intermFinalPayment" uib-btn-radio="'Interim'">Interim</label>
 											<label class="btn"
-												ng-class="{'btn-primary' : interimFinal == 'Final', 'btn-inverse' : interimFinal != 'Final'}"
-												ng-model="interimFinal" uib-btn-radio="'Final'">Final</label>
+												ng-class="{'btn-primary' : payment.intermFinalPayment == 'F', 'btn-inverse' : payment.intermFinalPayment != 'F'}"
+												ng-model="payment.intermFinalPayment" uib-btn-radio="'Final'">Final</label>
 										</div>
 
 									</div>
@@ -72,31 +72,34 @@
 										<div class="col-md-4">
 											<div class="form-group">
 												<label>Due Date</label>
-												<div class="controls">
-													<input type="date" placeholder="" class="form-control "
-														ng-model="payment.dueDate"
-														data-parsley-group="wizard-step-1" required />
+												<div class="input-group" moment-picker="payment.dueDate" format="YYYY-MM-DD">
+													<span class="input-group-addon"> 
+														<i class="fa fa-calendar"></i>
+													</span>
+													 <input class="form-control" ng-model="payment.dueDate" data-parsley-group="wizard-step-1" required>
 												</div>
 											</div>
 										</div>
 										<div class="col-md-4">
 											<div class="form-group">
 												<label>As At Date</label>
-												<div class="controls">
-													<input type="date" placeholder="" class="form-control "
-														ng-model="payment.asAtDate"
-														data-parsley-group="wizard-step-1" required />
+												<div class="input-group" moment-picker="payment.asAtDate" format="YYYY-MM-DD">
+													<span class="input-group-addon"> 
+														<i class="fa fa-calendar"></i>
+													</span>
+													 <input class="form-control" ng-model="payment.asAtDate" data-parsley-group="wizard-step-1" required>
 												</div>
 											</div>
 										</div>
 
 										<div class="col-md-4">
-											<div class="form-group">
+											<div class="form-group" ng-show="payment.ipaOrInvoiceReceivedDate != null">
 												<label>Invoice Received Date</label>
-												<div class="controls">
-													<input type="date" placeholder="" class="form-control "
-														ng-model="payment.invoiceReceivedDate"
-														data-parsley-group="wizard-step-1" />
+												<div class="input-group" moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD">
+													<span class="input-group-addon"> 
+														<i class="fa fa-calendar"></i>
+													</span>
+													 <input class="form-control" ng-model="payment.invoiceReceivedDate" data-parsley-group="wizard-step-1" ng-required = "payment.ipaOrInvoiceReceivedDate != null">
 												</div>
 											</div>
 										</div>
@@ -126,8 +129,7 @@
 
 									</div>
 									
-									<button id="activate-step-2"
-										class="m-t-5 btn btn-primary btn-block">
+									<button id="activate-step-2" class="m-t-5 btn btn-primary btn-block" ng-hide = "disableButtons" ng-disabled="disableButtons">
 										Next <span class="fa fa-arrow-right"></span>
 									</button>
 
@@ -147,19 +149,18 @@
 												</div>
 												<div class="widget-stat-info">
 													<div class="widget-stat-title">Certificate Amount</div>
-													<div class="widget-stat-number">{{payment.certificateAmount
-														| currency}}</div>
+													<div class="widget-stat-number">{{payment.certAmount | currency}}</div>
 													<div class="widget-stat-text"></div>
 												</div>
 											</div>
 
 											<ul class="list-group list-group-unbordered">
 												<li class="list-group-item"><b>Payment Terms</b> <b
-													class="pull-right">{{payment.paymentTerms}}</b></li>
+													class="pull-right">{{paymentTerms}}</b></li>
 												<li class="list-group-item"><b>Payment Requisition</b>
-													<b class="pull-right">{{payment.paymentRequisition}}</b></li>
+													<b class="pull-right">{{payment.directPayment==='N' ? 'No':'Yes'}}</b></li>
 												<li class="list-group-item"><b>Payment Status</b> <b
-													class="pull-right">{{payment.paymentStatus}}</b></li>
+													class="pull-right">{{convertPaymentStatus(payment.paymentStatus)}}</b></li>
 												<li class="list-group-item"><b>Certificate Issue
 														Date</b> <b class="pull-right">{{payment.certIssueDate}}</b></li>
 											</ul>
@@ -183,13 +184,13 @@
 			<div class="setup-content" id="step2">
 				<div class="row">
 					<div class="col-md-12 m-b-30 m-t-20 ">
-						<div id="" ui-grid="gridOptions" ui-grid-selection class="grid "></div>
+						<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-auto-resize ui-grid-edit ui-grid-exporter class="grid "></div>
 					</div>
 
 
 					<div class="col-md-12">
 						<button id="activate-step-3"
-							class="m-t-10 btn btn-primary btn-block">
+							class="m-t-10 btn btn-primary btn-block" ng-hide = "disableButtons" ng-disabled="disableButtons">
 							Next <span class="fa fa-arrow-right"></span>
 						</button>
 					</div>
@@ -236,7 +237,7 @@
 						</div>
 
 						<button id="activate-step-4"
-							class="m-t-5 btn btn-primary btn-block">
+							class="m-t-5 btn btn-primary btn-block" ng-hide = "disableButtons" ng-disabled="disableButtons">
 							Next <span class="fa fa-arrow-right"></span>
 						</button>
 
@@ -247,13 +248,10 @@
 
 			<!-- Payment Summary -->
 			<div class="setup-content" id="step4">
-				<div ng-include="'view/subcontract/payment-invoice.html'" ng-style = "{height: 500 + 'px', 'overflow': 'auto'}"></div>
-				<!-- <div class="col-md-6">
-					<a 	ui-sref="subcontract.paymentInvoice" class="btn btn-primary btn-block"><i class="fa fa-file-text-o"></i> Preview Payment Invoice</a>
-				</div> -->
+				<div ng-include="'view/subcontract/payment-invoice.html'"></div><!--  ng-style = "{height: 500 + 'px', 'overflow': 'auto'}" -->
 				<div class="col-md-12 hidden-print">
 					<button id="activate-step-6"
-						class="btn btn-primary btn-block">
+						class="btn btn-primary btn-block" ng-hide = "disableButtons" ng-disabled="disableButtons">
 						Submit Payment <span class="fa fa-arrow-right"></span>
 					</button>
 				</div>

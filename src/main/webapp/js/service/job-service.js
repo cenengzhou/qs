@@ -9,9 +9,9 @@ mainApp.service('jobService', ['$http', function($http){
 	
     function getJob(jobNo) {
         var request = $http({
-            method: "post",
+            method: "get",
             //headers: myHeaders,
-            url: "service/getJob.json",
+            url: "service/getJob",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -22,9 +22,9 @@ mainApp.service('jobService', ['$http', function($http){
     
     function getJobList() {
         var request = $http({
-            method: "post",
+            method: "get",
             //headers: myHeaders,
-            url: "service/getJobList.json",
+            url: "service/getJobList",
             dataType: "application/json;charset=UTF-8"
         });
         return( request.then( handleSuccess, handleError ) );

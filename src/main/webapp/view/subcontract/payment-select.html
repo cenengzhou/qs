@@ -24,9 +24,9 @@
 					<h4><i class="fa fa-trophy fa-fw"></i> Total Posted Certificate Amount</h4>
 				</div>
 				<div class="widget-stat-text m-b-10">
-					Payment Terms: {{paymentTerms}} - Pay when Paid + 14 days
+					Payment Terms: {{paymentTerms}}
 				</div>
-				<div class="widget-stat-number m-b-10">1,302,493</div>
+				<div class="widget-stat-number m-b-10">{{totalCertificateAmount | currency}}</div>
 				<div class="widget-stat-chart">
 					<div id="sparkline-line-chart"></div>
 				</div>
@@ -74,15 +74,16 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="m-b-md pull-right">
-									<a class="btn" ui-sref="subcontract.paymentdetails" 
+									<a class="btn" ui-sref="subcontract.paymentdetails({payment: payment, paymentTerms: paymentTerms})" 
 									ng-class="{'btn-grey' : payment.paymentStatus=='APR', 'btn-primary' : payment.paymentStatus!='APR'}">
 									View details</a>
-									<!-- <h3>Certificate Amount {{payment.certAmount | currency}}</h3> -->
 								</div>
 								<dl class="dl-horizontal">
-									<dt>Status:</dt>
+									<dt>Payment Status:</dt>
 									<dd>
-										<span class="label label-primary">{{payment.paymentStatus}}</span>
+										<div ng-class="{'text-black' : payment.paymentStatus=='APR', 'text-blue' : payment.paymentStatus!='APR'}">
+											<b>{{convertPaymentStatus(payment.paymentStatus)}}</b>
+										</div>
 									</dd>
 								</dl>
 							</div>
@@ -98,6 +99,8 @@
 									<dd>{{payment.dueDate | jsonDate : 'ddMMM,yyyy'}}</dd>
 									<dt>As At Date:</dt>
 									<dd>{{payment.asAtDate | jsonDate : 'ddMMM,yyyy'}}</dd>
+									<dt>Cert Issue Date:</dt>
+									<dd>{{payment.certIssueDate | jsonDate : 'ddMMM,yyyy'}}</dd>
 								</dl>
 							</div>
 							<div class="col-xs-12 col-md-12 col-lg-7">

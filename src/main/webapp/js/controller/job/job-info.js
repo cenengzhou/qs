@@ -1,13 +1,6 @@
 mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$cookieStore',
                                    function($scope, jobService, $cookieStore) {
 
-	$(".date").datepicker({
-		format: "dd-mm-yyyy",
-		//todayHighlight: true,
-		autoclose: true,
-		//todayBtn: "linked"
-	});
-
 	loadJobInfo();
 
 	function loadJobInfo() {
@@ -77,8 +70,8 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$cookieStore',
 					$scope.cpfIndexName = data.cpfIndexName;
 
 					console.log("data.actualPCCDate: "+data.actualPCCDate);
+					
 					$scope.actualPCCDate = data.actualPCCDate;
-					//$scope.actualPCCDate = new Date("12-02-2012");
 					$scope.actualMakingGoodDate = data.actualMakingGoodDate;
 					$scope.dateFinalACSettlement = data.dateFinalACSettlement;
 					$scope.defectListIssuedDate = data.defectListIssuedDate;
@@ -107,17 +100,9 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$cookieStore',
 	};
 
 	$scope.saveDates = function () {
-		console.log("plannedStartDate: " + $scope.plannedStartDate);
-
+		console.log("actualStartDate: " + $scope.actualStartDate);
 
 	};
 
 }]);
-/*.filter("jsonDate", function() {
-    var re = /\\\/Date\(([0-9]*)\)\\\//;
-    return function(x) {
-        var m = x.match(re);
-        if( m ) return new Date(parseInt(m[1]));
-        else return null;
-    };
-});*/
+

@@ -18,7 +18,7 @@
     }
     .invoice-title {    
         padding-bottom: 10px;
-        border-bottom: 2px solid #ebeced;
+        /* border-bottom: 2px solid #ebeced; */
         margin-bottom: 20px;
     }
     .invoice-header {

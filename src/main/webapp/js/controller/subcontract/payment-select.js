@@ -1,104 +1,119 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService',
-                                              function($scope, $uibModal, modalService, $animate, colorCode, paymentService) {
-	$scope.paymentTerms = "QS2";
-	$scope.maxPaymentNo = "5";
-	$scope.latestPaymentStatus = "APR";
-	
-	
-	loadPaymentCertList();
-    
-    function loadPaymentCertList() {
-    	paymentService.getSCPaymentCertList($scope.jobNo, $scope.subcontractNo)
-   	 .then(
-			 function( data ) {
-				 $scope.payments = data;
-			 });
-    }
-    
-    $scope.progress_bar = function(status){
-    	if (status.localeCompare('PND') == 0) {
-    		return "25%";
-    	}else if (status.localeCompare('SBM') == 0) {
-    		return "50%";
-    	}else if (status.localeCompare('UFR') == 0) {
-    		return { width: "50%" }
-    	}else if (status.localeCompare('PCS') == 0) {
-    		return { width: "75%" }
-    	}else if (status.localeCompare('APR') == 0) {
-    		return "100%";
-    	}else{
-    		return "10%";
-    	}
-    }
-    
-    
-    $scope.removeDefaultAnimation = function (){
-        $animate.enabled(false);
-    };
-    
+mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'paymentTermsDescription',
+                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, paymentTermsDescription) {
 
-    //Calendar Setting
-    var date = new Date();
-    var currentYear = date.getFullYear();
-    var currentMonth = date.getMonth() + 1;
-        currentMonth = (currentMonth < 10) ? '0' + currentMonth : currentMonth;
-    
-    $('#calendar').fullCalendar({
-        header: {
-            left: 'month,agendaWeek,agendaDay',
-            center: 'title',
-            right: 'prev,today,next '
-        },
-        selectable: true,
-        selectHelper: true,
-        eventLimit: true, // allow "more" link when too many events
-        events: [{
-            title: 'Certificate No.1',
-            start: currentYear + '-'+ '05' +'-01',
-            tooltip: 'Submitted on and Posted to Finance on '
-        }, {
-            title: 'Certificate No.1',
-            start: currentYear + '-'+ currentMonth +'-07',
-            end: currentYear + '-'+ currentMonth +'-10'
-        }, {
-            id: 999,
-            title: 'Certificate No.1',
-            start: currentYear + '-'+ currentMonth +'-09T16:00:00'
-        }, {
-            id: 999,
-            title: 'Certificate No.1',
-            start: currentYear + '-'+ currentMonth +'-16T16:00:00'
-        }, {
-            title: 'Conference',
-            start: currentYear + '-'+ currentMonth +'-11',
-            end: currentYear + '-'+ currentMonth +'-13'
-        }, {
-            title: 'Meeting',
-            start: currentYear + '-'+ currentMonth +'-12T10:30:00',
-            end: currentYear + '-'+ currentMonth +'-12T12:30:00'
-        }, {
-            title: 'Lunch',
-            start: currentYear + '-'+ currentMonth +'-12T12:00:00'
-        }, {
-            title: 'Meeting',
-            start: currentYear + '-'+ currentMonth +'-12T14:30:00'
-        }, {
-            title: 'Happy Hour',
-            start: currentYear + '-'+ currentMonth +'-12T17:30:00'
-        }, {
-            title: 'Dinner',
-            start: currentYear + '-'+ currentMonth +'-12T20:00:00'
-        }, {
-            title: 'Birthday Party',
-            start: currentYear + '-'+ currentMonth +'-13T07:00:00'
-        }],
-        eventColor: colorCode.primary,
-        eventTextColor: colorCode.white,
-        eventRender: function(event, element) {
-            element.attr('title', event.tooltip);
-        }
-    });
-    
+
+	loadPaymentCertList();
+
+
+	$scope.convertPaymentStatus = function(status){
+		if(status!=null){
+			if (status.localeCompare('PND') == 0) {
+				return "Pending";
+			}else if (status.localeCompare('SBM') == 0) {
+				return "Submitted";
+			}else if (status.localeCompare('UFR') == 0) {
+				return { width: "Under Finance Review" }
+			}else if (status.localeCompare('PCS') == 0) {
+				return { width: "Waiting For Posting" }
+			}else if (status.localeCompare('APR') == 0) {
+				return "Posted To Finance";
+			}
+		}
+	}
+
+	$scope.progress_bar = function(status){
+		if (status.localeCompare('PND') == 0) {
+			return "25%";
+		}else if (status.localeCompare('SBM') == 0) {
+			return "50%";
+		}else if (status.localeCompare('UFR') == 0) {
+			return { width: "50%" }
+		}else if (status.localeCompare('PCS') == 0) {
+			return { width: "75%" }
+		}else if (status.localeCompare('APR') == 0) {
+			return "100%";
+		}else{
+			return "10%";
+		}
+	}
+
+
+	$scope.removeDefaultAnimation = function (){
+		$animate.enabled(false);
+	};
+
+
+
+	function loadPaymentCertList() {
+		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.payments = data.scPaymentCertWithGSTWrapperList;
+					$scope.totalCertificateAmount = data.totalCertificateAmount;
+					$scope.paymentTerms = data.subcontract.paymentTerms + " - "+ paymentTermsDescription[data.subcontract.paymentTerms];
+
+
+					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
+
+					var obj = $scope.payments.find(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; })
+					$scope.latestPaymentStatus = obj.paymentStatus;
+
+					prepareCalendar();
+				});
+	}
+
+
+	function prepareCalendar(){
+		var myEvent = [];
+
+		for (i in $scope.payments) {
+			curDate = (new Date($scope.payments[i].certIssueDate)).yyyymmdd();
+
+			myEvent.push({
+				title:"Cert. No."+$scope.payments[i].paymentCertNo,
+				allDay: true,
+				start:  curDate,
+				tooltip: "Posted to Finance on "+ curDate
+			});
+
+			/*var myEvent = {
+    	    	    	title:"Cert. No."+$scope.payments[payment].paymentCertNo,
+    	    	    	allDay: true,
+    	    	    	start:  curDate.yyyymmdd(),
+    	    	    	tooltip: "Posted to Finance on"
+    	    	    }
+
+    	    	 myCalendar.fullCalendar( 'renderEvent', myEvent);*/
+		}
+
+		var myCalendar = $('#calendar').fullCalendar({
+			header: {
+				left: 'month,agendaWeek,agendaDay',
+				center: 'title',
+				right: 'prev,today,next '
+			},
+			selectable: true,
+			selectHelper: true,
+			eventLimit: true, // allow "more" link when too many events
+			events:  myEvent,
+			eventColor: colorCode.primary,
+			eventTextColor: colorCode.white,
+			eventRender: function(event, element) {
+				element.attr('title', event.tooltip);
+			}
+		});
+	}
+
+	Date.prototype.yyyymmdd = function() {
+		var yyyy = this.getFullYear().toString();
+		var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+		var dd  = this.getDate().toString();
+
+		return  yyyy+"-"+(mm.length===2?mm:"0"+mm) +"-"+ (dd.length===2?dd:"0"+dd); // padding
+	};
+
+
 }]);
 
 

@@ -9,23 +9,22 @@ package com.gammon.pcms.web;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.dao.SCPackageSPDao;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractService;
 
 @RestController
-@RequestMapping(value = "service",
-				method = RequestMethod.POST/*,
+@RequestMapping(value = "service"/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class SubcontractController {
@@ -33,11 +32,10 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
-	@Autowired
-	private SCPackageSPDao scPackageSPDao;
+	//@Autowired
+	//private SCPackageSPDao scPackageSPDao;
 	
-	@RequestMapping(value = "GetSubcontractList.json")
-//	public void getSubcontractList(@RequestBody GetSubcontractListRequest request){
+	/*@RequestMapping(value = "GetSubcontractList.json")
 	public List<Subcontract> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
 		List<Subcontract> subcontractList = null;
 		try{
@@ -47,10 +45,10 @@ public class SubcontractController {
 			databaseOperationException.printStackTrace();
 		}
 		return subcontractList;
-	}
+	}*/
 	
-	@RequestMapping(value = "getPackageList.json")
-	public List<Subcontract> getPackageList(@RequestParam(name="jobNo") String jobNo){
+	@RequestMapping(value = "getSubcontractList", method = RequestMethod.GET)
+	public List<Subcontract> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
 		List<Subcontract> subcontractList = null;
 		try{
 			subcontractList = subcontractService.obtainSubcontractList(jobNo);
@@ -59,5 +57,20 @@ public class SubcontractController {
 			databaseOperationException.printStackTrace();
 		}
 		return subcontractList;
+	}
+	
+	@RequestMapping(value = "addSubcontract", method = RequestMethod.POST)
+	public String addSubcontract(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
+		logger.info("------------------------addSubcontract");
+		logger.info("jobNo: "+jobNo);
+		logger.info("packageNo: "+subcontract.getPackageNo());
+		
+		String result1 = null;
+		try {
+			result1 = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result1;
 	}
 }

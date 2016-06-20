@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
@@ -557,6 +559,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("expectedPCCDate")
 	@Column(name = "expectedPCCDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getExpectedPCCDate() {
 		return expectedPCCDate;
 	}
@@ -567,6 +570,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("actualPCCDate")
 	@Column(name = "actualPCCDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getActualPCCDate() {
 		return actualPCCDate;
 	}
@@ -577,6 +581,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("expectedMakingGoodDate")
 	@Column(name = "expectedMakingGoodDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getExpectedMakingGoodDate() {
 		return expectedMakingGoodDate;
 	}
@@ -587,6 +592,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("actualMakingGoodDate")
 	@Column(name = "actualMakingGoodDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getActualMakingGoodDate() {
 		return actualMakingGoodDate;
 	}
@@ -607,6 +613,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("defectListIssuedDate")
 	@Column(name = "defectListIssuedDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getDefectListIssuedDate() {
 		return defectListIssuedDate;
 	}
@@ -617,6 +624,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("financialEndDate")
 	@Column(name = "financialEndDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getFinancialEndDate() {
 		return financialEndDate;
 	}
@@ -627,6 +635,7 @@ public class JobInfo extends BasePersistedObject {
 
 	@JsonProperty("dateFinalACSettlement")
 	@Column(name = "dateFinalACSettlement")
+	@Temporal(value = TemporalType.DATE)
 	public Date getDateFinalACSettlement() {
 		return dateFinalACSettlement;
 	}

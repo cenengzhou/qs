@@ -21,26 +21,28 @@
 			<table class="table">
 				<tr>
 					<td><b>JOB:</b></td>
-					<td class="text-right">13518</td>
-					<td>TM-CLK Link Southern Viaduct</td>
+					<td class="text-right">{{paymentCertSummary.jobNumber}}</td>
+					<td>{{paymentCertSummary.jobDescription}}</td>
 				</tr>
 				<tr>
 					<td><b>SUBCONTRACT:</b></td>
-					<td class="text-right">1121</td>
-					<td>Topographical Survey for Site Area near Viaduct B and C</td>
+					<td class="text-right">{{paymentCertSummary.subContractNo}}</td>
+					<td>{{paymentCertSummary.subContractDescription}}</td>
 				</tr>
 				<tr>
 					<td><b>SUBCONTRACTOR:</b></td>
-					<td class="text-right">299162</td>
-					<td>Cheuk Fung Engineering Co Ltd</td>
+					<td class="text-right">{{paymentCertSummary.subcontractorNo}}</td>
+					<td>{{paymentCertSummary.subcontractorDescription}}</td>
 				</tr>
 				<tr>
 					<td><b>TELEPHONE:</b></td>
-					<td class="text-right">+852-27766877</td>
+					<td class="text-right">{{paymentCertSummary.phone}}</td>
 					<td>
 						<address>
-							Flat C5, 28/F TML Tower<br /> 3 Hoi Shing Road<br /> Tsuen Wan<br />
-							New Territories, Hong Kong
+						{{paymentCertSummary.address1}}<br />
+						{{paymentCertSummary.address2}}<br />
+						{{paymentCertSummary.address3}}<br />
+						{{paymentCertSummary.address4}}
 						</address>
 					</td>
 
@@ -50,32 +52,32 @@
 					<td colspan="2">
 						<dl class="dl-horizontal">
 							<dt class="text-left">SUBCONTRACT VALUE:</dt>
-							<dd class="text-right">220,150.00</dd>
+							<dd class="text-right">{{paymentCertSummary.subcontractSum | currency}}</dd>
 
 							<dt class="text-left">ADDENDUM:</dt>
-							<dd class="text-right">0.00</dd>
+							<dd class="text-right">{{paymentCertSummary.addendum | currency}}</dd>
 
 							<dt class="text-left">REVISED VALUE:</dt>
-							<dd class="text-right">220,150.00</dd>
+							<dd class="text-right">{{paymentCertSummary.revisedValue | currency}}</dd>
 
 						</dl>
 					</td>
 					<td colspan="2">
 						<dl class="dl-horizontal">
 							<dt class="text-left">PAYMENT NO.:</dt>
-							<dd class="text-right">2</dd>
+							<dd class="text-right">{{paymentCertSummary.paymentCertNo}}</dd>
 
 							<dt class="text-left">AS AT DATE:</dt>
-							<dd class="text-right">21/05/2014</dd>
+							<dd class="text-right">{{paymentCertSummary.asAtDate}}</dd>
 
 							<dt class="text-left">PAYMENT TYPE:</dt>
-							<dd class="text-right">Interim</dd>
+							<dd class="text-right">{{paymentCertSummary.paymentType}}</dd>
 
 							<dt class="text-left">CURRENCY:</dt>
-							<dd class="text-right">HKD</dd>
+							<dd class="text-right">{{paymentCertSummary.currency}}</dd>
 
 							<dt class="text-left">NATURE:</dt>
-							<dd class="text-right">Domestic Subcontractor</dd>
+							<dd class="text-right">{{paymentCertSummary.subcontractorNature}}</dd>
 						</dl>
 					</td>
 				</tr>
@@ -94,86 +96,87 @@
 					</tr>
 					<tr>
 						<td>VALUE OF MEASURED WORKS/GOODS</td>
-						<td class="text-right">110,075.00</td>
-						<td class="text-right">220,150.00</td>
+						<td class="text-right">{{paymentCertSummary.measuredWorksMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.measuredWorksTotal | currency}}</td>
 					</tr>
 					<tr>
 						<td>VALUE OF DAY WORK SHEET</td>
-						<td class="text-right">0.00</td>
-						<td class="text-right">0.00</td>
+						<td class="text-right">{{paymentCertSummary.dayWorkSheetMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.dayWorkSheetTotal | currency}}</td>
 					</tr>
 					<tr>
 						<td>VALUE OF VARIATION</td>
-						<td class="text-right">0.00</td>
-						<td class="text-right">0.00</td>
+						<td class="text-right">{{paymentCertSummary.variationMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.variationTotal | currency}}</td>
 					</tr>
 					<tr>
 						<td>OTHERS</td>
-						<td class="text-right">0.00</td>
-						<td class="text-right">0.00</td>
+						<td class="text-right">{{paymentCertSummary.otherMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.otherTotal | currency}}</td>
 					</tr>
 					<tr class="subtotal">
 						<td></td>
-						<td class="text-right value"><b>110,075.00</b></td>
-						<td class="text-right value"><b>220,150.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subMovement1 | currency}}</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subTotal1 | currency}}</b></td>
 					</tr>
 					<tr>
 						<td class="text-right text-red">LESS RETENTION</td>
-						<td class="text-right text-red">(0.00)</td>
-						<td class="text-right text-red">(0.00)</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessRetentionMovement1 | currency}})</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessRetentionTotal1 | currency}})</td>
 					</tr>
 					<tr class="subtotal">
 						<td></td>
-						<td class="text-right value"><b>110,075.00</b></td>
-						<td class="text-right value"><b>220,150.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subMovement2 | currency}}</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subTotal2 | currency}}</b></td>
 					</tr>
 					<tr>
 						<td>VALUE OF MATERIALS ON SITE</td>
-						<td class="text-right">0.00</td>
-						<td class="text-right">0.00</td>
+						<td class="text-right">{{paymentCertSummary.materialOnSiteMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.materialOnSiteTotal | currency}}</td>
 					</tr>
 					<tr>
 						<td class="text-right text-red">LESS RETENTION</td>
-						<td class="text-right text-red">(0.00)</td>
-						<td class="text-right text-red">(0.00)</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessRetentionMovement2 | currency}})</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessRetentionTotal2 | currency}})</td>
 					</tr>
 					<tr class="subtotal">
 						<td></td>
-						<td class="text-right value"><b>110,075.00</b></td>
-						<td class="text-right value"><b>220,150.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subMovement3 | currency}}</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subTotal3 | currency}}</b></td>
 					</tr>
 					<tr>
 						<td class="text-right">VALUE OF ADJUSTMENTS</td>
-						<td class="text-right">0.00</td>
-						<td class="text-right">0.00</td>
+						<td class="text-right">{{paymentCertSummary.adjustmentMovement | currency}}</td>
+						<td class="text-right">{{paymentCertSummary.adjustmentTotal | currency}}</td>
 					</tr>
 					<tr class="subtotal">
 						<td></td>
-						<td class="text-right value"><b>110,075.00</b></td>
-						<td class="text-right value"><b>220,150.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subMovement4 | currency}}</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subTotal4 | currency}}</b></td>
 					</tr>
 					<tr>
 						<td class="text-right text-red">LESS CONTRA CHARGES</td>
-						<td class="text-right text-red">(0.00)</td>
-						<td class="text-right text-red">(0.00)</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessContraChargesMovement | currency}})</td>
+						<td class="text-right text-red">({{paymentCertSummary.lessContraChargesTotal | currency}})</td>
 					</tr>
 					<tr class="subtotal">
 						<td></td>
-						<td class="text-right value"><b>110,075.00</b></td>
-						<td class="text-right value"><b>220,150.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subMovement5 | currency}}</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.subTotal5 | currency}}</b></td>
 					</tr>
 					<tr>
 						<td class="text-right text-red">LESS PREVIOUS CERTIFICATIONS</td>
-						<td colspan="2" class="text-right text-red">(99,067.50)</td>
+						<td colspan="2" class="text-right text-red">({{paymentCertSummary.lessPreviousCertificationsMovement | currency}})</td>
 					</tr>
 					<tr class="total">
 						<td></td>
 						<td class="text-right text"><b>AMOUNT DUE (HKD)</b></td>
-						<td class="text-right value"><b>110,075.00</b></td>
+						<td class="text-right value"><b>{{paymentCertSummary.amountDueMovement | currency}}</b></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+
 
 	</div>
 

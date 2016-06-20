@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -159,6 +161,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "dueDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getDueDate() {
 		return dueDate;
 	}
@@ -167,6 +170,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "asAtDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getAsAtDate() {
 		return asAtDate;
 	}
@@ -175,6 +179,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "scIpaReceivedDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getIpaOrInvoiceReceivedDate() {
 		return ipaOrInvoiceReceivedDate;
 	}
@@ -183,6 +188,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "certIssueDate")
+	@Temporal(value = TemporalType.DATE)
 	public Date getCertIssueDate() {
 		return certIssueDate;
 	}
@@ -241,12 +247,12 @@ public class PaymentCert extends BasePersistedObject {
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "Subcontract_ID", foreignKey = @ForeignKey(name = "FK_PaymentCert_Subcontract_PK"), insertable = true, updatable = true)
+	@JoinColumn(name = "SUBCONTRACT_ID", foreignKey = @ForeignKey(name = "FK_Payment_Cert_Subcontract_PK"), insertable = true, updatable = true)
 	public Subcontract getSubcontract() {
 		return subcontract;
 	}
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
 	}
-		
+	
 }

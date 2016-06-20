@@ -18,3 +18,14 @@ mainApp.constant("colorCode", {
    	white:"#fff"
 });
 //#ffaaaa - Pink
+
+mainApp.constant("paymentTermsDescription", {
+	"QS0": "Manual Input Due Date",
+	"QS1": "Pay when Paid + 7 days",
+	"QS2": "Pay when Paid + 14 days",
+	"QS3": "Pay when IPA Received + 56 days",
+	"QS4": "Pay when Invoice Received + 28 days",
+	"QS5": "Pay when Invoice Received + 30 days",
+	"QS6": "Pay when Invoice Received + 45 days",
+	"QS7": "Pay when Invoice Received + 60 days"
+});

@@ -319,11 +319,11 @@ public class Subcontract extends BasePersistedObject{
 		return packageNo;
 	}
 
-	@JsonProperty("description")
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
 	}
 
+	@JsonProperty("description")
 	@Column(name = "description")
 	public String getDescription() {
 		return description;

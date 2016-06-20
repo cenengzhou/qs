@@ -91,7 +91,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			resourceSummaries = criteria.list();
 			return resourceSummaries;
@@ -109,7 +109,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				if(packageNo.contains("*")){
@@ -153,7 +153,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			paginationWrapper.setCurrentPage(pageNum);
 			//Get total number of records (pages)
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				packageNo = packageNo.replace("*", "%");
@@ -261,7 +261,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			}
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
 			Query query = getSession().createQuery(hql);
-			query.setEntity("job", job);
+			query.setEntity("jobInfo", job);
 			query.setFirstResult(pageNum * RECORDS_PER_PAGE);
 			query.setMaxResults(RECORDS_PER_PAGE);
 			
@@ -278,7 +278,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	public Double getMarkupAmountInSearch(JobInfo job, String packageNo, String objectCode, 
 			String subsidiaryCode, String description) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", job));
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		criteria.add(Restrictions.like("subsidiaryCode", "9%"));
 		if(!GenericValidator.isBlankOrNull(packageNo)){
@@ -325,7 +325,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			paginationWrapper.setCurrentPage(pageNum);
 			//Get total number of records (pages)
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				packageNo = packageNo.replace("*", "%");
@@ -413,7 +413,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			}
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
 			Query query = getSession().createQuery(hql);
-			query.setEntity("job", job);
+			query.setEntity("jobInfo", job);
 			query.setFirstResult(pageNum * RECORDS_PER_PAGE);
 			query.setMaxResults(RECORDS_PER_PAGE);
 			paginationWrapper.setCurrentPageContentList(query.list());
@@ -439,7 +439,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			//packageNo
 			if(GenericValidator.isBlankOrNull(packageNo))
 				criteria.add(Restrictions.isNull("packageNo"));
@@ -480,7 +480,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			//Check if resoureSummaries already exist
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			if(criteria.list().size() > 0)
 				return Boolean.FALSE;
 			
@@ -593,7 +593,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			//Check if resoureSummaries already exist
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			if(criteria.list().size() > 0)
 				return Boolean.FALSE;
 			
@@ -776,19 +776,19 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			
 			if(!job.getRepackagingType().equals("3")){
 				//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 				DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-				detachedCriteria.add(Restrictions.eq("job", job))
+				detachedCriteria.add(Restrictions.eq("jobInfo", job))
 								.add(Restrictions.eq("systemStatus", "ACTIVE"))
 								.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 								.setProjection(Projections.property("packageNo"));
 				
 				DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 				detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-									.add(Restrictions.eq("job", job))
+									.add(Restrictions.eq("jobInfo", job))
 									.add(Restrictions.like("objectCode", "14%"))
 									.add(Property.forName("packageNo").in(detachedCriteria))
 									.setProjection(Projections.property("id"));
@@ -822,20 +822,20 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.or(Restrictions.isNull("excludeLevy"), Restrictions.eq("excludeLevy", Boolean.FALSE)));
 			
 			if(!job.getRepackagingType().equals("3")){
 				//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 				DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-				detachedCriteria.add(Restrictions.eq("job", job))
+				detachedCriteria.add(Restrictions.eq("jobInfo", job))
 								.add(Restrictions.eq("systemStatus", "ACTIVE"))
 								.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 								.setProjection(Projections.property("packageNo"));
 
 				DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 				detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-									.add(Restrictions.eq("job", job))
+									.add(Restrictions.eq("jobInfo", job))
 									.add(Restrictions.like("objectCode", "14%"))
 									.add(Property.forName("packageNo").in(detachedCriteria))
 									.setProjection(Projections.property("id"));
@@ -862,20 +862,20 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.or(Restrictions.isNull("excludeDefect"), Restrictions.eq("excludeDefect", Boolean.FALSE)));
 			
 			if(!job.getRepackagingType().equals("3")){
 				//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 				DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-				detachedCriteria.add(Restrictions.eq("job", job))
+				detachedCriteria.add(Restrictions.eq("jobInfo", job))
 								.add(Restrictions.eq("systemStatus", "ACTIVE"))
 								.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 								.setProjection(Projections.property("packageNo"));
 
 				DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 				detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-									.add(Restrictions.eq("job", job))
+									.add(Restrictions.eq("jobInfo", job))
 									.add(Restrictions.like("objectCode", "14%"))
 									.add(Property.forName("packageNo").in(detachedCriteria))
 									.setProjection(Projections.property("id"));
@@ -898,7 +898,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		logger.info("getIVMovementMargin(Job job)");
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.like("subsidiaryCode", first + "_" + third + fourth + "%"));
 			criteria.setProjection(Projections.sqlProjection("sum({alias}.ivCumAmount - {alias}.ivPostedAmount) as ivMovement", new String[]{"ivMovement"}, new Type[]{DoubleType.INSTANCE}));
@@ -920,21 +920,21 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-			detachedCriteria.add(Restrictions.eq("job", job))
+			detachedCriteria.add(Restrictions.eq("jobInfo", job))
 							.add(Restrictions.eq("systemStatus", "ACTIVE"))
 							.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 							.setProjection(Projections.property("packageNo"));
 
 			DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 			detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-								.add(Restrictions.eq("job", job))
+								.add(Restrictions.eq("jobInfo", job))
 								.add(Restrictions.like("objectCode", "14%"))
 								.add(Property.forName("packageNo").in(detachedCriteria))
 								.setProjection(Projections.property("id"));
 			
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
 			
 			if(finalized)
@@ -979,7 +979,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			Query query = getSession().createQuery(hql);
 			query.setString("user", username);
 			query.setDate("date", new Date());
-			query.setEntity("job", job);
+			query.setEntity("jobInfo", job);
 			query.executeUpdate();
 		}catch (Exception he){
 			logger.info("Fail: updateBQResourceSummariesAfterPosting(Job job, String username)");
@@ -993,7 +993,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
 			criteria.add(Restrictions.eq("objectCode", objectCode));
 			criteria.add(Restrictions.eq("subsidiaryCode", subsidiaryCode));
@@ -1017,7 +1017,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			
 			//packageNo
 			if (GenericValidator.isBlankOrNull(packageNo))
@@ -1044,7 +1044,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	public Integer getCountOfSCSplitResources(JobInfo job, String packageNo, String objectCode, String subsidiaryCode) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", job));
 		criteria.add(Restrictions.isNull("packageNo"));
 		criteria.add(Restrictions.eq("objectCode", objectCode));
 		criteria.add(Restrictions.eq("subsidiaryCode", subsidiaryCode));
@@ -1063,7 +1063,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
 			criteria.add(Restrictions.like("objectCode", "14%"));
 			criteria.setProjection(Projections.sqlProjection("sum({alias}.QUANTITY * {alias}.RATE) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}));
@@ -1085,20 +1085,20 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
 			
 			if(!job.getRepackagingType().equals("3")){
 				//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 				DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-				detachedCriteria.add(Restrictions.eq("job", job))
+				detachedCriteria.add(Restrictions.eq("jobInfo", job))
 								.add(Restrictions.eq("systemStatus", "ACTIVE"))
 								.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 								.setProjection(Projections.property("packageNo"));
 
 				DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 				detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-									.add(Restrictions.eq("job", job))
+									.add(Restrictions.eq("jobInfo", job))
 									.add(Restrictions.like("objectCode", "14%"))
 									.add(Property.forName("packageNo").in(detachedCriteria))
 									.setProjection(Projections.property("id"));
@@ -1141,7 +1141,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		String hql = "Update BQResourceSummary set currIVAmount = 0 where systemStatus = 'ACTIVE' and job = :job and packageNo = :packageNo and objectCode like '14%'";
 		try {
 			Query query = getSession().createQuery(hql);
-			query.setEntity("job", job);
+			query.setEntity("jobInfo", job);
 			query.setString("packageNo", packageNo);
 			query.executeUpdate();
 		} catch (HibernateException hbException) {
@@ -1170,7 +1170,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	public Double getIVMovementOfJob(JobInfo job) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", job));
 		criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
 		criteria.setProjection(Projections.sqlProjection("sum({alias}.ivCumAmount - {alias}.ivPostedAmount) as ivMovementAmount", new String[]{"ivMovementAmount"}, new Type[]{DoubleType.INSTANCE}));
 		Double result=(Double)criteria.uniqueResult();
@@ -1187,14 +1187,14 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	public Double obtainIVMovementByJob(JobInfo job, boolean finalized) {
 		//Subquery: obtain resources with scPackage status "Final" and object code starts with "14" 
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
-		detachedCriteria.add(Restrictions.eq("job", job))
+		detachedCriteria.add(Restrictions.eq("jobInfo", job))
 						.add(Restrictions.eq("systemStatus", "ACTIVE"))
 						.add(Restrictions.eq("paymentStatus", Subcontract.FINAL_PAYMENT))
 						.setProjection(Projections.property("packageNo"));
 
 		DetachedCriteria detachedCriteria2 = DetachedCriteria.forClass(ResourceSummary.class);
 		detachedCriteria2.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-							.add(Restrictions.eq("job", job))
+							.add(Restrictions.eq("jobInfo", job))
 							.add(Restrictions.like("objectCode", "14%"))
 							.add(Property.forName("packageNo").in(detachedCriteria))
 							.setProjection(Projections.property("id"));
@@ -1202,7 +1202,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", job));
 		criteria.add(Restrictions.neProperty("currIVAmount", "postedIVAmount"));
 		
 		if(finalized)
@@ -1263,7 +1263,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			query.setString("username", username);
 			query.setDate("date", new Date());
 			query.setLong("bqResourceSummaryID", bqResourceSummaryID);
-			query.setEntity("job", job);
+			query.setEntity("jobInfo", job);
 
 			query.executeUpdate();
 			return true;
@@ -1521,7 +1521,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", job));
 			//packageNo
 			if(!GenericValidator.isBlankOrNull(packageNo))
 				criteria.add(Restrictions.eq("packageNo", packageNo));

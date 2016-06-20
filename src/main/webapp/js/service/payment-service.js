@@ -1,11 +1,14 @@
 mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getSCPaymentCertList: getSCPaymentCertList,
+    	getPaymentCertList: 	getPaymentCertList,
+    	getPaymentCert: 		getPaymentCert,
+    	getPaymentDetailList: 	getPaymentDetailList,
+    	getPaymentCertSummary: 	getPaymentCertSummary
     	
     });
 	
-    function getSCPaymentCertList(jobNo, subcontractNo) {
+    function getPaymentCertList(jobNo, subcontractNo) {
     	var myHeaders = {
     	        "Accept": "application/json",
     	        "Content-Type": "application/json",
@@ -13,13 +16,76 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	    };
     	
         var request = $http({
-            method: "post",
+            method: "get",
             //headers: myHeaders,
-            url: "service/getSCPaymentCertList.json",
+            url: "service/getPaymentCertList",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo
+            }
+    
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getPaymentCert(jobNo, subcontractNo, paymentCertNo) {
+    	var myHeaders = {
+    	        "Accept": "application/json",
+    	        "Content-Type": "application/json",
+    	    };
+    	
+        var request = $http({
+            method: "get",
+            url: "service/getPaymentCert",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	paymentCertNo: paymentCertNo
+            	
+            }
+    
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getPaymentDetailList(jobNo, subcontractNo, paymentCertNo) {
+    	var myHeaders = {
+    	        "Accept": "application/json",
+    	        "Content-Type": "application/json",
+    	    };
+    	
+        var request = $http({
+            method: "get",
+            url: "service/getPaymentDetailList",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	paymentCertNo: paymentCertNo
+            	
+            }
+    
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getPaymentCertSummary(jobNo, subcontractNo, paymentCertNo) {
+    	var myHeaders = {
+    	        "Accept": "application/json",
+    	        "Content-Type": "application/json",
+    	    };
+    	
+        var request = $http({
+            method: "get",
+            url: "service/getPaymentCertSummary",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	paymentCertNo: paymentCertNo
+            	
             }
     
         });

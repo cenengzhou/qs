@@ -1,12 +1,14 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
-    	obtainSubcontractList: obtainSubcontractList,
+    	getSubcontractList: getSubcontractList,
+    	addSubcontract: addSubcontract,
+    	
     	obtainVendorInfo: obtainVendorInfo
     	
     });
 	
-    function obtainSubcontractList(jobNo) {
+    function getSubcontractList(jobNo) {
     	var myHeaders = {
     	        "Accept": "application/json",
     	        "Content-Type": "application/json",
@@ -14,9 +16,9 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	    };
     	
         var request = $http({
-            method: "post",
+            method: "get",
             //headers: myHeaders,
-            url: "service/getPackageList.json",
+            url: "service/getSubcontractList",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -39,6 +41,18 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             responseType: 'arraybuffer'
             */
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function addSubcontract(jobNo, subcontract) {
+        var request = $http({
+            method: "post",
+            url: "service/addSubcontract",
+            params: {
+                jobNo: jobNo
+            },
+            data: subcontract
         });
         return( request.then( handleSuccess, handleError ) );
     }

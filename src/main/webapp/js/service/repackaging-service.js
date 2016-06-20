@@ -1,35 +1,21 @@
-mainApp.service('repackagingService', ['$http', function($http){
+mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
 	// Return public API.
     return({
-    	//function id being by repackging-update.js
-        getRepackagingList: getRepackagingList,
-        addResource: addResource
+    	getResourceSummaries: getResourceSummaries,
         
     });
 	
-    function getRepackagingList() {
-    	//var request = $http.get('http://localhost:8080/QSrevamp2/data/iv.json');
+    function getResourceSummaries(jobNo) {
         var request = $http({
             method: "get",
-            url: "data/iv.json"
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-    
-    function addResource() {
-        var request = $http({
-            method: "get",
-            url: "data/iv.json",
+            url: "service/getResourceSummaries",
+            dataType: "application/json;charset=UTF-8",
             params: {
-                action: "add"
-            },
-            data: {
-                resource: resource
+            	jobNo: jobNo
             }
         });
         return( request.then( handleSuccess, handleError ) );
     }
-    
     
     // ---
     // PRIVATE METHODS.

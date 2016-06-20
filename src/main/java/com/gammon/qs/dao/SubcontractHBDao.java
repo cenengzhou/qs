@@ -61,6 +61,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return result;
 	}
 
+	
 	public Subcontract obtainPackage(JobInfo job, String packageNo) throws DatabaseOperationException{
 		Subcontract result = null;
 		try{
@@ -640,4 +641,24 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return completed;
 	}
 	
+	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	public Subcontract obtainPackage(String jobNo, String packageNo) throws DatabaseOperationException{
+		Subcontract result = null;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo.trim()));
+			criteria.add(Restrictions.eq("packageNo", packageNo));
+			result = (Subcontract) criteria.uniqueResult();
+			if(result != null){
+				Hibernate.initialize(result.getJobInfo());
+			}
+		}catch (HibernateException he){
+			throw new DatabaseOperationException(he);
+		}
+		return result;
+	}
+	
+	
+	/*************************************** FUNCTIONS FOR PCMS - END*********************************************************/	
 }

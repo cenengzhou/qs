@@ -34,9 +34,10 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="css/adminLTE.css">
   <link rel="stylesheet" href="plugins/angular-chart/0.8.8/angular-chart.css">
-  <link rel="stylesheet" href="plugins/ui-grid/3.1.1/ui-grid.min.css">
-  <!-- daterange picker -->
-  <link rel="stylesheet" href="plugins/datepicker/2.0.0/bootstrap-datepicker3.min.css">
+  <link rel="stylesheet" href="plugins/ui-grid/3.1.1/ui-grid.css">
+ 
+  
+  <link rel="stylesheet" href="plugins/angular-moment-picker/0.5.3/angular-moment-picker.min.css">
   
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/1.0.1/all.css">
@@ -50,8 +51,8 @@
   <!-- Bootstrap-Wizard  -->
   <link href="plugins/bootstrap-wizard/css/bwizard.css" rel="stylesheet" />
   <link href="plugins/parsley/src/parsley.css" rel="stylesheet" />
-  
-  <link href="plugins/switchery/switchery.min.css" rel="stylesheet" />
+
+  <link href="plugins/switchery/switchery.min.css" rel="stylesheet" />	
   
   <!-- Dropzone -->
   <link rel="stylesheet" href="plugins/dropzone/basic.css">
@@ -59,7 +60,6 @@
 
   <link rel="stylesheet" href="css/pcms.css">
   <link href="css/animate.css" rel="stylesheet">
-  <!-- <link href="css/angular-animate.css" rel="stylesheet"> -->
   <!-- <link href="http://fonts.googleapis.com/css?family=Nunito:400,300,700" rel="stylesheet" id="fontFamilySrc" /> -->
   <link href="css/font.css" rel="stylesheet" id="fontFamilySrc" />
   <link href="css/style.css" rel="stylesheet" />
@@ -71,17 +71,6 @@
 
 	<div id="page-loader" class="page-loader fade in"><span class="spinner">Loading...</span></div>
 	<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar">
-		<!-- ng-class="{
-		        'page-sidebar-minified': setting.layout.pageSidebarMinified,
-		        'page-content-full-height': setting.layout.pageContentFullHeight,
-		        'page-footer-fixed': setting.layout.pageFixedFooter,
-		        'page-with-right-sidebar': setting.layout.pageRightSidebar,
-		        'page-sidebar-minified': setting.layout.pageSidebarMinified,
-		        'page-with-two-sidebar': setting.layout.pageTwoSidebar,
-		        'page-right-sidebar-toggled': setting.layout.pageTwoSidebar,
-		        'page-with-top-menu': setting.layout.pageTopMenu,
-		        'page-without-sidebar': setting.layout.pageWithoutSidebar
-		    }"> -->
 		<div ui-view=""></div>  
 		
    	</div>
@@ -110,7 +99,7 @@
 <script src="plugins/pdfmake/0.1.20/pdfmake.js"></script>
 <script src="plugins/pdfmake/0.1.20/vfs_fonts.js"></script>
 
-<script src="plugins/datepicker/2.0.0/bootstrap-datepicker.min.js"></script>
+<script src="plugins/angular-moment-picker/0.5.3/angular-moment-picker.min.js"></script>
 
 <script src="plugins/angularjs/1.4.9/angular-animate.min.js"></script>
 <script src="plugins/angularjs/1.4.9/angular-touch.min.js"></script>
@@ -120,8 +109,12 @@
 <script src="plugins/iCheck/1.0.1/icheck.min.js"></script>
 
 <script src="plugins/switchery/switchery.min.js"></script>
+<!-- <script src="https://cdn.rawgit.com/indrimuska/angular-switcher/master/dist/angular-switcher.min.js"> -->
+
 <!--Knob  -->    
 <script src="plugins/jquery-knob/jquery.knob.js"></script> 
+
+
 
  <!-- Dropzone -->
  <script src="plugins/dropzone/dropzone.js"></script> 

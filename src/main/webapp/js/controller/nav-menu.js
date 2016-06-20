@@ -15,7 +15,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	$scope.currentPath = $location.path();
 
 
-	console.log("$scope.currentPath: "+$scope.currentPath);
+	//console.log("$scope.currentPath: "+$scope.currentPath);
 
 	if($scope.currentPath.indexOf("/job")==0){	
 		$scope.activeMenu = '';
