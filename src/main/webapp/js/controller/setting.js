@@ -14,10 +14,12 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
     		}else{
     			if(toState.name != 'logout'){
 //    				console.log("login.htm?validateSession=stateChangeStart");
-    				$window.location.href = 'login.htm?InavlidSession';
+    				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
     			}
     		}
-    		});
+    	},  function(data){
+				$window.location.href = 'login.htm?ValidateCurrentSessionError';
+		});
     	App.initComponent();
         App.scrollTop();
         $('.pace .pace-progress').addClass('hide');

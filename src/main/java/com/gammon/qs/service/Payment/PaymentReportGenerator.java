@@ -79,7 +79,7 @@ public class PaymentReportGenerator {
 		}else
 			postedAmt = 0.00;
 		contentRows[4] = postedAmt.toString();
-		contentRows[5] = scPaymentDetail.getScDetail() != null ? (scPaymentDetail.getScDetail().getDescription() != null ? scPaymentDetail.getScDetail().getDescription() : "") : "";
+		contentRows[5] = scPaymentDetail.getSubcontractDetail() != null ? (scPaymentDetail.getSubcontractDetail().getDescription() != null ? scPaymentDetail.getSubcontractDetail().getDescription() : "") : "";
 		contentRows[6] = scPaymentDetail.getObjectCode() != null ? scPaymentDetail.getObjectCode().toString() : "";
 		contentRows[7] = scPaymentDetail.getSubsidiaryCode() != null ? scPaymentDetail.getSubsidiaryCode().toString() : "";
 

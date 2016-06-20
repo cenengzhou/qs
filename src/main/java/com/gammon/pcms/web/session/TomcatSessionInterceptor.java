@@ -1,7 +1,5 @@
 package com.gammon.pcms.web.session;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,12 +31,14 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 		Session session = tomcatManager.findSession(request.getSession().getId());
 		SessionInformation sessionInformation = sessionRegistry.getSessionInformation(session.getId());
 		if(sessionInformation != null) {
-			try {
-				User user = ((User) sessionInformation.getPrincipal());
-				String username = (user.getFullname() != null ? user.getFullname() : user.getUsername());
-				tomcatManager.findSession(session.getId()).setPrincipal(new BasicUserPrincipal(username));
-			} catch (IOException e) {
-				e.printStackTrace();
+			User user = ((User) sessionInformation.getPrincipal());
+			String username = (user.getFullname() != null ? user.getFullname() : user.getUsername());
+			session.setPrincipal(new BasicUserPrincipal(username));
+			session.setAuthType(user.getAuthType());
+			String login[] = user.getUsername().split("@");
+			request.setAttribute("username", login[0]);
+			if(login.length == 2) {
+				request.setAttribute("domain", login[1]);
 			}
 		}
 		super.postHandle(request, response, handler, modelAndView);

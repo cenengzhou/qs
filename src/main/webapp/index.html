@@ -10,10 +10,13 @@
 <meta http-equiv="cache-control" content="no-store" />
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="expires" content="0" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Index</title>
 <script src="plugins/angularjs/1.4.9/angular.js"></script>
 <script>
-var initApp = angular.module('initApp', []);  
+var initApp = angular.module('initApp', []);
+
 initApp.run(['$http', '$window', function($http,$window){
 
 	var userAgent = $window.navigator.userAgent;
@@ -26,10 +29,10 @@ initApp.run(['$http', '$window', function($http,$window){
 			if(data.data){
 				$window.location.href = 'home.html';
 			} else {
-				$window.location.href = 'login.htm?ValidateCurrentSession';
+				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
 			}
 		}, function(data){
-			$window.location.href = 'login.htm';
+			$window.location.href = 'login.htm?ValidateCurrentSessionError';
 		});
 	};
 	
@@ -38,7 +41,7 @@ initApp.run(['$http', '$window', function($http,$window){
     } else {
     	validateSession();
     }
-	
+
 }]); 
 
 </script>

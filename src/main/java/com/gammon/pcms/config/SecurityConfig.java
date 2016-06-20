@@ -1,6 +1,11 @@
 package com.gammon.pcms.config;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.session.InvalidSessionStrategy;
 
 import com.gammon.pcms.web.filter.HeaderAuthenticationFilter;
 import com.gammon.pcms.web.security.handler.KerberosLoginFailureHandler;
@@ -145,14 +151,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.cacheControl().and()
 			.frameOptions().sameOrigin().and()
 			.csrf().disable()
-			.sessionManagement()
+			.sessionManagement().invalidSessionStrategy(invalidSessionStrategy())
 			.enableSessionUrlRewriting(false)
-			.sessionAuthenticationErrorUrl(securityConfig.getLoginPath())
-			.invalidSessionUrl(securityConfig.getLoginPath())
+			.sessionAuthenticationErrorUrl(securityConfig.getLoginPath() + "?UnAuthorized")
+			.invalidSessionUrl(securityConfig.getLoginPath() + "?InvalidSession")
 			.maximumSessions(-1)
-			.expiredUrl(securityConfig.getLoginPath())
+			.expiredUrl(securityConfig.getLoginPath() + "?SessionExpired")
 			.sessionRegistry(securityConfig.sessionRegistry()).and()
-			.sessionFixation().newSession().and()
+			.sessionFixation().migrateSession().and()
 			.authorizeRequests()
 			.antMatchers(
 					"/spring-ws/*", 
@@ -184,11 +190,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout().permitAll()
 			.invalidateHttpSession(true)
 			.deleteCookies("JSESSIONID")
-			.logoutSuccessUrl(securityConfig.getLoginPath()).and()
+			.logoutSuccessUrl(securityConfig.getLoginPath() + "?logout").and()
 			.exceptionHandling().accessDeniedPage("/403.html").and()
 			.addFilterAfter(spnegoAuthenticationProcessingFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
 		}
 
+		@Bean InvalidSessionStrategy invalidSessionStrategy(){
+			InvalidSessionStrategy bean = new InvalidSessionStrategy(){
+				@Override
+				public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
+						throws IOException, ServletException {
+					response.addHeader("WWW-Authenticate", "Negotiate");
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				}};
+			return bean;
+		}
 		@Bean
 		public AuthenticationSuccessHandler loginSuccessHandler() {
 			return new LoginSuccessHandler(servletContext.getContextPath()+"/home.html", false);

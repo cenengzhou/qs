@@ -27,9 +27,9 @@ public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> 
 		try{
 			List<AttachSubcontract> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-			criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));		
+			criteria.createAlias("subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));		
  			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
 			resultList = criteria.list();
 			if(resultList == null)
@@ -56,10 +56,10 @@ public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> 
 	public AttachSubcontract obtainSCFileAttachment(String jobNumber, String subcontractNo, Integer sequenceNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-			criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
+			criteria.createAlias("subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 			return (AttachSubcontract)criteria.uniqueResult();
 		}catch (HibernateException he) {

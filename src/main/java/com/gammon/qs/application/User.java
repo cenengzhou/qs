@@ -8,30 +8,33 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.gammon.qs.application.gsf.GetRole;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.gsf.UserRole;
-
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 	
 	private static final long serialVersionUID = 823107936017935057L;
 
+	@JsonProperty("EmailAddress")
 	private String emailAddress;
+	
+	@JsonProperty("StaffID")
 	private String staffId;
-	private String username;
+	
+	@JsonProperty("UserName")
 	private String fullname;
+	
+	@JsonProperty("UserRoles")
 	private List<UserRole> userRoles;
+	
+	private String username;
+	private String authType;
 	
 	public User() {
 		this.userRoles = new ArrayList<UserRole>();
 	}
-	
-	public User(GetRole.Result result){
-		this.emailAddress = result.getEmailAddress();
-		this.staffId = result.getStaffId();
-		this.fullname = result.getUserName();
-		this.userRoles = (result.getUserRole() == null ? new ArrayList<UserRole>() : result.getUserRole());
-	}
-	
+		
 	public boolean hasRole(String rolename) {
 		for (UserRole role:userRoles) {
 			if (role.getRoleName().equalsIgnoreCase(rolename)) {
@@ -149,7 +152,10 @@ public class User implements UserDetails, Serializable {
 	 * @param userRoles the userRoles to set
 	 */
 	public void setUserRoles(List<UserRole> userRoles) {
-		this.userRoles = userRoles;
+		if(userRoles != null){
+			this.userRoles.clear();
+			this.userRoles.addAll(userRoles);
+		}
 	}
 
 	/**
@@ -157,6 +163,20 @@ public class User implements UserDetails, Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * @return the authType
+	 */
+	public String getAuthType() {
+		return authType;
+	}
+
+	/**
+	 * @param authType the authType to set
+	 */
+	public void setAuthType(String authType) {
+		this.authType = authType;
 	}
 
 }

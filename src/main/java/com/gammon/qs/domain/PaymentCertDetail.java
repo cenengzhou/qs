@@ -22,10 +22,10 @@ import com.gammon.qs.shared.util.CalculationUtil;
 public class PaymentCertDetail extends BasePersistedAuditObject {
 
 	private static final long serialVersionUID = -8875866510702313034L;
-	private PaymentCert scPaymentCert;
+	private PaymentCert paymentCert;
 	private Integer scSeqNo;
 
-	private SubcontractDetail scDetail;
+	private SubcontractDetail subcontractDetail;
 	
 	private String paymentCertNo;
 	private String lineType;
@@ -44,7 +44,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 		try {
 			if (object instanceof PaymentCertDetail)
 				if (this.scSeqNo.equals(((PaymentCertDetail) object).scSeqNo) &&
-					this.scPaymentCert.getId().equals(((PaymentCertDetail) object).scPaymentCert.getId()))
+					this.paymentCert.getId().equals(((PaymentCertDetail) object).paymentCert.getId()))
 					return true;
 			return false;
 		} catch (NullPointerException e) {
@@ -54,7 +54,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 
 	@Override
 	public String toString() {
-		return "PaymentCertDetail [scPaymentCert=" + scPaymentCert + ", scSeqNo=" + scSeqNo + ", scDetail=" + scDetail
+		return "PaymentCertDetail [scPaymentCert=" + paymentCert + ", scSeqNo=" + scSeqNo + ", scDetail=" + subcontractDetail
 				+ ", paymentCertNo=" + paymentCertNo + ", lineType=" + lineType + ", billItem=" + billItem
 				+ ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", description=" + description
 				+ ", movementAmount=" + movementAmount + ", cumAmount=" + cumAmount + ", toString()=" + super.toString()
@@ -62,12 +62,12 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 	}
 
 	@Id
-	public PaymentCert getScPaymentCert() {
-		return scPaymentCert;
+	public PaymentCert getPaymentCert() {
+		return paymentCert;
 	}
 
-	public void setScPaymentCert(PaymentCert scPaymentCert) {
-		this.scPaymentCert = scPaymentCert;
+	public void setPaymentCert(PaymentCert paymentCert) {
+		this.paymentCert = paymentCert;
 	}
 
 	@Id
@@ -144,10 +144,10 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	public SubcontractDetail getScDetail() {
-		return scDetail;
+	public SubcontractDetail getSubcontractDetail() {
+		return subcontractDetail;
 	}
-	public void setScDetail(SubcontractDetail scDetail) {
-		this.scDetail = scDetail;
+	public void setSubcontractDetail(SubcontractDetail subcontractDetail) {
+		this.subcontractDetail = subcontractDetail;
 	}
 }

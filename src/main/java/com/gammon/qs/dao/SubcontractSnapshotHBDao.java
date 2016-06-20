@@ -75,9 +75,10 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			
 			
 			if(workScope!=null && !"".equals(workScope)){
-				criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-				criteria.createAlias("SUBCONTRACT.scWorkscope", "scWorkscope");
-				criteria.add(Restrictions.eq("scWorkscope.workScope", workScope));
+				throw new RuntimeException("Subcontract does not contain SCWorkscope due to remove one to many linking");
+//				criteria.createAlias("subcontract", "subcontract");
+//				criteria.createAlias("subcontract.scWorkscope", "scWorkscope");
+//				criteria.add(Restrictions.eq("scWorkscope.workScope", workScope));
 			}
 			if(status!=null && !"".equals(status)){
 				criteria.add(Restrictions.eq("subcontractStatus", status));

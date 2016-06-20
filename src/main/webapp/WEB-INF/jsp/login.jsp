@@ -26,64 +26,21 @@ body {
 <script type="text/javascript" language="javascript">
 <%
 request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
-String domainString="";
-String usernameString="";
+String usernameString = (String) request.getAttribute("username");
+String domainString = (String) request.getAttribute("domain");
 String getElementString="document.getElementById(\"username\").value";
 boolean disableTextBox=false;
-//out.println("//"+request.getServerName());
-//out.println("//"+request.getAttribute("javax.servlet.forward.servlet_path"));
-//out.println("//bypass NTLM check:"+request.getAttribute("bypassNTLMCheck"));
-if(!"true".equals(request.getAttribute("bypassNTLMCheck"))){
-//out.println("//check:"+(!"true".equals(request.getAttribute("bypassNTLMCheck"))));
 String auth = request.getHeader("Authorization");
-String s = "";
-//out.println("//auth:"+auth);
-if (auth == null || auth.startsWith("Negotiate")) {
+System.out.println("auth:"+auth);
+if (auth == null) {
 	response.setStatus(response.SC_UNAUTHORIZED);
-	response.setHeader("WWW-Authenticate", "NTLM");
+	response.addHeader("WWW-Authenticate", "Negotiate");
 	return;
 }
 
-if (auth.startsWith("NTLM ")) { 
-	byte[] msg = new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(5));
-	int off = 0, length, offset;
-	if (msg[8] == 1) { 
-		off = 18;		
-		byte z = 0;
-		byte[] msg1 = {
-			(byte)'N', (byte)'T', (byte)'L', (byte)'M', (byte)'S',(byte)'S', (byte)'P', z,
-			(byte)2, z, z, z, z, z, z, z,
-			(byte)40, z, z, z, (byte)1, (byte)130, z, z,
-			z, (byte)2, (byte)2, (byte)2, z, z, z, z, 
-			z, z, z, z, z, z, z, z
-		};
-		response.setStatus(response.SC_UNAUTHORIZED);
-		response.setHeader("WWW-Authenticate", "NTLM " + new sun.misc.BASE64Encoder().encodeBuffer(msg1).trim());
-		return;
-	} else if (msg[8] == 3) {
-		off = 30;
-		//domain
-		length = msg[off+1]*256 + msg[off];
-		offset = msg[off+3]*256 + msg[off+2];
-		s = new String(msg, offset, length);
-		domainString = "";
-		for(int i=0; i<s.length(); i+=2){
-			domainString += s.charAt(i);
-		}
-		//username
-		length = msg[off+9]*256 + msg[off+8];
-		offset = msg[off+11]*256 + msg[off+10];
-		s = new String(msg, offset, length);
-		usernameString = "";
-		for(int i=0; i<s.length(); i+=2){
-			usernameString += s.charAt(i);
-		}
-	} else {
-		return;
-	}
-}
-}
-if(domainString.equals("GAMSKA")){
+System.out.println("username:" + usernameString);
+System.out.println("domain:" + domainString);
+if(domainString != null){
 	getElementString = "\""+ usernameString + "\"";
 	disableTextBox = true;
 } else {

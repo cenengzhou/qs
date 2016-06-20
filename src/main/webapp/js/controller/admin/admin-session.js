@@ -21,7 +21,8 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 				return true;
 			},
 			columnDefs: [
-			             { field: 'principal.fullname', displayName: "Name", enableCellEdit: false },
+			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
+			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
 			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
 			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
 			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
@@ -52,14 +53,19 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 	}
 	
 	$scope.loadGridData = function(){
-		$http.post('service/GetSessionList')
+		SessionHelper.getCurrentSessionId()
+		.then(function(data){
+			$rootScope.sessionId = data;
+			$http.post('service/GetSessionList')
 		    .then(function(data) {
 				if(angular.isArray(data.data)){
 					$scope.gridOptions.data = data.data;
 				} else {
 					SessionHelper.getCurrentSessionId().then;
 				}
-			});
+			});			
+		})
+
 	}
 	
 	$scope.filter = function() {

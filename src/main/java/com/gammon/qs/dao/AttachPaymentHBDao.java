@@ -28,11 +28,11 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-			criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
+			criteria.createAlias("subcontract", "subcontract");
+			criteria.createAlias("subcontract.jobInfo", "jobInfo");
 			criteria.createAlias("paymentCert", "paymentCert");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("scPaymentCert.paymentCertNo", new Integer(paymentCertNo)));
 			resultList = criteria.list();
 			if(resultList == null)

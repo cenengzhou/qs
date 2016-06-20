@@ -13,23 +13,23 @@ import org.hibernate.annotations.LazyToOneOption;
 public class PaymentCertDetailId implements Serializable{
 
 	private static final long serialVersionUID = 3369567209180059526L;
-	private PaymentCert scPaymentCert;
+	private PaymentCert paymentCert;
 	private Integer scSeqNo;
 	
 	public PaymentCertDetailId() {
 		super();
 	}
 	
-	public PaymentCertDetailId(PaymentCert scPaymentCert, Integer scSeqNo) {
+	public PaymentCertDetailId(PaymentCert paymentCert, Integer scSeqNo) {
 		super();
-		this.scPaymentCert = scPaymentCert;
+		this.paymentCert = paymentCert;
 		this.scSeqNo = scSeqNo;
 	}
 	
 	@Override
 	public int hashCode() {
 		int result = 17;
-		result = 37 * result + (getScPaymentCert() == null ? 0 : getScPaymentCert().hashCode());
+		result = 37 * result + (getPaymentCert() == null ? 0 : getPaymentCert().hashCode());
 		result = 37 * result + getScSeqNo();
 		return super.hashCode();
 	}
@@ -37,23 +37,23 @@ public class PaymentCertDetailId implements Serializable{
 	public boolean equals(Object other) {
 		if(!(other instanceof PaymentCertDetailId)) return false;
 		PaymentCertDetailId castOther = (PaymentCertDetailId) other;
-		return castOther.getScPaymentCert().getId() == scPaymentCert.getId() &&
+		return castOther.getPaymentCert().getId() == paymentCert.getId() &&
 				castOther.getScSeqNo() == scSeqNo;
 	}
 	@Override
 	public String toString() {
-		return "SCPaymentDetailId [scPaymentCert=" + scPaymentCert + ", scSeqNo=" + scSeqNo + ", toString()="
+		return "SCPaymentDetailId [PaymentCert=" + paymentCert + ", scSeqNo=" + scSeqNo + ", toString()="
 				+ super.toString() + "]";
 	}		
 	
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
 	@JoinColumn(name = "PaymentCert_ID", foreignKey = @ForeignKey(name = "FK_PaymentCertDetail_PaymentCert_PK"))
-	public PaymentCert getScPaymentCert() {
-		return scPaymentCert;
+	public PaymentCert getPaymentCert() {
+		return paymentCert;
 	}
-	public void setScPaymentCert(PaymentCert scPaymentCert) {
-		this.scPaymentCert = scPaymentCert;
+	public void setPaymentCert(PaymentCert paymentCert) {
+		this.paymentCert = paymentCert;
 	}
 	
 	@Column(name = "scSeqNo")

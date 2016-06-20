@@ -480,17 +480,17 @@ public class PaymentService{
 		logger.info("No of SCDetails: " + details.size());
 
 		for (PaymentCertDetail scPaymentDetail : details) {
-			if (scPaymentDetail.getScDetail() != null) {
+			if (scPaymentDetail.getSubcontractDetail() != null) {
 				try {
-					scDetailsDescription.add(scDetailDao.get(scPaymentDetail.getScDetail().getId()).getDescription());
+					scDetailsDescription.add(scDetailDao.get(scPaymentDetail.getSubcontractDetail().getId()).getDescription());
 				} catch (DatabaseOperationException e) {
 					logger.info("Exception caught when get SC Detail ID and Description:" +
-							" Job Number: " + scPaymentDetail.getScPaymentCert().getJobNo() +
-							" package no: " + scPaymentDetail.getScPaymentCert().getPackageNo() +
+							" Job Number: " + scPaymentDetail.getPaymentCert().getJobNo() +
+							" package no: " + scPaymentDetail.getPaymentCert().getPackageNo() +
 							" Payment Cert no.: " + scPaymentDetail.getPaymentCertNo() +
 							" Sequence no.: " + scPaymentDetail.getScSeqNo() +
 							" Bill Item: " + scPaymentDetail.getBillItem() +
-							" SC Detail ID: " + scPaymentDetail.getScDetail().getId());
+							" SC Detail ID: " + scPaymentDetail.getSubcontractDetail().getId());
 					e.printStackTrace();
 				}
 			} else 
@@ -783,7 +783,7 @@ public class PaymentService{
 					gstPayableInDB.setScSeqNo(100003);
 					gstPayableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
 					gstPayableInDB.setCreatedDate(new Date());
-					gstPayableInDB.setScPaymentCert(scPaymentCert);
+					gstPayableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstPayableInDB);
 					} catch (DatabaseOperationException e) {
@@ -804,7 +804,7 @@ public class PaymentService{
 					gstReceivableInDB.setScSeqNo(100004);
 					gstReceivableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
 					gstReceivableInDB.setCreatedDate(new Date());
-					gstReceivableInDB.setScPaymentCert(scPaymentCert);
+					gstReceivableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstReceivableInDB);
 					} catch (DatabaseOperationException e) {
@@ -1917,7 +1917,7 @@ public class PaymentService{
 		//Generate new Payment Detail
 		List<PaymentCertDetail> scPaymentDetailList = createPaymentFromSCDetail(previousPaymentCert, scPaymentCert,createdUser);
 		for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
-			scPaymentDetail.setScPaymentCert(scPaymentCert);
+			scPaymentDetail.setPaymentCert(scPaymentCert);
 		}
 		} catch (NumberFormatException | DatabaseOperationException e) {
 			e.printStackTrace();
@@ -2039,8 +2039,8 @@ public class PaymentService{
 						}
 					}
 
-					scPaymentDetail.setScPaymentCert(scPaymentCert);
-					scPaymentDetail.setScDetail(scDetails);
+					scPaymentDetail.setPaymentCert(scPaymentCert);
+					scPaymentDetail.setSubcontractDetail(scDetails);
 					scPaymentDetail.setCreatedUser(lastModifiedUser);
 					scPaymentDetail.setCreatedDate(createdDate);
 					scPaymentDetail.setLastModifiedUser(lastModifiedUser);
@@ -2100,7 +2100,7 @@ public class PaymentService{
 				PaymentCertDetail scPaymentDetailMR = new PaymentCertDetail();
 				scPaymentDetailMR.setBillItem("");
 				scPaymentDetailMR.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
-				scPaymentDetailMR.setScPaymentCert(scPaymentCert);
+				scPaymentDetailMR.setPaymentCert(scPaymentCert);
 				scPaymentDetailMR.setLineType("MR");
 				scPaymentDetailMR.setObjectCode(tempObjCode);
 				scPaymentDetailMR.setSubsidiaryCode(tempSubsidCode);
@@ -2132,7 +2132,7 @@ public class PaymentService{
 			if(scPaymentCert.getPaymentStatus()!=null && "F".equalsIgnoreCase(scPaymentCert.getIntermFinalPayment().trim())){
 				cumRetention = preRTAmount;
 			}
-			scPaymentDetailRT.setScPaymentCert(scPaymentCert);
+			scPaymentDetailRT.setPaymentCert(scPaymentCert);
 			scPaymentDetailRT.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
 			scPaymentDetailRT.setBillItem("");
 			scPaymentDetailRT.setLineType("RT");
@@ -2148,7 +2148,7 @@ public class PaymentService{
 
 			//create GP payment Detail
 			scPaymentDetailGP.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
-			scPaymentDetailGP.setScPaymentCert(scPaymentCert);
+			scPaymentDetailGP.setPaymentCert(scPaymentCert);
 			scPaymentDetailGP.setBillItem("");
 			scPaymentDetailGP.setLineType("GP");
 			scPaymentDetailGP.setObjectCode("");
@@ -2163,7 +2163,7 @@ public class PaymentService{
 			
 			//create GP payment Detail
 			scPaymentDetailGR.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
-			scPaymentDetailGR.setScPaymentCert(scPaymentCert);
+			scPaymentDetailGR.setPaymentCert(scPaymentCert);
 			scPaymentDetailGR.setBillItem("");
 			scPaymentDetailGR.setLineType("GR");
 			scPaymentDetailGR.setObjectCode("");

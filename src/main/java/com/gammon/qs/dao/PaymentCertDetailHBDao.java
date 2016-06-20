@@ -73,7 +73,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scSeqNo", scPaymentDetail.getScSeqNo()));
-			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(scPaymentDetail.getScPaymentCert()).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(scPaymentDetail.getPaymentCert()).getId() + "'")));
 			return (PaymentCertDetail) criteria.uniqueResult();
 
 		} catch (HibernateException he) {
@@ -222,10 +222,10 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	@SuppressWarnings("unchecked")
 	public List<PaymentCert> getSCPaymentDetail(String jobNumber, String packageNo) {
 		Criteria criteria = getSession().createCriteria(PaymentCert.class);
-		criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-		criteria.createAlias("SUBCONTRACT.jobInfo", "job");
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.createAlias("subcontract.jobInfo", "job");
 		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-		criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+		criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
 		return (List<PaymentCert>) criteria.list();
 	}
@@ -297,18 +297,18 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		PaymentCert currCert = null;
 		for (PaymentCertDetail scPaymentDetail : scPaymentDetails) {
 			if (currCert == null
-					|| !currCert.getSubcontract().getJobInfo().getJobNumber().equals(scPaymentDetail.getScPaymentCert().getSubcontract().getJobInfo().getJobNumber())
-					|| !currCert.getSubcontract().getPackageNo().equals(scPaymentDetail.getScPaymentCert().getSubcontract().getPackageNo())
-					|| !currCert.getPaymentCertNo().equals(scPaymentDetail.getScPaymentCert().getPaymentCertNo()))
-				currCert = scPaymentCertDao.obtainPaymentCertificate(scPaymentDetail.getScPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
-							scPaymentDetail.getScPaymentCert().getSubcontract().getPackageNo(),
-							scPaymentDetail.getScPaymentCert().getPaymentCertNo());
-			scPaymentDetail.setScPaymentCert(currCert);
+					|| !currCert.getSubcontract().getJobInfo().getJobNumber().equals(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber())
+					|| !currCert.getSubcontract().getPackageNo().equals(scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo())
+					|| !currCert.getPaymentCertNo().equals(scPaymentDetail.getPaymentCert().getPaymentCertNo()))
+				currCert = scPaymentCertDao.obtainPaymentCertificate(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
+							scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo(),
+							scPaymentDetail.getPaymentCert().getPaymentCertNo());
+			scPaymentDetail.setPaymentCert(currCert);
 			scPaymentDetail.setCreatedUser(currCert.getCreatedUser());
 			scPaymentDetail.setLastModifiedUser(currCert.getLastModifiedUser());
 			scPaymentDetail.setCreatedDate(currCert.getCreatedDate());
-			if (scPaymentDetail.getScDetail() != null) {
-				scPaymentDetail.setScDetail(scDetailsDao.getSCDetail(scPaymentDetail.getScDetail()));
+			if (scPaymentDetail.getSubcontractDetail() != null) {
+				scPaymentDetail.setSubcontractDetail(scDetailsDao.getSCDetail(scPaymentDetail.getSubcontractDetail()));
 			}
 			saveOrUpdate(scPaymentDetail);
 		}

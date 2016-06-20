@@ -69,10 +69,10 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			criteria.add(Restrictions.eq("paymentCertNo", paymentCertNo));
+			criteria.createAlias("subcontract","subcontract" );
 			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 			return (PaymentCert) criteria.uniqueResult();
 		}catch (HibernateException he){
 			logger.info("Fail: getSCPaymentCert(String jobNumber, String packageNo,String paymentCertNo)");
@@ -147,7 +147,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			scPaymentCertDB.setLastModifiedUser(scPaymentCert.getLastModifiedUser());
 			List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(scPaymentCertDB);
 			for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
-				scPaymentDetail.setScPaymentCert(scPaymentCertDB);
+				scPaymentDetail.setPaymentCert(scPaymentCertDB);
 				scPaymentDetailHBDao.saveOrUpdate(scPaymentDetail);
 			}
 			
@@ -167,10 +167,10 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			throw new DatabaseOperationException("packageNo is null");
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT.jobInfo","jobInfo" );
+			criteria.createAlias("subcontract","subcontract" );
+			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 			if(status!=null)
 				criteria.add(Restrictions.eq("paymentStatus",status));
 			if(directPayment!=null)
@@ -191,10 +191,10 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			throw new DatabaseOperationException("packageNo is null");
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT.jobInfo","jobInfo" );
+			criteria.createAlias("subcontract","subcontract" );
+			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.toString()));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.toString()));
 			criteria.addOrder(Order.desc("paymentCertNo"));
 			return (List<PaymentCert>) criteria.list();
 		}catch (HibernateException he){
@@ -211,12 +211,12 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("SUBCONTRACT.jobInfo","jobInfo" );
+			criteria.createAlias("subcontract","subcontract" );
+			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.toString()));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.toString()));
 			criteria.addOrder(Order.desc("paymentCertNo"));
-			criteria.setFetchMode("SUBCONTRACT", FetchMode.JOIN);
+			criteria.setFetchMode("subcontract", FetchMode.JOIN);
 			List<PaymentCert> resultList = criteria.list();
 			if (resultList!=null && !resultList.isEmpty())
 				return resultList.get(0);
@@ -234,11 +234,11 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("SUBCONTRACT.jobInfo", jobInfo ));
-			criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo.toString()));
+			criteria.createAlias("subcontract","subcontract" );
+			criteria.add(Restrictions.eq("subcontract.jobInfo", jobInfo ));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.toString()));
 			criteria.addOrder(Order.desc("paymentCertNo"));
-			criteria.setFetchMode("SUBCONTRACT", FetchMode.JOIN);
+			criteria.setFetchMode("subcontract", FetchMode.JOIN);
 			List<PaymentCert> resultList = criteria.list();
 			if (resultList!=null && !resultList.isEmpty())
 				return resultList.get(0);
@@ -272,8 +272,8 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
-			criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+			criteria.createAlias("subcontract", "subcontract");
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 			criteria.add(Restrictions.eq("paymentStatus", paymentStatus));
 			
 			return (PaymentCert) criteria.uniqueResult();
@@ -347,16 +347,16 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 	public List<PaymentCert> obtainDirectPaymentRecords(String division,
 			String company, String jobNumber, String vendorNo, String packageNo, List<Integer> scStatusList) {
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("SUBCONTRACT.jobInfo","jobInfo" );
-		criteria.createAlias("SUBCONTRACT","SUBCONTRACT" );
+		criteria.createAlias("subcontract","subcontract" );
+		criteria.createAlias("subcontract.jobInfo","jobInfo" );
 		criteria.add(Restrictions.eq("directPayment", PaymentCert.DIRECT_PAYMENT));
 		criteria.add(Restrictions.eq("paymentStatus", "APR"));
 		if (scStatusList!=null && scStatusList.size()>0)
-			criteria.add(Restrictions.in("SUBCONTRACT.subcontractStatus", scStatusList));
+			criteria.add(Restrictions.in("subcontract.subcontractStatus", scStatusList));
 		if (packageNo!=null && packageNo.trim().length()>0)
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 		if (vendorNo!=null && vendorNo.trim().length()>0)
-			criteria.add(Restrictions.eq("SUBCONTRACT.vendorNo",vendorNo));
+			criteria.add(Restrictions.eq("subcontract.vendorNo",vendorNo));
 		else 
 			criteria.add(Restrictions.isNotNull("SUBCONTRACT.vendorNo"));
 		if (jobNumber!=null && jobNumber.trim().length()>0)
@@ -368,7 +368,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		if (company!=null && company.trim().length()>0)
 			criteria.add(Restrictions.eq("jobInfo.company", company));
 		criteria.addOrder(Order.asc("jobInfo.jobNumber"))
-				.addOrder(Order.asc("SUBCONTRACT.packageNo"))
+				.addOrder(Order.asc("subcontract.packageNo"))
 				.addOrder(Order.asc("paymentCertNo"));
 		return criteria.list();
 	}
@@ -378,8 +378,8 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		
-		criteria.createAlias("SUBCONTRACT", "SUBCONTRACT");
-		criteria.createAlias("SUBCONTRACT.jobInfo", "jobInfo");
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.createAlias("subcontract.jobInfo", "jobInfo");
 		
 		if(scPaymentCertWrapper.getJobNo()!=null && !"".equals(scPaymentCertWrapper.getJobNo().trim()))
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", scPaymentCertWrapper.getJobNo().trim()));

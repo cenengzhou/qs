@@ -31,7 +31,6 @@ public class KerberosLoginFailureHandler implements AuthenticationFailureHandler
 																	throws IOException, ServletException {
 		logger.debug("login failed: " + ex);
 		logger.debug("forward to : " + loginPath);
-		request.setAttribute("bypassNTLMCheck", "false");
 		request.getRequestDispatcher(loginPath).forward(request, response);
 	}
 

@@ -1009,7 +1009,7 @@ public class SubcontractService {
 					List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.getSCPaymentDetail(jobNumber, packageNo, delPndCert.getPaymentCertNo());
 					scPaymentDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
 					for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
-						scPaymentDetail.setScPaymentCert(delPndCert);						
+						scPaymentDetail.setPaymentCert(delPndCert);						
 					}
 					lastAPRCertFound=true;
 					if (delPndCert.getPaymentCertNo().intValue()>1)
@@ -1076,7 +1076,7 @@ public class SubcontractService {
 					//For there is no GST in previous payment Cert
 					PaymentCertDetail scPaymentDetailGPGR = new PaymentCertDetail();
 					scPaymentDetailGPGR.setPaymentCertNo(curSCPaymentDetailGPGR.getPaymentCertNo().toString());
-					scPaymentDetailGPGR.setScPaymentCert(newPaymentCert);
+					scPaymentDetailGPGR.setPaymentCert(newPaymentCert);
 					scPaymentDetailGPGR.setBillItem("");
 					scPaymentDetailGPGR.setLineType(curSCPaymentDetailGPGR.getLineType().trim());
 					scPaymentDetailGPGR.setObjectCode("");
@@ -1087,7 +1087,7 @@ public class SubcontractService {
 					scPaymentDetailGPGR.setLastModifiedUser(curSCPaymentDetailGPGR.getLastModifiedUser());
 					scPaymentDetailGPGR.setCreatedUser(curSCPaymentDetailGPGR.getCreatedUser());
 					scPaymentDetailGPGR.setCreatedDate(curSCPaymentDetailGPGR.getCreatedDate());
-					scPaymentDetailGPGR.setScPaymentCert(newPaymentCert);
+					scPaymentDetailGPGR.setPaymentCert(newPaymentCert);
 				}
 			}
 
@@ -2679,7 +2679,7 @@ public class SubcontractService {
 									if(!latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 										List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
 										for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
-											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getScDetail().getId().equals(scDetails.getId())){
+											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
 												notUsedInPayment=false;
 												//Inactive scDetail
 												scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
@@ -5242,7 +5242,7 @@ public class SubcontractService {
 										boolean notUsedInPayment = true;
 										List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
 										for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
-											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getScDetail().getId().equals(scDetails.getId())){
+											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
 												notUsedInPayment=false;
 												//Inactive scDetail
 												scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
