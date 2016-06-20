@@ -86,14 +86,14 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PaginationWrapper<SubcontractDetail> getScDetailsByPage(Subcontract scPackage, String billItem, String description, String lineType, int pageNum) throws Exception{
-		logger.info("JobNumber: " + scPackage.getJobInfo().getJobNumber() + ", PackageNo: " + scPackage.getPackageNo() + ", billItem: " + billItem + ", description: " + description + ", lineType:" + lineType + ", pageNum: " + pageNum);
+	public PaginationWrapper<SubcontractDetail> getScDetailsByPage(Subcontract subcontract, String billItem, String description, String lineType, int pageNum) throws Exception{
+		logger.info("JobNumber: " + subcontract.getJobInfo().getJobNumber() + ", PackageNo: " + subcontract.getPackageNo() + ", billItem: " + billItem + ", description: " + description + ", lineType:" + lineType + ", pageNum: " + pageNum);
 		PaginationWrapper<SubcontractDetail> wrapper = new PaginationWrapper<SubcontractDetail>();
 		
 		//Get count
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		if(!GenericValidator.isBlankOrNull(billItem)){
 			billItem = billItem.replace('*', '%');
 			criteria.add(Restrictions.ilike("billItem", billItem, MatchMode.ANYWHERE));
@@ -116,7 +116,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		//Get page of records
 		criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		if(!GenericValidator.isBlankOrNull(billItem)){
 			criteria.add(Restrictions.ilike("billItem", billItem, MatchMode.ANYWHERE));
 		}
@@ -185,10 +185,10 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SubcontractDetail> getSCDetails(Subcontract scPackage) throws Exception{
+	public List<SubcontractDetail> getSCDetails(Subcontract subcontract) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		return (List<SubcontractDetail>)criteria.list();
 	}
 	
@@ -223,7 +223,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 							Restrictions.and(Restrictions.eq("lineType","V1"),Restrictions.ne("costRate", Double.valueOf(0.0))),
 							Restrictions.eq("lineType","V3"))
 					));
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			resultList = criteria.list();
 			return resultList;
@@ -240,7 +240,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("subcontract", "subcontract");
 			criteria.add(Restrictions.eq("jobNo",jobNumber));
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.INACTIVE));
 			resultList = criteria.list();
 			return resultList;
@@ -256,7 +256,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 			criteria.createAlias("subcontract", "subcontract");
 			criteria.createAlias("subcontract.jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("scPackage.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("sequenceNo", new Integer(sequenceNo)));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			return (SubcontractDetail)criteria.uniqueResult();
@@ -266,11 +266,11 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}
 	}
 	
-	public SubcontractDetail getSCDetail(Subcontract scPackage, String sequenceNo) throws DatabaseOperationException{
+	public SubcontractDetail getSCDetail(Subcontract subcontract, String sequenceNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("scPackage", scPackage));
+			criteria.add(Restrictions.eq("subcontract", subcontract));
 			criteria.add(Restrictions.eq("sequenceNo", new Integer(sequenceNo)));
 			return (SubcontractDetail)criteria.uniqueResult();
 		}catch(HibernateException he){
@@ -278,10 +278,10 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}
 	}
 	
-	public SubcontractDetail getSCDetail(Subcontract scPackage, String billItem, Integer resourceNo) throws Exception{
+	public SubcontractDetail getSCDetail(Subcontract subcontract, String billItem, Integer resourceNo) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		criteria.add(Restrictions.or(Restrictions.eq("billItem", billItem), Restrictions.like("billItem", billItem + " %")));
 		criteria.add(Restrictions.eq("resourceNo", resourceNo));
 		return (SubcontractDetail)criteria.uniqueResult();
@@ -300,7 +300,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		if(!GenericValidator.isBlankOrNull(jobNumber))
 			criteria.add(Restrictions.eq("jobNo", jobNumber));
 		if(!GenericValidator.isBlankOrNull(packageNo))
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", packageNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 		if(!GenericValidator.isBlankOrNull(billItem))
 			criteria.add(Restrictions.eq("billItem", billItem));
 		if(!GenericValidator.isBlankOrNull(objectCode))
@@ -312,16 +312,16 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		return (SubcontractDetail)criteria.uniqueResult();
 	}
 	
-	public SubcontractDetail getSCDetail(SubcontractDetail scDetails) throws DatabaseOperationException{
+	public SubcontractDetail getSCDetail(SubcontractDetail subcontractDetail) throws DatabaseOperationException{
 		
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("subcontract", "subcontract");
 			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber",scDetails.getSubcontract().getJobInfo().getJobNumber()));
+			criteria.add(Restrictions.eq("jobInfo.jobNumber",subcontractDetail.getSubcontract().getJobInfo().getJobNumber()));
 			//criteria.add(Restrictions.eq("jobNo",scDetails.getJobNo()));
-			criteria.add(Restrictions.eq("subcontract.packageNo", scDetails.getSubcontract().getPackageNo()));
-			criteria.add(Restrictions.eq("sequenceNo", scDetails.getSequenceNo()));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractDetail.getSubcontract().getPackageNo()));
+			criteria.add(Restrictions.eq("sequenceNo", subcontractDetail.getSequenceNo()));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			return (SubcontractDetail)criteria.uniqueResult();
 
@@ -361,7 +361,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	
 	public void addSCDetailVOWithBudget(SubcontractDetail scDetailToUpdate) throws DatabaseOperationException {
 		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(getType());
-		criteria.add(Restrictions.eq("scPackage", scDetailToUpdate.getSubcontract()));
+		criteria.add(Restrictions.eq("subcontract", scDetailToUpdate.getSubcontract()));
 		criteria.add(Restrictions.eq("resourceNo", scDetailToUpdate.getResourceNo()));
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		@SuppressWarnings("unchecked")
@@ -383,7 +383,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 			criteria.createAlias("subcontract.jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
 			//criteria.add(Restrictions.eq("jobNo",jobNumber));
-			criteria.add(Restrictions.eq("SUBCONTRACT.packageNo", subcontractNo));
+			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
 			criteria.add(Restrictions.eq("lineType", lineType));		
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			resultList = criteria.list();
@@ -420,10 +420,10 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SubcontractDetail> getSCDetailByResourceNo(Subcontract scpackage,Integer resourceNo) throws DatabaseOperationException {
+	public List<SubcontractDetail> getSCDetailByResourceNo(Subcontract subcontract,Integer resourceNo) throws DatabaseOperationException {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPackage", scpackage));
+			criteria.add(Restrictions.eq("subcontract", subcontract));
 			criteria.add(Restrictions.eq("resourceNo", resourceNo));
 			criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 			return criteria.list();
@@ -433,9 +433,9 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}
 	}
 	
-	public Integer getNextSequenceNo(Subcontract scPackage) throws Exception{
+	public Integer getNextSequenceNo(Subcontract subcontract) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		criteria.setProjection(Projections.max("sequenceNo"));
 		Integer maxSequenceNo = (Integer)criteria.uniqueResult();
 		if(maxSequenceNo == null)
@@ -510,9 +510,9 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SubcontractDetail> getSCDetailsWithCorrSC(Subcontract scPackage) {
+	public List<SubcontractDetail> getSCDetailsWithCorrSC(Subcontract subcontract) {
 		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(getType());
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.isNotNull("contraChargeSCNo"));
 		criteria.add(Restrictions.ne("contraChargeSCNo","0"));

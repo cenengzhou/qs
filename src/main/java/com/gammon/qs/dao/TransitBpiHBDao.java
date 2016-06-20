@@ -45,9 +45,9 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<TransitBpi> getTransitBqByHeaderNoCommentLines(Transit header){
+	public List<TransitBpi> getTransitBqByHeaderNoCommentLines(Transit transit){
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("transitHeader", header));
+		criteria.add(Restrictions.eq("transit", transit));
 		criteria.add(Restrictions.isNotNull("itemNo"));
 		criteria.addOrder(Order.asc("billNo"));
 		criteria.addOrder(Order.asc("subBillNo"));
@@ -175,9 +175,9 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TransitBpi> obtainTransitBQByTransitHeader(Transit transitHeader) {
+	public List<TransitBpi> obtainTransitBQByTransitHeader(Transit transit) {
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("transitHeader", transitHeader));
+		criteria.add(Restrictions.eq("transit", transit));
 		return criteria.list();
 	}
 }

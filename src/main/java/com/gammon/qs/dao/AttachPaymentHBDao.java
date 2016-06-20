@@ -71,7 +71,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));		
+			criteria.add(Restrictions.eq("paymentCert", scPaymentCert));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){

@@ -21,16 +21,16 @@ public class SubcontractWorkScopeHBDao extends BaseHibernateDao<SubcontractWorkS
 	private Logger logger = Logger.getLogger(SubcontractWorkScope.class.getName());
 
 	@SuppressWarnings("unchecked")
-	public List<SubcontractWorkScope> obtainSCWorkScopeListByPackage(Subcontract scPackage) throws DatabaseOperationException{
+	public List<SubcontractWorkScope> obtainSCWorkScopeListByPackage(Subcontract subcontract) throws DatabaseOperationException{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPackage", scPackage));
+			criteria.add(Restrictions.eq("subcontract", subcontract));
 			return (List<SubcontractWorkScope>) criteria.list();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void deleteSCWorkScopeBySCPackage(Subcontract scPackage) throws DatabaseOperationException{
+	public void deleteSCWorkScopeBySCPackage(Subcontract subcontract) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		for(SubcontractWorkScope scWorkScope: (List<SubcontractWorkScope>) criteria.list()){
 			delete(scWorkScope);
 		}

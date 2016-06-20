@@ -104,11 +104,11 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		return false;
 	}
 	
-	public Tender obtainTenderAnalysis(Subcontract scPackage, Integer vendorNo) throws DatabaseOperationException{
+	public Tender obtainTenderAnalysis(Subcontract subcontract, Integer vendorNo) throws DatabaseOperationException{
 		try{
 			//Get TenderAnalysis
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPackage", scPackage));
+			criteria.add(Restrictions.eq("subcontract", subcontract));
 			criteria.add(Restrictions.eq("vendorNo", vendorNo));
 			return (Tender)criteria.uniqueResult();
 		}
@@ -160,7 +160,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		List<Tender> tenderAnalyses;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("SUBCONTRACT", subcontract));
+			criteria.add(Restrictions.eq("subcontract", subcontract));
 			criteria.addOrder(Order.asc("vendorNo"));
 			tenderAnalyses = criteria.list();
 		}catch (HibernateException he){

@@ -37,8 +37,8 @@ public class ProvisionPostingHistHBDao extends
 //		criteria.createAlias("subcontractDetail", "subcontractDetail");
 //		criteria.createAlias("subcontractDetail.subcontract", "subcontract");
 //		criteria.createAlias("subcontract.jobInfo", "jobInfo");
-//		criteria.add(Restrictions.eq("job.jobNumber",jobNumber));
-//		criteria.add(Restrictions.eq("scPackage.packageNo", packageNo));
+//		criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+//		criteria.add(Restrictions.eq("subcontract.packageNo", subcontract));
 		criteria.add(Restrictions.eq("jobNo",jobNumber));
 		criteria.add(Restrictions.eq("packageNo", packageNo));
 		criteria.add(Restrictions.eq("postedYr", year));

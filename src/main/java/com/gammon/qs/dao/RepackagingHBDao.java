@@ -33,7 +33,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		List<Repackaging> repackagingEntries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job.jobNumber", jobNumber));
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.addOrder(Order.asc("repackagingVersion"));
 			repackagingEntries = criteria.list();
 			return repackagingEntries;
@@ -45,24 +45,24 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Repackaging> getRepackagingEntriesByJob(JobInfo job) throws DatabaseOperationException{
+	public List<Repackaging> getRepackagingEntriesByJob(JobInfo jobInfo) throws DatabaseOperationException{
 		List<Repackaging> repackagingEntries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.addOrder(Order.desc("repackagingVersion"));
 			repackagingEntries = criteria.list();
 			return repackagingEntries;
 		}
 		catch(HibernateException ex){
-			logger.severe("Error -- RepackagingEntryDao: getRepackagingEntriesByJob - " + job.getJobNumber());
+			logger.severe("Error -- RepackagingEntryDao: getRepackagingEntriesByJob - " + jobInfo.getJobNumber());
 			throw new DatabaseOperationException(ex);
 		}
 	}
 	
-	public Repackaging getRepackagingEntry(JobInfo job, Integer version) throws Exception{
+	public Repackaging getRepackagingEntry(JobInfo jobInfo, Integer version) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", jobInfo));
 		criteria.add(Restrictions.eq("repackagingVersion", version));
 		return (Repackaging)criteria.uniqueResult();
 	}
@@ -80,32 +80,32 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 			Hibernate.initialize(repackagingEntry.getJobInfo());
 	}
 	
-	public Repackaging getLatestRepackagingEntry(JobInfo job) throws Exception{
+	public Repackaging getLatestRepackagingEntry(JobInfo jobInfo) throws Exception{
 		Repackaging repackagingEntry = null;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.setProjection(Projections.max("repackagingVersion"));
 			Integer latestVersion = (Integer)criteria.uniqueResult();
 			criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.add(Restrictions.eq("repackagingVersion", latestVersion));
 			repackagingEntry = (Repackaging)criteria.uniqueResult();
 		}
 		catch(HibernateException ex){
-			logger.info("RepackagingEntry Dao: getRepackagingEntriesByJob - " + job.getJobNumber());
+			logger.info("RepackagingEntry Dao: getRepackagingEntriesByJob - " + jobInfo.getJobNumber());
 			throw new DatabaseOperationException(ex);
 		}
 		return repackagingEntry;
 	}
 	
-	public Long getIdOfLatestRepackagingEntry(JobInfo job) throws Exception{
+	public Long getIdOfLatestRepackagingEntry(JobInfo jobInfo) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", jobInfo));
 		criteria.setProjection(Projections.max("repackagingVersion"));
 		Integer latestVersion = (Integer)criteria.uniqueResult();
 		criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("job", job));
+		criteria.add(Restrictions.eq("jobInfo", jobInfo));
 		criteria.add(Restrictions.eq("repackagingVersion", latestVersion));
 		criteria.setProjection(Projections.property("id"));
 		return (Long)criteria.uniqueResult();

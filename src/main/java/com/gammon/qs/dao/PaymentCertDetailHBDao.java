@@ -52,12 +52,12 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PaymentCertDetail> getSCPaymentDetail(PaymentCert scPaymentCert, String lineType) throws DatabaseOperationException {
-		if (scPaymentCert == null)
+	public List<PaymentCertDetail> getSCPaymentDetail(PaymentCert paymentCert, String lineType) throws DatabaseOperationException {
+		if (paymentCert == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", lineType));
 			return (List<PaymentCertDetail>) criteria.list();
 
@@ -67,13 +67,13 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		}
 	}
 
-	public PaymentCertDetail getSCPaymentDetail(PaymentCertDetail scPaymentDetail) throws DatabaseOperationException {
-		if (scPaymentDetail == null)
+	public PaymentCertDetail getSCPaymentDetail(PaymentCertDetail paymentDetail) throws DatabaseOperationException {
+		if (paymentDetail == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scSeqNo", scPaymentDetail.getScSeqNo()));
-			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(scPaymentDetail.getPaymentCert()).getId() + "'")));
+			criteria.add(Restrictions.eq("scSeqNo", paymentDetail.getScSeqNo()));
+			criteria.add(Restrictions.sqlRestriction("PaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
 			return (PaymentCertDetail) criteria.uniqueResult();
 
 		} catch (HibernateException he) {
@@ -88,7 +88,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("PaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
 			return (List<PaymentCertDetail>) criteria.list();
 
 		} catch (HibernateException he) {
@@ -120,7 +120,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double getCertCpfAmount(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "CF"));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
@@ -133,7 +133,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainPaymentRetentionAmount(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.in("lineType", new String[] { "RT", "RA" }));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
@@ -146,7 +146,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainPaymentRetentionReleasedAmount(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "RR"));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
@@ -159,7 +159,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainPaymentGstPayable(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "GP"));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
@@ -172,7 +172,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainPaymentGstReceivable(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("lineType", "GR"));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
@@ -186,7 +186,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public List<AccountMovementWrapper> obtainPaymentAccountMovements(PaymentCert paymentCert) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.not(Restrictions.in("lineType", new Object[] { "CF", "RT", "RA", "RR", "GP", "GR", "MR" })));
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.sum("movementAmount"), "movementAmount")
@@ -204,7 +204,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public Double obtainAccountMaterialRetention(PaymentCert paymentCert, String objectCode, String subsidiaryCode) throws DatabaseOperationException {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPaymentCert", paymentCert));
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));
 			criteria.add(Restrictions.eq("objectCode", objectCode));
 			if (subsidiaryCode != null)
 				criteria.add(Restrictions.eq("subsidiaryCode", subsidiaryCode));
@@ -231,9 +231,9 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PaymentCert> getSCPaymentDetail(Subcontract scPackage) {
+	public List<PaymentCert> getSCPaymentDetail(Subcontract subcontract) {
 		Criteria criteria = getSession().createCriteria(PaymentCert.class);
-		criteria.add(Restrictions.eq("scPackage", scPackage));
+		criteria.add(Restrictions.eq("subcontract", subcontract));
 		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
 		return (List<PaymentCert>) criteria.list();
 	}
@@ -270,9 +270,9 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PaymentCertDetail> obtainSCPaymentDetailBySCPaymentCert(PaymentCert scPaymentCert){
+	public List<PaymentCertDetail> obtainSCPaymentDetailBySCPaymentCert(PaymentCert paymentCert){
 		Criteria criteria = getSession().createCriteria(PaymentCertDetail.class);
-		criteria.add(Restrictions.eq("scPaymentCert", scPaymentCert));
+		criteria.add(Restrictions.eq("paymentCert", paymentCert));
 		return criteria.list();
 	}
 	

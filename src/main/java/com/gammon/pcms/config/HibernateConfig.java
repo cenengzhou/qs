@@ -124,6 +124,8 @@ public class HibernateConfig {
 		properties.setProperty("hibernate.jdbc.batch_size", hibernateJdbcBatch_size);
 		properties.setProperty("hibernate.jdbc.fetch_size", hibernateJdbcFetch_size);
 		properties.setProperty("current_session_context_class", current_session_context_class);
+		properties.put("hibernate.ejb.interceptor", hibernateEntityInterceptor());
+
 		return properties;
 	}
 

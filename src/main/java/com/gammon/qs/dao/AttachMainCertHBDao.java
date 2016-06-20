@@ -51,11 +51,11 @@ public class AttachMainCertHBDao extends BaseHibernateDao<AttachMainCert> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachMainCert> obtainMainCertAttachmentList(MainCert mainContractCertificate) throws DatabaseOperationException{
+	public List<AttachMainCert> obtainMainCertAttachmentList(MainCert mainCert) throws DatabaseOperationException{
 		try{
 			List<AttachMainCert> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("mainCertificate", mainContractCertificate));		
+			criteria.add(Restrictions.eq("mainCert", mainCert));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){

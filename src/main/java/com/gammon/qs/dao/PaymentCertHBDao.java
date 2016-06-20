@@ -358,7 +358,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		if (vendorNo!=null && vendorNo.trim().length()>0)
 			criteria.add(Restrictions.eq("subcontract.vendorNo",vendorNo));
 		else 
-			criteria.add(Restrictions.isNotNull("SUBCONTRACT.vendorNo"));
+			criteria.add(Restrictions.isNotNull("subcontract.vendorNo"));
 		if (jobNumber!=null && jobNumber.trim().length()>0)
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 		else
@@ -388,9 +388,9 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		else if(companyList!=null)
 			criteria.add(Restrictions.in("jobInfo.company", companyList));
 		if(scPaymentCertWrapper.getSubcontract().getVendorNo()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getVendorNo().trim()))
-			criteria.add(Restrictions.eq("SUBCONTRACT.vendorNo", scPaymentCertWrapper.getSubcontract().getVendorNo().trim()));
+			criteria.add(Restrictions.eq("subcontract.vendorNo", scPaymentCertWrapper.getSubcontract().getVendorNo().trim()));
 		if(scPaymentCertWrapper.getSubcontract().getPaymentTerms()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getPaymentTerms().trim()))
-			criteria.add(Restrictions.eq("SUBCONTRACT.paymentTerms", scPaymentCertWrapper.getSubcontract().getPaymentTerms().trim()));
+			criteria.add(Restrictions.eq("subcontract.paymentTerms", scPaymentCertWrapper.getSubcontract().getPaymentTerms().trim()));
 		if(scPaymentCertWrapper.getSubcontract().getPackageNo()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getPackageNo().trim()))
 			criteria.add(Restrictions.eq("packageNo", scPaymentCertWrapper.getSubcontract().getPackageNo().trim()));
 		if(scPaymentCertWrapper.getPaymentStatus()!=null && !"".equals(scPaymentCertWrapper.getPaymentStatus().trim()))

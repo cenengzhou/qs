@@ -54,10 +54,10 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		}
 	}
 	
-	public boolean dummyAccountCodesExist(Transit header){
+	public boolean dummyAccountCodesExist(Transit transit){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBpi", "transitBpi");
-		criteria.add(Restrictions.eq("transitBpi.transit", header));
+		criteria.add(Restrictions.eq("transitBpi.transit", transit));
 		criteria.add(Restrictions.or(Restrictions.eq("objectCode", "000000"), Restrictions.eq("subsidiaryCode", "00000000")));
 		criteria.setProjection(Projections.rowCount());
 		Integer count = Integer.valueOf(criteria.uniqueResult().toString());
@@ -67,14 +67,14 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	// modified by brian on 20110120
 	// change to return the search result from PaginationWrapper<TransitResourceWrapper> to List<TransitResourceWrapper>
 	@SuppressWarnings("unchecked")
-	public List<TransitResourceWrapper> searchTransitResources(Transit header, String billNo, String subBillNo,
+	public List<TransitResourceWrapper> searchTransitResources(Transit transit, String billNo, String subBillNo,
 			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
 		
 //		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
 		
 		Criteria countCriteria = getSession().createCriteria(this.getType());
 		countCriteria.createAlias("transitBpi", "transitBpi");
-		countCriteria.add(Restrictions.eq("transitBpi.transit", header));
+		countCriteria.add(Restrictions.eq("transitBpi.transit", transit));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			billNo = billNo.replace("*", "%");
 			if(billNo.contains("%")){
@@ -147,7 +147,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBpi", "transitBpi");
-		criteria.add(Restrictions.eq("transitBpi.transit", header));
+		criteria.add(Restrictions.eq("transitBpi.transit", transit));
 		if(!GenericValidator.isBlankOrNull(billNo)){
 			if(billNo.contains("%")){
 				criteria.add(Restrictions.like("transitBpi.billNo", billNo));
@@ -396,10 +396,10 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	
 	// Last modified: Brian Tse
 	@SuppressWarnings("unchecked")
-	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(Transit header){
+	public List<TransitBQResourceReconciliationReportRecordWrapper> getBQResourceTransitReportFields(Transit transit){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBpi", "transitBpi");
-		criteria.add(Restrictions.eq("transitBpi.transitHeader", header));
+		criteria.add(Restrictions.eq("transitBpi.transit", transit));
 		criteria.addOrder(Order.asc("type"));
 		criteria.addOrder(Order.asc("objectCode"));
 		criteria.addOrder(Order.asc("resourceCode"));

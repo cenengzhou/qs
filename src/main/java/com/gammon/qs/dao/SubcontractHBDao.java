@@ -61,12 +61,11 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return result;
 	}
 
-	
-	public Subcontract obtainPackage(JobInfo job, String packageNo) throws DatabaseOperationException{
+	public Subcontract obtainPackage(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
 		Subcontract result = null;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
 			result = (Subcontract) criteria.uniqueResult();
 			if(result != null){
@@ -91,10 +90,10 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 
 	
 	@SuppressWarnings("unchecked")
-	public List<Subcontract> getSCPackages(JobInfo job) throws Exception {
+	public List<Subcontract> getSCPackages(JobInfo jobInfo) throws Exception {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("job", job));
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.addOrder(Order.asc("packageNo"));
 			return (List<Subcontract>) criteria.list();
 		}catch (HibernateException he){
@@ -512,7 +511,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		criteria.createAlias("jobInfo", "jobInfo");
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("internalJobNo", jobNo.trim()));
-		criteria.setProjection(Projections.distinct(Projections.property("job.jobNumber")));
+		criteria.setProjection(Projections.distinct(Projections.property("jobInfo.jobNumber")));
 		return criteria.list();
 	}
 

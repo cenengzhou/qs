@@ -41,11 +41,11 @@ public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachSubcontract> getSCAttachment(Subcontract scPackage) throws DatabaseOperationException{
+	public List<AttachSubcontract> getSCAttachment(Subcontract subcontract) throws DatabaseOperationException{
 		try{
 			List<AttachSubcontract> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scPackage", scPackage));		
+			criteria.add(Restrictions.eq("subcontract", subcontract));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){

@@ -48,7 +48,7 @@ public class PaymentCertDetailId implements Serializable{
 	
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
-	@JoinColumn(name = "PaymentCert_ID", foreignKey = @ForeignKey(name = "FK_PaymentCertDetail_PaymentCert_PK"))
+	@JoinColumn(name = "SCPaymentCert_ID", foreignKey = @ForeignKey(name = "FK_PaymentCertDetail_PaymentCert_PK"))
 	public PaymentCert getPaymentCert() {
 		return paymentCert;
 	}
