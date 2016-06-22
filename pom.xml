@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2016-06-16</version>
+	<version>2016-06-22</version>
 	<packaging>war</packaging>
 	
 	<!-- ========================================== REPOSITORIES ================================================ -->
@@ -944,7 +944,7 @@
 	
 	<!-- ========================================== BUILD ================================================= -->
 	<build>
-		<finalName>PCMS</finalName>	
+		<finalName>pcms</finalName>	
 		<!-- ====== Step 1: Define directories to be included / excluded ====== -->
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
