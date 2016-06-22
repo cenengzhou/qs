@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +21,7 @@ public class Addendum implements java.io.Serializable {
 
 	private static final long serialVersionUID = -730074274051941598L;
 	private BigDecimal id;
-	private BigDecimal idSubcontract;
+	private Subcontract idSubcontract;
 	private String noJob;
 	private String noSubcontract;
 	private String descriptionSubcontract;
@@ -58,7 +60,7 @@ public class Addendum implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	public Addendum(BigDecimal id, BigDecimal idSubcontract, String noJob, String noSubcontract,
+	public Addendum(BigDecimal id, Subcontract idSubcontract, String noJob, String noSubcontract,
 			String descriptionSubcontract, String noSubcontractor, String nameSubcontractor, long no, String title,
 			BigDecimal amtSubcontractRemeasured, BigDecimal amtSubcontractRevised, BigDecimal amtAddendumTotal,
 			BigDecimal amtAddendumTotalTba, BigDecimal amtAddendum, BigDecimal amtSubcontractRevisedTba,
@@ -102,13 +104,14 @@ public class Addendum implements java.io.Serializable {
 	public void setId(BigDecimal id) {
 		this.id = id;
 	}
-
-	@Column(name = "ID_SUBCONTRACT", scale = 0)
-	public BigDecimal getIdSubcontract() {
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_SUBCONTRACT", nullable = false)
+	public Subcontract getIdSubcontract() {
 		return this.idSubcontract;
 	}
 
-	public void setIdSubcontract(BigDecimal idSubcontract) {
+	public void setIdSubcontract(Subcontract idSubcontract) {
 		this.idSubcontract = idSubcontract;
 	}
 

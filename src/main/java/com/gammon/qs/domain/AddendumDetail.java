@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +21,7 @@ public class AddendumDetail implements java.io.Serializable {
 
 	private static final long serialVersionUID = -844399764451138531L;
 	private BigDecimal id;
-	private BigDecimal idAddendum;
+	private Addendum idAddendum;
 	private String noJob;
 	private String noSubcontract;
 	private long no;
@@ -49,7 +51,7 @@ public class AddendumDetail implements java.io.Serializable {
 	public AddendumDetail() {
 	}
 
-	public AddendumDetail(BigDecimal id, BigDecimal idAddendum, String noJob, String noSubcontract, long no,
+	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no,
 			String typeHd, String typeVo, String usernameCreated, Date dateCreated) {
 		this.id = id;
 		this.idAddendum = idAddendum;
@@ -62,7 +64,7 @@ public class AddendumDetail implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	public AddendumDetail(BigDecimal id, BigDecimal idAddendum, String noJob, String noSubcontract, long no,
+	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no,
 			String typeHd, String typeVo, String bpi, String description, BigDecimal quantity, BigDecimal rateAddendum,
 			BigDecimal amtAddendum, BigDecimal rateBudget, BigDecimal amtBudget, BigDecimal quantityTba,
 			BigDecimal rateAddendumTba, BigDecimal amtAddendumTba, BigDecimal rateBudgetTba, BigDecimal amtBudgetTba,
@@ -108,12 +110,13 @@ public class AddendumDetail implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "ID_ADDENDUM", nullable = false, scale = 0)
-	public BigDecimal getIdAddendum() {
+	@ManyToOne
+	@JoinColumn(name = "ID_ADDENDUM", nullable = false)
+	public Addendum getIdAddendum() {
 		return this.idAddendum;
 	}
 
-	public void setIdAddendum(BigDecimal idAddendum) {
+	public void setIdAddendum(Addendum idAddendum) {
 		this.idAddendum = idAddendum;
 	}
 
