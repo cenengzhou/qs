@@ -35,7 +35,7 @@ import com.gammon.qs.wrapper.BudgetForecastWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JdeAccountLedgerService {
 	private Logger						logger	= Logger.getLogger(this.getClass().getName());
 	@Autowired

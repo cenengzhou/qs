@@ -1,4 +1,4 @@
-package com.gammon.qs.application;
+package com.gammon.pcms.application;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gammon.qs.application.gsf.UserRole;
+import com.gammon.pcms.application.gsf.UserRole;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 	

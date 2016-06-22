@@ -38,7 +38,7 @@ import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.ivPosting.AccountIVWrapper;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class IVPostingService  {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired

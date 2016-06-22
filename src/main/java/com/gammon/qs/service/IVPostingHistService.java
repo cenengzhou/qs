@@ -21,7 +21,7 @@ import com.gammon.qs.wrapper.IVHistoryPaginationWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class IVPostingHistService implements Serializable{
 	private transient Logger logger = Logger.getLogger(IVPostingHistService.class.getName());
 	

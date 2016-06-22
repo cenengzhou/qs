@@ -24,7 +24,7 @@ import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.wrapper.BudgetPostingWrapper;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class BudgetPostingService {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired

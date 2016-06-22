@@ -32,7 +32,7 @@ import com.gammon.pcms.helper.JunitHelper;
  *
  */
 @RunWith(Parameterized.class)
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) 
 public class TransactionTestCase extends TestBase {
 

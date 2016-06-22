@@ -1,4 +1,4 @@
-package com.gammon.qs.dao;
+package com.gammon.pcms.dao.adl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +15,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-public abstract class BaseHibernateDao <T> implements GenericDao<T> {
+import com.gammon.qs.dao.GenericDao;
+public abstract class BaseAdlHibernateDao <T> implements GenericDao<T> {
 	private Class<T> type;
 	@Autowired
-	@Qualifier("sessionFactory")
+	@Qualifier("adlSessionFactory")
 	private SessionFactory sessionFactory;
 	
-    @PersistenceContext(unitName = "PersistenceUnit")
+    @PersistenceContext(unitName = "ADL PersistenceUnit")
     protected EntityManager entityManager;
     
-	public BaseHibernateDao(Class<T> type) {
+	public BaseAdlHibernateDao(Class<T> type) {
 		this.type = type;
 	}
 	

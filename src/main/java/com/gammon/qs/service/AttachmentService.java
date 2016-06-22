@@ -51,7 +51,7 @@ import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class AttachmentService {
 	@Autowired
 	private AttachmentConfig serviceConfig;
@@ -598,7 +598,7 @@ public class AttachmentService {
 		}else return false;
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAttachmentList(String nameObject, String textKey) throws Exception{
 		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
 		String splittedTextKey[]=null;
@@ -714,7 +714,7 @@ public class AttachmentService {
 		}
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAttachmentListForPCMS(String nameObject, String textKey) throws Exception{
 		@SuppressWarnings("unused")
 		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
@@ -832,7 +832,7 @@ public class AttachmentService {
 	}
 
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAddendumAttachmentList(String nameObject, String textKey) throws Exception{
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
@@ -866,7 +866,7 @@ public class AttachmentService {
 		}
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getPaymentAttachmentList(String nameObject, String textKey) throws Exception{
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();

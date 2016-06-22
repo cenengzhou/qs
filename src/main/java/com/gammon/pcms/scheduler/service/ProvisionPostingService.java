@@ -37,7 +37,7 @@ import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ProvisionWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
 @Component
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class, value = "transactionManager")
 public class ProvisionPostingService {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	private final String DSC_PROVISION_AAI_ITEM = "SCDPV";
@@ -95,7 +95,7 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 2:20:48 PM
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	private void sendEmailForStartingProvisionPosting(){
 		try {
 			String content = mailContentGenerator.obtainEmailContentForScheduleJob(startTime, endTime, "");
@@ -111,7 +111,7 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 2:21:16 PM
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	private void sendEmailForEndingProvisionPosting(){
 		try {
 			String content = mailContentGenerator.obtainEmailContentForScheduleJob(startTime, endTime, "");
@@ -121,7 +121,7 @@ public class ProvisionPostingService {
 		}
 	}
 	
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	private void sendEmailForErrorFoundInProvisionPosting(Exception exception){
 		try {
 			this.endTime = new Date();
@@ -146,7 +146,7 @@ public class ProvisionPostingService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 11:17:49 AM
 	 */
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	public void runProvisionPosting() {
 		this.startTime = new Date();
 		sendEmailForStartingProvisionPosting();
@@ -241,7 +241,7 @@ public class ProvisionPostingService {
 	 * @since	Mar 29, 2016 2:42:46 PM
 	 */
 	@Transactional(	propagation = Propagation.REQUIRES_NEW,
-					rollbackFor = { Exception.class })
+					rollbackFor = { Exception.class }, value = "transactionManager")
 	private void calculateAndInsertProvisionByJob(JobInfo job) throws Exception {
 		// Provision records
 		List<ProvisionWrapper> listOfProvision = new ArrayList<ProvisionWrapper>();
@@ -452,7 +452,7 @@ public class ProvisionPostingService {
 	 * @since Mar 29, 2016 2:10:15 PM
 	 */
 	@Transactional(	propagation = Propagation.REQUIRES_NEW,
-					rollbackFor = Exception.class)
+					rollbackFor = Exception.class, value = "transactionManager")
 	private Date obtainGLDate(JobInfo job) throws Exception {
 		// call from scheduler that do not have GL Date
 		if (companyGLDateCachedMap != null) {

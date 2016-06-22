@@ -9,7 +9,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.application.CronTriggerHBDao;
 import com.gammon.qs.domain.quartz.CronTriggers;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class CronTriggerService {
 
 	@Autowired

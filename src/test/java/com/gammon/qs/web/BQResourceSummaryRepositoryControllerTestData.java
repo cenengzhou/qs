@@ -27,7 +27,7 @@ import com.gammon.qs.service.RepackagingService;
  */
 @Configuration
 @PropertySource("file:${BQResourceSummaryRepositoryControllerTestData.properties}")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class BQResourceSummaryRepositoryControllerTestData extends ControllerTestCase.TestDataBase {
 	private Class<?> serviceClass;// = BQResourceSummaryRepositoryController.class;
 	

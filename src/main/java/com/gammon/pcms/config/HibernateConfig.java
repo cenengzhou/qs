@@ -20,14 +20,22 @@ import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Primary;
 
 import com.gammon.qs.aspect.AuditAspectHibernateInterceptor;
 
+@Primary
 @Configuration
-@PropertySource("file:${hibernate.properties}")
-@EnableJpaRepositories(basePackages = {"com.gammon.pcms.dao"})
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
+@PropertySource("file:${hibernate.properties}")
+@EnableJpaRepositories(
+		basePackages = {"com.gammon.pcms.dao" }, 
+		entityManagerFactoryRef = "entityManagerFactory",
+		transactionManagerRef = "transactionManager",
+		excludeFilters = @ComponentScan.Filter(type = FilterType.ASPECTJ, pattern = "com.gammon.pcms.dao.adl.*"))
 public class HibernateConfig {
 
 	@Value("${hibernate.hbm2ddl.auto}")
@@ -52,7 +60,7 @@ public class HibernateConfig {
 	private String qsadminConfig;
 	@Autowired
 	private JdbcConfig jdbcConfig;
-	
+
 	@Bean(name = "dataSource", destroyMethod = "")
 	public DataSource jdbcDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -63,20 +71,20 @@ public class HibernateConfig {
 		return dataSource;
 	}
 
-	@Bean
-	public LocalContainerEntityManagerFactoryBean  entityManagerFactory() {
+	@Bean(name = "entityManagerFactory")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("com.gammon.pcms.model", "com.gammon.qs.domain");
+		factory.setPackagesToScan("com.gammon.qs.domain");
 		factory.setDataSource(jdbcDataSource());
 		factory.setJpaProperties(databaseProperties());
 		factory.setPersistenceUnitName("PersistenceUnit");
 		factory.afterPropertiesSet();
-		return factory;//.getObject();
+		return factory;// .getObject();
 	}
 
 	@Bean(name = "sessionFactory")
@@ -112,7 +120,7 @@ public class HibernateConfig {
 		return bean;
 	}
 
-	@Bean
+	@Bean(name = "databaseProperties")
 	public Properties databaseProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2DdlAuto);

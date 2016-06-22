@@ -39,7 +39,7 @@ import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class HTMLStringForApprovalContentService implements Serializable{
 
 	private static final long serialVersionUID = -8118326890744998662L;

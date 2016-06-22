@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.dao.SingleSignOnKeyWSDao;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class SingleSignOnKeyService{
 	@Autowired
 	private SingleSignOnKeyWSDao singleSignOnKeyDao;

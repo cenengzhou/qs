@@ -13,7 +13,7 @@ import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Repackaging;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class RepackagingService {
 	
 	@SuppressWarnings("unused")

@@ -44,7 +44,7 @@ import com.gammon.qs.wrapper.PurchaseOrderEnquiryWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
 import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JobCostService implements Serializable {
 	private static final long serialVersionUID = -3316034472319644892L;
 	//Dao 

@@ -22,7 +22,7 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.shared.util.CalculationUtil;
 @Component
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PackageSnapshotGenerationService {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired
@@ -99,7 +99,7 @@ public class PackageSnapshotGenerationService {
 	 * @author	tikywong
 	 * @since	Mar 30, 2016 3:55:10 PM
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	public Boolean calculateTotalWDAmountByJob(String jobNumber) {
 		logger.info("STARTED -> recalculateTotalWDAmountByJob()");
 		try {

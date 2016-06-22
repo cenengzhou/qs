@@ -13,7 +13,7 @@ import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.service.admin.MailContentGenerator;
 @Component
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JDEF58001SynchronizationService {
 
 	private Logger logger = Logger.getLogger(getClass().getName());

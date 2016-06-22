@@ -98,7 +98,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PaymentService{
 
 	private Logger logger = Logger.getLogger(PaymentService.class.getName());

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.gammon.qs.application.User;
+import com.gammon.pcms.application.User;
 
 @Component(value = "SessionInterceptor")
 public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {

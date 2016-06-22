@@ -25,7 +25,7 @@ import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class MasterListService{
 	
 	private Logger logger = Logger.getLogger(MasterListService.class.getName());

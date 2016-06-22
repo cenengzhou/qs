@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -18,6 +19,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class TransactionalInterceptor {
 	
 	@Autowired
+	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
 	
 	@Pointcut("within(com.gammon.qs.service..*)")

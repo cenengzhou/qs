@@ -46,7 +46,7 @@ import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisVendorWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class TenderService implements Serializable {
 	private static final long serialVersionUID = -3750073286095069814L;
 	@Autowired

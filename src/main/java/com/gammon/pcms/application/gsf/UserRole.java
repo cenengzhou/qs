@@ -1,4 +1,4 @@
-package com.gammon.qs.application.gsf;
+package com.gammon.pcms.application.gsf;
 
 import java.io.Serializable;
 

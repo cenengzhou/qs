@@ -67,7 +67,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class MainCertService {
 	/**
 	 * @author xethhung
@@ -2193,7 +2193,7 @@ public class MainCertService {
 	 * Created on Nov 2, 2015
 	 * Contract Receivable Settlement Report
 	 */
-	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	@Transactional(readOnly = true, rollbackFor = Exception.class, value = "transactionManager")
 	public ByteArrayOutputStream downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type) throws DatabaseOperationException {
 		//TODO: GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)
 		throw new RuntimeException("GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)");

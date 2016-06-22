@@ -35,7 +35,7 @@ import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 @Component
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class PaymentPostingService {
 	
 	private Logger logger = Logger.getLogger(getClass().getName());

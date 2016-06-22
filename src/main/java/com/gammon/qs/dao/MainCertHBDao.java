@@ -225,8 +225,6 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return result.getCertAsAtDate();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public MainCert searchLatestPostedCert(String jobNumber) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNo", jobNumber));

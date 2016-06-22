@@ -10,7 +10,7 @@ import com.gammon.jde.webservice.serviceRequester.UserAccessJobs.UserAccessJobsR
 import com.gammon.jde.webservice.serviceRequester.UserAccessJobs.UserAccessJobsResponseObj;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class UserAccessJobsService {
 	@Autowired
 	@Qualifier("UserAccessJobsTemplate")

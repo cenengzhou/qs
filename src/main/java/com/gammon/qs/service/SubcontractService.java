@@ -125,7 +125,7 @@ import net.sf.jasperreports.engine.JRException;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class SubcontractService {
 	private transient Logger logger = Logger.getLogger(SubcontractService.class.getName());
 	

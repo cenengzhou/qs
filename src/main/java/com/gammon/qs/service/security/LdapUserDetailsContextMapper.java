@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 
-import com.gammon.qs.application.User;
+import com.gammon.pcms.application.User;
 
 public class LdapUserDetailsContextMapper extends LdapUserDetailsMapper {
 

@@ -39,7 +39,7 @@ import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.RetentionReleaseScheduleEnquiryWindowsWrapper;
 import com.gammon.qs.wrapper.RetentionReleaseSchedulePaginationWrapper;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class MainCertRetentionReleaseService implements Serializable {
 	
 	private static final long serialVersionUID = -1406168215541798928L;

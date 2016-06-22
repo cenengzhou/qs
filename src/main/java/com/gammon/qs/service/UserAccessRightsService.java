@@ -14,7 +14,7 @@ import com.gammon.jde.webservice.serviceRequester.userAccessRights.UserAccessRig
 import com.gammon.jde.webservice.serviceRequester.userAccessRights.UserAccessRightsResponseList;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class UserAccessRightsService {
 	@Autowired
 	@Qualifier("UserAccessRightsTemplate")

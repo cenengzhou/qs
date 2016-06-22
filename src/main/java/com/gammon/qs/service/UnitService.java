@@ -12,7 +12,7 @@ import com.gammon.qs.dao.UnitWSDao;
 import com.gammon.qs.domain.UnitOfMeasurement;
 import com.gammon.qs.wrapper.UDC;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class UnitService {
 	@Autowired
 	private UnitWSDao unitDao;

@@ -6,7 +6,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -37,7 +36,6 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		return (MainCertRetentionRelease) criteria.uniqueResult();
 	}
 	
-	@Transactional(rollbackFor=DatabaseOperationException.class)
 	public void saveList(List<MainCertRetentionRelease> saveList) throws DatabaseOperationException {
 		for (MainCertRetentionRelease rr:saveList){
 			MainCertRetentionRelease dbObj = internalSelectByJobSeq(rr.getJobNumber(), rr.getSequenceNo());

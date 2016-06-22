@@ -39,7 +39,7 @@ import com.gammon.qs.wrapper.PaginationWrapper;
  */
 @RunWith(Parameterized.class)
 @Rollback
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) 
 public class ControllerTestCase extends TestBase {
 

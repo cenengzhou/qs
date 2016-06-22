@@ -15,7 +15,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class AdminService {
 
 	private java.util.logging.Logger logger = java.util.logging.Logger.getLogger(this.getClass().toString());

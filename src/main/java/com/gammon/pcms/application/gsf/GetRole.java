@@ -1,10 +1,10 @@
-package com.gammon.qs.application.gsf;
+package com.gammon.pcms.application.gsf;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gammon.qs.application.User;
+import com.gammon.pcms.application.User;
 
 public class GetRole {
 	

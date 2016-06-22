@@ -38,7 +38,7 @@ import com.gammon.qs.wrapper.EmailMessage;
  * 05-Nov-2014
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class MailService {
 	private Logger logger = Logger.getLogger(MailService.class.getName()); 
 	

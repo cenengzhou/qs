@@ -73,7 +73,7 @@ import com.gammon.qs.wrapper.updateIVByResource.UpdateIVByResourceUpdateWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class BpiItemService implements Serializable {
 	private static final long serialVersionUID = 6521439591143450718L;
 	private final int uploadBatchSize = 100;
@@ -1868,7 +1868,7 @@ public class BpiItemService implements Serializable {
 	 * Apr 26, 2011 4:17:11 PM
 	 * @see com.gammon.qs.service.BpiItemService#saveIVAmountForUpdateByBQItemOrResource(com.gammon.qs.wrapper.IVBQItemWrapper, java.util.List, java.util.List, java.util.List)
 	 */
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 	public Boolean saveIVAmountForUpdateByBQItemOrResource(	IVBQItemWrapper bqItemWrapper, 
 															List<IVResourceWrapper> resourceWrappers,
 															List<IVBQResourceSummaryWrapper> bqResourceSummaryWrappers,

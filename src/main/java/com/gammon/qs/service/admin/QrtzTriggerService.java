@@ -14,7 +14,7 @@ import com.gammon.qs.domain.quartz.QrtzTriggers;
 
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class QrtzTriggerService {
 	private Logger logger = Logger.getLogger(QrtzTriggerService.class.getName());
 	

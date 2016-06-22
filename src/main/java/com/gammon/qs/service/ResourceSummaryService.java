@@ -55,7 +55,7 @@ import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class ResourceSummaryService implements Serializable {
 
 	private static final long serialVersionUID = -5837715659002620319L;

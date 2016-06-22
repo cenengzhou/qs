@@ -23,8 +23,8 @@ import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetRequestListObj;
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetRequestObj;
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetResponseObj;
+import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.WebServiceConfig;
-import com.gammon.qs.application.User;
 import com.gammon.qs.dao.RepackagingDetailHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
@@ -45,7 +45,7 @@ import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class RepackagingDetailService implements Serializable {
 	
 	private static final long serialVersionUID = 9105908214085435279L;

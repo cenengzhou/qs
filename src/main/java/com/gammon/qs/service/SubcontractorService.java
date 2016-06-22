@@ -35,7 +35,7 @@ import com.gammon.qs.wrapper.tenderAnalysis.SubcontractorTenderAnalysisWrapper;
  * created on 23 Jul, 2013
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class SubcontractorService{
 	private Logger logger = Logger.getLogger(SubcontractorService.class.getName());
 	
