@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.model.adl.FactAccountBalance;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 @Repository
 public class FactAccountBalanceAdlHBDao extends BaseAdlHibernateDao<FactAccountBalance> {
 	
@@ -20,7 +21,7 @@ public class FactAccountBalanceAdlHBDao extends BaseAdlHibernateDao<FactAccountB
 
 	@SuppressWarnings("unchecked")
 	public List<FactAccountBalance> findByFiscalYearAndAccountTypeLedgerAndEntityBusinessUnitKeyAndAccountSubsidiaryNot(
-			BigDecimal fiscalYear, String accountTypeLedger, String entityBusinessUnitKey, String accountSubsidiary){
+			BigDecimal fiscalYear, String accountTypeLedger, String entityBusinessUnitKey, String accountSubsidiary) throws DatabaseOperationException{
 		List<FactAccountBalance> factAccountBalanceList = new ArrayList<FactAccountBalance>();
 		Criteria criteria = getSession().createCriteria(getType());
 		criteria.add(Restrictions.eq("fiscalYear", fiscalYear));

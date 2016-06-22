@@ -21,7 +21,7 @@ public class FactAccountBalanceController {
 	
 	@RequestMapping(value = "GetFactAccountBalanceByFiscalYearAccountTypeLedgerEntityBusinessUnitKeyNotAccountSubsidiary", method = RequestMethod.GET)
 	public List<FactAccountBalance> findByFiscalYearAndAccountTypeLedgerAndEntityBusinessUnitKeyAndAccountSubsidiaryNot(
-			@RequestParam BigDecimal fiscalYear, @RequestParam String accountTypeLedger, @RequestParam String entityBusinessUnitKey, @RequestParam(defaultValue = "       ") String accountSubsidiary){
+			@RequestParam BigDecimal fiscalYear, @RequestParam String accountTypeLedger, @RequestParam String entityBusinessUnitKey, @RequestParam(defaultValue = "       ") String accountSubsidiary) throws Exception{
 		return factAccountBalanceService.findByFiscalYearAndAccountTypeLedgerAndEntityBusinessUnitKeyAndAccountSubsidiaryNot(fiscalYear, accountTypeLedger, entityBusinessUnitKey, accountSubsidiary);
 	}
 

@@ -58,4 +58,12 @@ public class UserRole implements GrantedAuthority, Serializable {
 		this.roleName = roleName;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserRole [roleDescription=" + roleDescription + ", roleName=" + roleName + "]";
+	}
+
 }
