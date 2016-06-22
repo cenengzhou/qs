@@ -73,7 +73,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scSeqNo", paymentDetail.getScSeqNo()));
-			criteria.add(Restrictions.sqlRestriction("PaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
 			return (PaymentCertDetail) criteria.uniqueResult();
 
 		} catch (HibernateException he) {
@@ -88,7 +88,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.sqlRestriction("PaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
 			return (List<PaymentCertDetail>) criteria.list();
 
 		} catch (HibernateException he) {
