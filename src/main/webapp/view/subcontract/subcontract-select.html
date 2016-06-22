@@ -15,15 +15,15 @@
 
 	<div class="row">
 		<div class="col-xs-3">
-			<div class="btn-group btn-group-justified">
+			<div class="btn-group btn-group-justifie">
 				<label class="btn" 
-					ng-class="{'bg-teal-active' : subcontractStatus == 'Award', 'btn-white' : subcontractStatus != 'Award'}"
+					ng-class="{'btn-primary' : subcontractStatus == 'Award', 'btn-white' : subcontractStatus != 'Award'}"
 					ng-model="subcontractStatus" uib-btn-radio="'Award'"><i class="fa fa-check-circle"></i> Award</label> 
 				<label class="btn" 
-					ng-class="{'bg-purple-gradient' : subcontractStatus == 'nonAward', 'btn-white' : subcontractStatus != 'nonAward'}"
+					ng-class="{'btn-inverse' : subcontractStatus == 'nonAward', 'btn-white' : subcontractStatus != 'nonAward'}"
 					ng-model="subcontractStatus" uib-btn-radio="'nonAward'"><i class="fa fa-remove"></i> Non-Award</label>
 				<label class="btn" 
-					ng-class="{'bg-teal-active' : subcontractStatus == '', 'btn-white' : subcontractStatus != ''}"
+					ng-class="{'btn-primary' : subcontractStatus == '', 'btn-white' : subcontractStatus != ''}"
 					ng-model="subcontractStatus" uib-btn-radio="''"><i class="fa fa-th"></i> All</label>
 			</div>
 		</div>
@@ -33,7 +33,7 @@
 					placeholder="Search Subcontract here.." class="form-control"
 					ng-click="removeDefaultAnimation()" /> <span
 					class="input-group-btn">
-					<button class="btn btn-flat bg-teal-gradient" ng-click='filter()'>
+					<button class="btn btn-flat bg-primary" ng-click='filter()'>
 						<span class="fa fa-search"></span>
 					</button>
 				</span>
@@ -41,8 +41,8 @@
 		</div>
 		
 		<div class="col-xs-3">
-			<!-- <button type="button" class="btn bg-teal-gradient" ui-sref="subcontract-create"><span class="glyphicon glyphicon-star">Create</span></button> -->
-			<button type="button" class="btn bg-teal-gradient pull-right"
+			<!-- <button type="button" class="btn bg-primary" ui-sref="subcontract-create"><span class="glyphicon glyphicon-star">Create</span></button> -->
+			<button type="button" class="btn bg-primary pull-right"
 				ng-click="openSubcontractCreateModal()">
 				<i class="fa fa-star"></i><span> Create</span>
 			</button>
@@ -64,13 +64,13 @@
 				<div class="box box-widget sc-panel">
 					<a ui-sref="subcontract.dashboard"
 						ng-click="updateSubcontractNo(sc.packageNo, sc.description)">
-						<div class="sc-panel-header bg-teal">
+						<div class="sc-panel-header bg-primary">
 							<div class="sc-panel-icon">
 								<span class="glyphicon glyphicon-ok-sign"></span>
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></small>
+								<small><span class="pull-right badge bg-inverse">{{sc.originalSCSum | currency}}</span></small>
 							</h3>
 							<h5 class="sc-panel-desc">
 								{{sc.description}}
@@ -97,13 +97,13 @@
 				ng-hide ="subcontractStatus=='Award'">
 				<div class="box box-widget sc-panel">
 					<a ui-sref="subcontract-flow">
-						<div class="sc-panel-header bg-purple-gradient">
+						<div class="sc-panel-header bg-inverse text-white">
 							<div class="sc-panel-icon">
 								<span class="glyphicon glyphicon-remove-sign"></span>
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge bg-blue">{{sc.originalSCSum | currency}}</span></small>
+								<small><span class="pull-right badge">{{sc.originalSCSum | currency}}</span></small>
 							</h3>
 							<h5 class="sc-panel-desc">
 								{{sc.description}}

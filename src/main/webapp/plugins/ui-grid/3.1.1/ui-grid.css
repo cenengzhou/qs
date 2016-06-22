@@ -266,6 +266,7 @@
   opacity: 1;
 }
 input[type="text"].ui-grid-filter-input {
+  color: #000;	
   padding: 0;
   margin: 0;
   border: 0;
@@ -1950,92 +1951,92 @@ div.ui-grid-cell-contents.invalid {
 .ui-grid-icon-plus-squared:before {
   content: '\c350';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-minus-squared:before {
   content: '\c351';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-search:before {
   content: '\c352';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-cancel:before {
   content: '\c353';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-info-circled:before {
   content: '\c354';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-lock:before {
   content: '\c355';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-lock-open:before {
   content: '\c356';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-pencil:before {
   content: '\c357';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-down-dir:before {
   content: '\c358';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-up-dir:before {
   content: '\c359';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-left-dir:before {
   content: '\c35a';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-right-dir:before {
   content: '\c35b';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-left-open:before {
   content: '\c35c';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-right-open:before {
   content: '\c35d';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-angle-down:before {
   content: '\c35e';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-filter:before {
   content: '\c35f';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-sort-alt-up:before {
   content: '\c360';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-sort-alt-down:before {
   content: '\c361';
 }
-/* '�' */
+/* '嚙踝��' */
 .ui-grid-icon-ok:before {
   content: '\c362';
 }
-/* '�' */
+/* '嚙踝��' */
 .ui-grid-icon-menu:before {
   content: '\c363';
 }
-/* '�' */
+/* '嚙踝��' */
 .ui-grid-icon-indent-left:before {
   content: '\e800';
 }
-/* '��' */
+/* '嚙踝蕭' */
 .ui-grid-icon-indent-right:before {
   content: '\e801';
 }
-/* '���' */
+/* '嚙踝蕭嚙�' */
 .ui-grid-icon-spin5:before {
   content: '\ea61';
 }
-/* '謕�' */
+/* '雓蕭' */

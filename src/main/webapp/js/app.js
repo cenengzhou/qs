@@ -158,12 +158,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                            'js/controller/subcontract/subcontract-flow.js',
                            'js/controller/subcontract/subcontract-create.js',
+                           'js/controller/repackaging/repackaging-assign-resources.js',
                            'js/controller/subcontract/subcontract-ta.js',
                            'js/controller/subcontract/subcontract-ta-details.js',
                            'js/controller/subcontract/subcontract-vendor.js',
                            'js/controller/subcontract/subcontract-vendor-feedback.js',
                            'js/controller/subcontract/subcontract-vendor-compare.js',
                            'js/controller/subcontract/subcontract-award.js',
+                           'js/service/repackaging-service.js',
                            'js/service/subcontract-service.js'
                     ] 
                 });
@@ -526,7 +528,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [	'js/controller/iv/iv-update.js'
+               	 files: [	'js/controller/iv/iv-update.js',
                     ] 
                 });
             }]
@@ -620,7 +622,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					var status = rejection.status;
 					var deferred = $q.defer();
 					if(status === 401 || status === 405) {
-						$window.location.href = 'login.htm?status=' + status;
+						//$window.location.href = 'login.htm?status=' + status;
 					}else if (status === 403){
 						$window.location.href = '403.html';
 					}

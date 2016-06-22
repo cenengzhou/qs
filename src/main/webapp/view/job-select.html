@@ -1,5 +1,6 @@
 <div class="m-t-20 m-l-20 m-r-20">
 
+
 	<div class="row">
 		<div class="col-xs-2"></div>
 		<div class="col-xs-8">
@@ -7,7 +8,7 @@
 				<input ng-model="searchquery" placeholder="Search Job here.."
 					class="form-control" ng-click="removeDefaultAnimation()" /> <span
 					class="input-group-btn">
-					<button class="btn btn-flat bg-aqua-gradient"
+					<button class="btn btn-flat bg-primary"
 						ng-click="searchJob()">
 						<span class="fa fa-search"></span>
 					</button>
@@ -27,16 +28,16 @@
 				<div class="box box-widget sc-panel">
 					<a
 						ui-sref="job.dashboard({jobNo: job.jobNo, jobDescription: job.description})">
-						<div class="sc-panel-header bg-aqua-gradient">
+						<div class="sc-panel-header bg-primary">
 							<div class="sc-panel-icon">
 								<span class="fa fa-bank"></span>
 							</div>
-							<h3 class="sc-panel-name">
-								<b>{{job.jobNo}}</b>
-							</h3>
 							<h5 class="sc-panel-desc">
 								{{job.description}}<!-- <span class="pull-right badge bg-blue">Gammon</span> -->
 							</h5>
+							<h3 class="sc-panel-name">
+								<b>{{job.jobNo}}</b>
+							</h3>
 						</div>
 					</a>
 				</div>

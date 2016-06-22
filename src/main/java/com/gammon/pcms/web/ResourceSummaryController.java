@@ -1,4 +1,5 @@
 /**
+
  * pcms-tc
  * com.gammon.pcms.web.controller
  * ResourceSummaryController.java
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 
 @RestController
 @RequestMapping(value = "service")
@@ -29,16 +31,34 @@ public class ResourceSummaryController {
 	
 	
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
-	public List<ResourceSummary> getResourceSummaries(@RequestParam(name="jobNo") String jobNo){
+	public List<ResourceSummary> getResourceSummaries(@RequestParam(name="jobNo") String jobNo, 
+													@RequestParam(name="packageNo") String packageNo, 
+													@RequestParam(name="objectCode") String objectCode){
 		logger.info("jobNo: "+jobNo);
 		List<ResourceSummary> resourceSummaries = null;
 		try {
 			
-			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo);
+			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, packageNo, objectCode);
 			logger.info("resourceSummaries size: "+resourceSummaries.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		return resourceSummaries;
 	}
+	
+	@RequestMapping(value = "getResourceSummariesForIV", method = RequestMethod.GET)
+	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(name="jobNo") String jobNo){
+		logger.info("jobNo: "+jobNo);
+		IVInputPaginationWrapper ivInputPaginationWrapper = null;
+		try {
+			
+			ivInputPaginationWrapper = resourceSummaryService.obtainResourceSummariesForIV(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return ivInputPaginationWrapper;
+	}
+	
+	
+	
 }

@@ -1,18 +1,25 @@
 mainApp.service('ivService', ['$http', function($http){
 	// Return public API.
     return({
-        getIVList: getIVList,
+    	getResourceSummaries: getResourceSummaries,
         addResource: addResource
         
     });
 	
-    function getIVList() {
+    function getResourceSummaries(jobNo, packageNo, objectCode) {
         var request = $http({
             method: "get",
-            url: "data/iv.json"
+            url: "service/getResourceSummaries",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	packageNo: packageNo,
+            	objectCode: objectCode
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
     
     function addResource() {
         var request = $http({

@@ -23,7 +23,6 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 
 	$scope.payment = $stateParams.payment;
 	if($scope.payment==null){
-		console.log("GET PAYMENT FROM SERVER");
 		loadPaymentCert();
 
 	}else{
@@ -31,10 +30,10 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 	}
 
 	function loadPaymentCert() {
-		paymentService.getSCPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
-					//console.log(data);
+					console.log(data);
 					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
 					$scope.payment = data;
 
@@ -51,8 +50,8 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 				});
 	}
 
-	function loadSCPaymentCertSummary() {
-		paymentService.getSCPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+	function loadPaymentCertSummary() {
+		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					console.log(data);
@@ -83,7 +82,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			enableCellEditOnFocus : true,
 			showGridFooter : false,
 			//showColumnFooter : true,
-
+			exporterMenuPdf: false,
 
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
@@ -136,7 +135,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			}else if($item.context.hash == "#step3"){
 
 			}else if($item.context.hash == "#step4"){
-				loadSCPaymentCertSummary();
+				loadPaymentCertSummary();
 			}
 
 

@@ -5,13 +5,15 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         
     });
 	
-    function getResourceSummaries(jobNo) {
+    function getResourceSummaries(jobNo, packageNo, objectCode) {
         var request = $http({
             method: "get",
             url: "service/getResourceSummaries",
             dataType: "application/json;charset=UTF-8",
             params: {
-            	jobNo: jobNo
+            	jobNo: jobNo,
+            	packageNo: packageNo,
+            	objectCode: objectCode
             }
         });
         return( request.then( handleSuccess, handleError ) );

@@ -1560,4 +1560,47 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountCodeWrapper.class));
 		return criteria.list();
 	}
+	
+	
+	/**************************************************** FUNCTIONS FOR PCMS **************************************************************/
+	@SuppressWarnings("unchecked")
+	public IVInputPaginationWrapper obtainResourceSummariesForIV(JobInfo job) throws DatabaseOperationException{
+		try{
+			IVInputPaginationWrapper paginationWrapper = new IVInputPaginationWrapper();
+
+			//Get total number of records (pages)
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobInfo", job));
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			
+			criteria.setProjection(Projections.projectionList().add(Projections.rowCount())
+					.add(Projections.sum("currIVAmount"))
+					.add(Projections.sum("postedIVAmount")));
+			Object[] rowTotals = (Object[])criteria.uniqueResult();
+			Integer rows = rowTotals[0] == null ? Integer.valueOf(0) : (Integer)rowTotals[0];
+			Double ivCumTotal = rowTotals[1] == null ? Double.valueOf(0) : (Double)rowTotals[1];
+			Double ivPostedTotal = rowTotals[2] == null ? Double.valueOf(0) : (Double)rowTotals[2];
+			
+			logger.info("rows ; " + rows +" ivCumTotal : " + ivCumTotal +" ivPostedTotal : " +ivPostedTotal );
+			paginationWrapper.setTotalRecords(rows);
+			paginationWrapper.setIvCumTotal(ivCumTotal);
+			paginationWrapper.setIvMovementTotal(ivCumTotal - ivPostedTotal);
+			
+			/*if(rows.equals(Integer.valueOf(0))){
+				paginationWrapper.setCurrentPageContentList(new ArrayList<ResourceSummary>());
+				return paginationWrapper;
+			}*/
+			
+			String hql = "from BQResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
+			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
+			Query query = getSession().createQuery(hql);
+			query.setEntity("jobInfo", job);
+			paginationWrapper.setCurrentPageContentList(query.list());
+			return paginationWrapper;
+		}
+		catch(HibernateException ex){
+			throw new DatabaseOperationException(ex);
+		}
+	}
+	/**************************************************** FUNCTIONS FOR PCMS - END **************************************************************/	
 }

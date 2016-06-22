@@ -17,17 +17,18 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 			enableCellEditOnFocus : true,
 			showGridFooter : false,
 			//showColumnFooter : true,
-
+			exporterMenuPdf: false,
+			
 			columnDefs: [
 			             { field: 'packageNo', cellClass: "grid-theme-blue", enableCellEdit: true},
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
-			             { field: 'resourceDescription', enableCellEdit: false},
+			             { field: 'resourceDescription', displayname: "Description", enableCellEdit: false},
 			             { field: 'unit'},
 			             { field: 'quantity', enableCellEdit: false, enableFiltering: false},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
 			             { field: 'amount', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
-			             { field: 'postedIvAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false},
+			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false},
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
 			             { field: 'excludeDefect', displayName: "Defect"},
 			             { field: 'excludeLevy', displayName: "Levy"}
@@ -50,10 +51,10 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
      loadRepacakgingData();
      
      function loadRepacakgingData() {
-    	 repackagingService.getResourceSummaries($scope.jobNo)
+    	 repackagingService.getResourceSummaries($scope.jobNo, "", "")
     	 .then(
 			 function( data ) {
-				 console.log(data);
+				 //console.log(data);
 				 $scope.gridOptions.data= data;
 			 });
      }

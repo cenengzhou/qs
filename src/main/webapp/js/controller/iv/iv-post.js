@@ -1,4 +1,4 @@
-mainApp.controller('IVPostCtrl', ['$scope' , '$http', 'colorCode', function($scope , $http, colorCode) {
+mainApp.controller('IVPostCtrl', ['$scope' , '$http', 'ivService', function($scope , $http, ivService) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,

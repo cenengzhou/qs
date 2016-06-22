@@ -28,7 +28,7 @@ mainApp.controller('SubcontractFlowCtrl', ['$scope', '$location', 'colorCode', '
 		if(view=="scpackage"){
 			modalService.open('lg', 'view/subcontract/modal/subcontract-create.html', 'SubcontractCreateModalCtrl');
 		}else if (view=="assignResources"){
-			modalService.open('lg', 'view/subcontract/subcontract-ta.html', 'SubcontractTACtrl');
+			modalService.open('lg', 'view/repackaging/modal/repackaging-assign-resources.html', 'RepackagingAssignResourcesCtrl');
 		}else if (view=="ta"){
 			modalService.open('lg', 'view/subcontract/subcontract-ta.html', 'SubcontractTACtrl');
 		}else if (view=="vendor"){

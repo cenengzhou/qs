@@ -96,8 +96,8 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 
 				 });
 		
-		//$location.path("/subcontract-flow");
-		//$uibModalInstance.close();//($scope.selected.item);
+		$location.path("/subcontract-flow");
+		$uibModalInstance.close();//($scope.selected.item);
 
 
 	};
