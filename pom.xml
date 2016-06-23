@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2016-06-22</version>
+	<version>2016-06-23</version>
 	<packaging>war</packaging>
 	
 	<!-- ========================================== REPOSITORIES ================================================ -->
@@ -974,6 +974,7 @@
 					<compilerVersion>${java.version}</compilerVersion>
 					<excludes>
 						<exclude>com/gammon/qs/webservice/serviceProvider/</exclude>
+						<exclude>**/node_modules/*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

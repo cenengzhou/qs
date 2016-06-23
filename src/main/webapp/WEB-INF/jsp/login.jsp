@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>Gammon ERP - QS Modules</title>
+<title>PCMS - Gammon Project Cost Management System</title>
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE8" />
 	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
 	<!-- Bootstrap 3.3.5 -->

@@ -26,7 +26,7 @@ import com.gammon.qs.service.JobInfoService;
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class JobController {
-	private Logger logger = Logger.getLogger(getClass());
+//	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private JobInfoService jobService;
@@ -37,7 +37,6 @@ public class JobController {
 		List<JobInfo> jobList = null;
 		try{
 			jobList = jobService.getAllJobNoAndDescription();
-			logger.info("----------------------------SERVER: jobList Size: "+jobList.size());
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
