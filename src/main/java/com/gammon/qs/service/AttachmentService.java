@@ -631,7 +631,7 @@ public class AttachmentService {
 				
 				return resultList;
 			}else if (AttachSubcontract.SCPaymentNameObject.equals(nameObject)){
-				List<AttachPayment> resultList = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
+				List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
 				if (resultList==null || resultList.size()<1)
 					return new ArrayList<AttachPayment>();
 				
@@ -748,7 +748,7 @@ public class AttachmentService {
 				
 				return resultList;
 			}else if (AttachSubcontract.SCPaymentNameObject.equals(nameObject)){
-				List<AttachPayment> resultList = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
+				List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
 				if (resultList==null || resultList.size()<1)
 					return new ArrayList<AttachPayment>();
 				
@@ -872,7 +872,7 @@ public class AttachmentService {
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
 		int latestPaymentCertNo = getLatestPaymentCertNo(jobNumber,  packageNo);
-		List<AttachPayment> resultList = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo,latestPaymentCertNo));
+		List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo,latestPaymentCertNo));
 		
 		Collections.sort(resultList, new Comparator<AttachPayment>(){
 			public int compare(AttachPayment scPaymentAttachment1, AttachPayment scPaymentAttachment2) {
@@ -924,7 +924,7 @@ public class AttachmentService {
 				directoryPath = serverPath + scAttachment.getFileLink();
 				scAttachmentDao.delete(scAttachment);
 			}else if (AttachSubcontract.SCPaymentNameObject.equalsIgnoreCase(nameObject)){
-				AttachPayment scPaymentAttachment = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])), sequenceNumber);
+				AttachPayment scPaymentAttachment = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])), sequenceNumber);
 				directoryPath = serverPath + scPaymentAttachment.getFileLink();
 				scPaymentAttachmentDao.delete(scPaymentAttachment);
 			}else{
@@ -971,7 +971,7 @@ public class AttachmentService {
 				fileLink = serverPath + scAttachmentResult.getFileLink();
 			}else if (AttachSubcontract.SCPaymentNameObject.equalsIgnoreCase(nameObject)){
 				AttachPayment scPaymentAttachmentResult = null;
-				scPaymentAttachmentResult  = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo,new Integer(splittedTextKey[2])), sequenceNumber);
+				scPaymentAttachmentResult  = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo,new Integer(splittedTextKey[2])), sequenceNumber);
 				if (scPaymentAttachmentResult==null)
 					throw new Exception("Attachment Type Error");
 				fileLink = serverPath + scPaymentAttachmentResult.getFileLink();
@@ -1053,7 +1053,7 @@ public class AttachmentService {
 				Integer paymentNo = new Integer(splittedTextKey[2].trim());
 				
 				logger.info("SCPayment Attachment - Job: "+jobNumber+" Package: "+packageNo+" Payment: "+paymentNo+" SequenceNo: "+sequenceNumber);
-				result = scPaymentAttachmentDao.getSCPaymentAttachment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, paymentNo), sequenceNumber);
+				result = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, paymentNo), sequenceNumber);
 				if (result!=null)
 					return result.getTextAttachment();
 			}else if(AttachSubcontract.MainCertNameObject.equalsIgnoreCase(nameObject)){

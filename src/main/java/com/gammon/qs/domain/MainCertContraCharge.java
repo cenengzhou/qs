@@ -81,7 +81,7 @@ public class MainCertContraCharge extends BasePersistedObject {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "MainCert_id", foreignKey = @ForeignKey(name = "FK_MainCertContraCharge_MainCert_PK"))
+	@JoinColumn(name = "MAIN_CERT_ID", foreignKey = @ForeignKey(name = "FK_MainCertContraCharge_MainCert_PK"))
 	public MainCert getMainCertificate() {
 		return mainCertificate;
 	}

@@ -145,7 +145,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "SCDetail_ID")
+	@JoinColumn(name = "SUBCONTRACT_DETAIL_ID")
 	public SubcontractDetail getSubcontractDetail() {
 		return subcontractDetail;
 	}

@@ -25,7 +25,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 
 	private Logger logger = Logger.getLogger(PaymentCertDetailHBDao.class.getName());
 	@Autowired
-	private PaymentCertHBDao scPaymentCertDao;
+	private PaymentCertHBDao paymentCertDao;
 	@Autowired
 	private SubcontractDetailHBDao scDetailsDao;
 
@@ -37,7 +37,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		if (scPaymentDetail == null)
 			throw new NullPointerException();
 		try {
-			if (getSCPaymentDetail(scPaymentDetail) == null) {
+			if (getPaymentDetail(scPaymentDetail) == null) {
 				scPaymentDetail.setCreatedDate(new Date());
 				scPaymentDetail.setCreatedUser(scPaymentDetail.getCreatedUser());
 				scPaymentDetail.setLastModifiedUser(scPaymentDetail.getLastModifiedUser());
@@ -67,32 +67,32 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		}
 	}
 
-	public PaymentCertDetail getSCPaymentDetail(PaymentCertDetail paymentDetail) throws DatabaseOperationException {
+	public PaymentCertDetail getPaymentDetail(PaymentCertDetail paymentDetail) throws DatabaseOperationException {
 		if (paymentDetail == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("scSeqNo", paymentDetail.getScSeqNo()));
-			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("Payment_Cert_ID = '" + (paymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
 			return (PaymentCertDetail) criteria.uniqueResult();
 
 		} catch (HibernateException he) {
-			logger.info("Fail: getSCPaymentCert(SCPaymentDetail scPaymentDetail)");
+			logger.info("Fail: getSCPaymentCert(PaymentDetail paymentDetail)");
 			throw new DatabaseOperationException(he);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PaymentCertDetail> getSCPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo) throws DatabaseOperationException {
+	public List<PaymentCertDetail> getPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo) throws DatabaseOperationException {
 		if (jobNumber == null || packageNo == null || paymentCertNo == null)
 			throw new NullPointerException("SC Payment Detail is Null");
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.sqlRestriction("scPaymentCert_ID = '" + (scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
+			criteria.add(Restrictions.sqlRestriction("Payment_Cert_ID = '" + (paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo).getId() + "'")));
 			return (List<PaymentCertDetail>) criteria.list();
 
 		} catch (HibernateException he) {
-			logger.info("Fail: getSCPaymentCert(String jobNumber, Integer packageNo, Integer paymentCertNo)");
+			logger.info("Fail: getPaymentCert(String jobNumber, Integer packageNo, Integer paymentCertNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}
@@ -101,7 +101,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		if (scPaymentDetail == null)
 			throw new NullPointerException("SCPayment Cert is Null");
 		try {
-			PaymentCertDetail scPaymentDetailDB = getSCPaymentDetail(scPaymentDetail);
+			PaymentCertDetail scPaymentDetailDB = getPaymentDetail(scPaymentDetail);
 			if (scPaymentDetailDB == null)
 				throw new DatabaseOperationException("Record of SCPaymentCert was not exist");
 			scPaymentDetailDB.setLineType(scPaymentDetail.getLineType());
@@ -278,9 +278,9 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	
 	public long deleteDetailByJobSCPaymentNo(String jobNumber, Integer packageNo, Integer paymentCertNo) throws DatabaseOperationException {
 		long noOfRecord = 0;
-		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
-		getSession().merge(obtainSCPaymentDetailBySCPaymentCert(scPaymentCert));
-		Query query = getSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + scPaymentCert.getId());
+		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
+		getSession().merge(obtainSCPaymentDetailBySCPaymentCert(paymentCert));
+		Query query = getSession().createQuery("delete from PaymentDetail paymentDetail where Payment_Cert_ID =" + paymentCert.getId());
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}
@@ -288,7 +288,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public long deleteDetailByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		getSession().clear();
-		Query query = getSession().createQuery("delete from SCPaymentDetail scPaymentDetail where scPaymentCert_ID =" + paymentCertID);
+		Query query = getSession().createQuery("delete from PaymentDetail paymentDetail where Payment_Cert_ID =" + paymentCertID);
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}
@@ -300,7 +300,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 					|| !currCert.getSubcontract().getJobInfo().getJobNumber().equals(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber())
 					|| !currCert.getSubcontract().getPackageNo().equals(scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo())
 					|| !currCert.getPaymentCertNo().equals(scPaymentDetail.getPaymentCert().getPaymentCertNo()))
-				currCert = scPaymentCertDao.obtainPaymentCertificate(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
+				currCert = paymentCertDao.obtainPaymentCertificate(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
 							scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo(),
 							scPaymentDetail.getPaymentCert().getPaymentCertNo());
 			scPaymentDetail.setPaymentCert(currCert);
@@ -315,13 +315,13 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 
 	}
 
-	public Double obtainAccumulatedPostedCertQtyByDetail(Long scDetail_id) throws DatabaseOperationException{
+	public Double obtainAccumulatedPostedCertQtyByDetail(Long subcontractDetail_id) throws DatabaseOperationException{
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("paymentCert", "paymentCert");
 			criteria.add(Restrictions.eq("paymentCert.paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
 			criteria.createAlias("subcontractDetail", "subcontractDetail");
-			criteria.add(Restrictions.eq("subcontractDetail.id", scDetail_id));
+			criteria.add(Restrictions.eq("subcontractDetail.id", subcontractDetail_id));
 			criteria.setProjection(Projections.sum("movementAmount"));
 			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
 		} catch (Exception he) {

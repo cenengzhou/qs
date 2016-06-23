@@ -1006,7 +1006,7 @@ public class SubcontractService {
 					if (ifPayment==null && delPndCert.getIntermFinalPayment()!=null){
 						ifPayment=delPndCert.getIntermFinalPayment().trim();
 					}
-					List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.getSCPaymentDetail(jobNumber, packageNo, delPndCert.getPaymentCertNo());
+					List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.getPaymentDetail(jobNumber, packageNo, delPndCert.getPaymentCertNo());
 					scPaymentDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
 					for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
 						scPaymentDetail.setPaymentCert(delPndCert);						

@@ -23,7 +23,7 @@ import com.gammon.qs.application.BasePersistedObject;
 @Table(name = "JDE_ACCOUNT_LEDGER")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "JDE_ACCOUNT_LEDGER_GEN",  sequenceName = "JDE_ACCOUNT_LEDGER_SEQ", allocationSize = 1)
-@AttributeOverride(name = "id", column = @Column(name = "ENTRY_ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 10, scale = 0))
+@AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 10, scale = 0))
 public class JdeAccountLedger extends BasePersistedObject {
 
 	private static final long serialVersionUID = -1415319038166674699L;

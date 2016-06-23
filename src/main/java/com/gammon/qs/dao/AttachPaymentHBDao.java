@@ -24,7 +24,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachPayment> getSCPaymentAttachment(String jobNumber, String subcontractNo, String paymentCertNo) throws DatabaseOperationException{
+	public List<AttachPayment> getAttachPayment(String jobNumber, String subcontractNo, String paymentCertNo) throws DatabaseOperationException{
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -43,7 +43,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		}
 	}
 	
-	public AttachPayment getSCPaymentAttachment(PaymentCert paymentCert, Integer attachmentSequenceNo) throws DatabaseOperationException{
+	public AttachPayment getAttachPayment(PaymentCert paymentCert, Integer attachmentSequenceNo) throws DatabaseOperationException{
 		try{
 			PaymentCert dbObj = new PaymentCert();
 			//dbObj = scPaymentCert;
@@ -61,17 +61,17 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 			criteria.add(Restrictions.eq("sequenceNo", attachmentSequenceNo));
 			return (AttachPayment)criteria.uniqueResult();
 		}catch (HibernateException he) {
-			logger.info("Fail: getSCPaymentAttachment(String jobNumber, String subcontractNo,String sequenceNo)");
+			logger.info("Fail: getAttachPayment(String jobNumber, String subcontractNo,String sequenceNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachPayment> getSCPaymentAttachment(PaymentCert scPaymentCert) throws DatabaseOperationException{
+	public List<AttachPayment> getAttachPayment(PaymentCert paymentCert) throws DatabaseOperationException{
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("paymentCert", scPaymentCert));		
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
@@ -79,7 +79,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		}
 	}
 	
-	public AttachPayment getSCPaymentAttachment(String jobNumber, String subcontractNo,String paymentCertNo, Integer sequenceNo) throws DatabaseOperationException{
+	public AttachPayment getAttachPayment(String jobNumber, String subcontractNo,String paymentCertNo, Integer sequenceNo) throws DatabaseOperationException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("paymentCert.subcontract", "subcontract");
@@ -91,56 +91,56 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 			return (AttachPayment)criteria.uniqueResult();
 		}catch (HibernateException he) {
-			logger.info("Fail: getSCPaymentAttachment(String jobNumber, String subcontractNo,String sequenceNo)");
+			logger.info("Fail: getAttachPayment(String jobNumber, String subcontractNo,String sequenceNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}
 	
-	public AttachPayment getSCPaymentAttachment(AttachPayment scPaymentAttachment) throws DatabaseOperationException{
+	public AttachPayment getSCPaymentAttachment(AttachPayment attachPayment) throws DatabaseOperationException{
 		try{
-			return getSCPaymentAttachment(scPaymentAttachment.getPaymentCert(),new Integer(scPaymentAttachment.getSequenceNo()));
+			return getAttachPayment(attachPayment.getPaymentCert(),new Integer(attachPayment.getSequenceNo()));
 		}catch (HibernateException he) {
 			logger.info("Fail: getSCPaymentAttachment(String jobNumber, String subcontractNo,String sequenceNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}
 	
-	public boolean saveSCPaymentAttachment(AttachPayment scPaymentAttachment) throws Exception{
-		AttachPayment dbObj = this.getSCPaymentAttachment(scPaymentAttachment);
+	public boolean saveAttachPayment(AttachPayment attachPayment) throws Exception{
+		AttachPayment dbObj = this.getSCPaymentAttachment(attachPayment);
 		if (dbObj==null)
 			throw new DatabaseOperationException("Update Fail.");
-		dbObj.setFileLink(scPaymentAttachment.getFileLink());
-		dbObj.setFileName(scPaymentAttachment.getFileName());
-		dbObj.setDocumentType(scPaymentAttachment.getDocumentType());
-		dbObj.setTextAttachment(scPaymentAttachment.getTextAttachment());
-		dbObj.setLastModifiedUser(scPaymentAttachment.getLastModifiedUser());
+		dbObj.setFileLink(attachPayment.getFileLink());
+		dbObj.setFileName(attachPayment.getFileName());
+		dbObj.setDocumentType(attachPayment.getDocumentType());
+		dbObj.setTextAttachment(attachPayment.getTextAttachment());
+		dbObj.setLastModifiedUser(attachPayment.getLastModifiedUser());
 		saveOrUpdate(dbObj);
 		return true;
 	}
 
-	public boolean addSCAttachment(AttachPayment scPaymentAttachment) throws DatabaseOperationException{
-		AttachPayment dbObj = this.getSCPaymentAttachment(scPaymentAttachment);
+	public boolean addSCAttachment(AttachPayment attachPayment) throws DatabaseOperationException{
+		AttachPayment dbObj = this.getSCPaymentAttachment(attachPayment);
 		if (dbObj!=null)
 			throw new DatabaseOperationException("Upload Fail."); 
-		scPaymentAttachment.setCreatedDate(new Date());
-		saveOrUpdate(scPaymentAttachment);
+		attachPayment.setCreatedDate(new Date());
+		saveOrUpdate(attachPayment);
 		return true;
 	}
-	public boolean addUpdateSCTextAttachment(AttachPayment scPaymentAttachment, String user) throws Exception{
+	public boolean addUpdateSCTextAttachment(AttachPayment attachPayment, String user) throws Exception{
 
 		try {
-			scPaymentAttachment.setLastModifiedUser(user);
-			return saveSCPaymentAttachment(scPaymentAttachment);
+			attachPayment.setLastModifiedUser(user);
+			return saveAttachPayment(attachPayment);
 		}catch (DatabaseOperationException dbe){
-			scPaymentAttachment.setCreatedUser(user);
-			return addSCAttachment(scPaymentAttachment);
+			attachPayment.setCreatedUser(user);
+			return addSCAttachment(attachPayment);
 		}
 	}
 	
 	public long deleteAttachmentByByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		getSession().clear();
-		Query query = getSession().createQuery("delete from SCPaymentAttachment scPaymentAttachment where scPaymentCert_ID =" + paymentCertID);
+		Query query = getSession().createQuery("delete from AttachPayment attachPayment where Payment_Cert_ID =" + paymentCertID);
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}

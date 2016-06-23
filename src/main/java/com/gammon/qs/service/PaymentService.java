@@ -400,7 +400,7 @@ public class PaymentService{
 
 	public PaymentCertViewWrapper calculatePaymentCertificateSummary(String jobNumber, String packageNo, Integer paymentCertNo) throws Exception {
 		PaymentCertViewWrapper result = new PaymentCertViewWrapper();
-		List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailDao.getSCPaymentDetail(jobNumber, packageNo, paymentCertNo);
+		List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailDao.getPaymentDetail(jobNumber, packageNo, paymentCertNo);
 		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
 		Subcontract scPackage = scPaymentCert.getSubcontract();
 
@@ -1090,7 +1090,7 @@ public class PaymentService{
 	}
 
 	public PaginationWrapper<PaymentCertDetail> getSCPaymentDetailsOfPackage(String jobNumber, String packageNo, String paymentCertNo, boolean isFullSet) throws Exception {
-		List<PaymentCertDetail> resultList = scPaymentDetailDao.getSCPaymentDetail(jobNumber, packageNo, new Integer(paymentCertNo));
+		List<PaymentCertDetail> resultList = scPaymentDetailDao.getPaymentDetail(jobNumber, packageNo, new Integer(paymentCertNo));
 		Collections.sort(resultList, new Comparator<PaymentCertDetail>() {
 
 			public int compare(PaymentCertDetail scPaymentDetails1, PaymentCertDetail scPaymentDetails2) {

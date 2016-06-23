@@ -358,7 +358,7 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.originalQuantity = (originalQuantity!=null?CalculationUtil.round(originalQuantity, 4):0.00);
 	}
 
-	@Column(name = "TENDER_ANALYSIS_DETAIL_ID")
+	@Column(name = "TENDER_ID")
 	public Long getTenderAnalysisDetail_ID() {
 		return tenderAnalysisDetail_ID;
 	}
