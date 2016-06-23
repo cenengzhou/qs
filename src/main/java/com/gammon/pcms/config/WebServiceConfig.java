@@ -29,6 +29,7 @@ import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -160,6 +161,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	public ObjectMapper objectMapper() {
 		ObjectMapper bean = new ObjectMapper();
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
+		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		return bean;
 	}
 
@@ -174,6 +176,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	public XmlMapper xmlMapper() {
 		XmlMapper bean = new XmlMapper();
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
+		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		return bean;
 	}
 	

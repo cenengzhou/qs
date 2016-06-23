@@ -15,17 +15,17 @@ import javax.persistence.ManyToOne;
 public class FactAccountBalanceId implements Serializable {
 
 	private static final long serialVersionUID = -6209048153370339914L;
-	private DimAccountMaster accountCodeKey;
+	private DimAccountMaster dimAccountMaster;
 	private BigDecimal fiscalYear;
 	private String accountTypeLedger;
 	private String accountSubLedger;
 
 	public FactAccountBalanceId(){}
 
-	public FactAccountBalanceId(DimAccountMaster accountCodeKey, BigDecimal fiscalYear, String accountTypeLedger,
+	public FactAccountBalanceId(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear, String accountTypeLedger,
 			String accountSubLedger) {
 		super();
-		this.accountCodeKey = accountCodeKey;
+		this.dimAccountMaster = dimAccountMaster;
 		this.fiscalYear = fiscalYear;
 		this.accountTypeLedger = accountTypeLedger;
 		this.accountSubLedger = accountSubLedger;
@@ -33,12 +33,12 @@ public class FactAccountBalanceId implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "ACCOUNT_CODE_KEY", nullable = false)
-	public DimAccountMaster getAccountCodeKey() {
-		return this.accountCodeKey;
+	public DimAccountMaster getDimAccountMaster() {
+		return this.dimAccountMaster;
 	}
 
-	public void setAccountCodeKey(DimAccountMaster accountCodeKey) {
-		this.accountCodeKey = accountCodeKey;
+	public void setDimAccountMaster(DimAccountMaster dimAccountMaster) {
+		this.dimAccountMaster = dimAccountMaster;
 	}
 
 	@Column(name = "FISCAL_YEAR", nullable = false, precision = 22, scale = 0)
@@ -73,7 +73,7 @@ public class FactAccountBalanceId implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "FactAccountBalanceId [accountCodeKey=" + accountCodeKey + ", fiscalYear=" + fiscalYear
+		return "FactAccountBalanceId [accountCodeKey=" + dimAccountMaster + ", fiscalYear=" + fiscalYear
 				+ ", accountTypeLedger=" + accountTypeLedger + ", accountSubLedger=" + accountSubLedger + "]";
 	}
 
@@ -84,7 +84,7 @@ public class FactAccountBalanceId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((accountCodeKey == null) ? 0 : accountCodeKey.hashCode());
+		result = prime * result + ((dimAccountMaster == null) ? 0 : dimAccountMaster.hashCode());
 		result = prime * result + ((accountSubLedger == null) ? 0 : accountSubLedger.hashCode());
 		result = prime * result + ((accountTypeLedger == null) ? 0 : accountTypeLedger.hashCode());
 		result = prime * result + ((fiscalYear == null) ? 0 : fiscalYear.hashCode());
@@ -106,11 +106,11 @@ public class FactAccountBalanceId implements Serializable {
 			return false;
 		}
 		FactAccountBalanceId other = (FactAccountBalanceId) obj;
-		if (accountCodeKey == null) {
-			if (other.accountCodeKey != null) {
+		if (dimAccountMaster == null) {
+			if (other.dimAccountMaster != null) {
 				return false;
 			}
-		} else if (!accountCodeKey.equals(other.accountCodeKey)) {
+		} else if (!dimAccountMaster.equals(other.dimAccountMaster)) {
 			return false;
 		}
 		if (accountSubLedger == null) {

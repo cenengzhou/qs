@@ -20,6 +20,8 @@ import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.dto.View;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
@@ -39,8 +41,9 @@ public class JobInfo extends BasePersistedObject {
 	private static final long serialVersionUID = 4305414438779476211L;
 	
 	private List<AccountMaster> accountMasterList;
-	
+	@JsonView(View.JobInfoSummary.class)
 	private String jobNumber;
+	@JsonView(View.JobInfoSummary.class)
 	private String description;
 	private String company;
 	private String employer;

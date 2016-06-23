@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.dto.View;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 
@@ -29,6 +31,7 @@ public class JobController {
 	@Autowired
 	private JobInfoService jobService;
 	
+	@JsonView(View.JobInfoSummary.class)
 	@RequestMapping(value = "getJobList", method = RequestMethod.GET)
 	public List<JobInfo> getJobList(){
 		List<JobInfo> jobList = null;
