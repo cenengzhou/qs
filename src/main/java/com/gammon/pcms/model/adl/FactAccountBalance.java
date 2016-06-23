@@ -18,9 +18,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "FACT_ACCOUNT_BALANCE")
 @IdClass(FactAccountBalanceId.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class FactAccountBalance implements Serializable {
-	
+
 	private static final long serialVersionUID = -9074679324371187968L;
 	private DimAccountMaster dimAccountMaster;
 	private BigDecimal fiscalYear;
@@ -62,71 +62,15 @@ public class FactAccountBalance implements Serializable {
 	private BigDecimal amountAccumPeriod12;
 	private BigDecimal amountAccumPeriod13;
 	private BigDecimal amountAccumPeriod14;
-	
-	public FactAccountBalance() {
-	}
 
-	public FactAccountBalance(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear, String accountTypeLedger,
-			String accountTypeSubLedger, String accountSubLedger) {
+	public FactAccountBalance() {}
+
+	public FactAccountBalance(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear, String accountTypeLedger, String accountTypeSubLedger, String accountSubLedger) {
 		this.dimAccountMaster = dimAccountMaster;
 		this.fiscalYear = fiscalYear;
 		this.accountTypeLedger = accountTypeLedger;
 		this.accountTypeSubLedger = accountTypeSubLedger;
 		this.accountSubLedger = accountSubLedger;
-	}
-
-	public FactAccountBalance(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear, String accountTypeLedger,
-			String entityBusinessUnitKey, String accountObject, String accountSubsidiary, String accountTypeSubLedger,
-			String accountSubLedger, String entityCompanyKey, String currencyLocal, BigDecimal amountPriorYearNetPost,
-			BigDecimal amountBeginningBalance, BigDecimal amountPeriod01, BigDecimal amountPeriod02,
-			BigDecimal amountPeriod03, BigDecimal amountPeriod04, BigDecimal amountPeriod05, BigDecimal amountPeriod06,
-			BigDecimal amountPeriod07, BigDecimal amountPeriod08, BigDecimal amountPeriod09, BigDecimal amountPeriod10,
-			BigDecimal amountPeriod11, BigDecimal amountPeriod12, BigDecimal amountPeriod13, BigDecimal amountPeriod14,
-			BigDecimal amountAccumPeriod01, BigDecimal amountAccumPeriod02, BigDecimal amountAccumPeriod03,
-			BigDecimal amountAccumPeriod04, BigDecimal amountAccumPeriod05, BigDecimal amountAccumPeriod06,
-			BigDecimal amountAccumPeriod07, BigDecimal amountAccumPeriod08, BigDecimal amountAccumPeriod09,
-			BigDecimal amountAccumPeriod10, BigDecimal amountAccumPeriod11, BigDecimal amountAccumPeriod12,
-			BigDecimal amountAccumPeriod13, BigDecimal amountAccumPeriod14) {
-		this.dimAccountMaster = dimAccountMaster;
-		this.fiscalYear = fiscalYear;
-		this.accountTypeLedger = accountTypeLedger;
-		this.entityBusinessUnitKey = entityBusinessUnitKey;
-		this.accountObject = accountObject;
-		this.accountSubsidiary = accountSubsidiary;
-		this.accountTypeSubLedger = accountTypeSubLedger;
-		this.accountSubLedger = accountSubLedger;
-		this.entityCompanyKey = entityCompanyKey;
-		this.currencyLocal = currencyLocal;
-		this.amountPriorYearNetPost = amountPriorYearNetPost;
-		this.amountBeginningBalance = amountBeginningBalance;
-		this.amountPeriod01 = amountPeriod01;
-		this.amountPeriod02 = amountPeriod02;
-		this.amountPeriod03 = amountPeriod03;
-		this.amountPeriod04 = amountPeriod04;
-		this.amountPeriod05 = amountPeriod05;
-		this.amountPeriod06 = amountPeriod06;
-		this.amountPeriod07 = amountPeriod07;
-		this.amountPeriod08 = amountPeriod08;
-		this.amountPeriod09 = amountPeriod09;
-		this.amountPeriod10 = amountPeriod10;
-		this.amountPeriod11 = amountPeriod11;
-		this.amountPeriod12 = amountPeriod12;
-		this.amountPeriod13 = amountPeriod13;
-		this.amountPeriod14 = amountPeriod14;
-		this.amountAccumPeriod01 = amountAccumPeriod01;
-		this.amountAccumPeriod02 = amountAccumPeriod02;
-		this.amountAccumPeriod03 = amountAccumPeriod03;
-		this.amountAccumPeriod04 = amountAccumPeriod04;
-		this.amountAccumPeriod05 = amountAccumPeriod05;
-		this.amountAccumPeriod06 = amountAccumPeriod06;
-		this.amountAccumPeriod07 = amountAccumPeriod07;
-		this.amountAccumPeriod08 = amountAccumPeriod08;
-		this.amountAccumPeriod09 = amountAccumPeriod09;
-		this.amountAccumPeriod10 = amountAccumPeriod10;
-		this.amountAccumPeriod11 = amountAccumPeriod11;
-		this.amountAccumPeriod12 = amountAccumPeriod12;
-		this.amountAccumPeriod13 = amountAccumPeriod13;
-		this.amountAccumPeriod14 = amountAccumPeriod14;
 	}
 
 	@Id
@@ -165,7 +109,8 @@ public class FactAccountBalance implements Serializable {
 		this.accountSubLedger = accountSubLedger;
 	}
 
-	@Column(name = "ENTITY_BUSINESS_UNIT_KEY", length = 48)
+	@Column(name = "ENTITY_BUSINESS_UNIT_KEY",
+			length = 48)
 	public String getEntityBusinessUnitKey() {
 		return this.entityBusinessUnitKey;
 	}
@@ -174,7 +119,8 @@ public class FactAccountBalance implements Serializable {
 		this.entityBusinessUnitKey = entityBusinessUnitKey;
 	}
 
-	@Column(name = "ACCOUNT_OBJECT", length = 24)
+	@Column(name = "ACCOUNT_OBJECT",
+			length = 24)
 	public String getAccountObject() {
 		return this.accountObject;
 	}
@@ -183,7 +129,8 @@ public class FactAccountBalance implements Serializable {
 		this.accountObject = accountObject;
 	}
 
-	@Column(name = "ACCOUNT_SUBSIDIARY", length = 32)
+	@Column(name = "ACCOUNT_SUBSIDIARY",
+			length = 32)
 	public String getAccountSubsidiary() {
 		return this.accountSubsidiary;
 	}
@@ -192,7 +139,9 @@ public class FactAccountBalance implements Serializable {
 		this.accountSubsidiary = accountSubsidiary;
 	}
 
-	@Column(name = "ACCOUNT_TYPE_SUB_LEDGER", nullable = false, length = 4)
+	@Column(name = "ACCOUNT_TYPE_SUB_LEDGER",
+			nullable = false,
+			length = 4)
 	public String getAccountTypeSubLedger() {
 		return this.accountTypeSubLedger;
 	}
@@ -201,7 +150,8 @@ public class FactAccountBalance implements Serializable {
 		this.accountTypeSubLedger = accountTypeSubLedger;
 	}
 
-	@Column(name = "ENTITY_COMPANY_KEY", length = 20)
+	@Column(name = "ENTITY_COMPANY_KEY",
+			length = 20)
 	public String getEntityCompanyKey() {
 		return this.entityCompanyKey;
 	}
@@ -210,7 +160,8 @@ public class FactAccountBalance implements Serializable {
 		this.entityCompanyKey = entityCompanyKey;
 	}
 
-	@Column(name = "CURRENCY_LOCAL", length = 12)
+	@Column(name = "CURRENCY_LOCAL",
+			length = 12)
 	public String getCurrencyLocal() {
 		return this.currencyLocal;
 	}
@@ -219,7 +170,9 @@ public class FactAccountBalance implements Serializable {
 		this.currencyLocal = currencyLocal;
 	}
 
-	@Column(name = "AMOUNT_PRIOR_YEAR_NET_POST", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PRIOR_YEAR_NET_POST",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPriorYearNetPost() {
 		return this.amountPriorYearNetPost;
 	}
@@ -228,7 +181,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPriorYearNetPost = amountPriorYearNetPost;
 	}
 
-	@Column(name = "AMOUNT_BEGINNING_BALANCE", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_BEGINNING_BALANCE",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountBeginningBalance() {
 		return this.amountBeginningBalance;
 	}
@@ -237,7 +192,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountBeginningBalance = amountBeginningBalance;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_01", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_01",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod01() {
 		return this.amountPeriod01;
 	}
@@ -246,7 +203,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod01 = amountPeriod01;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_02", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_02",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod02() {
 		return this.amountPeriod02;
 	}
@@ -255,7 +214,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod02 = amountPeriod02;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_03", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_03",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod03() {
 		return this.amountPeriod03;
 	}
@@ -264,7 +225,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod03 = amountPeriod03;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_04", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_04",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod04() {
 		return this.amountPeriod04;
 	}
@@ -273,7 +236,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod04 = amountPeriod04;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_05", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_05",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod05() {
 		return this.amountPeriod05;
 	}
@@ -282,7 +247,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod05 = amountPeriod05;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_06", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_06",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod06() {
 		return this.amountPeriod06;
 	}
@@ -291,7 +258,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod06 = amountPeriod06;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_07", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_07",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod07() {
 		return this.amountPeriod07;
 	}
@@ -300,7 +269,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod07 = amountPeriod07;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_08", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_08",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod08() {
 		return this.amountPeriod08;
 	}
@@ -309,7 +280,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod08 = amountPeriod08;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_09", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_09",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod09() {
 		return this.amountPeriod09;
 	}
@@ -318,7 +291,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod09 = amountPeriod09;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_10", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_10",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod10() {
 		return this.amountPeriod10;
 	}
@@ -327,7 +302,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod10 = amountPeriod10;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_11", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_11",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod11() {
 		return this.amountPeriod11;
 	}
@@ -336,7 +313,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod11 = amountPeriod11;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_12", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_12",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod12() {
 		return this.amountPeriod12;
 	}
@@ -345,7 +324,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod12 = amountPeriod12;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_13", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_13",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod13() {
 		return this.amountPeriod13;
 	}
@@ -354,7 +335,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod13 = amountPeriod13;
 	}
 
-	@Column(name = "AMOUNT_PERIOD_14", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_PERIOD_14",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountPeriod14() {
 		return this.amountPeriod14;
 	}
@@ -363,7 +346,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountPeriod14 = amountPeriod14;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_01", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_01",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod01() {
 		return this.amountAccumPeriod01;
 	}
@@ -372,7 +357,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod01 = amountAccumPeriod01;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_02", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_02",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod02() {
 		return this.amountAccumPeriod02;
 	}
@@ -381,7 +368,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod02 = amountAccumPeriod02;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_03", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_03",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod03() {
 		return this.amountAccumPeriod03;
 	}
@@ -390,7 +379,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod03 = amountAccumPeriod03;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_04", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_04",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod04() {
 		return this.amountAccumPeriod04;
 	}
@@ -399,7 +390,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod04 = amountAccumPeriod04;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_05", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_05",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod05() {
 		return this.amountAccumPeriod05;
 	}
@@ -408,7 +401,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod05 = amountAccumPeriod05;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_06", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_06",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod06() {
 		return this.amountAccumPeriod06;
 	}
@@ -417,7 +412,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod06 = amountAccumPeriod06;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_07", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_07",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod07() {
 		return this.amountAccumPeriod07;
 	}
@@ -426,7 +423,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod07 = amountAccumPeriod07;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_08", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_08",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod08() {
 		return this.amountAccumPeriod08;
 	}
@@ -435,7 +434,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod08 = amountAccumPeriod08;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_09", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_09",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod09() {
 		return this.amountAccumPeriod09;
 	}
@@ -444,7 +445,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod09 = amountAccumPeriod09;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_10", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_10",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod10() {
 		return this.amountAccumPeriod10;
 	}
@@ -453,7 +456,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod10 = amountAccumPeriod10;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_11", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_11",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod11() {
 		return this.amountAccumPeriod11;
 	}
@@ -462,7 +467,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod11 = amountAccumPeriod11;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_12", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_12",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod12() {
 		return this.amountAccumPeriod12;
 	}
@@ -471,7 +478,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod12 = amountAccumPeriod12;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_13", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_13",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod13() {
 		return this.amountAccumPeriod13;
 	}
@@ -480,7 +489,9 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod13 = amountAccumPeriod13;
 	}
 
-	@Column(name = "AMOUNT_ACCUM_PERIOD_14", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_ACCUM_PERIOD_14",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountAccumPeriod14() {
 		return this.amountAccumPeriod14;
 	}
@@ -489,40 +500,15 @@ public class FactAccountBalance implements Serializable {
 		this.amountAccumPeriod14 = amountAccumPeriod14;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "FactAccountBalance [dimAccountMaster=" + dimAccountMaster + ", fiscalYear=" + fiscalYear
-				+ ", accountTypeLedger=" + accountTypeLedger + ", entityBusinessUnitKey=" + entityBusinessUnitKey
-				+ ", accountObject=" + accountObject + ", accountSubsidiary=" + accountSubsidiary
-				+ ", accountTypeSubLedger=" + accountTypeSubLedger + ", accountSubLedger=" + accountSubLedger
-				+ ", entityCompanyKey=" + entityCompanyKey + ", currencyLocal=" + currencyLocal
-				+ ", amountPriorYearNetPost=" + amountPriorYearNetPost + ", amountBeginningBalance="
-				+ amountBeginningBalance + ", amountPeriod01=" + amountPeriod01 + ", amountPeriod02=" + amountPeriod02
-				+ ", amountPeriod03=" + amountPeriod03 + ", amountPeriod04=" + amountPeriod04 + ", amountPeriod05="
-				+ amountPeriod05 + ", amountPeriod06=" + amountPeriod06 + ", amountPeriod07=" + amountPeriod07
-				+ ", amountPeriod08=" + amountPeriod08 + ", amountPeriod09=" + amountPeriod09 + ", amountPeriod10="
-				+ amountPeriod10 + ", amountPeriod11=" + amountPeriod11 + ", amountPeriod12=" + amountPeriod12
-				+ ", amountPeriod13=" + amountPeriod13 + ", amountPeriod14=" + amountPeriod14 + ", amountAccumPeriod01="
-				+ amountAccumPeriod01 + ", amountAccumPeriod02=" + amountAccumPeriod02 + ", amountAccumPeriod03="
-				+ amountAccumPeriod03 + ", amountAccumPeriod04=" + amountAccumPeriod04 + ", amountAccumPeriod05="
-				+ amountAccumPeriod05 + ", amountAccumPeriod06=" + amountAccumPeriod06 + ", amountAccumPeriod07="
-				+ amountAccumPeriod07 + ", amountAccumPeriod08=" + amountAccumPeriod08 + ", amountAccumPeriod09="
-				+ amountAccumPeriod09 + ", amountAccumPeriod10=" + amountAccumPeriod10 + ", amountAccumPeriod11="
-				+ amountAccumPeriod11 + ", amountAccumPeriod12=" + amountAccumPeriod12 + ", amountAccumPeriod13="
-				+ amountAccumPeriod13 + ", amountAccumPeriod14=" + amountAccumPeriod14 + "]";
+		return "FactAccountBalance [dimAccountMaster=" + dimAccountMaster + ", fiscalYear=" + fiscalYear + ", accountTypeLedger=" + accountTypeLedger + ", entityBusinessUnitKey=" + entityBusinessUnitKey + ", accountObject=" + accountObject + ", accountSubsidiary=" + accountSubsidiary + ", accountTypeSubLedger=" + accountTypeSubLedger + ", accountSubLedger=" + accountSubLedger + ", entityCompanyKey=" + entityCompanyKey + ", currencyLocal=" + currencyLocal + ", amountPriorYearNetPost=" + amountPriorYearNetPost + ", amountBeginningBalance=" + amountBeginningBalance + ", amountPeriod01=" + amountPeriod01 + ", amountPeriod02=" + amountPeriod02 + ", amountPeriod03=" + amountPeriod03 + ", amountPeriod04=" + amountPeriod04 + ", amountPeriod05=" + amountPeriod05 + ", amountPeriod06=" + amountPeriod06 + ", amountPeriod07=" + amountPeriod07 + ", amountPeriod08=" + amountPeriod08 + ", amountPeriod09=" + amountPeriod09 + ", amountPeriod10=" + amountPeriod10 + ", amountPeriod11=" + amountPeriod11 + ", amountPeriod12=" + amountPeriod12 + ", amountPeriod13=" + amountPeriod13 + ", amountPeriod14=" + amountPeriod14 + ", amountAccumPeriod01=" + amountAccumPeriod01 + ", amountAccumPeriod02=" + amountAccumPeriod02 + ", amountAccumPeriod03=" + amountAccumPeriod03 + ", amountAccumPeriod04=" + amountAccumPeriod04 + ", amountAccumPeriod05=" + amountAccumPeriod05 + ", amountAccumPeriod06=" + amountAccumPeriod06 + ", amountAccumPeriod07=" + amountAccumPeriod07 + ", amountAccumPeriod08=" + amountAccumPeriod08 + ", amountAccumPeriod09=" + amountAccumPeriod09 + ", amountAccumPeriod10=" + amountAccumPeriod10 + ", amountAccumPeriod11=" + amountAccumPeriod11 + ", amountAccumPeriod12=" + amountAccumPeriod12 + ", amountAccumPeriod13=" + amountAccumPeriod13 + ", amountAccumPeriod14=" + amountAccumPeriod14 + "]";
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dimAccountMaster == null) ? 0 : dimAccountMaster.hashCode());
 		result = prime * result + ((accountObject == null) ? 0 : accountObject.hashCode());
 		result = prime * result + ((accountSubLedger == null) ? 0 : accountSubLedger.hashCode());
 		result = prime * result + ((accountSubsidiary == null) ? 0 : accountSubsidiary.hashCode());
@@ -559,307 +545,222 @@ public class FactAccountBalance implements Serializable {
 		result = prime * result + ((amountPeriod14 == null) ? 0 : amountPeriod14.hashCode());
 		result = prime * result + ((amountPriorYearNetPost == null) ? 0 : amountPriorYearNetPost.hashCode());
 		result = prime * result + ((currencyLocal == null) ? 0 : currencyLocal.hashCode());
+		result = prime * result + ((dimAccountMaster == null) ? 0 : dimAccountMaster.hashCode());
 		result = prime * result + ((entityBusinessUnitKey == null) ? 0 : entityBusinessUnitKey.hashCode());
 		result = prime * result + ((entityCompanyKey == null) ? 0 : entityCompanyKey.hashCode());
 		result = prime * result + ((fiscalYear == null) ? 0 : fiscalYear.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof FactAccountBalance)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		FactAccountBalance other = (FactAccountBalance) obj;
-		if (dimAccountMaster == null) {
-			if (other.dimAccountMaster != null) {
-				return false;
-			}
-		} else if (!dimAccountMaster.equals(other.dimAccountMaster)) {
-			return false;
-		}
 		if (accountObject == null) {
-			if (other.accountObject != null) {
+			if (other.accountObject != null)
 				return false;
-			}
-		} else if (!accountObject.equals(other.accountObject)) {
+		} else if (!accountObject.equals(other.accountObject))
 			return false;
-		}
 		if (accountSubLedger == null) {
-			if (other.accountSubLedger != null) {
+			if (other.accountSubLedger != null)
 				return false;
-			}
-		} else if (!accountSubLedger.equals(other.accountSubLedger)) {
+		} else if (!accountSubLedger.equals(other.accountSubLedger))
 			return false;
-		}
 		if (accountSubsidiary == null) {
-			if (other.accountSubsidiary != null) {
+			if (other.accountSubsidiary != null)
 				return false;
-			}
-		} else if (!accountSubsidiary.equals(other.accountSubsidiary)) {
+		} else if (!accountSubsidiary.equals(other.accountSubsidiary))
 			return false;
-		}
 		if (accountTypeLedger == null) {
-			if (other.accountTypeLedger != null) {
+			if (other.accountTypeLedger != null)
 				return false;
-			}
-		} else if (!accountTypeLedger.equals(other.accountTypeLedger)) {
+		} else if (!accountTypeLedger.equals(other.accountTypeLedger))
 			return false;
-		}
 		if (accountTypeSubLedger == null) {
-			if (other.accountTypeSubLedger != null) {
+			if (other.accountTypeSubLedger != null)
 				return false;
-			}
-		} else if (!accountTypeSubLedger.equals(other.accountTypeSubLedger)) {
+		} else if (!accountTypeSubLedger.equals(other.accountTypeSubLedger))
 			return false;
-		}
 		if (amountAccumPeriod01 == null) {
-			if (other.amountAccumPeriod01 != null) {
+			if (other.amountAccumPeriod01 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod01.equals(other.amountAccumPeriod01)) {
+		} else if (!amountAccumPeriod01.equals(other.amountAccumPeriod01))
 			return false;
-		}
 		if (amountAccumPeriod02 == null) {
-			if (other.amountAccumPeriod02 != null) {
+			if (other.amountAccumPeriod02 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod02.equals(other.amountAccumPeriod02)) {
+		} else if (!amountAccumPeriod02.equals(other.amountAccumPeriod02))
 			return false;
-		}
 		if (amountAccumPeriod03 == null) {
-			if (other.amountAccumPeriod03 != null) {
+			if (other.amountAccumPeriod03 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod03.equals(other.amountAccumPeriod03)) {
+		} else if (!amountAccumPeriod03.equals(other.amountAccumPeriod03))
 			return false;
-		}
 		if (amountAccumPeriod04 == null) {
-			if (other.amountAccumPeriod04 != null) {
+			if (other.amountAccumPeriod04 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod04.equals(other.amountAccumPeriod04)) {
+		} else if (!amountAccumPeriod04.equals(other.amountAccumPeriod04))
 			return false;
-		}
 		if (amountAccumPeriod05 == null) {
-			if (other.amountAccumPeriod05 != null) {
+			if (other.amountAccumPeriod05 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod05.equals(other.amountAccumPeriod05)) {
+		} else if (!amountAccumPeriod05.equals(other.amountAccumPeriod05))
 			return false;
-		}
 		if (amountAccumPeriod06 == null) {
-			if (other.amountAccumPeriod06 != null) {
+			if (other.amountAccumPeriod06 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod06.equals(other.amountAccumPeriod06)) {
+		} else if (!amountAccumPeriod06.equals(other.amountAccumPeriod06))
 			return false;
-		}
 		if (amountAccumPeriod07 == null) {
-			if (other.amountAccumPeriod07 != null) {
+			if (other.amountAccumPeriod07 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod07.equals(other.amountAccumPeriod07)) {
+		} else if (!amountAccumPeriod07.equals(other.amountAccumPeriod07))
 			return false;
-		}
 		if (amountAccumPeriod08 == null) {
-			if (other.amountAccumPeriod08 != null) {
+			if (other.amountAccumPeriod08 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod08.equals(other.amountAccumPeriod08)) {
+		} else if (!amountAccumPeriod08.equals(other.amountAccumPeriod08))
 			return false;
-		}
 		if (amountAccumPeriod09 == null) {
-			if (other.amountAccumPeriod09 != null) {
+			if (other.amountAccumPeriod09 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod09.equals(other.amountAccumPeriod09)) {
+		} else if (!amountAccumPeriod09.equals(other.amountAccumPeriod09))
 			return false;
-		}
 		if (amountAccumPeriod10 == null) {
-			if (other.amountAccumPeriod10 != null) {
+			if (other.amountAccumPeriod10 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod10.equals(other.amountAccumPeriod10)) {
+		} else if (!amountAccumPeriod10.equals(other.amountAccumPeriod10))
 			return false;
-		}
 		if (amountAccumPeriod11 == null) {
-			if (other.amountAccumPeriod11 != null) {
+			if (other.amountAccumPeriod11 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod11.equals(other.amountAccumPeriod11)) {
+		} else if (!amountAccumPeriod11.equals(other.amountAccumPeriod11))
 			return false;
-		}
 		if (amountAccumPeriod12 == null) {
-			if (other.amountAccumPeriod12 != null) {
+			if (other.amountAccumPeriod12 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod12.equals(other.amountAccumPeriod12)) {
+		} else if (!amountAccumPeriod12.equals(other.amountAccumPeriod12))
 			return false;
-		}
 		if (amountAccumPeriod13 == null) {
-			if (other.amountAccumPeriod13 != null) {
+			if (other.amountAccumPeriod13 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod13.equals(other.amountAccumPeriod13)) {
+		} else if (!amountAccumPeriod13.equals(other.amountAccumPeriod13))
 			return false;
-		}
 		if (amountAccumPeriod14 == null) {
-			if (other.amountAccumPeriod14 != null) {
+			if (other.amountAccumPeriod14 != null)
 				return false;
-			}
-		} else if (!amountAccumPeriod14.equals(other.amountAccumPeriod14)) {
+		} else if (!amountAccumPeriod14.equals(other.amountAccumPeriod14))
 			return false;
-		}
 		if (amountBeginningBalance == null) {
-			if (other.amountBeginningBalance != null) {
+			if (other.amountBeginningBalance != null)
 				return false;
-			}
-		} else if (!amountBeginningBalance.equals(other.amountBeginningBalance)) {
+		} else if (!amountBeginningBalance.equals(other.amountBeginningBalance))
 			return false;
-		}
 		if (amountPeriod01 == null) {
-			if (other.amountPeriod01 != null) {
+			if (other.amountPeriod01 != null)
 				return false;
-			}
-		} else if (!amountPeriod01.equals(other.amountPeriod01)) {
+		} else if (!amountPeriod01.equals(other.amountPeriod01))
 			return false;
-		}
 		if (amountPeriod02 == null) {
-			if (other.amountPeriod02 != null) {
+			if (other.amountPeriod02 != null)
 				return false;
-			}
-		} else if (!amountPeriod02.equals(other.amountPeriod02)) {
+		} else if (!amountPeriod02.equals(other.amountPeriod02))
 			return false;
-		}
 		if (amountPeriod03 == null) {
-			if (other.amountPeriod03 != null) {
+			if (other.amountPeriod03 != null)
 				return false;
-			}
-		} else if (!amountPeriod03.equals(other.amountPeriod03)) {
+		} else if (!amountPeriod03.equals(other.amountPeriod03))
 			return false;
-		}
 		if (amountPeriod04 == null) {
-			if (other.amountPeriod04 != null) {
+			if (other.amountPeriod04 != null)
 				return false;
-			}
-		} else if (!amountPeriod04.equals(other.amountPeriod04)) {
+		} else if (!amountPeriod04.equals(other.amountPeriod04))
 			return false;
-		}
 		if (amountPeriod05 == null) {
-			if (other.amountPeriod05 != null) {
+			if (other.amountPeriod05 != null)
 				return false;
-			}
-		} else if (!amountPeriod05.equals(other.amountPeriod05)) {
+		} else if (!amountPeriod05.equals(other.amountPeriod05))
 			return false;
-		}
 		if (amountPeriod06 == null) {
-			if (other.amountPeriod06 != null) {
+			if (other.amountPeriod06 != null)
 				return false;
-			}
-		} else if (!amountPeriod06.equals(other.amountPeriod06)) {
+		} else if (!amountPeriod06.equals(other.amountPeriod06))
 			return false;
-		}
 		if (amountPeriod07 == null) {
-			if (other.amountPeriod07 != null) {
+			if (other.amountPeriod07 != null)
 				return false;
-			}
-		} else if (!amountPeriod07.equals(other.amountPeriod07)) {
+		} else if (!amountPeriod07.equals(other.amountPeriod07))
 			return false;
-		}
 		if (amountPeriod08 == null) {
-			if (other.amountPeriod08 != null) {
+			if (other.amountPeriod08 != null)
 				return false;
-			}
-		} else if (!amountPeriod08.equals(other.amountPeriod08)) {
+		} else if (!amountPeriod08.equals(other.amountPeriod08))
 			return false;
-		}
 		if (amountPeriod09 == null) {
-			if (other.amountPeriod09 != null) {
+			if (other.amountPeriod09 != null)
 				return false;
-			}
-		} else if (!amountPeriod09.equals(other.amountPeriod09)) {
+		} else if (!amountPeriod09.equals(other.amountPeriod09))
 			return false;
-		}
 		if (amountPeriod10 == null) {
-			if (other.amountPeriod10 != null) {
+			if (other.amountPeriod10 != null)
 				return false;
-			}
-		} else if (!amountPeriod10.equals(other.amountPeriod10)) {
+		} else if (!amountPeriod10.equals(other.amountPeriod10))
 			return false;
-		}
 		if (amountPeriod11 == null) {
-			if (other.amountPeriod11 != null) {
+			if (other.amountPeriod11 != null)
 				return false;
-			}
-		} else if (!amountPeriod11.equals(other.amountPeriod11)) {
+		} else if (!amountPeriod11.equals(other.amountPeriod11))
 			return false;
-		}
 		if (amountPeriod12 == null) {
-			if (other.amountPeriod12 != null) {
+			if (other.amountPeriod12 != null)
 				return false;
-			}
-		} else if (!amountPeriod12.equals(other.amountPeriod12)) {
+		} else if (!amountPeriod12.equals(other.amountPeriod12))
 			return false;
-		}
 		if (amountPeriod13 == null) {
-			if (other.amountPeriod13 != null) {
+			if (other.amountPeriod13 != null)
 				return false;
-			}
-		} else if (!amountPeriod13.equals(other.amountPeriod13)) {
+		} else if (!amountPeriod13.equals(other.amountPeriod13))
 			return false;
-		}
 		if (amountPeriod14 == null) {
-			if (other.amountPeriod14 != null) {
+			if (other.amountPeriod14 != null)
 				return false;
-			}
-		} else if (!amountPeriod14.equals(other.amountPeriod14)) {
+		} else if (!amountPeriod14.equals(other.amountPeriod14))
 			return false;
-		}
 		if (amountPriorYearNetPost == null) {
-			if (other.amountPriorYearNetPost != null) {
+			if (other.amountPriorYearNetPost != null)
 				return false;
-			}
-		} else if (!amountPriorYearNetPost.equals(other.amountPriorYearNetPost)) {
+		} else if (!amountPriorYearNetPost.equals(other.amountPriorYearNetPost))
 			return false;
-		}
 		if (currencyLocal == null) {
-			if (other.currencyLocal != null) {
+			if (other.currencyLocal != null)
 				return false;
-			}
-		} else if (!currencyLocal.equals(other.currencyLocal)) {
+		} else if (!currencyLocal.equals(other.currencyLocal))
 			return false;
-		}
+		if (dimAccountMaster == null) {
+			if (other.dimAccountMaster != null)
+				return false;
+		} else if (!dimAccountMaster.equals(other.dimAccountMaster))
+			return false;
 		if (entityBusinessUnitKey == null) {
-			if (other.entityBusinessUnitKey != null) {
+			if (other.entityBusinessUnitKey != null)
 				return false;
-			}
-		} else if (!entityBusinessUnitKey.equals(other.entityBusinessUnitKey)) {
+		} else if (!entityBusinessUnitKey.equals(other.entityBusinessUnitKey))
 			return false;
-		}
 		if (entityCompanyKey == null) {
-			if (other.entityCompanyKey != null) {
+			if (other.entityCompanyKey != null)
 				return false;
-			}
-		} else if (!entityCompanyKey.equals(other.entityCompanyKey)) {
+		} else if (!entityCompanyKey.equals(other.entityCompanyKey))
 			return false;
-		}
 		if (fiscalYear == null) {
-			if (other.fiscalYear != null) {
+			if (other.fiscalYear != null)
 				return false;
-			}
-		} else if (!fiscalYear.equals(other.fiscalYear)) {
+		} else if (!fiscalYear.equals(other.fiscalYear))
 			return false;
-		}
 		return true;
 	}
 

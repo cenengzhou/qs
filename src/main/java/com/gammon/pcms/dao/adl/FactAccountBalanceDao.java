@@ -19,11 +19,11 @@ import com.gammon.pcms.model.adl.FactAccountBalance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @Repository
-public class FactAccountBalanceADLHBDao extends BaseAdlHibernateDao<FactAccountBalance> {
+public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalance> {
 
 	Logger logger = Logger.getLogger(FactAccountBalance.class.getName());
 
-	public FactAccountBalanceADLHBDao() {
+	public FactAccountBalanceDao() {
 		super(FactAccountBalance.class);
 	}
 	
@@ -52,6 +52,7 @@ public class FactAccountBalanceADLHBDao extends BaseAdlHibernateDao<FactAccountB
 		typeLedger = typeLedger.toUpperCase();
 		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
 		// Preset values
+		String typeSubLedger = "X";
 		String codeSubsidiary = "        "; // To filter non-cost code
 		
 		// Join
@@ -61,9 +62,10 @@ public class FactAccountBalanceADLHBDao extends BaseAdlHibernateDao<FactAccountB
 		criteria.add(Restrictions.eq("fiscalYear", year));
 		criteria.add(Restrictions.eq("accountTypeLedger", typeLedger));
 		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob));
+		criteria.add(Restrictions.eq("accountTypeSubLedger", typeSubLedger));
 		criteria.add(Restrictions.eq("accountSubLedger", noSubcontract));
 		criteria.add(Restrictions.ne("accountSubsidiary", codeSubsidiary));	
-				
+		
 		// Order By
 		criteria.addOrder(Order.asc("accountObject"))
 				.addOrder(Order.asc("accountSubsidiary"));
