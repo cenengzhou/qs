@@ -1,0 +1,56 @@
+
+<!-- begin #content -->
+<div id="content" class="content"
+	ng-controller="AdminTransitUOMMaintenanceCtrl as uom">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Transit UOM Maintenance</li>
+	</ol>
+	<!-- end breadcrumb -->
+	<div class="clearfix"></div>
+	<!-- ng-style="{height: 800 + 'px'}" -->
+
+	<!-- Main content -->
+
+	<div class="row" vertilize-container>
+		<div class="col-md-4">
+			<div class="panel panel-primary" vertilize>
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<i class="fa fa-info-circle"></i> Unit code matching
+					</h3>
+				</div>
+				<div class="panel-body">
+					<article><div class="caption"><h3>The Unified Code for Units of Measure (UCUM)</h3></div> is
+						a code system intended to include all units of measures being
+						contemporarily used in international science, engineering, and
+						business. The purpose is to facilitate unambiguous electronic
+						communication of quantities together with their units. The focus
+						is on electronic communication, as opposed to communication
+						between humans. A typical application of The Unified Code for
+						Units of Measure are electronic data interchange (EDI) protocols,
+						but there is nothing that prevents it from being used in other
+						types of machine communication. UCUM is based on the ISO 80000:
+						2009 Quantities and Units standards series that specify the use of
+						System International (SI) units in publications. ISO 80000
+						standards series is developed by Technical Committee 12,
+						International Organization of Standardization (ISO/TC12)
+						Quantities and units in co-operation with Technical Committee 25,
+						International Electrotechnical Committee (IEC/TC 25).</article>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8" vertilize>
+			<div id="" ui-grid="uom.gridOptions" external-scopes="clickHandler"
+				ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+				style="height: 500px;"></div>
+		</div>
+	</div>
+	<button class="btn btn-block btn-primary">
+		<i class="glyphicon glyphicon-upload"></i> Upload
+	</button>
+
+	<!-- end #content -->
+</div>

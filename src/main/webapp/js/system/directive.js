@@ -292,6 +292,9 @@ mainApp.directive('loading', function () {
         }
     }
 });*/
-
-
-
+mainApp.directive('underConstruction', function(){
+	return {
+		restrict: 'E',
+		templateUrl: 'view/admin/admin-mask.html'
+	};
+});

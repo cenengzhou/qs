@@ -615,7 +615,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/admin/admin-session.js'
+                           'js/controller/admin/admin-session.js',
+                           'js/controller/admin/admin-ManualProcedures.js',
+                           'js/controller/admin/admin-Revisions.js',
+                           'js/controller/admin/admin-TransitUOMMaintenance.js',
+                           'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
+                           'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
+                           'js/controller/admin/admin-SchedulerMaintenance.js'
                     ] 
                 });
             }]
@@ -631,7 +637,62 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		},
 		controller: "AdminSessionCtrl"
 	})
-	
+	.state("admin.ManualProcedures",{
+		url: "/ManualProcedures",
+		templateUrl: "view/admin/admin-ManualProcedures.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminManualProceduresCtrl"
+	})
+	.state("admin.Revisions",{
+		url: "/Revisions",
+		templateUrl: "view/admin/admin-Revisions.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminRevisionsCtrl"
+	})
+	.state("admin.TransitUOMMaintenance",{
+		url: "/TransitUOMMaintenance",
+		templateUrl: "view/admin/admin-TransitUOMMaintenance.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminTransitUOMMaintenanceCtrl"
+	})
+	.state("admin.TransitResourceCodeMaintenance",{
+		url: "/TransitResourceCodeMaintenance",
+		templateUrl: "view/admin/admin-TransitResourceCodeMaintenance.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminTransitResourceCodeMaintenanceCtrl"
+	})
+	.state("admin.SubcontractStandardTermsMaintenance",{
+		url: "/SubcontractStandardTermsMaintenance",
+		templateUrl: "view/admin/admin-SubcontractStandardTermsMaintenance.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminSubcontractStandardTermsMaintenanceCtrl"
+	})
+	.state("admin.SchedulerMaintenance",{
+		url: "/SchedulerMaintenance",
+		templateUrl: "view/admin/admin-SchedulerMaintenance.html",
+		"params": {
+			"jobNo": null,
+			"jobDescription": null
+		},
+		controller: "AdminSchedulerMaintenanceCtrl",
+		controllerAs: "schedulerMaintenance"
+	})
+
 }])
 .filter('jsonDate', ['$filter', function ($filter) {
 	return function (input, format) {

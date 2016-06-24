@@ -10,13 +10,53 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
+
+			<li ng-class="{active : activeAdminSideMenu == '/admin/session'}">
+				<a ui-sref="admin.session" ng-click="activeAdminSideMenu = '/admin/session'">
+
 			<li ui-sref-active="active">
 				<a ui-sref="admin.session">
-					<i class="fa fa-calendar-check-o"></i>
+
+					<i class="glyphicon glyphicon-random"></i>
 					<span>Session</span>
 				</a>
 			</li>
-			
+			<li ng-class="{active : activeAdminSideMenu == '/admin/ManualProcedures'}">
+				<a ui-sref="admin.ManualProcedures" ng-click="activeAdminSideMenu = '/admin/ManualProcedures'">
+					<i class="glyphicon glyphicon-tasks"></i>
+					<span>Manual Procedures</span>
+				</a>
+			</li>		
+			<li ng-class="{active : activeAdminSideMenu == '/admin/Revisions'}">
+				<a ui-sref="admin.Revisions" ng-click="activeAdminSideMenu = '/admin/Revisions'">
+					<i class="glyphicon glyphicon-sunglasses"></i>
+					<span>Revisions</span>
+				</a>
+			</li>		
+			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitUOMMaintenance'}">
+				<a ui-sref="admin.TransitUOMMaintenance" ng-click="activeAdminSideMenu = '/admin/TransitUOMMaintenance'">
+					<i class="glyphicon glyphicon-retweet"></i>
+					<span>Transit UOM Maintenance</span>
+				</a>
+			</li>		
+			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitResourceCodeMaintenance'}">
+				<a ui-sref="admin.TransitResourceCodeMaintenance" ng-click="activeAdminSideMenu = '/admin/TransitResourceCodeMaintenance'">
+					<i class="glyphicon glyphicon-list"></i>
+					<span>Transit Resource Code Maintenance</span>
+				</a>
+			</li>		
+			<li ng-class="{active : activeAdminSideMenu == '/admin/SubcontractStandardTermsMaintenance'}">
+				<a ui-sref="admin.SubcontractStandardTermsMaintenance" ng-click="activeAdminSideMenu = '/admin/SubcontractStandardTermsMaintenance'">
+					<i class="glyphicon glyphicon-book"></i>
+					<span>Subcontract Standard Terms Maintenance</span>
+				</a>
+			</li>		
+			<li ng-class="{active : activeAdminSideMenu == '/admin/SchedulerMaintenance'}">
+				<a ui-sref="admin.SchedulerMaintenance" ng-click="activeAdminSideMenu = '/admin/SchedulerMaintenance'">
+					<i class="glyphicon glyphicon-calendar"></i>
+					<span>Scheduler Maintenance</span>
+				</a>
+			</li>		
 						
 			<li class="divider has-minify-btn">
                       <!-- begin sidebar minify button -->
