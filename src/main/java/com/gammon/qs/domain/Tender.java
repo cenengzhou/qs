@@ -20,9 +20,11 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "TENDER")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "TENDER_GEN", sequenceName = "TENDER_SEQ", allocationSize = 1)
@@ -52,6 +54,13 @@ public class Tender extends BasePersistedObject{
 	
 	public Tender() {
 		super();
+	}
+	
+	@Override
+	public String toString() {
+		return "Tender [subcontract=" + subcontract + ", vendorNo=" + vendorNo + ", status=" + status
+				+ ", currencyCode=" + currencyCode + ", exchangeRate=" + exchangeRate + ", budgetAmount=" + budgetAmount
+				+ ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", toString()=" + super.toString() + "]";
 	}
 
 	@Override

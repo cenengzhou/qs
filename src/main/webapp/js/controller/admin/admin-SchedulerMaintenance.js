@@ -6,6 +6,7 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 				$http.post('service/GetAllTriggers').then(function(data) {
 					if (data !== null) {
 						$scope.triggers = data.data;
+						$scope.minDate = moment().format('DD MMM YYYY HH:mm');
 						for(var i = 0; i<$scope.triggers.length;i++){							
 							$scope.triggers[i].nextFireTime_Datetime = moment($scope.triggers[i].nextFireTime).format('DD MMM YYYY HH:mm');
 						}

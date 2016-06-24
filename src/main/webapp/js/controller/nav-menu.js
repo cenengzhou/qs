@@ -39,6 +39,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 		$scope.activeMenu = 'Transit';
 	}else if ($scope.currentPath.indexOf("/admin")==0){
 		$scope.activeMenu = 'Admin';
+		$scope.activeAdminSideMenu = $scope.currentPath;
 	}
 
 

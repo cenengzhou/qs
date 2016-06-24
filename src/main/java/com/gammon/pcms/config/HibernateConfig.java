@@ -79,7 +79,7 @@ public class HibernateConfig {
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("com.gammon.qs.domain");
+		factory.setPackagesToScan("com.gammon.qs.domain", "com.gammon.pcms.model");
 		factory.setDataSource(jdbcDataSource());
 		factory.setJpaProperties(databaseProperties());
 		factory.setPersistenceUnitName("PersistenceUnit");
