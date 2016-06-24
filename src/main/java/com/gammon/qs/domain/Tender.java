@@ -1,5 +1,8 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,15 +42,16 @@ public class Tender extends BasePersistedObject{
 	private String jobNo;
 	private String packageNo;
 	
+	// Newly added for new sub-contract approval workflow
+	private BigDecimal amtBuyingGainLoss = new BigDecimal(0);
+	private String remarks = " ";
+	private String statusChangeExecutionOfSC = "N/A";
+	private String usernamePrepared;
+	private Date datePrepared;
+	private String notes = " ";
+	
 	public Tender() {
 		super();
-	}
-	
-	@Override
-	public String toString() {
-		return "Tender [subcontract=" + subcontract + ", vendorNo=" + vendorNo + ", status=" + status
-				+ ", currencyCode=" + currencyCode + ", exchangeRate=" + exchangeRate + ", budgetAmount=" + budgetAmount
-				+ ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", toString()=" + super.toString() + "]";
 	}
 
 	@Override
@@ -111,7 +115,66 @@ public class Tender extends BasePersistedObject{
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
 	}
-	
+
+	@Column(name = "amtBuyingGainLoss",
+			precision = 19,
+			scale = 2)
+	public BigDecimal getAmtBuyingGainLoss() {
+		return amtBuyingGainLoss;
+	}
+
+	public void setAmtBuyingGainLoss(BigDecimal amtBuyingGainLoss) {
+		this.amtBuyingGainLoss = amtBuyingGainLoss;
+	}
+
+	@Column(name = "remarks",
+			length = 500)
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	@Column(name = "statusChangeExecutionOfSc",
+			length = 10)
+	public String getStatusChangeExecutionOfSC() {
+		return statusChangeExecutionOfSC;
+	}
+
+	public void setStatusChangeExecutionOfSC(String statusChangeExecutionOfSC) {
+		this.statusChangeExecutionOfSC = statusChangeExecutionOfSC;
+	}
+
+	@Column(name = "usernamePrepared",
+			length = 20)
+	public String getUsernamePrepared() {
+		return usernamePrepared;
+	}
+
+	public void setUsernamePrepared(String usernamePrepared) {
+		this.usernamePrepared = usernamePrepared;
+	}
+
+	@Column(name = "datePrepared")
+	public Date getDatePrepared() {
+		return datePrepared;
+	}
+
+	public void setDatePrepared(Date datePrepared) {
+		this.datePrepared = datePrepared;
+	}
+
+	@Column(name = "notes")
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
 	@JoinColumn(name = "Subcontract_ID", foreignKey = @ForeignKey(name = "FK_Tender_Subcontract_PK"))

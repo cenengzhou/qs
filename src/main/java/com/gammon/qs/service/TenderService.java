@@ -50,37 +50,35 @@ import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisVendorWrapper;
 public class TenderService implements Serializable {
 	private static final long serialVersionUID = -3750073286095069814L;
 	@Autowired
-	private transient TenderHBDao tenderAnalysisHBDao;
+	private transient TenderHBDao tenderDao;
 	@Autowired
-	private transient TenderDetailHBDao tenderAnalysisDetailHBDao;
+	private transient TenderDetailHBDao tenderDetailDao;
 	@Autowired
-	private transient SubcontractHBDao scPackageDao;
+	private transient SubcontractHBDao subcontractDao;
 	@Autowired
-	private transient BpiItemHBDao bqItemDao;
+	private transient BpiItemHBDao bpiItemDao;
 	@Autowired
-	private transient JobInfoHBDao jobDao;
+	private transient JobInfoHBDao jobInfoDao;
 	@Autowired
-	private transient ResourceSummaryHBDao bqResourceSummaryDao;
+	private transient ResourceSummaryHBDao resourceSummaryDao;
 	@Autowired
-	private transient BpiItemResourceHBDao resourceDao;
+	private transient BpiItemResourceHBDao bpiItemResourceDao;
 	@Autowired
-	private transient MasterListService masterListRepository;
+	private transient MasterListService masterListService;
 	@Autowired
 	private transient AccountCodeWSDao accountCodeDao;
 	@Autowired
-	private transient ExcelWorkbookProcessor excelFileProcessor;
+	private transient ExcelWorkbookProcessor excelWorkbookProcessor;
 	@Autowired
-	private transient SubcontractService packageRepository;
+	private transient SubcontractService subcontractService;
 	@Autowired
-	private transient PaymentCertHBDao scPaymentDao;
+	private transient PaymentCertHBDao paymentCertDao;
 	@Autowired
-	private transient PaymentCertDetailHBDao scPaymentDetailDao;
+	private transient PaymentCertDetailHBDao paymentCertDetailDao;
 	@Autowired
-	private transient SubcontractDetailHBDao scDetailsDao;
+	private transient SubcontractDetailHBDao subcontractDetailDao;
 	@Autowired
-	private transient AttachPaymentHBDao paymentAttachmentDao;
-	@Autowired
-	private transient PaymentCertHBDao scPaymentCertHBDao;
+	private transient AttachPaymentHBDao attachPaymentDao;
 	
 	private transient Logger logger = Logger.getLogger(TenderService.class.getName());
 	private List<TenderDetail> uploadCache = new ArrayList<TenderDetail>();
@@ -89,16 +87,16 @@ public class TenderService implements Serializable {
 	public List<String> obtainUneditableTADetailIDs(String jobNo, String packageNo, Integer vendorNo) throws DatabaseOperationException{
 		List<String> uneditableTADetailIDs = new ArrayList<String>();
 		
-		Tender tenderAnalysis = tenderAnalysisHBDao.obtainTenderAnalysis(jobNo, packageNo, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNo, packageNo, vendorNo);
 		
 		if(tenderAnalysis!=null && Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
-			List<SubcontractDetail> scDetailList = scDetailsDao.obtainSCDetails(jobNo, packageNo);
+			List<SubcontractDetail> scDetailList = subcontractDetailDao.obtainSCDetails(jobNo, packageNo);
 
 			if(scDetailList!=null && scDetailList.size()>0){
-				List<TenderDetail> taDetailList = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
+				List<TenderDetail> taDetailList = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
 				for(TenderDetail taDetail: taDetailList){
 					if(taDetail!=null && taDetail.getId()!=null){
-						SubcontractDetail scDetails = scDetailsDao.obtainSCDetailsByTADetailID(jobNo, packageNo, taDetail.getId());
+						SubcontractDetail scDetails = subcontractDetailDao.obtainSCDetailsByTADetailID(jobNo, packageNo, taDetail.getId());
 						if(scDetails!=null && (scDetails.getPostedCertifiedQuantity()!=0.0 || scDetails.getPostedWorkDoneQuantity()!=0.0 || scDetails.getCumWorkDoneQuantity()!=0.0)){
 							uneditableTADetailIDs.add(String.valueOf(taDetail.getId()));
 						}
@@ -120,25 +118,25 @@ public class TenderService implements Serializable {
 				String[] bpi = taDetail.getBillItem().split("/");
 				if(bpi.length != 5)
 					return "Invalid B/P/I code: " + taDetail.getBillItem();
-				BpiItem bqItem = bqItemDao.getBpiItemByRef(job.getJobNumber(), bpi[0], bpi[1].length() == 0 ? null : bpi[1], bpi[2].length() == 0 ? null : bpi[2], bpi[3].length() == 0 ? null : bpi[3], bpi[4]);
+				BpiItem bqItem = bpiItemDao.getBpiItemByRef(job.getJobNumber(), bpi[0], bpi[1].length() == 0 ? null : bpi[1], bpi[2].length() == 0 ? null : bpi[2], bpi[3].length() == 0 ? null : bpi[3], bpi[4]);
 				if(bqItem == null)
 					return "B/P/I not found: " + taDetail.getBillItem();
 			}
 			if(taDetail.getResourceNo() == null || taDetail.getResourceNo().equals(Integer.valueOf(0))){
-				String error = masterListRepository.validateAndCreateAccountCode(job.getJobNumber(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode());
+				String error = masterListService.validateAndCreateAccountCode(job.getJobNumber(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode());
 				if(error != null)
 					return error;
 			}
 		}
 		//Save
-		Subcontract scPackage = scPackageDao.obtainPackage(job, packageNo);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
 		if(scPackage == null)
 			return "Invalid package number";
 		else if(scPackage.isAwarded() || (scPackage.getSubcontractStatus()!=null && scPackage.getSubcontractStatus()==330))
 			return "Package has been awarded or submitted.";
 		
 		
-		PaymentCert latestPaymentCert = scPaymentDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+		PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		if(latestPaymentCert!=null && (latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED) 
 				|| latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING) 
 				|| latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW))){
@@ -152,7 +150,7 @@ public class TenderService implements Serializable {
 		
 
 		if(tenderAnalysis.getId()!=null && vendorNo!=0){
-			List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+			List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
 			if(scPaymentCertList!=null && scPaymentCertList.size()>0){
 				if(!tenderAnalysis.getCurrencyCode().equals(currencyCode)){
 					return "Currency Code must be the same as the one in previous payment.";
@@ -176,7 +174,7 @@ public class TenderService implements Serializable {
 		
 		
 		scPackage.setSubcontractStatus(Integer.valueOf(160));
-		scPackageDao.saveOrUpdate(scPackage);
+		subcontractDao.saveOrUpdate(scPackage);
 		return null;
 	}
 	
@@ -189,9 +187,9 @@ public class TenderService implements Serializable {
 			logger.info("Update Vendor Info");
 			//Update Vendor Info (Edit Vendor Feedback Rate)
 			if(tenderAnalysis.getVendorNo()!=0){
-				if(scDetailsDao.getSCDetails(scPackage)!=null && scDetailsDao.getSCDetails(scPackage).size()>0){
+				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
 					for(TenderDetail taDetail: toBeUpdatedTaDetails){
-						for(TenderDetail taDetailInDB: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
+						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
 							
 							if("1".equals(scPackage.getJobInfo().getRepackagingType())){
 								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
@@ -215,64 +213,64 @@ public class TenderService implements Serializable {
 					//Update TA 
 					tenderAnalysis.setCurrencyCode(tenderAnalysis.getCurrencyCode());
 					tenderAnalysis.setExchangeRate(tenderAnalysis.getExchangeRate());
-					tenderAnalysis.setBudgetAmount(bqResourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 					
 					//Delete Pending Payments
-					PaymentCert latestPaymentCert = scPaymentDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 					if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 						//Delete Pending Payment
-						paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-						scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-						scPaymentCertHBDao.delete(latestPaymentCert);
-						scPackageDao.update(scPackage);
+						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+						paymentCertDao.delete(latestPaymentCert);
+						subcontractDao.update(scPackage);
 						
 						//Reset cumCertQuantity in ScDetail
-						List<SubcontractDetail> scDetailsList = scDetailsDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 						for(SubcontractDetail scDetails: scDetailsList){
 							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
 								scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-								scDetailsDao.update(scDetails);
+								subcontractDetailDao.update(scDetails);
 							}
 						}
 					}
 					
 					if(Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
 						//Recalculate SCPackage Subcon Sum
-						packageRepository.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
+						subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
 					}
 					
-					tenderAnalysisHBDao.update(tenderAnalysis);
+					tenderDao.update(tenderAnalysis);
 				}else{
 					logger.info("Update Vendor");
-					tenderAnalysisHBDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
 				}
 			}else{
 				//Edit Budget Tender Analysis
-				List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
 				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
 					//if direct payment exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
 					for (TenderDetail taDetail: toBeUpdatedTaDetails){
-						ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getFeedbackRateDomestic());
+						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getFeedbackRateDomestic());
 						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetail.getResourceNo()));
 						if(resourceSummary==null)
 							return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
 					}
 
 					//Add new TA Details for budget TA (Input Tender Analysis)
-					List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisListWithDetails(scPackage);
 					for(Tender ta: tenderAnalysisList){
 						if(ta.getVendorNo()==0){
-							tenderAnalysis.setBudgetAmount(bqResourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
-							Integer seqNo = tenderAnalysisDetailHBDao.getNextSequenceNoForTA(ta);
+							tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
 							for(TenderDetail taDetail: toBeUpdatedTaDetails){
 								//boolean newTaDetail = true;
-								List<TenderDetail> taDetailInDB = tenderAnalysisDetailHBDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
+								List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
 								if(taDetailInDB == null || taDetailInDB.size()==0){
 									taDetail.setSequenceNo(seqNo);
 									taDetail.setResourceNo(taDetail.getResourceNo());
 									taDetail.setTender(ta);
-									tenderAnalysisDetailHBDao.update(taDetail);
-									tenderAnalysisHBDao.update(ta);
+									tenderDetailDao.update(taDetail);
+									tenderDao.update(ta);
 									seqNo++;
 								}
 							}
@@ -282,14 +280,14 @@ public class TenderService implements Serializable {
 						}
 					}
 				}else{
-					tenderAnalysisHBDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
 					scPackage.setVendorNo(null);
 				}
 			}
 		}
 		else{
 			logger.info("Create New Vendor");
-			tenderAnalysisHBDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+			tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
 		}
 		return null;
 	}
@@ -305,9 +303,9 @@ public class TenderService implements Serializable {
 				for(TenderDetail budgetTADetail: budgetTADetailList){
 					List<TenderDetail> taDetailInDB = null;
 					if("1".equals(job.getRepackagingType()))
-						taDetailInDB = tenderAnalysisDetailHBDao.obtainTADetailByResourceNo(ta, budgetTADetail.getResourceNo());
+						taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, budgetTADetail.getResourceNo());
 					else
-						taDetailInDB = tenderAnalysisDetailHBDao.obtainTADetailByBQItem(ta, budgetTADetail.getBillItem(), budgetTADetail.getObjectCode(), budgetTADetail.getSubsidiaryCode(), budgetTADetail.getResourceNo());
+						taDetailInDB = tenderDetailDao.obtainTADetailByBQItem(ta, budgetTADetail.getBillItem(), budgetTADetail.getObjectCode(), budgetTADetail.getSubsidiaryCode(), budgetTADetail.getResourceNo());
 					
 					if(taDetailInDB == null || taDetailInDB.size()==0){
 						//Insert new TA Details
@@ -325,8 +323,8 @@ public class TenderService implements Serializable {
 						taDetail.setResourceNo(budgetTADetail.getResourceNo());
 						
 						taDetail.setTender(ta);
-						tenderAnalysisDetailHBDao.update(taDetail);
-						tenderAnalysisHBDao.update(ta);
+						tenderDetailDao.update(taDetail);
+						tenderDao.update(ta);
 					}
 				}
 				break;
@@ -336,11 +334,11 @@ public class TenderService implements Serializable {
 	}
 	
 	public List<TenderDetail> obtainTenderAnalysisDetailList(JobInfo job, String packageNo, Integer vendorNo) throws Exception{
-		return tenderAnalysisDetailHBDao.getTenderAnalysisDetails(job, packageNo, vendorNo);
+		return tenderDetailDao.getTenderAnalysisDetails(job, packageNo, vendorNo);
 	}
 	
 	private Tender getOrCreateTenderAnalysis(JobInfo job, Subcontract scPackage, Integer vendorNo) throws Exception{
-		Tender tenderAnalysis = tenderAnalysisHBDao.obtainTenderAnalysis(scPackage, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(scPackage, vendorNo);
 		if(tenderAnalysis == null){
 			String packageNo = scPackage.getPackageNo();
 			tenderAnalysis = new Tender();
@@ -350,21 +348,21 @@ public class TenderService implements Serializable {
 			tenderAnalysis.setPackageNo(packageNo);
 			tenderAnalysis.setExchangeRate(Double.valueOf(1));
 			if("1".equals(job.getRepackagingType()))
-				tenderAnalysis.setBudgetAmount(bqResourceSummaryDao.getBudgetForPackage(job, packageNo));
+				tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, packageNo));
 			else
-				tenderAnalysis.setBudgetAmount(resourceDao.getBudgetForPackage(job.getJobNumber(), packageNo));
+				tenderAnalysis.setBudgetAmount(bpiItemResourceDao.getBudgetForPackage(job.getJobNumber(), packageNo));
 		}
 		return tenderAnalysis;
 	}
 	
 	public Tender obtainTenderAnalysisForRateInput(JobInfo job, String packageNo, Integer vendorNo) throws Exception{
-		List<TenderDetail> baseDetails = tenderAnalysisDetailHBDao.getTenderAnalysisDetails(job, packageNo, 0);
+		List<TenderDetail> baseDetails = tenderDetailDao.getTenderAnalysisDetails(job, packageNo, 0);
 		HashMap<Integer, TenderDetail> baseDetailsMap = new HashMap<Integer, TenderDetail>();
 		for(TenderDetail detail : baseDetails){
 			baseDetailsMap.put(detail.hashCode(), detail);
 		}
-		List<TenderDetail> vendorDetails = tenderAnalysisDetailHBDao.getTenderAnalysisDetails(job, packageNo, vendorNo);
-		Subcontract scPackage = scPackageDao.obtainPackage(job, packageNo);
+		List<TenderDetail> vendorDetails = tenderDetailDao.getTenderAnalysisDetails(job, packageNo, vendorNo);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
 		Tender tenderAnalysis = getOrCreateTenderAnalysis(job, scPackage, vendorNo);
 		if(vendorDetails != null && vendorDetails.size() > 0){
 			for(TenderDetail vendorDetail : vendorDetails){
@@ -375,12 +373,12 @@ public class TenderService implements Serializable {
 					vendorDetail.setFeedbackRateDomestic(baseDetail.getFeedbackRateDomestic());
 				}
 			}
-			tenderAnalysisDetailHBDao.deleteByTenderAnalysis(tenderAnalysis);
+			tenderDetailDao.deleteByTenderAnalysis(tenderAnalysis);
 			for(TenderDetail tenderAnalysisDetail : vendorDetails) {
 				tenderAnalysisDetail.setTender(tenderAnalysis);
 			}
 		} else {
-			tenderAnalysisDetailHBDao.deleteByTenderAnalysis(tenderAnalysis);
+			tenderDetailDao.deleteByTenderAnalysis(tenderAnalysis);
 			for(TenderDetail tenderAnalysisDetail : baseDetails) {
 				tenderAnalysisDetail.setTender(tenderAnalysis);
 			}
@@ -389,23 +387,23 @@ public class TenderService implements Serializable {
 	}
 	
 	public List<Tender> obtainTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
-		return tenderAnalysisHBDao.obtainTenderAnalysisList(job, packageNo);
+		return tenderDao.obtainTenderAnalysisList(job, packageNo);
 	}
 	
 	public Boolean removeTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
-		Subcontract scPackage = scPackageDao.obtainPackage(job, packageNo);
-		List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0)
 			return null;
 		else
-			return tenderAnalysisHBDao.removeTenderAnalysisListExceptBudgetTender(job, packageNo);
+			return tenderDao.removeTenderAnalysisListExceptBudgetTender(job, packageNo);
 	}
 	
 	public TenderAnalysisComparisonWrapper obtainTenderAnalysisComparison(JobInfo job, String packageNo) throws Exception{
-		Subcontract scPackage = scPackageDao.obtainPackage(job, packageNo);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
 		if(scPackage == null)
 			return null;
-		List<Tender> tenderAnalyses = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+		List<Tender> tenderAnalyses = tenderDao.obtainTenderAnalysisListWithDetails(scPackage);
 		if(tenderAnalyses == null || tenderAnalyses.size() == 0){
 			if("1".equals(job.getRepackagingType()))
 					return null;
@@ -423,7 +421,7 @@ public class TenderService implements Serializable {
 		for(Tender tenderAnalysis : tenderAnalyses){
 			Integer vendorNo = tenderAnalysis.getVendorNo();
 			if(!vendorNo.equals(Integer.valueOf(0))){
-				MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(vendorNo.toString());
+				MasterListVendor vendor = masterListService.obtainVendorByVendorNo(vendorNo.toString());
 				TenderAnalysisVendorWrapper vendorWrapper = new TenderAnalysisVendorWrapper();
 				vendorWrapper.setVendorNo(vendorNo);
 				vendorWrapper.setVendorName(vendor == null ? null : vendor.getVendorName());
@@ -432,7 +430,7 @@ public class TenderService implements Serializable {
 				vendorWrapper.setStatus(tenderAnalysis.getStatus());
 				vendorWrappers.add(vendorWrapper);
 			}
-			for(TenderDetail taDetail : tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
+			for(TenderDetail taDetail : tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
 				TenderAnalysisDetailWrapper taDetailWrapper = new TenderAnalysisDetailWrapper();
 				taDetailWrapper.setLineType(taDetail.getLineType());
 				taDetailWrapper.setBillItem(taDetail.getBillItem());
@@ -464,8 +462,8 @@ public class TenderService implements Serializable {
 		
 		String errorMessage = "";
 		
-		JobInfo job = jobDao.obtainJobInfo(jobNumber);
-		List<ResourceSummary> resources = bqResourceSummaryDao.getResourceSummariesSearch(job, packageNo, "14*", null);
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
+		List<ResourceSummary> resources = resourceSummaryDao.getResourceSummariesSearch(job, packageNo, "14*", null);
 		HashMap<String,Double> bqAccountAmounts = new HashMap<String, Double>();
 		HashMap<String,Double> excelAccountAmounts = new HashMap<String, Double>();
 		
@@ -479,10 +477,10 @@ public class TenderService implements Serializable {
 			}
 		}
 		try{
-			excelFileProcessor.openFile(file);
-			excelFileProcessor.readLine(0);
-			for(int i = 0; i < excelFileProcessor.getNumRow() - 1; i++){
-				String[] line = excelFileProcessor.readLine(7);
+			excelWorkbookProcessor.openFile(file);
+			excelWorkbookProcessor.readLine(0);
+			for(int i = 0; i < excelWorkbookProcessor.getNumRow() - 1; i++){
+				String[] line = excelWorkbookProcessor.readLine(7);
 				TenderDetail taDetail = new TenderDetail();
 				String bpi = (line[0] == null || line[0].trim().length() == 0) ? null : line[0].trim();
 				if(bpi != null && ((String)bpi).trim().length() > 0){
@@ -566,8 +564,8 @@ public class TenderService implements Serializable {
 			}else{
 				for (int i = 0; i < uploadCache.size(); i++) {
 					TenderDetail taDetail = uploadCache.get(0);
-					if (tenderAnalysisDetailHBDao.getTenderAnalysisDetail(jobNumber, packageNo, i + 1, i + 1) != null) {
-						tenderAnalysisDetailHBDao.update(taDetail);
+					if (tenderDetailDao.getTenderAnalysisDetail(jobNumber, packageNo, i + 1, i + 1) != null) {
+						tenderDetailDao.update(taDetail);
 						uploadCache.remove(0);
 					} else {
 						taDetail.setSequenceNo(Integer.valueOf(i + 1));
@@ -589,9 +587,9 @@ public class TenderService implements Serializable {
 		//Store uploaded details in a cache (don't save them yet)
 		//If the upload is successful, the Input Vendor Feedback Rates window will be opened with the uploaded results (getVendorTACache())
 		vendorTACache = new Tender();
-		excelFileProcessor.openFile(file);
-		excelFileProcessor.readLine(0);
-		String[] vendorDetails = excelFileProcessor.readLine(3);
+		excelWorkbookProcessor.openFile(file);
+		excelWorkbookProcessor.readLine(0);
+		String[] vendorDetails = excelWorkbookProcessor.readLine(3);
 		//Fill in vendor/currency details - they will be validated when the details are saved later
 		try{
 			vendorTACache.setVendorNo(Integer.valueOf(vendorDetails[0]));
@@ -606,10 +604,10 @@ public class TenderService implements Serializable {
 			return "Please input an exchange rate";
 		}
 		vendorTACache.setExchangeRate(exchangeRate);
-		excelFileProcessor.readLine(0);
-		excelFileProcessor.readLine(0);
-		for(int i = 0; i < excelFileProcessor.getNumRow() - 4; i++){
-			String[] line = excelFileProcessor.readLine(9);
+		excelWorkbookProcessor.readLine(0);
+		excelWorkbookProcessor.readLine(0);
+		for(int i = 0; i < excelWorkbookProcessor.getNumRow() - 4; i++){
+			String[] line = excelWorkbookProcessor.readLine(9);
 			TenderDetail taDetail = new TenderDetail();
 			if(line[0] != null && line[0].trim().length() != 0)
 				taDetail.setBillItem(line[0].trim());
@@ -638,17 +636,17 @@ public class TenderService implements Serializable {
 	}
 	
 	public ExcelFile downloadTenderAnalysisDetailsExcel(String jobNumber, String packageNo, String vendorNo) throws Exception{
-		List<TenderDetail> details = tenderAnalysisDetailHBDao.getTenderAnalysisDetails(jobNumber, packageNo, 0);
+		List<TenderDetail> details = tenderDetailDao.getTenderAnalysisDetails(jobNumber, packageNo, 0);
 		if(details == null || details.size() == 0)
 			return null;
 		Tender vendorTender = null;
 		Map<TenderDetail, Double> baseDetailMap = null;
 		if(!vendorNo.equals("0")){
-			vendorTender = tenderAnalysisHBDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(vendorNo));
+			vendorTender = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(vendorNo));
 			baseDetailMap = new HashMap<TenderDetail, Double>(details.size());
 			for(TenderDetail detail : details)
 				baseDetailMap.put(detail, detail.getFeedbackRateDomestic());
-			details = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(vendorTender);
+			details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(vendorTender);
 		}
 		
 		ExcelFile excel = new ExcelFile();
@@ -705,17 +703,17 @@ public class TenderService implements Serializable {
 	}
 	
 	public Boolean removeTenderAnalysis(String jobNumber, String packageNo, Integer vendorNo) throws Exception{
-		Tender tenderAnalysis = tenderAnalysisHBDao.obtainTenderAnalysis(jobNumber, packageNo, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, vendorNo);
 		if(tenderAnalysis == null)
 			return Boolean.FALSE;
-		JobInfo job = jobDao.obtainJobInfo(jobNumber);
-		Subcontract scPackage = scPackageDao.obtainPackage(job, packageNo);
-		List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
 		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM)))
 			return Boolean.FALSE;
 		
-		tenderAnalysisHBDao.delete(tenderAnalysis);
+		tenderDao.delete(tenderAnalysis);
 		return Boolean.TRUE;
 	}
 	
@@ -723,10 +721,10 @@ public class TenderService implements Serializable {
 		logger.info("createOrUpdateTADetailFromResource resource ID = " + resource.getId());
 		String jobNumber = resource.getJobNumber();
 		String packageNo = resource.getPackageNo();
-		Tender tenderAnalysis = tenderAnalysisHBDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(0));
+		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(0));
 		//If TA has not been initiated, create TA with details copied from resources
 		if(tenderAnalysis == null){
-			JobInfo job = jobDao.obtainJobInfo(jobNumber);
+			JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
 			createTAFromResources(job, packageNo);
 			return;
 		}
@@ -737,7 +735,7 @@ public class TenderService implements Serializable {
 		bpi += resource.getRefSectionNo() == null ? "/" : resource.getRefSectionNo() + "/";
 		bpi += resource.getRefPageNo() == null ? "/" : resource.getRefPageNo() + "/";
 		bpi += resource.getRefItemNo() == null ? "" : resource.getRefItemNo();
-		TenderDetail taDetail = tenderAnalysisDetailHBDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
+		TenderDetail taDetail = tenderDetailDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
 		//if resource was already in package (taDetail exists) update taDetail, otherwise create a new one
 		if(taDetail != null){
 			Double totalBudget = tenderAnalysis.getBudgetAmount();
@@ -745,8 +743,8 @@ public class TenderService implements Serializable {
 			taDetail.updateFromResource(resource);
 			totalBudget += taDetail.getQuantity() * taDetail.getFeedbackRateDomestic();
 			tenderAnalysis.setBudgetAmount(totalBudget); //update TA budget
-			tenderAnalysisDetailHBDao.saveOrUpdate(taDetail);
-			tenderAnalysisHBDao.saveOrUpdate(tenderAnalysis);
+			tenderDetailDao.saveOrUpdate(taDetail);
+			tenderDao.saveOrUpdate(tenderAnalysis);
 		}
 		else{
 			BpiItem bqItem = resource.getBpiItem();
@@ -756,12 +754,12 @@ public class TenderService implements Serializable {
 			taDetail = new TenderDetail(resource);
 			taDetail.setDescription(description);
 			taDetail.setTender(tenderAnalysis);
-			taDetail.setSequenceNo(tenderAnalysisDetailHBDao.getNextSequenceNoForTA(tenderAnalysis));
+			taDetail.setSequenceNo(tenderDetailDao.getNextSequenceNoForTA(tenderAnalysis));
 			Double totalBudget = tenderAnalysis.getBudgetAmount();
 			totalBudget += taDetail.getQuantity() * taDetail.getFeedbackRateDomestic();
 			tenderAnalysis.setBudgetAmount(totalBudget); //update TA budget
-			tenderAnalysisDetailHBDao.saveOrUpdate(taDetail);
-			tenderAnalysisHBDao.saveOrUpdate(tenderAnalysis);
+			tenderDetailDao.saveOrUpdate(taDetail);
+			tenderDao.saveOrUpdate(tenderAnalysis);
 		}
 		
 		
@@ -770,21 +768,21 @@ public class TenderService implements Serializable {
 		 * Payment Requisition
 		 * Remove Pending Payment Cert
 		 * **/
-		PaymentCert latestPaymentCert = scPaymentDao.obtainPaymentLatestCert(jobNumber, packageNo);
+		PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 		if(latestPaymentCert!=null 
 				&& latestPaymentCert.getDirectPayment().equals("Y") 
 				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 
-			paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-			scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-			scPaymentDao.deleteById(latestPaymentCert.getId());
+			attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+			paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+			paymentCertDao.deleteById(latestPaymentCert.getId());
 
 			//Reset cumCertQuantity in ScDetail
-			List<SubcontractDetail> scDetailsList = scDetailsDao.obtainSCDetails(jobNumber, packageNo);
+			List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(jobNumber, packageNo);
 			for(SubcontractDetail scDetails: scDetailsList){
 				if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
 					scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-					scDetailsDao.update(scDetails);
+					subcontractDetailDao.update(scDetails);
 				}
 			}
 		}
@@ -802,12 +800,12 @@ public class TenderService implements Serializable {
 		bpi += resource.getRefSectionNo() == null ? "/" : resource.getRefSectionNo() + "/";
 		bpi += resource.getRefPageNo() == null ? "/" : resource.getRefPageNo() + "/";
 		bpi += resource.getRefItemNo() == null ? "" : resource.getRefItemNo();
-		List<Tender> tenderAnlysisList = tenderAnalysisHBDao.obtainTenderAnalysis(jobNumber, packageNo);
+		List<Tender> tenderAnlysisList = tenderDao.obtainTenderAnalysis(jobNumber, packageNo);
 		Double newBudget = null;
 		for (Tender tenderAnalysis:tenderAnlysisList){
 			logger.info("Getting taDetail with TA.ID: " + tenderAnalysis.getId() + ", bpi: " + bpi + ", resourceNo: " + resource.getResourceNo());
 			
-			TenderDetail taDetail = tenderAnalysisDetailHBDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
+			TenderDetail taDetail = tenderDetailDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
 			if(taDetail != null){
 				
 				if (Integer.valueOf(0).equals(tenderAnalysis.getVendorNo())){
@@ -820,8 +818,8 @@ public class TenderService implements Serializable {
 						tenderAnalysis.setBudgetAmount(newBudget);
 				 //Error from PD: org.springframework.dao.InvalidDataAccessApiUsageException: deleted object would be re-saved by cascade (remove deleted object from associations)
 				
-				tenderAnalysisDetailHBDao.delete(taDetail);
-				tenderAnalysisHBDao.saveOrUpdate(tenderAnalysis);
+				tenderDetailDao.delete(taDetail);
+				tenderDao.saveOrUpdate(tenderAnalysis);
 			}
 		}
 		
@@ -830,28 +828,28 @@ public class TenderService implements Serializable {
 		 * Payment Requisition
 		 * Remove Pending Payment Cert
 		 * **/
-		PaymentCert latestPaymentCert = scPaymentDao.obtainPaymentLatestCert(jobNumber, packageNo);
+		PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 		if(latestPaymentCert!=null 
 				&& latestPaymentCert.getDirectPayment().equals("Y") 
 				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 
-			paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-			scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-			scPaymentDao.deleteById(latestPaymentCert.getId());
+			attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+			paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+			paymentCertDao.deleteById(latestPaymentCert.getId());
 
 			//Reset cumCertQuantity in ScDetail
-			List<SubcontractDetail> scDetailsList = scDetailsDao.obtainSCDetails(jobNumber, packageNo);
+			List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(jobNumber, packageNo);
 			for(SubcontractDetail scDetails: scDetailsList){
 				if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
 					scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-					scDetailsDao.update(scDetails);
+					subcontractDetailDao.update(scDetails);
 				}
 			}
 		}
 	}
 	
 	private Tender createTAFromResources(JobInfo job, String packageNo) throws Exception{
-		Subcontract scPackage = scPackageDao.obtainSCPackage(job.getJobNumber(), packageNo);
+		Subcontract scPackage = subcontractDao.obtainSCPackage(job.getJobNumber(), packageNo);
 		//Create TA
 		Tender tenderAnalysis = new Tender();
 		tenderAnalysis.setJobNo(job.getJobNumber());
@@ -865,7 +863,7 @@ public class TenderService implements Serializable {
 		
 		//Create TA Details
 		double totalBudget = 0; 
-		List<BpiItemResource> resources = resourceDao.getResourcesByPackage(job.getJobNumber(), packageNo);
+		List<BpiItemResource> resources = bpiItemResourceDao.getResourcesByPackage(job.getJobNumber(), packageNo);
 		int i = 1;
 		for(BpiItemResource resource : resources){
 			BpiItem bqItem = resource.getBpiItem();
@@ -880,7 +878,7 @@ public class TenderService implements Serializable {
 			taDetail.setTender(tenderAnalysis);
 		}
 		tenderAnalysis.setBudgetAmount(totalBudget);
-		tenderAnalysisHBDao.saveOrUpdate(tenderAnalysis);
+		tenderDao.saveOrUpdate(tenderAnalysis);
 		return tenderAnalysis;
 	}
 	
