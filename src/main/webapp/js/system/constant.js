@@ -29,3 +29,9 @@ mainApp.constant("paymentTermsDescription", {
 	"QS6": "Pay when Invoice Received + 45 days",
 	"QS7": "Pay when Invoice Received + 60 days"
 });
+
+mainApp.constant("subcontractRetentionTerms", {
+	"RETENTION_LUMPSUM": "Lump Sum Amount Retention",
+	"RETENTION_ORIGINAL": "Percentage - Original SC Sum",
+	"RETENTION_REVISED": "Percentage - Revised SC Sum"
+});

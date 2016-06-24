@@ -10,8 +10,8 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ng-class="{active : activeAdminSideMenu == 'AdminSession'}">
-				<a ui-sref="admin.session" ng-click="activeAdminSideMenu = '/admin/session'">
+			<li ui-sref-active="active">
+				<a ui-sref="admin.session">
 					<i class="fa fa-calendar-check-o"></i>
 					<span>Session</span>
 				</a>

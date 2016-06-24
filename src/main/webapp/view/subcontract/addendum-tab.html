@@ -1,0 +1,47 @@
+<div id="content" class="content">
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}} 
+	</h1>
+
+	<div id="wizard" class="bwizard clearfix">
+		<ul class="bwizard-steps clearfix setup-panel">
+			<li ui-sref-active="active">
+				<a ui-sref="subcontract.addendumDetails.title">
+					<span class="label badge-inverse">1</span> 
+					Addendum Title <small>Add/Edit Addendum Title here</small>
+				</a>
+			</li>
+			<li ui-sref-active="active"><a ui-sref="subcontract.addendumDetails.detail" > <span class="label">2</span>
+					Addendum <small>Variation Order, Day Work, Labour, CPF</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract.addendumDetails.details"> <span class="label">3</span>
+					Addendum Details <small>View Addendum Details here</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract.addendumDetails.attachment"> <span class="label">4</span>
+					Add Attachment <small>Add attachment here</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract.addendumDetails.summary"> <span class="label">5</span>
+					Addendum Summary <small>View Addendum Summary here</small>
+			</a></li>
+			<li ui-sref-active="active"><a href="#step6"> <span class="label">6</span>
+					Print Addendum <small></small>
+			</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div ui-view=""></div>
+		</div>
+
+		
+	</div>
+
+	<!-- end #wizard -->
+</div>
+

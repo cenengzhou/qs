@@ -130,11 +130,11 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 				$target.show();
 			}
 
-			if($item.context.hash == "#step2"){
+			if($item.context.hash == "#step2-details"){
 				loadPaymentDetails();
-			}else if($item.context.hash == "#step3"){
+			}else if($item.context.hash == "#step3-attachment"){
 
-			}else if($item.context.hash == "#step4"){
+			}else if($item.context.hash == "#step4-invoice"){
 				loadPaymentCertSummary();
 			}
 
@@ -150,7 +150,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			$('ul.setup-panel li:eq(2)').removeClass('disabled');
 			$('ul.setup-panel li:eq(3)').removeClass('disabled');
 
-			//$('ul.setup-panel li a[href="#step2"]').trigger('click');
+			//$('ul.setup-panel li a[href="#step2-details"]').trigger('click');
 
 			$scope.disableButtons = true;
 		}else{
@@ -164,16 +164,16 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			}
 
 			$('ul.setup-panel li:eq(1)').removeClass('disabled');
-			$('ul.setup-panel li a[href="#step2"]').trigger('click');
+			$('ul.setup-panel li a[href="#step2-details"]').trigger('click');
 		})    
 		$('#activate-step-3').on('click', function(e) {
 
 			$('ul.setup-panel li:eq(2)').removeClass('disabled');
-			$('ul.setup-panel li a[href="#step3"]').trigger('click');
+			$('ul.setup-panel li a[href="#step3-attachment"]').trigger('click');
 		})  
 		$('#activate-step-4').on('click', function(e) {
 			$('ul.setup-panel li:eq(3)').removeClass('disabled');
-			$('ul.setup-panel li a[href="#step4"]').trigger('click');
+			$('ul.setup-panel li a[href="#step4-invoice"]').trigger('click');
 		})  
 
 		});

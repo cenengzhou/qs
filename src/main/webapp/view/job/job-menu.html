@@ -11,8 +11,8 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ng-class="{active : activeJobSideMenu == '/job/dashboard'}">
-				<a ui-sref="job.dashboard" ng-click="activeJobSideMenu = '/job/dashboard'">
+			<li ui-sref-active="active">
+				<a ui-sref="job.dashboard">
 					<i class="fa fa-dashboard active"></i>
 					<span>Job Dashboard</span>
 				</a>
@@ -25,14 +25,14 @@
 				</a>
 			</li>
 			
-			<li ng-class="{active : activeJobSideMenu == '/job/info'}">
-				<a ui-sref="job.info" ng-click="activeJobSideMenu = '/job/info'">
+			<li ui-sref-active="active">
+				<a ui-sref="job.info" >
 					<i class="fa fa-book"></i> 
 					<span>Job Information</span>
 				</a>
 			</li>
-			<li ng-class="{active : activeJobSideMenu == '/job/dates'}">
-				<a ui-sref="job.dates" ng-click="activeJobSideMenu = '/job/dates'">
+			<li ui-sref-active="active">
+				<a ui-sref="job.dates">
 					<i class="fa fa-calendar"></i> 
 					<span>Job Dates</span>
 				</a>

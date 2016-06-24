@@ -641,7 +641,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
-	public Subcontract obtainPackage(String jobNo, String packageNo) throws DatabaseOperationException{
+	public Subcontract obtainSubcontract(String jobNo, String packageNo) throws DatabaseOperationException{
 		Subcontract result = null;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());

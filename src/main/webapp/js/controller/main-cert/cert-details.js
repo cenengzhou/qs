@@ -5,14 +5,6 @@ mainApp.controller('CertDetailsCtrl', ['$scope', '$http', '$location',  function
 	$scope.certStatus = "300";
 	
 
-	
-	$(".date").datepicker({
-		 	format: "dd-mm-yyyy",
-		    todayHighlight: true,
-		    autoclose: true,
-		    todayBtn: "linked"
-	});
-	
 	$scope.ipaSubmissionDate = "";
 	$scope.asAtDate = "";
 	$scope.certIssueDate = "";

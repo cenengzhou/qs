@@ -1,8 +1,10 @@
-mainApp.controller('AddendumDetailsCtrl', ['$scope' , '$http', 'modalMessageService', function($scope , $http, modalMessageService) {
+mainApp.controller('AddendumDetailsCtrl', ['$scope' , '$http', 'modalService', '$location',
+                                           function($scope , $http, modalService, $location) {
 
+	$scope.checked = false;
 	$scope.status = "yes";
 	
-	$scope.addendumTitle = "Addendum 1";
+	$scope.addendumTitle = "";
 	
 	$scope.subcontractorNature = "V2";
 	
@@ -17,15 +19,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , '$http', 'modalMessageServ
 			"CF": "CPF" 
     };
 	
-	/*
-	 //By using jquery json parser
-	 var obj = $.parseJSON('{"name": "", "skills": "", "jobtitel": "Entwickler", "res_linkedin": "GwebSearch"}');
-	alert(obj['jobtitel']);
-
-	//By using javasript json parser
-	var t = JSON.parse('{"name": "", "skills": "", "jobtitel": "Entwickler", "res_linkedin": "GwebSearch"}');
-	alert(t['jobtitel'])
-	*/
 	
 	$scope.addendum = {
 			description: "",
@@ -115,7 +108,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , '$http', 'modalMessageServ
 		$scope.selectedRows  = $scope.gridApi.selection.getSelectedRows();
 		
 		if($scope.selectedRows.length == 0){
-			modalMessageService.open('view/message-modal.html', 'MessageModalCtrl', "Please select a row to edit.");
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', "Please select a row to edit.");
 			return false;
 		}
 			
@@ -136,80 +129,22 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , '$http', 'modalMessageServ
 		for (var i = 0; i < arrayLength; i++) {
 			console.log($scope.selectedRows[i]['lineType']);
 		}*/
-		$('ul.setup-panel li a[href="#step2"]').trigger('click');	    
 	}
 
 	
-	//Form validation
-	$(document).ready(function() {
-	    
-	    var navListItems = $('ul.setup-panel li a'),
-	        allWells = $('.setup-content');
-
-	   allWells.hide();
-
-	    
-	    
-	    navListItems.click(function(e)
-	    {
-	        e.preventDefault();
-	        var $target = $($(this).attr('href')),
-	            $item = $(this).closest('li');
-	        
-	        if (!$item.hasClass('disabled')) {
-	            navListItems.closest('li').removeClass('active');
-	            $item.addClass('active');
-	            allWells.hide();
-	            $target.show();
-	        }
-	    });
-	     
-
-	    $('ul.setup-panel li.active a').trigger('click');
-	    
-	    if($scope.status == "yes"){
-	    	$('ul.setup-panel li:eq(1)').removeClass('disabled');
-	    	$('ul.setup-panel li:eq(2)').removeClass('disabled');
-	    	$('ul.setup-panel li a[href="#step3"]').trigger('click');	    
-	    }
-	    	
-	    
-	    
-	    
-	    $('#activate-step-2').on('click', function(e) {
-	    	/*console.log("Line types: "+$scope.addendum.selected);
-	    	console.log("Description: "+$scope.addendum.description);*/
-	    	
-	                // step-1 validation
-            if (false === $('form[name="form-wizard-step-1"]').parsley().validate('wizard-step-1')) {
-                return true;
-            }
-	    	
-	        $('ul.setup-panel li:eq(1)').removeClass('disabled');
-	        $('ul.setup-panel li a[href="#step2"]').trigger('click');
-	    })    
-	    $('#activate-step-3').on('click', function(e) {
-	    	
-	    	if (false === $('form[name="form-wizard-step-2"]').parsley().validate('wizard-step-2')) {
-                return false;
-            }
-	    	
-	        $('ul.setup-panel li:eq(2)').removeClass('disabled');
-	        $('ul.setup-panel li a[href="#step3"]').trigger('click');
-	    })  
-	    $('#activate-step-4').on('click', function(e) {
-	        $('ul.setup-panel li:eq(3)').removeClass('disabled');
-	        $('ul.setup-panel li a[href="#step4"]').trigger('click');
-	    })  
-	    $('#activate-step-5').on('click', function(e) {
-	        $('ul.setup-panel li:eq(4)').removeClass('disabled');
-	        $('ul.setup-panel li a[href="#step5"]').trigger('click');
-	    }) 
-	    $('#activate-step-6').on('click', function(e) {
-	        $('ul.setup-panel li:eq(5)').removeClass('disabled');
-	        $('ul.setup-panel li a[href="#step6"]').trigger('click');
-	    }) 
-	});
-
+	//Listen for state changes and call the callback
+    $scope.$on('$stateChangeStart',function(event,next){
+    	if($location.path().indexOf("title") >0){
+    		if (false === $('form[name="form-wizard-step-1"]').parsley().validate()) {
+    			event.preventDefault();  
+    		}
+    	}else if($location.path().indexOf("detail")>0 && $location.path().indexOf("details")==-1){
+    		if (false === $('form[name="form-wizard-step-2"]').parsley().validate()) {
+    			event.preventDefault();  
+    		}
+    	}
+    	
+	  });
+  
 
 }]);

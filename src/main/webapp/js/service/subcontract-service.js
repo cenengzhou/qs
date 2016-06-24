@@ -1,10 +1,11 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
+    	getSubcontract: 	getSubcontract,
     	getSubcontractList: getSubcontractList,
-    	addSubcontract: addSubcontract,
-    	
-    	obtainVendorInfo: obtainVendorInfo
+    	addSubcontract: 	addSubcontract,
+    	getWorkScope: 		getWorkScope,
+    	obtainVendorInfo: 	obtainVendorInfo
     	
     });
 	
@@ -41,6 +42,29 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             responseType: 'arraybuffer'
             */
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getSubcontract(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/getSubcontract",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getWorkScope(workScopeCode) {
+        var request = $http({
+            method: "get",
+            url: "service/getWorkScope",
+            params: {
+            	workScopeCode: workScopeCode
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }

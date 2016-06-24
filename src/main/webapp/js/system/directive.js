@@ -126,7 +126,7 @@ mainApp.directive('ngConfirmClick', [
  function(){
      return {
          link: function ($scope, $element, $attr) {
-             var msg = $attr.ngConfirmClick || "Are you sure want to close the window?";
+             var msg = $attr.ngConfirmClick || "Are you sure to close the window?";
              var clickAction = $attr.confirmedClick;
              $element.bind('click',function (event) {
                      if ( window.confirm(msg) ) {

@@ -10,14 +10,14 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ng-class="{active : activeIVSideMenu == 'IVUpdate'}">
-				<a ui-sref="iv.update" ng-click="activeIVSideMenu = 'IVUpdate'">
+			<li ui-sref-active="active">
+				<a ui-sref="iv.update">
 					<i class="fa fa-dashboard"></i> 
 					<span>IV Update</span>
 				</a>
 			</li>
-			<li ng-class="{active : activeIVSideMenu == 'IVPost'}">
-				<a ui-sref="iv.post" ng-click="activeIVSideMenu = 'IVPost'">
+			<li ui-sref-active="active">
+				<a ui-sref="iv.post">
 					<i class="fa fa-calendar-check-o"></i>
 					<span>IV Post</span>
 				</a>

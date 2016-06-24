@@ -301,7 +301,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             }]
         }
 	})
-	.state('subcontract.addendumDetails', {
+	/*.state('subcontract.addendumDetails', {
 		url: "/addendum/details",
 		templateUrl: "view/subcontract/addendum-details.html",
 		controller: 'AddendumDetailsCtrl',
@@ -317,7 +317,45 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 });
             }]
         }
+	})*/
+	.state('subcontract.addendumDetails', {
+		url: "/addendum/tab",
+		templateUrl: "view/subcontract/addendum-tab.html",
+		controller: 'AddendumDetailsCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/addendum-details.js',
+                    ] 
+                });
+            }]
+        }
 	})
+	.state('subcontract.addendumDetails.title', {
+		url: "/title",
+		templateUrl: "view/subcontract/addendum-title.html",
+	})
+	.state('subcontract.addendumDetails.detail', {
+		url: "/detail",
+		templateUrl: "view/subcontract/addendum-detail.html",
+	})
+       
+	.state('subcontract.addendumDetails.details', {
+		url: "/details",
+		templateUrl: "view/subcontract/addendum-details.html",
+	})
+       
+	.state('subcontract.addendumDetails.attachment', {
+		url: "/attachment",
+		templateUrl: "view/subcontract/addendum-attachment.html",
+	})
+	.state('subcontract.addendumDetails.summary', {
+		url: "/summary",
+		templateUrl: "view/subcontract/addendum-summary.html",
+	})
+	
 	.state('subcontract.payment', {
 		url: "/payment",
 		templateUrl: "view/subcontract/payment-select.html",

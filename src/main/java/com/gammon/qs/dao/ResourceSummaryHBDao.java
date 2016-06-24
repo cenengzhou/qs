@@ -491,6 +491,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			criteria.add(Restrictions.eq("jobNumber", jobInfo.getJobNumber()));
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 			criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
+			
 			criteria.setProjection(Projections.projectionList()
 					.add(Projections.groupProperty("objectCode"), "objectCode")
 					.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")

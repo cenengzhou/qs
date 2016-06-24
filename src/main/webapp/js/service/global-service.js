@@ -1,54 +1,49 @@
 //Return modal window 
 mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
-    return {
-        open: function(size, templateUrl, controller) {
-        	
-        		var modalInstance = $uibModal.open({
-        			animation: true,
-        			templateUrl: templateUrl,
-        			controller: controller,
-        			size: size,
-        			keyboard: false,
-        			//windowClass: 'modal-vertical-centered',
-        			backdrop: false
-        			/*resolve: {
-        				items: function () {
-        					return $scope.message;
-        				}
-        			}*/
-        		});
+	return {
+		open: function(size, templateUrl, controller, type, message) {
 
-        		/*modalInstance.result.then(function (selectedItem) {
-        			$scope.selected = selectedItem;
-        		}, function () {
-        			$log.info('Modal dismissed at: ' + new Date());
-        			//window.alert('Hello');
-        		});*/
-            
-            
-        }
-    };
+			var modalInstance = $uibModal.open({
+				animation: true,
+				templateUrl: templateUrl,
+				controller: controller,
+				size: size,
+				keyboard: false,
+				//windowClass: 'modal-vertical-centered',
+				backdrop: false,
+				resolve: {
+					modalType: function () {
+						return type;
+					},
+					modalMessage: function () {
+						return message;
+					}
+				}
+			});
+
+		}
+	};
 }]);
 
-mainApp.factory('modalMessageService', ['$uibModal', function( $uibModal) {
-    return {
-        open: function(templateUrl, controller, message) {
-        		var modalInstance = $uibModal.open({
-        			animation: true,
-        			templateUrl: templateUrl,
-        			controller: controller,
-        			size: 'md',
-        			keyboard: true,
-        			backdrop: true,
-        			resolve: {
-        				items: function () {
-        					return message;
-        				}
-        			}
-        		});
-        }
-    };
-}]);
+/*mainApp.factory('modalMessageService', ['$uibModal', function( $uibModal) {
+	return {
+		open: function(templateUrl, controller, message) {
+			var modalInstance = $uibModal.open({
+				animation: true,
+				templateUrl: templateUrl,
+				controller: controller,
+				size: 'md',
+				keyboard: true,
+				backdrop: true,
+				resolve: {
+					items: function () {
+						return message;
+					}
+				}
+			});
+		}
+	};
+}]);*/
 
 mainApp.factory('Base64', function() {
 	var keyStr = 'ABCDEFGHIJKLMNOP' +
@@ -140,39 +135,39 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	var defer = $q.defer();
 	return{
 		getCurrentSessionId: function(){
-		return $http.post('service/GetCurrentSessionId')
-		    .then(function(response){
-		    	if(typeof response.data === 'string'){
-		    		return response.data;
-		    	} else {
-		    		return $q.reject(response.data);
-		    	}
-		    }, function(response){
-		    	return $q.reject(response.data);
-		    });
+			return $http.post('service/GetCurrentSessionId')
+			.then(function(response){
+				if(typeof response.data === 'string'){
+					return response.data;
+				} else {
+					return $q.reject(response.data);
+				}
+			}, function(response){
+				return $q.reject(response.data);
+			});
 		},
 		validateSession: function(){
-		return $http.post('service/ValidateCurrentSession')
-		    .then(function(response){
-		    	if(typeof response.data === 'boolean'){
-		    		return response.data;
-		    	} else {
-		    		return $q.reject(response.data);
-		    	}
-		    }, function(response){
-		    	return $q.reject(response.data);
-		    });
+			return $http.post('service/ValidateCurrentSession')
+			.then(function(response){
+				if(typeof response.data === 'boolean'){
+					return response.data;
+				} else {
+					return $q.reject(response.data);
+				}
+			}, function(response){
+				return $q.reject(response.data);
+			});
 		},
 		invalidateSessionList: function(sessionIds){
-			 $http({
-			        method: "post",
-			        url: "service/InvalidateSessionList",
-			        data: sessionIds
-			    })
-				.success(function(data) {
-					defer.resolve(data)
-				});
-			 return defer.promise;
+			$http({
+				method: "post",
+				url: "service/InvalidateSessionList",
+				data: sessionIds
+			})
+			.success(function(data) {
+				defer.resolve(data)
+			});
+			return defer.promise;
 		}
 	}
 }]);
@@ -181,7 +176,7 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
        modalsExist: function () {
     	   console.log("modal: HI");
     	   console.log("modal: "+!!$uibModalStack.getTop());
-    	   
+
          return !!$uibModalStack.getTop();
        },
        closeAllModals: function () {

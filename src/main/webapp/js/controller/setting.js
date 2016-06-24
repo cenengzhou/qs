@@ -10,7 +10,7 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
     	SessionHelper.validateSession()
     	.then(function(data){
     		if(data){
-    			console.log('validate session:' + data);
+    			//console.log('validate session:' + data);
     		}else{
     			if(toState.name != 'logout'){
 //    				console.log("login.htm?validateSession=stateChangeStart");

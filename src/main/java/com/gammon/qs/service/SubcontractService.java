@@ -2862,9 +2862,6 @@ public class SubcontractService {
 		return subcontractHBDao.getSCPackages(job);		
 	}
 
-	public Subcontract obtainSCPackage(JobInfo job, String packageNo) throws DatabaseOperationException{
-		return subcontractHBDao.obtainPackage(job, packageNo);
-	}
 
 	public Subcontract getSCPackageForPackagePanel(JobInfo job, String packageNo) throws Exception{
 		logger.info(job.getJobNumber()+"-"+packageNo);	
@@ -3228,7 +3225,7 @@ public class SubcontractService {
 			Tender tenderAnalysis = new Tender();;
 			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 			Subcontract scPackage;
-			scPackage = this.obtainSCPackage(job, subcontractNumber);
+			scPackage = subcontractHBDao.obtainPackage(job, subcontractNumber);
 
 			if (scPackage == null){
 				return "SCPackage does not exist";
@@ -5095,7 +5092,7 @@ public class SubcontractService {
 	public String generateSCDetailsForPaymentRequisition(String jobNo, String subcontractNo, String vendorNo) throws Exception {
 		Tender budgetTA = null;
 		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
-		Subcontract scPackage = this.obtainSCPackage(job, subcontractNo);
+		Subcontract scPackage = subcontractHBDao.obtainPackage(job, subcontractNo);
 		
 		if (scPackage == null){
 			return "SCPackage does not exist";
@@ -5662,8 +5659,13 @@ public class SubcontractService {
 		return packageList;	
 	}
 	
+	public Subcontract obtainSubcontract(String jobNo, String packageNo) throws DatabaseOperationException{
+		return subcontractHBDao.obtainSubcontract(jobNo, packageNo);
+	}
+	
 	public String saveOrUpdateSCPackage(String jobNo, Subcontract subcontract) throws Exception{
 		logger.info("Job: " + jobNo + " SCPackage: " + subcontract.getPackageNo());
+		
 		//Validate internal job number
 		if(Subcontract.INTERNAL_TRADING.equalsIgnoreCase(subcontract.getFormOfSubcontract())){
 			if(subcontract.getInternalJobNo() == null || subcontract.getInternalJobNo().trim().length() == 0)
@@ -5678,9 +5680,9 @@ public class SubcontractService {
 
 		
 		if(subcontract.getId() == null){
-			Subcontract packageInDB = subcontractHBDao.obtainPackage(jobNo, subcontract.getPackageNo());
+			Subcontract packageInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
 			if(packageInDB != null)
-				return "The package number " + subcontract.getPackageNo() + " is already used";
+				return "The subcontract number " + subcontract.getPackageNo() + " has already been used.";
 			
 				Subcontract newSubcontract = new Subcontract();
 				newSubcontract.setJobInfo(jobHBDao.obtainJobInfo(jobNo));
@@ -5693,19 +5695,50 @@ public class SubcontractService {
 				newSubcontract.setInternalJobNo(subcontract.getInternalJobNo());
 				newSubcontract.setRetentionTerms(subcontract.getRetentionTerms());
 				newSubcontract.setPaymentTerms(subcontract.getPaymentTerms());
-				newSubcontract.setRetentionAmount(subcontract.getRetentionAmount());
 				newSubcontract.setPaymentTermsDescription(subcontract.getPaymentTermsDescription());
+				newSubcontract.setRetentionAmount(subcontract.getRetentionAmount());
 				newSubcontract.setMaxRetentionPercentage(subcontract.getMaxRetentionPercentage());
 				newSubcontract.setInterimRentionPercentage(subcontract.getInterimRentionPercentage());
 				newSubcontract.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
+				newSubcontract.setLabourIncludedContract(subcontract.getLabourIncludedContract());
+				newSubcontract.setPlantIncludedContract(subcontract.getPlantIncludedContract());
+				newSubcontract.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
 				
 				subcontractHBDao.addSCPackage(newSubcontract);
 		}else{
-			//Subcontract packageInDB = subcontractHBDao.obtainPackage(jobNo, subcontract.getPackageNo());
-			//subcontractHBDao.
+			//check if subcontract is submitted or awarded
+			Subcontract packageInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
+			if(packageInDB != null){
+				if(packageInDB.getSubcontractStatus() != null && packageInDB.getSubcontractStatus() >= 300){
+					return "Subcontract has been awarded or submitted.";
+				}
+				
+				packageInDB.setDescription(subcontract.getDescription());
+				packageInDB.setSubcontractorNature(subcontract.getSubcontractorNature());
+				packageInDB.setSubcontractTerm(subcontract.getSubcontractTerm());
+				packageInDB.setFormOfSubcontract(subcontract.getFormOfSubcontract());
+				packageInDB.setInternalJobNo(subcontract.getInternalJobNo());
+				packageInDB.setRetentionTerms(subcontract.getRetentionTerms());
+				packageInDB.setPaymentTerms(subcontract.getPaymentTerms());
+				packageInDB.setPaymentTermsDescription(subcontract.getPaymentTermsDescription());
+				packageInDB.setRetentionAmount(subcontract.getRetentionAmount());
+				packageInDB.setMaxRetentionPercentage(subcontract.getMaxRetentionPercentage());
+				packageInDB.setInterimRentionPercentage(subcontract.getInterimRentionPercentage());
+				packageInDB.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
+				packageInDB.setLabourIncludedContract(subcontract.getLabourIncludedContract());
+				packageInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
+				packageInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				
+				
+				
+				subcontractHBDao.update(packageInDB);
+			}
+
 		}
 
-		//subcontractHBDao.saveOrUpdate(subcontract);
+		
+		
 		return null;
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

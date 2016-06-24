@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.wrapper.UDC;
 
 @RestController
 @RequestMapping(value = "service"/*,
@@ -59,18 +60,48 @@ public class SubcontractController {
 		return subcontractList;
 	}
 	
+	
+	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)
+	public UDC getWorkScope(@RequestParam(name="workScopeCode") String workScopeCode){
+		logger.info("------------------------obtainWorkScope");
+		
+		UDC obtainWorkScope = null;
+		try {
+			obtainWorkScope = subcontractService.obtainWorkScope(workScopeCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return obtainWorkScope;
+	}
+	
+	@RequestMapping(value = "getSubcontract", method = RequestMethod.GET)
+	public Subcontract getSubcontract(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+		Subcontract subcontract = null;
+		try {
+			subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return subcontract;
+	}
+	
 	@RequestMapping(value = "addSubcontract", method = RequestMethod.POST)
 	public String addSubcontract(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
 		logger.info("------------------------addSubcontract");
 		logger.info("jobNo: "+jobNo);
 		logger.info("packageNo: "+subcontract.getPackageNo());
 		
-		String result1 = null;
+		String result = null;
 		try {
-			result1 = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
+			result = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
 		} catch (Exception e) {
+			result = "Subcontract cannot be updated.";
 			e.printStackTrace();
 		} 
-		return result1;
+		return result;
 	}
+	
+	
+	
+	
 }

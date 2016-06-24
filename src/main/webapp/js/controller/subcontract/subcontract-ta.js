@@ -34,15 +34,15 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', '$uibMo
 	};
 
 	loadRepacakgingData();
-
-	function loadRepacakgingData() {
-		repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
-		.then(
-				function( data ) {
-					console.log(data);
-					$scope.gridOptions.data= data;
-				});
-	}
+    
+    function loadRepacakgingData() {
+   	 repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
+   	 .then(
+			 function( data ) {
+				 console.log(data);
+				 //$scope.gridOptions.data= data;
+			 });
+    }
 
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();

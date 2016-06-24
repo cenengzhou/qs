@@ -1,6 +1,8 @@
-mainApp.controller("MessageModalCtrl", ['$scope', '$uibModalInstance', 'items',  function ($scope, $uibModalInstance, items) {
+mainApp.controller("MessageModalCtrl", ['$scope', '$uibModalInstance', 'modalType', 'modalMessage',  function ($scope, $uibModalInstance, modalType, modalMessage) {
 	$scope.header = "";
-	$scope.message = items;
+	$scope.type = modalType;
+	
+	$scope.message = modalMessage;
 
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");

@@ -19,7 +19,6 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 
 	if($scope.currentPath.indexOf("/job")==0){	
 		$scope.activeMenu = '';
-		$scope.activeJobSideMenu = $scope.currentPath;
 	}
 	else if ($scope.currentPath.indexOf("/cert")==0){
 		$scope.activeMenu = 'Certificate';
@@ -35,13 +34,11 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	}
 	else if ($scope.currentPath.indexOf("/iv")==0){
 		$scope.activeMenu = 'IV';
-		$scope.activeIVSideMenu = $scope.currentPath;
 
 	}else if ($scope.currentPath.indexOf("/transit")==0){
 		$scope.activeMenu = 'Transit';
 	}else if ($scope.currentPath.indexOf("/admin")==0){
 		$scope.activeMenu = 'Admin';
-		$scope.activeAdminSideMenu = $scope.currentPath;
 	}
 
 
