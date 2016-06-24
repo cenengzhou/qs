@@ -125,7 +125,7 @@ public class Tender extends BasePersistedObject{
 		this.packageNo = packageNo;
 	}
 
-	@Column(name = "amtBuyingGainLoss",
+	@Column(name = "AMT_BUYING_GAIN_LOSS",
 			precision = 19,
 			scale = 2)
 	public BigDecimal getAmtBuyingGainLoss() {
@@ -146,7 +146,7 @@ public class Tender extends BasePersistedObject{
 		this.remarks = remarks;
 	}
 
-	@Column(name = "statusChangeExecutionOfSc",
+	@Column(name = "STATUS_CHANGE_EXECUTION_OF_SC",
 			length = 10)
 	public String getStatusChangeExecutionOfSC() {
 		return statusChangeExecutionOfSC;
@@ -156,7 +156,7 @@ public class Tender extends BasePersistedObject{
 		this.statusChangeExecutionOfSC = statusChangeExecutionOfSC;
 	}
 
-	@Column(name = "usernamePrepared",
+	@Column(name = "USERNAME_PREPARED",
 			length = 20)
 	public String getUsernamePrepared() {
 		return usernamePrepared;
@@ -166,7 +166,7 @@ public class Tender extends BasePersistedObject{
 		this.usernamePrepared = usernamePrepared;
 	}
 
-	@Column(name = "datePrepared")
+	@Column(name = "DATE_PREPARED")
 	public Date getDatePrepared() {
 		return datePrepared;
 	}
@@ -175,7 +175,7 @@ public class Tender extends BasePersistedObject{
 		this.datePrepared = datePrepared;
 	}
 
-	@Column(name = "notes")
+	@Column(name = "NOTES")
 	public String getNotes() {
 		return notes;
 	}
