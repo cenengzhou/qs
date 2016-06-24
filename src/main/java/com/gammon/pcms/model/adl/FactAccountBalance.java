@@ -62,6 +62,11 @@ public class FactAccountBalance implements Serializable {
 	private BigDecimal amountAccumPeriod12;
 	private BigDecimal amountAccumPeriod13;
 	private BigDecimal amountAccumPeriod14;
+	
+	public static final String TYPE_LEDGER_AA = "AA";
+	public static final String TYPE_LEDGER_JI = "JI";	
+	public static final String CODE_OBJECT_TURNOVER = "221110";
+
 
 	public FactAccountBalance() {}
 

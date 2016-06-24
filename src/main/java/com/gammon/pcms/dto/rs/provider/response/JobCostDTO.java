@@ -9,7 +9,7 @@ package com.gammon.pcms.dto.rs.provider.response;
 
 import java.math.BigDecimal;
 
-public class MonthlyContractExpenditureDTO {
+public class JobCostDTO {
 
 	private String typeLedger;
 	private String codeObject;
@@ -77,7 +77,7 @@ public class MonthlyContractExpenditureDTO {
 
 	@Override
 	public String toString() {
-		return "MonthlyContractExpenditureDTO [typeLedger=" + typeLedger + ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", accountDescription=" + accountDescription + ", currencyLocal=" + currencyLocal + ", amountCumulative=" + amountCumulative + ", amountMovement=" + amountMovement + "]";
+		return "JobCostDTO [typeLedger=" + typeLedger + ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", accountDescription=" + accountDescription + ", currencyLocal=" + currencyLocal + ", amountCumulative=" + amountCumulative + ", amountMovement=" + amountMovement + "]";
 	}
 
 }

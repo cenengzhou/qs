@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.dto.rs.provider.response.MonthlyContractExpenditureDTO;
+import com.gammon.pcms.dto.rs.provider.response.JobCostDTO;
+import com.gammon.pcms.model.adl.FactAccountBalance;
 import com.gammon.pcms.service.ADLService;
 
 @RestController
@@ -19,14 +20,23 @@ public class ADLController {
 	@Autowired
 	private ADLService adlService;
 
-	@RequestMapping(value = "getMonthlyContractExpenditure",
+	@RequestMapping(value = "getMonthlyJobCost",
 					method = RequestMethod.GET)
-	public List<MonthlyContractExpenditureDTO> getMonthlyContractExpenditure(	@RequestParam(required = true) BigDecimal year,
-	                                                                         	@RequestParam(required = true) BigDecimal month,
-																				@RequestParam(required = true) String typeLedger,
-																				@RequestParam(required = true) String noJob,
-																				@RequestParam(required = false) String noSubcontract) throws Exception {
-		return adlService.getMonthlyContractExpenditure(year, month, typeLedger, noJob, noSubcontract);
+	public List<JobCostDTO> getMonthlyJobCost(	@RequestParam(required = true) BigDecimal year,
+																	@RequestParam(required = true) BigDecimal month,
+																	@RequestParam(required = true) String typeLedger,
+																	@RequestParam(required = true) String noJob,
+																	@RequestParam(required = false) String noSubcontract) {
+		return adlService.getMonthlyJobCost(year, month, typeLedger, noJob, noSubcontract);
+	}
+
+	@RequestMapping(value = "getTurnover",
+					method = RequestMethod.GET)
+	public List<FactAccountBalance> getTurnover(	@RequestParam(required = true) BigDecimal yearStart,
+																		@RequestParam(required = true) BigDecimal yearEnd,
+																		@RequestParam(required = true) String typeLedger,
+																		@RequestParam(required = true) String noJob) {
+		return adlService.getTurnover(yearStart, yearEnd, typeLedger, noJob);
 	}
 
 }
