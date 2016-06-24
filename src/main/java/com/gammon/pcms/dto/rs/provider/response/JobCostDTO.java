@@ -1,7 +1,7 @@
 /**
  * PCMS-TC
  * com.gammon.pcms.dto.rs.provider.response
- * MonthlyContractExpenditureDTO.java
+ * JobCostDTO.java
  * @since Jun 22, 2016 3:43:12 PM
  * @author tikywong
  */
