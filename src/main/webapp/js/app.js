@@ -606,10 +606,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	})
 	
 	//Admin
-	.state("admin", {
-		url: "/admin",
-		parent: "navigation",
-		templateUrl: "view/admin/admin-menu.html",
+	.state('admin', {
+		url: '/admin',
+		parent: 'navigation',
+		templateUrl: 'view/admin/admin-menu.html',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
@@ -626,72 +626,79 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 });
             }]
         },
-        controller: 'NavMenuCtrl'
+        controller: 'NavMenuCtrl',
+        controllerAs: 'navMenuCtrl'
 	})
-	.state("admin.session",{
-		url: "/session",
-		templateUrl: "view/admin/admin-session.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.session',{
+		url: '/session',
+		templateUrl: 'view/admin/admin-session.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminSessionCtrl"
+		controller: "AdminSessionCtrl",
+		controllerAs: 'sessionCtrl'
 	})
-	.state("admin.ManualProcedures",{
-		url: "/ManualProcedures",
-		templateUrl: "view/admin/admin-ManualProcedures.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.ManualProcedures',{
+		url: '/ManualProcedures',
+		templateUrl: 'view/admin/admin-ManualProcedures.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminManualProceduresCtrl"
+		controller: 'AdminManualProceduresCtrl',
+		controllerAs: 'manualProceduresCtrl'
 	})
-	.state("admin.Revisions",{
-		url: "/Revisions",
-		templateUrl: "view/admin/admin-Revisions.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.Revisions',{
+		url: '/Revisions',
+		templateUrl: 'view/admin/admin-Revisions.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminRevisionsCtrl"
+		controller: 'AdminRevisionsCtrl',
+		controllerAs: 'revisionsCtrl'
 	})
-	.state("admin.TransitUOMMaintenance",{
-		url: "/TransitUOMMaintenance",
-		templateUrl: "view/admin/admin-TransitUOMMaintenance.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.TransitUOMMaintenance',{
+		url: '/TransitUOMMaintenance',
+		templateUrl: 'view/admin/admin-TransitUOMMaintenance.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminTransitUOMMaintenanceCtrl"
+		controller: 'AdminTransitUOMMaintenanceCtrl',
+		controllerAs: 'transitUOMMaintenanceCtrl'
 	})
-	.state("admin.TransitResourceCodeMaintenance",{
-		url: "/TransitResourceCodeMaintenance",
-		templateUrl: "view/admin/admin-TransitResourceCodeMaintenance.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.TransitResourceCodeMaintenance',{
+		url: '/TransitResourceCodeMaintenance',
+		templateUrl: 'view/admin/admin-TransitResourceCodeMaintenance.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminTransitResourceCodeMaintenanceCtrl"
+		controller: 'AdminTransitResourceCodeMaintenanceCtrl',
+		controllerAs: 'resourceCodeMaintenanceCtrl'
 	})
-	.state("admin.SubcontractStandardTermsMaintenance",{
-		url: "/SubcontractStandardTermsMaintenance",
-		templateUrl: "view/admin/admin-SubcontractStandardTermsMaintenance.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.SubcontractStandardTermsMaintenance',{
+		url: '/SubcontractStandardTermsMaintenance',
+		templateUrl: 'view/admin/admin-SubcontractStandardTermsMaintenance.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminSubcontractStandardTermsMaintenanceCtrl"
+		controller: 'AdminSubcontractStandardTermsMaintenanceCtrl',
+		controllerAs: 'standardTermsMaintenanceCtrl'
 	})
-	.state("admin.SchedulerMaintenance",{
-		url: "/SchedulerMaintenance",
-		templateUrl: "view/admin/admin-SchedulerMaintenance.html",
-		"params": {
-			"jobNo": null,
-			"jobDescription": null
+	.state('admin.SchedulerMaintenance',{
+		url: '/SchedulerMaintenance',
+		templateUrl: 'view/admin/admin-SchedulerMaintenance.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null
 		},
-		controller: "AdminSchedulerMaintenanceCtrl",
-		controllerAs: "schedulerMaintenance"
-	})
+		controller: 'AdminSchedulerMaintenanceCtrl',
+		controllerAs: 'schedulerMaintenance'
+	});
 
 }])
 .filter('jsonDate', ['$filter', function ($filter) {
@@ -732,7 +739,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					deferred.reject(rejection);
 					return deferred.promise;
 				}
-			}
+			};
 		}];
 		$httpProvider.interceptors.push(httpIntercepter);
 }]);
@@ -826,7 +833,7 @@ mainApp.run(function($rootScope,$location, $uibModalStack){
 	      window.history.forward();
 	});*/
 		
-	})
+	});
 
 
 	

@@ -14,19 +14,19 @@
 	
 		<!-- Main content -->
 		<div class="row">
-			<section ng-controller="AdminRevisionsCtrl as revision" class="box box-primary">
+			<section class="box box-primary">
 				<ul class="nav nav-tabs">
-					<li role="presentation" ng-class="{active:revision.isSelected(1)}"><a
-						href ng-click="revision.selectTab(1)">Subcontract</a></li>
-					<li role="presentation" ng-class="{active:revision.isSelected(2)}"><a
-						href ng-click="revision.selectTab(2)">Payment</a></li>
-					<li role="presentation" ng-class="{active:revision.isSelected(3)}"><a
-						href ng-click="revision.selectTab(3)">Addendum</a></li>
-					<li role="presentation" ng-class="{active:revision.isSelected(4)}"><a
-						href ng-click="revision.selectTab(4)">Main Certificate</a></li>
+					<li role="presentation" ng-class="{active:revisionCtrl.isSelected(1)}"><a
+						href ng-click="revisionCtrl.selectTab(1)">Subcontract</a></li>
+					<li role="presentation" ng-class="{active:revisionCtrl.isSelected(2)}"><a
+						href ng-click="revisionCtrl.selectTab(2)">Payment</a></li>
+					<li role="presentation" ng-class="{active:revisionCtrl.isSelected(3)}"><a
+						href ng-click="revisionCtrl.selectTab(3)">Addendum</a></li>
+					<li role="presentation" ng-class="{active:revisionCtrl.isSelected(4)}"><a
+						href ng-click="revisionCtrl.selectTab(4)">Main Certificate</a></li>
 				</ul>
 				
-				<div ng-show="revision.isSelected(1)">
+				<div ng-show="revisionCtrl.isSelected(1)">
 					<div class="box col-md-12">
 						<table class="table">
 							<tr>
@@ -78,7 +78,7 @@
 					</div>
 				</div>
 
-				<div ng-show="revision.isSelected(2)">
+				<div ng-show="revisionCtrl.isSelected(2)">
 					<div class="box col-md-12">
 						<table class="table">
 							<tr>
@@ -118,7 +118,7 @@
 					</div>
 				</div>
 
-				<div  ng-show="revision.isSelected(3)">
+				<div  ng-show="revisionCtrl.isSelected(3)">
 					<div class="box col-md-12">
 						<table class="table">
 							<tr>
@@ -169,7 +169,7 @@
 						</table>
 					</div>
 				</div>
-				<div ng-show="revision.isSelected(4)">
+				<div ng-show="revisionCtrl.isSelected(4)">
 					<div class="box col-md-12">
 						<table class="table">
 							<tr>

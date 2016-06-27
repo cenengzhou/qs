@@ -7,10 +7,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +25,7 @@ import com.gammon.qs.domain.Tender;
  */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@SequenceGenerator(name = "TENDER_VARIANCE_GEN", sequenceName = "TENDER_VARIANCE_SEQ", allocationSize = 1)
 @Table(name = "TENDER_VARIANCE")
 public class TenderVariance implements Serializable {
 
@@ -78,7 +81,7 @@ public class TenderVariance implements Serializable {
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TENDER_VARIANCE_GEN")
 	@Column(name = "ID", unique = true, nullable = false, scale = 0)
 	public BigDecimal getId() {
 		return this.id;

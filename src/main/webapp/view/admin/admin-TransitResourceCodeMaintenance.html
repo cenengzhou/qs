@@ -1,6 +1,5 @@
 <!-- begin #content -->
-<div id="content" class="content"
-	ng-controller="AdminTransitResourceCodeMaintenanceCtrl as transitResource">
+<div id="content" class="content">
 	<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
 		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
@@ -22,24 +21,31 @@
 							<i class="fa fa-info-circle"></i> Resource code matching
 						</h3>
 					</div>
-					<div class="panel-body"><article><div class="caption"><h3>Lexical pattern matchers provide
-						excellent performance and ease of use,</h3></div> but have a limited
-						vocabulary. Syntactic matchers provide more precision, but may
-						sacrifice performance, robustness, or power. To achieve more of
-						the benefits of both models, we extend the pattern syntax of AWK
-						to support matching of abstract syntax trees, as demonstrated in a
-						tool called TAWK. Its pattern syntax is language-independent,
-						based on abstract tree patterns. As in AWK, patterns can have
-						associated actions, which in TAWK are written in this for generality,
-						familiarity, and performance. The use of this is simplified by
-						high-level libraries and dynamic linking. To allow processing of
-						program files containing non-syntactic constructs such as textual
-						macros, mechanisms have been designed that allow matching of
-						""language-like" macros in a syntactic fashion</article></div>
+					<div class="panel-body">
+						<article>
+							<div class="caption">
+								<h3>Lexical pattern matchers provide excellent performance
+									and ease of use,</h3>
+							</div>
+							but have a limited vocabulary. Syntactic matchers provide more
+							precision, but may sacrifice performance, robustness, or power.
+							To achieve more of the benefits of both models, we extend the
+							pattern syntax of AWK to support matching of abstract syntax
+							trees, as demonstrated in a tool called TAWK. Its pattern syntax
+							is language-independent, based on abstract tree patterns. As in
+							AWK, patterns can have associated actions, which in TAWK are
+							written in this for generality, familiarity, and performance. The
+							use of this is simplified by high-level libraries and dynamic
+							linking. To allow processing of program files containing
+							non-syntactic constructs such as textual macros, mechanisms have
+							been designed that allow matching of ""language-like" macros in a
+							syntactic fashion
+						</article>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-8" vertilize>
-				<div id="" ui-grid="transitResource.gridOptions"
+				<div id="" ui-grid="resourceCodeMaintenanceCtrl.gridOptions"
 					external-scopes="clickHandler" ui-grid-selection ui-grid-cellnav
 					ui-grid-edit class="grid" style="height: 500px;"></div>
 			</div>
@@ -47,6 +53,6 @@
 		<button class="btn btn-block btn-primary">
 			<i class="glyphicon glyphicon-upload"></i> Upload
 		</button>
-
-		<!-- end #content -->
 	</div>
+	<!-- end #content -->
+</div>

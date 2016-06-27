@@ -57,9 +57,9 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 		.then(function(data){
 			$rootScope.sessionId = data;
 			$http.post('service/GetSessionList')
-		    .then(function(data) {
-				if(angular.isArray(data.data)){
-					$scope.gridOptions.data = data.data;
+		    .then(function(response) {
+				if(angular.isArray(response.data)){
+					$scope.gridOptions.data = response.data;
 				} else {
 					SessionHelper.getCurrentSessionId().then;
 				}

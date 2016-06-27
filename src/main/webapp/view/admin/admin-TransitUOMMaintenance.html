@@ -1,7 +1,6 @@
 
 <!-- begin #content -->
-<div id="content" class="content"
-	ng-controller="AdminTransitUOMMaintenanceCtrl as uom">
+<div id="content" class="content">
 	<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
 		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
@@ -43,14 +42,15 @@
 			</div>
 		</div>
 		<div class="col-md-8" vertilize>
-			<div id="" ui-grid="uom.gridOptions" external-scopes="clickHandler"
+			<div id="" ui-grid="transitUOMMaintenanceCtrl.gridOptions" external-scopes="clickHandler"
 				ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
 				style="height: 500px;"></div>
 		</div>
 	</div>
+	<div class="row">
 	<button class="btn btn-block btn-primary">
 		<i class="glyphicon glyphicon-upload"></i> Upload
 	</button>
-
+	</div>
 	<!-- end #content -->
 </div>

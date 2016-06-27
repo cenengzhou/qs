@@ -25,8 +25,8 @@ initApp.run(['$http', '$window', function($http,$window){
 	var validateSession = function(){
 		console.log("init");
 		$http.post('service/ValidateCurrentSession')
-		.then(function(data){
-			if(data.data){
+		.then(function(response){
+			if(response.data){
 				$window.location.href = 'home.html';
 			} else {
 				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';

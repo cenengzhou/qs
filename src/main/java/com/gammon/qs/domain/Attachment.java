@@ -5,7 +5,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,6 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "ATTACHMENT")
+@SequenceGenerator(name = "ATTACHMENT_GEN", sequenceName = "ATTACHMENT_SEQ", allocationSize = 1)
 public class Attachment implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5560045256198537931L;
@@ -63,7 +67,7 @@ public class Attachment implements java.io.Serializable {
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATTACHMENT_GEN")
 	@Column(name = "ID", unique = true, nullable = false, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
