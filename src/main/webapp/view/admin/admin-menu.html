@@ -28,24 +28,42 @@
 					<span>Revisions</span>
 				</a>
 			</li>		
+			<li class="has-sub">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-file-text"></i>
+				    <span>Transit</span>
+			    </a>
+			 <ul class="sub-menu">
 			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitUOMMaintenance'}">
 				<a ui-sref="admin.TransitUOMMaintenance" ng-click="activeAdminSideMenu = '/admin/TransitUOMMaintenance'">
-					<i class="glyphicon glyphicon-retweet"></i>
-					<span>Transit UOM Maintenance</span>
+					<i class="fa fa-circle-o"></i>
+					<span>UOM Maintenance</span>
 				</a>
 			</li>		
 			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitResourceCodeMaintenance'}">
 				<a ui-sref="admin.TransitResourceCodeMaintenance" ng-click="activeAdminSideMenu = '/admin/TransitResourceCodeMaintenance'">
-					<i class="glyphicon glyphicon-list"></i>
-					<span>Transit Resource Code Maintenance</span>
+					<i class="fa fa-circle-o"></i>
+					<span>Resource Code Maintenance</span>
 				</a>
 			</li>		
+			 </ul>
+			 </li>
+			 <li class="has-sub">
+				<a href="javascript:;">
+				    <b class="caret pull-right"></b>
+				    <i class="fa fa-trophy"></i>
+				    <span>Subcontract</span>
+			    </a> 
+			<ul class="sub-menu">	
 			<li ng-class="{active : activeAdminSideMenu == '/admin/SubcontractStandardTermsMaintenance'}">
 				<a ui-sref="admin.SubcontractStandardTermsMaintenance" ng-click="activeAdminSideMenu = '/admin/SubcontractStandardTermsMaintenance'">
-					<i class="glyphicon glyphicon-book"></i>
-					<span style="padding:20px">Subcontract Standard Terms Maintenance</span>
+					<i class="fa fa-circle-o"></i>
+					<span>Standard Terms Maintenance</span>
 				</a>
 			</li>		
+			</ul>
+			</li>
 			<li ng-class="{active : activeAdminSideMenu == '/admin/SchedulerMaintenance'}">
 				<a ui-sref="admin.SchedulerMaintenance" ng-click="activeAdminSideMenu = '/admin/SchedulerMaintenance'">
 					<i class="glyphicon glyphicon-calendar"></i>
