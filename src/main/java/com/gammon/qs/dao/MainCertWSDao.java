@@ -31,6 +31,8 @@ import com.gammon.jde.webservice.serviceRequester.MainCertificateInsertManager.i
 import com.gammon.jde.webservice.serviceRequester.MainCertificateInsertManager.insertMainCertificateAdditional.MainCertificateAsAtDateInserttRequestListObj;
 import com.gammon.jde.webservice.serviceRequester.PostMainCertToARManager.getPostMainCertToAR.PostMainCertToARInterfaceRequestObj;
 import com.gammon.jde.webservice.serviceRequester.PostMainCertToARManager.getPostMainCertToAR.PostMainCertToARInterfaceResponseObj;
+import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
+import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.service.admin.EnvironmentConfig;
@@ -39,8 +41,6 @@ import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
-import com.gammon.qs.wrapper.mainCertContraCharge.MainCertContraChargeWrapper;
-import com.gammon.qs.wrapper.mainContractCert.MainContractCertWrapper;
 @Repository
 public class MainCertWSDao {
 
@@ -81,7 +81,7 @@ public class MainCertWSDao {
 		throw new UnsupportedOperationException("pagination not supported in WS implementation");
 	}
 
-	public long insertMainContractCert(MainContractCertWrapper mainCertWrapper) throws DatabaseOperationException {
+	public long insertMainContractCert(MainCertRequest mainCertWrapper) throws DatabaseOperationException {
 		logger.info("Inserting Main Contract Certificate to JDE...");
 
 		MainCertificateInsertRequestObj requestObj = new MainCertificateInsertRequestObj();
@@ -162,7 +162,7 @@ public class MainCertWSDao {
 		return responseObj.getNumberRowsInserted();
 	}
 
-	public long insertMainCertContraCharge(List<MainCertContraChargeWrapper> mainCertContraChargeWrapperList) throws DatabaseOperationException {
+	public long insertMainCertContraCharge(List<MainCertContraChargeRequest> mainCertContraChargeWrapperList) throws DatabaseOperationException {
 		InsertMainCertContraChargeRequestListObj requestListObj = new InsertMainCertContraChargeRequestListObj();
 		ArrayList<InsertMainCertContraChargeRequestObj> insertFields = new ArrayList<InsertMainCertContraChargeRequestObj>();
 		Integer counter = 0;
@@ -170,7 +170,7 @@ public class MainCertWSDao {
 			logger.info("Main Contract Certificate Contra Charge LIST is null.");
 			return 0;
 		} 
-		for (MainCertContraChargeWrapper curWrapper : mainCertContraChargeWrapperList) {
+		for (MainCertContraChargeRequest curWrapper : mainCertContraChargeWrapperList) {
 			if (curWrapper == null) {
 				logger.info("Main Contract Certificate Contra Charge Wrapper is null.");
 				continue;

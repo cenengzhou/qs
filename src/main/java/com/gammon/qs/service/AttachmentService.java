@@ -231,7 +231,7 @@ public class AttachmentService {
 	 */
 	public String getMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
 		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		MainCert mainCert = mainContractCertificateRepository.getMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
 		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
 		return attachment.getTextAttachment();
 	}
@@ -246,7 +246,7 @@ public class AttachmentService {
 		long start = System.currentTimeMillis();
 		
 		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		MainCert mainCert = mainContractCertificateRepository.getMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
 		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
 		
 		//prepare file

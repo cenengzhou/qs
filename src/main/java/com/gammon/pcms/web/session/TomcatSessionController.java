@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gammon.pcms.dto.SessionDTO;
+import com.gammon.pcms.dto.rs.provider.response.SessionDTO;
 import com.gammon.pcms.helper.JsonHelper;
 
 @RestController

@@ -27,10 +27,10 @@ public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalanc
 
 	@SuppressWarnings("unchecked")
 	public List<FactAccountBalance> findByFiscalYearRangeAndAccountTypeLedgerAndEntityBusinessUnitKeyAndAccountObject(	BigDecimal yearStart,
-																										BigDecimal yearEnd,
-																										String typeLedger,
-																										String noJob, 
-																										String codeObject) throws DatabaseOperationException {
+																														BigDecimal yearEnd,
+																														String typeLedger,
+																														String noJob,
+																														String codeObject) throws DatabaseOperationException {
 		Criteria criteria = getSession().createCriteria(getType());
 
 		// Data Formatting
@@ -67,12 +67,12 @@ public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalanc
 	 * @since Jun 24, 2016 9:30:05 AM
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JobCostDTO> findMonthlyJobCostBySubcontract(	BigDecimal year,
-																				BigDecimal month,
-																				String typeLedger,
-																				String noJob,
-																				String noSubcontract) throws DatabaseOperationException {
-		List<JobCostDTO> monthlyContractExpenditureDTOList = new ArrayList<JobCostDTO>();
+	public List<JobCostDTO> findMonthlyJobCostBySubcontract(BigDecimal year,
+															BigDecimal month,
+															String typeLedger,
+															String noJob,
+															String noSubcontract) throws DatabaseOperationException {
+		List<JobCostDTO> jobCostDTOList = new ArrayList<JobCostDTO>();
 
 		Criteria criteria = getSession().createCriteria(getType());
 
@@ -115,9 +115,9 @@ public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalanc
 
 		criteria.setResultTransformer(new AliasToBeanResultTransformer(JobCostDTO.class));
 
-		monthlyContractExpenditureDTOList.addAll(criteria.list());
+		jobCostDTOList.addAll(criteria.list());
 
-		return monthlyContractExpenditureDTOList;
+		return jobCostDTOList;
 	}
 
 	/**
@@ -134,10 +134,10 @@ public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalanc
 	 */
 	@SuppressWarnings("unchecked")
 	public List<JobCostDTO> findMonthlyJobCost(	BigDecimal year,
-															BigDecimal month,
-															String typeLedger,
-															String noJob) throws DatabaseOperationException {
-		List<JobCostDTO> monthlyContractExpenditureDTOList = new ArrayList<JobCostDTO>();
+												BigDecimal month,
+												String typeLedger,
+												String noJob) throws DatabaseOperationException {
+		List<JobCostDTO> jobCostDTOList = new ArrayList<JobCostDTO>();
 
 		Criteria criteria = getSession().createCriteria(getType());
 
@@ -176,9 +176,9 @@ public class FactAccountBalanceDao extends BaseAdlHibernateDao<FactAccountBalanc
 
 		criteria.setResultTransformer(new AliasToBeanResultTransformer(JobCostDTO.class));
 
-		monthlyContractExpenditureDTOList.addAll(criteria.list());
+		jobCostDTOList.addAll(criteria.list());
 
-		return monthlyContractExpenditureDTOList;
+		return jobCostDTOList;
 	}
 
 	/**

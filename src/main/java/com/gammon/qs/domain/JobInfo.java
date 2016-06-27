@@ -21,7 +21,7 @@ import org.hibernate.annotations.OptimisticLocking;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.gammon.pcms.dto.View;
+import com.gammon.pcms.dto.rs.provider.response.View;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity

@@ -24,18 +24,18 @@ import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.service.BpiItemService;
 import com.gammon.qs.service.IVPostingHistService;
+import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.JobCostService;
+import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.MasterListService;
-import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.RepackagingDetailService;
-import com.gammon.qs.service.MainCertRetentionReleaseService;
+import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.SubcontractorService;
 import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.transit.TransitService;
@@ -43,7 +43,6 @@ import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeSearchingCriteriaWrapper;
-import com.gammon.qs.wrapper.mainContractCert.MainContractCertEnquirySearchingWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.BaseFont;
@@ -685,50 +684,6 @@ public class DownloadController{
 		}
 	}
 
-	/**
-	 * @author xethhung
-	 * @since 23, Sep, 2015
-	 */
-	@RequestMapping(value="/gammonqs/mainContractCertificateEnquiryExport.rpt", method=RequestMethod.GET)
-	public void generateMainContractCertEnquiryReport(	@RequestParam(required=true,value="jobNo") String jobNo,
-	                                                   	@RequestParam(required=true,value="division") String division,
-	                                                   	@RequestParam(required=true,value="company") String company,
-	                                                   	@RequestParam(required=true,value="status") String status,
-	                                                   	@RequestParam(required=true,value="fileType") String fileType,
-	                                                   	HttpServletRequest request, HttpServletResponse response) {
-		logger.info("generateMainContractCertEnquiryReport");
-		try {
-			@SuppressWarnings("unused")
-			String jasperReportName = "MainContractCertEnquiryReport";
-			MainContractCertEnquirySearchingWrapper wrapper = new MainContractCertEnquirySearchingWrapper();
-			wrapper.setCompanyNo(WildCardStringFinder.removeWildCard(company));
-			wrapper.setJobNo(WildCardStringFinder.removeWildCard(jobNo));
-			wrapper.setDivisionCode(WildCardStringFinder.removeWildCard(division));
-			wrapper.setStatus(status);
-			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadMainCertificateEnquiryReport(wrapper,fileType);
-
-			if (outputStream != null) {
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Main Contract Certificate Enquiry Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			} else {
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: " + e.getLocalizedMessage());
-			showReportError(response);
-		} finally {
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	/**
 	 * @author koeyyeung
@@ -752,47 +707,6 @@ public class DownloadController{
 			if (outputStream != null) {
 				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
 				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Contract Receivable Settlement Report " + DateUtil.formatDate(new Date(), "dd-MM-yyyy") + "." + fileType + "\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			} else {
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: " + e.getLocalizedMessage());
-			showReportError(response);
-		} finally {
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	/**
-	 * modify by paulyiu 20151006
-	 * add search filter cert status & status
-	 */
-	@RequestMapping(value="/gammonqs/retentionReleaseScheduleReportDownload.rpt", method=RequestMethod.GET)
-	public void generateRetentionReleaseScheduleReport(	@RequestParam(required=true,value="jobNumber") String jobNumber,
-	                                                   	@RequestParam(required=true,value="jobNo") String jobNo,
-	                                                   	@RequestParam(required=true,value="division") String division,
-	                                                   	@RequestParam(required=true,value="company") String company,
-	                                                   	@RequestParam(required=true,value="status") String status,
-	                                                   	@RequestParam(required=true,value="certStatus") String certStatus,
-	                                                   	@RequestParam(required=true,value="fileType") String fileType,
-	                                                   	HttpServletRequest request, HttpServletResponse response) {
-		logger.info("generateRetentionReleaseScheduleReport");
-		try {
-			String jasperReportName = "RetentionReleaseScheduleReport";
-			ByteArrayOutputStream outputStream = retentionReleaseScheduleRepository.downloadRetentionReleaseScheduleReportFile(jobNumber, division, company, jobNo,status,certStatus, jasperReportName, fileType);
-
-			if (outputStream != null) {
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Retention Release Schedule Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
 				response.getOutputStream().write(outputStream.toByteArray());
 				response.getOutputStream().flush();
 			} else {
@@ -2030,159 +1944,7 @@ public class DownloadController{
 		}
 	}
 
-	/**
-	 * @author xethhung
-	 * Jun 25, 2015
-	 * Generate main Certificate Enquiry Report as PDF  
-	 */
-	@RequestMapping(value="/gammonqs/mainCertificateEnquiryReportPDFExport.rpt",method=RequestMethod.GET)
-	public void generateMainCertificateReportPDF(@RequestParam(required=true,value="jobNo") String jobNo,
-															@RequestParam(required=true,value="type") String type,
-															HttpServletRequest request, HttpServletResponse response ){		
-		String functionName = "generateMainCertificateReportPDF";
-		logger.info("Start -> "+ functionName);
-		try {
-			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadMainCertificateEnquiryReportPDF(jobNo, type);
-			if (outputStream!=null){
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setContentLength(outputStream.size());
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"MainContractCertificateEnquiry"+".pdf\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			}else{
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showReportError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		logger.info("End -> "+ functionName);
-	}
 
-	/**
-	 * @author xethhung
-	 * Jun 25, 2015
-	 * Generate main Certificate Enquiry Report as Excel  
-	 */
-	@RequestMapping(value="/gammonqs/mainCertificateEnquiryReportExcelExport.smvc",method=RequestMethod.GET)
-	public void generateMainCertificateReportExcel(@RequestParam(required=true,value="jobNo") String jobNo, 
-															@RequestParam(required=true,value="type") String type,
-															HttpServletRequest request, HttpServletResponse response ){		
-				
-		String functionName = "generateMainCertificateReportExcel";
-		logger.info("Start -> "+ functionName);
-		try {
-			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadMainCertificateEnquiryReportExcel(jobNo, type);
-			if (outputStream!=null){
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setContentLength(outputStream.size());
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"MainContractCertificateEnquiry"+".xls");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			}else{
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showReportError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-	
-	/**
-	 * @author xethhung
-	 * Jun 25, 2015
-	 * Generate main Certificate as Excel  
-	 */
-	@RequestMapping(value="/gammonqs/mainCertificateEnquiryExcelExport.smvc",method=RequestMethod.GET)
-	public void generateMainCertificateIPCEnquiryExcel(@RequestParam(required=true,value="jobNo") String jobNo,
-															@RequestParam(required=true,value="mainCertNo") int mainCertNo,
-															HttpServletRequest request, HttpServletResponse response ){		
-				
-		logger.info("generateMainCertificateIPCEnquiryExcel");
-		try {
-			ExcelFile excelFile = mainContractCertificateRepository.downloadMainCertificateEnquiryExcelFile(jobNo, mainCertNo);
-			if (excelFile!=null){
-				byte[] file = excelFile.getBytes();
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setContentLength(file.length);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
-
-				response.getOutputStream().write(file);
-				response.getOutputStream().flush();
-			}else{
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showReportError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	/**
-	 * @author xethhung
-	 * Jun 25, 2015
-	 * Generate main Certificate as PDF  
-	 */
-	@RequestMapping(value="/gammonqs/mainCertificateEnquiryPDFExport.rpt",method=RequestMethod.GET)
-	public void generateMainCertificateIPCEnquiryPDF(@RequestParam(required=true,value="jobNo") String jobNo,
-															@RequestParam(required=true,value="mainCertNo") int mainCertNo,
-															HttpServletRequest request, HttpServletResponse response ){		
-		final String functionName = "mainCertificateEnquiryPDFExport.smvc";
-		logger.info("Start -> "+functionName);
-		try {
-			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadMainCertificateEnquiryPDFFile(jobNo, mainCertNo, "mainContractCert");
-			if (outputStream!=null){
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setContentLength(outputStream.size());
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"MainContractCertificate"+".pdf\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			}else{
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showReportError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		logger.info("End -> "+functionName);
-	}
 	
 	@RequestMapping(value="/gammonqs/paymentCertificateEnquiryExcelExport.smvc",method=RequestMethod.GET)
 	public void generatePaymentCertificateEnquiryExcel(@RequestParam(required=true,value="jobNo") String jobNo,

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.gammon.pcms.application.User;
-import com.gammon.pcms.application.gsf.GetRole;
-import com.gammon.pcms.application.gsf.UserRole;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.dto.rs.consumer.gsf.GetRole;
+import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 import com.gammon.pcms.helper.RestTemplateHelper;
 
 @Service

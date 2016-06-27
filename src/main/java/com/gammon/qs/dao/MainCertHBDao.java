@@ -22,16 +22,13 @@ import org.hibernate.criterion.Subqueries;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.jde.webservice.serviceRequester.MainCertReceiveDateQueryManager.getMainCertReceiveDate.GetMainCertReceiveDateResponseObj;
 import com.gammon.pcms.config.StoredProcedureConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.wrapper.PaginationWrapper;
-import com.gammon.qs.wrapper.mainContractCert.MainContractCertEnquirySearchingWrapper;
 @Repository
 public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	private static final int RECORDS_PER_PAGE = 50;
@@ -123,36 +120,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return criteria.list();
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
-	public List<MainCert> obtainMainContractCertList(MainContractCertEnquirySearchingWrapper searchWrapper) throws DatabaseOperationException {
-		if (searchWrapper==null)
-			throw new IllegalArgumentException("Search Wrapper is null");
-		PaginationWrapper<MainCert> wrapper = new PaginationWrapper<MainCert>();
-		try {
-			DetachedCriteria subquery = DetachedCriteria.forClass(JobInfo.class);
-			if (StringUtils.isNotBlank(searchWrapper.getJobNo()))
-				subquery.add(Restrictions.ilike("jobNumber", searchWrapper.getJobNo(), MatchMode.START));
-			if (StringUtils.isNotBlank(searchWrapper.getCompanyNo()))
-				subquery.add(Restrictions.ilike("company", searchWrapper.getCompanyNo(), MatchMode.START));
-			if (StringUtils.isNotBlank(searchWrapper.getDivisionCode()))
-				subquery.add(Restrictions.ilike("division", searchWrapper.getDivisionCode(), MatchMode.START));
-			
-			subquery.setProjection(Property.forName("jobNumber"));
-			
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Subqueries.propertyIn("jobNo", subquery));
-			if(!searchWrapper.getStatus().trim().contentEquals(""))
-				criteria.add(Restrictions.and(Restrictions.eq("certificateStatus", searchWrapper.getStatus()), Subqueries.propertyIn("jobNo", subquery)));
-			else
-				criteria.add(Subqueries.propertyIn("jobNo", subquery));
-			criteria.addOrder(Order.asc("jobNo"));
-			criteria.addOrder(Order.desc("certificateNumber"));
-			return criteria.list();
-		} catch (HibernateException ex) {
-			throw new DatabaseOperationException(ex);
-		}
-	}
-
+	
 	/**
 	 * @author matthewatc
 	 * 16:05:58 19 Dec 2011 (UTC+8)
@@ -259,15 +227,6 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		}
 		return result;
 	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public GetMainCertReceiveDateResponseObj getMainCertReceiveDateAndAmount(String company, String refDocNo) {
-		return null;
-	}
-
 	
 	/**@author koeyyeung
 	 * created on 5th Aug, 2015
@@ -291,4 +250,30 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return completed;
 	}
 	
+	/*************************************** FUNCTIONS FOR PCMS - START**************************************************************/
+	/**
+	 * To find all Main Contract Certificate of a particular job 
+	 *
+	 * @param noJob
+	 * @return
+	 * @throws DatabaseOperationException
+	 * @author	tikywong
+	 * @since	Jun 27, 2016 11:10:59 AM
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MainCert> findByJobNo(String noJob) throws DatabaseOperationException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Where
+		criteria.add(Restrictions.eq("jobNo", noJob));
+		
+		//Order By
+		criteria.addOrder(Order.asc("jobNo"))
+				.addOrder(Order.asc("certificateNumber"));
+
+		return criteria.list();
+	}
+	
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+
 }

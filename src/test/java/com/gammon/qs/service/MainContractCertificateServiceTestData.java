@@ -207,7 +207,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#getMainContractCert(java.lang.String, java.lang.Integer)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#getCertificate(java.lang.String, java.lang.Integer)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetMainContractCert() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -261,7 +261,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#addMainContractCert(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#createMainCert(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public TransactionTestCase.TestDataMethod testAddMainContractCert() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -369,7 +369,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#getMainCertCertContraChargeList(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#getMainCertContraChargeList(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetMainCertCertContraChargeList() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -396,7 +396,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#addMainCertContraCharge(com.gammon.qs.domain.MainCertificateContraCharge)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#createMainCertContraCharge(com.gammon.qs.domain.MainCertificateContraCharge)}.
 	 */
 	public TransactionTestCase.TestDataMethod testAddMainCertContraCharge() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -666,7 +666,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#obtainPaidMainCertList(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#getPaidMainCertList(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainPaidMainCertList() {
 		return new TransactionTestCase.TestDataMethod() {

@@ -5,9 +5,9 @@ package com.gammon.qs.service.retentionReleaseSchedule;
 
 import java.util.List;
 
+import com.gammon.pcms.dto.rs.provider.response.MainCertRetentionReleaseDTO;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.util.DateUtil;
-import com.gammon.qs.wrapper.RetentionReleaseScheduleEnquiryWindowsWrapper;
 
 /**
  * 
@@ -20,10 +20,10 @@ public class RetentionReleaseScheduleExcelGenerator {
 	
 	private int numOfColumn = 22;
 	
-	private List<RetentionReleaseScheduleEnquiryWindowsWrapper> wrapperList;
+	private List<MainCertRetentionReleaseDTO> wrapperList;
 	
 	// constructor
-	public RetentionReleaseScheduleExcelGenerator(List<RetentionReleaseScheduleEnquiryWindowsWrapper> wrapperList){
+	public RetentionReleaseScheduleExcelGenerator(List<MainCertRetentionReleaseDTO> wrapperList){
 		this.wrapperList = wrapperList;
 	}
 	

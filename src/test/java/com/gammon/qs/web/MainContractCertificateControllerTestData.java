@@ -17,7 +17,7 @@ public class MainContractCertificateControllerTestData extends ControllerTestCas
 	private Class<?> serviceClass;// = MainContractCertificateController.class;
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#addMainContractCert(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#createMainCert(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public Map<String, Object> testAddMainContractCert() {
 		init();
@@ -73,7 +73,7 @@ public class MainContractCertificateControllerTestData extends ControllerTestCas
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#getMainContractCert(java.lang.String, java.lang.Integer)}.
+	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#getCertificate(java.lang.String, java.lang.Integer)}.
 	 */
 	public Map<String, Object> testGetMainContractCert() {
 		init();
@@ -129,7 +129,7 @@ public class MainContractCertificateControllerTestData extends ControllerTestCas
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#getMainCertCertContraChargeList(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#getMainCertContraChargeList(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public Map<String, Object> testGetMainCertCertContraChargeList() {
 		init();
@@ -143,7 +143,7 @@ public class MainContractCertificateControllerTestData extends ControllerTestCas
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#addMainCertContraCharge(com.gammon.qs.domain.MainCertificateContraCharge)}.
+	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#createMainCertContraCharge(com.gammon.qs.domain.MainCertificateContraCharge)}.
 	 */
 	public Map<String, Object> testAddMainCertContraCharge() {
 		init();
@@ -311,7 +311,7 @@ public class MainContractCertificateControllerTestData extends ControllerTestCas
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#obtainPaidMainCertList(java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.MainContractCertificateController#getPaidMainCertList(java.lang.String)}.
 	 */
 	public Map<String, Object> testObtainPaidMainCertList() {
 		init();

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gammon.pcms.application.gsf.UserRole;
+import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 	

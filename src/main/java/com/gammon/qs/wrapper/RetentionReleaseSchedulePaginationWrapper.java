@@ -1,10 +1,13 @@
 package com.gammon.qs.wrapper;
+
+import com.gammon.pcms.dto.rs.provider.response.MainCertRetentionReleaseDTO;
+
 /**
  * Pagination wrapper of Retention release schedule for calculate sum of values
  * @author paulnpyiu
  * @since Sep 3, 2015
  */
-public class RetentionReleaseSchedulePaginationWrapper extends PaginationWrapper<RetentionReleaseScheduleEnquiryWindowsWrapper>{
+public class RetentionReleaseSchedulePaginationWrapper extends PaginationWrapper<MainCertRetentionReleaseDTO>{
 
 	private static final long serialVersionUID = 4252773404895725921L;
 	double sumProjectedValues = 0.0;
