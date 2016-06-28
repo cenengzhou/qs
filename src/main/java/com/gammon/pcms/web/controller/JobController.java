@@ -9,8 +9,8 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,16 +22,15 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 
 @RestController
-@RequestMapping(value = "service"/*,
-				consumes = MediaType.APPLICATION_JSON_VALUE,
-				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
+@RequestMapping(value = "service")
 public class JobController {
-//	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private JobInfoService jobService;
 	
 	@JsonView(View.JobInfoSummary.class)
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+//	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
 	@RequestMapping(value = "getJobList", method = RequestMethod.GET)
 	public List<JobInfo> getJobList(){
 		List<JobInfo> jobList = null;

@@ -1,6 +1,8 @@
 package com.gammon.qs.service.admin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,10 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetRequest;
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetResponse;
+import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
+import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
@@ -26,6 +31,10 @@ public class AdminService {
 	@Autowired
 	@Qualifier("apWebservicePasswordConfig")
 	private WSConfig wsConfig;
+	@Autowired
+	private GSFService gsfService;
+	@Autowired
+	private JobInfoHBDao jobInfoHBDao;
 
 	public Set<String> obtainCompanyListByUsernameViaWS(String username) throws Exception {
 		Set<String> companySet = new HashSet<String>();
@@ -44,23 +53,36 @@ public class AdminService {
 		return companySet;
 	}
 
-	public Boolean canAccessJob(String userName, String jobNumber)throws DatabaseOperationException{
-		//TODO: GSF | JobDivisionInfo obtainJobDivisionInfoByJobNumber(jobNumber) | remark AdminService.canAccessJob(String userName, String jobNumber)
-		throw new RuntimeException("GSF | JobDivisionInfo obtainJobDivisionInfoByJobNumber(jobNumber) | remark AdminService.canAccessJob(String userName, String jobNumber)");
-//		// obtain the job information from approval system
-//		JobDivisionInfo jobDivisionInfo = jobDivisionInfoDao.obtainJobDivisionInfoByJobNumber(jobNumber);
-//
-//		if(jobDivisionInfo==null){
-//			logger.info("Job: ["+jobNumber +"] does not exist in Approval System.");
-//			return true;
-//		}
-//
-//		return jobSecurityDao.checkJobSecurity(userName, jobDivisionInfo.getCompany(), jobDivisionInfo.getDivision(), jobDivisionInfo.getDepartment(), jobNumber);
+	public List<String> obtainCanAccessJobNoList(String username){
+		List<JobSecurity> jobSecurityList = obtainCompanyListByUsername(username);
+		List<String> jobNumberList = new ArrayList<String>();
+		for(JobSecurity jobSecurity : jobSecurityList){
+			List<String> jobNumberByCompanyList = new ArrayList<String>();
+			if(jobSecurity.getRoleName().equals("JOB_ALL")){
+				try {
+					jobNumberByCompanyList = jobInfoHBDao.obtainAllJobCompany();
+					jobNumberList.addAll(jobNumberByCompanyList);
+				} catch (DatabaseOperationException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			try {
+				jobNumberByCompanyList = jobInfoHBDao.obtainJobNumberByCompany(jobSecurity.getCompany());
+				jobNumberList.addAll(jobNumberByCompanyList);
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
+		}
+		return jobNumberList;
 	}
-//
-	//TODO: GSF | List<JobSecurity> obtainJobSecurityList(username) | remark AdminService.obtainCompanyListByUsername(String username)
-//	public List<JobSecurity> obtainCompanyListByUsername(String username) throws DatabaseOperationException {
-//		return jobSecurityDao.obtainJobSecurityList(username);
-//	}
+	
+	public Boolean canAccessJob(String userName, String jobNumber)throws DatabaseOperationException{
+		return obtainCanAccessJobNoList(userName).contains(jobNumber);
+	}
+
+	public List<JobSecurity> obtainCompanyListByUsername(String username) {
+		return gsfService.getJobSecurityList(username);
+	}
 
 }

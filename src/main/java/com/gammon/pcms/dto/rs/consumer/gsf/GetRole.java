@@ -15,6 +15,14 @@ public class GetRole {
 		private String applicationCode;
 		private String userADAccount;
 		
+		public Request() {
+		}
+		
+		public Request(String applicationCode, String userADAccount) {
+			this.applicationCode = applicationCode;
+			this.userADAccount = userADAccount;
+		}
+
 		/**
 		 * @return the applicationCode
 		 */

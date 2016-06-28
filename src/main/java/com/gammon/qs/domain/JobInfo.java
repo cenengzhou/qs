@@ -29,7 +29,7 @@ import com.gammon.qs.application.BasePersistedObject;
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "JOB_INFO_GEN",  sequenceName = "JOB_INFO_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
-public class JobInfo extends BasePersistedObject {
+public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	public static final String FINQS0REVIEW_D = "D";	/*Depends on the company - Default*/
 	public static final String FINQS0REVIEW_Y = "Y";	/*Needs Finance Review*/
 	public static final String FINQS0REVIEW_N = "N";	/*Does not need Finance Review*/
@@ -705,5 +705,11 @@ public class JobInfo extends BasePersistedObject {
 
 	public void setFinQS0Review(String finQS0Review) {
 		this.finQS0Review = finQS0Review;
+	}
+
+	@Override
+	public int compareTo(JobInfo o) {
+		int diff = jobNumber.compareTo(o.getJobNumber());
+		return diff != 0 ? diff : company.compareTo(o.getCompany());
 	}
 }

@@ -2,21 +2,28 @@ package com.gammon.qs.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.application.User;
+import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.JobInfoWSDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.JobDates;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.job.JobDatesWrapper;
@@ -34,6 +41,8 @@ public class JobInfoService {
 	private JobInfoWSDao jobWSDao;
 	@Autowired
 	private SubcontractHBDao packageHBDao;
+	@Autowired
+	private AdminService adminService;
 	
 	//server cache 
 	private List<JobInfo> jobList;
@@ -62,8 +71,28 @@ public class JobInfoService {
 		this.packageHBDao = packageHBDao;
 	}
 
-	public List<JobInfo> getAllJobNoAndDescription() throws Exception{
-		return jobHBDao.obtainAllJobNoAndDescription();
+	public List<JobInfo> getAllJobNoAndDescription() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null) {
+			throw new RuntimeException("Invalid authentication for obtainCanAccessJobNoList");
+		}
+		User user = (User) auth.getPrincipal();
+		List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(user.getUsername());
+		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
+		for (JobSecurity jobSecurity : jobSecurityList) {
+			try {
+				if (jobSecurity.getRoleName().equals("JOB_ALL")) {
+					jobInfoSet = new TreeSet<JobInfo>(jobHBDao.obtainAllJobs());
+					break;
+				}else{
+					jobInfoSet.addAll(jobHBDao.obtainAllJobInfoByCompany(jobSecurity.getCompany()));
+				}
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
 	public List<JobInfo> getJobListBySearchStr(String searchJobStr) throws Exception {
@@ -293,5 +322,9 @@ public class JobInfoService {
 	public List<JobInfo> obtainJobsLikeByDivCoJob(String division, String company,
 			String jobNo) throws Exception {
 		return jobHBDao.obtainJobsLikeByDivCoJob(division, company, jobNo);
+	}
+	
+	public List<String> obtainJobInfoByCompany(String company) throws DatabaseOperationException{
+		return jobHBDao.obtainJobNumberByCompany(company);
 	}
 }

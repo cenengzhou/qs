@@ -112,13 +112,16 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	private String pcmsApiPassword;
 	@Value("${qs.keystore}")
 	private String qsKeystore;
+
+	@Value("${gsf.applicationCode}")
+	private String gsfApplicationCode;
 	@Value("${gsf.getRole.url}")
 	private String gsfGetRoleUrl;
 	@Value("${gsf.getFunctionSecurity.url}")
 	private String gsfGetFunctionSecurityUrl;
-	@Value("${gsf.applicationCode}")
-	private String gsfApplicationCode;
-	
+	@Value("${gsf.getJobSecurity.url}")
+	private String gsfGetJobSecurityUrl;
+		
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
 	    return new PropertySourcesPlaceholderConfigurer();
@@ -895,6 +898,13 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	 */
 	public String getGsfApplicationCode() {
 		return gsfApplicationCode;
+	}
+
+	/**
+	 * @return the gsfGetJobSecurityUrl
+	 */
+	public String getGsfGetJobSecurityUrl() {
+		return gsfGetJobSecurityUrl;
 	}
 
 }

@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
+
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 	
@@ -26,27 +28,27 @@ public class User implements UserDetails, Serializable {
 	private String fullname;
 	
 	@JsonProperty("UserRoles")
-	private List<UserRole> userRoles;
+	private List<UserRole> userRoleList;
 	
 	private String username;
 	private String authType;
 	
 	public User() {
-		this.userRoles = new ArrayList<UserRole>();
+		this.userRoleList = new ArrayList<UserRole>();
 	}
 		
 	public boolean hasRole(String rolename) {
-		for (UserRole role:userRoles) {
+		for (UserRole role : userRoleList) {
 			if (role.getRoleName().equalsIgnoreCase(rolename)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return userRoles;
+		return userRoleList;
 	}
 
 	@Override
@@ -78,18 +80,9 @@ public class User implements UserDetails, Serializable {
 	public boolean isEnabled() {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", username=" + username + ", fullname="
-				+ fullname + ", userRoles=" + userRoles + "]";
-	}
 	
 	public void addRole(UserRole role) {
-		this.userRoles.add(role);
+		this.userRoleList.add(role);
 	}
 
 	/**
@@ -144,17 +137,17 @@ public class User implements UserDetails, Serializable {
 	/**
 	 * @return the userRoles
 	 */
-	public List<UserRole> getUserRoles() {
-		return userRoles;
+	public List<UserRole> getUserRoleList() {
+		return userRoleList;
 	}
 
 	/**
-	 * @param userRoles the userRoles to set
+	 * @param userRoleList the userRoles to set
 	 */
-	public void setUserRoles(List<UserRole> userRoles) {
-		if(userRoles != null){
-			this.userRoles.clear();
-			this.userRoles.addAll(userRoles);
+	public void setUserRoles(List<UserRole> userRoleList) {
+		this.userRoleList.clear();
+		if(userRoleList != null){
+			this.userRoleList.addAll(userRoleList);
 		}
 	}
 
@@ -177,6 +170,15 @@ public class User implements UserDetails, Serializable {
 	 */
 	public void setAuthType(String authType) {
 		this.authType = authType;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", fullname=" + fullname + ", userRoleList="
+				+ userRoleList + ", username=" + username + ", authType=" + authType + "]";
 	}
 
 }

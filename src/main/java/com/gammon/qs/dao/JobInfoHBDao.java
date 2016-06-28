@@ -7,16 +7,17 @@ import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.JobDates;
+import com.gammon.qs.domain.JobInfo;
 
 @Repository
 public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
@@ -38,22 +39,34 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<JobInfo> obtainAllJobNoAndDescription() throws DatabaseOperationException{
+	public List<JobInfo> obtainAllJobNoAndDescription(List<String> canAccessJobNumberList) throws DatabaseOperationException{
 
 		List<JobInfo> result;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("jobNumber"),"jobNumber")
-					.add(Projections.property("description"),"description")
-					);
+			int subListSize = 99;
+			Disjunction or = Restrictions.disjunction();
+			for(int i=0; i<canAccessJobNumberList.size();i++){
+				int fromIndex = i;
+				int toIndex = i+subListSize < canAccessJobNumberList.size() ? i+subListSize : canAccessJobNumberList.size();
+				System.out.println("subList: from " + fromIndex + " to " + toIndex);
+				or.add(Restrictions.in("jobNumber", canAccessJobNumberList.subList(fromIndex, toIndex)));
+				i+=subListSize;
+			}
+			criteria.add(or);
 			criteria.addOrder(Order.asc("jobNumber"));
-			result = criteria.setResultTransformer(new AliasToBeanResultTransformer(JobInfo.class)).list();
-			
+			result = criteria.list();
 		}catch (HibernateException he){
 			throw new DatabaseOperationException(he);
 		}
 		return result;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<JobInfo> obtainAllJobInfoByCompany(String company) throws DatabaseOperationException{
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("company", company));
+		return criteria.list();
 	}
 	
 	/**
@@ -227,6 +240,17 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 
 	public String checkConvertedStatusInJDE(String jobNumber) {
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> obtainJobNumberByCompany(String company) throws DatabaseOperationException{
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("company", company));
+		ProjectionList projectionList = Projections.projectionList();
+		projectionList.add(Projections.property("jobNumber"));
+		criteria.setProjection(projectionList);
+		List<String> jobNumberList = criteria.list();
+		return jobNumberList;
 	}
 
 }

@@ -68,21 +68,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String loginPath;
 
 	// Role
-	@Value("${role.pcms-ws}")
+	@Value("${role.pcms.ws}")
 	private String rolePcmsWs;
-	@Value("${role.pcms-api}")
+	@Value("${role.pcms.api}")
 	private String rolePcmsApi;
-	@Value("${role.qs-qs}")
-	private String roleQsQs;
-	@Value("${role.qs-enquiry}")
-	private String roleQsEnquiry;
-	@Value("${role.qs-approver}")
-	private String roleQsApprover;
-	@Value("${role.qs-admin}")
-	private String roleQsAdmin;
-	@Value("${defaultMaxInactiveInterval}")
-	private String defaultMaxInactiveInterval;
-	
+	@Value("${role.pcms.enq}")
+	private String rolePcmsEnq;
+	@Value("${role.pcms.ims.enq}")
+	private String rolePcmsImsEnq;
+	@Value("${role.pcms.ims.admin}")
+	private String rolePcmsImsAdmin;
+	@Value("${role.pcms.qs}")
+	private String rolePcmsQs;
+	@Value("${role.pcms.qs.admin}")
+	private String rolePcmsQsAdmin;
+	@Value("${role.pcms.qs.reviewer}")
+	private String rolePcmsQsReviewer;
+		
 	// Kerberos
 	@Value("${kerberos.service-principal}")
 	private String kerberosServicePrincipal;
@@ -90,6 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String kerberosKeytabLocation;
 	@Value("${kerberos.debug}")
 	boolean kerberosDebug;
+	@Value("${defaultMaxInactiveInterval}")
+	private String defaultMaxInactiveInterval;
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -177,7 +181,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/login.htm*",
 					"/logout.htm*"
 					).permitAll()
-			.antMatchers("/**/*").hasAnyRole(securityConfig.getRoleQsQs(), securityConfig.getRoleQsEnquiry(), securityConfig.getRoleQsApprover(), securityConfig.getRoleQsAdmin()).and()
+			.antMatchers("/**/*").hasAnyRole(
+					securityConfig.getRolePcmsEnq(),
+					securityConfig.getRolePcmsImsAdmin(),
+					securityConfig.getRolePcmsImsEnq(),
+					securityConfig.getRolePcmsQs(),
+					securityConfig.getRolePcmsQsAdmin(),
+					securityConfig.getRolePcmsQsReviewer()
+					).and()
 			.exceptionHandling()
 			.authenticationEntryPoint(new SpnegoEntryPoint(securityConfig.getLoginPath())).and()
 			.formLogin()
@@ -348,22 +359,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return rolePcmsApi;
 	}
 
-	public String getRoleQsQs() {
-		return roleQsQs;
-	}
-
-	public String getRoleQsEnquiry() {
-		return roleQsEnquiry;
-	}
-
-	public String getRoleQsApprover() {
-		return roleQsApprover;
-	}
-
-	public String getRoleQsAdmin() {
-		return roleQsAdmin;
-	}
-
 	public String getKerberosServicePrincipal() {
 		return kerberosServicePrincipal;
 	}
@@ -381,5 +376,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	public String getDefaultMaxInactiveInterval() {
 		return defaultMaxInactiveInterval;
+	}
+
+	/**
+	 * @return the rolePcmsEnq
+	 */
+	public String getRolePcmsEnq() {
+		return rolePcmsEnq;
+	}
+
+	/**
+	 * @return the rolePcmsImsEnq
+	 */
+	public String getRolePcmsImsEnq() {
+		return rolePcmsImsEnq;
+	}
+
+	/**
+	 * @return the rolePcmsImsAdmin
+	 */
+	public String getRolePcmsImsAdmin() {
+		return rolePcmsImsAdmin;
+	}
+
+	/**
+	 * @return the rolePcmsQs
+	 */
+	public String getRolePcmsQs() {
+		return rolePcmsQs;
+	}
+
+	/**
+	 * @return the rolePcmsQsAdmin
+	 */
+	public String getRolePcmsQsAdmin() {
+		return rolePcmsQsAdmin;
+	}
+
+	/**
+	 * @return the rolePcmsQsReviewer
+	 */
+	public String getRolePcmsQsReviewer() {
+		return rolePcmsQsReviewer;
 	}
 }

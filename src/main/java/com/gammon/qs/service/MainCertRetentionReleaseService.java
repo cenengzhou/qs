@@ -1,6 +1,5 @@
 package com.gammon.qs.service;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriodYearByCompany.GetPeriodYearResponseObj;
-import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.dto.rs.provider.response.MainCertRetentionReleaseDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.CreateGLWSDao;
@@ -28,13 +26,9 @@ import com.gammon.qs.domain.MainCertRetentionRelease;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.retentionReleaseSchedule.RetentionReleaseScheduleExcelGenerator;
 import com.gammon.qs.service.security.SecurityService;
-import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.RoleSecurityFunctions;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.wrapper.PaginationWrapper;
-import com.gammon.qs.wrapper.RetentionReleaseSchedulePaginationWrapper;
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class MainCertRetentionReleaseService{
@@ -62,9 +56,6 @@ public class MainCertRetentionReleaseService{
 	private UserAccessRightsService userAccessRightsService;
 	@Autowired
 	private SecurityService securityService;
-	
-	@Autowired
-	private JasperConfig jasperConfig;
 	
 	/**
 	 * @author koeyyeung
