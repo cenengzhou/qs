@@ -29,6 +29,10 @@ public class DimAccountMaster implements Serializable {
 	public DimAccountMaster() {
 	}
 
+	public DimAccountMaster(String accountCodeKey) {
+		this.accountCodeKey = accountCodeKey;
+	}
+
 	public DimAccountMaster(String accountCodeKey, String businessUnit, String object, String subsidiary,
 			String companyCode, String accountDescription, String postEditCode, String postEdit,
 			String fullAccountCode) {

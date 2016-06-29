@@ -20,7 +20,9 @@ public class FactAccountBalanceId implements Serializable {
 	private String accountTypeLedger;
 	private String accountSubLedger;
 
-	public FactAccountBalanceId(){}
+	public FactAccountBalanceId(){
+		
+	}
 
 	public FactAccountBalanceId(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear, String accountTypeLedger,
 			String accountSubLedger) {
@@ -102,7 +104,7 @@ public class FactAccountBalanceId implements Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof FactAccountBalanceId)) {
+		if (!(obj instanceof FactAccountBalance)) {
 			return false;
 		}
 		FactAccountBalanceId other = (FactAccountBalanceId) obj;

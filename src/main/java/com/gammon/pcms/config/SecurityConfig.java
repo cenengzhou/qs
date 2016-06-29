@@ -84,6 +84,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String rolePcmsQsAdmin;
 	@Value("${role.pcms.qs.reviewer}")
 	private String rolePcmsQsReviewer;
+	@Value("${role.pcms.job.all}")
+	private String rolePcmsJobAll;
+	@Value("${role.pcms.job.hkg}")
+	private String rolePcmsJobHkg;
 		
 	// Kerberos
 	@Value("${kerberos.service-principal}")
@@ -418,5 +422,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	public String getRolePcmsQsReviewer() {
 		return rolePcmsQsReviewer;
+	}
+
+	/**
+	 * @return the rolePcmsJobAll
+	 */
+	public String getRolePcmsJobAll() {
+		return rolePcmsJobAll;
+	}
+
+	/**
+	 * @return the rolePcmsJobHkg
+	 */
+	public String getRolePcmsJobHkg() {
+		return rolePcmsJobHkg;
 	}
 }

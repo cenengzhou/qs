@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,10 +14,12 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetRequest;
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetResponse;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
@@ -35,6 +38,8 @@ public class AdminService {
 	private GSFService gsfService;
 	@Autowired
 	private JobInfoHBDao jobInfoHBDao;
+	@Autowired
+	private SecurityConfig securityConfig;
 
 	public Set<String> obtainCompanyListByUsernameViaWS(String username) throws Exception {
 		Set<String> companySet = new HashSet<String>();
@@ -58,7 +63,7 @@ public class AdminService {
 		List<String> jobNumberList = new ArrayList<String>();
 		for(JobSecurity jobSecurity : jobSecurityList){
 			List<String> jobNumberByCompanyList = new ArrayList<String>();
-			if(jobSecurity.getRoleName().equals("JOB_ALL")){
+			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
 				try {
 					jobNumberByCompanyList = jobInfoHBDao.obtainAllJobCompany();
 					jobNumberList.addAll(jobNumberByCompanyList);
@@ -75,6 +80,23 @@ public class AdminService {
 			}
 		}
 		return jobNumberList;
+	}
+	
+	public List<JobInfo> obtainCanAccessJobInfoList(List<JobSecurity> jobSecurityList){
+		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
+		for (JobSecurity jobSecurity : jobSecurityList) {
+			try {
+				if (jobSecurity.getRoleName().equals("JOB_ALL")) {
+					jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainAllJobs());
+					break;
+				}else{
+					jobInfoSet.addAll(jobInfoHBDao.obtainAllJobInfoByCompany(jobSecurity.getCompany()));
+				}
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
+		}
+		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
 	public Boolean canAccessJob(String userName, String jobNumber)throws DatabaseOperationException{

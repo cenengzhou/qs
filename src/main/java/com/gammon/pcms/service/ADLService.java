@@ -10,8 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dao.adl.FactAccountBalanceDao;
+import com.gammon.pcms.dao.adl.FactAccountLedgerDao;
+import com.gammon.pcms.dao.adl.RptIvAcctBalanceDao;
+import com.gammon.pcms.dao.adl.RptIvAcctBalanceSlDao;
 import com.gammon.pcms.dto.rs.provider.response.JobCostDTO;
+import com.gammon.pcms.model.adl.DimAccountMaster;
 import com.gammon.pcms.model.adl.FactAccountBalance;
+import com.gammon.pcms.model.adl.FactAccountLedger;
+import com.gammon.pcms.model.adl.RptIvAcctBalance;
+import com.gammon.pcms.model.adl.RptIvAcctBalanceSl;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @Service
@@ -22,6 +29,12 @@ public class ADLService {
 
 	@Autowired
 	private FactAccountBalanceDao factAccountBalanceDao;
+	@Autowired
+	private FactAccountLedgerDao factAccountLedgerDao;
+	@Autowired
+	private RptIvAcctBalanceDao rptIvAcctBalanceDao;
+	@Autowired
+	private RptIvAcctBalanceSlDao rptIvAcctBalanceSlDao;
 
 	/**
 	 * To get Job Cost records based on year, month, ledger type, job and sub-contract <br/>
@@ -79,5 +92,44 @@ public class ADLService {
 		}
 	}
 	
-	
+
+	public List<FactAccountLedger> testFactAccountLedger(String account_type_ledger, String entity_doc_company_key, BigDecimal number_document, String number_je_line_extension, BigDecimal number_journal_entry_line, String type_document) {
+		List<FactAccountLedger> factAccountLedgerList = new ArrayList<FactAccountLedger>();
+		try {
+			factAccountLedgerList.addAll(factAccountLedgerDao.obtainFactAccountLedger(
+					account_type_ledger,
+					entity_doc_company_key,
+					number_document,
+					number_je_line_extension,
+					number_journal_entry_line,
+					type_document
+					));
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return factAccountLedgerList;
+	}
+
+	public List<RptIvAcctBalance> testRptIvAcctBalance(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear,
+			String accountPeriod) {
+		List<RptIvAcctBalance> rptIvAcctBalanceList = new ArrayList<RptIvAcctBalance>();
+		try {
+			rptIvAcctBalanceList.addAll(rptIvAcctBalanceDao.obtainRptIvAcctBalance(dimAccountMaster, fiscalYear, accountPeriod));
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return rptIvAcctBalanceList;
+	}
+
+	public List<RptIvAcctBalanceSl> testRptIvAcctBalanceSl(DimAccountMaster dimAccountMaster, BigDecimal fiscalYear,
+			String accountPeriod, String accountSubLedger, String accountTypeSubLedger) {
+		List<RptIvAcctBalanceSl> rptIvAcctBalanceSlList = new ArrayList<RptIvAcctBalanceSl>();
+		try {
+			rptIvAcctBalanceSlList = rptIvAcctBalanceSlDao.obtainRptIvAcctBalanceSl(dimAccountMaster, fiscalYear, accountPeriod, accountSubLedger, accountTypeSubLedger);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return rptIvAcctBalanceSlList;
+	}
+
 }

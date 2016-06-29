@@ -24,6 +24,7 @@ import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.JobDates;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.admin.AdminService;
+import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.job.JobDatesWrapper;
@@ -43,6 +44,8 @@ public class JobInfoService {
 	private SubcontractHBDao packageHBDao;
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private SecurityService securityService;
 	
 	//server cache 
 	private List<JobInfo> jobList;
@@ -72,27 +75,9 @@ public class JobInfoService {
 	}
 
 	public List<JobInfo> getAllJobNoAndDescription() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null) {
-			throw new RuntimeException("Invalid authentication for obtainCanAccessJobNoList");
-		}
-		User user = (User) auth.getPrincipal();
+		User user = (User) securityService.getCurrentUser();
 		List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(user.getUsername());
-		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
-		for (JobSecurity jobSecurity : jobSecurityList) {
-			try {
-				if (jobSecurity.getRoleName().equals("JOB_ALL")) {
-					jobInfoSet = new TreeSet<JobInfo>(jobHBDao.obtainAllJobs());
-					break;
-				}else{
-					jobInfoSet.addAll(jobHBDao.obtainAllJobInfoByCompany(jobSecurity.getCompany()));
-				}
-			} catch (DatabaseOperationException e) {
-				e.printStackTrace();
-			}
-
-		}
-		return new ArrayList<JobInfo>(jobInfoSet);
+		return adminService.obtainCanAccessJobInfoList(jobSecurityList);
 	}
 	
 	public List<JobInfo> getJobListBySearchStr(String searchJobStr) throws Exception {
