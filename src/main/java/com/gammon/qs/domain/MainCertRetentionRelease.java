@@ -23,7 +23,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 	public static final String STATUS_ACTUAL = "A";
 	public static final String STATUS_FORECAST = "F";
 	public static final String STATUS_NOT_YET_RECEIVE = "CNR";
-	private String jobNumber;
+	private String jobNo;
 	private Integer sequenceNo;
 	private Integer mainCertNo;
 	private Date dueDate;
@@ -39,7 +39,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 	public int hashCode() {
 		final int prime = 37;
 		int result = 17;
-		result = prime * result + ((jobNumber == null) ? 0 : jobNumber.hashCode());
+		result = prime * result + ((jobNo == null) ? 0 : jobNo.hashCode());
 		result = prime * result + ((sequenceNo == null) ? 0 : sequenceNo.hashCode());
 		return result;
 	}
@@ -52,10 +52,10 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 		if (!(obj instanceof MainCertRetentionRelease))
 			return false;
 		MainCertRetentionRelease other = (MainCertRetentionRelease) obj;
-		if (jobNumber == null) {
-			if (other.jobNumber != null)
+		if (jobNo == null) {
+			if (other.jobNo != null)
 				return false;
-		} else if (!jobNumber.equals(other.jobNumber))
+		} else if (!jobNo.equals(other.jobNo))
 			return false;
 		if (sequenceNo == null) {
 			if (other.sequenceNo != null)
@@ -67,7 +67,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 	
 	@Override
 	public String toString() {
-		return "MainCertRetentionRelease [jobNumber=" + jobNumber + ", sequenceNo=" + sequenceNo + ", mainCertNo=" + mainCertNo
+		return "MainCertRetentionRelease [jobNo=" + jobNo + ", sequenceNo=" + sequenceNo + ", mainCertNo=" + mainCertNo
 				+ ", dueDate=" + dueDate + ", contractualDueDate=" + contractualDueDate + ", forecastReleaseAmt="
 				+ forecastReleaseAmt + ", actualReleaseAmt=" + actualReleaseAmt + ", releasePercent=" + releasePercent
 				+ ", status=" + status + ", toString()=" + super.toString() + "]";
@@ -79,11 +79,11 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 	public Long getId(){return super.getId();}
 
 	@Column(name = "jobNo", nullable = false, length = 12)
-	public String getJobNumber() {
-		return jobNumber;
+	public String getJobNo() {
+		return jobNo;
 	}
-	public void setJobNumber(String jobNumber) {
-		this.jobNumber = jobNumber;
+	public void setJobNo(String jobNo) {
+		this.jobNo = jobNo;
 	}
 	
 	@Column(name = "sequenceNo", nullable = false)

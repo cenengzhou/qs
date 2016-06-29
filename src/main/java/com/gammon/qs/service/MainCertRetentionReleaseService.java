@@ -123,7 +123,7 @@ public class MainCertRetentionReleaseService {
 							MainCertRetentionRelease dbRR = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(noJob, mainCertList.get(i).getCertificateNumber());
 							if (dbRR == null) {
 								MainCertRetentionRelease newRR = new MainCertRetentionRelease();
-								newRR.setJobNumber(noJob);
+								newRR.setJobNo(noJob);
 								newRR.setMainCertNo(mainCertList.get(i).getCertificateNumber());
 
 								newRR.setDueDate(mainCertList.get(i).getCertDueDate());

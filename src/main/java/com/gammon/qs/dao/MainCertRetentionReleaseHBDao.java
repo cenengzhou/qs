@@ -26,9 +26,9 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 	 * @since	Jun 28, 2016 2:56:40 PM
 	 */
 	@SuppressWarnings("unchecked")
-	public List<MainCertRetentionRelease> findByJobNo(String noJob) throws DataAccessException{
-		Criteria criteria = getSession().createCriteria(this.getType());
-		
+	public List<MainCertRetentionRelease> findByJobNo(String noJob) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(getType());
+
 		// Where
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
 				.add(Restrictions.eq("jobNumber", noJob));
@@ -46,20 +46,20 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("jobNumber", jobNumber));
 		criteria.add(Restrictions.eq("mainCertNo", mainCertNo));
-		criteria.add(Restrictions.eq("status", "A")); //status = actual
+		criteria.add(Restrictions.eq("status", "A")); 				//status = actual
 		
 		return (MainCertRetentionRelease) criteria.uniqueResult();
 	}
 	
 	public void saveList(List<MainCertRetentionRelease> saveList) throws DataAccessException {
 		for (MainCertRetentionRelease rr:saveList){
-			MainCertRetentionRelease dbObj = internalSelectByJobSeq(rr.getJobNumber(), rr.getSequenceNo());
+			MainCertRetentionRelease dbObj = internalSelectByJobSeq(rr.getJobNo(), rr.getSequenceNo());
 			if (dbObj!=null){
 				dbObj.setActualReleaseAmt(rr.getActualReleaseAmt());
 				dbObj.setDueDate(rr.getDueDate());
 				dbObj.setContractualDueDate(rr.getContractualDueDate());
 				dbObj.setForecastReleaseAmt(rr.getForecastReleaseAmt());
-				dbObj.setJobNumber(rr.getJobNumber());
+				dbObj.setJobNo(rr.getJobNo());
 				dbObj.setMainCertNo(rr.getMainCertNo());
 				dbObj.setReleasePercent(rr.getReleasePercent());
 				dbObj.setSequenceNo(rr.getSequenceNo());
