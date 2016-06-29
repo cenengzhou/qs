@@ -685,47 +685,47 @@ public class DownloadController{
 	}
 
 
-	/**
-	 * @author koeyyeung
-	 * created on 5th Nov, 2015**/
-	@RequestMapping(value="/gammonqs/contractReceivableEnquiry.rpt", method=RequestMethod.GET)
-	public void generateContractReceivableReport(	@RequestParam(required=true,value="jobNo") String jobNo,
-	                                                   	@RequestParam(required=true,value="division") String division,
-	                                                   	@RequestParam(required=true,value="company") String company,
-	                                                   	@RequestParam(required=true,value="status") String status,
-	                                                   	@RequestParam(required=true,value="fileType") String fileType,
-	                                                   	HttpServletRequest request, HttpServletResponse response) {
-		logger.info("generateContractReceivableReport");
-		try {
-			ContractReceivableWrapper wrapper = new ContractReceivableWrapper();
-			wrapper.setCompany(WildCardStringFinder.removeWildCard(company));
-			wrapper.setJobNo(WildCardStringFinder.removeWildCard(jobNo));
-			wrapper.setDivision(WildCardStringFinder.removeWildCard(division));
-			wrapper.setCertStatus(status);
-			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadContractReceivableReport(wrapper,fileType);
-
-			if (outputStream != null) {
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Contract Receivable Settlement Report " + DateUtil.formatDate(new Date(), "dd-MM-yyyy") + "." + fileType + "\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			} else {
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-		} catch (Exception e) {
-			logger.info("No file is generated.");
-			e.printStackTrace();
-			logger.info("Error: " + e.getLocalizedMessage());
-			showReportError(response);
-		} finally {
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	/**
+//	 * @author koeyyeung
+//	 * created on 5th Nov, 2015**/
+//	@RequestMapping(value="/gammonqs/contractReceivableEnquiry.rpt", method=RequestMethod.GET)
+//	public void generateContractReceivableReport(	@RequestParam(required=true,value="jobNo") String jobNo,
+//	                                                   	@RequestParam(required=true,value="division") String division,
+//	                                                   	@RequestParam(required=true,value="company") String company,
+//	                                                   	@RequestParam(required=true,value="status") String status,
+//	                                                   	@RequestParam(required=true,value="fileType") String fileType,
+//	                                                   	HttpServletRequest request, HttpServletResponse response) {
+//		logger.info("generateContractReceivableReport");
+//		try {
+//			ContractReceivableWrapper wrapper = new ContractReceivableWrapper();
+//			wrapper.setCompany(WildCardStringFinder.removeWildCard(company));
+//			wrapper.setJobNo(WildCardStringFinder.removeWildCard(jobNo));
+//			wrapper.setDivision(WildCardStringFinder.removeWildCard(division));
+//			wrapper.setCertStatus(status);
+//			ByteArrayOutputStream outputStream = mainContractCertificateRepository.downloadContractReceivableReport(wrapper,fileType);
+//
+//			if (outputStream != null) {
+//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Contract Receivable Settlement Report " + DateUtil.formatDate(new Date(), "dd-MM-yyyy") + "." + fileType + "\"");
+//				response.getOutputStream().write(outputStream.toByteArray());
+//				response.getOutputStream().flush();
+//			} else {
+//				logger.info("No file is generated.");
+//				showReportError(response);
+//			}
+//		} catch (Exception e) {
+//			logger.info("No file is generated.");
+//			e.printStackTrace();
+//			logger.info("Error: " + e.getLocalizedMessage());
+//			showReportError(response);
+//		} finally {
+//			try {
+//				response.getOutputStream().close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	@RequestMapping(value="/gammonqs/accountPayableExcelDownload.smvc",method=RequestMethod.GET)
 	public void generateAccountPayableExcel(@RequestParam(required=true,value="jobNumber") String jobNumber,

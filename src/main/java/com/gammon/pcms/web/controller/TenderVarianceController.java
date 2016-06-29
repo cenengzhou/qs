@@ -16,7 +16,7 @@ import com.gammon.pcms.service.TenderVarianceService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
-@RequestMapping(value = "service", method = RequestMethod.POST)
+@RequestMapping(value = "service/tenderVariance/", method = RequestMethod.POST)
 public class TenderVarianceController {
 
 	@Autowired
