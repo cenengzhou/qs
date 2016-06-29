@@ -72,7 +72,7 @@ public class RetentionReleaseScheduleServiceTestData extends TransactionTestCase
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertRetentionReleaseService#obtainCumulativeRetentionReleaseByJob(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertRetentionReleaseService#calculateCumulativeRetentionReleaseByJob(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainCumulativeRetentionReleaseByJob() {
 		return new TransactionTestCase.TestDataMethod() {

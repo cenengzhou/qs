@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
 import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
 
 @RestController
-@RequestMapping(value = "service")
+@RequestMapping(value = "service/mainCert/")
 public class MainCertController {
 
 	@Autowired
@@ -36,6 +37,7 @@ public class MainCertController {
 	@RequestMapping(value = "getCertificateList",
 					method = RequestMethod.GET)
 	public List<MainCert> getCertificateList(@RequestParam(required = true) String noJob) {
+
 		return mainCertService.getCertificateList(noJob);
 	}
 
@@ -46,17 +48,11 @@ public class MainCertController {
 	}
 
 	// ---------------- update / calculate ----------------
-	@RequestMapping(value = "calculateRetentionRelease",
-					method = RequestMethod.PUT)
-	public List<MainCertRetentionRelease> calculateRetentionRelease(@RequestParam(required = true) String noJob,
-																			@RequestParam(required = true) Integer noMainCert) {
-		return mainCertRetentionReleaseService.calculateRetentionRelease(noJob, noMainCert);
-	}
-
 	@RequestMapping(value = "updateRetentionRelease",
-					method = RequestMethod.PUT)
-	public Boolean updateRetentionRelease(	@RequestParam(required = true) String noJob,
+					method = RequestMethod.POST)
+	public PCMSDTO updateRetentionRelease(	@RequestParam(required = true) String noJob,
 											@Valid @RequestBody List<MainCertRetentionRelease> retentionReleaseList) {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
 	}
+
 }

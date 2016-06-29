@@ -1,6 +1,5 @@
 package com.gammon.qs.service;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -25,7 +24,6 @@ import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertContraCharge;
@@ -479,16 +477,16 @@ public class MainCertService {
 
 	
 	
-	/**
-	 * koeyyeung
-	 * Created on Nov 2, 2015
-	 * Contract Receivable Settlement Report
-	 */
-	@Transactional(readOnly = true, rollbackFor = Exception.class, value = "transactionManager")
-	public ByteArrayOutputStream downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type) throws DatabaseOperationException {
-		//TODO: GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)
-		throw new RuntimeException("GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)");
-	}
+//	/**
+//	 * koeyyeung
+//	 * Created on Nov 2, 2015
+//	 * Contract Receivable Settlement Report
+//	 */
+//	@Transactional(readOnly = true, rollbackFor = Exception.class, value = "transactionManager")
+//	public ByteArrayOutputStream downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type) throws DatabaseOperationException {
+//		//TODO: GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)
+//		throw new RuntimeException("GSF | List<JobSecurity> obtainCompanyListByUsername(username) | remark MainCertService.downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)");
+//	}
 	
 	/**@author koeyyeung
 	 * created on 5th Aug, 2015**/
@@ -511,9 +509,10 @@ public class MainCertService {
 		return mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 	}
 	
+	@Transactional(readOnly = true)
 	public List<MainCert> getCertificateList(String noJob) {
 		try {
-			return mainCertHBDao.findByJobNo(noJob);
+			return (ArrayList<MainCert>) mainCertHBDao.findByJobNo(noJob);
 		} catch (DatabaseOperationException e) {
 			return new ArrayList<MainCert>();
 		}

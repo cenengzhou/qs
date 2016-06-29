@@ -3,12 +3,14 @@ package com.gammon.qs.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MainCertRetentionReleaseHBDao;
 import com.gammon.qs.domain.MainCert;
@@ -37,7 +39,7 @@ public class MainCertRetentionReleaseService {
 	/**
 	 * @author koeyyeung modified on 18 Dec, 2013
 	 **/
-	public String obtainCumulativeRetentionReleaseByJob(MainCert mainCert) throws DataAccessException {
+	public PCMSDTO calculateCumulativeRetentionReleaseByJob(MainCert mainCert) throws DataAccessException {
 		String errorMessage = "";
 
 		List<MainCertRetentionRelease> rrList = retentionReleaseHBDao.findByJobNo(mainCert.getJobNo());
@@ -69,19 +71,11 @@ public class MainCertRetentionReleaseService {
 			logger.info("Total Retention Release Diff.: " + rrDiff);
 			logger.info("Actual Retention Release Diff.: " + actualRRDiff + "- cumActualRetentionRelease: " + cumActualRetentionRelease + "- cumRRCalculatedByMainCert: " + cumRRCalculatedByMainCert);
 		}
-		return errorMessage;
-	}
 
-	/*************************************** FUNCTIONS FOR PCMS - START **************************************************************/
-	public List<MainCertRetentionRelease> getRetentionReleaseList(String noJob) {
-		try {
-			return retentionReleaseHBDao.findByJobNo(noJob);
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-			return new ArrayList<MainCertRetentionRelease>();
-		}
+		return new PCMSDTO(StringUtils.isEmpty(errorMessage) ? PCMSDTO.Status.SUCCESS : PCMSDTO.Status.FAIL, errorMessage);
 	}
 	
+
 	/**
 	 * @author koeyyeung modified on 18 Dec, 2013
 	 **/
@@ -154,7 +148,7 @@ public class MainCertRetentionReleaseService {
 	private void updateActualRetentionRelease(String jobNumber, MainCert mainCert, MainCert prevMainCert, List<MainCertRetentionRelease> newRRSList) throws DatabaseOperationException {
 		logger.info("STARTED - generateActualRetentionRelease");
 
-		double rrDiff = CalculationUtil.round(calRetentionReleaseAmount(mainCert) - calRetentionReleaseAmount(prevMainCert), 2);
+		double rrDiff = CalculationUtil.round(calculateRetentionReleaseAmount(mainCert) - calculateRetentionReleaseAmount(prevMainCert), 2);
 		MainCertRetentionRelease rr = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(jobNumber, mainCert.getCertificateNumber());
 
 		if (rr != null && (mainCert.getCertificateNumber().equals(rr.getMainCertNo()))) {
@@ -184,13 +178,27 @@ public class MainCertRetentionReleaseService {
 		logger.info("END - generateActualRetentionRelease");
 	}
 
-	private double calRetentionReleaseAmount(MainCert mainCert) {
+	private double calculateRetentionReleaseAmount(MainCert mainCert) {
 		if (mainCert == null)
 			return 0.0;
-		return (mainCert.getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : mainCert.getCertifiedRetentionforNSCNDSCReleased().doubleValue()) + (mainCert.getCertifiedMainContractorRetentionReleased() == null ? 0 : mainCert.getCertifiedMainContractorRetentionReleased().doubleValue()) + (mainCert.getCertifiedMOSRetentionReleased() == null ? 0 : mainCert.getCertifiedMOSRetentionReleased().doubleValue());
+		return 	(mainCert.getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : mainCert.getCertifiedRetentionforNSCNDSCReleased().doubleValue()) + 
+				(mainCert.getCertifiedMainContractorRetentionReleased() == null ? 0 :mainCert.getCertifiedMainContractorRetentionReleased().doubleValue()) + 
+				(mainCert.getCertifiedMOSRetentionReleased() == null ? 0 : mainCert.getCertifiedMOSRetentionReleased().doubleValue());
 	}
 	
-	public Boolean updateRetentionRelease(String noJob, List<MainCertRetentionRelease> modifiedList) {
+
+	/*************************************** FUNCTIONS FOR PCMS - START **************************************************************/
+	@Transactional(readOnly = true)
+	public List<MainCertRetentionRelease> getRetentionReleaseList(String noJob) {
+		try {
+			return retentionReleaseHBDao.findByJobNo(noJob);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return new ArrayList<MainCertRetentionRelease>();
+		}
+	}
+	
+	public PCMSDTO updateRetentionRelease(String noJob, List<MainCertRetentionRelease> modifiedList) {
 		logger.info("STARTED - updateForecastRetentionRelease");
 		Boolean updated = false;
 		List<MainCertRetentionRelease> rrToUpdateList = new ArrayList<MainCertRetentionRelease>();
@@ -238,7 +246,7 @@ public class MainCertRetentionReleaseService {
 		}
 
 		logger.info("END - updateForecastRetentionRelease");
-		return updated;
+		return new PCMSDTO(updated ? PCMSDTO.Status.SUCCESS : PCMSDTO.Status.FAIL, "");
 	}
 
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/

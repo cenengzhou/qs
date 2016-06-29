@@ -18,7 +18,7 @@ import com.gammon.pcms.model.adl.RptIvAcctBalanceSl;
 import com.gammon.pcms.service.ADLService;
 
 @RestController
-@RequestMapping(value = "service")
+@RequestMapping(value = "service/adl/")
 public class ADLController {
 
 	@Autowired

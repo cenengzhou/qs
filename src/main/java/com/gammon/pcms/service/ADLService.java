@@ -22,7 +22,8 @@ import com.gammon.pcms.model.adl.RptIvAcctBalanceSl;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @Service
-@Transactional(	rollbackFor = Exception.class,
+@Transactional(	readOnly = true,
+				rollbackFor = Exception.class,
 				value = "adlTransactionManager")
 public class ADLService {
 //	private Logger logger = Logger.getLogger(getClass());

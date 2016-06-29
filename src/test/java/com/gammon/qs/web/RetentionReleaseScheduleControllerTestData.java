@@ -17,7 +17,7 @@ public class RetentionReleaseScheduleControllerTestData extends ControllerTestCa
 	private Class<?> serviceClass;// = RetentionReleaseScheduleController.class;
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.RetentionReleaseScheduleController#obtainCumulativeRetentionReleaseByJob(com.gammon.qs.domain.MainContractCertificate)}.
+	 * Test data for {@link com.gammon.qs.web.RetentionReleaseScheduleController#calculateCumulativeRetentionReleaseByJob(com.gammon.qs.domain.MainContractCertificate)}.
 	 */
 	public Map<String, Object> testObtainCumulativeRetentionReleaseByJob() {
 		init();
