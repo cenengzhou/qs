@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,14 +105,14 @@ public class MainCertService {
 			logger.info(message);
 			throw new DatabaseOperationException(message);
 		}
-		else if (mainCertHBDao.obtainMainContractCert(newMainContractCert.getJobNo(), newMainContractCert.getCertificateNumber())!=null){
+		else if (mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(), newMainContractCert.getCertificateNumber())!=null){
 			message = "The Main Contract Certificate existed already. Job: "+newMainContractCert.getJobNo()+" Cert No.: "+newMainContractCert.getCertificateNumber();
 			logger.info(message);
 			throw new DatabaseOperationException(message);
 		}
 		else {
 			if (newMainContractCert.getCertificateNumber()>1){
-				mainCertHBDao.obtainMainContractCert(newMainContractCert.getJobNo(),(newMainContractCert.getCertificateNumber()-1));
+				mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(),(newMainContractCert.getCertificateNumber()-1));
 				newMainContractCert.setCreatedDate(new Date());
 			}	
 			mainCertHBDao.insert(newMainContractCert);
@@ -129,7 +130,7 @@ public class MainCertService {
 		String message = null;
 		if (updatedMainCert!=null){
 			logger.info("Updating Main Contract Certificate Job: "+updatedMainCert.getJobNo()+" Cert No.:"+updatedMainCert.getCertificateNumber());
-			MainCert currMainCert = mainCertHBDao.obtainMainContractCert(updatedMainCert.getJobNo(), updatedMainCert.getCertificateNumber());
+			MainCert currMainCert = mainCertHBDao.findByJobNoAndCertificateNo(updatedMainCert.getJobNo(), updatedMainCert.getCertificateNumber());
 		
 			if (currMainCert!=null){
 				setModifiedDate(updatedMainCert);
@@ -239,7 +240,7 @@ public class MainCertService {
 	 * created on September 03, 2012
 	 */
 	public Boolean updateMainCertificateStatus(String jobNumber, Integer mainCertNumber, String newCertificateStatus) throws DatabaseOperationException {
-		MainCert mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 		
 		Boolean updated = true;
 		
@@ -262,7 +263,7 @@ public class MainCertService {
 
 		if (toBeUpdatedMainCert != null) {
 			logger.info("Resetting Main Contract Certificate Job: " + toBeUpdatedMainCert.getJobNo() + " Cert No.:" + toBeUpdatedMainCert.getCertificateNumber());
-			MainCert mainCertInDB = mainCertHBDao.obtainMainContractCert(toBeUpdatedMainCert.getJobNo(), toBeUpdatedMainCert.getCertificateNumber());
+			MainCert mainCertInDB = mainCertHBDao.findByJobNoAndCertificateNo(toBeUpdatedMainCert.getJobNo(), toBeUpdatedMainCert.getCertificateNumber());
 
 			if (mainCertInDB != null) {
 				if (mainCertInDB.getCertificateStatus() != null && mainCertInDB.getCertificateStatus().equals(MainCert.CERT_CONFIRMED)) {
@@ -287,52 +288,6 @@ public class MainCertService {
 		return message;
 	}
 
-	/**
-	 * @author tikywong
-	 * created on 25 October, 2012
-	 * confirm Main Contract Certificate at QS System (120 -> 150)
-	 */
-	public String confirmMainContractCert(MainCert toBeUpdatedMainCert) throws DatabaseOperationException {
-		String message = null;
-		
-		if(toBeUpdatedMainCert!=null){		
-			logger.info("Confirming Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Cert No.:"+toBeUpdatedMainCert.getCertificateNumber());
-			MainCert mainCertInDB = mainCertHBDao.obtainMainContractCert(toBeUpdatedMainCert.getJobNo(), toBeUpdatedMainCert.getCertificateNumber());
-			
-			if(mainCertInDB!=null){
-				if(mainCertInDB.getCertificateStatus()==null || !mainCertInDB.getCertificateStatus().equals(MainCert.IPA_SENT)){
-					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
-								"cannot be confirmed because its Certificate Status is not 120.";
-				}else if (mainCertInDB.getCertDueDate()==null){
-					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
-								"cannot be confirmed because it doesn't have a Due Date.";
-				}else if(mainCertInDB.getCertIssueDate()==null){
-					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
-								"cannot be confirmed because it doesn't have a Certified Date.";
-				}else if(mainCertInDB.getCertAsAtDate()==null){
-					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
-								"cannot be confirmed because it doesn't have a As At Date.";
-				}else{
-					mainCertInDB.setCertificateStatus(MainCert.CERT_CONFIRMED);
-					mainCertInDB.setCertStatusChangeDate(new Date());
-					mainCertHBDao.updateMainCert(mainCertInDB);
-				}
-			}else {
-				message = "No Main Contract Certificate is found with provided information. Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber();
-				logger.info(message);
-				throw new DatabaseOperationException(message);
-			}
-		}else{
-			message = "To be confirmed Main Contract Certificate is Null.";
-			logger.info(message);
-			throw new DatabaseOperationException(message);
-		}
-		
-		if(message!=null)
-			logger.info(message);
-		
-		return message;
-	}
 	
 	/**
 	 * 
@@ -507,7 +462,7 @@ public class MainCertService {
 		if (resultMsg == null || "".equals(resultMsg.trim())) {
 			logger.info("Job: "+jobNumber+" - Main Cert No.:"+mainCertNumber+" - Cert Amount: "+certAmount+" has been submitted to Approval System.");
 			try {
-				MainCert mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, mainCertNumber);
+				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 				mainCert.setCertificateStatus(MainCert.CERT_WAITING_FOR_APPROVAL);
 				mainCertHBDao.update(mainCert);
 			} catch (Exception e) {
@@ -522,59 +477,7 @@ public class MainCertService {
 		return resultMsg;
 	}
 
-	/**
-	 * @author koeyyeung
-	 * created on 30 Mar, 2015
-	 * Complete Main Cert Approval
-	 * @throws DatabaseOperationException 
-	 * **/
-	public Boolean toCompleteMainCertApproval(	String jobNumber,
-												String mainCertNo,
-												String approvalDecision) throws DatabaseOperationException {
-		if (jobNumber == null || jobNumber.trim().equals("")) {
-			logger.info("Job Number = null");
-			return Boolean.FALSE;
-		}
-		if (mainCertNo == null || mainCertNo.trim().equals("")) {
-			logger.info("Job Number: " + jobNumber + ", Package Number = null");
-			return Boolean.FALSE;
-		}
-		if (approvalDecision == null || approvalDecision.trim().equals("")) {
-			logger.info("Job Number: " + jobNumber + ", Package Number = " + mainCertNo + "Approval Decision = null");
-			return Boolean.FALSE;
-		}
-		logger.info("jobNumber:" + jobNumber + " packageNo:" + mainCertNo + " approvalDecision:" + approvalDecision);
-		
-		try {
-			MainCert	mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo));
-
-			if("A".equals(approvalDecision)){
-				//Approved Main Cert
-				String errorMsg = insertAndPostMainContractCert(jobNumber, mainCert.getCertificateNumber(), mainCert.getCertAsAtDate());
-
-				if(errorMsg==null){
-					logger.info("Job: "+jobNumber+" Main Contract Certificate has been posted successfully.");
-				}
-				else{
-					logger.info(errorMsg);
-					mainCert.setCertificateStatus(MainCert.CERT_CONFIRMED);
-					mainCertHBDao.update(mainCert);
-				}
-			}else{
-				//Rejected Main Cert
-				mainCert.setCertificateStatus(MainCert.CERT_CONFIRMED);
-				mainCertHBDao.update(mainCert);
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			return Boolean.FALSE;
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-			return Boolean.FALSE;
-		}
-		return Boolean.TRUE;
-		
-	}
+	
 	
 	/**
 	 * koeyyeung
@@ -604,17 +507,124 @@ public class MainCertService {
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - START**************************************************************/
-	public MainCert getCertificate(String jobNumber, Integer mainCertNumber) throws DatabaseOperationException{
-		return mainCertHBDao.obtainMainContractCert(jobNumber, mainCertNumber);
+	public MainCert getCertificate(String jobNumber, Integer mainCertNumber) throws DataAccessException{
+		return mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 	}
 	
-	public List<MainCert> getCertificates(String noJob) {
+	public List<MainCert> getCertificateList(String noJob) {
 		try {
 			return mainCertHBDao.findByJobNo(noJob);
 		} catch (DatabaseOperationException e) {
-			logger.error("Failed to get Certificate records: ", e);
 			return new ArrayList<MainCert>();
 		}
+	}
+	
+	/**
+	 * @author tikywong
+	 * created on 25 October, 2012
+	 * confirm Main Contract Certificate at QS System (120 -> 150)
+	 */
+	public String confirmMainContractCert(MainCert toBeUpdatedMainCert) {
+		String message = null;
+		
+		if(toBeUpdatedMainCert!=null){		
+			logger.info("Confirming Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Cert No.:"+toBeUpdatedMainCert.getCertificateNumber());
+			MainCert mainCertInDB = mainCertHBDao.findByJobNoAndCertificateNo(toBeUpdatedMainCert.getJobNo(), toBeUpdatedMainCert.getCertificateNumber());
+			
+			if(mainCertInDB!=null){
+				if(mainCertInDB.getCertificateStatus()==null || !mainCertInDB.getCertificateStatus().equals(MainCert.IPA_SENT)){
+					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
+								"cannot be confirmed because its Certificate Status is not 120.";
+				}else if (mainCertInDB.getCertDueDate()==null){
+					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
+								"cannot be confirmed because it doesn't have a Due Date.";
+				}else if(mainCertInDB.getCertIssueDate()==null){
+					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
+								"cannot be confirmed because it doesn't have a Certified Date.";
+				}else if(mainCertInDB.getCertAsAtDate()==null){
+					message = 	"Main Contract Certificate Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber()+" \n"+ 
+								"cannot be confirmed because it doesn't have a As At Date.";
+				}else{
+					mainCertInDB.setCertificateStatus(MainCert.CERT_CONFIRMED);
+					mainCertInDB.setCertStatusChangeDate(new Date());
+					try {
+						mainCertHBDao.updateMainCert(mainCertInDB);
+					} catch (DataAccessException e) {
+						message = "Failed to update Main Contract Certificate. Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber();
+						logger.info(message);
+						return message;
+					}
+				}
+			}else {
+				message = "No Main Contract Certificate is found with provided information. Job: "+toBeUpdatedMainCert.getJobNo()+" Certificate No.: "+toBeUpdatedMainCert.getCertificateNumber();
+				logger.info(message);
+				return message;
+			}
+		}else{
+			message = "To be confirmed Main Contract Certificate is Null.";
+			logger.info(message);
+			return message;
+		}
+		
+		if(message!=null)
+			logger.info(message);
+		
+		return message;
+	}
+	
+	
+	/**
+	 * @author koeyyeung
+	 * created on 30 Mar, 2015
+	 * Complete Main Cert Approval
+	 * @throws DatabaseOperationException 
+	 * **/
+	public Boolean toCompleteMainCertApproval(	String jobNumber,
+												String mainCertNo,
+												String approvalDecision) throws DatabaseOperationException {
+		if (jobNumber == null || jobNumber.trim().equals("")) {
+			logger.info("Job Number = null");
+			return Boolean.FALSE;
+		}
+		if (mainCertNo == null || mainCertNo.trim().equals("")) {
+			logger.info("Job Number: " + jobNumber + ", Package Number = null");
+			return Boolean.FALSE;
+		}
+		if (approvalDecision == null || approvalDecision.trim().equals("")) {
+			logger.info("Job Number: " + jobNumber + ", Package Number = " + mainCertNo + "Approval Decision = null");
+			return Boolean.FALSE;
+		}
+		logger.info("jobNumber:" + jobNumber + " packageNo:" + mainCertNo + " approvalDecision:" + approvalDecision);
+		
+		try {
+			MainCert	mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo));
+
+			if("A".equals(approvalDecision)){
+				//Approved Main Cert
+				String errorMsg = insertAndPostMainContractCert(jobNumber, mainCert.getCertificateNumber(), mainCert.getCertAsAtDate());
+
+				if(errorMsg==null){
+					logger.info("Job: "+jobNumber+" Main Contract Certificate has been posted successfully.");
+				}
+				else{
+					logger.info(errorMsg);
+					mainCert.setCertificateStatus(MainCert.CERT_CONFIRMED);
+					mainCertHBDao.update(mainCert);
+				}
+			}else{
+				//Rejected Main Cert
+				mainCert.setCertificateStatus(MainCert.CERT_CONFIRMED);
+				mainCertHBDao.update(mainCert);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return Boolean.FALSE;
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+		
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

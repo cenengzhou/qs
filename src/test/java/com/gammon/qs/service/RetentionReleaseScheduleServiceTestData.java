@@ -126,7 +126,7 @@ public class RetentionReleaseScheduleServiceTestData extends TransactionTestCase
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertRetentionReleaseService#updateForecastRetentionRelease(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertRetentionReleaseService#updateRetentionRelease(java.lang.String, java.util.List)}.
 	 */
 	public TransactionTestCase.TestDataMethod testUpdateForecastRetentionRelease() {
 		return new TransactionTestCase.TestDataMethod() {

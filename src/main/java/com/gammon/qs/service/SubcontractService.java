@@ -21,6 +21,7 @@ import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -3109,7 +3110,7 @@ public class SubcontractService {
 			
 			resourceSummary.setCurrIVAmount(resourceSummary.getCurrIVAmount() + movement);
 			bqResourceSummaryDao.saveOrUpdate(resourceSummary);
-		} catch (DatabaseOperationException dbException) {
+		} catch (DataAccessException dbException) {
 			dbException.printStackTrace();
 		}
 	}
@@ -3949,7 +3950,7 @@ public class SubcontractService {
 					scPackage.setRetentionReleased(totalRetentionReleasedAmount);
 					try {
 						subcontractHBDao.saveOrUpdate(scPackage);
-					} catch (DatabaseOperationException e) {
+					} catch (DataAccessException e) {
 						logger.info("Unable to update Package: "+scPackage.getPackageNo());
 						e.printStackTrace();
 						return false;

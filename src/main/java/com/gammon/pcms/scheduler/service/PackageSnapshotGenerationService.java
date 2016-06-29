@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,7 @@ public class PackageSnapshotGenerationService {
 			for (JobInfo job : jobList)
 				calculateTotalWDAmountByJob(job.getJobNumber());
 
-		} catch (DatabaseOperationException e) {
+		} catch (DataAccessException e) {
 			String exceptionMessage = e.getMessage();
 			content = mailContentGenerator.obtainEmailContentForScheduleJob(startTime, null, exceptionMessage);
 			mailContentGenerator.sendEmail("QS System Notification - Scheduled Job: Generate SCPackage Snapshot [ERROR]", content);

@@ -11,205 +11,142 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-public abstract class BaseHibernateDao <T> implements GenericDao<T> {
+
+public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 	private Class<T> type;
 	@Autowired
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
-	
-    @PersistenceContext(unitName = "PersistenceUnit")
-    protected EntityManager entityManager;
-    
+
+	@PersistenceContext(unitName = "PersistenceUnit")
+	protected EntityManager entityManager;
+
 	public BaseHibernateDao(Class<T> type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 
-	 * @author tikywong
-	 * May 10, 2013
+	 * @author tikywong May 10, 2013
 	 */
-	public void insert(T object) throws DatabaseOperationException {
-		try {
-			getSession().save(object);
-			flush();
-		} catch (Exception ex) {
-			throw new DatabaseOperationException(ex);
-		}
+	public void insert(T object) throws DataAccessException {
+		getSession().save(object);
+		flush();
 	}
-	
-	public void saveOrUpdate(T object) throws DatabaseOperationException {
-		try {
-			getSession().saveOrUpdate(object);
-			flush();
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void saveOrUpdate(T object) throws DataAccessException {
+		getSession().saveOrUpdate(object);
+		flush();
 	}
-	
-	/** 
-	 * @author tikywong
-	 * June 21, 2011 10:16:38 AM
+
+	/**
+	 * @author tikywong June 21, 2011 10:16:38 AM
 	 */
-	public void update(T object) throws DatabaseOperationException {
-		try{
-			getSession().update(object);
-			flush();
-		}catch (Exception ex){
-			throw new DatabaseOperationException(ex);
-		}
+	public void update(T object) throws DataAccessException {
+		getSession().update(object);
+		flush();
 	}
-	
-	public void updateAndFlush(T object) throws DatabaseOperationException {
-		try{
-			getSession().update(object);
-			flush();
-		}catch (Exception ex){
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void updateAndFlush(T object) throws DataAccessException {
+		getSession().update(object);
+		flush();
 	}
-	
-	public void updateFlushClear(T object) throws DatabaseOperationException {
-		try{
-			getSession().update(object);
-			flush();
-			clear();
-		}catch (Exception ex){
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void updateFlushClear(T object) throws DataAccessException {
+		getSession().update(object);
+		flush();
+		clear();
 	}
-	
-	public void merge(T object) throws DatabaseOperationException {
-		try{
-			getSession().merge(object);
-			flush();
-		}catch (Exception ex){
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void merge(T object) throws DataAccessException {
+		getSession().merge(object);
+		flush();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public T get(Long id) throws DatabaseOperationException {
-		T result = null;
-		try {
-			result = (T) getSession().get(type, id);
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
-		return result;
+	public T get(Long id) throws DataAccessException {
+		return (T) getSession().get(type, id);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<T> getAll() throws DatabaseOperationException {
-		List<T> result = new ArrayList<T>();
-		try {
-			result = getSession().createCriteria(type).list();
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
-		return result;
+	public List<T> getAll() throws DataAccessException {
+		return getSession().createCriteria(type).list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<T> getAllActive() throws DatabaseOperationException {
-		List<T> result = new ArrayList<T>();
-		try {
-			result = getSession().createCriteria(type).add(Restrictions.eq("systemStatus", BasePersistedObject.ACTIVE)).list();
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
-		return result;
+	public List<T> getAllActive() throws DataAccessException {
+		return getSession().createCriteria(type).add(Restrictions.eq("systemStatus", BasePersistedObject.ACTIVE)).list();
 	}
-	
-	public void delete(T persistentObject) throws DatabaseOperationException {
-		try {
-			getSession().delete(persistentObject);
-			flush();
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void delete(T persistentObject) throws DataAccessException {
+		getSession().delete(persistentObject);
+		flush();
 	}
-	
-	public void flushAndDelete(T persistentObject) throws DatabaseOperationException {
-		try {
-			flush();
-			getSession().delete(persistentObject);
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void flushAndDelete(T persistentObject) throws DataAccessException {
+		flush();
+		getSession().delete(persistentObject);
 	}
-	
-	public void deleteById(Long id) throws DatabaseOperationException {
-		try {
-			getSession().delete(this.get(id));
-			flush();
-		} catch (Exception ex) {			
-			throw new DatabaseOperationException(ex);
-		}
+
+	public void deleteById(Long id) throws DataAccessException {
+		getSession().delete(this.get(id));
+		flush();
 	}
 
 	@SuppressWarnings("null")
-	public void inactivate(T persistentObject) throws DatabaseOperationException{
-		if (persistentObject!=null){
-			if (persistentObject instanceof BasePersistedAuditObject){
-				((BasePersistedAuditObject)persistentObject).inactivate();
+	public void inactivate(T persistentObject) throws DataAccessException {
+		if (persistentObject != null) {
+			if (persistentObject instanceof BasePersistedAuditObject) {
+				((BasePersistedAuditObject) persistentObject).inactivate();
 				update(persistentObject);
-			}else throw new DatabaseOperationException("Object cannot be inactivated.");
-		}else throw new NullPointerException(persistentObject.getClass()+" is Null, the object cannot be inactivated.");
+			} else
+				throw new DataRetrievalFailureException("Object cannot be inactivated.");
+		} else
+			throw new NullPointerException(persistentObject.getClass() + " is Null, the object cannot be inactivated.");
 	}
-	
+
 	public void inactivateById(Long id) throws DatabaseOperationException {
-		inactivate(get(id));		
+		inactivate(get(id));
 	}
 
 	/**
 	 * Flush to record from memory to database but not yet committed
 	 *
 	 * @throws DatabaseOperationException
-	 * @author	tikywong
-	 * @since	Apr 5, 2016 3:29:13 PM
+	 * @author tikywong
+	 * @since Apr 5, 2016 3:29:13 PM
 	 */
-	public void flush() throws DatabaseOperationException {
-		try {
-			getSession().flush();
-		} catch (Exception ex) {
-			throw new DatabaseOperationException(ex);
-		}
+	public void flush() throws DataAccessException {
+		getSession().flush();
 	}
-	
+
 	/**
 	 * Flush to record from memory to database and clear out the memory but not yet committed to free the memory for huge batch jobs
 	 *
 	 * @throws DatabaseOperationException
-	 * @author	tikywong
-	 * @since	Apr 5, 2016 3:29:18 PM
+	 * @author tikywong
+	 * @since Apr 5, 2016 3:29:18 PM
 	 */
-	public void clear() throws DatabaseOperationException {
-		try {
-			getSession().clear();
-		} catch (Exception ex) {
-			throw new DatabaseOperationException(ex);
-		}
+	public void clear() throws DataAccessException {
+		getSession().clear();
 	}
 
 	/**
 	 * 
 	 *
 	 * @throws DatabaseOperationException
-	 * @author	tikywong
-	 * @since	Apr 5, 2016 3:29:24 PM
+	 * @author tikywong
+	 * @since Apr 5, 2016 3:29:24 PM
 	 */
-	public void flushAndClear() throws DatabaseOperationException {
-		try {
-			flush();
-			clear();
-		} catch (Exception ex) {
-			throw new DatabaseOperationException(ex);
-		}
+	public void flushAndClear() throws DataAccessException {
+		flush();
+		clear();
 	}
 
 	protected Class<T> getType() {
@@ -223,8 +160,8 @@ public abstract class BaseHibernateDao <T> implements GenericDao<T> {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
-	public Session getSession(){
+
+	public Session getSession() {
 		Session session = entityManager.unwrap(Session.class);
 		return session;
 	}

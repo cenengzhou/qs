@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -381,7 +382,7 @@ public class PaymentService{
 			if (scPaymentDetail.getSubcontractDetail() != null) {
 				try {
 					scDetailsDescription.add(scDetailDao.get(scPaymentDetail.getSubcontractDetail().getId()).getDescription());
-				} catch (DatabaseOperationException e) {
+				} catch (DataAccessException e) {
 					logger.info("Exception caught when get SC Detail ID and Description:" +
 							" Job Number: " + scPaymentDetail.getPaymentCert().getJobNo() +
 							" package no: " + scPaymentDetail.getPaymentCert().getPackageNo() +
@@ -620,7 +621,7 @@ public class PaymentService{
 		logger.info("4. Update SC Payment Certificate");
 		try {
 			scPaymentCertDao.update(scPaymentCert);
-		} catch (DatabaseOperationException dbException) {
+		} catch (DataAccessException dbException) {
 			String message = ("Unable to update Payment Certificate \n" +
 								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
 								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
@@ -684,7 +685,7 @@ public class PaymentService{
 					gstPayableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstPayableInDB);
-					} catch (DatabaseOperationException e) {
+					} catch (DataAccessException e) {
 						String message = ("Unable to insert Payment Certificate GST Payable");
 						resultWrapper.setIsUpdateSuccess(false);
 						resultWrapper.setMessage(message);
@@ -705,7 +706,7 @@ public class PaymentService{
 					gstReceivableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstReceivableInDB);
-					} catch (DatabaseOperationException e) {
+					} catch (DataAccessException e) {
 						String message = ("Unable to insert Payment Certificate GST Receviable");
 						resultWrapper.setIsUpdateSuccess(false);
 						resultWrapper.setMessage(message);
@@ -731,7 +732,7 @@ public class PaymentService{
 				try {
 					scPaymentDetailDao.update(gstPayableInDB);
 					scPaymentDetailDao.update(gstReceivableInDB);
-				} catch (DatabaseOperationException e) {
+				} catch (DataAccessException e) {
 					String message = ("Unable to insert Payment Certificate GST");
 					resultWrapper.setIsUpdateSuccess(false);
 					resultWrapper.setMessage(message);

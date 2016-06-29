@@ -1291,43 +1291,6 @@ public class DownloadController{
 		}
 	}
 	
-	@RequestMapping(value="/gammonqs/retentionReleaseScheduleExcelDownload.smvc",method=RequestMethod.GET)
-	public void generateRetentionReleaseScheduleExcel(@RequestParam(required=true,value="jobNumber") String jobNumber,
-														@RequestParam(required=true,value="division") String division,
-														@RequestParam(required=true,value="company") String company,
-														HttpServletRequest request, HttpServletResponse response ){		
-		
-		logger.info("generateRetentionReleaseScheduleExcel");
-
-		try {
-			ExcelFile excelFile = retentionReleaseScheduleRepository.retentionReleaseScheduleDownloadExcelFile(division,company,jobNumber);
-
-			if (excelFile != null) {
-				byte[] file = excelFile.getBytes();
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setContentLength(file.length);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
-
-				response.getOutputStream().write(file);
-				response.getOutputStream().flush();
-			} else{
-				logger.info("Download Controller : AccountLedgerExcelDownload - Excel File Error (File is null)");
-				showReportError(response);
-			}			
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showReportError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	@RequestMapping(value="/gammonqs/scDetailsDownload.smvc",method=RequestMethod.GET)
 	public void generateSCDetailsExcel(@RequestParam(required=true,value="jobNumber") String jobNumber,
 											@RequestParam(required=true,value="packageNumber") String packageNumber,

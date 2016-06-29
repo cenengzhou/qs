@@ -855,7 +855,7 @@ public class MainContractCertificateServiceTestData extends TransactionTestCase.
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.MainCertService#obtainMainContractCert(com.gammon.qs.wrapper.mainContractCert.MainContractCertEnquirySearchingWrapper, int)}.
+	 * Test method for {@link com.gammon.qs.service.MainCertService#findByJobNoAndCertificateNo(com.gammon.qs.wrapper.mainContractCert.MainContractCertEnquirySearchingWrapper, int)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainMainContractCert() {
 		return new TransactionTestCase.TestDataMethod() {

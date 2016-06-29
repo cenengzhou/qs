@@ -10,12 +10,13 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.RepackagingDetail;
 import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.domain.RepackagingDetail;
 @Repository
 public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 	
@@ -118,7 +119,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		for(RepackagingDetail repackagingDetail : repackagingDetailHBDao.obtainRepackagingDetail(entryInDB)){
 			try {
 				repackagingDetailHBDao.delete(repackagingDetail);
-			} catch (DatabaseOperationException e) {
+			} catch (DataAccessException e) {
 				e.printStackTrace();
 			}
 		}

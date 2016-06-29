@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,7 +69,7 @@ public class MainCertContraChargeService {
 		List<MainCertContraCharge> contraChargeList = new ArrayList<MainCertContraCharge>();
 		try {
 			mainCert = mainCertService.getCertificate(mainCert.getJobNo(), mainCert.getCertificateNumber());
-		} catch (DatabaseOperationException e) {
+		} catch (DataAccessException e) {
 			logger.error("Failed to get Main Contra Certificate: " + e);
 			return contraChargeList;
 		}
@@ -92,7 +93,7 @@ public class MainCertContraChargeService {
 		MainCert mainCert = new MainCert();
 		try {
 			mainCert = mainCertService.getCertificate(mainCertContraCharge.getMainCertificate().getJobNo(), mainCertContraCharge.getMainCertificate().getCertificateNumber());
-		} catch (DatabaseOperationException e) {
+		} catch (DataAccessException e) {
 			return "Failed to get Main Contract Certificate: " + e;
 		}
 		mainCertContraCharge.setMainCertificate(mainCert);
@@ -114,7 +115,7 @@ public class MainCertContraChargeService {
 		}
 		try {
 			mainCertContraChargeHBDao.delete(mainCertCC);
-		} catch (DatabaseOperationException e) {
+		} catch (DataAccessException e) {
 			logger.error("Failed to delete Main Contract Certificate Contra Charge: " + e);
 			return false;
 		}

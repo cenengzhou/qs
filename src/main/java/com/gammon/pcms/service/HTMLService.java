@@ -12,29 +12,30 @@ import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.MasterListWSDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
-import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MasterListVendor;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.MasterListService;
@@ -229,7 +230,7 @@ public class HTMLService implements Serializable{
 							for(TenderDetail curTenderAnalysisDetail: tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
 								comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic()*curTenderAnalysisDetail.getQuantity();
 							}
-						} catch (DatabaseOperationException e) {
+						} catch (DataAccessException e) {
 							e.printStackTrace();
 						}
 						vendorNameList.add(i, "");
@@ -332,7 +333,7 @@ public class HTMLService implements Serializable{
 								for (TenderDetail curTenderAnalysisDetail : tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
 									comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic() * curTenderAnalysisDetail.getQuantity();
 								}
-							} catch (DatabaseOperationException e) {
+							} catch (DataAccessException e) {
 								e.printStackTrace();
 							}
 							vendorNameList.add(i, "");
@@ -578,8 +579,8 @@ public class HTMLService implements Serializable{
 					e.printStackTrace();
 				}
 				
-				MainCert mainCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo));
-				MainCert previousCert = mainCertHBDao.obtainMainContractCert(jobNumber, Integer.valueOf(mainCertNo)-1);
+				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo));
+				MainCert previousCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo)-1);
 				if(previousCert==null)
 					previousCert = new MainCert();
 				

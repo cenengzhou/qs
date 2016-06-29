@@ -5,10 +5,10 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
-import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCertRetentionRelease;
 @Repository
 public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRetentionRelease> {
@@ -16,13 +16,28 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 	public MainCertRetentionReleaseHBDao() {
 		super(MainCertRetentionRelease.class);
 	}
-
+	
+	/**
+	 * To find Retention Release of a particular job including Forecast and Actual records
+	 *
+	 * @param noJob
+	 * @return
+	 * @author	tikywong
+	 * @since	Jun 28, 2016 2:56:40 PM
+	 */
 	@SuppressWarnings("unchecked")
-	public List<MainCertRetentionRelease> obtainRetentionReleaseScheduleByJob(String jobNumber) {
+	public List<MainCertRetentionRelease> findByJobNo(String noJob) throws DataAccessException{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("jobNumber", jobNumber));
-		criteria.addOrder(Order.asc("status")).addOrder(Order.asc("mainCertNo")).addOrder(Order.asc("dueDate")).addOrder(Order.asc("id"));
+		
+		// Where
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
+				.add(Restrictions.eq("jobNumber", noJob));
+		
+		// Order By
+		criteria.addOrder(Order.asc("status"))		// Forecast / Actual
+				.addOrder(Order.asc("mainCertNo"))	// null / 1, 2, 3, etc...
+				.addOrder(Order.asc("dueDate"))		// null / date	
+				.addOrder(Order.asc("id"));			// older entries with smaller ID
 		return criteria.list();
 	}
 	
@@ -36,7 +51,7 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		return (MainCertRetentionRelease) criteria.uniqueResult();
 	}
 	
-	public void saveList(List<MainCertRetentionRelease> saveList) throws DatabaseOperationException {
+	public void saveList(List<MainCertRetentionRelease> saveList) throws DataAccessException {
 		for (MainCertRetentionRelease rr:saveList){
 			MainCertRetentionRelease dbObj = internalSelectByJobSeq(rr.getJobNumber(), rr.getSequenceNo());
 			if (dbObj!=null){

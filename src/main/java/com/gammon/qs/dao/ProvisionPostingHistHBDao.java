@@ -11,6 +11,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -86,7 +87,7 @@ public class ProvisionPostingHistHBDao extends
 		return (ProvisionPostingHist)criteria.uniqueResult();
 	}
 	
-	public void saveOrUpdate(ProvisionPostingHist scDetailProvisionHistory) throws DatabaseOperationException{
+	public void saveOrUpdate(ProvisionPostingHist scDetailProvisionHistory) throws DataAccessException{
 		
 		ProvisionPostingHist dbObj = getSCDetailProvision(	scDetailProvisionHistory.getSubcontractDetail().getJobNo(),
 													 			scDetailProvisionHistory.getSubcontractDetail().getSubcontract().getPackageNo(),

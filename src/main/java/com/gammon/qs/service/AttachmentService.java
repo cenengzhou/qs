@@ -279,7 +279,7 @@ public class AttachmentService {
 		if(jobNumber==null || mainCertNumber==null || sequenceNo==null)
 			return false;
 		
-		MainCert mainCert = mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 		if(mainCert==null)
 			return false;
 		
@@ -312,7 +312,7 @@ public class AttachmentService {
 								sequenceNo==null?"Sequence No is null":
 								fileName==null||fileName.length()==0?"File name is null or without name":"File is null or empty");
 			
-		MainCert mainCert = mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 		if(mainCert==null)
 			throw new Exception("Job: "+jobNumber+" Main Certificate: "+mainCertNumber+" does not exist.");
 
@@ -372,7 +372,7 @@ public class AttachmentService {
 	 */
 	public Boolean saveMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String text) throws DatabaseOperationException {
 		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo+"\ntext="+text);
-		MainCert mainCert = mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 		if(mainCert==null)
 			return false;
 		
@@ -395,7 +395,7 @@ public class AttachmentService {
 	public Boolean deleteMainCertAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
 		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
 		
-		MainCert mainCert = mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, mainCertNumber);
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
 		if(mainCert==null)
 			return false;
 		
@@ -685,7 +685,7 @@ public class AttachmentService {
 				});
 				return resultList;
 			}else if (AttachSubcontract.MainCertNameObject.equals(nameObject.trim())){;
-			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, Integer.valueOf(packageNo)));
+			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)));
 			if (resultList==null || resultList.size()<1)
 				return new ArrayList<AttachMainCert>();
 			Collections.sort(resultList, new Comparator<AttachMainCert>(){
@@ -802,7 +802,7 @@ public class AttachmentService {
 				});
 				return resultList;
 			}else if (AttachSubcontract.MainCertNameObject.equals(nameObject.trim())){;
-			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, Integer.valueOf(packageNo)));
+			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)));
 			if (resultList==null || resultList.size()<1)
 				return new ArrayList<AttachMainCert>();
 			Collections.sort(resultList, new Comparator<AttachMainCert>(){
@@ -1060,7 +1060,7 @@ public class AttachmentService {
 				AttachMainCert result = null;
 				
 				logger.info("Main Certificate Attachment - Job: "+jobNumber+" MainCertNo.: "+packageNo+" SequenceNo: "+sequenceNumber);
-				result = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachment(mainContractCertificateHBDaoImpl.obtainMainContractCert(jobNumber, Integer.valueOf(packageNo)), sequenceNumber);
+				result = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachment(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)), sequenceNumber);
 				if (result!=null)
 					return result.getTextAttachment();
 			}

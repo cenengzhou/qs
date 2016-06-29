@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -498,7 +499,7 @@ public class ProvisionPostingService {
 				// Hibernate keep writing these records into the database instead of caching them in the memory
 				jobHBDao.updateFlushClear(job);
 				logger.info("job: "+job.getJobNumber()+" company: "+job.getCompany());
-			} catch (DatabaseOperationException dbException) {
+			} catch (DataAccessException dbException) {
 				e.printStackTrace();
 				sendEmailForErrorFoundInProvisionPosting(dbException);
 			}

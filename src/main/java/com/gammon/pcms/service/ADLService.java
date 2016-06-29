@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 @Transactional(	rollbackFor = Exception.class,
 				value = "adlTransactionManager")
 public class ADLService {
-	private Logger logger = Logger.getLogger(getClass());
+//	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
 	private FactAccountBalanceDao factAccountBalanceDao;
@@ -51,7 +50,7 @@ public class ADLService {
 			else
 				return factAccountBalanceDao.findMonthlyJobCostBySubcontract(year, month, typeLedger, noJob, noSubcontract);
 		} catch (DatabaseOperationException e) {
-			logger.error("Failed to get Monthly Job Cost records: ", e);
+			e.printStackTrace();
 			return new ArrayList<JobCostDTO>();
 		}
 	}
@@ -75,7 +74,7 @@ public class ADLService {
 		try {
 			return factAccountBalanceDao.findByFiscalYearRangeAndAccountTypeLedgerAndEntityBusinessUnitKeyAndAccountObject(yearStart, yearEnd, FactAccountBalance.TYPE_LEDGER_AA, noJob, FactAccountBalance.CODE_OBJECT_TURNOVER);
 		} catch (DatabaseOperationException e) {
-			logger.error("Failed to get Turnover (Internal Valuation) records: ", e);
+			e.printStackTrace();
 			return new ArrayList<FactAccountBalance>();
 		}
 	}

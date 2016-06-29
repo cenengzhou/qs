@@ -10,6 +10,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -24,10 +26,8 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 		super(TenderDetail.class);
 	}
 
-	private Logger logger = Logger.getLogger(TenderDetailHBDao.class.getName());
-
 	public TenderDetail getTenderAnalysisDetail(String jobNumber,
-			String packageNo, Integer venderNo, Integer sequenceNo) throws DatabaseOperationException {
+			String packageNo, Integer venderNo, Integer sequenceNo) throws DataAccessException {
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("tender", "tender");
@@ -37,13 +37,12 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 			return (TenderDetail) criteria.uniqueResult();
 		}catch (HibernateException he){
-			logger.info("Fail: getTenderAnalysis((String jobNumber, String packageNo)");
-			throw new DatabaseOperationException(he);
+			throw new DataRetrievalFailureException("Fail: getTenderAnalysis((String jobNumber, String packageNo)");
 		}	
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TenderDetail> getTenderAnalysisDetails(String jobNumber, String packageNo, Integer venderNo) throws DatabaseOperationException{
+	public List<TenderDetail> getTenderAnalysisDetails(String jobNumber, String packageNo, Integer venderNo) throws DataAccessException{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("tender", "tender");
@@ -56,16 +55,15 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 			criteria.addOrder(Order.asc("sequenceNo"));
 			return criteria.list(); 
 		}catch (HibernateException he){
-			logger.info("Fail: getTenderAnalysisDetail((String jobNumber, String packageNo, Integer vendorNo)");
-			throw new DatabaseOperationException(he);
+			throw new DataRetrievalFailureException("Fail: getTenderAnalysisDetail((String jobNumber, String packageNo, Integer vendorNo)");
 		}
 	}
 	
-	public List<TenderDetail> getTenderAnalysisDetails(JobInfo job, String packageNo, Integer vendorNo) throws DatabaseOperationException{
+	public List<TenderDetail> getTenderAnalysisDetails(JobInfo job, String packageNo, Integer vendorNo) throws DataAccessException{
 		return getTenderAnalysisDetails(job.getJobNumber(), packageNo, vendorNo);
 	}
 	
-	public TenderDetail getTenderAnalysisDetail(JobInfo job, String packageNo, Integer vendorNo, Integer sequenceNo) throws DatabaseOperationException{
+	public TenderDetail getTenderAnalysisDetail(JobInfo job, String packageNo, Integer vendorNo, Integer sequenceNo) throws DataAccessException{
 		return getTenderAnalysisDetail(job.getJobNumber(), packageNo, vendorNo, sequenceNo);
 	}
 	
@@ -142,7 +140,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	 * For Repackaging 1
 	 * **/
 	@SuppressWarnings("unchecked")
-	public List<TenderDetail> obtainTADetailByResourceNo(Tender tender, Integer resourceNo) throws DatabaseOperationException{
+	public List<TenderDetail> obtainTADetailByResourceNo(Tender tender, Integer resourceNo) throws DataAccessException{
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -161,7 +159,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TenderDetail> obtainTenderAnalysisDetailByTenderAnalysis(Tender tender) throws DatabaseOperationException{
+	public List<TenderDetail> obtainTenderAnalysisDetailByTenderAnalysis(Tender tender) throws DataAccessException{
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -215,7 +213,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 			for(TenderDetail tenderAnalysisDetail: tenderAnalysisDetailList){
 				delete(tenderAnalysisDetail);
 			}
-		}catch(DatabaseOperationException e){
+		}catch(DataAccessException e){
 			e.printStackTrace();
 		}
 	}

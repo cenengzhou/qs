@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -142,7 +143,7 @@ public class SCPackageLogic {
 										if (TADetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
 											scDetails.setCostRate(budgetTADetail.getFeedbackRateDomestic());
 										}
-								} catch (DatabaseOperationException e) {
+								} catch (DataAccessException e) {
 									e.printStackTrace();
 								}
 						}else{
@@ -166,7 +167,7 @@ public class SCPackageLogic {
 						scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
 						scDetails.setSubcontract(scPackage);;
 					}
-				} catch (DatabaseOperationException e) {
+				} catch (DataAccessException e) {
 					e.printStackTrace();
 				}
 			}
