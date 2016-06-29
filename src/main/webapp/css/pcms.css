@@ -15,7 +15,7 @@
 
 
 .fixed-container {
-  height: 650px;
+  height: 600px;
   width:100%;
   overflow-y: scroll;
 }
@@ -192,7 +192,7 @@
     background-color: #f2f2f2;
     border: 1px solid transparent;
     cursor: pointer;
-    height: 250px;
+    height: 200px;
     margin: 5px;
     border-radius: 10px;
 }
@@ -219,24 +219,6 @@
     background-image: url("../image/circle_large.png");
     margin-bottom: 13px;
 }
-.select-trigger .vendorName {
-    color: #999;
-    margin-top: 0;
-}
-@media only screen and (max-width: 735px) {
-    .select-trigger .vendorName {
-    color: #333;
-    margin-top: -2px;
-}
-}.select-trigger .vendorNo {
-    margin-bottom: 0;
-}
-@media only screen and (max-width: 735px) {
-    .select-trigger .vendorNo {
-    margin-top: 0;
-}
-.select-trigger .vendor-header {
-    height: 86px;
-}
+
 
 

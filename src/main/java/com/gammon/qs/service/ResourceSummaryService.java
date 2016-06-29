@@ -255,35 +255,7 @@ public class ResourceSummaryService implements Serializable {
 		return uneditableResourceSummaryIDs;
 	}
 
-	public BQResourceSummaryWrapper saveResourceSummary(ResourceSummary resourceSummary, Long repackagingEntryId) throws Exception{
-		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-		//Check status of repackaging entry
-		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
-		if("900".equals(repackagingEntry.getStatus())){
-			wrapper.setError("This repackaging entry has already been confirmed and locked.");
-			return wrapper;
-		}
-		
-		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
-		//Validate
-		String errorMsg = validateResourceSummary(resourceSummary, packagesToReset);
-		//Save if no error
-		if(errorMsg.length() == 0){
-			saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
-			List<ResourceSummary> list = new ArrayList<ResourceSummary>(1);
-			list.add(resourceSummary);
-			wrapper.setResourceSummaries(list);
-			/*if(packagesToReset.size() > 0){
-				for(SCPackage scPackage : packagesToReset){
-					scPackageDao.resetPackageTA(scPackage);				
-				}
-			}*/
-		}
-		else{
-			wrapper.setError(errorMsg);
-		}
-		return wrapper;
-	}
+	
 	
 	public BQResourceSummaryWrapper saveResourceSummaries(List<ResourceSummary> resourceSummaries, Long repackagingEntryId) throws Exception{
 		logger.info("saveResourceSummaries - STARTED");
@@ -1297,6 +1269,53 @@ public class ResourceSummaryService implements Serializable {
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(String jobNo) throws DatabaseOperationException{
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
 		return bqResourceSummaryDao.obtainResourceSummariesForIV(job);
+	}
+
+	
+	public String addResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
+		String result = "";
+		//Check status of repackaging entry
+		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
+		if("900".equals(repackagingEntry.getStatus())){
+			result = "This repackaging entry has already been confirmed and locked.";
+			return result;
+		}
+		
+		resourceSummary.setJobInfo(jobDao.obtainJobInfo(jobNo));
+		
+		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
+		//Validate
+		result = validateResourceSummary(resourceSummary, packagesToReset);
+		//Save if no error
+		if(result.length() == 0){
+			saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
+			List<ResourceSummary> list = new ArrayList<ResourceSummary>(1);
+			list.add(resourceSummary);
+		}
+		
+		return result;
+	}
+	
+	public String updateResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
+		String result = "";
+		//Check status of repackaging entry
+		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
+		if("900".equals(repackagingEntry.getStatus())){
+			result = "This repackaging entry has already been confirmed and locked.";
+			return result;
+		}
+		
+		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
+		//Validate
+		result = validateResourceSummary(resourceSummary, packagesToReset);
+		//Save if no error
+		if(result.length() == 0){
+			saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
+			List<ResourceSummary> list = new ArrayList<ResourceSummary>(1);
+			list.add(resourceSummary);
+		}
+		
+		return result;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

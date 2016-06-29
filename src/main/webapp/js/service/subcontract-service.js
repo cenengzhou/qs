@@ -19,7 +19,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "get",
             //headers: myHeaders,
-            url: "service/getSubcontractList",
+            url: "service/subcontract/getSubcontractList",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -49,7 +49,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     function getSubcontract(jobNo, subcontractNo) {
         var request = $http({
             method: "get",
-            url: "service/getSubcontract",
+            url: "service/subcontract/getSubcontract",
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo
@@ -61,7 +61,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     function getWorkScope(workScopeCode) {
         var request = $http({
             method: "get",
-            url: "service/getWorkScope",
+            url: "service/subcontract/getWorkScope",
             params: {
             	workScopeCode: workScopeCode
             }
@@ -72,7 +72,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     function addSubcontract(jobNo, subcontract) {
         var request = $http({
             method: "post",
-            url: "service/addSubcontract",
+            url: "service/subcontract/addSubcontract",
             params: {
                 jobNo: jobNo
             },

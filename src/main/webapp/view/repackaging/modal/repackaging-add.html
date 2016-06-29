@@ -1,24 +1,126 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h3 class="modal-title">Compare Vendor - Subcontract: {{packageNo}}</h3>
+			<h3 class="modal-title">Add New Resource</h3>
 		</div>
 		<div class="col-md-1">
-			<button class="btn btn-warning pull-right" type="button" confirmed-click="cancel()" ng-confirm-click>
+			<button class="btn btn-default pull-right" type="button"
+				confirmed-click="cancel()" ng-confirm-click>
 				<span class="fa fa-remove"></span>
 			</button>
 		</div>
 	</div>
 </div>
 <div class="modal-body bg-gray-light">
+
+
+
+	<div class="animated fadeIn">
+		<form name="form-wizard-step-1" id="form-wizard-step-1"
+			class="form-input-flat ng-pristine ng-valid">
+			<fieldset>
 				<div class="row">
-					<div class="col-md-12">
-						<div id="grid" ui-grid="gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-auto-resize class="grid"></div>
+					<div class="col-md-10 col-md-offset-1">
+						<h3 class="form-header form-header-lg m-b-10">
+							<span class="icon text-primary"><i class="fa fa-star"></i></span>
+						</h3>
+						<p class="m-b-20">Please input the required fields below.</p>
+						<div class="form-group">
+							<label>Resource Description</label> <input id="description"
+								type="text" class="form-control "
+								ng-model="resourceSummary.resourceDescription" required />
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Object Code</label> <input type="text" placeholder=""
+										class="form-control " ng-model="resourceSummary.objectCode" required />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Subsidiary Code</label> <input type="text"
+										placeholder="" class="form-control "
+										ng-model="resourceSummary.subsidiaryCode" required />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Unit</label> <input type="text" placeholder=""
+										class="form-control " ng-model="resourceSummary.unit" required />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Quantity</label> <input data-parsley-type="number"
+										step="0.01" class="form-control" ng-model="resourceSummary.quantity"
+										data-parsley-pattern="^[0-9]*\.[0-9]{2}$"
+										data-parsley-error-message="Max. 4 dp"
+										required />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>SC Rate</label> <input type="number" placeholder=""
+										class="form-control " ng-model="resourceSummary.rate" required />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Total Amount</label> <input type="number" placeholder=""
+										class="form-control" required />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Type</label> <input type="text" placeholder=""
+										class="form-control " ng-model="resourceSummary.resourceType"
+										required/>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Levy Excluded</label> <input type="text"
+										placeholder="" class="form-control "
+										required /><!-- ng-model="resourceSummary.excludeLevy"  -->
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Defect Excluded</label> <input type="text"
+										placeholder="" class="form-control "
+										required/> <!-- ng-model="resourceSummary.excludeDefect"  -->
+								</div>
+							</div>
+
+						</div>
+
+
 					</div>
-			</div>
-	
+
+
+
+				</div>
+			</fieldset>
+		</form>
+
+	</div>
+
+
+
+
+
 </div>
 <div class="modal-footer">
-    <button class="btn btn-twitter btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Add</button>
+	<button class="btn btn-primary btn-block" type="button"
+		ng-click="save()">
+		<span class="fa fa-save"></span> Add
+	</button>
 </div>
 

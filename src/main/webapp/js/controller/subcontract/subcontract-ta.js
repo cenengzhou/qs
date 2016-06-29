@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', '$uibModalInstance', 'repackagingService',
-                                         function ($scope, $http, $location, $uibModalInstance, repackagingService) {
+mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'repackagingService',
+                                         function ($scope, $http, $location, repackagingService) {
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -35,14 +35,14 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', '$uibMo
 
 	loadRepacakgingData();
     
-    function loadRepacakgingData() {
-   	 repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
-   	 .then(
+	 function loadRepacakgingData() {
+    	 repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
+    	 .then(
 			 function( data ) {
 				 console.log(data);
-				 //$scope.gridOptions.data= data;
+				 $scope.gridOptions.data= data;
 			 });
-    }
+     }
 
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
@@ -51,12 +51,9 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', '$uibMo
 
 	//Save Function
 	$scope.save = function () {
-		$location.path("/subcontract-flow");
-		$uibModalInstance.close();
+		//$location.path("/subcontract-flow");
+		//$uibModalInstance.close();
 	};
 
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-	};
 }]);
 

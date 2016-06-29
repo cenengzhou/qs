@@ -22,7 +22,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 
 @RestController
-@RequestMapping(value = "service")
+@RequestMapping(value = "service/job/")
 public class JobController {
 	
 	@Autowired

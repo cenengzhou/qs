@@ -1,4 +1,5 @@
-mainApp.controller('SubcontractAwardeModalCtrl', ['$scope', '$uibModalInstance', '$location', 'modalService', function($scope,  $uibModalInstance, $location, modalService) {
+mainApp.controller('SubcontractAwardCtrl', ['$scope', '$location', 'modalService',
+                                            function($scope, $location, modalService) {
 
 	$scope.packageNo = 1004;
 	$scope.budget = 226789000;
@@ -13,12 +14,5 @@ mainApp.controller('SubcontractAwardeModalCtrl', ['$scope', '$uibModalInstance',
     	$uibModalInstance.close();
     };
 
-    $scope.cancel = function () {
-    	$uibModalInstance.dismiss("cancel");
-    };
-    
-  //Listen for location changes and call the callback
-    $scope.$on('$locationChangeStart', function(event){
-   		 $uibModalInstance.close();
-    });	
+ 
 }]);

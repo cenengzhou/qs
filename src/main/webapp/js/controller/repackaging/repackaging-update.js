@@ -1,7 +1,13 @@
-
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'repackagingService', '$cookieStore',
-                                             function($scope , $http, modalService, repackagingService, $cookieStore) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'repackagingService', '$cookieStore', '$stateParams',
+                                             function($scope , $http, modalService, repackagingService, $cookieStore, $stateParams) {
 	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
+	
+	if($stateParams.repackagingEntryId){
+		$cookieStore.put('repackagingEntryId', $stateParams.repackagingEntryId);
+	}
+	
+	$scope.repackagingEntryId = $cookieStore.get("repackagingEntryId");
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
@@ -23,7 +29,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 			             { field: 'packageNo', cellClass: "grid-theme-blue", enableCellEdit: true},
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
-			             { field: 'resourceDescription', displayname: "Description", enableCellEdit: false},
+			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
 			             { field: 'unit'},
 			             { field: 'quantity', enableCellEdit: false, enableFiltering: false},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
@@ -74,7 +80,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 		}else if (view=="merge"){
 			modalService.open('lg', 'view/repackaging/modal/repackaging-merge.html', 'RepackagingMergeModalCtrl');
 		}else if (view=="add"){
-			modalService.open('lg', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl');
+			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl', '', $scope.repackagingEntryId);
 		}
 	};
 	

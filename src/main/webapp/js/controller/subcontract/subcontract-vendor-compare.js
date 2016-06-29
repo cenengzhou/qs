@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractVendorCompareModalCtrl", ['$scope', '$http', '$location', 'subcontractService', '$uibModalInstance', 'uiGridConstants', 
-                                                         function ($scope, $http, $location, subcontractService, $uibModalInstance, uiGridConstants) {
+mainApp.controller("SubcontractVendorCompareCtrl", ['$scope', '$http', '$location', 'subcontractService',  'uiGridConstants', 
+                                                         function ($scope, $http, $location, subcontractService, uiGridConstants) {
 	$scope.packageNo= 1004;
 	
 	$scope.selectedVendor = '31347';
@@ -60,7 +60,7 @@ mainApp.controller("SubcontractVendorCompareModalCtrl", ['$scope', '$http', '$lo
 	};
 
 	
-	$http.get("http://localhost:8080/QSrevamp2/data/vendor-compare.json")
+	$http.get("http://localhost:8080/pcms/data/vendor-compare.json")
 	.success(function(data) {
 		$scope.gridOptions.data = data;
 		
@@ -93,19 +93,10 @@ mainApp.controller("SubcontractVendorCompareModalCtrl", ['$scope', '$http', '$lo
 
 	//Save Function
 	$scope.save = function () {
-		$location.path("/subcontract-flow");
+		/*$location.path("/subcontract-flow");
 		console.log("SAVE $scope.selectedVendor: "+$scope.selectedVendor);
-		$uibModalInstance.close();
+		$uibModalInstance.close();*/
 	};
-
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-	};
-	
-	//Listen for location changes and call the callback
-    $scope.$on('$locationChangeStart', function(event){
-   		 $uibModalInstance.close();
-    });
 	
 }]);
 

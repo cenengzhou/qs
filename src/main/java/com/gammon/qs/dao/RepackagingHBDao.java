@@ -28,12 +28,29 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 	
 	@Autowired
 	private RepackagingDetailHBDao repackagingDetailHBDao;
+
+	public Repackaging getLatestRepackagingEntry(String jobNumber) throws DatabaseOperationException{
+		Repackaging repackaging;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+			criteria.addOrder(Order.desc("repackagingVersion"));
+			criteria.setMaxResults(1);
+			repackaging = (Repackaging) criteria.uniqueResult();
+			return repackaging;
+		}
+		catch(HibernateException ex){
+			throw new DatabaseOperationException(ex);
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Repackaging> getRepackagingEntriesByJobNumber(String jobNumber) throws DatabaseOperationException{
+	public List<Repackaging> getRepackagingEntriesByJobNo(String jobNumber) throws DatabaseOperationException{
 		List<Repackaging> repackagingEntries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
 			criteria.addOrder(Order.asc("repackagingVersion"));
 			repackagingEntries = criteria.list();

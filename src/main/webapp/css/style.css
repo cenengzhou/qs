@@ -7385,7 +7385,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     background: #eff0f1;
 }
 .bwizard-steps > li {
-    width: 20%;
+    width: 10%;
 }
 .bwizard-steps.clickable > li:hover,
 .bwizard-steps.clickable > li:focus,

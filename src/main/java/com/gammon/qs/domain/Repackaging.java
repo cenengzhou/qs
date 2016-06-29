@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
@@ -96,7 +98,7 @@ public class Repackaging extends BasePersistedObject {
 	
 	@ManyToOne
 	@LazyToOne(value= LazyToOneOption.PROXY)
-	@JoinColumn(name = "Job_Info_ID", foreignKey = @ForeignKey(name = "FK_Repackaging_JOBINFO_PK"), insertable = true, updatable = true, unique = true)
+	@JoinColumn(name = "Job_Info_ID", foreignKey = @ForeignKey(name = "FK_Repackaging_JobInfo_PK"), insertable = true, updatable = true, unique = true)
 	public JobInfo getJobInfo() {
 		return jobInfo;
 	}

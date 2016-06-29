@@ -10,15 +10,20 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 
 @RestController
@@ -59,6 +64,17 @@ public class ResourceSummaryController {
 		return ivInputPaginationWrapper;
 	}
 	
-	
+	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
+	public String addResourceSummary(@RequestParam(name="jobNo") String jobNo, 
+									@RequestParam(name="repackagingEntryId") String repackagingEntryId,
+									@Valid @RequestBody ResourceSummary resourceSummary){
+		String result = "";
+		try {
+			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingEntryId), resourceSummary);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
+	}
 	
 }

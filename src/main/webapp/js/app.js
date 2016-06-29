@@ -79,7 +79,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('job.dashboard', {
 		url: "/dashboard",
 		templateUrl: "view/job/job-dashboard.html",
-		"params": {
+		params: {
 			"jobNo": null,
 			"jobDescription": null
 		},
@@ -147,33 +147,106 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		controller: 'SubcontractSelectCtrl'
 	})
 	
-	.state('subcontract-flow', {
-		url: "/subcontract-flow",
+	.state('subcontract-award', {
+		url: "/subcontract-award/tab",
 		parent: "navigation",
-		templateUrl: "view/subcontract/subcontract-flow.html",
+		templateUrl: "view/subcontract/subcontract-award-tab.html",
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-flow.js',
-                           'js/controller/subcontract/subcontract-create.js',
-                           'js/controller/repackaging/repackaging-assign-resources.js',
-                           'js/controller/subcontract/subcontract-ta.js',
+                           
+                          
                            'js/controller/subcontract/subcontract-ta-details.js',
                            'js/controller/subcontract/subcontract-vendor.js',
                            'js/controller/subcontract/subcontract-vendor-feedback.js',
-                           'js/controller/subcontract/subcontract-vendor-compare.js',
-                           'js/controller/subcontract/subcontract-award.js',
+                           
+                          
                            'js/service/repackaging-service.js',
                            'js/service/subcontract-service.js'
                     ] 
                 });
             }]
         },
-		controller: 'SubcontractFlowCtrl'
+        controller: 'NavMenuCtrl'
 	})
-	
+	.state('subcontract-award.hearder', {
+		url: "/header",
+		templateUrl: "view/subcontract/subcontract-award-header.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-create.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'SubcontractCreateCtrl'
+	})
+	.state('subcontract-award.assign', {
+		url: "/assign",
+		templateUrl: "view/subcontract/subcontract-award-assign.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/repackaging/repackaging-assign-resources.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'RepackagingAssignResourcesCtrl'
+	})
+	.state('subcontract-award.ta', {
+		url: "/ta",
+		templateUrl: "view/subcontract/subcontract-award-ta.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/subcontract/subcontract-ta.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'SubcontractTACtrl'
+	})
+	.state('subcontract-award.vendor', {
+		url: "/vendor",
+		templateUrl: "view/subcontract/subcontract-award-vendor.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/subcontract/subcontract-vendor-compare.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'SubcontractVendorCompareCtrl'
+	})
+	.state('subcontract-award.summary', {
+		url: "/summary",
+		templateUrl: "view/subcontract/subcontract-award-summary.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/subcontract/subcontract-award.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'SubcontractAwardCtrl'
+	})
+
 	.state('subcontract', {
 		url: "/subcontract",
 		parent: "navigation",
@@ -509,6 +582,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/repackaging-update",
 		parent: "navigation",
 		templateUrl: "view/repackaging/repackaging-update.html",
+		params: {
+			'repackagingEntryId': null
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({

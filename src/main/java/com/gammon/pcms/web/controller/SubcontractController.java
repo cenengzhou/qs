@@ -25,7 +25,7 @@ import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 
 @RestController
-@RequestMapping(value = "service"/*,
+@RequestMapping(value = "service/subcontract/"/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class SubcontractController {

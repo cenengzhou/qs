@@ -24,7 +24,7 @@ import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 import com.gammon.qs.wrapper.scPayment.SCPaymentCertsWrapper;
 
 @RestController
-@RequestMapping(value = "service"/*,
+@RequestMapping(value = "service/payment/"/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class PaymentController {

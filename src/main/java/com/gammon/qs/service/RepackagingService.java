@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
+import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Repackaging;
@@ -16,74 +16,133 @@ import com.gammon.qs.domain.Repackaging;
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class RepackagingService {
 	
-	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(RepackagingService.class.getName());
 	@Autowired
 	private RepackagingHBDao repackagingEntryDao;
+	@Autowired
+	private JobInfoHBDao jobInfoDao;
+	@Autowired
+	private RepackagingDetailService repackagingDetailService;
+	@Autowired
+	private ResourceSummaryService resourceSummaryService;
+	
 
 	public List<Repackaging> getRepackagingEntriesByJob(JobInfo job)
 			throws Exception {
 		return repackagingEntryDao.getRepackagingEntriesByJob(job);
 	}
 
-	public List<Repackaging> getRepackagingEntriesByJobNumber(
-			String jobNumber) throws Exception {
-		return repackagingEntryDao.getRepackagingEntriesByJobNumber(jobNumber);
-	}
+	
 	
 	public Repackaging getRepackagingEntry(Long id) throws Exception{
 		return repackagingEntryDao.get(id);
-	}
-	
-	//Create and save a repackaging entry
-	public Repackaging createRepackagingEntry(Integer newVersion, JobInfo job, String username, String remarks) throws Exception{
-		Repackaging newEntry = new Repackaging();
-		newEntry.setRepackagingVersion(newVersion);
-		newEntry.setJobInfo(job);
-		newEntry.setCreateDate(new Date());
-		newEntry.setStatus("100");
-		newEntry.setRemarks(remarks);
-		repackagingEntryDao.saveOrUpdate(newEntry);
-		return newEntry;
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on January 05, 2012
-	 */
-	public Boolean removeRepackagingEntry(Repackaging repackagingEntry) throws Exception {
-		Boolean removed = false;
-		Repackaging entryInDB;
-		
-		if(repackagingEntry==null)
-			throw new ValidateBusinessLogicException("Repackaging Entry is null.");
-		
-		entryInDB = repackagingEntryDao.get(repackagingEntry.getId());
-		if(entryInDB==null)
-			throw new ValidateBusinessLogicException("Repackaging Entry doesn't exist in the database.");
-		
-		//Validation
-		if(entryInDB.getStatus()==null || !entryInDB.getStatus().equals("100"))
-			throw new ValidateBusinessLogicException("Repackaging Status is not 100. Entry cannot be deleted.");
-		
-		repackagingEntryDao.deleteById(entryInDB.getId());
-		removed = true;
-		
-		return removed;
-	}
-	
-	public Boolean saveRepackagingEntry(Repackaging repackagingEntry) throws Exception{
-		Repackaging entryInDB = repackagingEntryDao.get(repackagingEntry.getId());
-		if (entryInDB.getStatus()!=null && "900".equals(entryInDB.getStatus().trim()))
-			throw new ValidateBusinessLogicException("Repackaging status is 900. Job "+entryInDB.getJobInfo().getJobNumber()+" is locked already.");
-		entryInDB.setStatus(repackagingEntry.getStatus());	
-		entryInDB.setRemarks(repackagingEntry.getRemarks());
-		repackagingEntryDao.saveOrUpdate(entryInDB);
-		return Boolean.TRUE;
 	}
 	
 	public Repackaging getLatestRepackagingEntry(JobInfo job) throws Exception{
 		return repackagingEntryDao.getLatestRepackagingEntry(job);
 	}
 
+	
+	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	public Repackaging getLatestRepackagingEntry(String jobNo) throws Exception {
+		return repackagingEntryDao.getLatestRepackagingEntry(jobNo);
+	}
+	
+	public List<Repackaging> getRepackagingEntriesByJobNo(String jobNo) throws Exception {
+		return repackagingEntryDao.getRepackagingEntriesByJobNo(jobNo);
+	}
+	
+	//Create and save a repackaging entry
+	public String addRepackagingEntry(String jobNo) throws Exception{
+		String result = "";
+		Repackaging currentRepackaging = this.getLatestRepackagingEntry(jobNo);
+		
+		logger.info("currentRepackaging: "+currentRepackaging);
+		logger.info("version: "+currentRepackaging.getRepackagingVersion());
+		logger.info("currentRepackaging: "+currentRepackaging.getStatus());
+		
+		if(currentRepackaging != null && currentRepackaging.getRepackagingVersion() != null &&  "900".equals(currentRepackaging.getStatus())){
+			logger.info("Create new repackage");
+			Repackaging newEntry = new Repackaging();
+			newEntry.setRepackagingVersion(currentRepackaging.getRepackagingVersion()+1);
+			newEntry.setJobInfo(jobInfoDao.obtainJobInfo(jobNo));
+			newEntry.setCreateDate(new Date());
+			newEntry.setStatus("100");
+			repackagingEntryDao.saveOrUpdate(newEntry);
+		}
+		else{
+			result = "Repackaging has been unlocked already.";
+		}
+		return result;
+	}
+	
+	public String updateRepackagingEntry(Long id, String remarks) throws Exception{
+		String result = "";
+		
+		Repackaging entryInDB = repackagingEntryDao.get(id);
+		if (entryInDB.getStatus()!=null && "900".equals(entryInDB.getStatus().trim())){
+			result = "Repackaging status is 900. Job "+entryInDB.getJobInfo().getJobNumber()+" is locked already.";
+			//throw new ValidateBusinessLogicException("Repackaging status is 900. Job "+entryInDB.getJobInfo().getJobNumber()+" is locked already.");
+		}
+		if(remarks.length()>255)
+			remarks = remarks.substring(0, 255);
+		entryInDB.setRemarks(remarks);
+		repackagingEntryDao.saveOrUpdate(entryInDB);
+		return result;
+	}
+	
+	/**
+	 * @author tikywong
+	 * created on January 05, 2012
+	 */
+	public String deleteRepackagingEntry(Long id) throws Exception {
+		String result = "";
+		Repackaging entryInDB  =repackagingEntryDao.get(id);
+		
+		if(entryInDB==null){
+			result = "Repackaging Entry doesn't exist in the database.";
+			//throw new ValidateBusinessLogicException("Repackaging Entry doesn't exist in the database.");
+		}
+		
+		//Validation
+		if(entryInDB.getStatus()==null || !entryInDB.getStatus().equals("100")){
+			result = "Repackaging Status is not 100. Entry cannot be deleted.";
+			//throw new ValidateBusinessLogicException("Repackaging Status is not 100. Entry cannot be deleted.");
+		}
+		repackagingEntryDao.deleteById(entryInDB.getId());
+		
+		return result;
+	}
+	
+	/**
+	 * @author koeyyeung
+	 * created on June 29, 2016
+	 */
+	public String generateSnapshot(Long id, String jobNo) throws Exception {
+		String result = "";
+		
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
+		Repackaging repackagingEntry = repackagingEntryDao.get(id);
+		
+		if(job.getRepackagingType().equals("1")){
+			repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
+		}else if(job.getRepackagingType().equals("2")){
+			boolean updated = resourceSummaryService.generateSnapshotMethodTwo(job, repackagingEntry);
+			if(updated)
+				repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
+			else
+				result = "Snapshot cannot be generated.";
+		}else if(job.getRepackagingType().equals("3")){
+			boolean updated = resourceSummaryService.generateSnapshotMethodThree(job, repackagingEntry);
+			if(updated)
+				repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
+			else
+				result = "Snapshot cannot be generated.";
+		}
+		
+		
+		return result;
+	}
+	
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

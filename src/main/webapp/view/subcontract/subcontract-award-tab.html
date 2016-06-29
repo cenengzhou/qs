@@ -1,0 +1,57 @@
+<div class="m-t-20 m-l-40 m-r-40">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}} 
+	</h1>
+
+	<div id="wizard" class="bwizard clearfix">
+		<ul class="bwizard-steps clearfix setup-panel">
+			<li ui-sref-active="active">
+				<a ui-sref="subcontract-award.hearder">
+					<span class="label badge-inverse">1</span> 
+					Subcontract Header <small>Add/Edit Subcontract Header here</small>
+				</a>
+			</li>
+			<li ui-sref-active="active"><a ui-sref="subcontract-award.assign" > <span class="label">2</span>
+					Assign Resources <small>Assign Resources to Subconract</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract-award.ta"> <span class="label">3</span>
+					Tender Analysis <small>Tender Analysis</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract-award.vendor"> <span class="label">4</span>
+					Vendor <small>Add/Compare Vendor here</small>
+			</a></li>
+			<li ui-sref-active="active"><a > <span class="label">5</span>
+					Tender Variance <small>Variance to Standand Subcontract Terms</small>
+			</a></li>
+			<li ui-sref-active="active"><a > <span class="label">6</span>
+					Attachment <small>Add attachment here</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract.dashboard"> <span class="label">7</span>
+					Payment Requisition <small>Payment Requisition</small>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="subcontract-award.summary"> <span class="label">8</span>
+					Award Subcontract <small>Review Subcontract Summary here</small>
+			</a></li>
+			
+			
+		</ul>
+
+		<div class="tab-content">
+			<div ui-view=""></div>
+		</div>
+
+		
+	</div>
+
+	<!-- end #wizard -->
+</div>
+

@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance', '$location', 'subcontractService', '$cookieStore', 'modalService', 'modalType', 'subcontractRetentionTerms',
-                                                  function ($scope, $uibModalInstance, $location, subcontractService, $cookieStore, modalService, modalType, subcontractRetentionTerms) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms',
+                                                  function ($scope, $location, subcontractService, $cookieStore, modalService, subcontractRetentionTerms) {
 
 
 	$scope.subcontract = {
@@ -45,7 +45,6 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 	//Rentention
 	$scope.percentageOption= "Revised";
 
-	if(modalType != "Create"){
 		subcontractService.getSubcontract($cookieStore.get("jobNo"), $cookieStore.get("subcontractNo"))
 		.then(
 				function( data ) {
@@ -62,7 +61,7 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 					} 
 					
 				});
-	}
+	//}
 
 	$scope.updateLabour = function (){
 		if ($scope.subcontract.labourIncludedContract == true){
@@ -114,6 +113,11 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 	//Save Function
 	$scope.save = function () {
 		$scope.saveBoolean = true;
+		
+		if (false === $('form[name="form-wizard-step-1"]').parsley().validate()) {
+			event.preventDefault();  
+			return;
+		}
 		
 		$scope.newSubcontract = {
 				id:  $scope.subcontract.id,
@@ -178,8 +182,7 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Alert', data);
 				}else{
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
-					$location.path("/subcontract-flow");
-					$uibModalInstance.close();//($scope.selected.item);
+					//$location.path("/subcontract-flow");
 				}
 
 				//Download file				 
@@ -189,13 +192,8 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 			});
 	}
 
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-
-	};
-
 	//Listen for location changes and call the callback
-	$scope.$on('$locationChangeStart', function(event){
+	/*$scope.$on('$locationChangeStart', function(event){
 		//console.log("Location changed");
 		if(!$scope.saveBoolean){
 			var confirmed = window.confirm("Are you sure to exit this page?");
@@ -206,7 +204,7 @@ mainApp.controller("SubcontractCreateModalCtrl", ['$scope', '$uibModalInstance',
 				event.preventDefault();            
 			}
 		}
-	});
+	});*/
 
 }]);
 

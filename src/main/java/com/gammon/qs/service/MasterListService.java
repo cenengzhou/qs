@@ -449,8 +449,8 @@ public class MasterListService{
 			if (errorMessage != null)
 				return "Invalid subsidiary code: " + subsidiaryCode;
 			// 1c. Object+Subsidiary Combination
-			if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
-				return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+			/*if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
+				return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;*/
 
 			// 2. Create Account Code
 			if (!masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode))
@@ -458,6 +458,7 @@ public class MasterListService{
 			else
 				logger.info("Account Code: " + jobNumber + "." + objectCode + "." + subsidiaryCode + " has created successfully.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "Failed: Validating/Creating the account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
 		}
 		return errorMessage;

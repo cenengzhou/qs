@@ -49,103 +49,83 @@
 					</div>
 					<div class="form-group">
 						<label>Description</label>
-						<div class="controls">
 							<input id="description" type="text" class="form-control "
 								ng-model="addendum.description" required />
-						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Object Code</label>
-								<div class="controls">
 									<input type="text" placeholder="" class="form-control "
 										ng-model="addendum.objectCode" required />
-								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Subsidiary Code</label>
-								<div class="controls">
 									<input type="text" placeholder="" class="form-control "
 										ng-model="addendum.subsidiaryCode" required />
-								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Unit</label>
-								<div class="controls">
 									<input type="text" placeholder="" class="form-control "
 										ng-model="addendum.unit" required />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Quantity</label>
-								<div class="controls">
 									<input data-parsley-type="number" step="0.01"
 										class="form-control" ng-model="addendum.quantity"
 										data-parsley-pattern="^[0-9]*\.[0-9]{2}$"
 										data-parsley-error-message="Max. 4 decimal places only"
 										required />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>SC Rate</label>
-								<div class="controls">
 									<input type="number" placeholder="" class="form-control "
 										ng-model="addendum.scRate" required />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Total Amount</label>
-								<div class="controls">
 									<input type="number" placeholder="" class="form-control "
 										ng-model="addendum.totalAmount" required />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Corresponding SC No.</label>
-								<div class="controls">
 									<input type="number" placeholder="" class="form-control "
 										ng-model="addendum.corrSCNo"
 										data-ng-required="lineTypes.selected=='D2'" />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Alternative Object Code</label>
-								<div class="controls">
 									<input type="number" placeholder="" class="form-control "
 										ng-model="addendum.altObjectCode"
 										ng-disabled="lineTypes.selected!='D1'"
 										data-ng-required="lineTypes.selected=='D1'" />
-								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>Remark</label>
-								<div class="controls">
 									<input type="text" placeholder="" class="form-control "
 										ng-model="addendum.remark" />
-								</div>
 							</div>
 						</div>
 

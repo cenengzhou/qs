@@ -1,94 +1,60 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$http', '$location', '$uibModalInstance', 'uiGridConstants', function ($scope, $http, $location, $uibModalInstance, uiGridConstants) {
-	$scope.vendorNo= 31347;
-	$scope.packageNo= 1004;
-	
-	
-	
-	$scope.exchangeRate = 1;
-	
-	$scope.gridOptions = {
-			enableSorting: true,
-			enableFiltering: true,
-			enableColumnResizing : true,
-			enableGridMenu : true,
-			enableColumnMoving: false,
-			//enableRowSelection: true,
-			//enableFullRowSelection: true,
-			//multiSelect: false,
-			//showGridFooter : true,
-			showColumnFooter : true,
-			//fastWatch : true,
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'repackagingService', 'modalService', '$cookieStore',
+                                               function ($scope, $uibModalInstance, modalParam, repackagingService, modalService, $cookieStore) {
 
-			enableCellEditOnFocus : true,
+	$scope.repackagingEntryId = modalParam;
+
+	$scope.resourceSummary = {
+			subsidiaryCode : "29999999",
+			objectCode : "140299",
+			resourceDescription : "Testing",
+			unit : "AM",
+			quantity : 100,
+			rate : 1,
+
+			resourceType : "OI",
+			//excludeLevy : false,
+			//excludeDefect : false,
 
 
-			//Single Filter
-			onRegisterApi: function(gridApi){
-				$scope.gridApi = gridApi;
-			},
-			
-			
-			/*columnDefs: [
-			             { field: "billNo", displayName:"B/P/I", enableCellEdit: false, width:50},
-		            	 { field: "objectCode", enableCellEdit: false, width:60 },
-		            	 { field: "subsidiaryCode" , enableCellEdit: false, width:80 },
-		            	 { field: "description" , enableCellEdit: false,  width:150 },
-		            	 { field: "unit" , enableCellEdit: false, width:50 },
-		            	 { field: "quantity" , enableCellEdit: false, aggregationType: uiGridConstants.aggregationTypes.sum, width:80 },
-		            	 { field: "budgetAmount" , enableCellEdit: false, width:90 }
-		            	 { field: "feedbackRate" , enableCellEdit: true, cellClass: "grid-theme-blue", width:120 },
-		            	 { field: "feedbackRateHK" ,displayName:"Feedback Rate(HK)", cellClass: "grid-blue", enableCellEdit: false, width:170 }
-		    ]
-*/
+			//amount : "",
+	}
 
-	};
-
-	
-	$http.get("http://localhost:8080/pcms/data/vendor-compare.json")
-	.success(function(data) {
-		$scope.gridOptions.data = data;
-		
-		/*console.log("data size:"+ data.length);
-		console.log("data1 size:"+ Object.keys(data[0]).length);
-		
-		var colSize = Object.keys(data[0]).length;
-		
-		for (i = 0; i < colSize; i++) { 
-		    if(i>6){
-				console.log("data 0 0:"+ data[0][0]);
-				$scope.gridOptions.columnDefs.push({'field' : colName});
-		    	//$scope.gridOptions.columnDefs.splice(1, 0, { field: data[0][i], enableSorting: false});
-		    }
-		}*/
-		
-		 /*data.forEach( function addDates( row, index ){
-			 $scope.gridOptions.columnDefs.splice(1, 0, { field: 'company', enableSorting: false });
-	          row.company = "Hello";//Date(today.getDate() + ( index % 14 ) );
-	        });
-		 */
-		 
-		
-	});
-
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
-	};
 
 
 	//Save Function
 	$scope.save = function () {
-		$location.path("/subcontract-flow");
-		$uibModalInstance.close();
+
+		if (false === $('form[name="form-wizard-step-1"]').parsley().validate()) {
+			event.preventDefault();  
+			return;
+		}
+
+		addResourceSummary();
 	};
+
+
+	function addResourceSummary() {
+		repackagingService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingEntryId, $scope.resourceSummary)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "New Resource has been added.");
+						$uibModalInstance.close();
+					}
+				});
+	}
+
 
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");
 	};
-	
+
 	//Listen for location changes and call the callback
-    $scope.$on('$locationChangeStart', function(event){
-   		 $uibModalInstance.close();
-    });
-	
+	$scope.$on('$locationChangeStart', function(event){
+		$uibModalInstance.close();
+	});
+
 }]);
 

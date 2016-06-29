@@ -38,11 +38,11 @@
 				</span>
 			</div>
 		</div>
-		
-		<div class="col-xs-3">
-			<button type="button" class="btn bg-primary pull-right"
+		<div class="col-xs-1"></div>
+		<div class="col-xs-2">
+			<button type="button" class="btn btn-danger btn-block pull-right"
 				ng-click="openSubcontractCreateModal()">
-				<i class="fa fa-star"></i><span> Create</span>
+				<i class="fa fa-plus-circle"></i><span> Create</span>
 			</button>
 
 		</div>
@@ -93,7 +93,7 @@
 				ng-repeat="sc in subcontracts | filter:{scStatus:'!500'} | filter:searchquery"
 				ng-hide ="subcontractStatus=='Award'">
 				<div class="box box-widget sc-panel">
-					<a ui-sref="subcontract-flow" ng-click="updateSubcontractNo(sc.packageNo, sc.description)">
+					<a ui-sref="subcontract-award.hearder" ng-click="updateSubcontractNo(sc.packageNo, sc.description)">
 						<div class="sc-panel-header bg-inverse text-white">
 							<div class="sc-panel-icon">
 								<span class="glyphicon glyphicon-remove-sign"></span>

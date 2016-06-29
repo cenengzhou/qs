@@ -11,11 +11,11 @@
 	    display: inline-block;
 	    position: relative;
 	    margin-right: 5px;
-	    line-height: 18px;
+	    line-height: 10px;
 	    list-style: none;
-	    padding: 12px 17px 10px 30px;
+	    padding: 10px 10px 10px 10px;
 	    background: #efefef;
-	    zoom:1; *display: inline; *padding-left: 17px; }
+	    zoom:1; *display: inline; *padding-left: 10px; }
 		.bwizard-steps li:first-child {
 		    -moz-border-radius: 4px 0 0 4px;
 		    -webkit-border-radius: 4px 0 0 4px;

@@ -1,7 +1,7 @@
-<div class="modal-header" ng-class="{'bg-danger' : type == 'Alert', 'bg-success' : type == 'Success', 'bg-warning' : type == 'Warning'}">
+<div class="modal-header" ng-class="{'bg-danger' : status == 'Fail', 'bg-success' : status == 'Success', 'bg-warning' : status == 'Warn'}">
 	<div class="row">
 		<div class="col-md-11">
-			<h4 class="modal-title text-white text-center">Oops...</h4>
+			<h4 class="modal-title text-white text-center">{{status}}</h4>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-white pull-right" type="button"

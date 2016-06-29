@@ -1,6 +1,6 @@
 
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', '$uibModalInstance', 'repackagingService', '$cookieStore', '$location',
-                                             function($scope, $uibModalInstance, repackagingService, $cookieStore, $location) {
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'repackagingService', '$cookieStore', '$location',
+                                             function($scope, repackagingService, $cookieStore, $location) {
 	$scope.jobNo = $cookieStore.get("jobNo");
 	
 	$scope.editable = true;
@@ -64,15 +64,10 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', '$uibModalInstan
 		$scope.gridApi.grid.refresh();
 	};
 	
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-		
-	};
-	
 	$scope.save = function () {
 				
-		$location.path("/subcontract-flow");
-		$uibModalInstance.close();//($scope.selected.item);
+		//$location.path("/subcontract-flow");
+		//$uibModalInstance.close();
 
 
 	};

@@ -1,50 +1,93 @@
-mainApp.controller('RepackagingCtrl', ['$scope', '$location', function($scope, $location) {
+mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'repackagingService', 'modalService',
+                                       function($scope, $location, $cookieStore, repackagingService, modalService) {
 
-	$scope.totalBudget = 226789000;
-	$scope.taBudget = 244789000;
-
-	$scope.enableEditButton = function() {
-		return false;
-		 /*if (model.questions.length > 1) { // your question said "more than one element"
-		   return true;
-		  }
-		  else {
-		   return false;
-		  }*/
-		};
+	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
 	
-	$scope.display = {
-			unlock : true,
-			reset : false,
-			update : false,
-			snapshot : false,
-			confirm: false
-	};
-
+	$scope.repackaging = "";
+	loadRepacakgingData();
+    
 	$scope.click = function(view) {
-		//console.log("view: "+view);
-		$scope.display.unlock = (view == "unlock");
-		$scope.display.reset = (view == "reset");
-		$scope.display.update = (view == "update");
-		$scope.display.snapshot = (view == "snapshot");
-		$scope.display.confirm = (view == "confirm");
-
-
 		if(view=="unlock"){
-			$scope.enableEditButton = true;
-		//	modalService.open('lg', 'view/subcontract/modal/subcontract-create.html', 'SubcontractCreateModalCtrl');
+			addRepackagingEntry();
 		}else if (view=="reset"){
-		//	modalService.open('lg', 'view/subcontract/subcontract-ta.html', 'SubcontractTACtrl');
-		}else if (view=="update"){
-			$location.path("/repackaging-update");
+			deleteRepackagingEntry();
 		}else if (view=="snapshot"){
-		//	modalService.open('lg', 'view/subcontract/modal/subcontract-vendor-compare.html', 'SubcontractVendorCompareModalCtrl');
+			generateSnapshot();
 		}else if (view=="confirm"){
 		//	$location.path("/subcontract/dashboard");
 		}
 	};
 
-
+	$scope.updateRemarks = function(){
+		updateRepackagingEntry();
+	}
+	
+    
+    function loadRepacakgingData() {
+   	 repackagingService.getLatestRepackagingEntry($scope.jobNo)
+   	 .then(
+			 function( data ) {
+				 console.log(data);
+				 $scope.repackaging = data;
+			 });
+    }
+    
+    function addRepackagingEntry() {
+      	 repackagingService.addRepackagingEntry($scope.jobNo)
+      	 .then(
+   			 function( data ) {
+   				loadRepacakgingData();
+   				if(data.length!=0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+				}else{
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Repackaging has been unlocked.");
+				}
+   			 });
+       }
+    
+    function updateRepackagingEntry() {
+     	 repackagingService.updateRepackagingEntry($scope.repackaging)
+     	 .then(
+  			 function( data ) {
+  				loadRepacakgingData();
+  				if(data.length!=0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+				}else{
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Remarks has been updated.");
+				}
+  			 });
+      }
+    
+    
+	
+    function deleteRepackagingEntry() {
+     	 repackagingService.deleteRepackagingEntry($scope.repackaging.id)
+     	 .then(
+  			 function( data ) {
+  				loadRepacakgingData();
+  				if(data.length!=0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+				}else{
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Repackaging has been reset.");
+				}
+  			 });
+      }
+    
+    function generateSnapshot() {
+    	 repackagingService.generateSnapshot($scope.repackaging.id, $scope.jobNo)
+    	 .then(
+ 			 function( data ) {
+ 				loadRepacakgingData();
+ 				if(data.length!=0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+				}else{
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Snapshot has been generated.");
+				}
+ 			 });
+     }
+    
+    //Attachment
 	$scope.partialDownloadLink = 'http://localhost:8080/QSrevamp2/download?filename=';
     $scope.filename = '';
 

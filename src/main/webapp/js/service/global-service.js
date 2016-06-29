@@ -1,7 +1,7 @@
 //Return modal window 
 mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 	return {
-		open: function(size, templateUrl, controller, type, message) {
+		open: function(size, templateUrl, controller, status, param) {
 
 			var modalInstance = $uibModal.open({
 				animation: true,
@@ -12,11 +12,11 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 				//windowClass: 'modal-vertical-centered',
 				backdrop: false,
 				resolve: {
-					modalType: function () {
-						return type;
+					modalStaus: function () {
+						return status;
 					},
-					modalMessage: function () {
-						return message;
+					modalParam: function () {
+						return param;
 					}
 				}
 			});

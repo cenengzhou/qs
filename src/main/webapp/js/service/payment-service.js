@@ -18,7 +18,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
         var request = $http({
             method: "get",
             //headers: myHeaders,
-            url: "service/getPaymentCertList",
+            url: "service/payment/getPaymentCertList",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -37,7 +37,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	
         var request = $http({
             method: "get",
-            url: "service/getPaymentCert",
+            url: "service/payment/getPaymentCert",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -58,7 +58,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	
         var request = $http({
             method: "get",
-            url: "service/getPaymentDetailList",
+            url: "service/payment/getPaymentDetailList",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -79,7 +79,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	
         var request = $http({
             method: "get",
-            url: "service/getPaymentCertSummary",
+            url: "service/payment/getPaymentCertSummary",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
