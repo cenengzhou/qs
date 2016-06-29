@@ -31,7 +31,7 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 
 		// Where
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-				.add(Restrictions.eq("jobNumber", noJob));
+				.add(Restrictions.eq("jobNo", noJob));
 		
 		// Order By
 		criteria.addOrder(Order.asc("status"))		// Forecast / Actual
