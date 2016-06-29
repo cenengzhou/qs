@@ -59,7 +59,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
     	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
     	 .then(
 			 function( data ) {
-				 console.log(data);
 				 $scope.gridOptions.data= data;
 			 });
      }
