@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'repackagingService',
-                                         function ($scope, $http, $location, repackagingService) {
+mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resourceSummaryService',
+                                         function ($scope, $http, $location, resourceSummaryService) {
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -33,10 +33,10 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'repack
 
 	};
 
-	loadRepacakgingData();
+	loadResourceSummaries();
     
-	 function loadRepacakgingData() {
-    	 repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
+	 function loadResourceSummaries() {
+    	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "14*")
     	 .then(
 			 function( data ) {
 				 console.log(data);

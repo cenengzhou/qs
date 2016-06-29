@@ -1,4 +1,4 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'ivService', 'uiGridConstants', function($scope , ivService, uiGridConstants) {
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'uiGridConstants', function($scope , resourceSummaryService, uiGridConstants) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -59,7 +59,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'ivService', 'uiGridConstants', f
 	loadIVData();
      
      function loadIVData() {
-    	 ivService.getResourceSummaries($scope.jobNo, "", "")
+    	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
     	 .then(
 			 function( data ) {
 				 //console.log(data);

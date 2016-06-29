@@ -1,11 +1,9 @@
 mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
 	// Return public API.
     return({
-    	getResourceSummaries: 			getResourceSummaries,
     	getLatestRepackagingEntry:		getLatestRepackagingEntry,
     	getRepackagingEntriesByJobNo: 	getRepackagingEntriesByJobNo,
     	
-    	addResourceSummary:				addResourceSummary,
     	addRepackagingEntry:			addRepackagingEntry,
     	updateRepackagingEntry:			updateRepackagingEntry,
     	deleteRepackagingEntry:			deleteRepackagingEntry,
@@ -13,20 +11,6 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         
     });
 	
-    function getResourceSummaries(jobNo, packageNo, objectCode) {
-        var request = $http({
-            method: "get",
-            url: "service/repackaging/getResourceSummaries",
-            dataType: "application/json;charset=UTF-8",
-            params: {
-            	jobNo: jobNo,
-            	packageNo: packageNo,
-            	objectCode: objectCode
-            }
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-
     function getLatestRepackagingEntry(jobNo) {
         var request = $http({
             method: "get",
@@ -59,20 +43,6 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             params: {
                 jobNo: jobNo
             }
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-    
-    function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
-        var request = $http({
-            method: "post",
-            url: "service/repackaging/addResourceSummary",
-           // dataType: "application/json;charset=UTF-8",
-            params: {
-            	jobNo: jobNo,
-            	repackagingEntryId: repackagingEntryId
-            },
-            data: resourceSummary
         });
         return( request.then( handleSuccess, handleError ) );
     }

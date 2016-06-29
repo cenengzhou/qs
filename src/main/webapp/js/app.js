@@ -163,7 +163,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/subcontract/subcontract-vendor-feedback.js',
                            
                           
-                           'js/service/repackaging-service.js',
+                           'js/service/resource-summary-service.js',
                            'js/service/subcontract-service.js'
                     ] 
                 });
@@ -591,7 +591,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 name: 'app',
                	 files: [
                            'js/controller/repackaging/repackaging-update.js',
-                           'js/service/repackaging-service.js'
+                           'js/service/resource-summary-service.js'
                     ] 
                 });
             }]
@@ -627,7 +627,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-               	         	'js/service/iv-service.js'
+               	         	'js/service/resource-summary-service.js'
                     ] 
                 });
             }]

@@ -1,5 +1,5 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'repackagingService', 'modalService', '$cookieStore',
-                                               function ($scope, $uibModalInstance, modalParam, repackagingService, modalService, $cookieStore) {
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'modalService', '$cookieStore',
+                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, modalService, $cookieStore) {
 
 	$scope.repackagingEntryId = modalParam;
 
@@ -34,7 +34,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 
 
 	function addResourceSummary() {
-		repackagingService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingEntryId, $scope.resourceSummary)
+		resourceSummaryService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingEntryId, $scope.resourceSummary)
 		.then(
 				function( data ) {
 					if(data.length!=0){

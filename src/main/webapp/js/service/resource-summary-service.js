@@ -1,7 +1,8 @@
-mainApp.service('ivService', ['$http', function($http){
+mainApp.service('resourceSummaryService', ['$http', function($http){
 	// Return public API.
     return({
-    	getResourceSummaries: getResourceSummaries,
+    	getResourceSummaries: 	getResourceSummaries,
+    	addResourceSummary:		addResourceSummary,
         addResource: addResource
         
     });
@@ -20,6 +21,19 @@ mainApp.service('ivService', ['$http', function($http){
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
+        var request = $http({
+            method: "post",
+            url: "service/resourceSummaryaddResourceSummary",
+           // dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	repackagingEntryId: repackagingEntryId
+            },
+            data: resourceSummary
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
     
     function addResource() {
         var request = $http({

@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
-import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 
 @RestController
-@RequestMapping(value = "service")
+@RequestMapping(value = "service/resourceSummary")
 public class ResourceSummaryController {
 	private Logger logger = Logger.getLogger(getClass());
 	

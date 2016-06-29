@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'repackagingService', '$cookieStore', '$stateParams',
-                                             function($scope , $http, modalService, repackagingService, $cookieStore, $stateParams) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'resourceSummaryService', '$cookieStore', '$stateParams',
+                                             function($scope , $http, modalService, resourceSummaryService, $cookieStore, $stateParams) {
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
 	
@@ -53,14 +53,13 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 
 	}
 
-	
-     loadRepacakgingData();
+ loadResourceSummaries();
      
-     function loadRepacakgingData() {
-    	 repackagingService.getResourceSummaries($scope.jobNo, "", "")
+     function loadResourceSummaries() {
+    	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
     	 .then(
 			 function( data ) {
-				 //console.log(data);
+				 console.log(data);
 				 $scope.gridOptions.data= data;
 			 });
      }

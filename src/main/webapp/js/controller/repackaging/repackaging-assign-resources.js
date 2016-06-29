@@ -1,6 +1,6 @@
 
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'repackagingService', '$cookieStore', '$location',
-                                             function($scope, repackagingService, $cookieStore, $location) {
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', '$cookieStore', '$location',
+                                             function($scope, resourceSummaryService, $cookieStore, $location) {
 	$scope.jobNo = $cookieStore.get("jobNo");
 	
 	$scope.editable = true;
@@ -48,10 +48,10 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'repackagingServ
 	}
 
 	
-     loadRepacakgingData();
+     loadResourceSummaries();
      
-     function loadRepacakgingData() {
-    	 repackagingService.getResourceSummaries($scope.jobNo, "", "14*")
+     function loadResourceSummaries() {
+    	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "14*")
     	 .then(
 			 function( data ) {
 				 console.log(data);
