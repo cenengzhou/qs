@@ -25,25 +25,6 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 	};
 }]);
 
-/*mainApp.factory('modalMessageService', ['$uibModal', function( $uibModal) {
-	return {
-		open: function(templateUrl, controller, message) {
-			var modalInstance = $uibModal.open({
-				animation: true,
-				templateUrl: templateUrl,
-				controller: controller,
-				size: 'md',
-				keyboard: true,
-				backdrop: true,
-				resolve: {
-					items: function () {
-						return message;
-					}
-				}
-			});
-		}
-	};
-}]);*/
 
 mainApp.factory('Base64', function() {
 	var keyStr = 'ABCDEFGHIJKLMNOP' +
@@ -185,37 +166,3 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
      };
    }
  );*/
-
-
-
-
-/*//$scope.items = ['item1', 'item2', 'item3'];
-
-$scope.animationsEnabled = true;
-
-$scope.open = function (size) {
-
-  var modalInstance = $uibModal.open({
-    animation: $scope.animationsEnabled,
-    templateUrl: 'view/subcontract/subcontract-create.html',
-    controller: 'SubcontractCreateModalCtrl',
-    size: size,
-    backdrop: false,
-    resolve: {
-      items: function () {
-        return $scope.items;
-      }
-    }
-  });
-
-  modalInstance.result.then(function (selectedItem) {
-    $scope.selected = selectedItem;
-  }, function () {
-    $log.info('Modal dismissed at: ' + new Date());
-    //window.alert('Hello');
-  });
-};
-
-$scope.toggleAnimation = function () {
-  $scope.animationsEnabled = !$scope.animationsEnabled;
-};*/

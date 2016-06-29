@@ -16,7 +16,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     function getResourceSummaries(jobNo, packageNo, objectCode) {
         var request = $http({
             method: "get",
-            url: "service/repackaging/repackaging/getResourceSummaries",
+            url: "service/repackaging/getResourceSummaries",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -30,7 +30,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     function getLatestRepackagingEntry(jobNo) {
         var request = $http({
             method: "get",
-            url: "service/repackaging/repackaging/getLatestRepackagingEntry",
+            url: "service/repackaging/getLatestRepackagingEntry",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -42,7 +42,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     function getRepackagingEntriesByJobNo(jobNo) {
         var request = $http({
             method: "get",
-            url: "service/repackaging/repackaging/getRepackagingEntriesByJobNo",
+            url: "service/repackaging/getRepackagingEntriesByJobNo",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
