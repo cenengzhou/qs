@@ -25,7 +25,7 @@ import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 
 @RestController
-@RequestMapping(value = "service/resourceSummary")
+@RequestMapping(value = "service/resourceSummary/")
 public class ResourceSummaryController {
 	private Logger logger = Logger.getLogger(getClass());
 	

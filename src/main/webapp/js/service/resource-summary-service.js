@@ -1,4 +1,4 @@
-mainApp.service('resourceSummaryService', ['$http', function($http){
+mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 	// Return public API.
     return({
     	getResourceSummaries: 	getResourceSummaries,
@@ -10,7 +10,7 @@ mainApp.service('resourceSummaryService', ['$http', function($http){
     function getResourceSummaries(jobNo, packageNo, objectCode) {
         var request = $http({
             method: "get",
-            url: "service/getResourceSummaries",
+            url: "service/resourceSummary/getResourceSummaries",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -24,7 +24,7 @@ mainApp.service('resourceSummaryService', ['$http', function($http){
     function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
         var request = $http({
             method: "post",
-            url: "service/resourceSummaryaddResourceSummary",
+            url: "service/resourceSummary/addResourceSummary",
            // dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
