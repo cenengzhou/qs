@@ -152,7 +152,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		@Autowired
 		private SecurityConfig securityConfig;
 		
-		//TODO: Add role security to Swagger page
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.headers()
@@ -185,6 +184,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/login.htm*",
 					"/logout.htm*"
 					).permitAll()
+			.antMatchers("/swagger-ui.html*")
+			.hasAnyRole(securityConfig.getRolePcmsImsAdmin())
 			.antMatchers("/**/*").hasAnyRole(
 					securityConfig.getRolePcmsEnq(),
 					securityConfig.getRolePcmsImsAdmin(),

@@ -213,12 +213,14 @@ public class MainCertWSDao {
 
 	public long insertAsAtDate(String jobNumber, Integer mainCertNumber, Date asAtDate, String userId) {
 		MainCertificateAsAtDateInsertRequestObj requestObj = new MainCertificateAsAtDateInsertRequestObj();
+		Calendar now = Calendar.getInstance();
 		requestObj.setAsAtDate(asAtDate);
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNumber(mainCertNumber);
 		requestObj.setIpaNumber(mainCertNumber);
 		requestObj.setProgramId(WSPrograms.JP59026I_MainCertificateInsertManager);
-		requestObj.setTimeLastUpdated((new Date()).getHours() * 10000 + new Date().getMinutes() * 100 + new Date().getMinutes());
+//		requestObj.setTimeLastUpdated((new Date()).getHours() * 10000 + new Date().getMinutes() * 100 + new Date().getMinutes());
+		requestObj.setTimeLastUpdated(now.get(Calendar.HOUR_OF_DAY) * 10000 + now.get(Calendar.MINUTE) * 100 + now.get(Calendar.MINUTE));
 		requestObj.setTransactionOriginator(userId.toUpperCase());
 		requestObj.setUserId(wsConfig.getUserName());
 		requestObj.setWorkStationId(environmentConfig.getNodeName());

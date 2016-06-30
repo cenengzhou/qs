@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.io.ExcelFile;
@@ -29,8 +28,6 @@ import com.gammon.qs.service.BpiItemService;
 import com.gammon.qs.service.IVPostingHistService;
 import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.JobCostService;
-import com.gammon.qs.service.MainCertRetentionReleaseService;
-import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.RepackagingDetailService;
@@ -41,7 +38,6 @@ import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.DateUtil;
-import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeSearchingCriteriaWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 import com.lowagie.text.Document;
@@ -80,15 +76,11 @@ public class DownloadController{
 	@Autowired
 	private RepackagingDetailService repackagingDetailRepository;
 	@Autowired
-	private MainCertRetentionReleaseService retentionReleaseScheduleRepository;
-	@Autowired
 	private PaymentService paymentRepository;
 	@Autowired
 	private TenderService tenderAnalysisRepository;
 	@Autowired
 	private TransitService transitRepository;
-	@Autowired
-	private MainCertService mainContractCertificateRepository;
 	@Autowired
 	private AttachmentService attachmentRepository;
 	@Autowired

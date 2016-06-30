@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailAP;
 import com.gammon.qs.domain.SubcontractDetailBQ;
@@ -11,7 +12,6 @@ import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 
@@ -47,10 +47,10 @@ public class SCDetailsLogic {
 				// Workdone are not neccessary to check
 				// if (Math.abs(wrapper.getToBeApprovedQty())-Math.abs(scDetails.getCumWorkDoneQuantity())<0 ||Math.abs(wrapper.getToBeApprovedQty())-Math.abs(scDetails.getPostedWorkDoneQuantity())<0)
 				// throw new ValidateBusinessLogicException("To be approved Quantity must be larger than Workdone Quantity!");
-				if (wrapper.getToBeApprovedQty() != null && (scDetails.getCostRate() == null || !(Math.abs(scDetails.getCostRate()) > 0)))
-					scDetails.setToBeApprovedQuantity(wrapper.getToBeApprovedQty());
-				if (wrapper.getToBeApprovedRate() != null)
-					scDetails.setToBeApprovedRate(wrapper.getToBeApprovedRate());
+//				if (wrapper.getToBeApprovedQty() != null && (scDetails.getCostRate() == null || !(Math.abs(scDetails.getCostRate()) > 0)))
+//					scDetails.setToBeApprovedQuantity(wrapper.getToBeApprovedQty()); //@Deprecated
+//				if (wrapper.getToBeApprovedRate() != null)
+//					scDetails.setToBeApprovedRate(wrapper.getToBeApprovedRate()); //@Deprecated
 			}
 			if (!(scDetails instanceof SubcontractDetailBQ)) {
 				if (wrapper.getBqQuantity() != null)

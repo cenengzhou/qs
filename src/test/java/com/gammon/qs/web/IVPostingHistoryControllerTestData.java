@@ -3,6 +3,8 @@
  */
 package com.gammon.qs.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -40,9 +42,17 @@ public class IVPostingHistoryControllerTestData extends ControllerTestCase.TestD
 	public Map<String, Object> testObtainIVPostingHistory() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
+		Date fromDate = null;
+		Date toDate = null;
+		try {
+			fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(testObtainIVPostingHistory_fromDate);
+			toDate = new SimpleDateFormat("yyyy/MM/dd").parse(testObtainIVPostingHistory_toDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
-		data.put("params", new Object[] {testObtainIVPostingHistory_jobNumber, testObtainIVPostingHistory_packageNo, testObtainIVPostingHistory_objectCode, testObtainIVPostingHistory_subsidiaryCode, new Date(testObtainIVPostingHistory_fromDate), new Date(testObtainIVPostingHistory_toDate)});
+		data.put("params", new Object[] {testObtainIVPostingHistory_jobNumber, testObtainIVPostingHistory_packageNo, testObtainIVPostingHistory_objectCode, testObtainIVPostingHistory_subsidiaryCode, fromDate, toDate});
 		data.put("sql", testObtainIVPostingHistory_sql);
 		post();
 		return data;

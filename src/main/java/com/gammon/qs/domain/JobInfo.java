@@ -153,11 +153,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	public void setLegacyJob(String legacyJob) {
-		if(legacyJob == null){
-			this.legacyJob="";
-		}else{
-			this.legacyJob = legacyJob;
-		}
+		this.legacyJob = legacyJob;
 	}
 
 	@JsonProperty("jobNo")

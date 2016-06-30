@@ -12,14 +12,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
-import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.SubcontractSnapshotHBDao;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.shared.util.CalculationUtil;
 @Component

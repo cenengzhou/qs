@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriodYearByCompany.GetPeriodYearResponseObj;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -190,43 +192,41 @@ public class PaymentService{
 	 * @author koeyyeung
 	 * created on 09 Qct, 2013
 	 * **/
-	private List<PaymentCertWrapper> obtainPaymentCertificateList(PaymentCertWrapper scPaymentCertWrapper, String dueDateType) throws DatabaseOperationException {
-		//TODO: GSF | List<JobSecurity> obtainCompanyListByUsername(username) | reamrk PaymentService.obtainSCPaymentCertificateList(SCPaymentCertWrapper scPaymentCertWrapper, String dueDateType)
-		throw new RuntimeException("GSF | List<JobSecurity> obtainCompanyListByUsername(username) | reamrk PaymentService.obtainSCPaymentCertificateList(SCPaymentCertWrapper scPaymentCertWrapper, String dueDateType)");
-//		List<SCPaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<SCPaymentCertWrapper>();
-//		List<PaymentCert> scPaymentCerts = new ArrayList<PaymentCert>();
-//		String username = securityServiceImpl.getCurrentUser().getUsername();
-//		
-//		/*
-//		 * Apply job security
-//		 */
-//		if(!GenericValidator.isBlankOrNull(scPaymentCertWrapper.getJobNo())){
-//			if(adminServiceImpl.canAccessJob(username, scPaymentCertWrapper.getJobNo()))
-//				scPaymentCerts = scPaymentCertDao.obtainSCPaymentCertList(scPaymentCertWrapper, null, dueDateType);
-//			else
-//				logger.info("User: "+username+" is not authorized to access Job: "+scPaymentCertWrapper.getJobNo());
-//		}else {
-//			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
-//			
-//			List<String> companyList = new ArrayList<String>();
-//			for(JobSecurity jobSecurity:jobSecurityList)
-//				companyList.add(jobSecurity.getCompany());
-//
-//			if(companyList.contains(scPaymentCertWrapper.getJob().getCompany()) || companyList.contains("NA")){
-//				scPaymentCerts = scPaymentCertDao.obtainSCPaymentCertList(scPaymentCertWrapper, null, dueDateType);
-//			}else if(!GenericValidator.isBlankOrNull(scPaymentCertWrapper.getJob().getCompany()))
-//				logger.info("User: "+username+" is not authorized to access Company: "+scPaymentCertWrapper.getJob().getCompany());
-//			else{
-//				scPaymentCerts = scPaymentCertDao.obtainSCPaymentCertList(scPaymentCertWrapper, companyList, dueDateType);
-//			}
-//		}
-//		
-//		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (scPaymentCerts==null? "0" : scPaymentCerts.size()));
-//		
-//		scPaymentCertWrapperList.addAll(obtainSCPaymentCertWrapperList(scPaymentCerts));
-//		
-//		logger.info("scPaymentCertWrapperList size: "+scPaymentCertWrapperList.size());
-//		return scPaymentCertWrapperList;
+	private List<PaymentCertWrapper> obtainPaymentCertificateList(PaymentCertWrapper paymentCertWrapper, String dueDateType) throws DatabaseOperationException {
+		List<PaymentCertWrapper> paymentCertWrapperList = new ArrayList<PaymentCertWrapper>();
+		List<PaymentCert> paymentCerts = new ArrayList<PaymentCert>();
+		String username = securityServiceImpl.getCurrentUser().getUsername();
+		
+		/*
+		 * Apply job security
+		 */
+		if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobNo())){
+			if(adminServiceImpl.canAccessJob(username, paymentCertWrapper.getJobNo()))
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+			else
+				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
+		}else {
+			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
+			
+			List<String> companyList = new ArrayList<String>();
+			for(JobSecurity jobSecurity:jobSecurityList)
+				companyList.add(jobSecurity.getCompany());
+
+			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+			}else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
+				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
+			else{
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
+			}
+		}
+		
+		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (paymentCerts==null? "0" : paymentCerts.size()));
+		
+		paymentCertWrapperList.addAll(obtainSCPaymentCertWrapperList(paymentCerts));
+		
+		logger.info("scPaymentCertWrapperList size: "+paymentCertWrapperList.size());
+		return paymentCertWrapperList;
 	}
 	
 	/**

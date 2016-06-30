@@ -86,7 +86,7 @@ public class AdminService {
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
 		for (JobSecurity jobSecurity : jobSecurityList) {
 			try {
-				if (jobSecurity.getRoleName().equals("JOB_ALL")) {
+				if (jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())) {
 					jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainAllJobs());
 					break;
 				}else{

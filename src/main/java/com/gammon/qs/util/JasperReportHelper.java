@@ -16,7 +16,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 /**
  * koeyyeung
@@ -188,27 +190,31 @@ public class JasperReportHelper {
 		return outputStream;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	private static ByteArrayOutputStream callJasperReportsToExcel(@SuppressWarnings("rawtypes") List jasperReports, String[] sheetNames)throws JRException, IOException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
 	
 		//Convert Jasper Report to Excel
 		JRXlsExporter excelFile = new JRXlsExporter();
-		excelFile.setParameter(JRXlsExporterParameter.JASPER_PRINT_LIST, jasperReports);
-		excelFile.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, outputStream);
-		excelFile.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_FONT_SIZE_FIX_ENABLED,Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS, Boolean.TRUE);
-		excelFile.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
+
+		excelFile.setExporterInput(SimpleExporterInput.getInstance(jasperReports));
+		excelFile.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+		
+		SimpleXlsReportConfiguration xlsReportConfig = new SimpleXlsReportConfiguration();
+		xlsReportConfig.setOnePagePerSheet(false);
+		xlsReportConfig.setDetectCellType(true);
+		xlsReportConfig.setWhitePageBackground(false);
+		xlsReportConfig.setRemoveEmptySpaceBetweenRows(true);
+		xlsReportConfig.setFontSizeFixEnabled(true);
+		xlsReportConfig.setIgnorePageMargins(true);
+		xlsReportConfig.setCollapseRowSpan(true);
+		xlsReportConfig.setIgnoreGraphics(true);
+		xlsReportConfig.setRemoveEmptySpaceBetweenColumns(true);
 		if(sheetNames.length>0){
-			excelFile.setParameter(JRXlsExporterParameter.SHEET_NAMES, sheetNames);
+			xlsReportConfig.setSheetNames(sheetNames);
 		}
+		excelFile.setConfiguration(xlsReportConfig);
 		excelFile.exportReport();
 	
 		return outputStream;

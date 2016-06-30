@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Primary;
 
 import com.gammon.qs.aspect.AuditAspectHibernateInterceptor;
 
-@Primary
 @Configuration
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
@@ -61,6 +60,7 @@ public class HibernateConfig {
 	@Autowired
 	private JdbcConfig jdbcConfig;
 
+	@Primary
 	@Bean(name = "dataSource", destroyMethod = "")
 	public DataSource jdbcDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -71,6 +71,7 @@ public class HibernateConfig {
 		return dataSource;
 	}
 
+	@Primary
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
@@ -86,7 +87,8 @@ public class HibernateConfig {
 		factory.afterPropertiesSet();
 		return factory;// .getObject();
 	}
-
+	
+	@Primary
 	@Bean(name = "sessionFactory")
 	public HibernateJpaSessionFactoryBean sessionFactory() {
 		HibernateJpaSessionFactoryBean bean = new HibernateJpaSessionFactoryBean();
@@ -99,6 +101,7 @@ public class HibernateConfig {
 		return bean;
 	}
 
+	@Primary
 	@Bean(name = "transactionManager")
 	public PlatformTransactionManager transactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();

@@ -34,7 +34,6 @@ import com.gammon.qs.domain.RepackagingDetail;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.admin.EnvironmentConfig;
-import com.gammon.qs.service.admin.MailService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
@@ -68,9 +67,7 @@ public class RepackagingDetailService implements Serializable {
 	@Autowired
 	private transient WebServiceConfig webServiceConfig;
 	@Autowired
-	private transient EnvironmentConfig environmentConfig; 	
-	@Autowired
-	private MailService mailService;
+	private transient EnvironmentConfig environmentConfig;
 	
 	private List<RepackagingDetailComparisonWrapper> cachedResults = new ArrayList<RepackagingDetailComparisonWrapper>();
 	private Double totalBudget;

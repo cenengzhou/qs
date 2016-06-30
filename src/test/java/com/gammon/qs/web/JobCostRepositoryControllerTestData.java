@@ -3,6 +3,8 @@
  */
 package com.gammon.qs.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -235,9 +237,17 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	public Map<String, Object> testGetAccountBalanceByDateRangeList() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
+		Date fromDate = null;
+		Date thruDate = null;
+		try {
+			fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountBalanceByDateRangeList_fromDate);
+			thruDate = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountBalanceByDateRangeList_thruDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
-		data.put("params", new Object[] {testGetAccountBalanceByDateRangeList_jobNumber, testGetAccountBalanceByDateRangeList_subLedger, testGetAccountBalanceByDateRangeList_subLedgerType, testGetAccountBalanceByDateRangeList_postFlag, testGetAccountBalanceByDateRangeList_postFlag, new Date(testGetAccountBalanceByDateRangeList_fromDate), new Date(testGetAccountBalanceByDateRangeList_thruDate), testGetAccountBalanceByDateRangeList_year, testGetAccountBalanceByDateRangeList_period});
+		data.put("params", new Object[] {testGetAccountBalanceByDateRangeList_jobNumber, testGetAccountBalanceByDateRangeList_subLedger, testGetAccountBalanceByDateRangeList_subLedgerType, testGetAccountBalanceByDateRangeList_postFlag, testGetAccountBalanceByDateRangeList_postFlag, fromDate, thruDate, testGetAccountBalanceByDateRangeList_year, testGetAccountBalanceByDateRangeList_period});
 		data.put("sql", testGetAccountBalanceByDateRangeList_sql);
 		post();
 		return data;
@@ -314,9 +324,17 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	public Map<String, Object> testGetAccountLedger() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
+		Date glDate1 = null;
+		Date glDate2 = null;
+		try {
+			glDate1 = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountLedger_glDate1);
+			glDate2 = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountLedger_glDate2);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
-		data.put("params", new Object[] {testGetAccountLedger_accountId, testGetAccountLedger_postedCode, testGetAccountLedger_ledgerType, new Date(testGetAccountLedger_glDate1), new Date(testGetAccountLedger_glDate2), testGetAccountLedger_subledgerType, testGetAccountLedger_subledger});
+		data.put("params", new Object[] {testGetAccountLedger_accountId, testGetAccountLedger_postedCode, testGetAccountLedger_ledgerType, glDate1, glDate2, testGetAccountLedger_subledgerType, testGetAccountLedger_subledger});
 		data.put("sql", testGetAccountLedger_sql);
 		post();
 		return data;
@@ -344,9 +362,18 @@ public class JobCostRepositoryControllerTestData extends ControllerTestCase.Test
 	public Map<String, Object> testGetAccountLedgerByAccountCodeList() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
+		Date fromDate = null;
+		Date thruDate = null;
+		try {
+			fromDate = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountLedgerByAccountCodeList_fromDate);
+			thruDate = new SimpleDateFormat("yyyy/MM/dd").parse(testGetAccountLedgerByAccountCodeList_thruDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		data.put("serviceClass", serviceClass);
 		data.put("methodName", methodName);
-		data.put("params", new Object[] {testGetAccountLedgerByAccountCodeList_accountCode, testGetAccountLedgerByAccountCodeList_postFlag, testGetAccountLedgerByAccountCodeList_ledgerType, new Date(testGetAccountLedgerByAccountCodeList_fromDate), new Date(testGetAccountLedgerByAccountCodeList_thruDate), testGetAccountLedgerByAccountCodeList_subLedgerType, subLedtestGetAccountLedgerByAccountCodeList_subLedgerger});
+		data.put("params", new Object[] {testGetAccountLedgerByAccountCodeList_accountCode, testGetAccountLedgerByAccountCodeList_postFlag, testGetAccountLedgerByAccountCodeList_ledgerType, fromDate, thruDate, testGetAccountLedgerByAccountCodeList_subLedgerType, subLedtestGetAccountLedgerByAccountCodeList_subLedgerger});
 		data.put("sql", testGetAccountLedgerByAccountCodeList_sql);
 		post();
 		return data;
