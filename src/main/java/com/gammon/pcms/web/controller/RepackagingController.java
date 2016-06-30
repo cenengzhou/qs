@@ -32,13 +32,13 @@ public class RepackagingController {
 	private RepackagingService repackagingService;
 	
 	
-	@RequestMapping(value = "getRepackagingEntriesByJobNo", method = RequestMethod.GET)
-	public List<Repackaging> getRepackagingEntriesByJobNo(@RequestParam(name="jobNo") String jobNo){
+	@RequestMapping(value = "getRepackagingListByJobNo", method = RequestMethod.GET)
+	public List<Repackaging> getRepackagingListByJobNo(@RequestParam(name="jobNo") String jobNo){
 		logger.info("jobNo: "+jobNo);
 		List<Repackaging> repackagingList = null;
 		try {
 			
-			repackagingList = repackagingService.getRepackagingEntriesByJobNo(jobNo);
+			repackagingList = repackagingService.getRepackagingListByJobNo(jobNo);
 			logger.info("repackagingList size: "+repackagingList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,12 +46,12 @@ public class RepackagingController {
 		return repackagingList;
 	}
 	
-	@RequestMapping(value = "getLatestRepackagingEntry", method = RequestMethod.GET)
-	public Repackaging getLatestRepackagingEntry(@RequestParam(name="jobNo") String jobNo){
+	@RequestMapping(value = "getLatestRepackaging", method = RequestMethod.GET)
+	public Repackaging getLatestRepackaging(@RequestParam(name="jobNo") String jobNo){
 		logger.info("jobNo: "+jobNo);
 		Repackaging repackaging = null;
 		try {
-			repackaging = repackagingService.getLatestRepackagingEntry(jobNo);
+			repackaging = repackagingService.getLatestRepackaging(jobNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -59,11 +59,11 @@ public class RepackagingController {
 	}
 	
 	
-	@RequestMapping(value = "addRepackagingEntry", method = RequestMethod.POST)
-	public String addRepackagingEntry(@RequestParam(name="jobNo") String jobNo){
+	@RequestMapping(value = "addRepackaging", method = RequestMethod.POST)
+	public String addRepackaging(@RequestParam(name="jobNo") String jobNo){
 		String result = null;
 		try {
-			result = repackagingService.addRepackagingEntry(jobNo);
+			result = repackagingService.addRepackaging(jobNo);
 		} catch (Exception e) {
 			result = "Repackaging cannot be created.";
 			e.printStackTrace();
@@ -71,11 +71,11 @@ public class RepackagingController {
 		return result;
 	}
 	
-	@RequestMapping(value = "updateRepackagingEntry", method = RequestMethod.POST)
-	public String  updateRepackagingEntry(@Valid @RequestBody Repackaging repackaging){
+	@RequestMapping(value = "updateRepackaging", method = RequestMethod.POST)
+	public String  updateRepackaging(@Valid @RequestBody Repackaging repackaging){
 		String result = null;
 		try {
-			result = repackagingService.updateRepackagingEntry(repackaging.getId(), repackaging.getRemarks());
+			result = repackagingService.updateRepackaging(repackaging);
 		} catch (Exception e) {
 			result = "Repackaging cannot be updated.";
 			e.printStackTrace();
@@ -95,11 +95,11 @@ public class RepackagingController {
 		return result;
 	}
 	 
-	@RequestMapping(value = "deleteRepackagingEntry", method = RequestMethod.DELETE)
-	public String deleteRepackagingEntry(@RequestParam(name="id") String id){
+	@RequestMapping(value = "deleteRepackaging", method = RequestMethod.DELETE)
+	public String deleteRepackaging(@RequestParam(name="id") String id){
 		String result = null;
 		try {
-			result = repackagingService.deleteRepackagingEntry(Long.valueOf(id));
+			result = repackagingService.deleteRepackaging(Long.valueOf(id));
 		} catch (Exception e) {
 			result = "Repackaging cannot be generated.";
 			e.printStackTrace();

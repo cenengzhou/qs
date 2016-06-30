@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 
 @RestController
@@ -75,4 +76,29 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
+	@RequestMapping(value = "deleteResources", method = RequestMethod.POST)
+	public String deleteResources(@Valid @RequestBody List<ResourceSummary> resourceSummaryList){
+		String result = "";
+		try {
+			result = resourceSummaryService.deleteResources(resourceSummaryList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
+	}
+
+	@RequestMapping(value = "updateResourceSummaries", method = RequestMethod.POST)
+	public String updateResourceSummaries(@RequestParam(name="jobNo") String jobNo, 
+									@Valid @RequestBody List<ResourceSummary> resourceSummaryList){
+		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
+		try {
+			wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return wrapper.getError();
+	}
+	
+
 }
+

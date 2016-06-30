@@ -1,18 +1,21 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'resourceSummaryService', '$cookieStore', '$stateParams',
-                                             function($scope , $http, modalService, resourceSummaryService, $cookieStore, $stateParams) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'resourceSummaryService', '$cookieStore', '$stateParams', '$state',
+                                             function($scope , $http, modalService, resourceSummaryService, $cookieStore, $stateParams, $state) {
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
-	
+
 	if($stateParams.repackagingEntryId){
 		$cookieStore.put('repackagingEntryId', $stateParams.repackagingEntryId);
 	}
-	
+
 	$scope.repackagingEntryId = $cookieStore.get("repackagingEntryId");
+
+	
+	loadResourceSummaries();
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
-	
-	
+
+
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -24,7 +27,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 			showGridFooter : false,
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
-			
+
 			columnDefs: [
 			             { field: 'packageNo', cellClass: "grid-theme-blue", enableCellEdit: true},
 			             { field: 'objectCode', enableCellEdit: false},
@@ -53,25 +56,14 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 
 	}
 
- loadResourceSummaries();
-     
-     function loadResourceSummaries() {
-    	 resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
-    	 .then(
-			 function( data ) {
-				 $scope.gridOptions.data= data;
-			 });
-     }
-    
-	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
 
-	
+
 	//Open Window
 	$scope.open = function(view){
-	
+
 		if(view=="split"){
 			console.log("mySelections: "+$scope.mySelections);
 			modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl');
@@ -81,7 +73,37 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl', '', $scope.repackagingEntryId);
 		}
 	};
+
+	$scope.deleteResources = function(){
+		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+		console.log(selectedRows);
+		if(selectedRows.length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select resources to delete.");
+			return;
+		}
+		deleteResources(selectedRows);
+	}
+
+	function deleteResources(rowsToDelete) {
+		resourceSummaryService.deleteResources(rowsToDelete)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been deleted.");
+						$state.reload();
+					}
+				});
+	}
 	
+	function loadResourceSummaries() {
+		resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
+		.then(
+				function( data ) {
+					$scope.gridOptions.data= data;
+				});
+	}
 	
 	/*$scope.gridOptions = {
 	enableFiltering: true,
@@ -97,7 +119,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 
 	//enableCellEditOnFocus : true,
 	selectedItems: $scope.mySelections,
-	
+
 	exporterMenuPdf: false,
 	exporterCsvFilename: 'ResourceSummaries.csv',
 	exporterPdfDefaultStyle: {fontSize: 9},
@@ -116,7 +138,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 	exporterPdfPageSize: 'LETTER',
 	exporterPdfMaxGridWidth: 500,
 	//exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
-	
+
 	//paginationPageSizes: [50],
 	//paginationPageSize: 50,
 
@@ -126,7 +148,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
             //write code to execute only when selected.
             //alert(rowItem.entity );  //rowItem.entity is the "data" here
         	  console.log('rowItem.entity: '+rowItem.entity);
-        	  
+
             var detailData = [];
             angular.forEach(rowItem.entity, function(key, value){
               var dataRow = { col1: key, col2: value };
@@ -138,7 +160,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
             //write code on deselection.
           }
         },
-        
+
 	//Single Filter
 	onRegisterApi: function(gridApi){
 		$scope.gridApi = gridApi;
@@ -160,12 +182,12 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
     			 {field: 'defectExcluded', enableCellEdit: false, enableFiltering: false}
     			 ],
 		 rowTemplate: "<div ng-dblclick=\"grid.appScope.onDblClickRow(row)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" ui-grid-cell></div>",
-	
-	
+
+
 
 		};
-		
-		
+
+
 		$scope.gridOptions.onRegisterApi = function(gridApi){
 		 //set gridApi on scope
 		 $scope.gridApi = gridApi;
@@ -173,19 +195,19 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 		   console.log('Column: ' + colDef.name + ' packageNo: ' + rowEntity.packageNo);
 		 });
 		};
-		
-		
+
+
 		$scope.onDblClickRow = function(rowItem) {
 		var rowCol = $scope.gridApi.cellNav.getFocusableCols;
 		console.log('ON ROW CLICK: '+rowCol);
 		};
-		
+
 		$scope.getCurrentFocus = function(){
 		var rowCol = $scope.gridApi.cellNav.getFocusedCell();
 		if(rowCol !== null) {
 		    $scope.currentFocused = 'Row Id:' + rowCol.row.entity.id + ' col:' + rowCol.col.colDef.name;
 		}
 		}
-		*/
-			
+	 */
+
 }]);

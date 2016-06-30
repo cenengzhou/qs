@@ -10,20 +10,20 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ng-class="{active : activeAdminSideMenu == '/admin/session'}">
-				<a ui-sref="admin.session" ng-click="activeAdminSideMenu = '/admin/session'">
+			<li ui-sref-active="active">
+				<a ui-sref="admin.session">
 					<i class="glyphicon glyphicon-random"></i>
 					<span>Session</span>
 				</a>
 			</li>
-			<li ng-class="{active : activeAdminSideMenu == '/admin/ManualProcedures'}">
-				<a ui-sref="admin.ManualProcedures" ng-click="activeAdminSideMenu = '/admin/ManualProcedures'">
+			<li ui-sref-active="active">
+				<a ui-sref="admin.ManualProcedures">
 					<i class="glyphicon glyphicon-tasks"></i>
 					<span>Manual Procedures</span>
 				</a>
 			</li>		
-			<li ng-class="{active : activeAdminSideMenu == '/admin/Revisions'}">
-				<a ui-sref="admin.Revisions" ng-click="activeAdminSideMenu = '/admin/Revisions'">
+			<li ui-sref-active="active">
+				<a ui-sref="admin.Revisions">
 					<i class="glyphicon glyphicon-sunglasses"></i>
 					<span>Revisions</span>
 				</a>
@@ -64,8 +64,8 @@
 			</li>		
 			</ul>
 			</li>
-			<li ng-class="{active : activeAdminSideMenu == '/admin/SchedulerMaintenance'}">
-				<a ui-sref="admin.SchedulerMaintenance" ng-click="activeAdminSideMenu = '/admin/SchedulerMaintenance'">
+			<li ui-sref-active="active">
+				<a ui-sref="admin.SchedulerMaintenance">
 					<i class="glyphicon glyphicon-calendar"></i>
 					<span>Scheduler Maintenance</span>
 				</a>

@@ -29,7 +29,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 	@Autowired
 	private RepackagingDetailHBDao repackagingDetailHBDao;
 
-	public Repackaging getLatestRepackagingEntry(String jobNumber) throws DatabaseOperationException{
+	public Repackaging getLatestRepackaging(String jobNumber) throws DatabaseOperationException{
 		Repackaging repackaging;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -46,7 +46,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Repackaging> getRepackagingEntriesByJobNo(String jobNumber) throws DatabaseOperationException{
+	public List<Repackaging> getRepackagingListByJobNo(String jobNumber) throws DatabaseOperationException{
 		List<Repackaging> repackagingEntries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -98,7 +98,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 			Hibernate.initialize(repackagingEntry.getJobInfo());
 	}
 	
-	public Repackaging getLatestRepackagingEntry(JobInfo jobInfo) throws Exception{
+	public Repackaging getLatestRepackaging(JobInfo jobInfo) throws Exception{
 		Repackaging repackagingEntry = null;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());

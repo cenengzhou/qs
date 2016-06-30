@@ -48,7 +48,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					$scope.payments = data.scPaymentCertWithGSTWrapperList;
 					$scope.totalCertificateAmount = data.totalCertificateAmount;
 					$scope.paymentTerms = data.scPackage.paymentTerms + " - "+ paymentTermsDescription[data.scPackage.paymentTerms];
@@ -56,9 +56,9 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
 
-					var obj = $scope.payments.find(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; })
-					$scope.latestPaymentStatus = obj.paymentStatus;
-
+					var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
+					console.log(obj);
+					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
 					prepareCalendar();
 				});
 	}

@@ -1,5 +1,5 @@
 var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker',
-                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize',
+                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
 
@@ -194,7 +194,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/repackaging/repackaging-assign-resources.js'
+               	         'js/controller/subcontract/subcontract-award-assign.js'
                     ] 
                 });
             }]
@@ -591,6 +591,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 name: 'app',
                	 files: [
                            'js/controller/repackaging/repackaging-update.js',
+                           'js/controller/repackaging/repackaging-add.js',
                            'js/service/resource-summary-service.js'
                     ] 
                 });

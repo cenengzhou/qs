@@ -21,7 +21,7 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
 				$window.location.href = 'login.htm?ValidateCurrentSessionError';
 		});
     	App.initComponent();
-        App.scrollTop();
+        //App.scrollTop();
         $('.pace .pace-progress').addClass('hide');
         $('.pace').removeClass('pace-inactive');
     });

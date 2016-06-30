@@ -9,9 +9,9 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
     
 	$scope.click = function(view) {
 		if(view=="unlock"){
-			addRepackagingEntry();
+			addRepackaging();
 		}else if (view=="reset"){
-			deleteRepackagingEntry();
+			deleteRepackaging();
 		}else if (view=="snapshot"){
 			generateSnapshot();
 		}else if (view=="confirm"){
@@ -20,21 +20,22 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
 	};
 
 	$scope.updateRemarks = function(){
-		updateRepackagingEntry();
+		updateRepackaging();
 	}
 	
     
     function loadRepacakgingData() {
-   	 repackagingService.getLatestRepackagingEntry($scope.jobNo)
+   	 repackagingService.getLatestRepackaging($scope.jobNo)
    	 .then(
 			 function( data ) {
-				 console.log(data);
+				 //console.log(data);
 				 $scope.repackaging = data;
+				console.log($scope.repackaging.status);
 			 });
     }
     
-    function addRepackagingEntry() {
-      	 repackagingService.addRepackagingEntry($scope.jobNo)
+    function addRepackaging() {
+      	 repackagingService.addRepackaging($scope.jobNo)
       	 .then(
    			 function( data ) {
    				loadRepacakgingData();
@@ -46,8 +47,8 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
    			 });
        }
     
-    function updateRepackagingEntry() {
-     	 repackagingService.updateRepackagingEntry($scope.repackaging)
+    function updateRepackaging() {
+     	 repackagingService.updateRepackaging($scope.repackaging)
      	 .then(
   			 function( data ) {
   				loadRepacakgingData();
@@ -61,8 +62,8 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
     
     
 	
-    function deleteRepackagingEntry() {
-     	 repackagingService.deleteRepackagingEntry($scope.repackaging.id)
+    function deleteRepackaging() {
+     	 repackagingService.deleteRepackaging($scope.repackaging.id)
      	 .then(
   			 function( data ) {
   				loadRepacakgingData();

@@ -1228,22 +1228,7 @@ public class ResourceSummaryService implements Serializable {
 		return excel;
 	}
 	
-	public String deleteVoResources(List<ResourceSummary> resourceSummaries) throws Exception{
-		if(resourceSummaries == null || resourceSummaries.size() == 0)
-			return null;
-		for(ResourceSummary resourceSummary : resourceSummaries){
-			ResourceSummary summaryInDb = bqResourceSummaryDao.get(resourceSummary.getId());
-			if(!"VO".equals(summaryInDb.getResourceType()) && !"OI".equals(summaryInDb.getResourceType()))
-				return "Only VO/OI resources can be deleted";
-			if(summaryInDb.getPackageNo() != null && summaryInDb.getPackageNo().trim().length() != 0)
-				return "Please remove the VO from its package before deleting";
-			if(summaryInDb.getCurrIVAmount().doubleValue() != 0)
-				return "Resources with non-zero posted IV cannot be deleted";
-			summaryInDb.inactivate();
-			bqResourceSummaryDao.saveOrUpdate(summaryInDb);
-		}
-		return null;
-	}
+	
 
 	public ResourceSummary getResourceSummary(String jobNumber, String packageNo, String objectCode, String subsidiaryCode,
 												String resourceDescription, String unit, Double rate)throws Exception {
@@ -1262,7 +1247,7 @@ public class ResourceSummaryService implements Serializable {
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public List<ResourceSummary> getResourceSummaries(String jobNo, String packageNo, String objectCode) throws Exception {
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		return bqResourceSummaryDao.getResourceSummariesSearch(job, packageNo, objectCode, null);
+		return bqResourceSummaryDao.getResourceSummaries(job, packageNo, objectCode);
 	}
 	
 
@@ -1275,8 +1260,8 @@ public class ResourceSummaryService implements Serializable {
 	public String addResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
 		String result = "";
 		//Check status of repackaging entry
-		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
-		if("900".equals(repackagingEntry.getStatus())){
+		Repackaging repackaging = repackagingEntryDao.get(repackagingEntryId);
+		if("900".equals(repackaging.getStatus())){
 			result = "This repackaging entry has already been confirmed and locked.";
 			return result;
 		}
@@ -1293,29 +1278,161 @@ public class ResourceSummaryService implements Serializable {
 			list.add(resourceSummary);
 		}
 		
+		
+		repackaging.setStatus("200");
+		repackagingEntryDao.update(repackaging);
+		
+		
 		return result;
 	}
 	
-	public String updateResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
-		String result = "";
+	
+	public BQResourceSummaryWrapper updateResourceSummaries(List<ResourceSummary> resourceSummaries, String jobNo) throws Exception{
+		logger.info("saveResourceSummaries - STARTED");
+		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
+		
 		//Check status of repackaging entry
-		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
+		Repackaging repackagingEntry = repackagingEntryDao.getLatestRepackaging(jobNo);
 		if("900".equals(repackagingEntry.getStatus())){
-			result = "This repackaging entry has already been confirmed and locked.";
-			return result;
+			logger.info("This repackaging entry has already been confirmed and locked[900].");
+			wrapper.setError("This repackaging entry has already been confirmed and locked.");
+			return wrapper;
 		}
 		
+		StringBuilder errors = new StringBuilder();
 		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
-		//Validate
-		result = validateResourceSummary(resourceSummary, packagesToReset);
-		//Save if no error
-		if(result.length() == 0){
-			saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
-			List<ResourceSummary> list = new ArrayList<ResourceSummary>(1);
-			list.add(resourceSummary);
+		//Validate all
+		for(ResourceSummary resourceSummary : resourceSummaries){
+			errors.append(validateResourceSummary(resourceSummary, packagesToReset));
+		}
+		//Save all, if all are valid
+		if(errors.length() == 0){
+			if(packagesToReset.size() > 0){
+				for(Subcontract scPackage : packagesToReset){
+					//Set status to 100
+					scPackage.setSubcontractStatus(Integer.valueOf(100));
+					
+					/**
+					 * @author koeyyeung
+					 * created on 6th Jan, 2015
+					 * Payment Requisition Revamp
+					 * */
+					PaymentCert latestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+					
+					//if no payment yet & package status != 500 --> reset vendorNo in scPackage
+					if(latestPaymentCert==null){
+						if(!Integer.valueOf(500).equals(scPackage.getSubcontractStatus())){
+							//reset vendorNo in scPackage
+							scPackage.setVendorNo(null);
+						}
+						scPackageDao.resetPackageTA(scPackage);
+					}else{
+						//If 1st payment is pending (Direct Payment)--> delete payment cert 
+						if(latestPaymentCert!=null 
+								&& latestPaymentCert.getDirectPayment().equals("Y") 
+								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
+							//Payment list = 1: reset vendorNo		
+							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==1){
+								//reset vendorNo in scPackage
+								scPackage.setVendorNo(null);
+							}
+							
+							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+							
+							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+							scPaymentCertHBDao.delete(latestPaymentCert);
+							scPackageDao.update(scPackage);
+							
+							//Reset cumCertQuantity in ScDetail
+							List<SubcontractDetail> scDetailsList = scDetailsHBDaoImpl.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+							for(SubcontractDetail scDetails: scDetailsList){
+								if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
+									scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+									scDetailsHBDaoImpl.update(scDetails);
+								}
+							}
+						}
+						
+						//Determine to clear TA
+						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==0){
+							//Clear All TA
+							scPackageDao.resetPackageTA(scPackage);					
+						}else{
+							scPackageDao.update(scPackage);
+
+							List<Integer> resourceNoList = new ArrayList<Integer>();
+							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							for(Tender ta: tenderAnalysisList){
+								if ((ta.getStatus()!=null && "RCM".equalsIgnoreCase(ta.getStatus().trim()))){
+									//Recommended Vendor
+									for(TenderDetail taDetail: tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
+										SubcontractDetailBQ scDetail = scDetailsHBDaoImpl.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
+										if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0)){
+											resourceNoList.add(taDetail.getResourceNo());
+										}
+									}
+									break;
+								}
+							}
+							
+							
+
+							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							Iterator<Tender> taIterator = taList.iterator();
+							while(taIterator.hasNext()){
+								Tender TA = taIterator.next();	
+								List<TenderDetail> taDetaiList = tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA);
+								Iterator<TenderDetail> taDetailIterator = taDetaiList.iterator();					
+								while(taDetailIterator.hasNext()){					
+									TenderDetail taDetail = taDetailIterator.next();
+									if(!resourceNoList.contains(taDetail.getResourceNo())){
+										taDetailIterator.remove();
+										//logger.info("REMOVED DAO TRANSACTION - remove tender detail");
+										//For DAO Transaction
+										//scPackage.getTenderAnalysisList().remove(taDetail);
+										//For DAO Transaction --END
+									}
+								}
+							}
+							scPackageDao.update(scPackage);
+						}
+					}
+				}
+			}
+			for(ResourceSummary resourceSummary : resourceSummaries){
+				saveResourceSummaryHelper(resourceSummary, repackagingEntry.getId());
+			}
+			wrapper.setResourceSummaries(resourceSummaries);
+		}
+		else{
+			wrapper.setError(errors.toString());
+		}
+		logger.info("saveResourceSummaries - END");
+		return wrapper;
+	}
+
+	
+	public String deleteResources(List<ResourceSummary> resourceSummaries) throws Exception{
+		if(resourceSummaries == null || resourceSummaries.size() == 0)
+			return null;
+		for(ResourceSummary resourceSummary : resourceSummaries){
+			ResourceSummary summaryInDb = bqResourceSummaryDao.get(resourceSummary.getId());
+			if(!"VO".equals(summaryInDb.getResourceType()) && !"OI".equals(summaryInDb.getResourceType()))
+				return "Only VO/OI resources can be deleted";
+			if(summaryInDb.getPackageNo() != null && summaryInDb.getPackageNo().trim().length() != 0)
+				return "Please remove the VO from its package before deleting";
+			if(summaryInDb.getCurrIVAmount().doubleValue() != 0)
+				return "Resources with non-zero posted IV cannot be deleted";
+			summaryInDb.inactivate();
+			bqResourceSummaryDao.saveOrUpdate(summaryInDb);
 		}
 		
-		return result;
+		JobInfo job = resourceSummaries.get(0).getJobInfo();
+		Repackaging repackaging = repackagingEntryDao.getLatestRepackaging(job);
+		repackaging.setStatus("200");
+		repackagingEntryDao.update(repackaging);
+		
+		return null;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

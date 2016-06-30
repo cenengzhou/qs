@@ -1,5 +1,5 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'modalService', '$cookieStore',
-                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, modalService, $cookieStore) {
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'modalService', '$cookieStore', '$state',
+                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, modalService, $cookieStore, $state) {
 
 	$scope.repackagingEntryId = modalParam;
 
@@ -42,6 +42,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "New Resource has been added.");
 						$uibModalInstance.close();
+						$state.reload();
 					}
 				});
 	}

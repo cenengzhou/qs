@@ -1565,6 +1565,38 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	
 	/**************************************************** FUNCTIONS FOR PCMS **************************************************************/
 	@SuppressWarnings("unchecked")
+	public List<ResourceSummary> getResourceSummaries(JobInfo jobInfo, String packageNo, String objectCode) throws DatabaseOperationException{
+		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		List<ResourceSummary> resourceSummaries;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			if(!GenericValidator.isBlankOrNull(packageNo)){
+				criteria.add(Restrictions.or(Restrictions.eq("packageNo", packageNo), Restrictions.isNull("packageNo")));
+			}
+			if(!GenericValidator.isBlankOrNull(objectCode)){
+				if(objectCode.contains("*")){
+					criteria.add(Restrictions.like("objectCode", objectCode.replace("*", "%")));
+				}
+				else
+					criteria.add(Restrictions.eq("objectCode", objectCode));
+			}
+			
+			criteria.addOrder(Order.asc("objectCode"));
+			criteria.addOrder(Order.asc("packageNo"));
+			criteria.addOrder(Order.asc("subsidiaryCode"));
+			resourceSummaries = criteria.list();
+			return resourceSummaries;
+		}
+		catch(HibernateException ex){
+			throw new DatabaseOperationException(ex);
+		}
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(JobInfo job) throws DatabaseOperationException{
 		try{
 			IVInputPaginationWrapper paginationWrapper = new IVInputPaginationWrapper();

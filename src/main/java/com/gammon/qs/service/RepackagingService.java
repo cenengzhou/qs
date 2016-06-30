@@ -38,24 +38,24 @@ public class RepackagingService {
 		return repackagingEntryDao.get(id);
 	}
 	
-	public Repackaging getLatestRepackagingEntry(JobInfo job) throws Exception{
-		return repackagingEntryDao.getLatestRepackagingEntry(job);
+	public Repackaging getLatestRepackaging(JobInfo job) throws Exception{
+		return repackagingEntryDao.getLatestRepackaging(job);
 	}
 
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
-	public Repackaging getLatestRepackagingEntry(String jobNo) throws Exception {
-		return repackagingEntryDao.getLatestRepackagingEntry(jobNo);
+	public Repackaging getLatestRepackaging(String jobNo) throws Exception {
+		return repackagingEntryDao.getLatestRepackaging(jobNo);
 	}
 	
-	public List<Repackaging> getRepackagingEntriesByJobNo(String jobNo) throws Exception {
-		return repackagingEntryDao.getRepackagingEntriesByJobNo(jobNo);
+	public List<Repackaging> getRepackagingListByJobNo(String jobNo) throws Exception {
+		return repackagingEntryDao.getRepackagingListByJobNo(jobNo);
 	}
 	
 	//Create and save a repackaging entry
-	public String addRepackagingEntry(String jobNo) throws Exception{
+	public String addRepackaging(String jobNo) throws Exception{
 		String result = "";
-		Repackaging currentRepackaging = this.getLatestRepackagingEntry(jobNo);
+		Repackaging currentRepackaging = this.getLatestRepackaging(jobNo);
 		
 		logger.info("currentRepackaging: "+currentRepackaging);
 		logger.info("version: "+currentRepackaging.getRepackagingVersion());
@@ -76,17 +76,20 @@ public class RepackagingService {
 		return result;
 	}
 	
-	public String updateRepackagingEntry(Long id, String remarks) throws Exception{
+	public String updateRepackaging(Repackaging repackaging) throws Exception{
 		String result = "";
-		
-		Repackaging entryInDB = repackagingEntryDao.get(id);
+		logger.info(repackaging.getRemarks());
+		Repackaging entryInDB = repackagingEntryDao.get(repackaging.getId());
 		if (entryInDB.getStatus()!=null && "900".equals(entryInDB.getStatus().trim())){
 			result = "Repackaging status is 900. Job "+entryInDB.getJobInfo().getJobNumber()+" is locked already.";
 			//throw new ValidateBusinessLogicException("Repackaging status is 900. Job "+entryInDB.getJobInfo().getJobNumber()+" is locked already.");
 		}
-		if(remarks.length()>255)
-			remarks = remarks.substring(0, 255);
-		entryInDB.setRemarks(remarks);
+
+		entryInDB.setStatus(repackaging.getStatus());
+		entryInDB.setRemarks(repackaging.getRemarks());
+		if(repackaging.getRemarks().length()>255)
+			entryInDB.setRemarks(repackaging.getRemarks().substring(0, 255));
+
 		repackagingEntryDao.saveOrUpdate(entryInDB);
 		return result;
 	}
@@ -95,7 +98,7 @@ public class RepackagingService {
 	 * @author tikywong
 	 * created on January 05, 2012
 	 */
-	public String deleteRepackagingEntry(Long id) throws Exception {
+	public String deleteRepackaging(Long id) throws Exception {
 		String result = "";
 		Repackaging entryInDB  =repackagingEntryDao.get(id);
 		

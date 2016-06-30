@@ -1,20 +1,20 @@
 mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
 	// Return public API.
     return({
-    	getLatestRepackagingEntry:		getLatestRepackagingEntry,
-    	getRepackagingEntriesByJobNo: 	getRepackagingEntriesByJobNo,
+    	getLatestRepackaging:		getLatestRepackaging,
+    	getRepackagingListByJobNo: 	getRepackagingListByJobNo,
     	
-    	addRepackagingEntry:			addRepackagingEntry,
-    	updateRepackagingEntry:			updateRepackagingEntry,
-    	deleteRepackagingEntry:			deleteRepackagingEntry,
+    	addRepackaging:			addRepackaging,
+    	updateRepackaging:				updateRepackaging,
+    	deleteRepackaging:			deleteRepackaging,
     	generateSnapshot:				generateSnapshot
         
     });
 	
-    function getLatestRepackagingEntry(jobNo) {
+    function getLatestRepackaging(jobNo) {
         var request = $http({
             method: "get",
-            url: "service/repackaging/getLatestRepackagingEntry",
+            url: "service/repackaging/getLatestRepackaging",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -23,10 +23,10 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function getRepackagingEntriesByJobNo(jobNo) {
+    function getRepackagingListByJobNo(jobNo) {
         var request = $http({
             method: "get",
-            url: "service/repackaging/getRepackagingEntriesByJobNo",
+            url: "service/repackaging/getRepackagingListByJobNo",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
@@ -35,10 +35,10 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function addRepackagingEntry(jobNo) {
+    function addRepackaging(jobNo) {
         var request = $http({
             method: "post",
-            url: "service/repackaging/addRepackagingEntry",
+            url: "service/repackaging/addRepackaging",
             dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo
@@ -47,10 +47,10 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function updateRepackagingEntry(repackaging) {
+    function updateRepackaging(repackaging) {
         var request = $http({
             method: "post",
-            url: "service/repackaging/updateRepackagingEntry",
+            url: "service/repackaging/updateRepackaging",
             dataType: "application/json;charset=UTF-8",
             data : repackaging
         });
@@ -70,10 +70,10 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function deleteRepackagingEntry(id) {
+    function deleteRepackaging(id) {
         var request = $http({
             method: "delete",
-            url: "service/repackaging/deleteRepackagingEntry",
+            url: "service/repackaging/deleteRepackaging",
             dataType: "application/json;charset=UTF-8",
             params: {
                 id: id
