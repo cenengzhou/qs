@@ -1594,7 +1594,28 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		}
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public List<ResourceSummary> getResourceSummariesBySC(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
+		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		List<ResourceSummary> resourceSummaries;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobInfo", jobInfo));
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			if(!GenericValidator.isBlankOrNull(packageNo)){
+				criteria.add(Restrictions.or(Restrictions.eq("packageNo", packageNo)));
+			}
+			
+			criteria.addOrder(Order.asc("objectCode"));
+			criteria.addOrder(Order.asc("packageNo"));
+			criteria.addOrder(Order.asc("subsidiaryCode"));
+			resourceSummaries = criteria.list();
+			return resourceSummaries;
+		}
+		catch(HibernateException ex){
+			throw new DatabaseOperationException(ex);
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(JobInfo job) throws DatabaseOperationException{

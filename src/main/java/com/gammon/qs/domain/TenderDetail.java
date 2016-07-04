@@ -12,12 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
 import com.gammon.qs.application.BasePersistedObject;
+import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
 @Table(name = "TENDER_DETAIL")
@@ -33,13 +34,25 @@ public class TenderDetail extends BasePersistedObject{
 	private String billItem;
 	private String description;
 	private Double quantity;
-	private Double feedbackRateDomestic;
-	private Double feedbackRateForeign;
+	private Double rateBudget;
+	private Double rateSubcontract;
 	private String objectCode;
 	private String subsidiaryCode;
 	private String lineType;
 	private String unit;
 	private String remark;
+	
+			
+			
+			/**
+	 * @author koeyyeung
+	 * Convert to Amount Based
+	 * 04 Jul, 2016
+	 * **/
+	private Double amountBudget;
+	private Double amountSubcontract;
+	private Double amountForeign;
+	
 	
 	public TenderDetail(){
 		super();
@@ -57,7 +70,7 @@ public class TenderDetail extends BasePersistedObject{
 		billItem = bpi;
 //		description = resource.getDescription(); //TA description comes from BQ Item
 		quantity = resource.getQuantity() * resource.getRemeasuredFactor();
-		feedbackRateDomestic = resource.getCostRate();
+		rateBudget = resource.getCostRate();
 		objectCode = resource.getObjectCode();
 		subsidiaryCode = resource.getSubsidiaryCode();
 		unit = resource.getUnit();
@@ -67,7 +80,7 @@ public class TenderDetail extends BasePersistedObject{
 	public void updateFromResource(BpiItemResource resource){
 //		description = resource.getDescription();
 		quantity = resource.getQuantity() * resource.getRemeasuredFactor();
-		feedbackRateDomestic = resource.getCostRate();
+		rateBudget = resource.getCostRate();
 		objectCode = resource.getObjectCode();
 		subsidiaryCode = resource.getSubsidiaryCode();
 		unit = resource.getUnit();
@@ -150,7 +163,7 @@ public class TenderDetail extends BasePersistedObject{
 	public String toString() {
 		return "TenderDetail [tender=" + tender + ", sequenceNo=" + sequenceNo + ", resourceNo="
 				+ resourceNo + ", billItem=" + billItem + ", description=" + description + ", quantity=" + quantity
-				+ ", feedbackRateDomestic=" + feedbackRateDomestic + ", feedbackRateForeign=" + feedbackRateForeign
+				+ ", feedbackRateDomestic=" + rateBudget + ", feedbackRateForeign=" + rateSubcontract
 				+ ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", lineType=" + lineType
 				+ ", unit=" + unit + ", remark=" + remark + ", toString()=" + super.toString() + "]";
 	}
@@ -200,20 +213,20 @@ public class TenderDetail extends BasePersistedObject{
 		this.quantity = quantity;
 	}
 	
-	@Column(name = "feedbackRateD")
-	public Double getFeedbackRateDomestic() {
-		return feedbackRateDomestic;
+	@Column(name = "RATE_BUDGET")
+	public Double getRateBudget() {
+		return rateBudget;
 	}
-	public void setFeedbackRateDomestic(Double feedbackRateDomestic) {
-		this.feedbackRateDomestic = feedbackRateDomestic;
+	public void setRateBudget(Double rateBudget) {
+		this.rateBudget = rateBudget;
 	}
 	
-	@Column(name = "feedbackRateF")
-	public Double getFeedbackRateForeign() {
-		return feedbackRateForeign;
+	@Column(name = "RATE_SUBCONTRACT")
+	public Double getRateSubcontract() {
+		return rateSubcontract;
 	}
-	public void setFeedbackRateForeign(Double feedbackRateForeign) {
-		this.feedbackRateForeign = feedbackRateForeign;
+	public void setRateSubcontract(Double rateSubcontract) {
+		this.rateSubcontract = rateSubcontract;
 	}
 	
 	@Column(name = "objectCode", length = 6)
@@ -256,8 +269,36 @@ public class TenderDetail extends BasePersistedObject{
 		this.remark = remark;
 	}
 	
+	@Column(name = "AMT_BUDGET")
+	public Double getAmountBudget() {
+		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+
+	public void setAmountBudget(Double amountBudget) {
+		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	
+	@Column(name = "AMT_SUBCONTRACT")
+	public Double getAmountSubcontract() {
+		return (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	}
+
+	public void setAmountSubcontract(Double amountSubcontract) {
+		this.amountSubcontract = (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	}
+	
+	@Column(name = "AMT_FOREIGN")
+	public Double getAmountForeign() {
+		return (amountForeign!=null?CalculationUtil.round(amountForeign, 2):0.00);
+	}
+
+	public void setAmountForeign(Double amountForeign) {
+		this.amountForeign = (amountForeign!=null?CalculationUtil.round(amountForeign, 2):0.00);
+	}
+	
+	
 	@ManyToOne
-	@LazyToOne(value = LazyToOneOption.PROXY)
+	@Cascade(value = CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "Tender_ID", foreignKey = @ForeignKey(name = "FK_TenderDetail_Tender_PK"))
 	public Tender getTender() {
 		return tender;
@@ -265,5 +306,7 @@ public class TenderDetail extends BasePersistedObject{
 	public void setTender(Tender tender) {
 		this.tender = tender;
 	}
-	
+
+
+
 }

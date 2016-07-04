@@ -1,4 +1,4 @@
-mainApp.service('jobService', ['$http', function($http){
+mainApp.service('jobService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
     	getJob: getJob,

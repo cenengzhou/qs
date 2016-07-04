@@ -16,7 +16,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 			//excludeDefect : false,
 
 
-			//amount : "",
+			amountBudget : 100
 	}
 
 

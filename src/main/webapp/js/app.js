@@ -156,14 +156,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           
-                          
                            'js/controller/subcontract/subcontract-ta-details.js',
                            'js/controller/subcontract/subcontract-vendor.js',
                            'js/controller/subcontract/subcontract-vendor-feedback.js',
                            
                           
                            'js/service/resource-summary-service.js',
+                           'js/service/tender-service.js',
                            'js/service/subcontract-service.js'
                     ] 
                 });
@@ -374,23 +373,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             }]
         }
 	})
-	/*.state('subcontract.addendumDetails', {
-		url: "/addendum/details",
-		templateUrl: "view/subcontract/addendum-details.html",
-		controller: 'AddendumDetailsCtrl',
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/controller/subcontract/addendum-details.js',
-                           
-                           
-                    ] 
-                });
-            }]
-        }
-	})*/
+
 	.state('subcontract.addendumDetails', {
 		url: "/addendum/tab",
 		templateUrl: "view/subcontract/addendum-tab.html",

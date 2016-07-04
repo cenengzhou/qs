@@ -43,7 +43,21 @@ public class ResourceSummaryController {
 		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, packageNo, objectCode);
-			logger.info("resourceSummaries size: "+resourceSummaries.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return resourceSummaries;
+	}
+	
+	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
+	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(name="jobNo") String jobNo, 
+													@RequestParam(name="packageNo") String packageNo 
+													){
+		logger.info("jobNo: "+jobNo);
+		List<ResourceSummary> resourceSummaries = null;
+		try {
+			
+			resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, packageNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

@@ -24,6 +24,7 @@ import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
 import com.gammon.qs.application.BasePersistedObject;
+import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
 @Table(name = "BPI_ITEM")
 @DynamicInsert
@@ -68,6 +69,14 @@ public class BpiItem extends BasePersistedObject {
 	private BpiPage bpiPage;
 
 	private BQLineType bqLineType;
+	
+	/**
+	 * @author koeyyeung
+	 * Convert to Amount Based
+	 * 04 Jul, 2016
+	 * **/
+	private Double amountBudget;
+	private Double amountSelling;
 	
 	public BpiItem() {}
 
@@ -403,6 +412,23 @@ public class BpiItem extends BasePersistedObject {
 		this.refPageNo = refPageNo;
 	}
 	
+	@Column(name = "AMT_BUDGET")
+	public Double getAmountBudget() {
+		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	public void setAmountBudget(Double amountBudget) {
+		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	
+	@Column(name = "AMT_SELLING")
+	public Double getAmountSelling() {
+		return (amountSelling!=null?CalculationUtil.round(amountSelling, 2):0.00);
+	}
+
+	public void setAmountSelling(Double amountSelling) {
+		this.amountSelling = (amountSelling!=null?CalculationUtil.round(amountSelling, 2):0.00);
+	}
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@LazyToOne(LazyToOneOption.PROXY)
 	@JoinColumn(name = "Bpi_Page_ID", foreignKey = @ForeignKey(name = "FK_BpiItem_BpiPage_PK"))
@@ -413,6 +439,8 @@ public class BpiItem extends BasePersistedObject {
 	public void setBpiPage(BpiPage bpiPage) {
 		this.bpiPage = bpiPage;
 	}
+
+
 
 }
 

@@ -2,6 +2,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
 		getResourceSummaries: 		getResourceSummaries,
+		getResourceSummariesBySC:	getResourceSummariesBySC,
 		addResourceSummary:			addResourceSummary,
 		updateResourceSummaries:	updateResourceSummaries,
 		deleteResources:			deleteResources
@@ -18,6 +19,19 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				jobNo: jobNo,
 				packageNo: packageNo,
 				objectCode: objectCode
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getResourceSummariesBySC(jobNo, packageNo, objectCode) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getResourceSummariesBySC",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				packageNo: packageNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );

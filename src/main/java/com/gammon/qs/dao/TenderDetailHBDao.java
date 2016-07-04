@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -14,7 +15,6 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 @Repository
@@ -54,16 +54,10 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 			criteria.addOrder(Order.asc("sequenceNo"));
 			return criteria.list(); 
 		}catch (HibernateException he){
-			throw new DataRetrievalFailureException("Fail: getTenderAnalysisDetail((String jobNumber, String packageNo, Integer vendorNo)");
+			he.printStackTrace();
+			//throw new DataRetrievalFailureException("Fail: getTenderAnalysisDetail((String jobNumber, String packageNo, Integer vendorNo)");
 		}
-	}
-	
-	public List<TenderDetail> getTenderAnalysisDetails(JobInfo job, String packageNo, Integer vendorNo) throws DataAccessException{
-		return getTenderAnalysisDetails(job.getJobNumber(), packageNo, vendorNo);
-	}
-	
-	public TenderDetail getTenderAnalysisDetail(JobInfo job, String packageNo, Integer vendorNo, Integer sequenceNo) throws DataAccessException{
-		return getTenderAnalysisDetail(job.getJobNumber(), packageNo, vendorNo, sequenceNo);
+		return null;
 	}
 	
 	public TenderDetail getTenderAnalysisDetail(Tender tender, String billItem, Integer resourceNo) throws Exception{
@@ -203,7 +197,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 		return new ArrayList<TenderDetail>();
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public void deleteByTenderAnalysis(Tender tender) {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -215,6 +209,17 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 		}catch(DataAccessException e){
 			e.printStackTrace();
 		}
+	}*/
+	
+	
+	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	public long deleteByTenderAnalysis(Tender tender) throws DatabaseOperationException {
+		long noOfRecord = 0;
+		getSession().clear();
+		Query query = getSession().createQuery("delete from TenderDetail tenderDetail where Tender_ID =" + tender.getId());
+		noOfRecord = query.executeUpdate();
+		return noOfRecord;
 	}
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 }

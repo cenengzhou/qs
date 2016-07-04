@@ -20,6 +20,7 @@ import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
 import com.gammon.qs.application.BasePersistedObject;
+import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
 @Table(name = "RESOURCE_SUMMARY")
@@ -60,6 +61,14 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 	 * @author koeyyeung
 	 * created on 29th May, 2015**/
 	private String finalized = NOT_FINALIZED; 
+	
+	/**
+	 * @author koeyyeung
+	 * Convert to Amount Based
+	 * 04 Jul, 2016
+	 * **/
+	private Double amountBudget;
+
 	
 	public ResourceSummary() {
 	}
@@ -328,6 +337,14 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 		this.finalized = finalized;
 	}
 
+	@Column(name = "AMT_BUDGET")
+	public Double getAmountBudget() {
+		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	public void setAmountBudget(Double amountBudget) {
+		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	
 	@ManyToOne 
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "Job_Info_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_ResourceSummary_JobInfo_PK"))

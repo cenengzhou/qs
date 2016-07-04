@@ -894,7 +894,7 @@ public class PaymentService{
 				List<TenderDetail> tenderAnalysisDetailList = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
 				if (tenderAnalysis != null && tenderAnalysisDetailList != null && !tenderAnalysisDetailList.isEmpty())
 					for (TenderDetail tenderAnalysisDetail : tenderAnalysisDetailList)
-						budgetAmount += RoundingUtil.multiple(tenderAnalysisDetail.getQuantity(), tenderAnalysisDetail.getFeedbackRateDomestic());
+						budgetAmount += RoundingUtil.multiple(tenderAnalysisDetail.getQuantity(), tenderAnalysisDetail.getRateBudget());
 				if (RoundingUtil.round(totalCertAmount - budgetAmount, 2) > 0) {
 					submitPaymentResponseWrapper.setIsUpdated(false);
 					submitPaymentResponseWrapper.setErrorMsg("Total payment amount was larger than Tender Budget.");

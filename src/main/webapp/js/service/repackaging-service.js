@@ -4,10 +4,10 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     	getLatestRepackaging:		getLatestRepackaging,
     	getRepackagingListByJobNo: 	getRepackagingListByJobNo,
     	
-    	addRepackaging:			addRepackaging,
-    	updateRepackaging:				updateRepackaging,
+    	addRepackaging:				addRepackaging,
+    	updateRepackaging:			updateRepackaging,
     	deleteRepackaging:			deleteRepackaging,
-    	generateSnapshot:				generateSnapshot
+    	generateSnapshot:			generateSnapshot
         
     });
 	

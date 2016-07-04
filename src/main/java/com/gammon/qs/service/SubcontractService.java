@@ -2626,7 +2626,7 @@ public class SubcontractService {
 				taWrapper.setSubcontractorNumber(ta.getVendorNo());
 				Double subcontractSumInDomCurr =0.0;
 				for (TenderDetail taDetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta))
-					subcontractSumInDomCurr += taDetail.getFeedbackRateDomestic()*taDetail.getQuantity();
+					subcontractSumInDomCurr += taDetail.getRateBudget()*taDetail.getQuantity();
 				taWrapper.setSubcontractSumInDomCurr(subcontractSumInDomCurr);
 				taWrapperList.add(taWrapper);
 			}
@@ -2710,7 +2710,7 @@ public class SubcontractService {
 							SubcontractDetailBQ scDetailsInDB = scDetailsHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 							if(scDetailsInDB!=null){
 								//Update SC Details
-								scDetailsInDB.setScRate(taDetail.getFeedbackRateDomestic());
+								scDetailsInDB.setScRate(taDetail.getRateBudget());
 								scDetailsInDB.setApproved(SubcontractDetail.APPROVED);//Change status to "Approved"
 								scDetailsHBDao.update(scDetailsInDB);
 								
@@ -3260,7 +3260,7 @@ public class SubcontractService {
 					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)!=null){
 						for(TenderDetail currentTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
 							taSubcontractSum = taSubcontractSum + 
-							(currentTenderAnalysisDetail.getFeedbackRateDomestic() * currentTenderAnalysisDetail.getQuantity());
+							(currentTenderAnalysisDetail.getRateBudget() * currentTenderAnalysisDetail.getQuantity());
 						}
 					}else
 						return "No Tender Analysis Detail";
@@ -5105,7 +5105,7 @@ public class SubcontractService {
 			for (Tender ta: tenderAnalysisList){
 				if (Integer.valueOf(0).equals(ta.getVendorNo())){//Budget TA
 					for(TenderDetail taDetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
-						ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getFeedbackRateDomestic());
+						ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget());
 						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetails.getResourceNo()));
 						if(resourceSummary==null)
 							return "Tender Analysis should be identical to Resource Summaries in Repackaging for making Payment Requisition.";
@@ -5248,7 +5248,7 @@ public class SubcontractService {
 								SubcontractDetailBQ scDetailsInDB = scDetailsHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 								if(scDetailsInDB!=null){
 									//Update SC Details
-									scDetailsInDB.setScRate(taDetail.getFeedbackRateDomestic());
+									scDetailsInDB.setScRate(taDetail.getRateBudget());
 									scDetailsHBDao.update(scDetailsInDB);
 									
 									taIterator.remove();
@@ -5311,7 +5311,7 @@ public class SubcontractService {
 				if (budgetTA!=null){
 					for (TenderDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
 						if (taDetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
-							scDetails.setCostRate(budgetTADetail.getFeedbackRateDomestic());
+							scDetails.setCostRate(budgetTADetail.getRateBudget());
 						}
 				}
 			}else{
@@ -5322,7 +5322,7 @@ public class SubcontractService {
 			scDetails.setOriginalQuantity(taDetails.getQuantity());
 			scDetails.setQuantity(taDetails.getQuantity());
 			scDetails.setToBeApprovedQuantity(taDetails.getQuantity());
-			scDetails.setScRate(taDetails.getFeedbackRateDomestic());
+			scDetails.setScRate(taDetails.getRateBudget());
 			scDetails.setSubsidiaryCode(taDetails.getSubsidiaryCode());
 			scDetails.setObjectCode(taDetails.getObjectCode());
 			scDetails.setLineType(taDetails.getLineType());
@@ -5352,7 +5352,7 @@ public class SubcontractService {
 		Double scSum = 0.00;
 		//Update scPackage Subcontract Sum
 		for(TenderDetail TADetails: taDetailsList){
-			scSum = scSum + (TADetails.getQuantity()*TADetails.getFeedbackRateDomestic());
+			scSum = scSum + (TADetails.getQuantity()*TADetails.getRateBudget());
 		}
 		
 		if (Subcontract.RETENTION_ORIGINAL.equals(scPackage.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(scPackage.getRetentionTerms()))

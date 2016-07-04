@@ -64,6 +64,13 @@ public class BpiItemResource extends BasePersistedObject {
 	private String refPageNo;
 	private String refItemNo;
 	
+	/**
+	 * @author koeyyeung
+	 * Convert to Amount Based
+	 * 04 Jul, 2016
+	 * **/
+	private Double amountBudget;
+	
 	public BpiItemResource(){
 	}
 
@@ -312,6 +319,14 @@ public class BpiItemResource extends BasePersistedObject {
 		this.refItemNo = refItemNo;
 	}
 
+	@Column(name = "AMT_BUDGET")
+	public Double getAmountBudget() {
+		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	public void setAmountBudget(Double amountBudget) {
+		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	
 	@ManyToOne
 	@LazyToOne(LazyToOneOption.PROXY)
 //	@Cascade(CascadeType.SAVE_UPDATE)

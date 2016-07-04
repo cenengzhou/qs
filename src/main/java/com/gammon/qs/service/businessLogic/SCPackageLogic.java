@@ -130,7 +130,7 @@ public class SCPackageLogic {
 				scPackage.setExchangeRate(TA.getExchangeRate());
 				try { //
 					for(TenderDetail TADetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA)){
-						scSum = scSum + (TADetails.getQuantity()*TADetails.getFeedbackRateDomestic());
+						scSum = scSum + (TADetails.getQuantity()*TADetails.getRateBudget());
 						scDetails = new SubcontractDetailBQ();
 						scDetails.setSubcontract(scPackage);
 						scDetails.setSequenceNo(TADetails.getSequenceNo());
@@ -140,7 +140,7 @@ public class SCPackageLogic {
 								try {
 									for (TenderDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
 										if (TADetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
-											scDetails.setCostRate(budgetTADetail.getFeedbackRateDomestic());
+											scDetails.setCostRate(budgetTADetail.getRateBudget());
 										}
 								} catch (DataAccessException e) {
 									e.printStackTrace();
@@ -153,7 +153,7 @@ public class SCPackageLogic {
 						scDetails.setOriginalQuantity(TADetails.getQuantity());
 						scDetails.setQuantity(TADetails.getQuantity());
 						scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
-						scDetails.setScRate(TADetails.getFeedbackRateDomestic());
+						scDetails.setScRate(TADetails.getRateBudget());
 						scDetails.setSubsidiaryCode(TADetails.getSubsidiaryCode());
 						scDetails.setObjectCode(TADetails.getObjectCode());
 						scDetails.setLineType(TADetails.getLineType());

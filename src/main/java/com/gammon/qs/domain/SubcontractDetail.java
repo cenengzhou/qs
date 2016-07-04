@@ -74,6 +74,17 @@ public class SubcontractDetail extends BasePersistedObject {
 	private Long tenderAnalysisDetail_ID;
 	private Subcontract subcontract;
 
+	/**
+	 * @author koeyyeung
+	 * Convert to Amount Based
+	 * 04 Jul, 2016
+	 * **/
+	private Double amountSubcontract;
+	private Double amountBudget;
+	private Double amountSubcontractTBA;
+
+	
+
 	@Deprecated
 	private String balanceType=""; //%
 	@Transient
@@ -365,6 +376,30 @@ public class SubcontractDetail extends BasePersistedObject {
 	public void setTenderAnalysisDetail_ID(Long tenderAnalysisDetail_ID) {
 		this.tenderAnalysisDetail_ID = tenderAnalysisDetail_ID;
 	}
+	
+	@Column(name = "AMT_SUBCONTRACT")
+	public Double getAmountSubcontract() {
+		return (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	}
+	public void setAmountSubcontract(Double amountSubcontract) {
+		this.amountSubcontract = (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	}
+
+	@Column(name = "AMT_BUDGET")
+	public Double getAmountBudget() {
+		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	public void setAmountBudget(Double amountBudget) {
+		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	}
+	
+	@Column(name = "AMT_SUBCONTRACT_TBA")
+	public Double getAmountSubcontractTBA() {
+		return (amountSubcontractTBA!=null?CalculationUtil.round(amountSubcontractTBA, 2):0.00);
+	}
+	public void setAmountSubcontractTBA(Double amountSubcontractTBA) {
+		this.amountSubcontractTBA = (amountSubcontractTBA!=null?CalculationUtil.round(amountSubcontractTBA, 2):0.00);
+	}
 
 	@ManyToOne
 	@LazyToOne(LazyToOneOption.PROXY)
@@ -376,6 +411,8 @@ public class SubcontractDetail extends BasePersistedObject {
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
 	}
+	
+	
 	
 	public static class LineType{
 		public static String BQ = "BQ";

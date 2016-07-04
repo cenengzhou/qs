@@ -228,7 +228,7 @@ public class HTMLService implements Serializable{
 					if (curTenderAnalysis.getVendorNo().equals(0)){
 						try {
 							for(TenderDetail curTenderAnalysisDetail: tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-								comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic()*curTenderAnalysisDetail.getQuantity();
+								comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget()*curTenderAnalysisDetail.getQuantity();
 							}
 						} catch (DataAccessException e) {
 							e.printStackTrace();
@@ -260,8 +260,8 @@ public class HTMLService implements Serializable{
 						}
 						for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
 							TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
-							if (curTenderAnalysisDetail.getFeedbackRateDomestic()!=null && curTenderAnalysisDetail.getQuantity()!=null)
-								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getFeedbackRateDomestic();
+							if (curTenderAnalysisDetail.getRateBudget()!=null && curTenderAnalysisDetail.getQuantity()!=null)
+								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getRateBudget();
 						}
 						totalSubcontractSumList.add(i,totalSubcontractSum);
 						totalSubcontractSum = new Double(0);
@@ -309,14 +309,14 @@ public class HTMLService implements Serializable{
 							for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
 								TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
 
-								if (curTenderAnalysisDetail.getFeedbackRateDomestic()!=null)
-									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getFeedbackRateDomestic());
+								if (curTenderAnalysisDetail.getRateBudget()!=null)
+									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getRateBudget());
 								if (curTenderAnalysisDetail.getQuantity()!=null)
 									logger.info("curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty()" + curTenderAnalysisDetail.getQuantity());
 
-								if (curTenderAnalysisDetail.getFeedbackRateDomestic()!=new Double(0))
+								if (curTenderAnalysisDetail.getRateBudget()!=new Double(0))
 									totalSubcontractSum +=((curTenderAnalysisDetail.getQuantity()!=null?curTenderAnalysisDetail.getQuantity():new Double(0))
-											*(curTenderAnalysisDetail.getFeedbackRateDomestic()!=null?curTenderAnalysisDetail.getFeedbackRateDomestic():new Double(0)));
+											*(curTenderAnalysisDetail.getRateBudget()!=null?curTenderAnalysisDetail.getRateBudget():new Double(0)));
 
 							}
 							totalSubcontractSumList.add(i,totalSubcontractSum);
@@ -331,7 +331,7 @@ public class HTMLService implements Serializable{
 						else {
 							try {
 								for (TenderDetail curTenderAnalysisDetail : tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-									comparableBudgetAmount += curTenderAnalysisDetail.getFeedbackRateDomestic() * curTenderAnalysisDetail.getQuantity();
+									comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget() * curTenderAnalysisDetail.getQuantity();
 								}
 							} catch (DataAccessException e) {
 								e.printStackTrace();

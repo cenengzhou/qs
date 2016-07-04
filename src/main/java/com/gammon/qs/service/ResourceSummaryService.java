@@ -1250,6 +1250,11 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryDao.getResourceSummaries(job, packageNo, objectCode);
 	}
 	
+	public List<ResourceSummary> getResourceSummariesBySC(String jobNo, String packageNo) throws Exception {
+		JobInfo job = jobDao.obtainJobInfo(jobNo);
+		return bqResourceSummaryDao.getResourceSummariesBySC(job, packageNo);
+	}
+	
 
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(String jobNo) throws DatabaseOperationException{
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
