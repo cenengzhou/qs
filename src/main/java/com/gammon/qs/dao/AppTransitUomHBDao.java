@@ -11,6 +11,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppTransitUom;
 @Repository
 public class AppTransitUomHBDao extends BaseHibernateDao<AppTransitUom> {
@@ -49,7 +50,7 @@ public class AppTransitUomHBDao extends BaseHibernateDao<AppTransitUom> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AppTransitUom> searchTransitUomMatches(String causewayUom, String jdeUom) throws Exception{
+	public List<AppTransitUom> searchTransitUomMatches(String causewayUom, String jdeUom) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		if(!GenericValidator.isBlankOrNull(causewayUom)){
 			causewayUom = causewayUom.trim().toUpperCase().replace("*", "%");

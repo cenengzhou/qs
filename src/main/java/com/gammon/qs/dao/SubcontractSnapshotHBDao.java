@@ -131,7 +131,7 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		}
 	}
 
-	public Boolean callStoredProcedureToGenerateSnapshot() throws Exception {
+	public Boolean callStoredProcedureToGenerateSnapshot() throws DatabaseOperationException {
 		Boolean completed = false;
 
 		SessionFactoryImplementor sfi = (SessionFactoryImplementor) getSessionFactory();

@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.wrapper.UDC;
 
 @RestController
@@ -33,6 +36,8 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private SecurityService securityService;
 	//@Autowired
 	//private SCPackageSPDao scPackageSPDao;
 	
@@ -101,7 +106,40 @@ public class SubcontractController {
 		return result;
 	}
 	
+	@RequestMapping(value = "RunProvisionPostingManually", method = RequestMethod.POST)
+	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){
+		String username = securityService.getCurrentUser().getUsername();
+		Boolean overrideOldPosting = false;
+		subcontractService.runProvisionPostingManually(jobNumber, glDate, overrideOldPosting, username);
+	}
 	
+	@RequestMapping(value = "GenerateSCPackageSnapshotManually", method = RequestMethod.POST)
+	public void generateSCPackageSnapshotManually(){
+		subcontractService.generateSCPackageSnapshotManually();
+	}
 	
-	
+	@RequestMapping(value = "UpdateF58001FromSCPackageManually", method = RequestMethod.POST)
+	public void updateF58001FromSCPackageManually(){
+		subcontractService.updateF58001FromSCPackageManually();
+	}
+
+	@RequestMapping(value = "SearchSystemConstants", method = RequestMethod.POST)
+	public List<AppSubcontractStandardTerms> searchSystemConstants(){
+		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
+	}
+
+	@RequestMapping(value = "UpdateMultipleSystemConstants", method = RequestMethod.POST)
+	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
+		String username = securityService.getCurrentUser().getUsername();
+		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, username);
+	}
+
+	@RequestMapping(value = "InactivateSystemConstant", method = RequestMethod.POST)
+	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
+		String username = securityService.getCurrentUser().getUsername();
+		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
+			subcontractService.inactivateSystemConstant(appSubcontractStandardTerms, username);
+		}
+	}
+
 }

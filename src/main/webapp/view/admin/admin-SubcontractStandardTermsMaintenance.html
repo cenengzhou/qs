@@ -8,35 +8,34 @@
 	</ol>
 	<!-- end breadcrumb -->
 
-	<div class="row col-md-12">
 		<!-- ng-style="{height: 800 + 'px'}" -->
-<under-construction></under-construction>
 		<!-- Main content -->
 		<div class="row col-md-12">
-			<div class="box box-primary">
-				<table class="table">
-					<tr class="box box-primary">
-						<td colspan="2"><button
-								class="btn btn-block btn-primary glyphicon glyphicon-edit">
-								Update</button></td>
-						<td colspan="2"><button
-								class="btn btn-block btn-primary glyphicon glyphicon-remove-sign">
-								Delete</button></td>
-						<td colspan="2"><button
-								class="btn btn-block btn-primary glyphicon glyphicon-plus-sign">
-								Add</button></td>
-					</tr>
-				</table>
-
-			</div>
+			<div ui-grid="gridOptions" external-scopes="clickHandler"
+				ui-grid-row-edit ui-grid-pagination ui-grid-selection
+				ui-grid-cellnav ui-grid-edit class="grid" style="height: {{innerHeight-180}}px;overflow:auto"></div>
 		</div>
 
-		<div class="row col-md-12">
-			<div id="" ui-grid="standardTermsMaintenanceCtrl.gridOptions"
-				external-scopes="clickHandler" ui-grid-selection ui-grid-cellnav
-				ui-grid-edit class="grid" style="height: 500px; width =: 1600px"></div>
-		</div>
+		<div class="row">
 
-	</div>
+			<table class="box box-primary col-md-12">
+				<tr>
+					<td ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
+						<button class="btn btn-block btn-info glyphicon glyphicon-edit" ng-click="onUpdate()">
+							Update</button>
+					</td>
+					<td ng-show="selectedRows.length>0">
+						<button
+							class="btn btn-block btn-danger glyphicon glyphicon-remove-sign" ng-click="onDelete()">Delete</button>
+					</td>
+					<td>
+						<button
+							class="btn btn-block btn-warning glyphicon glyphicon-plus-sign">
+							Add</button>
+					</td>
+				</tr>
+			</table>
+
+		</div>
 </div>
 <!-- end #content -->

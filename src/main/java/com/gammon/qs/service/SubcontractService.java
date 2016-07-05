@@ -3715,8 +3715,14 @@ public class SubcontractService {
 			return systemConstantHBDaoImpl.getSystemConstant("59", "00000");
 	}
 
-	public List<AppSubcontractStandardTerms> searchSystemConstants(String systemCode, String company, String scPaymentTerm, Double scMaxRetentionPercent, Double scInterimRetentionPercent, Double scMOSRetentionPercent, String retentionType, String finQS0Review)  throws DatabaseOperationException {
-		return systemConstantHBDaoImpl.searchSystemConstants(systemCode, company, scPaymentTerm, scMaxRetentionPercent, scInterimRetentionPercent, scMOSRetentionPercent, retentionType, finQS0Review);
+	public List<AppSubcontractStandardTerms> searchSystemConstants(String systemCode, String company, String scPaymentTerm, Double scMaxRetentionPercent, Double scInterimRetentionPercent, Double scMOSRetentionPercent, String retentionType, String finQS0Review) {
+		List<AppSubcontractStandardTerms> appSubcontractStandardTermsList = null;
+		try {
+			appSubcontractStandardTermsList = systemConstantHBDaoImpl.searchSystemConstants(systemCode, company, scPaymentTerm, scMaxRetentionPercent, scInterimRetentionPercent, scMOSRetentionPercent, retentionType, finQS0Review);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return appSubcontractStandardTermsList;
 	}
 
 	/**
@@ -3725,12 +3731,24 @@ public class SubcontractService {
 	 * 
 	 * @throws DatabaseOperationException
 	 */
-	public Boolean inactivateSystemConstant(AppSubcontractStandardTerms request, String user) throws DatabaseOperationException {
-		return systemConstantHBDaoImpl.inactivateSystemConstant(request, user);
+	public Boolean inactivateSystemConstant(AppSubcontractStandardTerms request, String user) {
+		Boolean result = false;
+		try {
+			result = systemConstantHBDaoImpl.inactivateSystemConstant(request, user);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
-	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String user) throws DatabaseOperationException {
-		return systemConstantHBDaoImpl.updateMultipleSystemConstants(requests, user);
+	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String user) {
+		Boolean result = false;
+		try {
+			result = systemConstantHBDaoImpl.updateMultipleSystemConstants(requests, user);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String user) throws DatabaseOperationException {
@@ -3817,7 +3835,7 @@ public class SubcontractService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 3:04:29 PM
 	 */
-	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting, String username) throws Exception {
+	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting, String username) {
 		if (glDate == null)
 			throw new NullPointerException("GL Date cannot be null");
 
@@ -3825,9 +3843,14 @@ public class SubcontractService {
 		if (jobNumber != null && jobNumber.trim().length() > 0) {
 			logger.info("Job:" + jobNumber + " - GLDate: " + glDate.toString());
 			List<JobInfo> jobList = new ArrayList<JobInfo>();
-			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-			jobList.add(job);
-			provisionPostingService.postProvisionByJobs(jobList, glDate, overrideOldPosting, username);
+			JobInfo job;
+			try {
+				job = jobHBDao.obtainJobInfo(jobNumber);
+				jobList.add(job);
+				provisionPostingService.postProvisionByJobs(jobList, glDate, overrideOldPosting, username);
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
 
 			// postProvisionByJob(jobNumber, glDate, overrideOldPosting, user);
 		}
@@ -5072,11 +5095,15 @@ public class SubcontractService {
 		return messageConfig.getSubcontractHoldMessage();
 	}
 	
-	public Boolean generateSCPackageSnapshotManually() throws Exception{
+	public Boolean generateSCPackageSnapshotManually(){
 		logger.info("-----------------------generateSCPackageSnapshotManually(START)-------------------------");
 		boolean completed = false;
 		
-		completed = scPackageSnapshotDao.callStoredProcedureToGenerateSnapshot();
+		try {
+			completed = scPackageSnapshotDao.callStoredProcedureToGenerateSnapshot();
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
 		
 		logger.info("------------------------generateSCPackageSnapshotManually(END)---------------------------");
 		return completed;
@@ -5406,11 +5433,15 @@ public class SubcontractService {
 	
 	/**@author koeyyeung
 	 * created on 24th Apr, 2015**/
-	public Boolean updateF58001FromSCPackageManually () throws Exception {
+	public Boolean updateF58001FromSCPackageManually () {
 		logger.info("-----------------------updateF58001FromSCPackageManually(START)-------------------------");
 		boolean completed = false;
 		
-		completed = subcontractHBDao.callStoredProcedureToUpdateF58001();
+		try {
+			completed = subcontractHBDao.callStoredProcedureToUpdateF58001();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		logger.info("------------------------updateF58001FromSCPackageManually(END)---------------------------");
 		return completed;

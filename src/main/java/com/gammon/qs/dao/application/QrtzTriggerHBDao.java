@@ -22,7 +22,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 	}
 	
 	public QrtzTriggers getTrigger(String triggerName, String triggerGroup){
-		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(this.getType());
+		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("triggerName", triggerName));
 		criteria.add(Restrictions.eq("triggerGroup", triggerGroup));
 		return (QrtzTriggers) criteria.uniqueResult();

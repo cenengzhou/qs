@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
@@ -824,6 +824,29 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
     });
   }]);
 
+mainApp.config(['momentPickerProvider', function(momentPickerProvider){
+	  momentPickerProvider.options({
+          /* Picker properties */
+          locale:        'en',
+          format:        'L LTS',
+          minView:       'decade',
+          maxView:       'minute',
+          startView:     'year',
+          today:         false,
+          
+          /* Extra: Views properties */
+          leftArrow:     '&larr;',
+          rightArrow:    '&rarr;',
+          yearsFormat:   'YYYY',
+          monthsFormat:  'MMM',
+          daysFormat:    'D',
+          hoursFormat:   'HH:[00]',
+          minutesFormat: moment.localeData().longDateFormat('LT').replace(/[aA]/, ''),
+          secondsFormat: 'ss',
+          minutesStep:   1,
+          secondsStep:   1
+      });
+}]);
 
 
 /**
@@ -866,7 +889,16 @@ mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location',
 	.then(function(data){
 	    $rootScope.sessionId = data;
 	});
-    
+	
+	var initInnerSize = function(){
+		$rootScope.innerHeight = $window.innerHeight;
+		$rootScope.innerWidth = $window.innerWidth;
+		console.log("innerHeight:" + $rootScope.innerHeight + " innerWidth:" + $rootScope.innerWidth);
+	};
+	angular.element($window).bind('resize', function() {
+		initInnerSize();
+	});
+	initInnerSize();
 }]);
 
 

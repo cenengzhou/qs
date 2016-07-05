@@ -298,3 +298,16 @@ mainApp.directive('underConstruction', function(){
 		templateUrl: 'view/admin/admin-mask.html'
 	};
 });
+
+mainApp.directive('timestampToString', function($filter) {
+	  return {
+		    restrict: 'A',
+		    require: 'ngModel',
+		    link: function (scope, element, attrs, ngModel) {
+		      ngModel.$formatters.push(function (value) {
+		        return $filter('date')(new Date(value),'dd MMM yyyy HH:mm');
+		      });
+		    }
+		  };
+});
+	  

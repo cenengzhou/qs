@@ -29,9 +29,9 @@ import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.ProvisionPostingHist;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailOA;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.admin.MailContentGenerator;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -188,7 +188,7 @@ public class ProvisionPostingService {
 	 * modified on Jan 21, 2014 1:55:05 PM
 	 * @throws Exception 
 	 */
-	public void postProvisionByJobs(List<JobInfo> jobList, Date glDate, boolean overwritePreviousProvisionPosting, String username) throws Exception {
+	public void postProvisionByJobs(List<JobInfo> jobList, Date glDate, boolean overwritePreviousProvisionPosting, String username) {
 		// Global setup
 		if (this.startTime == null)
 			this.startTime = new Date();
@@ -199,7 +199,11 @@ public class ProvisionPostingService {
 
 		// --------------------- START: Setup ---------------------
 		// JDE EDI Batch No. & EDI Transaction No.
-		ediBatchNo = createGLDao.getEdiBatchNumber();
+		try {
+			ediBatchNo = createGLDao.getEdiBatchNumber();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		ediTransactionNo = 10000;
 
 		// Counters
@@ -228,7 +232,11 @@ public class ProvisionPostingService {
 		// After processing calculation of provision for all jobs, post the provision records that have inserted earlier
 		logger.info("Provision records start posting... " + "ediBatchNo: " + ediBatchNo + " username: " + username);
 		if (needToPost)
-			createGLDao.postGLByEdiBatchNo(ediBatchNo, username);
+			try {
+				createGLDao.postGLByEdiBatchNo(ediBatchNo, username);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		else
 			logger.info("No Provision record to be posted.");
 	}

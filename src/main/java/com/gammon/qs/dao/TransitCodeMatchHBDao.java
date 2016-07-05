@@ -10,6 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.TransitCodeMatch;
 @Repository
 public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
@@ -55,7 +56,7 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 	
 	@SuppressWarnings("unchecked")
 	public List<TransitCodeMatch> searchTransitCodeMatches(String matchingType, String resourceCode, 
-			String objectCode, String subsidiaryCode) throws Exception{
+			String objectCode, String subsidiaryCode) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		if(!GenericValidator.isBlankOrNull(matchingType))
 			criteria.add(Restrictions.eq("matchingType", matchingType));

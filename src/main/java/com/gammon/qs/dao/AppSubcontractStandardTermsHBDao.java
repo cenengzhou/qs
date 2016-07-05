@@ -141,7 +141,7 @@ public class AppSubcontractStandardTermsHBDao extends BaseHibernateDao<AppSubcon
 	
 	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String user) throws DatabaseOperationException {
 		try {
-			Session session = getSessionFactory().getCurrentSession();
+			Session session = getSession();
 			for(AppSubcontractStandardTerms request : requests) {
 				Criteria criteria = session.createCriteria(this.getType());
 				criteria.add(Restrictions.eq("systemCode", request.getSystemCode()));

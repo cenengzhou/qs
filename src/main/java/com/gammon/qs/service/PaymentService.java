@@ -2110,11 +2110,15 @@ public class PaymentService{
 		
 	/**@author koeyyeung
 	 * created on 24th Apr, 2015**/
-	public Boolean updateF58011FromSCPaymentCertManually () throws Exception {
+	public Boolean updateF58011FromSCPaymentCertManually () {
 		logger.info("-----------------------updateF58011FromSCPaymentCertManually(START)-------------------------");
 		boolean completed = false;
 		
-		completed = scPaymentCertDao.callStoredProcedureToUpdateF58011();
+		try {
+			completed = scPaymentCertDao.callStoredProcedureToUpdateF58011();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		logger.info("------------------------updateF58011FromSCPaymentCertManually(END)---------------------------");
 		return completed;

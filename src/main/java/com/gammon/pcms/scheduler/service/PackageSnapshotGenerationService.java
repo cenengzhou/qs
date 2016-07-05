@@ -133,8 +133,8 @@ public class PackageSnapshotGenerationService {
 			}
 
 			// Hibernate keep writing these records into the database instead of caching them in the memory
-			scPackageHBDao.getSessionFactory().getCurrentSession().flush();
-			scPackageHBDao.getSessionFactory().getCurrentSession().clear();
+			scPackageHBDao.getSession().flush();
+			scPackageHBDao.getSession().clear();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -9,8 +9,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 public class FileUtil {
 	private static final int MAX_FILE_SIZE = Integer.MAX_VALUE;
@@ -64,7 +67,10 @@ public class FileUtil {
 		@SuppressWarnings("unused")
 		int numberOfFiles = 0;
 
-		MultipartHttpServletRequest req = (MultipartHttpServletRequest)request;
+//		MultipartHttpServletRequest req = (MultipartHttpServletRequest)request;
+		HttpServletRequest originalRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		MultipartHttpServletRequest req = new DefaultMultipartHttpServletRequest(originalRequest);
+
 		MultipartFile file = null;
 		List<MultipartFile> files = new ArrayList<MultipartFile>();
 		

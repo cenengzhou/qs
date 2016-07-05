@@ -32,6 +32,7 @@ import com.gammon.qs.dao.TransitBpiHBDao;
 import com.gammon.qs.dao.TransitCodeMatchHBDao;
 import com.gammon.qs.dao.TransitHBDao;
 import com.gammon.qs.dao.TransitResourceHBDao;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
 import com.gammon.qs.domain.BpiBill;
 import com.gammon.qs.domain.BpiItem;
@@ -1332,7 +1333,26 @@ public class TransitService implements Serializable {
 		});
 		return searchTransitCodeMatchesByPage(0);
 	}
-	
+
+	public List<TransitCodeMatch> obtainTransitCodeMatcheList(String matchingType, String resourceCode, 
+			String objectCode, String subsidiaryCode){
+		List<TransitCodeMatch> transitCodeMatchList = null;
+		try {
+			transitCodeMatchList = transitCodeMatchDao.searchTransitCodeMatches(matchingType, resourceCode, objectCode, subsidiaryCode);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		Collections.sort(transitCodeMatchList, new Comparator<TransitCodeMatch>(){
+			public int compare(TransitCodeMatch cm1, TransitCodeMatch cm2) {
+				int typeComp = cm1.getMatchingType().compareTo(cm2.getMatchingType());
+				if(typeComp != 0)
+					return typeComp;
+				return cm1.getResourceCode().compareTo(cm2.getResourceCode());
+			}
+		});
+		return transitCodeMatchList;
+	}
+
 	public PaginationWrapper<TransitCodeMatch> searchTransitCodeMatchesByPage(int pageNum){
 		PaginationWrapper<TransitCodeMatch> wrapper = new PaginationWrapper<TransitCodeMatch>();
 		wrapper.setCurrentPage(pageNum);
@@ -1384,6 +1404,21 @@ public class TransitService implements Serializable {
 		return searchTransitUomMatchesByPage(0);
 	}
 	
+	public List<AppTransitUom> obtainTransitUomMatcheList(String causewayUom, String jdeUom){
+		List<AppTransitUom> appTransitUomList = null;
+		try {
+			appTransitUomList = transitUomMatchDao.searchTransitUomMatches(causewayUom, jdeUom);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		Collections.sort(appTransitUomList, new Comparator<AppTransitUom>(){
+			public int compare(AppTransitUom o1, AppTransitUom o2) {
+				return o1.getCausewayUom().compareTo(o2.getCausewayUom());
+			}
+		});
+		return appTransitUomList;
+	}
+
 	public PaginationWrapper<AppTransitUom> searchTransitUomMatchesByPage(int pageNum){
 		PaginationWrapper<AppTransitUom> wrapper = new PaginationWrapper<AppTransitUom>();
 		wrapper.setCurrentPage(pageNum);

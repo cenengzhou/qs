@@ -594,7 +594,7 @@ public class MainCertService {
 	
 	/**@author koeyyeung
 	 * created on 5th Aug, 2015**/
-	public Boolean updateMainCertFromF03B14Manually () throws Exception {
+	public Boolean updateMainCertFromF03B14Manually () {
 		logger.info("-----------------------updateMainCertFromF03B14Manually(START)-------------------------");
 		boolean completed= false;
 		try {

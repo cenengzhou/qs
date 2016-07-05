@@ -360,7 +360,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	}
 	
 	public void addSCDetailVOWithBudget(SubcontractDetail scDetailToUpdate) throws DatabaseOperationException {
-		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(getType());
+		Criteria criteria = getSession().createCriteria(getType());
 		criteria.add(Restrictions.eq("subcontract", scDetailToUpdate.getSubcontract()));
 		criteria.add(Restrictions.eq("resourceNo", scDetailToUpdate.getResourceNo()));
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
@@ -511,7 +511,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 
 	@SuppressWarnings("unchecked")
 	public List<SubcontractDetail> getSCDetailsWithCorrSC(Subcontract subcontract) {
-		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(getType());
+		Criteria criteria = getSession().createCriteria(getType());
 		criteria.add(Restrictions.eq("subcontract", subcontract));
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.isNotNull("contraChargeSCNo"));
@@ -522,7 +522,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 
 	@SuppressWarnings("unchecked")
 	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
-		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(getType());
+		Criteria criteria = getSession().createCriteria(getType());
 		criteria.createAlias("subcontract", "subcontract");
 		criteria.add(Restrictions.eq("subcontract.subcontractStatus",Integer.valueOf(500)));
 		criteria.createAlias("subcontract.jobInfo", "jobInfo");

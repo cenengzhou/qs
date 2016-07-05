@@ -55,4 +55,9 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
 	}
 
+	@RequestMapping(value = "UpdateMainCertFromF03B14Manually", method = RequestMethod.POST)
+	public void updateMainCertFromF03B14Manually(){
+		mainCertService.updateMainCertFromF03B14Manually();
+	}
+
 }

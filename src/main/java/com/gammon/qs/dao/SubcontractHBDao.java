@@ -451,7 +451,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	@SuppressWarnings("unchecked")
 	public List<Subcontract> obtainPackageListForSCPaymentPanel(String jobNumber) {
 		String[] packageNoArray; 
-		Criteria criteriaForPaymentCert = scPaymentCertHBDao.getSessionFactory().getCurrentSession().createCriteria(PaymentCert.class);
+		Criteria criteriaForPaymentCert = scPaymentCertHBDao.getSession().createCriteria(PaymentCert.class);
 		criteriaForPaymentCert.add(Restrictions.eq("jobNo", jobNumber.trim()));
 		List<PaymentCert> scPaymentCertList = criteriaForPaymentCert.list();
 		

@@ -88,4 +88,10 @@ public class PaymentController {
 		}
 		return paymentCertViewWrapper;
 	}
+	
+	@RequestMapping(value = "UpdateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
+	public void updateF58011FromSCPaymentCertManually(){
+		paymentService.updateF58011FromSCPaymentCertManually();
+	}
+
 }
