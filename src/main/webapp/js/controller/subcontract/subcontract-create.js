@@ -174,7 +174,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontract
 				});
 	}
 
-	function addSubcontract(){console.log("addSubcontract()");
+	function addSubcontract(){
 	subcontractService.addSubcontract($cookieStore.get("jobNo"), $scope.newSubcontract)
 	.then(
 			function( data ) {
@@ -190,20 +190,6 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontract
 
 			});
 	}
-
-	//Listen for location changes and call the callback
-	/*$scope.$on('$locationChangeStart', function(event){
-		//console.log("Location changed");
-		if(!$scope.saveBoolean){
-			var confirmed = window.confirm("Are you sure to exit this page?");
-			if(confirmed)
-				$uibModalInstance.close();
-			else{
-				// Prevent the browser default action (Going back):
-				event.preventDefault();            
-			}
-		}
-	});*/
 
 }]);
 

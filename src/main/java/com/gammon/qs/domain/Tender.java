@@ -52,6 +52,8 @@ public class Tender extends BasePersistedObject{
 	private Date datePrepared;
 	private String notes = " ";
 	
+	private String nameSubcontractor; 
+	
 	public Tender() {
 		super();
 	}
@@ -183,6 +185,16 @@ public class Tender extends BasePersistedObject{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	
+
+	@Column(name = "NAME_SUBCONTRACTOR", length = 20)
+	public String getNameSubcontractor() {
+		return nameSubcontractor;
+	}
+
+	public void setNameSubcontractor(String nameSubcontractor) {
+		this.nameSubcontractor = nameSubcontractor;
+	}
 
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
@@ -193,4 +205,6 @@ public class Tender extends BasePersistedObject{
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
 	}
+
+	
 }

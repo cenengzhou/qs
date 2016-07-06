@@ -89,7 +89,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 					 if(data.length!=0){
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 						}else{
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources has been updated.");
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
 							loadResourceSummaries();
 						}
 				 });

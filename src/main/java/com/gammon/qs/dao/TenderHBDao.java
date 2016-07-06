@@ -1,6 +1,7 @@
 package com.gammon.qs.dao;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -118,19 +119,17 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisList(JobInfo jobInfo, String packageNo) throws Exception{
+	public List<Tender> obtainTenderAnalysisList(String jobNo, String packageNo) throws Exception{
 
-		List<Tender> result;
+		List<Tender> result = null;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontract", "subcontract");
-			criteria.add(Restrictions.eq("subcontract.jobInfo", jobInfo));
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.trim()));
+			criteria.add(Restrictions.eq("jobNo", jobNo));
+			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
 			criteria.addOrder(Order.asc("vendorNo"));
 			result = criteria.list();
 		}catch (HibernateException he){
-			logger.info("Fail: getTenderAnalyses(Job job, String packageNo)");
-			throw new DatabaseOperationException(he);
+			he.printStackTrace();
 		}
 		return result;	
 	}
@@ -152,22 +151,6 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 			throw new DatabaseOperationException(he);
 		}
 		return result;	
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisListWithDetails(Subcontract subcontract) throws DatabaseOperationException{
-
-		List<Tender> tenderAnalyses;
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("subcontract", subcontract));
-			criteria.addOrder(Order.asc("vendorNo"));
-			tenderAnalyses = criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getTenderAnalyses(Job job, String packageNo)");
-			throw new DatabaseOperationException(he);
-		}
-		return tenderAnalyses;	
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -193,12 +176,21 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	public void updateTenderAnalysisAndTADetails(Tender tenderAnalysis, List<TenderDetail> taDetails) throws DatabaseOperationException{
-		logger.info("taDetails size: "+taDetails.size());
+		Double totalBudget = 0.0;
+		int sequence = 1;
 		tenderAnalysisDetailHBDao.deleteByTenderAnalysis(tenderAnalysis); //Will delete records
 		for(TenderDetail taDetail : taDetails){
+			taDetail.setSequenceNo(sequence++);
 			taDetail.setTender(tenderAnalysis); //Should save taDetail through cascades
+			
+			totalBudget += taDetail.getAmountSubcontract();
 			tenderAnalysisDetailHBDao.insert(taDetail);
 		}
+
+		if(tenderAnalysis.getVendorNo()!=0){
+			tenderAnalysis.setAmtBuyingGainLoss(new BigDecimal(tenderAnalysis.getBudgetAmount()-totalBudget));
+		}
+
 		saveOrUpdate(tenderAnalysis);
 	}
 	

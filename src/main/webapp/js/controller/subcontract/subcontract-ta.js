@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resourceSummaryService', 'tenderService', 'modalService', '$state',
-                                         function ($scope, $http, $location, resourceSummaryService, tenderService, modalService, $state) {
+mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'modalService', '$state', 'uiGridConstants',
+                                         function ($scope, resourceSummaryService, tenderService, modalService, $state, uiGridConstants) {
 	var accountBalance = {};
 	loadResourceSummaries();
 	loadTenderDetailList();
@@ -12,7 +12,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 			enableFullRowSelection: true,
 			multiSelect: true,
 			//showGridFooter : true,
-			//showColumnFooter : true,
+			showColumnFooter : true,
 			//fastWatch : true,
 
 			exporterMenuPdf: false,
@@ -24,7 +24,8 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 			             { field: 'unit'},
 			             { field: 'quantity', enableFiltering: false},
 			             { field: 'rate', enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false},
+			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
+		            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
 			             ]
 
 	};
@@ -40,7 +41,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 			enableGridMenu : true,
 			enableRowSelection: true,
 			multiSelect: false,
-
+			showColumnFooter : true,
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
 			rowEditWaitInterval :-1,
@@ -53,7 +54,9 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 			             { field: 'unit'},
 			             { field: 'quantity', enableFiltering: false},
 			             { field: 'rateBudget', enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false},
+			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
+
 			             ]
 
 	};
@@ -157,7 +160,10 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 	$scope.save = function () {
 		var ta = $scope.gridOptionsTa.data;
 		console.log(ta);
+		
+		//Validate Account Balance
 		var taBalance = JSON.parse(JSON.stringify(accountBalance));
+		
 		for (i in ta){
 			var objectCode = ta[i]['objectCode'];
 			var subsidiaryCode = ta[i]['subsidiaryCode'];
@@ -175,7 +181,26 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 			}
 		}
 		
-		updateTenderDetails(ta);
+		
+		//Update
+		var newTADetailList = [];
+		for (i in ta){
+			var newTADetail = {
+					//billItem : ta[i]['billItem'],
+					objectCode: ta[i]['objectCode'],
+					subsidiaryCode: ta[i]['subsidiaryCode'],
+					description: ta[i]['description'],
+					unit: ta[i]['unit'],
+					quantity: ta[i]['quantity'],
+					rateBudget: ta[i]['rateBudget'],
+					amountBudget: ta[i]['amountBudget'],
+			}
+			newTADetailList.push(newTADetail);
+		}
+		
+		console.log(newTADetailList);
+		
+		updateTenderDetails(newTADetailList);
 	};
 
 
@@ -197,7 +222,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 							accountBalance[(objectCode).concat(subsidiaryCode)] =  data[i]['amountBudget'];
 
 					}
-					console.log(accountBalance);
+					//console.log(accountBalance);
 
 				});
 	}
@@ -206,7 +231,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, 0)
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					$scope.gridOptionsTa.data= data;
 
 				});
@@ -216,7 +241,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, 0, "", "", taData, true)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{

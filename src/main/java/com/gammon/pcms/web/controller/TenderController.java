@@ -36,12 +36,12 @@ public class TenderController {
 	@RequestMapping(value = "getTenderDetailList", method = RequestMethod.GET)
 	public List<TenderDetail> getTenderDetailList(@RequestParam(name="jobNo") String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
-													@RequestParam(name="vendorNo") Integer vendorNo){
+													@RequestParam(name="subcontractorNo") Integer subcontractorNo){
 
 		List<TenderDetail> tenderDetailList = null;
 		try {
 			
-			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, vendorNo);
+			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, subcontractorNo);
 			logger.info("tenderDetailList: "+tenderDetailList.size());;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,12 +52,12 @@ public class TenderController {
 	@RequestMapping(value = "getTender", method = RequestMethod.GET)
 	public Tender getTender(@RequestParam(name="jobNo") String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
-													@RequestParam(name="vendorNo") Integer vendorNo){
+													@RequestParam(name="subcontractorNo") Integer subcontractorNo){
 
 		Tender tender = null;
 		try {
 			
-			tender = tenderService.obtainTender(jobNo, subcontractNo, vendorNo);
+			tender = tenderService.obtainTender(jobNo, subcontractNo, subcontractorNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -85,12 +85,25 @@ public class TenderController {
 	@RequestMapping(value = "createTender", method = RequestMethod.POST)
 	public String createTender(@RequestParam(name="jobNo") String jobNo, 
 								@RequestParam(name="subcontractNo") String subcontractNo,
-								@RequestParam(name="vendorNo") Integer vendorNo){
+								@RequestParam(name="subcontractorNo") Integer subcontractorNo){
 
 		String result = "";
 		try {
 			
-			result = tenderService.createTender(jobNo, subcontractNo, vendorNo);
+			result = tenderService.createTender(jobNo, subcontractNo, subcontractorNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
+	@RequestMapping(value = "updateRecommendedTender", method = RequestMethod.POST)
+	public String updateRecommendedTender(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo,
+										@RequestParam(name="subcontractorNo") Integer subcontractorNo){
+		String result = "";
+		try {
+			result = tenderService.updateRecommendedTender(jobNo, subcontractNo, subcontractorNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -100,27 +113,27 @@ public class TenderController {
 	@RequestMapping(value = "updateTenderDetails", method = RequestMethod.POST)
 	public String updateTenderDetails(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
-										@RequestParam(name="vendorNo") Integer vendorNo,
+										@RequestParam(name="subcontractorNo") Integer subcontractorNo,
 										@RequestParam(name="currencyCode") String currencyCode,
 										@RequestParam(name="exchangeRate") Double exchangeRate,
 										@RequestParam(name="validate") Boolean validate,
 										@Valid @RequestBody List<TenderDetail> taDetails){
 		String result = "";
 		try {
-			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, vendorNo, currencyCode, exchangeRate, taDetails, validate);
+			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, taDetails, validate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		return result;
 	}
 	
-	@RequestMapping(value = "deleteTender", method = RequestMethod.DELETE)
+	@RequestMapping(value = "deleteTender", method = RequestMethod.POST)
 	public String deleteTender(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
-										@RequestParam(name="vendorNo") Integer vendorNo){
+										@RequestParam(name="subcontractorNo") Integer subcontractorNo){
 		String result = "";
 		try {
-			result = tenderService.deleteTender(jobNo, subcontractNo, vendorNo);
+			result = tenderService.deleteTender(jobNo, subcontractNo, subcontractorNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

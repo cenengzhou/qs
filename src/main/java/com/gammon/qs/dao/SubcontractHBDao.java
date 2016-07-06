@@ -30,6 +30,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Tender;
+import com.gammon.qs.domain.TenderDetail;
 @Repository
 public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 
@@ -37,6 +38,8 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	private StoredProcedureConfig storedProcedureConfig;
 	@Autowired
 	private TenderHBDao tenderAnalysisHBdao;
+	@Autowired
+	private TenderDetailHBDao tenderDetailDao;
 	@Autowired
 	private PaymentCertHBDao scPaymentCertHBDao;
 	
@@ -411,13 +414,16 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		}
 	}
 
-	public void resetPackageTA(Subcontract subcontract) throws DatabaseOperationException{
+	public void resetPackageTA(Subcontract subcontract) throws Exception{
 		//delete all ta records
-		List<Tender> tenderAnalysisList = tenderAnalysisHBdao.obtainTenderAnalysisListWithDetails(subcontract);
-		if(tenderAnalysisList != null){
-			for(Tender tenderAnalysis : tenderAnalysisList){
-				tenderAnalysisHBdao.delete(tenderAnalysis);
+		List<Tender> tenderAnalysisList = tenderAnalysisHBdao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
+		for(Tender tenderAnalysis : tenderAnalysisList){
+			List<TenderDetail> details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
+			for (TenderDetail detail: details){
+				tenderDetailDao.delete(detail);
 			}
+
+			tenderAnalysisHBdao.delete(tenderAnalysis);
 		}
 	}
 

@@ -203,18 +203,18 @@
 }
 
 
-/* Vendor Compare */
+/* Subcontractor Compare */
 .select-trigger {
     display: block;
-    padding-top: 22px;
+    padding-top: 10px;
     text-align: center;
     text-decoration: none;
     color: #333;
     background-color: #f2f2f2;
     border: 1px solid transparent;
     cursor: pointer;
-    height: 200px;
-    margin: 5px;
+    height: 230px;
+    margin: 0px;
     border-radius: 10px;
 }
 .select-trigger.selected {

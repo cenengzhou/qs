@@ -1,15 +1,28 @@
 mainApp.service('masterListService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
-		getVendorList:		getVendorList,
+		getSubcontractor:			getSubcontractor,
+		getSubcontractorList:		getSubcontractorList
 
 	});
 
-	
-	function getVendorList(searchStr) {
+	function getSubcontractor(subcontractorNo) {
 		var request = $http({
 			method: "get",
-			url: "service/masterList/getVendorList",
+			url: "service/masterList/getSubcontractor",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				subcontractorNo: subcontractorNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	
+	function getSubcontractorList(searchStr) {
+		var request = $http({
+			method: "get",
+			url: "service/masterList/getSubcontractorList",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				searchStr: searchStr

@@ -2653,7 +2653,7 @@ public class SubcontractService {
 			PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNumber, packageNo);
 			if(latestPaymentCert!=null && scDetailsHBDao.getSCDetails(scPackage)!=null && scDetailsHBDao.getSCDetails(scPackage).size()>0){
 				//Insert, Update, Delete SC Detail
-				List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+				List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 				for (Tender TA: tenderAnalysisList){
 					if (Integer.valueOf(0).equals(TA.getVendorNo())){
 						budgetTA = TA;
@@ -2661,8 +2661,8 @@ public class SubcontractService {
 				}
 				
 				for(Tender TA: tenderAnalysisList){
-					if(TA.getStatus()!=null && "RCM".equalsIgnoreCase(TA.getStatus().trim())){
-						TA.setStatus("AWD");//Change status to "Awarded"
+					if(TA.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(TA.getStatus().trim())){
+						TA.setStatus(Tender.TA_STATUS_AWD);//Change status to "Awarded"
 						tenderAnalysisHBDao.updateTenderAnalysis(TA);
 						logger.info("Tender Analysis Saved");
 
@@ -2771,7 +2771,7 @@ public class SubcontractService {
 				//For SERVICE Transaction ----END
 				
 				//Create SC Details from scratch
-				scPackage = SCPackageLogic.awardSCPackage(scPackage, tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage));
+				scPackage = SCPackageLogic.awardSCPackage(scPackage, tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
 				
 			}
 			
@@ -3230,7 +3230,7 @@ public class SubcontractService {
 				return "SCPackage does not exist";
 			}
 			//Check if subcontractor is in the Tender Analysis.
-			List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+			List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 			for (Tender currentTenderAnalysis: tenderAnalysisList){
 				if (vendorNo.equals(currentTenderAnalysis.getVendorNo())){
 					tenderAnalysis = currentTenderAnalysis;
@@ -3403,7 +3403,7 @@ public class SubcontractService {
 					
 					if (msg.length() == 0){
 						//Update Related Records
-						tenderAnalysis.setStatus("RCM");
+						tenderAnalysis.setStatus(Tender.TA_STATUS_RCM);
 						tenderAnalysis.setLastModifiedUser(userID);
 						try{
 							tenderAnalysisHBDao.updateTenderAnalysis(tenderAnalysis);
@@ -5124,7 +5124,7 @@ public class SubcontractService {
 			return "SCPackage does not exist";
 		}
 		
-		List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+		List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		
 		//Step 1 ----------------TA must be equal to Resource Summary for Payment Requisition---------------------------------------------//
 		if("1".equals(job.getRepackagingType())){

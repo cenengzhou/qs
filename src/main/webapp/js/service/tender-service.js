@@ -6,12 +6,13 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 		getTenderList:				getTenderList,
 		createTender:				createTender,
 		updateTenderDetails: 		updateTenderDetails,
+		updateRecommendedTender:	updateRecommendedTender,
 		deleteTender:				deleteTender
 
 	});
 
 	
-	function getTenderDetailList(jobNo, subcontractNo, vendorNo) {
+	function getTenderDetailList(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "get",
 			url: "service/tender/getTenderDetailList",
@@ -19,13 +20,13 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				vendorNo: vendorNo
+				subcontractorNo: subcontractorNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
-	function getTender(jobNo, subcontractNo, vendorNo) {
+	function getTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "get",
 			url: "service/tender/getTender",
@@ -33,7 +34,7 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				vendorNo: vendorNo
+				subcontractorNo: subcontractorNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );
@@ -52,7 +53,7 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
-	function createTender(jobNo, subcontractNo, vendorNo) {
+	function createTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
 			method: "post",
 			url: "service/tender/createTender",
@@ -60,13 +61,27 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				vendorNo: vendorNo
+				subcontractorNo: subcontractorNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
-	function updateTenderDetails(jobNo, subcontractNo, vendorNo, currencyCode, exchangeRate, taDetails, validate) {
+	function updateRecommendedTender(jobNo, subcontractNo, subcontractorNo) {
+		var request = $http({
+			method: "post",
+			url: "service/tender/updateRecommendedTender",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				subcontractorNo: subcontractorNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, taDetails, validate) {
 		var request = $http({
 			method: "post",
 			url: "service/tender/updateTenderDetails",
@@ -74,7 +89,7 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				vendorNo: vendorNo,
+				subcontractorNo: subcontractorNo,
 				currencyCode: currencyCode, 
 				exchangeRate: exchangeRate,
 				validate: validate
@@ -85,15 +100,15 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 	}
 
 	
-	function deleteTender(jobNo, subcontractNo, vendorNo) {
+	function deleteTender(jobNo, subcontractNo, subcontractorNo) {
 		var request = $http({
-			method: "delete",
+			method: "post",
 			url: "service/tender/deleteTender",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				vendorNo: vendorNo
+				subcontractorNo: subcontractorNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );

@@ -225,7 +225,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 });
             }]
         },
-        controller: 'SubcontractVendorCtrl'
+        controller: 'SubcontractorCtrl'
 	})
 	.state('subcontract-award.summary', {
 		url: "/summary",
@@ -850,27 +850,6 @@ mainApp.config(['momentPickerProvider', function(momentPickerProvider){
  * Check authentication and user role if location changed
  */
 mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location', function ($rootScope, SessionHelper, $window, $document, $location) {
-  /*$rootScope.$on('$locationChangeStart', function(event, next, current) {
-
-	 // console.log('$location.path(): '+$location.path());
-	  var isLogin = $location.path() === "/login";
-	  var isLogout = $location.path() === "/logout";
-	  
-	  if(isLogin || isLogout){
-			return; // no need to redirect 
-		}
-	  
-      if ($rootScope.authenticated) {
-    	  console.log('ALLOW');
-          //$location.path('/job-select');
-      }
-      else {
-    	  console.log('DENY');
-          event.preventDefault();
-          $location.path('/login');
-      }
-  });*/
-
 //	window.onbeforeunload = function(authenticate)
 //	{
 //		$http({

@@ -123,8 +123,8 @@ public class SCPackageLogic {
 			}
 		}
 		for(Tender TA: tenderAnalysisList){
-			if(TA.getStatus()!=null && "RCM".equalsIgnoreCase(TA.getStatus().trim())){
-				TA.setStatus("AWD");
+			if(TA.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(TA.getStatus().trim())){
+				TA.setStatus(Tender.TA_STATUS_AWD);
 				scPackage.setVendorNo(TA.getVendorNo().toString());
 				scPackage.setPaymentCurrency(TA.getCurrencyCode().trim());
 				scPackage.setExchangeRate(TA.getExchangeRate());

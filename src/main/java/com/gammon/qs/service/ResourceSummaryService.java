@@ -330,7 +330,7 @@ public class ResourceSummaryService implements Serializable {
 							scPackageDao.update(scPackage);
 
 							List<Integer> resourceNoList = new ArrayList<Integer>();
-							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							for(Tender ta: tenderAnalysisList){
 								if ((ta.getStatus()!=null && "RCM".equalsIgnoreCase(ta.getStatus().trim()))){
 									//Recommended Vendor
@@ -344,9 +344,8 @@ public class ResourceSummaryService implements Serializable {
 								}
 							}
 							
-							
 
-							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							Iterator<Tender> taIterator = taList.iterator();
 							while(taIterator.hasNext()){
 								Tender TA = taIterator.next();	
@@ -1366,7 +1365,7 @@ public class ResourceSummaryService implements Serializable {
 							scPackageDao.update(scPackage);
 
 							List<Integer> resourceNoList = new ArrayList<Integer>();
-							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							for(Tender ta: tenderAnalysisList){
 								if ((ta.getStatus()!=null && "RCM".equalsIgnoreCase(ta.getStatus().trim()))){
 									//Recommended Vendor
@@ -1382,7 +1381,7 @@ public class ResourceSummaryService implements Serializable {
 							
 							
 
-							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisListWithDetails(scPackage);
+							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							Iterator<Tender> taIterator = taList.iterator();
 							while(taIterator.hasNext()){
 								Tender TA = taIterator.next();	

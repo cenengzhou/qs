@@ -1,59 +1,78 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h4 class="modal-title">Input Feedback Rates - Vendor:{{vendorNo}} Subcontract: {{subcontractNo}}</h4>
+			<h4 class="modal-title">Input Feedback Rates -
+				Vendor:{{vendorNo}} Subcontract: {{subcontractNo}}</h4>
 		</div>
 		<div class="col-md-1">
-			<button class="btn btn-warning pull-right" type="button" confirmed-click="cancel()" ng-confirm-click>
+			<button class="btn btn-default pull-right" type="button"
+				confirmed-click="cancel()" ng-confirm-click>
 				<span class="fa fa-remove"></span>
 			</button>
 		</div>
 	</div>
 </div>
 <div class="modal-body bg-gray-light">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="box box-info">
-							<div class="box-body">
-							
-								<div class="col-xs-3">
-									<div class="form-group-sm">
-				                      <label class="col-sm-5 control-label">Currency</label>
-				                      <div class="col-sm-7">
-				                         <div class="input-group">
-						                    <select	class="form-control input-lg" ng-model="currencyCode.selected"
-											ng-options="o as o for o in currencyCode.options"></select>
-					                  	</div>
-				                      </div>
-			                      </div>
-							
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-body">
+
+					<form class="form-group ng-pristine ng-valid "
+						name="form-wizard-step-1" id="form-wizard-step-1">
+						<div class="col-xs-3">
+							<div class="form-group">
+								<label class="col-sm-5 control-label">Currency</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<select class="form-control input-sm"
+											ng-model="currencyCode.selected"
+											ng-options="o as o for o in currencyCode.options" required></select>
+									</div>
 								</div>
-								<div class="col-xs-4">
-									<div class="form-group-sm">
-					                      <label class="col-sm-6 control-label">Exchange Rate.</label>
-					                      <div class="col-sm-6">
-					                         <div class="input-group">
-							                    <input type="number" class="form-control input-lg" ng-model = "tender.exchangeRate">
-						                  	</div>
-					                      </div>
-				                      </div>
-								</div>
-								
-								<div class="col-xs-5">
-									<h5>Feedback Rate(HKD) = Feedback Rate * Exchange Rate</h5>
-								</div>
-								
 							</div>
+
 						</div>
-					</div>
-					
-					<div class="col-md-12">
-						<div ui-grid="gridOptions" ui-grid-cellnav ui-grid-edit ui-grid-resize-columns ui-grid-move-columns ui-grid-importer ui-grid-exporter class="grid"></div>
-					</div>
+						<div class="col-xs-4">
+							<!-- <form class="form-group ng-pristine ng-valid "
+							name="form-wizard-step-1" id="form-wizard-step-1"> -->
+							<label class="col-sm-6 control-label">Exchange Rate.</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<!-- <input type="number" class="form-control input-sm" ng-model = "tender.exchangeRate"> -->
+									<input class="form-control input-sm" data-parsley-type="number"
+										step="0.01" class="form-control"
+										data-parsley-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+										data-parsley-error-message="Max 2 d.p."
+										ng-model="tender.exchangeRate"
+										ng-paste="recalculateForeignAmount()"
+										ng-change="recalculateForeignAmount()" required />
+								</div>
+							</div>
+							<!-- </form> -->
+						</div>
+
+						<div class="col-xs-5">
+							<h5>Feedback Rate(HKD) = Feedback Rate * Exchange Rate</h5>
+						</div>
+					</form>
+				</div>
 			</div>
-	
+		</div>
+
+		<div class="col-md-12">
+			<div ui-grid="gridOptions" ui-grid-cellnav ui-grid-edit
+				ui-grid-resize-columns ui-grid-move-columns ui-grid-exporter
+				class="grid"></div>
+		</div>
+		<!-- ui-grid-importer -->
+	</div>
+
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
+	<button class="btn btn-primary btn-block" type="button"
+		ng-click="save()">
+		<span class="fa fa-save"></span> Save
+	</button>
 </div>
 

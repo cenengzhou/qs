@@ -28,9 +28,22 @@ public class MasterListController {
 	@Autowired
 	private MasterListService masterListService;
 	
+	@RequestMapping(value = "getSubcontractor", method = RequestMethod.GET)
+	public MasterListVendor getSubcontractor(@RequestParam(name="subcontractorNo") String subcontractorNo){
+
+		MasterListVendor masterListVendor = null;
+		try {
+			
+			masterListVendor = masterListService.obtainVendorByVendorNo(subcontractorNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return masterListVendor;
+	}
 	
-	@RequestMapping(value = "getVendorList", method = RequestMethod.GET)
-	public List<MasterListVendor> getVendorList(@RequestParam(name="searchStr") String searchStr){
+	
+	@RequestMapping(value = "getSubcontractorList", method = RequestMethod.GET)
+	public List<MasterListVendor> getSubcontractorList(@RequestParam(name="searchStr") String searchStr){
 
 		List<MasterListVendor> masterListVendor = null;
 		try {
