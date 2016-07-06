@@ -33,12 +33,12 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'uiGrid
 			             {field: 'amount', enableCellEdit: false, enableFiltering: false },
 			             {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
 		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>',
-		            	 footerCellTemplate: '<div class="ui-grid-cell-contents" >Total: {{col.getAggregationValue() | number:2 }}</div>'},
+		            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
 		            	 {field: 'ivMovement', enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
 	            		 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>',
-	            		 footerCellTemplate: '<div class="ui-grid-cell-contents" >Total: {{col.getAggregationValue() | number:2 }}</div>'},
+	            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 	            		 {field: 'postedIVAmount',  enableCellEdit: false, enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum, 
-            			 footerCellTemplate: '<div class="ui-grid-cell-contents" >Total: {{col.getAggregationValue() | number:2 }}</div>'},
+            			 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
             			 {field: 'levyExcluded', enableCellEdit: false, enableFiltering: false },
             			 {field: 'defectExcluded', enableCellEdit: false, enableFiltering: false}
             			 ]

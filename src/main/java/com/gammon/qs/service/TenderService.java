@@ -109,119 +109,7 @@ public class TenderService implements Serializable {
 	}
 	
 	
-	/**
-	 * @author koeyyeung
-	 * Payment Requisition Revamp
-	 * **/
-	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract scPackage, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
-		if(tenderAnalysis.getId()!=null){
-			logger.info("Update Vendor Info");
-			//Update Vendor Info (Edit Vendor Feedback Rate)
-			if(tenderAnalysis.getVendorNo()!=0){
-				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
-					for(TenderDetail taDetail: toBeUpdatedTaDetails){
-						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
-							
-							if("1".equals(scPackage.getJobInfo().getRepackagingType())){
-								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
-										&& taDetail.getResourceNo().equals(taDetailInDB.getResourceNo())){
-									//Update TA Details
-									taDetailInDB.setRateBudget(taDetail.getRateBudget());
-									taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
-								}
-							}else{
-								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
-									&& taDetail.getBillItem() !=null && taDetailInDB.getBillItem()!=null
-									&& taDetail.getResourceNo().equals(taDetailInDB.getResourceNo())
-									&& taDetail.getBillItem().equals(taDetailInDB.getBillItem())){
-									//Update TA Details
-									taDetailInDB.setRateBudget(taDetail.getRateBudget());
-									taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
-								}
-							}
-						}
-					}
-					//Update TA 
-					tenderAnalysis.setCurrencyCode(tenderAnalysis.getCurrencyCode());
-					tenderAnalysis.setExchangeRate(tenderAnalysis.getExchangeRate());
-					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
-					
-					//Delete Pending Payments
-					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-					if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-						//Delete Pending Payment
-						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-						paymentCertDao.delete(latestPaymentCert);
-						subcontractDao.update(scPackage);
-						
-						//Reset cumCertQuantity in ScDetail
-						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-						for(SubcontractDetail scDetails: scDetailsList){
-							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-								scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-								subcontractDetailDao.update(scDetails);
-							}
-						}
-					}
-					
-					if(Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
-						//Recalculate SCPackage Subcon Sum
-						subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
-					}
-					
-					tenderDao.update(tenderAnalysis);
-				}else{
-					logger.info("Update Vendor");
-					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
-				}
-			}else{
-				//Edit Budget Tender Analysis
-				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
-				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
-					//if direct payment exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
-					for (TenderDetail taDetail: toBeUpdatedTaDetails){
-						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget());
-						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetail.getResourceNo()));
-						if(resourceSummary==null)
-							return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
-					}
-
-					//Add new TA Details for budget TA (Input Tender Analysis)
-					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisListWithDetails(scPackage);
-					for(Tender ta: tenderAnalysisList){
-						if(ta.getVendorNo()==0){
-							tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
-							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
-							for(TenderDetail taDetail: toBeUpdatedTaDetails){
-								//boolean newTaDetail = true;
-								List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
-								if(taDetailInDB == null || taDetailInDB.size()==0){
-									taDetail.setSequenceNo(seqNo);
-									taDetail.setResourceNo(taDetail.getResourceNo());
-									taDetail.setTender(ta);
-									tenderDetailDao.update(taDetail);
-									tenderDao.update(ta);
-									seqNo++;
-								}
-							}
-							//Recalculate SCPackage SC Sum
-							//packageRepository.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
-							break;
-						}
-					}
-				}else{
-					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
-					scPackage.setVendorNo(null);
-				}
-			}
-		}
-		else{
-			logger.info("Create New Vendor");
-			tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
-		}
-		return null;
-	}
+	
 	
 	public Boolean insertTenderAnalysisDetailForVendor(JobInfo job, String packageNo,Integer vendorNo) throws Exception{
 		logger.info("insertTenderAnalysisDetailForVendor: Edit Feedback Rate");
@@ -264,54 +152,9 @@ public class TenderService implements Serializable {
 		return null;
 	}
 	
-	private Tender getOrCreateTenderAnalysis(JobInfo job, Subcontract scPackage, Integer vendorNo) throws Exception{
-		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(scPackage, vendorNo);
-		if(tenderAnalysis == null){
-			String packageNo = scPackage.getPackageNo();
-			tenderAnalysis = new Tender();
-			tenderAnalysis.setSubcontract(scPackage);
-			tenderAnalysis.setVendorNo(vendorNo);
-			tenderAnalysis.setJobNo(job.getJobNumber());
-			tenderAnalysis.setPackageNo(packageNo);
-			tenderAnalysis.setExchangeRate(Double.valueOf(1));
-			if("1".equals(job.getRepackagingType()))
-				tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, packageNo));
-			else
-				tenderAnalysis.setBudgetAmount(bpiItemResourceDao.getBudgetForPackage(job.getJobNumber(), packageNo));
-		}
-		return tenderAnalysis;
-	}
 	
-	public Tender obtainTenderAnalysisForRateInput(JobInfo job, String packageNo, Integer vendorNo) throws Exception{
-		List<TenderDetail> baseDetails = tenderDetailDao.getTenderAnalysisDetails(job.getJobNumber(), packageNo, 0);
-		HashMap<Integer, TenderDetail> baseDetailsMap = new HashMap<Integer, TenderDetail>();
-		for(TenderDetail detail : baseDetails){
-			baseDetailsMap.put(detail.hashCode(), detail);
-		}
-		List<TenderDetail> vendorDetails = tenderDetailDao.getTenderAnalysisDetails(job.getJobNumber(), packageNo, vendorNo);
-		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
-		Tender tenderAnalysis = getOrCreateTenderAnalysis(job, scPackage, vendorNo);
-		if(vendorDetails != null && vendorDetails.size() > 0){
-			for(TenderDetail vendorDetail : vendorDetails){
-				TenderDetail baseDetail = baseDetailsMap.get(vendorDetail.hashCode());
-				if(baseDetail == null)
-					vendorDetail.setRateBudget(Double.valueOf(0));
-				else{
-					vendorDetail.setRateBudget(baseDetail.getRateBudget());
-				}
-			}
-			tenderDetailDao.deleteByTenderAnalysis(tenderAnalysis);
-			for(TenderDetail tenderAnalysisDetail : vendorDetails) {
-				tenderAnalysisDetail.setTender(tenderAnalysis);
-			}
-		} else {
-			tenderDetailDao.deleteByTenderAnalysis(tenderAnalysis);
-			for(TenderDetail tenderAnalysisDetail : baseDetails) {
-				tenderAnalysisDetail.setTender(tenderAnalysis);
-			}
-		}
-		return tenderAnalysis;
-	}
+	
+	
 	
 	public List<Tender> obtainTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
 		return tenderDao.obtainTenderAnalysisList(job, packageNo);
@@ -629,20 +472,7 @@ public class TenderService implements Serializable {
 		return excel;
 	}
 	
-	public Boolean removeTenderAnalysis(String jobNumber, String packageNo, Integer vendorNo) throws Exception{
-		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, vendorNo);
-		if(tenderAnalysis == null)
-			return Boolean.FALSE;
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
-		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
-		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
-		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
-		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM)))
-			return Boolean.FALSE;
-		
-		tenderDao.delete(tenderAnalysis);
-		return Boolean.TRUE;
-	}
+	
 	
 	public void createOrUpdateTADetailFromResource(BpiItemResource resource) throws Exception{
 		logger.info("createOrUpdateTADetailFromResource resource ID = " + resource.getId());
@@ -822,19 +652,92 @@ public class TenderService implements Serializable {
 	}
 	
 	
-	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public List<TenderDetail> obtainTenderDetailList(String jobNo, String packageNo, Integer vendorNo) throws Exception{
 		return tenderDetailDao.getTenderAnalysisDetails(jobNo, packageNo, vendorNo);
 	}
+
+	public List<Tender> obtainTenderList(String jobNumber, String subcontractNo) throws Exception{
+		List<Tender> tenderList= tenderDao.obtainTenderList(jobNumber, subcontractNo);
+		return tenderList;
+	} 
+
+	public Tender obtainTender(String jobNo, String subcontractNo, Integer vendorNo) throws Exception{
+		Tender tender = tenderDao.obtainTenderAnalysis(jobNo, subcontractNo, vendorNo);
+		return tender;
+	}
+
+	/**
+	 * @author koeyyeung
+	 * created on 04 Jul, 2016**/
+	public String createTender(String jobNo, String subcontractNo, Integer vendorNo) throws Exception{
+		String error = "";
+		try {
+			JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
+
+			Tender tender = new Tender();
+			tender.setSubcontract(subcontractDao.obtainSCPackage(jobNo, subcontractNo));
+			tender.setVendorNo(vendorNo);
+			tender.setJobNo(jobNo);
+			tender.setPackageNo(subcontractNo);
+			tender.setExchangeRate(Double.valueOf(1));
+			if("1".equals(job.getRepackagingType()))
+				tender.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontractNo));
+			else
+				tender.setBudgetAmount(bpiItemResourceDao.getBudgetForPackage(jobNo, subcontractNo));
+
+			tenderDao.insert(tender);
+
+			error = createTenderDetails(jobNo, subcontractNo, vendorNo);
+		} catch (Exception e) {
+			error = "Tender cannot be created.";
+			e.printStackTrace();
+		}
+		return error;
+	}
+
+
+	private String createTenderDetails(String jobNo, String subcontractNo, Integer vendorNo) throws Exception{
+		String error = "";
+		try {
+			Tender tenderInDB = tenderDao.obtainTenderAnalysis(jobNo, subcontractNo, vendorNo);
+			logger.info("tenderInDb: "+tenderInDB);
+			logger.info("tenderInDb: "+tenderInDB.getVendorNo());
+			List<TenderDetail> baseDetails = tenderDetailDao.getTenderAnalysisDetails(jobNo, subcontractNo, 0);
+
+			logger.info("baseDetails: "+baseDetails.size());
+
+			for(TenderDetail detail : baseDetails){
+				TenderDetail newDetail = new TenderDetail();
+				newDetail.setTender(tenderInDB);
+				newDetail.setSequenceNo(detail.getSequenceNo());
+				newDetail.setAmountBudget(detail.getAmountBudget());
+				newDetail.setResourceNo(detail.getResourceNo());
+				newDetail.setBillItem(detail.getBillItem());
+				newDetail.setDescription(detail.getDescription());
+				newDetail.setQuantity(detail.getQuantity());
+				newDetail.setRateBudget(detail.getRateBudget());
+				newDetail.setRateSubcontract(detail.getRateBudget());
+				newDetail.setObjectCode(detail.getObjectCode());
+				newDetail.setSubsidiaryCode(detail.getSubsidiaryCode());
+				newDetail.setLineType(detail.getLineType());
+				newDetail.setUnit(detail.getUnit());
+				newDetail.setRemark(detail.getRemark());
+
+				tenderDetailDao.insert(newDetail);
+			}
+		} catch (Exception e) {
+			error = "Tender cannot be created.";
+			e.printStackTrace();
+		}
+		return error;
+	}
 	
-	
+		
 	public String updateTenderAnalysisDetails(String jobNo, String packageNo,
 			Integer vendorNo, String currencyCode, Double exchangeRate,
 			List<TenderDetail> taDetails, boolean validate)
 			throws Exception {
-		
-		logger.info("------------------------------------------------->updateTenderAnalysisDetails ");
 		
 		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
 		
@@ -855,8 +758,6 @@ public class TenderService implements Serializable {
 			}
 		}
 		
-		logger.info("------------------------------------------------->updateTenderAnalysisDetails 2");
-		
 		//Save
 		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
 		if(scPackage == null)
@@ -873,7 +774,8 @@ public class TenderService implements Serializable {
 			return "Payment Requisition Submitted. Tender Information will be frozen.";
 		}
 	
-		Tender tenderAnalysis = getOrCreateTenderAnalysis(job, scPackage, vendorNo);
+		Tender tenderAnalysis = this.obtainTender(jobNo, packageNo, vendorNo);
+		logger.info("tenderAnalysis: "+tenderAnalysis);
 		if(currencyCode == null || vendorNo.equals(Integer.valueOf(0)))
 			currencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
 		
@@ -906,7 +808,142 @@ public class TenderService implements Serializable {
 		subcontractDao.saveOrUpdate(scPackage);
 		return null;
 	}
+	
+	
+	
+	/**
+	 * @author koeyyeung
+	 * Payment Requisition Revamp
+	 * **/
+	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract scPackage, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
+		if(tenderAnalysis.getId()!=null){
+			
+			if(tenderAnalysis.getVendorNo()!=0){
+				//Payment Requisition exists
+				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
+					logger.info("Update Vendor : Payment Requisition exsits");
+					for(TenderDetail taDetail: toBeUpdatedTaDetails){
+						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
+							
+							if("1".equals(scPackage.getJobInfo().getRepackagingType())){
+								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
+										&& taDetail.getResourceNo().equals(taDetailInDB.getResourceNo())){
+									//Update TA Details
+									taDetailInDB.setRateBudget(taDetail.getRateBudget());
+									taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
+								}
+							}else{
+								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
+									&& taDetail.getBillItem() !=null && taDetailInDB.getBillItem()!=null
+									&& taDetail.getResourceNo().equals(taDetailInDB.getResourceNo())
+									&& taDetail.getBillItem().equals(taDetailInDB.getBillItem())){
+									//Update TA Details
+									taDetailInDB.setRateBudget(taDetail.getRateBudget());
+									taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
+								}
+							}
+						}
+					}
+					//Update TA 
+					tenderAnalysis.setCurrencyCode(tenderAnalysis.getCurrencyCode());
+					tenderAnalysis.setExchangeRate(tenderAnalysis.getExchangeRate());
+					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+					
+					//Delete Pending Payments
+					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+					if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
+						//Delete Pending Payment
+						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+						paymentCertDao.delete(latestPaymentCert);
+						subcontractDao.update(scPackage);
+						
+						//Reset cumCertQuantity in ScDetail
+						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+						for(SubcontractDetail scDetails: scDetailsList){
+							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
+								scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+								subcontractDetailDao.update(scDetails);
+							}
+						}
+					}
+					
+					if(Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
+						//Recalculate SCPackage Subcon Sum
+						subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
+					}
+					
+					tenderDao.update(tenderAnalysis);
+				}else{
+					logger.info("Update Vendor");
+					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+				}
+			}else{
+				logger.info("Update Budget Tender Analysis");
+				//Edit Budget Tender Analysis
+				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
+					//if direct payment exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
+					for (TenderDetail taDetail: toBeUpdatedTaDetails){
+						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget());
+						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetail.getResourceNo()));
+						if(resourceSummary==null)
+							return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
+					}
 
+					//Add new TA Details for budget TA (Input Tender Analysis)
+					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisListWithDetails(scPackage);
+					for(Tender ta: tenderAnalysisList){
+						if(ta.getVendorNo()==0){
+							tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
+							for(TenderDetail taDetail: toBeUpdatedTaDetails){
+								//boolean newTaDetail = true;
+								List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
+								if(taDetailInDB == null || taDetailInDB.size()==0){
+									taDetail.setSequenceNo(seqNo);
+									taDetail.setResourceNo(taDetail.getResourceNo());
+									taDetail.setTender(ta);
+									tenderDetailDao.update(taDetail);
+									tenderDao.update(ta);
+									seqNo++;
+								}
+							}
+							//Recalculate SCPackage SC Sum
+							//packageRepository.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
+							break;
+						}
+					}
+				}else{
+					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+					scPackage.setVendorNo(null);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public String deleteTender(String jobNumber, String packageNo, Integer vendorNo) throws Exception{
+		String error = "";
+		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, vendorNo);
+		if(tenderAnalysis == null){
+			error = "Tender does not exsit.";
+			return error;
+		}
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
+		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM))){
+			error = "Recommended Tender under payment requistion cannot be deleted.";
+			return error;
+		}
+		tenderDao.delete(tenderAnalysis);
+		return error;
+	}	
+	
+	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 }

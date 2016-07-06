@@ -46,7 +46,8 @@
 .green { color: green}
 .red { color: red}
 .red-theme { color: red;  background-color: yellow !important; }
-.grid-theme-blue { color: blue;  background-color: pink !important; }
+.grid-theme-blue { color: blue;  background-color: #aad5ff !important; }
+.grid-theme-pink { color: blue;  background-color: pink !important; }
 .grid-blue { color: blue; }
 
 /* Modal Position  */

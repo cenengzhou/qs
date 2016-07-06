@@ -156,11 +156,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-ta-details.js',
-                           'js/controller/subcontract/subcontract-vendor.js',
-                           'js/controller/subcontract/subcontract-vendor-feedback.js',
-                           
-                          
                            'js/service/resource-summary-service.js',
                            'js/service/tender-service.js',
                            'js/service/subcontract-service.js'
@@ -223,12 +218,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/subcontract/subcontract-vendor-compare.js'
+               	         'js/controller/subcontract/subcontract-vendor.js',
+               	         'js/controller/subcontract/subcontract-vendor-feedback.js',
+               	         'js/service/master-list-service.js'
                     ] 
                 });
             }]
         },
-        controller: 'SubcontractVendorCompareCtrl'
+        controller: 'SubcontractVendorCtrl'
 	})
 	.state('subcontract-award.summary', {
 		url: "/summary",
@@ -889,16 +886,7 @@ mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location',
 	.then(function(data){
 	    $rootScope.sessionId = data;
 	});
-	
-	var initInnerSize = function(){
-		$rootScope.innerHeight = $window.innerHeight;
-		$rootScope.innerWidth = $window.innerWidth;
-		console.log("innerHeight:" + $rootScope.innerHeight + " innerWidth:" + $rootScope.innerWidth);
-	};
-	angular.element($window).bind('resize', function() {
-		initInnerSize();
-	});
-	initInnerSize();
+    
 }]);
 
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.TenderService;
 
@@ -34,17 +35,66 @@ public class TenderController {
 	
 	@RequestMapping(value = "getTenderDetailList", method = RequestMethod.GET)
 	public List<TenderDetail> getTenderDetailList(@RequestParam(name="jobNo") String jobNo, 
-													@RequestParam(name="packageNo") String packageNo,
-													@RequestParam(name="vendorNo") String vendorNo){
+													@RequestParam(name="subcontractNo") String subcontractNo,
+													@RequestParam(name="vendorNo") Integer vendorNo){
 
 		List<TenderDetail> tenderDetailList = null;
 		try {
 			
-			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, packageNo, Integer.valueOf(vendorNo));
+			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, vendorNo);
+			logger.info("tenderDetailList: "+tenderDetailList.size());;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		return tenderDetailList;
+	}
+	
+	@RequestMapping(value = "getTender", method = RequestMethod.GET)
+	public Tender getTender(@RequestParam(name="jobNo") String jobNo, 
+													@RequestParam(name="subcontractNo") String subcontractNo,
+													@RequestParam(name="vendorNo") Integer vendorNo){
+
+		Tender tender = null;
+		try {
+			
+			tender = tenderService.obtainTender(jobNo, subcontractNo, vendorNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return tender;
+	}
+	
+	@RequestMapping(value = "getTenderList", method = RequestMethod.GET)
+	public List<Tender> getTenderList(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo){
+
+		List<Tender> tenderList = null;
+		try {
+			//VendorNo: 0 is excluded 
+			tenderList = tenderService.obtainTenderList(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return tenderList;
+	}
+	
+	
+	
+	
+	
+	@RequestMapping(value = "createTender", method = RequestMethod.POST)
+	public String createTender(@RequestParam(name="jobNo") String jobNo, 
+								@RequestParam(name="subcontractNo") String subcontractNo,
+								@RequestParam(name="vendorNo") Integer vendorNo){
+
+		String result = "";
+		try {
+			
+			result = tenderService.createTender(jobNo, subcontractNo, vendorNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
 	}
 	
 	@RequestMapping(value = "updateTenderDetails", method = RequestMethod.POST)
@@ -58,6 +108,19 @@ public class TenderController {
 		String result = "";
 		try {
 			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, vendorNo, currencyCode, exchangeRate, taDetails, validate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
+	@RequestMapping(value = "deleteTender", method = RequestMethod.DELETE)
+	public String deleteTender(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo,
+										@RequestParam(name="vendorNo") Integer vendorNo){
+		String result = "";
+		try {
+			result = tenderService.deleteTender(jobNo, subcontractNo, vendorNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

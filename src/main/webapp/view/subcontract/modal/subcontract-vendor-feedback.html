@@ -1,7 +1,7 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h3 class="modal-title">Input/Edit Feedback Rates - Vendor:{{vendorNo}} Subcontract: {{packageNo}}</h3>
+			<h4 class="modal-title">Input Feedback Rates - Vendor:{{vendorNo}} Subcontract: {{subcontractNo}}</h4>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-warning pull-right" type="button" confirmed-click="cancel()" ng-confirm-click>
@@ -33,7 +33,7 @@
 					                      <label class="col-sm-6 control-label">Exchange Rate.</label>
 					                      <div class="col-sm-6">
 					                         <div class="input-group">
-							                    <input type="number" class="form-control input-lg" ng-model = "exchangeRate">
+							                    <input type="number" class="form-control input-lg" ng-model = "tender.exchangeRate">
 						                  	</div>
 					                      </div>
 				                      </div>
@@ -48,12 +48,12 @@
 					</div>
 					
 					<div class="col-md-12">
-						<div id="ipa_grid" ui-grid="gridOptions" ui-grid-cellnav ui-grid-edit ui-grid-resize-columns ui-grid-move-columns ui-grid-importer ui-grid-exporter class="grid"  style="height:400px;  width=: 1600px"></div>
+						<div ui-grid="gridOptions" ui-grid-cellnav ui-grid-edit ui-grid-resize-columns ui-grid-move-columns ui-grid-importer ui-grid-exporter class="grid"></div>
 					</div>
 			</div>
 	
 </div>
 <div class="modal-footer">
-    <button class="btn btn-twitter btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
+    <button class="btn btn-primary btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
 </div>
 

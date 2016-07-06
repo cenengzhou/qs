@@ -8,26 +8,43 @@
 				<a class="select-trigger"
 					ng-class="{'selected': selectedVendor == {{vendor.vendorNo}}}"
 					ng-click="vendorOption({{vendor.vendorNo}})">
-					<div class="check"></div> <span class="fa fa-bank fa-5x"></span>
-					<h5>{{vendor.vendorNo}}</h5>
-					<h5>{{vendor.vendorName}}</h5>
-					<h5 class="text-primary">Tender Budget: {{vendor.tenderAmount
-						| currency}}</h5>
+					
+					<div class="check"></div> 
+					<div class="col-md-6 col-md-offset-3">
+					<span class="icofont icofont-worker icofont-5x"></span>
+					</div>
+					
+					<div>
+					<button class="btn btn-primary"	ng-click="editVendor(vendor.vendorNo)">
+						<span class="icofont icofont-edit"></span> Edit
+					</button>
+					</div>
+					
+					<div class="m-t-10">
+					<button class="btn btn-success"	ng-click="delete(vendor.vendorNo)">
+						<span class="icofont icofont-delete-alt"></span> Delete
+					</button>
+					</div>
+					
+					<div class="col-md-12">
+						<h5>{{vendor.vendorNo}}</h5>
+						<h5>{{vendor.vendorName}}</h5>
+						<h5 class="text-primary">Tender Budget: {{vendor.tenderAmount | currency}}</h5>
+					</div>
 				</a>
 			</div>
 			<div class="col-md-4 col-xs-12 animated flipInX">
-				<a class="select-trigger" ng-click="openVendorFeedbackModal()">
+				<a class="select-trigger"> 
 				<br>
-					<div>
-						<span class="fa fa-plus-square fa-5x text-danger"></span>
-					</div>
-					<div>
-						<h5 class="text-danger">Add New Vendor</h5>
-					</div>
+					<span class="icofont icofont-worker icofont-5x text-danger"></span>
+					<h5 class="text-danger">New Vendor</h5>
 					<div class="col-md-6 col-md-offset-3">
 						<input type="number" class="form-control"
-							ng-model="subcontract.packageNo" required>
+							ng-model="newVendorNo">
 					</div>
+					<button class="btn btn-danger" ng-click="addVendor()">
+						<span class="icofont icofont-plus-square"></span> Add
+					</button>
 				</a>
 			</div>
 		</div>
@@ -35,9 +52,8 @@
 
 		<div class="col-md-12 m-t-10">
 			<div id="" ui-grid="gridOptions" ui-grid-resize-columns
-				ui-grid-move-columns ui-grid-exporter
-				ui-grid-auto-resize class="grid"></div>
-			<!-- style="height: 400px; width =: 1600px"  -->
+				ui-grid-move-columns ui-grid-exporter ui-grid-auto-resize
+				class="grid"></div>
 		</div>
 
 

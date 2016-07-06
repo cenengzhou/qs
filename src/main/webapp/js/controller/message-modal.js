@@ -1,6 +1,6 @@
-mainApp.controller("MessageModalCtrl", ['$scope', '$uibModalInstance', 'modalStaus', 'modalParam',  function ($scope, $uibModalInstance, modalStaus, modalParam) {
+mainApp.controller("MessageModalCtrl", ['$scope', '$uibModalInstance', 'modalStatus', 'modalParam',  function ($scope, $uibModalInstance, modalStatus, modalParam) {
 	$scope.header = "";
-	$scope.status = modalStaus;
+	$scope.status = modalStatus;
 
 	$scope.message = modalParam;
 

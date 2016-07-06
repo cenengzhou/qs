@@ -203,7 +203,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', '$http', '$location', 'resour
 	}
 
 	function loadTenderDetailList() {
-		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, "0")
+		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, 0)
 		.then(
 				function( data ) {
 					console.log(data);

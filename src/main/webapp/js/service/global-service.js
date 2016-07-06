@@ -12,7 +12,7 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 				//windowClass: 'modal-vertical-centered',
 				backdrop: false,
 				resolve: {
-					modalStaus: function () {
+					modalStatus: function () {
 						return status;
 					},
 					modalParam: function () {

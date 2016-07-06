@@ -182,7 +182,6 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontract
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Alert', data);
 				}else{
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
-					//$location.path("/subcontract-flow");
 				}
 
 				//Download file				 

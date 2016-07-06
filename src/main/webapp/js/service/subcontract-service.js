@@ -4,8 +4,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getSubcontract: 	getSubcontract,
     	getSubcontractList: getSubcontractList,
     	addSubcontract: 	addSubcontract,
-    	getWorkScope: 		getWorkScope,
-    	obtainVendorInfo: 	obtainVendorInfo
+    	getWorkScope: 		getWorkScope
     	
     });
 	
@@ -77,14 +76,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 jobNo: jobNo
             },
             data: subcontract
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-    
-    function obtainVendorInfo() {
-        var request = $http({
-            method: "get",
-            url: "data/vendor-info.json"
         });
         return( request.then( handleSuccess, handleError ) );
     }

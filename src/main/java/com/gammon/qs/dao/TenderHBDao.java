@@ -193,10 +193,11 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	public void updateTenderAnalysisAndTADetails(Tender tenderAnalysis, List<TenderDetail> taDetails) throws DatabaseOperationException{
+		logger.info("taDetails size: "+taDetails.size());
 		tenderAnalysisDetailHBDao.deleteByTenderAnalysis(tenderAnalysis); //Will delete records
 		for(TenderDetail taDetail : taDetails){
 			taDetail.setTender(tenderAnalysis); //Should save taDetail through cascades
-			tenderAnalysisDetailHBDao.saveOrUpdate(taDetail);
+			tenderAnalysisDetailHBDao.insert(taDetail);
 		}
 		saveOrUpdate(tenderAnalysis);
 	}
@@ -245,4 +246,23 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		return criteria.list();
 	}
 	
+	
+	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	@SuppressWarnings("unchecked")
+	public List<Tender> obtainTenderList(String jobNumber, String packageNo) throws Exception{
+
+		List<Tender> result = null;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
+			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
+			criteria.add(Restrictions.ne("vendorNo", 0));
+			criteria.addOrder(Order.asc("vendorNo"));
+			result = criteria.list();
+		}catch (HibernateException he){
+			he.printStackTrace();
+		}
+		return result;	
+	}
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

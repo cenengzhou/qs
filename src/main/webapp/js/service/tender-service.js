@@ -2,19 +2,64 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
 		getTenderDetailList:		getTenderDetailList,
-		updateTenderDetails: 		updateTenderDetails
+		getTender:					getTender,
+		getTenderList:				getTenderList,
+		createTender:				createTender,
+		updateTenderDetails: 		updateTenderDetails,
+		deleteTender:				deleteTender
 
 	});
 
 	
-	function getTenderDetailList(jobNo, packageNo, vendorNo) {
+	function getTenderDetailList(jobNo, subcontractNo, vendorNo) {
 		var request = $http({
 			method: "get",
 			url: "service/tender/getTenderDetailList",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
-				packageNo: packageNo,
+				subcontractNo: subcontractNo,
+				vendorNo: vendorNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getTender(jobNo, subcontractNo, vendorNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getTender",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				vendorNo: vendorNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getTenderList(jobNo, subcontractNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getTenderList",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function createTender(jobNo, subcontractNo, vendorNo) {
+		var request = $http({
+			method: "post",
+			url: "service/tender/createTender",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
 				vendorNo: vendorNo
 			}
 		});
@@ -39,6 +84,20 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 
+	
+	function deleteTender(jobNo, subcontractNo, vendorNo) {
+		var request = $http({
+			method: "delete",
+			url: "service/tender/deleteTender",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				vendorNo: vendorNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
 
 
 
