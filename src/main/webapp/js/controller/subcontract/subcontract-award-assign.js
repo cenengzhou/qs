@@ -1,10 +1,9 @@
 
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', '$cookieStore', '$location', 'modalService',
-                                             function($scope, resourceSummaryService, $cookieStore, $location, modalService) {
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.subcontractNo = $cookieStore.get("subcontractNo");
-	
-	loadResourceSummaries();
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 
+                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state) {
+	getSubcontract();
+	getResourceSummaries();
+
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
@@ -67,12 +66,26 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No records have been modified");
 			return;
 		}
-		updateResourceSummaries(dataRows);
+		
+		if($scope.subcontract.scStatus == "160"){
+			var modalOptions = {
+					bodyText: 'All exsiting tenders and tender details will be deleted. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					updateResourceSummaries(dataRows);
+				}
+			});
+		}else{
+			updateResourceSummaries(dataRows);
+		}
+		
 	};
 			
 	
-	
-	function loadResourceSummaries() {
+	function getResourceSummaries() {
    	 resourceSummaryService.getResourceSummaries($scope.jobNo, $scope.subcontractNo, "14*")
    	 .then(
 			 function( data ) {
@@ -80,20 +93,29 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 				 $scope.gridOptions.data= data;
 			 });
     }
+
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.subcontract = data;
+				});
+	}
 	
 	function updateResourceSummaries(resourceSummaryList) {
-	   	 resourceSummaryService.updateResourceSummaries($scope.jobNo, resourceSummaryList)
-	   	 .then(
-				 function( data ) {
-					 console.log(data);
-					 if(data.length!=0){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						}else{
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
-							loadResourceSummaries();
-						}
-				 });
-	    }
+		resourceSummaryService.updateResourceSummaries($scope.jobNo, resourceSummaryList)
+		.then(
+				function( data ) {
+					console.log(data);
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
+						$state.reload();
+					}
+				});
+	}
 	
 	
 }]);

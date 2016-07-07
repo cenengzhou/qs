@@ -1,0 +1,17 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+			<h4 class="modal-title text-white text-center">{{modalOptions.headerText}}</h4>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<p class="text-center-md">{{modalOptions.bodyText}}</p>
+	</div>
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" data-ng-click="modalOptions.ok()">{{modalOptions.actionButtonText}}</button>
+	<button type="button" class="btn" data-ng-click="modalOptions.close()">{{modalOptions.closeButtonText}}</button>
+</div>

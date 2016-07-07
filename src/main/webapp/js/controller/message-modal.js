@@ -5,7 +5,7 @@ mainApp.controller("MessageModalCtrl", ['$scope', '$uibModalInstance', 'modalSta
 	$scope.message = modalParam;
 
 	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
+		$uibModalInstance.close();
 	};
 
 

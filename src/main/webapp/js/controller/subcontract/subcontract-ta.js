@@ -1,8 +1,11 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'modalService', '$state', 'uiGridConstants',
-                                         function ($scope, resourceSummaryService, tenderService, modalService, $state, uiGridConstants) {
+mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
+                                         function ($scope, resourceSummaryService, tenderService, subcontractService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
+	
+	getSubcontract()
+	getResourceSummariesBySC();
+	getTenderDetailList();
+	
 	var accountBalance = {};
-	loadResourceSummaries();
-	loadTenderDetailList();
 
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -78,16 +81,16 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 			if(rowEntity.quantity!=null && rowEntity.rateBudget != null && rowEntity.amountBudget != null){
 				if(colDef.name == "quantity"){
-					rowEntity.quantity = round(newValue, 4);
-					rowEntity.amountBudget = round(rowEntity.quantity * rowEntity.rateBudget, 2);
+					rowEntity.quantity = roundUtil.round(newValue, 4);
+					rowEntity.amountBudget = roundUtil.round(rowEntity.quantity * rowEntity.rateBudget, 2);
 				}
 				else if(colDef.name == "rateBudget"){
-					rowEntity.rateBudget = round(newValue, 2);
-					rowEntity.amountBudget = round(rowEntity.quantity * rowEntity.rateBudget, 2);
+					rowEntity.rateBudget = roundUtil.round(newValue, 2);
+					rowEntity.amountBudget = roundUtil.round(rowEntity.quantity * rowEntity.rateBudget, 2);
 				}
 				else if(colDef.name == "amountBudget"){
-					rowEntity.amountBudget  = round(newValue, 2);
-					rowEntity.quantity = round(rowEntity.amountBudget/rowEntity.rateBudget, 4);
+					rowEntity.amountBudget  = roundUtil.round(newValue, 2);
+					rowEntity.quantity = roundUtil.round(rowEntity.amountBudget/rowEntity.rateBudget, 4);
 				}
 			}
 		});
@@ -159,7 +162,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 	//Save Function
 	$scope.save = function () {
 		var ta = $scope.gridOptionsTa.data;
-		console.log(ta);
+		//console.log(ta);
 		
 		//Validate Account Balance
 		var taBalance = JSON.parse(JSON.stringify(accountBalance));
@@ -167,15 +170,16 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 		for (i in ta){
 			var objectCode = ta[i]['objectCode'];
 			var subsidiaryCode = ta[i]['subsidiaryCode'];
-
-			if(Object.keys(taBalance).includes((objectCode).concat(subsidiaryCode)))
-				taBalance[(objectCode).concat(subsidiaryCode)] =  taBalance[(objectCode).concat(subsidiaryCode)] - ta[i]['amountBudget'];
+			var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
+			
+			if(Object.keys(taBalance).indexOf(accountCode) >= 0)
+				taBalance[accountCode] =  taBalance[accountCode] - ta[i]['amountBudget'];
 
 		}
 		
-		for (accountCode in taBalance){
+		for (i in taBalance){
 			//console.log("taBalance[accountCode]: "+taBalance[accountCode]);
-			if(taBalance[accountCode] != 0){
+			if(taBalance[i] != 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
 				return;
 			}
@@ -198,36 +202,60 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			newTADetailList.push(newTADetail);
 		}
 		
-		console.log(newTADetailList);
+		//console.log(newTADetailList);
 		
-		updateTenderDetails(newTADetailList);
+		
+		if($scope.subcontract.scStatus == "160"){
+			var modalOptions = {
+					bodyText: 'All exsiting tenders and tender details will be deleted. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					updateTenderDetails(newTADetailList);
+				}
+			});
+		}else{
+			updateTenderDetails(newTADetailList);
+		}
+		
 	};
 
+	
 
-
-	function loadResourceSummaries() {
+	function getResourceSummariesBySC() {
 		resourceSummaryService.getResourceSummariesBySC($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
 					$scope.gridOptions.data= data;
 
-
 					for (i in data){
 						var objectCode = data[i]['objectCode'];
 						var subsidiaryCode = data[i]['subsidiaryCode'];
-
-						if(Object.keys(accountBalance).includes((objectCode).concat(subsidiaryCode)))
-							accountBalance[(objectCode).concat(subsidiaryCode)] =  accountBalance[(objectCode).concat(subsidiaryCode)] + data[i]['amountBudget'];
+						var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
+						
+						if(Object.keys(accountBalance).indexOf(accountCode) >= 0)
+							accountBalance[accountCode] =  accountBalance[accountCode] + data[i]['amountBudget'];
 						else
-							accountBalance[(objectCode).concat(subsidiaryCode)] =  data[i]['amountBudget'];
+							accountBalance[accountCode] =  data[i]['amountBudget'];
 
 					}
 					//console.log(accountBalance);
 
 				});
 	}
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.subcontract = data;
+				});
+	}
+	
 
-	function loadTenderDetailList() {
+	function getTenderDetailList() {
 		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, 0)
 		.then(
 				function( data ) {
@@ -248,13 +276,9 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 						$state.reload();
 					}
 				});
-	}
 
+		}
 
-	//Rounding Util
-	function round(value, decimals) {
-		return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-	}
 
 
 }]);

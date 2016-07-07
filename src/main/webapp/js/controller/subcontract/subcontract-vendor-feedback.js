@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookieStore', 'tenderService', '$state', 'modalService', 
-                                                          function ($scope, $location, $uibModalInstance, uiGridConstants, modalParam, $cookieStore, tenderService, $state, modalService) {
+mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookieStore', 'tenderService', '$state', 'modalService', 'roundUtil',
+                                                          function ($scope, $location, $uibModalInstance, uiGridConstants, modalParam, $cookieStore, tenderService, $state, modalService, roundUtil) {
 
 	$scope.vendorNo= modalParam;
 	$scope.jobNo = $cookieStore.get("jobNo");
@@ -66,14 +66,14 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(colDef.name == "rateSubcontract"){
-				rowEntity.rateSubcontract  = round(newValue, 2);
-				rowEntity.amountSubcontract = round(rowEntity.quantity * rowEntity.rateSubcontract, 2);
-				rowEntity.amountForeign = round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
+				rowEntity.rateSubcontract  = roundUtil.round(newValue, 2);
+				rowEntity.amountSubcontract = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract, 2);
+				rowEntity.amountForeign = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
 			}
 			else if(colDef.name == "amountSubcontract"){
-				rowEntity.amountSubcontract = round(newValue, 2);
-				rowEntity.rateSubcontract = round(rowEntity.amountSubcontract / rowEntity.quantity, 2);
-				rowEntity.amountForeign = round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
+				rowEntity.amountSubcontract = roundUtil.round(newValue, 2);
+				rowEntity.rateSubcontract = roundUtil.round(rowEntity.amountSubcontract / rowEntity.quantity, 2);
+				rowEntity.amountForeign = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
 			}
 		});
 
@@ -89,7 +89,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 		 
 		 for (i in gridData){
 				$scope.tender.exchangeRate;
-			 gridData[i]['amountForeign'] = round($scope.tender.exchangeRate * gridData[i]['rateSubcontract'] * gridData[i]['quantity'], 2);
+			 gridData[i]['amountForeign'] = roundUtil.round($scope.tender.exchangeRate * gridData[i]['rateSubcontract'] * gridData[i]['quantity'], 2);
 		 }
 		 
 		 $scope.gridApi.grid.refresh();
@@ -185,17 +185,13 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						$uibModalInstance.close();
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Tender Details have been updated.");
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Tender feedback rate has been updated.");
 						$state.reload();
 						
 					}
 				});
 	}
 	
-	//Rounding Util
-	function round(value, decimals) {
-		return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-	}
 	
 }]);
 

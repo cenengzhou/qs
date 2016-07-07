@@ -1,7 +1,8 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms',
-                                                  function ($scope, $location, subcontractService, $cookieStore, modalService, subcontractRetentionTerms) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms',
+                                                  function ($scope, subcontractService, $cookieStore, modalService, subcontractRetentionTerms) {
 
-
+	getSubcontract();
+	
 	$scope.subcontract = {
 			id:"",
 			packageNo : "",
@@ -45,24 +46,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontract
 	//Rentention
 	$scope.percentageOption= "Revised";
 
-		subcontractService.getSubcontract($cookieStore.get("jobNo"), $cookieStore.get("subcontractNo"))
-		.then(
-				function( data ) {
-					console.log(data);
-					$scope.subcontract = data;
-					if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_LUMPSUM){
-						$scope.subcontract.retentionTerms = "Lump Sum";
-					}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_ORIGINAL){
-						$scope.subcontract.retentionTerms = "Percentage";
-						$scope.percentageOption= "Original";
-					}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_REVISED){
-						$scope.subcontract.retentionTerms = "Percentage";
-						$scope.percentageOption= "Revised";
-					} 
-					
-				});
-	//}
-
+	
 	$scope.updateLabour = function (){
 		if ($scope.subcontract.labourIncludedContract == true){
 			$scope.subcontract.labourIncludedContract = false;
@@ -162,6 +146,25 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', '$location', 'subcontract
 		getWorkScope($scope.subcontract.workscope);
 	};
 
+	function getSubcontract(){
+		subcontractService.getSubcontract($cookieStore.get("jobNo"), $cookieStore.get("subcontractNo"))
+		.then(
+				function( data ) {
+					//console.log(data);
+					$scope.subcontract = data;
+					if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_LUMPSUM){
+						$scope.subcontract.retentionTerms = "Lump Sum";
+					}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_ORIGINAL){
+						$scope.subcontract.retentionTerms = "Percentage";
+						$scope.percentageOption= "Original";
+					}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_REVISED){
+						$scope.subcontract.retentionTerms = "Percentage";
+						$scope.percentageOption= "Revised";
+					} 
+
+				});
+	}
+	
 	function getWorkScope(workScopeCode){
 		subcontractService.getWorkScope(workScopeCode)
 		.then(
