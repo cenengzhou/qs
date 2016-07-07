@@ -8,34 +8,32 @@
 	</ol>
 	<!-- end breadcrumb -->
 
-		<!-- ng-style="{height: 800 + 'px'}" -->
-		<!-- Main content -->
-		<div class="row col-md-12">
-			<div ui-grid="gridOptions" external-scopes="clickHandler"
-				ui-grid-row-edit ui-grid-pagination ui-grid-selection
-				ui-grid-cellnav ui-grid-edit class="grid" style="height: {{innerHeight-180}}px;overflow:auto"></div>
-		</div>
-
-		<div class="row">
-
-			<table class="box box-primary col-md-12">
-				<tr>
-					<td ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
-						<button class="btn btn-block btn-info glyphicon glyphicon-edit" ng-click="onUpdate()">
-							Update</button>
-					</td>
-					<td ng-show="selectedRows.length>0">
-						<button
-							class="btn btn-block btn-danger glyphicon glyphicon-remove-sign" ng-click="onDelete()">Delete</button>
-					</td>
-					<td>
-						<button
-							class="btn btn-block btn-warning glyphicon glyphicon-plus-sign">
-							Add</button>
-					</td>
-				</tr>
-			</table>
-
-		</div>
+	<!-- ng-style="{height: 800 + 'px'}" -->
+	<!-- Main content -->
+	<div class="row col-md-12">
+		<div ui-grid="gridOptions" external-scopes="clickHandler"
+			ui-grid-row-edit ui-grid-pagination ui-grid-selection ui-grid-cellnav
+			ui-grid-edit class="grid" resize ng-style="resizeWithOffset(215)"></div>
+	</div>
+	<div class="row">
+		<table class="box box-primary col-md-12">
+			<tr>
+				<td ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
+					<button class="btn btn-block btn-warning glyphicon glyphicon-edit"
+						ng-click="onUpdate()">Update</button>
+				</td>
+				<td ng-show="selectedRows.length>0">
+					<button
+						class="btn btn-block btn-danger glyphicon glyphicon-remove-sign"
+						ng-click="onDelete()">Delete</button>
+				</td>
+				<td>
+					<button
+						class="btn btn-block btn-info glyphicon glyphicon-plus-sign"
+						ng-click="onAdd()">Add</button>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <!-- end #content -->

@@ -1,19 +1,43 @@
 mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 		$rootScope, $http, modalService) {
-	$http.post("service/transit/ObtainTransitCodeMatcheList").then(function(response) {
-		$scope.gridOptions.data = response.data;
-	});
-
-	$scope.onSubmit = function(){
-		var type = uploadResourceCodeForm.type.value;
-		var jobNumber = uploadResourceCodeForm.jobNumber.value;
-		$http.post("gammonqs/transitUpload.smvc?type="+type+"&jobNumber="+jobNumber)
-		.then(function(response){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "File uploaded.");;
-		}, function(response){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Status:" + response.statusText );
-		});
+	$scope.loadData = function() {
+		$http.post("service/transit/ObtainTransitCodeMatcheList").then(
+				function(response) {
+					$scope.gridOptions.data = response.data;
+				});
 	};
+	$scope.loadData();
+
+	$scope.onSubmit = function() {
+		var formData = new FormData();
+		formData.append('files', uploadFile1.files[0]);
+		formData.append('type', 'Resource Code Matching');
+		formData.append('jobNumber', $scope.jobNo);
+		$http({
+			method : 'POST',
+			url : 'gammonqs/transitUpload.smvc',
+			data : formData,
+			headers : {
+				'Content-Type' : undefined
+			}
+		}).then(
+				function(response) {
+					$scope.loadData();
+					var msg = response.data;
+					modalService.open('md', 'view/message-modal.html',
+							'MessageModalCtrl', 'Success', "Success:"
+									+ msg.success
+									+ "\r\nNumber Record Imported:"
+									+ msg.numRecordImported
+									+ "\r\nHave warning:" + msg.haveWarning);
+				},
+				function(response) {
+					modalService.open('md', 'view/message-modal.html',
+							'MessageModalCtrl', 'Fail', "Status:"
+									+ response.statusText);
+				});
+	};
+
 	$scope.gridOptions = {
 		enableFiltering : true,
 		enableColumnResizing : true,
@@ -26,9 +50,9 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 		enableCellEditOnFocus : false,
 		allowCellFocus : false,
 		enableCellSelection : false,
-		enablePaginationControls: true,
-		paginationPageSizes: [25, 50, 100, 150, 200],
-	    paginationPageSize: 25,
+		enablePaginationControls : true,
+		paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+		paginationPageSize : 25,
 		columnDefs : [ {
 			field : 'matchingType',
 			displayName : "Matching Type",
@@ -47,9 +71,9 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 			enableCellEdit : false
 		} ]
 	};
-	
-	$scope.gridOptions.onRegisterApi = function (gridApi) {
-		  $scope.gridApi = gridApi;
+
+	$scope.gridOptions.onRegisterApi = function(gridApi) {
+		$scope.gridApi = gridApi;
 	};
-	
+
 });

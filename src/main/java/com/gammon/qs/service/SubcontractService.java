@@ -3751,10 +3751,6 @@ public class SubcontractService {
 		return result;
 	}
 
-	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String user) throws DatabaseOperationException {
-		return systemConstantHBDaoImpl.createSystemConstant(request, user);
-	}
-
 	public List<UDC> obtainWorkScopeList() throws DatabaseOperationException{
 		cachedWorkScopeList = unitRepository.getAllWorkScopes();
 		return cachedWorkScopeList;
@@ -5684,6 +5680,16 @@ public class SubcontractService {
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String user) {
+		Boolean result = false;
+		try {
+			result = systemConstantHBDaoImpl.createSystemConstant(request, user);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public List<Subcontract> obtainSubcontractList (String jobNo) throws DatabaseOperationException{
 		List<Subcontract> packageList = subcontractHBDao.obtainPackageList(jobNo);
 		return packageList;	

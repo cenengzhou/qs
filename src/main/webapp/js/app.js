@@ -678,6 +678,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/admin/admin-TransitUOMMaintenance.js',
                            'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
+                           'js/controller/admin/admin-SubcontractStandardTermsAddModal.js',
                            'js/controller/admin/admin-SchedulerMaintenance.js'
                     ] 
                 });

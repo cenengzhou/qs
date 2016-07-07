@@ -1,0 +1,91 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h3 class="modal-title">Add New System Constant</h3>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				confirmed-click="cancel()" ng-confirm-click>
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+
+	<div class="animated fadeIn">
+		<form name="addStdTermsForm" id="addStdTermsForm"
+			class="form-input-flat ng-pristine ng-valid" ng-submit="onSubmit()">
+			<fieldset>
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<h3 class="form-header form-header-lg m-b-10">
+							<span class="icon text-primary"><i class="fa fa-star"></i></span>
+						</h3>
+						<p class="m-b-20">Please input the required fields below.</p>						
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="systemCode">System Code</label>
+						<select class="form-control" ng-options="systemCode for systemCode in systemCodeList" id="systemCode" name="systemCode" ng-model="newRecord.systemCode" ng-required="true">
+						<option></option>
+						</select>
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="company">Company</label>
+						<select class="form-control" ng-options="company for company in companyList" id="company" name="company" ng-model="newRecord.company" ng-required="true">
+						<option></option>
+						</select>
+					</div>
+
+					<div class="form-group horizontal col-md-6">
+						<label for="scPaymentTerm">SC Payment Term</label>
+						<select class="form-control" ng-options="scPaymentTerm for scPaymentTerm in scPaymentTermList" id="scPaymentTerm" name="scPaymentTerm" ng-model="newRecord.scPaymentTerm" ng-required="true">
+						<option></option>
+						</select>
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="scMaxRetentionPercent">SC Max Retention %</label>
+						<input type="number" class="form-control" id="scMaxRetentionPercent" name="scMaxRetentionPercent" ng-model="newRecord.scMaxRetentionPercent" ng-required="true">
+					</div>
+					
+					<div class="form-group horizontal col-md-6">
+						<label for="scInterimRetentionPercent">SC Interim Retention %</label>
+						<input type="number" class="form-control" id="scInterimRetentionPercent" name="scInterimRetentionPercent" ng-model="newRecord.scInterimRetentionPercent" ng-required="true">
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="scMOSRetentionPercent">SC MOS Retention %</label>
+						<input type="number" class="form-control" id="scMOSRetentionPercent" name="scMOSRetentionPercent" ng-model="newRecord.scMOSRetentionPercent" ng-required="true">
+					</div>
+					
+					<div class="form-group horizontal col-md-6">
+						<label for="retentionType">Retention Type</label>
+						<select class="form-control" ng-options="retentionType for retentionType in retentionTypeList" id="retentionType" name="retentionType" ng-model="newRecord.retentionType" ng-required="true">
+						<option></option>
+						</select>
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="finQS0Review">Reviewed by Finance</label> <select class="form-control"
+							ng-options="finQS0Review for finQS0Review in finQS0ReviewList"
+							id="finQS0Review" name="finQS0Review" ng-model="newRecord.finQS0Review"
+							ng-required="true">
+						<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+	<button class="btn btn-primary btn-block" type="submit">
+		<span class="fa fa-save"></span> Add
+	</button>
+</div>
+			</fieldset>
+		</form>
+
+	</div>
+
+
+
+
+
+</div>
+
+

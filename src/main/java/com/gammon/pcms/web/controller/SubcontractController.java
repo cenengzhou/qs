@@ -10,6 +10,8 @@ package com.gammon.pcms.web.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -139,6 +141,17 @@ public class SubcontractController {
 		String username = securityService.getCurrentUser().getUsername();
 		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
 			subcontractService.inactivateSystemConstant(appSubcontractStandardTerms, username);
+		}
+	}
+
+	@RequestMapping(value = "CreateSystemConstant", method = RequestMethod.POST)
+	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
+			HttpServletRequest request, HttpServletResponse response) {
+		String username = securityService.getCurrentUser().getUsername();
+		boolean result = false;
+		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, username);
+		if (!result) {
+			response.setStatus(HttpServletResponse.SC_CONFLICT);
 		}
 	}
 

@@ -9,6 +9,7 @@ import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.service.security.SecurityService;
 
@@ -24,7 +25,7 @@ public class AuditAspectHibernateInterceptor extends EmptyInterceptor {
 		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername());
 		boolean modified = false;
 		List<String> propertyList = Arrays.asList(propertyNames);
-		if (entity instanceof BasePersistedObject) {
+		if (entity instanceof BasePersistedAuditObject) {
 			
 			modified = onSaveQS(state, username, propertyList);
 		} else if (propertyList.indexOf("dateLastModified") >=0){

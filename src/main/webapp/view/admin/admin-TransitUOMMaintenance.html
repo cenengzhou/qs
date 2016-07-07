@@ -13,9 +13,9 @@
 
 	<!-- Main content -->
 
-	<div class="row" style="height: {{innerHeight-180}}px;overflow:auto">
+	<div class="row" >
 		<div class="col-md-4">
-			<div class="panel panel-primary" style="height: 500px; overflow:auto">
+			<div class="panel panel-primary" resize ng-style="resizeWithOffset(215)">
 				<div class="panel-heading">
 					<h3 class="panel-title">
 						<i class="fa fa-info-circle"></i> Unit code matching
@@ -44,26 +44,20 @@
 		<div class="col-md-8">
 			<div id="" ui-grid="gridOptions"
 				external-scopes="clickHandler" ui-grid-exporter ui-grid-selection ui-grid-pagination ui-grid-selection ui-grid-cellnav
-				ui-grid-edit class="grid" style="height: {{innerHeight-200}}px;overflow:auto"></div>
+				ui-grid-edit class="grid" resize ng-style="resizeWithOffset(215)"></div>
 		</div>
 	</div>
+
 	<div class="row">
-	<form name="uploadUOMForm" id="uploadUOMForm" ng-submit="onSubmit()">
-	<div class="row">
+		<form name="uploadUOMForm" id="uploadUOMForm" ng-submit="onSubmit()">
 		<div class="form-group horizontal">
-			<div class="col-md-4">
-				<input class="form-control" type="file" name="uploadFile" id="uploadFile"/>
-			</div>
-			<div class="col-md-8">
-				<button type="submit" class="btn btn-block btn-primary">
-					<i class="glyphicon glyphicon-upload"></i> Upload
-				</button>
-			</div>
-			<input type="hidden" name="type" value="Unit Code Matching"/>
-			<input type="hidden" name="jobNumber" value="{{jobNo}}"/>
+			<label class="btn btn-block btn-primary">
+                <i class="glyphicon glyphicon-upload"></i> Upload&hellip; 
+				<input style="display: none;" class="form-control file-loading" type="file" name="files" id="uploadFile1" ng-model="uploadFile1" onChange="angular.element(this).scope().onSubmit()"/>	
+			</label>
 		</div>
+		</form>
 	</div>
-	</form>
-	</div>
+
 	<!-- end #content -->
 </div>

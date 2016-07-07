@@ -16,17 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.service.BpiItemService;
+import com.gammon.qs.service.JdeAccountLedgerService;
+import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
 import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;
-import com.gammon.qs.util.FileUtil;
 import com.google.gson.Gson;
 
 /**
@@ -58,6 +57,7 @@ public class UploadController {
 	@RequestMapping(value="/gammonqs/imageUpload.smvc",method=RequestMethod.POST)
 	public void uploadAttachment(@RequestParam(required=true,value="messageBoardID") String messageBoardID,
 								 @RequestParam(required=true,value="docType") String docType,
+								 @RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response ) throws Exception{
 		throw new RuntimeException("remove entity | messageBoardAttachment | remark uploadAttachment(...)");
 		//TODO: remove entity | messageBoardAttachment | remark uploadAttachment(...)
@@ -66,7 +66,7 @@ public class UploadController {
 //		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 //		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 //		
-//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		//List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 //		
 //		for (MultipartFile multipartFile : multipartFiles) {
 //			byte[] file = multipartFile.getBytes();
@@ -93,13 +93,14 @@ public class UploadController {
 	@RequestMapping(value = "/gammonqs/bqItemIVUpload.smvc", method = RequestMethod.POST)
 	public void uploadBQItem(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 											@RequestParam(required = true, value = "username") String username, 
+											@RequestParam("files") List<MultipartFile> multipartFiles,
 											HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload BQ Item - START");
 
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -126,6 +127,7 @@ public class UploadController {
 	
 	@RequestMapping(value = "/gammonqs/bqResourceSummaryIVUpload.smvc", method = RequestMethod.POST)
 	public void uploadBQResourceSummaryIV(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
+											@RequestParam("files") List<MultipartFile> multipartFiles,
 											HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload BQ Resource Summary IV - START");
 		
@@ -134,7 +136,7 @@ public class UploadController {
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -162,6 +164,7 @@ public class UploadController {
 	@RequestMapping(value = "/gammonqs/budgetForecastExcelUpload.smvc", method = RequestMethod.POST)
 	public void uploadBudgetForecastExcel(@RequestParam(required = true, value = "ledgerType") String ledgerType, 
 											@RequestParam(required = true, value = "jobNo") String jobNo, 
+											@RequestParam("files") List<MultipartFile> multipartFiles,
 											HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Budget Forecast Excel - START");
 		
@@ -170,7 +173,7 @@ public class UploadController {
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -198,6 +201,7 @@ public class UploadController {
 	@RequestMapping(value = "/gammonqs/resourceIVUpload.smvc", method = RequestMethod.POST)
 	public void uploadResourceIV(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 											@RequestParam(required = true, value = "username") String username, 
+											@RequestParam("files") List<MultipartFile> multipartFiles,
 											HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Resource IV - START");
 		
@@ -206,7 +210,7 @@ public class UploadController {
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -238,6 +242,7 @@ public class UploadController {
 										@RequestParam(required = true, value = "legacyJobFlag") String legacyJobFlag, 
 										@RequestParam(required = true, value = "allowManualInputSCWorkdone") String allowManualInputSCWorkdone,
 										@RequestParam(required = true, value = "userID") String userID, 
+										@RequestParam("files") List<MultipartFile> multipartFiles,
 										HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload SC Detail Excel - START");
 
@@ -246,7 +251,7 @@ public class UploadController {
 		
 		Integer packageNumber = Integer.parseInt(packageNumberString);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 		UploadSubcontractDetailByExcelResponse uploadFileResponse = null;
 		
 		for (MultipartFile multipartFile : multipartFiles) {
@@ -274,6 +279,7 @@ public class UploadController {
 	@RequestMapping(value = "/gammonqs/tenderAnalysisExcelUpload.smvc", method = RequestMethod.POST)
 	public void uploadTenderAnalysisExcel( @RequestParam(required = true, value = "jobNumber") String jobNumber, 
 											@RequestParam(required = true, value = "packageNumber") String packageNumber,
+											@RequestParam("files") List<MultipartFile> multipartFiles,
 											HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Tender Analysis Excel - START");
 
@@ -281,7 +287,7 @@ public class UploadController {
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 		
 		
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 		
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -307,7 +313,7 @@ public class UploadController {
 	}
 	
 	@RequestMapping(value = "/gammonqs/tenderAnalysisVendorExcelUpload.smvc", method = RequestMethod.POST)
-	public void uploadTenderAnalysisVendorExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void uploadTenderAnalysisVendorExcel(@RequestParam("files") List<MultipartFile> multipartFiles, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Tender Analysis Vendor Excel - START");
 		
 		if (!(request instanceof MultipartHttpServletRequest)) {
@@ -317,7 +323,7 @@ public class UploadController {
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 		
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 		
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();
@@ -341,18 +347,19 @@ public class UploadController {
 			}
 		}
 	}
-	
+    
 	@RequestMapping(value = "/gammonqs/transitUpload.smvc", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "type") String type, 
+								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Transit - START");
 		
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
-		
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
-		
+	
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+
 		TransitImportResponse transitImportResponse = null;
 		
 		for (MultipartFile multipartFile : multipartFiles) {
@@ -382,13 +389,14 @@ public class UploadController {
 	public void uploadMainCertificateAttachment(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "mainCertNumber") String mainCertNumber,
 								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
+								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Main Certificate Attachment - START");
 		
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 		
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 		
 		
 		for (MultipartFile multipartFile : multipartFiles) {
@@ -416,13 +424,14 @@ public class UploadController {
 	@RequestMapping(value = "/gammonqs/repackagingAttachmentUpload.smvc", method = RequestMethod.POST)
 	public void uploadRepackingAttachment(@RequestParam(required = true, value = "repackagingEntryID") String repackagingEntryID, 
 								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
+								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Repacking Attachment - START");
 		
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 
 		for (MultipartFile multipartFile : multipartFiles) {
@@ -454,13 +463,14 @@ public class UploadController {
 								@RequestParam(required = true, value = "nameObject") String nameObject,
 								@RequestParam(required = true, value = "textKey") String textKey,
 								@RequestParam(required = true, value = "createdUser") String createdUser,
+								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload SC Attachment - START");
 
 		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
 		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
 
-		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 			byte[] file = multipartFile.getBytes();

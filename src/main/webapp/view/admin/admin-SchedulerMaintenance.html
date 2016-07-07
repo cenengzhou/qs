@@ -12,7 +12,7 @@
 	<!-- ng-style="{height: 800 + 'px'}" -->
 	<!-- Main content -->
 	<form name="triggerForm" ng-submit="onSubmit()">
-	<div class="row" vertilize-container style="height: {{innerHeight-180}}px;overflow:auto">
+	<div class="row" vertilize-container resize ng-style="resizeWithOffset(180)">
 		<div class="col-sm-6 col-md-4" ng-repeat="trigger in triggers">
 			<div class="box"
 				ng-class="{'box-warning' : isHover($index) , 'box-default' : !isHover($index)}"
