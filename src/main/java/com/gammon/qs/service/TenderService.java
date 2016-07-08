@@ -15,25 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
+import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.BpiItemHBDao;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
-import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.BpiItemResourceHBDao;
+import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.PaymentCertDetailHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
-import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
-import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.BpiItem;
+import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.domain.BpiItemResource;
-import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
@@ -41,8 +41,6 @@ import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
-import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisDetailWrapper;
-import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisVendorWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -87,7 +85,7 @@ public class TenderService implements Serializable {
 	public List<String> obtainUneditableTADetailIDs(String jobNo, String packageNo, Integer vendorNo) throws DatabaseOperationException{
 		List<String> uneditableTADetailIDs = new ArrayList<String>();
 		
-		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNo, packageNo, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTender(jobNo, packageNo, vendorNo);
 		
 		if(tenderAnalysis!=null && Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
 			List<SubcontractDetail> scDetailList = subcontractDetailDao.obtainSCDetails(jobNo, packageNo);
@@ -361,7 +359,7 @@ public class TenderService implements Serializable {
 		Tender vendorTender = null;
 		Map<TenderDetail, Double> baseDetailMap = null;
 		if(!vendorNo.equals("0")){
-			vendorTender = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(vendorNo));
+			vendorTender = tenderDao.obtainTender(jobNumber, packageNo, Integer.valueOf(vendorNo));
 			baseDetailMap = new HashMap<TenderDetail, Double>(details.size());
 			for(TenderDetail detail : details)
 				baseDetailMap.put(detail, detail.getRateBudget());
@@ -427,7 +425,7 @@ public class TenderService implements Serializable {
 		logger.info("createOrUpdateTADetailFromResource resource ID = " + resource.getId());
 		String jobNumber = resource.getJobNumber();
 		String packageNo = resource.getPackageNo();
-		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, Integer.valueOf(0));
+		Tender tenderAnalysis = tenderDao.obtainTender(jobNumber, packageNo, Integer.valueOf(0));
 		//If TA has not been initiated, create TA with details copied from resources
 		if(tenderAnalysis == null){
 			JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
@@ -612,10 +610,21 @@ public class TenderService implements Serializable {
 	} 
 
 	public Tender obtainTender(String jobNo, String subcontractNo, Integer vendorNo) throws Exception{
-		Tender tender = tenderDao.obtainTenderAnalysis(jobNo, subcontractNo, vendorNo);
+		Tender tender = tenderDao.obtainTender(jobNo, subcontractNo, vendorNo);
+		return tender;
+	}
+	
+	public Tender obtainRecommendedTender(String jobNo, String subcontractNo) throws Exception{
+		Tender tender = null;
+		try {
+			tender = tenderDao.obtainRecommendedTender(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return tender;
 	}
 
+	
 	/**
 	 * @author koeyyeung
 	 * created on 04 Jul, 2016**/
@@ -659,7 +668,7 @@ public class TenderService implements Serializable {
 	private String createTenderDetails(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{
 		String error = "";
 		try {
-			Tender tenderInDB = tenderDao.obtainTenderAnalysis(jobNo, subcontractNo, subcontractorNo);
+			Tender tenderInDB = tenderDao.obtainTender(jobNo, subcontractNo, subcontractorNo);
 			List<TenderDetail> baseDetails = tenderDetailDao.getTenderAnalysisDetails(jobNo, subcontractNo, 0);
 
 			for(TenderDetail detail : baseDetails){
@@ -900,7 +909,7 @@ public class TenderService implements Serializable {
 	
 	public String deleteTender(String jobNumber, String packageNo, Integer vendorNo) throws Exception{
 		String error = "";
-		Tender tenderAnalysis = tenderDao.obtainTenderAnalysis(jobNumber, packageNo, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTender(jobNumber, packageNo, vendorNo);
 		if(tenderAnalysis == null){
 			error = "Tender does not exsit.";
 			return error;
@@ -947,7 +956,30 @@ public class TenderService implements Serializable {
 		return error;
 	}	
 	
-	public TenderAnalysisComparisonWrapper obtainTenderAnalysisComparison(JobInfo job, String packageNo) throws Exception{
+	
+	public TenderAnalysisComparisonWrapper obtainTenderComparisonList(String jobNo, String packageNo) throws Exception{
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
+		List<Tender> tenderList = tenderDao.obtainTenderAnalysisList(jobNo, packageNo);
+		if(tenderList == null || tenderList.size() == 0){
+			if("1".equals(job.getRepackagingType()))
+					return null;
+			else{
+				tenderList = new ArrayList<Tender>(1);
+				tenderList.add(createTAFromResources(job, packageNo));
+			}
+		}
+		
+		for (Tender tender: tenderList){
+			if(tender.getVendorNo()==0){
+				
+			}
+		}
+		
+		return null;
+	}
+	
+	/*public TenderAnalysisComparisonWrapper obtainTenderAnalysisComparison(String jobNo, String packageNo) throws Exception{
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
 		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
 		if(scPackage == null)
 			return null;
@@ -997,7 +1029,7 @@ public class TenderService implements Serializable {
 			}
 		}
 		return tenderAnalysisComparison;
-	}
+	}*/
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	

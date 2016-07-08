@@ -3,7 +3,7 @@
 
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
-			<h5><span class="icofont icofont-star-alt-2"></span>Please select a subcontractor from below.</h5>
+			<h5><span class="icofont icofont-tick-boxed"></span>Please select a subcontractor from below.</h5>
 			<div class="col-md-4 col-xs-12 animated flipInX"
 				ng-repeat="tender in tenders">
 				<div class="select-trigger m-b-10" ng-class="{'selected': tender.status == 'RCM'}">
@@ -14,7 +14,7 @@
 						
 						<h5>{{tender.vendorNo}}</h5>
 						<h5>{{tender.nameSubcontractor}}</h5>
-						<h5 class="text-primary">Tender Budget: {{tender.budgetAmount-tender.amtBuyingGainLoss | currency}}</h5>
+						<h5 class="text-primary">Tender Budget: {{tender.currencyCode}} {{tender.budgetAmount-tender.amtBuyingGainLoss | currency}}</h5>
 					</a>
 					
 					<div class="col-md-12">

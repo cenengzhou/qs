@@ -2,34 +2,52 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.service.TenderVarianceService;
-import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
-@RequestMapping(value = "service/tenderVariance/", method = RequestMethod.POST)
+@RequestMapping(value = "service/tenderVariance/")
 public class TenderVarianceController {
 
 	@Autowired
 	private TenderVarianceService tenderVarianceService;
 	
-	@RequestMapping("createTenderVariance")
-	public void createTenderVariance(@RequestBody TenderVariance tenderVariance, HttpServletRequest request, HttpServletResponse response) throws DatabaseOperationException{
-		tenderVarianceService.createTenderVariance(tenderVariance);
-		response.setStatus(HttpServletResponse.SC_CREATED);
+	
+	
+	@RequestMapping(value = "getTenderVarianceList", method = RequestMethod.GET)
+	public List<TenderVariance> getTenderVarianceList(@RequestParam(name="jobNo") String jobNo, 
+														@RequestParam(name="subcontractNo") String subcontractNo,
+														@RequestParam(name="subcontractorNo") String subcontractorNo){
+		List<TenderVariance> tenderVarianceList = null;
+		try {
+			tenderVarianceList = tenderVarianceService.obtainTenderVarianceList(jobNo, subcontractNo, subcontractorNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tenderVarianceList;
 	}
 	
-	@RequestMapping("obtainAllTenderVariance")
-	public List<TenderVariance> obtainAllTenderVariance(HttpServletRequest request, HttpServletResponse response) throws DatabaseOperationException{
-		return tenderVarianceService.obtainAllTenderVariance();
+	@RequestMapping(value = "createTenderVariance", method = RequestMethod.POST)
+	public String createTenderVariance(@RequestParam(name="jobNo") String jobNo, 
+									@RequestParam(name="subcontractNo") String subcontractNo,
+									@RequestParam(name="subcontractorNo") String subcontractorNo,
+									@Valid @RequestBody List<TenderVariance> tenderVarianceList){
+		String result = "";
+		try {
+			result = tenderVarianceService.createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
+	
 }

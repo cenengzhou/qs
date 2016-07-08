@@ -348,7 +348,7 @@ public class SubcontractorService{
 				tenderAnalysisWrapper.setStatus(tenderAnalysis.getStatus());
 				tenderAnalysisWrapper.setDivision(tenderAnalysis.getSubcontract().getJobInfo().getDivision());
 
-				Tender tender = tenderAnalysisDao.obtainTenderAnalysis(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
+				Tender tender = tenderAnalysisDao.obtainTender(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
 				tenderAnalysisWrapper.setBudgetAmount((tender==null || tender.getBudgetAmount()==null)?0.0:tender.getBudgetAmount());
 
 				tenderAnalysisWrapperList.add(tenderAnalysisWrapper);

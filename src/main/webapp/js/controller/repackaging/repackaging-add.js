@@ -24,7 +24,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 	//Save Function
 	$scope.save = function () {
 
-		if (false === $('form[name="form-wizard-step-1"]').parsley().validate()) {
+		if (false === $('form[name="form-validate"]').parsley().validate()) {
 			event.preventDefault();  
 			return;
 		}

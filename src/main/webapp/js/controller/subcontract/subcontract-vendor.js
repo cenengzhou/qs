@@ -111,8 +111,21 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractS
 	}
 
 
+	getTenderComparisonList();
+	function getTenderComparisonList() {
+		tenderService.getTenderComparisonList($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log("getTenderComparisonList");
+					console.log(data);
+					//console.log(Object.keys(data.detailWrapperMap));
+					/*console.log(data.detailWrapperMap.);*/
+				});
+	}
 
+	
 }]);
+
 
 
 

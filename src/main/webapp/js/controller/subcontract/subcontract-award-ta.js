@@ -1,7 +1,7 @@
 mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
                                          function ($scope, resourceSummaryService, tenderService, subcontractService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
 	
-	getSubcontract()
+	getSubcontract();
 	getResourceSummariesBySC();
 	getTenderDetailList();
 	
@@ -97,7 +97,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
 			$scope.removeRowIndex = $scope.gridOptionsTa.data.indexOf(row.entity);
-			console.log("$scope.removeRowIndex "+$scope.removeRowIndex);
 		});
 
 	}

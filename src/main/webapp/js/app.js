@@ -203,7 +203,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/subcontract/subcontract-ta.js'
+               	         'js/controller/subcontract/subcontract-award-ta.js'
                     ] 
                 });
             }]
@@ -226,6 +226,37 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             }]
         },
         controller: 'SubcontractorCtrl'
+	})
+	.state('subcontract-award.variance', {
+		url: "/variance",
+		templateUrl: "view/subcontract/subcontract-award-variance.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/subcontract/subcontract-award-variance.js',
+               	         'js/service/tender-variance-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'TenderVarianceCtrl'
+	})
+	.state('subcontract-award.dates', {
+		url: "/dates",
+		templateUrl: "view/subcontract/subcontract-dates.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	         'js/controller/subcontract/subcontract-dates.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'SubcontractDatesCtrl'
 	})
 	.state('subcontract-award.summary', {
 		url: "/summary",
@@ -767,10 +798,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 }]);
 
 mainApp.config(['$httpProvider', function($httpProvider){
-		/**The custom “X-Requested-With” is a conventional header sent by browser clients, and it used to be the default in Angular but they took it out in 1.3.0. 
-		 * Spring Security responds to it by not sending a “WWW-Authenticate” header in a 401 response, and thus the browser will not pop up an authentication dialog**/
-		 //$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
-		
 		var httpIntercepter = ['$rootScope', '$q', '$log', '$window', function($rootScope, $q, $log, $window) {
 			return {
 				'request' : function(config) {
@@ -800,6 +827,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 			};
 		}];
 		$httpProvider.interceptors.push(httpIntercepter);
+		
 }]);
 
 

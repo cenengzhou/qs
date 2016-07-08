@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.TenderService;
+import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
 
 @RestController
 @RequestMapping(value = "service/tender/")
@@ -64,6 +65,20 @@ public class TenderController {
 		return tender;
 	}
 	
+	@RequestMapping(value = "getRecommendedTender", method = RequestMethod.GET)
+	public Tender getRecommendedTender(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo){
+
+		Tender tender = null;
+		try {
+			//VendorNo: 0 is excluded 
+			tender = tenderService.obtainRecommendedTender(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return tender;
+	}
+	
 	@RequestMapping(value = "getTenderList", method = RequestMethod.GET)
 	public List<Tender> getTenderList(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo){
@@ -78,8 +93,18 @@ public class TenderController {
 		return tenderList;
 	}
 	
-	
-	
+	@RequestMapping(value = "getTenderComparisonList", method = RequestMethod.GET)
+	public TenderAnalysisComparisonWrapper getTenderComparisonList(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo){
+
+		TenderAnalysisComparisonWrapper wrapper = null;
+		try {
+			wrapper = tenderService.obtainTenderComparisonList(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return wrapper;
+	}
 	
 	
 	@RequestMapping(value = "createTender", method = RequestMethod.POST)

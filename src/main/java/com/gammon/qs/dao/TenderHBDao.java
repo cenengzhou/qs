@@ -55,7 +55,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 
 	private Tender getTenderAnalysis(Tender tenderAnalysis) throws DatabaseOperationException {
 
-		return obtainTenderAnalysis(tenderAnalysis.getSubcontract().getJobInfo().getJobNumber(),tenderAnalysis.getSubcontract().getPackageNo(),tenderAnalysis.getVendorNo());
+		return obtainTender(tenderAnalysis.getSubcontract().getJobInfo().getJobNumber(),tenderAnalysis.getSubcontract().getPackageNo(),tenderAnalysis.getVendorNo());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,18 +77,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		return result;	
 	}
 	
-	public Tender obtainTenderAnalysis(String jobNumber, String packageNo, Integer vendorNo) throws DatabaseOperationException{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
-			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
-			criteria.add(Restrictions.eq("vendorNo", vendorNo));
-			return (Tender)criteria.uniqueResult();
-		}catch (HibernateException he){
-			logger.info("Fail: getTenderAnalysis((String jobNumber, String packageNo, Integer vendorNo)");
-			throw new DatabaseOperationException(he);
-		}
-	}
+	
 
 	public boolean addTenderAnalysis(Tender tenderAnalysis) throws DatabaseOperationException {
 		try {
@@ -255,6 +244,32 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 			he.printStackTrace();
 		}
 		return result;	
+	}
+	
+	public Tender obtainTender(String jobNumber, String packageNo, Integer vendorNo) throws DatabaseOperationException{
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
+			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
+			criteria.add(Restrictions.eq("vendorNo", vendorNo));
+			return (Tender)criteria.uniqueResult();
+		}catch (HibernateException he){
+			he.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Tender obtainRecommendedTender(String jobNumber, String packageNo) throws DatabaseOperationException{
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
+			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
+			criteria.add(Restrictions.eq("status", Tender.TA_STATUS_RCM));
+			return (Tender)criteria.uniqueResult();
+		}catch (HibernateException he){
+			he.printStackTrace();
+		}
+		return null;
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

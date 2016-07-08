@@ -40,8 +40,7 @@
 		</div>
 		<div class="col-xs-1"></div>
 		<div class="col-xs-2">
-			<button type="button" class="btn btn-danger btn-block pull-right"
-				ng-click="openSubcontractCreateModal()">
+			<button type="button" class="btn btn-danger btn-block pull-right" ui-sref="subcontract-award.hearder">
 				<i class="fa fa-plus-circle"></i><span> Create</span>
 			</button>
 
@@ -77,7 +76,7 @@
 					</a>
 					<div class="box-footer no-padding">
 						<ul class="nav nav-stacked">
-							<li><a ui-sref="subcontract.dashboard">{{sc.vendorName}}<span
+							<li><a ui-sref="subcontract.dashboard" ng-click="updateSubcontractNo(sc.packageNo, sc.description)">{{sc.vendorName}}<span
 									class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
 						</ul>
 					</div>
@@ -109,7 +108,7 @@
 					</a>
 					<div class="box-footer no-padding">
 						<ul class="nav nav-stacked">
-							<li><a ui-sref="subcontract-flow">{{sc.vendorName}}<span
+							<li><a ui-sref="subcontract-award.hearder" ng-click="updateSubcontractNo(sc.packageNo, sc.description)">{{sc.vendorName}}<span
 									class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
 						</ul>
 					</div>

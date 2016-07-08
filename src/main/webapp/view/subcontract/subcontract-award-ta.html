@@ -7,7 +7,7 @@
 	                  <h3 class="box-title">Resource Summaries </h3>
 	                </div>
 				<div class="box-body">
-					<div ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-exporter class="grid "></div>
+					<div ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter class="grid "></div>
 				</div>
 			</div>
 		</div>
@@ -17,19 +17,19 @@
 			<div class="row">
 
 				<div class="col-md-12 col-md-offset-3">
-					<button class="btn btn-app bg-red-gradient" ng-click="addData()">
-						<i class="fa fa-plus-square-o"></i> Add
+					<button class="btn btn-app btn-danger" ng-click="addData()">
+						<i class="fa fa-plus-circle"></i> Add
 					</button>
 				</div>
 
-				<div class="col-md-12 col-md-offset-3" ng-click="copyData()">
-					<button class="btn btn-app bg-primary">
+				<div class="col-md-12 col-md-offset-3" >
+					<button class="btn btn-app btn-primary" ng-click="copyData()">
 						<i class="fa fa-copy"></i> Copy
 					</button>
 				</div>
 
 				<div class="col-md-12 col-md-offset-3">
-					<button class="btn btn-app bg-green-gradient" ng-click="deleteData()">
+					<button class="btn btn-app btn-success" ng-click="deleteData()">
 						<i class="fa fa-trash-o"></i> Delete
 					</button>
 				</div>
@@ -43,7 +43,7 @@
 	                  <h3 class="box-title">Tender Analysis Details</h3>
 	                </div>
 				<div class="box-body">
-					<div ui-grid="gridOptionsTa" ui-grid-selection ui-grid-auto-resize ui-grid-edit ui-grid-row-edit ui-grid-cellnav ui-grid-exporter class="grid "></div>
+					<div ui-grid="gridOptionsTa" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-edit ui-grid-row-edit ui-grid-cellnav ui-grid-exporter class="grid "></div>
 				</div>
 			</div>
 		</div>     

@@ -1,10 +1,11 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
-    	getSubcontract: 	getSubcontract,
-    	getSubcontractList: getSubcontractList,
-    	addSubcontract: 	addSubcontract,
-    	getWorkScope: 		getWorkScope
+    	getSubcontract: 		getSubcontract,
+    	getSubcontractList: 	getSubcontractList,
+    	getWorkScope: 			getWorkScope,
+    	upateSubcontract: 		upateSubcontract,
+    	upateSubcontractDates: 	upateSubcontractDates
     	
     });
 	
@@ -68,10 +69,22 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function addSubcontract(jobNo, subcontract) {
+    function upateSubcontract(jobNo, subcontract) {
         var request = $http({
             method: "post",
-            url: "service/subcontract/addSubcontract",
+            url: "service/subcontract/upateSubcontract",
+            params: {
+                jobNo: jobNo
+            },
+            data: subcontract
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function upateSubcontractDates(jobNo, subcontract) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/upateSubcontractDates",
             params: {
                 jobNo: jobNo
             },

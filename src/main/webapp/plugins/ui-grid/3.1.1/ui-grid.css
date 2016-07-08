@@ -35,7 +35,7 @@
 }
 .ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar,
 .ui-grid-cell:not(:last-child) .ui-grid-vertical-bar {
-  width: 1px;
+  width: 1px;	
 }
 .ui-grid-scrollbar-placeholder {
   background-color: transparent;
@@ -149,6 +149,7 @@
   -ms-user-select: none;
   user-select: none;
   width: 0;
+  font-size: 13px; 
 }
 .ui-grid-header-cell:last-child {
   border-right: 0;
@@ -436,6 +437,7 @@ select.ui-grid-filter-select:hover {
   border-right: 1px solid;
   border-color: #d9d9d9;
   box-sizing: border-box;
+  font-size: 13px;
 }
 .ui-grid-cell:last-child {
   border-right: 0;
@@ -625,7 +627,7 @@ input[type="text"].ui-grid-filter-input:hover {
   -ms-user-select: none;
   user-select: none;
   padding: 1px 1px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
   border-radius: 2px;
   color: transparent;
@@ -2005,7 +2007,7 @@ div.ui-grid-cell-contents.invalid {
 }
 /* '嚙踝蕭嚙�' */
 .ui-grid-icon-angle-down:before {
-  content: '\c35e';
+  content: none;/* '\c35e' */
 }
 /* '嚙踝蕭嚙�' */
 .ui-grid-icon-filter:before {
@@ -2040,3 +2042,19 @@ div.ui-grid-cell-contents.invalid {
   content: '\ea61';
 }
 /* '雓蕭' */
+
+
+  .ui-grid-viewport .ui-grid-cell-contents2 {
+  word-wrap: break-word;
+  white-space: normal !important;
+  height: auto !important;
+}
+
+ .ui-grid-row, .ui-grid-cell {
+  height: auto !important;
+}
+
+.ui-grid-row div[role=row] {
+  display: flex ;
+  align-content: stretch;
+} 

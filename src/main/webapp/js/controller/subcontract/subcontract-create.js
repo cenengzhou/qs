@@ -98,7 +98,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 	$scope.save = function () {
 		$scope.saveBoolean = true;
 		
-		if (false === $('form[name="form-wizard-step-1"]').parsley().validate()) {
+		if (false === $('form[name="form-validate"]').parsley().validate()) {
 			event.preventDefault();  
 			return;
 		}

@@ -1,15 +1,18 @@
-<div class="content-wrapper">
-	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
-		<ol class="breadcrumb">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+<!-- begin #content -->
+<div id="content" class="content">
+	
+	<div ng-show="subcontract.scStatus == 500">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+					Home</a></li>
 			<li class="active">Dashboard</li>
 		</ol>
-	</section>
 	
-	<section class="content">
+		<h1 class="page-header">
+			{{jobNo}}<small> {{jobDescription}}</small>
+		</h1>
+	</div>
+	
 		<div class="row">
 	         <!-- Contractual Date  -->
 	         <div class="col-md-6">
@@ -22,90 +25,98 @@
 	                  
 						<div class="col-md-8"><label>Subcontract Requisition Approved Date</label></div>
 						<div class="form-group col-md-4">
-							 <div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="subcontractRequisitionApprovedDate">
-		                    </div><!-- /.input group -->
-						</div>
+								<div class="input-group" moment-picker="subcontract.requisitionApprovedDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.requisitionApprovedDate">
+								</div>
+							</div>
 						
 						
 						<div class="col-md-8"><label>Subcontract Tender Analysis Approved Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="subcontractTaApprovedDate">
-		                    </div><!-- /.input group -->
+		                    <div class="input-group" moment-picker="subcontract.tenderAnalysisApprovedDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.tenderAnalysisApprovedDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Pre-Award Finalization Meeting Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="preAwardFinalizationMeetingDate">
-		                    </div><!-- /.input group -->
+								                    <div class="input-group" moment-picker="subcontract.preAwardMeetingDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.preAwardMeetingDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Letter of Acceptance Signed by Subcontractor Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="loaSignedBySubcontractorDate">
-		                    </div><!-- /.input group -->
+						<div class="input-group" moment-picker="subcontract.loaSignedDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.loaSignedDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontract Document Executed by Subcontractor Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="subcontractDocumentExecutedBySubcontractorDate">
-		                    </div><!-- /.input group -->
+						<div class="input-group" moment-picker="subcontract.scDocScrDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.scDocScrDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontract Document Executed by Legal Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="subcontractDocumentExecutedByLegalDate">
-		                    </div><!-- /.input group -->
+							<div class="input-group" moment-picker="subcontract.scDocLegalDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.scDocLegalDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Works Commencement Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="worksCommencementDate">
-		                    </div><!-- /.input group -->
+							<div class="input-group" moment-picker="subcontract.workCommenceDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.workCommenceDate">
+								</div>
 						</div>
 						
 						<div class="col-md-8"><label>Subcontractor Start on-site Date</label></div>
 						<div class="form-group col-md-4">
-							<div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="subcontractorStartOnSiteDate">
-		                    </div><!-- /.input group -->
+							<div class="input-group" moment-picker="subcontract.onSiteStartDate"
+									format="YYYY-MM-DD">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="subcontract.onSiteStartDate">
+								</div>
 						</div>
 						
 		                
 	                	</div><!-- /.row -->
 		         	</div><!-- /.box-body -->
 		         	<div class="box-footer">
-				 	 	<button class="btn btn-twitter btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
+				 	 	<button class="btn btn-primary btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
 				 	</div>
 	       		 </div>
 	       		
@@ -113,87 +124,7 @@
 	         
 	         
 	         <!-- Subcontract Tracking Information  -->
-	         <div class="col-md-6">
-	         	<!-- <div class="box box-primary">
-	                <div class="box-header with-border">
-	                  <h3 class="box-title">Subcontract Tracking Information</h3>
-	                </div>
-	                <div class="box-body">
-	                  	<div class="row">
-	                  		<div class="col-md-8"><label>Subcontract Created Date</label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{subcontractCreatedDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>Subcontract Award Approval Request Sent out Date </label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{subcontractAwardApprovalRequestSentOutDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>Subcontract Award Approval Date </label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{subcontractAwardApprovalDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>Latest Addendum Approval Date </label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{latestAddendumApprovalDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>1st Payment Certificate Issued Date </label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{firstPaymentCertificateIssuedDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>Latest Payment Certificate Issued Date </label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{latestPaymentCertificateIssuedDate}}" disabled>
-								</div>
-							</div>
-							
-							<div class="col-md-8"><label>Final Payment Certificate Issued Date</label></div>
-							<div class="form-group col-md-4">
-								<div class="input-group col-md-12">
-									<div class="input-group-addon">
-				                        <i class="fa fa-calendar"></i>
-				                    </div>
-				                    <input type="text" class="form-control pull-right"  data-date-format="dd-mm-yyyy" value = "{{finalPaymentCertificateIssuedDate}}" disabled>
-								</div>
-							</div>
-							
-	                	</div>
-		         	</div>
-	       		 </div> -->
-	       		 
+	         <div class="col-md-6" ng-show="subcontract.scStatus == 500">
 	       		 <div class="box box-primary">
 	       		  	<div class="box-header with-border">
 	                  <h3 class="box-title">Subcontract Tracking Information</h3>
@@ -201,31 +132,31 @@
 	                <div class="box-body box-profile">
 	                  <ul class="list-group list-group-unbordered">
 	                    <li class="list-group-item">
-	                      <b>Subcontract Created Date</b> <b class="pull-right">{{subcontractCreatedDate | date}}</b>
+	                      <b>Subcontract Created Date</b> <b class="pull-right">{{subcontract.subcontractCreatedDate | date}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Subcontract Award Approval Request Sent out Date</b> <b class="pull-right">{{subcontractAwardApprovalRequestSentOutDate | date}}</b>
+	                      <b>Subcontract Award Approval Request Sent out Date</b> <b class="pull-right">{{subcontract.subcontractAwardApprovalRequestSentOutDate | date}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Subcontract Award Approval Date</b> <b class="pull-right">{{subcontractAwardApprovalDate | date}}</b>
+	                      <b>Subcontract Award Approval Date</b> <b class="pull-right">{{subcontract.subcontractAwardApprovalDate | date}}</b>
 	                    </li>
 	                    
 	                     <li class="list-group-item">
-	                      <b>Latest Addendum Approval Date</b> <b class="pull-right">{{latestAddendumApprovalDate | date}}</b>
+	                      <b>Latest Addendum Approval Date</b> <b class="pull-right">{{subcontract.latestAddendumApprovalDate | date}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>1st Payment Certificate Issued Date</b> <b class="pull-right">{{firstPaymentCertificateIssuedDate | date}}</b>
+	                      <b>1st Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.firstPaymentCertificateIssuedDate | date}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Latest Payment Certificate Issued Date</b> <b class="pull-right">{{latestPaymentCertificateIssuedDate | date}}</b>
+	                      <b>Latest Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.latestPaymentCertificateIssuedDate | date}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Final Payment Certificate Issued Date</b> <b class="pull-right">{{finalPaymentCertificateIssuedDate | date}}</b>
+	                      <b>Final Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.finalPaymentCertificateIssuedDate | date}}</b>
 	                    </li>
 	                    
 	                  </ul>
@@ -236,7 +167,6 @@
 	         </div>
 	         
 
-        </div><!-- /.row -->    
-     </section><!-- /.content -->
-   </div><!-- /.content-wrapper -->
+        </div>    
+   </div>
 

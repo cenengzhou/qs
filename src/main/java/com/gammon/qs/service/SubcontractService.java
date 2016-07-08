@@ -2877,7 +2877,7 @@ public class SubcontractService {
 
 		//If package is non-awarded, setOriginalSubcontractSum as the budget for the package.
 		if(!scPackage.isAwarded()){
-			Tender tenderAnalysis = tenderAnalysisHBDao.obtainTenderAnalysis(job.getJobNumber(), packageNo, Integer.valueOf(0));
+			Tender tenderAnalysis = tenderAnalysisHBDao.obtainTender(job.getJobNumber(), packageNo, Integer.valueOf(0));
 			Double budget = tenderAnalysis != null ? tenderAnalysis.getBudgetAmount() : null;
 			scPackage.setOriginalSubcontractSum(budget);
 		}
@@ -5766,17 +5766,38 @@ public class SubcontractService {
 				packageInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
 				packageInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
 				
-				
-				
 				subcontractHBDao.update(packageInDB);
 			}
 
 		}
-
-		
-		
 		return null;
 	}
+	
+	public String upateSubcontractDates(String jobNo, Subcontract subcontract) {
+		String error = "";
+		try {
+			Subcontract subcontractInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
+			if(subcontractInDB != null){
+				subcontractInDB.setRequisitionApprovedDate(subcontract.getRequisitionApprovedDate());
+				subcontractInDB.setPreAwardMeetingDate(subcontract.getPreAwardMeetingDate());
+				subcontractInDB.setTenderAnalysisApprovedDate(subcontract.getTenderAnalysisApprovedDate());
+				subcontractInDB.setLoaSignedDate(subcontract.getLoaSignedDate());
+				subcontractInDB.setScDocScrDate(subcontract.getScDocScrDate());
+				subcontractInDB.setScDocLegalDate(subcontract.getScDocLegalDate());
+				subcontractInDB.setWorkCommenceDate(subcontract.getWorkCommenceDate());
+				subcontractInDB.setOnSiteStartDate(subcontract.getOnSiteStartDate());
+
+
+				subcontractHBDao.update(subcontractInDB);
+			}
+		} catch (Exception e) {
+			error = "Subcontract dates cannot be updated.";
+			e.printStackTrace();
+		} 
+		return error;
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+
+	
 	
 }

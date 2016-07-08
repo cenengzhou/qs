@@ -7361,7 +7361,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     border-radius: 6px;
     -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.07);
     box-shadow: 0 2px 0 rgba(0,0,0,0.07);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .bwizard-steps {
     display: table !important;
@@ -7416,7 +7416,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 }
 .bwizard-steps a {
     display: block;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 20px;
 }
 .bwizard-steps a:hover,

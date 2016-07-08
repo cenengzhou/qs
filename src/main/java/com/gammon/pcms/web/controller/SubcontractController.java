@@ -92,12 +92,8 @@ public class SubcontractController {
 		return subcontract;
 	}
 	
-	@RequestMapping(value = "addSubcontract", method = RequestMethod.POST)
-	public String addSubcontract(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
-		logger.info("------------------------addSubcontract");
-		logger.info("jobNo: "+jobNo);
-		logger.info("packageNo: "+subcontract.getPackageNo());
-		
+	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
+	public String upateSubcontract(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
 			result = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
@@ -107,6 +103,19 @@ public class SubcontractController {
 		} 
 		return result;
 	}
+	
+	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
+	public String upateSubcontractDates(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
+		String result = null;
+		try {
+			result = subcontractService.upateSubcontractDates(jobNo, subcontract);
+		} catch (Exception e) {
+			result = "Subcontract cannot be updated.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
 	
 	@RequestMapping(value = "RunProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){

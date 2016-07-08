@@ -3,7 +3,9 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 	return({
 		getTenderDetailList:		getTenderDetailList,
 		getTender:					getTender,
+		getRecommendedTender:		getRecommendedTender,
 		getTenderList:				getTenderList,
+		getTenderComparisonList:	getTenderComparisonList,
 		createTender:				createTender,
 		updateTenderDetails: 		updateTenderDetails,
 		updateRecommendedTender:	updateRecommendedTender,
@@ -40,10 +42,36 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
+	function getRecommendedTender(jobNo, subcontractNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getRecommendedTender",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
 	function getTenderList(jobNo, subcontractNo) {
 		var request = $http({
 			method: "get",
 			url: "service/tender/getTenderList",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getTenderComparisonList(jobNo, subcontractNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getTenderComparisonList",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
