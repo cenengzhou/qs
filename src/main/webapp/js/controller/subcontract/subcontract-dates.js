@@ -6,33 +6,39 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 
 //	Save Function
 	$scope.save = function () {
-		console.log($scope.subcontract);
-		
-		var subcontractToUpdate = {
-				id: $scope.subcontract.id,
-				packageNo : $scope.subcontract.packageNo,
-				requisitionApprovedDate:  $scope.subcontract.requisitionApprovedDate,
-				tenderAnalysisApprovedDate : $scope.subcontract.tenderAnalysisApprovedDate,
-				preAwardMeetingDate: $scope.subcontract.preAwardMeetingDate,
-				loaSignedDate: $scope.subcontract.loaSignedDate,
-				scDocScrDate: $scope.subcontract.scDocScrDate,
-				scDocLegalDate: $scope.subcontract.scDocLegalDate,
-				workCommenceDate: $scope.subcontract.workCommenceDate,
-				onSiteStartDate: $scope.subcontract.onSiteStartDate
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			console.log($scope.subcontract);
+
+			var subcontractToUpdate = {
+					id: $scope.subcontract.id,
+					packageNo : $scope.subcontract.packageNo,
+					requisitionApprovedDate:  $scope.subcontract.requisitionApprovedDate,
+					tenderAnalysisApprovedDate : $scope.subcontract.tenderAnalysisApprovedDate,
+					preAwardMeetingDate: $scope.subcontract.preAwardMeetingDate,
+					loaSignedDate: $scope.subcontract.loaSignedDate,
+					scDocScrDate: $scope.subcontract.scDocScrDate,
+					scDocLegalDate: $scope.subcontract.scDocLegalDate,
+					workCommenceDate: $scope.subcontract.workCommenceDate,
+					onSiteStartDate: $scope.subcontract.onSiteStartDate
+			}
+
+			console.log(subcontractToUpdate);
+
+			upateSubcontractDates(subcontractToUpdate);
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
-		
-		console.log(subcontractToUpdate);
-		
-		upateSubcontractDates(subcontractToUpdate);
 	};
 	
 	function getSubcontract(){
-		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					console.log(data);
-					$scope.subcontract = data;
-				});
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+			.then(
+					function( data ) {
+						console.log(data);
+						$scope.subcontract = data;
+					});
+		}
 	}
 
 	function upateSubcontractDates(subcontractToUpdate){

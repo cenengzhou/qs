@@ -13,6 +13,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AttachPaymentHBDao;
@@ -52,6 +54,8 @@ public class TenderService implements Serializable {
 	@Autowired
 	private  TenderDetailHBDao tenderDetailDao;
 	@Autowired
+	private  TenderVarianceHBDao tenderVarianceHBDao;
+	@Autowired
 	private  SubcontractHBDao subcontractDao;
 	@Autowired
 	private  BpiItemHBDao bpiItemDao;
@@ -77,6 +81,7 @@ public class TenderService implements Serializable {
 	private  SubcontractDetailHBDao subcontractDetailDao;
 	@Autowired
 	private  AttachPaymentHBDao attachPaymentDao;
+	
 	
 	private  Logger logger = Logger.getLogger(TenderService.class.getName());
 	private List<TenderDetail> uploadCache = new ArrayList<TenderDetail>();
@@ -633,7 +638,7 @@ public class TenderService implements Serializable {
 		try {
 			Tender tenderInDB = this.obtainTender(jobNo, subcontractNo, subcontractorNo);
 			if(tenderInDB != null){
-				error = "Subcontractor already exsits.";
+				error = "Subcontractor already exists.";
 				return error;
 			}
 			
@@ -795,7 +800,7 @@ public class TenderService implements Serializable {
 			if(tenderAnalysis.getVendorNo()!=0){
 				//Payment Requisition exists
 				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
-					logger.info("Update Vendor : Payment Requisition exsits");
+					logger.info("Update Vendor : Payment Requisition exists");
 					for(TenderDetail taDetail: toBeUpdatedTaDetails){
 						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
 							
@@ -907,15 +912,15 @@ public class TenderService implements Serializable {
 		return null;
 	}
 	
-	public String deleteTender(String jobNumber, String packageNo, Integer vendorNo) throws Exception{
+	public String deleteTender(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{
 		String error = "";
-		Tender tenderAnalysis = tenderDao.obtainTender(jobNumber, packageNo, vendorNo);
+		Tender tenderAnalysis = tenderDao.obtainTender(jobNo, subcontractNo, subcontractorNo);
 		if(tenderAnalysis == null){
-			error = "Tender does not exsit.";
+			error = "Tender does not exist.";
 			return error;
 		}
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
-		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
+		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
+		Subcontract scPackage = subcontractDao.obtainPackage(job, subcontractNo);
 		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
 		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM))){
@@ -925,6 +930,11 @@ public class TenderService implements Serializable {
 		List<TenderDetail> details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
 		for (TenderDetail detail: details){
 			tenderDetailDao.delete(detail);
+		}
+		
+		List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNo, subcontractNo, String.valueOf(subcontractorNo));
+		for (TenderVariance tenderVariance: tenderVarianceList){
+			tenderVarianceHBDao.delete(tenderVariance);
 		}
 		
 		tenderDao.delete(tenderAnalysis);

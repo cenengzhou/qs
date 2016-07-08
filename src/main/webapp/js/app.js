@@ -245,7 +245,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	})
 	.state('subcontract-award.dates', {
 		url: "/dates",
-		templateUrl: "view/subcontract/subcontract-dates.html",
+		templateUrl: "view/subcontract/subcontract-award-dates.html",
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({

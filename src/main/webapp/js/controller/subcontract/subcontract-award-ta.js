@@ -1,9 +1,7 @@
 mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
                                          function ($scope, resourceSummaryService, tenderService, subcontractService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
 	
-	getSubcontract();
-	getResourceSummariesBySC();
-	getTenderDetailList();
+	loadData();
 	
 	var accountBalance = {};
 
@@ -160,67 +158,76 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 	//Save Function
 	$scope.save = function () {
-		var ta = $scope.gridOptionsTa.data;
-		//console.log(ta);
-		
-		//Validate Account Balance
-		var taBalance = JSON.parse(JSON.stringify(accountBalance));
-		
-		for (i in ta){
-			var objectCode = ta[i]['objectCode'];
-			var subsidiaryCode = ta[i]['subsidiaryCode'];
-			var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
-			
-			if(Object.keys(taBalance).indexOf(accountCode) >= 0)
-				taBalance[accountCode] =  taBalance[accountCode] - ta[i]['amountBudget'];
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			var ta = $scope.gridOptionsTa.data;
 
-		}
-		
-		for (i in taBalance){
-			//console.log("taBalance[accountCode]: "+taBalance[accountCode]);
-			if(taBalance[i] != 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
-				return;
+			//Validate Account Balance
+			var taBalance = JSON.parse(JSON.stringify(accountBalance));
+
+			for (i in ta){
+				var objectCode = ta[i]['objectCode'];
+				var subsidiaryCode = ta[i]['subsidiaryCode'];
+				var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
+
+				if(Object.keys(taBalance).indexOf(accountCode) >= 0)
+					taBalance[accountCode] =  taBalance[accountCode] - ta[i]['amountBudget'];
+
 			}
-		}
-		
-		
-		//Update
-		var newTADetailList = [];
-		for (i in ta){
-			var newTADetail = {
-					//billItem : ta[i]['billItem'],
-					objectCode: ta[i]['objectCode'],
-					subsidiaryCode: ta[i]['subsidiaryCode'],
-					description: ta[i]['description'],
-					unit: ta[i]['unit'],
-					quantity: ta[i]['quantity'],
-					rateBudget: ta[i]['rateBudget'],
-					amountBudget: ta[i]['amountBudget'],
-			}
-			newTADetailList.push(newTADetail);
-		}
-		
-		//console.log(newTADetailList);
-		
-		
-		if($scope.subcontract.scStatus == "160"){
-			var modalOptions = {
-					bodyText: 'All exsiting tenders and tender details will be deleted. Continue?'
-			};
 
-
-			confirmService.showModal({}, modalOptions).then(function (result) {
-				if(result == "Yes"){
-					updateTenderDetails(newTADetailList);
+			for (i in taBalance){
+				//console.log("taBalance[accountCode]: "+taBalance[accountCode]);
+				if(taBalance[i] != 0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
+					return;
 				}
-			});
+			}
+
+
+			//Update
+			var newTADetailList = [];
+			for (i in ta){
+				var newTADetail = {
+						//billItem : ta[i]['billItem'],
+						objectCode: ta[i]['objectCode'],
+						subsidiaryCode: ta[i]['subsidiaryCode'],
+						description: ta[i]['description'],
+						unit: ta[i]['unit'],
+						quantity: ta[i]['quantity'],
+						rateBudget: ta[i]['rateBudget'],
+						amountBudget: ta[i]['amountBudget'],
+				}
+				newTADetailList.push(newTADetail);
+			}
+			//console.log(newTADetailList);
+
+
+			if($scope.subcontract.scStatus == "160"){
+				var modalOptions = {
+						bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+				};
+
+
+				confirmService.showModal({}, modalOptions).then(function (result) {
+					if(result == "Yes"){
+						updateTenderDetails(newTADetailList);
+					}
+				});
+			}else{
+				updateTenderDetails(newTADetailList);
+			}
 		}else{
-			updateTenderDetails(newTADetailList);
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
 		
 	};
 
+	function loadData(){
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			getSubcontract();
+			getResourceSummariesBySC();
+			getTenderDetailList();
+		}
+	}
 	
 
 	function getResourceSummariesBySC() {
@@ -250,6 +257,11 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
 				});
 	}
 	

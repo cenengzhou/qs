@@ -5185,7 +5185,7 @@ public class SubcontractService {
 							}*/
 							
 
-							//--------------------------------Delete all exsiting scDetails---------------------------//
+							//--------------------------------Delete all existing scDetails---------------------------//
 							//For SERVICE Transaction
 							for(SubcontractDetail scDetails: scDetailsHBDao.getSCDetails(scPackage)){
 								scDetailsHBDao.delete(scDetails);
@@ -5286,7 +5286,7 @@ public class SubcontractService {
 						}
 						//Step 3.3: Generate ALL SC Details if no existing SC details found
 						else{
-							logger.info("Step 3.3: Generate ALL SC Details since no exsiting SC details found");
+							logger.info("Step 3.3: Generate ALL SC Details since no existing SC details found");
 							addSCDetails(scPackage, ta, budgetTA, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, false);
 						}
 						//Step 3.4: Update Package

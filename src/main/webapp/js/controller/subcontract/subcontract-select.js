@@ -29,10 +29,8 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
     
 
     $scope.updateSubcontractNo = function (subcontractNo, subcontractDescription) {
-    	if(subcontractNo){
-    		$cookieStore.put('subcontractNo', subcontractNo);
-    		$cookieStore.put('subcontractDescription', subcontractDescription);
-    	}
+    	$cookieStore.put('subcontractNo', subcontractNo);
+    	$cookieStore.put('subcontractDescription', subcontractDescription);
     }
     
     $scope.openSubcontractCreateModal = function () {

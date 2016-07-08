@@ -1,9 +1,8 @@
 
 mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 
                                              function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state) {
-	getSubcontract();
-	getResourceSummaries();
 
+	loadData();
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
@@ -58,30 +57,33 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	};
 	
 	$scope.save = function () {
-		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-		console.log(dataRows);
-		
-		if(dataRows.length==0){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No records have been modified");
-			return;
-		}
-		
-		if($scope.subcontract.scStatus == "160"){
-			var modalOptions = {
-					bodyText: 'All exsiting tenders and tender details will be deleted. Continue?'
-			};
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+			console.log(dataRows);
+			
+			if(dataRows.length==0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No records have been modified");
+				return;
+			}
+			
+			if($scope.subcontract.scStatus == "160"){
+				var modalOptions = {
+						bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+				};
 
 
-			confirmService.showModal({}, modalOptions).then(function (result) {
-				if(result == "Yes"){
-					updateResourceSummaries(dataRows);
-				}
-			});
+				confirmService.showModal({}, modalOptions).then(function (result) {
+					if(result == "Yes"){
+						updateResourceSummaries(dataRows);
+					}
+				});
+			}else{
+				updateResourceSummaries(dataRows);
+			}
 		}else{
-			updateResourceSummaries(dataRows);
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
-		
 	};
 			
 	
@@ -95,11 +97,24 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
     }
 
 	
+	function loadData(){
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			getSubcontract();
+			getResourceSummaries();
+		}/*else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
+		}*/
+	}
+	
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
 				});
 	}
 	

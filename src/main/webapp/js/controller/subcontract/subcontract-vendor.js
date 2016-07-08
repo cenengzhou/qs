@@ -1,7 +1,7 @@
 mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', '$state',
                                          function($scope, modalService, subcontractService, $http, masterListService, tenderService, modalService, $state) {
-	getTenderList();
-
+	
+	loadData();
 
 	$scope.gridOptions = {
 			enableSorting: true,
@@ -37,19 +37,23 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractS
 	});
 
 	$scope.addVendor = function(){
-		if($scope.newVendorNo != null){
-			masterListService.getSubcontractor($scope.newVendorNo)
-			.then(
-					function( data ) {
-						if(data.length==0)
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Vendor number is invalid.");
-						else{
-							createTender();
-						}
-					});
-		}
-		else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input vendor number.");
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			if($scope.newVendorNo != null){
+				masterListService.getSubcontractor($scope.newVendorNo)
+				.then(
+						function( data ) {
+							if(data.length==0)
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Vendor number is invalid.");
+							else{
+								createTender();
+							}
+						});
+			}
+			else{
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input vendor number.");
+			}
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
 	};
 
@@ -87,6 +91,34 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractS
 
 	}
 
+	function loadData(){
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			getSubcontract();
+			getTenderList();
+		}
+	}
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.subcontract = data;
+					
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
+				});
+	}
+
+	function getTenderList() {
+		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					//console.log(data);
+					$scope.tenders = data;
+				});
+	}
 
 	function createTender(){
 		tenderService.createTender($scope.jobNo, $scope.subcontractNo, $scope.newVendorNo)
@@ -99,19 +131,7 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractS
 					}
 				});
 	}
-
-
-	function getTenderList() {
-		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					//console.log(data);
-					$scope.tenders = data;
-				});
-	}
-
-
-	getTenderComparisonList();
+	
 	function getTenderComparisonList() {
 		tenderService.getTenderComparisonList($scope.jobNo, $scope.subcontractNo)
 		.then(

@@ -1,6 +1,5 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms',
-                                                  function ($scope, subcontractService, $cookieStore, modalService, subcontractRetentionTerms) {
-
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms', '$state',
+                                                  function ($scope, subcontractService, $cookieStore, modalService, subcontractRetentionTerms, $state) {
 	getSubcontract();
 	
 	$scope.subcontract = {
@@ -147,7 +146,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 	};
 
 	function getSubcontract(){
-		subcontractService.getSubcontract($cookieStore.get("jobNo"), $cookieStore.get("subcontractNo"))
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
 					//console.log(data);
@@ -161,6 +160,11 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 						$scope.subcontract.retentionTerms = "Percentage";
 						$scope.percentageOption= "Revised";
 					} 
+					
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
 
 				});
 	}
@@ -184,7 +188,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 				if(data.length>0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Alert', data);
 				}else{
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
+			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
+					$cookieStore.put('subcontractNo', $scope.newSubcontract.packageNo);
+			    	$cookieStore.put('subcontractDescription', $scope.newSubcontract.description);
+			    	$state.reload();
 				}
 
 				//Download file				 

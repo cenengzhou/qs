@@ -1,8 +1,7 @@
 mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'modalService', '$state',
                                          function ($scope, tenderVarianceService, tenderService, subcontractService, modalService, $state) {
 	
-	getSubcontract();
-	getRecommendedTender();
+	loadData();
 
 	$scope.gridOptions = {
 			enableSorting: false,
@@ -56,21 +55,36 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 
 	//Save Function
 	$scope.save = function () {
-		var ta = $scope.gridOptions.data;
-		
-		if($scope.tenderNo ==null){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a recommended tener before doing tender variance.");
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			var ta = $scope.gridOptions.data;
+
+			if($scope.tenderNo ==null){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a recommended tender before doing tender variance.");
+			}else{
+				createTenderVariance(ta);
+			}
 		}else{
-			createTenderVariance(ta);
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
 	};
 
+	function loadData(){
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			getSubcontract();
+			getRecommendedTender();
+		}
+	}
 	
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
 				});
 	}
 	
@@ -80,7 +94,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 		.then(
 				function( data ) {
 					if(data.length==0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No recommended tener exists.");
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
 					}else{
 						$scope.tender = data;
 						getTenderVarianceList($scope.tender.vendorNo);

@@ -12,41 +12,42 @@
 		{{subcontractNo}}<small> {{subcontractDescription}} 
 	</h1>
 
-	<div id="wizard" class="bwizard clearfix">
-		<ul class="bwizard-steps clearfix setup-panel">
-			<li ui-sref-active="active">
-				<a ui-sref="subcontract-award.hearder">
-					<span class="label badge-inverse">1</span> 
-					Subcontract Header <small></small><!-- Add/Edit Subcontract Header here  -->
-				</a>
-			</li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.assign" > <span class="label">2</span>
-					Assign Resources <small></small><!-- Assign Resources to Subconract -->
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.ta"> <span class="label">3</span>
-					Tender Analysis <small></small>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.vendor"> <span class="label">4</span>
-					Subcontractor <small>Select Subcontractor here</small>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.variance"> <span class="label">5</span>
-					Tender Variance <small>Variance to Standand Subcontract Terms</small>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.dates"> <span class="label">6</span>
-					Dates<small>Input Subcontract Dates</small>
-			</a></li>
-			<li ui-sref-active="active"><a > <span class="label">7</span>
-					Attachment <small>Add attachment here</small>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract.dashboard"> <span class="label">9</span>
-					Payment Requisition <small>Payment Requisition</small>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="subcontract-award.summary"> <span class="label">10</span>
-					Award Subcontract <small></small>
-			</a></li>
-			
-			
-		</ul>
+	<div id="wizard" class="bwizard clearfix ">
+		<div class="hidden-print">
+			<ul class="bwizard-steps clearfix setup-panel">
+				<li ui-sref-active="active">
+					<a ui-sref="subcontract-award.hearder">
+						<span class="label badge-inverse">1</span> 
+						Subcontract Header <small></small><!-- Add/Edit Subcontract Header here  -->
+					</a>
+				</li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.assign" > <span class="label">2</span>
+						Assign Resources <small></small><!-- Assign Resources to Subconract -->
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.ta"> <span class="label">3</span>
+						Tender Analysis <small></small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.vendor"> <span class="label">4</span>
+						Tenderer <small>Select Tenderer here</small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.variance"> <span class="label">5</span>
+						Tender Variance <small>Variance to Standand Subcontract Terms</small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.dates"> <span class="label">6</span>
+						Dates<small>Input Subcontract Dates</small>
+				</a></li>
+				<li ui-sref-active="active"><a > <span class="label">7</span>
+						Attachment <small>Add attachment here</small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract.dashboard"> <span class="label">9</span>
+						Payment Requisition <small>Payment Requisition</small>
+				</a></li>
+				<li ui-sref-active="active"><a ui-sref="subcontract-award.summary"> <span class="label">10</span>
+						Award Subcontract <small></small>
+				</a></li>
+				
+			</ul>
+		</div>
 
 		<div class="tab-content">
 			<div ui-view=""></div>

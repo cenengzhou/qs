@@ -12,6 +12,7 @@
 	.invoice-title {
 		padding-bottom: 10px;
 		/* border-bottom: 2px solid #ebeced; */
+		font-size:15px;
 		margin-bottom: 20px;
 	}
 	.invoice-header {
