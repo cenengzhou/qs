@@ -164,4 +164,10 @@ public class SubcontractController {
 		}
 	}
 
+	@RequestMapping(value = "UpdateSubcontract", method = RequestMethod.POST)
+	public void updateSubcontract(@RequestBody Subcontract subcontract) {
+		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
+		subcontractService.saveSCPackage(subcontract);
+	}
+
 }

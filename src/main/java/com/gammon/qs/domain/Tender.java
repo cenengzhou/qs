@@ -14,17 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "TENDER")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "TENDER_GEN", sequenceName = "TENDER_SEQ", allocationSize = 1)
@@ -168,6 +168,7 @@ public class Tender extends BasePersistedObject{
 		this.usernamePrepared = usernamePrepared;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "DATE_PREPARED")
 	public Date getDatePrepared() {
 		return datePrepared;

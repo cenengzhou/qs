@@ -322,7 +322,6 @@ mainApp.directive('resize', function ($window) {
                 'w': window.innerWidth
             };
         }, function (newValue, oldValue) {
-            console.log(newValue, oldValue);
             scope.innerHeight = newValue.h;
             scope.innerWidth = newValue.w;
 

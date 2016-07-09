@@ -7,4 +7,6 @@ mainApp.controller('AdminRevisionsCtrl', ['$scope', '$rootScope', function($scop
 	$scope.isSelected = function(checkTab){
 		return $scope.tab === checkTab;
 	};
+	
+	
 }]);

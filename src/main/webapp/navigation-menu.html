@@ -64,12 +64,12 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown navbar-user">
 		                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-		                    <span class="image"><img src="image/horace.jpg" alt="" /></span>
-		                    <span class="hidden-xs">Horace Chu</span> <b class="caret"></b>
+		                    <span class="image"><img ng-src="{{userIcon}}" alt="" /></span>
+		                    <span class="hidden-xs">{{user.UserName}}</span> <b class="caret"></b>
 		                </a>
 		                <ul class="dropdown-menu pull-right">
-		                    <li><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
-		                    <li class="divider"></li>
+		                    <li ng-hide="true"><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
+		                    <li ng-hide="true" class="divider"></li>
 		                    <li><a href="javascript:;" ng-click="logout()">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>
 		                </ul>
 		            </li>

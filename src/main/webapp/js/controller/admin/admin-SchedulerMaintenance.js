@@ -1,6 +1,6 @@
 mainApp.controller('AdminSchedulerMaintenanceCtrl', 
-		
 		function($scope, $rootScope, $http, SessionHelper, modalService) {
+	
 			$scope.onSubmit = function(){
 				for(var i = 0; i<$scope.triggers.length;i++){
 					if($scope.triggers[i].nextFireTime.toString().indexOf(':')> -1){

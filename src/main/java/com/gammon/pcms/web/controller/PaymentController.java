@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,5 +94,13 @@ public class PaymentController {
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
 	}
+	
+	@RequestMapping(value = "UpdatePaymentCert", method = RequestMethod.POST)
+	public String updateSubcontract(@RequestBody PaymentCert paymentCert) {
+		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
+		String result = paymentService.updateSCPaymentCertAdmin(paymentCert);
+		return result;
+	}
+
 
 }

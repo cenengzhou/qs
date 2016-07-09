@@ -138,36 +138,6 @@ public class MainCertService {
 		return message;
 	}
 	
-	/**
-	 * @author tikywong
-	 * modified on 22 August, 2012
-	 * update Main Contract Certificate at QS System
-	 */
-	public String updateMainContractCert(MainCert updatedMainCert) throws DatabaseOperationException {
-		String message = null;
-		if (updatedMainCert!=null){
-			logger.info("Updating Main Contract Certificate Job: "+updatedMainCert.getJobNo()+" Cert No.:"+updatedMainCert.getCertificateNumber());
-			MainCert currMainCert = mainCertHBDao.findByJobNoAndCertificateNo(updatedMainCert.getJobNo(), updatedMainCert.getCertificateNumber());
-		
-			if (currMainCert!=null){
-				setModifiedDate(updatedMainCert);
-				currMainCert.updateCert(updatedMainCert);
-				mainCertHBDao.updateMainCert(currMainCert);
-			}else {
-				message = "No Main Contract Certificate is found with provided information. Job: "+updatedMainCert.getJobNo()+" Certificate No.: "+updatedMainCert.getCertificateNumber();
-				logger.info(message);
-				throw new DatabaseOperationException(message);
-			}
-		}
-		else{
-			message = "To be updated Main Contract Certificate is Null.";
-			logger.info(message);
-			throw new DatabaseOperationException(message);
-		}
-		
-		return message;
-	}
-	
 	private void setModifiedDate(MainCert mainContractCertificate){
 		if (mainContractCertificate!=null){
 			if (mainContractCertificate.getCreatedDate()==null)
@@ -624,6 +594,35 @@ public class MainCertService {
 	
 	/**
 	 * @author tikywong
+	 * modified on 22 August, 2012
+	 * update Main Contract Certificate at QS System
+	 */
+	public String updateMainContractCert(MainCert updatedMainCert) {
+		String message = null;
+		if (updatedMainCert!=null){
+			logger.info("Updating Main Contract Certificate Job: "+updatedMainCert.getJobNo()+" Cert No.:"+updatedMainCert.getCertificateNumber());
+			MainCert currMainCert = mainCertHBDao.findByJobNoAndCertificateNo(updatedMainCert.getJobNo(), updatedMainCert.getCertificateNumber());
+		
+			if (currMainCert!=null){
+//				setModifiedDate(updatedMainCert);
+//				currMainCert.updateCert(updatedMainCert);
+//				mainCertHBDao.updateMainCert(currMainCert);
+				mainCertHBDao.merge(updatedMainCert);
+			}else {
+				message = "No Main Contract Certificate is found with provided information. Job: "+updatedMainCert.getJobNo()+" Certificate No.: "+updatedMainCert.getCertificateNumber();
+				logger.info(message);
+			}
+		}
+		else{
+			message = "To be updated Main Contract Certificate is Null.";
+			logger.info(message);
+		}
+		
+		return message;
+	}
+	
+	/**
+	 * @author tikywong
 	 * created on 25 October, 2012
 	 * confirm Main Contract Certificate at QS System (120 -> 150)
 	 */
@@ -729,6 +728,8 @@ public class MainCertService {
 		return Boolean.TRUE;
 		
 	}
+	
+
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

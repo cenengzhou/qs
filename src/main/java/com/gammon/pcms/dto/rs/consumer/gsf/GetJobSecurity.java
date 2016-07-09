@@ -3,7 +3,6 @@ package com.gammon.pcms.dto.rs.consumer.gsf;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetJobSecurity {
@@ -87,7 +86,6 @@ public class GetJobSecurity {
 		
 	}
 	
-	@JsonIgnoreProperties(ignoreUnknown=true)
 	public static class Response implements Serializable {
 
 		private static final long serialVersionUID = -187979850876716556L;

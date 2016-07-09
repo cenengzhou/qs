@@ -1,6 +1,5 @@
 <!-- begin #content -->
 <div id="content" class="content">
-<under-construction></under-construction>
 	<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
 		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
@@ -19,183 +18,28 @@
 						href ng-click="selectTab(1)">Subcontract</a></li>
 					<li role="presentation" ng-class="{active:isSelected(2)}"><a
 						href ng-click="selectTab(2)">Payment</a></li>
-					<li role="presentation" ng-class="{active:isSelected(3)}"><a
-						href ng-click="selectTab(3)">Addendum</a></li>
+					<li role="presentation" ng-class="{active:isSelected(3), disabled:true} "><a
+						href ng-click="false && selectTab(3)">Addendum</a></li>
 					<li role="presentation" ng-class="{active:isSelected(4)}"><a
 						href ng-click="selectTab(4)">Main Certificate</a></li>
 				</ul>
 				
 				<div ng-show="isSelected(1)">
-					<div class="box col-md-12">
-						<table class="table">
-							<tr>
-								<td class="col-md-4">
-									<table class="table">
-										<tr>
-											<td>Job Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td>Package Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td colspan="2"><button class="btn btn-block btn-primary">Process</button></td>
-										</tr>
-									</table>
-								</td>
-								<td class="col-md-8">
-									<table>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Subcontract Awards Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Addendum Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Split/Terminate Subcontract Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Update
-												Subcontract Package</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Final Payment Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Recalculate
-												Package Posted Cert Amount</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
+					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Subcontract.html'">
 					</div>
 				</div>
 
 				<div ng-show="isSelected(2)">
-					<div class="box col-md-12">
-						<table class="table">
-							<tr>
-								<td class="col-md-4">
-									<table class="table">
-										<tr>
-											<td>Job Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td>Package Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td>Payment Certificate No.:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td colspan="2"><button class="btn btn-block btn-primary">Process</button></td>
-										</tr>
-									</table>
-								</td>
-								<td class="col-md-8">
-									<table>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Subcontract Payment Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Update
-												Subcontract Payment Certificate</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
+					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Payment.html'">
 					</div>
 				</div>
 
 				<div  ng-show="isSelected(3)">
-					<div class="box col-md-12">
-						<table class="table">
-							<tr>
-								<td class="col-md-4">
-									<table class="table">
-										<tr>
-											<td>Job Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td>Package Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td colspan="2"><button class="btn btn-block btn-primary">Process</button></td>
-										</tr>
-									</table>
-								</td>
-								<td class="col-md-8">
-									<table>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Subcontract Awards Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Addendum Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Split/Terminate Subcontract Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Update
-												Subcontract Package</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset
-												Final Payment Status</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="resetItem">Recalculate
-												Package Posted Cert Amount</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
+					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Addendum.html'">
 					</div>
 				</div>
 				<div ng-show="isSelected(4)">
-					<div class="box col-md-12">
-						<table class="table">
-							<tr>
-								<td class="col-md-4">
-									<table class="table">
-										<tr>
-											<td>Job Number:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td>Main Contract Certificate No.:</td>
-											<td><input type=text></input></td>
-										</tr>
-										<tr>
-											<td colspan="2"><button class="btn btn-block btn-primary">Process</button></td>
-										</tr>
-									</table>
-								</td>
-								<td class="col-md-8">
-									<table>
-										<tr>
-											<td><input type="radio" name="resetItem">Reset Main Contract Certificate Status</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
+					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-MainCert.html'">
 					</div>
 				</div>
 			</section>

@@ -621,6 +621,7 @@ public class Subcontract extends BasePersistedObject{
 		this.paymentTermsDescription = paymentTermsDescription;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scCreatedDate")
 	public Date getScCreatedDate() {
 		return scCreatedDate;
@@ -629,6 +630,7 @@ public class Subcontract extends BasePersistedObject{
 		this.scCreatedDate = scCreatedDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "latestAddendumValueUpdatedDate")
 	public Date getLatestAddendumValueUpdatedDate() {
 		return latestAddendumValueUpdatedDate;
@@ -638,6 +640,7 @@ public class Subcontract extends BasePersistedObject{
 		this.latestAddendumValueUpdatedDate = latestAddendumValueUpdatedDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "firstPaymentCertIssuedDate")
 	public Date getFirstPaymentCertIssuedDate() {
 		return firstPaymentCertIssuedDate;
@@ -647,6 +650,7 @@ public class Subcontract extends BasePersistedObject{
 		this.firstPaymentCertIssuedDate = firstPaymentCertIssuedDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "lastPaymentCertIssuedDate")
 	public Date getLastPaymentCertIssuedDate() {
 		return lastPaymentCertIssuedDate;
@@ -656,6 +660,7 @@ public class Subcontract extends BasePersistedObject{
 		this.lastPaymentCertIssuedDate = lastPaymentCertIssuedDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "finalPaymentIssuedDate")
 	public Date getFinalPaymentIssuedDate() {
 		return finalPaymentIssuedDate;
@@ -665,6 +670,7 @@ public class Subcontract extends BasePersistedObject{
 		this.finalPaymentIssuedDate = finalPaymentIssuedDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scAwardApprovalRequestSentDate")
 	public Date getScAwardApprovalRequestSentDate() {
 		return scAwardApprovalRequestSentDate;
@@ -674,6 +680,7 @@ public class Subcontract extends BasePersistedObject{
 		this.scAwardApprovalRequestSentDate = scAwardApprovalRequestSentDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scApprovalDate")
 	public Date getScApprovalDate() {
 		return scApprovalDate;

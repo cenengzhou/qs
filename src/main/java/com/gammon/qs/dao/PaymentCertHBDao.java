@@ -304,43 +304,43 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		return scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo));
 	}
 
-	public boolean updateSCPaymentCertAdmin(PaymentCert scPaymentCert) throws DatabaseOperationException {
-		throw new RuntimeException("remove entity | SCPaymentCertControl | remark updateSCPaymentCertAdmin(SCPaymentCert scPaymentCert)");
-		//TODO: remove entity | SCPaymentCertControl | remark updateSCPaymentCertAdmin(SCPaymentCert scPaymentCert)
-//		if (scPaymentCert==null)
-//			throw new DatabaseOperationException("SCPayment Cert is Null");
-//		try {
+	public boolean updateSCPaymentCertAdmin(PaymentCert paymentCert) throws DatabaseOperationException {
+//		throw new RuntimeException("remove entity | SCPaymentCertControl | remark updateSCPaymentCertAdmin(SCPaymentCert scPaymentCert)");
+		//TODO: remove entity | SCPaymentCertControl | remark paymentControl.setBeforeValues setAfterValues
+		if (paymentCert==null)
+			throw new DatabaseOperationException("SCPayment Cert is Null");
+		try {
 //			SCPaymentCertControl paymentControl = new SCPaymentCertControl();
-//			SCPaymentCert scPaymentCertDB =getSCPaymentCert(scPaymentCert);
-//			if (scPaymentCertDB==null){
-//				throw new DatabaseOperationException("SC Payment Cert "+scPaymentCert.getId()+" is not existed.");
-//			}
-//
+			PaymentCert paymentCertDB =getSCPaymentCert(paymentCert);
+			if (paymentCertDB==null){
+				throw new DatabaseOperationException("SC Payment Cert "+paymentCert.getId()+" is not existed.");
+			}
+
 //			paymentControl.setBeforeValues(scPaymentCertDB);
 //			paymentControl.setAfterValues(scPaymentCert);
 //			paymentControl.setActionType("UPDATE");
-//
-//			scPaymentCertDB.setPaymentStatus(scPaymentCert.getPaymentStatus());
-//			scPaymentCertDB.setMainContractPaymentCertNo(scPaymentCert.getMainContractPaymentCertNo());
-//			scPaymentCertDB.setDueDate(scPaymentCert.getDueDate());
-//			scPaymentCertDB.setAsAtDate(scPaymentCert.getAsAtDate());
-//			scPaymentCertDB.setIpaOrInvoiceReceivedDate(scPaymentCert.getIpaOrInvoiceReceivedDate());
-//			scPaymentCertDB.setCertIssueDate(scPaymentCert.getCertIssueDate());
-//			scPaymentCertDB.setCertAmount(scPaymentCert.getCertAmount());
-//			scPaymentCertDB.setIntermFinalPayment(scPaymentCert.getIntermFinalPayment());
-//			scPaymentCertDB.setAddendumAmount(scPaymentCert.getAddendumAmount());
-//			scPaymentCertDB.setRemeasureContractSum(scPaymentCert.getRemeasureContractSum());
-//			scPaymentCertDB.setDirectPayment(scPaymentCert.getDirectPayment());
-//			if (scPaymentCertDB.getCreatedDate()==null)
-//				scPaymentCertDB.setCreatedDate(new Date());
-//			scPaymentCertDB.setLastModifiedUser(scPaymentCert.getLastModifiedUser());
-//			saveOrUpdate(scPaymentCertDB);
+
+//			paymentCertDB.setPaymentStatus(paymentCert.getPaymentStatus());
+//			paymentCertDB.setMainContractPaymentCertNo(paymentCert.getMainContractPaymentCertNo());
+//			paymentCertDB.setDueDate(paymentCert.getDueDate());
+//			paymentCertDB.setAsAtDate(paymentCert.getAsAtDate());
+//			paymentCertDB.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
+//			paymentCertDB.setCertIssueDate(paymentCert.getCertIssueDate());
+//			paymentCertDB.setCertAmount(paymentCert.getCertAmount());
+//			paymentCertDB.setIntermFinalPayment(paymentCert.getIntermFinalPayment());
+//			paymentCertDB.setAddendumAmount(paymentCert.getAddendumAmount());
+//			paymentCertDB.setRemeasureContractSum(paymentCert.getRemeasureContractSum());
+//			paymentCertDB.setDirectPayment(paymentCert.getDirectPayment());
+//			if (paymentCertDB.getCreatedDate()==null)
+//				paymentCertDB.setCreatedDate(new Date());
+//			paymentCertDB.setLastModifiedUser(paymentCert.getLastModifiedUser());
+			merge(paymentCert);
 //			getSession().save(paymentControl);
-//			return true;
-//		}catch (HibernateException he){
-//			logger.info("Fail: updateSCPaymentCert(SCPaymentCert scPaymentCert)");
-//			throw new DatabaseOperationException(he);
-//		}
+			return true;
+		}catch (HibernateException he){
+			logger.info("Fail: updateSCPaymentCert(SCPaymentCert scPaymentCert)");
+			throw new DatabaseOperationException(he);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

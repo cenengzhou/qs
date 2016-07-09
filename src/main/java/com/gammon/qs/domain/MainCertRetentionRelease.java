@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.gammon.qs.application.BasePersistedObject;
 
@@ -102,6 +104,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 		this.mainCertNo = mainCertNo;
 	}
 	
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "dueDate")
 	public Date getDueDate() {
 		return dueDate;
@@ -146,6 +149,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 		this.contractualDueDate = contractualDueDate;
 	}
 	
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "contractualDueDate")
 	public Date getContractualDueDate() {
 		return contractualDueDate;

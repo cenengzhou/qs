@@ -4658,8 +4658,12 @@ public class SubcontractService {
 	 * @author tikywong
 	 * April 13, 2011
 	 */
-	public void saveSCPackage(Subcontract scPackage) throws DatabaseOperationException {
-		subcontractHBDao.saveOrUpdate(scPackage);
+	public void saveSCPackage(Subcontract scPackage) {
+		try{
+			subcontractHBDao.saveOrUpdate(scPackage);
+		} catch (DataAccessException e){
+			e.printStackTrace();
+		}
 	}
 
 	/**

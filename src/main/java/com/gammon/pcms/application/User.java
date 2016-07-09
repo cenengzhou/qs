@@ -8,11 +8,9 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class User implements UserDetails, Serializable {
 	
 	private static final long serialVersionUID = 823107936017935057L;

@@ -17,7 +17,7 @@ mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl',
 	});
 	
 	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
+		$uibModalInstance.close();
 	};
 	
 	$scope.onSubmit = function(){		

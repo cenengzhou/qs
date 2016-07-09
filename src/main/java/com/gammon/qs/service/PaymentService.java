@@ -1646,19 +1646,6 @@ public class PaymentService{
 		return Boolean.TRUE;
 	}
 
-	public String updateSCPaymentCertAdmin(PaymentCert paymentCert) {
-		if (paymentCert == null || paymentCert.getId() == null || paymentCert.getId().equals(0.0))
-			return "Invalid payment Cert";
-
-		try {
-			scPaymentCertDao.updateSCPaymentCertAdmin(paymentCert);
-		} catch (DatabaseOperationException e) {
-			logger.info(e.getLocalizedMessage());
-			return "Update Failure,please see the log. Log time:" + DateUtil.formatDate(new Date(), "dd/MM/yyyy hh:mm:ss");
-		}
-		return null;
-	}
-
 	public PaginationWrapper<SCPaymentExceptionalWrapper> obtainSubcontractorPaymentExceptionReportInPaginationWithPageNo(Integer pageNo) {
 		if (pageNo == null || pageNo < 0)
 			pageNo = 0;
@@ -2614,6 +2601,19 @@ public class PaymentService{
 			paymentCertViewWrapper.setAddendum(Double.valueOf(0.0));
 		
 		return paymentCertViewWrapper;
+	}
+	
+	public String updateSCPaymentCertAdmin(PaymentCert paymentCert) {
+		if (paymentCert == null || paymentCert.getId() == null || paymentCert.getId().equals(0.0))
+			return "Invalid payment Cert";
+
+		try {
+			scPaymentCertDao.updateSCPaymentCertAdmin(paymentCert);
+		} catch (DatabaseOperationException e) {
+			logger.info(e.getLocalizedMessage());
+			return "Update Failure,please see the log. Log time:" + DateUtil.formatDate(new Date(), "dd/MM/yyyy hh:mm:ss");
+		}
+		return null;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
