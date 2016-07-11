@@ -183,6 +183,18 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 				return $q.reject(response.data);
 			});
 		},
+		getSessionList: function(){
+			return $http.post('service/GetSessionList')
+			.then(function(response){
+				if(typeof response.data === 'object'){
+					return response.data;
+				} else {
+					return $q.reject(response.data);
+				}
+			}, function(response){
+				return $q.reject(response.data);
+			});
+		},
 		validateSession: function(){
 			return $http.post('service/ValidateCurrentSession')
 			.then(function(response){
@@ -208,6 +220,26 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 		}
 	}
 }]);
+
+mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
+	return{
+		checkNull: checkNull
+	}
+	
+	function checkNull(objectArray){
+		var result = false;
+		angular.forEach(objectArray, function(obj){
+			if(!result){
+				if(obj === undefined) {
+					result = true;
+				}
+			}
+		});
+		return result;
+	}
+	
+})
+
 /*mainApp.factory('modalUtils', function ($uibModalStack) {
      return {
        modalsExist: function () {

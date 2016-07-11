@@ -47,7 +47,7 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.getRetentionReleaseList(noJob);
 	}
 
-	@RequestMapping(value = "GetCertificate", method = RequestMethod.GET)
+	@RequestMapping(value = "getCertificate", method = RequestMethod.GET)
 	public MainCert getCertificate(@RequestParam String jobNo, @RequestParam Integer certificateNumber){
 		return mainCertService.getCertificate(jobNo, certificateNumber);
 	}
@@ -60,12 +60,12 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
 	}
 
-	@RequestMapping(value = "UpdateMainCertFromF03B14Manually", method = RequestMethod.POST)
+	@RequestMapping(value = "updateMainCertFromF03B14Manually", method = RequestMethod.POST)
 	public void updateMainCertFromF03B14Manually(){
 		mainCertService.updateMainCertFromF03B14Manually();
 	}
 	
-	@RequestMapping(value = "UpdateCertificate", method = RequestMethod.POST)
+	@RequestMapping(value = "updateCertificate", method = RequestMethod.POST)
 	public String updateCertificate(@RequestBody MainCert mainCert){
 		return mainCertService.updateMainContractCert(mainCert);
 	}

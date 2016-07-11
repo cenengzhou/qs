@@ -116,36 +116,35 @@ public class SubcontractController {
 		return result;
 	}
 	
-	
-	@RequestMapping(value = "RunProvisionPostingManually", method = RequestMethod.POST)
+	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){
 		String username = securityService.getCurrentUser().getUsername();
 		Boolean overrideOldPosting = false;
 		subcontractService.runProvisionPostingManually(jobNumber, glDate, overrideOldPosting, username);
 	}
 	
-	@RequestMapping(value = "GenerateSCPackageSnapshotManually", method = RequestMethod.POST)
+	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
 	public void generateSCPackageSnapshotManually(){
 		subcontractService.generateSCPackageSnapshotManually();
 	}
 	
-	@RequestMapping(value = "UpdateF58001FromSCPackageManually", method = RequestMethod.POST)
+	@RequestMapping(value = "updateF58001FromSCPackageManually", method = RequestMethod.POST)
 	public void updateF58001FromSCPackageManually(){
 		subcontractService.updateF58001FromSCPackageManually();
 	}
 
-	@RequestMapping(value = "SearchSystemConstants", method = RequestMethod.POST)
+	@RequestMapping(value = "searchSystemConstants", method = RequestMethod.POST)
 	public List<AppSubcontractStandardTerms> searchSystemConstants(){
 		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
 	}
 
-	@RequestMapping(value = "UpdateMultipleSystemConstants", method = RequestMethod.POST)
+	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
 	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		String username = securityService.getCurrentUser().getUsername();
 		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, username);
 	}
 
-	@RequestMapping(value = "InactivateSystemConstant", method = RequestMethod.POST)
+	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
 	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		String username = securityService.getCurrentUser().getUsername();
 		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
@@ -153,7 +152,7 @@ public class SubcontractController {
 		}
 	}
 
-	@RequestMapping(value = "CreateSystemConstant", method = RequestMethod.POST)
+	@RequestMapping(value = "createSystemConstant", method = RequestMethod.POST)
 	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
 			HttpServletRequest request, HttpServletResponse response) {
 		String username = securityService.getCurrentUser().getUsername();
@@ -164,10 +163,10 @@ public class SubcontractController {
 		}
 	}
 
-	@RequestMapping(value = "UpdateSubcontract", method = RequestMethod.POST)
-	public void updateSubcontract(@RequestBody Subcontract subcontract) {
+	@RequestMapping(value = "updateSubcontractAdmin", method = RequestMethod.POST)
+	public void updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
-		subcontractService.saveSCPackage(subcontract);
+		subcontractService.updateSubcontractAdmin(subcontract);
 	}
 
 }

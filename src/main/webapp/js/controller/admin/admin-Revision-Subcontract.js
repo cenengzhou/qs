@@ -1,37 +1,57 @@
 mainApp.controller('AdminRevisionSubcontractCtrl',
-		function($scope, $http, modalService, GlobalParameter) {
+		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'subcontractService',
+		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, subcontractService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.SubcontractSearch = {};
 
+	$scope.blockSbucontract = blockUI.instances.get('blockSbucontract');
+	$scope.blockSbucontract.start();
 	$scope.onSubmitSubcontractSearch = function() {
 		var jobNo = $scope.SubcontractSearch.jobNo;
 		var packageNo = $scope.SubcontractSearch.packageNo;
-		$http.get('service/subcontract/getSubcontract?jobNo='+ jobNo + '&subcontractNo='+ packageNo).then(
-			function(response) {
-				if(response.data instanceof Object){
-					$scope.SubcontractRecord = response.data;
+		cleanupSubcontractRecord();
+		if(GlobalHelper.checkNull([jobNo, packageNo])){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please enter job number and subcontract number!");
+		} else {
+		subcontractService.getSubcontract(jobNo, packageNo).then(
+			function(data) {
+				if(data instanceof Object){
+					$scope.SubcontractRecord = data;
+					$scope.blockSbucontract.stop();
 				} else {
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please enter job number and package number!");
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract not found");
 				}
-			}, function(response){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Please search subcontract first!");
+			}, function(data){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 			});
+		}
 	};
 
 	$scope.onSubmitSubcontractRecord = function() {
+		if($scope.RevisionsSubcontractRecord.$invalid) {
+			return
+		}
+		
 		if ($scope.SubcontractRecord.jobInfo !== undefined) {
-			$http.post('service/subcontract/UpdateSubcontract', $scope.SubcontractRecord)
+			subcontractService.updateSubcontractAdmin($scope.SubcontractRecord)
 	        .then(
-			function(response) {
+			function(data) {
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract updated.");
-			}, function(response){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Status: " + response.statusText);
+			}, function(message){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', message);
 			});
-			$scope.RevisionsSubcontractRecord.$setPristine();
-			$scope.SubcontractRecord = {};
 		} else {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please search subcontract first!");
 		}
+		cleanupSubcontractRecord();
 	};
 	
-});
+	function cleanupSubcontractRecord(){
+		$scope.RevisionsSubcontractRecord.$setPristine();
+		$scope.SubcontractRecord = {};
+		if(!$scope.blockSbucontract.isBlocking()){
+			$scope.blockSbucontract.start();
+		}
+	}
+	
+}]);

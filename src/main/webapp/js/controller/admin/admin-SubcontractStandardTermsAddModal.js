@@ -1,5 +1,6 @@
 mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl', 
-		function($scope, $rootScope, $uibModalInstance, $http, modalStatus, modalParam, modalService) {
+		['$scope', '$rootScope', '$uibModalInstance', '$http', 'modalStatus', 'modalParam', 'modalService', 'subcontractService',
+		function($scope, $rootScope, $uibModalInstance, $http, modalStatus, modalParam, modalService, subcontractService) {
 	
 	$scope.dataList = modalParam;
 	$scope.newRecord = {};
@@ -21,13 +22,13 @@ mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl',
 	};
 	
 	$scope.onSubmit = function(){		
-		$http.post('service/subcontract/CreateSystemConstant', $scope.newRecord)
-		.then(function(response){
+		subcontractService.createSystemConstant($scope.newRecord)
+		.then(function(data){
 			var newObj = {};
 			angular.copy($scope.newRecord, newObj);
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Create succeeded");
 			$scope.dataList.push(newObj);
-		}, function(response){
+		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "A SystemConstant with the same systemCode and company already exists" );
 		});
 
@@ -38,4 +39,4 @@ mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl',
 			list.push(item);
 		}
 	};
-});
+}]);

@@ -1,11 +1,20 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
-    	getSubcontract: 		getSubcontract,
-    	getSubcontractList: 	getSubcontractList,
-    	getWorkScope: 			getWorkScope,
-    	upateSubcontract: 		upateSubcontract,
-    	upateSubcontractDates: 	upateSubcontractDates
+    	getSubcontract: 				getSubcontract,
+    	getSubcontractList: 			getSubcontractList,
+    	getWorkScope: 					getWorkScope,
+    	upateSubcontract: 				upateSubcontract,
+    	upateSubcontractDates: 			upateSubcontractDates,
+    	runProvisionPostingManually:	runProvisionPostingManually,
+    	generateSCPackageSnapshotManually: generateSCPackageSnapshotManually,
+    	updateF58001FromSCPackageManually: updateF58001FromSCPackageManually,
+    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
+    	searchSystemConstants:			searchSystemConstants,
+    	updateMultipleSystemConstants:	updateMultipleSystemConstants,
+    	inactivateSystemConstant:		inactivateSystemConstant,
+    	createSystemConstant: 			createSystemConstant,
+    	updateSubcontractAdmin:			updateSubcontractAdmin
     	
     });
 	
@@ -93,6 +102,57 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function runProvisionPostingManually(jobNumber, glDate){
+    	var request = $http({
+    		method: 'post',
+    		url: 'service/subcontract/runProvisionPostingManually',
+    		params: {
+    			jobNumber: jobNumber,
+    			glDate: glDate
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function generateSCPackageSnapshotManually(){
+    	var request = $http.post("service/subcontract/generateSCPackageSnapshotManually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateF58001FromSCPackageManually(){
+    	var request = $http.post("service/subcontract/updateF58001FromSCPackageManually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function updateF58011FromSCPaymentCertManually(){
+    	var request = $http.post("service/subcontract/updateF58011FromSCPaymentCertManually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+	function searchSystemConstants(){
+    	var request = $http.post("service/subcontract/searchSystemConstants");
+    	return( request.then(handleSuccess, handleError));
+    }
+    
+	function updateMultipleSystemConstants(systemConstants){
+    	var request = $http.post("service/subcontract/updateMultipleSystemConstants", systemConstants);
+    	return( request.then(handleSuccess, handleError));
+    }
+    
+	function inactivateSystemConstant(systemConstants){
+    	var request = $http.post('service/subcontract/inactivateSystemConstant', systemConstants);
+    	return( request.then(handleSuccess, handleError));
+    }
+    
+	function createSystemConstant(newRecord){
+    	var request = $http.post('service/subcontract/createSystemConstant', newRecord);
+    	return( request.then(handleSuccess, handleError));
+    }
+    
+    function updateSubcontractAdmin(subcontract){
+       	var request = $http.post('service/subcontract/updateSubcontractAdmin', subcontract);
+    	return( request.then(handleSuccess, handleError));
+    }
     // ---
     // PRIVATE METHODS.
     // ---

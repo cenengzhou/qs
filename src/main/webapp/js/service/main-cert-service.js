@@ -2,7 +2,9 @@ mainApp.service('mainCertService', ['$http', function($http){
 	// Return public API.
     return({
         getMainCertList: getMainCertList,
-        
+        updateMainCertFromF03B14Manually: updateMainCertFromF03B14Manually,
+        getCertificate: getCertificate,
+        updateCertificate: updateCertificate
     });
 	
     function getMainCertList() {
@@ -13,7 +15,28 @@ mainApp.service('mainCertService', ['$http', function($http){
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function updateMainCertFromF03B14Manually(){
+    	var request = $http.post("service/mainCert/updateMainCertFromF03B14Manually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
     
+    function getCertificate(jobNo, certificateNumber) {
+        var request = $http({
+            method: "get",
+            url: "service/mainCert/getCertificate",
+            params: {
+            	jobNo: jobNo,
+            	certificateNumber: certificateNumber
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+    function updateCertificate(mainCert){
+    	var request = $http.post("service/mainCert/updateCertificate", mainCert);
+    	return( request.then( handleSuccess, handleError ) );
+    }
+        
     // ---
     // PRIVATE METHODS.
     // ---

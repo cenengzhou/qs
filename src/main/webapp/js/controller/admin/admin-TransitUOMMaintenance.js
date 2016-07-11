@@ -1,33 +1,29 @@
-mainApp.controller('AdminTransitUOMMaintenanceCtrl', function($scope,
-		$rootScope, $http, modalService) {
+mainApp.controller('AdminTransitUOMMaintenanceCtrl', 
+		['$scope', '$rootScope', '$http', 'modalService', 'transitService',
+		function($scope, $rootScope, $http, modalService, transitService) {
 	
 	$scope.onSubmit = function(){
 		var formData = new FormData();
 		formData.append('files', uploadFile1.files[0]);
 		formData.append('type', 'Unit Code Matching');
 		formData.append('jobNumber', $scope.jobNo);
-		$http({
-			method: 'POST',
-			url: 'gammonqs/transitUpload.smvc',
-			data: formData,
-            headers: {'Content-Type': undefined}
-        })
-		.then(function(response){
+		transitService.transitUpload(formData)
+		.then(function(data){
 			$scope.loadData();
-			var msg = response.data;
+			var msg = data;
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 
 					"Success:" + msg.success + 
 					"\r\nNumber Record Imported:" + msg.numRecordImported + 
 					"\r\nHave warning:" + msg.haveWarning);
-		}, function(response){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Status:" + response.statusText );
+		}, function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
 	};
 	
 	$scope.loadData = function(){
-		$http.post("service/transit/ObtainTransitUomMatcheList").then(
-			function(response) {
-				$scope.gridOptions.data = response.data;
+		transitService.obtainTransitUomMatcheList().then(
+			function(data) {
+				$scope.gridOptions.data = data;
 			});
 	};
 	$scope.loadData();
@@ -61,4 +57,4 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl', function($scope,
 		  $scope.gridApi = gridApi;
 	};
 	
-});
+}]);

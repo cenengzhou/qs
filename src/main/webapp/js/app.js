@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
@@ -713,7 +713,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsAddModal.js',
-                           'js/controller/admin/admin-SchedulerMaintenance.js'
+                           'js/controller/admin/admin-SchedulerMaintenance.js',
+                           'view/admin/admin-Revisions-Subcontract.html',
+                           'view/admin/admin-Revisions-Payment.html',
+                           'view/admin/admin-Revisions-Addendum.html',
+                           'view/admin/admin-Revisions-MainCert.html'
                     ] 
                 });
             }]
@@ -876,6 +880,66 @@ mainApp.config(['momentPickerProvider', function(momentPickerProvider){
           secondsStep:   1
       });
 }]);
+
+mainApp.config(function(blockUIConfig, colorCode) {
+
+	// Change the default overlay message
+	// blockUIConfig.message = '';
+	
+	// Apply these classes to al block-ui elements
+	// blockUIConfig.cssClass = 'block-ui my-custom-class'; 
+
+	// Enable browser navigation blocking
+	// blockUIConfig.blockBrowserNavigation = true;
+	
+	// Disable clearing block whenever an exception has occurred
+	// blockUIConfig.resetOnException = false;
+	
+	// Start a block with custom property values
+	// blockUI.start({ myProperty: 'My value' });
+
+	// Display the property value in the custom template.
+	// blockUIConfig.template = '<div>{{ state.myProperty }}</div>';
+	
+	blockUIConfig.template = '<div class="block-ui block-ui-overlay" style="background-color: '+colorCode.lightBlue+';z-index:900"></div>';
+	
+	// Disable automatically blocking of the user interface
+	blockUIConfig.autoBlock = false;
+	
+	// Change the default delay to 100ms before the blocking is visible
+	blockUIConfig.delay = 100;
+	
+	// Disable auto body block
+	blockUIConfig.autoInjectBodyBlock = false;
+	
+	blockUIConfig.requestFilter = function(config) {
+
+		  var message;
+
+		  switch(config.method) {
+		    case 'GET':
+		      message = 'Getting ...';
+		      break;
+
+		    case 'POST':
+		      message = 'Posting ...';
+		      break;
+
+		    case 'DELETE':
+		      message = 'Deleting ...';
+		      break;
+
+		    case 'PUT':
+		      message = 'Putting ...';
+		      break;
+		  };
+
+		  return message;
+
+		};
+
+});
+
 
 
 /**

@@ -12,18 +12,18 @@ import com.gammon.qs.domain.quartz.QrtzTriggers;
 import com.gammon.qs.service.admin.QrtzTriggerService;
 
 @RestController
-@RequestMapping(value = "service", method = RequestMethod.POST)
+@RequestMapping(value = "service/quartz", method = RequestMethod.POST)
 public class QuartzController {
 
 	@Autowired
 	private QrtzTriggerService qrtzTriggerService;
 	
-	@RequestMapping("GetAllTriggers")
+	@RequestMapping("getAllTriggers")
 	public List<QrtzTriggers> getAllTriggers(){
 		return qrtzTriggerService.getAllTriggers();
 	}
 	
-	@RequestMapping(value = "UpdateQrtzTriggerList", method = RequestMethod.POST)
+	@RequestMapping(value = "updateQrtzTriggerList", method = RequestMethod.POST)
 	public void updateQrtzTriggerList(@RequestBody List<QrtzTriggers> updatedQrtzList){
 		qrtzTriggerService.updateQrtzTriggerList(updatedQrtzList);
 	}

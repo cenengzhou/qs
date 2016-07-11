@@ -22,7 +22,7 @@ public class AuditAspectHibernateInterceptor extends EmptyInterceptor {
 	public boolean onSave(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) {
 		
-		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername());
+		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername()).split("@")[0];
 		boolean modified = false;
 		List<String> propertyList = Arrays.asList(propertyNames);
 		if (entity instanceof BasePersistedAuditObject) {
@@ -100,7 +100,7 @@ public class AuditAspectHibernateInterceptor extends EmptyInterceptor {
 			Object[] currentState, Object[] previousState,
 			String[] propertyNames, Type[] types) {
 		
-		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername());
+		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername()).split("@")[0];
 		
 		boolean modified = false;
 		List<String> propertyList = Arrays.asList(propertyNames);

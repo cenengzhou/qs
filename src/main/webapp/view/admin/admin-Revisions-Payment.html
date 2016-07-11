@@ -8,12 +8,13 @@
 			</div>
 			<div class="col-md-3">
 				<input type="number" class="form-control"
-					placeholder="Package Number:" id="PaymentCertSearch_packageNo"
+					placeholder="Subcontract Number:" id="PaymentCertSearch_packageNo"
 					ng-model="PaymentCertSearch.packageNo">
 			</div>
 			<div class="col-md-3">
 				<input type="number" class="form-control"
-					placeholder="Payment Certificate No:" id="PaymentCertSearch_paymentCertNo"
+					placeholder="Payment Certificate No:"
+					id="PaymentCertSearch_paymentCertNo"
 					ng-model="PaymentCertSearch.paymentCertNo">
 			</div>
 			<div class="col-md-3">
@@ -23,11 +24,11 @@
 		</form>
 	</div>
 
-	<div class="row" style="padding: 20px"
-		ng-show="PaymentCertRecord.paymentCertNo !== undefined">
-		<form name="RevisionsPaymentCertRecord"
-			ng-submit="onSubmitPaymentCertRecord()">
-			<div class="row" resize ng-style="resizeWithOffset(350)">
+	<form name="RevisionsPaymentCertRecord"
+		ng-submit="onSubmitPaymentCertRecord()">
+		<div class="row" style="padding: 20px" block-ui="blockPaymentCert"
+			ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
+			<div class="row" resize ng-style="resizeWithOffset(330)">
 
 				<fieldset>
 
@@ -45,7 +46,8 @@
 
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
-							<label for="PaymentCertRecord_packageNo" class="control-label">Subcontract Number</label>
+							<label for="PaymentCertRecord_packageNo" class="control-label">Subcontract
+								Number</label>
 							<div>
 								<input type="text" class="form-control"
 									id="PaymentCertRecord_packageNo"
@@ -56,7 +58,8 @@
 
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
-							<label for="PaymentCertRecord_paymentCertNo" class="control-label">Payment Certificate Number</label>
+							<label for="PaymentCertRecord_paymentCertNo"
+								class="control-label">Payment Certificate Number</label>
 							<div>
 								<input type="text" class="form-control"
 									id="PaymentCertRecord_paymentCertNo"
@@ -81,7 +84,7 @@
 									<option></option>
 								</select>
 							</div>
-						</div>	
+						</div>
 					</div>
 
 					<div class="col-md-4" style="padding: 5px">
@@ -96,7 +99,7 @@
 									<option></option>
 								</select>
 							</div>
-						</div>	
+						</div>
 					</div>
 
 					<div class="col-md-4" style="padding: 5px">
@@ -111,7 +114,7 @@
 									<option></option>
 								</select>
 							</div>
-						</div>	
+						</div>
 					</div>
 
 				</fieldset>
@@ -121,25 +124,33 @@
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
 							<label for="PaymentCertRecord_addendumAmount"
-								class="control-label">Addendum Amount</label>
+								class="control-label">Addendum Amount</label><span
+								ng-show="RevisionsPaymentCertRecord.PaymentCertRecord_addendumAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-								<span class="input-group-addon">$</span>
-								<input type="number" class="form-control" step="0.01"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
 									id="PaymentCertRecord_addendumAmount"
-									ng-model="PaymentCertRecord.addendumAmount">
+									name="PaymentCertRecord_addendumAmount"
+									ng-model="PaymentCertRecord.addendumAmount"
+									ng-model-options="{ updateOn: 'blur' }">
 							</div>
 						</div>
 					</div>
 
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
-							<label for="PaymentCertRecord_certAmount"
-								class="control-label">Certificate Amount</label>
+							<label for="PaymentCertRecord_certAmount" class="control-label">Certificate
+								Amount</label> <span
+								ng-show="RevisionsPaymentCertRecord.PaymentCertRecord_certAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-								<span class="input-group-addon">$</span>
-								<input type="number" class="form-control" step="0.01"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control"
 									id="PaymentCertRecord_certAmount"
-									ng-model="PaymentCertRecord.certAmount">
+									name="PaymentCertRecord_certAmount"
+									ng-model="PaymentCertRecord.certAmount"
+									ng-model-options="{ updateOn: 'blur' }">
 							</div>
 						</div>
 					</div>
@@ -147,13 +158,16 @@
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
 							<label for="PaymentCertRecord_remeasureContractSum"
-								class="control-label">Remeasure Contract Sum</label>
+								class="control-label">Remeasure Contract Sum</label><span
+								ng-show="RevisionsPaymentCertRecord.PaymentCertRecord_remeasureContractSum.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" class="form-control" step="0.01" 
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
 									id="PaymentCertRecord_remeasureContractSum"
 									name="PaymentCertRecord_remeasureContractSum"
-									ng-model="PaymentCertRecord.remeasureContractSum">
+									ng-model="PaymentCertRecord.remeasureContractSum"
+									ng-model-options="{ updateOn: 'blur' }">
 							</div>
 						</div>
 					</div>
@@ -162,7 +176,7 @@
 						<div class="form-group">
 							<label for="PaymentCertRecord_mainContractPaymentCertNo"
 								class="control-label">Main Contract Payment Cert No</label>
-							<div class="input-group">
+							<div>
 								<input type="number" class="form-control"
 									id="PaymentCertRecord_mainContractPaymentCertNo"
 									ng-model="PaymentCertRecord.mainContractPaymentCertNo">
@@ -176,12 +190,12 @@
 
 					<div class="col-md-4" style="padding: 5px">
 						<div class="form-group">
-							<label for="PaymentCertRecord_asAtDate"
-								class="control-label">As at Date</label>
+							<label for="PaymentCertRecord_asAtDate" class="control-label">As
+								at Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.asAtDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									moment-picker="PaymentCertRecord.asAtDate" format="YYYY-MM-DD"
+									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
 										id="PaymentCertRecord_asAtDate"
@@ -197,8 +211,8 @@
 								class="control-label">Certificate Issue Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.asAtDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									moment-picker="PaymentCertRecord.asAtDate" format="YYYY-MM-DD"
+									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
 										id="PaymentCertRecord_certIssueDate"
@@ -214,8 +228,8 @@
 								class="control-label">Due Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.dueDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									moment-picker="PaymentCertRecord.dueDate" format="YYYY-MM-DD"
+									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
 										id="PaymentCertRecord_dueDate"
@@ -243,13 +257,14 @@
 					</div>
 
 				</fieldset>
-				
+
 			</div>
 
-			<div class="row" ng-show="PaymentCertRecord.paymentCertNo !== undefined">
+			<div class="row"
+				ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
 				<button type="submit" class="btn btn-block btn-warning">Update</button>
 			</div>
-			
-		</form>
-	</div>
+
+		</div>
+	</form>
 </div>

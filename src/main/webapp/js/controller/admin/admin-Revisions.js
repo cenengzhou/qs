@@ -1,5 +1,7 @@
 
-mainApp.controller('AdminRevisionsCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+mainApp.controller('AdminRevisionsCtrl', 
+		['$scope', '$rootScope', 
+		 function($scope, $rootScope) {
 	$scope.tab = 1;
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;

@@ -8,7 +8,8 @@
 			</div>
 			<div class="col-md-4">
 				<input type="number" class="form-control"
-					placeholder="Certificate Number:" id="MainCertSearch_certificateNumber"
+					placeholder="Certificate Number:"
+					id="MainCertSearch_certificateNumber"
 					ng-model="MainCertSearch.certificateNumber">
 			</div>
 			<div class="col-md-4">
@@ -18,17 +19,19 @@
 		</form>
 	</div>
 
-	<div class="row" style="padding: 20px"
-		ng-show="MainCertRecord.jobNo !== undefined">
-		<form name="RevisionsMainCertRecord"
-			ng-submit="onSubmitMainCertRecord()">
-			<div class="row" resize ng-style="resizeWithOffset(350)">
+	<form name="RevisionsMainCertRecord"
+		ng-submit="onSubmitMainCertRecord()">
+		<div class="row" style="padding: 20px" block-ui="blockMainCert"
+			ng-show="true || MainCertRecord.jobNo !== undefined">
+
+			<div class="row" resize ng-style="resizeWithOffset(330)">
 
 				<fieldset>
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_certificateNumber" class="control-label">Certificate Number</label>
+							<label for="MainCertRecord_certificateNumber"
+								class="control-label">Certificate Number</label>
 							<div>
 								<input type="text" class="form-control"
 									id="MainCertRecord_certificateNumber"
@@ -39,7 +42,8 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_clientCertNo" class="control-label">Client Certificate No</label>
+							<label for="MainCertRecord_clientCertNo" class="control-label">Client
+								Certificate No</label>
 							<div>
 								<input type="text" class="form-control"
 									id="MainCertRecord_clientCertNo"
@@ -50,11 +54,12 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_jobNo" class="control-label">Job Number</label>
+							<label for="MainCertRecord_jobNo" class="control-label">Job
+								Number</label>
 							<div>
 								<input type="text" class="form-control"
-									id="MainCertRecord_jobNo"
-									value="{{MainCertRecord.jobNo}}" readonly>
+									id="MainCertRecord_jobNo" value="{{MainCertRecord.jobNo}}"
+									readonly>
 							</div>
 						</div>
 					</div>
@@ -71,18 +76,18 @@
 									<option></option>
 								</select>
 							</div>
-						</div>	
+						</div>
 					</div>
 
 				</fieldset>
-				
+
 				<fieldset>
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_arDocNumber"
-								class="control-label">AR Document Number</label>
-							<div class="input-group">
+							<label for="MainCertRecord_arDocNumber" class="control-label">AR
+								Document Number</label>
+							<div>
 								<input type="number" class="form-control"
 									id="MainCertRecord_arDocNumber"
 									ng-model="MainCertRecord.arDocNumber">
@@ -93,11 +98,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_totalReceiptAmount"
-								class="control-label">Total Receipt Amount</label>
+								class="control-label">Total Receipt Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_totalReceiptAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_totalReceiptAmount"
+									name="MainCertRecord_totalReceiptAmount"
 									ng-model="MainCertRecord.totalReceiptAmount">
 							</div>
 						</div>
@@ -105,12 +113,14 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_gstPayable"
-								class="control-label">GST Payable</label>
+							<label for="MainCertRecord_gstPayable" class="control-label">GST
+								Payable</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_gstPayable.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
-									id="MainCertRecord_gstPayable"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
+									id="MainCertRecord_gstPayable" name="MainCertRecord_gstPayable"
 									ng-model="MainCertRecord.gstPayable">
 							</div>
 						</div>
@@ -118,12 +128,15 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_gstReceivable"
-								class="control-label">GST Receivable</label>
+							<label for="MainCertRecord_gstReceivable" class="control-label">GST
+								Receivable</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_gstReceivable.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_gstReceivable"
+									name="MainCertRecord_gstReceivable"
 									ng-model="MainCertRecord.gstReceivable">
 							</div>
 						</div>
@@ -132,11 +145,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedAdjustmentAmount"
-								class="control-label">Applied Adjustment Amount</label>
+								class="control-label">Applied Adjustment Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedAdjustmentAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedAdjustmentAmount"
+									name="MainCertRecord_appliedAdjustmentAmount"
 									ng-model="MainCertRecord.appliedAdjustmentAmount">
 							</div>
 						</div>
@@ -145,11 +161,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedAdjustmentAmount"
-								class="control-label">Certified Adjustment Amount</label>
+								class="control-label">Certified Adjustment Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedAdjustmentAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedAdjustmentAmount"
+									name="MainCertRecord_certifiedAdjustmentAmount"
 									ng-model="MainCertRecord.certifiedAdjustmentAmount">
 							</div>
 						</div>
@@ -158,11 +177,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedAdvancePayment"
-								class="control-label">Applied Advance Payment</label>
+								class="control-label">Applied Advance Payment</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedAdvancePayment.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedAdvancePayment"
+									name="MainCertRecord_appliedAdvancePayment"
 									ng-model="MainCertRecord.appliedAdvancePayment">
 							</div>
 						</div>
@@ -171,11 +193,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedAdvancePayment"
-								class="control-label">Certified Advance Payment</label>
+								class="control-label">Certified Advance Payment</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedAdvancePayment.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedAdvancePayment"
+									name="MainCertRecord_certifiedAdvancePayment"
 									ng-model="MainCertRecord.certifiedAdvancePayment">
 							</div>
 						</div>
@@ -184,11 +209,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedContraChargeAmount"
-								class="control-label">Applied Contra Charge Amount</label>
+								class="control-label">Applied Contra Charge Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedContraChargeAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedContraChargeAmount"
+									name="MainCertRecord_appliedContraChargeAmount"
 									ng-model="MainCertRecord.appliedContraChargeAmount">
 							</div>
 						</div>
@@ -197,11 +225,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedContraChargeAmount"
-								class="control-label">Certified Contra Charge Amount</label>
+								class="control-label">Certified Contra Charge Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedContraChargeAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedContraChargeAmount"
+									name="MainCertRecord_certifiedContraChargeAmount"
 									ng-model="MainCertRecord.certifiedContraChargeAmount">
 							</div>
 						</div>
@@ -210,11 +241,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedCPFAmount"
-								class="control-label">Applied CPF Amount</label>
+								class="control-label">Applied CPF Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedCPFAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedCPFAmount"
+									name="MainCertRecord_appliedCPFAmount"
 									ng-model="MainCertRecord.appliedCPFAmount">
 							</div>
 						</div>
@@ -223,11 +257,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedCPFAmount"
-								class="control-label">Certified CPF Amount</label>
+								class="control-label">Certified CPF Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedCPFAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedCPFAmount"
+									name="MainCertRecord_certifiedCPFAmount"
 									ng-model="MainCertRecord.certifiedCPFAmount">
 							</div>
 						</div>
@@ -236,11 +273,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedMainContractorAmount"
-								class="control-label">Applied Main Contractor Amount</label>
+								class="control-label">Applied Main Contractor Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedMainContractorAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedMainContractorAmount"
+									name="MainCertRecord_appliedMainContractorAmount"
 									ng-model="MainCertRecord.appliedMainContractorAmount">
 							</div>
 						</div>
@@ -249,11 +289,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedMainContractorAmount"
-								class="control-label">Certified Main Contractor Amount</label>
+								class="control-label">Certified Main Contractor Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedMainContractorAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedMainContractorAmount"
+									name="MainCertRecord_certifiedMainContractorAmount"
 									ng-model="MainCertRecord.certifiedMainContractorAmount">
 							</div>
 						</div>
@@ -263,10 +306,14 @@
 						<div class="form-group">
 							<label for="MainCertRecord_appliedMainContractorRetention"
 								class="control-label">Applied Main Contractor Retention</label>
+							<span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedMainContractorRetention.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedMainContractorRetention"
+									name="MainCertRecord_appliedMainContractorRetention"
 									ng-model="MainCertRecord.appliedMainContractorRetention">
 							</div>
 						</div>
@@ -275,11 +322,15 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedMainContractorRetention"
-								class="control-label">Certified Main Contractor Retention</label>
+								class="control-label">Certified Main Contractor
+								Retention</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedMainContractorRetention.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedMainContractorRetention"
+									name="MainCertRecord_certifiedMainContractorRetention"
 									ng-model="MainCertRecord.certifiedMainContractorRetention">
 							</div>
 						</div>
@@ -287,12 +338,17 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_appliedMainContractorRetentionReleased"
-								class="control-label">Applied Main Contractor Retention Released</label>
+							<label
+								for="MainCertRecord_appliedMainContractorRetentionReleased"
+								class="control-label">Applied Main Contractor Retention
+								Released</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedMainContractorRetentionReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedMainContractorRetentionReleased"
+									name="MainCertRecord_appliedMainContractorRetentionReleased"
 									ng-model="MainCertRecord.appliedMainContractorRetentionReleased">
 							</div>
 						</div>
@@ -300,12 +356,17 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_certifiedMainContractorRetentionReleased"
-								class="control-label">Certified Main Contractor Retention Released</label>
+							<label
+								for="MainCertRecord_certifiedMainContractorRetentionReleased"
+								class="control-label">Certified Main Contractor
+								Retention Released</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedMainContractorRetentionReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedMainContractorRetentionReleased"
+									name="MainCertRecord_certifiedMainContractorRetentionReleased"
 									ng-model="MainCertRecord.certifiedMainContractorRetentionReleased">
 							</div>
 						</div>
@@ -314,11 +375,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedMOSAmount"
-								class="control-label">Applied MOS Amount</label>
+								class="control-label">Applied MOS Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedMOSAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedMOSAmount"
+									name="MainCertRecord_appliedMOSAmount"
 									ng-model="MainCertRecord.appliedMOSAmount">
 							</div>
 						</div>
@@ -327,11 +391,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedMOSAmount"
-								class="control-label">Certified MOS Amount</label>
+								class="control-label">Certified MOS Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedMOSAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedMOSAmount"
+									name="MainCertRecord_certifiedMOSAmount"
 									ng-model="MainCertRecord.certifiedMOSAmount">
 							</div>
 						</div>
@@ -340,11 +407,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedMOSRetention"
-								class="control-label">Applied MOS Retention</label>
+								class="control-label">Applied MOS Retention</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedMOSRetention.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedMOSRetention"
+									name="MainCertRecord_appliedMOSRetention"
 									ng-model="MainCertRecord.appliedMOSRetention">
 							</div>
 						</div>
@@ -353,11 +423,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedMOSRetentionReleased"
-								class="control-label">Certified MOS Retention</label>
+								class="control-label">Certified MOS Retention</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedMOSRetentionReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedMOSRetentionReleased"
+									name="MainCertRecord_certifiedMOSRetentionReleased"
 									ng-model="MainCertRecord.certifiedMOSRetentionReleased">
 							</div>
 						</div>
@@ -366,11 +439,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedNSCNDSCAmount"
-								class="control-label">Applied NSCNDSC Amount</label>
+								class="control-label">Applied NSCNDSC Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedNSCNDSCAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedNSCNDSCAmount"
+									name="MainCertRecord_appliedNSCNDSCAmount"
 									ng-model="MainCertRecord.appliedNSCNDSCAmount">
 							</div>
 						</div>
@@ -379,11 +455,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedNSCNDSCAmount"
-								class="control-label">Certified NSCNDSC Amount</label>
+								class="control-label">Certified NSCNDSC Amount</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedNSCNDSCAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedNSCNDSCAmount"
+									name="MainCertRecord_certifiedNSCNDSCAmount"
 									ng-model="MainCertRecord.certifiedNSCNDSCAmount">
 							</div>
 						</div>
@@ -392,11 +471,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedRetentionforNSCNDSC"
-								class="control-label">Applied Retention for NSCNDSC</label>
+								class="control-label">Applied Retention for NSCNDSC</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedRetentionforNSCNDSC.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedRetentionforNSCNDSC"
+									name="MainCertRecord_appliedRetentionforNSCNDSC"
 									ng-model="MainCertRecord.appliedRetentionforNSCNDSC">
 							</div>
 						</div>
@@ -405,11 +487,14 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedRetentionforNSCNDSC"
-								class="control-label">Certified Retention for NSCNDSC</label>
+								class="control-label">Certified Retention for NSCNDSC</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedRetentionforNSCNDSC.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedRetentionforNSCNDSC"
+									name="MainCertRecord_certifiedRetentionforNSCNDSC"
 									ng-model="MainCertRecord.certifiedRetentionforNSCNDSC">
 							</div>
 						</div>
@@ -418,11 +503,15 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_appliedRetentionforNSCNDSCReleased"
-								class="control-label">Applied Retention for NSCNDSC Released</label>
+								class="control-label">Applied Retention for NSCNDSC
+								Released</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_appliedRetentionforNSCNDSCReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_appliedRetentionforNSCNDSCReleased"
+									name="MainCertRecord_appliedRetentionforNSCNDSCReleased"
 									ng-model="MainCertRecord.appliedRetentionforNSCNDSCReleased">
 							</div>
 						</div>
@@ -431,11 +520,15 @@
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
 							<label for="MainCertRecord_certifiedRetentionforNSCNDSCReleased"
-								class="control-label">Certified Retention for NSCNDSC Released</label>
+								class="control-label">Certified Retention for NSCNDSC
+								Released</label> <span
+								ng-show="RevisionsMainCertRecord.MainCertRecord_certifiedRetentionforNSCNDSCReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
-							<span class="input-group-addon">$</span>
-								<input type="number" step="0.0.1" class="form-control"
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									ng-model-options="{ updateOn: 'blur' }" class="form-control"
 									id="MainCertRecord_certifiedRetentionforNSCNDSCReleased"
+									name="MainCertRecord_certifiedRetentionforNSCNDSCReleased"
 									ng-model="MainCertRecord.certifiedRetentionforNSCNDSCReleased">
 							</div>
 						</div>
@@ -447,8 +540,8 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_certIssueDate"
-								class="control-label">Certificate Issue Date</label>
+							<label for="MainCertRecord_certIssueDate" class="control-label">Certificate
+								Issue Date</label>
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.certIssueDate"
@@ -481,12 +574,12 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_certAsAtDate"
-								class="control-label">Certificate As At Date</label>
+							<label for="MainCertRecord_certAsAtDate" class="control-label">Certificate
+								As At Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="MainCertRecord.certAsAtDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									moment-picker="MainCertRecord.certAsAtDate" format="YYYY-MM-DD"
+									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
 										id="MainCertRecord_certAsAtDate"
@@ -498,12 +591,12 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_certDueDate"
-								class="control-label">Certificate Due Date</label>
+							<label for="MainCertRecord_certDueDate" class="control-label">Certificate
+								Due Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="MainCertRecord.certDueDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									moment-picker="MainCertRecord.certDueDate" format="YYYY-MM-DD"
+									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
 										id="MainCertRecord_certDueDate"
@@ -532,8 +625,8 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_ipaSentoutDate"
-								class="control-label">IPA Sentout Date</label>
+							<label for="MainCertRecord_ipaSentoutDate" class="control-label">IPA
+								Sentout Date</label>
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.ipaSentoutDate"
@@ -567,9 +660,9 @@
 				</fieldset>
 			</div>
 
-			<div class="row" ng-show="MainCertRecord.jobNo !== undefined">
+			<div class="row" ng-show="true || MainCertRecord.jobNo !== undefined">
 				<button type="submit" class="btn btn-block btn-warning">Update</button>
 			</div>
-		</form>
-	</div>
+		</div>
+	</form>
 </div>

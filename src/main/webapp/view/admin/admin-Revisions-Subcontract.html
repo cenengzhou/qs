@@ -17,847 +17,912 @@
 			</div>
 		</form>
 	</div>
+	<form name="RevisionsSubcontractRecord"
+		ng-submit="onSubmitSubcontractRecord()">
+		<div class="row" style="padding: 20px" block-ui="blockSbucontract"
+			ng-show="true || SubcontractRecord.jobInfo !== undefined">
 
-	<div class="row" style="padding: 20px"
-		ng-show="SubcontractRecord.jobInfo !== undefined">
-			<form name="RevisionsSubcontractRecord"
-				ng-submit="onSubmitSubcontractRecord()">
-				<div class="row" resize ng-style="resizeWithOffset(350)">
+			<div class="row" resize ng-style="resizeWithOffset(330)">
 
-					<fieldset>
+				<fieldset>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_jobNo" class="control-label">Job
-									Number</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_jobNo"
-										value="{{SubcontractRecord.jobInfo.jobNo}}" readonly>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_jobNo" class="control-label">Job
+								Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_jobNo"
+									value="{{SubcontractRecord.jobInfo.jobNo}}" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_packageNo" class="control-label">Subcontract
+								Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_packageNo"
+									value="{{SubcontractRecord.packageNo}}" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_vendorNo" class="control-label">Vendor
+								Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_vendorNo"
+									value="{{SubcontractRecord.vendorNo}}" readonly>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_approvalRoute"
+								class="control-label">Approval Route</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_approvalRoute"
+									ng-model="SubcontractRecord.approvalRoute">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_description" class="control-label">Description</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_description"
+									ng-model="SubcontractRecord.description">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_internalJobNo"
+								class="control-label">Internal Job Number</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_internalJobNo"
+									value="{{SubcontractRecord.internalJobNo}}">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_paymentTermsDescription"
+								class="control-label">Payment Terms Description</label>
+							<div>
+								<input type="text" class="form-control"
+									id="SubcontractRecord_paymentTermsDescription"
+									ng-model="SubcontractRecord.paymentTermsDescription">
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_cpfCalculation"
+								class="control-label">CPF Calculation</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.cpfCalculation"
+									id="SubcontractRecord_cpfCalculation"
+									ng-model="SubcontractRecord.cpfCalculation">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_formOfSubcontract"
+								class="control-label">Form of Subcontract</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.formOfSubcontract"
+									id="SubcontractRecord_formOfSubcontract"
+									ng-model="SubcontractRecord.formOfSubcontract">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_packageType" class="control-label">Package
+								Type</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.packageType"
+									id="SubcontractRecord_packageType"
+									ng-model="SubcontractRecord.packageType">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_paymentCurrency"
+								class="control-label">Payment Currency</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.paymentCurrency"
+									id="SubcontractRecord_paymentCurrency"
+									ng-model="SubcontractRecord.paymentCurrency">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_paymentInformation"
+								class="control-label">Payment Information</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.paymentInformation"
+									id="SubcontractRecord_paymentInformation"
+									ng-model="SubcontractRecord.paymentInformation">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_subcontractorNature"
+								class="control-label">Subcontractor Nature</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.subcontractorNature"
+									id="SubcontractRecord_subcontractorNature"
+									ng-model="SubcontractRecord.subcontractorNature">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_submittedAddendum"
+								class="control-label">Submitted Addendum</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.submittedAddendum"
+									id="SubcontractRecord_submittedAddendum"
+									ng-model="SubcontractRecord.submittedAddendum">
+								</select>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_paymentTerms" class="control-label">Payment
+								Terms</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.paymentTerms"
+									id="SubcontractRecord_paymentTerms"
+									ng-model="SubcontractRecord.paymentTerms">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_retentionTerms"
+								class="control-label">Retention Terms</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.retentionTerms"
+									id="SubcontractRecord_retentionTerms"
+									ng-model="SubcontractRecord.retentionTerms">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_subcontractTerm"
+								class="control-label">Subcontract Terms</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.subcontractTerm"
+									id="SubcontractRecord_subcontractTerm"
+									ng-model="SubcontractRecord.subcontractTerm">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_packageStatus"
+								class="control-label">Package Status</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.packageStatus"
+									id="SubcontractRecord_packageStatus"
+									ng-model="SubcontractRecord.packageStatus">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_paymentStatus"
+								class="control-label">Payment Status</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.paymentStatus"
+									id="SubcontractRecord_paymentStatus"
+									ng-model="SubcontractRecord.paymentStatus">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_splitTerminateStatus"
+								class="control-label">Split Terminate Status</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.splitTerminateStatus"
+									id="SubcontractRecord_splitTerminateStatus"
+									ng-model="SubcontractRecord.splitTerminateStatus">
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_subcontractStatus"
+								class="control-label">Subcontract Status</label>
+							<div>
+								<select class="form-control"
+									ng-options="k as v for (k,v) in GlobalParameter.subcontractStatus"
+									id="SubcontractRecord_subcontractStatus"
+									ng-model="SubcontractRecord.subcontractStatus">
+									<option></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_labourIncludedContract"
+								class="control-label">Labour Included</label>
+							<div>
+								<input type="checkbox"
+									id="SubcontractRecord_labourIncludedContract"
+									ng-model="SubcontractRecord.labourIncludedContract">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_materialIncludedContract"
+								class="control-label">Material Included</label>
+							<div>
+								<input type="checkbox"
+									id="SubcontractRecord_materialIncludedContract"
+									ng-model="SubcontractRecord.materialIncludedContract">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_plantIncludedContract"
+								class="control-label">Plant Included</label>
+							<div>
+								<input type="checkbox"
+									id="SubcontractRecord_plantIncludedContract"
+									ng-model="SubcontractRecord.plantIncludedContract">
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_cpfBasePeriod"
+								class="control-label">CPF Base Period</label>
+							<div>
+								<input type="number" class="form-control"
+									id="SubcontractRecord_cpfBasePeriod"
+									ng-model="SubcontractRecord.cpfBasePeriod">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_cpfBaseYear" class="control-label">CPF
+								Base Year</label>
+							<div>
+								<input type="number" class="form-control"
+									id="SubcontractRecord_cpfBaseYear"
+									ng-model="SubcontractRecord.cpfBaseYear">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_accumlatedRetention"
+								class="control-label">Accumulated Retention</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_accumlatedRetention.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_accumlatedRetention"
+									name="SubcontractRecord_accumlatedRetention"
+									ng-model="SubcontractRecord.accumlatedRetention"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_approvedVOAmount"
+								class="control-label">Approved VO Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_approvedVOAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_approvedVOAmount"
+									name="SubcontractRecord_approvedVOAmount"
+									ng-model="SubcontractRecord.approvedVOAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_exchangeRate" class="control-label">Exchange
+								Rate</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_exchangeRate.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+								<input type="number" step="0.01" class="form-control"
+									id="SubcontractRecord_exchangeRate"
+									name="SubcontractRecord_exchangeRate"
+									ng-model="SubcontractRecord.exchangeRate"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_interimRentionPercentage"
+								class="control-label">Interim Retention %</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_interimRentionPercentage.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<input type="number" step="0.01" class="form-control"
+									id="SubcontractRecord_interimRentionPercentage"
+									name="SubcontractRecord_interimRentionPercentage"
+									ng-model="SubcontractRecord.interimRentionPercentage"
+									ng-model-options="{ updateOn: 'blur' }"> <span
+									class="input-group-addon">%</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_maxRetentionPercentage"
+								class="control-label">Max Retention %</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_maxRetentionPercentage.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<input type="number" step="0.01" 
+									class="form-control"
+									id="SubcontractRecord_maxRetentionPercentage"
+									name="SubcontractRecord_maxRetentionPercentage"
+									ng-model="SubcontractRecord.maxRetentionPercentage"
+									ng-model-options="{ updateOn: 'blur' }"> <span
+									class="input-group-addon">%</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_mosRetentionPercentage"
+								class="control-label">MOS Retention %</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_mosRetentionPercentage.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<input type="number" step="0.01" class="form-control"									
+									id="SubcontractRecord_mosRetentionPercentage"
+									name="SubcontractRecord_mosRetentionPercentage"
+									ng-model="SubcontractRecord.mosRetentionPercentage"
+									ng-model-options="{ updateOn: 'blur' }"> <span
+									class="input-group-addon">%</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_originalSubcontractSum"
+								class="control-label">Original SC Sum</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_originalSubcontractSum.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_originalSubcontractSum"
+									name="SubcontractRecord_originalSubcontractSum"
+									ng-model="SubcontractRecord.originalSubcontractSum"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_remeasuredSubcontractSum"
+								class="control-label">Remeasured SC Sum</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_remeasuredSubcontractSum.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_remeasuredSubcontractSum"
+									name="SubcontractRecord_remeasuredSubcontractSum"
+									ng-model="SubcontractRecord.remeasuredSubcontractSum"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_retentionAmount"
+								class="control-label">Retention Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_retentionAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_retentionAmount"
+									name="SubcontractRecord_retentionAmount"
+									ng-model="SubcontractRecord.retentionAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_retentionReleased"
+								class="control-label">Retention Release</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_retentionReleased.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_retentionReleased"
+									name="SubcontractRecord_retentionReleased"
+									ng-model="SubcontractRecord.retentionReleased"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalCCPostedCertAmount"
+								class="control-label">Total CC Posted Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalCCPostedCertAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalCCPostedCertAmount"
+									name="SubcontractRecord_totalCCPostedCertAmount"
+									ng-model="SubcontractRecord.totalCCPostedCertAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalCumCertifiedAmount"
+								class="control-label">Total Cumlated Cert Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalCumCertifiedAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalCumCertifiedAmount"
+									name="SubcontractRecord_totalCumCertifiedAmount"
+									ng-model="SubcontractRecord.totalCumCertifiedAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalCumWorkDoneAmount"
+								class="control-label">Total Cumulated Work Done Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalCumWorkDoneAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalCumWorkDoneAmount"
+									name="SubcontractRecord_totalCumWorkDoneAmount"
+									ng-model="SubcontractRecord.totalCumWorkDoneAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalMOSPostedCertAmount"
+								class="control-label">Total MOS Posted Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalMOSPostedCertAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalMOSPostedCertAmount"
+									name="SubcontractRecord_totalMOSPostedCertAmount"
+									ng-model="SubcontractRecord.totalMOSPostedCertAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalPostedCertifiedAmount"
+								class="control-label">Total Posted Cert Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalPostedCertifiedAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalPostedCertifiedAmount"
+									name="SubcontractRecord_totalPostedCertifiedAmount"
+									ng-model="SubcontractRecord.totalPostedCertifiedAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_totalPostedWorkDoneAmount"
+								class="control-label">Total Posted Work Done Amount</label> <span
+								ng-show="RevisionsSubcontractRecord.SubcontractRecord_totalPostedWorkDoneAmount.$error.pattern"
+								class="text-danger"> Not a valid number!</span>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="number" step="0.01"
+									class="form-control" 
+									id="SubcontractRecord_totalPostedWorkDoneAmount"
+									name="SubcontractRecord_totalPostedWorkDoneAmount"
+									ng-model="SubcontractRecord.totalPostedWorkDoneAmount"
+									ng-model-options="{ updateOn: 'blur' }">
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_finalPaymentIssuedDate"
+								class="control-label">Final Payment Issued Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.finalPaymentIssuedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_finalPaymentIssuedDate"
+										ng-model="SubcontractRecord.finalPaymentIssuedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_packageNo" class="control-label">Subcontract
-									Number</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_packageNo"
-										value="{{SubcontractRecord.packageNo}}" readonly>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_firstPaymentCertIssuedDate"
+								class="control-label">First Payment Cert Issued Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.firstPaymentCertIssuedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_firstPaymentCertIssuedDate"
+										ng-model="SubcontractRecord.firstPaymentCertIssuedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_vendorNo" class="control-label">Vendor
-									Number</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_vendorNo"
-										value="{{SubcontractRecord.vendorNo}}" readonly>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_latestAddendumValueUpdatedDate"
+								class="control-label">Last Addendum Value Update Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.latestAddendumValueUpdatedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_latestAddendumValueUpdatedDate"
+										ng-model="SubcontractRecord.latestAddendumValueUpdatedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_approvalRoute"
-									class="control-label">Approval Route</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_approvalRoute"
-										ng-model="SubcontractRecord.approvalRoute">
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_lastPaymentCertIssuedDate"
+								class="control-label">Last Payment Cert Issueed Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.lastPaymentCertIssuedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_lastPaymentCertIssuedDate"
+										ng-model="SubcontractRecord.lastPaymentCertIssuedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_description" class="control-label">Description</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_description"
-										ng-model="SubcontractRecord.description">
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_loaSignedDate"
+								class="control-label">LOA Signed Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.loaSignedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_loaSignedDate"
+										ng-model="SubcontractRecord.loaSignedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_internalJobNo"
-									class="control-label">Internal Job Number</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_internalJobNo"
-										value="{{SubcontractRecord.internalJobNo}}">
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_preAwardMeetingDate"
+								class="control-label">Preaward Metting Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.preAwardMeetingDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_preAwardMeetingDate"
+										ng-model="SubcontractRecord.preAwardMeetingDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_paymentTermsDescription"
-									class="control-label">Payment Terms Description</label>
-								<div>
-									<input type="text" class="form-control"
-										id="SubcontractRecord_paymentTermsDescription"
-										ng-model="SubcontractRecord.paymentTermsDescription">
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_requisitionApprovedDate"
+								class="control-label">Requisition Approved Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.requisitionApprovedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_requisitionApprovedDate"
+										ng-model="SubcontractRecord.requisitionApprovedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_cpfCalculation"
-									class="control-label">CPF Calculation</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.cpfCalculation"
-										id="SubcontractRecord_cpfCalculation"
-										ng-model="SubcontractRecord.cpfCalculation">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_scApprovalDate"
+								class="control-label">SC Approval Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.scApprovalDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_scApprovalDate"
+										ng-model="SubcontractRecord.scApprovalDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_formOfSubcontract"
-									class="control-label">Form of Subcontract</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.formOfSubcontract"
-										id="SubcontractRecord_formOfSubcontract"
-										ng-model="SubcontractRecord.formOfSubcontract">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_scAwardApprovalRequestSentDate"
+								class="control-label">SC Award Approval Requestent Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.scAwardApprovalRequestSentDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_scAwardApprovalRequestSentDate"
+										ng-model="SubcontractRecord.scAwardApprovalRequestSentDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_packageType" class="control-label">Package
-									Type</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.packageType"
-										id="SubcontractRecord_packageType"
-										ng-model="SubcontractRecord.packageType">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_scCreatedDate"
+								class="control-label">SC Created Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.scCreatedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_scCreatedDate"
+										ng-model="SubcontractRecord.scCreatedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_paymentCurrency"
-									class="control-label">Payment Currency</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.paymentCurrency"
-										id="SubcontractRecord_paymentCurrency"
-										ng-model="SubcontractRecord.paymentCurrency">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_scDocLegalDate"
+								class="control-label">SC DOC LEGAL Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.scDocLegalDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_scDocLegalDate"
+										ng-model="SubcontractRecord.scDocLegalDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_paymentInformation"
-									class="control-label">Payment Information</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.paymentInformation"
-										id="SubcontractRecord_paymentInformation"
-										ng-model="SubcontractRecord.paymentInformation">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_scDocScrDate" class="control-label">SC
+								Doc SCR Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.scDocScrDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_scDocScrDate"
+										ng-model="SubcontractRecord.scDocScrDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_subcontractorNature"
-									class="control-label">Subcontractor Nature</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.subcontractorNature"
-										id="SubcontractRecord_subcontractorNature"
-										ng-model="SubcontractRecord.subcontractorNature">
-										<option></option>
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_tenderAnalysisApprovedDate"
+								class="control-label">TA Approved Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.tenderAnalysisApprovedDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_tenderAnalysisApprovedDate"
+										ng-model="SubcontractRecord.tenderAnalysisApprovedDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_submittedAddendum"
-									class="control-label">Submitted Addendum</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.submittedAddendum"
-										id="SubcontractRecord_submittedAddendum"
-										ng-model="SubcontractRecord.submittedAddendum">
-									</select>
+					<div class="col-md-4" style="padding: 5px">
+						<div class="form-group">
+							<label for="SubcontractRecord_workCommenceDate"
+								class="control-label">Work Commence Date</label>
+							<div>
+								<div class="input-group"
+									moment-picker="SubcontractRecord.workCommenceDate"
+									format="YYYY-MM-DD" start-view="hour" today="true">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i></span> <input class="form-control"
+										id="SubcontractRecord_workCommenceDate"
+										ng-model="SubcontractRecord.workCommenceDate">
 								</div>
 							</div>
 						</div>
+					</div>
 
-					</fieldset>
+				</fieldset>
+			</div>
 
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_paymentTerms"
-									class="control-label">Payment Terms</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.paymentTerms"
-										id="SubcontractRecord_paymentTerms"
-										ng-model="SubcontractRecord.paymentTerms">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_retentionTerms"
-									class="control-label">Retention Terms</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.retentionTerms"
-										id="SubcontractRecord_retentionTerms"
-										ng-model="SubcontractRecord.retentionTerms">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_subcontractTerm"
-									class="control-label">Subcontract Terms</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.subcontractTerm"
-										id="SubcontractRecord_subcontractTerm"
-										ng-model="SubcontractRecord.subcontractTerm">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_packageStatus"
-									class="control-label">Package Status</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.packageStatus"
-										id="SubcontractRecord_packageStatus"
-										ng-model="SubcontractRecord.packageStatus">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_paymentStatus"
-									class="control-label">Payment Status</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.paymentStatus"
-										id="SubcontractRecord_paymentStatus"
-										ng-model="SubcontractRecord.paymentStatus">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_splitTerminateStatus"
-									class="control-label">Split Terminate Status</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.splitTerminateStatus"
-										id="SubcontractRecord_splitTerminateStatus"
-										ng-model="SubcontractRecord.splitTerminateStatus">
-									</select>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_subcontractStatus"
-									class="control-label">Subcontract Status</label>
-								<div>
-									<select class="form-control"
-										ng-options="k as v for (k,v) in GlobalParameter.subcontractStatus"
-										id="SubcontractRecord_subcontractStatus"
-										ng-model="SubcontractRecord.subcontractStatus">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_labourIncludedContract"
-									class="control-label">Labour Included</label>
-								<div>
-									<input type="checkbox"
-										id="SubcontractRecord_labourIncludedContract"
-										ng-model="SubcontractRecord.labourIncludedContract">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_materialIncludedContract"
-									class="control-label">Material Included</label>
-								<div>
-									<input type="checkbox"
-										id="SubcontractRecord_materialIncludedContract"
-										ng-model="SubcontractRecord.materialIncludedContract">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_plantIncludedContract"
-									class="control-label">Plant Included</label>
-								<div>
-									<input type="checkbox"
-										id="SubcontractRecord_plantIncludedContract"
-										ng-model="SubcontractRecord.plantIncludedContract">
-								</div>
-							</div>
-						</div>
-
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_accumlatedRetention"
-									class="control-label">Accumulated Retention</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										class="form-control"
-										id="SubcontractRecord_accumlatedRetention"
-										ng-model="SubcontractRecord.accumlatedRetention">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_approvedVOAmount"
-									class="control-label">Approved VO Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										class="form-control" id="SubcontractRecord_approvedVOAmount"
-										ng-model="SubcontractRecord.approvedVOAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_cpfBasePeriod"
-									class="control-label">CPF Base Period</label>
-								<div>
-									<input type="number" class="form-control"
-										id="SubcontractRecord_cpfBasePeriod"
-										ng-model="SubcontractRecord.cpfBasePeriod">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_cpfBaseYear" class="control-label">CPF
-									Base Year</label>
-								<div>
-									<input type="number" class="form-control"
-										id="SubcontractRecord_cpfBaseYear"
-										ng-model="SubcontractRecord.cpfBaseYear">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_exchangeRate"
-									class="control-label">Exchange Rate</label>
-								<div class="input-group">
-									<span class="input-group-addon"><i
-										class="fa fa-exchange"></i></span> <input type="number"
-										class="form-control" id="SubcontractRecord_exchangeRate"
-										ng-model="SubcontractRecord.exchangeRate">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_interimRentionPercentage"
-									class="control-label">Interim Retention %</label>
-								<div class="input-group">
-									<input type="number" class="form-control"
-										id="SubcontractRecord_interimRentionPercentage"
-										ng-model="SubcontractRecord.interimRentionPercentage">
-									<span class="input-group-addon">%</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_maxRetentionPercentage"
-									class="control-label">Max Retention %</label>
-								<div class="input-group">
-									<input type="number" class="form-control"
-										id="SubcontractRecord_maxRetentionPercentage"
-										ng-model="SubcontractRecord.maxRetentionPercentage"> <span
-										class="input-group-addon">%</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_mosRetentionPercentage"
-									class="control-label">MOS Retention %</label>
-								<div class="input-group">
-									<input type="number" class="form-control"
-										id="SubcontractRecord_mosRetentionPercentage"
-										ng-model="SubcontractRecord.mosRetentionPercentage"> <span
-										class="input-group-addon">%</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_originalSubcontractSum"
-									class="control-label">Original SC Sum</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_originalSubcontractSum"
-										ng-model="SubcontractRecord.originalSubcontractSum">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_remeasuredSubcontractSum"
-									class="control-label">Remeasured SC Sum</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_remeasuredSubcontractSum"
-										ng-model="SubcontractRecord.remeasuredSubcontractSum">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_retentionAmount"
-									class="control-label">Retention Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_retentionAmount"
-										ng-model="SubcontractRecord.retentionAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_retentionReleased"
-									class="control-label">Retention Release</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_retentionReleased"
-										ng-model="SubcontractRecord.retentionReleased">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalCCPostedCertAmount"
-									class="control-label">Total CC Posted Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_totalCCPostedCertAmount"
-										ng-model="SubcontractRecord.totalCCPostedCertAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalCumCertifiedAmount"
-									class="control-label">Total Cumlated Cert Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_totalCumCertifiedAmount"
-										ng-model="SubcontractRecord.totalCumCertifiedAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalCumWorkDoneAmount"
-									class="control-label">Total Cumulated Work Done Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_totalCumWorkDoneAmount"
-										ng-model="SubcontractRecord.totalCumWorkDoneAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalMOSPostedCertAmount"
-									class="control-label">Total MOS Posted Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_totalMOSPostedCertAmount"
-										ng-model="SubcontractRecord.totalMOSPostedCertAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalPostedCertifiedAmount"
-									class="control-label">Total Posted Cert Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="number"
-										step='0.01' class="form-control"
-										id="SubcontractRecord_totalPostedCertifiedAmount"
-										ng-model="SubcontractRecord.totalPostedCertifiedAmount">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_totalPostedWorkDoneAmount"
-									class="control-label">Total Posted Work Done Amount</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span> <input type="text"
-										class="form-control"
-										id="SubcontractRecord_totalPostedWorkDoneAmount"
-										ng-model="SubcontractRecord.totalPostedWorkDoneAmount">
-								</div>
-							</div>
-						</div>
-
-					</fieldset>
-
-					<fieldset>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_finalPaymentIssuedDate"
-									class="control-label">Final Payment Issued Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.finalPaymentIssuedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_finalPaymentIssuedDate"
-											ng-model="SubcontractRecord.finalPaymentIssuedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_firstPaymentCertIssuedDate"
-									class="control-label">First Payment Cert Issued Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.firstPaymentCertIssuedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_firstPaymentCertIssuedDate"
-											ng-model="SubcontractRecord.firstPaymentCertIssuedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_latestAddendumValueUpdatedDate"
-									class="control-label">Last Addendum Value Update Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.latestAddendumValueUpdatedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_latestAddendumValueUpdatedDate"
-											ng-model="SubcontractRecord.latestAddendumValueUpdatedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_lastPaymentCertIssuedDate"
-									class="control-label">Last Payment Cert Issueed Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.lastPaymentCertIssuedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_lastPaymentCertIssuedDate"
-											ng-model="SubcontractRecord.lastPaymentCertIssuedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_loaSignedDate"
-									class="control-label">LOA Signed Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.loaSignedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_loaSignedDate"
-											ng-model="SubcontractRecord.loaSignedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_preAwardMeetingDate"
-									class="control-label">Preaward Metting Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.preAwardMeetingDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_preAwardMeetingDate"
-											ng-model="SubcontractRecord.preAwardMeetingDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_requisitionApprovedDate"
-									class="control-label">Requisition Approved Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.requisitionApprovedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_requisitionApprovedDate"
-											ng-model="SubcontractRecord.requisitionApprovedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_scApprovalDate"
-									class="control-label">SC Approval Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.scApprovalDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_scApprovalDate"
-											ng-model="SubcontractRecord.scApprovalDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_scAwardApprovalRequestSentDate"
-									class="control-label">SC Award Approval Requestent Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.scAwardApprovalRequestSentDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_scAwardApprovalRequestSentDate"
-											ng-model="SubcontractRecord.scAwardApprovalRequestSentDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_scCreatedDate"
-									class="control-label">SC Created Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.scCreatedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_scCreatedDate"
-											ng-model="SubcontractRecord.scCreatedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_scDocLegalDate"
-									class="control-label">SC DOC LEGAL Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.scDocLegalDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_scDocLegalDate"
-											ng-model="SubcontractRecord.scDocLegalDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_scDocScrDate"
-									class="control-label">SC Doc SCR Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.scDocScrDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_scDocScrDate"
-											ng-model="SubcontractRecord.scDocScrDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_tenderAnalysisApprovedDate"
-									class="control-label">TA Approved Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.tenderAnalysisApprovedDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_tenderAnalysisApprovedDate"
-											ng-model="SubcontractRecord.tenderAnalysisApprovedDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4" style="padding: 5px">
-							<div class="form-group">
-								<label for="SubcontractRecord_workCommenceDate"
-									class="control-label">Work Commence Date</label>
-								<div>
-									<div class="input-group"
-										moment-picker="SubcontractRecord.workCommenceDate"
-										format="YYYY-MM-DD" start-view="hour" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i></span> <input class="form-control"
-											id="SubcontractRecord_workCommenceDate"
-											ng-model="SubcontractRecord.workCommenceDate">
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</fieldset>
-				</div>
-
-				<div class="row"
-					ng-show="SubcontractRecord.jobInfo.jobNo !== undefined">
-					<button type="submit" class="btn btn-block btn-warning">Update</button>
-				</div>
-
-			</form>
+			<div class="row"
+				ng-show="true || SubcontractRecord.jobInfo.jobNo !== undefined">
+				<button type="submit" class="btn btn-block btn-warning">Update</button>
+			</div>
 		</div>
-	</div>
+	</form>
+</div>

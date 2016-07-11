@@ -1,5 +1,7 @@
 
-mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', function($scope , $http, colorCode, SessionHelper, $rootScope) {
+mainApp.controller('AdminSessionCtrl', 
+		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 
+		 function($scope , $http, colorCode, SessionHelper, $rootScope) {
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -56,10 +58,10 @@ mainApp.controller('AdminSessionCtrl', ['$scope' , '$http', 'colorCode', 'Sessio
 		SessionHelper.getCurrentSessionId()
 		.then(function(data){
 			$rootScope.sessionId = data;
-			$http.post('service/GetSessionList')
-		    .then(function(response) {
-				if(angular.isArray(response.data)){
-					$scope.gridOptions.data = response.data;
+			SessionHelper.getSessionList()
+		    .then(function(data) {
+				if(angular.isArray(data)){
+					$scope.gridOptions.data = data;
 				} else {
 					SessionHelper.getCurrentSessionId().then;
 				}

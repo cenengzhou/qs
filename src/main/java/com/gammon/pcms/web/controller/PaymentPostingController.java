@@ -14,7 +14,7 @@ public class PaymentPostingController {
 	@Autowired
 	private PaymentPostingService paymentPostingService;
 	
-	@RequestMapping(value = "RunPaymentPosting", method = RequestMethod.POST)
+	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();
 	}

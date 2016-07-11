@@ -4721,36 +4721,40 @@ public class SubcontractService {
 
 	}
 
-    public String saveOrUpdateSCPackageAdmin(Subcontract scPackage) throws DatabaseOperationException {
-		throw new RuntimeException("remove entity | SCPackageControl | remark saveOrUpdateSCPackageAdmin(SCPackage scPackage)");
-    	//TODO: remove entity | SCPackageControl | remark saveOrUpdateSCPackageAdmin(SCPackage scPackage) 
-//	if (SCPackage.INTERNAL_TRADING.equalsIgnoreCase(scPackage
-//		.getFormOfSubcontract())) {
-//	    if (scPackage.getInternalJobNo() == null
-//		    || scPackage.getInternalJobNo().trim().length() == 0)
-//		return "Invalid internal job number";
-//	    Job job = jobHBDao.obtainJob(scPackage.getInternalJobNo());
-//	    if (job == null) {
-//		try {
-//		    job = jobWSDao.obtainJob(scPackage.getInternalJobNo());
-//		} catch (Exception e) {
-//		    throw new DatabaseOperationException(
-//			    e.getLocalizedMessage());
-//		}
-//		if (job == null)
-//		    return "Invalid internal job number: "
-//			    + scPackage.getInternalJobNo();
-//	    }
-//	}
-//
-//	SCPackage packageInDB = packageHBDao.get(scPackage.getId());
-//	SCPackageControl packageControl = assignSCPackageControl(packageInDB,
-//		scPackage);
-//
-//	packageHBDao.saveOrUpdate(packageInDB);
+    public String updateSubcontractAdmin(Subcontract subcontract) {
+    	//TODO: remove entity | SCPackageControl | remark SCPackageControl assignSCPackageControl(packageInDB, subcontract)
+	if (Subcontract.INTERNAL_TRADING.equalsIgnoreCase(subcontract.getFormOfSubcontract())) {
+	    if (subcontract.getInternalJobNo() == null || subcontract.getInternalJobNo().trim().length() == 0) {
+	    	return "Invalid internal job number";
+	    }
+	    
+	    JobInfo job = null;
+		try {
+			job = jobHBDao.obtainJobInfo(subcontract.getInternalJobNo());
+		} catch (DatabaseOperationException e1) {
+			e1.printStackTrace();
+		}
+	    if (job == null) {
+			try {
+			    job = jobWSDao.obtainJob(subcontract.getInternalJobNo());
+				if (job == null)
+				    return "Invalid internal job number: " + subcontract.getInternalJobNo();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
+	}
+
+	Subcontract subcontractInDB = subcontractHBDao.get(subcontract.getId());
+//	SCPackageControl packageControl = assignSCPackageControl(packageInDB, subcontract);
 //	scPackageControlDao.saveOrUpdate(packageControl);
-//
-//	return null;
+	if(subcontractInDB == null) {
+		return "Subcontract not found in database";
+	}
+	
+	subcontractHBDao.merge(subcontract);
+
+	return null;
     }
 
 	//TODO: remove entity | SCPackageControl | remark assignSCPackageControl(SCPackage oldPackage,SCPackage newPackage) 

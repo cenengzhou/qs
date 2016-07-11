@@ -52,7 +52,7 @@ public class TransitController {
 		return null;
 	}
 
-	@RequestMapping(value = "ObtainTransitCodeMatcheList", method = RequestMethod.POST)
+	@RequestMapping(value = "obtainTransitCodeMatcheList", method = RequestMethod.POST)
 	public List<TransitCodeMatch> obtainTransitCodeMatcheList(@RequestParam(defaultValue = "") String matchingType, 
 			@RequestParam(defaultValue = "") String resourceCode,
 			@RequestParam(defaultValue = "") String objectCode, 
@@ -60,7 +60,7 @@ public class TransitController {
 		return transitService.obtainTransitCodeMatcheList(matchingType, resourceCode, objectCode, subsidiaryCode);
 	}
 
-	@RequestMapping(value = "ObtainTransitUomMatcheList", method = RequestMethod.POST)
+	@RequestMapping(value = "obtainTransitUomMatcheList", method = RequestMethod.POST)
 	public List<AppTransitUom> obtainTransitUomMatcheList(@RequestParam(defaultValue = "") String causewayUom, 
 			@RequestParam(defaultValue = "") String jdeUom) {
 		return transitService.obtainTransitUomMatcheList(causewayUom, jdeUom);

@@ -1,9 +1,10 @@
-mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
-		$rootScope, $http, modalService) {
+mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', 
+		['$scope', '$rootScope', '$http', 'modalService', 'transitService',
+		 function($scope, $rootScope, $http, modalService, transitService) {
 	$scope.loadData = function() {
-		$http.post("service/transit/ObtainTransitCodeMatcheList").then(
-				function(response) {
-					$scope.gridOptions.data = response.data;
+		transitService.obtainTransitCodeMatcheList().then(
+				function(data) {
+					$scope.gridOptions.data = data;
 				});
 	};
 	$scope.loadData();
@@ -13,17 +14,11 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 		formData.append('files', uploadFile1.files[0]);
 		formData.append('type', 'Resource Code Matching');
 		formData.append('jobNumber', $scope.jobNo);
-		$http({
-			method : 'POST',
-			url : 'gammonqs/transitUpload.smvc',
-			data : formData,
-			headers : {
-				'Content-Type' : undefined
-			}
-		}).then(
-				function(response) {
+		transitService.transitUpload(formData)
+		.then(
+				function(data) {
 					$scope.loadData();
-					var msg = response.data;
+					var msg = data;
 					modalService.open('md', 'view/message-modal.html',
 							'MessageModalCtrl', 'Success', "Success:"
 									+ msg.success
@@ -31,10 +26,9 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 									+ msg.numRecordImported
 									+ "\r\nHave warning:" + msg.haveWarning);
 				},
-				function(response) {
+				function(data) {
 					modalService.open('md', 'view/message-modal.html',
-							'MessageModalCtrl', 'Fail', "Status:"
-									+ response.statusText);
+							'MessageModalCtrl', 'Fail', data);
 				});
 	};
 
@@ -76,4 +70,4 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', function($scope,
 		$scope.gridApi = gridApi;
 	};
 
-});
+}]);

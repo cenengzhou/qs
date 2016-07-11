@@ -1,9 +1,10 @@
-mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
-		 function($scope, $rootScope, $http, modalService ) {
+mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl', 
+		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService',
+		 function($scope, $rootScope, $http, modalService, subcontractService ) {
 	$scope.loadData = function(){
-	$http.post("service/subcontract/SearchSystemConstants").then(
-			function(response) {
-				$scope.gridOptions.data = response.data;
+	subcontractService.searchSystemConstants().then(
+			function(data) {
+				$scope.gridOptions.data = data;
 			});
 	};
 	$scope.loadData();
@@ -137,27 +138,27 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		var dataRows = $scope.gridDirtyRows.map(function(gridRow) {
 			return gridRow.entity;
 		});
-		$http.post('service/subcontract/UpdateMultipleSystemConstants', dataRows)
-		.then(function(response){
+		subcontractService.updateMultipleSystemConstants(dataRows)
+		.then(function(data){
 			$scope.gridApi.rowEdit.setRowsClean(dataRows);
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Updated " + dataRows.length + " records");;
-		}, function(response){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Status:" + response.statusText );
+		}, function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
 		
 	};
 
 	$scope.onDelete = function() {
 		$scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
-		$http.post('service/subcontract/InactivateSystemConstant', $scope.selectedRows)
-		.then(function(response){
+		subcontractService.inactivateSystemConstant($scope.selectedRows)
+		.then(function(data){
 			angular.forEach($scope.selectedRows, function (data, index) {
 			    $scope.gridOptions.data.splice($scope.gridOptions.data.lastIndexOf(data), 1);
 			  });
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Deleted " + $scope.selectedRows.length + " records");;
 			$scope.selectedRows = [];
-		}, function(response){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Status:" + response.statusText );
+		}, function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
 	};
 	
@@ -172,4 +173,4 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		$scope.gridApi.selection.on.rowSelectionChangedBatch($scope, $scope.rowSelectionChangedBatch);
 	};
 
-});
+}]);
