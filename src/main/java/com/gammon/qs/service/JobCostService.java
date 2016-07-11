@@ -25,24 +25,21 @@ import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 import com.gammon.qs.domain.AccountMaster;
+import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.jobCost.AccountBalanceExcelGenerator;
 import com.gammon.qs.service.jobCost.AccountPayableExcelGenerator;
 import com.gammon.qs.service.jobCost.PurchaseOrderExcelGenerator;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.wrapper.APRecordPaginationWrapper;
-import com.gammon.qs.wrapper.AccountBalanceByDateRangePaginationWrapper;
 import com.gammon.qs.wrapper.AccountLedgerPaginationWrapper;
 import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 import com.gammon.qs.wrapper.PurchaseOrderEnquiryWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
-import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JobCostService implements Serializable {
@@ -69,11 +66,6 @@ public class JobCostService implements Serializable {
 	// -----------------------------------
 	// Server Cached lists for pagination
 	// -----------------------------------
-	// Account Balance
-	private List<AccountBalanceByDateRangeWrapper> listOfAccountBalanceByDateRange; // WHOLE list of Account Balance to be displayed in UI
-	private List<AccountBalanceByDateRangeWrapper> listOfAccountBalanceByDateRangeBackup; // WHOLE list of Account Balance that was returned from WS
-	private AccountBalanceByDateRangePaginationWrapper accountBalanceByDateRangePaginationWrapper;
-	
 	//APRecord
 	private List<APRecord> listOfAPRecord;
 	private APRecordPaginationWrapper apRecordPaginationWrapper;
@@ -102,39 +94,12 @@ public class JobCostService implements Serializable {
 		this.purchaseOrderEnquiryWrapper = purchaseOrderEnquiryWrapper;
 	}
 	
-	public List<AccountBalanceByDateRangeWrapper> getListOfAccountBalanceByDateRange() {
-		return listOfAccountBalanceByDateRange;
-	}
-
-	public void setListOfAccountBalanceByDateRange(
-			List<AccountBalanceByDateRangeWrapper> listOfAccountBalanceByDateRange) {
-		this.listOfAccountBalanceByDateRange = listOfAccountBalanceByDateRange;
-	}
-
-	public List<AccountBalanceByDateRangeWrapper> getListOfAccountBalanceByDateRangeCache() {
-		return listOfAccountBalanceByDateRangeBackup;
-	}
-
-	public void setListOfAccountBalanceByDateRangeCache(
-			List<AccountBalanceByDateRangeWrapper> listOfAccountBalanceByDateRangeCache) {
-		this.listOfAccountBalanceByDateRangeBackup = listOfAccountBalanceByDateRangeCache;
-	}
-
 	public List<JdeAccountLedgerWrapper> getListOfAccountLedger() {
 		return listOfAccountLedger;
 	}
 
 	public void setListOfAccountLedger(List<JdeAccountLedgerWrapper> listOfAccountLedger) {
 		this.listOfAccountLedger = listOfAccountLedger;
-	}
-
-	public List<AccountBalanceByDateRangeWrapper> getListOfAccountBalanceByDateRangeBackup() {
-		return listOfAccountBalanceByDateRangeBackup;
-	}
-
-	public void setListOfAccountBalanceByDateRangeBackup(
-			List<AccountBalanceByDateRangeWrapper> listOfAccountBalanceByDateRangeBackup) {
-		this.listOfAccountBalanceByDateRangeBackup = listOfAccountBalanceByDateRangeBackup;
 	}
 
 	public List<APRecord> getListOfAPRecord() {
@@ -491,160 +456,7 @@ public class JobCostService implements Serializable {
 			return null;	
 	}
 	
-	public AccountBalanceByDateRangePaginationWrapper getAccountBalanceByDateRangeList(String jobNumber, String subLedger, String subLedgerType, String totalFlag,
-			String postFlag, Date fromDate, Date thruDate, String year, String period) throws Exception {
-		accountBalanceByDateRangePaginationWrapper = new AccountBalanceByDateRangePaginationWrapper();
-		
-		List<AccountMaster> accountMasterList = getAccountMasterList(jobNumber);
-		
-		List<AccountBalanceByDateRangeWrapper> accountBalanceWrapperList = jobCostDao.getAccountBalanceByDateRangeList(accountMasterList, jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
-		logger.info("RETURNED ACCOUNT BALANCE RECORDS(FULL LIST FROM WS)SIZE: " + accountBalanceWrapperList.size());
-
-		//Backup for Filtering
-		listOfAccountBalanceByDateRangeBackup = new ArrayList<AccountBalanceByDateRangeWrapper>();
-		listOfAccountBalanceByDateRangeBackup.addAll(accountBalanceWrapperList);
-		//Backup for Pagination
-		listOfAccountBalanceByDateRange = new ArrayList<AccountBalanceByDateRangeWrapper>();
-		listOfAccountBalanceByDateRange.addAll(accountBalanceWrapperList);
-		
-		accountBalanceByDateRangePaginationWrapper.setTotalPage(listOfAccountBalanceByDateRange.size()%200==0?listOfAccountBalanceByDateRange.size()/200:listOfAccountBalanceByDateRange.size()/200+1);
-		accountBalanceByDateRangePaginationWrapper.setTotalRecords(listOfAccountBalanceByDateRange.size());
-		
-		Double tempTotalJI = accountBalanceByDateRangePaginationWrapper.getTotalJI();
-		Double tempTotalAA = accountBalanceByDateRangePaginationWrapper.getTotalAA();
-		Double tempTotalVariance = accountBalanceByDateRangePaginationWrapper.getTotalVariance();
-		
-		for(AccountBalanceByDateRangeWrapper accountBalanceByDateRangeWrapper:listOfAccountBalanceByDateRange){
-			tempTotalJI+=accountBalanceByDateRangeWrapper.getAmountJI();
-			tempTotalAA+=accountBalanceByDateRangeWrapper.getAmountAA();
-			tempTotalVariance+=accountBalanceByDateRangeWrapper.getAmountJI()-accountBalanceByDateRangeWrapper.getAmountAA();
-		}
-		
-		accountBalanceByDateRangePaginationWrapper.setTotalAA(tempTotalAA);
-		accountBalanceByDateRangePaginationWrapper.setTotalJI(tempTotalJI);
-		accountBalanceByDateRangePaginationWrapper.setTotalVariance(tempTotalVariance);
-		
-		accountBalanceByDateRangePaginationWrapper = getAccountBalanceByDateRangePaginationWrapperByPage(0);
-		
-		return accountBalanceByDateRangePaginationWrapper;
-	}
-
-	public AccountBalanceByDateRangePaginationWrapper getAccountBalanceByDateRangePaginationWrapperByPage(Integer pageNum) throws Exception {
-		accountBalanceByDateRangePaginationWrapper.setCurrentPage(pageNum);
-			
-		accountBalanceByDateRangePaginationWrapper.setPreviousTotalJI(accountBalanceByDateRangePaginationWrapper.getTotalJI());
-		accountBalanceByDateRangePaginationWrapper.setPreviousTotalAA(accountBalanceByDateRangePaginationWrapper.getTotalAA());
-		accountBalanceByDateRangePaginationWrapper.setPreviousTotalVariance(accountBalanceByDateRangePaginationWrapper.getTotalVariance());
-		
-		//200 Records Per Page
-		int start = ((pageNum)*200);
-		int end = ((pageNum)*200)+200;
-		if(listOfAccountBalanceByDateRange.size()<=end)
-			end = listOfAccountBalanceByDateRange.size();
-		
-		if(listOfAccountBalanceByDateRange.size()==0)
-			accountBalanceByDateRangePaginationWrapper.setCurrentPageContentList(new ArrayList<AccountBalanceByDateRangeWrapper>());
-		else		
-			accountBalanceByDateRangePaginationWrapper.setCurrentPageContentList(new ArrayList<AccountBalanceByDateRangeWrapper>(listOfAccountBalanceByDateRange.subList(start, end)));
-		
-		logger.info("RETURNED ACCOUNT BALANCE RECORDS(PAGINATION)SIZE: " + accountBalanceByDateRangePaginationWrapper.getCurrentPageContentList().size());
-		return accountBalanceByDateRangePaginationWrapper;
-	}
 	
-	public ExcelFile downloadAccountBalanceExcelFile(String jobNumber, String subLedger, String subLedgerType, String totalFlag, String postFlag, Date fromDate, Date thruDate, String year, String period) throws Exception {
-		//Get the whole list of AccountBalanceByDateRangeWrapper all via Web Server
-		getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
-		//Get the whole list from Server (filter criterion have not applied)
-		List<AccountBalanceByDateRangeWrapper> accountBalanceList = listOfAccountBalanceByDateRangeBackup!=null?listOfAccountBalanceByDateRangeBackup:new ArrayList<AccountBalanceByDateRangeWrapper>();
-		
-		logger.info("DOWNLOAD EXCEL - ACCOUNT BALANCE RECORDS SIZE:"+ accountBalanceList.size());
-		
-		if(accountBalanceList==null || accountBalanceList.size()==0)
-			return null;
-		
-		//Create Excel File
-		ExcelFile excelFile = new ExcelFile();
-		
-		AccountBalanceExcelGenerator excelGenerator = new AccountBalanceExcelGenerator(accountBalanceList, jobNumber);			
-		excelFile = excelGenerator.generate();
-
-
-		return excelFile;
-	}
-
-	public AccountBalanceByDateRangePaginationWrapper getAccountBalanceByDateRangePaginationWrapperByFilter(String objectCode, String subsidiaryCode, boolean filterZero) throws Exception{
-		accountBalanceByDateRangePaginationWrapper = new AccountBalanceByDateRangePaginationWrapper();
-		
-		//Filter Before Search
-		if(listOfAccountBalanceByDateRangeBackup==null){
-			listOfAccountBalanceByDateRange = new ArrayList<AccountBalanceByDateRangeWrapper>();
-		}
-		else{
-			//Clear out
-			listOfAccountBalanceByDateRange.clear();
-			
-			//Totals
-			Double totalJI = 0.00;
-			Double totalAA = 0.00;
-			Double totalVariance = 0.00;
-				
-			//Filtered Account Balance List
-			boolean needToAdd = false;
-			String objectCodeTrimmed = objectCode.replace('*', ' ').trim();
-			String subsidiaryCodeTrimmed = subsidiaryCode.replace('*', ' ').trim();
-	
-			for(AccountBalanceByDateRangeWrapper accountBalanceByDateRangeWrapper:listOfAccountBalanceByDateRangeBackup){
-				//Object Code only
-				if(objectCode.length()>0 && subsidiaryCode.equals("")){
-					if(	(objectCode.endsWith("*") && accountBalanceByDateRangeWrapper.getObjectCode().startsWith(objectCodeTrimmed)) ||
-						(accountBalanceByDateRangeWrapper.getObjectCode().equals(objectCode)))
-						needToAdd = true;
-				}
-				//Subsidiary Code only
-				else if(subsidiaryCode.length()>0 && objectCode.equals("")){
-					if( (subsidiaryCode.endsWith("*") && accountBalanceByDateRangeWrapper.getSubsidiaryCode().startsWith(subsidiaryCodeTrimmed)) ||
-						(accountBalanceByDateRangeWrapper.getSubsidiaryCode().equals(subsidiaryCode)))
-						needToAdd = true;
-				}
-				//Object Code & Subsidiary Code
-				else if(objectCode.length()>0 && subsidiaryCode.length()>0){
-					if( (objectCode.endsWith("*") && accountBalanceByDateRangeWrapper.getObjectCode().startsWith(objectCodeTrimmed) && subsidiaryCode.endsWith("*") && accountBalanceByDateRangeWrapper.getSubsidiaryCode().startsWith(subsidiaryCodeTrimmed)) ||
-						(accountBalanceByDateRangeWrapper.getObjectCode().equals(objectCode) && accountBalanceByDateRangeWrapper.getSubsidiaryCode().equals(subsidiaryCode))	)
-						needToAdd = true;
-				}
-				else if(objectCode.length()==0 && subsidiaryCode.length()==0)
-					needToAdd = true;
-				
-				//Filter out zero output
-				if(filterZero && accountBalanceByDateRangeWrapper.getAmountJI()==0 && accountBalanceByDateRangeWrapper.getAmountAA()==0)
-					needToAdd = false;
-				
-				//Adding the result to the list
-				if(needToAdd){
-					listOfAccountBalanceByDateRange.add(accountBalanceByDateRangeWrapper);
-					totalJI+=accountBalanceByDateRangeWrapper.getAmountJI();
-					totalAA+=accountBalanceByDateRangeWrapper.getAmountAA();
-					totalVariance+=accountBalanceByDateRangeWrapper.getAmountJI()-accountBalanceByDateRangeWrapper.getAmountAA();
-				}
-				
-				needToAdd = false;
-			}
-			
-			//Set Totals
-			accountBalanceByDateRangePaginationWrapper.setTotalAA(totalAA);
-			accountBalanceByDateRangePaginationWrapper.setTotalJI(totalJI);
-			accountBalanceByDateRangePaginationWrapper.setTotalVariance(totalVariance);
-		}
-		
-		//Pagination
-		accountBalanceByDateRangePaginationWrapper.setTotalPage(listOfAccountBalanceByDateRange.size()%200==0?listOfAccountBalanceByDateRange.size()/200:listOfAccountBalanceByDateRange.size()/200+1);
-		accountBalanceByDateRangePaginationWrapper.setTotalRecords(listOfAccountBalanceByDateRange.size());	
-		
-		accountBalanceByDateRangePaginationWrapper = getAccountBalanceByDateRangePaginationWrapperByPage(0);
-		
-		logger.info("RETURNED FILTERED ACCOUNT BALANCE RECORDS(PAGINATION) SIZE: " + accountBalanceByDateRangePaginationWrapper.getCurrentPageContentList().size());		
-		return accountBalanceByDateRangePaginationWrapper;
-	}
 	
 	// last modified: brian tse
 	// get the whole list of account ledger according to the search criteria for export excel in Account Ledger Enquiry window
@@ -848,44 +660,6 @@ public class JobCostService implements Serializable {
 		return wrapperList;
 	}
 
-	/**
-	 * add by paulyiu 20150728
-	 */
-
-	public ByteArrayOutputStream downloadAccountBalanceReportFile(String jobNumber, String subLedger, String subLedgerType, String totalFlag, String postFlag, Date fromDate, Date thruDate, String year, String period,String jasperReportName,String fileType) throws Exception {
-		//Get the whole list of AccountBalanceByDateRangeWrapper all via Web Server
-		getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
-		//Get the whole list from Server (filter criterion have not applied)
-		List<AccountBalanceByDateRangeWrapper> accountBalanceList = listOfAccountBalanceByDateRangeBackup!=null?listOfAccountBalanceByDateRangeBackup:new ArrayList<AccountBalanceByDateRangeWrapper>();
-		
-		logger.info("DOWNLOAD PDF - ACCOUNT BALANCE RECORDS SIZE:"+ accountBalanceList.size());
-		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-		if(accountBalanceList==null || accountBalanceList.size()==0)
-			return null;
-		String jasperTemplate = jasperConfig.getTemplatePath();
-		String fileFullPath = jasperTemplate +jasperReportName;
-		Date asOfDate = new Date();
-		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperTemplate);
-		parameters.put("AS_OF_DATE", asOfDate);
-		parameters.put("JOB_NO",jobNumber);
-		parameters.put("JOB_DESC",job.getDescription());
-		parameters.put("SEARCH_SUBLEDGER", subLedger);
-		parameters.put("SEARCH_SUBLEDGERTYPE", subLedgerType);
-		parameters.put("SEARCH_TOTALFLAG",totalFlag);
-		parameters.put("SEARCH_POSTFLAG", postFlag);
-		parameters.put("SEARCH_FROMDATE", fromDate);
-		parameters.put("SEARCH_THRUDATE", thruDate);
-		parameters.put("SEARCH_YEAR", year);
-		parameters.put("SEARCH_PERIOD", period);
-		
-		if (fileType.equalsIgnoreCase(JasperReportHelper.OUTPUT_PDF)) {
-			return JasperReportHelper.get().setCurrentReport(accountBalanceList, fileFullPath, parameters).compileAndAddReport().exportAsPDF();
-		}else if(fileType.equalsIgnoreCase(JasperReportHelper.OUTPUT_EXCEL)){
-			return JasperReportHelper.get().setCurrentReport(accountBalanceList, fileFullPath, parameters).compileAndAddReport().addSheetName("AccountBalanceReport-portrait").exportAsExcel();
-		}
-			return null;
-	}
 	
 	/**
 	 * add by paulyiu 20150728
