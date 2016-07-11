@@ -4667,7 +4667,6 @@ blockquote small {
     }
 }
 
-
 /* 8.11 Panel Loading Element Setting */
 
 .panel.panel-loading .panel-body {
@@ -4697,7 +4696,6 @@ blockquote small {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
 
 /* 8.12 Spinner Small Setting */
 
@@ -4732,30 +4730,29 @@ blockquote small {
     -webkit-animation: spinner .6s linear infinite;
 }
 
-
 /* 8.13 Button Element Setting */
 
 .btn {
     border: none;
     font-weight: 300;
 }
-.btn.btn-circle {
+ .btn.btn-circle {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
-}
-.btn.btn-rounded {
+} 
+ .btn.btn-rounded {
     -webkit-border-radius: 60px;
     -moz-border-radius: 60px;
     border-radius: 60px;
-}
-.btn.active {
+} 
+ /* .btn.active {
     position: relative;
     top: 1px;
     -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125) !important;
     box-shadow: inset 0 3px 5px rgba(0,0,0,0.125) !important;
-}
-.btn:focus,
+}  */
+/* .btn:focus,
 .btn:focus:active,
 .btn:hover:active,
 .btn:active {
@@ -4766,8 +4763,7 @@ blockquote small {
 .btn:active {
     position: relative;
     top: 1px;
-}
-
+} */
 
 /* 8.14 Button Group Setting */
 
@@ -4792,7 +4788,6 @@ blockquote small {
 .btn-group .btn-group + .btn-group {
     margin-left: 0;
 }
-
 
 /* 8.15 Button Theme Setting */
 
@@ -5866,7 +5861,7 @@ a.list-group-item-danger:hover {
     border-width: 1px;
 }
 .table > thead > tr > th {
-    padding: 5px 20px 8px;
+    padding: 10px 20px 8px;
     font-weight: normal;
     background-color: #ebeced;
     border-color: #bec3c6 !important;
@@ -6098,7 +6093,6 @@ a.list-group-item-danger:hover {
         max-height: 100%;
     }
 }
-
 
 /* -------------------------------
    9.0 Plugins
@@ -8127,7 +8121,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 /* 10.4 Page - Invoice Setting */
 
 .invoice {
-    padding: 10px;
+    padding: 40px;
     border-radius: 5px;
     background: #fff;
     box-shadow: 0 2px 0 rgba(0,0,0,0.07);
@@ -10633,3 +10627,5 @@ body.font-helvetica-arial .mail-box-user-list > li a {
     font-weight: 300;
     font-size: 13px;
 }
+
+

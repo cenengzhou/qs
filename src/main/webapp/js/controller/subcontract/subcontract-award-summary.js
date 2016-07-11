@@ -21,8 +21,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log("getSubcontract");
-					console.log(data);
 					$scope.subcontract = data;
 					
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
@@ -36,8 +34,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		tenderService.getTender($scope.jobNo, $scope.subcontractNo, 0)
 		.then(
 				function( data ) {
-					console.log("getTender");
-					console.log(data);
 					$scope.budgetTender = data;
 				});
 	}
@@ -46,8 +42,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log("getTenderList");
-					console.log(data);
 					$scope.tenderList = data;
 				});
 	}
@@ -59,8 +53,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 					if(data.length==0){
 						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
 					}else{
-						console.log("getRecommendedTender");
-						console.log(data);
 						$scope.rcmTenderer = data;
 						getTenderVarianceList($scope.rcmTenderer.vendorNo);
 					}
@@ -71,8 +63,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
 		.then(
 				function( data ) {
-					console.log("getTenderVarianceList");
-					console.log(data);
 					$scope.tenderVarianceList = data;
 				});
 	}

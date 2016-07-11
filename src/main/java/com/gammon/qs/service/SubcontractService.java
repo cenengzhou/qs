@@ -5773,6 +5773,8 @@ public class SubcontractService {
 				packageInDB.setLabourIncludedContract(subcontract.getLabourIncludedContract());
 				packageInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
 				packageInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				packageInDB.setNotes(subcontract.getNotes());
+				packageInDB.setApprovalRoute(subcontract.getApprovalRoute());
 				
 				subcontractHBDao.update(packageInDB);
 			}

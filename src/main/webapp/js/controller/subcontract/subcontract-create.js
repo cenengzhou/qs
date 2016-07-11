@@ -91,6 +91,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 		
 	}
 	
+	$scope.resetInternalJob = function (){
+		$scope.subcontract.internalJobNo = "";
+	}
+	
 	$scope.saveBoolean = false;
 
 	//Save Function
@@ -120,7 +124,8 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 				labourIncludedContract : $scope.subcontract.labourIncludedContract,
 				plantIncludedContract : $scope.subcontract.plantIncludedContract,
 				materialIncludedContract : $scope.subcontract.materialIncludedContract,
-				//approvalSubType: $scope.subcontract.approvalSubType
+				notes: $scope.subcontract.notes,
+				approvalRoute: $scope.subcontract.approvalRoute,
 				/*selectedCPF : $scope.subcontract.selectedCPF,
 				cpfBasePeriod : $scope.subcontract.cpfBasePeriod,
 				cpfBaseYear: $scope.subcontract.cpfBaseYear,
@@ -176,13 +181,13 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'subcontractService', '$c
 					if(data.length==0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Alert', "Work Scope "+workScopeCode+" does not exist.");
 					}else{
-						addSubcontract();
+						upateSubcontract();
 					}
 				});
 	}
 
-	function addSubcontract(){
-	subcontractService.addSubcontract($cookieStore.get("jobNo"), $scope.newSubcontract)
+	function upateSubcontract(){
+	subcontractService.upateSubcontract($cookieStore.get("jobNo"), $scope.newSubcontract)
 	.then(
 			function( data ) {
 				if(data.length>0){

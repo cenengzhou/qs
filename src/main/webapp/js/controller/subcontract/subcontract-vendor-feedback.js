@@ -23,6 +23,14 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			          ],
 			          selected: "HKD"
 	};
+	
+	$scope.statusChangeExecutionOfSC = {
+			options: ["Y",
+			          "N",
+			          "N/A"
+			          ],
+			          selected: "N/A"
+	};
 
 	loadTenderDetail();
 
@@ -35,8 +43,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			//enableRowSelection: true,
 			//enableFullRowSelection: true,
 			//multiSelect: false,
-			//showGridFooter : true,
-			showColumnFooter : true,
+			showGridFooter : false,
+			showColumnFooter : false,
 			//fastWatch : true,
 
 			enableCellEditOnFocus : true,
@@ -163,6 +171,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 					//console.log(data);
 					$scope.tender = data;
 					$scope.currencyCode.selected = data.currencyCode;
+					$scope.statusChangeExecutionOfSC.selected = data.statusChangeExecutionOfSC;
 
 				});
 	}
@@ -178,7 +187,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 	}
 
 	function updateTenderDetails(taData) {
-		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, taData, true)
+		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.statusChangeExecutionOfSC.selected,
+				taData, true)
 		.then(
 				function( data ) {
 					if(data.length!=0){

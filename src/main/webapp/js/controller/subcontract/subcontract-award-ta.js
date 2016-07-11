@@ -277,7 +277,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 	}
 	
 	function updateTenderDetails(taData) {
-		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, 0, "", "", taData, true)
+		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, 0, "", "", "", "", taData, true)
 		.then(
 				function( data ) {
 					if(data.length!=0){

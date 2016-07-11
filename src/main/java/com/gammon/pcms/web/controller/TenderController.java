@@ -141,11 +141,13 @@ public class TenderController {
 										@RequestParam(name="subcontractorNo") Integer subcontractorNo,
 										@RequestParam(name="currencyCode") String currencyCode,
 										@RequestParam(name="exchangeRate") Double exchangeRate,
+										@RequestParam(name="remarks") String remarks,
+										@RequestParam(name="statusChangeExecutionOfSC") String statusChangeExecutionOfSC,
 										@RequestParam(name="validate") Boolean validate,
 										@Valid @RequestBody List<TenderDetail> taDetails){
 		String result = "";
 		try {
-			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, taDetails, validate);
+			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

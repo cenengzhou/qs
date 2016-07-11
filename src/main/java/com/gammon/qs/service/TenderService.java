@@ -292,7 +292,7 @@ public class TenderService implements Serializable {
 					} else {
 						taDetail.setSequenceNo(Integer.valueOf(i + 1));
 						taDetail.setResourceNo(Integer.valueOf(i + 1));
-						updateTenderAnalysisDetails(jobNumber, packageNo, 0, null, 1.0, uploadCache, true);
+						updateTenderAnalysisDetails(jobNumber, packageNo, 0, null, 1.0, null, null, uploadCache, true);
 					}
 				}
 			}
@@ -706,7 +706,7 @@ public class TenderService implements Serializable {
 	
 		
 	public String updateTenderAnalysisDetails(String jobNo, String packageNo,
-			Integer vendorNo, String currencyCode, Double exchangeRate,
+			Integer vendorNo, String currencyCode, Double exchangeRate, String remarks, String statusChangeExecutionOfSC,
 			List<TenderDetail> taDetails, boolean validate)
 			throws Exception {
 		
@@ -762,6 +762,8 @@ public class TenderService implements Serializable {
 						return "Exchange rate must be the same as the one in previous payment.";
 					}
 				}
+				tenderAnalysis.setRemarks(remarks);
+				tenderAnalysis.setStatusChangeExecutionOfSC(statusChangeExecutionOfSC);
 			}
 			tenderAnalysis.setCurrencyCode(currencyCode);
 			tenderAnalysis.setExchangeRate(exchangeRate);

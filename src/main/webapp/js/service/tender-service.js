@@ -109,7 +109,7 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
-	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, taDetails, validate) {
+	function updateTenderDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate) {
 		var request = $http({
 			method: "post",
 			url: "service/tender/updateTenderDetails",
@@ -120,6 +120,8 @@ mainApp.service('tenderService', ['$http', '$q', function($http, $q){
 				subcontractorNo: subcontractorNo,
 				currencyCode: currencyCode, 
 				exchangeRate: exchangeRate,
+				remarks: remarks, 
+				statusChangeExecutionOfSC: statusChangeExecutionOfSC,
 				validate: validate
 			},
 			data: taDetails
