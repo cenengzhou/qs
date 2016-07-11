@@ -50,7 +50,6 @@ public class Tender extends BasePersistedObject{
 	private String statusChangeExecutionOfSC = "N/A";
 	private String usernamePrepared;
 	private Date datePrepared;
-	private String notes = " ";
 	
 	private String nameSubcontractor; 
 	
@@ -177,16 +176,6 @@ public class Tender extends BasePersistedObject{
 	public void setDatePrepared(Date datePrepared) {
 		this.datePrepared = datePrepared;
 	}
-
-	@Column(name = "NOTES")
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-	
 
 	@Column(name = "NAME_SUBCONTRACTOR", length = 20)
 	public String getNameSubcontractor() {

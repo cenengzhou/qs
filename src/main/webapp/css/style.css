@@ -5866,7 +5866,7 @@ a.list-group-item-danger:hover {
     border-width: 1px;
 }
 .table > thead > tr > th {
-    padding: 10px 20px 8px;
+    padding: 5px 20px 8px;
     font-weight: normal;
     background-color: #ebeced;
     border-color: #bec3c6 !important;
@@ -8127,7 +8127,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 /* 10.4 Page - Invoice Setting */
 
 .invoice {
-    padding: 40px;
+    padding: 10px;
     border-radius: 5px;
     background: #fff;
     box-shadow: 0 2px 0 rgba(0,0,0,0.07);
@@ -8148,10 +8148,14 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     text-align: right;
 }
 .invoice-title {
-    font-size: 18px;
-    line-height: 36px;
+    font-size: 15px;
+    line-height: 30px;
+    text-decoration: underline;
     margin-top: 0;
     margin-bottom: 20px;
+}
+.invoice-underline{
+	text-decoration: underline;
 }
 .invoice-detail {
     float: right;
@@ -8159,7 +8163,10 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 .invoice-header {
     padding: 20px 0 40px;
 }
-.invoice .table {
+.invoice .table, th, td {
+   border: none;
+}
+ .invoice .table {
     margin-bottom: 10px;
 }
 .invoice .table thead th {
@@ -8195,7 +8202,54 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 .invoice .table tbody .subtotal td.value {
     border-top-color: #ebeced !important;
     border-top: 2px solid #ebeced !important;
+} 
+
+
+.invoice .label-border{
+	border:2px; 
+	border-style:solid !important; 
+	border-color:#000000 !important; 
+	padding: 0.5em !important;
 }
+.invoice .table-border {
+    border: 2px solid black !important;
+}
+.invoice .table-border .t-header {
+	 /* border: 1px solid black !important;
+    border-color: black !important;
+    border-top-color: black !important;
+    border-bottom-color: black !important; */
+     font-size: 12px;
+    font-weight: bold !important;
+    background: #fff !important;
+    text-align: center;
+    border: 2px solid black !important;
+   	border-top-color: black !important;
+    border-bottom-color: black !important;
+    border-color: black !important;
+}
+.invoice .table-border .row1 {
+   	border: 1px solid black !important;
+}
+.invoice .table-border .row2{
+    border: 2px solid black !important;
+    border-color: black !important;
+}
+.invoice .table-border .column1{
+    border: 1px solid black !important;
+    border-color: black !important;
+    border-top-color: black !important;
+    border-bottom-color: black !important;
+}
+.invoice .table-border .column2{
+	font-weight: bold;
+    border: none;
+    border-top-color: black !important;
+   	padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
 .invoice-note {
     font-size: 11px;
     margin-bottom: 40px;
@@ -8210,8 +8264,8 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
         padding: 20px;
     }
     .invoice-title {
-        font-size: 24px;
-        line-height: 28px;
+        font-size: 15px;
+        line-height: 24px;
     }
     .invoice-header {
         padding: 0;

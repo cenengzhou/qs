@@ -156,8 +156,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/resource-summary-service.js',
-                           'js/service/tender-service.js',
                            'js/service/subcontract-service.js'
                     ] 
                 });
@@ -188,7 +186,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/subcontract/subcontract-award-assign.js'
+               	         'js/controller/subcontract/subcontract-award-assign.js',
+               	         'js/service/resource-summary-service.js'
                     ] 
                 });
             }]
@@ -203,7 +202,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/subcontract/subcontract-award-ta.js'
+               	         'js/controller/subcontract/subcontract-award-ta.js',
+               	         'js/service/resource-summary-service.js'
                     ] 
                 });
             }]
@@ -220,7 +220,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                	         'js/controller/subcontract/subcontract-vendor.js',
                	         'js/controller/subcontract/subcontract-vendor-feedback.js',
-               	         'js/service/master-list-service.js'
+               	         'js/service/master-list-service.js',
+               	         'js/service/tender-service.js'
                     ] 
                 });
             }]
@@ -266,12 +267,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         'js/controller/subcontract/subcontract-award.js'
+               	         'js/controller/subcontract/subcontract-award-summary.js',
+               	         'js/service/tender-variance-service.js',
+               	         'js/service/tender-service.js'
                     ] 
                 });
             }]
         },
-        controller: 'SubcontractAwardCtrl'
+        controller: 'SubcontractAwardSummaryCtrl'
 	})
 
 	.state('subcontract', {

@@ -137,6 +137,7 @@ public class Subcontract extends BasePersistedObject{
 	private String submittedAddendum = ADDENDUM_NOT_SUBMITTED;
 	private String splitTerminateStatus = SPLITTERMINATE_DEFAULT;
 	private String paymentTermsDescription;
+	private String notes;
 	
 	
 	private Date scCreatedDate;
@@ -305,7 +306,7 @@ public class Subcontract extends BasePersistedObject{
 				+ ", tenderAnalysisApprovedDate=" + tenderAnalysisApprovedDate + ", preAwardMeetingDate="
 				+ preAwardMeetingDate + ", loaSignedDate=" + loaSignedDate + ", scDocScrDate=" + scDocScrDate
 				+ ", scDocLegalDate=" + scDocLegalDate + ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate="
-				+ onSiteStartDate + ", toString()=" + super.toString() + "]";
+				+ onSiteStartDate+ ", notes=" + notes + ", toString()=" + super.toString() + "]";
 	}
 
 	@Override
@@ -824,6 +825,16 @@ public class Subcontract extends BasePersistedObject{
 		this.onSiteStartDate = onSiteStartDate;
 	}
 
+	@Column(name = "NOTES", length = 1000)
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "Job_Info_ID", foreignKey = @ForeignKey(name = "FK_Subcontract_JobInfo_PK"))
