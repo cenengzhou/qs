@@ -174,7 +174,7 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 	    	    $scope.printReportMessage = 'Please confirm resources before print report';
 	    	    $scope.completeTransitMessage = 'Please print report before complete transit';
 	    	    $scope.reImportBq = 'Please note that if you re-import BQ items, all current items and resources will be deleted';
-		}
+    		}
     		
     		//Header Created
     		if($scope.step >= 1) {
@@ -242,6 +242,12 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 		transitService.transitUpload(formData)
 		.then(function(data){
 			$scope.getTransit();
+			if(type === 'BQ'){
+				$scope.showBqItems();
+			} else if(type === 'Resource'){
+				$scope.showResourcesItems();
+			}
+			
 			var msg = data;
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 
 					"Success:" + msg.success + 
@@ -254,18 +260,27 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     	
     $scope.showBqItems = function(){
         $scope.loadBqItems();
+		$scope.showPanel = 'viewBq';
         $scope.bqGridApi.core.refresh();
     }
     
     $scope.showResourcesItems = function(){
     	$scope.loadResources();
+		$scope.showPanel = 'viewResources';
     	$scope.resourcesGridApi.core.refresh();
     }
     
     $scope.confirmResources = function(){
-    	transitService.confirmResourcesAndCreatePackages()
+    	transitService.confirmResourcesAndCreatePackages($scope.jobNo)
     	.then(function(data){
-    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', data );
+    		$scope.getTransit();
+    		$scope.loadBqItems();
+    		$scope.loadResources();
+    		if(data.length === ''){
+    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', data );
+    		}else{
+    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.replace('<br/>', '\n') );
+    		}
     	}, function(data){
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
     	});
@@ -275,7 +290,6 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 		transitService.getTransitBQItems($scope.jobNo)
 		.then(function(data) {
 			$scope.bqGridOptions.data = data;
-			$scope.showPanel = 'viewBq';
 		});
     }
  
@@ -283,7 +297,6 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 		transitService.getTransitResources($scope.jobNo)
 		.then(function(data) {
 			$scope.resourcesGridOptions.data = data;
-			$scope.showPanel = 'viewResources';
 		});
     }
 

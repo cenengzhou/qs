@@ -65,8 +65,14 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
     
-    function confirmResourcesAndCreatePackages(){
-    	var request = $http.post("service/transit/confirmResourcesAndCreatePackages");
+    function confirmResourcesAndCreatePackages(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/confirmResourcesAndCreatePackages',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
     	return( request.then( handleSuccess, handleError ) );
     }
 
