@@ -213,7 +213,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
-	public long deleteByTenderAnalysis(Tender tender) throws DatabaseOperationException {
+	public long deleteByTenderAnalysis(Tender tender) throws DataAccessException {
 		long noOfRecord = 0;
 		getSession().clear();
 		Query query = getSession().createQuery("delete from TenderDetail tenderDetail where Tender_ID =" + tender.getId());

@@ -43,7 +43,6 @@ public class TenderController {
 		try {
 			
 			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, subcontractorNo);
-			logger.info("tenderDetailList: "+tenderDetailList.size());;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

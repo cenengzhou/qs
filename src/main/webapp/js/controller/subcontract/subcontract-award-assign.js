@@ -60,7 +60,6 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-			console.log(dataRows);
 			
 			if(dataRows.length==0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No records have been modified");

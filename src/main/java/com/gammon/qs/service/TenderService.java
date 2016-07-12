@@ -1,6 +1,7 @@
 package com.gammon.qs.service;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -859,7 +861,7 @@ public class TenderService implements Serializable {
 					tenderDao.update(tenderAnalysis);
 				}else{
 					logger.info("Update Vendor");
-					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
 				}
 			}else{
 				logger.info("Update Budget Tender Analysis");
@@ -899,7 +901,7 @@ public class TenderService implements Serializable {
 						}
 					}
 				}else{
-					tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
 					scPackage.setVendorNo(null);
 				}
 			}
@@ -907,11 +909,49 @@ public class TenderService implements Serializable {
 		else{
 			if(vendorNo ==0){
 				logger.info("Create TA Budget");
-				tenderDao.updateTenderAnalysisAndTADetails(tenderAnalysis, toBeUpdatedTaDetails);
+				this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
 			}
 		}
 		
 		return null;
+	}
+	
+	private void updateTenderAndDetails(Tender tender, List<TenderDetail> tenderDetails, Subcontract subcontract) throws DataAccessException{
+			Double totalBudget = 0.0;
+			int sequence = 1;
+			
+			if(tender.getVendorNo()==0){
+				//Delete all Tenders when budget is modified
+				subcontractDao.resetPackageTA(subcontract);
+
+				tenderDao.insert(tender);
+				
+				for(TenderDetail taDetail : tenderDetails){
+					taDetail.setSequenceNo(sequence++);
+					taDetail.setTender(tender); //Should save taDetail through cascades
+
+					totalBudget += taDetail.getAmountSubcontract();
+					tenderDetailDao.insert(taDetail);
+				}
+
+			}else{
+				//Delete TA Details
+				tenderDetailDao.deleteByTenderAnalysis(tender); 
+
+				for(TenderDetail taDetail : tenderDetails){
+					taDetail.setSequenceNo(sequence++);
+					taDetail.setTender(tender); //Should save taDetail through cascades
+	
+					totalBudget += taDetail.getAmountSubcontract();
+					tenderDetailDao.insert(taDetail);
+				}
+
+				//Set Buying Loss/Gain for Tender
+				tender.setAmtBuyingGainLoss(new BigDecimal(tender.getBudgetAmount()-totalBudget));
+
+				tenderDao.saveOrUpdate(tender);
+			}
+			
 	}
 	
 	public String deleteTender(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{

@@ -99,10 +99,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 	}
 
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
-	};
-
 
 	$scope.addData = function() {
 		$scope.gridOptionsTa.data.push({

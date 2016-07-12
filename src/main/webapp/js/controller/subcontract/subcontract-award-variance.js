@@ -58,7 +58,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			var ta = $scope.gridOptions.data;
 
-			if($scope.tender.vendorNo ==null){
+			if($scope.tender ==null || $scope.tender.vendorNo ==null){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a recommended tender before doing tender variance.");
 			}else{
 				createTenderVariance(ta);

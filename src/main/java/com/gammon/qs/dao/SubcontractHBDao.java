@@ -20,15 +20,18 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
+import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 @Repository
@@ -42,6 +45,8 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	private TenderDetailHBDao tenderDetailDao;
 	@Autowired
 	private PaymentCertHBDao scPaymentCertHBDao;
+	@Autowired
+	private TenderVarianceHBDao tenderVarianceHBDao;
 	
 	private Logger logger = Logger.getLogger(SubcontractHBDao.class.getName());
 	public SubcontractHBDao() {
@@ -414,10 +419,15 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		}
 	}
 
-	public void resetPackageTA(Subcontract subcontract) throws Exception{
+	public void resetPackageTA(Subcontract subcontract) throws DataAccessException{
 		//delete all ta records
 		List<Tender> tenderAnalysisList = tenderAnalysisHBdao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
 		for(Tender tenderAnalysis : tenderAnalysisList){
+			List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo(), String.valueOf(tenderAnalysis.getVendorNo()));
+			for (TenderVariance tenderVariance: tenderVarianceList){
+				tenderVarianceHBDao.delete(tenderVariance);
+			}
+			
 			List<TenderDetail> details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
 			for (TenderDetail detail: details){
 				tenderDetailDao.delete(detail);

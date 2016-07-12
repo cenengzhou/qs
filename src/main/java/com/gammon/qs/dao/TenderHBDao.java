@@ -1,7 +1,6 @@
 package com.gammon.qs.dao;
 
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,19 +11,23 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
-import com.gammon.qs.domain.TenderDetail;
 @Repository
 public class TenderHBDao extends BaseHibernateDao<Tender> {
 
 	@Autowired
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
+	@Autowired
+	private TenderVarianceHBDao tenderVarianceHBDao;
+	
 	
 	public TenderHBDao() {
 		super(Tender.class);
@@ -108,7 +111,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Tender> obtainTenderAnalysisList(String jobNo, String packageNo) throws Exception{
+	public List<Tender> obtainTenderAnalysisList(String jobNo, String packageNo) throws DataAccessException{
 
 		List<Tender> result = null;
 		try{
@@ -164,24 +167,6 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		return Boolean.TRUE;
 	}
 	
-	public void updateTenderAnalysisAndTADetails(Tender tenderAnalysis, List<TenderDetail> taDetails) throws DatabaseOperationException{
-		Double totalBudget = 0.0;
-		int sequence = 1;
-		tenderAnalysisDetailHBDao.deleteByTenderAnalysis(tenderAnalysis); //Will delete records
-		for(TenderDetail taDetail : taDetails){
-			taDetail.setSequenceNo(sequence++);
-			taDetail.setTender(tenderAnalysis); //Should save taDetail through cascades
-			
-			totalBudget += taDetail.getAmountSubcontract();
-			tenderAnalysisDetailHBDao.insert(taDetail);
-		}
-
-		if(tenderAnalysis.getVendorNo()!=0){
-			tenderAnalysis.setAmtBuyingGainLoss(new BigDecimal(tenderAnalysis.getBudgetAmount()-totalBudget));
-		}
-
-		saveOrUpdate(tenderAnalysis);
-	}
 	
 	public Integer obtainNoOfQuotReturned(Integer vendorNo) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
