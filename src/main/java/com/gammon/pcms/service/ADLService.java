@@ -31,7 +31,13 @@ public class ADLService {
 	private AccountBalanceAAJIDao accountBalanceAAJIDao;
 	@Autowired
 	private AccountBalanceAAJISCDao accountBalanceAAJISCDao;
-
+	
+	
+	/*
+	 * -----------------------------------------------
+	 * JDE @ Data Layer
+	 * -----------------------------------------------
+	 */
 	/**
 	 * AA & JI Ledger only
 	 *
@@ -43,7 +49,7 @@ public class ADLService {
 	 * @author tikywong
 	 * @since Jul 6, 2016 1:49:12 PM
 	 */
-	public List<?> getMonthlyJobCost(	BigDecimal year,
+	public List<?> getMonthlyJobCostList(	BigDecimal year,
 										BigDecimal month,
 										String noJob,
 										String noSubcontract) {
@@ -64,7 +70,7 @@ public class ADLService {
 	 * @author tikywong
 	 * @since Jul 5, 2016 10:06:26 AM
 	 */
-	public List<?> getAAJILedgerByAccountCode(	BigDecimal yearStart,
+	public List<?> getAAJILedgerList(	BigDecimal yearStart,
 												BigDecimal yearEnd,
 												String noJob,
 												String noSubcontract,
@@ -89,7 +95,7 @@ public class ADLService {
 	 * @author tikywong
 	 * @since Jul 7, 2016 5:01:29 PM
 	 */
-	public List<AccountBalance> getAccountBalance(	BigDecimal yearStart,
+	public List<AccountBalance> getAccountBalanceList(	BigDecimal yearStart,
 													BigDecimal yearEnd,
 													String typeLedger,
 													String noJob,
@@ -98,6 +104,16 @@ public class ADLService {
 		return accountBalanceDao.find(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
 	}
 
+	/**
+	 * Monthly Cash Flow for Job Dash Board
+	 *
+	 * @param yearStart
+	 * @param yearEnd
+	 * @param noJob
+	 * @return
+	 * @author	tikywong
+	 * @since	Jul 12, 2016 2:16:59 PM
+	 */
 	public MonthlyCashFlowDTO getMonthlyCashFlow(	BigDecimal yearStart,
 													BigDecimal yearEnd,
 													String noJob) {
@@ -126,7 +142,50 @@ public class ADLService {
 	 * @author	tikywong
 	 * @since	Jul 11, 2016 3:17:56 PM
 	 */
-	public List<AccountLedger> getAccountLedger(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
+	public List<AccountLedger> getAccountLedgerList(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
 		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+	}
+
+	/*
+	 * -----------------------------------------------
+	 * Approval System @ Data Layer
+	 * -----------------------------------------------
+	 */
+	/**
+	 * 
+	 *
+	 * @param statusApproval
+	 * @param noJob
+	 * @param typeApproval
+	 * @param noSubcontract
+	 * @param noPayment
+	 * @param noMainCert
+	 * @param recordKeyInstance
+	 * @return
+	 * @author	tikywong
+	 * @since	Jul 12, 2016 2:24:46 PM
+	 */
+	public Object getApprovalHeader(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param statusApproval
+	 * @param noJob
+	 * @param typeApproval
+	 * @param noSubcontract
+	 * @param noPayment
+	 * @param noMainCert
+	 * @param recordKeyInstance
+	 * @return
+	 * @author	tikywong
+	 * @since	Jul 12, 2016 2:29:46 PM
+	 */
+	public List<Object> getApprovalDetailList(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

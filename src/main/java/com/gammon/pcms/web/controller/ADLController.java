@@ -39,17 +39,17 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 6, 2016 1:49:37 PM
 	 */
-	@RequestMapping(value = "getMonthlyJobCost",
+	@RequestMapping(value = "getMonthlyJobCostList",
 					method = RequestMethod.GET)
-	public List<?> getMonthlyJobCost(
-										@RequestParam(required = true) String noJob,
-										@RequestParam(required = false) String noSubcontract,
-										@RequestParam(	required = false,
-														defaultValue = "0") BigDecimal year,
-										@RequestParam(	required = false,
-														defaultValue = "0") BigDecimal month) {
+	public List<?> getMonthlyJobCostList(
+											@RequestParam(required = true) String noJob,
+											@RequestParam(required = false) String noSubcontract,
+											@RequestParam(	required = false,
+															defaultValue = "0") BigDecimal year,
+											@RequestParam(	required = false,
+															defaultValue = "0") BigDecimal month) {
 		try {
-			return adlService.getMonthlyJobCost(year, month, noJob, noSubcontract);
+			return adlService.getMonthlyJobCostList(year, month, noJob, noSubcontract);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<>();
@@ -70,18 +70,18 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 6, 2016 1:53:23 PM
 	 */
-	@RequestMapping(value = "getLedgerAAJIByAccountCode",
+	@RequestMapping(value = "getAAJILedgerList",
 					method = RequestMethod.GET)
-	public List<?> getAAJILedgerByAccountCode(	@RequestParam(required = true) String noJob,
-												@RequestParam(required = false) String noSubcontract,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearStart,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearEnd,
-												@RequestParam(required = false) String codeObject,
-												@RequestParam(required = false) String codeSubsidiary) {
+	public List<?> getAAJILedgerList(	@RequestParam(required = true) String noJob,
+										@RequestParam(required = false) String noSubcontract,
+										@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal yearStart,
+										@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal yearEnd,
+										@RequestParam(required = false) String codeObject,
+										@RequestParam(required = false) String codeSubsidiary) {
 		try {
-			return adlService.getAAJILedgerByAccountCode(yearStart, yearEnd, noJob, noSubcontract, codeObject, codeSubsidiary);
+			return adlService.getAAJILedgerList(yearStart, yearEnd, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountBalanceAAJI>();
@@ -117,49 +117,78 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getAccountBalance",
+	@RequestMapping(value = "getAccountBalanceList",
 					method = RequestMethod.GET)
-	public List<AccountBalance> getAccountBalance(	@RequestParam(required = true) String noJob,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearStart,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearEnd,
-													@RequestParam(required = false) String typeLedger,
-													@RequestParam(required = false) String codeObject,
-													@RequestParam(required = false) String codeSubsidiary) {
+	public List<AccountBalance> getAccountBalanceList(	@RequestParam(required = true) String noJob,
+														@RequestParam(	required = false,
+																		defaultValue = "0") BigDecimal yearStart,
+														@RequestParam(	required = false,
+																		defaultValue = "0") BigDecimal yearEnd,
+														@RequestParam(required = false) String typeLedger,
+														@RequestParam(required = false) String codeObject,
+														@RequestParam(required = false) String codeSubsidiary) {
 		try {
-			return adlService.getAccountBalance(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
+			return adlService.getAccountBalanceList(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountBalance>();
 		}
 	}
 
-	@RequestMapping(value = "getAccountLedger",
+	@RequestMapping(value = "getAccountLedgerList",
 					method = RequestMethod.GET)
-	public List<AccountLedger> getAccountLedger(@RequestParam(required = true) String noJob,
-												@RequestParam(	required = true,
-																defaultValue = "AA") String typeLedger,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearStart,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearEnd,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal monthStart,
-												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal monthEnd,
-												@RequestParam(	required = false,
-																defaultValue = "JS") String typeDocument,
-												@RequestParam(required = false) String noSubcontract,
-												@RequestParam(	required = false,
-																defaultValue = "3440") String codeObject,
-												@RequestParam(required = false) String codeSubsidiary) {
+	public List<AccountLedger> getAccountLedgerList(@RequestParam(required = true) String noJob,
+													@RequestParam(	required = true,
+																	defaultValue = "AA") String typeLedger,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal yearStart,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal yearEnd,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal monthStart,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal monthEnd,
+													@RequestParam(	required = false,
+																	defaultValue = "JS") String typeDocument,
+													@RequestParam(required = false) String noSubcontract,
+													@RequestParam(	required = false,
+																	defaultValue = "3440") String codeObject,
+													@RequestParam(required = false) String codeSubsidiary) {
 		try {
-			return adlService.getAccountLedger(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+			return adlService.getAccountLedgerList(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountLedger>();
 		}
 	}
 
+	@RequestMapping(value = "getApprovalHeader",
+					method = RequestMethod.GET)
+	public Object getApprovalHeader(@RequestParam(required = true) String statusApproval,
+									@RequestParam(required = true) String noJob,
+									@RequestParam(	required = true,
+													defaultValue = "SC") String typeApproval,
+									@RequestParam(required = false) String noSubcontract,
+									@RequestParam(required = false) String noPayment,
+									@RequestParam(required = false) String noMainCert,
+									@RequestParam(required = false) BigDecimal recordKeyInstance) {
+
+		try {
+			return adlService.getApprovalHeader(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Object();
+		}
+	}
+
+	public List<Object> getApprovalDetailList(	@RequestParam(required = false) String statusApproval,
+												@RequestParam(required = false) String noJob,
+												@RequestParam(	required = true,
+																defaultValue = "SC") String typeApproval,
+												@RequestParam(required = false) String noSubcontract,
+												@RequestParam(required = false) String noPayment,
+												@RequestParam(required = false) String noMainCert,
+												@RequestParam(required = false) BigDecimal recordKeyInstance) {
+		return adlService.getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
+	}
 }
