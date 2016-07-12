@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService', 'paymentpostingService', 'mainCertService',
-		function($scope, $rootScope, $http, modalService, subcontractService, paymentpostingService, mainCertService) {
+		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService', 'paymentService', 'paymentpostingService', 'mainCertService',
+		function($scope, $rootScope, $http, modalService, subcontractService, paymentService, paymentpostingService, mainCertService) {
 	$scope.provisionGlDate = moment();
 	
 	$scope.onSubmitProvisionPosting = function(){
@@ -41,7 +41,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 	};
 	
 	$scope.onSubmitF58011 = function(){
-		subcontractService.updateF58011FromSCPaymentCertManually()
+		paymentService.updateF58011FromSCPaymentCertManually()
 		.then(function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Synchronize F58011 From Subcontract Payment Certificate completed.");;
 		},function(data){

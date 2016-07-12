@@ -108,10 +108,6 @@ public class TransitService implements Serializable {
 	
 	private transient Logger logger = Logger.getLogger(TransitService.class.getName());
 	
-	public Transit getTransitHeader(String jobNumber) throws Exception {
-		return transitHeaderDao.getTransitHeader(jobNumber);
-	}
-	
 	public TransitHeaderResultWrapper createOrUpdateTransitHeader(String jobNumber, String estimateNo, String matchingCode, 
 			boolean newJob) throws Exception{
 		TransitHeaderResultWrapper result = new TransitHeaderResultWrapper();
@@ -296,139 +292,7 @@ public class TransitService implements Serializable {
 		else
 			return sbError.toString();
 	}
-	
-	public String confirmResourcesAndCreatePackages(String jobNumber) throws Exception{	
-		logger.info("TRANSIT: confirming resources for job " + jobNumber);
-		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(header == null)
-			return "Please create a transit header";
-		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
-			return "Transit for this job has already been completed";
-		// modified by brian on 20110117
-		// for change the error message prompted when confirming resources
-//		else if(!(TransitHeader.RESOURCES_IMPORTED.equals(header.getStatus()) || TransitHeader.RESOURCES_UPDATED.equals(header.getStatus())))
-//			return "Please import resources";
-		else if(Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()))
-			return "Transit Resources for this job has already been confirmed.";
 		
-		//Check that there are no dummy account numbers (obj and sub codes all 0s)
-		if(transitResourceDao.dummyAccountCodesExist(header))
-			return "There are resources with dummy account codes (all '0's). Please update these to valid account codes before confirming resources.";
-		List<TransitBpi> markupBqs = transitBqDao.getTransitBQItems(jobNumber, "80", null, null, null, null);
-		for(TransitBpi markupBq : markupBqs)
-			transitBqDao.delete(markupBq); //child resources are deleted too
-
-		List<TransitBpi> bqItems = transitBqDao.getTransitBqByHeaderNoCommentLines(header);
-		Set<String> accountCodes = new HashSet<String>();
-		
-		Map<String, String> packages = new HashMap<String, String>();
-		int dscNo = 1001;
-		int nscNo = 3001;
-		int matNo = 6001;
-		
-		double totalMarkup = 0;
-		
-		StringBuilder errorMsg = new StringBuilder();
-
-		for(TransitBpi bqItem : bqItems){
-			double totalResourceValue = 0;
-			List<TransitResource> resources = transitResourceDao.obtainTransitResourceListByTransitBQ(bqItem);
-			//Iterate through resources. Get bq cost rate (total resource value / bq quant) and assign package no.s
-			for(TransitResource resource : resources){
-				totalResourceValue += resource.getTotalQuantity() * resource.getRate();
-				
-				String obj = resource.getObjectCode().substring(0, 2);
-				if(obj.equals("14") || obj.equals("13")){
-					// test take 5 digits in resource code to group
-					String res = resource.getResourceCode().substring(0, 5) + obj + resource.getSubsidiaryCode().charAt(0);
-					String packageNo = packages.get(res);
-					if(packageNo == null){
-						if(obj.equals("13"))
-							packageNo = Integer.toString(matNo++);	
-						else if(resource.getSubsidiaryCode().startsWith("3"))
-							packageNo = Integer.toString(nscNo++);
-						else
-							packageNo = Integer.toString(dscNo++);
-						packages.put(res, packageNo);
-					}
-					
-					// check if package number too long
-					if(packageNo != null && packageNo.length() > 5)
-						errorMsg.append("Package Number: " + packageNo + " is long than 5 characters." + "<br/>");
-					
-					resource.setPackageNo(packageNo);
-				}
-				else
-					resource.setPackageNo("0");
-				
-				accountCodes.add(resource.getObjectCode() + "." + resource.getSubsidiaryCode());
-			}
-			double itemCostRate = !bqItem.getQuantity().equals(new Double(0)) ? RoundingUtil.round(totalResourceValue / bqItem.getQuantity(), 4) : new Double(0);
-			//keep track of markup (for bill 80)
-			totalMarkup += bqItem.getQuantity() * (bqItem.getSellingRate() - itemCostRate);
-			bqItem.setCostRate(itemCostRate);
-		}
-		
-		for(String accountCode : accountCodes){
-			String[] objSub = accountCode.split("\\.");
-			if(!masterListRepository.createAccountCode(jobNumber, objSub[0], objSub[1])){
-				errorMsg.append("Error creating account code: " + jobNumber + "." + accountCode + "<br/>");
-			}
-		}
-		if(errorMsg.length() != 0)
-			return errorMsg.toString();
-		
-		totalMarkup = RoundingUtil.round(totalMarkup, 4);
-		
-		//BILL 80 - Genuine Markup
-		TransitBpi markupBq = new TransitBpi();
-		markupBq.setTransit(header);
-		markupBq.setBillNo("80");
-		markupBq.setPageNo("1");
-		markupBq.setItemNo("A");
-		markupBq.setSequenceNo(Integer.valueOf(10001));
-		markupBq.setDescription("Genuine Markup");
-		markupBq.setQuantity(new Double(totalMarkup));
-		markupBq.setValue(new Double(totalMarkup));
-		markupBq.setSellingRate(new Double(1));
-		markupBq.setUnit("NO");
-		TransitResource markupResource = new TransitResource();
-		markupResource.setTransitBpi(markupBq);
-		markupResource.setResourceNo(Integer.valueOf(1));
-		markupResource.setObjectCode("199999");
-		markupResource.setSubsidiaryCode("99019999");
-		markupResource.setType("IC");
-		markupResource.setDescription("Genuine Markup");
-		markupResource.setTotalQuantity(new Double(totalMarkup));
-		markupResource.setUnit("NO");
-		transitBqDao.saveOrUpdate(markupBq);
-		transitResourceDao.saveOrUpdate(markupResource);
-		//BILL 80 - Genuine Markup Change Order
-		TransitBpi markupBqCo = new TransitBpi();
-		markupBqCo.setTransit(header);
-		markupBqCo.setBillNo("80");
-		markupBqCo.setPageNo("2");
-		markupBqCo.setItemNo("A");
-		markupBqCo.setSequenceNo(Integer.valueOf(10000));
-		markupBqCo.setDescription("Genuine Markup of Change Order");
-		markupBqCo.setUnit("NO");
-		TransitResource markupResourceCo = new TransitResource();
-		markupResourceCo.setTransitBpi(markupBqCo);
-		markupResourceCo.setResourceNo(Integer.valueOf(1));
-		markupResourceCo.setObjectCode("199999");
-		markupResourceCo.setSubsidiaryCode("99019999");
-		markupResourceCo.setType("IC");
-		markupResourceCo.setDescription("Genuine Markup of Change Order");
-		markupResourceCo.setUnit("NO");
-		transitBqDao.saveOrUpdate(markupBqCo);
-		transitResourceDao.saveOrUpdate(markupResourceCo);
-		
-		header.setStatus(Transit.RESOURCES_CONFIRMED);
-		transitHeaderDao.saveOrUpdate(header); //cascades down to bq items and resources
-		return null;
-	}
-	
-	
 	public String completeTransit(String jobNumber) throws Exception{
 		logger.info("TRANSIT: complete transit for job " + jobNumber);
 		JobInfo job = jobRepository.obtainJob(jobNumber);
@@ -642,6 +506,7 @@ public class TransitService implements Serializable {
 		int sequenceNo = 1;
 		int importBQCount = 0;
 		int i = 0;
+		List<TransitBpi> transitBpiList = new ArrayList<TransitBpi>();
 		try{
 			List<Object[]> uomCodeMatches = transitUomMatchDao.getAllUomMatches();
 			Map<String, String> uomMap = new HashMap<String, String>(uomCodeMatches.size());
@@ -656,7 +521,8 @@ public class TransitService implements Serializable {
 			//Map to hold the bqItems (does not include headers), to check for duplicates - maps item to line number
 			HashMap<TransitBpi, Integer> bqItemMap = new HashMap<TransitBpi, Integer>();
 			//temp list to store the headers before you can fill bill/subBill/page, then move to headersList
-			ArrayList<TransitBpi> headersTempList = new ArrayList<TransitBpi>(); 
+			List<TransitBpi> headersTempList = new ArrayList<TransitBpi>(); 
+			
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
 				String[] row = excelFileProcessor.readLine(8);
 				if(isRowEmpty(row))
@@ -796,6 +662,7 @@ public class TransitService implements Serializable {
 						}
 						headersTempList.clear();
 					}
+					transitBpiList.add(bqItem);
 				}
 				else{
 					//Add header to temp list - have to scan ahead to find the bill/subBill/page, then go back and fill the header(s)
@@ -811,6 +678,9 @@ public class TransitService implements Serializable {
 		if(errorList.size() == 0){
 			header.setStatus(Transit.BQ_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
+			for(TransitBpi transitBpi: transitBpiList){
+				transitBqDao.saveOrUpdate(transitBpi);
+			}
 //			response.setNumRecordImported(sequenceNo);
 			// modified by brian on 20110118
 			// since sequenceNo start from 1 so the import count is incorrect,
@@ -1682,4 +1552,176 @@ public class TransitService implements Serializable {
 			return null;
 		}
 	}
+	
+	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	
+	public Transit getTransitHeader(String jobNumber) {
+		Transit result = null;
+		try {
+			result = transitHeaderDao.getTransitHeader(jobNumber);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public List<TransitBpi> getTransitBQItems(String jobNumber) {
+		List<TransitBpi> transitBpiList = null;
+		try {
+			transitBpiList = transitBqDao.getTransitBQItems(jobNumber, null, null, null, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return transitBpiList;
+	}
+	
+	public List<TransitResource> searchTransitResources(String jobNumber) {
+		List<TransitResource> resourceList = null;
+		try {
+			Transit transit = transitHeaderDao.getTransitHeader(jobNumber);
+			resourceList = transitResourceDao.searchTransitResources(transit);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return resourceList;
+	}
+
+	public String confirmResourcesAndCreatePackages(String jobNumber) {	
+		logger.info("TRANSIT: confirming resources for job " + jobNumber);
+		Transit header;
+		try {
+			header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(header == null)
+			return "Please create a transit header";
+		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
+			return "Transit for this job has already been completed";
+		// modified by brian on 20110117
+		// for change the error message prompted when confirming resources
+//		else if(!(TransitHeader.RESOURCES_IMPORTED.equals(header.getStatus()) || TransitHeader.RESOURCES_UPDATED.equals(header.getStatus())))
+//			return "Please import resources";
+		else if(Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()))
+			return "Transit Resources for this job has already been confirmed.";
+		
+		//Check that there are no dummy account numbers (obj and sub codes all 0s)
+		if(transitResourceDao.dummyAccountCodesExist(header))
+			return "There are resources with dummy account codes (all '0's). Please update these to valid account codes before confirming resources.";
+		List<TransitBpi> markupBqs = transitBqDao.getTransitBQItems(jobNumber, "80", null, null, null, null);
+		for(TransitBpi markupBq : markupBqs)
+			transitBqDao.delete(markupBq); //child resources are deleted too
+
+		List<TransitBpi> bqItems = transitBqDao.getTransitBqByHeaderNoCommentLines(header);
+		Set<String> accountCodes = new HashSet<String>();
+		
+		Map<String, String> packages = new HashMap<String, String>();
+		int dscNo = 1001;
+		int nscNo = 3001;
+		int matNo = 6001;
+		
+		double totalMarkup = 0;
+		
+		StringBuilder errorMsg = new StringBuilder();
+
+		for(TransitBpi bqItem : bqItems){
+			double totalResourceValue = 0;
+			List<TransitResource> resources = transitResourceDao.obtainTransitResourceListByTransitBQ(bqItem);
+			//Iterate through resources. Get bq cost rate (total resource value / bq quant) and assign package no.s
+			for(TransitResource resource : resources){
+				totalResourceValue += resource.getTotalQuantity() * resource.getRate();
+				
+				String obj = resource.getObjectCode().substring(0, 2);
+				if(obj.equals("14") || obj.equals("13")){
+					// test take 5 digits in resource code to group
+					String res = resource.getResourceCode().substring(0, 5) + obj + resource.getSubsidiaryCode().charAt(0);
+					String packageNo = packages.get(res);
+					if(packageNo == null){
+						if(obj.equals("13"))
+							packageNo = Integer.toString(matNo++);	
+						else if(resource.getSubsidiaryCode().startsWith("3"))
+							packageNo = Integer.toString(nscNo++);
+						else
+							packageNo = Integer.toString(dscNo++);
+						packages.put(res, packageNo);
+					}
+					
+					// check if package number too long
+					if(packageNo != null && packageNo.length() > 5)
+						errorMsg.append("Package Number: " + packageNo + " is long than 5 characters." + "<br/>");
+					
+					resource.setPackageNo(packageNo);
+				}
+				else
+					resource.setPackageNo("0");
+				
+				accountCodes.add(resource.getObjectCode() + "." + resource.getSubsidiaryCode());
+			}
+			double itemCostRate = !bqItem.getQuantity().equals(new Double(0)) ? RoundingUtil.round(totalResourceValue / bqItem.getQuantity(), 4) : new Double(0);
+			//keep track of markup (for bill 80)
+			totalMarkup += bqItem.getQuantity() * (bqItem.getSellingRate() - itemCostRate);
+			bqItem.setCostRate(itemCostRate);
+		}
+		
+		for(String accountCode : accountCodes){
+			String[] objSub = accountCode.split("\\.");
+			if(!masterListRepository.createAccountCode(jobNumber, objSub[0], objSub[1])){
+				errorMsg.append("Error creating account code: " + jobNumber + "." + accountCode + "<br/>");
+			}
+		}
+		if(errorMsg.length() != 0)
+			return errorMsg.toString();
+		
+		totalMarkup = RoundingUtil.round(totalMarkup, 4);
+		
+		//BILL 80 - Genuine Markup
+		TransitBpi markupBq = new TransitBpi();
+		markupBq.setTransit(header);
+		markupBq.setBillNo("80");
+		markupBq.setPageNo("1");
+		markupBq.setItemNo("A");
+		markupBq.setSequenceNo(Integer.valueOf(10001));
+		markupBq.setDescription("Genuine Markup");
+		markupBq.setQuantity(new Double(totalMarkup));
+		markupBq.setValue(new Double(totalMarkup));
+		markupBq.setSellingRate(new Double(1));
+		markupBq.setUnit("NO");
+		TransitResource markupResource = new TransitResource();
+		markupResource.setTransitBpi(markupBq);
+		markupResource.setResourceNo(Integer.valueOf(1));
+		markupResource.setObjectCode("199999");
+		markupResource.setSubsidiaryCode("99019999");
+		markupResource.setType("IC");
+		markupResource.setDescription("Genuine Markup");
+		markupResource.setTotalQuantity(new Double(totalMarkup));
+		markupResource.setUnit("NO");
+		transitBqDao.saveOrUpdate(markupBq);
+		transitResourceDao.saveOrUpdate(markupResource);
+		//BILL 80 - Genuine Markup Change Order
+		TransitBpi markupBqCo = new TransitBpi();
+		markupBqCo.setTransit(header);
+		markupBqCo.setBillNo("80");
+		markupBqCo.setPageNo("2");
+		markupBqCo.setItemNo("A");
+		markupBqCo.setSequenceNo(Integer.valueOf(10000));
+		markupBqCo.setDescription("Genuine Markup of Change Order");
+		markupBqCo.setUnit("NO");
+		TransitResource markupResourceCo = new TransitResource();
+		markupResourceCo.setTransitBpi(markupBqCo);
+		markupResourceCo.setResourceNo(Integer.valueOf(1));
+		markupResourceCo.setObjectCode("199999");
+		markupResourceCo.setSubsidiaryCode("99019999");
+		markupResourceCo.setType("IC");
+		markupResourceCo.setDescription("Genuine Markup of Change Order");
+		markupResourceCo.setUnit("NO");
+		transitBqDao.saveOrUpdate(markupBqCo);
+		transitResourceDao.saveOrUpdate(markupResourceCo);
+		
+		header.setStatus(Transit.RESOURCES_CONFIRMED);
+		transitHeaderDao.saveOrUpdate(header); //cascades down to bq items and resources
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+
 }

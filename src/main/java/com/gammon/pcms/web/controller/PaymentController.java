@@ -90,12 +90,12 @@ public class PaymentController {
 		return paymentCertViewWrapper;
 	}
 	
-	@RequestMapping(value = "UpdateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
+	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
 	}
 	
-	@RequestMapping(value = "UpdatePaymentCert", method = RequestMethod.POST)
+	@RequestMapping(value = "updatePaymentCert", method = RequestMethod.POST)
 	public String updateSubcontract(@RequestBody PaymentCert paymentCert) {
 		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
 		String result = paymentService.updateSCPaymentCertAdmin(paymentCert);

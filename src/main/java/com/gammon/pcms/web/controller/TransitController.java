@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.qs.domain.AppTransitUom;
+import com.gammon.qs.domain.Transit;
+import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitCodeMatch;
+import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.service.transit.TransitService;
 
 @RestController
@@ -25,14 +28,6 @@ import com.gammon.qs.service.transit.TransitService;
 public class TransitController {
 	@Autowired
 	private TransitService transitService;
-
-	public void importBPIItems() {
-		// TODO: import Excel file
-	}
-
-	public void importBPIResources() {
-		// TODO: import Excel file
-	}
 
 	@RequestMapping(value = "confirmBPIResources", method = RequestMethod.POST)
 	public PCMSDTO confirmBPIResources() {
@@ -65,4 +60,25 @@ public class TransitController {
 			@RequestParam(defaultValue = "") String jdeUom) {
 		return transitService.obtainTransitUomMatcheList(causewayUom, jdeUom);
 	}
+	
+	@RequestMapping(value = "getTransit", method = RequestMethod.POST)
+	public Transit getTransit(@RequestParam String jobNumber){
+		return transitService.getTransitHeader(jobNumber);
+	}
+	
+	@RequestMapping(value = "getTransitBQItems", method = RequestMethod.POST)
+	public List<TransitBpi> getTransitBQItems(@RequestParam String jobNumber){
+		return transitService.getTransitBQItems(jobNumber);
+	}
+
+	@RequestMapping(value = "getTransitResources", method = RequestMethod.POST)
+	public List<TransitResource> getTransitResources(@RequestParam String jobNumber){
+		return transitService.searchTransitResources(jobNumber);
+	}
+	
+	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
+	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber){
+		return transitService.confirmResourcesAndCreatePackages(jobNumber);
+	}
+
 }

@@ -57,7 +57,7 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	}
 	
 	public void deleteTransitBqItemsByHeader(Transit header) throws Exception{
-		String hqlDelete = "delete TransitBQ bq where bq.transitHeader = :header";
+		String hqlDelete = "delete TransitBpi bq where bq.transit = :header";
 		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
@@ -65,7 +65,7 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	}
 	
 	public void deleteTransitBqBill80ByHeader(Transit header) throws Exception{
-		String hqlDelete = "delete TransitBQ bq where bq.transitHeader = :header and bq.billNo = '80'";
+		String hqlDelete = "delete TransitBpi bq where bq.transit = :header and bq.billNo = '80'";
 		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
@@ -74,7 +74,7 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 	
 	@SuppressWarnings("unchecked")
 	public List<TransitBpi> getTransitBQItems(String jobNumber, String billNo, String subBillNo, 
-			String pageNo, String itemNo, String description) throws Exception{
+			String pageNo, String itemNo, String description) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transit", "transit");
 		criteria.add(Restrictions.eq("transit.jobNumber", jobNumber.trim()));

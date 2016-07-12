@@ -10,6 +10,7 @@
 	<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1>
+
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box  box-default">
@@ -18,55 +19,144 @@
 				</div>
 
 				<br>	
-					
+
 				<div class="stepwizard">
 					<div class="stepwizard-row">
 						<div class="liner"></div>
-						<!-- <div class="stepwizard-step">
-							<a class="btn icon-btn btn-primary" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-plus img-circle text-info"></span>Create
-								Transit Header</a>
-						</div> -->
-						<div class="stepwizard-step">
-							<a class="btn icon-btn btn-primary" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-import img-circle text-info"></span>Import
-								BQ</a>
-							<p>
-								<small class="text-muted">
-									<i	class="glyphicon glyphicon-file"></i><a href="">
-									<strong>Transit	Template</strong></a></small>
-							</p>
+							<div class="stepwizard-step" ng-show="showPanel !== 'dashboard'" ng-click="showPanel = 'dashboard'">
+							<button class="btn icon-btn btn-primary">
+							<span class="glyphicon btn-glyphicon fa fa-dashboard img-circle text-info"></span>
+							Dashboard
+							</button>
 						</div>
-						<div class="stepwizard-step">
-							<a class="btn icon-btn btn-primary" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-import img-circle text-info"></span>Import
-								Resources</a>
+						
+						<div class="stepwizard-step" ng-show="step <= 1">
+							<label class="btn icon-btn {{getStyle('ImportBqButton')}}" style="opacity:100 !important" 
+							uib-popover="{{getMessage('ImportBq')}}" popover-trigger="mouseenter" popover-title="Import BQ items" popover-animation="true" type="button">
+							<span class="glyphicon btn-glyphicon glyphicon-import img-circle {{getStyle('ImportBqText')}}"></span>
+							Import BQ
+							<form name="importBqItemsForm" id="importBqItemsForm" ng-submit="onSubmitTransitUpload(importBqItemsForm.files, 'BQ')">
+							<input ng-disabled="!importBqStatus" style="display: none;" class="form-control file-loading" type="file" name="files" id="importBqFile" ng-model="importBqFile" onChange="angular.element(this).scope().onSubmitTransitUpload(importBqItemsForm.files, 'BQ')"/>
+							</form>
+							</label>
 						</div>
-						<div class="stepwizard-step">
-							<a class="btn icon-btn btn-grey" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-check img-circle text-gray"></span>Confirm
-								Resources</a>
+						<div class="stepwizard-step" ng-show="step >= 2" ng-click="showBqItems()">
+							<button class="btn icon-btn btn-primary">
+							<span class="glyphicon btn-glyphicon glyphicon-list-alt img-circle text-info"></span>
+							View Imported BQ Items
+							</button>
 						</div>
-						<div class="stepwizard-step">
-							<a class="btn icon-btn btn-grey" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-print img-circle text-gray"></span>Print
-								Report</a>
+						
+						<div class="stepwizard-step" ng-show="step <= 2">
+							<label class="btn icon-btn {{getStyle('ImportResourcesButton')}}" style="opacity:100 !important" 
+							uib-popover="{{getMessage('ImportResources')}}" popover-trigger="mouseenter" popover-title="Import Resources" popover-animation="true" type="button">
+							<span class="glyphicon btn-glyphicon glyphicon-import img-circle {{getStyle('ImportResourcesText')}}"></span>
+							Import Resources
+							<form name="importResourcesForm" id="importResourcesForm" ng-submit="onSubmitTransitUpload(importResourcesForm.files, 'Resource')">
+							<input ng-disabled="!importResourcesStatus" style="display: none;" class="form-control file-loading" type="file" name="files" id="importResourcesFile" ng-model="importResourcesFile" onChange="angular.element(this).scope().onSubmitTransitUpload(importResourcesForm.files, 'Resource')"/>
+							</form>
+							</label>
 						</div>
-						<div class="stepwizard-step">
-							<a class="btn icon-btn btn-grey" href="#"><span
-								class="glyphicon btn-glyphicon glyphicon-ok img-circle text-gray"></span>Complete
-								Transit</a>
-							
+						<div class="stepwizard-step" ng-show="step >= 3" ng-click="showResourcesItems()">
+							<button class="btn icon-btn btn-primary">
+							<span class="glyphicon btn-glyphicon glyphicon-list-alt img-circle text-info"></span>
+							View Imported Resources
+							</button>
 						</div>
+						
+						<div class="stepwizard-step">
+							<button class="btn icon-btn {{getStyle('ConfirmResourcesButton')}}" style="opacity:100 !important"
+							uib-popover="{{getMessage('ConfirmResources')}}" popover-trigger="mouseenter" popover-title="Confirm Resources" popover-animation="true" type="button">
+							<span class="glyphicon btn-glyphicon glyphicon-check img-circle {{getStyle('ConfirmResourcesText')}}"></span>
+							Confirm Resources
+							</button>
+						</div>
+						
+						<div class="stepwizard-step">
+							<button class="btn icon-btn {{getStyle('PrintReportButton')}}" style="opacity:100 !important"
+							uib-popover="{{getMessage('PrintReport')}}" popover-trigger="mouseenter" popover-title="Print Report" popover-animation="true" type="button">
+							<span class="glyphicon btn-glyphicon glyphicon-print img-circle  {{getStyle('PrintReportText')}}"></span>
+							Print Report
+							</button>
+						</div>
+						
+						<div class="stepwizard-step">
+							<button class="btn icon-btn {{getStyle('CompleteTransitButton')}}" style="opacity:100 !important"
+							uib-popover="{{getMessage('CompleteTransit')}}" popover-trigger="mouseenter" popover-title="Complete Transit" popover-animation="true" type="button">
+							<span class="glyphicon btn-glyphicon glyphicon-ok img-circle  {{getStyle('CompleteTransitText')}}"></span>
+							Complete Transit
+							</button>
+						</div>
+						
 					</div>
 				</div>
+				
+				<br>	
+					
 			</div>
 		</div>
 	</div>
 
+	<div class="col-md-12" ng-show="showPanel === 'viewBq'">
+	
+		<div class="row">
+			<div id="bqGrid" name="bqGrid" ui-grid="bqGridOptions" external-scopes="clickHandler"
+				ui-grid-exporter ui-grid-selection ui-grid-pagination ui-grid-resize-columns="true"
+				ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid col-md-12" resize
+				ng-style="resizeWithOffset(310)"></div>
+		</div>
+		
+		<div class="row">
+			<form name="reImportBqItemsForm" id="reImportBqItemsForm"
+				ng-submit="onSubmitTransitUpload(reImportBqItemsForm.files, 'BQ')">
+				<div class="form-group horizontal">
+					<label class="btn btn-block btn-warning"
+						uib-popover="{{getMessage('ReImportBq')}}"
+						popover-trigger="mouseenter" popover-title="Complete Transit"
+						popover-animation="true" type="button"> <i
+						class="glyphicon glyphicon-upload"></i> Re-Import BQ&hellip; <input
+						style="display: none;" class="form-control file-loading"
+						type="file" name="files" id="reimportBqFile"
+						ng-model="reImportBqFile"
+						onChange="angular.element(this).scope().onSubmitTransitUpload(reImportBqItemsForm.files, 'BQ')" />
+					</label>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	<div class="col-md-12" ng-show="showPanel === 'viewResources'">
+	
+		<div class="row">
+			<div id="resourcesGrid" name="resourcesGrid" ui-grid="resourcesGridOptions" external-scopes="clickHandler"
+				ui-grid-exporter ui-grid-selection ui-grid-pagination ui-grid-resize-columns="true"
+				ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid col-md-12" resize
+				ng-style="resizeWithOffset(310)"></div>
+		</div>
+		
+		<div class="row">
+			<form name="reImportResourcesForm" id="reImportResourcesForm"
+				ng-submit="onSubmitTransitUpload(reImportResourcesForm.files, 'Resource')">
+				<div class="form-group horizontal">
+					<label class="btn btn-block btn-warning"
+						uib-popover="{{getMessage('ReImportResources')}}"
+						popover-trigger="mouseenter" popover-title="Complete Transit"
+						popover-animation="true" type="button"> <i
+						class="glyphicon glyphicon-upload"></i> Re-Import Resources&hellip; <input
+						style="display: none;" class="form-control file-loading"
+						type="file" name="files" id="reimportBqFile"
+						ng-model="reImportResourceFile"
+						onChange="angular.element(this).scope().onSubmitTransitUpload(reImportResourcesForm.files, 'Resource')" />
+					</label>
+				</div>
+			</form>
+		</div>
+
+	</div>
 
 	<!-- Bar Chart  -->
-	<div class="row">
+	<div class="row" ng-show="showPanel === 'dashboard'">
 		<div class="col-md-4">
 			<!-- TABLE: LATEST ORDERS -->
 			<div class="box box-info">

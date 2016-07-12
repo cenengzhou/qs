@@ -10,6 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Transit;
 @Repository
 public class TransitHBDao extends BaseHibernateDao<Transit> {
@@ -21,7 +22,7 @@ public class TransitHBDao extends BaseHibernateDao<Transit> {
 
 	private Logger logger = Logger.getLogger(TransitHBDao.class.getName());
 	
-	public Transit getTransitHeader(String jobNumber) throws Exception{
+	public Transit getTransitHeader(String jobNumber) throws DatabaseOperationException {
 		logger.info("getTransitHeader: " + jobNumber);
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));

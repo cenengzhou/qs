@@ -1,7 +1,11 @@
-mainApp.controller('TransitCtrl', ['$scope', 'colorCode', function($scope, colorCode) {
+mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'transitService', '$cookieStore', 'transitService',
+                          function($scope, colorCode, modalService, transitService, $cookieStore, transitService) {
 
+	$scope.jobNo = $cookieStore.get("jobNo");
+	$scope.jobDescription = $cookieStore.get("jobDescription");
+	
     Chart.defaults.global.colours = ['#00c0ef', '#FF5252'];
-    
+
     var sellingJson = {
     		"data": [],
     		"labels": ["Labour", "Plant", "Material", "Subcontract", "Others"],
@@ -69,5 +73,423 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', function($scope, color
     
     $scope.barChartParameters = barChartJson;
     
-      
+    $scope.showPanel = 'dashboard';
+    $scope.step = 0;
+    
+    $scope.normalButtonStyle = 'btn-primary';
+    $scope.disabledButtonStyle = 'btn-grey disabled';
+    $scope.normalTextStyle = 'text-info';
+    $scope.disabledTextStyle = 'text-grey';
+    	
+    $scope.getStyle = function(item){
+    	switch(item){
+    	case 'ImportBqButton':
+    		return $scope.importBqStatus ? $scope.normalButtonStyle : $scope.disabledButtonStyle;
+    		break;
+    	case 'ImportBqText':
+    		return $scope.importBqStatus ? $scope.normalTextStyle : $scope.disabledTextStyle;
+    		break;
+    	case 'ImportResourcesButton':
+    		return $scope.importResourcesStatus ? $scope.normalButtonStyle : $scope.disabledButtonStyle;
+    		break;
+    	case 'ImportResourcesText':
+    		return $scope.importResourcesStatus ? $scope.normalTextStyle : $scope.disabledTextStyle;
+    		break;
+    	case 'ConfirmResourcesButton':
+    		return $scope.confirmResourcesStatus ? $scope.normalButtonStyle : $scope.disabledButtonStyle;
+    		break;
+    	case 'ConfirmResourcesText':
+    		return $scope.confirmResourcesStatus ? $scope.normalTextStyle : $scope.disabledTextStyle;
+    		break;
+    	case 'PrintReportButton':
+    		return $scope.printReportStatus ? $scope.normalButtonStyle : $scope.disabledButtonStyle;
+    		break;
+    	case 'PrintReportText':
+    		return $scope.printReportStatus ? $scope.normalTextStyle : $scope.disabledTextStyle;
+    		break;
+    	case 'CompleteTransitButton':
+    		return $scope.completeTransitStatus ? $scope.normalButtonStyle : $scope.disabledButtonStyle;
+    		break;
+    	case 'CompleteTransitText':
+    		return $scope.completeTransitStatus ? $scope.normalTextStyle : $scope.disabledTextStyle;
+    		break;
+    	}
+    }
+    
+    $scope.getMessage = function(item){
+    	switch(item){
+    	case 'ImportBq':
+    		return $scope.importBqStatus ? '' : $scope.importBqMessage;
+    		break;
+    	case 'ReImportBq':
+    		return $scope.reImportBq;
+    		break;
+    	case 'ImportResources':
+    		return $scope.importResourceStatus ? '' : $scope.importResourcesMessage;
+    		break;
+    	case 'ConfirmResources':
+    		return $scope.confirmResourceStatus ? '' : $scope.confirmResourcesMessage;
+    		break;
+      	case 'PrintReport':
+    		return $scope.printReportStatus ? '' : $scope.printReportMessage;
+    		break;
+     	case 'CompleteTransit':
+    		return $scope.completeTransitStatus ? '' : $scope.completeTransitMessage;
+    		break;
+     	}
+    }
+    
+    $scope.getTransit = function(){
+    	transitService.getTransit($scope.jobNo)
+    	.then(function(data){
+	    	if(data instanceof Object) {
+	    		$scope.transit = data;
+	    		if($scope.transit.status === 'Header Created'){
+	    			$scope.step = 1;
+	    		} else if($scope.transit.status === 'BQ Items Imported'){
+	    			$scope.step = 2
+	    		} else if($scope.transit.status === 'Resources Imported') {
+	    			$scope.step = 3;
+	    		} else if($scope.transit.status === 'Resources Updated') {
+	    			$scope.step = 4;
+	    		} else if($scope.transit.status === 'Resources Confirmed') {
+	    			$scope.step = 5;
+	    		} else if($scope.transit.status === 'Report Printed') {
+	    			$scope.step = 6;
+	    		}else if($scope.transit.status === 'Transit Completed') {
+	    			$scope.step = 7;
+	    		}
+	    	}
+	    	
+    		if($scope.step >= 0) {
+	    	    $scope.importBqStatus = false;
+	    	    $scope.importResourcesStatus = false;
+	    	    $scope.confirmResourcesStatus = false;
+	    	    $scope.printReportStatus = false;
+	    	    $scope.completeTransitStatus = false;
+	    	    
+	    	    $scope.importBqMessage = 'Please create a header before importing items';
+	    	    $scope.importResourcesMessage = 'Please import BQ before importing resources';
+	    	    $scope.confirmResourcesMessage = 'Please import BQ and Resources before confirm resources';
+	    	    $scope.printReportMessage = 'Please confirm resources before print report';
+	    	    $scope.completeTransitMessage = 'Please print report before complete transit';
+	    	    $scope.reImportBq = 'Please note that if you re-import BQ items, all current items and resources will be deleted';
+		}
+    		
+    		//Header Created
+    		if($scope.step >= 1) {
+    			$scope.importBqMessage = '';
+    			$scope.importBqStatus = true;
+    		}
+    		
+    		//BQ Items Imported
+    		if($scope.step >= 2) {
+    			$scope.importBqMessage = 'BQ Items Imported';
+    			$scope.importResourcesMessage = '';
+    			$scope.importResourcesStatus = true;
+    		}
+
+    		//Resources Imported
+    		if($scope.step >= 3) {
+    			$scope.importResourcesMessage = 'Resources Imported';
+    			$scope.importResourcesStatus = false;
+    			$scope.confirmResourcesMessage = 'Make sure you want to confirm resources and group into packages';
+    			$scope.confirmResourcesStatus = true;
+    		}
+
+    		//Resources Updated
+    		if($scope.step >= 4) {
+    			$scope.importResourcesMessage = 'Resources Updated';
+    		}
+
+    		//Resources Confirmed
+    		if($scope.step >= 5) {
+    			$scope.confirmResourcesMessage = 'Resources Confirmed';
+    			$scope.confirmResourcesStatus = false;
+    			$scope.printReportMessage = '';
+    			$scope.printReportStatus = true;
+    		}
+
+    		//Report Printed
+    		if($scope.step >= 6) {
+    			$scope.completeTransitMessage = '';
+    			$scope.completeTransitStatus = true;
+    		}
+
+    		//Transit Completed
+    		if($scope.step >= 7) {
+    			$scope.importBqMessage = 'Transit for the job has already been completed';
+    			$scope.importResourcesMessage = 'Transit for the job has already been completed';
+    			$scope.confirmResourcesMessage = 'Transit for the job has already been completed';
+    			$scope.printReportMessage = 'Transit for the job has already been completed';
+    			$scope.completeTransitMessage = 'Transit for the job has already been completed';
+    			$scope.completeTransitStatus = false;
+    		}
+    		
+    		console.log('Current step:' + $scope.step);
+
+	    }, function(data){
+	    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Error:" + data);
+	    })
+    }
+    $scope.getTransit();
+    
+    $scope.onSubmitTransitUpload = function(item, type){
+		var formData = new FormData();
+		formData.append('files', item.files[0]);
+		formData.append('type', type);
+		formData.append('jobNumber', $scope.jobNo);
+		transitService.transitUpload(formData)
+		.then(function(data){
+			$scope.getTransit();
+			var msg = data;
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 
+					"Success:" + msg.success + 
+					"\r\nNumber Record Imported:" + msg.numRecordImported + 
+					"\r\nHave warning:" + msg.haveWarning);
+		}, function(data){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+		});
+    }
+    	
+    $scope.showBqItems = function(){
+        $scope.loadBqItems();
+        $scope.bqGridApi.core.refresh();
+    }
+    
+    $scope.showResourcesItems = function(){
+    	$scope.loadResources();
+    	$scope.resourcesGridApi.core.refresh();
+    }
+    
+    $scope.confirmResources = function(){
+    	transitService.confirmResourcesAndCreatePackages()
+    	.then(function(data){
+    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', data );
+    	}, function(data){
+    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+    	});
+    }
+    
+    $scope.loadBqItems = function(){
+		transitService.getTransitBQItems($scope.jobNo)
+		.then(function(data) {
+			$scope.bqGridOptions.data = data;
+			$scope.showPanel = 'viewBq';
+		});
+    }
+ 
+    $scope.loadResources = function(){
+		transitService.getTransitResources($scope.jobNo)
+		.then(function(data) {
+			$scope.resourcesGridOptions.data = data;
+			$scope.showPanel = 'viewResources';
+		});
+    }
+
+    $scope.bqGridOptions = {
+    		enableFiltering : true,
+    		enableColumnResizing : true,
+    		enableGridMenu : true,
+    		enableRowSelection : true,
+    		enableSelectAll : true,
+    		enableFullRowSelection : false,
+    		multiSelect : true,
+    		showGridFooter : true,
+    		enableCellEditOnFocus : false,
+    		enablePaginationControls : true,
+    		paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+    		paginationPageSize : 25,
+    		allowCellFocus : false,
+    		enableCellSelection : false,
+    		columnDefs : [ 
+    		{
+    			field : 'sequenceNo',
+    			displayName : "Sequence No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'billNo',
+    			displayName : "Bill No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'subBillNo',
+    			displayName : "Sub Bill No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'pageNo',
+    			displayName : "Page No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'itemNo',
+    			displayName : "Item No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'description',
+    			displayName : "Description",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'quantity',
+    			displayName : "Quantity",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'unit',
+    			displayName : "Unit",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'sellingRate',
+    			displayName : "Selling Rate",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'costRate',
+    			displayName : "Cost Rate",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'value',
+    			displayName : "Value",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'transit.id',
+    			displayName : "Transit ID",
+    			enableCellEdit : false,
+    			width:"100"
+    		}
+    		]
+    	};
+    
+	$scope.bqGridOptions.onRegisterApi = function (gridApi) {
+		  $scope.bqGridApi = gridApi;
+		  gridApi.core.refresh();
+	};
+        
+    $scope.resourcesGridOptions = {
+    		enableFiltering : true,
+    		enableColumnResizing : true,
+    		enableGridMenu : true,
+    		enableRowSelection : true,
+    		enableSelectAll : true,
+    		enableFullRowSelection : false,
+    		multiSelect : true,
+    		showGridFooter : true,
+    		enableCellEditOnFocus : false,
+    		enablePaginationControls : true,
+    		paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+    		paginationPageSize : 25,
+    		allowCellFocus : false,
+    		enableCellSelection : false,
+    		columnDefs : [ 
+    		 {
+    			field : 'objectCode',
+    			displayName : "Object Code",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'subsidiaryCode',
+    			displayName : "Subsidiary Code",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'packageNo',
+    			displayName : "Package No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'resourceNo',
+    			displayName : "Resource No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'resourceCode',
+    			displayName : "Resource Code",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'type',
+    			displayName : "Type",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'description',
+    			displayName : "Page No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'itemNo',
+    			displayName : "Item No",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'description',
+    			displayName : "Description",
+    			enableCellEdit : false,
+    			width:"200"
+    		}, {
+    			field : 'waste',
+    			displayName : "Waste",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'totalQuantity',
+    			displayName : "Total Quantity",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'unit',
+    			displayName : "Unit",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'rate',
+    			displayName : "Rate",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'value',
+    			displayName : "Value",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'objectCode',
+    			displayName : "Object Code",
+    			enableCellEdit : false,
+    			width:"100"
+    		}, {
+    			field : 'transitBpi.id',
+    			displayName : "Transit Bpi",
+    			enableCellEdit : false,
+    			width:"100"
+    		}
+    		]
+    	};
+        
+		$scope.resourcesGridOptions.onRegisterApi = function (gridApi) {
+			  $scope.resourcesGridApi = gridApi;
+			  gridApi.core.refresh();
+		};
+	      
+
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+
+ 
 }]);

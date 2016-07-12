@@ -18,6 +18,7 @@ import org.hibernate.type.Type;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.domain.TransitBpi;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.service.transit.TransitService;
@@ -33,7 +34,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 	private Logger logger = Logger.getLogger(TransitResourceHBDao.class.getName());
 
 	public void deleteResourcesByHeader(Transit header) throws Exception{
-		String hqlDelete = "delete TransitResource res where res.transitBQ in (from TransitBQ bq where bq.transitHeader = :header)";
+		String hqlDelete = "delete TransitResource res where res.transitBpi in (from TransitBpi bq where bq.transit = :header)";
 		Query deleteQuery = getSession().createQuery(hqlDelete);
 		deleteQuery.setEntity("header", header);
 		int numDeleted = deleteQuery.executeUpdate();
@@ -424,4 +425,12 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		return criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<TransitResource> searchTransitResources(Transit transit) throws DatabaseOperationException{
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.add(Restrictions.eq("transitBpi.transit", transit));
+		List<TransitResource> resources = criteria.list();
+		return resources;
+	}
 }

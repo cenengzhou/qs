@@ -5,7 +5,8 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	getPaymentCert: 		getPaymentCert,
     	getPaymentDetailList: 	getPaymentDetailList,
     	getPaymentCertSummary: 	getPaymentCertSummary, 
-    	updatePaymentCert:		updatePaymentCert
+    	updatePaymentCert:		updatePaymentCert,
+    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually
     	
     });
 	
@@ -94,10 +95,14 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     }
     
     function updatePaymentCert(paymentCert) {
-        var request = $http.post('service/payment/UpdatePaymentCert', paymentCert)
+        var request = $http.post('service/payment/updatePaymentCert', paymentCert)
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function updateF58011FromSCPaymentCertManually(){
+    	var request = $http.post("service/payment/updateF58011FromSCPaymentCertManually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
 
     // ---
     // PRIVATE METHODS.

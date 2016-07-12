@@ -2,6 +2,7 @@
 mainApp.controller('AdminSessionCtrl', 
 		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 
 		 function($scope , $http, colorCode, SessionHelper, $rootScope) {
+			
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,

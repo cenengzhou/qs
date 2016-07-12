@@ -9,7 +9,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	runProvisionPostingManually:	runProvisionPostingManually,
     	generateSCPackageSnapshotManually: generateSCPackageSnapshotManually,
     	updateF58001FromSCPackageManually: updateF58001FromSCPackageManually,
-    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
     	searchSystemConstants:			searchSystemConstants,
     	updateMultipleSystemConstants:	updateMultipleSystemConstants,
     	inactivateSystemConstant:		inactivateSystemConstant,
@@ -121,11 +120,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     
     function updateF58001FromSCPackageManually(){
     	var request = $http.post("service/subcontract/updateF58001FromSCPackageManually");
-    	return( request.then( handleSuccess, handleError ) );
-    }
-
-    function updateF58011FromSCPaymentCertManually(){
-    	var request = $http.post("service/subcontract/updateF58011FromSCPaymentCertManually");
     	return( request.then( handleSuccess, handleError ) );
     }
 

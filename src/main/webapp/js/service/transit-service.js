@@ -3,7 +3,11 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     return({
     	obtainTransitCodeMatcheList:	obtainTransitCodeMatcheList,
     	obtainTransitUomMatcheList:		obtainTransitUomMatcheList,
-    	transitUpload:					transitUpload
+    	transitUpload:					transitUpload,
+    	getTransit:						getTransit,
+    	getTransitBQItems:				getTransitBQItems,
+    	getTransitResources:			getTransitResources,
+    	confirmResourcesAndCreatePackages: confirmResourcesAndCreatePackages
     });
    
     function obtainTransitCodeMatcheList(){
@@ -25,6 +29,44 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
 				'Content-Type' : undefined
 			}
     	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function getTransit(jobNo){
+    	var request = $http({
+    			method: 'POST',
+    			url:	'service/transit/getTransit',
+    			params: {
+    				jobNumber: jobNo
+    			}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function getTransitBQItems(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/getTransitBQItems',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function getTransitResources(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/getTransitResources',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function confirmResourcesAndCreatePackages(){
+    	var request = $http.post("service/transit/confirmResourcesAndCreatePackages");
     	return( request.then( handleSuccess, handleError ) );
     }
 
