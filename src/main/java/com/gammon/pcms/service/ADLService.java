@@ -12,7 +12,7 @@ import com.gammon.pcms.dao.adl.AccountBalanceAAJIDao;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dao.adl.AccountLedgerDao;
-import com.gammon.pcms.dto.rs.provider.response.adl.MonthlyCashFlowDTO;
+import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountLedger;
 
@@ -114,7 +114,7 @@ public class ADLService {
 	 * @author	tikywong
 	 * @since	Jul 12, 2016 2:16:59 PM
 	 */
-	public MonthlyCashFlowDTO getMonthlyCashFlow(	BigDecimal yearStart,
+	public JobDashboardDTO getJobDashboardData(	BigDecimal yearStart,
 													BigDecimal yearEnd,
 													String noJob) {
 
@@ -122,7 +122,7 @@ public class ADLService {
 		List<AccountBalance> turnoverList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_AA, noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_OB, noJob);
 
-		return new MonthlyCashFlowDTO(contractReceivableList, turnoverList, originalBudgetList, null);
+		return new JobDashboardDTO(contractReceivableList, turnoverList, originalBudgetList, null);
 	}
 	
 	/**

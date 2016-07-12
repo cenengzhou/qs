@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.dto.rs.provider.response.adl.MonthlyCashFlowDTO;
+import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -102,18 +102,18 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 11, 2016 9:26:48 AM
 	 */
-	@RequestMapping(value = "getMonthlyCashFlow",
+	@RequestMapping(value = "getJobDashboardData",
 					method = RequestMethod.GET)
-	public MonthlyCashFlowDTO getMonthlyCashFlow(	@RequestParam(required = true) String noJob,
+	public JobDashboardDTO getJobDashboardData(	@RequestParam(required = true) String noJob,
 													@RequestParam(	required = false,
 																	defaultValue = "0") BigDecimal yearStart,
 													@RequestParam(	required = false,
 																	defaultValue = "0") BigDecimal yearEnd) {
 		try {
-			return adlService.getMonthlyCashFlow(yearStart, yearEnd, noJob);
+			return adlService.getJobDashboardData(yearStart, yearEnd, noJob);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new MonthlyCashFlowDTO();
+			return new JobDashboardDTO();
 		}
 	}
 

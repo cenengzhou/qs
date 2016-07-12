@@ -1,7 +1,7 @@
 /**
  * PCMS-TC
  * com.gammon.pcms.dto.rs.provider.response
- * MonthlyCashFlowDTO.java
+ * JobDashboardDTO.java
  * @since Jul 7, 2016 4:39:31 PM
  * @author tikywong
  */
@@ -11,18 +11,18 @@ import java.util.List;
 
 import com.gammon.pcms.model.adl.AccountBalance;
 
-public class MonthlyCashFlowDTO {
+public class JobDashboardDTO {
 
 	private List<AccountBalance> contractReceivableList;
 	private List<AccountBalance> turnoverList;
 	private List<AccountBalance> originalBudgetList;
 	private List<AccountBalance> paymentList;
 
-	public MonthlyCashFlowDTO() {
+	public JobDashboardDTO() {
 		super();
 	}
 
-	public MonthlyCashFlowDTO(List<AccountBalance> contractReceivableList, List<AccountBalance> turnoverList, List<AccountBalance> originalBudgetList, List<AccountBalance> paymentList) {
+	public JobDashboardDTO(List<AccountBalance> contractReceivableList, List<AccountBalance> turnoverList, List<AccountBalance> originalBudgetList, List<AccountBalance> paymentList) {
 		super();
 		this.contractReceivableList = contractReceivableList;
 		this.turnoverList = turnoverList;
@@ -64,7 +64,7 @@ public class MonthlyCashFlowDTO {
 
 	@Override
 	public String toString() {
-		return "MonthlyCashFlowDTO [contractReceivableList=" + contractReceivableList + ", turnoverList=" + turnoverList + ", originalBudgetList=" + originalBudgetList + ", paymentList=" + paymentList + "]";
+		return "JobDashboardDTO [contractReceivableList=" + contractReceivableList + ", turnoverList=" + turnoverList + ", originalBudgetList=" + originalBudgetList + ", paymentList=" + paymentList + "]";
 	}
 
 }
