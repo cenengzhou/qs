@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.pcms.dto.rs.provider.response.adl.MonthlyCashFlowDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
+import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.service.ADLService;
 
 @RestController
@@ -98,8 +99,8 @@ public class ADLController {
 	 * @param yearStart
 	 * @param yearEnd
 	 * @return
-	 * @author	tikywong
-	 * @since	Jul 11, 2016 9:26:48 AM
+	 * @author tikywong
+	 * @since Jul 11, 2016 9:26:48 AM
 	 */
 	@RequestMapping(value = "getMonthlyCashFlow",
 					method = RequestMethod.GET)
@@ -131,6 +132,33 @@ public class ADLController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountBalance>();
+		}
+	}
+
+	@RequestMapping(value = "getAccountLedger",
+					method = RequestMethod.GET)
+	public List<AccountLedger> getAccountLedger(@RequestParam(required = true) String noJob,
+												@RequestParam(	required = true,
+																defaultValue = "AA") String typeLedger,
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal yearStart,
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal yearEnd,
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal monthStart,
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal monthEnd,
+												@RequestParam(	required = false,
+																defaultValue = "JS") String typeDocument,
+												@RequestParam(required = false) String noSubcontract,
+												@RequestParam(	required = false,
+																defaultValue = "3440") String codeObject,
+												@RequestParam(required = false) String codeSubsidiary) {
+		try {
+			return adlService.getAccountLedger(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<AccountLedger>();
 		}
 	}
 

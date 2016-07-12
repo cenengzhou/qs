@@ -1,7 +1,6 @@
 package com.gammon.qs.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -25,22 +24,32 @@ import com.gammon.pcms.dto.rs.provider.response.View;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
-@Table(name = "JOB_INFO", uniqueConstraints = @UniqueConstraint(columnNames = "ID", name = "JOB_INFO_PK"))
+@Table(	name = "JOB_INFO",
+		uniqueConstraints = @UniqueConstraint(	columnNames = "ID",
+												name = "JOB_INFO_PK"))
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "JOB_INFO_GEN",  sequenceName = "JOB_INFO_SEQ", allocationSize = 1)
-@AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
-public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
-	public static final String FINQS0REVIEW_D = "D";	/*Depends on the company - Default*/
-	public static final String FINQS0REVIEW_Y = "Y";	/*Needs Finance Review*/
-	public static final String FINQS0REVIEW_N = "N";	/*Does not need Finance Review*/
+@SequenceGenerator(	name = "JOB_INFO_GEN",
+					sequenceName = "JOB_INFO_SEQ",
+					allocationSize = 1)
+@AttributeOverride(	name = "id",
+					column = @Column(	name = "ID",
+										unique = true,
+										nullable = false,
+										insertable = false,
+										updatable = false,
+										precision = 19,
+										scale = 0))
+public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> {
+	public static final String FINQS0REVIEW_D = "D"; /* Depends on the company - Default */
+	public static final String FINQS0REVIEW_N = "N"; /* Does not need Finance Review */
+	public static final Object FINQS0REVIEW_Y = "Y"; /* Need Finance Review */
 	
-	public static final String REPACKAGING_TYPE_1 = "1"; /*Repackaging - Resource Summary, IV - Resource Summary*/
-	public static final String REPACKAGING_TYPE_2 = "2"; /*Repackaging - BQ & Resource, IV - Resource Summary*/
-	public static final String REPACKAGING_TYPE_3 = "3"; /*Repackaging - BQ & Resource, IV - BQ & Resource*/
-	
+	public static final String REPACKAGING_TYPE_1 = "1"; /* Repackaging - Resource Summary, IV - Resource Summary */
+	public static final String REPACKAGING_TYPE_2 = "2"; /* Repackaging - BQ & Resource, IV - Resource Summary */
+	public static final String REPACKAGING_TYPE_3 = "3"; /* Repackaging - BQ & Resource, IV - BQ & Resource */
+
 	private static final long serialVersionUID = 4305414438779476211L;
-	
-	private List<AccountMaster> accountMasterList;
+
 	@JsonView(View.JobInfoSummary.class)
 	private String jobNumber;
 	@JsonView(View.JobInfoSummary.class)
@@ -64,8 +73,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	private Double projectedContractValue = 0.0;
 	private Double orginalNominatedSCContractValue = 0.0;
 	private Double tenderGP = 0.0;
-	private Integer forecastEndYear =0;
-	private Integer forecastEndPeriod=0;
+	private Integer forecastEndYear = 0;
+	private Integer forecastEndPeriod = 0;
 	private Double maxRetentionPercentage = 0.0;
 	private Double interimRetentionPercentage = 0.0;
 	private Double mosRetentionPercentage = 0.0;
@@ -95,12 +104,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	private String allowManualInputSCWorkDone;
 	private String legacyJob;
 	private String conversionStatus;
-	private String repackagingType = REPACKAGING_TYPE_1; //1 to use resourceSummaries, 2 to use resources, 3 resources and BQ
-	private String budgetPosted; //Only used in JDE web services - no column in DB.
-	private String finQS0Review = FINQS0REVIEW_D; //Y: Needs Finance Review, N: Doesn't need Finance Review, D: Depends on the company
-	
-	public JobInfo() {
-	}
+	private String repackagingType = REPACKAGING_TYPE_1; // 1 to use resourceSummaries, 2 to use resources, 3 resources and BQ
+	private String budgetPosted; // Only used in JDE web services - no column in DB.
+	private String finQS0Review = FINQS0REVIEW_D; // Y: Needs Finance Review, N: Doesn't need Finance Review, D: Depends on the company
+
+	public JobInfo() {}
 
 	@Transient
 	public String getBudgetPosted() {
@@ -112,42 +120,16 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@Override
-	public String toString() {
-		return "JobInfo [accountMasterList=" + accountMasterList
-				+ ", jobNumber=" + jobNumber + ", description=" + description + ", company=" + company + ", employer="
-				+ employer + ", contractType=" + contractType + ", division=" + division + ", department=" + department
-				+ ", internalJob=" + internalJob + ", soloJV=" + soloJV + ", completionStatus=" + completionStatus
-				+ ", insuranceCAR=" + insuranceCAR + ", insuranceECI=" + insuranceECI + ", insuranceTPL=" + insuranceTPL
-				+ ", clientContractNo=" + clientContractNo + ", parentJobNo=" + parentJobNo + ", jvPartnerNo="
-				+ jvPartnerNo + ", jvPercentage=" + jvPercentage + ", originalContractValue=" + originalContractValue
-				+ ", projectedContractValue=" + projectedContractValue + ", orginalNominatedSCContractValue="
-				+ orginalNominatedSCContractValue + ", tenderGP=" + tenderGP + ", forecastEndYear=" + forecastEndYear
-				+ ", forecastEndPeriod=" + forecastEndPeriod + ", maxRetentionPercentage=" + maxRetentionPercentage
-				+ ", interimRetentionPercentage=" + interimRetentionPercentage + ", mosRetentionPercentage="
-				+ mosRetentionPercentage + ", valueOfBSWork=" + valueOfBSWork + ", grossFloorArea=" + grossFloorArea
-				+ ", grossFloorAreaUnit=" + grossFloorAreaUnit + ", billingCurrency=" + billingCurrency
-				+ ", paymentTermsForNominatedSC=" + paymentTermsForNominatedSC + ", defectProvisionPercentage="
-				+ defectProvisionPercentage + ", cpfApplicable=" + cpfApplicable + ", cpfIndexName=" + cpfIndexName
-				+ ", cpfBaseYear=" + cpfBaseYear + ", cpfBasePeriod=" + cpfBasePeriod + ", levyApplicable="
-				+ levyApplicable + ", levyCITAPercentage=" + levyCITAPercentage + ", levyPCFBPercentage="
-				+ levyPCFBPercentage + ", expectedPCCDate=" + expectedPCCDate + ", actualPCCDate=" + actualPCCDate
-				+ ", expectedMakingGoodDate=" + expectedMakingGoodDate + ", actualMakingGoodDate="
-				+ actualMakingGoodDate + ", defectLiabilityPeriod=" + defectLiabilityPeriod + ", defectListIssuedDate="
-				+ defectListIssuedDate + ", financialEndDate=" + financialEndDate + ", dateFinalACSettlement="
-				+ dateFinalACSettlement + ", yearOfCompletion=" + yearOfCompletion + ", bqFinalizedFlag="
-				+ bqFinalizedFlag + ", allowManualInputSCWorkDone=" + allowManualInputSCWorkDone + ", legacyJob="
-				+ legacyJob + ", conversionStatus=" + conversionStatus + ", repackagingType=" + repackagingType
-				+ ", budgetPosted=" + budgetPosted + ", finQS0Review=" + finQS0Review + ", toString()="
-				+ super.toString() + "]";
-	}
-	
-	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JOB_INFO_GEN")
-	public Long getId(){return super.getId();}
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "JOB_INFO_GEN")
+	public Long getId() {
+		return super.getId();
+	}
 
 	@JsonProperty("legacyJob")
-	@Column(name = "legacyJob", length = 1)
+	@Column(name = "legacyJob",
+			length = 1)
 	public String getLegacyJob() {
 		return legacyJob;
 	}
@@ -157,7 +139,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("jobNo")
-	@Column(name = "jobNo", length = 12)
+	@Column(name = "jobNo",
+			length = 12)
 	public String getJobNumber() {
 		return this.jobNumber;
 	}
@@ -165,7 +148,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	public void setJobNumber(String jobNumber) {
 		this.jobNumber = jobNumber;
 	}
-	
+
 	@JsonProperty("description")
 	@Column(name = "description")
 	public String getDescription() {
@@ -176,17 +159,9 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 		this.description = description;
 	}
 
-	@Transient
-	public List<AccountMaster> getAccountMasterList() {
-		return accountMasterList;
-	}
-
-	public void setAccountMasterList(List<AccountMaster> accountMasterList) {
-		this.accountMasterList = accountMasterList;
-	}
-
 	@JsonProperty("company")
-	@Column(name = "company", length = 12)
+	@Column(name = "company",
+			length = 12)
 	public String getCompany() {
 		return company;
 	}
@@ -196,7 +171,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("employer")
-	@Column(name = "employer", length = 12)
+	@Column(name = "employer",
+			length = 12)
 	public String getEmployer() {
 		return employer;
 	}
@@ -206,7 +182,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("contractType")
-	@Column(name = "contractType", length = 10)
+	@Column(name = "contractType",
+			length = 10)
 	public String getContractType() {
 		return contractType;
 	}
@@ -216,7 +193,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("division")
-	@Column(name = "division", length = 10)
+	@Column(name = "division",
+			length = 10)
 	public String getDivision() {
 		return division;
 	}
@@ -226,7 +204,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("department")
-	@Column(name = "department", length = 10)
+	@Column(name = "department",
+			length = 10)
 	public String getDepartment() {
 		return department;
 	}
@@ -236,7 +215,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("internalJob")
-	@Column(name = "internalJob", length = 3)
+	@Column(name = "internalJob",
+			length = 3)
 	public String getInternalJob() {
 		return internalJob;
 	}
@@ -246,7 +226,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("soloJV")
-	@Column(name = "soloJV", length = 4)
+	@Column(name = "soloJV",
+			length = 4)
 	public String getSoloJV() {
 		return soloJV;
 	}
@@ -256,7 +237,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("completionStatus")
-	@Column(name = "completionStatus", length = 1)
+	@Column(name = "completionStatus",
+			length = 1)
 	public String getCompletionStatus() {
 		return completionStatus;
 	}
@@ -266,7 +248,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("insuranceCAR")
-	@Column(name = "insuranceCAR", length = 10)
+	@Column(name = "insuranceCAR",
+			length = 10)
 	public String getInsuranceCAR() {
 		return insuranceCAR;
 	}
@@ -276,7 +259,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("insuranceTPL")
-	@Column(name = "insuranceTPL", length = 10)
+	@Column(name = "insuranceTPL",
+			length = 10)
 	public String getInsuranceTPL() {
 		return insuranceTPL;
 	}
@@ -284,9 +268,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	public void setInsuranceTPL(String insuranceTPL) {
 		this.insuranceTPL = insuranceTPL;
 	}
-	
+
 	@JsonProperty("insuranceECI")
-	@Column(name = "insuranceECI", length = 10)
+	@Column(name = "insuranceECI",
+			length = 10)
 	public String getInsuranceECI() {
 		return insuranceECI;
 	}
@@ -296,7 +281,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("clientContractNo")
-	@Column(name = "clientContractNo", length = 20)
+	@Column(name = "clientContractNo",
+			length = 20)
 	public String getClientContractNo() {
 		return clientContractNo;
 	}
@@ -306,7 +292,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("parentJobNo")
-	@Column(name = "parentJobNo", length = 12)
+	@Column(name = "parentJobNo",
+			length = 12)
 	public String getParentJobNo() {
 		return parentJobNo;
 	}
@@ -316,7 +303,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("jvPartnerNo")
-	@Column(name = "jvPartnerNo", length = 12)
+	@Column(name = "jvPartnerNo",
+			length = 12)
 	public String getJvPartnerNo() {
 		return jvPartnerNo;
 	}
@@ -362,7 +350,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	public void setOrginalNominatedSCContractValue(
-			Double orginalNominatedSCContractValue) {
+													Double orginalNominatedSCContractValue) {
 		this.orginalNominatedSCContractValue = orginalNominatedSCContractValue;
 	}
 
@@ -447,7 +435,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("grossFloorAreaUnit")
-	@Column(name = "grossFloorAreaUnit", length = 10)
+	@Column(name = "grossFloorAreaUnit",
+			length = 10)
 	public String getGrossFloorAreaUnit() {
 		return grossFloorAreaUnit;
 	}
@@ -457,7 +446,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("billingCurrency")
-	@Column(name = "billingCurrency", length = 10)
+	@Column(name = "billingCurrency",
+			length = 10)
 	public String getBillingCurrency() {
 		return billingCurrency;
 	}
@@ -467,7 +457,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("paymentTermForNSC")
-	@Column(name = "paymentTermForNSC", length = 10)
+	@Column(name = "paymentTermForNSC",
+			length = 10)
 	public String getPaymentTermsForNominatedSC() {
 		return paymentTermsForNominatedSC;
 	}
@@ -487,7 +478,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("cpfApplicable")
-	@Column(name = "cpfApplicable", length = 3)
+	@Column(name = "cpfApplicable",
+			length = 3)
 	public String getCpfApplicable() {
 		return cpfApplicable;
 	}
@@ -497,7 +489,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("cpfIndexName")
-	@Column(name = "cpfIndexName", length = 12)
+	@Column(name = "cpfIndexName",
+			length = 12)
 	public String getCpfIndexName() {
 		return cpfIndexName;
 	}
@@ -527,7 +520,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("levyApplicable")
-	@Column(name = "levyApplicable", length = 3)
+	@Column(name = "levyApplicable",
+			length = 3)
 	public String getLevyApplicable() {
 		return levyApplicable;
 	}
@@ -664,7 +658,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("manualInputSCWD")
-	@Column(name = "manualInputSCWD", length = 1)
+	@Column(name = "manualInputSCWD",
+			length = 1)
 	public String getAllowManualInputSCWorkDone() {
 		return allowManualInputSCWorkDone;
 	}
@@ -678,7 +673,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("conversionStatus")
-	@Column(name = "conversionStatus", length = 3)
+	@Column(name = "conversionStatus",
+			length = 3)
 	public String getConversionStatus() {
 		return conversionStatus;
 	}
@@ -688,13 +684,15 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 	}
 
 	@JsonProperty("repackagingType")
-	@Column(name = "repackagingType", length = 1)
+	@Column(name = "repackagingType",
+			length = 1)
 	public String getRepackagingType() {
 		return repackagingType;
 	}
 
 	@JsonProperty("finQS0Review")
-	@Column(name = "finQS0Review", length = 3)
+	@Column(name = "finQS0Review",
+			length = 3)
 	public String getFinQS0Review() {
 		return finQS0Review;
 	}
@@ -708,4 +706,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo>{
 		int diff = jobNumber.compareTo(o.getJobNumber());
 		return diff != 0 ? diff : company.compareTo(o.getCompany());
 	}
+
+	@Override
+	public String toString() {
+		return "JobInfo [jobNumber=" + jobNumber + ", description=" + description + ", company=" + company + ", employer=" + employer + ", contractType=" + contractType + ", division=" + division + ", department=" + department + ", internalJob=" + internalJob + ", soloJV=" + soloJV + ", completionStatus=" + completionStatus + ", insuranceCAR=" + insuranceCAR + ", insuranceECI=" + insuranceECI + ", insuranceTPL=" + insuranceTPL + ", clientContractNo=" + clientContractNo + ", parentJobNo=" + parentJobNo + ", jvPartnerNo=" + jvPartnerNo + ", jvPercentage=" + jvPercentage + ", originalContractValue=" + originalContractValue + ", projectedContractValue=" + projectedContractValue + ", orginalNominatedSCContractValue=" + orginalNominatedSCContractValue + ", tenderGP=" + tenderGP + ", forecastEndYear=" + forecastEndYear + ", forecastEndPeriod=" + forecastEndPeriod + ", maxRetentionPercentage=" + maxRetentionPercentage + ", interimRetentionPercentage=" + interimRetentionPercentage + ", mosRetentionPercentage=" + mosRetentionPercentage + ", valueOfBSWork=" + valueOfBSWork + ", grossFloorArea=" + grossFloorArea + ", grossFloorAreaUnit=" + grossFloorAreaUnit + ", billingCurrency=" + billingCurrency + ", paymentTermsForNominatedSC=" + paymentTermsForNominatedSC + ", defectProvisionPercentage=" + defectProvisionPercentage + ", cpfApplicable=" + cpfApplicable + ", cpfIndexName=" + cpfIndexName + ", cpfBaseYear=" + cpfBaseYear + ", cpfBasePeriod=" + cpfBasePeriod + ", levyApplicable=" + levyApplicable + ", levyCITAPercentage=" + levyCITAPercentage + ", levyPCFBPercentage=" + levyPCFBPercentage + ", expectedPCCDate=" + expectedPCCDate + ", actualPCCDate=" + actualPCCDate + ", expectedMakingGoodDate=" + expectedMakingGoodDate + ", actualMakingGoodDate=" + actualMakingGoodDate + ", defectLiabilityPeriod=" + defectLiabilityPeriod + ", defectListIssuedDate=" + defectListIssuedDate + ", financialEndDate=" + financialEndDate + ", dateFinalACSettlement=" + dateFinalACSettlement + ", yearOfCompletion=" + yearOfCompletion + ", bqFinalizedFlag=" + bqFinalizedFlag + ", allowManualInputSCWorkDone=" + allowManualInputSCWorkDone + ", legacyJob=" + legacyJob + ", conversionStatus=" + conversionStatus + ", repackagingType=" + repackagingType + ", budgetPosted=" + budgetPosted + ", finQS0Review=" + finQS0Review + "]";
+	}
+
 }

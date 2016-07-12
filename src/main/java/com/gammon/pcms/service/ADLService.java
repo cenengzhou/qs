@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJIDao;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
+import com.gammon.pcms.dao.adl.AccountLedgerDao;
 import com.gammon.pcms.dto.rs.provider.response.adl.MonthlyCashFlowDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
+import com.gammon.pcms.model.adl.AccountLedger;
 
 @Service
 @Transactional(	readOnly = true,
@@ -21,6 +23,8 @@ import com.gammon.pcms.model.adl.AccountBalance;
 public class ADLService {
 	// private Logger logger = Logger.getLogger(getClass());
 
+	@Autowired
+	private AccountLedgerDao accountLedgerDao;
 	@Autowired
 	private AccountBalanceDao accountBalanceDao;
 	@Autowired
@@ -103,5 +107,26 @@ public class ADLService {
 		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_OB, noJob);
 
 		return new MonthlyCashFlowDTO(contractReceivableList, turnoverList, originalBudgetList, null);
+	}
+	
+	/**
+	 * Account Ledger general searching
+	 *
+	 * @param yearStart
+	 * @param yearEnd
+	 * @param monthStart
+	 * @param monthEnd
+	 * @param typeLedger
+	 * @param typeDocument
+	 * @param noJob
+	 * @param noSubcontract
+	 * @param codeObject
+	 * @param codeSubsidiary
+	 * @return
+	 * @author	tikywong
+	 * @since	Jul 11, 2016 3:17:56 PM
+	 */
+	public List<AccountLedger> getAccountLedger(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
+		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 }

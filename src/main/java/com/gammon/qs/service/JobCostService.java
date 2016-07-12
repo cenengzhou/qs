@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +25,6 @@ import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
 import com.gammon.qs.domain.AccountMaster;
-import com.gammon.qs.domain.JdeAccountLedgerWrapper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.io.ExcelFile;
@@ -35,7 +33,6 @@ import com.gammon.qs.service.jobCost.PurchaseOrderExcelGenerator;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.wrapper.APRecordPaginationWrapper;
-import com.gammon.qs.wrapper.AccountLedgerPaginationWrapper;
 import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 import com.gammon.qs.wrapper.PurchaseOrderEnquiryWrapper;
@@ -70,10 +67,6 @@ public class JobCostService implements Serializable {
 	private List<APRecord> listOfAPRecord;
 	private APRecordPaginationWrapper apRecordPaginationWrapper;
 	
-	//Account Ledger
-	private List<JdeAccountLedgerWrapper> listOfAccountLedger;												//WHOLE list of Account Ledger to be displayed
-	private AccountLedgerPaginationWrapper accountLedgerPaginationWrapper;
-	
 	private List<PORecord> pORecordList = null;
 	private PurchaseOrderEnquiryWrapper purchaseOrderEnquiryWrapper = null;
 
@@ -94,14 +87,6 @@ public class JobCostService implements Serializable {
 		this.purchaseOrderEnquiryWrapper = purchaseOrderEnquiryWrapper;
 	}
 	
-	public List<JdeAccountLedgerWrapper> getListOfAccountLedger() {
-		return listOfAccountLedger;
-	}
-
-	public void setListOfAccountLedger(List<JdeAccountLedgerWrapper> listOfAccountLedger) {
-		this.listOfAccountLedger = listOfAccountLedger;
-	}
-
 	public List<APRecord> getListOfAPRecord() {
 		return listOfAPRecord;
 	}
@@ -117,26 +102,10 @@ public class JobCostService implements Serializable {
 	public List<AccountMaster> getAccountMasterListByAccountCode(String jobNumber, String objectCode, String subsidiaryCode) throws Exception{
 		return this.jobCostDao.getAccountMasterList(jobNumber, objectCode, subsidiaryCode);
 	}
-
-
-	public List<JdeAccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) throws Exception{
-		return this.jobCostDao.getAccountLedger(accountId, postedCode, ledgerType, glDate1, glDate2, subledgerType,subledger);
-
-	}
 	
 	private List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws Exception{
 		return jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);	
-		
 	}
-	
-	/**
-	 * @author heisonwong
-	 * 
-	 * 3Aug 2015 14:40
-	 * 
-	 * Add PDF and excel report for Purchase order
-	 * 
-	 * **/
 
 
 	public String createAccountMasterByGroup(Boolean scResource,
@@ -456,152 +425,6 @@ public class JobCostService implements Serializable {
 			return null;	
 	}
 	
-	
-	
-	// last modified: brian tse
-	// get the whole list of account ledger according to the search criteria for export excel in Account Ledger Enquiry window
-	public List<JdeAccountLedgerWrapper> getAccountLedgerListByAccountCodeList(String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger)throws Exception {
-		ArrayList<String> accountCodeAL = new ArrayList<String>(); //[JobNumber,ObjectCode,SubsidiaryCode]	
-		StringTokenizer st = new StringTokenizer(accountCode, ".");
-		
-		while(st.hasMoreTokens())
-			accountCodeAL.add(st.nextToken());
-			
-		//Web Service - get Account IDs of the provided Account Code
-		List<AccountMaster> accountMasterList = new ArrayList<AccountMaster>();
-		if(accountCodeAL.size()==2)
-			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), null);
-		else if (accountCodeAL.size()==3)
-			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), accountCodeAL.get(2));
-		
-		List<AccountMaster> filteredAccountMasterList = new ArrayList<AccountMaster>();
-		List<AccountMaster> filteredAccountMasterWithSubsidiaryList = new ArrayList<AccountMaster>();
-				
-		//Filter
-		for(AccountMaster accountMaster: accountMasterList){
-			//No Subsidiary Code
-			if(accountCodeAL.size()==2 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()))
-				filteredAccountMasterList.add(accountMaster);
-			//With Subsidiary Code
-			if(accountCodeAL.size()==3 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()) && accountMaster.getSubsidiaryCode().trim().equals(accountCodeAL.get(2).trim()))
-				filteredAccountMasterWithSubsidiaryList.add(accountMaster);
-		}	
-		List<JdeAccountLedgerWrapper> accountLedgerList = new ArrayList<JdeAccountLedgerWrapper>();
-		//Web Service - get Account Ledgers of the Account IDs
-		if(accountCodeAL.size()==3){
-			for(AccountMaster accountMaster:filteredAccountMasterWithSubsidiaryList)
-				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
-		}
-		else{
-			for(AccountMaster accountMaster:filteredAccountMasterList)
-				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
-		}		
-	
-		//Keep the records in application server for pagination
-		listOfAccountLedger = accountLedgerList;
-		logger.info("RETURNED ACCOUNT LEDGER RECORDS(FULL LIST FROM WS)SIZE: " + listOfAccountLedger.size());
-		
-		return accountLedgerList;
-	}
-	
-	public AccountLedgerPaginationWrapper getAccountLedgerByAccountCodeList(String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger)throws Exception {
-		accountLedgerPaginationWrapper = new AccountLedgerPaginationWrapper();
-/*		
-		ArrayList<String> accountCodeAL = new ArrayList<String>(); //[JobNumber,ObjectCode,SubsidiaryCode]	
-		StringTokenizer st = new StringTokenizer(accountCode, ".");
-		
-		while(st.hasMoreTokens())
-			accountCodeAL.add(st.nextToken());
-			
-		//Web Service - get Account IDs of the provided Account Code
-		List<AccountMaster> accountMasterList = new ArrayList<AccountMaster>();
-		if(accountCodeAL.size()==2)
-			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), null);
-		else if (accountCodeAL.size()==3)
-			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), accountCodeAL.get(2));
-		
-		List<AccountMaster> filteredAccountMasterList = new ArrayList<AccountMaster>();
-		List<AccountMaster> filteredAccountMasterWithSubsidiaryList = new ArrayList<AccountMaster>();
-				
-		//Filter
-		for(AccountMaster accountMaster: accountMasterList){
-			//No Subsidiary Code
-			if(accountCodeAL.size()==2 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()))
-				filteredAccountMasterList.add(accountMaster);
-			//With Subsidiary Code
-			if(accountCodeAL.size()==3 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()) && accountMaster.getSubsidiaryCode().trim().equals(accountCodeAL.get(2).trim()))
-				filteredAccountMasterWithSubsidiaryList.add(accountMaster);
-		}	
-		List<AccountLedgerWrapper> accountLedgerList = new ArrayList<AccountLedgerWrapper>();
-		//Web Service - get Account Ledgers of the Account IDs
-		if(accountCodeAL.size()==3){
-			for(AccountMaster accountMaster:filteredAccountMasterWithSubsidiaryList)
-				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
-		}
-		else{
-			for(AccountMaster accountMaster:filteredAccountMasterList)
-				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
-		}	*/	
-	
-		//Keep the records in application server for pagination
-		listOfAccountLedger = getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
-		logger.info("RETURNED ACCOUNT LEDGER RECORDS(FULL LIST FROM WS)SIZE: " + listOfAccountLedger.size());
-		
-		accountLedgerPaginationWrapper.setTotalPage(listOfAccountLedger.size()%200==0?listOfAccountLedger.size()/200:listOfAccountLedger.size()/200+1);
-		accountLedgerPaginationWrapper.setTotalRecords(listOfAccountLedger.size());
-		
-		Double tempTotalAmount = accountLedgerPaginationWrapper.getTotalAmount();
-		for(JdeAccountLedgerWrapper accountLedger:listOfAccountLedger)
-			tempTotalAmount+=accountLedger.getAmount();
-		
-		accountLedgerPaginationWrapper.setTotalAmount(tempTotalAmount);
-		accountLedgerPaginationWrapper = getAccountLedgerPaginationWrapperByPage(0);
-		
-		return accountLedgerPaginationWrapper;
-	}
-	
-	public AccountLedgerPaginationWrapper getAccountLedgerPaginationWrapperByPage(Integer pageNum) throws Exception{
-		if (listOfAccountLedger==null ){
-			logger.log(Level.SEVERE,"listOfAccountLedger is null");
-			throw new ValidateBusinessLogicException("Paging problems occurred. Please click Search again");
-		}
-		
-//				accountLedgerPaginationWrapper.getCurrentPageContentList().size()<1){
-//			if (accountLedgerPaginationWrapper==null )
-//				logger.log(Level.SEVERE,"accountLedgerPaginationWrapper is null");
-//			else if(accountLedgerPaginationWrapper.getCurrentPageContentList()==null)
-//				logger.log(Level.SEVERE,"accountLedgerPaginationWrapper.getCurrentPageContentList() is null");
-//			else
-//				logger.log(Level.SEVERE,"size of accountLedgerPaginationWrapper.getCurrentPageContentList() is "+accountLedgerPaginationWrapper.getCurrentPageContentList().size());
-//			throw new ValidateBusinessLogicException("Paging problems occurred. Please click Search again");
-//		}
-		accountLedgerPaginationWrapper.setCurrentPage(pageNum);
-		
-		//200 Records Per Page
-		int start = ((pageNum)*200);
-		int end = ((pageNum)*200)+200;
-		if(listOfAccountLedger.size()<=end)
-			end = listOfAccountLedger.size();
-		
-		if(listOfAccountLedger.size()==0)
-			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<JdeAccountLedgerWrapper>());
-		else
-			accountLedgerPaginationWrapper.setCurrentPageContentList(new ArrayList<JdeAccountLedgerWrapper>(listOfAccountLedger.subList(start, end)));
-		
-		logger.info("RETURNED ACCOUNT LEDGER RECORDS(PAGINATION) SIZE: " + accountLedgerPaginationWrapper.getCurrentPageContentList().size());
-		return accountLedgerPaginationWrapper;
-	}
-	
-
-	/**
-	 * modified heisonwong
-	 * 
-	 * 3Aug 2015 14:40
-	 * 
-	 * Fix bug that cannot search excact word
-	 * 
-	 * **/
-	
 	private List<PORecord> filter(List<PORecord> inputList, String filterString){
 		if(inputList != null && inputList.size() > 0){
 			List<PORecord> outputList = new ArrayList<PORecord>();
@@ -661,41 +484,6 @@ public class JobCostService implements Serializable {
 	}
 
 	
-	/**
-	 * add by paulyiu 20150728
-	 */
-
-	public ByteArrayOutputStream downloadAccountLedgerReportFile(	String jobNumber, String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger,String jasperReportName,String fileType) throws Exception {
-		List<JdeAccountLedgerWrapper> accountLedgerList = getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
-		logger.info("DOWNLOAD PDF - ACCOUNT LEDGER RECORDS SIZE:"+ accountLedgerList.size());
-		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-		if(accountLedgerList==null || accountLedgerList.size()==0)
-			return null;
-		String jasperTemplate = jasperConfig.getTemplatePath();
-		String fileFullPath = jasperTemplate +jasperReportName;
-		Date asOfDate = new Date();
-		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperTemplate);
-		parameters.put("AS_OF_DATE", asOfDate);
-		parameters.put("JOB_NO",jobNumber);
-		parameters.put("JOB_DESC",job.getDescription());
-		parameters.put("SEARCH_ACCOUNTCODE", accountCode);
-		parameters.put("SEARCH_POSTFLAG", postFlag);
-		parameters.put("SEARCH_LEDGERTYPE", ledgerType);
-		parameters.put("SEARCH_FROMDATE", fromDate);
-		parameters.put("SEARCH_THRUDATE", thruDate);
-		parameters.put("SEARCH_SUBLEDGERTYPE", subLedgerType);
-		parameters.put("SEARCH_SUBLEDGER", subLedger);
-		parameters.put("FILE_TYPE", fileType);
-		if (fileType.equalsIgnoreCase("pdf")) {
-			return JasperReportHelper.get().setCurrentReport(accountLedgerList, fileFullPath, parameters).compileAndAddReport().exportAsPDF();
-		}else if(fileType.equalsIgnoreCase("xls")){
-			return JasperReportHelper.get().setCurrentReport(accountLedgerList, fileFullPath, parameters)
-					.compileAndAddReport().exportAsExcel();
-		}
-		
-		return null;
-	}
 	
 	/**
 	 * add by paulyiu 20150730

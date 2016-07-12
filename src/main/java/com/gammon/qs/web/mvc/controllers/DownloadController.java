@@ -437,68 +437,6 @@ public class DownloadController{
 //		}		
 	}
 	
-	/**
-	 * add by paulyiu 20150730
-	 */
-	@RequestMapping(value = "/gammonqs/accountLedgerReportExport.rpt",
-					method = RequestMethod.GET)
-	public void generateAccountLedgerReport(@RequestParam(required=true,value="jobNumber") String jobNumber,
-											@RequestParam(required=true,value="accountCode") String accountCode,
-											@RequestParam(required=true,value="ledgerType") String ledgerType,
-											@RequestParam(required=true,value="subLedger") String subLedger,
-											@RequestParam(required=true,value="postFlag") String postFlag,
-											@RequestParam(required=true,value="fromDate") String fromDateString,
-											@RequestParam(required=true,value="thruDate") String thruDateString,
-											@RequestParam(required=true,value="fileType") String fileType,
-											HttpServletRequest request, HttpServletResponse response) {
-
-		logger.info("generateAccountLedgerReport");
-
-		// copy from search in Account Ledger Enquiry window
-		ledgerType = ledgerType.equals("") ? null : ledgerType;
-		subLedger = subLedger.equals("") ? null : subLedger;
-
-		String subLedgerType = null;
-		if (subLedger != null && !subLedger.equals(""))
-			subLedgerType = "X";
-
-		if (postFlag.equals("posted"))
-			postFlag = "P";
-		if (postFlag.equals("unposted"))
-			postFlag = " ";
-		if (postFlag.equals("all"))
-			postFlag = null;
-
-		try {
-			Date fromDate = fromDateString.equals("") ? null : DateUtil.parseDate(fromDateString, "dd/MM/yyyy");
-			Date thruDate = thruDateString.equals("") ? null : DateUtil.parseDate(thruDateString, "dd/MM/yyyy");
-			String jasperReportName = "AccountLedgerReport";
-
-			ByteArrayOutputStream outputStream = jobCostRepository.downloadAccountLedgerReportFile(jobNumber, accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger, jasperReportName, fileType);
-
-			if (outputStream != null) {
-				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Account Ledger Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
-				response.getOutputStream().write(outputStream.toByteArray());
-				response.getOutputStream().flush();
-			} else {
-				logger.info("No file is generated.");
-				showReportError(response);
-			}
-
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-			logger.info("Error: " + e.getLocalizedMessage());
-			showReportError(response);
-		} finally {
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	/**
 	 * add by paulyiu 20150730
