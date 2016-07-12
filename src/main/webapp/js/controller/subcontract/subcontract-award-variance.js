@@ -19,7 +19,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 							cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
 			             { field: 'generalCondition', displayName: "General Condition of Sub-Contract",
 			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { field: 'proposedVariance', displayName: "Posted Variance to the General Conditioin Condition",
+			             { field: 'proposedVariance', displayName: "Posted Variance to the General Conditioin",
 			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
 			             { field: 'reason', displayName: "Reason for the Variance",
 		            		 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
@@ -58,7 +58,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			var ta = $scope.gridOptions.data;
 
-			if($scope.tenderNo ==null){
+			if($scope.tender.vendorNo ==null){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a recommended tender before doing tender variance.");
 			}else{
 				createTenderVariance(ta);

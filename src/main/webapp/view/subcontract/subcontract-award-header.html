@@ -9,7 +9,7 @@
 						<div class="box box-solid">
 							<div class="box-body">
 								<div class="col-md-12">
-									<div class="box box-info">
+									<div class="box box-primary">
 										<div class="box-body">
 											<div class="row">
 												<div class="col-md-3">
@@ -18,7 +18,12 @@
 												<div class="form-group col-md-9">
 													<div class="input-group col-md-12">
 														<input type="text" class="form-control"
-															ng-model="subcontract.packageNo" required>
+															data-parsley-minlength="4"
+															data-parsley-maxlength="4"
+															data-parsley-error-message="Must be in 4 digits"
+															ng-model="subcontract.packageNo"
+															ng-disabled="disableSubcontactNo"
+															required>
 													</div>
 												</div>
 												<div class="col-md-3">
@@ -43,7 +48,10 @@
 												</div>
 												<div class="form-group col-md-9">
 													<div class="input-group col-md-12">
-														<input type="text" class="form-control "
+														<input type="text" class="form-control"
+															data-parsley-maxlength="5"
+															data-parsley-pattern="^[A-Za-z0-9]+$"
+															data-parsley-error-message="Max. length: 5 (A-Z, a-z or numbers)"
 															ng-model="subcontract.approvalRoute">
 													</div>
 												</div>
@@ -54,7 +62,7 @@
 												<div class="form-group col-md-9">
 													<div class="input-group col-md-12">
 														<textarea class="form-control " rows="1"
-															ng-model="subcontract.notes" required></textarea>
+															ng-model="subcontract.notes"></textarea>
 													</div>
 												</div>
 
@@ -155,6 +163,15 @@
 													</div>
 												</div>
 
+												<div class="col-md-3">
+													<label>Status</label>
+												</div>
+												<div class="form-group col-md-9">
+													<div class="col-md-12">
+														<h6 class="">{{subcontractStatus}}</h6>
+													</div>
+												</div>
+
 											</div>
 										</div>
 									</div>
@@ -162,7 +179,7 @@
 
 								<!-- Retention -->
 								<div class="col-md-12">
-									<div class="box box-info">
+									<div class="box box-primary">
 										<div class="box-body ">
 											<div class="row">
 												<label class="col-md-3">Retention</label>
@@ -265,7 +282,7 @@
 
 								<!-- Payment Terms  -->
 								<div class="col-md-12">
-									<div class="box box-info">
+									<div class="box box-primary">
 										<div class="box-body">
 											<div class="row">
 												<label class="col-md-3">Payment Terms</label>
@@ -317,28 +334,22 @@
 
 												<div class="row col-md-9">
 													<div class="col-md-12">
-														<input type="checkbox" data-ios-toggle="toggle"
+														<input type="checkbox" data-ios-toggle="toggle" 
 															data-style="ios" data-onstyle="primary"
 															data-offstyle="warning" data-on="Subject to CPF"
-															data-off="No CPF" ng-model="subcontract.selectedCPF">
-														<!-- <div class="col-md-12">
-															<label><input type="radio"
-																ng-model="subcontract.selectedCPF" value="No CPF"
-																ng-icheck /> Not Subject to CPF</label>
-														</div>
-														<div class="col-md-12">
-															<label><input type="radio"
-																ng-model="subcontract.selectedCPF" value="CPF" ng-icheck />
-																Subject to CPF</label> -->
+															data-off="No CPF" ng-model="subcontract.cpfCalculation" ng-disabled="disableCPFButton">
 													</div>
 												</div>
 
 												<div class="col-md-6">
 													<div class="form-group"
-														ng-show="subcontract.selectedCPF == true">
+														ng-show="subcontract.cpfCalculation == true">
 														<label>CPF Base Period</label>
 														<div class="input-group col-md-12">
 															<input type="number" class="form-control"
+																data-parsley-minlength="1"
+																data-parsley-maxlength="2"
+																data-parsley-error-message="Input 1 - 12 "
 																ng-model="cpfBasePeriod">
 														</div>
 													</div>
@@ -346,11 +357,15 @@
 
 												<div class="col-md-6">
 													<div class="form-group"
-														ng-show="subcontract.selectedCPF == true">
+														ng-show="subcontract.cpfCalculation == true">
 														<label>CPF Base Year</label>
 														<div class="input-group col-md-12">
 															<input type="number" class="form-control"
-																ng-model="cpfBaseYear">
+																data-parsley-minlength="4"
+																data-parsley-maxlength="4"
+																data-parsley-error-message="Must be in 4 digits"
+																ng-model="cpfBaseYear"
+																>
 														</div>
 													</div>
 												</div>

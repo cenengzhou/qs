@@ -138,7 +138,7 @@ public class Subcontract extends BasePersistedObject{
 	private String splitTerminateStatus = SPLITTERMINATE_DEFAULT;
 	private String paymentTermsDescription;
 	private String notes;
-	
+	private Integer workscope;
 	
 	private Date scCreatedDate;
 	private Date latestAddendumValueUpdatedDate;
@@ -833,6 +833,15 @@ public class Subcontract extends BasePersistedObject{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	
+	@Column(name = "WORK_SCOPE")
+	public Integer getWorkscope() {
+		return workscope;
+	}
+
+	public void setWorkscope(Integer workscope) {
+		this.workscope = workscope;
+	}
 
 	
 	@ManyToOne
@@ -845,6 +854,8 @@ public class Subcontract extends BasePersistedObject{
 	public void setJobInfo(JobInfo jobInfo) {
 		this.jobInfo = jobInfo;
 	}
+
+	
 
 	public static class RepackagingType{
 		public static final String Type1 = "1";

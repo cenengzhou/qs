@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
@@ -171,7 +171,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-create.js'
+                           'js/controller/subcontract/subcontract-create.js',
+                           'js/service/job-service.js'
                     ] 
                 });
             }]
@@ -237,7 +238,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 name: 'app',
                	 files: [
                	         'js/controller/subcontract/subcontract-award-variance.js',
-               	         'js/service/tender-variance-service.js'
+               	         'js/service/tender-variance-service.js',
+               	         'js/service/tender-service.js'
                     ] 
                 });
             }]
@@ -269,7 +271,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                	         'js/controller/subcontract/subcontract-award-summary.js',
                	         'js/service/tender-variance-service.js',
-               	         'js/service/tender-service.js'
+               	         'js/service/tender-service.js',
+               	      'js/service/master-list-service.js'
                     ] 
                 });
             }]

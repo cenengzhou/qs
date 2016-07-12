@@ -116,6 +116,20 @@ public class SubcontractController {
 		return result;
 	}
 	
+	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
+	public String submitAwardApproval(@RequestParam(name="jobNo") String jobNo, 
+			@RequestParam(name="subcontractNo") String subcontractNo, 
+			@RequestParam(name="subcontractorNo") String subcontractorNo){
+		String result = null;
+		try {
+			result = subcontractService.submitAwardApproval(jobNo, subcontractNo, subcontractorNo);
+		} catch (Exception e) {
+			result = "Subcontract cannot be submitted.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){
 		String username = securityService.getCurrentUser().getUsername();

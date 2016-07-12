@@ -19,16 +19,6 @@ mainApp.constant("colorCode", {
 });
 //#ffaaaa - Pink
 
-mainApp.constant("paymentTermsDescription", {
-	"QS0": "Manual Input Due Date",
-	"QS1": "Pay when Paid + 7 days",
-	"QS2": "Pay when Paid + 14 days",
-	"QS3": "Pay when IPA Received + 56 days",
-	"QS4": "Pay when Invoice Received + 28 days",
-	"QS5": "Pay when Invoice Received + 30 days",
-	"QS6": "Pay when Invoice Received + 45 days",
-	"QS7": "Pay when Invoice Received + 60 days"
-});
 
 mainApp.constant("subcontractRetentionTerms", {
 	"RETENTION_LUMPSUM": "Lump Sum Amount Retention",
@@ -66,10 +56,11 @@ mainApp.constant('GlobalParameter', {
 		'Minor':'Minor'
 	},
 	subcontractStatus: {
-		100:'100 - SC Created',
-		160:'160 - TA Analysis Ready',
-		330:'330 - Award Request Submitted',
-		550:'550 - SC Awarded'
+		100:'100 - Newly Created Subcontract',
+		160:'160 - Tender Analysis Ready',
+		330:'330 - Subcontract Award request Submitted',
+		340:'340 - Subcontract Award request Rejected',
+		550:'550 - Awarded Subcontract'
 	},
 	packageStatus: {
 		100:'100 - SC Created',
@@ -158,4 +149,11 @@ mainApp.constant('GlobalParameter', {
 		300: '300 - Certificate Posted to Finance\'s AR'
 	}
 
+});
+
+mainApp.constant('GlobalMessage', {
+	subcontractorHoldMessage:
+		"The subcontractor is under finance hold status. <br/>Please contact Finance Dept at 2516-8911 ext 7799 for details.",
+	paymentHoldMessage:
+		"Please contact Finance Dept -Ms Cindy Deng at 2516-8911 ext 7789 or Ms Kathy Chen at 2516-8911 ext 7798.<br/> For SGP vendors, please contact Mr Nix Goh at 6722-3654.",
 });

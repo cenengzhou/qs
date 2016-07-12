@@ -10,7 +10,6 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
     function getJob(jobNo) {
         var request = $http({
             method: "get",
-            //headers: myHeaders,
             url: "service/job/getJob",
             dataType: "application/json;charset=UTF-8",
             params: {
@@ -23,7 +22,6 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
     function getJobList() {
         var request = $http({
             method: "get",
-            //headers: myHeaders,
             url: "service/job/getJobList",
             dataType: "application/json;charset=UTF-8"
         });

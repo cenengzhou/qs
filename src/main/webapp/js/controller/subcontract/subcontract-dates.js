@@ -46,7 +46,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 		.then(
 				function( data ) {
 					if(data.length>0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Alert', data);
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been updated successfully.");
 						$state.reload();

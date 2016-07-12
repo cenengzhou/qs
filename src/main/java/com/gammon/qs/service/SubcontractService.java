@@ -3214,7 +3214,7 @@ public class SubcontractService {
 		return Boolean.TRUE;
 	}
 
-	public String submitAwardApproval(String jobNumber, String subcontractNumber, String vendorNumber, String currencyCode, String userID) throws Exception {
+	public String submitAwardApproval(String jobNumber, String subcontractNumber, String vendorNumber) throws Exception {
 		try {
 			boolean isTAExisted = false;
 			Integer vendorNo = new Integer(vendorNumber);
@@ -3245,13 +3245,15 @@ public class SubcontractService {
 					//Check Subcontractor Stauts by calling WS. 
 					//Check Subcontractor's work scope status by calling WS.
 					//Check if Subcontractor is BlackListed by calling WS.
-					List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
+					/*List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
 					if (scWorkScopeList==null ||scWorkScopeList.size() == 0|| scWorkScopeList.get(0)==null
 							|| scWorkScopeList.get(0).getWorkScope()==null||"".equals(scWorkScopeList.get(0).getWorkScope().trim())){
 						return "There is no workscope in this Subcontract.";
-					}
+					}*/
+					if(scPackage.getWorkscope()==null)
+						return "There is no workscope in this Subcontract.";
 
-					resultMsg = masterListWSDao.checkAwardValidation(vendorNo, scWorkScopeList.get(0).getWorkScope());
+					resultMsg = masterListWSDao.checkAwardValidation(vendorNo, String.valueOf(scPackage.getWorkscope()));
 					if (resultMsg != null && resultMsg.length() != 0){
 						return resultMsg;
 					}
@@ -3395,8 +3397,9 @@ public class SubcontractService {
 
 					// the currency pass to approval system should be the company base currency
 					// so change the currencyCode to company base currency here since it will not affect other part of code
-					currencyCode = getCompanyBaseCurrency(jobNumber);
-
+					String currencyCode = getCompanyBaseCurrency(jobNumber);
+					String userID = securityServiceImpl.getCurrentUser().getUsername();
+					
 					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, vendorNo.toString(), vendorName, approvalType, approvalSubType, approvalAmount, currencyCode, userID);
 					if(msg!=null)
 						logger.info("Create Approval Route Message: "+msg);
@@ -3404,9 +3407,10 @@ public class SubcontractService {
 					if (msg.length() == 0){
 						//Update Related Records
 						tenderAnalysis.setStatus(Tender.TA_STATUS_RCM);
-						tenderAnalysis.setLastModifiedUser(userID);
+						tenderAnalysis.setUsernamePrepared(userID);
+						tenderAnalysis.setDatePrepared(new Date());
 						try{
-							tenderAnalysisHBDao.updateTenderAnalysis(tenderAnalysis);
+							tenderAnalysisHBDao.update(tenderAnalysis);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -3414,7 +3418,7 @@ public class SubcontractService {
 						scPackage.setLastModifiedUser(userID);
 						scPackage.setScAwardApprovalRequestSentDate(new Date());
 						try{
-							subcontractHBDao.updateSubcontract(scPackage);
+							subcontractHBDao.update(scPackage);
 						}catch(Exception e){
 							e.printStackTrace();
 						}
@@ -5709,16 +5713,44 @@ public class SubcontractService {
 	
 	public String saveOrUpdateSCPackage(String jobNo, Subcontract subcontract) throws Exception{
 		logger.info("Job: " + jobNo + " SCPackage: " + subcontract.getPackageNo());
+		String error = "";
+		
+		if(subcontract.getPackageNo().startsWith("1")){
+			if(!"DSC".equals(subcontract.getSubcontractorNature())){
+				error =   "Subcontract numbers begin with '1' are reserved for 'DSC' subcontracts";
+				return error;
+			}
+		}
+		else if(subcontract.getPackageNo().startsWith("2")){
+			if(!"NDSC".equals(subcontract.getSubcontractorNature())){
+				error =  "Subcontract numbers begin with '2' are reserved for 'NDSC' subcontracts";
+				return error;
+			}
+		}
+		else if(subcontract.getPackageNo().startsWith("3")){
+			if(!"NSC".equals(subcontract.getSubcontractorNature())){
+				error =  "Subcontract numbers begin with '3' are reserved for 'NSC' subcontracts";
+				return error;
+			}
+		}
+		else{
+			error = "Subcontract number must begin with 1, 2 or 3";
+			return error;
+		}
 		
 		//Validate internal job number
 		if(Subcontract.INTERNAL_TRADING.equalsIgnoreCase(subcontract.getFormOfSubcontract())){
-			if(subcontract.getInternalJobNo() == null || subcontract.getInternalJobNo().trim().length() == 0)
-				return "Invalid internal job number";
+			if(subcontract.getInternalJobNo() == null || subcontract.getInternalJobNo().trim().length() == 0){
+				error = "Invalid internal job number"; 
+				return error;
+			}
 			JobInfo job = jobHBDao.obtainJobInfo(subcontract.getInternalJobNo());
 			if(job == null){
 				job = jobWSDao.obtainJob(subcontract.getInternalJobNo());
-				if(job == null)
-					return "Invalid internal job number: " + subcontract.getInternalJobNo();
+				if(job == null){
+					error =  "Invalid internal job number: " + subcontract.getInternalJobNo();
+					return error;
+				}
 			}
 		}
 
@@ -5759,6 +5791,7 @@ public class SubcontractService {
 				}
 				
 				packageInDB.setDescription(subcontract.getDescription());
+				packageInDB.setWorkscope(subcontract.getWorkscope());
 				packageInDB.setSubcontractorNature(subcontract.getSubcontractorNature());
 				packageInDB.setSubcontractTerm(subcontract.getSubcontractTerm());
 				packageInDB.setFormOfSubcontract(subcontract.getFormOfSubcontract());
@@ -5775,6 +5808,9 @@ public class SubcontractService {
 				packageInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
 				packageInDB.setNotes(subcontract.getNotes());
 				packageInDB.setApprovalRoute(subcontract.getApprovalRoute());
+				packageInDB.setCpfCalculation(subcontract.getCpfCalculation());
+				packageInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
+				packageInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
 				
 				subcontractHBDao.update(packageInDB);
 			}

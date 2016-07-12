@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'paymentTermsDescription',
-                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, paymentTermsDescription) {
+mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'GlobalParameter',
+                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, GlobalParameter) {
 
 
 	loadPaymentCertList();
@@ -51,7 +51,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 					//console.log(data);
 					$scope.payments = data.scPaymentCertWithGSTWrapperList;
 					$scope.totalCertificateAmount = data.totalCertificateAmount;
-					$scope.paymentTerms = data.scPackage.paymentTerms + " - "+ paymentTermsDescription[data.scPackage.paymentTerms];
+					$scope.paymentTerms = GlobalParameter.paymentTerms[data.scPackage.paymentTerms];
 
 
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));

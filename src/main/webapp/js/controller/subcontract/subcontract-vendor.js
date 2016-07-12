@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', '$state',
-                                         function($scope, modalService, subcontractService, $http, masterListService, tenderService, modalService, $state) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage',
+                                         function($scope, subcontractService, $http, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage) {
 	
 	loadData();
 
@@ -43,14 +43,24 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'modalService', 'subcontractS
 				.then(
 						function( data ) {
 							if(data.length==0)
-								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Vendor number is invalid.");
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Tenderer number is invalid.");
 							else{
-								createTender();
+								if(data.scFinancialAlert !="" && data.scFinancialAlert !=null){
+									var modalOptions = {
+										bodyText: GlobalMessage.subcontractorHoldMessage
+									};
+									confirmService.showModal({}, modalOptions).then(function (result) {
+										if(result == "Yes"){
+											createTender();
+										}
+									});
+								}else
+									createTender();
 							}
 						});
 			}
 			else{
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input vendor number.");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input tenderer number.");
 			}
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");

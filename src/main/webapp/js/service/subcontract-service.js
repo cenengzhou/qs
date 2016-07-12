@@ -6,6 +6,8 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getWorkScope: 					getWorkScope,
     	upateSubcontract: 				upateSubcontract,
     	upateSubcontractDates: 			upateSubcontractDates,
+    	submitAwardApproval:			submitAwardApproval,
+    	
     	runProvisionPostingManually:	runProvisionPostingManually,
     	generateSCPackageSnapshotManually: generateSCPackageSnapshotManually,
     	updateF58001FromSCPackageManually: updateF58001FromSCPackageManually,
@@ -58,6 +60,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "get",
             url: "service/subcontract/getSubcontract",
+            dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo
@@ -70,6 +73,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "get",
             url: "service/subcontract/getWorkScope",
+            dataType: "application/json;charset=UTF-8",
             params: {
             	workScopeCode: workScopeCode
             }
@@ -81,6 +85,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "post",
             url: "service/subcontract/upateSubcontract",
+            dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo
             },
@@ -93,6 +98,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "post",
             url: "service/subcontract/upateSubcontractDates",
+            dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo
             },
@@ -101,10 +107,25 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function submitAwardApproval(jobNo, subcontractNo, subcontractorNo) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/submitAwardApproval",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                subcontractorNo: subcontractorNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     function runProvisionPostingManually(jobNumber, glDate){
     	var request = $http({
     		method: 'post',
     		url: 'service/subcontract/runProvisionPostingManually',
+    		dataType: "application/json;charset=UTF-8",
     		params: {
     			jobNumber: jobNumber,
     			glDate: glDate
