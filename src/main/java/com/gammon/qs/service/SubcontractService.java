@@ -3234,14 +3234,6 @@ public class SubcontractService {
 			
 			Tender rcmTender = tenderAnalysisHBDao.obtainRecommendedTender(jobNumber, subcontractNumber);
 			
-			/*List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-			for (Tender currentTenderAnalysis: tenderAnalysisList){
-				if (vendorNo.equals(currentTenderAnalysis.getVendorNo())){
-					rcmTender = currentTenderAnalysis;
-					isTAExisted = true;
-					break;
-				}
-			}*/
 			
 			if (rcmTender!=null){
 				//Check if the status is not 160 or 340
@@ -3264,6 +3256,9 @@ public class SubcontractService {
 					}
 
 					//Get the Recommended SC Sum 
+					BigDecimal originalBudget = new BigDecimal(rcmTender.getBudgetAmount());
+					BigDecimal tenderBudget = originalBudget.subtract(rcmTender.getAmtBuyingGainLoss()).setScale(2, BigDecimal.ROUND_HALF_UP);
+					
 					/*if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)!=null){
 						for(TenderDetail currentTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)){
 							taSubcontractSum = taSubcontractSum + 
@@ -3272,13 +3267,13 @@ public class SubcontractService {
 					}else
 						return "No Tender Analysis Detail";*/
 					
-					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null){
+					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null)
 						return "No Tender Analysis Detail";
 					
 					if("Lump Sum Amount Retention".equals(scPackage.getRetentionTerms())){ 
 						if (scPackage.getRetentionAmount()==null){
 							return "Retention Amount has to be provided when the Retiontion Terms is Lump Sum Amount Retention";
-						}else if (scPackage.getRetentionAmount()>0 && scPackage.getRetentionAmount()>taSubcontractSum){
+						}else if (scPackage.getRetentionAmount()>0 && scPackage.getRetentionAmount()>tenderBudget.doubleValue()){
 							return "Lum Sum Retention Amount is larger than Recommended Subcontract Sum";
 						}
 					}
@@ -3356,8 +3351,8 @@ public class SubcontractService {
 							for (PaymentCertDetail scPaymentDetail:scPaymentDetailList)
 								if (!"RT".equals(scPaymentDetail.getLineType())&&!"GP".equals(scPaymentDetail.getLineType())&&!"GR".equals(scPaymentDetail.getLineType()))
 									certedAmount += scPaymentDetail.getCumAmount();
-							if (RoundingUtil.round(taSubcontractSum-certedAmount,2)<0)
-								return "Paid Amount("+certedAmount+") is larger than the subcontract sum("+taSubcontractSum+") to be awarded";
+							if (RoundingUtil.round(tenderBudget.doubleValue()-certedAmount,2)<0)
+								return "Paid Amount("+certedAmount+") is larger than the subcontract sum("+tenderBudget+") to be awarded";
 						}
 					}
 
@@ -3366,10 +3361,6 @@ public class SubcontractService {
 					 * @author koeyyeung
 					 * created on 12 July, 2016
 					 * Determine Approval Type **/
-					BigDecimal originalBudget = new BigDecimal(rcmTender.getBudgetAmount());
-					BigDecimal tenderBudget = originalBudget.subtract(rcmTender.getAmtBuyingGainLoss()).setScale(2, BigDecimal.ROUND_HALF_UP);
-					logger.info("-----------------------tenderBudget: "+tenderBudget);
-					
 					boolean variedSubcontract = false;
 					List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNumber, subcontractNumber, String.valueOf(rcmTender.getVendorNo()));
 					List<Tender> tenderList = tenderAnalysisHBDao.obtainTenderList(jobNumber, subcontractNumber);
