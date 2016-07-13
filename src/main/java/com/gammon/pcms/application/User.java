@@ -29,6 +29,7 @@ public class User implements UserDetails, Serializable {
 	
 	private String username;
 	private String authType;
+	private String domainName;
 	
 	public User() {
 		this.userRoleList = new ArrayList<UserRole>();
@@ -169,13 +170,28 @@ public class User implements UserDetails, Serializable {
 		this.authType = authType;
 	}
 
+	/**
+	 * @return the domainName
+	 */
+	public String getDomainName() {
+		return domainName;
+	}
+
+	/**
+	 * @param domainName the domainName to set
+	 */
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", fullname=" + fullname + ", userRoleList="
-				+ userRoleList + ", username=" + username + ", authType=" + authType + "]";
+		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", fullname=" + fullname
+				+ ", userRoleList=" + userRoleList + ", username=" + username + ", authType=" + authType
+				+ ", domainName=" + domainName + "]";
 	}
 
 }

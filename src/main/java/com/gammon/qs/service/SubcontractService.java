@@ -142,7 +142,8 @@ public class SubcontractService {
 	private SubcontractWorkScopeHBDao scWorkScopeHBDao;
 	@Autowired
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
-	
+	@Autowired
+	private SecurityService securityService;
 	//Job
 	@Autowired
 	private JobInfoHBDao jobHBDao;
@@ -3729,26 +3730,13 @@ public class SubcontractService {
 		return appSubcontractStandardTermsList;
 	}
 
-	/**
-	 * created by matthewlam, 2015-01-29
-	 * Bug fix #77 - unable to inactivate System Constants records
-	 * 
-	 * @throws DatabaseOperationException
-	 */
-	public Boolean inactivateSystemConstant(AppSubcontractStandardTerms request, String user) {
+	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String username) {
 		Boolean result = false;
-		try {
-			result = systemConstantHBDaoImpl.inactivateSystemConstant(request, user);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
+		if(username == null || username.equals("")){
+			username = securityService.getCurrentUser().getUsername();
 		}
-		return result;
-	}
-
-	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String user) {
-		Boolean result = false;
 		try {
-			result = systemConstantHBDaoImpl.updateMultipleSystemConstants(requests, user);
+			result = systemConstantHBDaoImpl.updateMultipleSystemConstants(requests, username);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -3838,7 +3826,9 @@ public class SubcontractService {
 	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting, String username) {
 		if (glDate == null)
 			throw new NullPointerException("GL Date cannot be null");
-
+		if(username == null || username.equals("")){
+			username = securityService.getCurrentUser().getUsername();
+		}
 		// For specified job
 		if (jobNumber != null && jobNumber.trim().length() > 0) {
 			logger.info("Job:" + jobNumber + " - GLDate: " + glDate.toString());
@@ -5692,10 +5682,13 @@ public class SubcontractService {
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
-	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String user) {
+	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String username) {
 		Boolean result = false;
+		if(username == null || username.equals("")){
+			username = securityService.getCurrentUser().getUsername();
+		}
 		try {
-			result = systemConstantHBDaoImpl.createSystemConstant(request, user);
+			result = systemConstantHBDaoImpl.createSystemConstant(request, username);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -5842,6 +5835,36 @@ public class SubcontractService {
 		} 
 		return error;
 	}
+	
+	/**
+	 * created by matthewlam, 2015-01-29
+	 * Bug fix #77 - unable to inactivate System Constants records
+	 * 
+	 * @throws DatabaseOperationException
+	 */
+	public Boolean inactivateSystemConstant(AppSubcontractStandardTerms request, String username) {
+		Boolean result = false;
+		if(username == null || username.equals("")){
+			username = securityService.getCurrentUser().getUsername();
+		}
+		try {
+			result = systemConstantHBDaoImpl.inactivateSystemConstant(request, username);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public Boolean inactivateSystemConstantList(List<AppSubcontractStandardTerms> appSubcontractStandardTermsList) {
+		Boolean result = false;
+		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
+			inactivateSystemConstant(appSubcontractStandardTerms, null);
+		}
+
+		return result;
+	}
+
+
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 
 	

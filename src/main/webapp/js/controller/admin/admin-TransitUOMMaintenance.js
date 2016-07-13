@@ -9,6 +9,7 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 		formData.append('jobNumber', $scope.jobNo);
 		transitService.transitUpload(formData)
 		.then(function(data){
+			uploadFile1.value = null;
 			$scope.loadData();
 			var msg = data;
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 

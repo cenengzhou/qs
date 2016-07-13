@@ -6,7 +6,8 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	getPaymentDetailList: 	getPaymentDetailList,
     	getPaymentCertSummary: 	getPaymentCertSummary, 
     	updatePaymentCert:		updatePaymentCert,
-    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually
+    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
+    	runPaymentPosting:		runPaymentPosting
     	
     });
 	
@@ -104,7 +105,12 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
 
-    // ---
+    function runPaymentPosting(){
+    	var request = $http.post("service/payment/runPaymentPosting");
+    	return( request.then(handleSuccess, handleError));
+    }
+    
+   // ---
     // PRIVATE METHODS.
     // ---
     // Transform the error response, unwrapping the application dta from

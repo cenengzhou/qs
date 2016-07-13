@@ -1,6 +1,6 @@
 mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService',
-		 function($scope, $rootScope, $http, modalService, subcontractService ) {
+		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService', 'GlobalParameter',
+		 function($scope, $rootScope, $http, modalService, subcontractService, GlobalParameter ) {
 	$scope.loadData = function(){
 	subcontractService.searchSystemConstants().then(
 			function(data) {
@@ -11,6 +11,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 
 	$scope.gridOptions = {
 		enableFiltering : true,
+		enableCellEditOnFocus : true,
 		enableColumnResizing : true,
 		enableGridMenu : true,
 		enableRowSelection : true,
@@ -25,6 +26,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		rowEditWaitInterval : -1,
 		paginationPageSizes : [ 25, 50, 100, 150, 200 ],
 		paginationPageSize : 25,
+		enableCellEditOnFocus : true,
 		columnDefs : [ {
 			field : 'systemCode',
 			displayName : "System Code",
@@ -35,34 +37,11 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			enableCellEdit : false
 		}, {
 			field : 'scPaymentTerm',
-			displayName : "SC Payment Term",
+			displayName : 'SC Payment Term',
 			editableCellTemplate : 'ui-grid/dropdownEditor',
+			cellFilter: 'dropdownFilter:"paymentTerms"',
 			cellClass : 'text-primary',
-			editDropdownOptionsArray : [ {
-				id : 'QS0',
-				value : 'QS0 - Manual Input Due Date'
-			}, {
-				id : 'QS1',
-				value : 'QS1 - Pay when Paid + 7 days'
-			}, {
-				id : 'QS2',
-				value : 'QS2 - Pay when paid + 14 days'
-			}, {
-				id : 'QS3',
-				value : 'QS3 - Pay when IPA Received + 56 days'
-			}, {
-				id : 'QS4',
-				value : 'QS4 - Pay when Invoice Received + 28 days'
-			}, {
-				id : 'QS5',
-				value : 'QS5 - Pay when Invoice Received + 30 days'
-			}, {
-				id : 'QS6',
-				value : 'QS6 - Pay when Invoice Received + 45 days'
-			}, {
-				id : 'QS7',
-				value : 'QS7 - Pay when Invoice Received + 60 days'
-			} ],
+			editDropdownOptionsArray : GlobalParameter.paymentTerms,
 			editDropdownIdLabel : 'id',
 			editDropdownValueLabel : 'value',
 			enableCellEdit : true
@@ -92,16 +71,8 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			displayName : "Retention Type",
 			editableCellTemplate : 'ui-grid/dropdownEditor',
 			cellClass : 'text-primary',
-			editDropdownOptionsArray : [ {
-				id : 'Lump Sum Amount Retention',
-				value : 'Lump Sum Amount Retention'
-			}, {
-				id : 'Percentage - Original SC Sum',
-				value : 'Percentage - Original SC Sum'
-			}, {
-				id : 'Percentage - Revised SC Sum',
-				value : 'Percentage - Revised SC Sum'
-			} ],
+			editDropdownOptionsArray : GlobalParameter.retentionTerms,
+			cellFilter : 'dropdownFilter:"retentionTerms"',
 			editDropdownIdLabel : 'id',
 			editDropdownValueLabel : 'value',
 			enableCellEdit : true
@@ -110,13 +81,8 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			displayName : "Reviewed by Finance",
 			editableCellTemplate : 'ui-grid/dropdownEditor',
 			cellClass : 'text-primary',
-			editDropdownOptionsArray : [ {
-				id : 'N',
-				value : 'No'
-			}, {
-				id : 'Y',
-				value : 'Yes'
-			} ],
+			editDropdownOptionsArray : GlobalParameter.finQS0Review,
+			cellFilter : 'dropdownFilter:"finQS0Review"',
 			enableCellEdit : true
 		} ]
 	};
@@ -124,7 +90,6 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 	$scope.afterCellEdit = function(rowEntity, colDef) {
 		$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 		$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
-		console.log($scope.gridDirtyRows);
 	};
 
 	$scope.rowSelectionChanged = function(row) {

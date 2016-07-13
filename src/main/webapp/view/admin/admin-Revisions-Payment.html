@@ -78,7 +78,7 @@
 								class="control-label">Direct Payment</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.directPayment"
+									ng-options="v.id as v.value for v in GlobalParameter.directPayment"
 									id="PaymentCertRecord_directPayment"
 									ng-model="PaymentCertRecord.directPayment">
 									<option></option>
@@ -93,7 +93,7 @@
 								class="control-label">Payment Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.paymentStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.paymentStatus"
 									id="PaymentCertRecord_paymentStatus"
 									ng-model="PaymentCertRecord.paymentStatus">
 									<option></option>
@@ -108,7 +108,7 @@
 								class="control-label">Interm Final Payment</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.intermFinalPayment"
+									ng-options="v.id as v.value for v in GlobalParameter.intermFinalPayment"
 									id="PaymentCertRecord_intermFinalPayment"
 									ng-model="PaymentCertRecord.intermFinalPayment">
 									<option></option>
@@ -262,7 +262,7 @@
 
 			<div class="row"
 				ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
-				<button type="submit" class="btn btn-block btn-warning">Update</button>
+				<button type="submit" class="btn btn-block btn-primary">Update</button>
 			</div>
 
 		</div>

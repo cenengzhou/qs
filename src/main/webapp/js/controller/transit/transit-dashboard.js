@@ -1,8 +1,10 @@
-mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'transitService', '$cookieStore', 'transitService',
-                          function($scope, colorCode, modalService, transitService, $cookieStore, transitService) {
-
+mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookieStore', 'transitService',  '$window', '$timeout', 'blockUI',
+                          function($scope, colorCode, modalService, transitService, budgetpostingService, $cookieStore, transitService, $window, $timeout, blockUI) {
+	$scope.loading = true;
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
+	
+	$scope.blockStepBar = blockUI.instances.get('blockStepBar');
 	
     Chart.defaults.global.colours = ['#00c0ef', '#FF5252'];
 
@@ -80,7 +82,23 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     $scope.disabledButtonStyle = 'btn-grey disabled';
     $scope.normalTextStyle = 'text-info';
     $scope.disabledTextStyle = 'text-grey';
-    	
+    
+    function initStatus(){
+	    $scope.importBqStatus = false;
+	    $scope.importResourcesStatus = false;
+	    $scope.confirmResourcesStatus = false;
+	    $scope.printReportStatus = false;
+	    $scope.completeTransitStatus = false;
+	    
+	    $scope.importBqMessage = 'Please create a header before importing items';
+	    $scope.importResourcesMessage = 'Please import BQ before importing resources';
+	    $scope.confirmResourcesMessage = 'Please import BQ and Resources before confirm resources';
+	    $scope.printReportMessage = 'Please confirm resources before print report';
+	    $scope.completeTransitMessage = 'Please print report before complete transit';
+	    $scope.reImportBq = 'Please note that if you re-import BQ items, all current items and resources will be deleted';
+    }
+    initStatus();
+    
     $scope.getStyle = function(item){
     	switch(item){
     	case 'ImportBqButton':
@@ -125,10 +143,10 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     		return $scope.reImportBq;
     		break;
     	case 'ImportResources':
-    		return $scope.importResourceStatus ? '' : $scope.importResourcesMessage;
+    		return $scope.importResourcesStatus ? '' : $scope.importResourcesMessage;
     		break;
     	case 'ConfirmResources':
-    		return $scope.confirmResourceStatus ? '' : $scope.confirmResourcesMessage;
+    		return $scope.confirmResourcesStatus ? '' : $scope.confirmResourcesMessage;
     		break;
       	case 'PrintReport':
     		return $scope.printReportStatus ? '' : $scope.printReportMessage;
@@ -140,6 +158,7 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     }
     
     $scope.getTransit = function(){
+    	$scope.blockStepBar.start();
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	if(data instanceof Object) {
@@ -159,21 +178,11 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 	    		}else if($scope.transit.status === 'Transit Completed') {
 	    			$scope.step = 7;
 	    		}
+	    		console.log('Current step:' + $scope.step + ' status:' + $scope.transit.status);
 	    	}
-	    	
+    		
     		if($scope.step >= 0) {
-	    	    $scope.importBqStatus = false;
-	    	    $scope.importResourcesStatus = false;
-	    	    $scope.confirmResourcesStatus = false;
-	    	    $scope.printReportStatus = false;
-	    	    $scope.completeTransitStatus = false;
-	    	    
-	    	    $scope.importBqMessage = 'Please create a header before importing items';
-	    	    $scope.importResourcesMessage = 'Please import BQ before importing resources';
-	    	    $scope.confirmResourcesMessage = 'Please import BQ and Resources before confirm resources';
-	    	    $scope.printReportMessage = 'Please confirm resources before print report';
-	    	    $scope.completeTransitMessage = 'Please print report before complete transit';
-	    	    $scope.reImportBq = 'Please note that if you re-import BQ items, all current items and resources will be deleted';
+    			initStatus();
     		}
     		
     		//Header Created
@@ -226,8 +235,7 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     			$scope.completeTransitStatus = false;
     		}
     		
-    		console.log('Current step:' + $scope.step);
-
+    		$scope.blockStepBar.stop();
 	    }, function(data){
 	    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Error:" + data);
 	    })
@@ -235,12 +243,14 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     $scope.getTransit();
     
     $scope.onSubmitTransitUpload = function(item, type){
+    	$scope.blockStepBar.start();
 		var formData = new FormData();
 		formData.append('files', item.files[0]);
 		formData.append('type', type);
 		formData.append('jobNumber', $scope.jobNo);
 		transitService.transitUpload(formData)
 		.then(function(data){
+			item.value = null;
 			$scope.getTransit();
 			if(type === 'BQ'){
 				$scope.showBqItems();
@@ -249,46 +259,99 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
 			}
 			
 			var msg = data;
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', msg.success? 'Success' : 'Fail', 
 					"Success:" + msg.success + 
 					"\r\nNumber Record Imported:" + msg.numRecordImported + 
 					"\r\nHave warning:" + msg.haveWarning);
+			$scope.blockStepBar.stop();
 		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
     }
-    	
+    
     $scope.showBqItems = function(){
         $scope.loadBqItems();
 		$scope.showPanel = 'viewBq';
-        $scope.bqGridApi.core.refresh();
     }
     
     $scope.showResourcesItems = function(){
     	$scope.loadResources();
 		$scope.showPanel = 'viewResources';
-    	$scope.resourcesGridApi.core.refresh();
+    }
+    
+    $scope.openPrintReport = function(url){
+    	var wnd = $window.open(url, 'Print Report', '_blank');
+    	$timeout(function(){
+    		wnd.close();
+    	}, 2000);
+    	
+    	$timeout(function(){
+    		$scope.getTransit();
+    	}, 3000);
     }
     
     $scope.confirmResources = function(){
+    	$scope.blockStepBar.start();
     	transitService.confirmResourcesAndCreatePackages($scope.jobNo)
     	.then(function(data){
     		$scope.getTransit();
-    		$scope.loadBqItems();
-    		$scope.loadResources();
-    		if(data.length === ''){
-    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', data );
+    		if(data === ''){
+    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Resources confirmed' );
     		}else{
     			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.replace('<br/>', '\n') );
     		}
+    		$scope.blockStepBar.stop();
     	}, function(data){
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
     	});
     }
     
+    $scope.completeTransitMsg = '';
+    $scope.completeTransitErr = false;
+    $scope.completeTransit = function(){
+    	$scope.blockStepBar.start();
+    	transitService.completeTransit($scope.jobNo)
+    	.then(function(data){
+    		$scope.getTransit();
+    		$scope.loadBqItems();
+    		$scope.loadResources();
+    		$scope.completeTransitMsg = '';
+    		$scope.completeTransitErr = false;
+    		
+    		if(data === ''){
+    			$scope.blockStepBar.start();
+    			$scope.completeTransitMsg += 'Complete Transit: Success\n';
+    			budgetpostingService.postBudget($scope.jobNo)
+    			.then(function(data){
+    				if(data === ''){
+    					$scope.completeTransitMsg += 'Budget posting: Success\n';
+    				} else {
+    					$scope.completeTransitMsg += 'Budget posting:' + data + '\n';
+    					$scope.completeTransitErr = true;
+    				}
+    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', msg.replace('<br/>', '\n') );
+    				$scope.blockStepBar.stop();
+    			}, function(data){
+    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data);
+    				$scope.blockStepBar.stop();
+    			});
+    		} else {
+    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '\n';
+    			$scope.completeTransitErr = true;
+    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data);
+    		}
+    		$scope.blockStepBar.stop();
+    	}, function(data){
+    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+    		$scope.blockStepBar.stop();
+    	});
+   	
+    }
+    
     $scope.loadBqItems = function(){
 		transitService.getTransitBQItems($scope.jobNo)
 		.then(function(data) {
+			$scope.addBpiColumnData(data);
 			$scope.bqGridOptions.data = data;
 		});
     }
@@ -296,10 +359,30 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     $scope.loadResources = function(){
 		transitService.getTransitResources($scope.jobNo)
 		.then(function(data) {
+			$scope.addBpiColumnData(data);
 			$scope.resourcesGridOptions.data = data;
 		});
     }
-
+    
+    $scope.addBpiColumnData = function(data){
+    	data.forEach(function(d){
+    		d.bpiString = bpiString;
+    	})
+    }
+    
+    function bpiString (type){
+    	var obj = this;
+    	if(type === 'Resource'){
+    		obj = this.transitBpi;
+    	}
+    	var bpi = '';
+    	bpi += obj.billNo === null ? '/' : obj.billNo + '/';
+		bpi += obj.subBillNo === null ? '//' : obj.subBillNo + '//';
+		bpi += obj.pageNo == null ? '/' : obj.pageNo + '/';
+		bpi += obj.itemNo == null ? '' : obj.itemNo;
+		return bpi;
+    }
+      
     $scope.bqGridOptions = {
     		enableFiltering : true,
     		enableColumnResizing : true,
@@ -317,72 +400,52 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     		enableCellSelection : false,
     		columnDefs : [ 
     		{
-    			field : 'sequenceNo',
-    			displayName : "Sequence No",
+    			field : 'bpiString()',
+    			displayName : "Bill Item",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'billNo',
-    			displayName : "Bill No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'subBillNo',
-    			displayName : "Sub Bill No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'pageNo',
-    			displayName : "Page No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'itemNo',
-    			displayName : "Item No",
-    			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
     			field : 'description',
     			displayName : "Description",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'quantity',
-    			displayName : "Quantity",
-    			enableCellEdit : false,
-    			width:"100"
+    			cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+    		          if (row.entity.unit === '') {
+    		            return 'blue';
+    		          }
+    		        }
+    			
     		}, {
     			field : 'unit',
     			displayName : "Unit",
     			enableCellEdit : false,
-    			width:"100"
+    			
+    		}, {
+    			field : 'quantity',
+    			displayName : "Quantity",
+    			enableCellEdit : false,
+    			
     		}, {
     			field : 'sellingRate',
     			displayName : "Selling Rate",
     			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
-    			field : 'costRate',
-    			displayName : "Cost Rate",
+    			field : 'sequenceNo',
+    			displayName : "Sequence No",
     			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
     			field : 'value',
     			displayName : "Value",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'transit.id',
-    			displayName : "Transit ID",
-    			enableCellEdit : false,
-    			width:"100"
+    			
     		}
     		]
     	};
     
 	$scope.bqGridOptions.onRegisterApi = function (gridApi) {
 		  $scope.bqGridApi = gridApi;
-		  gridApi.core.refresh();
+//		  gridApi.grid.refresh();
 	};
         
     $scope.resourcesGridOptions = {
@@ -401,95 +464,92 @@ mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'trans
     		allowCellFocus : false,
     		enableCellSelection : false,
     		columnDefs : [ 
-    		 {
-    			field : 'objectCode',
-    			displayName : "Object Code",
+    		{
+    			field : 'bpiString("Resource")',
+    			displayName : "B/P/I",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'subsidiaryCode',
-    			displayName : "Subsidiary Code",
+    			
+    		},{
+    			field : 'type',
+    			displayName : "Type",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'packageNo',
-    			displayName : "Package No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'resourceNo',
-    			displayName : "Resource No",
-    			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
     			field : 'resourceCode',
     			displayName : "Resource Code",
     			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
-    			field : 'type',
-    			displayName : "Type",
-    			enableCellEdit : false,
-    			width:"100"
+    			field : 'objectCode',
+    			displayName : "Object Code",
+    			enableCellEdit : true,
+    			cellStyle : 'blue'
+    			
+    		}, {
+    			field : 'subsidiaryCode',
+    			displayName : "Subsidiary Code",
+    			enableCellEdit : true,
+    			cellStyle : 'blue'
+    			
     		}, {
     			field : 'description',
     			displayName : "Page No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'itemNo',
-    			displayName : "Item No",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'description',
-    			displayName : "Description",
-    			enableCellEdit : false,
-    			width:"200"
-    		}, {
-    			field : 'waste',
-    			displayName : "Waste",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'totalQuantity',
-    			displayName : "Total Quantity",
-    			enableCellEdit : false,
-    			width:"100"
+    			enableCellEdit : true,
+    			cellStyle : 'blue'
+    			
     		}, {
     			field : 'unit',
     			displayName : "Unit",
     			enableCellEdit : false,
-    			width:"100"
+    			
+    		}, {
+    			field : 'waste',
+    			displayName : "Waste",
+    			enableCellEdit : false,
+    			
+    		}, {
+    			field : 'totalQuantity',
+    			displayName : "Total Quantity",
+    			enableCellEdit : false,
+    			
     		}, {
     			field : 'rate',
     			displayName : "Rate",
     			enableCellEdit : false,
-    			width:"100"
+    			
     		}, {
     			field : 'value',
     			displayName : "Value",
     			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'objectCode',
-    			displayName : "Object Code",
-    			enableCellEdit : false,
-    			width:"100"
-    		}, {
-    			field : 'transitBpi.id',
-    			displayName : "Transit Bpi",
-    			enableCellEdit : false,
-    			width:"100"
+    			
     		}
     		]
     	};
         
 		$scope.resourcesGridOptions.onRegisterApi = function (gridApi) {
 			  $scope.resourcesGridApi = gridApi;
-			  gridApi.core.refresh();
+//			  gridApi.grid.refresh();
 		};
 	      
+		$scope.afterCellEdit = function(rowEntity, colDef) {
+			$scope.resourcesGridApi.rowEdit.setRowsDirty( [rowEntity]);
+			$scope.gridDirtyRows = $scope.resourcesGridApi.rowEdit.getDirtyRows($scope.resourcesGridApi);
+		};
+
+		$scope.onUpdate = function() {
+			var dataRows = $scope.gridDirtyRows.map(function(gridRow) {
+				return gridRow.entity;
+			});
+			subcontractService.updateMultipleSystemConstants(dataRows)
+			.then(function(data){
+				$scope.gridApi.rowEdit.setRowsClean(dataRows);
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Updated " + dataRows.length + " records");;
+			}, function(data){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+			});
+			
+		};
+
 
     	
     	

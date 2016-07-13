@@ -35,11 +35,8 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 			String username = (user.getFullname() != null ? user.getFullname() : user.getUsername());
 			session.setPrincipal(new BasicUserPrincipal(username));
 			session.setAuthType(user.getAuthType());
-			String login[] = user.getUsername().split("@");
-			request.setAttribute("username", login[0]);
-			if(login.length == 2) {
-				request.setAttribute("domain", login[1]);
-			}
+			request.setAttribute("username", user.getUsername());
+			request.setAttribute("domain", user.getDomainName());
 		}
 		super.postHandle(request, response, handler, modelAndView);
 	}

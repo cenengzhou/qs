@@ -26,7 +26,6 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractService;
-import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.wrapper.UDC;
 
 @RestController
@@ -38,8 +37,6 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
-	@Autowired
-	private SecurityService securityService;
 	//@Autowired
 	//private SCPackageSPDao scPackageSPDao;
 	
@@ -132,9 +129,7 @@ public class SubcontractController {
 	
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){
-		String username = securityService.getCurrentUser().getUsername();
-		Boolean overrideOldPosting = false;
-		subcontractService.runProvisionPostingManually(jobNumber, glDate, overrideOldPosting, username);
+		subcontractService.runProvisionPostingManually(jobNumber, glDate, false, null);
 	}
 	
 	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
@@ -154,24 +149,19 @@ public class SubcontractController {
 
 	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
 	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
-		String username = securityService.getCurrentUser().getUsername();
-		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, username);
+		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, null);
 	}
 
 	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
 	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
-		String username = securityService.getCurrentUser().getUsername();
-		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
-			subcontractService.inactivateSystemConstant(appSubcontractStandardTerms, username);
-		}
+		subcontractService.inactivateSystemConstantList(appSubcontractStandardTermsList);
 	}
 
 	@RequestMapping(value = "createSystemConstant", method = RequestMethod.POST)
 	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
 			HttpServletRequest request, HttpServletResponse response) {
-		String username = securityService.getCurrentUser().getUsername();
 		boolean result = false;
-		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, username);
+		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, null);
 		if (!result) {
 			response.setStatus(HttpServletResponse.SC_CONFLICT);
 		}

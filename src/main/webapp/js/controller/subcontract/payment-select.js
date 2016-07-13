@@ -51,7 +51,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 					//console.log(data);
 					$scope.payments = data.scPaymentCertWithGSTWrapperList;
 					$scope.totalCertificateAmount = data.totalCertificateAmount;
-					$scope.paymentTerms = GlobalParameter.paymentTerms[data.scPackage.paymentTerms];
+					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.scPackage.paymentTerms);
 
 
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));

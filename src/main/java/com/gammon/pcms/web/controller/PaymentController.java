@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
@@ -33,7 +34,8 @@ public class PaymentController {
 	
 	@Autowired
 	private PaymentService paymentService;
-	
+	@Autowired
+	private PaymentPostingService paymentPostingService;	
 	
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
 	public SCPaymentCertsWrapper getPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
@@ -102,5 +104,8 @@ public class PaymentController {
 		return result;
 	}
 
-
+	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
+	public void runPaymentPosting(){
+		paymentPostingService.runPaymentPosting();
+	}
 }

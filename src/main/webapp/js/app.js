@@ -912,7 +912,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	// Display the property value in the custom template.
 	// blockUIConfig.template = '<div>{{ state.myProperty }}</div>';
 	
-	blockUIConfig.template = '<div class="block-ui block-ui-overlay" style="background-color: '+colorCode.lightBlue+';z-index:900"></div>';
+	blockUIConfig.template = '<div class="block-ui block-ui-overlay" style="z-index:900"></div>';
 	
 	// Disable automatically blocking of the user interface
 	blockUIConfig.autoBlock = false;

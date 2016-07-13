@@ -100,7 +100,7 @@ public class AuditAspectHibernateInterceptor extends EmptyInterceptor {
 			Object[] currentState, Object[] previousState,
 			String[] propertyNames, Type[] types) {
 		
-		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername()).split("@")[0];
+		String username = securityService==null?"SYSTEM":(securityService.getCurrentUser()==null?"SYSTEM":securityService.getCurrentUser().getUsername());
 		
 		boolean modified = false;
 		List<String> propertyList = Arrays.asList(propertyNames);

@@ -133,7 +133,7 @@ public class JobInfoService {
 		return job.getRepackagingType();
 	}
 
-	public Boolean updateJob(JobInfo job) throws Exception {
+	public Boolean updateJob(JobInfo job) throws DatabaseOperationException, ValidateBusinessLogicException {
 		if (job.getGrossFloorAreaUnit()!=null && job.getGrossFloorAreaUnit().length()>2) {
 			if (job.getGrossFloorAreaUnit().trim().length()>2) 
 				throw new ValidateBusinessLogicException("Unit length is too long.");
@@ -181,7 +181,12 @@ public class JobInfoService {
 
 		
 		if (this.jobHBDao.updateJob(job)){
-			String result = this.jobWSDao.updateJobAdditionalInfo(job);
+			String result = "";
+			try {
+				result = this.jobWSDao.updateJobAdditionalInfo(job);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if (result.equals("Success"))
 				return true;
 			else

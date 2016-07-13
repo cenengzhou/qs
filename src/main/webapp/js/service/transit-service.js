@@ -7,7 +7,8 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     	getTransit:						getTransit,
     	getTransitBQItems:				getTransitBQItems,
     	getTransitResources:			getTransitResources,
-    	confirmResourcesAndCreatePackages: confirmResourcesAndCreatePackages
+    	confirmResourcesAndCreatePackages: confirmResourcesAndCreatePackages,
+    	completeTransit:				completeTransit
     });
    
     function obtainTransitCodeMatcheList(){
@@ -66,6 +67,17 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     }
     
     function confirmResourcesAndCreatePackages(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/confirmResourcesAndCreatePackages',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function completeTransit(jobNo){
     	var request = $http({
     		method: 'POST',
     		url: 'service/transit/confirmResourcesAndCreatePackages',

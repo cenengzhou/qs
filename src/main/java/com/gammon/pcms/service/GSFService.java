@@ -39,6 +39,7 @@ public class GSFService {
 		user.setUsername(username);
 		if (login.length == 2) {
 			user.setAuthType("Kerberos");
+			user.setDomainName(login[1]);
 		}
 		return user;
 	}

@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService', 'paymentService', 'paymentpostingService', 'mainCertService',
-		function($scope, $rootScope, $http, modalService, subcontractService, paymentService, paymentpostingService, mainCertService) {
+		['$scope', '$rootScope', '$http', 'modalService', 'subcontractService', 'paymentService', 'mainCertService',
+		function($scope, $rootScope, $http, modalService, subcontractService, paymentService, mainCertService) {
 	$scope.provisionGlDate = moment();
 	
 	$scope.onSubmitProvisionPosting = function(){
@@ -23,7 +23,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 	};
 
 	$scope.onSubmitPostSubcontractPayment = function(){
-		paymentpostingService.runPaymentPosting()
+		paymentService.runPaymentPosting()
 		.then(function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Finished.");;
 		},function(data){

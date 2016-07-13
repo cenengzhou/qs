@@ -123,7 +123,7 @@
 								class="control-label">CPF Calculation</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.cpfCalculation"
+									ng-options="v.id as v.value for v in GlobalParameter.cpfCalculation"
 									id="SubcontractRecord_cpfCalculation"
 									ng-model="SubcontractRecord.cpfCalculation">
 									<option></option>
@@ -138,7 +138,7 @@
 								class="control-label">Form of Subcontract</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.formOfSubcontract"
+									ng-options="v.id as v.value for v in GlobalParameter.formOfSubcontract"
 									id="SubcontractRecord_formOfSubcontract"
 									ng-model="SubcontractRecord.formOfSubcontract">
 									<option></option>
@@ -153,7 +153,7 @@
 								Type</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.packageType"
+									ng-options="v.id as v.value for v in GlobalParameter.packageType"
 									id="SubcontractRecord_packageType"
 									ng-model="SubcontractRecord.packageType">
 									<option></option>
@@ -168,7 +168,7 @@
 								class="control-label">Payment Currency</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.paymentCurrency"
+									ng-options="v.id as v.value for v in GlobalParameter.paymentCurrency"
 									id="SubcontractRecord_paymentCurrency"
 									ng-model="SubcontractRecord.paymentCurrency">
 									<option></option>
@@ -183,7 +183,7 @@
 								class="control-label">Payment Information</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.paymentInformation"
+									ng-options="v.id as v.value for v in GlobalParameter.paymentInformation"
 									id="SubcontractRecord_paymentInformation"
 									ng-model="SubcontractRecord.paymentInformation">
 									<option></option>
@@ -198,7 +198,7 @@
 								class="control-label">Subcontractor Nature</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.subcontractorNature"
+									ng-options="v.id as v.value for v in GlobalParameter.subcontractorNature"
 									id="SubcontractRecord_subcontractorNature"
 									ng-model="SubcontractRecord.subcontractorNature">
 									<option></option>
@@ -213,7 +213,7 @@
 								class="control-label">Submitted Addendum</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.submittedAddendum"
+									ng-options="v.id as v.value for v in GlobalParameter.submittedAddendum"
 									id="SubcontractRecord_submittedAddendum"
 									ng-model="SubcontractRecord.submittedAddendum">
 								</select>
@@ -231,7 +231,7 @@
 								Terms</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.paymentTerms"
+									ng-options="v.id as v.value for v in GlobalParameter.paymentTerms"
 									id="SubcontractRecord_paymentTerms"
 									ng-model="SubcontractRecord.paymentTerms">
 									<option></option>
@@ -246,7 +246,7 @@
 								class="control-label">Retention Terms</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.retentionTerms"
+									ng-options="v.id as v.value for v in GlobalParameter.retentionTerms"
 									id="SubcontractRecord_retentionTerms"
 									ng-model="SubcontractRecord.retentionTerms">
 									<option></option>
@@ -261,7 +261,7 @@
 								class="control-label">Subcontract Terms</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.subcontractTerm"
+									ng-options="v.id as v.value for v in GlobalParameter.subcontractTerm"
 									id="SubcontractRecord_subcontractTerm"
 									ng-model="SubcontractRecord.subcontractTerm">
 									<option></option>
@@ -280,7 +280,7 @@
 								class="control-label">Package Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.packageStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.packageStatus"
 									id="SubcontractRecord_packageStatus"
 									ng-model="SubcontractRecord.packageStatus">
 									<option></option>
@@ -295,7 +295,7 @@
 								class="control-label">Payment Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.paymentStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.paymentStatus"
 									id="SubcontractRecord_paymentStatus"
 									ng-model="SubcontractRecord.paymentStatus">
 									<option></option>
@@ -310,7 +310,7 @@
 								class="control-label">Split Terminate Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.splitTerminateStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.splitTerminateStatus"
 									id="SubcontractRecord_splitTerminateStatus"
 									ng-model="SubcontractRecord.splitTerminateStatus">
 								</select>
@@ -324,7 +324,7 @@
 								class="control-label">Subcontract Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.subcontractStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.subcontractStatus"
 									id="SubcontractRecord_subcontractStatus"
 									ng-model="SubcontractRecord.subcontractStatus">
 									<option></option>
@@ -921,7 +921,7 @@
 
 			<div class="row"
 				ng-show="true || SubcontractRecord.jobInfo.jobNo !== undefined">
-				<button type="submit" class="btn btn-block btn-warning">Update</button>
+				<button type="submit" class="btn btn-block btn-primary">Update</button>
 			</div>
 		</div>
 	</form>

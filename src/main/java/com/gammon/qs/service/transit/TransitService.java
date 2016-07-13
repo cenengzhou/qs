@@ -33,6 +33,7 @@ import com.gammon.qs.dao.TransitCodeMatchHBDao;
 import com.gammon.qs.dao.TransitHBDao;
 import com.gammon.qs.dao.TransitResourceHBDao;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
 import com.gammon.qs.domain.BpiBill;
 import com.gammon.qs.domain.BpiItem;
@@ -293,110 +294,6 @@ public class TransitService implements Serializable {
 			return sbError.toString();
 	}
 		
-	public String completeTransit(String jobNumber) throws Exception{
-		logger.info("TRANSIT: complete transit for job " + jobNumber);
-		JobInfo job = jobRepository.obtainJob(jobNumber);
-		job.setAllowManualInputSCWorkDone("Y");
-		job.setConversionStatus("Y");
-		jobRepository.updateJob(job);
-		
-		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
-			return "Transit for this job has already been completed";
-		else if(!header.getStatus().equals(Transit.REPORT_PRINTED))
-			return "Please confirm resources and create reports before completing the transit process.";
-		List<TransitBpi> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
-		Collections.sort(transitBqItems, new Comparator<TransitBpi>(){
-			public int compare(TransitBpi bq1, TransitBpi bq2) {
-				int billComp = bq1.getBillNo().compareTo(bq2.getBillNo());
-				if(billComp != 0)
-					return billComp;
-				int subBillComp = bq1.getSubBillNo() != null && bq2.getSubBillNo() != null ? bq1.getSubBillNo().compareTo(bq2.getSubBillNo()) : 
-					bq1.getSubBillNo() != null ? 1 : bq2.getSubBillNo() != null ? -1 : 0;
-				if(subBillComp != 0)
-					return subBillComp;
-				int pageComp = bq1.getPageNo() != null && bq2.getPageNo() != null ? bq1.getPageNo().compareTo(bq2.getPageNo()) : 
-					bq1.getPageNo() != null ? 1 : bq2.getPageNo() != null ? -1 : 0;
-				return pageComp;
-			}
-		});
-		String billNo = "";
-		String subBillNo = "";
-		String pageNo = "";
-		BpiBill bill = null;
-		BpiPage page = null;
-		Set<String> packageNos = new HashSet<String>();
-		List<BpiItem> bqItems = new ArrayList<BpiItem>();
-		for(TransitBpi transitBq : transitBqItems){
-			//Create bill, page if necessary
-			if(!billNo.equals(transitBq.getBillNo()) || 
-					(subBillNo != null && !subBillNo.equals(transitBq.getSubBillNo())) || 
-					(subBillNo == null && transitBq.getSubBillNo() != null)){
-				billNo = transitBq.getBillNo();
-				subBillNo = transitBq.getSubBillNo();
-				bill = new BpiBill();
-				bill.setBillNo(billNo);
-				bill.setSubBillNo(subBillNo);
-				bill.setJobInfo(job);
-				billDao.saveOrUpdate(bill);
-			}
-			if(page == null || page.getBpiBill() != bill || 
-					(pageNo != null && !pageNo.equals(transitBq.getPageNo())) ||
-					(pageNo == null && transitBq.getPageNo() != null)){
-				pageNo = transitBq.getPageNo();
-				page = new BpiPage();
-				page.setPageNo(pageNo);
-				page.setBpiBill(bill);
-				pageDao.saveOrUpdate(page);
-			}
-			//create BQItem from transitBQ
-			BpiItem bqItem = bqItemFromTransit(transitBq);
-			bqItem.setRefJobNumber(jobNumber);
-			bqItem.setBpiPage(page);
-			bqItems.add(bqItem);
-			for(TransitResource transitResource : transitResourceDao.obtainTransitResourceListByTransitBQ(transitBq)){
-				BpiItemResource resource = resourceFromTransit(transitResource);
-				resource.setBpiItem(bqItem);
-				resource.setJobNumber(jobNumber);
-				resource.setRefBillNo(billNo);
-				resource.setRefSubBillNo(subBillNo);
-				resource.setRefPageNo(pageNo);
-				resource.setRefItemNo(bqItem.getItemNo());
-				resource.setBpiItem(bqItem);
-				if(resource.getPackageNo() != null && !resource.getPackageNo().equals("0"))
-					packageNos.add(resource.getPackageNo());
-			}
-		}
-		logger.info("saving bqItems");
-		bqItemDao.saveBpiItems(bqItems);
-		for(String packageNo : packageNos){
-			Subcontract scPackage = new Subcontract();
-			scPackage.setJobInfo(job);
-			scPackage.setPackageNo(packageNo);
-			scPackage.setDescription("Subcontract " + packageNo);
-			if(packageNo.startsWith("1")){
-				scPackage.setSubcontractorNature("DSC");
-				scPackage.setPackageType("S");
-			}
-			else if(packageNo.startsWith("2")){
-				scPackage.setSubcontractorNature("NDSC");
-				scPackage.setPackageType("S");
-			}
-			else if(packageNo.startsWith("3")){
-				scPackage.setSubcontractorNature("NSC");
-				scPackage.setPackageType("S");
-			}
-			else if(packageNo.startsWith("6")){
-				scPackage.setSubcontractorNature("DS");
-				scPackage.setPackageType("M");
-			}
-			scPackageDao.saveOrUpdate(scPackage);
-		}
-		header.setStatus(Transit.TRANSIT_COMPLETED);
-		transitHeaderDao.saveOrUpdate(header);
-		return null;
-	}
-	
 	private BpiItem bqItemFromTransit(TransitBpi transitBq){
 //		logger.info("bqItemFromTransit: " + transitBq.getId());
 		BpiItem bqItem = new BpiItem();
@@ -1717,6 +1614,116 @@ public class TransitService implements Serializable {
 		header.setStatus(Transit.RESOURCES_CONFIRMED);
 		transitHeaderDao.saveOrUpdate(header); //cascades down to bq items and resources
 		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String completeTransit(String jobNumber) {
+		logger.info("TRANSIT: complete transit for job " + jobNumber);
+		try {
+			JobInfo job = jobRepository.obtainJob(jobNumber);
+		job.setAllowManualInputSCWorkDone("Y");
+		job.setConversionStatus("Y");
+		jobRepository.updateJob(job);
+		
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
+			return "Transit for this job has already been completed";
+		else if(!header.getStatus().equals(Transit.REPORT_PRINTED))
+			return "Please confirm resources and create reports before completing the transit process.";
+		List<TransitBpi> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
+		Collections.sort(transitBqItems, new Comparator<TransitBpi>(){
+			public int compare(TransitBpi bq1, TransitBpi bq2) {
+				int billComp = bq1.getBillNo().compareTo(bq2.getBillNo());
+				if(billComp != 0)
+					return billComp;
+				int subBillComp = bq1.getSubBillNo() != null && bq2.getSubBillNo() != null ? bq1.getSubBillNo().compareTo(bq2.getSubBillNo()) : 
+					bq1.getSubBillNo() != null ? 1 : bq2.getSubBillNo() != null ? -1 : 0;
+				if(subBillComp != 0)
+					return subBillComp;
+				int pageComp = bq1.getPageNo() != null && bq2.getPageNo() != null ? bq1.getPageNo().compareTo(bq2.getPageNo()) : 
+					bq1.getPageNo() != null ? 1 : bq2.getPageNo() != null ? -1 : 0;
+				return pageComp;
+			}
+		});
+		String billNo = "";
+		String subBillNo = "";
+		String pageNo = "";
+		BpiBill bill = null;
+		BpiPage page = null;
+		Set<String> packageNos = new HashSet<String>();
+		List<BpiItem> bqItems = new ArrayList<BpiItem>();
+		for(TransitBpi transitBq : transitBqItems){
+			//Create bill, page if necessary
+			if(!billNo.equals(transitBq.getBillNo()) || 
+					(subBillNo != null && !subBillNo.equals(transitBq.getSubBillNo())) || 
+					(subBillNo == null && transitBq.getSubBillNo() != null)){
+				billNo = transitBq.getBillNo();
+				subBillNo = transitBq.getSubBillNo();
+				bill = new BpiBill();
+				bill.setBillNo(billNo);
+				bill.setSubBillNo(subBillNo);
+				bill.setJobInfo(job);
+				billDao.saveOrUpdate(bill);
+			}
+			if(page == null || page.getBpiBill() != bill || 
+					(pageNo != null && !pageNo.equals(transitBq.getPageNo())) ||
+					(pageNo == null && transitBq.getPageNo() != null)){
+				pageNo = transitBq.getPageNo();
+				page = new BpiPage();
+				page.setPageNo(pageNo);
+				page.setBpiBill(bill);
+				pageDao.saveOrUpdate(page);
+			}
+			//create BQItem from transitBQ
+			BpiItem bqItem = bqItemFromTransit(transitBq);
+			bqItem.setRefJobNumber(jobNumber);
+			bqItem.setBpiPage(page);
+			bqItems.add(bqItem);
+			for(TransitResource transitResource : transitResourceDao.obtainTransitResourceListByTransitBQ(transitBq)){
+				BpiItemResource resource = resourceFromTransit(transitResource);
+				resource.setBpiItem(bqItem);
+				resource.setJobNumber(jobNumber);
+				resource.setRefBillNo(billNo);
+				resource.setRefSubBillNo(subBillNo);
+				resource.setRefPageNo(pageNo);
+				resource.setRefItemNo(bqItem.getItemNo());
+				resource.setBpiItem(bqItem);
+				if(resource.getPackageNo() != null && !resource.getPackageNo().equals("0"))
+					packageNos.add(resource.getPackageNo());
+			}
+		}
+		logger.info("saving bqItems");
+		bqItemDao.saveBpiItems(bqItems);
+		for(String packageNo : packageNos){
+			Subcontract scPackage = new Subcontract();
+			scPackage.setJobInfo(job);
+			scPackage.setPackageNo(packageNo);
+			scPackage.setDescription("Subcontract " + packageNo);
+			if(packageNo.startsWith("1")){
+				scPackage.setSubcontractorNature("DSC");
+				scPackage.setPackageType("S");
+			}
+			else if(packageNo.startsWith("2")){
+				scPackage.setSubcontractorNature("NDSC");
+				scPackage.setPackageType("S");
+			}
+			else if(packageNo.startsWith("3")){
+				scPackage.setSubcontractorNature("NSC");
+				scPackage.setPackageType("S");
+			}
+			else if(packageNo.startsWith("6")){
+				scPackage.setSubcontractorNature("DS");
+				scPackage.setPackageType("M");
+			}
+			scPackageDao.saveOrUpdate(scPackage);
+		}
+		header.setStatus(Transit.TRANSIT_COMPLETED);
+		transitHeaderDao.saveOrUpdate(header);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		} catch (ValidateBusinessLogicException e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -1,14 +1,21 @@
-mainApp.service('paymentpostingService', ['$http', '$q',  function($http, $q){
+mainApp.service('budgetpostingService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	runPaymentPosting:		runPaymentPosting
+    	postBudget:		postBudget
     });
    
-    function runPaymentPosting(){
-    	var request = $http.post("service/paymentposting/runPaymentPosting");
-    	return( request.then(handleSuccess, handleError));
+    function postBudget(jobNo){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/budgetposting/postBudget',
+    		params:{
+    			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
     }
     
+
     // ---
     // PRIVATE METHODS.
     // ---

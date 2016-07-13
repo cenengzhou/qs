@@ -34,19 +34,6 @@ public class TransitController {
 		return null;
 	}
 
-	public void printBPIItemReconcilliationReport() {
-		// TODO: return PDF report
-	}
-
-	public void printBPIResourceReconcilliationReport() {
-		// TODO: return PDF report
-	}
-
-	@RequestMapping(value = "completeTransit", method = RequestMethod.POST)
-	public PCMSDTO completeTransit() {
-		return null;
-	}
-
 	@RequestMapping(value = "obtainTransitCodeMatcheList", method = RequestMethod.POST)
 	public List<TransitCodeMatch> obtainTransitCodeMatcheList(@RequestParam(defaultValue = "") String matchingType, 
 			@RequestParam(defaultValue = "") String resourceCode,
@@ -79,6 +66,11 @@ public class TransitController {
 	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
 	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber){
 		return transitService.confirmResourcesAndCreatePackages(jobNumber);
+	}
+
+	@RequestMapping(value = "completeTransit", method = RequestMethod.POST)
+	public String completeTransit(@RequestParam String jobNumber){
+		return transitService.completeTransit(jobNumber);
 	}
 
 }

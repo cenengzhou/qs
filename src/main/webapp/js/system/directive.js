@@ -373,3 +373,10 @@ mainApp.directive('resize', function ($window) {
     };
 });
 
+mainApp.filter('dropdownFilter', function (GlobalParameter) {
+    return function (input, arrName) {
+    	return GlobalParameter.getValueById(GlobalParameter[arrName] , input);
+      };
+});
+
+

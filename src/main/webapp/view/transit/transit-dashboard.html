@@ -11,7 +11,7 @@
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1>
 
-	<div class="row">
+	<div class="row" block-ui="blockStepBar">
 		<div class="col-md-12">
 			<div class="box  box-default">
 				<div class="box-header with-border">
@@ -64,28 +64,47 @@
 							</button>
 						</div>
 						
-						<div class="stepwizard-step" ng-click="confirmResources()">
-							<button class="btn icon-btn {{getStyle('ConfirmResourcesButton')}}" style="opacity:100 !important"
+						<div class="stepwizard-step">
+							<label ng-disabled="!confirmResourcesStatus"  class="btn icon-btn {{getStyle('ConfirmResourcesButton')}}" style="opacity:100 !important"
 							uib-popover="{{getMessage('ConfirmResources')}}" popover-trigger="mouseenter" popover-title="Confirm Resources" popover-animation="true" type="button">
 							<span class="glyphicon btn-glyphicon glyphicon-check img-circle {{getStyle('ConfirmResourcesText')}}"></span>
 							Confirm Resources
-							</button>
+							<input ng-disabled="!confirmResourcesStatus" style="display: none;" ng-click="confirmResources()">
+							</label>
 						</div>
-						
-						<div class="stepwizard-step">
-							<button class="btn icon-btn {{getStyle('PrintReportButton')}}" style="opacity:100 !important"
-							uib-popover="{{getMessage('PrintReport')}}" popover-trigger="mouseenter" popover-title="Print Report" popover-animation="true" type="button">
+						<div class="stepwizard-step dropdown">
+							<label ng-disabled="!printReportStatus" class="btn icon-btn dropdown-toggle {{getStyle('PrintReportButton')}}" style="opacity:100 !important"
+							uib-popover="{{getMessage('PrintReport')}}" popover-trigger="mouseenter" popover-title="Print Report" popover-animation="true" type="button"
+							id="printReportMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 							<span class="glyphicon btn-glyphicon glyphicon-print img-circle  {{getStyle('PrintReportText')}}"></span>
 							Print Report
-							</button>
+							</label>
+							
+							<ul class="dropdown-menu" aria-labelledby="printReportMenu" style="background:none !important">
+							    <li>
+							    <button ng-disabled="!printReportStatus" class="btn icon-btn btn-primary" style="opacity:100 !important;" ng-click="openPrintReport('/pcms/gammonqs/printBQMasterReconciliationReport.smvc?jobNumber='+jobNo)"
+								uib-popover="Print BQ Master Reconciliation Report" popover-trigger="mouseenter" popover-title="Print report" popover-animation="true" type="button">
+								<span class="glyphicon btn-glyphicon glyphicon-print img-circle {{getStyle('PrintReportText')}}"></span>
+								Print BQ Master Reconciliation Report
+								</button>
+							    <li>
+							    <li>
+							    <button ng-disabled="!printReportStatus" class="btn icon-btn btn-primary" style="opacity:100 !important;"  ng-click="openPrintReport('/pcms/gammonqs/printBQRecourseReconciliationReport.smvc?jobNumber='+jobNo)"
+								uib-popover="Print BQ Resource Reconciliation Report" popover-trigger="mouseenter" popover-title="Print report" popover-animation="true" type="button">
+								<span class="glyphicon btn-glyphicon glyphicon-print img-circle {{getStyle('PrintReportText')}}"></span>
+								Print BQ Resource Reconciliation Report
+								</button>
+							    <li>
+						  	</ul>
 						</div>
 						
 						<div class="stepwizard-step">
-							<button class="btn icon-btn {{getStyle('CompleteTransitButton')}}" style="opacity:100 !important"
+							<label ng-disabled="!completeTransitStatus" class="btn icon-btn {{getStyle('CompleteTransitButton')}}" style="opacity:100 !important" 
 							uib-popover="{{getMessage('CompleteTransit')}}" popover-trigger="mouseenter" popover-title="Complete Transit" popover-animation="true" type="button">
 							<span class="glyphicon btn-glyphicon glyphicon-ok img-circle  {{getStyle('CompleteTransitText')}}"></span>
 							Complete Transit
-							</button>
+							<input ng-disabled="!completeTransitStatus" style="display: none;" ng-click="completeTransit()">
+							</label>
 						</div>
 						
 					</div>
@@ -97,7 +116,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-12" ng-show="showPanel === 'viewBq'">
+	<div class="col-md-12" ng-if="showPanel === 'viewBq'">
 	
 		<div class="row">
 			<div id="bqGrid" name="bqGrid" ui-grid="bqGridOptions" external-scopes="clickHandler"
@@ -110,7 +129,7 @@
 			<form name="reImportBqItemsForm" id="reImportBqItemsForm"
 				ng-submit="onSubmitTransitUpload(reImportBqItemsForm.files, 'BQ')">
 				<div class="form-group horizontal">
-					<label class="btn btn-block btn-warning"
+					<label class="btn btn-block btn-primary"
 						uib-popover="{{getMessage('ReImportBq')}}"
 						popover-trigger="mouseenter" popover-title="Complete Transit"
 						popover-animation="true" type="button"> <i
@@ -126,7 +145,7 @@
 
 	</div>
 
-	<div class="col-md-12" ng-show="showPanel === 'viewResources'">
+	<div class="col-md-12" ng-if="showPanel === 'viewResources'">
 	
 		<div class="row">
 			<div id="resourcesGrid" name="resourcesGrid" ui-grid="resourcesGridOptions" external-scopes="clickHandler"
@@ -139,7 +158,7 @@
 			<form name="reImportResourcesForm" id="reImportResourcesForm"
 				ng-submit="onSubmitTransitUpload(reImportResourcesForm.files, 'Resource')">
 				<div class="form-group horizontal">
-					<label class="btn btn-block btn-warning"
+					<label class="btn btn-block btn-primary"
 						uib-popover="{{getMessage('ReImportResources')}}"
 						popover-trigger="mouseenter" popover-title="Complete Transit"
 						popover-animation="true" type="button"> <i
@@ -156,7 +175,7 @@
 	</div>
 
 	<!-- Bar Chart  -->
-	<div class="row" ng-show="showPanel === 'dashboard'">
+	<div class="row" ng-if="showPanel === 'dashboard'">
 		<div class="col-md-4">
 			<!-- TABLE: LATEST ORDERS -->
 			<div class="box box-info">

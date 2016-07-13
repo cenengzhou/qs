@@ -70,7 +70,7 @@
 								class="control-label">Certificate Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="k as v for (k,v) in GlobalParameter.certificateStatus"
+									ng-options="v.id as v.value for v in GlobalParameter.certificateStatus"
 									id="MainCertRecord_cpfCalculation"
 									ng-model="MainCertRecord.certificateStatus">
 									<option></option>
@@ -661,7 +661,7 @@
 			</div>
 
 			<div class="row" ng-show="true || MainCertRecord.jobNo !== undefined">
-				<button type="submit" class="btn btn-block btn-warning">Update</button>
+				<button type="submit" class="btn btn-block btn-primary">Update</button>
 			</div>
 		</div>
 	</form>

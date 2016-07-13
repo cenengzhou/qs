@@ -17,7 +17,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	$scope.currentPath = $location.path();
 
 	$scope.getCurrentUser = function(){
-		$http.get('service/security/GetCurrentUser')
+		$http.get('service/security/getCurrentUser')
 		.then(function(response){
 			if(response.data instanceof Object){
 				$scope.user = response.data;
