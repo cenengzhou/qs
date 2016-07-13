@@ -7,12 +7,13 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
-
+	$scope.subcontractNo = $cookieStore.get("subcontractNo");
+	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
+	
 	$scope.userIcon = 'resources/images/profile.png';
 	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/'
 	$scope.user = {name:'No one'};
-	$scope.subcontractNo = $cookieStore.get("subcontractNo");
-	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
+	
 
 	$scope.currentPath = $location.path();
 
@@ -26,7 +27,6 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 		})
 	}
 	$scope.getCurrentUser();
-	//console.log("$scope.currentPath: "+$scope.currentPath);
 
 	if($scope.currentPath.indexOf("/job")==0){	
 		$scope.activeMenu = '';

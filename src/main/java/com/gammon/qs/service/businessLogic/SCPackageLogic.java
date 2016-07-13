@@ -164,7 +164,14 @@ public class SCPackageLogic {
 						scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
 						scDetails.setTenderAnalysisDetail_ID(TADetails.getId());
 						scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
-						scDetails.setSubcontract(scPackage);;
+						scDetails.setSubcontract(scPackage);
+						/**
+						 * @author koeyyeung
+						 * created on 12 July, 2016
+						 * Convert to amount based**/
+						scDetails.setAmountBudget(TADetails.getAmountBudget());
+						scDetails.setAmountSubcontract(TADetails.getAmountSubcontract());
+						scDetails.setAmountSubcontractTBA(TADetails.getAmountSubcontract());
 					}
 				} catch (DataAccessException e) {
 					e.printStackTrace();

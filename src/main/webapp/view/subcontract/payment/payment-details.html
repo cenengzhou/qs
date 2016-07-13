@@ -1,4 +1,24 @@
-<div id="content" class="content">
+<!-- Payment Details  -->
+<div class="animated fadeIn">
+	<div class="row">
+		<div class="col-md-12 m-b-30 m-t-20 ">
+			<div id="" ui-grid="gridOptions" ui-grid-selection
+				ui-grid-auto-resize ui-grid-auto-resize ui-grid-edit
+				ui-grid-exporter class="grid "></div>
+		</div>
+
+
+		<div class="col-md-12">
+			<button class="m-t-5 btn btn-primary btn-block"
+				ng-hide="disableButtons" ng-disabled="disableButtons">
+				Update <span class="fa fa-save"></span>
+			</button>
+		</div>
+	</div>
+</div>
+
+
+<!-- <div id="content" class="content">
 	<ol class="breadcrumb pull-right">
 		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 				Home</a></li>
@@ -30,7 +50,7 @@
 		</div>
 
 		<div class="tab-content">
-			<!-- Payment Certificate-->
+			Payment Certificate
 			<div class="setup-content" id="step1">
 				<form name="form-wizard-step-1" id="form-wizard-step-1"
 					class="form-input-flat ng-pristine ng-valid">
@@ -180,7 +200,7 @@
 
 			</div>
 
-			<!-- Payment Details  -->
+			Payment Details 
 			<div class="setup-content" id="step2">
 				<div class="row">
 					<div class="col-md-12 m-b-30 m-t-20 ">
@@ -198,7 +218,7 @@
 			</div>
 
 
-			<!-- Attachment -->
+			Attachment
 			<div class="setup-content" id="step3">
 				<div class="row">
 					<div class="col-md-10 col-md-offset-1">
@@ -232,7 +252,6 @@
 							</div>
 
 							<div class="box-footer">
-								<!-- <a class="btn btn-twitter btn-block" ui-sref="cert-all-details">Upload <i class="fa fa-save"></i></a> -->
 							</div>
 						</div>
 
@@ -246,9 +265,9 @@
 			</div>
 
 
-			<!-- Payment Summary -->
+			Payment Summary
 			<div class="setup-content" id="step4">
-				<div ng-include="'view/subcontract/payment-invoice.html'"></div><!--  ng-style = "{height: 500 + 'px', 'overflow': 'auto'}" -->
+				<div ng-include="'view/subcontract/payment/payment-invoice.html'"></div> ng-style = "{height: 500 + 'px', 'overflow': 'auto'}"
 				<div class="col-md-12 hidden-print">
 					<button id="activate-step-6"
 						class="btn btn-primary btn-block" ng-hide = "disableButtons" ng-disabled="disableButtons">
@@ -261,6 +280,6 @@
 
 	</div>
 
-	<!-- end #wizard -->
 </div>
 
+ -->

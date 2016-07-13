@@ -1,5 +1,5 @@
-mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookieStore', 'transitService',  '$window', '$timeout', 'blockUI',
-                          function($scope, colorCode, modalService, transitService, budgetpostingService, $cookieStore, transitService, $window, $timeout, blockUI) {
+mainApp.controller('TransitCtrl', ['$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookieStore',  '$window', '$timeout', 'blockUI',
+                          function($scope, colorCode, modalService, transitService, budgetpostingService, $cookieStore, $window, $timeout, blockUI) {
 	$scope.loading = true;
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");

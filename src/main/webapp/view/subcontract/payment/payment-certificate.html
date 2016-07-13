@@ -1,0 +1,159 @@
+<!-- Payment Certificate-->
+<div class="animated fadeIn">
+	<form name="form-wizard-step-1" id="form-wizard-step-1"
+		class="form-input-flat ng-pristine ng-valid">
+		<fieldset>
+			<div class="row">
+				<div class="col-md-11 col-md-offset-1">
+					<h3 class="form-header form-header-lg m-b-10">
+						<span class="icon text-primary"><i
+							class="fa fa-shopping-cart"></i></span> Payment <small>Certificate
+							No.{{paymentCertNo}}</small>
+					</h3>
+
+					<p class="m-b-20">Please input the required fields below.</p>
+
+
+					<div class="col-md-7">
+
+						<div class="form-group">
+							<label>Payment Type</label>
+							<div class="btn-group btn-group-justified">
+								<label class="btn"
+									ng-class="{'btn-primary' : payment.intermFinalPayment == 'I', 'btn-inverse' : payment.intermFinalPayment != 'I'}"
+									ng-model="payment.intermFinalPayment" uib-btn-radio="'I'">Interim</label>
+								<label class="btn"
+									ng-class="{'btn-primary' : payment.intermFinalPayment == 'F', 'btn-inverse' : payment.intermFinalPayment != 'F'}"
+									ng-model="payment.intermFinalPayment" uib-btn-radio="'F'">Final</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Main Certificate No.</label>
+							<div class="controls">
+								<select class="form-control " ng-model="mainCertNo.selected"
+									ng-options="o as o for o in mainCertNo.options" ng-disabled="disableButtons"></select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Due Date</label>
+									<div class="input-group" moment-picker="payment.dueDate"
+										format="YYYY-MM-DD">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons"
+											data-parsley-group="wizard-step-1" required>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>As At Date</label>
+									<div class="input-group" moment-picker="payment.asAtDate"
+										format="YYYY-MM-DD">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" ng-model="payment.asAtDate" ng-disabled="disableButtons"
+											data-parsley-group="wizard-step-1" required>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="form-group"
+									ng-show="paymentTerms== 'Q4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
+									<label>Invoice Received Date</label>
+									<div class="input-group"
+										moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control"
+											ng-model="payment.invoiceReceivedDate"
+											data-parsley-group="wizard-step-1"
+											ng-required="payment.ipaOrInvoiceReceivedDate != null">
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-md-4" ng-show = "jobNo.indexOf('14')>-1">
+								<div class="form-group">
+									<label>GST Payable</label>
+									<div class="controls">
+										<input type="number" placeholder="" class="form-control "
+											ng-model="payment.gstPayable"
+											data-parsley-group="wizard-step-1" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4" ng-show = "jobNo.indexOf('14')>-1">
+								<div class="form-group">
+									<label>GST Receivable</label>
+									<div class="controls">
+										<input type="number" placeholder="" class="form-control "
+											ng-model="payment.gstReceivable"
+											data-parsley-group="wizard-step-1" />
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<button class="m-t-5 btn btn-primary btn-block" ng-hide="disableButtons"
+							ng-disabled="disableButtons">
+							Update <span class="fa fa-save"></span>
+						</button>
+
+					</div>
+
+
+					<div class="col-md-4 m-l-10">
+						<div class="box no-border">
+							<div class="box-body">
+								<div class="widget widget-stat bg-primary text-white">
+									<div class="widget-stat-btn">
+										<a href="#" data-click="widget-reload"><i
+											class="fa fa-repeat"></i></a>
+									</div>
+									<div class="widget-stat-icon">
+										<i class="fa fa-calculator"></i>
+									</div>
+									<div class="widget-stat-info">
+										<div class="widget-stat-title">Certificate Amount</div>
+										<div class="widget-stat-number">{{payment.certAmount |
+											currency}}</div>
+										<div class="widget-stat-text"></div>
+									</div>
+								</div>
+
+								<ul class="list-group list-group-unbordered">
+									<li class="list-group-item"><b>Payment Terms</b> <b
+										class="pull-right">{{paymentTerms}}</b></li>
+									<li class="list-group-item"><b>Payment Requisition</b> <b
+										class="pull-right">{{payment.directPayment==='N' ?
+											'No':'Yes'}}</b></li>
+									<li class="list-group-item"><b>Payment Status</b> <b
+										class="pull-right">{{convertPaymentStatus(payment.paymentStatus)}}</b></li>
+									<li class="list-group-item"><b>Certificate Issue Date</b>
+										<b class="pull-right">{{payment.certIssueDate}}</b></li>
+								</ul>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+
+
+			</div>
+		</fieldset>
+	</form>
+
+</div>
+

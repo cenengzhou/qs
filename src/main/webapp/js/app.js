@@ -447,9 +447,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		templateUrl: "view/subcontract/addendum/addendum-summary.html",
 	})
 	
-	.state('subcontract.payment', {
-		url: "/payment",
-		templateUrl: "view/subcontract/payment-select.html",
+	.state('subcontract.payment-select', {
+		url: "/payment-select",
+		templateUrl: "view/subcontract/payment/payment-select.html",
 		controller: 'PaymentCtrl',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -463,9 +463,79 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             }]
         }
 	})
-	.state('subcontract.paymentdetails', {
+	.state('subcontract.payment', {
+		url: "/payment/tab",
+		templateUrl: "view/subcontract/payment/payment-tab.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/service/payment-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'NavMenuCtrl'
+	})
+	.state('subcontract.payment.certificate', {
+		url: "/certificate",
+		templateUrl: "view/subcontract/payment/payment-certificate.html",
+		"params": {
+			"paymentCertNo": null, 
+			"paymentTerms": null
+		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/payment/payment-certificate.js',
+                    ] 
+                });
+            }]
+        },
+        controller: 'PaymentCertCtrl'
+	})
+	.state('subcontract.payment.details', {
+		url: "/details",
+		templateUrl: "view/subcontract/payment/payment-details.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/payment/payment-details.js',
+                    ] 
+                });
+            }]
+        },
+        controller: 'PaymentDetailsCtrl',
+	})
+	.state('subcontract.payment.attachment', {
+		url: "/attachment",
+		templateUrl: "view/subcontract/payment/payment-attachment.html",
+	})
+	.state('subcontract.payment.invoice', {
+		url: "/invoice",
+		templateUrl: "view/subcontract/payment/payment-invoice.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/payment/payment-invoice.js',
+                    ] 
+                });
+            }]
+        },
+        controller: 'PaymentInvoiceCtrl',
+	})
+	
+	
+	/*.state('subcontract.paymentdetails', {
 		url: "/payment/details",
-		templateUrl: "view/subcontract/payment-details.html",
+		templateUrl: "view/subcontract/payment/payment-details.html",
 		"params": {
 			"payment": null, 
 			"paymentTerms": null
@@ -485,7 +555,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	})
 	.state('subcontract.paymentInvoice', {
 		url: "/payment/invoice",
-		templateUrl: "view/subcontract/payment-invoice.html",
+		templateUrl: "view/subcontract/payment/payment-invoice.html",
 		controller: 'PaymentDetailsCtrl',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -497,7 +567,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 });
             }]
         }
-	})
+	})*/
+	
+	
+	
 	.state('subcontract.split', {
 		url: "/split",
 		templateUrl: "view/subcontract/subcontract-split.html",
@@ -632,7 +705,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/transit/transit-dashboard.js'
+                           'js/controller/transit/transit-dashboard.js',
+                           'js/service/subcontract-service.js',
+                           'js/service/transit-service.js',
+                           'js/service/js/service/budgetposting-service.js'
                     ] 
                 });
             }]
@@ -713,7 +789,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [
+               	 files: [  'js/service/subcontract-service.js',
+               	           'js/service/main-cert-service.js',
+               	           'js/service/payment-service.js',
+               	           'js/service/quartz-service.js',
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',
