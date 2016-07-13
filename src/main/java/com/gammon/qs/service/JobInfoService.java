@@ -23,7 +23,6 @@ import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
-import com.gammon.qs.wrapper.job.JobDatesWrapper;
 
 @Service
 //SpringSession workaround: change "session" to "request"
@@ -204,25 +203,6 @@ public class JobInfoService {
 		return job;
 	}
 	
-	// added by brian on 20110503
-	public JobDatesWrapper getJobDatesByJobNumber(String jobNumber) throws Exception {
-		return new JobDatesWrapper(this.jobWSDao.obtainJobDates(jobNumber));
-	}
-	
-	// call web service to update the 6 dates in table F0006
-	public Boolean updateJobDates(JobDatesWrapper jobDatesWrapper, String userId) throws Exception {
-		JobDates jobdates = new JobDates();
-		jobdates.setActualEndDate(jobDatesWrapper.getActualEndDate());
-		jobdates.setActualStartDate(jobDatesWrapper.getActualStartDate());
-		jobdates.setAnticipatedCompletionDate(jobDatesWrapper.getAnticipatedCompletionDate());
-		jobdates.setJobNumber(jobDatesWrapper.getJobNumber());
-		jobdates.setPlannedEndDate(jobDatesWrapper.getPlannedEndDate());
-		jobdates.setPlannedStartDate(jobDatesWrapper.getPlannedStartDate());
-		jobdates.setRevisedCompletionDate(jobDatesWrapper.getRevisedCompletionDate());
-		
-		return jobWSDao.updateJobDates(jobdates, userId);
-	}
-	
 	/**
 	 * @author koeyyeung
 	 * created on 19 April, 2013
@@ -313,4 +293,52 @@ public class JobInfoService {
 	public List<String> obtainJobInfoByCompany(String company) throws DatabaseOperationException{
 		return jobHBDao.obtainJobNumberByCompany(company);
 	}
+	
+	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	public String updateJobInfo(JobInfo job) throws Exception {
+		String error = "";
+		/*if (job.getCpfIndexName()!=null && job.getCpfIndexName().length()>10) {
+			if (job.getCpfIndexName().trim().length()>10){ 
+				throw new ValidateBusinessLogicException("CPF Index Name length is too long.");
+				return error;
+			}
+			else job.setCpfIndexName(job.getCpfIndexName().trim());
+		}*/
+		
+		if (this.jobHBDao.updateJob(job)){
+			String result = this.jobWSDao.updateJobAdditionalInfo(job);
+			if (result.equals("Success"))
+				error = "";
+			else
+				error = "Failed to update job information.";
+		}
+		return error;
+	}
+	
+	// call web service to get the 6 dates in table F0006
+	public JobDates getJobDates(String jobNumber) throws Exception {
+		JobDates jobDates = null;
+		try {
+			jobDates = jobWSDao.obtainJobDates(jobNumber);
+			logger.info("getPlannedStartDate: "+jobDates.getPlannedStartDate());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jobDates;
+	}
+
+	// call web service to update the 6 dates in table F0006
+	public String updateJobDates(JobDates jobDates) throws Exception {
+		String error ="";
+		try {
+			error = jobWSDao.updateJobDates(jobDates, securityService.getCurrentUser().getUsername());
+		} catch (Exception e) {
+			error = "Failed to update Job Dates";
+			e.printStackTrace();
+		}
+
+		return error;
+	}
+		
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

@@ -187,7 +187,7 @@ mainApp.directive('dropzone', function() {
 
 
 //CurrencyFilter
-mainApp.directive('realTimeCurrency', function ($filter, $locale) {
+mainApp.directive('ngCurrency', function ($filter, $locale) {
     var decimalSep = $locale.NUMBER_FORMATS.DECIMAL_SEP;
     var toNumberRegex = new RegExp('[^0-9\\' + decimalSep + ']', 'g');
     var trailingZerosRegex = new RegExp('\\' + decimalSep + '0+$');

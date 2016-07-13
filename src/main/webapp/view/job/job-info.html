@@ -12,415 +12,433 @@
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1>
 
-		<div class="row">
-			<!-- Certificate Info -->
-			<div class="col-md-12">
-				<!-- Horizontal Form -->
-				<div class="box box-info">
-					<div class="box-body">
-						<span
-							class="profile-user-img img-responsive icofont icofont-newspaper icofont-4x text-blue"></span>
-						<h3 class="profile-username text-center">{{jobNo}}</h3>
-						<p class="text-muted text-center">{{jobDescription}}</p>
+	<div class="row">
+		<!-- Certificate Info -->
+		<div class="col-md-12">
+			<!-- Horizontal Form -->
+			<div class="box box-info">
+				<div class="box-body">
+					<span
+						class="profile-user-img img-responsive icofont icofont-newspaper icofont-4x text-blue"></span>
+					<h3 class="profile-username text-center">{{jobNo}}</h3>
+					<p class="text-muted text-center">{{jobDescription}}</p>
 
-						<div class="row">
+					<div class="row">
+						<div class="col-md-6">
 							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Company</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{company}}</label>
-								</div>
+								<label>Company</label>
 							</div>
-
 							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Customer No.</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{customerNo}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Contact Type</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{contactType}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Division</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{division}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Department</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{department}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Solo/JV</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{soloJV}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Completion Status</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{completionStatus}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Insurance CAR</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{insuranceCAR}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Insurance ECI</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{insuranceECI}}</label>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="col-md-6">
-									<label>Insurance TPL</label>
-								</div>
-								<div class="col-md-6">
-									<label>{{insuranceTPL}}</label>
-								</div>
+								<label>{{job.company}}</label>
 							</div>
 						</div>
 
-						<br>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Customer No.</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.customerNo}}</label>
+							</div>
+						</div>
 
-						<div class="box box-default">
-							<div class="box-body">
-								<div class="row">
-									<label class="col-md-4">Major Information</label>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Contact Type</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.contactType}}</label>
+							</div>
+						</div>
 
-									<div class="row col-md-8">
-										<div class="form-group col-md-6">
-											<label>Original Contract Value</label>
-											<div class="input-group col-md-12">
-												<span class="input-group-addon">$</span> 
-												<input type="number" class="form-control" ng-model = "originalContractValue" rea-time-currency>
-											</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Division</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.division}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Department</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.department}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Solo/JV</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.soloJV}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Completion Status</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.completionStatus}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Insurance CAR</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.insuranceCAR}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Insurance ECI</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.insuranceECI}}</label>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Insurance TPL</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.insuranceTPL}}</label>
+							</div>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Major Information</label>
+
+								<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>Original Contract Value</label>
+										<div class="input-group col-md-12">
+
+											<input type="text" class="form-control"
+												ng-model="job.originalContractValue" ng-Currency>
 										</div>
-
-										<div class="form-group col-md-6">
-											<label>Projected Contract Value</label>
-											<div class="input-group col-md-12">
-												<span class="input-group-addon">$</span> <input
-													type="number" class="form-control" ng-model = "projectedContractValue">
-											</div>
-										</div>
-
-
-										<div class="form-group col-md-6">
-											<label>Original Nominated SC Contract Value</label>
-											<div class="input-group col-md-12">
-												<span class="input-group-addon">$</span> <input
-													type="number" class="form-control" ng-model = "orginalNominatedSCContractValue">
-											</div>
-										</div>
-
-
-										<div class="form-group col-md-6">
-											<label>Tender GP</label>
-											<div class="input-group col-md-12">
-												<span class="input-group-addon">$</span> 
-												<input type="number" class="form-control" ng-model = "tenderGP">
-											</div>
-										</div>
-
-										<div class="form-group col-md-6">
-											<label>Parent Job Number</label>
-											<div class="input-group col-md-12">
-												<input type="text" class="form-control" ng-model = "parentJobNo">
-											</div>
-										</div>
-
-										<div class="form-group col-md-6">
-											<label>Client Contract Number</label>
-											<div class="input-group col-md-12">
-												<input type="text" class="form-control" ng-model = "clientContractNo">
-											</div>
-										</div>
-										
-										<div class="form-group col-md-6">
-											<label>JV Partner Number</label>
-											<div class="input-group col-md-12">
-												<input type="text" class="form-control" ng-model = "parentJobNo">
-											</div>
-										</div>
-										
-										<div class="form-group col-md-6">
-											<label>JV %</label>
-											<div class="input-group col-md-12">
-												<input type="number" class="form-control" ng-model = "jvPercentage">
-											</div>
-										</div>
-
 									</div>
-									
+
+									<div class="form-group col-md-6">
+										<label>Projected Contract Value</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control"
+												ng-model="job.projectedContractValue" ng-Currency>
+										</div>
+									</div>
+
+
+									<div class="form-group col-md-6">
+										<label>Original Nominated SC Contract Value</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control"
+												ng-model="job.orginalNSCContractValue" ng-Currency>
+										</div>
+									</div>
+
+
+									<div class="form-group col-md-6">
+										<label>Tender GP</label>
+										<div class="input-group col-md-12">
+
+											<input type="text" class="form-control"
+												ng-model="job.tenderGP" ng-Currency>
+										</div>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label>Parent Job Number</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control"
+												ng-model="job.parentJobNo">
+										</div>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label>Client Contract Number</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control"
+												maxlength="40"
+												ng-model="job.clientContractNo">
+										</div>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label>JV Partner Number</label>
+										<div class="input-group col-md-12">
+											<input type="text" class="form-control"
+												ng-model="job.jvPartnerNo">
+										</div>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label>JV %</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control"
+												ng-model="job.jvPercentage">
+										</div>
+									</div>
 
 								</div>
+
+
 							</div>
 						</div>
+					</div>
 
-						<!-- Levy -->
-						<div class="box box-default">
-							<div class="box-body">
-								<div class="row">
-									<label class="col-md-4">Levy</label>
+					<!-- Levy -->
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Levy</label>
 
-									<div class="row col-md-8">
-										<div class="col-md-12">
-											<!-- <label> Subject to CPF  </label> -->
-											<input type="checkbox" data-ios-toggle="toggle"
-												data-style="ios" data-onstyle="primary"
-												data-offstyle="warning" data-on="Applicable"
-												data-off="Not-Applicable" ng-model="levyApplicable">
-										</div>
+								<div class="row col-md-8">
+									<div class="col-md-12">
+										<input type="checkbox" data-ios-toggle="toggle"
+											data-style="ios" data-onstyle="primary"
+											data-offstyle="warning" data-on="Applicable"
+											data-off="Not-Applicable" ng-model="job.levyApplicable">
+									</div>
 
+									<form name="levyForm" id="levyForm"
+										class="ng-pristine ng-valid">
 										<div class="col-md-6">
-											<form name="levyPeriodForm" novalidate>
-												<div class="form-group" ng-show="levyApplicable == true"
-													ng-class="{ 'has-error': levyPeriodForm.levyPeriod.$touched && levyPeriodForm.levyPeriod.$invalid }">
-													<label>Levy CITA %</label>
-													<div class="input-group col-md-12">
-														<input type="number" class="form-control"
-															name="levyPeriod" ng-model="levyPeriod" required>
-														<div class="help-block"
-															ng-messages="levyPeriodForm.levyPeriod.$error"
-															ng-if="levyPeriodForm.levyPeriod.$touched">
-															<p ng-message="required">This field is required.</p>
-														</div>
-													</div>
+											<div class="form-group" ng-show="job.levyApplicable == true">
+												<label>Levy CITA %</label>
+												<div class="input-group col-md-12">
+													<input data-parsley-type="number" class="form-control"
+														name="levyCITAPercent" 
+														data-parsley-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+														data-parsley-error-message="Max. 2 d.p."
+														ng-model="job.levyCITAPercent"
+														data-ng-required="job.levyApplicable == true">
 												</div>
-											</form>
+											</div>
 										</div>
 
 										<div class="col-md-6">
-											<div class="form-group" ng-show="levyApplicable == true">
+											<div class="form-group" ng-show="job.levyApplicable == true">
 												<label>Levy PCFB %</label>
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control" name="cpfYear"
-														required>
+													<input data-parsley-type="number" class="form-control"
+														name="levyPCFBPercent" 
+														data-parsley-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+														data-parsley-error-message="Max. 2 d.p."
+														ng-model="job.levyPCFBPercent"
+														data-ng-required="job.levyApplicable == true">
 												</div>
 											</div>
 										</div>
-
-									</div>
+									</form>
 
 								</div>
+
 							</div>
 						</div>
+					</div>
 
-						<!-- CPF -->
-						<div class="box box-default">
-							<div class="box-body">
-								<div class="row">
-									<label class="col-md-4">CPF</label>
+					<!-- CPF -->
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">CPF</label>
 
-									<div class="row col-md-8">
-										<div class="col-md-12">
-											<!-- <label> Subject to CPF  </label> -->
-											<input type="checkbox" data-ios-toggle="toggle"
-												data-style="ios" data-onstyle="primary"
-												data-offstyle="warning" data-on="Subject to CPF"
-												data-off="No CPF" ng-model="cpfApplicable">
-											<!-- <div class="col-md-12"><label><input type="radio" ng-model="cpfApplicable" value="No CPF" ng-icheck /> Not Subject to CPF</label></div>
-									                   <div class="col-md-12"><label><input type="radio" ng-model="cpfApplicable" value="CPF" ng-icheck /> Subject to CPF</label></div> -->
-										</div>
+								<div class="row col-md-8">
+									<div class="col-md-12">
+										<input type="checkbox" data-ios-toggle="toggle"
+											data-style="ios" data-onstyle="primary"
+											data-offstyle="warning" data-on="Subject to CPF"
+											data-off="No CPF" ng-model="job.cpfApplicable">
+									</div>
 
+									<form name="cpfForm" id="cpfForm"
+										class="ng-pristine ng-valid">
 										<div class="col-md-6">
-											<form name="cpfForm" novalidate>
-												<div class="form-group" ng-show="cpfApplicable == true"
-													ng-class="{ 'has-error': cpfForm.cpfBasePeriod.$touched && cpfForm.cpfBasePeriod.$invalid }">
-													<label>CPF Base Period</label>
-													<div class="input-group col-md-12">
-														<input type="number" class="form-control" name="cpfBasePeriod"
-															ng-model="cpfBasePeriod" required>
-														<div class="help-block"
-															ng-show="cpfForm.cpfBasePeriod.$error.required">
-															<p>This field is required.</p>
-														</div>
-													</div>
+											<div class="form-group" ng-show="job.cpfApplicable == true">
+												<label>CPF Base Period</label>
+												<div class="input-group col-md-12">
+													<input data-parsley-type="number" class="form-control" name="cpfBasePeriod"
+														data-parsley-maxlength="2"
+														 ng-model="job.cpfBasePeriod" 
+														data-ng-required="job.cpfApplicable == true">
 												</div>
-											</form>
+											</div>
+
 										</div>
 
 										<div class="col-md-6">
-											<div class="form-group" ng-show="cpfApplicable == true">
+											<div class="form-group" ng-show="job.cpfApplicable == true">
 												<label>CPF Base Year</label>
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control" name="cpfBaseYear" ng-model="cpfBaseYear" required>
+													<input data-parsley-type="number" class="form-control" name="cpfBaseYear"
+														data-parsley-maxlength="4"
+														ng-model="job.cpfBaseYear"
+														data-ng-required="job.cpfApplicable == true">
 												</div>
 											</div>
 										</div>
-										
+
 										<div class="col-md-6">
-											<div class="form-group" ng-show="cpfApplicable == true">
+											<div class="form-group" ng-show="job.cpfApplicable == true">
 												<label>CPF Index Name</label>
 												<div class="input-group col-md-12">
-													<input type="text" class="form-control" name="cpfIndexName" ng-model="cpfIndexName" required>
+													<input type="text" class="form-control" name="cpfIndexName"
+														data-parsley-maxlength="10"
+														ng-model="job.cpfIndexName"
+														data-ng-required="job.cpfApplicable == true">
 												</div>
 											</div>
 										</div>
-										
-									</div>
+									</form>
 
 								</div>
 
 							</div>
-							<!-- /.box-body -->
+
 						</div>
-						<!-- /.box -->
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
 
-						<!-- Retention -->
-						<div class="box box-default">
-							<div class="box-body">
-								<div class="row">
-									<label class="col-md-4">Retention</label>
+					<!-- Retention -->
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Retention</label>
 
-									<div class="row col-md-8">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label>Max Retention %</label>
-												<div class="input-group col-md-12">
-													<input type="text" class="form-control" ng-model = "maxRetPercent">
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-6">
-											<div class="form-group">
-												<label>Interim Retention %</label>
-												<div class="input-group col-md-12">
-													<input type="number" class="form-control" ng-model = "interimRetPercent">
-												</div>
-											</div>
-										</div>
-										
-										<div class="col-md-6">
-											<div class="form-group">
-												<label>MOS Retention %</label>
-												<div class="input-group col-md-12">
-													<input type="number" class="form-control" ng-model = "mosRetPercent">
-												</div>
+								<div class="row col-md-8">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Max Retention %</label>
+											<div class="input-group col-md-12">
+												<input type="text" class="form-control"
+													ng-model="job.maxRetPercent">
 											</div>
 										</div>
 									</div>
 
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Interim Retention %</label>
+											<div class="input-group col-md-12">
+												<input type="number" class="form-control"
+													ng-model="job.interimRetPercent">
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>MOS Retention %</label>
+											<div class="input-group col-md-12">
+												<input type="number" class="form-control"
+													ng-model="job.mosRetPercent">
+											</div>
+										</div>
+									</div>
 								</div>
+
 							</div>
-							<!-- /.box-body -->
 						</div>
-						<!-- /.box -->
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
 
-						<div class="box box-default">
-							<div class="box-body">
-								<div class="row">
-									<label class="col-md-4">General Information</label>
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">General Information</label>
 
-									<div class="row col-md-8">
+								<div class="row col-md-8">
 									<div class="form-group col-md-6">
 										<label>Value of BS work</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control" ng-model = "valueOfBSWork">
+											<input type="text" class="form-control"
+												ng-model="job.valueOfBSWork" ng-Currency>
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Billing Currency</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control" ng-model = "billingCurrency">
+											<input type="text" class="form-control"
+												maxlength="3"
+												ng-model="job.billingCurrency">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Gross Floor Area</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control" ng-model = "grossFloorArea">
+											<input type="number" class="form-control"
+												ng-model="job.grossFloorArea">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Gross Floor Area Unit</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control" ng-model = "grossFloorAreaUnit">
+											<input type="text" class="form-control"
+												maxlength="2"
+												ng-model="job.grossFloorAreaUnit">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Payment Terms for Nominated SC</label>
 										<div class="input-group col-md-12">
-											<input type="text" class="form-control" ng-model = "paymentTermsForNominatedSC">
+											<input type="text" class="form-control"
+												maxlength="3"
+												ng-model="job.paymentTermForNSC">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Defect Provision %</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control" ng-model = "defectProvisionPercentage">
+											<input type="number" class="form-control"
+												ng-model="job.defectProvisionPercent">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Forecast End Year</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control" ng-model = "forecastEndYear">
+											<input type="number" class="form-control"
+												ng-model="job.forecastEndYear">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>Forecast End Period</label>
 										<div class="input-group col-md-12">
-											<input type="number" class="form-control" ng-model = "forecastEndPeriod">
+											<input type="number" class="form-control"
+												ng-model="job.forecastEndPeriod">
 										</div>
 									</div>
-									
-									
-									</div>
+
+
 								</div>
 							</div>
-							<!-- /.box-body -->
 						</div>
-						<!-- /.box -->
+					</div>
 
 
-					</div>
-					<!-- /.box-body -->
-					<div class="box-footer">
-						<a class="btn btn-primary btn-block" ng-click="saveJobInfo()">Save
-							<i class="fa fa-floppy-o"></i>
-						</a>
-					</div>
-					<!-- /.box-footer -->
-					<!-- </form> -->
 				</div>
-				<!-- /.box -->
+				<!-- /.box-body -->
+				<div class="box-footer">
+					<a class="btn btn-primary btn-block" ng-click="saveJobInfo()">Save
+						<i class="fa fa-floppy-o"></i>
+					</a>
+				</div>
 			</div>
 		</div>
-		<!-- /.row -->
+	</div>
 </div>
-<!-- /.content-wrapper -->
 

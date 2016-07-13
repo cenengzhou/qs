@@ -113,13 +113,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('job.dates', {
 		url: "/dates",
 		templateUrl: "view/job/job-dates.html",
-		controller: 'JobInfoCtrl',
+		controller: 'JobDatesCtrl',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/job/job-info.js'
+                           'js/controller/job/job-dates.js'
                     ] 
                 });
             }]

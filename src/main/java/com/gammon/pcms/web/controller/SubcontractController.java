@@ -67,8 +67,6 @@ public class SubcontractController {
 	
 	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)
 	public UDC getWorkScope(@RequestParam(name="workScopeCode") String workScopeCode){
-		logger.info("------------------------obtainWorkScope");
-		
 		UDC obtainWorkScope = null;
 		try {
 			obtainWorkScope = subcontractService.obtainWorkScope(workScopeCode);
@@ -115,11 +113,10 @@ public class SubcontractController {
 	
 	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
 	public String submitAwardApproval(@RequestParam(name="jobNo") String jobNo, 
-			@RequestParam(name="subcontractNo") String subcontractNo, 
-			@RequestParam(name="subcontractorNo") String subcontractorNo){
+			@RequestParam(name="subcontractNo") String subcontractNo){
 		String result = null;
 		try {
-			result = subcontractService.submitAwardApproval(jobNo, subcontractNo, subcontractorNo);
+			result = subcontractService.submitAwardApproval(jobNo, subcontractNo);
 		} catch (Exception e) {
 			result = "Subcontract cannot be submitted.";
 			e.printStackTrace();

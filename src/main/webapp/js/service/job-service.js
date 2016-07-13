@@ -1,8 +1,12 @@
 mainApp.service('jobService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getJob: getJob,
-    	getJobList: getJobList,
+    	getJob: 		getJob,
+    	getJobList: 	getJobList,
+    	getJobDates:	getJobDates,
+    	updateJobInfo: 	updateJobInfo,
+    	updateJobDates:	updateJobDates,
+    	
     	obtainJobInfo: obtainJobInfo,
     	obtainJobDashboardData: obtainJobDashboardData,
     });
@@ -24,6 +28,38 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             method: "get",
             url: "service/job/getJobList",
             dataType: "application/json;charset=UTF-8"
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getJobDates(jobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/job/getJobDates",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateJobDates(jobDates) {
+        var request = $http({
+            method: "post",
+            url: "service/job/updateJobDates",
+            dataType: "application/json;charset=UTF-8",
+            data: jobDates
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateJobInfo(job) {
+        var request = $http({
+            method: "post",
+            url: "service/job/updateJobInfo",
+            dataType: "application/json;charset=UTF-8",
+            data: job
         });
         return( request.then( handleSuccess, handleError ) );
     }

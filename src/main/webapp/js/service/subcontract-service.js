@@ -107,15 +107,14 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function submitAwardApproval(jobNo, subcontractNo, subcontractorNo) {
+    function submitAwardApproval(jobNo, subcontractNo) {
         var request = $http({
             method: "post",
             url: "service/subcontract/submitAwardApproval",
             dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo,
-                subcontractNo: subcontractNo,
-                subcontractorNo: subcontractorNo
+                subcontractNo: subcontractNo
             }
         });
         return( request.then( handleSuccess, handleError ) );

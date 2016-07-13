@@ -30,7 +30,9 @@ import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListMa
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
+import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.PackageSnapshotGenerationService;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -177,6 +179,9 @@ public class SubcontractService {
 	//Job Cost
 	@Autowired
 	private JobCostWSDao jobCostDao;
+	//Tender Variance
+	@Autowired
+	private TenderVarianceHBDao tenderVarianceHBDao;
 	
 	//Master List
 	@Autowired
@@ -3215,31 +3220,30 @@ public class SubcontractService {
 		return Boolean.TRUE;
 	}
 
-	public String submitAwardApproval(String jobNumber, String subcontractNumber, String vendorNumber) throws Exception {
+	public String submitAwardApproval(String jobNumber, String subcontractNumber) throws Exception {
 		try {
-			boolean isTAExisted = false;
-			Integer vendorNo = new Integer(vendorNumber);
 			String approvalType;
-			Double budgetSum; 
-			Double taSubcontractSum = 0.00;
-			Tender tenderAnalysis = new Tender();;
+			
 			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-			Subcontract scPackage;
-			scPackage = subcontractHBDao.obtainPackage(job, subcontractNumber);
+			Subcontract scPackage = subcontractHBDao.obtainPackage(job, subcontractNumber);
 
 			if (scPackage == null){
 				return "SCPackage does not exist";
 			}
 			//Check if subcontractor is in the Tender Analysis.
-			List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+			
+			Tender rcmTender = tenderAnalysisHBDao.obtainRecommendedTender(jobNumber, subcontractNumber);
+			
+			/*List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 			for (Tender currentTenderAnalysis: tenderAnalysisList){
 				if (vendorNo.equals(currentTenderAnalysis.getVendorNo())){
-					tenderAnalysis = currentTenderAnalysis;
+					rcmTender = currentTenderAnalysis;
 					isTAExisted = true;
 					break;
 				}
-			}
-			if (isTAExisted){
+			}*/
+			
+			if (rcmTender!=null){
 				//Check if the status is not 160 or 340
 				if (Integer.valueOf(160).equals(scPackage.getSubcontractStatus()) || Integer.valueOf(340).equals(scPackage.getSubcontractStatus())){
 					String resultMsg;
@@ -3254,19 +3258,23 @@ public class SubcontractService {
 					if(scPackage.getWorkscope()==null)
 						return "There is no workscope in this Subcontract.";
 
-					resultMsg = masterListWSDao.checkAwardValidation(vendorNo, String.valueOf(scPackage.getWorkscope()));
+					resultMsg = masterListWSDao.checkAwardValidation(rcmTender.getVendorNo(), String.valueOf(scPackage.getWorkscope()));
 					if (resultMsg != null && resultMsg.length() != 0){
 						return resultMsg;
 					}
 
 					//Get the Recommended SC Sum 
-					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)!=null){
-						for(TenderDetail currentTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
+					/*if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)!=null){
+						for(TenderDetail currentTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)){
 							taSubcontractSum = taSubcontractSum + 
 							(currentTenderAnalysisDetail.getRateBudget() * currentTenderAnalysisDetail.getQuantity());
 						}
 					}else
+						return "No Tender Analysis Detail";*/
+					
+					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null){
 						return "No Tender Analysis Detail";
+					
 					if("Lump Sum Amount Retention".equals(scPackage.getRetentionTerms())){ 
 						if (scPackage.getRetentionAmount()==null){
 							return "Retention Amount has to be provided when the Retiontion Terms is Lump Sum Amount Retention";
@@ -3334,17 +3342,14 @@ public class SubcontractService {
 								if (lastPaymentCert==null || lastPaymentCert.getPaymentCertNo().compareTo(scPaymentCert.getPaymentCertNo()) <0)
 									lastPaymentCert=scPaymentCert;
 							}
-							/*else if ("PCS".equals(scPaymentCert.getPaymentStatus())||"SBM".equals(scPaymentCert.getPaymentStatus()))
-								submittedDirectPayment=true;
-						if (submittedDirectPayment)
-							return "Payment is submitted.";*/
+							
 
 						if (paidDirectPayment){
 							double certedAmount = 0;
 							
 							 // Check if selected vendor matched with paid vendor 
-							if (!vendorNo.toString().equals(scPackage.getVendorNo().trim()))
-								return "Selected vendor("+vendorNo+") does not match with paid vendor("+scPackage.getVendorNo()+")";
+							if (!rcmTender.getVendorNo().toString().equals(scPackage.getVendorNo().trim()))
+								return "Selected vendor("+rcmTender.getVendorNo()+") does not match with paid vendor("+scPackage.getVendorNo()+")";
 
 							 // Check if the paid amount is smaller than to be award subcontract sum
 							List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(lastPaymentCert);
@@ -3356,18 +3361,66 @@ public class SubcontractService {
 						}
 					}
 
-					Double approvalAmount;
-					budgetSum = tenderAnalysis.getBudgetAmount();
+					
+					/**
+					 * @author koeyyeung
+					 * created on 12 July, 2016
+					 * Determine Approval Type **/
+					BigDecimal originalBudget = new BigDecimal(rcmTender.getBudgetAmount());
+					BigDecimal tenderBudget = originalBudget.subtract(rcmTender.getAmtBuyingGainLoss()).setScale(2, BigDecimal.ROUND_HALF_UP);
+					logger.info("-----------------------tenderBudget: "+tenderBudget);
+					
+					boolean variedSubcontract = false;
+					List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNumber, subcontractNumber, String.valueOf(rcmTender.getVendorNo()));
+					List<Tender> tenderList = tenderAnalysisHBDao.obtainTenderList(jobNumber, subcontractNumber);
+					
+					//1. Non-standard payment terms
+					if(deviated){
+						logger.info("1. Non-standard payment terms");
+						variedSubcontract = true;
+					}
+					//2. Tender Variance
+					else if(tenderVarianceList != null && tenderVarianceList.size()>0){
+						logger.info("2. Tender Variance exist");
+						variedSubcontract = true;
+					}
+					//3. Status Change Execution of SC - (Y)
+					else if("Y".equals(rcmTender.getStatusChangeExecutionOfSC())){
+						logger.info("3. Status Change Execution of SC - (Y)");
+						variedSubcontract = true;
+					}
+					//4. Tender List < 3
+					else if(tenderList.size()<3){
+						logger.info("4. Tender List < 3");
+						variedSubcontract = true;
+					}
+					
+					
+					//Tender Budget is greater than Original Budget
+					if(tenderBudget.compareTo(originalBudget) == 1){
+						if(variedSubcontract)
+							approvalType = "V6";
+						else
+							approvalType = "V5";
+							
+					}else{
+						if(variedSubcontract)
+							approvalType = "V6";
+						else
+							approvalType = "V5";
+					}
+					
+					Double approvalAmount = tenderBudget.doubleValue();
+					
+					/*Double approvalAmount;
+					budgetSum = rcmTender.getBudgetAmount();
 					if (budgetSum == null)
 						budgetSum = 0.00;
 					Double diff = budgetSum - taSubcontractSum;						
-					// added by brian on 20110406 - start 
 					Double diffForRounding = diff;
-					// round the diff to 2 d.p.
 					int roundDP = 2;
-					//					if (diff < 0 && budgetSum != null){
+
 					if (RoundingUtil.round(diffForRounding, roundDP) < 0 && budgetSum != null){
-						// added by brian on 20110406 - end
 						approvalAmount = diff*-1;
 						if (deviated)
 							approvalType = "V6";
@@ -3386,32 +3439,35 @@ public class SubcontractService {
 							else
 								approvalType = "AW";
 						}
-					}
+					}*/
+					
+					
+					
 
 					//Submit Approval
 					String msg = "";
-					String vendorName = masterListWSDao.getOneVendor(vendorNo.toString()).getVendorName();
+					//String vendorName = masterListWSDao.getOneVendor(vendorNo.toString()).getVendorName();
 					String approvalSubType = scPackage.getApprovalRoute();	//used to pass "null" to Phase 2 in-order to display NA
 
-					if (vendorName != null)
-						vendorName = vendorName.trim();
+					/*if (vendorName != null)
+						vendorName = vendorName.trim();*/
 
 					// the currency pass to approval system should be the company base currency
 					// so change the currencyCode to company base currency here since it will not affect other part of code
 					String currencyCode = getCompanyBaseCurrency(jobNumber);
 					String userID = securityServiceImpl.getCurrentUser().getUsername();
 					
-					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, vendorNo.toString(), vendorName, approvalType, approvalSubType, approvalAmount, currencyCode, userID);
+					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, rcmTender.getVendorNo().toString(), rcmTender.getNameSubcontractor(), approvalType, approvalSubType, approvalAmount, currencyCode, userID);
 					if(msg!=null)
 						logger.info("Create Approval Route Message: "+msg);
 					
 					if (msg.length() == 0){
 						//Update Related Records
-						tenderAnalysis.setStatus(Tender.TA_STATUS_RCM);
-						tenderAnalysis.setUsernamePrepared(userID);
-						tenderAnalysis.setDatePrepared(new Date());
+						rcmTender.setStatus(Tender.TA_STATUS_RCM);
+						rcmTender.setUsernamePrepared(userID);
+						rcmTender.setDatePrepared(new Date());
 						try{
-							tenderAnalysisHBDao.update(tenderAnalysis);
+							tenderAnalysisHBDao.update(rcmTender);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -3826,9 +3882,7 @@ public class SubcontractService {
 	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting, String username) {
 		if (glDate == null)
 			throw new NullPointerException("GL Date cannot be null");
-		if(username == null || username.equals("")){
-			username = securityService.getCurrentUser().getUsername();
-		}
+
 		// For specified job
 		if (jobNumber != null && jobNumber.trim().length() > 0) {
 			logger.info("Job:" + jobNumber + " - GLDate: " + glDate.toString());

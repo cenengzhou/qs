@@ -1,108 +1,75 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', '$cookieStore',
-                                   function($scope, jobService, $cookieStore) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state',
+                                   function($scope, jobService, modalService, $state) {
 
 	loadJobInfo();
 
 	function loadJobInfo() {
-		jobService.getJob($cookieStore.get("jobNo"))
+		jobService.getJob($scope.jobNo)
 		.then(
 				function( data ) {
-					$scope.plannedStartDate = "";
-					$scope.actualStartDate  = data.actualPCCDate;
-					$scope.plannedEndDate  = "";
-					$scope.actualEndDate  = "";
-					$scope.anticipatedCompletionDate= "";  
-					$scope.revisedCompletionDate  = "";
-
-					$scope.actualPCCDate="";
-					$scope.actualMakingGoodDate="";
-					$scope.defectLiabilityDate="";
-					$scope.financialEndDate="";
-					$scope.finalACSettlementDate="";
-
-					$scope.company = data.company;
-					$scope.customerNo = data.employer;
-					$scope.contactType =data.contractType;
-					$scope.division = data.division;
-					$scope.department = data.department;
-					$scope.soloJV = data.soloJV;
-					$scope.completionStatus = data.completionStatus;
-					$scope.insuranceCAR = data.insuranceCAR;
-					$scope.insuranceECI = data.insuranceECI;
-					$scope.insuranceTPL = data.insuranceTPL;
-
-					$scope.originalContractValue = data.originalContractValue;
-					$scope.projectedContractValue = data.projectedContractValue;
-					$scope.orginalNominatedSCContractValue = data.orginalNominatedSCContractValue;
-					$scope.tenderGP = data.tenderGP;
-					$scope.clientContractNo = data.clientContractNo;
-					$scope.parentJobNo = data.parentJobNo;
-					$scope.jvPartnerNo= data.jvPartnerNo;
-					$scope.jvPercentage= data.jvPercentage;
-
-					$scope.maxRetPercent = data.maxRetPercent;
-					$scope.interimRetPercent = data.interimRetPercent;
-					$scope.mosRetPercent = data.mosRetPercent;
-
-					$scope.valueOfBSWork = data.valueOfBSWork;
-					$scope.grossFloorArea = data.grossFloorArea;
-					$scope.grossFloorAreaUnit = data.grossFloorAreaUnit;
-					$scope.billingCurrency = data.billingCurrency;
-					$scope.paymentTermsForNominatedSC = data.paymentTermsForNominatedSC;
-					$scope.defectProvisionPercentage = data.defectProvisionPercentage;
-					$scope.forecastEndYear = data.forecastEndYear;
-					$scope.forecastEndPeriod = data.forecastEndPeriod;
-
-					$scope.levyApplicable = false;
-					if(data.levyApplicable == "1")
-						$scope.levyApplicable = true;
-
-					$scope.levyCITAPercentage = data.levyCITAPercentage;
-					$scope.levyPCFBPercentage = data.levyPCFBPercentage;
-
-					//CPF Calculation
-					$scope.cpfApplicable = false;
-					if(data.cpfApplicable == "1")
-						$scope.cpfApplicable = true;
-
-					$scope.cpfBaseYear = data.cpfBaseYear;
-					$scope.cpfBasePeriod = data.cpfBasePeriod;
-					$scope.cpfIndexName = data.cpfIndexName;
-
-					console.log("data.actualPCCDate: "+data.actualPCCDate);
+					$scope.job = data;
 					
-					$scope.actualPCCDate = data.actualPCCDate;
-					$scope.actualMakingGoodDate = data.actualMakingGoodDate;
-					$scope.dateFinalACSettlement = data.dateFinalACSettlement;
-					$scope.defectListIssuedDate = data.defectListIssuedDate;
-					$scope.financialEndDate = data.financialEndDate;
-
+					if($scope.job.cpfApplicable == "1")
+						$scope.job.cpfApplicable = true;
+					else
+						$scope.job.cpfApplicable = false;
+					
+					if($scope.job.levyApplicable == "1")
+						$scope.job.levyApplicable = true;
+					else
+						$scope.job.levyApplicable = false;
+					
 				});
 	}
 
 
-
-	/*$scope.paymentTerms = {
-	options: [
-      "Yes",
-      "No"
-      ],
-      selected: "No"
-	};*/
-
-
-
 	//Save Function
 	$scope.saveJobInfo = function () {
-		console.log("levyCITAPercentage: " + $scope.levyCITAPercentage);
-		console.log("cpfPeriod: " + $scope.cpfPeriod);
-
+		if (false === $('form[name="levyForm"]').parsley().validate()) {
+			event.preventDefault();  
+			return;
+		}
+		if (false === $('form[name="cpfForm"]').parsley().validate()) {
+			event.preventDefault();  
+			return;
+		}
+		
+		
+		if($scope.job.cpfApplicable == true)
+			$scope.job.cpfApplicable = "1";
+		else{
+			$scope.job.cpfApplicable = "0";
+			$scope.job.cpfBaseYear = "";
+			$scope.job.cpfBasePeriod ="";
+			$scope.job.cpfIndexName = "";
+		}
+		
+		if($scope.job.levyApplicable == true)
+			$scope.job.levyApplicable = "1";
+		else{
+			$scope.job.levyApplicable = "0";
+			$scope.job.levyCITAPercent = 0;
+			$scope.job.levyPCFBPercent = 0;
+		}
+		console.log($scope.job);
+		
+		updateJobInfo($scope.job);
+		
+		
 	};
-
-	$scope.saveDates = function () {
-		console.log("actualStartDate: " + $scope.actualStartDate);
-
-	};
+	
+	function updateJobInfo(job){
+		jobService.updateJobInfo(job)
+		.then(
+				function( data ) {
+					if(data.length>0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+				    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Job has been updated successfully.");
+				    	$state.reload();
+					}
+				});
+		}
 
 }]);
 

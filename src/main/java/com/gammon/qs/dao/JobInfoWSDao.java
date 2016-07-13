@@ -378,8 +378,10 @@ public class JobInfoWSDao{
 	 * modified on June 06, 2013
 	 * 
 	 */
-	public Boolean updateJobDates(JobDates jobdates, String userId){
+	public String updateJobDates(JobDates jobdates, String userId){
 			logger.info("call WS(updateJobDatesByJobNumberWebServiceTemplate): STARTED");
+			String error = "";
+			
 			// initialize request object
 			UpdateBQMasterDatesByJobNumberRequestObj requestObj = new UpdateBQMasterDatesByJobNumberRequestObj();
 			requestObj.setUpdateField(new UpdateBQMasterDatesByJobNumberRequestField());
@@ -409,14 +411,14 @@ public class JobInfoWSDao{
 			
 			if (responseObj==null){
 				logger.info("No Update to Job Date - Response Object is null.");
-				return false;
+				error = "Failed to update Job Dates.";
 			}
 			else if (responseObj.getNumberRowsUpdated()==null || responseObj.getNumberRowsUpdated().intValue()<1){
 				logger.info("No Update to Job Date - Number of record updated = 0.");
-				return false;
+				error = "Failed to update Job Dates.";
 			}
 			
-			return true;
+			return error;
 	}
 
 	public List<JobInfo> obtainAllJobs() throws DatabaseOperationException {

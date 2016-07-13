@@ -106,7 +106,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			return;
 		}
 		
-		$scope.newSubcontract = {
+		$scope.subcontractToUpdate = {
 				id:  $scope.subcontract.id,
 				packageNo : $scope.subcontract.packageNo,
 				description: $scope.subcontract.description,
@@ -133,19 +133,26 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 		}
 		
 		if($scope.subcontract.retentionTerms == "Lump Sum"){
-			$scope.newSubcontract.retentionTerms = subcontractRetentionTerms.RETENTION_LUMPSUM;
+			$scope.subcontractToUpdate.retentionTerms = subcontractRetentionTerms.RETENTION_LUMPSUM;
 		}
 		else if($scope.subcontract.retentionTerms == "Percentage" && $scope.percentageOption == "Original"){
-			$scope.newSubcontract.retentionTerms = subcontractRetentionTerms.RETENTION_ORIGINAL;
+			$scope.subcontractToUpdate.retentionTerms = subcontractRetentionTerms.RETENTION_ORIGINAL;
 		}
 		else if($scope.subcontract.retentionTerms == "Percentage" && $scope.percentageOption == "Revised"){
-			$scope.newSubcontract.retentionTerms = subcontractRetentionTerms.RETENTION_REVISED;
+			$scope.subcontractToUpdate.retentionTerms = subcontractRetentionTerms.RETENTION_REVISED;
 		} 
 		if($scope.subcontract.cpfCalculation=="No CPF"){
-			$scope.newSubcontract.cpfCalculation = "Not Subject to CPF";
+			$scope.subcontractToUpdate.cpfCalculation = "Not Subject to CPF";
 		}
 		
-		console.log($scope.newSubcontract);
+		if($scope.subcontract.cpfCalculation == true){
+			$scope.subcontractToUpdate.cpfCalculation = "1";
+		}else{
+			$scope.subcontractToUpdate.cpfCalculation = "0";
+			$scope.subcontractToUpdate.cpfBasePeriod = "";
+			$scope.subcontractToUpdate.cpfBaseYear = "";
+		}
+		//console.log($scope.subcontractToUpdate);
 
 
 		getWorkScope($scope.subcontract.workscope);
@@ -169,6 +176,11 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 							$scope.subcontract.retentionTerms = "Percentage";
 							$scope.percentageOption= "Revised";
 						} 
+						
+						if($scope.subcontract.cpfCalculation == "1"){
+							$scope.subcontract.cpfCalculation = true;
+						}else
+							$scope.subcontract.cpfCalculation = false;
 						
 						if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
 							$scope.disableButtons = true;
@@ -206,15 +218,15 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	}
 
 	function upateSubcontract(){
-	subcontractService.upateSubcontract($cookieStore.get("jobNo"), $scope.newSubcontract)
+	subcontractService.upateSubcontract($cookieStore.get("jobNo"), $scope.subcontractToUpdate)
 	.then(
 			function( data ) {
 				if(data.length>0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
 				}else{
 			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
-					$cookieStore.put('subcontractNo', $scope.newSubcontract.packageNo);
-			    	$cookieStore.put('subcontractDescription', $scope.newSubcontract.description);
+					$cookieStore.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
+			    	$cookieStore.put('subcontractDescription', $scope.subcontractToUpdate.description);
 			    	$state.reload();
 				}
 

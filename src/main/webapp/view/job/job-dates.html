@@ -26,22 +26,22 @@
 							<div class="col-md-6">
 								<div class="col-md-8"><label>Planned Start Date</label></div>
 								<div class="form-group col-md-4">
-				                    <div class="input-group" moment-picker="plannedStartDate" format="YYYY-MM-DD">
+				                    <div class="input-group" moment-picker="jobDates.plannedStartDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="plannedStartDate">
+										 <input class="form-control" ng-model="jobDates.plannedStartDate">
 									</div>
 								</div>
 								
 								
 								<div class="col-md-8"><label>Planned End Date</label></div>
 								<div class="form-group col-md-4">
-				                    <div class="input-group" moment-picker="plannedEndDate" format="YYYY-MM-DD">
+				                    <div class="input-group" moment-picker="jobDates.plannedEndDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="plannedEndDate">
+										 <input class="form-control" ng-model="jobDates.plannedEndDate">
 									</div>
 								</div>
 
@@ -49,41 +49,41 @@
 								<label>Actual Start Date</label>
 							</div>
 							<div class="form-group col-md-4">
-								<div class="input-group" moment-picker="actualStartDate" format="YYYY-MM-DD">
+								<div class="input-group" moment-picker="jobDates.actualStartDate" format="YYYY-MM-DD">
 									<span class="input-group-addon"> 
 										<i class="fa fa-calendar"></i>
 									</span>
-									 <input class="form-control" ng-model="actualStartDate">
+									 <input class="form-control" ng-model="jobDates.actualStartDate">
 								</div>
 							</div>
 
 							<div class="col-md-8"><label>Actual End Date</label></div>
 								<div class="form-group col-md-4">
-									<div class="input-group" moment-picker="actualEndDate" format="YYYY-MM-DD">
+									<div class="input-group" moment-picker="jobDates.actualEndDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="actualEndDate">
+										 <input class="form-control" ng-model="jobDates.actualEndDate">
 									</div>
 								</div>
 								
 								<div class="col-md-8"><label>Anticipated Completion Date</label></div>
 								<div class="form-group col-md-4">
-				                    <div class="input-group" moment-picker="anticipatedCompletionDate" format="YYYY-MM-DD">
+				                    <div class="input-group" moment-picker="jobDates.anticipatedCompletionDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="anticipatedCompletionDate">
+										 <input class="form-control" ng-model="jobDates.anticipatedCompletionDate">
 									</div>
 								</div>
 								
 								<div class="col-md-8"><label>Revised Completion Date</label></div>
 								<div class="form-group col-md-4">
-									<div class="input-group" moment-picker="revisedCompletionDate" format="YYYY-MM-DD">
+									<div class="input-group" moment-picker="jobDates.revisedCompletionDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="revisedCompletionDate">
+										 <input class="form-control" ng-model="jobDates.revisedCompletionDate">
 									</div>
 								</div>
 							
@@ -93,11 +93,11 @@
 							<div class="col-md-6">
 								<div class="col-md-8"><label>Actual PCC Date</label></div>
 								<div class="form-group col-md-4">
-									<div class="input-group" moment-picker="actualPCCDate" format="YYYY-MM-DD">
+									<div class="input-group" moment-picker="job.actualPCCDate" format="YYYY-MM-DD">
 									<span class="input-group-addon"> 
 										<i class="fa fa-calendar"></i>
 									</span>
-									 <input class="form-control" ng-model="actualPCCDate">
+									 <input class="form-control" ng-model="job.actualPCCDate">
 								</div>
 								</div>
 
@@ -105,41 +105,41 @@
 								
 								<div class="col-md-8"><label>Actual Making Good Date</label></div>
 								<div class="form-group col-md-4">
-									<div class="input-group" moment-picker="actualMakingGoodDate" format="YYYY-MM-DD">
+									<div class="input-group" moment-picker="job.actualMakingGoodDate" format="YYYY-MM-DD">
 									<span class="input-group-addon"> 
 										<i class="fa fa-calendar"></i>
 									</span>
-									 <input class="form-control" ng-model="actualMakingGoodDate">
+									 <input class="form-control" ng-model="job.actualMakingGoodDate">
 									</div>
 								</div>
 								
 								<div class="col-md-8"><label>Defect List Issued Date</label></div>
 								<div class="form-group col-md-4">
-									<div class="input-group" moment-picker="defectListIssuedDate" format="YYYY-MM-DD">
+									<div class="input-group" moment-picker="job.defectListIssuedDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="defectListIssuedDate">
+										 <input class="form-control" ng-model="job.defectListIssuedDate">
 									</div>
 								</div>
 								
 								<div class="col-md-8"><label>Financial End Date</label></div>
 								<div class="form-group col-md-4">
-				                    <div class="input-group" moment-picker="financialEndDate" format="YYYY-MM-DD">
+				                    <div class="input-group" moment-picker="job.financialEndDate" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="financialEndDate">
+										 <input class="form-control" ng-model="job.financialEndDate">
 									</div>
 								</div>
 								
 								<div class="col-md-8"><label>Final A/C Settlement Date</label></div>
 								<div class="form-group col-md-4">
-				                    <div class="input-group" moment-picker="finalACSettlementDate" format="YYYY-MM-DD">
+				                    <div class="input-group" moment-picker="job.dateFinalACSettlement" format="YYYY-MM-DD">
 										<span class="input-group-addon"> 
 											<i class="fa fa-calendar"></i>
 										</span>
-										 <input class="form-control" ng-model="finalACSettlementDate">
+										 <input class="form-control" ng-model="job.dateFinalACSettlement">
 									</div>
 								</div>
 							
@@ -152,7 +152,7 @@
 					<div class="box-footer">
 						<button class="btn btn-primary btn-block" type="button"
 							ng-click="saveDates()">
-							<span class="fa fa-save"></span> Save
+							<span class="fa fa-save"></span> Update
 						</button>
 					</div>
 				</div>

@@ -84,11 +84,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String billingCurrency;
 	private String paymentTermsForNominatedSC;
 	private Double defectProvisionPercentage = 0.0;
-	private String cpfApplicable;
+	private String cpfApplicable;// 0/1
 	private String cpfIndexName;
 	private Integer cpfBaseYear = 0;
 	private Integer cpfBasePeriod = 0;
-	private String levyApplicable;
+	private String levyApplicable; // 0/1
 	private Double levyCITAPercentage = 0.0;
 	private Double levyPCFBPercentage = 0.0;
 	private Date expectedPCCDate;

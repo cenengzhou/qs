@@ -3,16 +3,17 @@
  */
 package com.gammon.qs.domain;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author briantse
  * @Create_Date May 3, 2011
  */
-public class JobDates  implements Serializable {
+public class JobDates {
 	
-	private static final long serialVersionUID = -5818808407784267229L;
 
 	private String jobNumber;
 	
@@ -40,6 +41,7 @@ public class JobDates  implements Serializable {
 		this.jobNumber = jobNumber;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getPlannedStartDate() {
 		return plannedStartDate;
 	}
@@ -48,6 +50,7 @@ public class JobDates  implements Serializable {
 		this.plannedStartDate = plannedStartDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getActualStartDate() {
 		return actualStartDate;
 	}
@@ -56,6 +59,7 @@ public class JobDates  implements Serializable {
 		this.actualStartDate = actualStartDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getPlannedEndDate() {
 		return plannedEndDate;
 	}
@@ -64,6 +68,7 @@ public class JobDates  implements Serializable {
 		this.plannedEndDate = plannedEndDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getActualEndDate() {
 		return actualEndDate;
 	}
@@ -72,6 +77,7 @@ public class JobDates  implements Serializable {
 		this.actualEndDate = actualEndDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getAnticipatedCompletionDate() {
 		return anticipatedCompletionDate;
 	}
@@ -80,16 +86,13 @@ public class JobDates  implements Serializable {
 		this.anticipatedCompletionDate = anticipatedCompletionDate;
 	}
 
+	@Temporal(value = TemporalType.DATE)
 	public Date getRevisedCompletionDate() {
 		return revisedCompletionDate;
 	}
 
 	public void setRevisedCompletionDate(Date revisedCompletionDate) {
 		this.revisedCompletionDate = revisedCompletionDate;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }
