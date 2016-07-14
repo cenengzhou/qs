@@ -5,7 +5,7 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 	$scope.MainCertSearch = {};
 
 	$scope.blockMainCert = blockUI.instances.get('blockMainCert');
-	$scope.blockMainCert.start();
+	$scope.blockMainCert.start({hideMessage: true, hideAnimate:true});
 	
 	$scope.onSubmitMainCertSearch = function() {
 		var jobNo = $scope.MainCertSearch.jobNo;
@@ -53,7 +53,7 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 		$scope.RevisionsMainCertRecord.$setPristine();
 		$scope.MainCertRecord = {};
 		if(!$scope.blockMainCert.isBlocking()){
-			$scope.blockMainCert.start();
+			$scope.blockMainCert.start({hideMessage: true, hideAnimate:true});
 		}
 	}
 	

@@ -7,15 +7,19 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
@@ -28,11 +32,6 @@ import com.gammon.qs.service.transit.TransitService;
 public class TransitController {
 	@Autowired
 	private TransitService transitService;
-
-	@RequestMapping(value = "confirmBPIResources", method = RequestMethod.POST)
-	public PCMSDTO confirmBPIResources() {
-		return null;
-	}
 
 	@RequestMapping(value = "obtainTransitCodeMatcheList", method = RequestMethod.POST)
 	public List<TransitCodeMatch> obtainTransitCodeMatcheList(@RequestParam(defaultValue = "") String matchingType, 
@@ -72,5 +71,34 @@ public class TransitController {
 	public String completeTransit(@RequestParam String jobNumber){
 		return transitService.completeTransit(jobNumber);
 	}
+	
+	@RequestMapping(value = "saveTransitResourcesList", method = RequestMethod.POST)
+	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList,
+																HttpServletRequest request, HttpServletResponse response){
+		String result = null;
+		try{
+			result = transitService.saveTransitResources(jobNumber, resourcesList);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if(result != null){
+			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "saveTransitResources", method = RequestMethod.POST)
+	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources,
+													HttpServletRequest request, HttpServletResponse response){
+		String result = null;
+		try{
+			result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources), request, response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 
 }

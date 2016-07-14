@@ -1,4 +1,4 @@
-mainApp.service('transitService', ['$http', '$q',  function($http, $q){
+mainApp.service('transitService', ['$http', '$q', 'modalService', function($http, $q, modalService){
 	// Return public API.
     return({
     	obtainTransitCodeMatcheList:	obtainTransitCodeMatcheList,
@@ -8,7 +8,9 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     	getTransitBQItems:				getTransitBQItems,
     	getTransitResources:			getTransitResources,
     	confirmResourcesAndCreatePackages: confirmResourcesAndCreatePackages,
-    	completeTransit:				completeTransit
+    	completeTransit:				completeTransit,
+    	saveTransitResources:			saveTransitResources,
+    	saveTransitResourcesList:		saveTransitResourcesList
     });
    
     function obtainTransitCodeMatcheList(){
@@ -87,6 +89,38 @@ mainApp.service('transitService', ['$http', '$q',  function($http, $q){
     	});
     	return( request.then( handleSuccess, handleError ) );
     }
+    
+    function saveTransitResources(jobNo, resources){
+    	var defer = $q.defer();
+			$http({
+				method: 'POST',
+				url: 'service/transit/saveTransitResources',
+	    		params:{
+	    			jobNumber: jobNo,
+	    		}, 
+	    		data: resources
+			})
+			.then(function(response) {
+				defer.resolve(response.data)
+			}, function(response){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.statusText+':'+response.data);
+				defer.reject(response.data);
+			});
+			return defer.promise;
+    }
+
+    function saveTransitResourcesList(jobNo, resourcesList){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/saveTransitResourcesList',
+    		params:{
+    			jobNumber: jobNo
+    		},
+    		data: resourcesList
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
 
     // ---
     // PRIVATE METHODS.

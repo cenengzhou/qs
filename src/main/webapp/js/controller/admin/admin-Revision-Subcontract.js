@@ -5,7 +5,7 @@ mainApp.controller('AdminRevisionSubcontractCtrl',
 	$scope.SubcontractSearch = {};
 
 	$scope.blockSbucontract = blockUI.instances.get('blockSbucontract');
-	$scope.blockSbucontract.start();
+	$scope.blockSbucontract.start({hideMessage: true, hideAnimate:true});
 	$scope.onSubmitSubcontractSearch = function() {
 		var jobNo = $scope.SubcontractSearch.jobNo;
 		var packageNo = $scope.SubcontractSearch.packageNo;
@@ -50,7 +50,7 @@ mainApp.controller('AdminRevisionSubcontractCtrl',
 		$scope.RevisionsSubcontractRecord.$setPristine();
 		$scope.SubcontractRecord = {};
 		if(!$scope.blockSbucontract.isBlocking()){
-			$scope.blockSbucontract.start();
+			$scope.blockSbucontract.start({hideMessage: true, hideAnimate:true});
 		}
 	}
 	

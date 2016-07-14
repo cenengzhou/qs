@@ -5,7 +5,7 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 	$scope.PaymentCertSearch = {};
 
 	$scope.blockPaymentCert = blockUI.instances.get('blockPaymentCert');
-	$scope.blockPaymentCert.start();
+	$scope.blockPaymentCert.start({hideMessage: true, hideAnimate:true});
 	
 	$scope.onSubmitPaymentCertSearch = function() {
 		var jobNo = $scope.PaymentCertSearch.jobNo;
@@ -54,7 +54,7 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 		$scope.RevisionsPaymentCertRecord.$setPristine();
 		$scope.PaymentCertRecord = {};
 		if(!$scope.blockPaymentCert.isBlocking()){
-			$scope.blockPaymentCert.start();
+			$scope.blockPaymentCert.start({hideMessage: true, hideAnimate:true});
 		}
 	}
 	

@@ -261,39 +261,6 @@ public class TransitService implements Serializable {
 //		return transitResourceDao.searchTransitResourcesByPage(header, billNo, subBillNo, pageNo, itemNo, resourceCode, objectCode, subsidiaryCode, description, pageNum);
 //	}
 	
-	public String saveTransitResources(String jobNumber, List<TransitResource> resources) throws Exception{
-		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
-			return "Transit for this job has already been completed";
-		StringBuilder sbError = new StringBuilder();
-		//Validate 
-		for(TransitResource resource : resources){
-			String objectCode = resource.getObjectCode();
-			String subsidiaryCode = resource.getSubsidiaryCode();
-			String error = masterListRepository.validateObjectAndSubsidiaryCodes(objectCode, subsidiaryCode);
-			if(error != null)
-				sbError.append(error);
-			
-			if(resource.getDescription() == null || resource.getDescription().trim().length() == 0)
-				sbError.append("Description must not be blank");
-		}
-		//Save if all are valid
-		if(sbError.length() == 0){
-			for(TransitResource resource : resources){
-				TransitResource resourceInDb = transitResourceDao.get(resource.getId());
-				resourceInDb.setObjectCode(resource.getObjectCode());
-				resourceInDb.setSubsidiaryCode(resource.getSubsidiaryCode());
-				resourceInDb.setDescription(resource.getDescription().trim());
-				transitResourceDao.saveOrUpdate(resourceInDb);
-			}
-			header.setStatus(Transit.RESOURCES_UPDATED);
-			transitHeaderDao.saveOrUpdate(header);
-			return null;
-		}
-		else
-			return sbError.toString();
-	}
-		
 	private BpiItem bqItemFromTransit(TransitBpi transitBq){
 //		logger.info("bqItemFromTransit: " + transitBq.getId());
 		BpiItem bqItem = new BpiItem();
@@ -1727,6 +1694,39 @@ public class TransitService implements Serializable {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public String saveTransitResources(String jobNumber, List<TransitResource> resources) throws Exception{
+		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
+			return "Transit for this job has already been completed";
+		StringBuilder sbError = new StringBuilder();
+		//Validate 
+		for(TransitResource resource : resources){
+			String objectCode = resource.getObjectCode();
+			String subsidiaryCode = resource.getSubsidiaryCode();
+			String error = masterListRepository.validateObjectAndSubsidiaryCodes(objectCode, subsidiaryCode);
+			if(error != null)
+				sbError.append(error);
+			
+			if(resource.getDescription() == null || resource.getDescription().trim().length() == 0)
+				sbError.append("Description must not be blank");
+		}
+		//Save if all are valid
+		if(sbError.length() == 0){
+			for(TransitResource resource : resources){
+				TransitResource resourceInDb = transitResourceDao.get(resource.getId());
+				resourceInDb.setObjectCode(resource.getObjectCode());
+				resourceInDb.setSubsidiaryCode(resource.getSubsidiaryCode());
+				resourceInDb.setDescription(resource.getDescription().trim());
+				transitResourceDao.saveOrUpdate(resourceInDb);
+			}
+			header.setStatus(Transit.RESOURCES_UPDATED);
+			transitHeaderDao.saveOrUpdate(header);
+			return null;
+		}
+		else
+			return sbError.toString();
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

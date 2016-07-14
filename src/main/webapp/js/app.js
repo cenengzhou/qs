@@ -708,7 +708,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/transit/transit-dashboard.js',
                            'js/service/subcontract-service.js',
                            'js/service/transit-service.js',
-                           'js/service/js/service/budgetposting-service.js'
+                           'js/service/budgetposting-service.js'
                     ] 
                 });
             }]
@@ -792,6 +792,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [  'js/service/subcontract-service.js',
                	           'js/service/main-cert-service.js',
                	           'js/service/payment-service.js',
+               	           'js/service/transit-service.js',
                	           'js/service/quartz-service.js',
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
@@ -991,7 +992,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	// Display the property value in the custom template.
 	// blockUIConfig.template = '<div>{{ state.myProperty }}</div>';
 	
-	blockUIConfig.template = '<div class="block-ui block-ui-overlay" style="z-index:900"></div>';
+	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:900"><i class="fa fa-connectdevelop fa-fw fa-pulse text-grey" style="width:100%; font-size: 1000px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
 	
 	// Disable automatically blocking of the user interface
 	blockUIConfig.autoBlock = false;

@@ -16,14 +16,14 @@
 		<div class="col-md-4 col-sm-12">
 			<form id="provisionPostingForm"
 				ng-submit="onSubmitProvisionPosting()">
-				<div class="panel panel-primary panel" vertilize>
+				<div class="panel panel-primary panel" vertilize  block-ui="blockProcedures">
 					<div class="panel-heading">
 						<h3 class="panel-title">Provision Posting</h3>
 					</div>
 					<div class="panel-body">
 						<div class="form-group">
 							<label for="jobNumber">Job Number:</label> <input type="text"
-								class="form-control" id="jobNumber" ng-model="provisionJobNumber" required="required">
+								class="form-control" id="jobNumber" ng-model="provisionJobNumber">
 						</div>
 						<div class="form-group">
 							<label for="glDate">GL Date:</label>
@@ -44,7 +44,7 @@
 		<div class="col-md-4 col-sm-12">
 			<form name="generateSubcontractSnapshotForm"
 				ng-submit="onSubmitGenerateSubcontractSnapshot()">
-				<div class="panel panel-primary  panel" vertilize>
+				<div class="panel panel-primary  panel" vertilize  block-ui="blockProcedures">
 					<div class="panel-heading">
 						<h3 class="panel-title">Generate Subcontract Package Snapshot</h3>
 					</div>
@@ -71,7 +71,7 @@
 		<div class="col-md-4 col-sm-12">
 			<form name="postSubcontractPaymentForm"
 				ng-submit="onSubmitPostSubcontractPayment()">
-				<div class="panel panel-primary  panel" vertilize>
+				<div class="panel panel-primary  panel" vertilize  block-ui="blockProcedures">
 					<div class="panel-heading">
 						<h3 class="panel-title">Post Subcontract Payment</h3>
 					</div>
@@ -92,7 +92,7 @@
 			</form>
 		</div>
 	</div>
-	<div class="row row-eq-height col-sm-12" vertilize-container>
+	<div class="row row-eq-height col-sm-12" vertilize-container  block-ui="blockProcedures">
 		<div class="col-md-4 col-sm-12">
 			<form name="f58001Form" ng-submit="onSubmitF58001()">
 				<div class="panel panel-primary  panel" vertilize>
@@ -120,7 +120,7 @@
 
 		<div class="col-md-4 col-sm-12">
 		<form name="f58011Form" ng-submit="onSubmitF58011()">
-			<div class="panel panel-primary  panel" vertilize>
+			<div class="panel panel-primary  panel" vertilize  block-ui="blockProcedures">
 				<div class="panel-heading">
 					<h3 class="panel-title">Synchronize F58011 From Subcontract
 						Payment Certificate</h3>
@@ -144,7 +144,7 @@
 
 		<div class="col-md-4 col-sm-12">
 		<form name="syncMainCertForm" ng-submit="onSubmitSyncMainCert()">
-			<div class="panel panel-primary  panel" vertilize>
+			<div class="panel panel-primary  panel" vertilize  block-ui="blockProcedures">
 				<div class="panel-heading">
 					<h3 class="panel-title">Synchronize Main Contract Certificate
 						From JDE(F03B14)</h3>
