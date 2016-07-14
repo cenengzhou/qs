@@ -1,10 +1,12 @@
-mainApp.service('mainCertService', ['$http', function($http){
+mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
         getMainCertList: getMainCertList,
-        updateMainCertFromF03B14Manually: updateMainCertFromF03B14Manually,
+
+        getPaidMainCertList:	getPaidMainCertList,
         getCertificate: getCertificate,
-        updateCertificate: updateCertificate
+        updateCertificate: updateCertificate,
+        updateMainCertFromF03B14Manually: updateMainCertFromF03B14Manually,
     });
 	
     function getMainCertList() {
@@ -14,6 +16,18 @@ mainApp.service('mainCertService', ['$http', function($http){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function getPaidMainCertList(noJob) {
+        var request = $http({
+            method: "get",
+            url: "service/mainCert/getPaidMainCertList",
+            params: {
+            	noJob: noJob
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function updateMainCertFromF03B14Manually(){
     	var request = $http.post("service/mainCert/updateMainCertFromF03B14Manually");

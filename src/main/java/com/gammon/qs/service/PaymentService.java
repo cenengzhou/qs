@@ -110,7 +110,7 @@ public class PaymentService{
 	@Autowired
 	private TenderHBDao tenderAnalysisHBDaoImpl;
 	@Autowired
-	private SubcontractHBDao scPackageHBDao;
+	private SubcontractHBDao subcontractHBDao;
 	@Autowired
 	private SubcontractDetailHBDao scDetailDao;
 	@Autowired
@@ -1013,7 +1013,7 @@ public class PaymentService{
 		if ("SBM".equals(scPaymentCert.getPaymentStatus()) || "UFR".equals(scPaymentCert.getPaymentStatus())) {
 			logger.info("Call toCompleteApprovalProcess (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
 			Subcontract scPackage = SCPaymentLogic.toCompleteApprovalProcess(scPaymentCert, systemConstant, approvalDecision);
-			scPackageHBDao.updateSubcontract(scPackage);
+			subcontractHBDao.updateSubcontract(scPackage);
 
 			if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
 				logger.info("Call submitPaymentReview (To be reviewed By Finance) (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
@@ -1129,7 +1129,7 @@ public class PaymentService{
 	@SuppressWarnings("unused")
 	public ByteArrayOutputStream getSCPaymentCertViewDetailWrapper(
 			String jobNumber, String packageNo, String paymentCertNo, boolean addendumIncluded) throws Exception {
-		String company = scPackageHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
+		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
 
 		// Get the Basic Payment Cert information
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
@@ -2390,7 +2390,7 @@ public class PaymentService{
 	}
 	
 	public List<Subcontract> obtainPackageListForSCPaymentPanel(String jobNumber) throws Exception {
-		return scPackageHBDao.obtainPackageListForSCPaymentPanel(jobNumber);
+		return subcontractHBDao.obtainPackageListForSCPaymentPanel(jobNumber);
 	}
 	
 	/**
@@ -2408,10 +2408,217 @@ public class PaymentService{
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	/**
+	 *@author koeyyeung
+	 *created on 13 Jul, 2016
+	 *Create Payment **/
+	public String createPayment(String jobNo, String subcontractNo) {
+		String error = "";
+		try {
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			
+			if(subcontract == null){
+				error = "Subcontract Does not exist.";
+				return error;
+			}
+				
+			
+			if(subcontract.getPaymentStatus()!=null && "F".trim().equalsIgnoreCase(subcontract.getPaymentStatus().trim())){
+				error = "Subcontract is final paid.";
+				return error;
+			}
+
+			PaymentCert latestPaymentCert = scPaymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			if(latestPaymentCert!=null && !"APR".equals(latestPaymentCert.getPaymentStatus())){
+				error = "Payment number " +latestPaymentCert.getPaymentCertNo()+  " has not completed yet.";
+				return error;
+			}
+			
+			//1. Create new Payment
+			PaymentCert newPayment = new PaymentCert();
+			newPayment.setJobNo(jobNo);
+			newPayment.setSubcontract(subcontract);
+			newPayment.setPackageNo(subcontractNo);
+			
+			if(latestPaymentCert!=null)
+				newPayment.setPaymentCertNo(latestPaymentCert.getPaymentCertNo()+1);
+			else
+				newPayment.setPaymentCertNo(1);
+			
+			if(subcontract.getSubcontractStatus()<500)
+				newPayment.setDirectPayment(PaymentCert.DIRECT_PAYMENT);
+			else
+				newPayment.setDirectPayment(PaymentCert.NON_DIRECT_PAYMENT);
+			
+
+			newPayment.setAddendumAmount(subcontract.getApprovedVOAmount());
+			newPayment.setRemeasureContractSum(subcontract.getRemeasuredSubcontractSum());
+			newPayment.setIntermFinalPayment("I");
+			newPayment.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
+			newPayment.setCertAmount(0.0);
+			
+			scPaymentCertDao.insert(newPayment);
+			
+			//2. Generate Payment Details
+			createPaymentDetail(latestPaymentCert, newPayment);
+			
+		} catch (DatabaseOperationException e) {
+			error = "Payment cannot be created.";
+			e.printStackTrace();
+		}
+		return error;
+	}
+	
+	private String createPaymentDetail(PaymentCert previousPaymentCert, PaymentCert scPaymentCert){	
+		String error = "";
+		try {
+			List<SubcontractDetail> scDetailList = scDetailsHBDao.getSCDetails(scPaymentCert.getSubcontract());
+
+			if (scDetailList!=null){
+				List<PaymentCertDetail> resultList = new ArrayList<PaymentCertDetail>();
+
+				double totalMOSAmount = 0;
+				String tempSubsidCode = "";
+				String tempObjCode = "";
+
+				for (SubcontractDetail scDetails:scDetailList){
+					PaymentCertDetail scPaymentDetail = new PaymentCertDetail();
+					scPaymentDetail.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+					scPaymentDetail.setBillItem(scDetails.getBillItem());
+					scPaymentDetail.setScSeqNo(scDetails.getSequenceNo());
+					scPaymentDetail.setObjectCode(scDetails.getObjectCode());
+					scPaymentDetail.setSubsidiaryCode(scDetails.getSubsidiaryCode());
+					scPaymentDetail.setDescription(scDetails.getDescription());
+					scPaymentDetail.setLineType(scDetails.getLineType());
+
+					scPaymentDetail.setPaymentCert(scPaymentCert);
+					scPaymentDetail.setSubcontractDetail(scDetails);
+					
+					
+					/**
+					 *@author koeyyeung
+					 *created on 13 Jul, 2016
+					 *Convert to Amount Based 
+					 **/
+					if (scDetails.getPostedCertifiedQuantity()!=null)
+						scPaymentDetail.setCumAmount(scDetails.getPostedCertifiedQuantity()*scDetails.getScRate());
+					else 
+						scPaymentDetail.setCumAmount(0.0);
+					
+					scPaymentDetail.setMovementAmount(0.0);
+
+					
+					if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
+						totalMOSAmount += scPaymentDetail.getCumAmount();
+						tempSubsidCode = scDetails.getSubsidiaryCode();
+						tempObjCode = scDetails.getObjectCode();
+					}
+					resultList.add(scPaymentDetail);
+				}
+
+				double preRTAmount = 0.0;
+				double preMRAmount = 0.0;
+				double preGPAmount = 0.0;
+				double preGRAmount = 0.0;
+				PaymentCertDetail scPaymentDetailGP = new PaymentCertDetail();
+				PaymentCertDetail scPaymentDetailGR = new PaymentCertDetail();
+				PaymentCertDetail scPaymentDetailRT = new PaymentCertDetail();
+				if (scPaymentCert.getPaymentCertNo()>1){
+					List<PaymentCert> scPaymentCertList;
+					try {
+						scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPaymentCert.getJobNo(), Integer.valueOf(scPaymentCert.getSubcontract().getPackageNo()));
+						for (PaymentCert searchSCPaymentCert:scPaymentCertList){
+							if (searchSCPaymentCert.getPaymentCertNo().equals(scPaymentCert.getPaymentCertNo()-1)){
+								List<PaymentCertDetail> searchSCPaymentDetailList = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(searchSCPaymentCert);
+								for (PaymentCertDetail preSCPaymentDetail:searchSCPaymentDetailList)
+									if ("RT".equals(preSCPaymentDetail.getLineType()))
+										preRTAmount = preSCPaymentDetail.getCumAmount();
+									else if ("MR".equals(preSCPaymentDetail.getLineType()))
+										preMRAmount += preSCPaymentDetail.getCumAmount();
+									else if ("GP".equals(preSCPaymentDetail.getLineType())){
+										preGPAmount = preSCPaymentDetail.getCumAmount();
+										scPaymentDetailGP.setCumAmount(preSCPaymentDetail.getCumAmount());}
+									else if ("GR".equals(preSCPaymentDetail.getLineType())){
+										preGRAmount = preSCPaymentDetail.getCumAmount();
+										scPaymentDetailGR.setCumAmount(preSCPaymentDetail.getCumAmount());
+									}
+								break;
+							}
+						}
+					} catch (NumberFormatException | DatabaseOperationException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				//create MR payment Detail
+				double cumMOSRetention = CalculationUtil.round(totalMOSAmount*scPaymentCert.getSubcontract().getMosRetentionPercentage()/100.0, 2);
+				if(cumMOSRetention != 0 || preMRAmount != 0){
+					PaymentCertDetail scPaymentDetailMR = new PaymentCertDetail();
+					scPaymentDetailMR.setBillItem("");
+					scPaymentDetailMR.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+					scPaymentDetailMR.setPaymentCert(scPaymentCert);
+					scPaymentDetailMR.setLineType("MR");
+					scPaymentDetailMR.setObjectCode(tempObjCode);
+					scPaymentDetailMR.setSubsidiaryCode(tempSubsidCode);
+					scPaymentDetailMR.setCumAmount(scPaymentCert.getSubcontract().getTotalMOSPostedCertAmount());
+					scPaymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
+					scPaymentDetailMR.setScSeqNo(100002);
+					resultList.add(scPaymentDetailMR);
+				}
+
+				//create RT Payment Detail
+				scPaymentDetailRT.setPaymentCert(scPaymentCert);
+				scPaymentDetailRT.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+				scPaymentDetailRT.setBillItem("");
+				scPaymentDetailRT.setLineType("RT");
+				scPaymentDetailRT.setObjectCode("");
+				scPaymentDetailRT.setSubsidiaryCode("");
+				scPaymentDetailRT.setCumAmount(preRTAmount);
+				scPaymentDetailRT.setMovementAmount(0.0);
+				scPaymentDetailRT.setScSeqNo(100001);
+				resultList.add(scPaymentDetailRT);
+
+				//create GP payment Detail
+				scPaymentDetailGP.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+				scPaymentDetailGP.setPaymentCert(scPaymentCert);
+				scPaymentDetailGP.setBillItem("");
+				scPaymentDetailGP.setLineType("GP");
+				scPaymentDetailGP.setObjectCode("");
+				scPaymentDetailGP.setSubsidiaryCode("");
+				scPaymentDetailGP.setCumAmount(preGPAmount);
+				scPaymentDetailGP.setMovementAmount(0.00);
+				scPaymentDetailGP.setScSeqNo(100003);
+				resultList.add(scPaymentDetailGP);
+
+				//create GP payment Detail
+				scPaymentDetailGR.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+				scPaymentDetailGR.setPaymentCert(scPaymentCert);
+				scPaymentDetailGR.setBillItem("");
+				scPaymentDetailGR.setLineType("GR");
+				scPaymentDetailGR.setObjectCode("");
+				scPaymentDetailGR.setSubsidiaryCode("");
+				scPaymentDetailGR.setCumAmount(preGRAmount);
+				scPaymentDetailGR.setMovementAmount(0.00);
+				scPaymentDetailGR.setScSeqNo(100004);
+				resultList.add(scPaymentDetailGR);
+				
+				for (PaymentCertDetail paymentDetail: resultList){
+					scPaymentDetailDao.insert(paymentDetail);
+				}
+				return error;
+			}
+
+		} catch (Exception e1) {
+			error = "Payment Detail cannot be created.";
+			e1.printStackTrace();
+		}
+		return error;
+	}
+	
+	/**
 	 * refactored by Tiky Wong
 	 * on July 31, 2013
 	 */
-	public SCPaymentCertsWrapper obtainSCPackagePaymentCertificates(String jobNumber, String packageNo) throws DatabaseOperationException {
+	public SCPaymentCertsWrapper getPaymentCertList(String jobNumber, String packageNo) throws DatabaseOperationException {
 		SCPaymentCertsWrapper scPaymentCertsWrapper = new SCPaymentCertsWrapper();
 
 		// 1. Obtain payment certificates' associated job
@@ -2434,7 +2641,7 @@ public class PaymentService{
 			return null;
 		}
 
-		Subcontract scPackage = scPackageHBDao.obtainSCPackage(jobNumber, packageNo);
+		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		if (scPackage == null) {
 			logger.info("scPackage is null with packagNo: " + packageNo);
 			return null;
@@ -2519,7 +2726,7 @@ public class PaymentService{
 		
 // Generate Payment Cert Report
 	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo, boolean addendumIncluded) throws Exception {
-		String company = scPackageHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
+		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
 
 		// Get the Basic Payment Cert information
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
@@ -2615,6 +2822,10 @@ public class PaymentService{
 		}
 		return null;
 	}
+
+
+
+	
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

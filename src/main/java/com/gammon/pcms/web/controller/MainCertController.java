@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
 import com.gammon.qs.service.MainCertRetentionReleaseService;
@@ -41,6 +42,18 @@ public class MainCertController {
 		return mainCertService.getCertificateList(noJob);
 	}
 
+	@RequestMapping(value = "getPaidMainCertList", method = RequestMethod.GET)
+	public List<Integer> getPaidMainCertList(@RequestParam(required = true) String noJob) {
+		List<Integer> mainCertList= null;
+		try {
+			mainCertList= mainCertService.getPaidMainCertList(noJob);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return mainCertList;
+	}
+	
+	
 	@RequestMapping(value = "getRetentionReleaseList",
 					method = RequestMethod.GET)
 	public List<MainCertRetentionRelease> getRetentionReleaseList(@RequestParam(required = true) String noJob) {

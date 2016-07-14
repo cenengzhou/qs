@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,7 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
-	public String upateSubcontract(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
+	public String upateSubcontract(@RequestParam(name="jobNo") String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
 			result = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
@@ -100,7 +99,7 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
-	public String upateSubcontractDates(@RequestParam(name="jobNo") String jobNo, @Valid @RequestBody Subcontract subcontract){
+	public String upateSubcontractDates(@RequestParam(name="jobNo") String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
 			result = subcontractService.upateSubcontractDates(jobNo, subcontract);

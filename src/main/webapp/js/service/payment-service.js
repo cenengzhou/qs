@@ -5,6 +5,8 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	getPaymentCert: 		getPaymentCert,
     	getPaymentDetailList: 	getPaymentDetailList,
     	getPaymentCertSummary: 	getPaymentCertSummary, 
+    	createPayment:			createPayment,
+    	calculatePaymentDueDate:calculatePaymentDueDate,
     	updatePaymentCert:		updatePaymentCert,
     	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
     	runPaymentPosting:		runPaymentPosting
@@ -33,11 +35,6 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     }
     
     function getPaymentCert(jobNo, subcontractNo, paymentCertNo) {
-    	var myHeaders = {
-    	        "Accept": "application/json",
-    	        "Content-Type": "application/json",
-    	    };
-    	
         var request = $http({
             method: "get",
             url: "service/payment/getPaymentCert",
@@ -54,11 +51,6 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     }
     
     function getPaymentDetailList(jobNo, subcontractNo, paymentCertNo) {
-    	var myHeaders = {
-    	        "Accept": "application/json",
-    	        "Content-Type": "application/json",
-    	    };
-    	
         var request = $http({
             method: "get",
             url: "service/payment/getPaymentDetailList",
@@ -75,11 +67,6 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     }
     
     function getPaymentCertSummary(jobNo, subcontractNo, paymentCertNo) {
-    	var myHeaders = {
-    	        "Accept": "application/json",
-    	        "Content-Type": "application/json",
-    	    };
-    	
         var request = $http({
             method: "get",
             url: "service/payment/getPaymentCertSummary",
@@ -91,6 +78,37 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             	
             }
     
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate) {
+        var request = $http({
+            method: "get",
+            url: "service/payment/calculatePaymentDueDate",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	mainCertNo: mainCertNo,
+            	asAtDate: asAtDate,
+            	ipaOrInvoiceDate: ipaOrInvoiceDate,
+            	dueDate: dueDate
+            }
+    
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function createPayment(jobNo, subcontractNo) {
+        var request = $http({
+            method: "post",
+            url: "service/payment/createPayment",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo:subcontractNo
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }

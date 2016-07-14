@@ -4,7 +4,7 @@
 		class="form-input-flat ng-pristine ng-valid">
 		<fieldset>
 			<div class="row">
-				<div class="col-md-11 col-md-offset-1">
+				<div class="col-md-10 col-md-offset-2">
 					<h3 class="form-header form-header-lg m-b-10">
 						<span class="icon text-primary"><i
 							class="fa fa-shopping-cart"></i></span> Payment <small>Certificate
@@ -14,15 +14,15 @@
 					<p class="m-b-20">Please input the required fields below.</p>
 
 
-					<div class="col-md-7">
+					<div class="col-md-6">
 
 						<div class="form-group">
 							<label>Payment Type</label>
 							<div class="btn-group btn-group-justified">
-								<label class="btn"
+								<label class="btn" ng-disabled="disableButtons"
 									ng-class="{'btn-primary' : payment.intermFinalPayment == 'I', 'btn-inverse' : payment.intermFinalPayment != 'I'}"
 									ng-model="payment.intermFinalPayment" uib-btn-radio="'I'">Interim</label>
-								<label class="btn"
+								<label class="btn" ng-disabled="disableButtons"
 									ng-class="{'btn-primary' : payment.intermFinalPayment == 'F', 'btn-inverse' : payment.intermFinalPayment != 'F'}"
 									ng-model="payment.intermFinalPayment" uib-btn-radio="'F'">Final</label>
 							</div>
@@ -32,7 +32,9 @@
 							<label>Main Certificate No.</label>
 							<div class="controls">
 								<select class="form-control " ng-model="mainCertNo.selected"
-									ng-options="o as o for o in mainCertNo.options" ng-disabled="disableButtons"></select>
+									ng-options="o as o for o in mainCertNo.options" 
+									ng-change="calculatePaymentDueDate()"
+									ng-disabled="disableButtons"></select>
 							</div>
 						</div>
 
@@ -45,7 +47,8 @@
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons"
-											data-parsley-group="wizard-step-1" required>
+											data-parsley-group="wizard-step-1" 
+											ng-change="calculatePaymentDueDate()" required>
 									</div>
 								</div>
 							</div>
@@ -57,7 +60,8 @@
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" ng-model="payment.asAtDate" ng-disabled="disableButtons"
-											data-parsley-group="wizard-step-1" required>
+											data-parsley-group="wizard-step-1" 
+											ng-change="calculatePaymentDueDate()" required>
 									</div>
 								</div>
 							</div>
@@ -73,7 +77,8 @@
 										</span> <input class="form-control"
 											ng-model="payment.invoiceReceivedDate"
 											data-parsley-group="wizard-step-1"
-											ng-required="payment.ipaOrInvoiceReceivedDate != null">
+											ng-required="payment.ipaOrInvoiceReceivedDate != null"
+											ng-change="calculatePaymentDueDate()">
 									</div>
 								</div>
 							</div>
@@ -104,7 +109,7 @@
 						</div>
 
 						<button class="m-t-5 btn btn-primary btn-block" ng-hide="disableButtons"
-							ng-disabled="disableButtons">
+							ng-disabled="disableButtons" ng-click="update()">
 							Update <span class="fa fa-save"></span>
 						</button>
 
@@ -115,10 +120,6 @@
 						<div class="box no-border">
 							<div class="box-body">
 								<div class="widget widget-stat bg-primary text-white">
-									<div class="widget-stat-btn">
-										<a href="#" data-click="widget-reload"><i
-											class="fa fa-repeat"></i></a>
-									</div>
 									<div class="widget-stat-icon">
 										<i class="fa fa-calculator"></i>
 									</div>

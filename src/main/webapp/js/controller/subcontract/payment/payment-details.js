@@ -1,7 +1,7 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 
-                                          function($scope , $http, $stateParams, $cookieStore, paymentService) {
-	$scope.disableButtons = true;
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 'modalService', 'roundUtil', 
+                                          function($scope , $http, $stateParams, $cookieStore, paymentService, modalService, roundUtil) {
 	loadData();
+	$scope.disableButtons = true;
 
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -19,7 +19,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
 			             { field: 'billItem', enableCellEdit: false},
-			             { field: 'movementAmount', cellClass: "grid-theme-blue"},
+			             { field: 'movementAmount', enableCellEdit: false},
 			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue"},
 			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false},
 			             { field: 'description', enableCellEdit: false},
@@ -33,42 +33,52 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 		$scope.gridApi = gridApi;
 
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-
-			//Alert to show what info about the edit is available
-			//alert('Column: ' + colDef.name + ' feedbackRate: ' + rowEntity.feedbackRate);
-			//rowEntity.feedbackRateHK = rowEntity.feedbackRate * $scope.exchangeRate;
+			if(rowEntity.lineType == "GR" || rowEntity.lineType == "GP" || rowEntity.lineType == "RT" || rowEntity.lineType == "MR"){
+				rowEntity.cumAmount  = roundUtil.round(newValue, 2);
+				rowEntity.movementAmount = roundUtil.round(rowEntity.cumAmount - rowEntity.postedAmount, 2);
+			}
+			if(colDef.name == "cumAmount"){
+				rowEntity.cumAmount  = roundUtil.round(newValue, 2);
+				rowEntity.movementAmount = roundUtil.round(rowEntity.cumAmount - rowEntity.postedAmount, 2);
+			}
 		});
 
 	}
 	
+
 	function loadData() {
-		getPaymentCert();
-		loadPaymentDetails();
+		if($cookieStore.get('paymentCertNo') != ""){
+			getPaymentCert();
+			loadPaymentDetails();
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
 	}
 	
 	function getPaymentCert() {
-		if($cookieStore.get('paymentCertNo') != ""){
-			paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
-			.then(
-					function( data ) {
-						$scope.payment = data;
-						
-						if($scope.payment.paymentStatus == "PND")
-							$scope.disableButtons = false;
-						
-					});
-		}
+		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
+		.then(
+				function( data ) {
+					var payment = data;
+					$scope.payment = data;
+
+					if($scope.payment.paymentStatus == "PND")
+						$scope.disableButtons = false;
+
+				});
 	}
-	
+
 	function loadPaymentDetails() {
-		if($cookieStore.get('paymentCertNo') != ""){
 		paymentService.getPaymentDetailList($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
 		.then(
 				function( data ) {
+					angular.forEach(data, function(value, key){
+						value.postedAmount = value.movementAmount+value.cumAmount;
+					});
+					
 					$scope.gridOptions.data = data;
+					
 					$scope.gridApi.grid.refresh();
 				});
-		}
 	}
 
 }]);

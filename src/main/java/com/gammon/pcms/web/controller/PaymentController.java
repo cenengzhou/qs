@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,7 @@ import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 import com.gammon.qs.wrapper.scPayment.SCPaymentCertsWrapper;
 
 @RestController
@@ -42,9 +44,8 @@ public class PaymentController {
 		logger.info("IN Controller");;
 		SCPaymentCertsWrapper scPaymentCertsWrapper = null;
 		try{
-			scPaymentCertsWrapper = paymentService.obtainSCPackagePaymentCertificates(jobNo, subcontractNo);
+			scPaymentCertsWrapper = paymentService.getPaymentCertList(jobNo, subcontractNo);
 		}catch(DatabaseOperationException databaseOperationException){
-			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();
 		}
 		return scPaymentCertsWrapper;
@@ -58,7 +59,6 @@ public class PaymentController {
 		try{
 			scPaymentCert = paymentService.obtainPaymentCertificate(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
 		}catch(DatabaseOperationException databaseOperationException){
-			logger.error("Database Exception: ");
 			databaseOperationException.printStackTrace();
 		}
 		return scPaymentCert;
@@ -72,7 +72,6 @@ public class PaymentController {
 		try{
 			paymentDetailList = paymentService.obtainPaymentDetailList(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
 		}catch(Exception exception){
-			logger.error("Exception: ");
 			exception.printStackTrace();
 		}
 		return paymentDetailList;
@@ -86,10 +85,38 @@ public class PaymentController {
 		try{
 			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo, true);
 		}catch(Exception exception){
-			logger.error("Exception: ");
 			exception.printStackTrace();
 		}
 		return paymentCertViewWrapper;
+	}
+	
+	@RequestMapping(value = "calculatePaymentDueDate", method = RequestMethod.GET)
+	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
+															@RequestParam(required = true) String subcontractNo, 
+															@RequestParam(required = true) Integer mainCertNo, 
+															@RequestParam(required = false) Date asAtDate,
+															@RequestParam(required = false) Date ipaOrInvoiceDate,
+															@RequestParam(required = false) Date dueDate){
+		PaymentDueDateAndValidationResponseWrapper paymentCertViewWrapper = null;
+		try{
+			paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return paymentCertViewWrapper;
+	}
+	
+	
+	@RequestMapping(value = "createPayment", method = RequestMethod.POST)
+	public String createPayment(@RequestParam(name="jobNo") String jobNo,
+												@RequestParam(name="subcontractNo") String subcontractNo){
+		String result = "";
+		try{
+			result = paymentService.createPayment(jobNo, subcontractNo);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return result;
 	}
 	
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)

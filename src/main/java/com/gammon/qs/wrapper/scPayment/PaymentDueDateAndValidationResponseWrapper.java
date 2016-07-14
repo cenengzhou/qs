@@ -6,6 +6,9 @@ package com.gammon.qs.wrapper.scPayment;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * @author briantse
  * @Create_Date Jan 18, 2011
@@ -14,6 +17,7 @@ public class PaymentDueDateAndValidationResponseWrapper implements Serializable 
 	
 	private static final long serialVersionUID = -5596448220439817004L;
 
+	
 	private Date dueDate = null;
 	
 	private boolean isvalid = false;
@@ -27,6 +31,7 @@ public class PaymentDueDateAndValidationResponseWrapper implements Serializable 
 		this.isvalid = false;
 	}
 	
+	@Temporal(value = TemporalType.DATE)
 	public Date getDueDate() {
 		return dueDate;
 	}

@@ -222,7 +222,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	.then(
 			function( data ) {
 				if(data.length>0){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 				}else{
 			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
 					$cookieStore.put('subcontractNo', $scope.subcontractToUpdate.packageNo);

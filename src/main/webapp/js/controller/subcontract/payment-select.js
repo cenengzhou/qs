@@ -5,38 +5,6 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 	loadPaymentCertList();
 
 
-	$scope.convertPaymentStatus = function(status){
-		if(status!=null){
-			if (status.localeCompare('PND') == 0) {
-				return "Pending";
-			}else if (status.localeCompare('SBM') == 0) {
-				return "Submitted";
-			}else if (status.localeCompare('UFR') == 0) {
-				return { width: "Under Finance Review" }
-			}else if (status.localeCompare('PCS') == 0) {
-				return { width: "Waiting For Posting" }
-			}else if (status.localeCompare('APR') == 0) {
-				return "Posted To Finance";
-			}
-		}
-	}
-
-	$scope.progress_bar = function(status){
-		if (status.localeCompare('PND') == 0) {
-			return "25%";
-		}else if (status.localeCompare('SBM') == 0) {
-			return "50%";
-		}else if (status.localeCompare('UFR') == 0) {
-			return { width: "50%" }
-		}else if (status.localeCompare('PCS') == 0) {
-			return { width: "75%" }
-		}else if (status.localeCompare('APR') == 0) {
-			return "100%";
-		}else{
-			return "10%";
-		}
-	}
-
 
 	$scope.removeDefaultAnimation = function (){
 		$animate.enabled(false);
@@ -48,7 +16,6 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.payments = data.scPaymentCertWithGSTWrapperList;
 					$scope.totalCertificateAmount = data.totalCertificateAmount;
 					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.scPackage.paymentTerms);
@@ -57,8 +24,10 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
 
 					var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
-
+					console.log(obj);
 					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
+					$scope.latestPaymentType = obj[0]['intermFinalPayment'];
+					
 					prepareCalendar();
 				});
 	}
@@ -113,6 +82,37 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		return  yyyy+"-"+(mm.length===2?mm:"0"+mm) +"-"+ (dd.length===2?dd:"0"+dd); // padding
 	};
 
+	$scope.convertPaymentStatus = function(status){
+		if(status!=null){
+			if (status.localeCompare('PND') == 0) {
+				return "Pending";
+			}else if (status.localeCompare('SBM') == 0) {
+				return "Submitted";
+			}else if (status.localeCompare('UFR') == 0) {
+				return { width: "Under Finance Review" }
+			}else if (status.localeCompare('PCS') == 0) {
+				return { width: "Waiting For Posting" }
+			}else if (status.localeCompare('APR') == 0) {
+				return "Posted To Finance";
+			}
+		}
+	}
+
+	$scope.progress_bar = function(status){
+		if (status.localeCompare('PND') == 0) {
+			return "25%";
+		}else if (status.localeCompare('SBM') == 0) {
+			return "50%";
+		}else if (status.localeCompare('UFR') == 0) {
+			return { width: "50%" }
+		}else if (status.localeCompare('PCS') == 0) {
+			return { width: "75%" }
+		}else if (status.localeCompare('APR') == 0) {
+			return "100%";
+		}else{
+			return "10%";
+		}
+	}
 
 }]);
 

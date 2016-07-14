@@ -491,6 +491,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/payment/payment-certificate.js',
+                           'js/service/main-cert-service.js'
                     ] 
                 });
             }]
@@ -708,7 +709,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/transit/transit-dashboard.js',
                            'js/service/subcontract-service.js',
                            'js/service/transit-service.js',
-                           'js/service/budgetposting-service.js'
+                           'js/service/js/service/budgetposting-service.js'
                     ] 
                 });
             }]

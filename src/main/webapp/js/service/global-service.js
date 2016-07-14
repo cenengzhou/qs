@@ -10,7 +10,7 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 				size: size,
 				keyboard: false,
 				//windowClass: 'modal-vertical-centered',
-				backdrop: false,
+				backdrop: 'static',
 				resolve: {
 					modalStatus: function () {
 						return status;
@@ -27,8 +27,8 @@ mainApp.factory('modalService', ['$uibModal', function( $uibModal) {
 
 mainApp.service('confirmService', ['$uibModal', function( $uibModal) {
 	var modalDefaults = {
-	        backdrop: true,
-	        keyboard: true,
+	        backdrop: 'static',
+	        keyboard: false,
 	        modalFade: true,
 	        templateUrl: 'view/confirm-modal.html'
 	    };

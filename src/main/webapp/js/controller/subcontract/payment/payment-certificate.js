@@ -1,23 +1,19 @@
-mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 
-                                          function($scope , $http, $stateParams, $cookieStore, paymentService) {
+mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 'mainCertService', 'modalService', 
+                                          function($scope , $http, $stateParams, $cookieStore, paymentService, mainCertService, modalService) {
+	getPaymentCert();
+	
 	$scope.disableButtons = true;
 
 	$scope.mainCertNo = {
-			options: [
-			          "1",
-			          "2",
-			          "3",
-			          "4",
-			          "16"
-			          ],
-			          selected: "1"
+			options: [],
+			selected: ""
 	};
 
-	console.log("$stateParams.paymentCertNo: "+$stateParams.paymentCertNo);
 	if($stateParams.paymentCertNo){
 		if($stateParams.paymentCertNo == '0'){
 			$cookieStore.put('paymentCertNo', '');
 			$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
+			createPayment();
 		}else{
 			$cookieStore.put('paymentCertNo', $stateParams.paymentCertNo);
 			$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
@@ -26,7 +22,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$coo
 	$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
 	$scope.paymentTerms = $cookieStore.get('paymentTerms');
 
-	getPaymentCert();
+	
 
 	$scope.convertPaymentStatus = function(status){
 		if(status!=null){
@@ -44,23 +40,69 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$coo
 		}
 	}
 	
+	$scope.update = function(){
+		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
+	}
 
-
+	$scope.calculatePaymentDueDate = function() {
+		console.log("$scope.paymentTerms.substring(0, 3):"+ $scope.paymentTerms.substring(0, 3));
+		if($scope.paymentTerms.substring(0, 3) != "QS0"){
+			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
+			.then(
+					function( data ) {
+						console.log(data);
+						if(data!=null){
+							if(data.valid ==true)
+								$scope.payment.dueDate = data.dueDate;
+							else
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.errorMsg);
+						}
+					});
+		}
+	}
+	
+	
 	function getPaymentCert() {
 		if($scope.paymentCertNo != ""){
 			paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 			.then(
 					function( data ) {
 						console.log(data);
-						$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
 						$scope.payment = data;
+						
+						getPaidMainCertList();
 						
 						if($scope.payment.paymentStatus == "PND")
 							$scope.disableButtons = false;
 		
 					});
-		}
+		}else
+			$scope.disableButtons = false;
 	}
+	
 
+	function getPaidMainCertList() {
+		mainCertService.getPaidMainCertList($scope.jobNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.mainCertNo.options = data;
+					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
+
+				});
+	}
+	
+	
+	
+	function createPayment() {
+		paymentService.createPayment($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					
+					getPaymentCert();
+
+				});
+	}
 
 }]);
