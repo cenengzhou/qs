@@ -2,8 +2,11 @@ package com.gammon.pcms.web.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,8 @@ import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountLedger;
+import com.gammon.pcms.model.adl.ApprovalDetail;
+import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.service.ADLService;
 
 @RestController
@@ -22,6 +27,9 @@ import com.gammon.pcms.service.ADLService;
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class ADLController {
 
+	@SuppressWarnings("unused")
+	private static Logger logger = Logger.getLogger(ADLController.class);
+	
 	@Autowired
 	private ADLService adlService;
 
@@ -164,7 +172,7 @@ public class ADLController {
 
 	@RequestMapping(value = "getApprovalHeader",
 					method = RequestMethod.GET)
-	public Object getApprovalHeader(@RequestParam(required = true) String statusApproval,
+	public ApprovalHeader getApprovalHeader(@RequestParam(required = true) String statusApproval,
 									@RequestParam(required = true) String noJob,
 									@RequestParam(	required = true,
 													defaultValue = "SC") String typeApproval,
@@ -177,11 +185,12 @@ public class ADLController {
 			return adlService.getApprovalHeader(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new Object();
+			return new ApprovalHeader();
 		}
 	}
 
-	public List<Object> getApprovalDetailList(	@RequestParam(required = false) String statusApproval,
+	@RequestMapping(value = "getApprovalDetailList", method = RequestMethod.GET)
+	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(required = false) String statusApproval,
 												@RequestParam(required = false) String noJob,
 												@RequestParam(	required = true,
 																defaultValue = "SC") String typeApproval,
@@ -189,6 +198,34 @@ public class ADLController {
 												@RequestParam(required = false) String noPayment,
 												@RequestParam(required = false) String noMainCert,
 												@RequestParam(required = false) BigDecimal recordKeyInstance) {
-		return adlService.getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
+		List<ApprovalDetail> resultList = null;
+		try {
+			resultList = adlService.getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultList;
 	}
+	
+	@RequestMapping(value = "getApprovalDetailSet", method = RequestMethod.GET)
+	public Set<ApprovalDetail> getApprovalDetailSet(	@RequestParam(required = false) String statusApproval,
+												@RequestParam(required = false) String noJob,
+												@RequestParam(	required = true,
+																defaultValue = "SC") String typeApproval,
+												@RequestParam(required = false) String noSubcontract,
+												@RequestParam(required = false) String noPayment,
+												@RequestParam(required = false) String noMainCert,
+												@RequestParam(required = false) BigDecimal recordKeyInstance) {
+		Set<ApprovalDetail> resultSet = null;
+		try{
+			List<ApprovalDetail> resultList = getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
+			logger.info("resultList:" + resultList.size());
+			resultSet = new HashSet<ApprovalDetail>(resultList);
+			logger.info("resultSet:" + resultSet.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultSet;
+	}
+
 }

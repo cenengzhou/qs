@@ -12,9 +12,13 @@ import com.gammon.pcms.dao.adl.AccountBalanceAAJIDao;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dao.adl.AccountLedgerDao;
+import com.gammon.pcms.dao.adl.ApprovalDetailDao;
+import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountLedger;
+import com.gammon.pcms.model.adl.ApprovalDetail;
+import com.gammon.pcms.model.adl.ApprovalHeader;
 
 @Service
 @Transactional(	readOnly = true,
@@ -31,7 +35,10 @@ public class ADLService {
 	private AccountBalanceAAJIDao accountBalanceAAJIDao;
 	@Autowired
 	private AccountBalanceAAJISCDao accountBalanceAAJISCDao;
-	
+	@Autowired
+	private ApprovalHeaderDao approvalHeaderDao;
+	@Autowired
+	private ApprovalDetailDao approvalDetailDao;
 	
 	/*
 	 * -----------------------------------------------
@@ -165,9 +172,9 @@ public class ADLService {
 	 * @author	tikywong
 	 * @since	Jul 12, 2016 2:24:46 PM
 	 */
-	public Object getApprovalHeader(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
-		// TODO Auto-generated method stub
-		return null;
+	public ApprovalHeader getApprovalHeader(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
+		// TODO entity testing : ApprovalHeader
+		return approvalHeaderDao.getApprovalHeaderByRecordKeyInstance(recordKeyInstance);
 	}
 	
 	/**
@@ -184,8 +191,8 @@ public class ADLService {
 	 * @author	tikywong
 	 * @since	Jul 12, 2016 2:29:46 PM
 	 */
-	public List<Object> getApprovalDetailList(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ApprovalDetail> getApprovalDetailList(String statusApproval, String noJob, String typeApproval, String noSubcontract, String noPayment, String noMainCert, BigDecimal recordKeyInstance) {
+		// TODO entity testing : ApprovalDetail
+		return approvalDetailDao.obtainApprovalDetailByRecordKeyInstance(recordKeyInstance);
 	}
 }

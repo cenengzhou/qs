@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.gammon.pcms.model.adl.id.AccountLedgerId;
 
@@ -287,6 +289,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.typeDocumentDescription = typeDocumentDescription;
 	}
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DATE_GL",
 			length = 7)
 	public Date getDateGl() {
@@ -692,7 +695,8 @@ public class AccountLedger implements java.io.Serializable {
 	public void setNumberInvoice(String numberInvoice) {
 		this.numberInvoice = numberInvoice;
 	}
-
+	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DATE_INVOICE",
 			length = 7)
 	public Date getDateInvoice() {
@@ -734,6 +738,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.entityGlPostedBy = entityGlPostedBy;
 	}
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DATE_POSTED",
 			length = 7)
 	public Date getDatePosted() {
