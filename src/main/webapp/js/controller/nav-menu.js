@@ -11,7 +11,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
 	
 	$scope.userIcon = 'resources/images/profile.png';
-	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/'
+//	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/' <= require login
+	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.user = {name:'No one'};
 	
 
@@ -22,7 +23,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 		.then(function(response){
 			if(response.data instanceof Object){
 				$scope.user = response.data;
-				$scope.userIcon = $scope.imageServerAddress + $scope.user.StaffID + '.jpg';
+				$scope.userIcon = $scope.user.image;
 			}
 		})
 	}
@@ -53,6 +54,25 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 		$scope.activeAdminSideMenu = $scope.currentPath;
 	}
 
-
-
+//	function convertImgToBase64URL(url, callback, outputFormat){
+//	    var img = new Image();
+//	    img.crossOrigin = 'Anonymous';
+//	    img.onload = function(){
+//	        var canvas = document.createElement('CANVAS'),
+//	        ctx = canvas.getContext('2d'), dataURL;
+//	        canvas.height = img.height;
+//	        canvas.width = img.width;
+//	        ctx.drawImage(img, 0, 0);
+//	        dataURL = canvas.toDataURL(outputFormat);
+//	        callback(dataURL);
+//	        canvas = null; 
+//	    };
+//	    img.src = url;
+//	}
+//	//same origin access policy need set at desction server
+//	convertImgToBase64URL($scope.imageServerAddress + $scope.user.StaffID + '.jpg', 
+//			function(base64Img){
+//			      $('#userImage').find('img').attr('src', base64Img);  
+//			   
+//			});
 }]);

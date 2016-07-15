@@ -30,6 +30,7 @@ public class User implements UserDetails, Serializable {
 	private String username;
 	private String authType;
 	private String domainName;
+	private String image;
 	
 	public User() {
 		this.userRoleList = new ArrayList<UserRole>();
@@ -192,6 +193,20 @@ public class User implements UserDetails, Serializable {
 		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", fullname=" + fullname
 				+ ", userRoleList=" + userRoleList + ", username=" + username + ", authType=" + authType
 				+ ", domainName=" + domainName + "]";
+	}
+
+	/**
+	 * @return the image
+	 */
+	public String getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 }
