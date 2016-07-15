@@ -11,8 +11,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
 	
 	$scope.userIcon = 'resources/images/profile.png';
-//	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/' <= require login
-	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
+//	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/' //<= require login
+//	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.user = {name:'No one'};
 	
 
@@ -23,7 +23,9 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 		.then(function(response){
 			if(response.data instanceof Object){
 				$scope.user = response.data;
-				$scope.userIcon = $scope.user.image;
+				if($scope.user.image !== null){
+					$scope.userIcon = $scope.user.image;
+				}
 			}
 		})
 	}

@@ -126,6 +126,8 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	private String ipeopleUrl;
 	@Value("${ipeople.fallback.path}")
 	private String ipeopleFallbackPath;
+	@Value("${peopleDirectory.picture.url}")
+	private String peopDirectoryPictureUrl;
 		
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
@@ -926,6 +928,13 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	 */
 	public String getIpeopleFallbackPath() {
 		return ipeopleFallbackPath;
+	}
+
+	/**
+	 * @return the peopDirectoryPictureUrl
+	 */
+	public String getPeopDirectoryPictureUrl() {
+		return peopDirectoryPictureUrl;
 	}
 
 }

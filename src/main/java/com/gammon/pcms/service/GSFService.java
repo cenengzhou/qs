@@ -3,14 +3,12 @@ package com.gammon.pcms.service;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +31,6 @@ public class GSFService {
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
-	@Autowired
-	private ServletContext servletContext;
 
 	public User getRole(String username) {
 		User user = new User();
@@ -87,19 +83,12 @@ public class GSFService {
 		try {
 			url = new URL(address);
 			image = ImageIO.read(url);
-		} catch (IOException e) {
-			try {
-				url = new URL(servletContext.getResource(webServiceConfig.getIpeopleFallbackPath()).toString());
-				image = ImageIO.read(url);
-				if (image != null) {
-					ImageIO.write(image, "PNG", bos);
-					result = DatatypeConverter.printBase64Binary(bos.toByteArray());
-				}
-			} catch (MalformedURLException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if (image != null) {
+				ImageIO.write(image, "PNG", bos);
+				result = DatatypeConverter.printBase64Binary(bos.toByteArray());
 			}
+		} catch (IOException e) {
+			return null;
 		}
 		return "data:image/png;base64," + result;
 	}
