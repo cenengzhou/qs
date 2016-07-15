@@ -483,7 +483,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		templateUrl: "view/subcontract/payment/payment-certificate.html",
 		"params": {
 			"paymentCertNo": null, 
-			"paymentTerms": null
+			"paymentTermsDesc": null
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
