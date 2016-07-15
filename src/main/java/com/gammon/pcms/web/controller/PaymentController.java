@@ -52,14 +52,14 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
-	public SCPaymentCertsWrapper getPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
-		SCPaymentCertsWrapper scPaymentCertsWrapper = null;
+	public List<PaymentCert> getPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+		List<PaymentCert> paymentCertList = null;
 		try{
-			scPaymentCertsWrapper = paymentService.getPaymentCertList(jobNo, subcontractNo);
+			paymentCertList = paymentService.getPaymentCertList(jobNo, subcontractNo);
 		}catch(DatabaseOperationException databaseOperationException){
 			databaseOperationException.printStackTrace();
 		}
-		return scPaymentCertsWrapper;
+		return paymentCertList;
 	}
 	
 	@RequestMapping(value = "getPaymentCert", method = RequestMethod.GET)

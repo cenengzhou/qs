@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'GlobalParameter',
-                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, GlobalParameter) {
+mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter',
+                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter) {
 
 
 	loadPaymentCertList();
@@ -16,9 +16,11 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					$scope.payments = data.scPaymentCertWithGSTWrapperList;
-					$scope.totalCertificateAmount = data.totalCertificateAmount;
-					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.scPackage.paymentTerms);
+					console.log(data);
+					//$scope.payments = data.scPaymentCertWithGSTWrapperList;
+					$scope.payments = data;
+					//$scope.totalCertificateAmount = data.totalCertificateAmount;
+					//$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.scPackage.paymentTerms);
 
 
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
@@ -28,10 +30,21 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
 					$scope.latestPaymentType = obj[0]['intermFinalPayment'];
 					
+					getSubcontract();
+					
 					prepareCalendar();
 				});
 	}
 
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
+				});
+	}
 
 	function prepareCalendar(){
 		var myEvent = [];
