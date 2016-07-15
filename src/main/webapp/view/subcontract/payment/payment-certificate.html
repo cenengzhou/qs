@@ -42,13 +42,14 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>Due Date</label>
-									<div class="input-group" moment-picker="payment.dueDate"
+									<div class="input-group" moment-picker="payment.dueDate" ng-model="payment.dueDate"
 										format="YYYY-MM-DD">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons"
 											data-parsley-group="wizard-step-1" 
-											ng-change="calculatePaymentDueDate()" required>
+											 required>
+											
 									</div>
 								</div>
 							</div>
@@ -133,7 +134,7 @@
 
 								<ul class="list-group list-group-unbordered">
 									<li class="list-group-item"><b>Payment Terms</b> <b
-										class="pull-right">{{paymentTerms}}</b></li>
+										class="pull-right">{{paymentTermsDesc}}</b></li>
 									<li class="list-group-item"><b>Payment Requisition</b> <b
 										class="pull-right">{{payment.directPayment==='N' ?
 											'No':'Yes'}}</b></li>

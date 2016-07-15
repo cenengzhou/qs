@@ -2,6 +2,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
     	getPaymentCertList: 	getPaymentCertList,
+    	getLatestPaymentCert:	getLatestPaymentCert,
     	getPaymentCert: 		getPaymentCert,
     	getPaymentDetailList: 	getPaymentDetailList,
     	getPaymentCertSummary: 	getPaymentCertSummary, 
@@ -33,6 +34,21 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function getLatestPaymentCert(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/payment/getLatestPaymentCert",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            }
+    
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function getPaymentCert(jobNo, subcontractNo, paymentCertNo) {
         var request = $http({

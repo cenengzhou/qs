@@ -1,6 +1,5 @@
 mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 'mainCertService', 'modalService', 
                                           function($scope , $http, $stateParams, $cookieStore, paymentService, mainCertService, modalService) {
-	getPaymentCert();
 	
 	$scope.disableButtons = true;
 
@@ -12,17 +11,19 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$coo
 	if($stateParams.paymentCertNo){
 		if($stateParams.paymentCertNo == '0'){
 			$cookieStore.put('paymentCertNo', '');
-			$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
+			$cookieStore.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
 			createPayment();
 		}else{
 			$cookieStore.put('paymentCertNo', $stateParams.paymentCertNo);
-			$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
+			$cookieStore.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
 		}
 	}
 	$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
-	$scope.paymentTerms = $cookieStore.get('paymentTerms');
-
+	$scope.paymentTermsDesc = $cookieStore.get('paymentTermsDesc');
+	console.log($cookieStore.get('paymentTermsDesc'));
+	$scope.paymentTerms = $scope.paymentTermsDesc.substring(0, 3);
 	
+	getPaymentCert();
 
 	$scope.convertPaymentStatus = function(status){
 		if(status!=null){
@@ -44,9 +45,9 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$coo
 		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
 	}
 
+	
 	$scope.calculatePaymentDueDate = function() {
-		console.log("$scope.paymentTerms.substring(0, 3):"+ $scope.paymentTerms.substring(0, 3));
-		if($scope.paymentTerms.substring(0, 3) != "QS0"){
+		if($scope.paymentTerms != "QS0"){
 			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
 			.then(
 					function( data ) {
@@ -98,11 +99,39 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$http', '$stateParams', '$coo
 		paymentService.createPayment($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
-					
-					getPaymentCert();
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else
+						getLatestPaymentCert();
 
 				});
 	}
 
+	
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.payment = data;
+					
+					$cookieStore.put('paymentCertNo', $scope.payment.paymentCertNo);
+					$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
+					
+					getPaidMainCertList();
+
+					if($scope.payment.paymentStatus == "PND")
+						$scope.disableButtons = false;
+
+				});
+		
+	}
+	
+	$scope.$watch('payment.dueDate', function(newValue, oldValue) {
+		console.log("newValue: "+newValue);
+		console.log("oldValue: "+oldValue);
+        
+		if(oldValue != null)
+			$scope.calculatePaymentDueDate();
+    });
+	
 }]);

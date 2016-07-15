@@ -24,7 +24,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
 
 					var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
-					console.log(obj);
+					//console.log(obj);
 					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
 					$scope.latestPaymentType = obj[0]['intermFinalPayment'];
 					

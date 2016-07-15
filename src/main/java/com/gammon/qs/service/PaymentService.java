@@ -312,10 +312,6 @@ public class PaymentService{
 		return scPaymentCertDao.obtainSCPaymentCertListByStatus(jobNumber, packageNo, status, directPayment);
 	}
 	
-	public PaymentCert obtainPaymentLatestCert(String jobNumber, String packageNo) throws DatabaseOperationException{
-		return scPaymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
-	}
-	
 	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, Integer packageNo) throws DatabaseOperationException{
 		return scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 	}
@@ -2407,6 +2403,10 @@ public class PaymentService{
 	
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	public PaymentCert obtainPaymentLatestCert(String jobNumber, String packageNo) throws DatabaseOperationException{
+		return scPaymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
+	}
+	
 	/**
 	 *@author koeyyeung
 	 *created on 13 Jul, 2016

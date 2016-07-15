@@ -39,9 +39,20 @@ public class PaymentController {
 	@Autowired
 	private PaymentPostingService paymentPostingService;	
 	
+	
+	@RequestMapping(value = "getLatestPaymentCert", method = RequestMethod.GET)
+	public PaymentCert getLatestPaymentCert(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+		PaymentCert paymentCert = null;
+		try{
+			paymentCert = paymentService.obtainPaymentLatestCert(jobNo, subcontractNo);
+		}catch(DatabaseOperationException databaseOperationException){
+			databaseOperationException.printStackTrace();
+		}
+		return paymentCert;
+	}
+	
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
 	public SCPaymentCertsWrapper getPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
-		logger.info("IN Controller");;
 		SCPaymentCertsWrapper scPaymentCertsWrapper = null;
 		try{
 			scPaymentCertsWrapper = paymentService.getPaymentCertList(jobNo, subcontractNo);
