@@ -27,7 +27,6 @@ import com.gammon.pcms.service.ADLService;
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class ADLController {
 
-	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(ADLController.class);
 	
 	@Autowired

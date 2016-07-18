@@ -83,15 +83,10 @@ import com.gammon.qs.wrapper.directPayment.SCPaymentExceptionalWrapper;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertHeaderWrapper;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
-import com.gammon.qs.wrapper.scPayment.PaymentCertWithGSTWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 import com.gammon.qs.wrapper.scPayment.SCAllPaymentCertReportWrapper;
-import com.gammon.qs.wrapper.scPayment.SCPaymentCertsWrapper;
 import com.gammon.qs.wrapper.submitPayment.SubmitPaymentResponseWrapper;
-import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
-import com.gammon.qs.wrapper.updatePaymentCert.UpdatePaymentCertificateResultWrapper;
-import com.gammon.qs.wrapper.updatePaymentCert.UpdatePaymentCertificateWrapper;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;

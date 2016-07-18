@@ -1,15 +1,8 @@
 package com.gammon.pcms.service;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +34,6 @@ public class GSFService {
 			ResponseEntity<GetRole.Response> roleResponse = getResponseEntity(webServiceConfig.getGsfGetRoleUrl(),
 					roleRequest, GetRole.Response.class);
 			user = roleResponse.getBody().getUser();
-			String userImage = getImageAsBase64(webServiceConfig.getIpeopleUrl() + user.getStaffId() + ".jpg");
-			;
-			user.setImage(userImage);
 		} catch (HttpMessageNotReadableException e) {
 			e.printStackTrace();
 		}
@@ -75,21 +65,4 @@ public class GSFService {
 		return restTemplate.postForEntity(gsf.toString(), request, response);
 	}
 
-	public String getImageAsBase64(String address) {
-		URL url = null;
-		BufferedImage image = null;
-		String result = "";
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		try {
-			url = new URL(address);
-			image = ImageIO.read(url);
-			if (image != null) {
-				ImageIO.write(image, "PNG", bos);
-				result = DatatypeConverter.printBase64Binary(bos.toByteArray());
-			}
-		} catch (IOException e) {
-			return null;
-		}
-		return "data:image/png;base64," + result;
-	}
 }

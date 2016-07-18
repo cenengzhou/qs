@@ -25,7 +25,6 @@ import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
-import com.gammon.qs.wrapper.scPayment.SCPaymentCertsWrapper;
 
 @RestController
 @RequestMapping(value = "service/payment/"/*,
