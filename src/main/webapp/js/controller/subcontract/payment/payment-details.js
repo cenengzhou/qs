@@ -1,5 +1,5 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 'modalService', 'roundUtil', 
-                                          function($scope , $http, $stateParams, $cookieStore, paymentService, modalService, roundUtil) {
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookieStore', 'paymentService', 'modalService', 'roundUtil', '$state',
+                                          function($scope, $stateParams, $cookieStore, paymentService, modalService, roundUtil, $state) {
 	loadData();
 	$scope.disableButtons = true;
 
@@ -20,23 +20,29 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			showGridFooter : false,
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
+			
+			rowEditWaitInterval :-1,
 
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
 			             { field: 'billItem', enableCellEdit: false},
 			             { field: 'movementAmount', cellClass: "grid-theme-blue", cellEditableCondition : $scope.canEdit,
+		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>',
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
 						            return 'grid-theme-blue';
 						          }
 						        }*/
 			             },
-			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue", cellEditableCondition : $scope.canEdit},
-			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false},
+			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue", cellEditableCondition : $scope.canEdit,
+		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>'},
+			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false,
+			             cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>'},
 			             { field: 'description', enableCellEdit: false},
 			             { field: 'scSeqNo', displayName: "Sequence No", enableCellEdit: false},
 			             { field: 'objectCode', enableCellEdit: false},
-			             {field: 'subsidiaryCode', enableCellEdit: false}
+			             {field: 'subsidiaryCode', enableCellEdit: false},
+			             { field: 'subcontractDetail.id', enableCellEdit: false, visible: false},
 			             ]
 	};
 
@@ -59,11 +65,24 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 
 	}
 	
+	$scope.update = function(){
+		if($scope.payment.paymentStatus == "PND"){
+			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+
+			if(dataRows.length==0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+				return;
+			}
+
+			updatePaymentDetails($scope.gridOptions.data);
+		}
+	}
+	
 
 	function loadData() {
 		if($cookieStore.get('paymentCertNo') != ""){
 			getPaymentCert();
-			loadPaymentDetails();
 		}else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
 	}
@@ -78,15 +97,21 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 					if($scope.payment.paymentStatus == "PND")
 						$scope.disableButtons = false;
 
+					getPaymentDetailList();
 				});
 	}
 
-	function loadPaymentDetails() {
+	function getPaymentDetailList() {
 		paymentService.getPaymentDetailList($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
 		.then(
 				function( data ) {
+					if($scope.payment.paymentStatus!="PND")
+						$scope.edit = false;
+					else
+						$scope.edit = true;
+					
 					angular.forEach(data, function(value, key){
-						value.postedAmount = value.movementAmount+value.cumAmount;
+						value.postedAmount = value.cumAmount - value.movementAmount;
 						
 						/*if(value.lineType == "GR")
 							$scope.edit = false;
@@ -99,5 +124,21 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 					$scope.gridApi.grid.refresh();
 				});
 	}
+	
+
+
+	function updatePaymentDetails(paymentDetails) {
+		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'), "I", paymentDetails)
+		.then(
+				function( data ) {
+					if(data.length != 0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Details have been updated.");
+						$state.reload();
+					}
+				});
+	}
+
 
 }]);

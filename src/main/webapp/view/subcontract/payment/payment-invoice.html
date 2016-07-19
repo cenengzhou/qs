@@ -166,10 +166,17 @@
 							| currency}}</b></td>
 				</tr>
 				<tr>
-					<td class="text-right">VALUE OF ADJUSTMENTS</td>
+					<td>VALUE OF ADJUSTMENTS</td>
 					<td class="text-right">{{paymentCertSummary.adjustmentMovement
 						| currency}}</td>
 					<td class="text-right">{{paymentCertSummary.adjustmentTotal |
+						currency}}</td>
+				</tr>
+				<tr ng-show = "jobNo.indexOf('14')>-1">
+					<td>VALUE OF GST PAYABLE</td>
+					<td class="text-right">{{paymentCertSummary.gstPayableMovement
+						| currency}}</td>
+					<td class="text-right">{{paymentCertSummary.gstPayableTotal |
 						currency}}</td>
 				</tr>
 				<tr class="subtotal">
@@ -180,10 +187,17 @@
 							| currency}}</b></td>
 				</tr>
 				<tr>
-					<td class="text-right text-red">LESS CONTRA CHARGES</td>
+					<td class="text-red">LESS CONTRA CHARGES</td>
 					<td class="text-right text-red">({{paymentCertSummary.lessContraChargesMovement
 						| currency}})</td>
 					<td class="text-right text-red">({{paymentCertSummary.lessContraChargesTotal
+						| currency}})</td>
+				</tr>
+				<tr ng-show = "jobNo.indexOf('14')>-1">
+					<td class="text-red">LESS GST RECEIVABLE</td>
+					<td class="text-right text-red">({{paymentCertSummary.lessGSTReceivableMovement
+						| currency}})</td>
+					<td class="text-right text-red">({{paymentCertSummary.lessGSTReceivableTotal
 						| currency}})</td>
 				</tr>
 				<tr class="subtotal">
@@ -194,7 +208,7 @@
 							| currency}}</b></td>
 				</tr>
 				<tr>
-					<td class="text-right text-red">LESS PREVIOUS CERTIFICATIONS</td>
+					<td class="text-red">LESS PREVIOUS CERTIFICATIONS</td>
 					<td colspan="2" class="text-right text-red">({{paymentCertSummary.lessPreviousCertificationsMovement
 						| currency}})</td>
 				</tr>
@@ -208,5 +222,12 @@
 		</table>
 	</div>
 
+	<div class="col-md-12">
+		<button class="m-t-5 btn btn-primary btn-block"
+			ng-hide="disableButtons" ng-click="submit()"
+			ng-disabled="disableButtons">
+			Submit <span class="fa fa-send-o"></span>
+		</button>
+	</div>
 
 </div>

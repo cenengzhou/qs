@@ -95,7 +95,7 @@ public class HTMLStringForApprovalContentService implements Serializable{
 			  
 			if(paymentNo==null || "".equals(paymentNo.trim()) || paymentNo.trim().length()==0){// check the paymentNo
 				logger.info("Payment number is null --> Max. Payment No. will be used.");
-				scPaymentCertList = paymentHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, new Integer(subcontractNumber));
+				scPaymentCertList = paymentHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, subcontractNumber);
 
 				int maxPaymentCertNumber = 0;
 				if (scPaymentCertList.size() > 0) {

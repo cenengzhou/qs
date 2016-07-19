@@ -86,19 +86,18 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http'
 
 
 	$scope.updateRecommendedTender = function(recommendedSubcontractor){
-		tenderService.updateRecommendedTender($scope.jobNo, $scope.subcontractNo, recommendedSubcontractor)
-		.then(
-				function( data ) {
-					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Recommended Subcontractor has been updated.");
-						$state.reload();
-					}
-				});
-
-
-
+		if($scope.subcontract.scStatus !="330" && $scope.subcontract.scStatus !="500"){
+			tenderService.updateRecommendedTender($scope.jobNo, $scope.subcontractNo, recommendedSubcontractor)
+			.then(
+					function( data ) {
+						if(data.length!=0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Recommended Subcontractor has been updated.");
+							$state.reload();
+						}
+					});
+		}
 	}
 
 	function loadData(){

@@ -301,7 +301,7 @@ public class ResourceSummaryService implements Serializable {
 								&& latestPaymentCert.getDirectPayment().equals("Y") 
 								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 							//Payment list = 1: reset vendorNo		
-							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==1){
+							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==1){
 								//reset vendorNo in scPackage
 								scPackage.setVendorNo(null);
 							}
@@ -323,7 +323,7 @@ public class ResourceSummaryService implements Serializable {
 						}
 						
 						//Determine to clear TA
-						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==0){
+						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==0){
 							//Clear All TA
 							scPackageDao.resetPackageTA(scPackage);					
 						}else{
@@ -1336,7 +1336,7 @@ public class ResourceSummaryService implements Serializable {
 								&& latestPaymentCert.getDirectPayment().equals("Y") 
 								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 							//Payment list = 1: reset vendorNo		
-							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==1){
+							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==1){
 								//reset vendorNo in scPackage
 								scPackage.setVendorNo(null);
 							}
@@ -1358,7 +1358,7 @@ public class ResourceSummaryService implements Serializable {
 						}
 						
 						//Determine to clear TA
-						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo())).size()==0){
+						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==0){
 							//Clear All TA
 							scPackageDao.resetPackageTA(scPackage);					
 						}else{

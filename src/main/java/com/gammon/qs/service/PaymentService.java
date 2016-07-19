@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -86,7 +87,7 @@ import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 import com.gammon.qs.wrapper.scPayment.SCAllPaymentCertReportWrapper;
-import com.gammon.qs.wrapper.submitPayment.SubmitPaymentResponseWrapper;
+import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -152,6 +153,9 @@ public class PaymentService{
 	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
+	@Autowired
+	private SubcontractService subcontractService;
+	
 	
 	private List<PaymentCertDetail> cachedResults;
 	private List<SCPaymentExceptionalWrapper> cachedSCPaymentReportResults;
@@ -171,17 +175,6 @@ public class PaymentService{
 	private static final String APPROVALTYPE_DIRECTPAYMENT_NP = "NP";
 	private static final String APPROVALTYPE_PAYMENTREVIEW_FR = "FR";
 
-
-	/**
-	 * @author koeyyeung
-	 * payment hold alert message
-	 * created on 25th Nov, 2015
-	 * **/
-	public String obtainPaymentHoldMessage(){
-		return messageConfig.getPaymentHoldMessage();
-	}
-	
-	
 
 	/**
 	 * @author koeyyeung
@@ -307,7 +300,7 @@ public class PaymentService{
 		return scPaymentCertDao.obtainSCPaymentCertListByStatus(jobNumber, packageNo, status, directPayment);
 	}
 	
-	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, Integer packageNo) throws DatabaseOperationException{
+	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, String packageNo) throws DatabaseOperationException{
 		return scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 	}
 	
@@ -774,179 +767,7 @@ public class PaymentService{
 		return null;
 	}
 
-	public SubmitPaymentResponseWrapper submitPayment(String jobNumber, Integer packageNo, Integer paymentCertNo, Double certAmount, String userID, String currentMainCertNo) throws Exception {
-		logger.info("Job: "+jobNumber+" Package No.:"+packageNo+" Payment Certificate No.: "+paymentCertNo+" Certificate Amount: "+certAmount+" User: "+userID+" Main Certificate No.: "+currentMainCertNo);	
-		SubmitPaymentResponseWrapper submitPaymentResponseWrapper = new SubmitPaymentResponseWrapper();
-
-		if (currentMainCertNo != null && !"".equals(currentMainCertNo) && !"0".equals(currentMainCertNo)) {
-			String errorStr = isValidMainContractCertificate(jobNumber, Integer.valueOf(currentMainCertNo));
-			if (errorStr != null) {
-				throw new ValidateBusinessLogicException(errorStr);
-			}
-		}
-		
-		try {
-			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
-			String resultMsg = null;
-			String company = paymentCert.getSubcontract().getJobInfo().getCompany();
-			String vendorNo = paymentCert.getSubcontract().getVendorNo();
-			String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
-			String approvalType = APPROVALTYPE_INTERIMPAYMENT_SP;
-
-			JobInfo job = paymentCert.getSubcontract().getJobInfo();
-			AppSubcontractStandardTerms systemConstant = null;
-			if (company != null)
-				systemConstant = systemConstantDao.getSystemConstant(company);
-			else
-				systemConstant = systemConstantDao.getSystemConstant("00000");
-
-			//Determine Special Approval Type (Initialized as SP)
-			if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
-				approvalType = APPROVALTYPE_DIRECTPAYMENT_NP;
-			}
-			else if ("F".equals(paymentCert.getIntermFinalPayment()))
-				approvalType = APPROVALTYPE_FINALPAYMENT_SF;
-
-			logger.info("PaymentStatus: " + paymentCert.getPaymentStatus() + " ApprovalType: " + approvalType);
-
-			String approvalSubType = paymentCert.getSubcontract().getApprovalRoute();
-			String currencyCode = null;
-			if (company != null) {
-				try {
-					GetPeriodYearResponseObj periodYear = createGLDao.getPeriodYear(company, new Date());
-					currencyCode = periodYear.getCurrencyCodeFrom();
-				} catch (Exception e) {
-					submitPaymentResponseWrapper.setIsUpdated(false);
-					submitPaymentResponseWrapper.setErrorMsg(e.getLocalizedMessage());
-					logger.info(e.getMessage());
-					return submitPaymentResponseWrapper;
-				}
-			} else {
-				submitPaymentResponseWrapper.setIsUpdated(false);
-				submitPaymentResponseWrapper.setErrorMsg("There is no company");
-				return submitPaymentResponseWrapper;
-			}
-			PaymentCertViewWrapper result = new PaymentCertViewWrapper();
-			generatePaymentCertPreview(scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert), result);
-
-			double totalCertAmount = CalculationUtil.round((result.getSubTotal5() - result.getGstPayableTotal() + result.getLessGSTReceivableTotal()), 2);
-
-			/*
-			 * Check if the payment amount is larger than the budget amount in tender analysis
-			 * @Author Peter Chan
-			 * @2012-03-02
-			 */
-			if (!PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())) {
-				// For normal payment (Not the direct payment)
-				/**
-				 * @author koeyyeung
-				 * modified on 07Mar, 2014
-				 * Round the figure before making comparison
-				 * Any payment (Interim/Final) shouldn't exceed the Total Sub-contract Sum**/
-				if (totalCertAmount > CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)) {
-					logger.info("SC Sum: "+CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)+" - totalCertAmount: "+totalCertAmount);
-					submitPaymentResponseWrapper.setIsUpdated(false);
-					submitPaymentResponseWrapper.setErrorMsg("Total payment amount was larger than Subcontract Sum of the Package.");
-					return submitPaymentResponseWrapper;
-				}
-				
-				if ("F".equals(paymentCert.getIntermFinalPayment().trim())) {
-					logger.info("Checking Provision for Final Account Job:" + paymentCert.getJobNo() + " Package:" + paymentCert.getPackageNo());
-					List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNumber, packageNo.toString());
-					for (SubcontractDetail scDetail : scDetailsList)
-						if ((	"BQ".equals(scDetail.getLineType().trim()) || "B1".equals(scDetail.getLineType().trim()) ||
-								"V1".equals(scDetail.getLineType().trim()) || "V2".equals(scDetail.getLineType().trim()) || "V3".equals(scDetail.getLineType().trim()) ||
-								"L1".equals(scDetail.getLineType().trim()) || "L2".equals(scDetail.getLineType().trim()) ||
-								"D1".equals(scDetail.getLineType().trim()) || "D2".equals(scDetail.getLineType().trim()) ||
-								"CF".equals(scDetail.getLineType().trim()) || "OA".equals(scDetail.getLineType().trim())
-								) && SubcontractDetail.APPROVED.equals(scDetail.getApproved())) {
-							/**
-							 * @author koeyyeung
-							 * modified on 07Mar, 2014
-							 * use direct comparison and display the figures to user when error occurred**/
-							if (scDetail.getCumCertifiedQuantity().doubleValue() != scDetail.getCumWorkDoneQuantity().doubleValue()) {
-								logger.info("CumCertifiedQuantity :"+scDetail.getCumCertifiedQuantity()+" ; CumWorkDoneQuantity :"+scDetail.getCumWorkDoneQuantity());
-								submitPaymentResponseWrapper.setIsUpdated(false);
-								submitPaymentResponseWrapper.setErrorMsg(	"No provision is allowed when submitting for the Final Payment. <br>" +
-																			"There is projected provision in SC Detail Sequence No.: " + scDetail.getSequenceNo()+"<br>"+
-																			"Cum. Certified Quantity :"+scDetail.getCumCertifiedQuantity()+"<br>"+
-																			"Cum. Work Done Quantity :"+scDetail.getCumWorkDoneQuantity()																		
-																			);
-								
-								return submitPaymentResponseWrapper;
-							}
-						}
-					certAmount = paymentCert.getSubcontract().getSubcontractSum();
-				}
-			} else {
-				// For Direct Payment
-				Tender tenderAnalysis = tenderAnalysisHBDaoImpl.obtainTenderAnalysis(paymentCert.getSubcontract(), Integer.valueOf(0));
-				double budgetAmount = 0;
-				List<TenderDetail> tenderAnalysisDetailList = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
-				if (tenderAnalysis != null && tenderAnalysisDetailList != null && !tenderAnalysisDetailList.isEmpty())
-					for (TenderDetail tenderAnalysisDetail : tenderAnalysisDetailList)
-						budgetAmount += RoundingUtil.multiple(tenderAnalysisDetail.getQuantity(), tenderAnalysisDetail.getRateBudget());
-				if (RoundingUtil.round(totalCertAmount - budgetAmount, 2) > 0) {
-					submitPaymentResponseWrapper.setIsUpdated(false);
-					submitPaymentResponseWrapper.setErrorMsg("Total payment amount was larger than Tender Budget.");
-					return submitPaymentResponseWrapper;
-				}
-
-			}
-
-			//Validate Main Cert No. for QS1 and QS2
-			paymentCert = calculateAndUpdatePaymentDueDate(paymentCert);
-			if((paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS1") || paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS2"))
-				&&paymentCert.getMainContractPaymentCertNo()==null){
-				submitPaymentResponseWrapper.setIsUpdated(false);
-				submitPaymentResponseWrapper.setErrorMsg("Main Certificate No. cannot be empty.");
-				return submitPaymentResponseWrapper;
-			}
-			
-			// ValidateBusinessLogicException will be thrown for invalid payment 
-			List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
-			List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(paymentCert.getSubcontract());
-			if (SCPaymentLogic.ableToSubmit(paymentCert, scPaymentCertList, scDetailsList, scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
-				// the currency pass to approval system should be the company base currency
-				currencyCode = getCompanyBaseCurrency(jobNumber);
-
-				resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNo.toString(), vendorNo, vendorName,
-						approvalType, approvalSubType, certAmount, currencyCode, userID);
-			}
-
-			logger.info("resultMsg" + resultMsg);
-			if (resultMsg == null || "".equals(resultMsg.trim())) {
-				/*
-				 * Set payment status to UFR if it has to be reviewed by Finance
-				 * @author Tiky Wong
-				 * 28-May-2012
-				 */
-				if (paymentCert.getSubcontract().getPaymentTerms().equals("QS0") &&
-						(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
-						(systemConstant != null && systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)) &&
-						(paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED) || paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)))
-					paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
-				else
-					paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED);
-
-				submitPaymentResponseWrapper.setIsUpdated(true);
-					
-				scPaymentCertDao.updateSCPaymentCert(paymentCert);
-			} else {
-				submitPaymentResponseWrapper.setIsUpdated(false);
-				submitPaymentResponseWrapper.setErrorMsg(resultMsg);
-			}
-			logger.info("PaymentStatus of Job " + paymentCert.getJobNo() + " SC:" + paymentCert.getPackageNo() + " paymentNo:" + paymentCert.getPaymentCertNo() + " is " + paymentCert.getPaymentStatus());
-		} catch (Exception e) {
-			logger.info("Exception caught: submitPayment() - Job: "+jobNumber+" Package No.:"+packageNo+" Payment Certificate No.: "+paymentCertNo+" Certificate Amount: "+certAmount+" User: "+userID+" Main Certificate No.: "+currentMainCertNo);
-			submitPaymentResponseWrapper.setIsUpdated(false);
-			submitPaymentResponseWrapper.setErrorMsg(e.getLocalizedMessage());
-			logger.info(e.getMessage());
-			return submitPaymentResponseWrapper;
-		}
-
-		return submitPaymentResponseWrapper;
-	}
+	
 
 	private PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert) throws ValidateBusinessLogicException {
 		return paymentPostingService.calculateAndUpdatePaymentDueDate(paymentCert);
@@ -1761,7 +1582,7 @@ public class PaymentService{
 		boolean isAllApr = true;
 		List<PaymentCert> scPaymentCertList;
 		try {
-			scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+			scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0){
 			int latestPaymentCert = 0;
 			for(PaymentCert tempSCPaymentCert:scPaymentCertList){
@@ -1947,7 +1768,7 @@ public class PaymentService{
 			if (scPaymentCert.getPaymentCertNo()>1){
 				List<PaymentCert> scPaymentCertList;
 				try {
-					scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPaymentCert.getJobNo(), Integer.valueOf(scPaymentCert.getSubcontract().getPackageNo()));
+					scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPaymentCert.getJobNo(), scPaymentCert.getSubcontract().getPackageNo());
 					for (PaymentCert searchSCPaymentCert:scPaymentCertList){
 						if (searchSCPaymentCert.getPaymentCertNo().equals(scPaymentCert.getPaymentCertNo()-1)){
 							List<PaymentCertDetail> searchSCPaymentDetailList = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(searchSCPaymentCert);
@@ -2398,113 +2219,38 @@ public class PaymentService{
 	
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	/**
+	 * @author koeyyeung
+	 * payment hold alert message
+	 * created on 25th Nov, 2015
+	 * **/
+	public String obtainPaymentHoldMessage(){
+		return messageConfig.getPaymentHoldMessage();
+	}
+	
 	public PaymentCert obtainPaymentLatestCert(String jobNumber, String packageNo) throws DatabaseOperationException{
 		return scPaymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 	}
 	
 	
-	/**
-	 * refactored by Tiky Wong
-	 * on July 31, 2013
-	 */
-	/*public SCPaymentCertsWrapper getPaymentCertList(String jobNumber, String packageNo) throws DatabaseOperationException {
-		SCPaymentCertsWrapper scPaymentCertsWrapper = new SCPaymentCertsWrapper();
-
-		// 1. Obtain payment certificates' associated job
-		if (jobNumber == null) {
-			logger.info("jobNumber is null.");
-			return null;
+	public Double obtainPaymentGstAmount(String jobNo, String subcontractNo, Integer paymentCertNo, String lineType) {
+		Double gstAmount = 0.0;
+		try {
+			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+			if(paymentCert!=null){
+				if("GP".equals(lineType))
+					gstAmount = scPaymentDetailDao.obtainPaymentGstPayable(paymentCert);
+				if("GR".equals(lineType))
+					gstAmount = scPaymentDetailDao.obtainPaymentGstReceivable(paymentCert);
+			}
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
 		}
-
-		JobInfo job = jobHBDaoImpl.obtainJobInfo(jobNumber);
-		if (job == null) {
-			logger.info("job is null with jobNumber: " + jobNumber);
-			return null;
-		}
-
-		scPaymentCertsWrapper.setJob(job);
-
-		// 2. Obtain payment certificates' associated SC package
-		if (packageNo == null) {
-			logger.info("packageNo is null.");
-			return null;
-		}
-
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
-		if (scPackage == null) {
-			logger.info("scPackage is null with packagNo: " + packageNo);
-			return null;
-		}
-
-		scPaymentCertsWrapper.setScPackage(scPackage);
-
-		// 3. Obtain SCPackage hold payment Status
-		Integer addressNumber = new Integer(scPackage.getVendorNo());
-		SupplierMasterWrapper supplierMasterWrapper = supplierMasterRepository.obtainSupplierMaster(addressNumber);
-
-		scPaymentCertsWrapper.setSupplierMasterWrapper(supplierMasterWrapper);
-
-		// 4. Obtain a full list of payment certificates of the requested job number + SC package
-		ArrayList<PaymentCertWithGSTWrapper> scPaymentCertWithGSTWrappers = new ArrayList<PaymentCertWithGSTWrapper>();
-		List<PaymentCert> scPaymentCertListInDB = scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, new Integer(packageNo));
-
-		double totalCertificateAmount = 0;
-		double totalGSTPayableAmount = 0;
-		double totalGSTReceivableAmount = 0;
-		for (PaymentCert scPaymentCert : scPaymentCertListInDB) {
-			PaymentCertWithGSTWrapper scPaymentCertWithGSTWrapper = new PaymentCertWithGSTWrapper();
-
-			scPaymentCertWithGSTWrapper.setPaymentCertNo(scPaymentCert.getPaymentCertNo());
-			scPaymentCertWithGSTWrapper.setPaymentStatus(scPaymentCert.getPaymentStatus());
-			scPaymentCertWithGSTWrapper.setDirectPayment(scPaymentCert.getDirectPayment());
-			scPaymentCertWithGSTWrapper.setIntermFinalPayment(scPaymentCert.getIntermFinalPayment());
-			scPaymentCertWithGSTWrapper.setMainContractPaymentCertNo(scPaymentCert.getMainContractPaymentCertNo());
-
-			scPaymentCertWithGSTWrapper.setDueDate(scPaymentCert.getDueDate());
-			scPaymentCertWithGSTWrapper.setAsAtDate(scPaymentCert.getAsAtDate());
-			scPaymentCertWithGSTWrapper.setScIpaReceivedDate(scPaymentCert.getIpaOrInvoiceReceivedDate());
-			scPaymentCertWithGSTWrapper.setCertIssueDate(scPaymentCert.getCertIssueDate());
-
-			scPaymentCertWithGSTWrapper.setCertAmount(scPaymentCert.getCertAmount());
-			scPaymentCertWithGSTWrapper.setAddendumAmount(scPaymentCert.getAddendumAmount());
-			scPaymentCertWithGSTWrapper.setRemeasureContractSum(scPaymentCert.getRemeasureContractSum());
-
-			scPaymentCertWithGSTWrapper.setJobNo(scPaymentCert.getJobNo());
-			scPaymentCertWithGSTWrapper.setPackageNo(scPaymentCert.getPackageNo());
-
-			Double certGSTPayable = scPaymentDetailDao.obtainPaymentGstPayable(scPaymentCert);
-			Double certGSTReceivable = scPaymentDetailDao.obtainPaymentGstReceivable(scPaymentCert);
-			scPaymentCertWithGSTWrapper.setGstPayable(certGSTPayable);
-			scPaymentCertWithGSTWrapper.setGstReceivable(certGSTReceivable);
-
-			// calculate total amounts
-			totalCertificateAmount += scPaymentCert.getCertAmount() != null ? scPaymentCert.getCertAmount() : 0.00;
-			totalGSTPayableAmount += certGSTPayable != null ? certGSTPayable : 0.00;
-			totalGSTReceivableAmount += certGSTReceivable != null ? certGSTReceivable : 0.00;
-
-			scPaymentCertWithGSTWrappers.add(scPaymentCertWithGSTWrapper);
-		}
-
-		scPaymentCertsWrapper.setScPaymentCertWithGSTWrapperList(scPaymentCertWithGSTWrappers);
-		logger.info("No. of Payment Certificates: " + scPaymentCertWithGSTWrappers.size());
-
-		// 5. Set total amounts
-		scPaymentCertsWrapper.setTotalCertificateAmount(totalCertificateAmount);
-		scPaymentCertsWrapper.setTotalGSTPayableAmount(totalGSTPayableAmount);
-		scPaymentCertsWrapper.setTotalGSTReceivableAmount(totalGSTReceivableAmount);
-		
-		//6.check whether it's internal job or not(for SGP job)
-		List<String> parentJobList = jobRepository.obtainParentJobList(jobNumber);
-		if(parentJobList.size()>0)
-			scPaymentCertsWrapper.setIsInternalJob(true);
-		else
-			scPaymentCertsWrapper.setIsInternalJob(false);
-		
-		return scPaymentCertsWrapper;
-	}*/
+		return gstAmount;
+	}
 	
 	public List<PaymentCert> getPaymentCertList(String jobNumber, String packageNo) throws DatabaseOperationException {
-		List<PaymentCert> paymeneCertList = scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(packageNo));
+		List<PaymentCert> paymeneCertList = scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 		return paymeneCertList;
 	}
 	
@@ -2721,27 +2467,20 @@ public class PaymentService{
 				PaymentCertDetail scPaymentDetailGR = new PaymentCertDetail();
 				PaymentCertDetail scPaymentDetailRT = new PaymentCertDetail();
 				if (scPaymentCert.getPaymentCertNo()>1){
-					List<PaymentCert> scPaymentCertList;
 					try {
-						scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPaymentCert.getJobNo(), Integer.valueOf(scPaymentCert.getSubcontract().getPackageNo()));
-						for (PaymentCert searchSCPaymentCert:scPaymentCertList){
-							if (searchSCPaymentCert.getPaymentCertNo().equals(scPaymentCert.getPaymentCertNo()-1)){
-								List<PaymentCertDetail> searchSCPaymentDetailList = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(searchSCPaymentCert);
-								for (PaymentCertDetail preSCPaymentDetail:searchSCPaymentDetailList)
-									if ("RT".equals(preSCPaymentDetail.getLineType()))
-										preRTAmount = preSCPaymentDetail.getCumAmount();
-									else if ("MR".equals(preSCPaymentDetail.getLineType()))
-										preMRAmount += preSCPaymentDetail.getCumAmount();
-									else if ("GP".equals(preSCPaymentDetail.getLineType())){
-										preGPAmount = preSCPaymentDetail.getCumAmount();
-										scPaymentDetailGP.setCumAmount(preSCPaymentDetail.getCumAmount());}
-									else if ("GR".equals(preSCPaymentDetail.getLineType())){
-										preGRAmount = preSCPaymentDetail.getCumAmount();
-										scPaymentDetailGR.setCumAmount(preSCPaymentDetail.getCumAmount());
-									}
-								break;
+						List<PaymentCertDetail> prePaymentDetailList = scPaymentDetailDao.getPaymentDetail(scPaymentCert.getJobNo(), scPaymentCert.getPackageNo(), scPaymentCert.getPaymentCertNo()-1);
+						for (PaymentCertDetail preSCPaymentDetail: prePaymentDetailList)
+							if ("RT".equals(preSCPaymentDetail.getLineType()))
+								preRTAmount = preSCPaymentDetail.getCumAmount();
+							else if ("MR".equals(preSCPaymentDetail.getLineType()))
+								preMRAmount += preSCPaymentDetail.getCumAmount();
+							else if ("GP".equals(preSCPaymentDetail.getLineType())){
+								preGPAmount = preSCPaymentDetail.getCumAmount();
+								scPaymentDetailGP.setCumAmount(preSCPaymentDetail.getCumAmount());}
+							else if ("GR".equals(preSCPaymentDetail.getLineType())){
+								preGRAmount = preSCPaymentDetail.getCumAmount();
+								scPaymentDetailGR.setCumAmount(preSCPaymentDetail.getCumAmount());
 							}
-						}
 					} catch (NumberFormatException | DatabaseOperationException e) {
 						e.printStackTrace();
 					}
@@ -2757,8 +2496,8 @@ public class PaymentService{
 					scPaymentDetailMR.setLineType("MR");
 					scPaymentDetailMR.setObjectCode(tempObjCode);
 					scPaymentDetailMR.setSubsidiaryCode(tempSubsidCode);
-					scPaymentDetailMR.setCumAmount(scPaymentCert.getSubcontract().getTotalMOSPostedCertAmount());
-					scPaymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
+					scPaymentDetailMR.setCumAmount(preMRAmount);
+					scPaymentDetailMR.setMovementAmount(0.0);
 					scPaymentDetailMR.setScSeqNo(100002);
 					resultList.add(scPaymentDetailMR);
 				}
@@ -2813,92 +2552,297 @@ public class PaymentService{
 	}
 	
 	/**
+	 * @author koeyyeung
+	 * created on 12 Jul, 2016
+	 * New flow for Payment: input from payment details instead of scDetails**/
+	public String updatePaymentDetails(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentType, List<PaymentCertDetail> paymentDetails){
+		String error = "";
+		double totalCertAmount = 0.0;
+		double totalMOSAmount = 0.0;
+		
+		try {
+			//1. Validate Subcontract
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			if (subcontract.getPaymentStatus() != null && "F".equals(subcontract.getPaymentStatus().trim())) {
+				error = "Subcontract: " + subcontract.getPackageNo() + " - has been finalized.";
+				logger.info(error);
+				return error;
+			}
+			
+			//2. Validate PaymentCert
+			PaymentCert paymentCert = this.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+			if (paymentCert == null) {
+				error = "Job: " + jobNo + " Subcontract: " + subcontractNo + " Payment No. "+paymentCertNo+" does not exist.";
+				logger.info(error);
+				return error;
+			}
+			else if (paymentCert != null && ("PCS".equals(paymentCert.getPaymentStatus()) || "UFR".equals(paymentCert.getPaymentStatus()) || "SBM".equals(paymentCert.getPaymentStatus()))) {
+				error = "Subcontract: " + subcontractNo + " - has payment submitted for approval";
+				logger.info(error);
+				return error;
+			}
+			
+			//update payment type
+			paymentCert.setIntermFinalPayment(paymentType);
+			
+			//3. Get previous cert details: RT/MR
+			double preRTAmount = 0.0;
+			double preMRAmount = 0.0;
+			if(paymentCertNo > 1){
+				List<PaymentCertDetail> prePaymentDetailList = scPaymentDetailDao.getPaymentDetail(jobNo, subcontractNo, paymentCertNo-1);
+				for (PaymentCertDetail preSCPaymentDetail: prePaymentDetailList){
+					if ("RT".equals(preSCPaymentDetail.getLineType()))
+						preRTAmount = preSCPaymentDetail.getCumAmount();
+					else if ("MR".equals(preSCPaymentDetail.getLineType()))
+						preMRAmount += preSCPaymentDetail.getCumAmount();
+				}
+			}
+			
+			if(paymentDetails != null)
+				for(PaymentCertDetail paymentDetail: paymentDetails){
+					if(paymentDetail.getLineType() != "RT" && paymentDetail.getLineType() != "MR" && paymentDetail.getLineType() != "GP" && paymentDetail.getLineType() != "GR"){
+						PaymentCertDetail paymentDetailInDB = 	scPaymentDetailDao.obtainPaymentDetail(paymentCert, paymentDetail.getSubcontractDetail());
+						
+						if(paymentDetailInDB != null){
+							SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
+	
+							if(scDetail != null){
+								scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
+								scDetailDao.update(scDetail);
+							}
+	
+	
+							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
+							if(scDetail.getAmountBudget() >= 0){
+								if (paymentDetail.getCumAmount() > scDetail.getAmountBudget()) {
+									error = "New Certified Quantity: " + paymentDetail.getCumAmount() + " cannot be larger than BQ Quantity: " + scDetail.getAmountBudget() ;
+									logger.info(error);
+									return error;
+								}
+							}else{
+								if (paymentDetail.getCumAmount() < scDetail.getAmountBudget() || paymentDetail.getCumAmount() >0) {
+									error = "New Certified Quantity: " + paymentDetail.getCumAmount() + " cannot be smaller than BQ Quantity: " + scDetail.getAmountBudget() ;
+									logger.info(error);
+									return error;
+								}
+							}
+	
+							if (scDetail instanceof SubcontractDetailBQ)
+								totalCertAmount += paymentDetail.getCumAmount();
+							
+	
+							if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
+								totalMOSAmount += paymentDetail.getCumAmount();
+							}
+	
+							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
+							paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
+							scPaymentDetailDao.update(paymentDetailInDB);	
+	
+						}
+					}		
+				}
+			
+			//5. Update RT, MR
+			double cumMOSRetention = CalculationUtil.round(totalMOSAmount*paymentCert.getSubcontract().getMosRetentionPercentage()/100.0, 2);
+			double cumRetention = CalculationUtil.round(totalCertAmount*paymentCert.getSubcontract().getInterimRentionPercentage()/100.0, 2);
+			
+			//Define upper limit of retention
+			double retentionUpperLimit = paymentCert.getSubcontract().getRetentionAmount();
+			if (paymentCert.getSubcontract().getRetentionAmount()<paymentCert.getSubcontract().getAccumlatedRetention())
+				retentionUpperLimit = paymentCert.getSubcontract().getAccumlatedRetention();
+			
+			//SCPayment's RT cannot be larger than "Retention Amount"/"Accumulated Retention Amount" in SC Header
+			if (cumRetention>retentionUpperLimit)
+				cumRetention = retentionUpperLimit;
+			
+			//No retention should be hold for Final Payment
+			if(paymentCert.getPaymentStatus()!=null && "F".equalsIgnoreCase(paymentCert.getIntermFinalPayment().trim())){
+				cumRetention = preRTAmount;
+				cumMOSRetention = preMRAmount;
+			}
+			
+			List<PaymentCertDetail> paymentDetailRTList = scPaymentDetailDao.getSCPaymentDetail(paymentCert, "RT");
+			
+			if(paymentDetailRTList != null && paymentDetailRTList.size()==1){
+				PaymentCertDetail paymentDetailRT = paymentDetailRTList.get(0);
+				paymentDetailRT.setCumAmount(cumRetention);
+				paymentDetailRT.setMovementAmount(cumRetention - preRTAmount);
+				scPaymentDetailDao.update(paymentDetailRT);
+			}
+			
+			List<PaymentCertDetail> paymentDetailMRList = scPaymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
+			if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){
+				PaymentCertDetail paymentDetailMR = paymentDetailMRList.get(0);
+				paymentDetailMR.setCumAmount(cumMOSRetention);
+				paymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
+				scPaymentDetailDao.update(paymentDetailMR);
+			}
+			
+			//6. Update Payment Cert Amount
+			List<AccountMovementWrapper> accList = new ArrayList<AccountMovementWrapper>();
+			double cumAmount = 0.00;
+			double cumAmount_RT = 0.0;
+			double cumAmount_CF = 0.0;
+			double cumAmount_MOS = 0.0;
+			double cumAmount_MR = 0.0;
+			List<PaymentCertDetail> paymentDetailListInDB = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
+			for (PaymentCertDetail scPaymentDetail: paymentDetailListInDB){
+				if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+					cumAmount_RT += scPaymentDetail.getMovementAmount();
+				else if ("CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+					cumAmount_CF += scPaymentDetail.getMovementAmount();
+				else if ("MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+					cumAmount_MR = cumAmount_MR + scPaymentDetail.getMovementAmount();
+				else if ("MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+					cumAmount_MOS += scPaymentDetail.getMovementAmount();
+				else if (!("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
+					boolean accFound = false;
+					for (AccountMovementWrapper certMovement:accList)
+						if (((certMovement.getObjectCode() == null && scPaymentDetail.getObjectCode() == null) ||
+								(certMovement.getObjectCode() != null && scPaymentDetail.getObjectCode() != null &&
+								certMovement.getObjectCode().equals(scPaymentDetail.getObjectCode().trim()))) &&
+								((certMovement.getSubsidiaryCode() == null && scPaymentDetail.getSubsidiaryCode() == null) || (
+								certMovement.getSubsidiaryCode() != null && scPaymentDetail.getSubsidiaryCode() != null &&
+								certMovement.getSubsidiaryCode().equals(scPaymentDetail.getSubsidiaryCode().trim())))) {
+							accFound = true;
+							certMovement.setMovementAmount(certMovement.getMovementAmount()+scPaymentDetail.getMovementAmount());
+						}
+					
+					//Setting up Sub-contract Payment Detail lines except RA, RT, RR, CF, MR, MS, GP, GR
+					if (!accFound){
+						AccountMovementWrapper newAcc = new AccountMovementWrapper();
+						if (scPaymentDetail.getObjectCode()==null||"".equals(scPaymentDetail.getObjectCode().trim()))
+							newAcc.setObjectCode(null);
+						else 
+							newAcc.setObjectCode(scPaymentDetail.getObjectCode().trim());
+						if (scPaymentDetail.getSubsidiaryCode()==null||"".equals(scPaymentDetail.getSubsidiaryCode().trim()))
+							newAcc.setObjectCode(null);
+						else 
+							newAcc.setSubsidiaryCode(scPaymentDetail.getSubsidiaryCode().trim());
+						if (scPaymentDetail.getMovementAmount()==null||scPaymentDetail.getMovementAmount().isNaN())
+							newAcc.setMovementAmount(0.0);
+						else 
+							newAcc.setMovementAmount(scPaymentDetail.getMovementAmount());
+						accList.add(newAcc);
+					}
+						
+				}
+			}
+			
+			cumAmount = RoundingUtil.round(cumAmount_CF,2) - 
+						RoundingUtil.round(cumAmount_RT, 2)+
+						RoundingUtil.round(cumAmount_MOS, 2) -
+						RoundingUtil.round(cumAmount_MR, 2);
+			for (AccountMovementWrapper certMovement:accList)
+				cumAmount += RoundingUtil.round(certMovement.getMovementAmount(), 2);
+			
+			
+			paymentCert.setCertAmount(cumAmount);
+			scPaymentCertDao.update(paymentCert);
+
+			//4. Recalculate Subcintract Total Amounts
+			subcontractService.calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
+		} catch (DatabaseOperationException e) {
+			error = "Payment Details cannot be updated.";
+			e.printStackTrace();
+		}
+
+		return error;
+	}
+	
+	/**
 	 * @author tikywong
 	 * refactored on 09 August, 2013
 	 * @author koeyyeung
 	 * modified on 15 July, 2016
 	 */
-	/*public String updatePaymentCertificate(UpdatePaymentCertificateWrapper updatePaymentCertificateWrapper) {
+	public String updatePaymentCertificate(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentTerms, PaymentCert paymentCert, Double gstPayable, Double gstReceivable) {
 		String error = "";
-		UpdatePaymentCertificateResultWrapper resultWrapper = new UpdatePaymentCertificateResultWrapper();
-
 		// 1. Obtain payment certificate
 		logger.info("1. Obtain payment certificate");
 		PaymentCert scPaymentCert = null;
 		try {
-			scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(updatePaymentCertificateWrapper.getJobNumber(), updatePaymentCertificateWrapper.getPackageNo(), updatePaymentCertificateWrapper.getPaymentCertNo());
+			scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 		} catch (DatabaseOperationException e) {
-			String message = ("Unable to obtain Payment Certificate \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
+			e.printStackTrace();
+			error = ("Unable to obtain Payment Certificate \n" +
+								"Job: " + jobNo +
+								" Subcontract No.: " + subcontractNo +
+								" Payment Certificate No.: " + paymentCertNo);
+			logger.info(error);
+			return error;
 		}
 		if (scPaymentCert == null) {
-			String message = ("No Payment Certificate is found \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
+			error = ("No Payment Certificate is found \n" +
+					"Job: " + jobNo +
+					" Subcontract No.: " + subcontractNo +
+					" Payment Certificate No.: " + paymentCertNo);
+			logger.info(error);
+			return error;
 		}
 
 		// 2. Obtain parent job's Main Contract Certificate for QS1 & QS2
 		logger.info("2. Obtain parent job's Main Contract Certificate for QS1 & QS2");
-		if ((updatePaymentCertificateWrapper.getPaymentTerm().equals("QS1") || updatePaymentCertificateWrapper.getPaymentTerm().equals("QS2")) &&
-				updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert() != null) {
-			String message = isValidMainContractCertificate(updatePaymentCertificateWrapper.getJobNumber(), updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert());
-			if (message != null) {
-				resultWrapper.setIsUpdateSuccess(false);
-				resultWrapper.setMessage(message);
-				return resultWrapper;
+		if ((paymentTerms.equals("QS1") || paymentTerms.equals("QS2")) &&
+				paymentCert.getMainContractPaymentCertNo() != null) {
+			error = isValidMainContractCertificate(jobNo, paymentCert.getMainContractPaymentCertNo());
+			if (error != null) {
+				return error;
 			} else
-				scPaymentCert.setMainContractPaymentCertNo(updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert());
+				scPaymentCert.setMainContractPaymentCertNo(paymentCert.getMainContractPaymentCertNo());
 		} else
 			scPaymentCert.setMainContractPaymentCertNo(null);
 
-		if (updatePaymentCertificateWrapper.getAsAtDate() != null)
-			scPaymentCert.setAsAtDate(updatePaymentCertificateWrapper.getAsAtDate());
-		if (updatePaymentCertificateWrapper.getDueDate() != null)
-			scPaymentCert.setDueDate(updatePaymentCertificateWrapper.getDueDate());
-		if (updatePaymentCertificateWrapper.getSclpaReceivedDate() != null)
-			scPaymentCert.setIpaOrInvoiceReceivedDate(updatePaymentCertificateWrapper.getSclpaReceivedDate());
+		if (paymentCert.getAsAtDate() != null)
+			scPaymentCert.setAsAtDate(paymentCert.getAsAtDate());
+		if (paymentCert.getDueDate() != null)
+			scPaymentCert.setDueDate(paymentCert.getDueDate());
+		if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
+			scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
 
 		// 3. Calculate Due Date
 		logger.info("3. Calculate Due Date");
 		try {
 			scPaymentCert = calculateAndUpdatePaymentDueDate(scPaymentCert);
 
-		} catch (ValidateBusinessLogicException vException) {
-			String message = vException.getMessage();
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
+		} catch (ValidateBusinessLogicException e) {
+			e.printStackTrace();
+			error = e.getMessage();
+			logger.info(error);
+			return error;
 		}
 
 		// 4. Update SC Payment Certificate
 		logger.info("4. Update SC Payment Certificate");
 		try {
 			scPaymentCertDao.update(scPaymentCert);
-		} catch (DataAccessException dbException) {
-			String message = ("Unable to update Payment Certificate \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			error = ("Unable to update Payment Certificate \n" +
+					"Job: " + jobNo +
+					" Subcontract No.: " + subcontractNo +
+					" Payment Certificate No.: " + paymentCertNo);
+			return error;
 		}
 
+		
+				
 		// 5. Insert & Update GST Payable & GST Receivable
-		if(	 updatePaymentCertificateWrapper.getJob()!=null &&
-			(updatePaymentCertificateWrapper.getJob().getDivision().equals("SGP") || updatePaymentCertificateWrapper.getJob().getJobNumber().startsWith("14"))){
+		JobInfo job;
+		try {
+			job = jobHBDaoImpl.obtainJobInfo(jobNo);
+		} catch (DatabaseOperationException e) {
+			error = ("Unable to obtain Payment Certificate \n" +
+					"Job: " + jobNo +
+					" Subcontract No.: " + subcontractNo +
+					" Payment Certificate No.: " + paymentCertNo);
+			logger.info(error);
+			e.printStackTrace();
+			return error;
+		}
+		if(	job!=null &&
+			(job.getDivision().equals("SGP") || job.getJobNumber().startsWith("14"))){
 			if(!Subcontract.INTERNAL_TRADING.equals(scPaymentCert.getSubcontract().getFormOfSubcontract())){
 				// 5a. Obtain GST from DB
 				logger.info("5. Insert & Update GST Payable & GST Receivable");
@@ -2907,10 +2851,8 @@ public class PaymentService{
 				try {
 					List<PaymentCertDetail> gstPayableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
 					if (gstPayableList == null || gstPayableList.size() > 1) {
-						String message = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
+						error = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
+						return error;
 					}
 
 					if (gstPayableList.size() == 0 || gstPayableList.get(0) == null)
@@ -2920,21 +2862,18 @@ public class PaymentService{
 
 					List<PaymentCertDetail> gstReceivableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
 					if (gstReceivableList == null || gstReceivableList.size() > 1) {
-						String message = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
+						error = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
+						return error;
 					}
 
 					if (gstReceivableList.size() == 0 || gstReceivableList.get(0) == null)
 						gstReceivableInDB = null;
 					else
 						gstReceivableInDB = gstReceivableList.get(0);
-				} catch (DatabaseOperationException dbException) {
-					String message = ("Unable to update Payment Certificate GST.");
-					resultWrapper.setIsUpdateSuccess(false);
-					resultWrapper.setMessage(message);
-					return resultWrapper;
+				} catch (DatabaseOperationException e) {
+					e.printStackTrace();
+					error = ("Unable to update Payment Certificate GST.");
+					return error;
 				}
 
 				// 5b. Insert new GST Payable
@@ -2945,16 +2884,13 @@ public class PaymentService{
 					gstPayableInDB.setCumAmount(0.0);
 					gstPayableInDB.setMovementAmount(0.0);
 					gstPayableInDB.setScSeqNo(100003);
-					gstPayableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
-					gstPayableInDB.setCreatedDate(new Date());
 					gstPayableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstPayableInDB);
 					} catch (DataAccessException e) {
-						String message = ("Unable to insert Payment Certificate GST Payable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
+						e.printStackTrace();
+						error = ("Unable to insert Payment Certificate GST Payable");
+						return error;
 					}
 				}
 
@@ -2966,31 +2902,26 @@ public class PaymentService{
 					gstReceivableInDB.setCumAmount(0.0);
 					gstReceivableInDB.setMovementAmount(0.0);
 					gstReceivableInDB.setScSeqNo(100004);
-					gstReceivableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
-					gstReceivableInDB.setCreatedDate(new Date());
 					gstReceivableInDB.setPaymentCert(scPaymentCert);
 					try {
 						scPaymentDetailDao.insert(gstReceivableInDB);
 					} catch (DataAccessException e) {
-						String message = ("Unable to insert Payment Certificate GST Receviable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
+						e.printStackTrace();
+						error = ("Unable to insert Payment Certificate GST Receviable");
+						return error;
 					}
 				}
 
 				// 5d. Calculate GST Cumulative Amount & GST Movement Amount
-				if(updatePaymentCertificateWrapper.getGstPayable()!=null){
+				if(gstPayable!=null){
 					gstPayableInDB.setCumAmount(gstPayableInDB.getCumAmount().doubleValue() - 
-							gstPayableInDB.getMovementAmount().doubleValue() + 
-							updatePaymentCertificateWrapper.getGstPayable().doubleValue());
-					gstPayableInDB.setMovementAmount(updatePaymentCertificateWrapper.getGstPayable());
+							gstPayableInDB.getMovementAmount().doubleValue() + gstPayable);
+					gstPayableInDB.setMovementAmount(gstPayable);
 				}
-				if(updatePaymentCertificateWrapper.getGstReceivable()!=null){
+				if(gstReceivable!=null){
 					gstReceivableInDB.setCumAmount(gstReceivableInDB.getCumAmount().doubleValue() - 
-							gstReceivableInDB.getMovementAmount().doubleValue() + 
-							updatePaymentCertificateWrapper.getGstReceivable().doubleValue());
-					gstReceivableInDB.setMovementAmount(updatePaymentCertificateWrapper.getGstReceivable());
+							gstReceivableInDB.getMovementAmount().doubleValue() + gstReceivable);
+					gstReceivableInDB.setMovementAmount(gstReceivable);
 				}
 
 				// 5f. Update GST
@@ -2998,36 +2929,224 @@ public class PaymentService{
 					scPaymentDetailDao.update(gstPayableInDB);
 					scPaymentDetailDao.update(gstReceivableInDB);
 				} catch (DataAccessException e) {
-					String message = ("Unable to insert Payment Certificate GST");
-					resultWrapper.setIsUpdateSuccess(false);
-					resultWrapper.setMessage(message);
-					return resultWrapper;
+					e.printStackTrace();
+					error = ("Unable to insert Payment Certificate GST");
+					return error;
 				}
 			}
 		}
 		
-		resultWrapper.setIsUpdateSuccess(true);
-		resultWrapper.setAsAtDate(scPaymentCert.getAsAtDate());
-		resultWrapper.setDueDate(scPaymentCert.getDueDate());
-		
 		return error;
-	}*/
+	}
 	
-	public String updatePaymentDetails(String jobNo, String subcontractNo, String paymentCertNo, List<PaymentCertDetail> paymentDetails){
+	/**
+	 * @author koeyyeung
+	 * modified on 17 Jul, 2016
+	 * move UI validation logic back to service layer**/
+	public String submitPayment(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception {
+		logger.info("Job: "+jobNo+" Subcontract No.:"+subcontractNo+" Payment Certificate No.: "+paymentCertNo);	
 		String error = "";
-		
-		for(PaymentCertDetail paymentDetail: paymentDetails){
-			SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
-			if(scDetail != null){
-				//scDetail.set
-				paymentDetail.getCumAmount();
-				scDetailDao.update(scDetail);
+
+		try {
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			//Validation 1: No payment can be submitted when addendum is submitted
+			if(Subcontract.ADDENDUM_SUBMITTED.equals(subcontract.getSubmittedAddendum())){
+				error = "Payment cannot be submitted. Addendum approval request was submitted.";
+				return error;
 			}
+
+			Integer addressNumber = new Integer(subcontract.getVendorNo());
+			SupplierMasterWrapper supplierMasterWrapper = supplierMasterRepository.obtainSupplierMaster(addressNumber);
+			//Validation 2: No payment can be submitted if subcontractor has been hold or with empty info
+			if(supplierMasterWrapper==null){
+				error = "Subcontractor: "+subcontract.getVendorNo()+" - Unable to verify its Hold Payment Status. Supplier Master Information doesn't exist. <br/>"+
+								 "Please log a helpdesk call @ http://helpdesk";
+				logger.info(error);
+				return error;
+			}
+			else if(supplierMasterWrapper.getHoldPaymentCode().equals(PaymentCert.HOLD_PAYMENT)){
+				error="No payment can be submitted due to ALL the payments of Subcontractor: "+supplierMasterWrapper.getAddressNumber()+" are being hold.  <br/>"+
+						this.obtainPaymentHoldMessage();
+				logger.info(error);
+				return error;
+			}	
 			
-			scPaymentDetailDao.update(paymentDetail);			
+			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo.toString(), paymentCertNo);
+
+			//Validation 3: Payment should be in Pending status
+			if(paymentCert!=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				
+				Double certAmount = paymentCert.getCertAmount();
+
+				if (paymentCert.getMainContractPaymentCertNo() != null && !"".equals(paymentCert.getMainContractPaymentCertNo()) && !"0".equals(paymentCert.getMainContractPaymentCertNo())) {
+					String errorStr = isValidMainContractCertificate(jobNo, Integer.valueOf(paymentCert.getMainContractPaymentCertNo()));
+					if (errorStr != null) {
+						error = errorStr;
+						return error;
+					}
+				}
+
+
+				String resultMsg = null;
+				String company = paymentCert.getSubcontract().getJobInfo().getCompany();
+				String vendorNo = paymentCert.getSubcontract().getVendorNo();
+				String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
+				String approvalType = APPROVALTYPE_INTERIMPAYMENT_SP;
+
+				JobInfo job = paymentCert.getSubcontract().getJobInfo();
+				AppSubcontractStandardTerms systemConstant = null;
+				if (company != null)
+					systemConstant = systemConstantDao.getSystemConstant(company);
+				else
+					systemConstant = systemConstantDao.getSystemConstant("00000");
+
+				//Determine Special Approval Type (Initialized as SP)
+				if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
+					approvalType = APPROVALTYPE_DIRECTPAYMENT_NP;
+				}
+				else if ("F".equals(paymentCert.getIntermFinalPayment()))
+					approvalType = APPROVALTYPE_FINALPAYMENT_SF;
+
+				logger.info("PaymentStatus: " + paymentCert.getPaymentStatus() + " ApprovalType: " + approvalType);
+
+				String approvalSubType = paymentCert.getSubcontract().getApprovalRoute();
+				String currencyCode = null;
+				if (company != null) {
+					try {
+						GetPeriodYearResponseObj periodYear = createGLDao.getPeriodYear(company, new Date());
+						currencyCode = periodYear.getCurrencyCodeFrom();
+					} catch (Exception e) {
+						e.printStackTrace();
+						error = "Failed to get currency code from JDE";
+						logger.info(error);
+						return error;
+					}
+				} else {
+					error = "There is no company";
+					logger.info(error);
+					return error;
+				}
+				PaymentCertViewWrapper result = new PaymentCertViewWrapper();
+				generatePaymentCertPreview(scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert), result);
+
+				double totalCertAmount = CalculationUtil.round((result.getSubTotal5() - result.getGstPayableTotal() + result.getLessGSTReceivableTotal()), 2);
+
+				/*
+				 * Check if the payment amount is larger than the budget amount in tender analysis
+				 * @Author Peter Chan
+				 * @2012-03-02
+				 */
+				if (!PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())) {
+					// For normal payment (Not the direct payment)
+					/**
+					 * @author koeyyeung
+					 * modified on 07Mar, 2014
+					 * Round the figure before making comparison
+					 * Any payment (Interim/Final) shouldn't exceed the Total Sub-contract Sum**/
+					if (totalCertAmount > CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)) {
+						logger.info("SC Sum: "+CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)+" - totalCertAmount: "+totalCertAmount);
+
+						error = "Total payment amount was larger than Subcontract Sum of the Package.";
+						logger.info(error);
+						return error;
+					}
+
+					if ("F".equals(paymentCert.getIntermFinalPayment().trim())) {
+						logger.info("Checking Provision for Final Account Job:" + paymentCert.getJobNo() + " Package:" + paymentCert.getPackageNo());
+						List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNo, subcontractNo.toString());
+						for (SubcontractDetail scDetail : scDetailsList)
+							if ((	"BQ".equals(scDetail.getLineType().trim()) || "B1".equals(scDetail.getLineType().trim()) ||
+									"V1".equals(scDetail.getLineType().trim()) || "V2".equals(scDetail.getLineType().trim()) || "V3".equals(scDetail.getLineType().trim()) ||
+									"L1".equals(scDetail.getLineType().trim()) || "L2".equals(scDetail.getLineType().trim()) ||
+									"D1".equals(scDetail.getLineType().trim()) || "D2".equals(scDetail.getLineType().trim()) ||
+									"CF".equals(scDetail.getLineType().trim()) || "OA".equals(scDetail.getLineType().trim())
+									) && SubcontractDetail.APPROVED.equals(scDetail.getApproved())) {
+								/**
+								 * @author koeyyeung
+								 * modified on 07Mar, 2014
+								 * use direct comparison and display the figures to user when error occurred**/
+								if (scDetail.getCumCertifiedQuantity().doubleValue() != scDetail.getCumWorkDoneQuantity().doubleValue()) {
+									logger.info("CumCertifiedQuantity :"+scDetail.getCumCertifiedQuantity()+" ; CumWorkDoneQuantity :"+scDetail.getCumWorkDoneQuantity());
+
+									error = "No provision is allowed when submitting for the Final Payment. <br>" +
+											"There is projected provision in SC Detail Sequence No.: " + scDetail.getSequenceNo()+"<br>"+
+											"Cum. Certified Quantity :"+scDetail.getCumCertifiedQuantity()+"<br>"+
+											"Cum. Work Done Quantity :"+scDetail.getCumWorkDoneQuantity();
+									logger.info(error);
+									return error;
+								}
+							}
+						certAmount = paymentCert.getSubcontract().getSubcontractSum();
+					}
+				} else {
+					// For Direct Payment
+					Tender tenderAnalysis = tenderAnalysisHBDaoImpl.obtainTenderAnalysis(paymentCert.getSubcontract(), Integer.valueOf(0));
+					double budgetAmount = 0;
+					List<TenderDetail> tenderAnalysisDetailList = tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
+					if (tenderAnalysis != null && tenderAnalysisDetailList != null && !tenderAnalysisDetailList.isEmpty())
+						for (TenderDetail tenderAnalysisDetail : tenderAnalysisDetailList)
+							budgetAmount += RoundingUtil.multiple(tenderAnalysisDetail.getQuantity(), tenderAnalysisDetail.getRateBudget());
+					if (RoundingUtil.round(totalCertAmount - budgetAmount, 2) > 0) {
+						error = "Total payment amount was larger than Tender Budget.";
+						logger.info(error);
+						return error;
+					}
+
+				}
+
+				//Validate Main Cert No. for QS1 and QS2
+				paymentCert = calculateAndUpdatePaymentDueDate(paymentCert);
+				if((paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS1") || paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS2"))
+						&&paymentCert.getMainContractPaymentCertNo()==null){
+					error = "Main Certificate No. cannot be empty.";
+					logger.info(error);
+					return error;
+				}
+
+				// ValidateBusinessLogicException will be thrown for invalid payment 
+				List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNo, subcontractNo);
+				List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(paymentCert.getSubcontract());
+				if (SCPaymentLogic.ableToSubmit(paymentCert, scPaymentCertList, scDetailsList, scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
+					// the currency pass to approval system should be the company base currency
+					currencyCode = getCompanyBaseCurrency(jobNo);
+
+					resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, jobNo, subcontractNo.toString(), vendorNo, vendorName,
+							approvalType, approvalSubType, certAmount, currencyCode, securityServiceImpl.getCurrentUser().getUsername());
+				}
+
+				logger.info("resultMsg" + resultMsg);
+				if (resultMsg == null || "".equals(resultMsg.trim())) {
+					/*
+					 * Set payment status to UFR if it has to be reviewed by Finance
+					 * @author Tiky Wong
+					 * 28-May-2012
+					 */
+					if (paymentCert.getSubcontract().getPaymentTerms().equals("QS0") &&
+							(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
+							(systemConstant != null && systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)) &&
+							(paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED) || paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)))
+						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
+					else
+						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED);
+
+					scPaymentCertDao.updateSCPaymentCert(paymentCert);
+				} else {
+					error = resultMsg;
+				}
+				logger.info("PaymentStatus of Job " + paymentCert.getJobNo() + " SC:" + paymentCert.getPackageNo() + " paymentNo:" + paymentCert.getPaymentCertNo() + " is " + paymentCert.getPaymentStatus());
+
+
+			}else 
+				error = "Payment Certificate is not in Pending status. Payment cannot be submitted.";
+		} catch (Exception e) {
+			logger.info("Exception caught: submitPayment() - Job: "+jobNo+" Package No.:"+subcontractNo+" Payment Certificate No.: "+paymentCertNo);
+			e.printStackTrace();
+			error = e.getMessage();
+			logger.info(error);
+			return error;
 		}
 
-		
+
 		return error;
 	}
 	
@@ -3046,7 +3165,5 @@ public class PaymentService{
 
 
 
-	
-	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

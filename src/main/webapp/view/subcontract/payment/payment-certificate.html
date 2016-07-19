@@ -1,7 +1,7 @@
 <!-- Payment Certificate-->
 <div class="animated fadeIn">
-	<form name="form-wizard-step-1" id="form-wizard-step-1"
-		class="form-input-flat ng-pristine ng-valid">
+	<form name="form-validate" id="form-validate"
+		class="ng-pristine ng-valid">
 		<fieldset>
 			<div class="row">
 				<div class="col-md-10 col-md-offset-2">
@@ -21,20 +21,21 @@
 							<div class="btn-group btn-group-justified">
 								<label class="btn" ng-disabled="disableButtons"
 									ng-class="{'btn-primary' : payment.intermFinalPayment == 'I', 'btn-inverse' : payment.intermFinalPayment != 'I'}"
-									ng-model="payment.intermFinalPayment" uib-btn-radio="'I'">Interim</label>
+									ng-model="payment.intermFinalPayment" uib-btn-radio="'I'" ng-click="updatePaymentType('I')">Interim</label>
 								<label class="btn" ng-disabled="disableButtons"
 									ng-class="{'btn-primary' : payment.intermFinalPayment == 'F', 'btn-inverse' : payment.intermFinalPayment != 'F'}"
-									ng-model="payment.intermFinalPayment" uib-btn-radio="'F'">Final</label>
+									ng-model="payment.intermFinalPayment" uib-btn-radio="'F'" ng-click="updatePaymentType('F')">Final</label>
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" ng-show="paymentTerms== 'QS1' || paymentTerms =='QS2'">
 							<label>Main Certificate No.</label>
 							<div class="controls">
 								<select class="form-control " ng-model="mainCertNo.selected"
 									ng-options="o as o for o in mainCertNo.options" 
 									ng-change="calculatePaymentDueDate()"
-									ng-disabled="disableButtons"></select>
+									ng-disabled="disableButtons"
+									ng-required = "paymentTerms== 'QS1' || paymentTerms =='QS2'"></select>
 							</div>
 						</div>
 
@@ -43,11 +44,10 @@
 								<div class="form-group">
 									<label>Due Date</label>
 									<div class="input-group" moment-picker="payment.dueDate" ng-model="payment.dueDate"
-										format="YYYY-MM-DD">
+										format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" ng-model="payment.dueDate" ng-disabled="disableButtons"
-											data-parsley-group="wizard-step-1" 
 											 required>
 											
 									</div>
@@ -57,29 +57,31 @@
 								<div class="form-group">
 									<label>As At Date</label>
 									<div class="input-group" moment-picker="payment.asAtDate"
-										format="YYYY-MM-DD">
+										format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
-										</span> <input class="form-control" ng-model="payment.asAtDate" ng-disabled="disableButtons"
-											data-parsley-group="wizard-step-1" 
-											ng-change="calculatePaymentDueDate()" required>
+										</span> <input class="form-control"
+											ng-model="payment.asAtDate" 
+											ng-disabled="disableButtons"
+											required>
 									</div>
 								</div>
 							</div>
 
 							<div class="col-md-4">
 								<div class="form-group"
-									ng-show="paymentTerms== 'Q4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
+									ng-show="paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
 									<label>Invoice Received Date</label>
 									<div class="input-group"
-										moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD">
+										moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control"
 											ng-model="payment.invoiceReceivedDate"
-											data-parsley-group="wizard-step-1"
-											ng-required="payment.ipaOrInvoiceReceivedDate != null"
-											ng-change="calculatePaymentDueDate()">
+											ng-change="calculatePaymentDueDate()"
+											ng-disabled="disableButtons"
+											data-parsley-group="validate-invoiceDate"
+											ng-required = "paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
 									</div>
 								</div>
 							</div>
@@ -90,8 +92,7 @@
 									<label>GST Payable</label>
 									<div class="controls">
 										<input type="number" placeholder="" class="form-control "
-											ng-model="payment.gstPayable"
-											data-parsley-group="wizard-step-1" />
+											ng-model="gstPayable"/>
 									</div>
 								</div>
 							</div>
@@ -101,8 +102,7 @@
 									<label>GST Receivable</label>
 									<div class="controls">
 										<input type="number" placeholder="" class="form-control "
-											ng-model="payment.gstReceivable"
-											data-parsley-group="wizard-step-1" />
+											ng-model="gstReceivable"/>
 									</div>
 								</div>
 							</div>

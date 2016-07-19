@@ -894,7 +894,7 @@ public class AttachmentService {
 
 	public Integer getLatestPaymentCertNo(String jobNumber, String packageNo) throws Exception{
 		int latestPaymentCertNo = 0;
-		List<PaymentCert> paymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, new Integer(packageNo));
+		List<PaymentCert> paymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 		for(PaymentCert curPaymentCert : paymentCertList){
 			if(curPaymentCert.getPaymentCertNo()>latestPaymentCertNo)
 				latestPaymentCertNo = curPaymentCert.getPaymentCertNo();

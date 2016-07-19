@@ -62,7 +62,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
 			
 			if(dataRows.length==0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No records have been modified");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
 				return;
 			}
 			

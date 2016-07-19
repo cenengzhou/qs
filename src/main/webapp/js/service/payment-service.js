@@ -6,9 +6,13 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	getPaymentCert: 		getPaymentCert,
     	getPaymentDetailList: 	getPaymentDetailList,
     	getPaymentCertSummary: 	getPaymentCertSummary, 
+    	getGSTAmount:			getGSTAmount,
     	createPayment:			createPayment,
+    	updatePaymentCertificate: updatePaymentCertificate,
     	calculatePaymentDueDate:calculatePaymentDueDate,
+    	updatePaymentDetails:	updatePaymentDetails,
     	updatePaymentCert:		updatePaymentCert,
+    	submitPayment:			submitPayment,
     	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
     	runPaymentPosting:		runPaymentPosting
     	
@@ -98,6 +102,21 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function getGSTAmount(jobNo, subcontractNo, paymentCertNo, lineType) {
+        var request = $http({
+            method: "get",
+            url: "service/payment/getGSTAmount",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	paymentCertNo: paymentCertNo,
+            	lineType: lineType
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     function calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate) {
         var request = $http({
             method: "get",
@@ -128,6 +147,54 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms, gstPayable, gstReceivable, paymentCert) {
+		var request = $http({
+			method: "post",
+			url: "service/payment/updatePaymentCertificate",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				paymentCertNo: paymentCertNo,
+				paymentTerms: paymentTerms,
+				gstPayable: gstPayable,
+				gstReceivable: gstReceivable
+			},
+			data: paymentCert
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+    
+    function updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails) {
+		var request = $http({
+			method: "post",
+			url: "service/payment/updatePaymentDetails",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				paymentCertNo: paymentCertNo,
+				paymentType: paymentType
+			},
+			data: paymentDetails
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+    
+    function submitPayment(jobNo, subcontractNo, paymentCertNo) {
+		var request = $http({
+			method: "post",
+			url: "service/payment/submitPayment",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				paymentCertNo: paymentCertNo,
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
     
     function updatePaymentCert(paymentCert) {
         var request = $http.post('service/payment/updatePaymentCert', paymentCert)

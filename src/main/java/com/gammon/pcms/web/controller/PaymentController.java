@@ -40,7 +40,7 @@ public class PaymentController {
 	
 	
 	@RequestMapping(value = "getLatestPaymentCert", method = RequestMethod.GET)
-	public PaymentCert getLatestPaymentCert(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+	public PaymentCert getLatestPaymentCert(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		PaymentCert paymentCert = null;
 		try{
 			paymentCert = paymentService.obtainPaymentLatestCert(jobNo, subcontractNo);
@@ -51,7 +51,7 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
-	public List<PaymentCert> getPaymentCertList(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+	public List<PaymentCert> getPaymentCertList(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		List<PaymentCert> paymentCertList = null;
 		try{
 			paymentCertList = paymentService.getPaymentCertList(jobNo, subcontractNo);
@@ -62,9 +62,9 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "getPaymentCert", method = RequestMethod.GET)
-	public PaymentCert getPaymentCert(@RequestParam(name="jobNo") String jobNo, 
-													@RequestParam(name="subcontractNo") String subcontractNo,
-													@RequestParam(name="paymentCertNo") String paymentCertNo){
+	public PaymentCert getPaymentCert(@RequestParam(required = true) String jobNo, 
+													@RequestParam(required = true) String subcontractNo,
+													@RequestParam(required = true) String paymentCertNo){
 		PaymentCert scPaymentCert = null;
 		try{
 			scPaymentCert = paymentService.obtainPaymentCertificate(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
@@ -75,9 +75,9 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "getPaymentDetailList", method = RequestMethod.GET)
-	public List<PaymentCertDetail> getPaymentDetailList(@RequestParam(name="jobNo") String jobNo, 
-													@RequestParam(name="subcontractNo") String subcontractNo,
-													@RequestParam(name="paymentCertNo") String paymentCertNo){
+	public List<PaymentCertDetail> getPaymentDetailList(@RequestParam(required = true) String jobNo, 
+													@RequestParam(required = true) String subcontractNo,
+													@RequestParam(required = true) String paymentCertNo){
 		List<PaymentCertDetail> paymentDetailList = null;
 		try{
 			paymentDetailList = paymentService.obtainPaymentDetailList(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
@@ -88,9 +88,9 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "getPaymentCertSummary", method = RequestMethod.GET)
-	public PaymentCertViewWrapper getSCPaymentCertSummary(@RequestParam(name="jobNo") String jobNo, 
-																	@RequestParam(name="subcontractNo") String subcontractNo,
-																	@RequestParam(name="paymentCertNo") String paymentCertNo){
+	public PaymentCertViewWrapper getSCPaymentCertSummary(@RequestParam(required = true) String jobNo, 
+																	@RequestParam(required = true) String subcontractNo,
+																	@RequestParam(required = true) String paymentCertNo){
 		PaymentCertViewWrapper paymentCertViewWrapper = null;
 		try{
 			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo, true);
@@ -99,6 +99,21 @@ public class PaymentController {
 		}
 		return paymentCertViewWrapper;
 	}
+	
+	@RequestMapping(value = "getGSTAmount", method = RequestMethod.GET)
+	public Double getGSTAmount(@RequestParam(required = true) String jobNo, 
+								@RequestParam(required = true) String subcontractNo,
+								@RequestParam(required = true) Integer paymentCertNo, 
+								@RequestParam(required = true) String lineType){
+		Double gstAmount = null;
+		try{
+			gstAmount = paymentService.obtainPaymentGstAmount(jobNo, subcontractNo, paymentCertNo, lineType);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return gstAmount;
+	}
+	
 	
 	@RequestMapping(value = "calculatePaymentDueDate", method = RequestMethod.GET)
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
@@ -118,8 +133,8 @@ public class PaymentController {
 	
 	
 	@RequestMapping(value = "createPayment", method = RequestMethod.POST)
-	public String createPayment(@RequestParam(name="jobNo") String jobNo,
-												@RequestParam(name="subcontractNo") String subcontractNo){
+	public String createPayment(@RequestParam(required = true) String jobNo,
+												@RequestParam(required = true) String subcontractNo){
 		String result = "";
 		try{
 			result = paymentService.createPayment(jobNo, subcontractNo);
@@ -129,13 +144,60 @@ public class PaymentController {
 		return result;
 	}
 	
+	
+	@RequestMapping(value = "updatePaymentCertificate", method = RequestMethod.POST)
+	public String updatePaymentCertificate(@RequestParam(required = true) String jobNo,
+												@RequestParam(required = true) String subcontractNo,
+												@RequestParam(required = true) Integer paymentCertNo,
+												@RequestParam(required = true) String paymentTerms,
+												@RequestParam(required = true) Double gstPayable,
+												@RequestParam(required = true) Double gstReceivable,
+												@RequestBody PaymentCert paymentCert){
+		String result = "";
+		try{
+			result = paymentService.updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms,  paymentCert, gstPayable, gstReceivable);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "updatePaymentDetails", method = RequestMethod.POST)
+	public String updatePaymentDetails(@RequestParam(required = true) String jobNo,
+												@RequestParam(required = true) String subcontractNo,
+												@RequestParam(required = true) Integer paymentCertNo,
+												@RequestParam(required = true) String paymentType,
+												@RequestBody(required = false) List<PaymentCertDetail> paymentDetails){
+		String result = "";
+		try{
+			result = paymentService.updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "submitPayment", method = RequestMethod.POST)
+	public String submitPayment(@RequestParam(required = true) String jobNo,
+												@RequestParam(required = true) String subcontractNo,
+												@RequestParam(required = true) Integer paymentCertNo){
+		String result = "";
+		try{
+			result = paymentService.submitPayment(jobNo, subcontractNo, paymentCertNo);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
 	}
 	
 	@RequestMapping(value = "updatePaymentCert", method = RequestMethod.POST)
-	public String updateSubcontract(@RequestBody PaymentCert paymentCert) {
+	public String updatePaymentCert(@RequestBody PaymentCert paymentCert) {
 		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
 		String result = paymentService.updateSCPaymentCertAdmin(paymentCert);
 		return result;

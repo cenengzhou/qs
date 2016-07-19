@@ -167,7 +167,7 @@ public class TenderService implements Serializable {
 	
 	public Boolean removeTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
 		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
-		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0)
 			return null;
 		else
@@ -755,7 +755,7 @@ public class TenderService implements Serializable {
 
 		if(tenderAnalysis!=null){
 			if(vendorNo!=0){
-				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
 					if(!tenderAnalysis.getCurrencyCode().equals(currencyCode)){
 						return "Currency Code must be the same as the one in previous payment.";
@@ -866,7 +866,7 @@ public class TenderService implements Serializable {
 			}else{
 				logger.info("Update Budget Tender Analysis");
 				//Edit Budget Tender Analysis
-				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
 					//if direct payment exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
 					for (TenderDetail taDetail: toBeUpdatedTaDetails){
@@ -963,7 +963,7 @@ public class TenderService implements Serializable {
 		}
 		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
 		Subcontract scPackage = subcontractDao.obtainPackage(job, subcontractNo);
-		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
 		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM))){
 			error = "Recommended Tender under payment requistion cannot be deleted.";

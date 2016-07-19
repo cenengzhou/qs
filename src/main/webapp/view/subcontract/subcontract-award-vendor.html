@@ -8,7 +8,7 @@
 				ng-repeat="tender in tenders">
 				<div class="select-trigger m-b-10" ng-class="{'selected': tender.status == 'RCM'}">
 					
-					<a ng-click="updateRecommendedTender({{tender.vendorNo}})">
+					<a ng-click="updateRecommendedTender({{tender.vendorNo}})" >
 						<div class="check"></div> 
 						<span class="icofont icofont-worker icofont-5x"></span>
 						
@@ -33,7 +33,7 @@
 				</div>
 			</div>
 			
-			<div class="col-md-4 col-xs-12 animated flipInX">
+			<div class="col-md-4 col-xs-12 animated flipInX" ng-hide = "disableButtons">
 				<div class="select-trigger"> 
 				<br><br>
 					<span class="icofont icofont-worker icofont-5x text-danger"></span>

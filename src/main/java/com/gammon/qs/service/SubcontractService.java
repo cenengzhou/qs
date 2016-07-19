@@ -262,7 +262,7 @@ public class SubcontractService {
 	
 	public ScListView getSCListView(String jobNumber, String packageNumber, String packageType) throws Exception{
 		ScListView scListView = new ScListView();
-		List<SubcontractDetail> result = obtainSCDetails(jobNumber, packageNumber, packageType);
+		List<SubcontractDetail> result = obtainSCDetails(jobNumber, packageNumber);
 
 		Double doubleLiabilities = new Double(0);
 		Double doubleTotalLiabilities = new Double(0);
@@ -1009,7 +1009,7 @@ public class SubcontractService {
 			PaymentCert previousSCPaymentCert = null;
 			boolean lastAPRCertFound = false;
 			int largestAPRCertNo = -1;
-			for (PaymentCert delPndCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(packageNo))){
+			for (PaymentCert delPndCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
 				if (PaymentCert.PAYMENTSTATUS_PND_PENDING.equalsIgnoreCase(delPndCert.getPaymentStatus().trim())){
 					
 					if (ifPayment==null && delPndCert.getIntermFinalPayment()!=null){
@@ -1055,7 +1055,7 @@ public class SubcontractService {
 			
 			if (ifPayment==null)
 				ifPayment="I";
-			List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(packageNo));
+			List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 			for (int i = 0;i<scPaymentCertList.size();i++)
 				if (scPaymentCertList.get(i).getPaymentCertNo().equals(largestAPRCertNo)){
 					previousSCPaymentCert = scPaymentCertList.get(i);
@@ -1426,7 +1426,7 @@ public class SubcontractService {
 
 	private String addVOValidate(SubcontractDetail newVO, boolean saving) throws Exception {
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(newVO.getSubcontract().getJobInfo().getJobNumber(), newVO.getSubcontract().getPackageNo());
-		List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(newVO.getSubcontract().getJobInfo().getJobNumber(), Integer.valueOf(scPackage.getPackageNo()));
+		List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(newVO.getSubcontract().getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		String ableToSubmitAddendum = SCPackageLogic.ableToSubmitAddendum(scPackage, scPaymentCertList);
 		if (ableToSubmitAddendum !=null){
 			return "Subcontract "+newVO.getSubcontract().getPackageNo()+" cannot add new line (" +ableToSubmitAddendum +")";
@@ -1912,35 +1912,6 @@ public class SubcontractService {
 		return scDetailsHBDao.getScDetailsByPage(scPackage, billItem, description, lineType, pageNum);
 	}
 
-
-	/**
-	 * @author tikywong
-	 * Modified on November 2, 2012
-	 * Obtain the full list of active SCDetails
-	 * @throws DatabaseOperationException 
-	 * 
-	 */
-	public List<SubcontractDetail> obtainSCDetails(String jobNumber, String packageNumber, String packageType) throws DatabaseOperationException {
-		List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNumber, packageNumber);
-
-		//Sorted by Bill Item
-		Collections.sort(scDetails, new Comparator<SubcontractDetail>(){
-			public int compare(SubcontractDetail scDetails1, SubcontractDetail scDetails2) {
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getBillItem()==null)
-					return 0;			
-				return scDetails1.getBillItem().compareTo(scDetails2.getBillItem());
-			}
-		});
-
-		if(scDetails==null)
-			logger.info("Job: "+jobNumber+" Package No.: "+packageNumber+" Package Type: "+packageType+" SCDetail List is null.");
-		else
-			logger.info("Job: "+jobNumber+" Package No.: "+packageNumber+" Package Type: "+packageType+" SCDetail List size: "+scDetails.size());
-
-		return scDetails;
-	}
 
 	/**
 	 * @author koeyyeung
@@ -3326,7 +3297,7 @@ public class SubcontractService {
 					 // - Verify generated Payment Requisition before submit Payment Requisition
 					 // @Author Peter Chan
 					 // 08-Mar-2012
-					 List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(scPackage.getPackageNo()));
+					 List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, scPackage.getPackageNo());
 					if (scPaymentCertList!=null && !scPaymentCertList.isEmpty()){
 						logger.info("Checking Payment Requisition");
 						boolean paidDirectPayment=false;
@@ -3983,7 +3954,7 @@ public class SubcontractService {
 					if(recalculateRententionAmount){
 						try {
 							Double accumulatedRetentionAmount=0.0;
-							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(packageNo))){
+							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
 								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
 									//RT+RA
 									Double retentionAmount = scPaymentDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
@@ -5747,6 +5718,35 @@ public class SubcontractService {
 	
 	public Subcontract obtainSubcontract(String jobNo, String packageNo) throws DatabaseOperationException{
 		return subcontractHBDao.obtainSubcontract(jobNo, packageNo);
+	}
+	
+	/**
+	 * @author tikywong
+	 * Modified on November 2, 2012
+	 * Obtain the full list of active SCDetails
+	 * @throws DatabaseOperationException 
+	 * 
+	 */
+	public List<SubcontractDetail> obtainSCDetails(String jobNo, String subcontractNo) throws DatabaseOperationException {
+		List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNo, subcontractNo);
+
+		//Sorted by Bill Item
+		Collections.sort(scDetails, new Comparator<SubcontractDetail>(){
+			public int compare(SubcontractDetail scDetails1, SubcontractDetail scDetails2) {
+				if(scDetails1== null || scDetails2 == null)
+					return 0;
+				if(scDetails1.getBillItem()==null)
+					return 0;			
+				return scDetails1.getBillItem().compareTo(scDetails2.getBillItem());
+			}
+		});
+
+		if(scDetails==null)
+			logger.info("Job: "+jobNo+" Package No.: "+subcontractNo+" SCDetail List is null.");
+		else
+			logger.info("Job: "+jobNo+" Package No.: "+subcontractNo+" SCDetail List size: "+scDetails.size());
+
+		return scDetails;
 	}
 	
 	public String saveOrUpdateSCPackage(String jobNo, Subcontract subcontract) throws Exception{

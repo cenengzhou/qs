@@ -1,13 +1,40 @@
-mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 'modalService',
-                                          function($scope , $http, $stateParams, $cookieStore, paymentService, modalService) {
+mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '$cookieStore', 'paymentService', 'modalService', 'confirmService', 'roundUtil',
+                                          function($scope , $state, $stateParams, $cookieStore, paymentService, modalService, confirmService, roundUtil) {
 	
 	$scope.disableButtons = true;
 	loadData();
+	
+	$scope.submit =  function(){
+		if($scope.payment.paymentStatus == "PND"){
+			
+			if(roundUtil.round($scope.paymentCertSummary.subMovement5, 2) !=  roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)){
+				var message = "Total Movement Amount: "+roundUtil.round($scope.paymentCertSummary.subMovement5, 2)+"</br>"+
+								"Total Amount Due: "+roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)+"</br>"+
+								"Total Movement Amount and Total Amount Due do not match in the payment certificate.</br>" +
+								"Please verify the figures before submitting the payment.";
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', message);
+			}
+			else{
+				if($scope.payment.certAmount < 0 || $scope.payment.certAmount == 0){
+					var modalOptions = {
+							bodyText: 'The Certificate Amount is less than or equal to $0.00.<br/>Do you still wish to submit the payment?'
+					};
+
+					confirmService.showModal({}, modalOptions).then(function (result) {
+						if(result == "Yes"){
+							submitPayment();
+						}
+					});
+				}else
+					submitPayment();
+			}
+		}
+	}
 
 	function loadData() {
 		if($cookieStore.get('paymentCertNo') != ""){
 			getPaymentCert();
-			loadPaymentCertSummary();
+			getPaymentCertSummary();
 		}else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
 	}
@@ -27,7 +54,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$http', '$stateParams', '$
 
 
 
-	function loadPaymentCertSummary() {
+	function getPaymentCertSummary() {
 		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
 		.then(
 				function( data ) {
@@ -35,6 +62,19 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$http', '$stateParams', '$
 					$scope.paymentCertSummary = data;
 				});
 
+	}
+	
+	function submitPayment() {
+		paymentService.submitPayment($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
+		.then(
+				function( data ) {
+					if(data.length != 0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else {
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment has been submitted.");
+						$state.reload();
+					}
+				});
 	}
 
 }]);

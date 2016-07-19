@@ -4,6 +4,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getSubcontract: 				getSubcontract,
     	getSubcontractList: 			getSubcontractList,
     	getWorkScope: 					getWorkScope,
+    	getSCDetails:					getSCDetails,
     	upateSubcontract: 				upateSubcontract,
     	upateSubcontractDates: 			upateSubcontractDates,
     	submitAwardApproval:			submitAwardApproval,
@@ -60,6 +61,19 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "get",
             url: "service/subcontract/getSubcontract",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getSCDetails(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSCDetails",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,

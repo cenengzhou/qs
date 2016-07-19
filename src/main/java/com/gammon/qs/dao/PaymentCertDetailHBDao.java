@@ -250,21 +250,16 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		PaymentCertDetail scPaymentDetail = null;
 		Criteria criteria = getSession().createCriteria(this.getType());
 		
-		try{
 		criteria.createAlias("paymentCert", "paymentCert");
 		criteria.createAlias("subcontractDetail", "subcontractDetail");
 			
 		criteria.add(Restrictions.eq("paymentCert", paymentCert));
 		criteria.add(Restrictions.eq("subcontractDetail", subcontractDetail));
-		criteria.add(Restrictions.eq("this.objectCode", subcontractDetail.getObjectCode()));
+		/*criteria.add(Restrictions.eq("this.objectCode", subcontractDetail.getObjectCode()));
 		criteria.add(Restrictions.eq("this.subsidiaryCode", subcontractDetail.getSubsidiaryCode()));
-		criteria.add(Restrictions.eq("this.billItem", subcontractDetail.getBillItem()));
+		criteria.add(Restrictions.eq("this.billItem", subcontractDetail.getBillItem()));*/
 		
 		scPaymentDetail = (PaymentCertDetail) criteria.uniqueResult();
-		}catch(Exception he){
-			logger.info("Fail: obtainPaymentDetail(SCPaymentCert scPaymentCert, SCDetails scDetail)");
-			he.printStackTrace();
-		}
 
 		return scPaymentDetail;
 	}

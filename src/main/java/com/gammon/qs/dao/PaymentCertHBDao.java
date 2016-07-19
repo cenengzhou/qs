@@ -184,7 +184,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, Integer packageNo) throws DatabaseOperationException{
+	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, String packageNo) throws DatabaseOperationException{
 		if (jobNumber==null)
 			throw new DatabaseOperationException("Jobnumber is null");
 		if (packageNo==null)
@@ -194,7 +194,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			criteria.createAlias("subcontract","subcontract" );
 			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.toString()));
+			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
 			criteria.addOrder(Order.desc("paymentCertNo"));
 			return (List<PaymentCert>) criteria.list();
 		}catch (HibernateException he){

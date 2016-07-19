@@ -1,5 +1,7 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -64,6 +66,13 @@ public class SubcontractDetail extends BasePersistedObject {
 	private String remark;
 	private Double postedCertifiedQuantity = 0.0;
 	private Double cumCertifiedQuantity = 0.0;
+
+	private BigDecimal amountCumulativeCert = new BigDecimal(0);
+	private BigDecimal amountPostedCert = new BigDecimal(0);
+	
+	private BigDecimal amountCumulativeWD = new BigDecimal(0);
+	private BigDecimal amountPostedWD = new BigDecimal(0);
+	
 	/**
 	 * @author koeyyeung
 	 * newQuantity should be set for every line type: BQ, B1, V1, V2, V3, D1, D2, C1, C2, CP, OA, RR, RT, RA
@@ -401,6 +410,39 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.amountSubcontractTBA = (amountSubcontractTBA!=null?CalculationUtil.round(amountSubcontractTBA, 2):0.00);
 	}
 
+	@Column(name = "AMT_CUMULATIVE_CERT")
+	public BigDecimal getAmountCumulativeCert() {
+		return amountCumulativeCert;
+	}
+	public void setAmountCumulativeCert(BigDecimal amountCumulativeCert) {
+		this.amountCumulativeCert = amountCumulativeCert;
+	}
+	
+	@Column(name = "AMT_POSTED_CERT")
+	public BigDecimal getAmountPostedCert() {
+		return amountPostedCert;
+	}
+	public void setAmountPostedCert(BigDecimal amountPostedCert) {
+		this.amountPostedCert = amountPostedCert;
+	}
+	
+	@Column(name = "AMT_CUMULATIVE_WD")
+	public BigDecimal getAmountCumulativeWD() {
+		return amountCumulativeWD;
+	}
+	public void setAmountCumulativeWD(BigDecimal amountCumulativeWD) {
+		this.amountCumulativeWD = amountCumulativeWD;
+	}
+	
+	@Column(name = "AMT_POSTED_WD")
+	public BigDecimal getAmountPostedWD() {
+		return amountPostedWD;
+	}
+	public void setAmountPostedWD(BigDecimal amountPostedWD) {
+		this.amountPostedWD = amountPostedWD;
+	}
+	
+	
 	@ManyToOne
 	@LazyToOne(LazyToOneOption.PROXY)
 	@Cascade(CascadeType.SAVE_UPDATE)

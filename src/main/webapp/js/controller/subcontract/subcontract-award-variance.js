@@ -19,7 +19,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 							cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
 			             { field: 'generalCondition', displayName: "General Condition of Sub-Contract",
 			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { field: 'proposedVariance', displayName: "Posted Variance to the General Conditioin",
+			             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin",
 			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
 			             { field: 'reason', displayName: "Reason for the Variance",
 		            		 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 

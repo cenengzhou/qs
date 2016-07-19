@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 
@@ -52,7 +53,7 @@ public class SubcontractController {
 	}*/
 	
 	@RequestMapping(value = "getSubcontractList", method = RequestMethod.GET)
-	public List<Subcontract> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
+	public List<Subcontract> getSubcontractList(@RequestParam(required =true) String jobNo){
 		List<Subcontract> subcontractList = null;
 		try{
 			subcontractList = subcontractService.obtainSubcontractList(jobNo);
@@ -65,7 +66,7 @@ public class SubcontractController {
 	
 	
 	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)
-	public UDC getWorkScope(@RequestParam(name="workScopeCode") String workScopeCode){
+	public UDC getWorkScope(@RequestParam(required =true) String workScopeCode){
 		UDC obtainWorkScope = null;
 		try {
 			obtainWorkScope = subcontractService.obtainWorkScope(workScopeCode);
@@ -76,7 +77,7 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "getSubcontract", method = RequestMethod.GET)
-	public Subcontract getSubcontract(@RequestParam(name="jobNo") String jobNo, @RequestParam(name="subcontractNo") String subcontractNo){
+	public Subcontract getSubcontract(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		Subcontract subcontract = null;
 		try {
 			subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
@@ -86,8 +87,19 @@ public class SubcontractController {
 		return subcontract;
 	}
 	
+	@RequestMapping(value = "getSCDetails", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSCDetails(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		try {
+			scDetails = subcontractService.obtainSCDetails(jobNo, subcontractNo);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
-	public String upateSubcontract(@RequestParam(name="jobNo") String jobNo,  @RequestBody Subcontract subcontract){
+	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
 			result = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
@@ -99,7 +111,7 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
-	public String upateSubcontractDates(@RequestParam(name="jobNo") String jobNo,  @RequestBody Subcontract subcontract){
+	public String upateSubcontractDates(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
 			result = subcontractService.upateSubcontractDates(jobNo, subcontract);
@@ -111,8 +123,8 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
-	public String submitAwardApproval(@RequestParam(name="jobNo") String jobNo, 
-			@RequestParam(name="subcontractNo") String subcontractNo){
+	public String submitAwardApproval(@RequestParam(required =true) String jobNo, 
+			@RequestParam(required =true) String subcontractNo){
 		String result = null;
 		try {
 			result = subcontractService.submitAwardApproval(jobNo, subcontractNo);
