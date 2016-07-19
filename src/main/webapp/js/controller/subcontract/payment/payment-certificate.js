@@ -56,7 +56,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 					function( data ) {
 						console.log(data);
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment has been updated successfully.");
-						$state.reload();
+						//$state.reload();
 					});
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment is not in Pending status.");
@@ -97,8 +97,6 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 	function loadData(){
 		if($scope.paymentCertNo != ""){
 			getPaymentCert();
-			getGSTPayble();
-			getGSTReceivable();
 			getPaidMainCertList();
 		}
 	}
@@ -107,10 +105,16 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					$scope.payment = data;
 					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
-
+					
+					//Get GST value for Singapore jobs
+					if($scope.jobNo.indexOf("14") > -1){
+						getGSTPayble();
+					}else
+						$scope.totalCertAmount = data.certAmount;
+					
 					if($scope.payment.paymentStatus == "PND")
 						$scope.disableButtons = false;
 
@@ -123,6 +127,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 		.then(
 				function( data ) {
 					$scope.gstPayable = data;
+					getGSTReceivable();
 				});
 	}
 
@@ -131,6 +136,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 		.then(
 				function( data ) {
 					$scope.gstReceivable = data;
+					$scope.totalCertAmount = $scope.payment.certAmount + $scope.gstPayable - $scope.gstReceivable;
 				});
 	}
 

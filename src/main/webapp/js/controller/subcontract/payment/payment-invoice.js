@@ -43,7 +43,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					$scope.payment = data;
 
 					if($scope.payment.paymentStatus == "PND")
@@ -58,7 +58,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					$scope.paymentCertSummary = data;
 				});
 

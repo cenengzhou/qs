@@ -535,204 +535,6 @@ public class PaymentService{
 	}
 
 	/**
-	 * @author tikywong
-	 * refactored on 09 August, 2013
-	 */
-	/*public UpdatePaymentCertificateResultWrapper updatePaymentCertificate(UpdatePaymentCertificateWrapper updatePaymentCertificateWrapper) {
-		UpdatePaymentCertificateResultWrapper resultWrapper = new UpdatePaymentCertificateResultWrapper();
-
-		// 1. Obtain payment certificate
-		logger.info("1. Obtain payment certificate");
-		PaymentCert scPaymentCert = null;
-		try {
-			scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(updatePaymentCertificateWrapper.getJobNumber(), updatePaymentCertificateWrapper.getPackageNo(), updatePaymentCertificateWrapper.getPaymentCertNo());
-		} catch (DatabaseOperationException e) {
-			String message = ("Unable to obtain Payment Certificate \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
-		}
-		if (scPaymentCert == null) {
-			String message = ("No Payment Certificate is found \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
-		}
-
-		// 2. Obtain parent job's Main Contract Certificate for QS1 & QS2
-		logger.info("2. Obtain parent job's Main Contract Certificate for QS1 & QS2");
-		if ((updatePaymentCertificateWrapper.getPaymentTerm().equals("QS1") || updatePaymentCertificateWrapper.getPaymentTerm().equals("QS2")) &&
-				updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert() != null) {
-			String message = isValidMainContractCertificate(updatePaymentCertificateWrapper.getJobNumber(), updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert());
-			if (message != null) {
-				resultWrapper.setIsUpdateSuccess(false);
-				resultWrapper.setMessage(message);
-				return resultWrapper;
-			} else
-				scPaymentCert.setMainContractPaymentCertNo(updatePaymentCertificateWrapper.getParentJobMainContractPaymentCert());
-		} else
-			scPaymentCert.setMainContractPaymentCertNo(null);
-
-		if (updatePaymentCertificateWrapper.getAsAtDate() != null)
-			scPaymentCert.setAsAtDate(updatePaymentCertificateWrapper.getAsAtDate());
-		if (updatePaymentCertificateWrapper.getDueDate() != null)
-			scPaymentCert.setDueDate(updatePaymentCertificateWrapper.getDueDate());
-		if (updatePaymentCertificateWrapper.getSclpaReceivedDate() != null)
-			scPaymentCert.setIpaOrInvoiceReceivedDate(updatePaymentCertificateWrapper.getSclpaReceivedDate());
-
-		// 3. Calculate Due Date
-		logger.info("3. Calculate Due Date");
-		try {
-			scPaymentCert = calculateAndUpdatePaymentDueDate(scPaymentCert);
-
-		} catch (ValidateBusinessLogicException vException) {
-			String message = vException.getMessage();
-			logger.info(message);
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
-		}
-
-		// 4. Update SC Payment Certificate
-		logger.info("4. Update SC Payment Certificate");
-		try {
-			scPaymentCertDao.update(scPaymentCert);
-		} catch (DataAccessException dbException) {
-			String message = ("Unable to update Payment Certificate \n" +
-								"Job: " + updatePaymentCertificateWrapper.getJobNumber() +
-								" Package No.: " + updatePaymentCertificateWrapper.getPackageNo() +
-								" Payment Certificate No.: " + updatePaymentCertificateWrapper.getPaymentCertNo());
-			resultWrapper.setIsUpdateSuccess(false);
-			resultWrapper.setMessage(message);
-			return resultWrapper;
-		}
-
-		// 5. Insert & Update GST Payable & GST Receivable
-		if(	 updatePaymentCertificateWrapper.getJob()!=null &&
-			(updatePaymentCertificateWrapper.getJob().getDivision().equals("SGP") || updatePaymentCertificateWrapper.getJob().getJobNumber().startsWith("14"))){
-			if(!Subcontract.INTERNAL_TRADING.equals(scPaymentCert.getSubcontract().getFormOfSubcontract())){
-				// 5a. Obtain GST from DB
-				logger.info("5. Insert & Update GST Payable & GST Receivable");
-				PaymentCertDetail gstPayableInDB = null;
-				PaymentCertDetail gstReceivableInDB = null;
-				try {
-					List<PaymentCertDetail> gstPayableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
-					if (gstPayableList == null || gstPayableList.size() > 1) {
-						String message = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
-					}
-
-					if (gstPayableList.size() == 0 || gstPayableList.get(0) == null)
-						gstPayableInDB = null;
-					else
-						gstPayableInDB = gstPayableList.get(0);
-
-					List<PaymentCertDetail> gstReceivableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
-					if (gstReceivableList == null || gstReceivableList.size() > 1) {
-						String message = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
-					}
-
-					if (gstReceivableList.size() == 0 || gstReceivableList.get(0) == null)
-						gstReceivableInDB = null;
-					else
-						gstReceivableInDB = gstReceivableList.get(0);
-				} catch (DatabaseOperationException dbException) {
-					String message = ("Unable to update Payment Certificate GST.");
-					resultWrapper.setIsUpdateSuccess(false);
-					resultWrapper.setMessage(message);
-					return resultWrapper;
-				}
-
-				// 5b. Insert new GST Payable
-				if (gstPayableInDB == null) {
-					gstPayableInDB = new PaymentCertDetail();
-					gstPayableInDB.setBillItem("");
-					gstPayableInDB.setLineType("GP");
-					gstPayableInDB.setCumAmount(0.0);
-					gstPayableInDB.setMovementAmount(0.0);
-					gstPayableInDB.setScSeqNo(100003);
-					gstPayableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
-					gstPayableInDB.setCreatedDate(new Date());
-					gstPayableInDB.setPaymentCert(scPaymentCert);
-					try {
-						scPaymentDetailDao.insert(gstPayableInDB);
-					} catch (DataAccessException e) {
-						String message = ("Unable to insert Payment Certificate GST Payable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
-					}
-				}
-
-				// 5c. Insert new GST Receivable
-				if (gstReceivableInDB == null) {
-					gstReceivableInDB = new PaymentCertDetail();
-					gstReceivableInDB.setBillItem("");
-					gstReceivableInDB.setLineType("GR");
-					gstReceivableInDB.setCumAmount(0.0);
-					gstReceivableInDB.setMovementAmount(0.0);
-					gstReceivableInDB.setScSeqNo(100004);
-					gstReceivableInDB.setCreatedUser(updatePaymentCertificateWrapper.getUserId());
-					gstReceivableInDB.setCreatedDate(new Date());
-					gstReceivableInDB.setPaymentCert(scPaymentCert);
-					try {
-						scPaymentDetailDao.insert(gstReceivableInDB);
-					} catch (DataAccessException e) {
-						String message = ("Unable to insert Payment Certificate GST Receviable");
-						resultWrapper.setIsUpdateSuccess(false);
-						resultWrapper.setMessage(message);
-						return resultWrapper;
-					}
-				}
-
-				// 5d. Calculate GST Cumulative Amount & GST Movement Amount
-				if(updatePaymentCertificateWrapper.getGstPayable()!=null){
-					gstPayableInDB.setCumAmount(gstPayableInDB.getCumAmount().doubleValue() - 
-							gstPayableInDB.getMovementAmount().doubleValue() + 
-							updatePaymentCertificateWrapper.getGstPayable().doubleValue());
-					gstPayableInDB.setMovementAmount(updatePaymentCertificateWrapper.getGstPayable());
-				}
-				if(updatePaymentCertificateWrapper.getGstReceivable()!=null){
-					gstReceivableInDB.setCumAmount(gstReceivableInDB.getCumAmount().doubleValue() - 
-							gstReceivableInDB.getMovementAmount().doubleValue() + 
-							updatePaymentCertificateWrapper.getGstReceivable().doubleValue());
-					gstReceivableInDB.setMovementAmount(updatePaymentCertificateWrapper.getGstReceivable());
-				}
-
-				// 5f. Update GST
-				try {
-					scPaymentDetailDao.update(gstPayableInDB);
-					scPaymentDetailDao.update(gstReceivableInDB);
-				} catch (DataAccessException e) {
-					String message = ("Unable to insert Payment Certificate GST");
-					resultWrapper.setIsUpdateSuccess(false);
-					resultWrapper.setMessage(message);
-					return resultWrapper;
-				}
-			}
-		}
-		
-		resultWrapper.setIsUpdateSuccess(true);
-		resultWrapper.setAsAtDate(scPaymentCert.getAsAtDate());
-		resultWrapper.setDueDate(scPaymentCert.getDueDate());
-		
-		return resultWrapper;
-	}*/
-
-	/**
 	 * Obtain the Main Contract Certificate from JDE   
 	 * 
 	 * A valid Main Contract Certificate: <br>
@@ -2613,15 +2415,15 @@ public class PaymentService{
 	
 	
 							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
-							if(scDetail.getAmountBudget() >= 0){
-								if (paymentDetail.getCumAmount() > scDetail.getAmountBudget()) {
-									error = "New Certified Quantity: " + paymentDetail.getCumAmount() + " cannot be larger than BQ Quantity: " + scDetail.getAmountBudget() ;
+							if(scDetail.getAmountSubcontract() >= 0){
+								if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract()) {
+									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Budget Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}
 							}else{
-								if (paymentDetail.getCumAmount() < scDetail.getAmountBudget() || paymentDetail.getCumAmount() >0) {
-									error = "New Certified Quantity: " + paymentDetail.getCumAmount() + " cannot be smaller than BQ Quantity: " + scDetail.getAmountBudget() ;
+								if (paymentDetail.getCumAmount() < scDetail.getAmountSubcontract() || paymentDetail.getCumAmount() >0) {
+									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Budget Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}
@@ -2680,63 +2482,7 @@ public class PaymentService{
 			}
 			
 			//6. Update Payment Cert Amount
-			List<AccountMovementWrapper> accList = new ArrayList<AccountMovementWrapper>();
-			double cumAmount = 0.00;
-			double cumAmount_RT = 0.0;
-			double cumAmount_CF = 0.0;
-			double cumAmount_MOS = 0.0;
-			double cumAmount_MR = 0.0;
-			List<PaymentCertDetail> paymentDetailListInDB = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
-			for (PaymentCertDetail scPaymentDetail: paymentDetailListInDB){
-				if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
-					cumAmount_RT += scPaymentDetail.getMovementAmount();
-				else if ("CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
-					cumAmount_CF += scPaymentDetail.getMovementAmount();
-				else if ("MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
-					cumAmount_MR = cumAmount_MR + scPaymentDetail.getMovementAmount();
-				else if ("MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
-					cumAmount_MOS += scPaymentDetail.getMovementAmount();
-				else if (!("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
-					boolean accFound = false;
-					for (AccountMovementWrapper certMovement:accList)
-						if (((certMovement.getObjectCode() == null && scPaymentDetail.getObjectCode() == null) ||
-								(certMovement.getObjectCode() != null && scPaymentDetail.getObjectCode() != null &&
-								certMovement.getObjectCode().equals(scPaymentDetail.getObjectCode().trim()))) &&
-								((certMovement.getSubsidiaryCode() == null && scPaymentDetail.getSubsidiaryCode() == null) || (
-								certMovement.getSubsidiaryCode() != null && scPaymentDetail.getSubsidiaryCode() != null &&
-								certMovement.getSubsidiaryCode().equals(scPaymentDetail.getSubsidiaryCode().trim())))) {
-							accFound = true;
-							certMovement.setMovementAmount(certMovement.getMovementAmount()+scPaymentDetail.getMovementAmount());
-						}
-					
-					//Setting up Sub-contract Payment Detail lines except RA, RT, RR, CF, MR, MS, GP, GR
-					if (!accFound){
-						AccountMovementWrapper newAcc = new AccountMovementWrapper();
-						if (scPaymentDetail.getObjectCode()==null||"".equals(scPaymentDetail.getObjectCode().trim()))
-							newAcc.setObjectCode(null);
-						else 
-							newAcc.setObjectCode(scPaymentDetail.getObjectCode().trim());
-						if (scPaymentDetail.getSubsidiaryCode()==null||"".equals(scPaymentDetail.getSubsidiaryCode().trim()))
-							newAcc.setObjectCode(null);
-						else 
-							newAcc.setSubsidiaryCode(scPaymentDetail.getSubsidiaryCode().trim());
-						if (scPaymentDetail.getMovementAmount()==null||scPaymentDetail.getMovementAmount().isNaN())
-							newAcc.setMovementAmount(0.0);
-						else 
-							newAcc.setMovementAmount(scPaymentDetail.getMovementAmount());
-						accList.add(newAcc);
-					}
-						
-				}
-			}
-			
-			cumAmount = RoundingUtil.round(cumAmount_CF,2) - 
-						RoundingUtil.round(cumAmount_RT, 2)+
-						RoundingUtil.round(cumAmount_MOS, 2) -
-						RoundingUtil.round(cumAmount_MR, 2);
-			for (AccountMovementWrapper certMovement:accList)
-				cumAmount += RoundingUtil.round(certMovement.getMovementAmount(), 2);
-			
+			double cumAmount = calculatePaymentCertAmount(paymentCert);
 			
 			paymentCert.setCertAmount(cumAmount);
 			scPaymentCertDao.update(paymentCert);
@@ -2749,6 +2495,67 @@ public class PaymentService{
 		}
 
 		return error;
+	}
+	
+	private Double calculatePaymentCertAmount(PaymentCert paymentCert){
+		List<AccountMovementWrapper> accList = new ArrayList<AccountMovementWrapper>();
+		double cumAmount = 0.00;
+		double cumAmount_RT = 0.0;
+		double cumAmount_CF = 0.0;
+		double cumAmount_MOS = 0.0;
+		double cumAmount_MR = 0.0;
+		List<PaymentCertDetail> paymentDetailListInDB = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
+		for (PaymentCertDetail scPaymentDetail: paymentDetailListInDB){
+			if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+				cumAmount_RT += scPaymentDetail.getMovementAmount();
+			else if ("CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+				cumAmount_CF += scPaymentDetail.getMovementAmount();
+			else if ("MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+				cumAmount_MR = cumAmount_MR + scPaymentDetail.getMovementAmount();
+			else if ("MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+				cumAmount_MOS += scPaymentDetail.getMovementAmount();
+			else if (!("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
+				boolean accFound = false;
+				for (AccountMovementWrapper certMovement:accList)
+					if (((certMovement.getObjectCode() == null && scPaymentDetail.getObjectCode() == null) ||
+							(certMovement.getObjectCode() != null && scPaymentDetail.getObjectCode() != null &&
+							certMovement.getObjectCode().equals(scPaymentDetail.getObjectCode().trim()))) &&
+							((certMovement.getSubsidiaryCode() == null && scPaymentDetail.getSubsidiaryCode() == null) || (
+							certMovement.getSubsidiaryCode() != null && scPaymentDetail.getSubsidiaryCode() != null &&
+							certMovement.getSubsidiaryCode().equals(scPaymentDetail.getSubsidiaryCode().trim())))) {
+						accFound = true;
+						certMovement.setMovementAmount(certMovement.getMovementAmount()+scPaymentDetail.getMovementAmount());
+					}
+				
+				//Setting up Sub-contract Payment Detail lines except RA, RT, RR, CF, MR, MS, GP, GR
+				if (!accFound){
+					AccountMovementWrapper newAcc = new AccountMovementWrapper();
+					if (scPaymentDetail.getObjectCode()==null||"".equals(scPaymentDetail.getObjectCode().trim()))
+						newAcc.setObjectCode(null);
+					else 
+						newAcc.setObjectCode(scPaymentDetail.getObjectCode().trim());
+					if (scPaymentDetail.getSubsidiaryCode()==null||"".equals(scPaymentDetail.getSubsidiaryCode().trim()))
+						newAcc.setObjectCode(null);
+					else 
+						newAcc.setSubsidiaryCode(scPaymentDetail.getSubsidiaryCode().trim());
+					if (scPaymentDetail.getMovementAmount()==null||scPaymentDetail.getMovementAmount().isNaN())
+						newAcc.setMovementAmount(0.0);
+					else 
+						newAcc.setMovementAmount(scPaymentDetail.getMovementAmount());
+					accList.add(newAcc);
+				}
+					
+			}
+		}
+		
+		cumAmount = RoundingUtil.round(cumAmount_CF,2) - 
+					RoundingUtil.round(cumAmount_RT, 2)+
+					RoundingUtil.round(cumAmount_MOS, 2) -
+					RoundingUtil.round(cumAmount_MR, 2);
+		for (AccountMovementWrapper certMovement:accList)
+			cumAmount += RoundingUtil.round(certMovement.getMovementAmount(), 2);
+		
+		return cumAmount;
 	}
 	
 	/**
@@ -2807,28 +2614,13 @@ public class PaymentService{
 			scPaymentCert = calculateAndUpdatePaymentDueDate(scPaymentCert);
 
 		} catch (ValidateBusinessLogicException e) {
-			e.printStackTrace();
 			error = e.getMessage();
 			logger.info(error);
 			return error;
 		}
 
-		// 4. Update SC Payment Certificate
-		logger.info("4. Update SC Payment Certificate");
-		try {
-			scPaymentCertDao.update(scPaymentCert);
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-			error = ("Unable to update Payment Certificate \n" +
-					"Job: " + jobNo +
-					" Subcontract No.: " + subcontractNo +
-					" Payment Certificate No.: " + paymentCertNo);
-			return error;
-		}
-
-		
 				
-		// 5. Insert & Update GST Payable & GST Receivable
+		// 4. Insert & Update GST Payable & GST Receivable
 		JobInfo job;
 		try {
 			job = jobHBDaoImpl.obtainJobInfo(jobNo);
@@ -2838,7 +2630,6 @@ public class PaymentService{
 					" Subcontract No.: " + subcontractNo +
 					" Payment Certificate No.: " + paymentCertNo);
 			logger.info(error);
-			e.printStackTrace();
 			return error;
 		}
 		if(	job!=null &&
@@ -2933,7 +2724,24 @@ public class PaymentService{
 					error = ("Unable to insert Payment Certificate GST");
 					return error;
 				}
+				
+				double certAmount = calculatePaymentCertAmount(scPaymentCert);
+				scPaymentCert.setCertAmount(certAmount);
 			}
+			
+		}
+		
+		//5. Update SC Payment Certificate
+		logger.info("4. Update SC Payment Certificate");
+		try {
+			scPaymentCertDao.update(scPaymentCert);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			error = ("Unable to update Payment Certificate \n" +
+					"Job: " + jobNo +
+					" Subcontract No.: " + subcontractNo +
+					" Payment Certificate No.: " + paymentCertNo);
+			return error;
 		}
 		
 		return error;

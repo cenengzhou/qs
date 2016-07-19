@@ -74,11 +74,11 @@
 									<label ng-hide="paymentTerms== 'QS3'">Invoice Received Date</label>
 									<label ng-show="paymentTerms== 'QS3'"> IPA Received Date</label>
 									<div class="input-group"
-										moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
+										moment-picker=payment.ipaOrInvoiceReceivedDate format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control"
-											ng-model="payment.invoiceReceivedDate"
+											ng-model="payment.ipaOrInvoiceReceivedDate"
 											ng-change="calculatePaymentDueDate()"
 											ng-disabled="disableButtons"
 											data-parsley-group="validate-invoiceDate"
@@ -127,7 +127,7 @@
 									</div>
 									<div class="widget-stat-info">
 										<div class="widget-stat-title">Certificate Amount</div>
-										<div class="widget-stat-number">{{payment.certAmount |
+										<div class="widget-stat-number">{{totalCertAmount |
 											currency}}</div>
 										<div class="widget-stat-text"></div>
 									</div>
