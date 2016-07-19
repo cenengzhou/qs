@@ -4,7 +4,7 @@
 		class="ng-pristine ng-valid">
 		<fieldset>
 			<div class="row">
-				<div class="col-md-10 col-md-offset-2">
+				<div class="col-md-10 col-md-offset-1">
 					<h3 class="form-header form-header-lg m-b-10">
 						<span class="icon text-primary"><i
 							class="fa fa-shopping-cart"></i></span> Payment <small>Certificate
@@ -70,8 +70,9 @@
 
 							<div class="col-md-4">
 								<div class="form-group"
-									ng-show="paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
-									<label>Invoice Received Date</label>
+									ng-show="paymentTerms== 'QS3' || paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
+									<label ng-hide="paymentTerms== 'QS3'">Invoice Received Date</label>
+									<label ng-show="paymentTerms== 'QS3'"> IPA Received Date</label>
 									<div class="input-group"
 										moment-picker=payment.invoiceReceivedDate format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
@@ -81,7 +82,7 @@
 											ng-change="calculatePaymentDueDate()"
 											ng-disabled="disableButtons"
 											data-parsley-group="validate-invoiceDate"
-											ng-required = "paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
+											ng-required = "paymentTerms== 'QS3' || paymentTerms== 'QS4' || paymentTerms =='QS5' || paymentTerms =='QS6' || paymentTerms =='QS7'">
 									</div>
 								</div>
 							</div>
@@ -92,7 +93,7 @@
 									<label>GST Payable</label>
 									<div class="controls">
 										<input type="number" placeholder="" class="form-control "
-											ng-model="gstPayable"/>
+											ng-model="gstPayable" ng-disabled="disableButtons"/>
 									</div>
 								</div>
 							</div>
@@ -102,7 +103,7 @@
 									<label>GST Receivable</label>
 									<div class="controls">
 										<input type="number" placeholder="" class="form-control "
-											ng-model="gstReceivable"/>
+											ng-model="gstReceivable" ng-disabled="disableButtons"/>
 									</div>
 								</div>
 							</div>
@@ -117,7 +118,7 @@
 					</div>
 
 
-					<div class="col-md-4 m-l-10">
+					<div class="col-md-5 m-l-10">
 						<div class="box no-border">
 							<div class="box-body">
 								<div class="widget widget-stat bg-primary text-white">

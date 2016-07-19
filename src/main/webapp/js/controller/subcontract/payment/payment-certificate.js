@@ -81,16 +81,17 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 	}
 
 	$scope.updatePaymentType = function(paymentType){
-		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'), paymentType)
-		.then(
-				function( data ) {
-					if(data.length != 0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate has been updated.");
-						$state.reload();
-					}
-				});
+		if(!$scope.disableButtons)
+			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'), paymentType)
+			.then(
+					function( data ) {
+						if(data.length != 0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate has been updated.");
+							$state.reload();
+						}
+					});
 	}
 	
 	function loadData(){

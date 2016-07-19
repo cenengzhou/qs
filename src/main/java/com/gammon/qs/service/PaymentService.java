@@ -1718,8 +1718,8 @@ public class PaymentService{
 					scPaymentDetail.setLineType(scDetails.getLineType());
 
 					//Cumulative Certified Amount
-					if (scDetails.getCumCertifiedQuantity()!=null)
-						scPaymentDetail.setCumAmount(scDetails.getCumCertifiedQuantity()*scDetails.getScRate());
+					if (scDetails.getAmountCumulativeCert()!=null)
+						scPaymentDetail.setCumAmount(scDetails.getAmountCumulativeCert().doubleValue());
 					else 
 						scPaymentDetail.setCumAmount(0.0);
 
