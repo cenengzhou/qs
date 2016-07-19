@@ -469,7 +469,7 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 			@Override
 			public Object obtainObjectFromDB() {
 				try {
-					scPaymentCertList = paymentService.obtainSCPaymentCertListByPackageNo(jobNumber, Integer.valueOf(packageNo));
+					scPaymentCertList = paymentService.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 
 				} catch (DatabaseOperationException e) {
 					e.printStackTrace();

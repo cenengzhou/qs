@@ -157,7 +157,21 @@ mainApp.constant('GlobalParameter', {
 		{id:'150', value:'150 - Certificate Confirmed'},
 		{id:'200', value:'200 - Certificate Waiting for Approval'},
 		{id:'300', value:'300 - Certificate Posted to Finance\'s AR'}
-	]
+	],
+	month: [
+       {id:'01', value:'January'},
+       {id:'02', value:'February'},
+       {id:'03', value:'March'},
+       {id:'04', value:'April'},
+       {id:'05', value:'May'},
+       {id:'06', value:'June'},
+       {id:'07', value:'July'},
+       {id:'08', value:'August'},
+       {id:'09', value:'September'},
+       {id:'10', value:'October'},
+       {id:'11', value:'November'},
+       {id:'12', value:'December'}
+    ]
 });
 
 mainApp.constant('GlobalMessage', {

@@ -16,7 +16,8 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	updateMultipleSystemConstants:	updateMultipleSystemConstants,
     	inactivateSystemConstant:		inactivateSystemConstant,
     	createSystemConstant: 			createSystemConstant,
-    	updateSubcontractAdmin:			updateSubcontractAdmin
+    	updateSubcontractAdmin:			updateSubcontractAdmin,
+    	obtainSubcontractListWithSCListWrapper:	obtainSubcontractListWithSCListWrapper
     	
     });
 	
@@ -181,6 +182,16 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
        	var request = $http.post('service/subcontract/updateSubcontractAdmin', subcontract);
     	return( request.then(handleSuccess, handleError));
     }
+    
+    function obtainSubcontractListWithSCListWrapper(subcontractListWrapper){
+    	var request = $http({
+    		method: 'post',
+    		url: 'service/subcontract/obtainSubcontractListWithSCListWrapper',
+    		data: subcontractListWrapper
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
     // ---
     // PRIVATE METHODS.
     // ---

@@ -1912,24 +1912,6 @@ public class SubcontractService {
 		return scDetailsHBDao.getScDetailsByPage(scPackage, billItem, description, lineType, pageNum);
 	}
 
-
-	/**
-	 * @author koeyyeung
-	 * modified on 26 Aug, 2014
-	 * add period search from SCPackage Snapshot
-	 * **/
-	public List<SCListWrapper> obtainSubcontractList(SubcontractListWrapper searchWrapper) throws Exception{
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-		
-		if(!"".equals(searchWrapper.getMonth()) &&!"".equals(searchWrapper.getYear()))
-			scListWrapperList = obtainSubcontractListFromSCPackageSnapshot(searchWrapper);
-		else
-			scListWrapperList = obtainSubcontractListFromSCPackage(searchWrapper);
-		
-		logger.info("NUMBER OF RECORDS(SCLISTWRAPPER):" + scListWrapperList.size());
-		return scListWrapperList;
-	}
-	
 	private List<SCListWrapper> obtainSubcontractListFromSCPackage(SubcontractListWrapper searchWrapper) throws Exception{
 		List<Subcontract> subcontractList = new ArrayList<Subcontract>();
 		String username = searchWrapper.getUsername() != null ? searchWrapper.getUsername() : securityServiceImpl.getCurrentUser().getUsername();
@@ -4431,14 +4413,9 @@ public class SubcontractService {
 	// added by brian on 20110126
 	// for check the job security to filter the performance appraisal
 	// (logic is copy from AdminServiceImpl.canAccessJob(String, String) in phrase 1)
-	public boolean canAccess(String userName, String jobNumber){
-		try {
+	public boolean canAccess(String userName, String jobNumber) throws DataAccessException {
 			return adminServiceImpl.canAccessJob(userName, jobNumber);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-			return false;
 		}
-	}
 
 	
 
@@ -5710,11 +5687,6 @@ public class SubcontractService {
 		}
 		return result;
 	}
-
-	public List<Subcontract> obtainSubcontractList (String jobNo) throws DatabaseOperationException{
-		List<Subcontract> packageList = subcontractHBDao.obtainPackageList(jobNo);
-		return packageList;	
-	}
 	
 	public Subcontract obtainSubcontract(String jobNo, String packageNo) throws DatabaseOperationException{
 		return subcontractHBDao.obtainSubcontract(jobNo, packageNo);
@@ -5909,7 +5881,30 @@ public class SubcontractService {
 		return result;
 	}
 
-
+	public List<Subcontract> obtainSubcontractList(String jobNumber) throws DataAccessException {
+		if(adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNumber)){
+			return subcontractHBDao.obtainSubcontractList(jobNumber);
+		}
+		return null;
+	}
+	
+	/**
+	 * @author koeyyeung
+	 * modified on 26 Aug, 2014
+	 * add period search from SCPackage Snapshot
+	 * **/
+	public List<SCListWrapper> obtainSubcontractList(SubcontractListWrapper searchWrapper) throws Exception{
+		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
+		
+		if(!GenericValidator.isBlankOrNull(searchWrapper.getMonth()) &&!GenericValidator.isBlankOrNull(searchWrapper.getYear()))
+			scListWrapperList = obtainSubcontractListFromSCPackageSnapshot(searchWrapper);
+		else
+			scListWrapperList = obtainSubcontractListFromSCPackage(searchWrapper);
+		
+		logger.info("NUMBER OF RECORDS(SCLISTWRAPPER):" + scListWrapperList.size());
+		return scListWrapperList;
+	}
+	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 
 	

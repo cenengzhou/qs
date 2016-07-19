@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -99,7 +100,7 @@ public class AdminService {
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
-	public Boolean canAccessJob(String userName, String jobNumber)throws DatabaseOperationException{
+	public Boolean canAccessJob(String userName, String jobNumber)throws DataAccessException{
 		return obtainCanAccessJobNoList(userName).contains(jobNumber);
 	}
 

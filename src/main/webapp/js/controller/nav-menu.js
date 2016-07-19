@@ -56,6 +56,9 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	}else if ($scope.currentPath.indexOf("/admin")==0){
 		$scope.activeMenu = 'Admin';
 		$scope.activeAdminSideMenu = $scope.currentPath;
+	}else if($scope.currentPath.indexOf("/enquiry")==0){
+		$scope.activeMenu= 'Enquiry';
+		$scope.activeEnquirySideMenu = $scope.currentPath;
 	}
 
 //	function convertImgToBase64URL(url, callback, outputFormat){

@@ -1,0 +1,105 @@
+<div id="sidebar"
+	class="sidebar sidebar-highlight-primary sidebar-light">
+	<!-- begin sidebar scrollbar -->
+	<div data-scrollbar="true" data-height="100%">
+		<!-- begin sidebar nav -->
+		<ul class="nav">
+			<li class="nav-header">{{jobNo}} {{jobDescription}}</li>
+			<li class="divider has-minify-btn">
+				<!-- begin sidebar minify button --> 
+				
+				<a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
+				<i
+					class="fa fa-angle-left"></i></a> <!-- end sidebar minify button -->
+			</li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.subcontract">
+					<i class="fa fa-file-text"></i> <span>Subcontract
+						Enquiry</span>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="enquiry.payment"> <i
+					class="fa fa-file-text"></i> <span>Payment Enquiry</span>
+			</a></li>
+			<li class="has-sub"><a href="javascript:;"> <b
+					class="caret pull-right"></b> <i class="fa fa-file-text"></i> <span>Month
+						End</span>
+			</a>
+				<ul class="sub-menu">
+					<li
+						ng-class="{active : activeEnquirySideMenu == '/enquiry/jobCost'}">
+						<a ui-sref="enquiry.jobCost"
+						ng-click="activeEnquirySideMenu = '/enquiry/jobCost'"> <i
+							class="fa fa-circle-o"></i> <span>Job Cost Enquiry</span>
+					</a>
+					</li>
+					<li
+						ng-class="{active : activeEnquirySideMenu == '/enquiry/accountLedger'}">
+						<a ui-sref="enquiry.accountLedger"
+						ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'"> <i
+							class="fa fa-circle-o"></i> <span>Account Ledger Enquiry</span>
+					</a>
+					</li>
+				</ul></li>
+			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractor">
+					<i class="fa fa-file-text"></i> <span>Subcontractor
+						Enquiry</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.client"> <i
+					class="fa fa-file-text"></i> <span>Client
+						Enquiry</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.accountCode">
+					<i class="fa fa-file-text"></i> <span>Account
+						Code</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.workscope">
+					<i class="fa fa-file-text"></i> 
+					<span>Work Scope Enquiry</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractprovisionposting">
+					<i class="fa fa-file-text"></i> 
+					<span>Subcontract Provision Posting History</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.internalValuationPosting">
+					<i class="fa fa-file-text"></i> 
+					<span>Internal Valuation Posting History</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractDetail">
+					<i class="fa fa-file-text"></i> 
+					<span>Subcontract Detail Enquiry</span>
+			</a></li>
+
+			<li ui-sref-active="active"><a ui-sref="enquiry.jobInfo">
+					<i class="fa fa-file-text"></i> 
+					<span>Job Information Enquiry</span>
+			</a></li>
+
+
+			<li class="divider has-minify-btn">
+				<!-- begin sidebar minify button --> <a href="javascript:;"
+				class="sidebar-minify-btn" data-click="sidebar-minify"><i
+					class="fa fa-angle-left"></i></a> <!-- end sidebar minify button -->
+			</li>
+		</ul>
+		<!-- end sidebar nav -->
+	</div>
+	<!-- end sidebar scrollbar -->
+</div>
+<div class="sidebar-bg"></div>
+
+<div ui-view></div>
+
+<script>
+	$(document).ready(function() {
+		handleSidebarMinify();
+		handleSidebarMenu();
+	});
+</script>
+
+

@@ -37,7 +37,7 @@ public class GSFService {
 		} catch (HttpMessageNotReadableException e) {
 			e.printStackTrace();
 		}
-		user.setUsername(username);
+		user.setUsername(login[0]);
 		if (login.length == 2) {
 			user.setAuthType("Kerberos");
 			user.setDomainName(login[1]);

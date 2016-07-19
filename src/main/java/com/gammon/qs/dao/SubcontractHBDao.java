@@ -381,9 +381,9 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			if(reportType!=null && "SubcontractorAnalysisReport".equals(reportType))
 				criteria.addOrder(Order.asc("vendorNo"));
 			else{
-				criteria.addOrder(Order.asc("job.company"))
-						.addOrder(Order.asc("job.division"))
-						.addOrder(Order.asc("job.jobNumber"))
+				criteria.addOrder(Order.asc("jobInfo.company"))
+						.addOrder(Order.asc("jobInfo.division"))
+						.addOrder(Order.asc("jobInfo.jobNumber"))
 						.addOrder(Order.asc("packageNo"));
 			}
 			result = (List<Subcontract>)criteria.list();
@@ -674,6 +674,14 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Subcontract> obtainSubcontractList(String jobNumber) throws DataAccessException {
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+			return (List<Subcontract>) criteria.list();
+	}
+
 	
 	/*************************************** FUNCTIONS FOR PCMS - END*********************************************************/	
 }

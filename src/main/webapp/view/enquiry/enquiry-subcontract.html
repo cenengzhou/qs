@@ -1,0 +1,45 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+					Home</a></li>
+			<li class="active">Dashboard</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title">Subcontract Enquiry</h3>
+						<form role="form">
+						<div class="form-group">
+						<label for="searchJobNo">Job Number:</label>
+						<input class="control" type="text" id="searchJobNo" ng-model="searchJobNo" placeholder="Job Number:">
+						<label for="searchMonth">Month:</label>
+						<select id="searchMonth" ng-options="v.id as v.value for v in GlobalParameter.month" ng-model="searchMonth">
+							<option value="">Select Month</option>
+						</select>
+<!-- 						<input type="text" id="searchMonth" ng-model="searchMonth"> -->
+						<label for="searchYear">Year:</label>
+						<input class="control" type="text" id="searchYear" ng-model="searchYear" placeholder="Year" ng-pattern="/[1970-2016]/">
+						<button class="btn btn-primary" type="submit" ng-click="loadGridData()">Search</button>
+						</div>
+						</form>
+						<div class="col-md-12" block-ui="blockEnquirySubcontract">
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+									resize ng-style="resizeWithOffset(265)">
+						</div>
+
+					</div>
+				</div>
+			</div>
+	
+		</div>
+	</section>
+
+</div>

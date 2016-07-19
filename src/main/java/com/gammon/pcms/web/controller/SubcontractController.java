@@ -27,6 +27,8 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
+import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
+import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 @RestController
 @RequestMapping(value = "service/subcontract/"/*,
@@ -57,13 +59,24 @@ public class SubcontractController {
 		List<Subcontract> subcontractList = null;
 		try{
 			subcontractList = subcontractService.obtainSubcontractList(jobNo);
-		}catch(DatabaseOperationException databaseOperationException){
+		} catch (Exception e){
 			logger.error("Database Exception: ");
-			databaseOperationException.printStackTrace();
+			e.printStackTrace();
 		}
 		return subcontractList;
 	}
 	
+	@RequestMapping(value = "obtainSubcontractListWithSCListWrapper", method = RequestMethod.POST)
+	public List<SCListWrapper> obtainSubcontractListWithSCListWrapper(@RequestBody SubcontractListWrapper subcontractListWrapper){
+		List<SCListWrapper> scListWrapper = null;
+		try{
+			scListWrapper = subcontractService.obtainSubcontractList(subcontractListWrapper);
+		}catch(Exception e){
+			logger.error("Database Exception: ");
+			e.printStackTrace();
+		}
+		return scListWrapper;
+	}
 	
 	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)
 	public UDC getWorkScope(@RequestParam(required =true) String workScopeCode){
