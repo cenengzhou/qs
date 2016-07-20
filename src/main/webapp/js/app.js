@@ -789,7 +789,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	         	'js/service/main-cert-service.js',
                	         	'js/service/payment-service.js',
                	         	'js/service/subcontract-service.js',
-//               	         	'js/service/subcontract-service.js',
+               	         	'js/service/adl-service.js',
 //               	         	'js/service/subcontract-service.js',
 //               	         	'js/service/subcontract-service.js',
                	         	

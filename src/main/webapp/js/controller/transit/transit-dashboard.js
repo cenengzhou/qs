@@ -288,9 +288,9 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     
     $scope.openPrintReport = function(url){
     	var wnd = $window.open(url, 'Print Report', '_blank');
-    	$timeout(function(){
-    		wnd.close();
-    	}, 5000);
+//    	$timeout(function(){
+//    		wnd.close();
+//    	}, 5000);
     	
     	$timeout(function(){
     		$scope.getTransit();
@@ -443,24 +443,22 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		}, {
     			field : 'quantity',
     			displayName : 'Quantity',
-    			cellFilter : 'number:4',
+    			cellFilter : 'number:3',
+    			cellClass: 'text-right',
     			enableCellEdit : false,
     			
     		}, {
     			field : 'sellingRate',
     			displayName : 'Selling Rate',
     			cellFilter : 'number:2',
-    			enableCellEdit : false,
-    			
-    		}, {
-    			field : 'sequenceNo',
-    			displayName : 'Sequence No',
+    			cellClass: 'text-right',
     			enableCellEdit : false,
     			
     		}, {
     			field : 'value',
     			displayName : 'Value',
     			cellFilter : 'number:2',
+    			cellClass: 'text-right',
     			enableCellEdit : false,
     			
     		}
@@ -537,22 +535,30 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			field : 'waste',
     			displayName : "Waste",
     			enableCellEdit : false,
-    			
+    			cellFilter : 'number:3',
+    			cellClass: 'text-right',
+   			
     		}, {
     			field : 'totalQuantity',
     			displayName : "Total Quantity",
     			enableCellEdit : false,
-    			
+    			cellFilter : 'number:3',
+    			cellClass: 'text-right',
+  			
     		}, {
     			field : 'rate',
     			displayName : "Rate",
     			enableCellEdit : false,
-    			
+    			cellFilter : 'number:2',
+    			cellClass: 'text-right',
+   			
     		}, {
     			field : 'value',
     			displayName : "Value",
     			enableCellEdit : false,
-    			
+    			cellFilter : 'number:2',
+    			cellClass: 'text-right',
+  			
     		}
     		]
     	};

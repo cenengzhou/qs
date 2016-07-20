@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', '$cookieStore', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 
-                                      function($scope , $rootScope, $http, $cookieStore, modalService, blockUI, GlobalParameter, subcontractService) {
+mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 
+                                      function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, subcontractService) {
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.blockEnquirySubcontract = blockUI.instances.get('blockEnquirySubcontract');
@@ -14,16 +14,10 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes: [50],
-			paginationPageSize: 50,
+			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+			paginationPageSize : 25,
 			allowCellFocus: false,
 			enableCellSelection: false,
-			isRowSelectable: function(row){
-				if(row.entity.sessionId === $rootScope.sessionId){
-					return false;
-				}
-				return true;
-			},
 			columnDefs: [
 			             { field: 'company', width:'60', displayName: "Company", enableCellEdit: false },
 			             { field: 'division', width:'60', displayName: "Division", enableCellEdit: false },
@@ -40,21 +34,21 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 			             { field: 'paymentTerms', width:'80', displayName: "Payment Terms", enableCellEdit: false},
 			             { field: 'subcontractTerm', width:'120', displayName: "SC Term", enableCellEdit: false},
 			             { field: 'subcontractorNature', width:'100', displayName: "Subcontractor Nature", enableCellEdit: false},
-			             { field: 'originalSubcontractSum', width:'120', displayName: "Original SC Sum", enableCellEdit: false},
-			             { field: 'remeasuredSubcontractSum', width:'160', displayName: "Remeasured Subcontract Sum", enableCellEdit: false},
-			             { field: 'addendum', displayName: "Addendum", width:'120', enableCellEdit: false},
-			             { field: 'subcontractSum', width:'160', displayName: "Revised Subcontract Sum", enableCellEdit: false},
-			             { field: 'accumlatedRetentionAmt', width:'130', displayName: "Accumlated Retention(RT)", enableCellEdit: false},
-			             { field: 'retentionReleasedAmt', width:'130', displayName: "Retention Released(RR)", enableCellEdit: false},
-			             { field: 'retentionBalanceAmt', width:'120', displayName: "Retention Balance", enableCellEdit: false},
-			             { field: 'netCertifiedAmount', width:'120', displayName: "Net Cert. Amt(excl. CC)", enableCellEdit: false},
-			             { field: 'totalPostedCertAmt', width:'120', displayName: "Cert. Amount (Posted)", enableCellEdit: false},
-			             { field: 'totalCumCertAmt', width:'120', displayName: "Cert Amount (Cum.)", enableCellEdit: false},
-			             { field: 'totalLiabilities', width:'120', displayName: "Work Done Amount*(Cum.)", enableCellEdit: false},
-			             { field: 'totalProvision', width:'120', displayName: "Provision", enableCellEdit: false},
-			             { field: 'balanceToComplete', width:'120', displayName: "Balance to Complete", enableCellEdit: false},
-			             { field: 'totalCCPostedAmt', width:'120', displayName: "Contra Charge", enableCellEdit: false},
-			             { field: 'totalMOSPostedAmt', width:'120', displayName: "Material On Site", enableCellEdit: false},
+			             { field: 'originalSubcontractSum', width:'120', displayName: "Original SC Sum", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'remeasuredSubcontractSum', width:'160', displayName: "Remeasured Subcontract Sum", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'addendum', displayName: "Addendum", width:'120', cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'subcontractSum', width:'160', displayName: "Revised Subcontract Sum", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'accumlatedRetentionAmt', width:'130', displayName: "Accumlated Retention(RT)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'retentionReleasedAmt', width:'130', displayName: "Retention Released(RR)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'retentionBalanceAmt', width:'120', displayName: "Retention Balance", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'netCertifiedAmount', width:'120', displayName: "Net Cert. Amt(excl. CC)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalPostedCertAmt', width:'120', displayName: "Cert. Amount (Posted)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalCumCertAmt', width:'120', displayName: "Cert Amount (Cum.)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalLiabilities', width:'120', displayName: "Work Done Amount*(Cum.)", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalProvision', width:'120', displayName: "Provision", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'balanceToComplete', width:'120', displayName: "Balance to Complete", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalCCPostedAmt', width:'120', displayName: "Contra Charge", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
+			             { field: 'totalMOSPostedAmt', width:'120', displayName: "Material On Site", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
             			 ]
 	};
 	

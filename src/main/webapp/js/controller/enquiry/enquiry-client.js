@@ -1,5 +1,6 @@
 
-mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'SessionHelper', function($scope , $http, $rootScope, SessionHelper) {
+mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
+                                function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -11,16 +12,10 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'Sess
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes: [50],
-			paginationPageSize: 50,
+			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+			paginationPageSize : 25,
 			allowCellFocus: false,
 			enableCellSelection: false,
-			isRowSelectable: function(row){
-				if(row.entity.sessionId === $rootScope.sessionId){
-					return false;
-				}
-				return true;
-			},
 			columnDefs: [
 			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
 			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },

@@ -1,8 +1,5 @@
 <div class="content-wrapper">
 	<section class="content-header">
-		<h1>
-			{{jobNo}} <small>{{jobDescription}}</small>
-		</h1>
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 					Home</a></li>
@@ -14,15 +11,41 @@
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12" block-ui="blockAccountLedger">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title">Account Ledger Enquirys1</h3>
-						
+						<h3 class="box-title">Account Ledger Enquiry</h3>
+						<form role="form" class="form-horizontal">
+						<div class="form-group">
+						<div><label class="control-label" for="searchJobNo">Job Number:</label>
+						<span id="searchJobNo">{{jobNo}}</span></div>
+						<div class="col-md-3"><label class="control-label" for="searchTypeLedger">Ledger Type:</label>
+						<input class="form-control" type="text" id="searchTypeLedger" ng-model="searchTypeLedger"></div>
+						<div class="col-md-3"><label class="control-label" for="searchYearStart">Year Start:</label>
+						<input class="form-control"  type="text" id="searchYearStart" ng-model="searchYearStart"></div>
+						<div class="col-md-3"><label class="control-label" for="searchYearEnd">Year End:</label>
+						<input  class="form-control" type="text" id="searchYearEnd" ng-model="searchYearEnd"></div>
+						<div class="col-md-3"><label class="control-label" for="searchMonthStart">Month Start</label>
+						<input class="form-control"  type="text" id="searchMonthStart" ng-model="searchMonthStart"></div>
+						<div class="col-md-3"><label class="control-label" for="searchMonthEnd">Month End:</label>
+						<input class="form-control"  type="text" id="searchMonthEnd" ng-model="searchMonthEnd"></div>
+						<div class="col-md-3"><label class="control-label" for="searchTypeDocument">Document Type:</label>
+						<input class="form-control"  type="text" id="searchTypeDocument" ng-model="searchTypeDocument"></div>
+						<div class="col-md-3"><label class="control-label" for="searchSubcontractNo">Subcontract Number:</label>
+						<input class="form-control"  type="text" id="searchSubcontractNo" ng-model="searchSubcontractNo"></div>
+						<div class="col-md-3"><label class="control-label" for="searchCodeObject">Object Code:</label>
+						<input class="form-control"  type="text" id="searchCodeObject" ng-model="searchCodeObject"></div>
+						<div class="col-md-3"><label class="control-label" for="searchCodeSubsidiary">Subsidiary Code:</label>
+						<input class="form-control"  type="text" id="searchCodeSubsidiary" ng-model="searchCodeSubsidiary"></div>
+						<div class="col-md-9">
+						<label class="control-label" for="searchCodeSubsidiary"></label>
+						<button class="form-control btn btn-primary text-info"  type="submit" ng-click="loadGridData()">Search</button></div>
+						</div>
+						</form>
 						<div class="col-md-12">
-								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" 
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									resize ng-style="resizeWithOffset(430)"></div>
 					</div>
 				</div>
 			</div>
