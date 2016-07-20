@@ -5693,6 +5693,54 @@ public class SubcontractService {
 	}
 	
 	/**
+	 * @author koeyyeung
+	 * created on 19 July, 2016
+	 * Subcontract Dashboard Data**/
+	public List<SubcontractDetail> getSubcontractDetailsDashboardData(String jobNo, String subcontractNo) {
+		List<SubcontractDetail> scDetailsDashboard = new ArrayList<SubcontractDetail>();
+		try {
+			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNo, subcontractNo);
+			double totalBQBudgetAmount = 0.0;
+			double postedBQCertifiedAmount = 0.0;
+			double postedBQWDAmount = 0.0;
+			double totalVOBudgetAmount = 0.0;
+			double postedVOCertifiedAmount = 0.0;
+			double postedVOWDAmount = 0.0;
+			
+			for (SubcontractDetail scDetail: scDetails){
+				if(scDetail instanceof SubcontractDetailVO){
+					totalVOBudgetAmount += scDetail.getAmountBudget();
+					postedVOCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
+					postedVOWDAmount += scDetail.getAmountPostedWD().doubleValue();
+				}else if(scDetail instanceof SubcontractDetailBQ){
+					totalBQBudgetAmount += scDetail.getAmountBudget();
+					postedBQCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
+					postedBQWDAmount += scDetail.getAmountPostedWD().doubleValue();
+				} 
+			}
+			
+			SubcontractDetail scDetailBQ = new SubcontractDetail();
+			scDetailBQ.setLineType("BQ");
+			scDetailBQ.setAmountBudget(totalBQBudgetAmount);
+			scDetailBQ.setAmountPostedCert(new BigDecimal(postedBQCertifiedAmount));
+			scDetailBQ.setAmountPostedWD(new BigDecimal(postedBQWDAmount));
+			scDetailsDashboard.add(scDetailBQ);
+			
+			SubcontractDetail scDetailVO = new SubcontractDetail();
+			scDetailVO.setLineType("VO");
+			scDetailVO.setAmountBudget(totalVOBudgetAmount);
+			scDetailVO.setAmountPostedCert(new BigDecimal(postedVOCertifiedAmount));
+			scDetailVO.setAmountPostedWD(new BigDecimal(postedVOWDAmount));
+			scDetailsDashboard.add(scDetailVO);
+
+			
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return scDetailsDashboard;
+	}
+	
+	/**
 	 * @author tikywong
 	 * Modified on November 2, 2012
 	 * Obtain the full list of active SCDetails
@@ -5880,6 +5928,8 @@ public class SubcontractService {
 
 		return result;
 	}
+
+	
 
 	public List<Subcontract> obtainSubcontractList(String jobNumber) throws DataAccessException {
 		if(adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNumber)){

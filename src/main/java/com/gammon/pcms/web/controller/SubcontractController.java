@@ -111,6 +111,13 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getSubcontractDetailsDashboardData", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSubcontractDetailsDashboardData(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		scDetails = subcontractService.getSubcontractDetailsDashboardData(jobNo, subcontractNo);
+		return scDetails;
+	}
+	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;

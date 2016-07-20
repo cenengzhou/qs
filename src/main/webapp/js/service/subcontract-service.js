@@ -1,22 +1,23 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
-    	getSubcontract: 				getSubcontract,
-    	getSubcontractList: 			getSubcontractList,
-    	getWorkScope: 					getWorkScope,
-    	getSCDetails:					getSCDetails,
-    	upateSubcontract: 				upateSubcontract,
-    	upateSubcontractDates: 			upateSubcontractDates,
-    	submitAwardApproval:			submitAwardApproval,
+    	getSubcontract: 					getSubcontract,
+    	getSubcontractList: 				getSubcontractList,
+    	getWorkScope: 						getWorkScope,
+    	getSCDetails:						getSCDetails,
+    	getSubcontractDetailsDashboardData:	getSubcontractDetailsDashboardData,
+    	upateSubcontract: 					upateSubcontract,
+    	upateSubcontractDates: 				upateSubcontractDates,
+    	submitAwardApproval:				submitAwardApproval,
     	
-    	runProvisionPostingManually:	runProvisionPostingManually,
-    	generateSCPackageSnapshotManually: generateSCPackageSnapshotManually,
-    	updateF58001FromSCPackageManually: updateF58001FromSCPackageManually,
-    	searchSystemConstants:			searchSystemConstants,
-    	updateMultipleSystemConstants:	updateMultipleSystemConstants,
-    	inactivateSystemConstant:		inactivateSystemConstant,
-    	createSystemConstant: 			createSystemConstant,
-    	updateSubcontractAdmin:			updateSubcontractAdmin,
+    	runProvisionPostingManually:		runProvisionPostingManually,
+    	generateSCPackageSnapshotManually: 	generateSCPackageSnapshotManually,
+    	updateF58001FromSCPackageManually: 	updateF58001FromSCPackageManually,
+    	searchSystemConstants:				searchSystemConstants,
+    	updateMultipleSystemConstants:		updateMultipleSystemConstants,
+    	inactivateSystemConstant:			inactivateSystemConstant,
+    	createSystemConstant: 				createSystemConstant,
+    	updateSubcontractAdmin:				updateSubcontractAdmin,
     	obtainSubcontractListWithSCListWrapper:	obtainSubcontractListWithSCListWrapper
     	
     });
@@ -75,6 +76,19 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         var request = $http({
             method: "get",
             url: "service/subcontract/getSCDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getSubcontractDetailsDashboardData(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetailsDashboardData",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,

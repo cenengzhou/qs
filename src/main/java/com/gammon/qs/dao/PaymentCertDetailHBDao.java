@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
@@ -268,6 +269,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public List<PaymentCertDetail> obtainSCPaymentDetailBySCPaymentCert(PaymentCert paymentCert){
 		Criteria criteria = getSession().createCriteria(PaymentCertDetail.class);
 		criteria.add(Restrictions.eq("paymentCert", paymentCert));
+		criteria.addOrder(Order.asc("lineType"));
 		return criteria.list();
 	}
 	

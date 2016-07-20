@@ -1,6 +1,5 @@
-mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode',   
-                                       function($scope, colorCode) {
-	$scope.subcontractSum = 53895000;
+mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractService',
+                                       function($scope, colorCode, subcontractService) {
 	$scope.paymentAmount = 100256;
 
 
@@ -31,93 +30,126 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode',
 
 	//Chart.defaults.global.colours = [colorCode.blue, colorCode.red, colorCode.green, colorCode.pink, colorCode.purple];
 
-	var barChartJson = {
-			labels : [''],
-			series : ['Total', 'Certified', 'Work Done'],
-			bqData : [],
-			voData : [],
-			colours: [{
-				strokeColor: colorCode.red,
-				fillColor: colorCode.red,
-				highlightFill: colorCode.red,
-				highlightStroke: colorCode.red
-			}, 
-			{
-				strokeColor: colorCode.blue,
-				fillColor: colorCode.blue,
-				highlightFill: colorCode.blue,
-				highlightStroke: colorCode.blue
-			},
-			{
-				strokeColor: colorCode.green,
-				fillColor: colorCode.green,
-				highlightFill: colorCode.green,
-				highlightStroke: colorCode.green
-			}],
-			options : {
-				/*'onAnimationComplete': function () {
-     	        	 //this.showTooltip(this.segments, true);
+	loadData();
+	
+	function loadData(){
+		getSubcontract();
+		getSubcontractDetailsDashboardData();
+	}
 
-     	            //Show tooltips in bar chart (issue: multiple datasets doesnt work http://jsfiddle.net/5gyfykka/14/)
-     	            this.showTooltip(this.datasets[0].bars, true);
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					//console.log(data);
+					$scope.subcontract = data;
+					$scope.revisedSCSum = data.remeasuredSubcontractSum + data.approvedVOAmount;
 
-     	            //Show tooltips in line chart (issue: multiple datasets doesnt work http://jsfiddle.net/5gyfykka/14/)
-     	            //this.showTooltip(this.datasets[0].points, true);  
-     	        },*/
-				showTooltips : true,
-				responsive : true,
-				maintainAspectRatio : true,
-				animation : true,
-				scaleLabel: " <%= Number(value / 1000) + ' K'%>",
-				//'scaleLabel' : "<%= Number(value).toFixed(2).replace('.', ',') + ' $'%>"
-				/*'scaleOverride':true,
-     	        'scaleSteps':2,
-     	        'scaleStartValue':100000,
-     	        'scaleStepWidth':1000000*/
-			}
+					//Chart: Subcontract Distribution
+					var subcontractJson = {
+							"data": [$scope.subcontract.remeasuredSubcontractSum, $scope.subcontract.approvedVOAmount],
+							"labels": ["Remeasured Subcontract Sum", "Addendum"],
+							"colours": [{
+								"strokeColor": colorCode.blue,
+								"pointHighlightStroke": colorCode.lightBlue
+							}, 
+							{
+								"strokeColor": colorCode.green,
+								"pointHighlightStroke": colorCode.lightGreen
+							}
+							],
+							'options' : {
+								showTooltips: true,
 
-	};
+								//SHow Tooltip by default
+								/*onAnimationComplete: function () {
+				    				this.showTooltip(this.segments, true);
+				    			}*/
+							}
+					};
 
+					$scope.subcontractPieChart = subcontractJson;
+				});
+	}
 
-	barChartJson.bqData.push(
-			['33796000'],['280000'], ['300000']
-	);
+	function getSubcontractDetailsDashboardData(){
+		subcontractService.getSubcontractDetailsDashboardData($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					
+					//Chart: Subcontract Details Distribution
+					var barChartJson = {
+							labels : [''],
+							series : ['Total', 'Certified', 'Work Done'],
+							bqData : [],
+							voData : [],
+							colours: [{
+								strokeColor: colorCode.red,
+								fillColor: colorCode.red,
+								highlightFill: colorCode.red,
+								highlightStroke: colorCode.red
+							}, 
+							{
+								strokeColor: colorCode.blue,
+								fillColor: colorCode.blue,
+								highlightFill: colorCode.blue,
+								highlightStroke: colorCode.blue
+							},
+							{
+								strokeColor: colorCode.green,
+								fillColor: colorCode.green,
+								highlightFill: colorCode.green,
+								highlightStroke: colorCode.green
+							}],
+							options : {
+								/*'onAnimationComplete': function () {
+				     	        	 //this.showTooltip(this.segments, true);
 
-	barChartJson.voData.push(
-			[2099000],[80000], [100000]
-	); 	
+				     	            //Show tooltips in bar chart (issue: multiple datasets doesnt work http://jsfiddle.net/5gyfykka/14/)
+				     	            this.showTooltip(this.datasets[0].bars, true);
 
-	$scope.barChartParameters = barChartJson;
+				     	            //Show tooltips in line chart (issue: multiple datasets doesnt work http://jsfiddle.net/5gyfykka/14/)
+				     	            //this.showTooltip(this.datasets[0].points, true);  
+				     	        },*/
+								showTooltips : true,
+								responsive : true,
+								maintainAspectRatio : true,
+								animation : true,
+								scaleLabel: " <%= Number(value / 1000) + ' K'%>",
+								//'scaleLabel' : "<%= Number(value).toFixed(2).replace('.', ',') + ' $'%>"
+								/*'scaleOverride':true,
+				     	        'scaleSteps':2,
+				     	        'scaleStartValue':100000,
+				     	        'scaleStepWidth':1000000*/
+							}
 
+					};
+					
+					angular.forEach(data, function(value, key){
+						if(value.lineType == "BQ"){
+							barChartJson.bqData.push(
+									[value.amountBudget],[value.amountPostedCert], [value.amountPostedWD]
+							);
+						}else if(value.lineType == "VO"){
+							console.log(value.amountBudget, value.amountPostedCert, value.amountPostedWD);
+							if(value.amountBudget == 0)
+								value.amountBudget = 0.0001
+							if(value.amountPostedCert == 0)
+								value.amountPostedCert = 0.0001
+							if(value.amountPostedWD == 0)
+									value.amountPostedWD = 0.0001
+							barChartJson.voData.push(
+									[value.amountBudget],[value.amountPostedCert], [value.amountPostedWD]
+							);	
+						}
+					});
+					
 
-	var subcontractJson = {
-			"data": ["33796000", "2099000"],
-			"labels": ["Original Subcontract Sum", "Addendum"],
-			"colours": [{
-				"strokeColor": colorCode.blue,
-				"pointHighlightStroke": colorCode.lightBlue
-			}, 
-			{
-				"strokeColor": colorCode.green,
-				"pointHighlightStroke": colorCode.lightGreen
-			}
-			],
-			'options' : {
-				showTooltips: true,
-
-				//SHow Tooltip by default
-				/*onAnimationComplete: function () {
-    				this.showTooltip(this.segments, true);
-    			}*/
-			}
-	};
-	$scope.subcontract = subcontractJson;
-
-
-
-
-
-
-
-
+					$scope.barChartParameters = barChartJson;
+						
+				});
+	}
+	
+	
 }]);
