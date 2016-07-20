@@ -860,8 +860,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		'params': {
 			'jobNo': null,
 			'jobDescription' : null
-		},
-		controller: 'EnquiryPaymentCtrl'
+		}
 	})
 	.state('enquiry.subcontract', {
 		url: '/subcontract',

@@ -180,47 +180,6 @@ public class PaymentService{
 	 * @author koeyyeung
 	 * created on 09 Qct, 2013
 	 * **/
-	private List<PaymentCertWrapper> obtainPaymentCertificateList(PaymentCertWrapper paymentCertWrapper, String dueDateType) throws DatabaseOperationException {
-		List<PaymentCertWrapper> paymentCertWrapperList = new ArrayList<PaymentCertWrapper>();
-		List<PaymentCert> paymentCerts = new ArrayList<PaymentCert>();
-		String username = securityServiceImpl.getCurrentUser().getUsername();
-		
-		/*
-		 * Apply job security
-		 */
-		if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobNo())){
-			if(adminServiceImpl.canAccessJob(username, paymentCertWrapper.getJobNo()))
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
-			else
-				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
-		}else {
-			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
-
-			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
-			}else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
-			else{
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
-			}
-		}
-		
-		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (paymentCerts==null? "0" : paymentCerts.size()));
-		
-		paymentCertWrapperList.addAll(obtainSCPaymentCertWrapperList(paymentCerts));
-		
-		logger.info("scPaymentCertWrapperList size: "+paymentCertWrapperList.size());
-		return paymentCertWrapperList;
-	}
-	
-	/**
-	 * @author koeyyeung
-	 * created on 09 Qct, 2013
-	 * **/
 	private List<PaymentCertWrapper> obtainSCPaymentCertWrapperList(List<PaymentCert> scPaymentCerts) throws DatabaseOperationException{
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<PaymentCertWrapper>();
 		
@@ -2971,7 +2930,46 @@ public class PaymentService{
 		return null;
 	}
 
+	/**
+	 * @author koeyyeung
+	 * created on 09 Qct, 2013
+	 * **/
+	public List<PaymentCertWrapper> obtainPaymentCertificateList(PaymentCertWrapper paymentCertWrapper, String dueDateType) throws DatabaseOperationException {
+		List<PaymentCertWrapper> paymentCertWrapperList = new ArrayList<PaymentCertWrapper>();
+		List<PaymentCert> paymentCerts = new ArrayList<PaymentCert>();
+		String username = securityServiceImpl.getCurrentUser().getUsername();
+		
+		/*
+		 * Apply job security
+		 */
+		if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobNo())){
+			if(adminServiceImpl.canAccessJob(username, paymentCertWrapper.getJobNo()))
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+			else
+				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
+		}else {
+			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
+			
+			List<String> companyList = new ArrayList<String>();
+			for(JobSecurity jobSecurity:jobSecurityList)
+				companyList.add(jobSecurity.getCompany());
 
+			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+			}else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
+				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
+			else{
+				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
+			}
+		}
+		
+		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (paymentCerts==null? "0" : paymentCerts.size()));
+		
+		paymentCertWrapperList.addAll(obtainSCPaymentCertWrapperList(paymentCerts));
+		
+		logger.info("scPaymentCertWrapperList size: "+paymentCertWrapperList.size());
+		return paymentCertWrapperList;
+	}
 
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

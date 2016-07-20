@@ -1,7 +1,10 @@
 
-mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
-	
+mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 
+                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService) {
+	$scope.GlobalParameter = GlobalParameter;
+	$scope.searchDueDateType = 'onOrBefore';
+	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
+	$scope.searchJobNo = $scope.jobNo;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -17,13 +20,21 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'maxInactiveInterval', enableCellEdit: false},
+			             { field: 'jobInfo.company', displayName: 'Company', enableCellEdit: false },
+			             { field: 'jobNo', displayName: 'Job Number', enableCellEdit: false },
+			             { field: 'packageNo', displayName: 'Subcontract Number', enableCellEdit: false},
+			             { field: 'subcontract.vendorNo', displayName: 'Subcontractor Number', enableCellEdit: false},
+			             { field: 'paymentCertNo', displayName: 'Payment Number', enableCellEdit: false},
+			             { field: 'mainContractPaymentCertNo', displayName: 'Main Certificate Number', enableCellEdit: false},
+			             { field: 'subcontract.paymentTerms', displayName: 'Payment Terms', enableCellEdit: false},
+			             { field: 'getValueById("paymentStatus","paymentStatus")', displayName: 'Status', enableCellEdit: false},
+			             { field: 'getValueById("directPayment","directPayment")', displayName: 'Direct Payment', enableCellEdit: false},
+			             { field: 'getValueById("intermFinalPayment","intermFinalPayment")', displayName: 'Interim / Final Payment', enableCellEdit: false},
+			             { field: 'certAmount', displayName: 'Certificate Amount', cellFilter: 'number:2', cellClass: 'text-right', enableCellEdit: false},
+			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date', enableCellEdit: false},
+			             { field: 'asAtDate', cellFilter: 'date', displayName: 'As at Date', enableCellEdit: false},
+			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date', enableCellEdit: false},
+			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date', enableCellEdit: false}	
             			 ]
 	};
 	
@@ -32,18 +43,35 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
+		var paymentCertWrapper = {};
+		paymentCertWrapper.jobInfo = {}
+		console.log($scope.searchJobNo);
+		paymentCertWrapper.jobInfo.jobNumber = $scope.searchJobNo;
+		paymentCertWrapper.jobNo = $scope.searchJobNo;
+		paymentCertWrapper.jobInfo.setCompany = $scope.searchCompany;
+		paymentCertWrapper.subcontract = {};
+		paymentCertWrapper.subcontract.packageNo = $scope.searchPackage;
+		paymentCertWrapper.subcontract.venderNo = $scope.searchVenderNo;
+		paymentCertWrapper.subcontract.paymentTerms = $scope.searchPaymentTerms;
+		paymentCertWrapper.paymentStatus = $scope.searchPaymentStatus;
+		paymentCertWrapper.intermFinalPayment = $scope.searchIntermFinalPayment;
+		paymentCertWrapper.directPayment = $scope.searchDirectPayment;
+		paymentCertWrapper.dueDate = $scope.searchDueDate !== undefined ? new moment($scope.searchDueDate) : null;
+		paymentCertWrapper.certIssueDate = $scope.searchCertIssueDate;
+		
+		var dueDateType = $scope.searchDueDateType !== undefined ? $scope.searchDueDateType : 'ignore';
+		$scope.blockEnquiryPayment.start('Loading...')
+		paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType)
 		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
-		    .then(function(data) {
 				if(angular.isArray(data)){
+					$scope.convertAbbr(data);
 					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
-				}
-			});			
-		})
+				} 
+				$scope.blockEnquiryPayment.stop();
+		}, function(data){
+			$scope.blockEnquiryPayment.stop();
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+		});
 
 	}
 	
@@ -51,5 +79,16 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 		$scope.gridApi.grid.refresh();
 	};
 	$scope.loadGridData();
+	
+	$scope.convertAbbr = function(data){
+    	data.forEach(function(d){
+    		d.getValueById = $scope.getValueById;
+    	})
+    }
+	
+	$scope.getValueById = function(arr, id){
+		var obj = this;
+		return GlobalParameter.getValueById(GlobalParameter[arr], obj[id]);
+	}
 	
 }]);

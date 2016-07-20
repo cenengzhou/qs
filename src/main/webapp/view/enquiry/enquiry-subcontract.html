@@ -1,4 +1,4 @@
-<div class="content-wrapper">
+<div class="content-wrapper" ng-controllor="EnquiryPaymentCtrl">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
@@ -10,13 +10,12 @@
 
 	<!-- Main content -->
 	<section class="content">
-		<div class="row">
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Subcontract Enquiry</h3>
 						<form role="form">
-						<div class="form-group">
+						<div class="form-group">{{searchJobNo}}
 						<label for="searchJobNo">Job Number:</label>
 						<input class="control" type="text" id="searchJobNo" ng-model="searchJobNo" placeholder="Job Number:">
 						<label for="searchMonth">Month:</label>

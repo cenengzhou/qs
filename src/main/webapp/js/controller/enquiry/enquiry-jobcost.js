@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'adlService', 
-                                  function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, adlService) {
+mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 
+                                  function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
 	
@@ -13,6 +13,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			enableFullRowSelection: false,
 			multiSelect: true,
 			showGridFooter : true,
+			showColumnFooter: true,
 			enableCellEditOnFocus : false,
 			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
 			paginationPageSize : 25,
@@ -29,8 +30,14 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'currencyLocal', displayName: 'Currency', enableCellEdit: false},
 			             { field: 'aaAmountPeriod', displayName: 'AA Amount Period', enableCellEdit: false},
 			             { field: 'jiAmountPeriod', displayName: 'JI Amount Period', enableCellEdit: false},
-			             { field: 'aaAmountAccum', displayName: 'AA Amount Accum', cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false},
-			             { field: 'jiAmountAccum', displayName: 'JI Amount Accum', cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false}
+			             { field: 'aaAmountAccum', displayName: 'AA Amount Accum', aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false
+			             },
+			             { field: 'jiAmountAccum', displayName: 'JI Amount Accum', aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>', 
+			            	 cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false
+			             }
             			 ]
 	};
 	

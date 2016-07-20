@@ -14,7 +14,8 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	updatePaymentCert:		updatePaymentCert,
     	submitPayment:			submitPayment,
     	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
-    	runPaymentPosting:		runPaymentPosting
+    	runPaymentPosting:		runPaymentPosting,
+    	obtainPaymentCertificateList:	obtainPaymentCertificateList
     	
     });
 	
@@ -210,6 +211,18 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
     	var request = $http.post("service/payment/runPaymentPosting");
     	return( request.then(handleSuccess, handleError));
     }
+    
+    function obtainPaymentCertificateList(paymentCertWrapper, dueDateType) {
+		var request = $http({
+			method: "post",
+			url: "service/payment/obtainPaymentCertificateList",
+			params: {
+				dueDateType: dueDateType
+			},
+			data: paymentCertWrapper
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
     
    // ---
     // PRIVATE METHODS.

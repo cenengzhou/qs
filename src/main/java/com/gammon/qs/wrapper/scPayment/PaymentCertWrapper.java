@@ -1,9 +1,10 @@
 package com.gammon.qs.wrapper.scPayment;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.wrapper.supplierMaster.SupplierMasterWrapper;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentCertWrapper extends PaymentCertWithGSTWrapper{
 	/**
 	 * koeyyeung

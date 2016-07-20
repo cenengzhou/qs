@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 
 @RestController
@@ -207,4 +209,16 @@ public class PaymentController {
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();
 	}
+	
+	@RequestMapping(value = "obtainPaymentCertificateList", method = RequestMethod.POST)
+	public List<PaymentCertWrapper> obtainPaymentCertificateList(@RequestBody PaymentCertWrapper paymentCertWrapper, @RequestParam String dueDateType){
+		List<PaymentCertWrapper> wrapperList = new ArrayList<PaymentCertWrapper>();
+		try {
+			wrapperList.addAll(paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return wrapperList;
+	}
+
 }

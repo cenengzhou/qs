@@ -34,6 +34,13 @@ mainApp.constant('GlobalParameter', {
 	        }
 	    }
 	},
+	getObjectById: function  (arr, id) {
+	    for (var i = 0; i < arr.length; i++) {
+	        if (arr[i].id === id) {
+	            return arr[i];
+	        }
+	    }
+	},
 	paymentTerms:[
 		{id:"QS0", value: "QS0 - Manual Input Due Date"},
 		{id:"QS1", value: "QS1 - Pay when Paid + 7 days"},
@@ -88,7 +95,7 @@ mainApp.constant('GlobalParameter', {
 		{id:'Percentage - Revised SC Sum', value:'Percentage - Revised SC Sum'},
 		{id:'Lump Sum Amount Retention', value:'Lump Sum Amount Retention'}
 	],
-	paymentStatus: [
+	subcontract_paymentStatus: [
 		{id:'N', value:'N - Not Submitted'},
 		{id:'D', value:'D - Payment Requistion'},
 		{id:'I', value:'I - Interim Payment'},
@@ -141,11 +148,11 @@ mainApp.constant('GlobalParameter', {
 	    {id:'Y', value:'Yes'}
 	],
 	paymentStatus: [
-		{id:'PND', value:'PND - Pending'},
-		{id:'SBM', value:'SBM - Submitted'},
-		{id:'UFR', value:'UFR - Under Review by Finance'},
-		{id:'PCS', value:'PCS - AP Not Created'},
-		{id:'APR', value:'APR - AP Created'}
+		{id:'PND', value:'PND - Pending', color:'#007D00'},
+		{id:'SBM', value:'SBM - Submitted', color:'#E68550'},
+		{id:'UFR', value:'UFR - Under Review by Finance', color:'#E68550'},
+		{id:'PCS', value:'PCS - AP Not Created', color:'#E68550'},
+		{id:'APR', value:'APR - AP Created', color:'#707070'}
 	],
 	intermFinalPayment: [
 		{id:'I', value:'Interim'},
