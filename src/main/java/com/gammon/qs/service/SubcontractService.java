@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -120,6 +121,9 @@ import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardDetailsWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisWrapper;
 import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
@@ -211,7 +215,7 @@ public class SubcontractService {
 	@Autowired
 	private SecurityService securityServiceImpl;
 	@Autowired
-	private SubcontractSnapshotHBDao scPackageSnapshotDao;
+	private SubcontractSnapshotHBDao subcontractSnapshotDao;
 	@Autowired
 	private AttachPaymentHBDao paymentAttachmentDao;
 	@Autowired
@@ -2041,7 +2045,7 @@ public class SubcontractService {
 		 */
 		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
 			if(adminServiceImpl.canAccessJob(username, searchWrapper.getJobNumber()))
-				subcontractList = scPackageSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
+				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
@@ -2057,7 +2061,7 @@ public class SubcontractService {
 				companyList.add(jobSecurity.getCompany());
 
 			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
-				subcontractList = scPackageSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
+				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
@@ -2066,7 +2070,7 @@ public class SubcontractService {
 			}else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
 				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
 			else{
-				subcontractList = scPackageSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
+				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
@@ -5091,7 +5095,7 @@ public class SubcontractService {
 		boolean completed = false;
 		
 		try {
-			completed = scPackageSnapshotDao.callStoredProcedureToGenerateSnapshot();
+			completed = subcontractSnapshotDao.callStoredProcedureToGenerateSnapshot();
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -5694,6 +5698,154 @@ public class SubcontractService {
 	
 	/**
 	 * @author koeyyeung
+	 * modified on 26 Aug, 2014
+	 * add period search from SCPackage Snapshot
+	 * **/
+	public List<SubcontractDashboardWrapper> getSubcontractDashboardData(String jobNo, String subcontractNo, String year) {
+		List<SubcontractDashboardWrapper> subcontractDashboardWrappeList = new ArrayList<SubcontractDashboardWrapper>();
+		try {
+			List<SubcontractSnapshotWrapper> snapshotWrapperList = subcontractSnapshotDao.obtainSubcontractMonthlyStat(jobNo, subcontractNo, year);
+			logger.info("snapshotWrapperList size: "+snapshotWrapperList.size());
+			
+			
+			SubcontractDashboardDetailsWrapper detailCert = new SubcontractDashboardDetailsWrapper();
+			SubcontractDashboardDetailsWrapper detailWD = new SubcontractDashboardDetailsWrapper();
+			SubcontractDashboardDetailsWrapper detailCC = new SubcontractDashboardDetailsWrapper();
+			SubcontractDashboardDetailsWrapper detailMOS = new SubcontractDashboardDetailsWrapper();
+			SubcontractDashboardDetailsWrapper detailRet = new SubcontractDashboardDetailsWrapper();
+			
+			for (SubcontractSnapshotWrapper result: snapshotWrapperList){
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(result.getSnapshotDate());
+				int month = cal.get(Calendar.MONTH)+1;
+				
+				switch (month) {
+				case 1:
+					detailCert.setJan(result.getTotalPostedCertifiedAmount());
+					detailWD.setJan(result.getTotalPostedWorkDoneAmount());
+					detailCC.setJan(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setJan(result.getTotalMOSPostedCertAmount());
+					detailRet.setJan(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 2:
+					detailCert.setFeb(result.getTotalPostedCertifiedAmount());
+					detailWD.setFeb(result.getTotalPostedWorkDoneAmount());
+					detailCC.setFeb(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setFeb(result.getTotalMOSPostedCertAmount());
+					detailRet.setFeb(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 3:
+					detailCert.setMar(result.getTotalPostedCertifiedAmount());
+					detailWD.setMar(result.getTotalPostedWorkDoneAmount());
+					detailCC.setMar(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setMar(result.getTotalMOSPostedCertAmount());
+					detailRet.setMar(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 4:
+					detailCert.setApr(result.getTotalPostedCertifiedAmount());
+					detailWD.setApr(result.getTotalPostedWorkDoneAmount());
+					detailCC.setApr(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setApr(result.getTotalMOSPostedCertAmount());
+					detailRet.setApr(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 5:
+					detailCert.setMay(result.getTotalPostedCertifiedAmount());
+					detailWD.setMay(result.getTotalPostedWorkDoneAmount());
+					detailCC.setMay(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setMay(result.getTotalMOSPostedCertAmount());
+					detailRet.setMay(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 6:
+					detailCert.setJun(result.getTotalPostedCertifiedAmount());
+					detailWD.setJun(result.getTotalPostedWorkDoneAmount());
+					detailCC.setJun(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setJun(result.getTotalMOSPostedCertAmount());
+					detailRet.setJun(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 7:
+					detailCert.setJul(result.getTotalPostedCertifiedAmount());
+					detailWD.setJul(result.getTotalPostedWorkDoneAmount());
+					detailCC.setJul(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setJul(result.getTotalMOSPostedCertAmount());
+					detailRet.setJul(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 8:
+					detailCert.setAug(result.getTotalPostedCertifiedAmount());
+					detailWD.setAug(result.getTotalPostedWorkDoneAmount());
+					detailCC.setAug(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setAug(result.getTotalMOSPostedCertAmount());
+					detailRet.setAug(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 9:
+					detailCert.setSep(result.getTotalPostedCertifiedAmount());
+					detailWD.setSep(result.getTotalPostedWorkDoneAmount());
+					detailCC.setSep(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setSep(result.getTotalMOSPostedCertAmount());
+					detailRet.setSep(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 10:
+					detailCert.setOct(result.getTotalPostedCertifiedAmount());
+					detailWD.setOct(result.getTotalPostedWorkDoneAmount());
+					detailCC.setOct(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setOct(result.getTotalMOSPostedCertAmount());
+					detailRet.setOct(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 11:
+					detailCert.setNov(result.getTotalPostedCertifiedAmount());
+					detailWD.setNov(result.getTotalPostedWorkDoneAmount());
+					detailCC.setNov(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setNov(result.getTotalMOSPostedCertAmount());
+					detailRet.setNov(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				case 12:
+					detailCert.setDec(result.getTotalPostedCertifiedAmount());
+					detailWD.setDec(result.getTotalPostedWorkDoneAmount());
+					detailCC.setDec(result.getTotalCCPostedCertAmount()*-1);
+					detailMOS.setDec(result.getTotalMOSPostedCertAmount());
+					detailRet.setDec(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
+					break;
+				default:
+					break;
+				}
+				
+				
+			}
+			
+			SubcontractDashboardWrapper subcontractDashboardCertWrapper = new SubcontractDashboardWrapper();
+			subcontractDashboardCertWrapper.setCategory("CERT");
+			subcontractDashboardCertWrapper.setSubcontractDashboardDetailWrapper(detailCert);
+			
+			SubcontractDashboardWrapper subcontractDashboardWDWrapper = new SubcontractDashboardWrapper();
+			subcontractDashboardWDWrapper.setCategory("WD");
+			subcontractDashboardWDWrapper.setSubcontractDashboardDetailWrapper(detailWD);
+			
+			SubcontractDashboardWrapper SubcontractDashboardCCWrapper = new SubcontractDashboardWrapper();
+			SubcontractDashboardCCWrapper.setCategory("CC");
+			SubcontractDashboardCCWrapper.setSubcontractDashboardDetailWrapper(detailCC);
+			
+			SubcontractDashboardWrapper subcontractDashboardMOSWrapper = new SubcontractDashboardWrapper();
+			subcontractDashboardMOSWrapper.setCategory("MOS");
+			subcontractDashboardMOSWrapper.setSubcontractDashboardDetailWrapper(detailMOS);
+			
+			SubcontractDashboardWrapper subcontractDashboardRetWrapper = new SubcontractDashboardWrapper();
+			subcontractDashboardRetWrapper.setCategory("RET");
+			subcontractDashboardRetWrapper.setSubcontractDashboardDetailWrapper(detailRet);
+			
+			subcontractDashboardWrappeList.add(subcontractDashboardCertWrapper);
+			subcontractDashboardWrappeList.add(subcontractDashboardWDWrapper);
+			subcontractDashboardWrappeList.add(SubcontractDashboardCCWrapper);
+			subcontractDashboardWrappeList.add(subcontractDashboardMOSWrapper);
+			subcontractDashboardWrappeList.add(subcontractDashboardRetWrapper);
+
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+
+		return subcontractDashboardWrappeList;
+	}
+	
+	/**
+	 * @author koeyyeung
 	 * created on 19 July, 2016
 	 * Subcontract Dashboard Data**/
 	public List<SubcontractDetail> getSubcontractDetailsDashboardData(String jobNo, String subcontractNo) {
@@ -5842,35 +5994,35 @@ public class SubcontractService {
 				subcontractHBDao.addSCPackage(newSubcontract);
 		}else{
 			//check if subcontract is submitted or awarded
-			Subcontract packageInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
-			if(packageInDB != null){
-				if(packageInDB.getSubcontractStatus() != null && packageInDB.getSubcontractStatus() >= 300){
+			Subcontract subcontractInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
+			if(subcontractInDB != null){
+				if(subcontractInDB.getSubcontractStatus() != null && subcontractInDB.getSubcontractStatus() >= 300){
 					return "Subcontract has been awarded or submitted.";
 				}
 				
-				packageInDB.setDescription(subcontract.getDescription());
-				packageInDB.setWorkscope(subcontract.getWorkscope());
-				packageInDB.setSubcontractorNature(subcontract.getSubcontractorNature());
-				packageInDB.setSubcontractTerm(subcontract.getSubcontractTerm());
-				packageInDB.setFormOfSubcontract(subcontract.getFormOfSubcontract());
-				packageInDB.setInternalJobNo(subcontract.getInternalJobNo());
-				packageInDB.setRetentionTerms(subcontract.getRetentionTerms());
-				packageInDB.setPaymentTerms(subcontract.getPaymentTerms());
-				packageInDB.setPaymentTermsDescription(subcontract.getPaymentTermsDescription());
-				packageInDB.setRetentionAmount(subcontract.getRetentionAmount());
-				packageInDB.setMaxRetentionPercentage(subcontract.getMaxRetentionPercentage());
-				packageInDB.setInterimRentionPercentage(subcontract.getInterimRentionPercentage());
-				packageInDB.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
-				packageInDB.setLabourIncludedContract(subcontract.getLabourIncludedContract());
-				packageInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
-				packageInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
-				packageInDB.setNotes(subcontract.getNotes());
-				packageInDB.setApprovalRoute(subcontract.getApprovalRoute());
-				packageInDB.setCpfCalculation(subcontract.getCpfCalculation());
-				packageInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
-				packageInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
+				subcontractInDB.setDescription(subcontract.getDescription());
+				subcontractInDB.setWorkscope(subcontract.getWorkscope());
+				subcontractInDB.setSubcontractorNature(subcontract.getSubcontractorNature());
+				subcontractInDB.setSubcontractTerm(subcontract.getSubcontractTerm());
+				subcontractInDB.setFormOfSubcontract(subcontract.getFormOfSubcontract());
+				subcontractInDB.setInternalJobNo(subcontract.getInternalJobNo());
+				subcontractInDB.setRetentionTerms(subcontract.getRetentionTerms());
+				subcontractInDB.setPaymentTerms(subcontract.getPaymentTerms());
+				subcontractInDB.setPaymentTermsDescription(subcontract.getPaymentTermsDescription());
+				subcontractInDB.setRetentionAmount(subcontract.getRetentionAmount());
+				subcontractInDB.setMaxRetentionPercentage(subcontract.getMaxRetentionPercentage());
+				subcontractInDB.setInterimRentionPercentage(subcontract.getInterimRentionPercentage());
+				subcontractInDB.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
+				subcontractInDB.setLabourIncludedContract(subcontract.getLabourIncludedContract());
+				subcontractInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
+				subcontractInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				subcontractInDB.setNotes(subcontract.getNotes());
+				subcontractInDB.setApprovalRoute(subcontract.getApprovalRoute());
+				subcontractInDB.setCpfCalculation(subcontract.getCpfCalculation());
+				subcontractInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
+				subcontractInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
 				
-				subcontractHBDao.update(packageInDB);
+				subcontractHBDao.update(subcontractInDB);
 			}
 
 		}
@@ -5954,6 +6106,7 @@ public class SubcontractService {
 		logger.info("NUMBER OF RECORDS(SCLISTWRAPPER):" + scListWrapperList.size());
 		return scListWrapperList;
 	}
+
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 

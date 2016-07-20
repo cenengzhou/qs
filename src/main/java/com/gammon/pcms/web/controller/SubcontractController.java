@@ -29,6 +29,7 @@ import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 
 @RestController
 @RequestMapping(value = "service/subcontract/"/*,
@@ -109,6 +110,15 @@ public class SubcontractController {
 			e.printStackTrace();
 		}
 		return scDetails;
+	}
+	
+	@RequestMapping(value = "getSubcontractDashboardData", method = RequestMethod.GET)
+	public List<SubcontractDashboardWrapper> getSubcontractDashboardData(@RequestParam(required =true) String jobNo, 
+																@RequestParam(required =true) String subcontractNo, 
+																@RequestParam(required =true) String year){
+		List<SubcontractDashboardWrapper> subcontractDashboardWrapperList = null;
+		subcontractDashboardWrapperList = subcontractService.getSubcontractDashboardData(jobNo, subcontractNo, year);
+		return subcontractDashboardWrapperList;
 	}
 	
 	@RequestMapping(value = "getSubcontractDetailsDashboardData", method = RequestMethod.GET)

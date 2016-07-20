@@ -2,38 +2,22 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
                                        function($scope, colorCode, subcontractService) {
 	$scope.paymentAmount = 100256;
 
-
-	$scope.lineChartParameters = {
-			labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-			series : ['Work Done', 'Payment', 'Contra Charge',  'Material On Site', 'Retention Balance'],
-			data : [
-			        [50000, 80000, 110000, 120000, 180000, 230000, 250000, 278000, 298000, 360000, 380000, 400000],
-			        [30000, 60000, 90000, 120000, 150000, 200000, 220000, 228000, 228000, 260000, 280000, 280000],
-			        [0, 0, 0, 0, 0, 0, 50000, 80000, 100000, 100000, 100000, 100000],
-			        [15000, 18000, 21000, 31000, 41000, 48000, 58000, 60000, 60000, 60000, 60000, 60000],
-			        [5000, 8000, 11000, 12000, 18000, 23000, 25000, 25000, 25000, 25000, 25000, 25000]
-			        ],
-			        options : {
-			        	showScale : true,
-			        	showTooltips : true,
-			        	responsive : true,
-			        	/*maintainAspectRatio : true,*/
-			        	pointDot : true,
-			        	bezierCurve : true,
-			        	datasetFill : false,
-			        	animation : true,
-			        	scaleLabel: " <%= Number(value / 1000) + ' K'%>"
-
-			        }
-
-	};
-
 	//Chart.defaults.global.colours = [colorCode.blue, colorCode.red, colorCode.green, colorCode.pink, colorCode.purple];
 
 	loadData();
-	
+
+	$scope.getDashboardDataByYear = function (year){
+		$scope.selectedYear = year;
+		getSubcontractDashboardData(year);
+	}
+
 	function loadData(){
 		getSubcontract();
+		var year =  new Date().getFullYear();
+		$scope.selectedYear = year;
+		$scope.yearList = [year, year-1, year-2];
+		console.log($scope.yearList);
+		getSubcontractDashboardData(year);
 		getSubcontractDetailsDashboardData();
 	}
 
@@ -41,7 +25,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
+					console.log(data);
 					$scope.subcontract = data;
 					$scope.revisedSCSum = data.remeasuredSubcontractSum + data.approvedVOAmount;
 
@@ -72,12 +56,72 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 				});
 	}
 
+	function getSubcontractDashboardData(year){
+		subcontractService.getSubcontractDashboardData($scope.jobNo, $scope.subcontractNo, year)
+		.then(
+				function( data ) {
+					console.log(data);
+					if(data.length > 0){
+						var certData = null;
+						var wdData = null;
+						var ccData = null;
+						var mosData = null
+						var retData = null;
+						
+						angular.forEach(data, function(value, key){
+							if(value.category =="CERT"){
+								certData = value.subcontractDashboardDetailWrapper;
+							}else if(value.category =="WD"){
+								wdData = value.subcontractDashboardDetailWrapper;
+							}else if(value.category =="CC"){
+								ccData = value.subcontractDashboardDetailWrapper;
+							}else if(value.category =="MOS"){
+								mosData = value.subcontractDashboardDetailWrapper;
+							}else if(value.category =="RET"){
+								retData = value.subcontractDashboardDetailWrapper;
+							}
+						});
+
+						console.log(certData);
+						console.log(wdData);
+						console.log(ccData);
+						console.log(retData);
+
+						$scope.lineChartParameters = {
+								labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+								series : ['Work Done', 'Payment', 'Contra Charge',  'Material On Site', 'Retention Balance'],
+								data : [
+								        [wdData.jan, wdData.feb, wdData.mar, wdData.apr, wdData.may, wdData.jun, wdData.jul, wdData.aug, wdData.sep, wdData.oct, wdData.nov, wdData.dec],
+								        [certData.jan, certData.feb, certData.mar, certData.apr, certData.may, certData.jun, certData.jul, certData.aug, certData.sep, certData.oct, certData.nov, certData.dec],
+								        [ccData.jan, ccData.feb, ccData.mar, ccData.apr, ccData.may, ccData.jun, ccData.jul, ccData.aug, ccData.sep, ccData.oct, ccData.nov, ccData.dec],
+								        [mosData.jan, mosData.feb, mosData.mar, mosData.apr, mosData.may, mosData.jun, mosData.jul, mosData.aug, mosData.sep, mosData.oct, mosData.nov, mosData.dec],
+								        [retData.jan, retData.feb, retData.mar, retData.apr, retData.may, retData.jun, retData.jul, retData.aug, retData.sep, retData.oct, retData.nov, retData.dec],
+								        ],
+								        options : {
+								        	showScale : true,
+								        	showTooltips : true,
+								        	responsive : true,
+								        	/*maintainAspectRatio : true,*/
+								        	pointDot : true,
+								        	bezierCurve : true,
+								        	datasetFill : false,
+								        	animation : true,
+								        	scaleLabel: " <%= Number(value / 1000) + ' K'%>"
+
+								        }
+
+						};
+					}
+
+				});
+	}
+
 	function getSubcontractDetailsDashboardData(){
 		subcontractService.getSubcontractDetailsDashboardData($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
-					
+					//console.log(data);
+
 					//Chart: Subcontract Details Distribution
 					var barChartJson = {
 							labels : [''],
@@ -125,31 +169,30 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 							}
 
 					};
-					
+
 					angular.forEach(data, function(value, key){
 						if(value.lineType == "BQ"){
 							barChartJson.bqData.push(
 									[value.amountBudget],[value.amountPostedCert], [value.amountPostedWD]
 							);
 						}else if(value.lineType == "VO"){
-							console.log(value.amountBudget, value.amountPostedCert, value.amountPostedWD);
 							if(value.amountBudget == 0)
 								value.amountBudget = 0.0001
-							if(value.amountPostedCert == 0)
-								value.amountPostedCert = 0.0001
-							if(value.amountPostedWD == 0)
-									value.amountPostedWD = 0.0001
-							barChartJson.voData.push(
-									[value.amountBudget],[value.amountPostedCert], [value.amountPostedWD]
-							);	
+								if(value.amountPostedCert == 0)
+									value.amountPostedCert = 0.0001
+									if(value.amountPostedWD == 0)
+										value.amountPostedWD = 0.0001
+										barChartJson.voData.push(
+												[value.amountBudget],[value.amountPostedCert], [value.amountPostedWD]
+										);	
 						}
 					});
-					
+
 
 					$scope.barChartParameters = barChartJson;
-						
+
 				});
 	}
-	
-	
+
+
 }]);

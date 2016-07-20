@@ -6,6 +6,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getWorkScope: 						getWorkScope,
     	getSCDetails:						getSCDetails,
     	getSubcontractDetailsDashboardData:	getSubcontractDetailsDashboardData,
+    	getSubcontractDashboardData:		getSubcontractDashboardData,
     	upateSubcontract: 					upateSubcontract,
     	upateSubcontractDates: 				upateSubcontractDates,
     	submitAwardApproval:				submitAwardApproval,
@@ -80,6 +81,20 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getSubcontractDashboardData(jobNo, subcontractNo, year) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDashboardData",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo, 
+            	year: year
             }
         });
         return( request.then( handleSuccess, handleError ) );

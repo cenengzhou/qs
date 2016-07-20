@@ -9,9 +9,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,7 @@ import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.util.DateUtil;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
 
 /**
  * koeyyeung
@@ -106,6 +109,43 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		return result;
 	}
 
+	/**
+	 * @author koeyyeung
+	 * created on 20 Jul,2016
+	 * Subcontract Dashboard**/
+	@SuppressWarnings("unchecked")
+	public List<SubcontractSnapshotWrapper> obtainSubcontractMonthlyStat(String jobNo, String subcontractNo, String year) throws DatabaseOperationException {
+		try{			
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+			criteria.createAlias("jobInfo", "jobInfo");
+			if (jobNo!=null && !"".equals(jobNo))
+				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+			
+			criteria.add(Restrictions.eq("packageNo", subcontractNo));
+			criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-01-"+year, "dd-MM-yyyy")));
+			criteria.add(Restrictions.le("snapshotDate", DateUtil.parseDate("31-12-"+year, "dd-MM-yyyy")));
+
+			
+			ProjectionList projectionList = Projections.projectionList();
+			projectionList.add(Projections.sum("totalPostedCertifiedAmount"), "totalPostedCertifiedAmount");
+			projectionList.add(Projections.sum("totalPostedWorkDoneAmount"), "totalPostedWorkDoneAmount");
+			projectionList.add(Projections.sum("totalCCPostedCertAmount"), "totalCCPostedCertAmount");
+			projectionList.add(Projections.sum("totalMOSPostedCertAmount"), "totalMOSPostedCertAmount");
+			projectionList.add(Projections.sum("accumlatedRetention") , "totalAccumlatedRetention");
+			projectionList.add(Projections.sum("retentionReleased") , "totalRetentionReleased");
+			
+			projectionList.add(Projections.groupProperty("snapshotDate"), "snapshotDate");
+			criteria.setProjection(projectionList);
+			
+			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotWrapper.class));
+			
+			return criteria.list();
+		}catch (HibernateException he){
+			throw new DatabaseOperationException(he);
+		}
+	}
+	
 	private Date obtainSnapshotDate(String month, String year){
 		Date startDate = DateUtil.parseDate("01-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
 		Date endDate = DateUtil.parseDate("31-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");

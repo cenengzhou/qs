@@ -1,19 +1,77 @@
 <div id="content" class="content">
-		<!-- begin breadcrumb -->
-		<ol class="breadcrumb pull-right">
-			<li><a ui-sref = "job.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Dashboard</li>
-		</ol>
-		<!-- end breadcrumb -->
-		
-		<h1 class="page-header">{{jobNo}}<small> {{jobDescription}}</small></h1>
-		<div class="row">
-			<div class="col-md-7">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol>
+	<!-- end breadcrumb -->
 
-				
-				
-				<div class="col-md-12">
-					<div class="box">
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+	<div class="row">
+		<div class="col-md-7">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-inverse"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-inverse"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h3 class="panel-title">
+						<b>Subcontract {{subcontractNo}} - </b>{{subcontractDescription}}
+					</h3>
+					<h3 class="panel-title">Payment Terms:
+						{{subcontract.paymentTerms}}</h3>
+				</div>
+				<div class="panel-body">
+					<div class="panel-option bg-white">
+						<div class="dropdown pull-right">
+							<a href="javascript:;" class="btn btn-primary btn-rounded btn-sm"
+								data-toggle="dropdown">Year {{selectedYear}} <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="year in yearList">
+									<a ng-click="getDashboardDataByYear(year)">{{year}}</a>
+								</li>
+							</ul>
+						</div>
+						<div class="text-center">Date: 1 November 2015 - 30 November
+							2015</div>
+					</div>
+
+					<div class="chart">
+						<canvas id="line" class="chart chart-line"
+							chart-data="lineChartParameters.data"
+							chart-labels="lineChartParameters.labels" chart-legend="true"
+							chart-series="lineChartParameters.series"
+							chart-options="lineChartParameters.options" height="190">
+						           	</canvas>
+					</div>
+
+					<!-- <div class="col-md-12 col-xs-12">
+						<span>Work Done Amount</span> <span class="pull-right"><b>$400K</b>
+							out of $53895K</span>
+
+						<div class="progress m-b-10">
+							<div class="progress-bar progress-bar-aqua" style="width: 40%"></div>
+						</div>
+						<span>Payment Amount</span> <span class="pull-right"><b>$280K</b>
+							out of $53895K</span>
+
+						<div class="progress m-b-10">
+							<div class="progress-bar progress-bar-danger" style="width: 80%"></div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+
+
+
+			<!-- <div class="box">
 						<div class="box-header with-border">
 							<h3 class="box-title">
 								<b>Subcontract {{subcontractNo}} - </b> <small>{{subcontractDescription}}</small>
@@ -23,7 +81,7 @@
 							</h3>
 							
 						</div>
-						<!-- /.box-header -->
+
 						<div class="box-body">
 							<div class="row">
 								<div class="col-md-12 col-xs-12">
@@ -32,7 +90,6 @@
 									</p>
 
 									<div class="chart">
-										<!-- height: "10px" -->
 										<canvas id="line" class="chart chart-line"
 											chart-data="lineChartParameters.data"
 											chart-labels="lineChartParameters.labels"
@@ -41,7 +98,6 @@
 											chart-options="lineChartParameters.options" height="190">
 						           	</canvas>
 									</div>
-									<!-- /.chart-responsive -->
 								</div>
 		
 								<br>
@@ -60,107 +116,103 @@
 					                        <div class="progress-bar progress-bar-danger" style="width: 80%"></div>
 					                    </div>
 								</div>
-								<!-- /.col -->
 							</div>
-							<!-- /.row -->
 						</div>
-						<!-- ./box-body -->
+					</div> -->
+
+		</div>
+
+
+
+
+
+
+		<div class="col-md-5">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="small-box bg-primary">
+						<div class="inner">
+							<h3>{{revisedSCSum | currency}}</h3>
+
+							<p>Revised Subcontract Sum</p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-calculator"></i>
+						</div>
+					</div>
+					<!-- TABLE: LATEST ORDERS -->
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">Subcontract Distribution</h3>
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body">
+							<div class="col-md-12">
+								<canvas id="pie" class="chart chart-pie"
+									chart-data="subcontractPieChart.data"
+									chart-labels="subcontractPieChart.labels"
+									chart-options="subcontractPieChart.options"
+									chart-colours="subcontractPieChart.colours" height="80">
+									<!--100  -->
+									</canvas>
+							</div>
+							<div class="col-md-12">
+								<ul class="chart-legend clearfix">
+									<li class="pull-left"><i class="fa fa-circle text-aqua"></i>
+										<label>Original Subcontract Sum :
+											{{subcontract.originalSCSum | currency}}</label></li>
+									<li class="pull-left"><i class="fa fa-circle text-aqua"></i>
+										<label>{{subcontractPieChart.labels[0]}} :
+											{{subcontractPieChart.data[0] | currency}}</label></li>
+									<li class="pull-left"><i class="fa fa-circle text-green"></i>
+										<label>{{subcontractPieChart.labels[1]}}:
+											{{subcontractPieChart.data[1] | currency}}</label></li>
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div>
 
-
-			</div>
-
-
-
-
-
-
-			<div class="col-md-5 connectedSortable">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="small-box bg-primary">
-							<div class="inner">
-								<h3>{{revisedSCSum | currency}}</h3>
-		
-								<p>Revised Subcontract Sum</p>
-							</div>
-							<div class="icon">
-								<i class="ion ion-calculator"></i>
-							</div>
-						</div>
-						<!-- TABLE: LATEST ORDERS -->
+				<div class="col-md-12">
+					<div class="box">
 						<div class="box box-primary">
 							<div class="box-header with-border">
-								<h3 class="box-title">Subcontract Distribution</h3>
+								<h3 class="box-title">Core Subcontract Details Distribution
+									(Amount)</h3>
 							</div>
-							<!-- /.box-header -->
 							<div class="box-body">
-								<div class="col-md-12">
-									<canvas id="pie" class="chart chart-pie"
-										chart-data="subcontractPieChart.data"
-										chart-labels="subcontractPieChart.labels"
-										chart-options="subcontractPieChart.options" 
-										chart-colours="subcontractPieChart.colours" height="80"><!--100  -->
-									</canvas>
-								</div>
-								<div class="col-md-12">
-									<ul class="chart-legend clearfix">
-										<li class="pull-left"><i class="fa fa-circle text-aqua"></i>
-											<label>{{subcontractPieChart.labels[0]}} :
-												{{subcontractPieChart.data[0] | currency}}</label></li>
-										<li class="pull-left"><i class="fa fa-circle text-green"></i>
-											<label>{{subcontractPieChart.labels[1]}}:
-												{{subcontractPieChart.data[1] | currency}}</label></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="box">
-							<div class="box box-primary">
-								<div class="box-header with-border">
-									<h3 class="box-title">Core Subcontract Details
-										Distribution (Amount)</h3>
-								</div>
-								<div class="box-body">
-									<div class="row">
-										<div class="col-md-6 col-xs-12">
-											<!-- <canvas id="doughnut" class="chart chart-doughnut"
+								<div class="row">
+									<div class="col-md-6 col-xs-12">
+										<!-- <canvas id="doughnut" class="chart chart-doughnut"
 										chart-data="bq.data"
 										chart-labels="bq.labels" chart-legend="true"
 										height="130">
 										</canvas> -->
-											<canvas id="bar" class="chart chart-bar"
-												chart-data="barChartParameters.bqData"
-												chart-labels="barChartParameters.labels"
-												chart-colours="barChartParameters.colours"
-												chart-series="barChartParameters.series"
-												chart-options="barChartParameters.options" 
-												chart-legend="true"
-												height="150">
+										<canvas id="bar" class="chart chart-bar"
+											chart-data="barChartParameters.bqData"
+											chart-labels="barChartParameters.labels"
+											chart-colours="barChartParameters.colours"
+											chart-series="barChartParameters.series"
+											chart-options="barChartParameters.options"
+											chart-legend="true" height="150">
 									</canvas>
-											<p class="text-center">
-												<strong>BQ</strong>
-											</p>
-										</div>
-										<!-- ./col -->
-										<div class="col-md-6 col-xs-12">
-											<canvas id="bar" class="chart chart-bar"
-												chart-data="barChartParameters.voData"
-												chart-labels="barChartParameters.labels"
-												chart-colours="barChartParameters.colours"
-												chart-series="barChartParameters.series"
-												chart-options="barChartParameters.options" 
-												chart-legend="true"
-												height="150">
+										<p class="text-center">
+											<strong>BQ</strong>
+										</p>
+									</div>
+									<!-- ./col -->
+									<div class="col-md-6 col-xs-12">
+										<canvas id="bar" class="chart chart-bar"
+											chart-data="barChartParameters.voData"
+											chart-labels="barChartParameters.labels"
+											chart-colours="barChartParameters.colours"
+											chart-series="barChartParameters.series"
+											chart-options="barChartParameters.options"
+											chart-legend="true" height="150">
 									</canvas>
-											<p class="text-center">
-												<strong>Addendum</strong>
-											</p>
-										</div>
+										<p class="text-center">
+											<strong>Addendum</strong>
+										</p>
 									</div>
 								</div>
 							</div>
@@ -168,9 +220,10 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
-		
-				
-		
+
+	</div>
+
+
+
 </div>
