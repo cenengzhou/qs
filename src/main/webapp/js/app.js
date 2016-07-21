@@ -790,9 +790,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	         	'js/service/payment-service.js',
                	         	'js/service/subcontract-service.js',
                	         	'js/service/adl-service.js',
-//               	         	'js/service/subcontract-service.js',
-//               	         	'js/service/subcontract-service.js',
-               	         	
+               	         	'js/service/unit-service.js',
+               	         	'js/service/subcontractor-service.js'               	         	
                     ] 
                 });
             }]

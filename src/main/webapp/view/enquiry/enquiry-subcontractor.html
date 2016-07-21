@@ -1,4 +1,4 @@
-<div class="content-wrapper">
+<div class="content-wrapper" ng-controller="EnquirySubcontractorCtrl">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
@@ -15,8 +15,25 @@
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Subcontractor Enquiry</h3>
-						
-						<div class="col-md-12">
+						<form role="form" class="form" ng-submit="loadGridData()">
+							<div class="form-group">
+								<div class="col-md-4">
+									<label for="searchSubcontractorNo">Subcontractor Number:</label>
+									<input type="text" id="searchWorkScopes" class="form-control" ng-model="searchSubcontractorNo">
+								</div>
+								<div class="col-md-4">
+								<label for="searchWorkScopes">Work Scope (Trade)</label>
+									<select class="form-control" id="searchWorkScopes" ng-model="searchWorkScopes" ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
+										<option value="">All</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label for="searchSubmit">&nbsp;</label>
+									<button = type="submit" class="form-control btn btn-primary">Search</button>
+								</div>
+							</div>
+						</form>
+						<div class="col-md-12" block-ui="blockEnquirySubcontractor">
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
 									resize ng-style="resizeWithOffset(215)"></div>

@@ -178,7 +178,38 @@ mainApp.constant('GlobalParameter', {
        {id:'10', value:'October'},
        {id:'11', value:'November'},
        {id:'12', value:'December'}
-    ]
+    ],
+    subcontractorVenderType: [
+       {id:1, value:'Supplier'},
+       {id:2, value:'Subcontractor'},
+       {id:3, value:'Both (Supplier & Subcontractor)'}
+    ],
+    subcontractorVendorStatus: [
+       {id:'1', value:'Performance being observed'},
+       {id:'2', value:'Suspended'},
+       {id:'3', value:'Blacklisted'},
+       {id:'4', value:'Obsolete'},
+       {id:'5', value:'On HSE League Table'},
+       {id:'6', value:'Observed & On HSE League'},
+       {id:'7', value:'Suspended & On HSE League'}
+	],
+	subcontractorApproval: [
+	   {id:'N', value:'No'},
+	   {id:'Y', value:'Yes'},
+	   {id:'', value:'-'}
+	],
+	subcontractorHoldPayment: [
+	   {id:'N', value:'No'},
+	   {id:'Y', value:'Yes'},
+	   {id:'', value:'-'}
+	],
+	subcontractorFinancialAlertStatus: function(status){
+		if(status !== null && status.length > 0){
+			return 'Yes';
+		}
+		return 'No';
+	}
+	   
 });
 
 mainApp.constant('GlobalMessage', {
