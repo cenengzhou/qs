@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,16 +56,15 @@ public class SubcontractController {
 		return subcontractList;
 	}*/
 	
-	@RequestMapping(value = "getSubcontractList", method = RequestMethod.GET)
-	public List<Subcontract> getSubcontractList(@RequestParam(required =true) String jobNo){
-		List<Subcontract> subcontractList = null;
-		try{
-			subcontractList = subcontractService.obtainSubcontractList(jobNo);
-		} catch (Exception e){
-			logger.error("Database Exception: ");
+	@RequestMapping(value = "getSubcontractList",
+					method = RequestMethod.GET)
+	public List<Subcontract> getSubcontractList(@RequestParam(required = true) String jobNo) {
+		try {
+			return subcontractService.getSubcontractList(jobNo);
+		} catch (Exception e) {
 			e.printStackTrace();
+			return new ArrayList<Subcontract>();
 		}
-		return subcontractList;
 	}
 	
 	@RequestMapping(value = "obtainSubcontractListWithSCListWrapper", method = RequestMethod.POST)

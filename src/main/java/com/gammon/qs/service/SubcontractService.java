@@ -6082,12 +6082,11 @@ public class SubcontractService {
 	}
 
 	
-
-	public List<Subcontract> obtainSubcontractList(String jobNumber) throws DataAccessException {
-		if(adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNumber)){
-			return subcontractHBDao.obtainSubcontractList(jobNumber);
-		}
-		return null;
+	public List<Subcontract> getSubcontractList(String jobNo) throws DataAccessException {
+		if (adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNo))
+			return subcontractHBDao.findSubcontractList(jobNo);
+		else
+			return new ArrayList<Subcontract>();
 	}
 	
 	/**

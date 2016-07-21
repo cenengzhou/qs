@@ -24,22 +24,13 @@ public class AccountBalance implements Serializable {
 
 	private static final long serialVersionUID = -9074679324371187968L;
 	
-	/**
-	 * Actual Cost (Subcontract in SCRate + Labor, Plant, Material and Others CostRate)
-	 */
-	public static final String TYPE_LEDGER_AA = "AA";
-	/**
-	 * Turnover / Internal Valuation / Work Done (Subcontract CostRate + Labor, Plant, Material and Others in CostRate)
-	 */
-	public static final String TYPE_LEDGER_JI = "JI";
-	/**
-	 * Original Budget posted right after Transit is completed (Budget + Margin account code 199999.9XXXXXXX)
-	 */
-	public static final String TYPE_LEDGER_OB = "OB";
-	/**
-	 * Original Budget posted right after Transit is completed (Budget only, not including Margin account code 199999.9XXXXXXX)
-	 */
-	public static final String TYPE_LEDGER_OC = "OC";
+	public static enum TYPE_LEDGER {
+									AA, // Actual Cost (Subcontract in SCRate + Labor, Plant, Material and Others CostRate)
+									JI, // Turnover / Internal Valuation / Work Done (Subcontract CostRate + Labor, Plant, Material and Others in CostRate)
+									OB, // Original Budget posted right after Transit is completed (Budget + Margin account code 199999.9XXXXXXX)
+									OC // Original Budget posted right after Transit is completed (Budget only, not including Margin account code 199999.9XXXXXXX)
+	}
+	
 	public static final String CODE_OBJECT_TURNOVER = "221110";
 	public static final String CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX = "2312";
 	public static final String CODE_OBJECT_EMPTY = "      ";

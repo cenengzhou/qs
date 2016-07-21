@@ -125,9 +125,9 @@ public class ADLService {
 												BigDecimal yearEnd,
 												String noJob) {
 
-		List<AccountBalance> contractReceivableList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_AA, noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-		List<AccountBalance> turnoverList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_AA, noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER_OB, noJob);
+		List<AccountBalance> contractReceivableList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+		List<AccountBalance> turnoverList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.OB.toString(), noJob);
 
 		return new JobDashboardDTO(contractReceivableList, turnoverList, originalBudgetList, null);
 	}

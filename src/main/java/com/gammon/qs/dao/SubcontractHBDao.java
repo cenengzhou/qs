@@ -673,13 +673,20 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		}
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Subcontract> obtainSubcontractList(String jobNumber) throws DataAccessException {
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-			return (List<Subcontract>) criteria.list();
+	public List<Subcontract> findSubcontractList(String jobNumber) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+
+		// Join
+		criteria.createAlias("jobInfo", "jobInfo");
+
+		// Where
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+
+		// Order by
+		criteria.addOrder(Order.asc("packageNo"));
+		return (List<Subcontract>) criteria.list();
 	}
 
 	
