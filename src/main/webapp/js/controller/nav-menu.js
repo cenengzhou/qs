@@ -1,5 +1,5 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope', '$cookieStore', '$stateParams', 
-                                   function($http, $scope, $location, $rootScope, $cookieStore, $stateParams) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope', '$cookieStore', '$stateParams', 'masterListService', 'modalService',
+                                   function($http, $scope, $location, $rootScope, $cookieStore, $stateParams, masterListService, modalService) {
 	if($stateParams.jobNo){
 		$cookieStore.put('jobNo', $stateParams.jobNo);
 		$cookieStore.put('jobDescription', $stateParams.jobDescription);
@@ -82,4 +82,87 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 //			      $('#userImage').find('img').attr('src', base64Img);  
 //			   
 //			});
+	
+	$scope.ObjectCodeGridOptions = {
+			enableFiltering: true,
+			enableColumnResizing : true,
+			enableGridMenu : false,
+			enableRowSelection: false,
+			enableSelectAll: false,
+			enableFullRowSelection: true,
+			multiSelect: false,
+			showGridFooter : false,
+			enableCellEditOnFocus : false,
+			allowCellFocus: false,
+			enableCellSelection: false,
+			columnDefs: [
+			             { field: 'objectCode', displayName: "Code", width: '80', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '120', enableCellEdit: false }
+            			 ]
+	};
+	
+	$scope.ObjectCodeGridOptions.onRegisterApi = function (gridApi) {
+		  $scope.ObjectCodeGridApi = gridApi;
+		  $scope.ObjectCodeGridApi.grid.refresh();
+	}
+	
+	$scope.ObjectCodeloadGridData = function(){
+//		$scope.blockEnquiryClient.start('Loading...')
+			masterListService.searchObjectList('*')
+		    .then(function(data) {
+				if(angular.isArray(data)){
+					$scope.ObjectCodeGridOptions.data = data;
+//					$scope.blockEnquiryClient.stop();
+				}
+		}, function(data){
+//			$scope.blockEnquiryClient.stop();
+//			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+		})
+
+	}
+	
+	$scope.SubsidiaryCodeGridOptions = {
+			enableFiltering: true,
+			enableColumnResizing : true,
+			enableGridMenu : false,
+			enableRowSelection: false,
+			enableSelectAll: false,
+			enableFullRowSelection: true,
+			multiSelect: false,
+			showGridFooter : false,
+			enableCellEditOnFocus : false,
+			allowCellFocus: false,
+			enableCellSelection: false,
+			columnDefs: [
+			              { field: 'subsidiaryCode', displayName: "Code", width: '80', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '120', enableCellEdit: false }
+            			 ]
+	};
+	
+	$scope.SubsidiaryCodeGridOptions.onRegisterApi = function (gridApi) {
+		  $scope.SubsidiaryCodeGridApi = gridApi;
+		  $scope.SubsidiaryCodeGridApi.grid.refresh();
+	}
+	
+	$scope.SubsidiaryCodeloadGridData = function(){
+//		$scope.blockEnquiryClient.start('Loading...')
+			masterListService.searchSubsidiaryList('*')
+		    .then(function(data) {
+				if(angular.isArray(data)){
+					$scope.SubsidiaryCodeGridOptions.data = data;
+//					$scope.blockEnquiryClient.stop();
+				}
+		}, function(data){
+//			$scope.blockEnquiryClient.stop();
+//			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+		})
+	}
+	
+	$scope.filter = function() {
+		$scope.ObjectCodeGridApi.grid.refresh();
+		$scope.SubsidiaryCodeGridApi.grid.refresh();
+	};
+	
+	$scope.ObjectCodeloadGridData();
+	$scope.SubsidiaryCodeloadGridData();
 }]);

@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                   function($scope, $rootScope, $http, modalService, blockUI, SessionHelper) {
+mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 
+                                   function($scope, $rootScope, $http, modalService, blockUI, unitService) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -17,13 +17,8 @@ mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'maxInactiveInterval', enableCellEdit: false},
+			             { field: 'code', displayName: "Code", enableCellEdit: false },
+			             { field: 'description', displayName: "Description", enableCellEdit: false }
             			 ]
 	};
 	
@@ -32,18 +27,15 @@ mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
-		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
+		unitService.getAllWorkScopes()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
-				}
-			});			
-		})
+				} 
+		}, function(data){
+			$scope.blockEnquirySubcontractor.stop();
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+		});
 
 	}
 	

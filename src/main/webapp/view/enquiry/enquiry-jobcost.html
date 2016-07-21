@@ -11,20 +11,37 @@
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-md-12" block-ui="blockJobCost">
-			
+			<div class="col-md-12">
+
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Job Cost Enquiry</h3>
-						
-						<div class="col-md-12">
-								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
-									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(250)"></div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<label for="searchJobNo">Job Number:</label>
+								<input type="text" class="form-control">
+							</div>
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-4">
+							</div>
+						</div>
+							<div class="col-md-12" block-ui="blockJobCost">
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler"
+									ui-grid-resize-columns ui-grid-pagination ui-grid-selection
+									ui-grid-cellnav ui-grid-edit class="grid" resize
+									ng-style="resizeWithOffset(250)"></div>
+							</div>
+					
 					</div>
 				</div>
 			</div>
-		</div>
 		</div>
 	</section>
 

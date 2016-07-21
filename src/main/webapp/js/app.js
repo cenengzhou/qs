@@ -14,6 +14,16 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('navigation', {
 	    templateUrl: 'navigation-menu.html',
 	    abstract: true,
+	    resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/service/master-list-service.js'
+                    ] 
+                });
+            }]
+        },
 	  })
 	  
 	
@@ -774,7 +784,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-               	         	'js/controller/enquiry/enquiry-accountcode.js',
                	         	'js/controller/enquiry/enquiry-accountledger.js',
                	         	'js/controller/enquiry/enquiry-client.js',
                	         	'js/controller/enquiry/enquiry-internalvaluationposting.js',

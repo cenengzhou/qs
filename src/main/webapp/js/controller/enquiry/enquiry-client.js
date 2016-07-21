@@ -1,7 +1,9 @@
 
-mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
+mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractorService', 
+                                function($scope , $rootScope, $http, modalService, blockUI, subcontractorService) {
 	
+	$scope.blockEnquiryClient = blockUI.instances.get('blockEnquiryClient');
+	$scope.searchClient = '';
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -17,13 +19,9 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'maxInactiveInterval', enableCellEdit: false},
+			             { field: 'subcontractorNo', displayName: "Subcontractor Number", enableCellEdit: false },
+			             { field: 'subcontractorName', displayName: "Subcontractor Name", enableCellEdit: false },
+			             { field: 'businessRegistrationNo', displayName: "Business Registration Number", enableCellEdit: false}
             			 ]
 	};
 	
@@ -32,24 +30,25 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
-		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
+		if($scope.searchClient !== ''){
+		$scope.blockEnquiryClient.start('Loading...')
+		subcontractorService.obtainClientWrappers('*' + $scope.searchClient + '*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
+					$scope.blockEnquiryClient.stop();
 				}
-			});			
+		}, function(data){
+			$scope.blockEnquiryClient.stop();
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		})
+		} else {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter client number or name to search' ); 
+		}
 
 	}
 	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-	$scope.loadGridData();
-	
 }]);

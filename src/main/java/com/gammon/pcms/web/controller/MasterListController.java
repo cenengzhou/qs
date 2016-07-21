@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.qs.domain.MasterListObject;
+import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.MasterListService;
 
@@ -55,6 +57,30 @@ public class MasterListController {
 		return masterListVendor;
 	}
 	
+	@RequestMapping(value = "searchObjectList", method = RequestMethod.POST)
+	public List<MasterListObject> searchObjectList(@RequestParam String searchStr){
+
+		List<MasterListObject> masterListObject = null;
+		try {
+			
+			masterListObject = masterListService.searchObjectList(searchStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return masterListObject;
+	}
+	
+	@RequestMapping(value = "searchSubsidiaryList", method = RequestMethod.POST)
+	public List<MasterListSubsidiary> searchSubsidiaryList(@RequestParam String searchStr){
+
+		List<MasterListSubsidiary> masterListSubsidiary = null;
+		try {
+			masterListSubsidiary = masterListService.searchSubsidiaryList(searchStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return masterListSubsidiary;
+	}
 	
 }
 

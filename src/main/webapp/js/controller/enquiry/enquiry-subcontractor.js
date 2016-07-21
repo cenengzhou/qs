@@ -64,7 +64,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
 		} else {
 		$scope.blockEnquirySubcontractor.start('Loading...');
-		subcontractorService.obtainSubcontractorWrappers($scope.searchWorkScopes, $scope.searchSubcontractorNo !== '' ? $scope.searchSubcontractorNo + '*' : '')
+		subcontractorService.obtainSubcontractorWrappers($scope.searchWorkScopes, $scope.searchSubcontractorNo !== '' ? '*' + $scope.searchSubcontractorNo + '*' : '')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.convertAbbr(data);

@@ -35,4 +35,15 @@ public class SubcontractorController {
 		return wrapperList;
 	}
 
+	@RequestMapping(value = "obtainClientWrappers", method = RequestMethod.POST)
+	public List<SubcontractorWrapper> obtainClientWrappers(@RequestParam String client){
+		List<SubcontractorWrapper> wrapperList = new ArrayList<SubcontractorWrapper>();
+		try {
+			wrapperList.addAll(subcontractorService.obtainClientWrappers(client));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return wrapperList;
+	}
+
 }

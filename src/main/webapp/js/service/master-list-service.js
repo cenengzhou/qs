@@ -2,7 +2,9 @@ mainApp.service('masterListService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
 		getSubcontractor:			getSubcontractor,
-		getSubcontractorList:		getSubcontractorList
+		getSubcontractorList:		getSubcontractorList,
+		searchObjectList:			searchObjectList,
+		searchSubsidiaryList:		searchSubsidiaryList
 
 	});
 
@@ -32,6 +34,27 @@ mainApp.service('masterListService', ['$http', '$q', function($http, $q){
 	}
 	
 
+	function searchObjectList(searchStr) {
+		var request = $http({
+			method: "POST",
+			url: "service/masterList/searchObjectList",
+			params: {
+				searchStr: searchStr
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function searchSubsidiaryList(searchStr) {
+		var request = $http({
+			method: "POST",
+			url: "service/masterList/searchSubsidiaryList",
+			params: {
+				searchStr: searchStr
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
 	// ---
 	// PRIVATE METHODS.
 	// ---

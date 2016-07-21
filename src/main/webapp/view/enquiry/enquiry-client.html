@@ -1,4 +1,4 @@
-<div class="content-wrapper">
+<div class="content-wrapper" ng-controller="EnquiryClientCtrl">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
@@ -15,11 +15,22 @@
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Client Enquiry</h3>
-						
-						<div class="col-md-12">
+						<form role="form" class="form" ng-submit="loadGridData()">
+							<div class="form-group">
+								<div class="col-md-4">
+									<label for="searchClient">Client No. / Name:</label>
+									<input type="text" id="searchClient" class="form-control" ng-model="searchClient">
+								</div>
+								<div class="col-md-4">
+									<label for="searchSubmit">&nbsp;</label>
+									<button = type="submit" class="form-control btn btn-primary">Search</button>
+								</div>
+							</div>
+						</form>
+						<div class="col-md-12" block-ui="blockEnquiryClient">
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									resize ng-style="resizeWithOffset(290)"></div>
 					</div>
 				</div>
 			</div>

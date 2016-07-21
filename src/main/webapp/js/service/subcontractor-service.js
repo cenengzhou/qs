@@ -1,7 +1,8 @@
 mainApp.service('subcontractorService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	obtainSubcontractorWrappers:		obtainSubcontractorWrappers
+    	obtainSubcontractorWrappers:		obtainSubcontractorWrappers,
+    	obtainClientWrappers:	obtainClientWrappers
     });
    
     function obtainSubcontractorWrappers(workScope, subcontractor){
@@ -16,7 +17,17 @@ mainApp.service('subcontractorService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
     
-
+    function obtainClientWrappers(client){
+    	var request = $http({
+    		url: 'service/subcontractor/obtainClientWrappers',
+    		method: 'POST',
+    		params: {
+    			client: client
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
     // ---
     // PRIVATE METHODS.
     // ---
