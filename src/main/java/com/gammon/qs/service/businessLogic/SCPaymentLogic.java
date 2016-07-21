@@ -293,6 +293,12 @@ public class SCPaymentLogic {
 			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 				//1. update package detail
 				scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
+				/**
+				 * @author koeyyeung
+				 * created on 19 Jul, 2016
+				 * convert to amount based**/
+				scDetails.setAmountPostedCert(scDetails.getAmountCumulativeCert());
+				
 				// Payment Requisition: Not approved but paid
 				if("BQ".equals(scDetails.getLineType()) && SubcontractDetail.NOT_APPROVED.equals(scDetails.getApproved()))
 					scDetails.setApproved(SubcontractDetail.NOT_APPROVED_BUT_PAID);

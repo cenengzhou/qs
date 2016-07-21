@@ -14,6 +14,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -34,6 +35,7 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
 @Repository
 public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 
@@ -689,6 +691,30 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return (List<Subcontract>) criteria.list();
 	}
 
+	public SubcontractSnapshotWrapper obtainSubcontractCurrentStat(String jobNo, String subcontractNo) throws DatabaseOperationException {
+		try{			
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+			criteria.createAlias("jobInfo", "jobInfo");
+			if (jobNo!=null && !"".equals(jobNo))
+				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+			
+			criteria.add(Restrictions.eq("packageNo", subcontractNo));
+			
+			
+			ProjectionList projectionList = Projections.projectionList();
+			projectionList.add(Projections.sum("totalPostedCertifiedAmount"), "totalPostedCertifiedAmount");
+			projectionList.add(Projections.sum("totalPostedWorkDoneAmount"), "totalPostedWorkDoneAmount");
+			
+			criteria.setProjection(projectionList);
+			
+			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotWrapper.class));
+			
+			return (SubcontractSnapshotWrapper) criteria.uniqueResult();
+		}catch (HibernateException he){
+			throw new DatabaseOperationException(he);
+		}
+	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END*********************************************************/	
 }

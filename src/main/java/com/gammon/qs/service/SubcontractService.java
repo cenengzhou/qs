@@ -121,7 +121,6 @@ import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardDetailsWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisWrapper;
@@ -5412,6 +5411,11 @@ public class SubcontractService {
 					accumulatedMovementAmount=accumulatedMovementAmount * (-1);
 				try {
 					scDetails.setPostedCertifiedQuantity(CalculationUtil.round(accumulatedMovementAmount/scDetails.getScRate(),4));
+					/**
+					 * @author koeyyeung
+					 * created on 19 Jul, 2016
+					 * convert to amount based**/
+					scDetails.setAmountPostedCert(new BigDecimal(accumulatedMovementAmount));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -5702,144 +5706,91 @@ public class SubcontractService {
 	 * add period search from SCPackage Snapshot
 	 * **/
 	public List<SubcontractDashboardWrapper> getSubcontractDashboardData(String jobNo, String subcontractNo, String year) {
+		String startMonth = "";
+		String startYear = "";
+		String endMonth = "";
+		String endYear = "";
+		
+		HashMap<Integer, String> monthHashMap = new HashMap<Integer, String>();
+		monthHashMap.put(1, "Jan");
+		monthHashMap.put(2, "Feb");
+		monthHashMap.put(3, "Mar");
+		monthHashMap.put(4, "Apr");
+		monthHashMap.put(5, "May");
+		monthHashMap.put(6, "Jun");
+		monthHashMap.put(7, "Jul");
+		monthHashMap.put(8, "Aug");
+		monthHashMap.put(9, "Sep");
+		monthHashMap.put(10, "Oct");
+		monthHashMap.put(11, "Nov");
+		monthHashMap.put(12, "Dec");
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		
+		if("Latest".equals(year)){
+			endMonth = String.valueOf(cal.get(Calendar.MONTH) + 2); // beware of month indexing from zero
+			endYear  = String.valueOf(cal.get(Calendar.YEAR));
+			
+			startMonth = endMonth;
+			startYear  = String.valueOf(cal.get(Calendar.YEAR)-1);
+		}else {
+			startYear= year;
+			endYear  = year;
+		}
+		
+		logger.info("start:"+startMonth+"-"+startYear+"; End: "+endMonth+"-"+endYear ); 
+		
 		List<SubcontractDashboardWrapper> subcontractDashboardWrappeList = new ArrayList<SubcontractDashboardWrapper>();
 		try {
-			List<SubcontractSnapshotWrapper> snapshotWrapperList = subcontractSnapshotDao.obtainSubcontractMonthlyStat(jobNo, subcontractNo, year);
+			List<SubcontractSnapshotWrapper> snapshotWrapperList = subcontractSnapshotDao.obtainSubcontractMonthlyStat(jobNo, subcontractNo, startMonth, startYear, endMonth, endYear);
 			logger.info("snapshotWrapperList size: "+snapshotWrapperList.size());
+
+			Collections.sort(snapshotWrapperList); 
 			
-			
-			SubcontractDashboardDetailsWrapper detailCert = new SubcontractDashboardDetailsWrapper();
-			SubcontractDashboardDetailsWrapper detailWD = new SubcontractDashboardDetailsWrapper();
-			SubcontractDashboardDetailsWrapper detailCC = new SubcontractDashboardDetailsWrapper();
-			SubcontractDashboardDetailsWrapper detailMOS = new SubcontractDashboardDetailsWrapper();
-			SubcontractDashboardDetailsWrapper detailRet = new SubcontractDashboardDetailsWrapper();
-			
+			List<String> monthList = new ArrayList<String>();
+			List<Double> certList = new ArrayList<Double>();
+			List<Double> wdList = new ArrayList<Double>();
+
 			for (SubcontractSnapshotWrapper result: snapshotWrapperList){
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(result.getSnapshotDate());
-				int month = cal.get(Calendar.MONTH)+1;
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(result.getSnapshotDate());
+				int month = calendar.get(Calendar.MONTH)+1;
+
 				
-				switch (month) {
-				case 1:
-					detailCert.setJan(result.getTotalPostedCertifiedAmount());
-					detailWD.setJan(result.getTotalPostedWorkDoneAmount());
-					detailCC.setJan(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setJan(result.getTotalMOSPostedCertAmount());
-					detailRet.setJan(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 2:
-					detailCert.setFeb(result.getTotalPostedCertifiedAmount());
-					detailWD.setFeb(result.getTotalPostedWorkDoneAmount());
-					detailCC.setFeb(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setFeb(result.getTotalMOSPostedCertAmount());
-					detailRet.setFeb(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 3:
-					detailCert.setMar(result.getTotalPostedCertifiedAmount());
-					detailWD.setMar(result.getTotalPostedWorkDoneAmount());
-					detailCC.setMar(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setMar(result.getTotalMOSPostedCertAmount());
-					detailRet.setMar(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 4:
-					detailCert.setApr(result.getTotalPostedCertifiedAmount());
-					detailWD.setApr(result.getTotalPostedWorkDoneAmount());
-					detailCC.setApr(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setApr(result.getTotalMOSPostedCertAmount());
-					detailRet.setApr(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 5:
-					detailCert.setMay(result.getTotalPostedCertifiedAmount());
-					detailWD.setMay(result.getTotalPostedWorkDoneAmount());
-					detailCC.setMay(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setMay(result.getTotalMOSPostedCertAmount());
-					detailRet.setMay(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 6:
-					detailCert.setJun(result.getTotalPostedCertifiedAmount());
-					detailWD.setJun(result.getTotalPostedWorkDoneAmount());
-					detailCC.setJun(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setJun(result.getTotalMOSPostedCertAmount());
-					detailRet.setJun(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 7:
-					detailCert.setJul(result.getTotalPostedCertifiedAmount());
-					detailWD.setJul(result.getTotalPostedWorkDoneAmount());
-					detailCC.setJul(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setJul(result.getTotalMOSPostedCertAmount());
-					detailRet.setJul(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 8:
-					detailCert.setAug(result.getTotalPostedCertifiedAmount());
-					detailWD.setAug(result.getTotalPostedWorkDoneAmount());
-					detailCC.setAug(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setAug(result.getTotalMOSPostedCertAmount());
-					detailRet.setAug(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 9:
-					detailCert.setSep(result.getTotalPostedCertifiedAmount());
-					detailWD.setSep(result.getTotalPostedWorkDoneAmount());
-					detailCC.setSep(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setSep(result.getTotalMOSPostedCertAmount());
-					detailRet.setSep(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 10:
-					detailCert.setOct(result.getTotalPostedCertifiedAmount());
-					detailWD.setOct(result.getTotalPostedWorkDoneAmount());
-					detailCC.setOct(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setOct(result.getTotalMOSPostedCertAmount());
-					detailRet.setOct(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 11:
-					detailCert.setNov(result.getTotalPostedCertifiedAmount());
-					detailWD.setNov(result.getTotalPostedWorkDoneAmount());
-					detailCC.setNov(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setNov(result.getTotalMOSPostedCertAmount());
-					detailRet.setNov(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				case 12:
-					detailCert.setDec(result.getTotalPostedCertifiedAmount());
-					detailWD.setDec(result.getTotalPostedWorkDoneAmount());
-					detailCC.setDec(result.getTotalCCPostedCertAmount()*-1);
-					detailMOS.setDec(result.getTotalMOSPostedCertAmount());
-					detailRet.setDec(result.getTotalAccumlatedRetention()-result.getTotalRetentionReleased());
-					break;
-				default:
-					break;
-				}
-				
-				
+				monthList.add(monthHashMap.get(month));
+				certList.add(result.getTotalPostedCertifiedAmount());
+				wdList.add(result.getTotalPostedWorkDoneAmount());
 			}
 			
+			if(monthList.size()<12){
+				SubcontractSnapshotWrapper currentSCWrapper = subcontractHBDao.obtainSubcontractCurrentStat(jobNo, subcontractNo);
+				monthList.add(monthHashMap.get(cal.get(Calendar.MONTH)+1));
+				certList.add(currentSCWrapper.getTotalPostedCertifiedAmount());
+				wdList.add(currentSCWrapper.getTotalPostedWorkDoneAmount());
+			
+			}
 			SubcontractDashboardWrapper subcontractDashboardCertWrapper = new SubcontractDashboardWrapper();
 			subcontractDashboardCertWrapper.setCategory("CERT");
-			subcontractDashboardCertWrapper.setSubcontractDashboardDetailWrapper(detailCert);
-			
+			subcontractDashboardCertWrapper.setStartYear(startYear);
+			subcontractDashboardCertWrapper.setEndYear(endYear);
+			subcontractDashboardCertWrapper.setMonthList(monthList);
+			subcontractDashboardCertWrapper.setDetailList(certList);
+
 			SubcontractDashboardWrapper subcontractDashboardWDWrapper = new SubcontractDashboardWrapper();
 			subcontractDashboardWDWrapper.setCategory("WD");
-			subcontractDashboardWDWrapper.setSubcontractDashboardDetailWrapper(detailWD);
-			
-			SubcontractDashboardWrapper SubcontractDashboardCCWrapper = new SubcontractDashboardWrapper();
-			SubcontractDashboardCCWrapper.setCategory("CC");
-			SubcontractDashboardCCWrapper.setSubcontractDashboardDetailWrapper(detailCC);
-			
-			SubcontractDashboardWrapper subcontractDashboardMOSWrapper = new SubcontractDashboardWrapper();
-			subcontractDashboardMOSWrapper.setCategory("MOS");
-			subcontractDashboardMOSWrapper.setSubcontractDashboardDetailWrapper(detailMOS);
-			
-			SubcontractDashboardWrapper subcontractDashboardRetWrapper = new SubcontractDashboardWrapper();
-			subcontractDashboardRetWrapper.setCategory("RET");
-			subcontractDashboardRetWrapper.setSubcontractDashboardDetailWrapper(detailRet);
-			
+			subcontractDashboardWDWrapper.setStartYear(startYear);
+			subcontractDashboardWDWrapper.setEndYear(endYear);
+			subcontractDashboardWDWrapper.setMonthList(monthList);
+			subcontractDashboardWDWrapper.setDetailList(wdList);
+
 			subcontractDashboardWrappeList.add(subcontractDashboardCertWrapper);
 			subcontractDashboardWrappeList.add(subcontractDashboardWDWrapper);
-			subcontractDashboardWrappeList.add(SubcontractDashboardCCWrapper);
-			subcontractDashboardWrappeList.add(subcontractDashboardMOSWrapper);
-			subcontractDashboardWrappeList.add(subcontractDashboardRetWrapper);
 
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
+
 
 		return subcontractDashboardWrappeList;
 	}
@@ -5852,20 +5803,20 @@ public class SubcontractService {
 		List<SubcontractDetail> scDetailsDashboard = new ArrayList<SubcontractDetail>();
 		try {
 			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNo, subcontractNo);
-			double totalBQBudgetAmount = 0.0;
+			double totalBQSCAmount = 0.0;
 			double postedBQCertifiedAmount = 0.0;
 			double postedBQWDAmount = 0.0;
-			double totalVOBudgetAmount = 0.0;
+			double totalVOSCAmount = 0.0;
 			double postedVOCertifiedAmount = 0.0;
 			double postedVOWDAmount = 0.0;
 			
 			for (SubcontractDetail scDetail: scDetails){
 				if(scDetail instanceof SubcontractDetailVO){
-					totalVOBudgetAmount += scDetail.getAmountBudget();
+					totalVOSCAmount += scDetail.getAmountSubcontract();
 					postedVOCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedVOWDAmount += scDetail.getAmountPostedWD().doubleValue();
 				}else if(scDetail instanceof SubcontractDetailBQ){
-					totalBQBudgetAmount += scDetail.getAmountBudget();
+					totalBQSCAmount += scDetail.getAmountSubcontract();
 					postedBQCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedBQWDAmount += scDetail.getAmountPostedWD().doubleValue();
 				} 
@@ -5873,14 +5824,14 @@ public class SubcontractService {
 			
 			SubcontractDetail scDetailBQ = new SubcontractDetail();
 			scDetailBQ.setLineType("BQ");
-			scDetailBQ.setAmountBudget(totalBQBudgetAmount);
+			scDetailBQ.setAmountSubcontract(totalBQSCAmount);
 			scDetailBQ.setAmountPostedCert(new BigDecimal(postedBQCertifiedAmount));
 			scDetailBQ.setAmountPostedWD(new BigDecimal(postedBQWDAmount));
 			scDetailsDashboard.add(scDetailBQ);
 			
 			SubcontractDetail scDetailVO = new SubcontractDetail();
 			scDetailVO.setLineType("VO");
-			scDetailVO.setAmountBudget(totalVOBudgetAmount);
+			scDetailVO.setAmountSubcontract(totalVOSCAmount);
 			scDetailVO.setAmountPostedCert(new BigDecimal(postedVOCertifiedAmount));
 			scDetailVO.setAmountPostedWD(new BigDecimal(postedVOWDAmount));
 			scDetailsDashboard.add(scDetailVO);

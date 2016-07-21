@@ -114,7 +114,7 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 	 * created on 20 Jul,2016
 	 * Subcontract Dashboard**/
 	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshotWrapper> obtainSubcontractMonthlyStat(String jobNo, String subcontractNo, String year) throws DatabaseOperationException {
+	public List<SubcontractSnapshotWrapper> obtainSubcontractMonthlyStat(String jobNo, String subcontractNo, String startMonth, String startYear, String endMonth, String endYear) throws DatabaseOperationException {
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
@@ -123,17 +123,17 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
 			
 			criteria.add(Restrictions.eq("packageNo", subcontractNo));
-			criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-01-"+year, "dd-MM-yyyy")));
-			criteria.add(Restrictions.le("snapshotDate", DateUtil.parseDate("31-12-"+year, "dd-MM-yyyy")));
-
+			if(startMonth !=""){
+				criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-"+startMonth+"-"+startYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.lt("snapshotDate", DateUtil.parseDate("01-"+endMonth+"-"+endYear, "dd-MM-yyyy")));
+			}else {
+				criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-01-"+endYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.le("snapshotDate", DateUtil.parseDate("31-12-"+endYear, "dd-MM-yyyy")));
+			}
 			
 			ProjectionList projectionList = Projections.projectionList();
 			projectionList.add(Projections.sum("totalPostedCertifiedAmount"), "totalPostedCertifiedAmount");
 			projectionList.add(Projections.sum("totalPostedWorkDoneAmount"), "totalPostedWorkDoneAmount");
-			projectionList.add(Projections.sum("totalCCPostedCertAmount"), "totalCCPostedCertAmount");
-			projectionList.add(Projections.sum("totalMOSPostedCertAmount"), "totalMOSPostedCertAmount");
-			projectionList.add(Projections.sum("accumlatedRetention") , "totalAccumlatedRetention");
-			projectionList.add(Projections.sum("retentionReleased") , "totalRetentionReleased");
 			
 			projectionList.add(Projections.groupProperty("snapshotDate"), "snapshotDate");
 			criteria.setProjection(projectionList);
