@@ -16,7 +16,29 @@ import javax.persistence.Table;
 public class ApprovalHeader implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6274539270768673975L;
-	
+
+	// Non-Database Approval Type
+	public static enum TYPE_APPROVAL {
+										AWARD, PAYMENT, ADDENDUM, SPLIT, TERMINATE, CERTIFICATE
+	}
+
+	// -----------------Database-----------------
+	public static enum TYPE_DOCUMENT {
+										AW, ST, V5, V6, // Award
+										SP, SF, NP, FR, // Payment
+										SM, SL, // Addendum
+										VA, VB, // Split and Terminate
+										RM // Main Contract Certificate
+	}
+
+	public static enum TYPE_APPROVAL_CATEFORY {
+												SC, PO, SA
+	}
+
+	public static enum STATUS_APPROVAL {
+										APPROVED, REJECTED, CANCELLED, IN_PROGRESS
+	}
+
 	private String recordKeyDocument;
 	private BigDecimal recordKeyInstance;
 	private String typeDocument;
@@ -34,11 +56,16 @@ public class ApprovalHeader implements java.io.Serializable {
 	private String currencyDocument;
 	private double amountInForeignCurr;
 
-	public ApprovalHeader() {
-	}
+	public ApprovalHeader() {}
 
-	public ApprovalHeader(BigDecimal recordKeyInstance, String typeDocument, String typeApprovalCategory,
-			String approvalRouteVendor, long approvalRouteVersion, double amountInForeignCurr) {
+	public ApprovalHeader(	String recordKeyDocument,
+							BigDecimal recordKeyInstance,
+							String typeDocument,
+							String typeApprovalCategory,
+							String approvalRouteVendor,
+							long approvalRouteVersion,
+							double amountInForeignCurr) {
+		this.recordKeyDocument = recordKeyDocument;
 		this.recordKeyInstance = recordKeyInstance;
 		this.typeDocument = typeDocument;
 		this.typeApprovalCategory = typeApprovalCategory;
@@ -47,11 +74,22 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.amountInForeignCurr = amountInForeignCurr;
 	}
 
-	public ApprovalHeader(String recordKeyDocument, BigDecimal recordKeyInstance, String typeDocument,
-			String typeApprovalCategory, String entityBusinessUnitKey, Long entityVendorId, String dateModified,
-			String dateCreated, String approvalRouteVendor, long approvalRouteVersion, String statusApproval,
-			String statusApprovalCode, String currenyLocal, BigDecimal amountInLocalCurr, String currencyDocument,
-			double amountInForeignCurr) {
+	public ApprovalHeader(	String recordKeyDocument,
+							BigDecimal recordKeyInstance,
+							String typeDocument,
+							String typeApprovalCategory,
+							String entityBusinessUnitKey,
+							Long entityVendorId,
+							String dateModified,
+							String dateCreated,
+							String approvalRouteVendor,
+							long approvalRouteVersion,
+							String statusApproval,
+							String statusApprovalCode,
+							String currenyLocal,
+							BigDecimal amountInLocalCurr,
+							String currencyDocument,
+							double amountInForeignCurr) {
 		this.recordKeyDocument = recordKeyDocument;
 		this.recordKeyInstance = recordKeyInstance;
 		this.typeDocument = typeDocument;
@@ -70,8 +108,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.amountInForeignCurr = amountInForeignCurr;
 	}
 
-	
-	@Column(name = "RECORD_KEY_DOCUMENT", length = 1472)
+	@Column(name = "RECORD_KEY_DOCUMENT",
+			length = 1472)
 	public String getRecordKeyDocument() {
 		return this.recordKeyDocument;
 	}
@@ -81,16 +119,20 @@ public class ApprovalHeader implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "RECORD_KEY_INSTANCE", nullable = false, scale = 0)
+	@Column(name = "RECORD_KEY_INSTANCE",
+			nullable = false,
+			scale = 0)
 	public BigDecimal getRecordKeyInstance() {
 		return this.recordKeyInstance;
 	}
 
-	public void setRecordKeyInstance (BigDecimal recordKeyInstance) {
+	public void setRecordKeyInstance(BigDecimal recordKeyInstance) {
 		this.recordKeyInstance = recordKeyInstance;
 	}
 
-	@Column(name = "TYPE_DOCUMENT", nullable = false, length = 200)
+	@Column(name = "TYPE_DOCUMENT",
+			nullable = false,
+			length = 200)
 	public String getTypeDocument() {
 		return this.typeDocument;
 	}
@@ -99,7 +141,9 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.typeDocument = typeDocument;
 	}
 
-	@Column(name = "TYPE_APPROVAL_CATEGORY", nullable = false, length = 40)
+	@Column(name = "TYPE_APPROVAL_CATEGORY",
+			nullable = false,
+			length = 40)
 	public String getTypeApprovalCategory() {
 		return this.typeApprovalCategory;
 	}
@@ -108,7 +152,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.typeApprovalCategory = typeApprovalCategory;
 	}
 
-	@Column(name = "ENTITY_BUSINESS_UNIT_KEY", length = 48)
+	@Column(name = "ENTITY_BUSINESS_UNIT_KEY",
+			length = 48)
 	public String getEntityBusinessUnitKey() {
 		return this.entityBusinessUnitKey;
 	}
@@ -117,7 +162,9 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.entityBusinessUnitKey = entityBusinessUnitKey;
 	}
 
-	@Column(name = "ENTITY_VENDOR_ID", precision = 10, scale = 0)
+	@Column(name = "ENTITY_VENDOR_ID",
+			precision = 10,
+			scale = 0)
 	public Long getEntityVendorId() {
 		return this.entityVendorId;
 	}
@@ -126,7 +173,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.entityVendorId = entityVendorId;
 	}
 
-	@Column(name = "DATE_MODIFIED", length = 29)
+	@Column(name = "DATE_MODIFIED",
+			length = 29)
 	public String getDateModified() {
 		return this.dateModified;
 	}
@@ -135,7 +183,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.dateModified = dateModified;
 	}
 
-	@Column(name = "DATE_CREATED", length = 29)
+	@Column(name = "DATE_CREATED",
+			length = 29)
 	public String getDateCreated() {
 		return this.dateCreated;
 	}
@@ -144,7 +193,9 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	@Column(name = "APPROVAL_ROUTE_VENDOR", nullable = false, length = 200)
+	@Column(name = "APPROVAL_ROUTE_VENDOR",
+			nullable = false,
+			length = 200)
 	public String getApprovalRouteVendor() {
 		return this.approvalRouteVendor;
 	}
@@ -153,7 +204,10 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.approvalRouteVendor = approvalRouteVendor;
 	}
 
-	@Column(name = "APPROVAL_ROUTE_VERSION", nullable = false, precision = 10, scale = 0)
+	@Column(name = "APPROVAL_ROUTE_VERSION",
+			nullable = false,
+			precision = 10,
+			scale = 0)
 	public long getApprovalRouteVersion() {
 		return this.approvalRouteVersion;
 	}
@@ -162,7 +216,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.approvalRouteVersion = approvalRouteVersion;
 	}
 
-	@Column(name = "STATUS_APPROVAL", length = 200)
+	@Column(name = "STATUS_APPROVAL",
+			length = 200)
 	public String getStatusApproval() {
 		return this.statusApproval;
 	}
@@ -171,7 +226,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.statusApproval = statusApproval;
 	}
 
-	@Column(name = "STATUS_APPROVAL_CODE", length = 4)
+	@Column(name = "STATUS_APPROVAL_CODE",
+			length = 4)
 	public String getStatusApprovalCode() {
 		return this.statusApprovalCode;
 	}
@@ -180,7 +236,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.statusApprovalCode = statusApprovalCode;
 	}
 
-	@Column(name = "CURRENY_LOCAL", length = 12)
+	@Column(name = "CURRENY_LOCAL",
+			length = 12)
 	public String getCurrenyLocal() {
 		return this.currenyLocal;
 	}
@@ -189,7 +246,9 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.currenyLocal = currenyLocal;
 	}
 
-	@Column(name = "AMOUNT_IN_LOCAL_CURR", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_IN_LOCAL_CURR",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountInLocalCurr() {
 		return this.amountInLocalCurr;
 	}
@@ -198,7 +257,8 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.amountInLocalCurr = amountInLocalCurr;
 	}
 
-	@Column(name = "CURRENCY_DOCUMENT", length = 12)
+	@Column(name = "CURRENCY_DOCUMENT",
+			length = 12)
 	public String getCurrencyDocument() {
 		return this.currencyDocument;
 	}
@@ -207,7 +267,10 @@ public class ApprovalHeader implements java.io.Serializable {
 		this.currencyDocument = currencyDocument;
 	}
 
-	@Column(name = "AMOUNT_IN_FOREIGN_CURR", nullable = false, precision = 126, scale = 0)
+	@Column(name = "AMOUNT_IN_FOREIGN_CURR",
+			nullable = false,
+			precision = 126,
+			scale = 0)
 	public double getAmountInForeignCurr() {
 		return this.amountInForeignCurr;
 	}
@@ -225,50 +288,7 @@ public class ApprovalHeader implements java.io.Serializable {
 			return false;
 		ApprovalHeader castOther = (ApprovalHeader) other;
 
-		return ((this.getRecordKeyDocument() == castOther.getRecordKeyDocument())
-				|| (this.getRecordKeyDocument() != null && castOther.getRecordKeyDocument() != null
-						&& this.getRecordKeyDocument().equals(castOther.getRecordKeyDocument())))
-				&& ((this.getRecordKeyInstance() == castOther.getRecordKeyInstance())
-						|| (this.getRecordKeyInstance() != null && castOther.getRecordKeyInstance() != null
-								&& this.getRecordKeyInstance().equals(castOther.getRecordKeyInstance())))
-				&& ((this.getTypeDocument() == castOther.getTypeDocument())
-						|| (this.getTypeDocument() != null && castOther.getTypeDocument() != null
-								&& this.getTypeDocument().equals(castOther.getTypeDocument())))
-				&& ((this.getTypeApprovalCategory() == castOther.getTypeApprovalCategory())
-						|| (this.getTypeApprovalCategory() != null && castOther.getTypeApprovalCategory() != null
-								&& this.getTypeApprovalCategory().equals(castOther.getTypeApprovalCategory())))
-				&& ((this.getEntityBusinessUnitKey() == castOther.getEntityBusinessUnitKey())
-						|| (this.getEntityBusinessUnitKey() != null && castOther.getEntityBusinessUnitKey() != null
-								&& this.getEntityBusinessUnitKey().equals(castOther.getEntityBusinessUnitKey())))
-				&& ((this.getEntityVendorId() == castOther.getEntityVendorId())
-						|| (this.getEntityVendorId() != null && castOther.getEntityVendorId() != null
-								&& this.getEntityVendorId().equals(castOther.getEntityVendorId())))
-				&& ((this.getDateModified() == castOther.getDateModified())
-						|| (this.getDateModified() != null && castOther.getDateModified() != null
-								&& this.getDateModified().equals(castOther.getDateModified())))
-				&& ((this.getDateCreated() == castOther.getDateCreated())
-						|| (this.getDateCreated() != null && castOther.getDateCreated() != null
-								&& this.getDateCreated().equals(castOther.getDateCreated())))
-				&& ((this.getApprovalRouteVendor() == castOther.getApprovalRouteVendor())
-						|| (this.getApprovalRouteVendor() != null && castOther.getApprovalRouteVendor() != null
-								&& this.getApprovalRouteVendor().equals(castOther.getApprovalRouteVendor())))
-				&& (this.getApprovalRouteVersion() == castOther.getApprovalRouteVersion())
-				&& ((this.getStatusApproval() == castOther.getStatusApproval())
-						|| (this.getStatusApproval() != null && castOther.getStatusApproval() != null
-								&& this.getStatusApproval().equals(castOther.getStatusApproval())))
-				&& ((this.getStatusApprovalCode() == castOther.getStatusApprovalCode())
-						|| (this.getStatusApprovalCode() != null && castOther.getStatusApprovalCode() != null
-								&& this.getStatusApprovalCode().equals(castOther.getStatusApprovalCode())))
-				&& ((this.getCurrenyLocal() == castOther.getCurrenyLocal())
-						|| (this.getCurrenyLocal() != null && castOther.getCurrenyLocal() != null
-								&& this.getCurrenyLocal().equals(castOther.getCurrenyLocal())))
-				&& ((this.getAmountInLocalCurr() == castOther.getAmountInLocalCurr())
-						|| (this.getAmountInLocalCurr() != null && castOther.getAmountInLocalCurr() != null
-								&& this.getAmountInLocalCurr().equals(castOther.getAmountInLocalCurr())))
-				&& ((this.getCurrencyDocument() == castOther.getCurrencyDocument())
-						|| (this.getCurrencyDocument() != null && castOther.getCurrencyDocument() != null
-								&& this.getCurrencyDocument().equals(castOther.getCurrencyDocument())))
-				&& (this.getAmountInForeignCurr() == castOther.getAmountInForeignCurr());
+		return ((this.getRecordKeyDocument() == castOther.getRecordKeyDocument()) || (this.getRecordKeyDocument() != null && castOther.getRecordKeyDocument() != null && this.getRecordKeyDocument().equals(castOther.getRecordKeyDocument()))) && ((this.getRecordKeyInstance() == castOther.getRecordKeyInstance()) || (this.getRecordKeyInstance() != null && castOther.getRecordKeyInstance() != null && this.getRecordKeyInstance().equals(castOther.getRecordKeyInstance()))) && ((this.getTypeDocument() == castOther.getTypeDocument()) || (this.getTypeDocument() != null && castOther.getTypeDocument() != null && this.getTypeDocument().equals(castOther.getTypeDocument()))) && ((this.getTypeApprovalCategory() == castOther.getTypeApprovalCategory()) || (this.getTypeApprovalCategory() != null && castOther.getTypeApprovalCategory() != null && this.getTypeApprovalCategory().equals(castOther.getTypeApprovalCategory()))) && ((this.getEntityBusinessUnitKey() == castOther.getEntityBusinessUnitKey()) || (this.getEntityBusinessUnitKey() != null && castOther.getEntityBusinessUnitKey() != null && this.getEntityBusinessUnitKey().equals(castOther.getEntityBusinessUnitKey()))) && ((this.getEntityVendorId() == castOther.getEntityVendorId()) || (this.getEntityVendorId() != null && castOther.getEntityVendorId() != null && this.getEntityVendorId().equals(castOther.getEntityVendorId()))) && ((this.getDateModified() == castOther.getDateModified()) || (this.getDateModified() != null && castOther.getDateModified() != null && this.getDateModified().equals(castOther.getDateModified()))) && ((this.getDateCreated() == castOther.getDateCreated()) || (this.getDateCreated() != null && castOther.getDateCreated() != null && this.getDateCreated().equals(castOther.getDateCreated()))) && ((this.getApprovalRouteVendor() == castOther.getApprovalRouteVendor()) || (this.getApprovalRouteVendor() != null && castOther.getApprovalRouteVendor() != null && this.getApprovalRouteVendor().equals(castOther.getApprovalRouteVendor()))) && (this.getApprovalRouteVersion() == castOther.getApprovalRouteVersion()) && ((this.getStatusApproval() == castOther.getStatusApproval()) || (this.getStatusApproval() != null && castOther.getStatusApproval() != null && this.getStatusApproval().equals(castOther.getStatusApproval()))) && ((this.getStatusApprovalCode() == castOther.getStatusApprovalCode()) || (this.getStatusApprovalCode() != null && castOther.getStatusApprovalCode() != null && this.getStatusApprovalCode().equals(castOther.getStatusApprovalCode()))) && ((this.getCurrenyLocal() == castOther.getCurrenyLocal()) || (this.getCurrenyLocal() != null && castOther.getCurrenyLocal() != null && this.getCurrenyLocal().equals(castOther.getCurrenyLocal()))) && ((this.getAmountInLocalCurr() == castOther.getAmountInLocalCurr()) || (this.getAmountInLocalCurr() != null && castOther.getAmountInLocalCurr() != null && this.getAmountInLocalCurr().equals(castOther.getAmountInLocalCurr()))) && ((this.getCurrencyDocument() == castOther.getCurrencyDocument()) || (this.getCurrencyDocument() != null && castOther.getCurrencyDocument() != null && this.getCurrencyDocument().equals(castOther.getCurrencyDocument()))) && (this.getAmountInForeignCurr() == castOther.getAmountInForeignCurr());
 	}
 
 	public int hashCode() {
@@ -291,6 +311,11 @@ public class ApprovalHeader implements java.io.Serializable {
 		result = 37 * result + (getCurrencyDocument() == null ? 0 : this.getCurrencyDocument().hashCode());
 		result = 37 * result + (int) this.getAmountInForeignCurr();
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "ApprovalHeader [recordKeyDocument=" + recordKeyDocument + ", recordKeyInstance=" + recordKeyInstance + ", typeDocument=" + typeDocument + ", typeApprovalCategory=" + typeApprovalCategory + ", entityBusinessUnitKey=" + entityBusinessUnitKey + ", entityVendorId=" + entityVendorId + ", dateModified=" + dateModified + ", dateCreated=" + dateCreated + ", approvalRouteVendor=" + approvalRouteVendor + ", approvalRouteVersion=" + approvalRouteVersion + ", statusApproval=" + statusApproval + ", statusApprovalCode=" + statusApprovalCode + ", currenyLocal=" + currenyLocal + ", amountInLocalCurr=" + amountInLocalCurr + ", currencyDocument=" + currencyDocument + ", amountInForeignCurr=" + amountInForeignCurr + "]";
 	}
 
 }

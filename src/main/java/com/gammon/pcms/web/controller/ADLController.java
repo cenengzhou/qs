@@ -2,11 +2,8 @@ package com.gammon.pcms.web.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +24,8 @@ import com.gammon.pcms.service.ADLService;
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class ADLController {
 
-	private static Logger logger = Logger.getLogger(ADLController.class);
-	
+	// private static Logger logger = Logger.getLogger(ADLController.class);
+
 	@Autowired
 	private ADLService adlService;
 
@@ -112,10 +109,10 @@ public class ADLController {
 	@RequestMapping(value = "getJobDashboardData",
 					method = RequestMethod.GET)
 	public JobDashboardDTO getJobDashboardData(	@RequestParam(required = true) String noJob,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearStart,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearEnd) {
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal yearStart,
+												@RequestParam(	required = false,
+																defaultValue = "0") BigDecimal yearEnd) {
 		try {
 			return adlService.getJobDashboardData(yearStart, yearEnd, noJob);
 		} catch (Exception e) {
@@ -169,62 +166,50 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getApprovalHeader",
+	@RequestMapping(value = "getApprovalHeaderList",
 					method = RequestMethod.GET)
-	public ApprovalHeader getApprovalHeader(@RequestParam(required = true) String statusApproval,
-									@RequestParam(required = true) String noJob,
-									@RequestParam(	required = true,
-													defaultValue = "SC") String typeApproval,
-									@RequestParam(required = false) String noSubcontract,
-									@RequestParam(required = false) String noPayment,
-									@RequestParam(required = false) String noMainCert,
-									@RequestParam(required = false) BigDecimal recordKeyInstance) {
+	public List<ApprovalHeader> getApprovalHeaderList(	@RequestParam(	required = true,
+																		defaultValue = "APPROVED") String statusApproval,
+														@RequestParam(required = true) String noJob,
+														@RequestParam(	required = true,
+																		defaultValue = "SC") String typeApprovalCategory,
+														@RequestParam(required = false) String typeApproval,
+														@RequestParam(required = false) String noSubcontract,
+														@RequestParam(required = false) String noPayment,
+														@RequestParam(required = false) String noMainCert,
+														@RequestParam(required = false) String noAddendum,
+														@RequestParam(	required = false,
+																		defaultValue = "0") BigDecimal recordKeyInstance) {
 
 		try {
-			return adlService.getApprovalHeader(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
+			return adlService.getApprovalHeaderList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ApprovalHeader();
+			return new ArrayList<ApprovalHeader>();
 		}
 	}
 
-	@RequestMapping(value = "getApprovalDetailList", method = RequestMethod.GET)
-	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(required = false) String statusApproval,
-												@RequestParam(required = false) String noJob,
-												@RequestParam(	required = true,
-																defaultValue = "SC") String typeApproval,
-												@RequestParam(required = false) String noSubcontract,
-												@RequestParam(required = false) String noPayment,
-												@RequestParam(required = false) String noMainCert,
-												@RequestParam(required = false) BigDecimal recordKeyInstance) {
-		List<ApprovalDetail> resultList = null;
+	@RequestMapping(value = "getApprovalDetailList",
+					method = RequestMethod.GET)
+	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(	required = false,
+																		defaultValue = "APPROVED") String statusApproval,
+														@RequestParam(required = false) String noJob,
+														@RequestParam(	required = true,
+																		defaultValue = "SC") String typeApprovalCategory,
+														@RequestParam(	required = false,
+																		defaultValue = "PAYMENT") String typeApproval,
+														@RequestParam(required = false) String noSubcontract,
+														@RequestParam(required = false) String noPayment,
+														@RequestParam(required = false) String noMainCert,
+														@RequestParam(required = false) String noAddendum,
+														@RequestParam(	required = false,
+																		defaultValue = "0") BigDecimal recordKeyInstance) {
 		try {
-			resultList = adlService.getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);	
+			return adlService.getApprovalDetailList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ArrayList<ApprovalDetail>();
 		}
-		return resultList;
-	}
-	
-	@RequestMapping(value = "getApprovalDetailSet", method = RequestMethod.GET)
-	public Set<ApprovalDetail> getApprovalDetailSet(	@RequestParam(required = false) String statusApproval,
-												@RequestParam(required = false) String noJob,
-												@RequestParam(	required = true,
-																defaultValue = "SC") String typeApproval,
-												@RequestParam(required = false) String noSubcontract,
-												@RequestParam(required = false) String noPayment,
-												@RequestParam(required = false) String noMainCert,
-												@RequestParam(required = false) BigDecimal recordKeyInstance) {
-		Set<ApprovalDetail> resultSet = null;
-		try{
-			List<ApprovalDetail> resultList = getApprovalDetailList(statusApproval, noJob, typeApproval, noSubcontract, noPayment, noMainCert, recordKeyInstance);
-			logger.info("resultList:" + resultList.size());
-			resultSet = new HashSet<ApprovalDetail>(resultList);
-			logger.info("resultSet:" + resultSet.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return resultSet;
 	}
 
 }

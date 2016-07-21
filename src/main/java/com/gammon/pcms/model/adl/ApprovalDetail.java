@@ -51,12 +51,19 @@ public class ApprovalDetail implements java.io.Serializable {
 	private BigDecimal recordKeyDelegation;
 	private Character isDelegated;
 
-	public ApprovalDetail() {
-	}
+	public ApprovalDetail() {}
 
-	public ApprovalDetail(ApprovalHeader recordKeyInstance, long numberApprSeq, BigDecimal numberApprSubSeq,
-			String typeApproval, String typeSubApproval, String typeDocument, Long entityApproverId,
-			String approverAction, String approverGroup, double amountDloa, BigDecimal recordKeyDelegation) {
+	public ApprovalDetail(	ApprovalHeader recordKeyInstance,
+							long numberApprSeq,
+							BigDecimal numberApprSubSeq,
+							String typeApproval,
+							String typeSubApproval,
+							String typeDocument,
+							Long entityApproverId,
+							String approverAction,
+							String approverGroup,
+							double amountDloa,
+							BigDecimal recordKeyDelegation) {
 		super();
 		this.recordKeyInstance = recordKeyInstance;
 		this.numberApprSeq = numberApprSeq;
@@ -71,15 +78,35 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.recordKeyDelegation = recordKeyDelegation;
 	}
 
-
-	public ApprovalDetail(String recordKeyDocument, ApprovalHeader recordKeyInstance, long numberApprSeq,
-			BigDecimal numberApprSubSeq, String andOr, String entityCompanyKey, String typeApproval,
-			String typeApprovalDescription, String typeSubApproval, String typeDocument, String typeDocumentDescr,
-			Long numberDocument, String entityBusinessUnitKey, String currencyLocal, BigDecimal amountLocalCurrency,
-			String dateCreated, String dateApproved, String statusApproval, String approverName, Long entityApproverId,
-			String approverAction, String approverComment, String approverGroup, String approverGroupDescription,
-			double amountDloa, String prerequisite, String escalation, BigDecimal recordKeyDelegation,
-			Character isDelegated) {
+	public ApprovalDetail(	String recordKeyDocument,
+							ApprovalHeader recordKeyInstance,
+							long numberApprSeq,
+							BigDecimal numberApprSubSeq,
+							String andOr,
+							String entityCompanyKey,
+							String typeApproval,
+							String typeApprovalDescription,
+							String typeSubApproval,
+							String typeDocument,
+							String typeDocumentDescr,
+							Long numberDocument,
+							String entityBusinessUnitKey,
+							String currencyLocal,
+							BigDecimal amountLocalCurrency,
+							String dateCreated,
+							String dateApproved,
+							String statusApproval,
+							String approverName,
+							Long entityApproverId,
+							String approverAction,
+							String approverComment,
+							String approverGroup,
+							String approverGroupDescription,
+							double amountDloa,
+							String prerequisite,
+							String escalation,
+							BigDecimal recordKeyDelegation,
+							Character isDelegated) {
 		this.recordKeyDocument = recordKeyDocument;
 		this.recordKeyInstance = recordKeyInstance;
 		this.numberApprSeq = numberApprSeq;
@@ -111,7 +138,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.isDelegated = isDelegated;
 	}
 
-	@Column(name = "RECORD_KEY_DOCUMENT", length = 1968)
+	@Column(name = "RECORD_KEY_DOCUMENT",
+			length = 1968)
 	public String getRecordKeyDocument() {
 		return this.recordKeyDocument;
 	}
@@ -147,7 +175,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.numberApprSubSeq = numberApprSubSeq;
 	}
 
-	@Column(name = "AND_OR", length = 3)
+	@Column(name = "AND_OR",
+			length = 3)
 	public String getAndOr() {
 		return this.andOr;
 	}
@@ -156,7 +185,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.andOr = andOr;
 	}
 
-	@Column(name = "ENTITY_COMPANY_KEY", length = 20)
+	@Column(name = "ENTITY_COMPANY_KEY",
+			length = 20)
 	public String getEntityCompanyKey() {
 		return this.entityCompanyKey;
 	}
@@ -174,7 +204,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.typeApproval = typeApproval;
 	}
 
-	@Column(name = "TYPE_APPROVAL_DESCRIPTION", length = 40)
+	@Column(name = "TYPE_APPROVAL_DESCRIPTION",
+			length = 40)
 	public String getTypeApprovalDescription() {
 		return this.typeApprovalDescription;
 	}
@@ -201,7 +232,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.typeDocument = typeDocument;
 	}
 
-	@Column(name = "TYPE_DOCUMENT_DESCR", length = 1000)
+	@Column(name = "TYPE_DOCUMENT_DESCR",
+			length = 1000)
 	public String getTypeDocumentDescr() {
 		return this.typeDocumentDescr;
 	}
@@ -210,7 +242,9 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.typeDocumentDescr = typeDocumentDescr;
 	}
 
-	@Column(name = "NUMBER_DOCUMENT", precision = 10, scale = 0)
+	@Column(name = "NUMBER_DOCUMENT",
+			precision = 10,
+			scale = 0)
 	public Long getNumberDocument() {
 		return this.numberDocument;
 	}
@@ -219,7 +253,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.numberDocument = numberDocument;
 	}
 
-	@Column(name = "ENTITY_BUSINESS_UNIT_KEY", length = 48)
+	@Column(name = "ENTITY_BUSINESS_UNIT_KEY",
+			length = 48)
 	public String getEntityBusinessUnitKey() {
 		return this.entityBusinessUnitKey;
 	}
@@ -228,7 +263,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.entityBusinessUnitKey = entityBusinessUnitKey;
 	}
 
-	@Column(name = "CURRENCY_LOCAL", length = 12)
+	@Column(name = "CURRENCY_LOCAL",
+			length = 12)
 	public String getCurrencyLocal() {
 		return this.currencyLocal;
 	}
@@ -237,7 +273,9 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.currencyLocal = currencyLocal;
 	}
 
-	@Column(name = "AMOUNT_LOCAL_CURRENCY", precision = 22, scale = 0)
+	@Column(name = "AMOUNT_LOCAL_CURRENCY",
+			precision = 22,
+			scale = 0)
 	public BigDecimal getAmountLocalCurrency() {
 		return this.amountLocalCurrency;
 	}
@@ -246,7 +284,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.amountLocalCurrency = amountLocalCurrency;
 	}
 
-	@Column(name = "DATE_CREATED", length = 29)
+	@Column(name = "DATE_CREATED",
+			length = 29)
 	public String getDateCreated() {
 		return this.dateCreated;
 	}
@@ -255,7 +294,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	@Column(name = "DATE_APPROVED", length = 29)
+	@Column(name = "DATE_APPROVED",
+			length = 29)
 	public String getDateApproved() {
 		return this.dateApproved;
 	}
@@ -264,7 +304,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.dateApproved = dateApproved;
 	}
 
-	@Column(name = "STATUS_APPROVAL", length = 200)
+	@Column(name = "STATUS_APPROVAL",
+			length = 200)
 	public String getStatusApproval() {
 		return this.statusApproval;
 	}
@@ -273,7 +314,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.statusApproval = statusApproval;
 	}
 
-	@Column(name = "APPROVER_NAME", length = 1020)
+	@Column(name = "APPROVER_NAME",
+			length = 1020)
 	public String getApproverName() {
 		return this.approverName;
 	}
@@ -283,7 +325,7 @@ public class ApprovalDetail implements java.io.Serializable {
 	}
 
 	@Id
-//	@Column(name = "ENTITY_APPROVER_ID", precision = 10, scale = 0)
+	// @Column(name = "ENTITY_APPROVER_ID", precision = 10, scale = 0)
 	public Long getEntityApproverId() {
 		return this.entityApproverId;
 	}
@@ -301,7 +343,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.approverAction = approverAction;
 	}
 
-	@Column(name = "APPROVER_COMMENT", length = 1000)
+	@Column(name = "APPROVER_COMMENT",
+			length = 1000)
 	public String getApproverComment() {
 		return this.approverComment;
 	}
@@ -319,7 +362,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.approverGroup = approverGroup;
 	}
 
-	@Column(name = "APPROVER_GROUP_DESCRIPTION", length = 1000)
+	@Column(name = "APPROVER_GROUP_DESCRIPTION",
+			length = 1000)
 	public String getApproverGroupDescription() {
 		return this.approverGroupDescription;
 	}
@@ -328,7 +372,10 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.approverGroupDescription = approverGroupDescription;
 	}
 
-	@Column(name = "AMOUNT_DLOA", nullable = false, precision = 126, scale = 0)
+	@Column(name = "AMOUNT_DLOA",
+			nullable = false,
+			precision = 126,
+			scale = 0)
 	public double getAmountDloa() {
 		return this.amountDloa;
 	}
@@ -337,7 +384,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.amountDloa = amountDloa;
 	}
 
-	@Column(name = "PREREQUISITE", length = 1)
+	@Column(name = "PREREQUISITE",
+			length = 1)
 	public String getPrerequisite() {
 		return this.prerequisite;
 	}
@@ -346,7 +394,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.prerequisite = prerequisite;
 	}
 
-	@Column(name = "ESCALATION", length = 1)
+	@Column(name = "ESCALATION",
+			length = 1)
 	public String getEscalation() {
 		return this.escalation;
 	}
@@ -356,7 +405,7 @@ public class ApprovalDetail implements java.io.Serializable {
 	}
 
 	@Id
-//	@Column(name = "RECORD_KEY_DELEGATION", scale = 0)
+	// @Column(name = "RECORD_KEY_DELEGATION", scale = 0)
 	public BigDecimal getRecordKeyDelegation() {
 		return this.recordKeyDelegation;
 	}
@@ -365,7 +414,8 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.recordKeyDelegation = recordKeyDelegation;
 	}
 
-	@Column(name = "IS_DELEGATED", length = 1)
+	@Column(name = "IS_DELEGATED",
+			length = 1)
 	public Character getIsDelegated() {
 		return this.isDelegated;
 	}
@@ -374,7 +424,9 @@ public class ApprovalDetail implements java.io.Serializable {
 		this.isDelegated = isDelegated;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -415,7 +467,9 @@ public class ApprovalDetail implements java.io.Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -569,24 +623,9 @@ public class ApprovalDetail implements java.io.Serializable {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "ApprovalDetail [recordKeyDocument=" + recordKeyDocument + ", recordKeyInstance=" + recordKeyInstance
-				+ ", numberApprSeq=" + numberApprSeq + ", numberApprSubSeq=" + numberApprSubSeq + ", andOr=" + andOr
-				+ ", entityCompanyKey=" + entityCompanyKey + ", typeApproval=" + typeApproval
-				+ ", typeApprovalDescription=" + typeApprovalDescription + ", typeSubApproval=" + typeSubApproval
-				+ ", typeDocument=" + typeDocument + ", typeDocumentDescr=" + typeDocumentDescr + ", numberDocument="
-				+ numberDocument + ", entityBusinessUnitKey=" + entityBusinessUnitKey + ", currencyLocal="
-				+ currencyLocal + ", amountLocalCurrency=" + amountLocalCurrency + ", dateCreated=" + dateCreated
-				+ ", dateApproved=" + dateApproved + ", statusApproval=" + statusApproval + ", approverName="
-				+ approverName + ", entityApproverId=" + entityApproverId + ", approverAction=" + approverAction
-				+ ", approverComment=" + approverComment + ", approverGroup=" + approverGroup
-				+ ", approverGroupDescription=" + approverGroupDescription + ", amountDloa=" + amountDloa
-				+ ", prerequisite=" + prerequisite + ", escalation=" + escalation + ", recordKeyDelegation="
-				+ recordKeyDelegation + ", isDelegated=" + isDelegated + "]";
+		return "ApprovalDetail [recordKeyDocument=" + recordKeyDocument + ", recordKeyInstance=" + recordKeyInstance + ", numberApprSeq=" + numberApprSeq + ", numberApprSubSeq=" + numberApprSubSeq + ", andOr=" + andOr + ", entityCompanyKey=" + entityCompanyKey + ", typeApproval=" + typeApproval + ", typeApprovalDescription=" + typeApprovalDescription + ", typeSubApproval=" + typeSubApproval + ", typeDocument=" + typeDocument + ", typeDocumentDescr=" + typeDocumentDescr + ", numberDocument=" + numberDocument + ", entityBusinessUnitKey=" + entityBusinessUnitKey + ", currencyLocal=" + currencyLocal + ", amountLocalCurrency=" + amountLocalCurrency + ", dateCreated=" + dateCreated + ", dateApproved=" + dateApproved + ", statusApproval=" + statusApproval + ", approverName=" + approverName + ", entityApproverId=" + entityApproverId + ", approverAction=" + approverAction + ", approverComment=" + approverComment + ", approverGroup=" + approverGroup + ", approverGroupDescription=" + approverGroupDescription + ", amountDloa=" + amountDloa + ", prerequisite=" + prerequisite + ", escalation=" + escalation + ", recordKeyDelegation=" + recordKeyDelegation + ", isDelegated=" + isDelegated + "]";
 	}
 
 }
