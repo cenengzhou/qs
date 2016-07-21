@@ -21,6 +21,7 @@ import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 @Service
@@ -41,7 +42,9 @@ public class AdminService {
 	private JobInfoHBDao jobInfoHBDao;
 	@Autowired
 	private SecurityConfig securityConfig;
-
+	@Autowired
+	private SecurityService securityService;
+	
 	public Set<String> obtainCompanyListByUsernameViaWS(String username) throws Exception {
 		Set<String> companySet = new HashSet<String>();
 		try {
@@ -64,15 +67,18 @@ public class AdminService {
 		List<String> jobNumberList = new ArrayList<String>();
 		for(JobSecurity jobSecurity : jobSecurityList){
 			List<String> jobNumberByCompanyList = new ArrayList<String>();
-			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
-				try {
-					jobNumberByCompanyList = jobInfoHBDao.obtainAllJobCompany();
-					jobNumberList.addAll(jobNumberByCompanyList);
-				} catch (DatabaseOperationException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
+//			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
+//				try {
+//					List<String> allJobCompany = jobInfoHBDao.obtainAllJobCompany();
+//					for(String company : allJobCompany){
+//						jobNumberByCompanyList.addAll(jobInfoHBDao.obtainJobNumberByCompany(company));
+//					}
+//					jobNumberList.addAll(jobNumberByCompanyList);
+//				} catch (DatabaseOperationException e) {
+//					e.printStackTrace();
+//				}
+//				break;
+//			}
 			try {
 				jobNumberByCompanyList = jobInfoHBDao.obtainJobNumberByCompany(jobSecurity.getCompany());
 				jobNumberList.addAll(jobNumberByCompanyList);
@@ -101,7 +107,11 @@ public class AdminService {
 	}
 	
 	public Boolean canAccessJob(String userName, String jobNumber)throws DataAccessException{
-		return obtainCanAccessJobNoList(userName).contains(jobNumber);
+		if(securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll())){
+			return true;
+		} else {
+			return obtainCanAccessJobNoList(userName).contains(jobNumber);
+		}
 	}
 
 	public List<JobSecurity> obtainCompanyListByUsername(String username) {
