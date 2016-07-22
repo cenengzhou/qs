@@ -199,7 +199,7 @@ public class SubcontractController {
 	}
 
 	@RequestMapping(value = "searchProvisionHistory", method = RequestMethod.POST)
-	public List<SCDetailProvisionHistoryWrapper> searchProvisionHistory(@RequestParam String jobNumber, @RequestParam String packageNo,
+	public List<SCDetailProvisionHistoryWrapper> searchProvisionHistory(@RequestParam String jobNumber, @RequestParam(required = false) String packageNo,
 			@RequestParam String year, @RequestParam String month) {
 		List<SCDetailProvisionHistoryWrapper> wrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
 		try{

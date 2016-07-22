@@ -222,7 +222,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	return( request.then( handleSuccess, handleError ) );
     }
     
-    function searchProvisionHistory(jobNumber, packageNo, year){
+    function searchProvisionHistory(jobNumber, packageNo, year, month){
     	var request = $http({
     		method: 'post',
     		url: 'service/subcontract/searchProvisionHistory',

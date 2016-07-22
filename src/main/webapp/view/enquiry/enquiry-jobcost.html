@@ -26,8 +26,8 @@
 								<div class="col-md-2">
 									<label for="searchSubcontractNo">Subcontract Number:</label> <input
 										type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
-										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters" ng-model-options="{ updateOn: 'blur' }">
-										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters</p>
+										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
 								</div>
 								<div class="col-md-2">
 									<label for="searchYear">Year:</label>
@@ -37,7 +37,7 @@
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="searchYear" name="searchYear"
 											ng-model="searchYear"
-											pattern=".{1,2}" required title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+											pattern=".{2,2}" required title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 									<p ng-show="searchJobCostForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
 								</div>
