@@ -111,14 +111,14 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
     	$scope.cumulativeData = angular.copy(data);
     	$scope.movementData = angular.copy(data);
     	$scope.cumulativeData.forEach(function(d){
-    		d.actualValue = d.aaAmountPeriod;
-    		d.internalValue = d.jiAmountPeriod;
-    		d.variance = d.jiAmountPeriod - d.aaAmountPeriod;
-    	});
-    	$scope.movementData.forEach(function(d){
     		d.actualValue = d.aaAmountAccum;
     		d.internalValue = d.jiAmountAccum;
     		d.variance = d.jiAmountAccum - d.aaAmountAccum;
+    	});
+    	$scope.movementData.forEach(function(d){
+    		d.actualValue = d.aaAmountPeriod;
+    		d.internalValue = d.jiAmountPeriod;
+    		d.variance = d.jiAmountPeriod - d.aaAmountPeriod;
     	});
     }
 	
