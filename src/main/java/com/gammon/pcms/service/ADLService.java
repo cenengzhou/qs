@@ -182,7 +182,24 @@ public class ADLService {
 	public AccountMaster getAccountMaster(String noJob, String codeObject, String codeSubsidiary){
 		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
 	}
-
+	
+	//TODO: pending for AddressBook object
+	public List<?> getAddressBookListOfSubcontractorAndClient(){
+		List<String> typeAddressBooks = new ArrayList<String>();
+		// should be enum of AddressBook class
+		typeAddressBooks.add("V");
+		typeAddressBooks.add("C");
+		
+		//call DAO
+				
+		 return new ArrayList<>();
+	}
+	
+	//TODO: pending for AddressBook object
+	public void getAddressBook(BigDecimal noAddressBook){
+		// call DAO
+	}
+	
 	/*
 	 * ----------------------------------------------- Approval System @ Data Layer -----------------------------------------------
 	 */

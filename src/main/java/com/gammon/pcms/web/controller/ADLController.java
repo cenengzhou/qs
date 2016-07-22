@@ -177,7 +177,7 @@ public class ADLController {
 			return new ArrayList<AccountMaster>();
 		}
 	}
-	
+
 	@RequestMapping(value = "getAccountMaster",
 					method = RequestMethod.GET)
 	public AccountMaster getAccountMaster(	@RequestParam(required = true) String noJob,
@@ -191,8 +191,31 @@ public class ADLController {
 			return null;
 		}
 	}
+
 	
-	
+	// TODO: migrate from web service to ADL
+	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
+					method = RequestMethod.GET)
+	public List<?> getAddressBookListOfSubcontractorAndClient() {
+		try {
+			return adlService.getAddressBookListOfSubcontractorAndClient();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
+	// TODO: migrate from web service to ADL
+	@RequestMapping(value = "getAddressBook",
+			method = RequestMethod.GET)
+	public void getAddressBook(@RequestParam(required = true) BigDecimal noAddressBook){
+		try{
+			// return adlService.getAddressBook(noAddressBook);
+		}catch(Exception e){
+			e.printStackTrace();
+//			return null;
+		}
+	}
 	
 	@RequestMapping(value = "getApprovalHeaderList",
 					method = RequestMethod.GET)
@@ -217,7 +240,7 @@ public class ADLController {
 		}
 	}
 
-	//TODO: Pending for CNC team to add unique id (2016-07-15)
+	// TODO: Pending for CNC team to add unique id (2016-07-15)
 	@RequestMapping(value = "getApprovalDetailList",
 					method = RequestMethod.GET)
 	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(	required = false,
