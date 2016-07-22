@@ -16,6 +16,9 @@ import javax.persistence.Table;
 public class AccountMaster implements Serializable {
 
 	private static final long serialVersionUID = 8680457098969690335L;
+	
+	public static final String CODE_SUBSIDIARY_EMPTY = "        ";
+	
 	private String accountCodeKey;
 	private String businessUnit;
 	private String object;
@@ -145,7 +148,7 @@ public class AccountMaster implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AccountMaster [accountCodeKey=" + accountCodeKey + ", businessUnit=" + businessUnit + ", object=" + object + ", subsidiary=" + subsidiary + ", companyCode=" + companyCode + ", accountDescription=" + accountDescription + ", postEditCode=" + postEditCode + ", postEdit=" + postEdit + ", fullAccountCode=" + fullAccountCode + "]";
+		return "AccountMasterDao [accountCodeKey=" + accountCodeKey + ", businessUnit=" + businessUnit + ", object=" + object + ", subsidiary=" + subsidiary + ", companyCode=" + companyCode + ", accountDescription=" + accountDescription + ", postEditCode=" + postEditCode + ", postEdit=" + postEdit + ", fullAccountCode=" + fullAccountCode + "]";
 	}
 
 	@Override

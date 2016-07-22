@@ -15,6 +15,7 @@ import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountLedger;
+import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.service.ADLService;
@@ -166,6 +167,33 @@ public class ADLController {
 		}
 	}
 
+	@RequestMapping(value = "getAccountMasterList",
+					method = RequestMethod.GET)
+	public List<AccountMaster> getAccountMasterList(@RequestParam(required = true) String noJob) {
+		try {
+			return adlService.getAccountMasterList(noJob);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<AccountMaster>();
+		}
+	}
+	
+	@RequestMapping(value = "getAccountMaster",
+					method = RequestMethod.GET)
+	public AccountMaster getAccountMaster(	@RequestParam(required = true) String noJob,
+											@RequestParam(required = true) String codeObject,
+											@RequestParam(	required = false,
+															defaultValue = AccountMaster.CODE_SUBSIDIARY_EMPTY) String codeSubsidiary) {
+		try {
+			return adlService.getAccountMaster(noJob, codeObject, codeSubsidiary);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
 	@RequestMapping(value = "getApprovalHeaderList",
 					method = RequestMethod.GET)
 	public List<ApprovalHeader> getApprovalHeaderList(	@RequestParam(	required = true,
@@ -189,6 +217,7 @@ public class ADLController {
 		}
 	}
 
+	//TODO: Pending for CNC team to add unique id (2016-07-15)
 	@RequestMapping(value = "getApprovalDetailList",
 					method = RequestMethod.GET)
 	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(	required = false,

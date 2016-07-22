@@ -14,11 +14,13 @@ import com.gammon.pcms.dao.adl.AccountBalanceAAJIDao;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dao.adl.AccountLedgerDao;
+import com.gammon.pcms.dao.adl.AccountMasterDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountLedger;
+import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 
@@ -29,6 +31,8 @@ import com.gammon.pcms.model.adl.ApprovalHeader;
 public class ADLService {
 	private Logger logger = Logger.getLogger(getClass());
 
+	@Autowired
+	private AccountMasterDao accountMasterDao;
 	@Autowired
 	private AccountLedgerDao accountLedgerDao;
 	@Autowired
@@ -152,6 +156,32 @@ public class ADLService {
 	public List<AccountLedger> getAccountLedgerList(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
 		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
+	
+	/**
+	 * Account Master general searching
+	 *
+	 * @param noJob
+	 * @return
+	 * @author tikywong
+	 * @since Jul 22, 2016 11:44:46 AM
+	 */
+	public List<AccountMaster> getAccountMasterList(String noJob) {
+		return accountMasterDao.find(noJob);
+	}
+	
+	/**
+	 * Find unique Account Master
+	 *
+	 * @param noJob
+	 * @param codeObject
+	 * @param codeSubsidiary
+	 * @return
+	 * @author	tikywong
+	 * @since	Jul 22, 2016 12:00:56 PM
+	 */
+	public AccountMaster getAccountMaster(String noJob, String codeObject, String codeSubsidiary){
+		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
+	}
 
 	/*
 	 * ----------------------------------------------- Approval System @ Data Layer -----------------------------------------------
@@ -247,16 +277,8 @@ public class ADLService {
 	 * @since	Jul 19, 2016 12:08:23 PM
 	 */
 	public List<ApprovalDetail> getApprovalDetailList(String statusApproval, String noJob, String typeApprovalCategory, String typeApproval, String noSubcontract, String noPayment, String noMainCert, String noAddendum, BigDecimal recordKeyInstance) {
-		if (recordKeyInstance.longValue() > 0){
-			List<ApprovalDetail> x = approvalDetailDao.obtainApprovalDetailByRecordKeyInstance(recordKeyInstance);
-			
-			logger.info("-------------------->size: "+x.size());
-			for(ApprovalDetail a: x)
-				logger.info(a);
-			
-			return x;
-//			return approvalDetailDao.obtainApprovalDetailByRecordKeyInstance(recordKeyInstance);
-		}
+		if (recordKeyInstance.longValue() > 0)
+			return approvalDetailDao.obtainApprovalDetailByRecordKeyInstance(recordKeyInstance);
 		else {
 			// Search for "recordKeyInstance"(s) from Approval Header
 			List<ApprovalHeader> approvalHeaderList = getApprovalHeaderList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);

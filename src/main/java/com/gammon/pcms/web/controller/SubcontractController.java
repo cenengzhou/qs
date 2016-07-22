@@ -41,20 +41,6 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
-	//@Autowired
-	//private SCPackageSPDao scPackageSPDao;
-	
-	/*@RequestMapping(value = "GetSubcontractList.json")
-	public List<Subcontract> getSubcontractList(@RequestParam(name="jobNo") String jobNo){
-		List<Subcontract> subcontractList = null;
-		try{
-			subcontractList = scPackageSPDao.findByJobInfo_JobNumberAndSubcontractStatusAndSystemStatus(jobNo, 500, "ACTIVE");
-		}catch(DatabaseOperationException databaseOperationException){
-			logger.error("Database Exception: ");
-			databaseOperationException.printStackTrace();
-		}
-		return subcontractList;
-	}*/
 	
 	@RequestMapping(value = "getSubcontractList",
 					method = RequestMethod.GET)
