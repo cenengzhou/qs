@@ -21,7 +21,7 @@ public class AccountBalanceAAJISCId implements Serializable {
 
 	private AccountMaster accountMaster;
 	private BigDecimal fiscalYear;
-	private String accountPeriod;
+	private BigDecimal accountPeriod;
 	private String accountSubLedger;
 	private String accountTypeSubLedger;
 
@@ -29,7 +29,7 @@ public class AccountBalanceAAJISCId implements Serializable {
 
 	public AccountBalanceAAJISCId(	AccountMaster accountMaster,
 									BigDecimal fiscalYear,
-									String accountPeriod,
+									BigDecimal accountPeriod,
 									String accountSubLedger,
 									String accountTypeSubLedger) {
 		this.accountMaster = accountMaster;
@@ -62,11 +62,11 @@ public class AccountBalanceAAJISCId implements Serializable {
 
 	@Column(name = "ACCOUNT_PERIOD",
 			length = 2)
-	public String getAccountPeriod() {
+	public BigDecimal getAccountPeriod() {
 		return this.accountPeriod;
 	}
 
-	public void setAccountPeriod(String accountPeriod) {
+	public void setAccountPeriod(BigDecimal accountPeriod) {
 		this.accountPeriod = accountPeriod;
 	}
 

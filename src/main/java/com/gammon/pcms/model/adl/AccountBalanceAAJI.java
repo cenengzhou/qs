@@ -25,7 +25,7 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 
 	private AccountMaster accountMaster;
 	private BigDecimal fiscalYear;
-	private String accountPeriod;
+	private BigDecimal accountPeriod;
 
 	private String entityBusinessUnitKey;
 	private String accountObject;
@@ -39,7 +39,7 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 
 	public AccountBalanceAAJI() {}
 
-	public AccountBalanceAAJI(AccountMaster accountMaster, BigDecimal fiscalYear, String accountPeriod) {
+	public AccountBalanceAAJI(AccountMaster accountMaster, BigDecimal fiscalYear, BigDecimal accountPeriod) {
 		this.accountMaster = accountMaster;
 		this.fiscalYear = fiscalYear;
 		this.accountPeriod = accountPeriod;
@@ -51,7 +51,7 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 								String accountSubsidiary,
 								String accountDescription,
 								BigDecimal fiscalYear,
-								String accountPeriod,
+								BigDecimal accountPeriod,
 								String currencyLocal,
 								BigDecimal aaAmountPeriod,
 								BigDecimal jiAmountPeriod,
@@ -90,11 +90,11 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 	}
 
 	@Id
-	public String getAccountPeriod() {
+	public BigDecimal getAccountPeriod() {
 		return this.accountPeriod;
 	}
 
-	public void setAccountPeriod(String accountPeriod) {
+	public void setAccountPeriod(BigDecimal accountPeriod) {
 		this.accountPeriod = accountPeriod;
 	}
 

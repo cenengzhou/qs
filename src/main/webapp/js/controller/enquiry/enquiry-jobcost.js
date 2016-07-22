@@ -4,6 +4,70 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
 	
+	$scope.columnDefs = [
+			             { field: 'accountObject', displayName: 'Object', enableCellEdit: false},
+			             { field: 'accountSubsidiary', displayName: 'Subsidiary', enableCellEdit: false},
+			             { field: 'accountDescription', displayName: 'Description', enableCellEdit: false},
+			             
+			             { field: 'actualValue', displayName: 'Actual Value', 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.actualValue < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 cellFilter: 'number:2', enableCellEdit: false
+			             },
+			             { field: 'internalValue', displayName: 'Internal Value', aggregationHideLabel: true, 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.internalValue < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 cellFilter: 'number:2', enableCellEdit: false
+			             },
+			             { field: 'variance', displayName: 'Variance', 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.variance < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 cellFilter: 'number:2', enableCellEdit: false
+			             },
+            			 ];
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -15,42 +79,56 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
+			paginationPageSizes : [ 25, 50, 100, 150, 200],
 			paginationPageSize : 25,
 			allowCellFocus: false,
 			enableCellSelection: false,
-			columnDefs: [
-			             { field: 'accountMaster.accountCodeKey', displayName: 'Account Code Key', enableCellEdit: false },
-			             { field: 'fiscalYear', displayName: 'Fiscal Year', enableCellEdit: false },
-			             { field: 'accountPeriod', displayName: 'Account Period', enableCellEdit: false},
-			             { field: 'entityBusinessUnitKey', displayName: 'Entity Business Unit Key', enableCellEdit: false},
-			             { field: 'accountObject', displayName: 'Account Object', enableCellEdit: false},
-			             { field: 'accountSubsidiary', displayName: 'Account Subsidiary', enableCellEdit: false},
-			             { field: 'accountDescription', displayName: 'Account Description', enableCellEdit: false},
-			             { field: 'currencyLocal', displayName: 'Currency', enableCellEdit: false},
-			             { field: 'aaAmountPeriod', displayName: 'AA Amount Period', enableCellEdit: false},
-			             { field: 'jiAmountPeriod', displayName: 'JI Amount Period', enableCellEdit: false},
-			             { field: 'aaAmountAccum', displayName: 'AA Amount Accum', aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>',
-			            	 cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false
-			             },
-			             { field: 'jiAmountAccum', displayName: 'JI Amount Accum', aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>', 
-			            	 cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false
-			             }
-            			 ]
+			exporterMenuPdf: false,
+			columnDefs: $scope.columnDefs
 	};
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
+//		$scope.changeCumMovement();
 	}
+	
+	$scope.changeCumMovement = function(){
+		if($scope.searchCumMovement === false){
+			$scope.gridOptions.data = $scope.cumulativeData;
+		} else {
+			$scope.gridOptions.data = $scope.movementData;
+		}
+		$scope.gridApi.grid.refresh();
+	}
+	$scope.currentDate = new Date();
+	$scope.searchCumMovement = false;
+	$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
+	$scope.searchMonth = $scope.currentDate.getMonth() + 1;
+	$scope.searchJobNo = $scope.jobNo;
+	$scope.cumulativeData = {};
+	$scope.movementData = {};
+    $scope.addVarianceData = function(data){
+    	$scope.cumulativeData = angular.copy(data);
+    	$scope.movementData = angular.copy(data);
+    	$scope.cumulativeData.forEach(function(d){
+    		d.actualValue = d.aaAmountPeriod;
+    		d.internalValue = d.jiAmountPeriod;
+    		d.variance = d.jiAmountPeriod - d.aaAmountPeriod;
+    	});
+    	$scope.movementData.forEach(function(d){
+    		d.actualValue = d.aaAmountAccum;
+    		d.internalValue = d.jiAmountAccum;
+    		d.variance = d.jiAmountAccum - d.aaAmountAccum;
+    	});
+    }
 	
 	$scope.loadGridData = function(){
 		$scope.blockJobCost.start('Loading...')
-		adlService.getMonthlyJobCostList($scope.jobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
+		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
 		    .then(function(data) {
 				if(angular.isArray(data)){
-					$scope.gridOptions.data = data;
+					$scope.addVarianceData(data);
+					$scope.changeCumMovement();
 				} 
 				$scope.blockJobCost.stop();
 			}, function(data){
@@ -63,5 +141,4 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 		$scope.gridApi.grid.refresh();
 	};
 	$scope.loadGridData();
-	
 }]);
