@@ -4,83 +4,215 @@
 	<div data-scrollbar="true" data-height="100%">
 		<!-- begin sidebar nav -->
 		<ul class="nav">
+		
 			<li class="nav-header">{{jobNo}} {{jobDescription}}</li>
+			
 			<li class="divider has-minify-btn">
 				<!-- begin sidebar minify button --> 
-				
 				<a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
-				<i
-					class="fa fa-angle-left"></i></a> <!-- end sidebar minify button -->
+				<i class="fa fa-angle-left"></i></a>
+				<!-- end sidebar minify button -->
 			</li>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.subcontract">
-					<i class="fa fa-file-text"></i> <span>Subcontract
-						Enquiry</span>
-			</a></li>
-			<li ui-sref-active="active"><a ui-sref="enquiry.payment"> <i
-					class="fa fa-file-text"></i> <span>Payment Enquiry</span>
-			</a></li>
-			<li class="has-sub"><a href="javascript:;"> <b
-					class="caret pull-right"></b> <i class="fa fa-file-text"></i> <span>Month
-						End</span>
-			</a>
+			<li class="has-sub">
+
+				<a href ui-sref="enquiry.jobCost" ng-click="activeEnquirySideMenu = '/enquiry/jobCost'" ng-disabled="true"> 
+					<b class="caret pull-right"></b>
+					<i class="fa fa-file-text"></i>
+					<span>Job</span>
+				</a>
+
 				<ul class="sub-menu">
-					<li
-						ng-class="{active : activeEnquirySideMenu == '/enquiry/jobCost'}">
-						<a ui-sref="enquiry.jobCost"
-						ng-click="activeEnquirySideMenu = '/enquiry/jobCost'"> <i
-							class="fa fa-circle-o"></i> <span>Job Cost Enquiry</span>
-					</a>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/jobInfo'}">
+						<a ui-sref="enquiry.jobInfo" ng-click="activeEnquirySideMenu = '/enquiry/jobInfo'">
+							<i class="fa fa-circle-o"></i>
+							<span>Job Information</span>.
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
 					</li>
-					<li
-						ng-class="{active : activeEnquirySideMenu == '/enquiry/accountLedger'}">
-						<a ui-sref="enquiry.accountLedger"
-						ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'"> <i
-							class="fa fa-circle-o"></i> <span>Account Ledger Enquiry</span>
-					</a>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/jobCost'}">
+						<a ui-sref="enquiry.jobCost" ng-click="activeEnquirySideMenu = '/enquiry/jobCost'">
+							<i class="fa fa-circle-o"></i>
+							<span>Job Cost</span>
+						</a>
 					</li>
-				</ul></li>
-			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractor">
-					<i class="fa fa-file-text"></i> <span>Subcontractor
-						Enquiry</span>
-			</a></li>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.client"> <i
-					class="fa fa-file-text"></i> <span>Client
-						Enquiry</span>
-			</a></li>
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/ivHistory'}">
+						<a ui-sref="enquiry.ivHistory" ng-click="activeEnquirySideMenu = '/enquiry/ivHistory'">
+							<i class="fa fa-circle-o"></i>
+							<span>Internal Valuation History</span>.
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.workscope">
-					<i class="fa fa-file-text"></i> 
-					<span>Work Scope Enquiry</span>
-			</a></li>
+				</ul>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractprovisionposting">
-					<i class="fa fa-file-text"></i> 
-					<span>Subcontract Provision Posting History</span>
-			</a></li>
+			</li>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.internalValuationPosting">
-					<i class="fa fa-file-text"></i> 
-					<span>Internal Valuation Posting History</span>
-			</a></li>
+			<li class="has-sub">
+			
+				<a href ui-sref="enquiry.subcontract" ng-click="activeEnquirySideMenu = '/enquiry/subcontract'"> 
+					<b class="caret pull-right"></b>
+					<i class="fa fa-file-text"></i>
+					<span>Subcontract</span>
+				</a>
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.subcontractDetail">
-					<i class="fa fa-file-text"></i> 
-					<span>Subcontract Detail Enquiry</span>
-			</a></li>
+				<ul class="sub-menu">
 
-			<li ui-sref-active="active"><a ui-sref="enquiry.jobInfo">
-					<i class="fa fa-file-text"></i> 
-					<span>Job Information Enquiry</span>
-			</a></li>
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/subcontract'}">
+						<a ui-sref="enquiry.subcontract" ng-click="activeEnquirySideMenu = '/enquiry/subcontract'">
+							<i class="fa fa-circle-o"></i>
+							<span>Subcontract</span>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/subcontractDetail'}">
+						<a ui-sref="enquiry.subcontractDetail" ng-click="activeEnquirySideMenu = '/enquiry/subcontractDetail'">
+							<i class="fa fa-circle-o"></i>
+							<span>Subcontract Detail</span>.
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/payment'}">
+						<a ui-sref="enquiry.payment" ng-click="activeEnquirySideMenu = '/enquiry/payment'">
+							<i class="fa fa-circle-o"></i>
+							<span>Payment</span>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/provisionHistory'}">
+						<a ui-sref="enquiry.provisionHistory" ng-click="activeEnquirySideMenu = '/enquiry/provisionHistory'">
+							<i class="fa fa-circle-o"></i>
+							<span>Provision History</span>.
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/workScope'}">
+						<a ui-sref="enquiry.workScope" ng-click="activeEnquirySideMenu = '/enquiry/workScope'">
+							<i class="fa fa-circle-o"></i>
+							<span>Work Scope</span>
+						</a>
+					</li>
+
+				</ul>
+
+			</li>
+
+			<li class="has-sub">
+			
+				<a href ui-sref="enquiry.subcontractor" ng-click="activeEnquirySideMenu = '/enquiry/subcontractor'"> 
+					<b class="caret pull-right"></b>
+					<i class="fa fa-file-text"></i>
+					<span>Address Book</span>
+				</a>
+
+				<ul class="sub-menu">
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/subcontractor'}">
+						<a ui-sref="enquiry.subcontractor" ng-click="activeEnquirySideMenu = '/enquiry/subcontractor'">
+							<i class="fa fa-circle-o"></i>
+							<span>Subcontractor</span>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/client'}">
+						<a ui-sref="enquiry.client" ng-click="activeEnquirySideMenu = '/enquiry/client'">
+							<i class="fa fa-circle-o"></i>
+							<span>Client</span>
+						</a>
+					</li>
+
+				</ul>
+
+			</li>
+
+			<li class="has-sub">
+			
+				<a href ui-sref="enquiry.purchaseOrder" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrder'"> 
+					<b class="caret pull-right"></b>
+					<i class="fa fa-file-text"></i>
+					<span>Purchase Order</span>
+				</a>
+
+				<ul class="sub-menu">
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/purchaseOrder'}">
+						<a ui-sref="enquiry.purchaseOrder" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrder'">
+							<i class="fa fa-circle-o"></i>
+							<span>Purchase Order</span>
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/purchaseOrderDetail'}">
+						<a ui-sref="enquiry.purchaseOrderDetail" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrderDetail'">
+							<i class="fa fa-circle-o"></i>
+							<span>Purchase Order Detail</span>
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+				</ul>
+
+			</li>
+
+			<li class="has-sub">
+			
+				<a href ui-sref="enquiry.accountLedger" ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'"> 
+					<b class="caret pull-right"></b>
+					<i class="fa fa-file-text"></i>
+					<span>JDE</span>
+				</a>
+
+				<ul class="sub-menu">
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/accountLedger'}">
+						<a ui-sref="enquiry.accountLedger" ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'">
+							<i class="fa fa-circle-o"></i>
+							<span>Account Ledger</span>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/customerLedger'}">
+						<a ui-sref="enquiry.customerLedger" ng-click="activeEnquirySideMenu = '/enquiry/customerLedger'">
+							<i class="fa fa-circle-o"></i>
+							<span>Customer Ledger</span>
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/supplierLedger'}">
+						<a ui-sref="enquiry.supplierLedger" ng-click="activeEnquirySideMenu = '/enquiry/supplierLedger'">
+							<i class="fa fa-circle-o"></i>
+							<span>Supplier Ledger</span>
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+					<li ng-class="{active : activeEnquirySideMenu == '/enquiry/performanceAppraisal'}">
+						<a ui-sref="enquiry.performanceAppraisal" ng-click="activeEnquirySideMenu = '/enquiry/performanceAppraisal'">
+							<i class="fa fa-circle-o"></i>
+							<span>Performance Appralisal</span>
+							<i class="fa fa-connectdevelop fa-fw fa-pulse"></i>
+						</a>
+					</li>
+
+				</ul>
+
+			</li>
 
 
 			<li class="divider has-minify-btn">
-				<!-- begin sidebar minify button --> <a href="javascript:;"
-				class="sidebar-minify-btn" data-click="sidebar-minify"><i
-					class="fa fa-angle-left"></i></a> <!-- end sidebar minify button -->
+				<!-- begin sidebar minify button -->
+				<a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
+				<i class="fa fa-angle-left"></i></a> 
+				<!-- end sidebar minify button -->
 			</li>
+			
 		</ul>
 		<!-- end sidebar nav -->
 	</div>

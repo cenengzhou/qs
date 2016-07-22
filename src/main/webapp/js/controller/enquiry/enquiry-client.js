@@ -14,8 +14,8 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
-			paginationPageSize : 25,
+			paginationPageSizes : [],
+			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [

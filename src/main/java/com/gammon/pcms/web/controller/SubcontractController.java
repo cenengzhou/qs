@@ -27,6 +27,7 @@ import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
+import com.gammon.qs.wrapper.SCDetailProvisionHistoryWrapper;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
@@ -196,5 +197,18 @@ public class SubcontractController {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
 		subcontractService.updateSubcontractAdmin(subcontract);
 	}
+
+	@RequestMapping(value = "searchProvisionHistory", method = RequestMethod.POST)
+	public List<SCDetailProvisionHistoryWrapper> searchProvisionHistory(@RequestParam String jobNumber, @RequestParam String packageNo,
+			@RequestParam String year, @RequestParam String month) {
+		List<SCDetailProvisionHistoryWrapper> wrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
+		try{
+			wrapperList.addAll(subcontractService.searchProvisionHistory(jobNumber, packageNo, year, month));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return wrapperList;
+	}
+
 
 }

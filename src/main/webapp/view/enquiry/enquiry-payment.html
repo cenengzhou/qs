@@ -1,7 +1,7 @@
 <div class="content-wrapper" ng-controller="EnquiryPaymentCtrl">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
-			<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+			<li><a ui-sref="enquiry.subcontract"><i class="fa fa-dashboard"></i>
 					Home</a></li>
 			<li class="active">Dashboard</li>
 		</ol>
@@ -14,16 +14,17 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title">Payment Enquiry</h3>
+						<h3 class="box-title">Payment</h3>
 						<div class="col-md-12">
-							<form role="form" class="form-horizatial"
+							<form role="form" class="form-input-flat form-horizatial"
 								name="enquiryPaymentForm">
 								<div class="form-group">
-									<div class="col-md-3">
-										<label for="searchJobNo">Job Number:</label> <input
-											type="text" id="searchJobNo" name="searchJobNo" class="form-control"
-											ng-model="searchJobNo">
-									</div>
+								<div class="col-md-3">
+									<label for="searchJobNo">Job Number:</label> <input type="text"
+										class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo"
+										pattern=".{5,5}" required title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="enquiryPaymentForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+								</div>					
 									<div class="col-md-3">
 									<label for="searchDueDateType">Due Date:</label>
 										<select ng-model="searchDueDateType" class="form-control">
@@ -44,7 +45,7 @@
 									<div class="col-md-3">
 									<label >&nbsp;</label>
 										<button class="btn btn-block btn-primary" type="submit"
-											ng-click="loadGridData()">Search</button>
+											ng-click="loadGridData()"><span class="fa fa-search"></span> Search</button>
 									</div>
 								</div>
 								<div class="clearfix"></div>

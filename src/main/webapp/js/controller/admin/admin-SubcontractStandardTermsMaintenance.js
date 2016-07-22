@@ -3,8 +3,8 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		 function($scope, $rootScope, $http, modalService, blockUI, subcontractService, GlobalParameter ) {
 	$scope.blockStandardTerms = blockUI.instances.get('blockStandardTerms');
 	$scope.loadData = function(){
-	$scope.blockStandardTerms.start('Loading...');
-	subcontractService.searchSystemConstants().then(
+		$scope.blockStandardTerms.start('Loading...');
+		subcontractService.searchSystemConstants().then(
 			function(data) {
 				$scope.blockStandardTerms.stop();
 				$scope.gridOptions.data = data;
@@ -27,8 +27,8 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		enableCellSelection : false,
 		enablePaginationControls : true,
 		rowEditWaitInterval : -1,
-		paginationPageSizes : [ 25, 50, 100, 150, 200 ],
-		paginationPageSize : 25,
+		paginationPageSizes : [ ],
+		paginationPageSize : 100,
 		enableCellEditOnFocus : true,
 		columnDefs : [ {
 			field : 'systemCode',

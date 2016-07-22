@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 
                                         function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService) {
 	
-	$scope.blockAccountLedger = blockUI.instances.get('blockAccountLedger');
+	$scope.blockEnquiryAccountLedger = blockUI.instances.get('blockEnquiryAccountLedger');
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -14,8 +14,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
-			paginationPageSize : 25,
+			paginationPageSizes : [ ],
+			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
@@ -87,16 +87,16 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockAccountLedger.start('Locading...')
+		$scope.blockEnquiryAccountLedger.start('Locading...')
 		adlService.getAccountLedgerList($scope.jobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
 				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-				$scope.blockAccountLedger.stop()
+				$scope.blockEnquiryAccountLedger.stop()
 			}, function(data){
-				$scope.blockAccountLedger.stop();
+				$scope.blockEnquiryAccountLedger.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});	
 	}

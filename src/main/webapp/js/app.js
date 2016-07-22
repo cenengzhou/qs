@@ -784,17 +784,27 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-               	         	'js/controller/enquiry/enquiry-accountledger.js',
-               	         	'js/controller/enquiry/enquiry-client.js',
-               	         	'js/controller/enquiry/enquiry-internalvaluationposting.js',
-               	         	'js/controller/enquiry/enquiry-jobcost.js',
-               	         	'js/controller/enquiry/enquiry-jobinfo.js',
-               	         	'js/controller/enquiry/enquiry-payment.js',
-               	         	'js/controller/enquiry/enquiry-subcontract.js',
-               	         	'js/controller/enquiry/enquiry-subcontractdetail.js',
-               	         	'js/controller/enquiry/enquiry-subcontractor.js',
-               	         	'js/controller/enquiry/enquiry-subcontractprovisionposting.js',
-               	         	'js/controller/enquiry/enquiry-workscope.js',
+							'js/controller/enquiry/enquiry-jobinfo.js',
+							'js/controller/enquiry/enquiry-jobcost.js',
+							'js/controller/enquiry/enquiry-ivhistory.js',
+							
+							'js/controller/enquiry/enquiry-subcontract.js',
+							'js/controller/enquiry/enquiry-subcontractdetail.js',
+							'js/controller/enquiry/enquiry-payment.js',
+							'js/controller/enquiry/enquiry-provisionhistory.js',
+							'js/controller/enquiry/enquiry-workscope.js',
+							
+							'js/controller/enquiry/enquiry-subcontractor.js',
+							'js/controller/enquiry/enquiry-client.js',
+							
+							'js/controller/enquiry/enquiry-purchaseorder.js',
+							'js/controller/enquiry/enquiry-purchaseorderdetail.js',
+							
+							'js/controller/enquiry/enquiry-accountledger.js',
+							'js/controller/enquiry/enquiry-customerledger.js',
+							'js/controller/enquiry/enquiry-supplierledger.js',
+							'js/controller/enquiry/enquiry-performanceappraisal.js',
+							
                	         	'js/service/main-cert-service.js',
                	         	'js/service/payment-service.js',
                	         	'js/service/subcontract-service.js',
@@ -808,113 +818,150 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
         controller: 'NavMenuCtrl',
         controllerAs: 'navMenuCtrl'
 	})
-	.state('enquiry.accountCode', {
-		url: '/accountCode',
-		templateUrl: 'view/enquiry/enquiry-accountcode.html',
-		'params': {
-			'jobNo': null,
-			'jobDescription' : null
-		},
-		controller: 'EnquiryAccountCodeCtrl'
-	})
-	.state('enquiry.accountLedger', {
-		url: '/accountLedger',
-		templateUrl: 'view/enquiry/enquiry-accountledger.html',
-		'params': {
-			'jobNo': null,
-			'jobDescription' : null
-		},
-		controller: 'EnquiryAccountLedgerCtrl'
-	})
-	.state('enquiry.client', {
-		url: '/client',
-		templateUrl: 'view/enquiry/enquiry-client.html',
-		'params': {
-			'jobNo': null,
-			'jobDescription' : null
-		},
-		controller: 'EnquiryClientCtrl'
-	})
-	.state('enquiry.internalValuationPosting', {
-		url: '/internalValuationPosting',
-		templateUrl: 'view/enquiry/enquiry-internalvaluationposting.html',
-		'params': {
-			'jobNo': null,
-			'jobDescription' : null
-		},
-		controller: 'EnquiryInternalValuationPostingCtrl'
-	})
-	.state('enquiry.jobCost', {
-		url: '/jobCost',
-		templateUrl: 'view/enquiry/enquiry-jobcost.html',
-		'params': {
-			'jobNo': null,
-			'jobDescription' : null
-		},
-		controller: 'EnquiryJobCostCtrl'
-	})
 	.state('enquiry.jobInfo', {
 		url: '/jobInfo',
 		templateUrl: 'view/enquiry/enquiry-jobinfo.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
 		controller: 'EnquiryJobInfoCtrl'
-	})
-	.state('enquiry.payment', {
-		url: '/payment',
-		templateUrl: 'view/enquiry/enquiry-payment.html',
+		})
+	.state('enquiry.jobCost', {
+		url: '/jobCost',
+		templateUrl: 'view/enquiry/enquiry-jobcost.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
-		}
-	})
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryJobCostCtrl'
+		})
+	.state('enquiry.ivHistory', {
+		url: '/ivHistory',
+		templateUrl: 'view/enquiry/enquiry-ivhistory.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryIvHistoryCtrl'
+		})
 	.state('enquiry.subcontract', {
 		url: '/subcontract',
 		templateUrl: 'view/enquiry/enquiry-subcontract.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
 		controller: 'EnquirySubcontractCtrl'
-	})
+		})
 	.state('enquiry.subcontractDetail', {
 		url: '/subcontractDetail',
 		templateUrl: 'view/enquiry/enquiry-subcontractdetail.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
 		controller: 'EnquirySubcontractDetailCtrl'
-	})
+		})
+	.state('enquiry.payment', {
+		url: '/payment',
+		templateUrl: 'view/enquiry/enquiry-payment.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryPaymentCtrl'
+		})
+	.state('enquiry.provisionHistory', {
+		url: '/provisionHistory',
+		templateUrl: 'view/enquiry/enquiry-provisionhistory.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryProvisionHistoryCtrl'
+		})
+	.state('enquiry.workScope', {
+		url: '/workScope',
+		templateUrl: 'view/enquiry/enquiry-workscope.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryWorkScopeCtrl'
+		})
 	.state('enquiry.subcontractor', {
 		url: '/subcontractor',
 		templateUrl: 'view/enquiry/enquiry-subcontractor.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
 		controller: 'EnquirySubcontractorCtrl'
-	})
-	.state('enquiry.subcontractprovisionposting', {
-		url: '/subcontractProvisionPosting',
-		templateUrl: 'view/enquiry/enquiry-subcontractprovisionposting.html',
+		})
+	.state('enquiry.client', {
+		url: '/client',
+		templateUrl: 'view/enquiry/enquiry-client.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
-		controller: 'EnquirySubcontractProvisionPostingCtrl'
-	})
-	.state('enquiry.workscope', {
-		url: '/workscope',
-		templateUrl: 'view/enquiry/enquiry-workscope.html',
+		controller: 'EnquiryClientCtrl'
+		})
+	.state('enquiry.purchaseOrder', {
+		url: '/purchaseOrder',
+		templateUrl: 'view/enquiry/enquiry-purchaseorder.html',
 		'params': {
 			'jobNo': null,
-			'jobDescription' : null
+			'jobDescription' : null,
 		},
-		controller: 'EnquiryWorkscopeCtrl'
-	})
+		controller: 'EnquiryPurchaseOrderCtrl'
+		})
+	.state('enquiry.purchaseOrderDetail', {
+		url: '/purchaseOrderDetail',
+		templateUrl: 'view/enquiry/enquiry-purchaseorderdetail.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryPurchaseOrderDetailCtrl'
+		})
+	.state('enquiry.accountLedger', {
+		url: '/accountLedger',
+		templateUrl: 'view/enquiry/enquiry-accountledger.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryAccountLedgerCtrl'
+		})
+	.state('enquiry.customerLedger', {
+		url: '/customerLedger',
+		templateUrl: 'view/enquiry/enquiry-customerledger.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryCustomerLedgerCtrl'
+		})
+	.state('enquiry.supplierLedger', {
+		url: '/supplierLedger',
+		templateUrl: 'view/enquiry/enquiry-supplierledger.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquirySupplierLedgerCtrl'
+		})
+	.state('enquiry.performanceAppraisal', {
+		url: '/performanceAppraisal',
+		templateUrl: 'view/enquiry/enquiry-performanceappraisal.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryPerformanceAppraisalCtrl'
+		})
 
 	//Admin
 	.state('admin', {

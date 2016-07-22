@@ -1,6 +1,8 @@
 
-mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 
+mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 
                                    function($scope, $rootScope, $http, modalService, blockUI, unitService) {
+	
+	$scope.blockEnquiryWorkScope = blockUI.instances.get('blockEnquiryWorkScope');
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -12,8 +14,8 @@ mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
-			paginationPageSize : 25,
+			paginationPageSizes : [ ],
+			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
@@ -27,13 +29,15 @@ mainApp.controller('EnquiryWorkscopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 	}
 	
 	$scope.loadGridData = function(){
+		$scope.blockEnquiryWorkScope.start('Loading...');
 		unitService.getAllWorkScopes()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
+				$scope.blockEnquiryWorkScope.stop();
 		}, function(data){
-			$scope.blockEnquirySubcontractor.stop();
+			$scope.blockEnquiryWorkScope.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 

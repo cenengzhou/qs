@@ -2,6 +2,9 @@
 mainApp.controller('EnquirySubcontractDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
                                          function($scope, $rootScope, $http, modalService, blockUI, SessionHelper) {
 	
+	$scope.blockEnquirySubcontractDetail = blockUI.instances.get('blockEnquirySubcontractDetail');
+	$scope.blockEnquirySubcontractDetail.start('Under Construction');
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -12,18 +15,18 @@ mainApp.controller('EnquirySubcontractDetailCtrl', ['$scope' , '$rootScope', '$h
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ 25, 50, 100, 150, 200 ],
-			paginationPageSize : 25,
+			paginationPageSizes : [ ],
+			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'maxInactiveInterval', enableCellEdit: false},
+//			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
+//			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
+//			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
+//			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
+//			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
+//			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
+//			             { field: 'maxInactiveInterval', enableCellEdit: false},
             			 ]
 	};
 	
@@ -50,6 +53,6 @@ mainApp.controller('EnquirySubcontractDetailCtrl', ['$scope' , '$rootScope', '$h
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-	$scope.loadGridData();
+//	$scope.loadGridData();
 	
 }]);

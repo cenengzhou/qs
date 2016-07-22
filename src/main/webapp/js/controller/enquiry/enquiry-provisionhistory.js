@@ -1,9 +1,9 @@
 
-mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
+mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
                                   function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
 	
-	$scope.blockEnquiryJobInfo = blockUI.instances.get('blockEnquiryJobInfo');
-	$scope.blockEnquiryJobInfo.start('Under Construction');
+	$scope.blockEnquiryProvisionHistory = blockUI.instances.get('blockEnquiryProvisionHistory');
+	$scope.blockEnquiryProvisionHistory.start('Under Construction');
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
