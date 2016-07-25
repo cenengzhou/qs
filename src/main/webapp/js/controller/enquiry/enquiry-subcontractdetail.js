@@ -20,6 +20,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 		paginationPageSize : 100,
 		allowCellFocus : false,
 		enableCellSelection : false,
+		exporterMenuPdf: false,
 		columnDefs : [
 				{
 					field : 'subcontract.packageNo',

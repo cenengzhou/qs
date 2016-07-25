@@ -17,6 +17,7 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 			paginationPageSizes : [],
 			paginationPageSize : 100,
 			allowCellFocus: false,
+			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
 			             { field: 'subcontractorNo', displayName: "Subcontractor Number", enableCellEdit: false },

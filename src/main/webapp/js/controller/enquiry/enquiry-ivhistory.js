@@ -19,6 +19,7 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'createdDate', displayName: 'Posting Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
 			             { field: 'packageNo', displayName: 'Package No.', enableCellEdit: false },

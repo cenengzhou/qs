@@ -51,14 +51,16 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	else if ($scope.currentPath.indexOf("/iv")==0){
 		$scope.activeMenu = 'IV';
 
-	}else if ($scope.currentPath.indexOf("/transit")==0){
+	}else if ($scope.currentPath.indexOf('/transit')==0){
 		$scope.activeMenu = 'Transit';
-	}else if ($scope.currentPath.indexOf("/admin")==0){
+	}else if ($scope.currentPath.indexOf('/admin')==0){
 		$scope.activeMenu = 'Admin';
 		$scope.activeAdminSideMenu = $scope.currentPath;
-	}else if($scope.currentPath.indexOf("/enquiry")==0){
+	}else if($scope.currentPath.indexOf('/enquiry')==0){
 		$scope.activeMenu= 'Enquiry';
 		$scope.activeEnquirySideMenu = $scope.currentPath;
+	}else if($scope.currentPath.indexOf('/reports')==0){
+		$scope.activeMenu= 'Reports'
 	}
 
 //	function convertImgToBase64URL(url, callback, outputFormat){

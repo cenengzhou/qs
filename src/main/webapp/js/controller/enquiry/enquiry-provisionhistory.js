@@ -22,6 +22,7 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 			paginationPageSizes : [ ],
 			paginationPageSize : 100,
 			allowCellFocus: false,
+			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
 			             { field: 'packageNo', displayName: "Package No.", enableCellEdit: false },

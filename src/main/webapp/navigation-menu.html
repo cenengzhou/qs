@@ -46,6 +46,12 @@
 							Enquiry
 						</a>
 					</li>
+						<li ng-class="{'bg-primary-light' : activeMenu == 'Reports'}">
+						<a ui-sref="reports" ng-click="activeMenu = 'Reports'"> 
+							<i class="fa fa-book"></i>
+							Reports
+						</a>
+					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}">
 						<a ui-sref="transit" ng-click="activeMenu = 'Transit'"> 
 							<i class="fa fa-file-text"></i>

@@ -27,6 +27,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 			paginationPageSizes : [ ],
 			paginationPageSize : 100,
 			allowCellFocus: false,
+			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
 			             { field: 'subcontractorNo', displayName: "Subcontractor No", enableCellEdit: false },

@@ -19,6 +19,7 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'jobInfo.company', displayName: 'Company', enableCellEdit: false },
 			             { field: 'jobNo', displayName: 'Job Number', enableCellEdit: false },

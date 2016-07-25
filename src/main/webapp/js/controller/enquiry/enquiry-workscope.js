@@ -18,6 +18,7 @@ mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'code', displayName: "Code", enableCellEdit: false },
 			             { field: 'description', displayName: "Description", enableCellEdit: false }

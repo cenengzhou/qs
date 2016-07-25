@@ -17,6 +17,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			paginationPageSizes : [ ],
 			paginationPageSize : 100,
 			allowCellFocus: false,
+			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
 			             { field: 'typeDocument', width:'100', displayName: "Document Type", enableCellEdit: false },

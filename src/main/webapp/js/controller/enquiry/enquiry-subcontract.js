@@ -18,6 +18,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'company', width:'60', displayName: "Company", enableCellEdit: false },
 			             { field: 'division', width:'60', displayName: "Division", enableCellEdit: false },

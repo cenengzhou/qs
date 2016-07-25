@@ -964,7 +964,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		},
 		controller: 'EnquiryPerformanceAppraisalCtrl'
 		})
-
+	//Reports
+	.state("reports", {
+		url: "/reports",
+		parent: "navigation",
+		templateUrl: "view/reports/reports-main.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [	
+							'js/controller/reports/reports-main.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'ReportMainCtrl'
+	})
 	//Admin
 	.state('admin', {
 		url: '/admin',
