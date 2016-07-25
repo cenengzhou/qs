@@ -9,6 +9,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
     	
     	obtainJobInfo: obtainJobInfo,
     	obtainJobDashboardData: obtainJobDashboardData,
+    	getJobDetailList: 	getJobDetailList,
     });
 	
     function getJob(jobNo) {
@@ -80,7 +81,15 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    // ---
+    function getJobDetailList() {
+        var request = $http({
+            method: "POST",
+            url: "service/job/getJobDetailList",
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+   // ---
     // PRIVATE METHODS.
     // ---
     // Transform the error response, unwrapping the application dta from

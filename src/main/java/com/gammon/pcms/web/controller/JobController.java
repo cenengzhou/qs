@@ -46,6 +46,17 @@ public class JobController {
 		return jobList;
 	}
 	
+	@RequestMapping(value = "getJobDetailList", method = RequestMethod.POST)
+	public List<JobInfo> getJobDetailList(){
+		List<JobInfo> jobList = null;
+		try{
+			jobList = jobService.getAllJobNoAndDescription();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jobList;
+	}
+
 	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo){
 		JobInfo job = null;

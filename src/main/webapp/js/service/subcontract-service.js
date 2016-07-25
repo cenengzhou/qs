@@ -20,8 +20,8 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	createSystemConstant: 				createSystemConstant,
     	updateSubcontractAdmin:				updateSubcontractAdmin,
     	obtainSubcontractListWithSCListWrapper:	obtainSubcontractListWithSCListWrapper,
-    	searchProvisionHistory:				searchProvisionHistory
-    	
+    	searchProvisionHistory:				searchProvisionHistory,
+    	getSCDetailList:					getSCDetailList
     });
 	
     function getSubcontractList(jobNo) {
@@ -234,6 +234,17 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     		}
     	});
     	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getSCDetailList(jobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSCDetailList",
+            params: {
+            	jobNo: jobNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
     }
     
     // ---

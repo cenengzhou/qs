@@ -6057,6 +6057,10 @@ public class SubcontractService {
 		return scListWrapperList;
 	}
 
+	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
+		return scDetailsHBDao.getScDetails(jobNumber);
+		
+	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 

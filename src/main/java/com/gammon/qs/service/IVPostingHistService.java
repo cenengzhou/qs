@@ -87,4 +87,13 @@ public class IVPostingHistService implements Serializable{
 		return Boolean.FALSE;
 	}
 	
+	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	public List<IVPostingHist> obtainIVPostingHistoryList(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, Date fromDate, Date toDate) throws Exception {
+		logger.info("Job: " + jobNumber + " Package: " + packageNo + " Object: " + objectCode + " Subsidiary: " + subsidiaryCode + " From Date: " + fromDate + " To Date: " + toDate);
+		
+		return ivPostingHistoryDao.obtainIVPostingHistory(jobNumber, packageNo, objectCode, subsidiaryCode, fromDate, toDate);
+		
+	}
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	
 }

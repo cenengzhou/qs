@@ -8,7 +8,6 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'accountObject', displayName: 'Object', enableCellEdit: false},
 			             { field: 'accountSubsidiary', displayName: 'Subsidiary', enableCellEdit: false},
 			             { field: 'accountDescription', displayName: 'Description', enableCellEdit: false},
-			             
 			             { field: 'internalValue', displayName: 'Internal Value', aggregationHideLabel: true, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
@@ -27,7 +26,8 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 }, 
 			            	 cellFilter: 'number:2', enableCellEdit: false
-			             },			             { field: 'actualValue', displayName: 'Actual Value', 
+			             },
+			             { field: 'actualValue', displayName: 'Actual Value', 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.actualValue < 0){

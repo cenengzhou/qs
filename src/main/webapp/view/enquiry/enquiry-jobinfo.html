@@ -1,4 +1,4 @@
-<div class="content-wrapper" block-ui="blockEnquiryJobInfo">
+<div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.jobInfo"><i class="fa fa-dashboard"></i>
@@ -16,7 +16,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Job Information</h3>
 						
-						<div class="col-md-12">
+						<div class="col-md-12" block-ui="blockEnquiryJobInfo">
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
 									resize ng-style="resizeWithOffset(215)"></div>

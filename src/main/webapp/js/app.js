@@ -810,7 +810,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	         	'js/service/subcontract-service.js',
                	         	'js/service/adl-service.js',
                	         	'js/service/unit-service.js',
-               	         	'js/service/subcontractor-service.js'               	         	
+               	         	'js/service/subcontractor-service.js',
+               	         	'js/service/ivpostinghist-service.js',
+               	         	'js/service/job-service.js'
                     ] 
                 });
             }]

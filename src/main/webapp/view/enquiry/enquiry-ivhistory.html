@@ -1,4 +1,4 @@
-<div class="content-wrapper" block-ui="blockEnquiryIvHistory">
+<div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.jobInfo"><i class="fa fa-dashboard"></i>
@@ -15,11 +15,68 @@
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Internal Valuation History</h3>
+						<form role="form" name="searchIVPostingHistForm" id="searchIVPostingHistForm" ng-submit="loadGridData()" class="form-input-flat">
 						
-						<div class="col-md-12">
+						<div class="form-group">
+								<div class="col-md-3">
+									<label for="searchJobNo">Job Number:</label> 
+									<label class="form-control" id="searchJobNo" name="searchJobNo">{{jobNo}}</label>
+								</div>
+								
+								<div class="col-md-3">
+									<label for="searchPackageNo">Package No.:</label> <input type="text"
+										class="form-control" id="searchPackageNo" name="searchPackageNo" ng-model="searchPackageNo"
+										pattern=".{4,4}" title="Please enter 4 characters" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchIVPostingHistForm.searchPackageNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
+								</div>					
+						
+								<div class="col-md-3">
+									<label for="searchObjectCode">Object Code:</label> <input type="text"
+										class="form-control" id="searchObjectCode" name="searchObjectCode" ng-model="searchObjectCode"
+										pattern=".{6,6}" title="Please enter 6 characters" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchIVPostingHistForm.searchObjectCode.$error.pattern" class="red">Please enter 6 characters or leave it blank</p>
+								</div>					
+						
+								<div class="col-md-3">
+									<label for="searchSubsidiaryCode">Subsidiary Code:</label> <input type="text"
+										class="form-control" id="searchSubsidiaryCode" name="searchSubsidiaryCode" ng-model="searchSubsidiaryCode"
+										pattern=".{8,8}" title="Please enter 8 characters" ng-model-options="{ updateOn: 'blur' }">
+										<p ng-show="searchIVPostingHistForm.searchSubsidiaryCode.$error.pattern" class="red">Please enter 8 characters or leave it blank</p>
+								</div>					
+								<div class="clearfix"></div>
+								<div class="col-md-3">
+									<label for="searchFromDate">From Date:</label>
+									<div class="input-group" moment-picker="searchFromDate"
+										format="DD MMM YYYY" start-view="year" min-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchFromDate" name="searchFromDate"
+											ng-model="searchFromDate">
+									</div>
+								</div>
+								
+								<div class="col-md-3">
+									<label for="searchToDate">To Date:</label>
+									<div class="input-group" moment-picker="searchToDate"
+										format="DD MMM YYYY" start-view="year" min-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchToDate" name="searchToDate"
+											ng-model="searchToDate">
+									</div>
+								</div>
+								
+								<div class="col-md-6">
+									<label>&nbsp;</label>
+									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+								</div>
+							</div>	
+						
+						</form>
+						<div class="col-md-12" block-ui="blockEnquiryIvHistory"><br>
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									resize ng-style="resizeWithOffset(350)"></div>
 					</div>
 				</div>
 			</div>

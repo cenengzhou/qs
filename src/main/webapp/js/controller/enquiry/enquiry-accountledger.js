@@ -23,10 +23,23 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			             { field: 'numberDocument', width:'100', displayName: "Document", enableCellEdit: false },
 			             { field: 'dateGl', width:'100', displayName: "G/L Date", cellFilter: 'date', enableCellEdit: false },
 			             { field: 'taxExplCode', width:'100', displayName: "Explanation", enableCellEdit: false },
-			             { field: 'amount', width:'100', displayName: "Amount", cellClass: 'text-right', 
+			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.amount < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
 			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
-			               	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>', 
-			               	 cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }
 			             },
 			             { field: 'accountTypeLedger', width:'100', displayName: "Ledger Type", enableCellEdit: false },
 			             { field: 'statusPost', width:'100', displayName: "Post Status", enableCellEdit: false },

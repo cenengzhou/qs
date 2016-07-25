@@ -99,6 +99,17 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getSCDetailList", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo){
+		List<SubcontractDetail> scDetails = new ArrayList<SubcontractDetail>();
+		try {
+			scDetails.addAll(subcontractService.getScDetails(jobNo));
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
 	@RequestMapping(value = "getSubcontractDashboardData", method = RequestMethod.GET)
 	public List<SubcontractDashboardWrapper> getSubcontractDashboardData(@RequestParam(required =true) String jobNo, 
 																@RequestParam(required =true) String subcontractNo, 

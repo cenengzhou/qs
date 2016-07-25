@@ -1,4 +1,4 @@
-<div class="content-wrapper" block-ui="blockEnquirySubcontractDetail">
+<div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.subcontract"><i class="fa fa-dashboard"></i>
@@ -16,9 +16,9 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Subcontract Detail</h3>
 						
-						<div class="col-md-12">
+						<div class="col-md-12" block-ui="blockEnquirySubcontractDetail">
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
-									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" width="1600"
 									resize ng-style="resizeWithOffset(215)"></div>
 					</div>
 				</div>

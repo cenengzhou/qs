@@ -1,10 +1,3 @@
-/**
- * PCMS-TC
- * com.gammon.pcms.web.controller
- * TransitController.java
- * @since Jun 29, 2016 5:45:47 PM
- * @author tikywong
- */
 package com.gammon.pcms.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
