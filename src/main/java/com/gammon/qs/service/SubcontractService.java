@@ -15,9 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -30,9 +31,7 @@ import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListMa
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseObj;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
-import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.PackageSnapshotGenerationService;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
@@ -44,7 +43,6 @@ import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AppSubcontractStandardTermsHBDao;
 import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.BpiItemResourceHBDao;
-import com.gammon.qs.dao.CreateGLWSDao;
 import com.gammon.qs.dao.HedgingNotificationWSDao;
 import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -85,13 +83,9 @@ import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.businessLogic.SCDetailsLogic;
 import com.gammon.qs.service.businessLogic.SCPackageLogic;
-import com.gammon.qs.service.finance.FinanceSubcontractListGenerator;
-import com.gammon.qs.service.finance.SubcontractLiabilityReportGenerator;
-import com.gammon.qs.service.finance.SubcontractorAnalysisReportGenerator;
 import com.gammon.qs.service.jobCost.ScProvisionHistoryExcelGenerator;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.service.subcontractDetail.SubcontractDetailForJobReportGenerator;
-import com.gammon.qs.service.subcontractDetail.SubcontractDetailReportGenerator;
 import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.domainWS.HedgingNotificationWrapper;
@@ -104,7 +98,6 @@ import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.SCDetailProvisionHistoryPaginationWrapper;
 import com.gammon.qs.wrapper.SCDetailProvisionHistoryWrapper;
 import com.gammon.qs.wrapper.SCDetailsWrapper;
-import com.gammon.qs.wrapper.SCListPaginationWrapper;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.addAddendum.AddAddendumWrapper;
 import com.gammon.qs.wrapper.addendumApproval.AddendumApprovalResponseWrapper;
@@ -112,10 +105,7 @@ import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeEnquiryReportWrappe
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeEnquiryWrapper;
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargePaginationWrapper;
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeSearchingCriteriaWrapper;
-import com.gammon.qs.wrapper.currencyCode.CurrencyCodeWrapper;
-import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrapper;
-import com.gammon.qs.wrapper.nonAwardedSCApproval.NonAwardedSCApprovalResponseWrapper;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalPaginationWrapper;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
@@ -123,7 +113,6 @@ import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
-import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisWrapper;
 import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
@@ -208,9 +197,7 @@ public class SubcontractService {
 	@Autowired
 	private ExcelWorkbookProcessor excelFileProcessor;
 	@Autowired
-	private CreateGLWSDao createGLDao;
-	@Autowired
-	private AdminService adminServiceImpl; // added by brian on 20110126 for add job security
+	private AdminService adminServiceImpl;
 	@Autowired
 	private SecurityService securityServiceImpl;
 	@Autowired
@@ -225,7 +212,6 @@ public class SubcontractService {
 	//pagination cache
 	private static final int PAGE_SIZE = GlobalParameter.PAGE_SIZE;
 	private List<SubcontractDetail> cachedSCDetailsList = new ArrayList<SubcontractDetail>();
-	private List<SCListWrapper> cachedSCList = new ArrayList<SCListWrapper>();
 	private List<ContraChargeEnquiryWrapper> cachedContraCharge = new ArrayList<ContraChargeEnquiryWrapper>();
 	private List<GetPerformanceAppraisalsResponseObj> cachedPerformanceAppraisalsList = new ArrayList<GetPerformanceAppraisalsResponseObj>();
 	private List<SCDetailProvisionHistoryWrapper> provisionHistoriesWrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
@@ -237,14 +223,8 @@ public class SubcontractService {
 	private JasperConfig jasperConfig;
 	@Autowired
 	private MessageConfig messageConfig;
-	@Autowired
-	private WebServiceConfig webServiceConfig;
 
 	public SubcontractService(){		
-	}
-
-	public List<Subcontract> getPackages(String jobNumber) throws Exception{
-		return subcontractHBDao.getPackages(jobNumber);
 	}
 
 	public List<SubcontractDetail> getCachedSCDetailsList() {
@@ -314,70 +294,6 @@ public class SubcontractService {
 
 	}
 
-	public Subcontract obtainAwardedPackage(String jobNumber, String packageNumber, String packageType) throws Exception {
-		return  subcontractHBDao.obtainSCPackage(jobNumber, packageNumber);
-	}
-
-	public Subcontract obtainNotAwardedPackage(String jobNumber, String packageNumber, String packageType) throws Exception {
-		if (packageType.trim().equals("S"))
-			return subcontractHBDao.obtainSCPackage(jobNumber, packageNumber);
-		return null;
-	}
-	
-	public List<Subcontract> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber,String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> companyList, Integer status) throws DatabaseOperationException{
-		return subcontractHBDao.obtainSubcontractList(company, division, jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, paymentStatus, workScope, clientNo, splitTerminateStatus, companyList, status, null);
-	}
-
-	public PaginationWrapper<SubcontractDetail> getSCDetailsOfPackageForExcel(String jobNumber, String packageNumber, String packageType, boolean isFullSet) throws Exception {
-		List<SubcontractDetail> resultList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNumber);
-		Collections.sort(resultList, new Comparator<SubcontractDetail>(){
-
-			public int compare(SubcontractDetail scDetails1, SubcontractDetail scDetails2) {
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getBillItem() == null)
-					return 0;
-
-				return scDetails1.getBillItem().compareTo(scDetails2.getBillItem());
-			}
-
-		});
-		cachedSCDetailsList.clear();
-		cachedSCDetailsList.addAll(resultList);
-		if(isFullSet)
-			return getSCDetailListAtPageForExcel(-1);
-		else
-			return getSCDetailListAtPageForExcel(0);
-	}
-
-	public PaginationWrapper<SubcontractDetail> getSCDetailListAtPageForExcel(int pageNum) throws Exception {
-		PaginationWrapper<SubcontractDetail> scDetailsListWrapper = new PaginationWrapper<SubcontractDetail>();
-
-		List<SubcontractDetail> currentSCDetailsList = new ArrayList<SubcontractDetail>();
-
-		//full set result list
-		if(pageNum <0){
-			currentSCDetailsList.addAll(this.cachedSCDetailsList);
-			scDetailsListWrapper.setCurrentPageContentList(currentSCDetailsList);
-			scDetailsListWrapper.setTotalPage(1);		
-			scDetailsListWrapper.setCurrentPage(0);
-			return scDetailsListWrapper;
-		}
-		else{
-			int formIndex = PAGE_SIZE * pageNum;
-			int toIndex = PAGE_SIZE * (pageNum +1) <= this.cachedSCDetailsList.size()?PAGE_SIZE * (pageNum +1): this.cachedSCDetailsList.size(); 
-
-			currentSCDetailsList.addAll(this.cachedSCDetailsList.subList(formIndex, toIndex));
-			scDetailsListWrapper.setCurrentPageContentList(currentSCDetailsList);
-
-			scDetailsListWrapper.setTotalPage((cachedSCDetailsList.size() + PAGE_SIZE - 1)/PAGE_SIZE);		
-			scDetailsListWrapper.setCurrentPage(pageNum);
-
-			return scDetailsListWrapper;
-
-		}
-	}
-	
 	public PaginationWrapper<SCDetailsWrapper> getSCDetailsOfPackage(String jobNumber, String packageNumber, String packageType, boolean isFullSet) throws Exception {
 		List<SubcontractDetail> resultList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNumber);
 		Collections.sort(resultList, new Comparator<SubcontractDetail>(){
@@ -400,7 +316,6 @@ public class SubcontractService {
 		else
 			return obtainSCDetailListAtPage(0);
 	}
-
 
 	public PaginationWrapper<SCDetailsWrapper> obtainSCDetailListAtPage(int pageNum) throws Exception {
 		PaginationWrapper<SCDetailsWrapper> scDetailsListWrapper = new PaginationWrapper<SCDetailsWrapper>();
@@ -1107,36 +1022,6 @@ public class SubcontractService {
 			paymentCertHBDao.saveOrUpdate(newPaymentCert);
 		}
 		return true;
-	}
-
-	public PaymentCertHBDao getScPaymentCertHBDao() {
-		return paymentCertHBDao;
-	}
-
-	public void setScPaymentCertHBDao(PaymentCertHBDao scPaymentCertHBDao) {
-		this.paymentCertHBDao = scPaymentCertHBDao;
-	}
-
-	public PaymentCertDetailHBDao getScPaymentDetailHBDao() {
-		return scPaymentDetailHBDao;
-	}
-
-	public void setScPaymentDetailHBDao(PaymentCertDetailHBDao scPaymentDetailHBDao) {
-		this.scPaymentDetailHBDao = scPaymentDetailHBDao;
-	}
-
-	public ExcelFile getSCDetailsExcelFileByJobPackageNoPackageType(
-			String jobNumber, String packageNumber, String packageType) throws Exception {
-		ExcelFile excelFile = null;
-
-		PaginationWrapper<SubcontractDetail> scDetailsWrapper = this.getSCDetailsOfPackageForExcel(jobNumber, packageNumber, packageType, true);
-
-		List<SubcontractDetail> scDetailsList = scDetailsWrapper.getCurrentPageContentList();
-		SubcontractDetailReportGenerator reportGenerator = new SubcontractDetailReportGenerator(scDetailsList, jobNumber);			
-		excelFile = reportGenerator.generate();
-
-
-		return excelFile;
 	}
 
 	/**
@@ -1915,339 +1800,6 @@ public class SubcontractService {
 		return scDetailsHBDao.getScDetailsByPage(scPackage, billItem, description, lineType, pageNum);
 	}
 
-	private List<SCListWrapper> obtainSubcontractListFromSCPackage(SubcontractListWrapper searchWrapper) throws Exception{
-		List<Subcontract> subcontractList = new ArrayList<Subcontract>();
-		String username = searchWrapper.getUsername() != null ? searchWrapper.getUsername() : securityServiceImpl.getCurrentUser().getUsername();
-		/*
-		 * @author koeyyeung
-		 * modified on 16 Oct, 2013
-		 * Apply job security
-		 */
-		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
-			//Access by peer systems via web service or users
-			if(webServiceConfig.getQsWsUsername().equals(username) || adminServiceImpl.canAccessJob(username, searchWrapper.getJobNumber()))
-				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
-																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																		searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																		searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null, searchWrapper.getReportType());
-			else
-				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
-		}else {
-			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
-
-			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
-				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
-																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																		searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																		searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null, searchWrapper.getReportType());
-			}else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
-			else{
-				subcontractList = subcontractHBDao.obtainSubcontractList(searchWrapper.getCompany(), searchWrapper.getDivision(),
-																	searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																	searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																	searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																	searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), companyList, null, searchWrapper.getReportType());
-			}
-		}
-		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (subcontractList==null? "0" : subcontractList.size()));
-		
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-		
-		for(Subcontract scPackage: subcontractList){
-			SCListWrapper scListWrapper = new SCListWrapper();
-			scListWrapper.setClientNo(scPackage.getJobInfo().getEmployer());
-			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
-			if(scWorkScopeList!=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
-				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
-			scListWrapper.setPackageNo(scPackage.getPackageNo());
-			scListWrapper.setVendorNo(scPackage.getVendorNo());
-			
-			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackage.getVendorNo());
-			scListWrapper.setVendorName(vendor != null ? vendor.getVendorName() : "");
-			scListWrapper.setDescription(scPackage.getDescription());
-			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum());
-			scListWrapper.setAddendum(scPackage.getApprovedVOAmount());
-			scListWrapper.setSubcontractSum(scPackage.getSubcontractSum());
-			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackage.getPaymentStatus()));
-			scListWrapper.setPaymentTerms(scPackage.getPaymentTerms());
-			scListWrapper.setSubcontractTerm(scPackage.getSubcontractTerm());
-			scListWrapper.setSubcontractorNature(scPackage.getSubcontractorNature());
-			scListWrapper.setTotalLiabilities(scPackage.getTotalCumWorkDoneAmount());
-			scListWrapper.setTotalPostedCertAmt(scPackage.getTotalPostedCertifiedAmount());
-			scListWrapper.setTotalCumCertAmt(scPackage.getTotalCumCertifiedAmount());
-			if (scPackage.getTotalCumWorkDoneAmount()!=null && scPackage.getTotalPostedCertifiedAmount()!=null)
-				scListWrapper.setTotalProvision(scPackage.getTotalCumWorkDoneAmount() - scPackage.getTotalPostedCertifiedAmount());			
-			Double balanceToComplete = null;
-			if (scPackage.getSubcontractSum() !=null && scPackage.getTotalCumWorkDoneAmount() !=null)
-				balanceToComplete = new Double (scPackage.getSubcontractSum()-scPackage.getTotalCumWorkDoneAmount());
-			scListWrapper.setBalanceToComplete(balanceToComplete);
-			scListWrapper.setTotalCCPostedAmt(scPackage.getTotalCCPostedCertAmount());
-			scListWrapper.setTotalMOSPostedAmt(scPackage.getTotalMOSPostedCertAmount());
-			scListWrapper.setJobNumber(scPackage.getJobInfo().getJobNumber());
-			scListWrapper.setJobDescription(scPackage.getJobInfo().getDescription());
-			scListWrapper.setAccumlatedRetentionAmt(scPackage.getAccumlatedRetention());
-			scListWrapper.setRetentionReleasedAmt(scPackage.getRetentionReleased());
-			if(scPackage.getAccumlatedRetention()!=null && scPackage.getRetentionReleased()!=null)
-				scListWrapper.setRetentionBalanceAmt((scPackage.getAccumlatedRetention() + scPackage.getRetentionReleased()));
-
-			scListWrapper.setRequisitionApprovedDate(scPackage.getRequisitionApprovedDate());
-			scListWrapper.setTenderAnalysisApprovedDate(scPackage.getTenderAnalysisApprovedDate());
-			scListWrapper.setPreAwardMeetingDate(scPackage.getPreAwardMeetingDate());
-			scListWrapper.setLoaSignedDate(scPackage.getLoaSignedDate());
-			scListWrapper.setScDocScrDate(scPackage.getScDocScrDate());
-			scListWrapper.setScDocLegalDate(scPackage.getScDocLegalDate());
-			scListWrapper.setWorkCommenceDate(scPackage.getWorkCommenceDate());
-			scListWrapper.setOnSiteStartDate(scPackage.getOnSiteStartDate());
-			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackage.getSplitTerminateStatus()));
-			
-			if(searchWrapper.isIncludeJobCompletionDate() && scPackage.getJobInfo().getJobNumber()!=null && !"".equals(scPackage.getJobInfo().getJobNumber()))
-				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackage.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
-			
-			/**
-			 * koeyyeung
-			 * added on 27 Aug, 2014
-			 * requested by Finance
-			 */
-			scListWrapper.setCompany(scPackage.getJobInfo().getCompany());
-			scListWrapper.setDivision(scPackage.getJobInfo().getDivision());
-			scListWrapper.setSoloJV((scPackage.getJobInfo().getSoloJV().equals("S")?"Solo":scPackage.getJobInfo().getSoloJV()));
-			scListWrapper.setJvPercentage(scPackage.getJobInfo().getJvPercentage());
-			scListWrapper.setActualPCCDate(scPackage.getJobInfo().getActualPCCDate());
-			scListWrapper.setCompletionStatus(scPackage.getJobInfo().getCompletionStatus());
-			scListWrapper.setCurrency(scPackage.getPaymentCurrency());
-			scListWrapper.setOriginalSubcontractSum(scPackage.getOriginalSubcontractSum());
-			
-			if(scPackage.getTotalPostedCertifiedAmount()!=null && scListWrapper.getRetentionBalanceAmt()!=null)
-				scListWrapper.setNetCertifiedAmount(scPackage.getTotalPostedCertifiedAmount()-scListWrapper.getRetentionBalanceAmt());
-			
-			scListWrapperList.add(scListWrapper);
-		}
-		return scListWrapperList;
-	}
-	
-	private List<SCListWrapper> obtainSubcontractListFromSCPackageSnapshot(SubcontractListWrapper searchWrapper) throws Exception{
-		logger.info("obtainSubcontractListFromSCPackageSnapshot");
-		
-		List<SubcontractSnapshot> subcontractList = new ArrayList<SubcontractSnapshot>();
-		String username = securityServiceImpl.getCurrentUser().getUsername();
-		/*
-		 * @author koeyyeung
-		 * modified on 16 Oct, 2013
-		 * Apply job security
-		 */
-		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
-			if(adminServiceImpl.canAccessJob(username, searchWrapper.getJobNumber()))
-				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
-																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null,
-																				searchWrapper.getMonth(), searchWrapper.getYear(), searchWrapper.getReportType());
-			else
-				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
-		}else {
-			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
-
-			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
-				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
-																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null,
-																				searchWrapper.getMonth(), searchWrapper.getYear(), searchWrapper.getReportType());
-			}else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
-			else{
-				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
-																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
-																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
-																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), companyList, null,
-																				searchWrapper.getMonth(), searchWrapper.getYear(), searchWrapper.getReportType());
-			}
-		}
-		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (subcontractList==null? "0" : subcontractList.size()));
-		
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-		
-		for(SubcontractSnapshot scPackageSnapshot: subcontractList){
-			SCListWrapper scListWrapper = new SCListWrapper();
-			scListWrapper.setClientNo(scPackageSnapshot.getJobInfo().getEmployer());
-			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackageSnapshot.getSubcontract());
-			if(scWorkScopeList !=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
-				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
-			scListWrapper.setPackageNo(scPackageSnapshot.getPackageNo());
-			scListWrapper.setVendorNo(scPackageSnapshot.getVendorNo());
-			
-			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackageSnapshot.getVendorNo());
-			scListWrapper.setVendorName(vendor != null ? vendor.getVendorName() : "");
-			scListWrapper.setDescription(scPackageSnapshot.getDescription());
-			scListWrapper.setRemeasuredSubcontractSum(scPackageSnapshot.getRemeasuredSubcontractSum());
-			scListWrapper.setAddendum(scPackageSnapshot.getApprovedVOAmount());
-			scListWrapper.setSubcontractSum(scPackageSnapshot.getSubcontractSum());
-			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackageSnapshot.getPaymentStatus()));
-			scListWrapper.setPaymentTerms(scPackageSnapshot.getPaymentTerms());
-			scListWrapper.setSubcontractTerm(scPackageSnapshot.getSubcontractTerm());
-			scListWrapper.setSubcontractorNature(scPackageSnapshot.getSubcontractorNature());
-			scListWrapper.setTotalLiabilities(scPackageSnapshot.getTotalCumWorkDoneAmount());
-			scListWrapper.setTotalPostedCertAmt(scPackageSnapshot.getTotalPostedCertifiedAmount());
-			scListWrapper.setTotalCumCertAmt(scPackageSnapshot.getTotalCumCertifiedAmount());
-			if (scPackageSnapshot.getTotalCumWorkDoneAmount()!=null && scPackageSnapshot.getTotalPostedCertifiedAmount()!=null)
-				scListWrapper.setTotalProvision(scPackageSnapshot.getTotalCumWorkDoneAmount() - scPackageSnapshot.getTotalPostedCertifiedAmount());			
-			Double balanceToComplete = null;
-			if (scPackageSnapshot.getSubcontractSum() !=null && scPackageSnapshot.getTotalCumWorkDoneAmount() !=null)
-				balanceToComplete = new Double (scPackageSnapshot.getSubcontractSum()-scPackageSnapshot.getTotalCumWorkDoneAmount());
-			scListWrapper.setBalanceToComplete(balanceToComplete);
-			scListWrapper.setTotalCCPostedAmt(scPackageSnapshot.getTotalCCPostedCertAmount());
-			scListWrapper.setTotalMOSPostedAmt(scPackageSnapshot.getTotalMOSPostedCertAmount());
-			scListWrapper.setJobNumber(scPackageSnapshot.getJobInfo().getJobNumber());
-			scListWrapper.setJobDescription(scPackageSnapshot.getJobInfo().getDescription());
-			scListWrapper.setAccumlatedRetentionAmt(scPackageSnapshot.getAccumlatedRetention());
-			scListWrapper.setRetentionReleasedAmt(scPackageSnapshot.getRetentionReleased());
-			if(scPackageSnapshot.getAccumlatedRetention()!=null && scPackageSnapshot.getRetentionReleased()!=null)
-				scListWrapper.setRetentionBalanceAmt((scPackageSnapshot.getAccumlatedRetention() + scPackageSnapshot.getRetentionReleased()));
-
-			scListWrapper.setRequisitionApprovedDate(scPackageSnapshot.getRequisitionApprovedDate());
-			scListWrapper.setTenderAnalysisApprovedDate(scPackageSnapshot.getTenderAnalysisApprovedDate());
-			scListWrapper.setPreAwardMeetingDate(scPackageSnapshot.getPreAwardMeetingDate());
-			scListWrapper.setLoaSignedDate(scPackageSnapshot.getLoaSignedDate());
-			scListWrapper.setScDocScrDate(scPackageSnapshot.getScDocScrDate());
-			scListWrapper.setScDocLegalDate(scPackageSnapshot.getScDocLegalDate());
-			scListWrapper.setWorkCommenceDate(scPackageSnapshot.getWorkCommenceDate());
-			scListWrapper.setOnSiteStartDate(scPackageSnapshot.getOnSiteStartDate());
-			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackageSnapshot.getSplitTerminateStatus()));
-			
-			if(searchWrapper.isIncludeJobCompletionDate() && scPackageSnapshot.getJobInfo().getJobNumber()!=null && !"".equals(scPackageSnapshot.getJobInfo().getJobNumber()))
-				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackageSnapshot.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
-			
-			
-			/**
-			 * koeyyeung
-			 * added on 27 Aug, 2014
-			 * requested by Finance
-			 */
-			scListWrapper.setCompany(scPackageSnapshot.getJobInfo().getCompany());
-			scListWrapper.setDivision(scPackageSnapshot.getJobInfo().getDivision());
-			scListWrapper.setSoloJV((scPackageSnapshot.getJobInfo().getSoloJV().equals("S")?"Solo":scPackageSnapshot.getJobInfo().getSoloJV()));
-			scListWrapper.setJvPercentage(scPackageSnapshot.getJobInfo().getJvPercentage());
-			scListWrapper.setActualPCCDate(scPackageSnapshot.getJobInfo().getActualPCCDate());
-			scListWrapper.setCompletionStatus(scPackageSnapshot.getJobInfo().getCompletionStatus());
-			scListWrapper.setCurrency(scPackageSnapshot.getPaymentCurrency());
-			scListWrapper.setOriginalSubcontractSum(scPackageSnapshot.getOriginalSubcontractSum());
-			
-			if(scPackageSnapshot.getTotalPostedCertifiedAmount()!=null && scListWrapper.getRetentionBalanceAmt()!=null)
-				scListWrapper.setNetCertifiedAmount(scPackageSnapshot.getTotalPostedCertifiedAmount()-scListWrapper.getRetentionBalanceAmt());
-			
-			scListWrapper.setSnapshotDate(scPackageSnapshot.getSnapshotDate());
-			
-			scListWrapperList.add(scListWrapper);
-		}
-		return scListWrapperList;
-	}
-	
-	public SCListPaginationWrapper obtainSubcontractListPaginationWrapper(SubcontractListWrapper searchWrapper) throws Exception{
-		List<SCListWrapper> scListWrapperList = obtainSubcontractList(searchWrapper);
-		
-		cachedSCList = scListWrapperList;
-		if (cachedSCList == null)
-			return null;
-		else
-			return obtainSubcontractListByPage(0);
-	}
-
-
-	/**
-	 * modified by matthewlam, 2015-01-30
-	 * Bug fix #93 - Add Page Total and Grand Total
-	 */
-	public SCListPaginationWrapper obtainSubcontractListByPage(int pageNum) {
-		SCListPaginationWrapper wrapper = new SCListPaginationWrapper();
-		wrapper.setCurrentPage(pageNum);
-		int size = cachedSCList.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1) / RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if (toInd > cachedSCList.size())
-			toInd = cachedSCList.size();
-
-		// Calculate Grand Total Amounts
-		double totalAccumlatedRetentionAmt = 0.0;
-		double totalAddendum = 0.0;
-		double totalBalanceToComplete = 0.0;
-		double totalCCPostedAmt = 0.0;
-		double totalCumCertAmt = 0.0;
-		double totalLiabilities = 0.0;
-		double totalMOSPostedAmt = 0.0;
-		double totalNetCertAmt = 0.0;
-		double totalOriginalSubcontractSumAmt = 0.0;
-		double totalPostedCertAmt = 0.0;
-		double totalProvision = 0.0;
-		double totalRemeasuredSubcontractSum = 0.0;
-		double totalRetentionBalanceAmt = 0.0;
-		double totalRetentionReleasedAmt = 0.0;
-		double totalRevisedSubcontractSum = 0.0;
-
-		for (int i = 0; i < cachedSCList.size(); i++) {
-			SCListWrapper w = cachedSCList.get(i);
-			totalAccumlatedRetentionAmt += w.getAccumlatedRetentionAmt();
-			totalAddendum += w.getAddendum();
-			totalBalanceToComplete += w.getBalanceToComplete();
-			totalCCPostedAmt += w.getTotalCCPostedAmt();
-			totalCumCertAmt += w.getTotalCumCertAmt();
-			totalLiabilities += w.getTotalLiabilities();
-			totalMOSPostedAmt += w.getTotalMOSPostedAmt();
-			totalNetCertAmt += w.getNetCertifiedAmount();
-			totalOriginalSubcontractSumAmt += w.getOriginalSubcontractSum();
-			totalPostedCertAmt += w.getTotalPostedCertAmt();
-			totalProvision += w.getTotalProvision();
-			totalRemeasuredSubcontractSum += w.getRemeasuredSubcontractSum();
-			totalRetentionBalanceAmt += w.getRetentionBalanceAmt();
-			totalRetentionReleasedAmt += w.getRetentionReleasedAmt();
-			totalRevisedSubcontractSum += w.getSubcontractSum();
-		}
-
-		wrapper.setOverallAccumlatedRetentionAmount(totalAccumlatedRetentionAmt);
-		wrapper.setOverallAddendum(totalAddendum);
-		wrapper.setOverallBalanceToComplete(totalBalanceToComplete);
-		wrapper.setOverallCCPostedAmount(totalCCPostedAmt);
-		wrapper.setOverallCumCertAmount(totalCumCertAmt);
-		wrapper.setOverallLiabilities(totalLiabilities);
-		wrapper.setOverallMOSPostedAmount(totalMOSPostedAmt);
-		wrapper.setOverallNetCertAmount(totalNetCertAmt);
-		wrapper.setOverallOriginalSubcontractSumAmount(totalOriginalSubcontractSumAmt);
-		wrapper.setOverallPostedCertAmount(totalPostedCertAmt);
-		wrapper.setOverallProvision(totalProvision);
-		wrapper.setOverallRemeasuredSubcontractSum(totalRemeasuredSubcontractSum);
-		wrapper.setOverallRetentionBalanceAmount(totalRetentionBalanceAmt);
-		wrapper.setOverallRetentionReleasedAmount(totalRetentionReleasedAmt);
-		wrapper.setOverallRevisedSubcontractSum(totalRevisedSubcontractSum);
-
-		ArrayList<SCListWrapper> scListWrappers = new ArrayList<SCListWrapper>(cachedSCList.subList(fromInd, toInd));
-
-		wrapper.setCurrentPageContentList(scListWrappers);
-		return wrapper;
-	}
-
-	public SubcontractHBDao getPackageHBDao() {
-		return subcontractHBDao;
-	}
-
-	public void setPackageHBDao(SubcontractHBDao packageHBDao) {
-		this.subcontractHBDao = packageHBDao;
-	}
-
 	public String suspendAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
 		SubcontractDetail scDetails = scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
 		//Validate Addendum was submitted
@@ -2267,54 +1819,6 @@ public class SubcontractService {
 		else{
 			return "Error has been existed";
 		}
-	}
-
-	public void setMasterListRepository(MasterListService masterListRepository) {
-		this.masterListRepository = masterListRepository;
-	}
-
-	public MasterListService getMasterListRepository() {
-		return masterListRepository;
-	}
-
-	public UnitService getUnitRepository() {
-		return unitRepository;
-	}
-
-	public void setUnitRepository(UnitService unitRepository) {
-		this.unitRepository = unitRepository;
-	}
-
-	public AccountCodeWSDao getAccountCodeWSDao() {
-		return accountCodeWSDao;
-	}
-
-	public void setAccountCodeWSDao(AccountCodeWSDao accountCodeWSDao) {
-		this.accountCodeWSDao = accountCodeWSDao;
-	}
-
-	public void setJobCostDao(JobCostWSDao jobCostDao) {
-		this.jobCostDao = jobCostDao;
-	}
-
-	public JobCostWSDao getJobCostDao() {
-		return jobCostDao;
-	}
-
-	public void setTenderAnalysisHBDao(TenderHBDao tenderAnalysisHBDao) {
-		this.tenderAnalysisHBDao = tenderAnalysisHBDao;
-	}
-
-	public TenderHBDao getTenderAnalysisHBDao() {
-		return tenderAnalysisHBDao;
-	}
-
-	public CreateGLWSDao getCreateGLDao() {
-		return createGLDao;
-	}
-
-	public void setCreateGLDao(CreateGLWSDao createGLDao) {
-		this.createGLDao = createGLDao;
 	}
 
 	public String deleteAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
@@ -2411,48 +1915,6 @@ public class SubcontractService {
 		return true;
 	}
 
-	@Deprecated
-	public NonAwardedSCApprovalResponseWrapper nonAwardedSCApproval(
-			String jobNumber, Integer subcontractNumber,
-			Integer subcontractorNumber, Double subcontractSumInDomCurr,
-			Double comparableBudgetAmount, String username) {
-
-		//		NonAwardedSCApprovalResponseWrapper responseObj = new NonAwardedSCApprovalResponseWrapper();
-		//		String resultMsg = null;
-		//		SCPackage scPackage = packageHBDao.getSCPackage(jobNumber, subcontractNumber.toString());
-		//		String approvalType = null;
-		//
-		////		resultMsg = SCDetailsLogic.validateAddendumApproval(scPackage);
-		////		logger.info(resultMsg);
-		//		try{
-		//			String company = scPackage.getJob().getCompany();
-		//			String vendorNo = scPackage.getVendorNo();
-		//			String vendorName = masterListRepository.searchVendorAddressDetails(scPackage.getVendorNo().trim()).getVendorName();//"Testing Company  Name";
-		//			String approvalSubType = scPackage.getApprovalRoute();
-		//			String currencyCode = scPackage.getPaymentCurrency();
-		//			if(resultMsg == null){
-		//				resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber.toString(), vendorNo, vendorName,
-		//						approvalType, approvalSubType, certAmount, currencyCode, userID);
-		//			}
-		//			logger.info("resultMsg"+resultMsg);
-		//			if(resultMsg==null || resultMsg.trim().length()<1){
-		//				responseObj.setIsFinished(true);}
-		//			else{
-		//				responseObj.setIsFinished(false);
-		//				responseObj.setErrorMsg(resultMsg);
-		//			}
-		//		}catch (Exception e){
-		//			responseObj.setIsFinished(false);
-		//			responseObj.setErrorMsg(e.getLocalizedMessage());
-		//			logger.info(e.getMessage());
-		//		}
-		//		scPackage.setSubmittedAddendum("1");
-		//		packageHBDao.updateSCPackage(scPackage);
-		//		return responseObj;
-
-		return null;
-	}
-
 	public List<ListNonAwardedSCPackageWrapper> retrieveNonAwardedSCPackageList(
 			String jobNumber) {
 		try {
@@ -2495,46 +1957,6 @@ public class SubcontractService {
 		return null;
 	}
 
-	public String[][] getUnawardedPackageNos(JobInfo job) throws Exception{
-		logger.info("getUnawardedPackageNos for job: " + job.getJobNumber());
-		List<Object[]> packageObjects = subcontractHBDao.getUnawardedPackageNos(job);
-		String[][] packages ;
-		if(packageObjects == null || packageObjects.size() == 0)
-			packages = new String[1][3];
-		else{
-			packages = new String[packageObjects.size()+1][3];
-			for(int i = 0; i < packageObjects.size(); i++){
-				packages[i+1][0] = (String)packageObjects.get(i)[0];
-				packages[i+1][1] = (String)packageObjects.get(i)[0] + " - " + (String)packageObjects.get(i)[1];
-				packages[i+1][2] = packageObjects.get(i)[2] != null ? packageObjects.get(i)[2].toString() : "";
-			}
-		}
-		packages[0][0] = " "; //package num
-		packages[0][1] = "No Package"; //description
-		packages[0][2] = "000"; //status
-		return packages;
-	}
-
-	public String[][] getAwardedPackageStore(JobInfo job) throws Exception {
-		logger.info("getAwardedPackageNos for job: " + job.getJobNumber());
-		List<Object[]> packageObjects = subcontractHBDao.getAwardedPackageStore(job);
-		String[][] packages=null;
-		if(packageObjects == null || packageObjects.size() == 0)
-			packages = new String[1][3];
-		else{
-			packages = new String[packageObjects.size()+1][3];
-			for(int i = 0; i < packageObjects.size(); i++){
-				packages[i+1][0] = (String)packageObjects.get(i)[0];
-				packages[i+1][1] = (String)packageObjects.get(i)[0] + " - " + (String)packageObjects.get(i)[1];
-				packages[i+1][2] = packageObjects.get(i)[2] != null ? packageObjects.get(i)[2].toString() : "";
-			}
-		}
-		packages[0][0] = " "; //package num
-		packages[0][1] = "No Package"; //description
-		packages[0][2] = "000"; //status
-		return packages;
-	}
-
 	public List<String> getUneditablePackageNos(JobInfo job) throws Exception{
 		return subcontractHBDao.getUneditablePackageNos(job);
 	}
@@ -2568,37 +1990,6 @@ public class SubcontractService {
 		return unawardedPackageNos;
 	}
 	
-	public List<String> getAwardedPackageNos(JobInfo job) throws Exception{
-		return subcontractHBDao.getAwardedPackageNos(job);
-	}	
-
-	public List<TenderAnalysisWrapper> retrieveTenderAnalysisList(
-			String jobNumber, String packageNumber) {
-		try {
-			List<TenderAnalysisWrapper> taWrapperList = new ArrayList<TenderAnalysisWrapper>();
-			List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysis(jobNumber, packageNumber);
-			for (Tender ta: tenderAnalysisList) {
-				TenderAnalysisWrapper taWrapper = new TenderAnalysisWrapper();
-				taWrapper.setComparableBudgetAmount(new Double(0));
-				//				taWrapper.setComparableBudgetAmount(ta.getBudgetAmount());
-				taWrapper.setCurrency(ta.getCurrencyCode());
-				taWrapper.setExchangeRate(new Double(1.0));
-				//				taWrapper.setExchangeRate(ta.getExchangeRate());
-				taWrapper.setSubcontractorName(masterListRepository.searchVendorAddressDetails(ta.getVendorNo().toString()).getVendorName());
-				taWrapper.setSubcontractorNumber(ta.getVendorNo());
-				Double subcontractSumInDomCurr =0.0;
-				for (TenderDetail taDetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta))
-					subcontractSumInDomCurr += taDetail.getRateBudget()*taDetail.getQuantity();
-				taWrapper.setSubcontractSumInDomCurr(subcontractSumInDomCurr);
-				taWrapperList.add(taWrapper);
-			}
-			return taWrapperList;
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage());
-		}
-		return null;
-	}
-
 	/**
 	 * @author koeyyeung
 	 * modified on Jan, 2015
@@ -2815,72 +2206,6 @@ public class SubcontractService {
 		return true;
 	}
 
-	public List<Subcontract> getPackagesFromList(JobInfo job, List<String> packageNos) throws Exception{
-		return subcontractHBDao.getPackagesFromList(job, packageNos);
-	}
-
-	public List<Subcontract> getSCPackages(JobInfo job) throws Exception{
-		return subcontractHBDao.getSCPackages(job);		
-	}
-
-
-	public Subcontract getSCPackageForPackagePanel(JobInfo job, String packageNo) throws Exception{
-		logger.info(job.getJobNumber()+"-"+packageNo);	
-		Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
-		//Get vendor name and append it to vendor no (split again in the ui)
-		String vendorNo = scPackage.getVendorNo();
-		if(vendorNo != null && scPackage.isAwarded()){
-			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(vendorNo);
-			if(vendor != null){
-				vendorNo += "-" + vendor.getVendorName();
-				scPackage.setVendorNo(vendorNo);
-			}
-		}
-
-		//If package is non-awarded, setOriginalSubcontractSum as the budget for the package.
-		if(!scPackage.isAwarded()){
-			Tender tenderAnalysis = tenderAnalysisHBDao.obtainTender(job.getJobNumber(), packageNo, Integer.valueOf(0));
-			Double budget = tenderAnalysis != null ? tenderAnalysis.getBudgetAmount() : null;
-			scPackage.setOriginalSubcontractSum(budget);
-		}
-		return scPackage;
-	}
-
-	
-
-
-
-	/**
-	 * For Manual Sub-contract Provision Posting
-	 * @author tikywong
-	 * modified on January 21, 2014 1:54:41 PM
-	 */
-//	public void postProvisionByJob(String jobNumber, Date glDate, boolean overrideOldPosting, String username) throws Exception{
-//		List<SCPackage> scPackageList = packageHBDao.obtainPackagesByStatusForProvisionPosting(jobNumber, new Integer(500));
-//		List<ProvisionWrapper> listOfProvision = new ArrayList<ProvisionWrapper>();
-//		
-//		if (scPackageList!=null && scPackageList.size()>0)
-//			for (SCPackage abPackage:scPackageList){
-//				List<ProvisionWrapper> provisionWrapperList = provisionPostingService.validateGLDateForSCProvision(abPackage, glDate, overrideOldPosting, jobCostDao.getAccountIDListByJob(jobNumber));
-//				if (provisionWrapperList!=null)
-//					listOfProvision.addAll(provisionWrapperList);
-//			}
-//		if (listOfProvision!=null && listOfProvision.size()>0){
-//			String ediBatchNo = createGLDao.getEdiBatchNumber();
-//			createGLDao.createSCProvision(ediBatchNo, listOfProvision, glDate, username, 10000);
-//			createGLDao.postGLByEdiBatchNo(ediBatchNo, username);
-//		}
-//		else
-//			logger.log(Level.INFO, "No Provision record to be posted.");
-//	}
-
-	public void setBqResourceSummaryDao(ResourceSummaryHBDao bqResourceSummaryDao) {
-		this.bqResourceSummaryDao = bqResourceSummaryDao;
-	}
-
-	public ResourceSummaryHBDao getBqResourceSummaryDao() {
-		return bqResourceSummaryDao;
-	}
 
 	public Boolean updateNewQuantity(Long id, Double newQuantity) throws Exception{
 		if("ACTIVE".equalsIgnoreCase(scDetailsHBDao.get(id).getSystemStatus())){
@@ -3985,84 +3310,6 @@ public class SubcontractService {
 		return packageSnapshotGenerationService.calculateTotalWDAmountByJob(jobNumber);
 	}
 
-	public ExcelFile downloadSubcontractEnquiryReportExcelFile(String company, String division, String jobNumber, String subcontractNo, String subcontractorNumber, 
-			String subcontractorNature,String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, Boolean includeJobCompletionDate, 
-			String month, String year, String reportType) throws Exception {
-		SubcontractListWrapper searchWrapper= new SubcontractListWrapper();
-		searchWrapper.setCompany(company);
-		searchWrapper.setDivision(division);
-		searchWrapper.setJobNumber(jobNumber);
-		searchWrapper.setSubcontractNo(subcontractNo);
-		searchWrapper.setSubcontractorNo(subcontractorNumber);
-		searchWrapper.setSubcontractorNature(subcontractorNature);
-		searchWrapper.setPaymentStatus(paymentStatus);
-		searchWrapper.setWorkscope(workScope);
-		searchWrapper.setClientNo(clientNo);
-		searchWrapper.setIncludeJobCompletionDate(includeJobCompletionDate);
-		searchWrapper.setSplitTerminateStatus(splitTerminateStatus);
-		searchWrapper.setMonth(month);
-		searchWrapper.setYear(year);
-		searchWrapper.setReportType(reportType);
-		
-		List<SCListWrapper> scListWrapper = obtainSubcontractList(searchWrapper);
-		ExcelFile excelFile = null;
-		
-		if("subcontractLiabilityReport".equals(reportType)){
-			SubcontractLiabilityReportGenerator reportGenerator = new SubcontractLiabilityReportGenerator (scListWrapper);
-			excelFile = reportGenerator.generate();
-		}else if("subcontractListReport".equals(reportType)){
-			FinanceSubcontractListGenerator reportGenerator = new FinanceSubcontractListGenerator (scListWrapper, includeJobCompletionDate);
-			excelFile = reportGenerator.generate();
-		}else if("SubcontractorAnalysisReport".equals(reportType)){
-			SubcontractorAnalysisReportGenerator reportGenerator = new SubcontractorAnalysisReportGenerator (scListWrapper);
-			excelFile = reportGenerator.generate();
-		}
-		return excelFile;
-	}
-	
-
-	public ByteArrayOutputStream downloadSubcontractEnquiryReportPDFFile(String company, String division, String jobNumber, String subcontractNo,
-			String subcontractorNumber, String subcontractorNature,String paymentStatus, String workScope, String clientNo, Boolean includeJobCompletionDate,
-			String splitTerminateStatus, String month, String year, String jasperReportName)throws Exception {
-		String fileFullPath = jasperConfig.getTemplatePath()+jasperReportName;
-		Date asOfDate = null;
-		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
-		
-		SubcontractListWrapper searchWrapper= new SubcontractListWrapper();
-		searchWrapper.setCompany(company);
-		searchWrapper.setDivision(division);
-		searchWrapper.setJobNumber(jobNumber);
-		searchWrapper.setSubcontractNo(subcontractNo);
-		searchWrapper.setSubcontractorNo(subcontractorNumber);
-		searchWrapper.setSubcontractorNature(subcontractorNature);
-		searchWrapper.setPaymentStatus(paymentStatus);
-		searchWrapper.setWorkscope(workScope);
-		searchWrapper.setClientNo(clientNo);
-		searchWrapper.setIncludeJobCompletionDate(includeJobCompletionDate);
-		searchWrapper.setSplitTerminateStatus(splitTerminateStatus);
-		searchWrapper.setMonth(month);
-		searchWrapper.setYear(year);
-		
-		
-		List<SCListWrapper> scListWrappers = obtainSubcontractList(searchWrapper);
-
-		if(scListWrappers.size()==0){
-			SCListWrapper scListWrapper = new SCListWrapper();
-			scListWrapper.setJobNumber(jobNumber);
-			scListWrappers.add(scListWrapper);
-		}else{
-			if(scListWrappers.get(0).getSnapshotDate()!=null)
-				asOfDate = scListWrappers.get(0).getSnapshotDate();
-			else
-				asOfDate = new Date();
-		}
-
-		parameters.put("AS_OF_DATE", asOfDate);
-		
-		return JasperReportHelper.get().setCurrentReport(scListWrappers,fileFullPath,parameters).compileAndAddReport().exportAsPDF();
-	}
-	
 	public void updateScDetailFromResource(BpiItemResource resource, Subcontract scPackage) throws Exception{
 		String bpi = "";
 		bpi += resource.getRefBillNo() == null ? "/" : resource.getRefBillNo() + "/";
@@ -4136,7 +3383,7 @@ public class SubcontractService {
 				// add Job security to filter out record that user is not allowed to access
 				for(int i = 0; i < responseListObj.getPerformanceAppraisalsList().size(); i++){
 					// added to cachedPerformanceAppraisalsList if allow to access
-					if(canAccess(userName, responseListObj.getPerformanceAppraisalsList().get(i).getJobNumber().trim()))
+					if(adminServiceImpl.canAccessJob(userName, responseListObj.getPerformanceAppraisalsList().get(i).getJobNumber().trim()))
 						cachedPerformanceAppraisalsList.add(responseListObj.getPerformanceAppraisalsList().get(i));
 				}
 
@@ -4413,14 +3660,6 @@ public class SubcontractService {
 		return wrapper;
 	}
 
-	// added by brian on 20110126
-	// for check the job security to filter the performance appraisal
-	// (logic is copy from AdminServiceImpl.canAccessJob(String, String) in phrase 1)
-	public boolean canAccess(String userName, String jobNumber) throws DataAccessException {
-			return adminServiceImpl.canAccessJob(userName, jobNumber);
-		}
-
-	
 
 	// added by brian tse on 20110223
 	// get the company base currency by job number
@@ -4433,20 +3672,6 @@ public class SubcontractService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}
-	}
-
-	// added by brian on 20110420
-	// get the currency code list by pass a empty string to web service
-	public List<CurrencyCodeWrapper> getCurrencyCodeList(String currencyCode) {
-		logger.info("[PackageRepository][getCurrencyCodeList]");
-		try {
-			// force currencyCode = "" to get the full currency code list
-			currencyCode = "";
-			return this.subcontractWSDao.getCurrencyCodeList(currencyCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ArrayList<CurrencyCodeWrapper>();
 		}
 	}
 
@@ -6041,22 +5266,221 @@ public class SubcontractService {
 	}
 	
 	/**
-	 * @author koeyyeung
-	 * modified on 26 Aug, 2014
-	 * add period search from SCPackage Snapshot
-	 * **/
-	public List<SCListWrapper> obtainSubcontractList(SubcontractListWrapper searchWrapper) throws Exception{
+	 * For Subcontract Enquiry only </br>
+	 * Either search from Subcontract Snapshot or Subcontract Table
+	 * 
+	 * @author koeyyeung, tikywong modified on 26 Aug, 2014, 25 Jul, 2016
+	 * @throws Exception 
+	 * 
+	 **/
+	public List<SCListWrapper> getSubcontractList(String noJob, BigDecimal year, BigDecimal month, Boolean showJobInfo) throws Exception {
 		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-		
-		if(!GenericValidator.isBlankOrNull(searchWrapper.getMonth()) &&!GenericValidator.isBlankOrNull(searchWrapper.getYear()))
-			scListWrapperList = obtainSubcontractListFromSCPackageSnapshot(searchWrapper);
-		else
-			scListWrapperList = obtainSubcontractListFromSCPackage(searchWrapper);
-		
-		logger.info("NUMBER OF RECORDS(SCLISTWRAPPER):" + scListWrapperList.size());
+
+		// 1. check if there is any record from in subcontract snapshot table
+		scListWrapperList = prepareSubcontractSnapshotList(noJob, year, month, showJobInfo);
+		// 2. if no record is found, obtain from subcontract table
+		if (CollectionUtils.isEmpty(scListWrapperList))
+			scListWrapperList = prepareSubcontractList(noJob, showJobInfo);
+
 		return scListWrapperList;
 	}
+	
+	/**
+	 * For Subcontract Enquiry only
+	 *
+	 * @param noJob
+	 * @param showJobInfo
+	 * @return
+	 * @throws Exception
+	 * @author	tikywong
+	 * @since	Jul 25, 2016 3:27:12 PM
+	 */
+	// TODO: Further refine with ADL 
+	private List<SCListWrapper> prepareSubcontractList(String noJob, Boolean showJobInfo) throws Exception {
+		List<Subcontract> subcontractList = new ArrayList<Subcontract>();
+		String username = securityServiceImpl.getCurrentUser().getUsername();
 
+		if (StringUtils.isNotBlank(noJob)) {
+			if (adminServiceImpl.canAccessJob(username, noJob))
+				subcontractList = subcontractHBDao.findSubcontractList(noJob);
+			else
+				logger.info("User: " + username + " is not authorized to access Job: " + (StringUtils.isNotBlank(noJob) ? noJob : "ALL Job"));
+		}
+		logger.info("NUMBER OF RECORDS(SNAPSHOT): " + (subcontractList == null ? "0" : subcontractList.size()));
+		
+		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
+
+		for (Subcontract scPackage : subcontractList) {
+			SCListWrapper scListWrapper = new SCListWrapper();
+			scListWrapper.setClientNo(scPackage.getJobInfo().getEmployer());
+			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
+			if (scWorkScopeList != null && scWorkScopeList.size() > 0 && scWorkScopeList.get(0) != null)
+				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
+			scListWrapper.setPackageNo(scPackage.getPackageNo());
+			scListWrapper.setVendorNo(scPackage.getVendorNo());
+
+			//TODO: replace by ADL
+//			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackage.getVendorNo());
+			scListWrapper.setVendorName(/*vendor != null ? vendor.getVendorName() : */"");
+			scListWrapper.setDescription(scPackage.getDescription());
+			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum());
+			scListWrapper.setAddendum(scPackage.getApprovedVOAmount());
+			scListWrapper.setSubcontractSum(scPackage.getSubcontractSum());
+			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackage.getPaymentStatus()));
+			scListWrapper.setPaymentTerms(scPackage.getPaymentTerms());
+			scListWrapper.setSubcontractTerm(scPackage.getSubcontractTerm());
+			scListWrapper.setSubcontractorNature(scPackage.getSubcontractorNature());
+			scListWrapper.setTotalLiabilities(scPackage.getTotalCumWorkDoneAmount());
+			scListWrapper.setTotalPostedCertAmt(scPackage.getTotalPostedCertifiedAmount());
+			scListWrapper.setTotalCumCertAmt(scPackage.getTotalCumCertifiedAmount());
+			if (scPackage.getTotalCumWorkDoneAmount() != null && scPackage.getTotalPostedCertifiedAmount() != null)
+				scListWrapper.setTotalProvision(scPackage.getTotalCumWorkDoneAmount() - scPackage.getTotalPostedCertifiedAmount());
+			Double balanceToComplete = null;
+			if (scPackage.getSubcontractSum() != null && scPackage.getTotalCumWorkDoneAmount() != null)
+				balanceToComplete = new Double(scPackage.getSubcontractSum() - scPackage.getTotalCumWorkDoneAmount());
+			scListWrapper.setBalanceToComplete(balanceToComplete);
+			scListWrapper.setTotalCCPostedAmt(scPackage.getTotalCCPostedCertAmount());
+			scListWrapper.setTotalMOSPostedAmt(scPackage.getTotalMOSPostedCertAmount());
+			scListWrapper.setJobNumber(scPackage.getJobInfo().getJobNumber());
+			scListWrapper.setJobDescription(scPackage.getJobInfo().getDescription());
+			scListWrapper.setAccumlatedRetentionAmt(scPackage.getAccumlatedRetention());
+			scListWrapper.setRetentionReleasedAmt(scPackage.getRetentionReleased());
+			if (scPackage.getAccumlatedRetention() != null && scPackage.getRetentionReleased() != null)
+				scListWrapper.setRetentionBalanceAmt((scPackage.getAccumlatedRetention() + scPackage.getRetentionReleased()));
+
+			scListWrapper.setRequisitionApprovedDate(scPackage.getRequisitionApprovedDate());
+			scListWrapper.setTenderAnalysisApprovedDate(scPackage.getTenderAnalysisApprovedDate());
+			scListWrapper.setPreAwardMeetingDate(scPackage.getPreAwardMeetingDate());
+			scListWrapper.setLoaSignedDate(scPackage.getLoaSignedDate());
+			scListWrapper.setScDocScrDate(scPackage.getScDocScrDate());
+			scListWrapper.setScDocLegalDate(scPackage.getScDocLegalDate());
+			scListWrapper.setWorkCommenceDate(scPackage.getWorkCommenceDate());
+			scListWrapper.setOnSiteStartDate(scPackage.getOnSiteStartDate());
+			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackage.getSplitTerminateStatus()));
+
+			if (showJobInfo && StringUtils.isNotBlank(scPackage.getJobInfo().getJobNumber()))
+				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackage.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
+
+			/**
+			 * koeyyeung added on 27 Aug, 2014 requested by Finance
+			 */
+			scListWrapper.setCompany(scPackage.getJobInfo().getCompany());
+			scListWrapper.setDivision(scPackage.getJobInfo().getDivision());
+			scListWrapper.setSoloJV((scPackage.getJobInfo().getSoloJV().equals("S") ? "Solo" : scPackage.getJobInfo().getSoloJV()));
+			scListWrapper.setJvPercentage(scPackage.getJobInfo().getJvPercentage());
+			scListWrapper.setActualPCCDate(scPackage.getJobInfo().getActualPCCDate());
+			scListWrapper.setCompletionStatus(scPackage.getJobInfo().getCompletionStatus());
+			scListWrapper.setCurrency(scPackage.getPaymentCurrency());
+			scListWrapper.setOriginalSubcontractSum(scPackage.getOriginalSubcontractSum());
+
+			if (scPackage.getTotalPostedCertifiedAmount() != null && scListWrapper.getRetentionBalanceAmt() != null)
+				scListWrapper.setNetCertifiedAmount(scPackage.getTotalPostedCertifiedAmount() - scListWrapper.getRetentionBalanceAmt());
+
+			scListWrapperList.add(scListWrapper);
+		}
+		return scListWrapperList;
+	}
+	
+	/**
+	 * For Subcontract ENquiry only
+	 *
+	 * @param noJob
+	 * @param year
+	 * @param month
+	 * @param showJobInfo
+	 * @return
+	 * @throws Exception
+	 * @author	tikywong
+	 * @since	Jul 25, 2016 3:28:18 PM
+	 */
+	//TODO: Further refine with ADL 
+	private List<SCListWrapper> prepareSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, Boolean showJobInfo) throws Exception {
+		List<SubcontractSnapshot> subcontractList = new ArrayList<SubcontractSnapshot>();
+		String username = securityServiceImpl.getCurrentUser().getUsername();
+		
+		if (adminServiceImpl.canAccessJob(username, noJob))
+			subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, true, false);
+		else
+			logger.info("User: " + username + " is not authorized to access Job: " + noJob);
+
+		logger.info("NUMBER OF RECORDS(SUBCONTRACT): " + (subcontractList == null ? "0" : subcontractList.size()));
+		
+		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
+		
+		for(SubcontractSnapshot scPackageSnapshot: subcontractList){
+			SCListWrapper scListWrapper = new SCListWrapper();
+			scListWrapper.setClientNo(scPackageSnapshot.getJobInfo().getEmployer());
+			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackageSnapshot.getSubcontract());
+			if(scWorkScopeList !=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
+				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
+			scListWrapper.setPackageNo(scPackageSnapshot.getPackageNo());
+			scListWrapper.setVendorNo(scPackageSnapshot.getVendorNo());
+			
+			//TODO: replace by ADL
+//			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackageSnapshot.getVendorNo());
+			scListWrapper.setVendorName(/*vendor != null ? vendor.getVendorName() :*/ "");
+			scListWrapper.setDescription(scPackageSnapshot.getDescription());
+			scListWrapper.setRemeasuredSubcontractSum(scPackageSnapshot.getRemeasuredSubcontractSum());
+			scListWrapper.setAddendum(scPackageSnapshot.getApprovedVOAmount());
+			scListWrapper.setSubcontractSum(scPackageSnapshot.getSubcontractSum());
+			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackageSnapshot.getPaymentStatus()));
+			scListWrapper.setPaymentTerms(scPackageSnapshot.getPaymentTerms());
+			scListWrapper.setSubcontractTerm(scPackageSnapshot.getSubcontractTerm());
+			scListWrapper.setSubcontractorNature(scPackageSnapshot.getSubcontractorNature());
+			scListWrapper.setTotalLiabilities(scPackageSnapshot.getTotalCumWorkDoneAmount());
+			scListWrapper.setTotalPostedCertAmt(scPackageSnapshot.getTotalPostedCertifiedAmount());
+			scListWrapper.setTotalCumCertAmt(scPackageSnapshot.getTotalCumCertifiedAmount());
+			if (scPackageSnapshot.getTotalCumWorkDoneAmount()!=null && scPackageSnapshot.getTotalPostedCertifiedAmount()!=null)
+				scListWrapper.setTotalProvision(scPackageSnapshot.getTotalCumWorkDoneAmount() - scPackageSnapshot.getTotalPostedCertifiedAmount());			
+			Double balanceToComplete = null;
+			if (scPackageSnapshot.getSubcontractSum() !=null && scPackageSnapshot.getTotalCumWorkDoneAmount() !=null)
+				balanceToComplete = new Double (scPackageSnapshot.getSubcontractSum()-scPackageSnapshot.getTotalCumWorkDoneAmount());
+			scListWrapper.setBalanceToComplete(balanceToComplete);
+			scListWrapper.setTotalCCPostedAmt(scPackageSnapshot.getTotalCCPostedCertAmount());
+			scListWrapper.setTotalMOSPostedAmt(scPackageSnapshot.getTotalMOSPostedCertAmount());
+			scListWrapper.setJobNumber(scPackageSnapshot.getJobInfo().getJobNumber());
+			scListWrapper.setJobDescription(scPackageSnapshot.getJobInfo().getDescription());
+			scListWrapper.setAccumlatedRetentionAmt(scPackageSnapshot.getAccumlatedRetention());
+			scListWrapper.setRetentionReleasedAmt(scPackageSnapshot.getRetentionReleased());
+			if(scPackageSnapshot.getAccumlatedRetention()!=null && scPackageSnapshot.getRetentionReleased()!=null)
+				scListWrapper.setRetentionBalanceAmt((scPackageSnapshot.getAccumlatedRetention() + scPackageSnapshot.getRetentionReleased()));
+
+			scListWrapper.setRequisitionApprovedDate(scPackageSnapshot.getRequisitionApprovedDate());
+			scListWrapper.setTenderAnalysisApprovedDate(scPackageSnapshot.getTenderAnalysisApprovedDate());
+			scListWrapper.setPreAwardMeetingDate(scPackageSnapshot.getPreAwardMeetingDate());
+			scListWrapper.setLoaSignedDate(scPackageSnapshot.getLoaSignedDate());
+			scListWrapper.setScDocScrDate(scPackageSnapshot.getScDocScrDate());
+			scListWrapper.setScDocLegalDate(scPackageSnapshot.getScDocLegalDate());
+			scListWrapper.setWorkCommenceDate(scPackageSnapshot.getWorkCommenceDate());
+			scListWrapper.setOnSiteStartDate(scPackageSnapshot.getOnSiteStartDate());
+			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackageSnapshot.getSplitTerminateStatus()));
+			
+			if(showJobInfo && StringUtils.isNotBlank(scPackageSnapshot.getJobInfo().getJobNumber()))
+				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackageSnapshot.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
+			
+			/**
+			 * koeyyeung
+			 * added on 27 Aug, 2014
+			 * requested by Finance
+			 */
+			scListWrapper.setCompany(scPackageSnapshot.getJobInfo().getCompany());
+			scListWrapper.setDivision(scPackageSnapshot.getJobInfo().getDivision());
+			scListWrapper.setSoloJV((scPackageSnapshot.getJobInfo().getSoloJV().equals("S")?"Solo":scPackageSnapshot.getJobInfo().getSoloJV()));
+			scListWrapper.setJvPercentage(scPackageSnapshot.getJobInfo().getJvPercentage());
+			scListWrapper.setActualPCCDate(scPackageSnapshot.getJobInfo().getActualPCCDate());
+			scListWrapper.setCompletionStatus(scPackageSnapshot.getJobInfo().getCompletionStatus());
+			scListWrapper.setCurrency(scPackageSnapshot.getPaymentCurrency());
+			scListWrapper.setOriginalSubcontractSum(scPackageSnapshot.getOriginalSubcontractSum());
+			
+			if(scPackageSnapshot.getTotalPostedCertifiedAmount()!=null && scListWrapper.getRetentionBalanceAmt()!=null)
+				scListWrapper.setNetCertifiedAmount(scPackageSnapshot.getTotalPostedCertifiedAmount()-scListWrapper.getRetentionBalanceAmt());
+			
+			scListWrapper.setSnapshotDate(scPackageSnapshot.getSnapshotDate());
+			
+			scListWrapperList.add(scListWrapper);
+		}
+		return scListWrapperList;
+	}
 	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
 		return scDetailsHBDao.getScDetails(jobNumber);
 		

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -106,11 +107,14 @@ public class AdminService {
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
-	public Boolean canAccessJob(String userName, String jobNumber)throws DataAccessException{
-		if(securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll())){
+	public Boolean canAccessJob(String nameUser, String noJob) throws DataAccessException {
+		if (securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll()))
 			return true;
-		} else {
-			return obtainCanAccessJobNoList(userName).contains(jobNumber);
+		else {
+			if (StringUtils.isNotBlank(noJob))
+				return obtainCanAccessJobNoList(nameUser).contains(noJob);
+			else
+				return false;
 		}
 	}
 

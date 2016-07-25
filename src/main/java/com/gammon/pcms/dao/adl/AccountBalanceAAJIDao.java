@@ -61,7 +61,7 @@ public class AccountBalanceAAJIDao extends BaseAdlHibernateDao<AccountBalanceAAJ
 			criteria.add(Restrictions.le("fiscalYear", yearEnd));
 		if (yearStart.intValue() > 0)
 			criteria.add(Restrictions.ge("fiscalYear", yearStart));
-		if (StringUtils.isNotEmpty(codeObject))
+		if (StringUtils.isNotBlank(codeObject))
 			criteria.add(Restrictions.ilike("accountObject", codeObject, MatchMode.START));
 		if (StringUtils.isNotEmpty(codeSubsidiary))
 			criteria.add(Restrictions.ilike("accountSubsidiary", codeSubsidiary, MatchMode.START));

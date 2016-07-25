@@ -57,7 +57,7 @@ public class AccountBalanceAAJISCDao extends BaseAdlHibernateDao<AccountBalanceA
 		
 		// Data Formatting
 		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
-		noSubcontract = StringUtils.isNotEmpty(noSubcontract) ? StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : noSubcontract;
+		noSubcontract = StringUtils.isNotBlank(noSubcontract) ? StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
 			
 		// Where
 		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob));
@@ -66,11 +66,11 @@ public class AccountBalanceAAJISCDao extends BaseAdlHibernateDao<AccountBalanceA
 			criteria.add(Restrictions.le("fiscalYear", yearEnd));
 		if (yearStart.intValue() > 0)
 			criteria.add(Restrictions.ge("fiscalYear", yearStart));
-		if (StringUtils.isNotEmpty(noSubcontract)) {
+		if (StringUtils.isNotBlank(noSubcontract)) {
 			criteria.add(Restrictions.eq("accountSubLedger", noSubcontract));
 			criteria.add(Restrictions.eq("accountTypeSubLedger", AccountBalanceAAJISC.TYPE_SUBLEDGER_X));
 		}
-		if (StringUtils.isNotEmpty(codeObject))
+		if (StringUtils.isNotBlank(codeObject))
 			criteria.add(Restrictions.ilike("accountObject", codeObject, MatchMode.START));
 		if (StringUtils.isNotEmpty(codeSubsidiary))
 			criteria.add(Restrictions.ilike("accountSubsidiary", codeSubsidiary, MatchMode.START));

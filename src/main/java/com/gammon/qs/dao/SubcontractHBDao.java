@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -684,7 +685,8 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		criteria.createAlias("jobInfo", "jobInfo");
 
 		// Where
-		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+		if(StringUtils.isNotBlank(jobNo))
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
 
 		// Order by
 		criteria.addOrder(Order.asc("packageNo"));

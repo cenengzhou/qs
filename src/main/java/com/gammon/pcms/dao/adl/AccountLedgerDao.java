@@ -30,7 +30,7 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 		typeLedger = typeLedger.toUpperCase();
 		typeDocument = typeDocument.toUpperCase();
 		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
-		noSubcontract = StringUtils.isNotEmpty(noSubcontract) ?StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
+		noSubcontract = StringUtils.isNotBlank(noSubcontract) ?StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
 		
 		System.out.println("["+typeLedger+"] ["+typeDocument+"] ["+noJob+"] ["+noSubcontract+"]");
 		
@@ -48,13 +48,13 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 			criteria.add(Restrictions.ge("accountPeriod", monthStart));
 		
 		// Where (optional)
-		if(StringUtils.isNotEmpty(typeDocument))
+		if(StringUtils.isNotBlank(typeDocument))
 			criteria.add(Restrictions.eq("typeDocument", typeDocument));
-		if (StringUtils.isNotEmpty(noSubcontract)) {
+		if (StringUtils.isNotBlank(noSubcontract)) {
 			criteria.add(Restrictions.eq("accountSubLedger", noSubcontract));
 			criteria.add(Restrictions.eq("accountTypeSubLedger", AccountBalanceAAJISC.TYPE_SUBLEDGER_X));
 		}
-		if (StringUtils.isNotEmpty(codeObject))
+		if (StringUtils.isNotBlank(codeObject))
 			criteria.add(Restrictions.ilike("accountObject", codeObject, MatchMode.START));
 		if (StringUtils.isNotEmpty(codeSubsidiary))
 			criteria.add(Restrictions.ilike("accountSubsidiary", codeSubsidiary, MatchMode.START));

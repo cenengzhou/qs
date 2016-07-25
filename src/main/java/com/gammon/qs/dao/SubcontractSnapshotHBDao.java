@@ -1,9 +1,12 @@
 package com.gammon.qs.dao;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -15,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
@@ -39,74 +43,40 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshot> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber, String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> companyList, Integer status, String month, String year, String reportType) throws DatabaseOperationException {
-		List<SubcontractSnapshot> result = null;
-		try{			
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.createAlias("jobInfo", "jobInfo");
-			if (company!=null && !"".equals(company))
-				criteria.add(Restrictions.eq("jobInfo.company", company));
-			else if (companyList!=null)
-				criteria.add(Restrictions.in("jobInfo.company", companyList));
-			if (division!=null && !"".equals(division))
-				criteria.add(Restrictions.eq("jobInfo.division", division));
-			if (jobNumber!=null && !"".equals(jobNumber))
-				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-			if (clientNo!=null && !"".equals(clientNo))
-				criteria.add(Restrictions.eq("jobInfo.employer", clientNo));
-			if (subcontractNumber!=null && !"".equals(subcontractNumber))
-				criteria.add(Restrictions.eq("packageNo", subcontractNumber));
-			if (subcontractorNumber!=null && !"".equals(subcontractorNumber))
-				criteria.add(Restrictions.eq("vendorNo", subcontractorNumber)); 
-			if (subcontractorNature!=null && !"".equals(subcontractorNature))
-				criteria.add(Restrictions.eq("subcontractorNature", subcontractorNature));
-			if (paymentStatus!=null && !"".equals(paymentStatus)){
-				if("NDI".equals(paymentStatus))
-					criteria.add(Restrictions.or(	Restrictions.eq("paymentStatus", "N"),
-								 Restrictions.or(	Restrictions.eq("paymentStatus", "D"),
-										 			Restrictions.eq("paymentStatus", "I"))));
-				else 
-					criteria.add(Restrictions.eq("paymentStatus", paymentStatus));
-			}
-				
-			if(splitTerminateStatus!=null && !"".equals(splitTerminateStatus))
-				criteria.add(Restrictions.eq("splitTerminateStatus", splitTerminateStatus));
-				
-			//Awarded Subcontracts
+	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean orderBySubcontractorNo) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		logger.info("----> noJob: " + noJob + "] [" + year + "] [" + month + "] [" + awardedOnly + "] [" + orderBySubcontractorNo + "]");
+		// Where
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.createAlias("jobInfo", "jobInfo");
+		if (StringUtils.isNotBlank(noJob))
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", noJob));
+		if (awardedOnly)
 			criteria.add(Restrictions.eq("subcontractStatus", new Integer(500)));
+		if (month.intValue()> 0 && year.intValue() > 0) {
+			Calendar startDate = Calendar.getInstance();
+			startDate.set(year.intValue(), month.intValue()-1, 1);
+			logger.info("------------> startDate "+startDate.getTime());
 			
+			Calendar endDate = Calendar.getInstance();
+			endDate.set(year.intValue(), month.intValue()-1, Calendar.getInstance().getActualMaximum(month.intValue()));
+			logger.info("------------> endDate "+endDate.getTime());
 			
-			if(workScope!=null && !"".equals(workScope)){
-				throw new RuntimeException("Subcontract does not contain SCWorkscope due to remove one to many linking");
-//				criteria.createAlias("subcontract", "subcontract");
-//				criteria.createAlias("subcontract.scWorkscope", "scWorkscope");
-//				criteria.add(Restrictions.eq("scWorkscope.workScope", workScope));
-			}
-			if(status!=null && !"".equals(status)){
-				criteria.add(Restrictions.eq("subcontractStatus", status));
-			}
-			
-			if(!"".equals(month) && !"".equals(year)){
-				Date snapshotDate = obtainSnapshotDate(month, year);
-				criteria.add(Restrictions.eq("snapshotDate", snapshotDate));
-			}
-			
-			
-			if(reportType!=null && "SubcontractorAnalysisReport".equals(reportType))
-				criteria.addOrder(Order.asc("vendorNo"));
-			else{
-				criteria.addOrder(Order.asc("jobInfo.company"))
-						.addOrder(Order.asc("jobInfo.division"))
-						.addOrder(Order.asc("jobInfo.jobNumber"))
-						.addOrder(Order.asc("packageNo"));
-			}
-			
-			result = (List<SubcontractSnapshot>)criteria.list();
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
+			criteria.add(Restrictions.le("snapshotDate", endDate.getTime()))
+					.add(Restrictions.ge("snapshotDate", startDate.getTime()));
 		}
-		return result;
+
+		// order by
+		if (orderBySubcontractorNo)
+			criteria.addOrder(Order.asc("vendorNo"));
+		else {
+			criteria.addOrder(Order.asc("jobInfo.company"))
+					.addOrder(Order.asc("jobInfo.division"))
+					.addOrder(Order.asc("jobInfo.jobNumber"))
+					.addOrder(Order.asc("packageNo"));
+		}
+
+		return (List<SubcontractSnapshot>) criteria.list();
 	}
 
 	/**
@@ -146,9 +116,9 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		}
 	}
 	
-	private Date obtainSnapshotDate(String month, String year){
-		Date startDate = DateUtil.parseDate("01-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
-		Date endDate = DateUtil.parseDate("31-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
+	private Date obtainSnapshotDate(BigDecimal month, BigDecimal year){
+		Date startDate = DateUtil.parseDate("01-"+convertToStringMonth(month.intValue())+"-"+year, "dd-MM-yyyy");
+		Date endDate = DateUtil.parseDate("31-"+convertToStringMonth(month.intValue())+"-"+year, "dd-MM-yyyy");
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
@@ -163,12 +133,11 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		return (Date) criteria.uniqueResult();
 	}
 	
-	public String convertToStringMonth(Integer month){
-		if(month<10){
-			return "0"+String.valueOf(month);
-		}else{
+	private String convertToStringMonth(Integer month) {
+		if (month < 10)
+			return "0" + String.valueOf(month);
+		else
 			return String.valueOf(month);
-		}
 	}
 
 	public Boolean callStoredProcedureToGenerateSnapshot() throws DatabaseOperationException {

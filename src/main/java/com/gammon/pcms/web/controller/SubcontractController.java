@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,14 +31,12 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.SCDetailProvisionHistoryWrapper;
 import com.gammon.qs.wrapper.UDC;
-import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 
 @RestController
-@RequestMapping(value = "service/subcontract/"/*,
-				consumes = MediaType.APPLICATION_JSON_VALUE,
-				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
+@RequestMapping(value = "service/subcontract/",
+				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class SubcontractController {
 	private Logger logger = Logger.getLogger(getClass());
 	
@@ -54,16 +54,20 @@ public class SubcontractController {
 		}
 	}
 	
-	@RequestMapping(value = "obtainSubcontractListWithSCListWrapper", method = RequestMethod.POST)
-	public List<SCListWrapper> obtainSubcontractListWithSCListWrapper(@RequestBody SubcontractListWrapper subcontractListWrapper){
-		List<SCListWrapper> scListWrapper = null;
-		try{
-			scListWrapper = subcontractService.obtainSubcontractList(subcontractListWrapper);
-		}catch(Exception e){
-			logger.error("Database Exception: ");
+	@RequestMapping(value = "getSubcontractSnapShotList",
+					method = RequestMethod.POST)
+	public List<SCListWrapper> getSubcontractSnapShotList(	@RequestParam(required = false) String noJob,
+															@RequestParam(required = true) BigDecimal year,
+															@RequestParam(required = true) BigDecimal month,
+															@RequestParam(	required = true,
+																			defaultValue = "false") Boolean showJobInfo) {
+		try {
+			logger.info("--------------> [" + noJob + "] [" + year + "] [" + month + "] [" + showJobInfo + "]");
+			return subcontractService.getSubcontractList(noJob, year, month, showJobInfo);
+		} catch (Exception e) {
 			e.printStackTrace();
+			return new ArrayList<SCListWrapper>();
 		}
-		return scListWrapper;
 	}
 	
 	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)

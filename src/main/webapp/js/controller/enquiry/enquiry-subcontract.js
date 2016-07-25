@@ -59,11 +59,10 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 	
 	$scope.loadGridData = function(){
 		$scope.blockEnquirySubcontract.start("Loading...")
-		var subcontractListWrapper = {};
-		subcontractListWrapper.jobNumber = $scope.searchJobNo;
-		subcontractListWrapper.month = $scope.searchMonth;
-		subcontractListWrapper.year = $scope.searchYear;
-		subcontractService.obtainSubcontractListWithSCListWrapper(subcontractListWrapper)
+		$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
+		$scope.searchMonth = $scope.currentDate.getMonth() + 1;
+		
+		subcontractService.getSubcontractSnapShotList($scope.searchJobNo, $scope.searchYear, $scope.searchMonth, false)
 		.then(function(data){
 				$scope.gridOptions.data = data;
 				$scope.blockEnquirySubcontract.stop();

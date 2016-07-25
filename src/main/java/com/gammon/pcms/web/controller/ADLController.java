@@ -192,7 +192,6 @@ public class ADLController {
 		}
 	}
 
-	
 	// TODO: migrate from web service to ADL
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
 					method = RequestMethod.GET)
