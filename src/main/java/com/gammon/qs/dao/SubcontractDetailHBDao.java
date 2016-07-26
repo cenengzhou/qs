@@ -17,6 +17,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -775,6 +776,38 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}catch (HibernateException he){
 			throw new DatabaseOperationException(he);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SubcontractDetail> getSCDetailsForWD(String jobNo, String subcontractNo) throws DataAccessException{
+		List<String> lineTypeList = new ArrayList<String>();
+		lineTypeList.add("BQ");
+		lineTypeList.add("B1");
+		lineTypeList.add("V1");
+		lineTypeList.add("V2");
+		lineTypeList.add("V3");
+		lineTypeList.add("L1");
+		lineTypeList.add("L2");
+		lineTypeList.add("D1");
+		lineTypeList.add("D2");
+		lineTypeList.add("CF");
+		lineTypeList.add("OA");
+		List<SubcontractDetail> resultList;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
+
+		criteria.add(Restrictions.eq("jobNo",jobNo));
+
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+
+		criteria.add(Restrictions.in("lineType", lineTypeList));
+		
+		criteria.addOrder(Order.asc("lineType"));
+	    
+		resultList = criteria.list();
+		return resultList;
+
 	}
 	
 }

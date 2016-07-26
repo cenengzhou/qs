@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,6 +104,17 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getSubcontractDetailForWD", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSubcontractDetailForWD(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		try {
+			scDetails = subcontractService.getSubcontractDetailForWD(jobNo, subcontractNo);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
 	@RequestMapping(value = "getSCDetailList", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo){
 		List<SubcontractDetail> scDetails = new ArrayList<SubcontractDetail>();
@@ -142,6 +154,36 @@ public class SubcontractController {
 		return result;
 	}
 	
+	@RequestMapping(value = "updateWDandIV", method = RequestMethod.POST)
+	public String updateWDandIV(@RequestParam(required =true) String jobNo,
+								@RequestParam(required =true) String subcontractNo,
+								@RequestBody SubcontractDetail scDetail){
+		String result = null;
+		try {
+			result = subcontractService.updateWDandIV(jobNo, subcontractNo, scDetail);
+		} catch (Exception e) {
+			result = "Subcontract Details cannot be updated.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "updateWDandIVByPercent", method = RequestMethod.POST)
+	public String updateWDandIVByPercent(@RequestParam(required =true) String jobNo,
+								@RequestParam(required =true) String subcontractNo,
+								@RequestParam(required =true) Double percent){
+		String result = null;
+		try {
+			result = subcontractService.updateWDandIVByPercent(jobNo, subcontractNo, percent);
+		} catch (Exception e) {
+			result = "Subcontract Details cannot be updated.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
+	
 	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
 	public String upateSubcontractDates(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
@@ -153,6 +195,18 @@ public class SubcontractController {
 		} 
 		return result;
 	}
+	
+	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
+	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
+		boolean result = false;
+		try {
+			result = subcontractService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
 	
 	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
 	public String submitAwardApproval(@RequestParam(required =true) String jobNo, 

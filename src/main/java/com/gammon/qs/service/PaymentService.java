@@ -2376,13 +2376,13 @@ public class PaymentService{
 							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
 							if(scDetail.getAmountSubcontract() >= 0){
 								if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract()) {
-									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Budget Amount: " + scDetail.getAmountSubcontract() ;
+									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}
 							}else{
 								if (paymentDetail.getCumAmount() < scDetail.getAmountSubcontract() || paymentDetail.getCumAmount() >0) {
-									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Budget Amount: " + scDetail.getAmountSubcontract() ;
+									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}

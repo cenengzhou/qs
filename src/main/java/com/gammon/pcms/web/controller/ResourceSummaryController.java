@@ -35,14 +35,13 @@ public class ResourceSummaryController {
 	
 	
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
-	public List<ResourceSummary> getResourceSummaries(@RequestParam(name="jobNo") String jobNo, 
-													@RequestParam(name="packageNo") String packageNo, 
+	public List<ResourceSummary> getResourceSummaries(@RequestParam(required =true) String jobNo, 
+													@RequestParam(name="subcontractNo") String subcontractNo, 
 													@RequestParam(name="objectCode") String objectCode){
-		logger.info("jobNo: "+jobNo);
 		List<ResourceSummary> resourceSummaries = null;
 		try {
 			
-			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, packageNo, objectCode);
+			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, subcontractNo, objectCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -50,23 +49,56 @@ public class ResourceSummaryController {
 	}
 	
 	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
-	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(name="jobNo") String jobNo, 
-													@RequestParam(name="packageNo") String packageNo 
+	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(required =true) String jobNo, 
+													@RequestParam(name="subcontractNo") String subcontractNo 
 													){
-		logger.info("jobNo: "+jobNo);
 		List<ResourceSummary> resourceSummaries = null;
 		try {
 			
-			resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, packageNo);
+			resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, subcontractNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 		return resourceSummaries;
 	}
 	
+	@RequestMapping(value = "getResourceSummariesByAccountCode", method = RequestMethod.GET)
+	public List<ResourceSummary> getResourceSummariesByAccountCode(@RequestParam(required =true) String jobNo, 
+													@RequestParam(name="subcontractNo") String subcontractNo,
+													@RequestParam(name="objectCode") String objectCode,
+													@RequestParam(name="subsidiaryCode") String subsidiaryCode
+													){
+		List<ResourceSummary> resourceSummaries = null;
+		try {
+			
+			resourceSummaries = resourceSummaryService.getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return resourceSummaries;
+	}
+	
+	@RequestMapping(value = "getResourceSummariesByLineType", method = RequestMethod.GET)
+	public List<ResourceSummary> getResourceSummariesByLineType(@RequestParam(required =true) String jobNo, 
+													@RequestParam(name="subcontractNo") String subcontractNo,
+													@RequestParam(name="objectCode") String objectCode,
+													@RequestParam(name="subsidiaryCode") String subsidiaryCode,
+													@RequestParam(name="lineType") String lineType,
+													@RequestParam(name="resourceNo") Integer resourceNo
+													){
+		List<ResourceSummary> resourceSummaries = null;
+		try {
+			
+			resourceSummaries = resourceSummaryService.getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return resourceSummaries;
+	}
+	
+	
 	@RequestMapping(value = "getResourceSummariesForIV", method = RequestMethod.GET)
-	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(name="jobNo") String jobNo){
-		logger.info("jobNo: "+jobNo);
+	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(required =true) String jobNo){
 		IVInputPaginationWrapper ivInputPaginationWrapper = null;
 		try {
 			
@@ -78,7 +110,7 @@ public class ResourceSummaryController {
 	}
 	
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
-	public String addResourceSummary(@RequestParam(name="jobNo") String jobNo, 
+	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
 									@RequestParam(name="repackagingEntryId") String repackagingEntryId,
 									@Valid @RequestBody ResourceSummary resourceSummary){
 		String result = "";
@@ -102,7 +134,7 @@ public class ResourceSummaryController {
 	}
 
 	@RequestMapping(value = "updateResourceSummaries", method = RequestMethod.POST)
-	public String updateResourceSummaries(@RequestParam(name="jobNo") String jobNo, 
+	public String updateResourceSummaries(@RequestParam(required =true) String jobNo, 
 									@Valid @RequestBody List<ResourceSummary> resourceSummaryList){
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		try {

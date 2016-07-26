@@ -2400,104 +2400,12 @@ public class SubcontractService {
 		}
 	}
 
-	/**
-	 * @author Tiky Wong
-	 * Refactored on 25-11-2013
-	 * @author koeyyeung
-	 * modified on 03-06-2015
-	 * add Parameter: recalculateFinalizedPackage - recalculate Resource Summary IV for finalized SC Package
-	 */
-	public Boolean recalculateResourceSummaryIV(JobInfo job, String packageNo, boolean recalculateFinalizedPackage){
-		logger.info("Recalculating IV for job: " + job.getJobNumber() + ", packageNo: " + packageNo);
-		try{
-			Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
-			if (scPackage == null){
-				logger.info("No re-calculation of IV has been done because the package does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo);
-				return Boolean.FALSE;
-			}
-
-			if (!recalculateFinalizedPackage && "F".equals(scPackage.getPaymentStatus())){
-				logger.info("No re-calculation of IV has been done because the package is final - Job: "+job.getJobNumber()+" Package: "+packageNo);
-				return Boolean.FALSE;
-			}
-
-			//Obtain active SCDetail only
-			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(job.getJobNumber(), packageNo);
-			if (scDetails == null){
-				logger.info("No re-calculation of IV has been done because none of the SC Detail exists. Job: "+job.getJobNumber()+" Package: "+packageNo);
-				return Boolean.FALSE;
-			}
-
-			// map of account code (e.g. "140299.19999999") to cumIVAmount
-			Map<String, Double> accountIV = new HashMap<String, Double>();
-
-			// Reset the currIVAmount of all the resources in the package (object code 14%)
-			bqResourceSummaryDao.resetIVAmountofPackage(job, packageNo);
-
-			// Iterate through scDetails and find total movements for each account code - separate the positive and negative iv amounts
-			for (SubcontractDetail scDetail : scDetails) {
-				String lineType = scDetail.getLineType();
-				if ("BQ".equals(lineType) || "V3".equals(lineType) || "V1".equals(lineType)) {
-					double costRate = scDetail.getCostRate() != null ? scDetail.getCostRate() : 0.0;
-					double bqQty = scDetail.getQuantity() != null ? scDetail.getQuantity() : 0.0;
-					double cumWDQty = scDetail.getCumWorkDoneQuantity() != null ? scDetail.getCumWorkDoneQuantity() : 0.0;
-
-					//No IV update if it is BQ and BQ Quantity = 0 (no budget)
-					if (bqQty == 0.0 && "BQ".equals(lineType))
-						continue;
-
-					//No IV Update if cost Rate or cumulative WD Quantity = 0
-					if (costRate==0.0 || cumWDQty==0.0)
-						continue;
-
-					double cumIVAmount = costRate * cumWDQty;
-					ResourceSummary resourceSummaryInDB = null;
-
-					//With Resource No. > 0 means it has a Resource Summary associated with
-					if (scDetail.getResourceNo() != null && scDetail.getResourceNo() > 0) {
-						resourceSummaryInDB = bqResourceSummaryDao.get(scDetail.getResourceNo().longValue());
-						if (resourceSummaryInDB != null &&
-							((resourceSummaryInDB.getJobInfo()!=null && resourceSummaryInDB.getJobInfo().getJobNumber()!=null && !resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber())) ||
-							 (resourceSummaryInDB.getPackageNo()!=null && !resourceSummaryInDB.getPackageNo().equals(packageNo)) ||
-							 (resourceSummaryInDB.getObjectCode()!=null && !resourceSummaryInDB.getObjectCode().equals(scDetail.getObjectCode())) ||
-							 (resourceSummaryInDB.getSubsidiaryCode()!=null && !resourceSummaryInDB.getSubsidiaryCode().equals(scDetail.getSubsidiaryCode())))){
-							resourceSummaryInDB = null;
-						}
-					}
-
-					// V1(with budget), V3 with Resource Summary
-					if (("V1".equalsIgnoreCase(lineType) || "V3".equalsIgnoreCase(lineType) ) && resourceSummaryInDB != null) 
-						updateResourceSummaryIVFromSCVO(job, packageNo, scDetail.getObjectCode(), scDetail.getSubsidiaryCode(), cumIVAmount, scDetail.getResourceNo().longValue());
-					//V1, BQ, B1 without Resource Summary
-					else {
-						String accountCode = scDetail.getObjectCode() + "." + scDetail.getSubsidiaryCode();
-						Double accountIVAmount = accountIV.get(accountCode);
-						if (accountIVAmount == null)
-							accountIVAmount = new Double(cumIVAmount);
-						else
-							accountIVAmount = new Double(accountIVAmount + cumIVAmount);
-						accountIV.put(accountCode, accountIVAmount);
-					}
-				}
-			}
-
-			// Update resource summaries
-			for (Entry<String, Double> entry : accountIV.entrySet()) {
-				String[] objSub = entry.getKey().split("\\.");
-				updateResourceSummaryIVFromSCNonVO(job, packageNo, objSub[0], objSub[1], entry.getValue());
-			}
-
-		}catch(DatabaseOperationException dbException){
-			dbException.printStackTrace();
-		}
-
-		return Boolean.TRUE;
-	}
+	
 
 	public Boolean recalculateResourceSummaryIVbyJob(JobInfo job) throws Exception{
 		List<String> packageNos = subcontractHBDao.getAwardedPackageNos(job);
 		for(String packageNo : packageNos)
-			recalculateResourceSummaryIV(job, packageNo, false);
+			recalculateResourceSummaryIV(job.getJobNumber(), packageNo, false);
 		return Boolean.TRUE;
 	}
 
@@ -3178,125 +3086,7 @@ public class SubcontractService {
 
 	}
 
-	public Boolean calculateTotalWDandCertAmount(String jobNumber, String packageNo, boolean recalculateRententionAmount){
-		logger.info("Recalculate ScPackage Figures - JobNo: "+jobNumber+" - PackageNo: "+packageNo);
-			List<Subcontract> packages = new ArrayList<Subcontract>();
-			try {
-				if(GenericValidator.isBlankOrNull(packageNo))
-					packages = subcontractHBDao.obtainPackageList(jobNumber);
-				else{
-					JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-					Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
-					if(scPackage!=null)
-						packages.add(scPackage);
-				}
-			} catch (DatabaseOperationException e) {
-				logger.info("Unable to obtain Package List for Job: "+jobNumber+" - No calculation on Total WD and Certified Amount has been done.");
-				e.printStackTrace();
-				return false;
-			}
-			
-			for(Subcontract scPackage: packages){
-				//if (scPackage.isAwarded()){
-				List<SubcontractDetail> scDetails;
-				Double totalCumWorkDoneAmount = 0.00; 
-				Double totalCumCertAmount =0.00;
-				Double totalPostedWorkDoneAmount = 0.00; 
-				Double totalPostedCertAmount =0.00;
-				Double totalCCPostedCertAmount = 0.00;
-				Double totalMOSPostedCertAmount = 0.00;
-				Double totalRetentionReleasedAmount = 0.00;
-				try {
-					scDetails = scDetailsHBDao.getSCDetails(scPackage);
-
-					for (SubcontractDetail scDetail: scDetails){
-						// Not updating work done (C1, C2, RR, RA, AP, MS)
-						// Updating work done (B1, BQ, V1, V2, V3, OA, CF, D1, D2, L1, L2)
-						boolean excludedFromProvisionCalculation = "C1".equals(scDetail.getLineType()) || 
-																   "C2".equals(scDetail.getLineType()) || 
-																   "RR".equals(scDetail.getLineType()) || 
-																   "RT".equals(scDetail.getLineType()) || 
-																   "RA".equals(scDetail.getLineType()) ||
-																   "AP".equals(scDetail.getLineType()) ||
-																   "MS".equals(scDetail.getLineType());
-
-						String systemStatus = scDetail.getSystemStatus();
-						if(BasePersistedAuditObject.ACTIVE.equals(systemStatus)){
-							//Total Posted Contra Charge Certified Amount
-							if("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType())){
-								totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Retention Released Amount
-							if("RR".equals(scDetail.getLineType())){
-								totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Posted Material On Site Certified Amount
-							if("MS".equals(scDetail.getLineType())){
-								totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Cumulative Work Done Amount
-							if (!excludedFromProvisionCalculation){
-								totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Cumulative Certified Amount
-							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Cumulative Certified Amount" 
-							if("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Posted Work Done Amount
-							if (!excludedFromProvisionCalculation){
-								totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
-							}
-							//Total Posted Certified Amount
-							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Posted Certified Amount"
-							if ("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-							}
-						}
-						}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-					/**
-					 * @author koeyyeung
-					 * created on 10th April, 2015
-					 * update Accumulated Retention Amount**/
-					if(recalculateRententionAmount){
-						try {
-							Double accumulatedRetentionAmount=0.0;
-							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
-								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
-									//RT+RA
-									Double retentionAmount = scPaymentDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
-									if (retentionAmount != null)
-										accumulatedRetentionAmount = accumulatedRetentionAmount + retentionAmount;
-								}
-							}
-							scPackage.setAccumlatedRetention(accumulatedRetentionAmount);
-						} catch (DatabaseOperationException e) {
-							e.printStackTrace();
-						}
-					}
-					
-					scPackage.setTotalCumCertifiedAmount(totalCumCertAmount);
-					scPackage.setTotalCumWorkDoneAmount(totalCumWorkDoneAmount);
-					scPackage.setTotalPostedCertifiedAmount(totalPostedCertAmount);
-					scPackage.setTotalPostedWorkDoneAmount(totalPostedWorkDoneAmount);
-					scPackage.setTotalCCPostedCertAmount(totalCCPostedCertAmount);
-					scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCertAmount);
-					scPackage.setRetentionReleased(totalRetentionReleasedAmount);
-					try {
-						subcontractHBDao.saveOrUpdate(scPackage);
-					} catch (DataAccessException e) {
-						logger.info("Unable to update Package: "+scPackage.getPackageNo());
-						e.printStackTrace();
-						return false;
-					}
-				//}
-			}
-		
-		return true;
-	}
+	
 	
 	/**
 	 * To recalculate Total Work Done Amount of all subcontract packages for specified job
@@ -4927,6 +4717,17 @@ public class SubcontractService {
 	
 	/**
 	 * @author koeyyeung
+	 * created on 21 Jul, 2016
+	 * @throws DatabaseOperationException 
+	 * **/
+	public List<SubcontractDetail> getSubcontractDetailForWD(String jobNo, String subcontractNo) throws DataAccessException {
+		List<SubcontractDetail> scDetailList = scDetailsHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+		return scDetailList;
+	}
+	
+	
+	/**
+	 * @author koeyyeung
 	 * modified on 26 Aug, 2014
 	 * add period search from SCPackage Snapshot
 	 * **/
@@ -5485,6 +5286,434 @@ public class SubcontractService {
 		return scDetailsHBDao.getScDetails(jobNumber);
 		
 	}
+	/**
+	 * @author koeyyeung
+	 * creatd on 21 Jul, 2016
+	 * update work done and IV
+	 * **/
+	public String updateWDandIV(String jobNo, String subcontractNo, SubcontractDetail subcontractDetail){
+		String message = null;
+		if (subcontractDetail == null){
+			message = "No Subcontract Detail has to be updated.";
+			logger.info(message);
+			return message;
+		}
+
+		Subcontract subcontract = null;
+		try {
+			subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+
+		if (subcontract == null) {
+			message = "Job: " + jobNo + " Subcontract: " + subcontractNo + " -  does not exist.";
+			logger.info(message);
+			return message;
+		}
+		if(Integer.valueOf(100).equals(subcontract.getSubcontractStatus())){
+			message = "Job " + jobNo + " Subcontract " + subcontractNo + " : SC Status = 100. Please input tender analysis again.";
+			logger.info(message);
+			return message;
+		}
+
+		try {
+
+			SubcontractDetail scDetailInDB = scDetailsHBDao.getSCDetail(subcontract, subcontractDetail.getSequenceNo().toString());
+
+			if (scDetailInDB == null) {
+				message = "Job: " + jobNo + " Subcontract: " + subcontractNo + " SCDetail SeqNo: " + subcontractDetail.getSequenceNo() + " - SCDetail does not exist.";
+				logger.info(message);
+				return message;
+			}
+
+			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? subcontractDetail.getAmountCumulativeWD().doubleValue():0.0;
+			calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneAmt);
+
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		} finally {
+			// Update the SCPackage in DB after updating all the SCDetails
+			subcontractHBDao.saveOrUpdate(subcontract);
+
+			// ----------Recalculate SC Package Total Amounts - START ----------
+			calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
+		}
+		return message;
+	}
+	
+	
+	/**
+	 * @author koeyyeung
+	 * creatd on 21 Jul, 2016
+	 * update work done and IV By Percent
+	 * **/
+	public String updateWDandIVByPercent(String jobNo, String subcontractNo, Double percent){
+		String message = "";
+			// No SCDetail to be updated
+			if (percent == null){
+				message = "No Subcontract Detail has to be updated.";
+				logger.info(message);
+				return message;
+			}
+
+			Subcontract subcontract = null;
+			try {
+				subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
+
+			if (subcontract == null) {
+				message = "Job: " + jobNo + " Subcontract: " + subcontractNo + " -  does not exist.";
+				logger.info(message);
+				return message;
+			}
+			if(Integer.valueOf(100).equals(subcontract.getSubcontractStatus())){
+				message = "Job " + jobNo + " Subcontract " + subcontractNo + " : SC Status = 100. Please input tender analysis again.";
+				logger.info(message);
+				return message;
+			}
+			
+			List<SubcontractDetail> subcontractDetailList = scDetailsHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+
+			try {
+				for (SubcontractDetail scDetail: subcontractDetailList) {
+					
+					double cumWorkDoneAmt = scDetail.getAmountCumulativeWD().doubleValue()*(1+percent/100);
+					calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
+				}
+			} finally {
+				// Update the SCPackage in DB after updating all the SCDetails
+				subcontractHBDao.saveOrUpdate(subcontract);
+
+				// ---------- Recalculate SC Package Total Amounts - START ----------
+				calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
+			}
+		return message;
+	}
+	
+	
+	private String calculateWDandIV(SubcontractDetail scDetailInDB, Subcontract subcontract, double cumWorkDoneAmt){
+		String message = "";
+		double cumWorkDoneAmtMovement = 0.0;
+		// ----------1. Calculate work done amount - START ----------
+		/**@author koeyyeung
+		 * Bug Fix #57: Non-approved VO (e.g. V1) cannot be larger than BQ Quantity
+		 * created on 16th Mar, 2015
+		 * **/
+		// BQ, B1, V1, V2, V3 - cannot be larger than BQ Quantity
+		if ("BQ".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+				"B1".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+				"V1".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+				"V2".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+				"V3".equalsIgnoreCase(scDetailInDB.getLineType())) {
+			if (scDetailInDB.getApproved() != null){
+				if(SubcontractDetail.APPROVED.equals(scDetailInDB.getApproved())) {
+					if(scDetailInDB.getAmountSubcontract() >= 0){
+						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontract()) {
+							message = "New Work Done Amount: " + cumWorkDoneAmt+ " cannot be larger than Subcontract Amount: " + scDetailInDB.getAmountSubcontract() ;
+							logger.info(message);
+							return message;
+						}
+					}else{
+						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontract() || cumWorkDoneAmt >0) {
+							message = "New Work Done Amount: " + cumWorkDoneAmt + " cannot be smaller than Subcontract Amount: " + scDetailInDB.getAmountSubcontract() ;
+							logger.info(message);
+							return message;
+						}
+					}
+				}else{
+					//SUSPEND,NOT_APPROVED,NOT_APPROVED_BUT_PAID
+					if(scDetailInDB.getAmountSubcontractTBA() >= 0){
+						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontractTBA()) {
+							message = "New Work Done Amount: " + cumWorkDoneAmt+ " cannot be larger than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
+							logger.info(message);
+							return message;
+						}
+					}else{
+						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontractTBA() || cumWorkDoneAmt >0) {
+							message = "New Work Done Amount: " + cumWorkDoneAmt + " cannot be smaller than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
+							logger.info(message);
+							return message;
+						}
+					}
+				}
+
+			}
+		}
+		logger.info(" cumWorkDoneAmt:"+ cumWorkDoneAmt);
+		logger.info("scDetailInDB.getAmountCumulativeWD(): "+scDetailInDB.getAmountCumulativeWD());
+		if (scDetailInDB.getAmountCumulativeWD().doubleValue() != cumWorkDoneAmt){
+			cumWorkDoneAmtMovement = cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue();
+			scDetailInDB.setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
+		}
+		// ----------1. Calculate work done amount - DONE ----------
+
+		// ----------3. Update IV in resource Summary - START ----------
+		// No IV update if (1)Final Payment has made, (2)No update on work done quantity, (3)No Budget (cost rate = 0)
+		double costRate = scDetailInDB.getCostRate() != null ? scDetailInDB.getCostRate() : 0.00;
+		if (!"F".equals(subcontract.getPaymentStatus()) &&	costRate != 0.0) {
+			try {
+				if ("BQ".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+					"V3".equalsIgnoreCase(scDetailInDB.getLineType()) ||
+					"V1".equalsIgnoreCase(scDetailInDB.getLineType())) {
+					
+					ResourceSummary checkResource = null;
+					if (scDetailInDB.getResourceNo() != null && scDetailInDB.getResourceNo() > 0) {
+						checkResource = bqResourceSummaryDao.get(scDetailInDB.getResourceNo().longValue());
+						if (checkResource == null || !subcontract.getPackageNo().equals(checkResource.getPackageNo()) ||
+							!checkResource.getObjectCode().equals(scDetailInDB.getObjectCode()) ||
+							!checkResource.getSubsidiaryCode().equals(scDetailInDB.getSubsidiaryCode()) ||
+							!checkResource.getJobInfo().getJobNumber().equals(subcontract.getJobInfo().getJobNumber()))
+							checkResource = null;
+					}
+
+					// Update IV for V1(with budget), V3
+					if (checkResource != null && ("V1".equalsIgnoreCase(scDetailInDB.getLineType()) || "V3".equalsIgnoreCase(scDetailInDB.getLineType())))
+						updateResourceSummaryIVFromSCVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
+														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
+														CalculationUtil.round(cumWorkDoneAmtMovement/scDetailInDB.getScRate() * scDetailInDB.getCostRate(), 2), 
+														scDetailInDB.getResourceNo().longValue());
+					// Update IV for BQ, V1 (no budget)
+					else
+						updateResourceSummaryIVFromSCNonVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
+														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
+														CalculationUtil.round(cumWorkDoneAmtMovement/scDetailInDB.getScRate()  * scDetailInDB.getCostRate(), 2));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		// ----------3. Update IV in resource Summary - DONE ----------
+
+		// Update the SCDetail in DB if it passes all validations
+		logger.info("Saving scDetails");
+		scDetailsHBDao.saveOrUpdate(scDetailInDB);
+		// ----------5. Update the SC Package - START ----------
+		// Update the cumulative total work done amount
+		logger.info("J" + subcontract.getJobInfo().getJobNumber() + " SC" + scDetailInDB.getSubcontract().getPackageNo() + "-" + scDetailInDB.getLineType() + "-" + scDetailInDB.getObjectCode() + "-" + scDetailInDB.getSubsidiaryCode() +
+				" WorkDoneAmtMovement = " + cumWorkDoneAmtMovement);
+		return message;
+	}
+	
+	
+	public Boolean calculateTotalWDandCertAmount(String jobNumber, String packageNo, boolean recalculateRententionAmount){
+		logger.info("Recalculate ScPackage Figures - JobNo: "+jobNumber+" - PackageNo: "+packageNo);
+			List<Subcontract> packages = new ArrayList<Subcontract>();
+			try {
+				if(GenericValidator.isBlankOrNull(packageNo))
+					packages = subcontractHBDao.obtainPackageList(jobNumber);
+				else{
+					JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
+					Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
+					if(scPackage!=null)
+						packages.add(scPackage);
+				}
+			} catch (DatabaseOperationException e) {
+				logger.info("Unable to obtain Package List for Job: "+jobNumber+" - No calculation on Total WD and Certified Amount has been done.");
+				e.printStackTrace();
+				return false;
+			}
+			
+			for(Subcontract scPackage: packages){
+				//if (scPackage.isAwarded()){
+				List<SubcontractDetail> scDetails;
+				Double totalCumWorkDoneAmount = 0.00; 
+				Double totalCumCertAmount =0.00;
+				Double totalPostedWorkDoneAmount = 0.00; 
+				Double totalPostedCertAmount =0.00;
+				Double totalCCPostedCertAmount = 0.00;
+				Double totalMOSPostedCertAmount = 0.00;
+				Double totalRetentionReleasedAmount = 0.00;
+				try {
+					scDetails = scDetailsHBDao.getSCDetails(scPackage);
+
+					for (SubcontractDetail scDetail: scDetails){
+						// Not updating work done (C1, C2, RR, RA, AP, MS)
+						// Updating work done (B1, BQ, V1, V2, V3, OA, CF, D1, D2, L1, L2)
+						boolean excludedFromProvisionCalculation = "C1".equals(scDetail.getLineType()) || 
+																   "C2".equals(scDetail.getLineType()) || 
+																   "RR".equals(scDetail.getLineType()) || 
+																   "RT".equals(scDetail.getLineType()) || 
+																   "RA".equals(scDetail.getLineType()) ||
+																   "AP".equals(scDetail.getLineType()) ||
+																   "MS".equals(scDetail.getLineType());
+
+						String systemStatus = scDetail.getSystemStatus();
+						if(BasePersistedAuditObject.ACTIVE.equals(systemStatus)){
+							//Total Posted Contra Charge Certified Amount
+							if("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType())){
+								totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Retention Released Amount
+							if("RR".equals(scDetail.getLineType())){
+								totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Posted Material On Site Certified Amount
+							if("MS".equals(scDetail.getLineType())){
+								totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Cumulative Work Done Amount
+							if (!excludedFromProvisionCalculation){
+								totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Cumulative Certified Amount
+							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Cumulative Certified Amount" 
+							if("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
+								totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Posted Work Done Amount
+							if (!excludedFromProvisionCalculation){
+								totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
+							}
+							//Total Posted Certified Amount
+							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Posted Certified Amount"
+							if ("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
+								totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+							}
+						}
+						}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+					/**
+					 * @author koeyyeung
+					 * created on 10th April, 2015
+					 * update Accumulated Retention Amount**/
+					if(recalculateRententionAmount){
+						try {
+							Double accumulatedRetentionAmount=0.0;
+							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
+								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
+									//RT+RA
+									Double retentionAmount = scPaymentDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
+									if (retentionAmount != null)
+										accumulatedRetentionAmount = accumulatedRetentionAmount + retentionAmount;
+								}
+							}
+							scPackage.setAccumlatedRetention(accumulatedRetentionAmount);
+						} catch (DatabaseOperationException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					scPackage.setTotalCumCertifiedAmount(totalCumCertAmount);
+					scPackage.setTotalCumWorkDoneAmount(totalCumWorkDoneAmount);
+					scPackage.setTotalPostedCertifiedAmount(totalPostedCertAmount);
+					scPackage.setTotalPostedWorkDoneAmount(totalPostedWorkDoneAmount);
+					scPackage.setTotalCCPostedCertAmount(totalCCPostedCertAmount);
+					scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCertAmount);
+					scPackage.setRetentionReleased(totalRetentionReleasedAmount);
+					try {
+						subcontractHBDao.saveOrUpdate(scPackage);
+					} catch (DataAccessException e) {
+						logger.info("Unable to update Package: "+scPackage.getPackageNo());
+						e.printStackTrace();
+						return false;
+					}
+				//}
+			}
+		
+		return true;
+	}
+
+	/**
+	 * @author Tiky Wong
+	 * Refactored on 25-11-2013
+	 * @author koeyyeung
+	 * modified on 03-06-2015
+	 * add Parameter: recalculateFinalizedPackage - recalculate Resource Summary IV for finalized SC Package
+	 */
+	public Boolean recalculateResourceSummaryIV(String jobNo, String packageNo, boolean recalculateFinalizedPackage){
+		logger.info("Recalculating IV for job: " + jobNo + ", packageNo: " + packageNo);
+		try{
+			JobInfo job = jobHBDao.obtainJobInfo(jobNo);
+			Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
+			if (scPackage == null){
+				logger.info("No re-calculation of IV has been done because the package does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo);
+				return Boolean.FALSE;
+			}
+
+			if (!recalculateFinalizedPackage && "F".equals(scPackage.getPaymentStatus())){
+				logger.info("No re-calculation of IV has been done because the package is final - Job: "+job.getJobNumber()+" Package: "+packageNo);
+				return Boolean.FALSE;
+			}
+
+			//Obtain active SCDetail only
+			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(job.getJobNumber(), packageNo);
+			if (scDetails == null){
+				logger.info("No re-calculation of IV has been done because none of the SC Detail exists. Job: "+job.getJobNumber()+" Package: "+packageNo);
+				return Boolean.FALSE;
+			}
+
+			// map of account code (e.g. "140299.19999999") to cumIVAmount
+			Map<String, Double> accountIV = new HashMap<String, Double>();
+
+			// Reset the currIVAmount of all the resources in the package (object code 14%)
+			bqResourceSummaryDao.resetIVAmountofPackage(job, packageNo);
+
+			// Iterate through scDetails and find total movements for each account code - separate the positive and negative iv amounts
+			for (SubcontractDetail scDetail : scDetails) {
+				String lineType = scDetail.getLineType();
+				if ("BQ".equals(lineType) || "V3".equals(lineType) || "V1".equals(lineType)) {
+					double costRate = scDetail.getCostRate() != null ? scDetail.getCostRate() : 0.0;
+					double scRate = scDetail.getScRate() != null ? scDetail.getScRate() : 0.0;
+					double bqQty = scDetail.getQuantity() != null ? scDetail.getQuantity() : 0.0;
+					double cumWDAmount = scDetail.getAmountCumulativeWD()!=null ? scDetail.getAmountCumulativeWD().doubleValue(): 0.0;
+
+					//No IV update if it is BQ and BQ Quantity = 0 (no budget)
+					if (bqQty == 0.0 && "BQ".equals(lineType))
+						continue;
+
+					//No IV Update if cost Rate or cumulative WD Quantity = 0
+					if (costRate==0.0 || cumWDAmount==0.0)
+						continue;
+
+					double cumIVAmount = CalculationUtil.round(cumWDAmount/scRate*costRate, 2);
+					ResourceSummary resourceSummaryInDB = null;
+
+					//With Resource No. > 0 means it has a Resource Summary associated with
+					if (scDetail.getResourceNo() != null && scDetail.getResourceNo() > 0) {
+						resourceSummaryInDB = bqResourceSummaryDao.get(scDetail.getResourceNo().longValue());
+						if (resourceSummaryInDB != null &&
+							((resourceSummaryInDB.getJobInfo()!=null && resourceSummaryInDB.getJobInfo().getJobNumber()!=null && !resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber())) ||
+							 (resourceSummaryInDB.getPackageNo()!=null && !resourceSummaryInDB.getPackageNo().equals(packageNo)) ||
+							 (resourceSummaryInDB.getObjectCode()!=null && !resourceSummaryInDB.getObjectCode().equals(scDetail.getObjectCode())) ||
+							 (resourceSummaryInDB.getSubsidiaryCode()!=null && !resourceSummaryInDB.getSubsidiaryCode().equals(scDetail.getSubsidiaryCode())))){
+							resourceSummaryInDB = null;
+						}
+					}
+
+					// V1(with budget), V3 with Resource Summary
+					if (("V1".equalsIgnoreCase(lineType) || "V3".equalsIgnoreCase(lineType) ) && resourceSummaryInDB != null) 
+						updateResourceSummaryIVFromSCVO(job, packageNo, scDetail.getObjectCode(), scDetail.getSubsidiaryCode(), cumIVAmount, scDetail.getResourceNo().longValue());
+					//V1, BQ, B1 without Resource Summary
+					else {
+						String accountCode = scDetail.getObjectCode() + "." + scDetail.getSubsidiaryCode();
+						Double accountIVAmount = accountIV.get(accountCode);
+						if (accountIVAmount == null)
+							accountIVAmount = new Double(cumIVAmount);
+						else
+							accountIVAmount = new Double(accountIVAmount + cumIVAmount);
+						accountIV.put(accountCode, accountIVAmount);
+					}
+				}
+			}
+
+			// Update resource summaries
+			for (Entry<String, Double> entry : accountIV.entrySet()) {
+				String[] objSub = entry.getKey().split("\\.");
+				updateResourceSummaryIVFromSCNonVO(job, packageNo, objSub[0], objSub[1], entry.getValue());
+			}
+
+		}catch(DatabaseOperationException dbException){
+			dbException.printStackTrace();
+		}
+
+		return Boolean.TRUE;
+	}
+	
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 

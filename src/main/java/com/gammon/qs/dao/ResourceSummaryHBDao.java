@@ -1139,7 +1139,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	}
 	
 	public void resetIVAmountofPackage(JobInfo jobInfo, String packageNo) throws DatabaseOperationException {
-		String hql = "Update BQResourceSummary set currIVAmount = 0 where systemStatus = 'ACTIVE' and job = :job and packageNo = :packageNo and objectCode like '14%'";
+		String hql = "Update ResourceSummary set currIVAmount = 0 where systemStatus = 'ACTIVE' and jobInfo = :jobInfo and packageNo = :packageNo and objectCode like '14%'";
 		try {
 			Query query = getSession().createQuery(hql);
 			query.setEntity("jobInfo", jobInfo);

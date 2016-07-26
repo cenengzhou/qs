@@ -134,7 +134,7 @@ public class ResourceSummaryService implements Serializable {
 		
 		List<String> finalizedPackageNoList = bqResourceSummaryDao.obtainPackageNoForIVRecalculation(job.getJobNumber(), packageNo, objectCode, subsidiaryCode, description);
 		for (String finalizedPackageNo: finalizedPackageNoList){
-			packageRepository.recalculateResourceSummaryIV(job, finalizedPackageNo, true);
+			packageRepository.recalculateResourceSummaryIV(job.getJobNumber(), finalizedPackageNo, true);
 			recalculated = true;
 		}
 		
@@ -731,7 +731,7 @@ public class ResourceSummaryService implements Serializable {
 																		(isBill80?new Double(1):resource.getCostRate()));
 				}
 				else{ //Subcontract
-					List<ResourceSummary> scBQResourceSummaries = getResourceSummariesForAccount(	jobDao.obtainJobInfo(resource.getJobNumber()), 
+					List<ResourceSummary> scBQResourceSummaries = bqResourceSummaryDao.getResourceSummariesForAccount(	jobDao.obtainJobInfo(resource.getJobNumber()), 
 																									packageNo, resource.getObjectCode(), resource.getSubsidiaryCode());
 //					logger.info("Number of SCBQResourceSummaries:"+(scBQResourceSummaries==null?0:scBQResourceSummaries.size()));
 					if(scBQResourceSummaries!=null && scBQResourceSummaries.size()==1)
@@ -914,7 +914,7 @@ public class ResourceSummaryService implements Serializable {
 			return Boolean.FALSE;
 		}
 		
-		//logger.info("proportion: "+proportion);
+		logger.info("proportion: "+proportion);
 		
 		/**
 		 * @author koeyyeung
@@ -922,7 +922,7 @@ public class ResourceSummaryService implements Serializable {
 		 * Fix the proportion issue in split
 		 * **/
 		double remainder = newAmount - CalculationUtil.round((totalAmountofSameAccountCode*proportion),4);
-		//logger.info("remainder: "+remainder);
+		logger.info("remainder: "+remainder);
 		
 		//ResourceSummary of BQs which created before contract award
 		String message = "";
@@ -1234,9 +1234,7 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryDao.getResourceSummary(jobDao.obtainJobInfo(jobNumber), packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
 	}
 	
-	public List<ResourceSummary> getResourceSummariesForAccount(JobInfo job, String packageNo, String objectCode, String subsidiaryCode) throws Exception{
-		return bqResourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
-	}
+	
 
 	public Double getIVMovementOfJobFromResourceSummary(JobInfo job) {
 		return bqResourceSummaryDao.getIVMovementOfJob(job);
@@ -1254,6 +1252,10 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryDao.getResourceSummariesBySC(job, packageNo);
 	}
 	
+	public List<ResourceSummary> getResourceSummariesByAccountCode(String jobNo, String packageNo, String objectCode, String subsidiaryCode) throws Exception{
+		JobInfo job = jobDao.obtainJobInfo(jobNo);
+		return bqResourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+	}
 
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(String jobNo) throws DatabaseOperationException{
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
@@ -1437,6 +1439,61 @@ public class ResourceSummaryService implements Serializable {
 		repackagingEntryDao.update(repackaging);
 		
 		return null;
+	}
+
+	/**
+	 * @author koeyyeung
+	 * creatd on 21 Jul, 2016
+	 * **/
+	public List<ResourceSummary> getResourceSummariesByLineType(String jobNo, String subcontractNo, String objectCode,
+			String subsidiaryCode, String lineType, Integer resourceNo) {
+		List<ResourceSummary> resourceSummaryList = new ArrayList<ResourceSummary>();
+		try {
+			
+			if(lineType=="V1" || lineType =="V3"){
+				ResourceSummary resourceSummary =  bqResourceSummaryDao.get(Long.valueOf(resourceNo));
+				resourceSummaryList.add(resourceSummary);
+			}else{
+				JobInfo job = jobDao.obtainJobInfo(jobNo);
+				List<ResourceSummary> resourceSummaries =  bqResourceSummaryDao.getResourceSummariesForAccount(job, subcontractNo, objectCode, subsidiaryCode);
+				List<SubcontractDetail> scDetailList = scDetailsHBDaoImpl.getSCDetailsForWD(jobNo, subcontractNo);
+				
+				
+				HashMap<Long, SubcontractDetail> resourceIDofAddendum = new HashMap<Long, SubcontractDetail>();
+				for (SubcontractDetail scDetails : scDetailList) {
+					ResourceSummary resourceSummaryInDB = null;
+					if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
+						resourceSummaryInDB = bqResourceSummaryDao.get(scDetails.getResourceNo().longValue());
+						
+						if (resourceSummaryInDB == null || 
+							!subcontractNo.equals(resourceSummaryInDB.getPackageNo()) || 
+							!resourceSummaryInDB.getObjectCode().equals(scDetails.getObjectCode()) || 
+							!resourceSummaryInDB.getSubsidiaryCode().equals(scDetails.getSubsidiaryCode()) || 
+							!resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber()))
+							resourceSummaryInDB = null;
+					}
+					if (!"BQ".equals(scDetails.getLineType()) && 
+						!"B1".equals(scDetails.getLineType()) && 
+						!Double.valueOf(0.0).equals(scDetails.getCostRate()) && 
+						resourceSummaryInDB != null)
+						resourceIDofAddendum.put(scDetails.getResourceNo().longValue(), scDetails);
+				}
+				
+
+				for (ResourceSummary resourceSummary : resourceSummaries){
+					if (resourceIDofAddendum.get(resourceSummary.getId()) == null){
+						resourceSummaryList.add(resourceSummary);
+					}
+				}
+				
+				
+			}
+			
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		
+		return resourceSummaryList;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
