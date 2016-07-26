@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,9 +17,12 @@ import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
+import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
+import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.pcms.service.ADLService;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
 @RequestMapping(value = "service/adl/",
@@ -195,7 +199,7 @@ public class ADLController {
 	// TODO: migrate from web service to ADL
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
 					method = RequestMethod.GET)
-	public List<?> getAddressBookListOfSubcontractorAndClient() {
+	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {
 		try {
 			return adlService.getAddressBookListOfSubcontractorAndClient();
 		} catch (Exception e) {
@@ -207,12 +211,12 @@ public class ADLController {
 	// TODO: migrate from web service to ADL
 	@RequestMapping(value = "getAddressBook",
 			method = RequestMethod.GET)
-	public void getAddressBook(@RequestParam(required = true) BigDecimal noAddressBook){
+	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal noAddressBook){
 		try{
-			// return adlService.getAddressBook(noAddressBook);
+			return adlService.getAddressBook(noAddressBook);
 		}catch(Exception e){
 			e.printStackTrace();
-//			return null;
+			return null;
 		}
 	}
 	
@@ -261,6 +265,17 @@ public class ADLController {
 			e.printStackTrace();
 			return new ArrayList<ApprovalDetail>();
 		}
+	}
+	
+	//TODO: Test BusinessUnit
+	@RequestMapping(value = "getBusinessUnit", method = RequestMethod.POST)
+	public BusinessUnit getBusinessUnitList(@RequestBody AddressBook addressbook){
+		try {
+			return adlService.getBusinessUnit(addressbook);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

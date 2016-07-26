@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +16,19 @@ import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dao.adl.AccountLedgerDao;
 import com.gammon.pcms.dao.adl.AccountMasterDao;
+import com.gammon.pcms.dao.adl.AddressBookDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
+import com.gammon.pcms.dao.adl.BusinessUnitDao;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
+import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
+import com.gammon.pcms.model.adl.BusinessUnit;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @Service
 @Transactional(	readOnly = true,
@@ -45,6 +51,10 @@ public class ADLService {
 	private ApprovalHeaderDao approvalHeaderDao;
 	@Autowired
 	private ApprovalDetailDao approvalDetailDao;
+	@Autowired
+	private AddressBookDao addressBookDao;
+	@Autowired
+	private BusinessUnitDao businessUnitDao;
 
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
@@ -184,22 +194,24 @@ public class ADLService {
 	}
 	
 	//TODO: pending for AddressBook object
-	public List<?> getAddressBookListOfSubcontractorAndClient(){
+	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(){
 		List<String> typeAddressBooks = new ArrayList<String>();
 		// should be enum of AddressBook class
-		typeAddressBooks.add("V");
-		typeAddressBooks.add("C");
+		typeAddressBooks.add(AddressBook.TYPE_VENDOR);
+		typeAddressBooks.add(AddressBook.TYPE_CLIENT);
 		
-		//call DAO
-				
-		 return new ArrayList<>();
+		return addressBookDao.getAddressBookListOfSubcontractorAndClient(typeAddressBooks);
 	}
 	
 	//TODO: pending for AddressBook object
-	public void getAddressBook(BigDecimal noAddressBook){
-		// call DAO
+	public AddressBook getAddressBook(BigDecimal noAddressBook) throws DataAccessException {
+		return addressBookDao.get(noAddressBook);
 	}
 	
+	//TODO: testing businessUnit
+	public BusinessUnit getBusinessUnit(AddressBook addressbook) throws DatabaseOperationException {
+		return businessUnitDao.getBusinessUnit(addressbook.getAddressBookNumber().toString());
+	}
 	/*
 	 * ----------------------------------------------- Approval System @ Data Layer -----------------------------------------------
 	 */

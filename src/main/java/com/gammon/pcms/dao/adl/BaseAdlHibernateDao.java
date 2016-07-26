@@ -1,5 +1,6 @@
 package com.gammon.pcms.dao.adl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
@@ -101,6 +103,13 @@ public abstract class BaseAdlHibernateDao <T> implements GenericDao<T> {
 		} catch (Exception ex) {			
 			throw new DatabaseOperationException(ex);
 		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T get(BigDecimal id) throws DataAccessException {
+		T result = null;
+		result = (T) getSession().get(type, id);
 		return result;
 	}
 	
