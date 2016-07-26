@@ -27,7 +27,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
-			             { field: 'unit'},
+			             { field: 'unit',  enableCellEdit: false},
 			             { field: 'quantity', enableCellEdit: false, enableFiltering: false},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
 			             { field: 'amountBudget', displayName: "Amount",  enableCellEdit: false, enableCellEdit: false, enableFiltering: false},

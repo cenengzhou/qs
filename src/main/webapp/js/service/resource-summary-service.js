@@ -1,42 +1,78 @@
 mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
-		getResourceSummaries: 		getResourceSummaries,
-		getResourceSummariesBySC:	getResourceSummariesBySC,
-		addResourceSummary:			addResourceSummary,
-		updateResourceSummaries:	updateResourceSummaries,
-		deleteResources:			deleteResources
+		getResourceSummaries: 				getResourceSummaries,
+		getResourceSummariesBySC:			getResourceSummariesBySC,
+		getResourceSummariesByAccountCode: 	getResourceSummariesByAccountCode,
+		getResourceSummariesByLineType:		getResourceSummariesByLineType,
+		addResourceSummary:					addResourceSummary,
+		updateResourceSummaries:			updateResourceSummaries,
+		deleteResources:					deleteResources
 
 
 	});
 
-	function getResourceSummaries(jobNo, packageNo, objectCode) {
+	function getResourceSummaries(jobNo, subcontractNo, objectCode) {
 		var request = $http({
 			method: "get",
 			url: "service/resourceSummary/getResourceSummaries",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
-				packageNo: packageNo,
+				subcontractNo: subcontractNo,
 				objectCode: objectCode
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
 	
-	function getResourceSummariesBySC(jobNo, packageNo, objectCode) {
+	function getResourceSummariesBySC(jobNo, subcontractNo, objectCode) {
 		var request = $http({
 			method: "get",
 			url: "service/resourceSummary/getResourceSummariesBySC",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
-				packageNo: packageNo
+				subcontractNo: subcontractNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
 
+	function getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getResourceSummariesByAccountCode",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				objectCode: objectCode,
+				subsidiaryCode: subsidiaryCode
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	
+	function getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getResourceSummariesByLineType",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				objectCode: objectCode,
+				subsidiaryCode: subsidiaryCode,
+				lineType: lineType,
+				resourceNo: resourceNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	
 	function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
 		var request = $http({
 			method: "post",

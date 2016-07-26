@@ -397,7 +397,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-workdone.js'
+                           'js/controller/subcontract/subcontract-workdone.js',
+                           'js/service/resource-summary-service.js'
                     ] 
                 });
             }]

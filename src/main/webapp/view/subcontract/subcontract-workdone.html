@@ -1,86 +1,68 @@
 <div class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb pull-right">
+	<!-- <ol class="breadcrumb pull-right">
 		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 				Home</a></li>
 		<li class="active">Dashboard</li>
-	</ol>
-	<!-- end breadcrumb -->
+	</ol> -->
 
 	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}} </small>
 	</h1>
 
 
-		<div class="row">
-		    <div class="col-md-6 col-xs-12">
-		      <!-- small box -->
-		      <div class="small-box bg-aqua">
-		        <div class="inner">
-		          <h3>{{workdone | currency}}</h3>
-		
-		          <p>Work Done Total Amount</p>
-		        </div>
-		        <div class="icon">
-		          <i class="ion ion-social-usd"></i>
-		        </div>
-		      </div>
-		    </div>
-			
-			
-			<div class="col-md-6 col-xs-12">
-		      <!-- small box -->
-		      <div class="small-box bg-green">
-		        <div class="inner">
-		          <h3>{{iv | currency}}</h3>
-		          <p>IV Total Amount</p>
-		        </div>
-		        <div class="icon">
-		          <i class="ion ion-social-usd"></i>
-		        </div>
-		      </div>
-		    </div>
-		    <!-- ./col -->
-	 	</div>
-	
-	
-	
-		<div class="row">
+	<div class="row">
 
-			<div class="col-md-6">
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">Work Done</h3>
-					</div>
-					<div class="box-body">
-						<div id="ipa_grid" ui-grid="gridOptions" ui-grid-selection
-							ui-grid-cellnav class="grid"
-							style="height: 400px;"></div>
+		<div class="col-md-6">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Work Done</h3>
+					<div class="box-title pull-right col-md-7">
+						<div class="col-md-5">
+							<input type="number" step="0.01"
+								class="form-control input-group-sm input-sm"
+								placeholder="Input %" ng-model="percent">
+						</div>
+						<div class="col-md-7">
+							<button class="btn btn-primary btn-sm" ng-click = "applyPercent()">Apply % for Cum WD Amount</button>
+						</div>
+
 					</div>
 				</div>
-			</div>
-
-
-			<div class="col-md-6">
-				<div class="box box-success">
-					<div class="box-header with-border">
-						<h3 class="box-title">IV</h3>
-					</div>
-					<div class="box-body">
-						<div id="ipa_grid" ui-grid="gridOptions" ui-grid-selection
-							ui-grid-cellnav class="grid"
-							style="height: 400px;"></div>
-					</div>
+				<div class="box-body">
+					<div ui-grid="gridOptions" ui-grid-resize-columns
+						ui-grid-move-columns ui-grid-pinning ui-grid-edit 
+						ui-grid-cellnav ui-grid-exporter class="grid"></div>
+					<!-- style="height: 250px;"  -->
 				</div>
 			</div>
-
 		</div>
-		<!-- /.row -->
 
 
-		<button class="btn btn-primary btn-block" type="button"	ng-click="save()">
-			<span class="fa fa-save"></span> Save
-		</button>
-		
+		<div class="col-md-6">
+			<div class="box box-success">
+				<div class="box-header with-border">
+					<h3 class="box-title">Internal Valuation</h3>
+					<div class="box-title pull-right col-md-5">
+						<button class="btn btn-primary btn-sm" ng-click="recalculateIV()"><span class="fa fa-calculator"></span> Recalculate Resource Summary IV</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div ui-grid="gridOptionsIV" ui-grid-resize-columns
+						ui-grid-move-columns ui-grid-pinning ui-grid-edit
+						ui-grid-cellnav ui-grid-exporter class="grid"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.row -->
+
+
+	<button class="btn btn-primary btn-block" type="button"
+		ng-click="save()">
+		<span class="fa fa-save"></span> Save
+	</button>
+
 </div>
 

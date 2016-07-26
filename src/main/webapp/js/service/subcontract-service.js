@@ -5,11 +5,15 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getSubcontractList: 				getSubcontractList,
     	getWorkScope: 						getWorkScope,
     	getSCDetails:						getSCDetails,
+    	getSubcontractDetailForWD:			getSubcontractDetailForWD,
     	getSubcontractDetailsDashboardData:	getSubcontractDetailsDashboardData,
     	getSubcontractDashboardData:		getSubcontractDashboardData,
     	upateSubcontract: 					upateSubcontract,
     	upateSubcontractDates: 				upateSubcontractDates,
+    	updateWDandIV:						updateWDandIV,
+    	updateWDandIVByPercent:				updateWDandIVByPercent,
     	submitAwardApproval:				submitAwardApproval,
+    	recalculateResourceSummaryIV:		recalculateResourceSummaryIV,
     	
     	runProvisionPostingManually:		runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 	generateSCPackageSnapshotManually,
@@ -87,6 +91,19 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function getSubcontractDetailForWD(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetailForWD",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     function getSubcontractDashboardData(jobNo, subcontractNo, year) {
         var request = $http({
             method: "get",
@@ -148,6 +165,48 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 jobNo: jobNo
             },
             data: subcontract
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateWDandIV(jobNo, subcontractNo, scDetail) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/updateWDandIV",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo
+            },
+            data: scDetail
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateWDandIVByPercent(jobNo, subcontractNo, percent) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/updateWDandIVByPercent",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                percent: percent
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/recalculateResourceSummaryIV",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                recalculateFinalizedPackage: recalculateFinalizedPackage
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }
