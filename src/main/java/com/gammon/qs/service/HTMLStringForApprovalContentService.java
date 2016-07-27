@@ -14,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
@@ -36,7 +37,6 @@ import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -188,12 +188,12 @@ public class HTMLStringForApprovalContentService implements Serializable{
 			"</tr>"+
 			"<tr class=\"second\">"+
 			"<td class=\"cell03\">LOA Signed Date:</td>"+
-			"<td>"+(scPackage.getLoaSignedDate()!=null?DateUtil.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+			"<td>"+(scPackage.getLoaSignedDate()!=null?DateHelper.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 			"<td></td>"+
 			"</tr>"+
 			"<tr class=\"first\">"+
 			"<td class=\"cell03\">Subcontract Document Signed Date:</td>"+
-			"<td>"+(scPackage.getScDocScrDate()!=null?DateUtil.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+			"<td>"+(scPackage.getScDocScrDate()!=null?DateHelper.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 			"<td></td>"+
 			"</tr>"+
 			"<tr class=\"second\">"+
@@ -481,12 +481,12 @@ public class HTMLStringForApprovalContentService implements Serializable{
 			"</tr>"+
 			"<tr class=\"second\">"+
 			"<td class=\"T1C1cell01\">LOA Signed Date:</td>"+
-			"<td class=\"T1C2cell01\">"+(scPackage.getLoaSignedDate()!=null?DateUtil.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+			"<td class=\"T1C2cell01\">"+(scPackage.getLoaSignedDate()!=null?DateHelper.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 			"<td class=\"T1C3cell01\"></td>"+
 			"</tr>"+
 			"<tr class=\"first\">"+
 			"<td class=\"T1C1cell01\">SC Doc Signed Date:</td>"+
-			"<td class=\"T1C2cell01\">"+(scPackage.getScDocScrDate()!=null?DateUtil.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+			"<td class=\"T1C2cell01\">"+(scPackage.getScDocScrDate()!=null?DateHelper.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 			"<td class=\"T1C3cell01\"></td>"+
 			"</tr>"+
 			"<tr class=\"second\">"+
@@ -752,12 +752,12 @@ public class HTMLStringForApprovalContentService implements Serializable{
 				"</tr>"+
 				"<tr>"+
 				"<td class=\"cell03\">LOA Signed Date:</td>"+
-				"<td>"+(scPackage.getLoaSignedDate()!=null?DateUtil.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+				"<td>"+(scPackage.getLoaSignedDate()!=null?DateHelper.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 				"<td>"+"</td>"+
 				"</tr>"+
 				"<tr>"+
 				"<td class=\"cell03\">Subcontract Document Signed Date:</td>"+
-				"<td>"+(scPackage.getScDocScrDate()!=null?DateUtil.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+				"<td>"+(scPackage.getScDocScrDate()!=null?DateHelper.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 				"<td>"+"</td>"+
 				"</tr>"+
 				"</tbody>"+
@@ -961,13 +961,13 @@ public class HTMLStringForApprovalContentService implements Serializable{
 				"<tr>"+
 				"<tr class=\"first\">"+
 				"<td class=\"T1C1cell01\">LOA Signed Date:</td>"+
-				"<td class=\"T1C2cell01\">"+(scPackage.getLoaSignedDate()!=null?DateUtil.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+				"<td class=\"T1C2cell01\">"+(scPackage.getLoaSignedDate()!=null?DateHelper.formatDate(scPackage.getLoaSignedDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 				"<td class=\"T1C3cell01\">"+"</td>"+
 				"</tr>"+
 				"<tr>"+
 				"<tr class=\"second\">"+
 				"<td class=\"T1C1cell01\">SC Doc Signed Date:</td>"+
-				"<td class=\"T1C2cell01\">"+(scPackage.getScDocScrDate()!=null?DateUtil.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
+				"<td class=\"T1C2cell01\">"+(scPackage.getScDocScrDate()!=null?DateHelper.formatDate(scPackage.getScDocScrDate(), "dd/MM/yyyy"):"Not Signed")+"</td>"+
 				"<td class=\"T1C3cell01\">"+"</td>"+
 				"</tr>"+
 				"</tbody>"+
@@ -1926,23 +1926,23 @@ public class HTMLStringForApprovalContentService implements Serializable{
 							"<tbody>"+
 							"<tr class=\"first\">"+
 							"<td class=\"cell03\" style=\"width: 100px;\">IPA Date:</td>"+
-							"<td style=\"width: 120px;\">"+(mainCert.getIpaSubmissionDate()!=null?DateUtil.formatDate(mainCert.getIpaSubmissionDate(), "dd/MM/yyyy"):"")+"</td>"+
+							"<td style=\"width: 120px;\">"+(mainCert.getIpaSubmissionDate()!=null?DateHelper.formatDate(mainCert.getIpaSubmissionDate(), "dd/MM/yyyy"):"")+"</td>"+
 							"</tr>"+
 							"<tr class=\"second\">"+
 							"<td class=\"cell03\">IPA Sent out Date:</td>"+
-							"<td>"+(mainCert.getIpaSentoutDate()!=null?DateUtil.formatDate(mainCert.getIpaSentoutDate(), "dd/MM/yyyy"):"")+"</td>"+
+							"<td>"+(mainCert.getIpaSentoutDate()!=null?DateHelper.formatDate(mainCert.getIpaSentoutDate(), "dd/MM/yyyy"):"")+"</td>"+
 							"</tr>"+
 							"<tr class=\"first\">"+
 							"<td class=\"cell03\">Certificate Date:</td>"+
-							"<td>"+(mainCert.getCertIssueDate()!=null?DateUtil.formatDate(mainCert.getCertIssueDate(), "dd/MM/yyyy"):"")+"</td>"+
+							"<td>"+(mainCert.getCertIssueDate()!=null?DateHelper.formatDate(mainCert.getCertIssueDate(), "dd/MM/yyyy"):"")+"</td>"+
 							"</tr>"+
 							"<tr class=\"second\">"+
 							"<td class=\"cell03\">Certificate As At Date:</td>"+
-							"<td>"+(mainCert.getCertAsAtDate()!=null?DateUtil.formatDate(mainCert.getCertAsAtDate(), "dd/MM/yyyy"):"")+"</td>"+
+							"<td>"+(mainCert.getCertAsAtDate()!=null?DateHelper.formatDate(mainCert.getCertAsAtDate(), "dd/MM/yyyy"):"")+"</td>"+
 							"</tr>"+
 							"<tr class=\"first\">"+
 							"<td class=\"cell03\">Certificate Due Date:</td>"+
-							"<td>"+(mainCert.getCertDueDate()!=null?DateUtil.formatDate(mainCert.getCertDueDate(), "dd/MM/yyyy"):"")+"</td>"+
+							"<td>"+(mainCert.getCertDueDate()!=null?DateHelper.formatDate(mainCert.getCertDueDate(), "dd/MM/yyyy"):"")+"</td>"+
 							"</tr>"+
 							"</tbody>"+
 							"</table>"+
@@ -2144,23 +2144,23 @@ public class HTMLStringForApprovalContentService implements Serializable{
 						"<tbody>"+
 						"<tr class=\"first\">"+
 						"<td class=\"T1C1cell01\">IPA Date:</td>"+
-						"<td class=\"T1C2cell01\">"+(mainCert.getIpaSubmissionDate()!=null?DateUtil.formatDate(mainCert.getIpaSubmissionDate(), "dd/MM/yyyy"):"")+"</td>"+
+						"<td class=\"T1C2cell01\">"+(mainCert.getIpaSubmissionDate()!=null?DateHelper.formatDate(mainCert.getIpaSubmissionDate(), "dd/MM/yyyy"):"")+"</td>"+
 						"</tr>"+
 						"<tr class=\"second\">"+
 						"<td class=\"T1C1cell01\">IPA Sent out Date:</td>"+
-						"<td class=\"T1C2cell01\">"+(mainCert.getIpaSentoutDate()!=null?DateUtil.formatDate(mainCert.getIpaSentoutDate(), "dd/MM/yyyy"):"")+"</td>"+
+						"<td class=\"T1C2cell01\">"+(mainCert.getIpaSentoutDate()!=null?DateHelper.formatDate(mainCert.getIpaSentoutDate(), "dd/MM/yyyy"):"")+"</td>"+
 						"</tr>"+
 						"<tr class=\"first\">"+
 						"<td class=\"T1C1cell01\">Certificate Date:</td>"+
-						"<td class=\"T1C2cell01\">"+(mainCert.getCertIssueDate()!=null?DateUtil.formatDate(mainCert.getCertIssueDate(), "dd/MM/yyyy"):"")+"</td>"+
+						"<td class=\"T1C2cell01\">"+(mainCert.getCertIssueDate()!=null?DateHelper.formatDate(mainCert.getCertIssueDate(), "dd/MM/yyyy"):"")+"</td>"+
 						"</tr>"+
 						"<tr class=\"second\">"+
 						"<td class=\"T1C1cell01\">Certificate As At Date:</td>"+
-						"<td class=\"T1C2cell01\">"+(mainCert.getCertAsAtDate()!=null?DateUtil.formatDate(mainCert.getCertAsAtDate(), "dd/MM/yyyy"):"")+"</td>"+
+						"<td class=\"T1C2cell01\">"+(mainCert.getCertAsAtDate()!=null?DateHelper.formatDate(mainCert.getCertAsAtDate(), "dd/MM/yyyy"):"")+"</td>"+
 						"</tr>"+
 						"<tr class=\"first\">"+
 						"<td class=\"T1C1cell01\">Certificate Due Date:</td>"+
-						"<td class=\"T1C2cell01\">"+(mainCert.getCertDueDate()!=null?DateUtil.formatDate(mainCert.getCertDueDate(), "dd/MM/yyyy"):"")+"</td>"+
+						"<td class=\"T1C2cell01\">"+(mainCert.getCertDueDate()!=null?DateHelper.formatDate(mainCert.getCertDueDate(), "dd/MM/yyyy"):"")+"</td>"+
 						"</tr>"+
 						"</tbody>"+
 						"</table>"+

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 /**
@@ -38,7 +38,7 @@ public class SubcontractLiabilityReportGenerator {
 
 		excelFile = new ExcelFile();
 
-		excelFile.setFileName("Subcontract Liability Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd" )+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Subcontract Liability Report " + DateHelper.formatDate(new Date(), "yyyy-MM-dd" )+ ExcelFile.EXTENSION);
 		excelFile.setEmpty(false);
 		excelFile.getDocument().setCurrentSheetName("Subcontract Liability Report");
 

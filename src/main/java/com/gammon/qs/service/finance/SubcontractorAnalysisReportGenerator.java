@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 /**
@@ -41,7 +41,7 @@ public class SubcontractorAnalysisReportGenerator {
 
 		excelFile = new ExcelFile();
 
-		excelFile.setFileName("SubcontractorAnalysisReport" + DateUtil.formatDate(new Date(), "yyyyMMdd" )+ ExcelFile.EXTENSION);
+		excelFile.setFileName("SubcontractorAnalysisReport" + DateHelper.formatDate(new Date(), "yyyyMMdd" )+ ExcelFile.EXTENSION);
 		excelFile.setEmpty(false);
 		excelFile.getDocument().setCurrentSheetName("Subcontractor Analysis Report");
 
@@ -81,7 +81,7 @@ public class SubcontractorAnalysisReportGenerator {
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSoloJV(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJvPercentage()+"", false);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJobDescription(), true);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompletionStatus(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPackageNo(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCurrency(), true);

@@ -27,12 +27,12 @@
 								<div class="col-md-3">
 									<label for="searchYear">Year:</label>
 									<div class="input-group" moment-picker="searchYear"
-										format="YY" start-view="year" today="true">
+										format="YYYY" start-view="year" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="searchYear" name="searchYear"
 											ng-model="searchYear"
-											pattern=".{1,2}" title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+											pattern=".{4,4}" title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 									<p ng-show="searchSubcontractForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
 								</div>

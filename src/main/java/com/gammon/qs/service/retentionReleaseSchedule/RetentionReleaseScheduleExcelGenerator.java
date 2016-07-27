@@ -6,8 +6,8 @@ package com.gammon.qs.service.retentionReleaseSchedule;
 import java.util.List;
 
 import com.gammon.pcms.dto.rs.provider.response.MainCertRetentionReleaseDTO;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 
 /**
  * 
@@ -87,17 +87,17 @@ public class RetentionReleaseScheduleExcelGenerator {
 		contentRow[index++] = this.wrapperList.get(i).getProjectedContractValue() == null ? "" : this.wrapperList.get(i).getProjectedContractValue().toString();
 		contentRow[index++] = this.wrapperList.get(i).getMaxRetentionPercentage() == null ? "" : this.wrapperList.get(i).getMaxRetentionPercentage().toString();
 		contentRow[index++] = this.wrapperList.get(i).getEstimatedRetention() == null ? "" : this.wrapperList.get(i).getEstimatedRetention().toString();
-		contentRow[index++] = this.wrapperList.get(i).getActualPCCDate() == null ? "" :DateUtil.formatDate(this.wrapperList.get(i).getActualPCCDate(),"dd/MM/yyyy");
-		contentRow[index++] = this.wrapperList.get(i).getCompletionDate() == null ? "" :DateUtil.formatDate(this.wrapperList.get(i).getCompletionDate(),"dd/MM/yyyy");
+		contentRow[index++] = this.wrapperList.get(i).getActualPCCDate() == null ? "" :DateHelper.formatDate(this.wrapperList.get(i).getActualPCCDate(),"dd/MM/yyyy");
+		contentRow[index++] = this.wrapperList.get(i).getCompletionDate() == null ? "" :DateHelper.formatDate(this.wrapperList.get(i).getCompletionDate(),"dd/MM/yyyy");
 		contentRow[index++] = this.wrapperList.get(i).getDlp() == null ? "" : this.wrapperList.get(i).getDlp().toString();
 		contentRow[index++] = this.wrapperList.get(i).getCumRetentionRec() == null ? "" : this.wrapperList.get(i).getCumRetentionRec().toString();
 		contentRow[index++] = this.wrapperList.get(i).getRetentionReleaseSeq() == null ? "" : this.wrapperList.get(i).getRetentionReleaseSeq().toString();
 		contentRow[index++] = this.wrapperList.get(i).getReceiptAmt() == null ? "" : this.wrapperList.get(i).getReceiptAmt().toString();
-		contentRow[index++] = this.wrapperList.get(i).getReceiptDate() == null ? "" : DateUtil.formatDate(this.wrapperList.get(i).getReceiptDate(),"dd/MM/yyyy");
+		contentRow[index++] = this.wrapperList.get(i).getReceiptDate() == null ? "" : DateHelper.formatDate(this.wrapperList.get(i).getReceiptDate(),"dd/MM/yyyy");
 		contentRow[index++] = this.wrapperList.get(i).getMainCert() == null ? "" : this.wrapperList.get(i).getMainCert().toString();
 		contentRow[index++] = this.wrapperList.get(i).getOutstandingAmt() == null ? "" : this.wrapperList.get(i).getOutstandingAmt().toString();
-		contentRow[index++] = this.wrapperList.get(i).getDueDate() == null ? "" : DateUtil.formatDate(this.wrapperList.get(i).getDueDate(),"dd/MM/yyyy");
-		contentRow[index++] = this.wrapperList.get(i).getContractualDueDate() == null ? "" : DateUtil.formatDate(this.wrapperList.get(i).getContractualDueDate(),"dd/MM/yyyy");
+		contentRow[index++] = this.wrapperList.get(i).getDueDate() == null ? "" : DateHelper.formatDate(this.wrapperList.get(i).getDueDate(),"dd/MM/yyyy");
+		contentRow[index++] = this.wrapperList.get(i).getContractualDueDate() == null ? "" : DateHelper.formatDate(this.wrapperList.get(i).getContractualDueDate(),"dd/MM/yyyy");
 		contentRow[index++] = this.wrapperList.get(i).getStatus() == null ? "" :this.wrapperList.get(i).getStatus() ;
 		
 	

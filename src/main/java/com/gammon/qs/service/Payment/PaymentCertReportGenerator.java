@@ -7,8 +7,8 @@ import java.util.Date;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.gammon.qs.io.ExcelWorkbook;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 public class PaymentCertReportGenerator {
@@ -24,7 +24,7 @@ public class PaymentCertReportGenerator {
 		this.wrapper=wrapper;
 	}
 	public ExcelFile generate() throws Exception{
-		excelFile.setFileName("Subcontract Payment Cert" + DateUtil.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Subcontract Payment Cert" + DateHelper.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
 		
 		excelFile.getDocument().setCurrentSheetName("job("+this.wrapper.getJobNumber()+")-package("+wrapper.getSubContractNo()+")-paymentCertNo("+wrapper.getPaymentCertNo()+")");
 		createTemplate();

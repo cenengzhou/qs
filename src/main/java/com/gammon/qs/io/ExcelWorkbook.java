@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.gammon.qs.util.DateUtil;
+import com.gammon.pcms.helper.DateHelper;
 
 /**
  * modified by koeyyeung
@@ -431,8 +431,8 @@ public class ExcelWorkbook {
         	return;
         //bpi was being parsed as a date - split the string with '/' and check the length is 3 before doing parseDate 
 //        String[] splitStr = value.split("/");
-//        Date tmpDate = splitStr.length == 3 ? DateUtil.parseDate(value) : null;
-        Date tmpDate = isValidDate(value) ? DateUtil.parseDate(value) : null;
+//        Date tmpDate = splitStr.length == 3 ? DateHelper.parseDate(value) : null;
+        Date tmpDate = isValidDate(value) ? DateHelper.parseDate(value) : null;
         if (tmpDate != null) {
             try {
                 CellUtil.setCellStyleProperty(cell, this.wb, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));
@@ -475,7 +475,7 @@ public class ExcelWorkbook {
         if (forceToString){
         	cell.setCellValue(new XSSFRichTextString(value));
         }else {
-	        Date tmpDate = isValidDate(value) ? DateUtil.parseDate(value) : null;
+	        Date tmpDate = isValidDate(value) ? DateHelper.parseDate(value) : null;
 	        if (tmpDate != null) {
 	            try {
 	                CellUtil.setCellStyleProperty(cell, this.wb, "dataFormat", new Short(HSSFDataFormat.getBuiltinFormat("m/d/yy")));

@@ -3,13 +3,13 @@ package com.gammon.qs.service.subcontractDetail;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.RoundingUtil;
 
 public class SubcontractDetailForJobReportGenerator {
@@ -27,7 +27,7 @@ public class SubcontractDetailForJobReportGenerator {
 	public ExcelFile generate() throws Exception{
 		
 		excelFile = new ExcelFile();
-		excelFile.setFileName("Subcontract Details " + DateUtil.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Subcontract Details " + DateHelper.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
 		
 		if(scDetailsList.size()> 0 )
 		{

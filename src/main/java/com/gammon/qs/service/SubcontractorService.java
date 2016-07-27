@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetSupplierMasterManager_Refactor.getSupplierMaster.SupplierMasterResponseObj;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.dao.SubcontractHBDao;
@@ -24,7 +25,6 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.security.SecurityService;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.SubcontractorWrapper;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
@@ -248,8 +248,8 @@ public class SubcontractorService{
 		Integer noOfQuotReturned =0;
 		Integer noOfAward=0;
 		
-		String year = String.valueOf(Integer.valueOf(DateUtil.formatDate(new Date(), "yyyy")) - 1); 
-		Date startDate = DateUtil.parseDate("0101"+year, "ddMMyyyy");
+		String year = String.valueOf(Integer.valueOf(DateHelper.formatDate(new Date(), "yyyy")) - 1); 
+		Date startDate = DateHelper.parseDate("0101"+year, "ddMMyyyy");
 		
 		if(subcontractorNo!=null&&!"".equals(subcontractorNo)){
 			noOfQuotReturned = tenderAnalysisDao.obtainNoOfQuotReturned(Integer.valueOf(subcontractorNo));
@@ -376,7 +376,7 @@ public class SubcontractorService{
 	private ExcelFile subcontractorExcelFile(List<SubcontractorWrapper> subcontractorWrapperList, String type) {
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
-		String filename = "SubcontractorEnquiry-"+DateUtil.formatDate(new Date(),"yyyy-MM-dd")+ExcelFile.EXTENSION;
+		String filename = "SubcontractorEnquiry-"+DateHelper.formatDate(new Date(),"yyyy-MM-dd")+ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("filename: "+filename);
 
@@ -482,7 +482,7 @@ public class SubcontractorService{
 	private ExcelFile scPackageExcelFile(List<Subcontract> packageList) {
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
-		String filename = "AwardedSubcontracts-"+DateUtil.formatDate(new Date(),"yyyy-MM-dd")+ExcelFile.EXTENSION;
+		String filename = "AwardedSubcontracts-"+DateHelper.formatDate(new Date(),"yyyy-MM-dd")+ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("filename: "+filename);
 

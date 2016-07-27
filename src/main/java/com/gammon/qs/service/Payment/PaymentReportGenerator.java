@@ -3,9 +3,9 @@ package com.gammon.qs.service.Payment;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 
 public class PaymentReportGenerator {
 	
@@ -26,7 +26,7 @@ public class PaymentReportGenerator {
 	public ExcelFile generate() throws Exception{
 		
 		excelFile = new ExcelFile();
-		excelFile.setFileName("Subcontract Payment Details" + DateUtil.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Subcontract Payment Details" + DateHelper.formatDate(new Date(), "yyyyMMddHHmmss")+ ExcelFile.EXTENSION);
 		
 		if(scPaymentDetailList.size()> 0 )
 		{

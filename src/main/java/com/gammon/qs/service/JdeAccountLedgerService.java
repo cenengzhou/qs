@@ -23,13 +23,13 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JdeAccountLedgerHBDao;
 import com.gammon.qs.domain.JdeAccountLedger;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.BudgetForecastExcelWrapper;
 import com.gammon.qs.wrapper.BudgetForecastWrapper;
 @Service
@@ -51,8 +51,8 @@ public class JdeAccountLedgerService {
 		logger.info("obtainAccountLedgersByJobNo-STARTED");
 		List<BudgetForecastWrapper> budgetAndForecastWrapperList = new ArrayList<BudgetForecastWrapper>();
 
-		/*int day = Integer.valueOf(DateUtil.formatDate(new Date(), "dd"));
-		int month = Integer.valueOf(DateUtil.formatDate(new Date(), "MM"));
+		/*int day = Integer.valueOf(DateHelper.formatDate(new Date(), "dd"));
+		int month = Integer.valueOf(DateHelper.formatDate(new Date(), "MM"));
 
 		if (!"12".equals(month)) {
 			if (day > 25) {
@@ -194,8 +194,8 @@ public class JdeAccountLedgerService {
 			excelFileProcessor.readLine(0);
 			logger.info("Total row: " + excelFileProcessor.getNumRow());
 
-			int day = Integer.valueOf(DateUtil.formatDate(new Date(), "dd"));
-			int month = Integer.valueOf(DateUtil.formatDate(new Date(), "MM"));
+			int day = Integer.valueOf(DateHelper.formatDate(new Date(), "dd"));
+			int month = Integer.valueOf(DateHelper.formatDate(new Date(), "MM"));
 
 			if (!"12".equals(month)) {
 				if (day > 25) {
@@ -307,7 +307,7 @@ public class JdeAccountLedgerService {
 				accountLedger.setObjectCode(objectCode);
 				accountLedger.setSubledger(subcontractNo);
 
-				String year = DateUtil.formatDate(new Date(), "yyyy");
+				String year = DateHelper.formatDate(new Date(), "yyyy");
 				accountLedger.setFiscalYear(Integer.parseInt(year));
 
 				if (subcontractNo != null && !"".equals(subcontractNo)) {
@@ -507,7 +507,7 @@ public class JdeAccountLedgerService {
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
 		String filename = "";
-		filename = jobNo + "-LatestForecastExcel-" + DateUtil.formatDate(new Date()) + ExcelFile.EXTENSION;
+		filename = jobNo + "-LatestForecastExcel-" + DateHelper.formatDate(new Date()) + ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("J#" + jobNo + " Creating Excel file: " + filename);
 
@@ -552,7 +552,7 @@ public class JdeAccountLedgerService {
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
 		String filename = "";
-		filename = jobNo + " BudgetForecastExcel " + DateUtil.formatDate(new Date()) + ExcelFile.EXTENSION;
+		filename = jobNo + " BudgetForecastExcel " + DateHelper.formatDate(new Date()) + ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("J#" + jobNo + " Creating Excel file: " + filename);
 

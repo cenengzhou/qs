@@ -3,9 +3,9 @@ package com.gammon.qs.service.bpi;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 
 public class ResourceReportGenerator {
 	
@@ -20,7 +20,7 @@ public class ResourceReportGenerator {
 	
 	public ExcelFile generate() throws Exception{
 		excelFile = new ExcelFile();
-		excelFile.setFileName("Resource Enquiry" + DateUtil.formatDate(new Date(), "yyyy-MM-dd")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Resource Enquiry" + DateHelper.formatDate(new Date(), "yyyy-MM-dd")+ ExcelFile.EXTENSION);
 		excelFile.getDocument().setCurrentSheetName("job("+ this.jobNumber+")");
 
 		generateResource();

@@ -79,11 +79,11 @@ public class PaymentCertHeaderGenerator {
 		contentRows[9]= wrapper.getNscdsc()!= null? wrapper.getNscdsc():"-";
 		contentRows[10]= wrapper.getPaymentTerms()!= null? wrapper.getPaymentTerms():"-";
 		contentRows[11]= wrapper.getPaymentType()!= null? wrapper.getPaymentType():"-";
-		contentRows[12]= wrapper.getDueDate() !=null? DateUtil.formatDate(wrapper.getDueDate(), "dd/MM/yyyy").toString():"";
-		contentRows[13]= wrapper.getAsAtDate()!=null? DateUtil.formatDate(wrapper.getAsAtDate(), "dd/MM/yyyy").toString():"";
-		contentRows[14]= wrapper.getValueDateOnCert()!=null? DateUtil.formatDate(wrapper.getValueDateOnCert(), "dd/MM/yyyy").toString():"";
+		contentRows[12]= wrapper.getDueDate() !=null? DateHelper.formatDate(wrapper.getDueDate(), "dd/MM/yyyy").toString():"";
+		contentRows[13]= wrapper.getAsAtDate()!=null? DateHelper.formatDate(wrapper.getAsAtDate(), "dd/MM/yyyy").toString():"";
+		contentRows[14]= wrapper.getValueDateOnCert()!=null? DateHelper.formatDate(wrapper.getValueDateOnCert(), "dd/MM/yyyy").toString():"";
 		contentRows[15]= wrapper.getCertNo()!= null? wrapper.getCertNo():"-";
-		contentRows[16]= wrapper.getRecievedDate()!=null? DateUtil.formatDate(wrapper.getRecievedDate(), "dd/MM/yyyy").toString():"";
+		contentRows[16]= wrapper.getRecievedDate()!=null? DateHelper.formatDate(wrapper.getRecievedDate(), "dd/MM/yyyy").toString():"";
 		contentRows[17]= wrapper.getMainCertAmt().toString();*/
 		
 		return contentRows;

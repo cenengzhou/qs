@@ -15,11 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -5107,7 +5107,7 @@ public class SubcontractService {
 			else
 				logger.info("User: " + username + " is not authorized to access Job: " + (StringUtils.isNotBlank(noJob) ? noJob : "ALL Job"));
 		}
-		logger.info("NUMBER OF RECORDS(SNAPSHOT): " + (subcontractList == null ? "0" : subcontractList.size()));
+		logger.info("NUMBER OF RECORDS(SUBCONTRACT): " + (subcontractList == null ? "0" : subcontractList.size()));
 		
 		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
 
@@ -5200,11 +5200,11 @@ public class SubcontractService {
 		String username = securityServiceImpl.getCurrentUser().getUsername();
 		
 		if (adminServiceImpl.canAccessJob(username, noJob))
-			subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, true, false);
+			subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, true);
 		else
 			logger.info("User: " + username + " is not authorized to access Job: " + noJob);
 
-		logger.info("NUMBER OF RECORDS(SUBCONTRACT): " + (subcontractList == null ? "0" : subcontractList.size()));
+		logger.info("NUMBER OF RECORDS(SUBCONTRACT SNAPSHOT): " + (subcontractList == null ? "0" : subcontractList.size()));
 		
 		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
 		

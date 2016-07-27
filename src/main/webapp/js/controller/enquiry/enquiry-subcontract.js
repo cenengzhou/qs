@@ -2,6 +2,9 @@
 mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 
                                       function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, subcontractService) {
 	$scope.searchJobNo = $scope.jobNo;
+	$scope.currentDate = new Date(); // Default: Today
+	$scope.searchYear = $scope.currentDate.getFullYear();
+	$scope.searchMonth = $scope.currentDate.getMonth();
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.blockEnquirySubcontract = blockUI.instances.get('blockEnquirySubcontract');
 	$scope.gridOptions = {
@@ -59,9 +62,6 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 	
 	$scope.loadGridData = function(){
 		$scope.blockEnquirySubcontract.start("Loading...")
-		$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
-		$scope.searchMonth = $scope.currentDate.getMonth() + 1;
-		
 		subcontractService.getSubcontractSnapShotList($scope.searchJobNo, $scope.searchYear, $scope.searchMonth, false)
 		.then(function(data){
 				$scope.gridOptions.data = data;

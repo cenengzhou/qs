@@ -37,7 +37,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.JasperReportHelper;
 
 import net.sf.jasperreports.engine.JRException;
@@ -381,7 +380,7 @@ public class JunitHelper {
 			testCaseResultList.add(
 					new JunitHelper.TestCaseResult((String) jasperParameters.get("REPORT_TEST_CLASS"), resultList));
 			String fileName = (String) jasperParameters.get("REPORT_TITLE") + " "
-					+ DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "."
+					+ DateHelper.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "."
 					+ (String) jasperParameters.get("REPORT_TYPE");
 			jasperOutputStream = JasperReportHelper.get()
 					.setCurrentReport(testCaseResultList, reportname, jasperParameters).compileAndAddReport()
@@ -410,7 +409,7 @@ public class JunitHelper {
 			String reportname = (String) jasperParameters.get("TEMPLATE_PATH")
 					+ (String) jasperParameters.get("jasperTemplateName");
 			String fileName = (String) jasperParameters.get("REPORT_TITLE") + " "
-					+ DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "."
+					+ DateHelper.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "."
 					+ (String) jasperParameters.get("REPORT_TYPE");
 			jasperOutputStream = JasperReportHelper.get()
 					.setCurrentReport(testCaseResultList, reportname, jasperParameters).compileAndAddReport()

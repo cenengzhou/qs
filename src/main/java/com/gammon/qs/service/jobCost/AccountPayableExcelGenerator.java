@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.gammon.qs.io.ExcelWorkbook;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 
 public class AccountPayableExcelGenerator {
 	private ExcelFile excelFile;
@@ -37,7 +37,7 @@ public class AccountPayableExcelGenerator {
 	public ExcelFile generate() throws Exception{
 		
 		excelFile = new ExcelFile();
-		excelFile.setFileName("Supplier Ledger Enquiry " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Supplier Ledger Enquiry " + DateHelper.formatDate(new Date(), "yyyy-MM-dd HHmmss")+ ExcelFile.EXTENSION);
 		
 		excelDoc = excelFile.getDocument();
 		
@@ -87,12 +87,12 @@ public class AccountPayableExcelGenerator {
 		contentRows[10] = apRecord.getPayStatus();
 		contentRows[11] = apRecord.getCompany();
 		contentRows[12] = apRecord.getCurrency();
-		contentRows[13] = DateUtil.formatDate(apRecord.getInvoiceDate());
-		contentRows[14] = DateUtil.formatDate(apRecord.getGlDate());
-		contentRows[15] = DateUtil.formatDate(apRecord.getDueDate());
+		contentRows[13] = DateHelper.formatDate(apRecord.getInvoiceDate());
+		contentRows[14] = DateHelper.formatDate(apRecord.getGlDate());
+		contentRows[15] = DateHelper.formatDate(apRecord.getDueDate());
 		contentRows[16] = checkNull(apRecord.getBatchNumber());
 		contentRows[17] = apRecord.getBatchType();
-		contentRows[18] = DateUtil.formatDate(apRecord.getBatchDate());
+		contentRows[18] = DateHelper.formatDate(apRecord.getBatchDate());
 		contentRows[19] = apRecord.getSubledgerType();
 
 		

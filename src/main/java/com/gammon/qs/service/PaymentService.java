@@ -33,6 +33,7 @@ import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriod
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -74,7 +75,6 @@ import com.gammon.qs.service.businessLogic.SCPaymentLogic;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.PaginationWrapper;
@@ -359,8 +359,8 @@ public class PaymentService{
 		result.setSubContractDescription(scPackage.getDescription());
 		
 		//Dates
-		result.setAsAtDate(DateUtil.formatDate(scPaymentCert.getAsAtDate(), GlobalParameter.DATE_FORMAT));
-		result.setDueDate(DateUtil.formatDate(scPaymentCert.getDueDate(), GlobalParameter.DATE_FORMAT));
+		result.setAsAtDate(DateHelper.formatDate(scPaymentCert.getAsAtDate(), GlobalParameter.DATE_FORMAT));
+		result.setDueDate(DateHelper.formatDate(scPaymentCert.getDueDate(), GlobalParameter.DATE_FORMAT));
 			
 		//Sub-contract Total Amount
 		Double SCTotalAmt = scPackage.getRemeasuredSubcontractSum();
@@ -720,7 +720,7 @@ public class PaymentService{
 		String currency = scpaymentCert.getSubcontract().getPaymentCurrency();
 		String subcontractorNature = scpaymentCert.getSubcontract().getSubcontractorNature();
 
-		paymentCertViewWrapper.setAsAtDate(DateUtil.formatDate(asAtDate, "dd/MM/yyyy").toString());
+		paymentCertViewWrapper.setAsAtDate(DateHelper.formatDate(asAtDate, "dd/MM/yyyy").toString());
 
 		paymentCertViewWrapper.setCurrency(currency);
 		logger.info("Company: " + (new Integer(company)).toString());
@@ -1723,7 +1723,7 @@ public class PaymentService{
 		logger.info("scPaymentCertWrapperList.size() : " + scPaymentCertWrapperList.size());
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
-		String filename = "PaymentCertEnquiry-" + DateUtil.formatDate(new Date(), "yyyy-MM-dd") + ExcelFile.EXTENSION;
+		String filename = "PaymentCertEnquiry-" + DateHelper.formatDate(new Date(), "yyyy-MM-dd") + ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("filename: " + filename);
 
@@ -1772,10 +1772,10 @@ public class PaymentService{
 			doc.setCellValue(numberOfRows, inx++, PaymentCert.NON_DIRECT_PAYMENT.equals(scPaymentCertWrapper.getDirectPayment()) ? "NO" : "YES", true);
 			doc.setCellValue(numberOfRows, inx++, "F".equals(scPaymentCertWrapper.getIntermFinalPayment()) ? PaymentCert.FINAL_PAYMENT : PaymentCert.INTERIM_PAYMENT, true);
 			doc.setCellValue(numberOfRows, inx++, formatNumber(scPaymentCertWrapper.getCertAmount(), 2), false);
-			doc.setCellValue(numberOfRows, inx++, DateUtil.formatDate(scPaymentCertWrapper.getDueDate()), true);
-			doc.setCellValue(numberOfRows, inx++, DateUtil.formatDate(scPaymentCertWrapper.getAsAtDate()), true);
-			doc.setCellValue(numberOfRows, inx++, DateUtil.formatDate(scPaymentCertWrapper.getScIpaReceivedDate()), true);
-			doc.setCellValue(numberOfRows, inx++, DateUtil.formatDate(scPaymentCertWrapper.getCertIssueDate()), true);
+			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getDueDate()), true);
+			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getAsAtDate()), true);
+			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getScIpaReceivedDate()), true);
+			doc.setCellValue(numberOfRows, inx++, DateHelper.formatDate(scPaymentCertWrapper.getCertIssueDate()), true);
 			doc.setCellAlignment(ExcelWorkbook.ALIGN_H_RIGHT, numberOfRows, 10);
 			numberOfRows++;
 
@@ -1834,7 +1834,7 @@ public class PaymentService{
 		
 		ExcelFile excelFile = new ExcelFile();
 		ExcelWorkbook doc = excelFile.getDocument();
-		String filename = "SubcontractPaymentEnquiry-" + DateUtil.formatDate(new Date(), "yyyy-MM-dd") + ExcelFile.EXTENSION;
+		String filename = "SubcontractPaymentEnquiry-" + DateHelper.formatDate(new Date(), "yyyy-MM-dd") + ExcelFile.EXTENSION;
 		excelFile.setFileName(filename);
 		logger.info("filename: " + filename);
 		
@@ -2045,7 +2045,7 @@ public class PaymentService{
 		String currency = scpaymentCert.getSubcontract().getPaymentCurrency();
 		String subcontractorNature = scpaymentCert.getSubcontract().getSubcontractorNature();
 
-		paymentCertViewWrapper.setAsAtDate(DateUtil.formatDate(asAtDate, "dd/MM/yyyy").toString());
+		paymentCertViewWrapper.setAsAtDate(DateHelper.formatDate(asAtDate, "dd/MM/yyyy").toString());
 
 		paymentCertViewWrapper.setCurrency(currency);
 		logger.info("Company: " + (new Integer(company)).toString());
@@ -2925,7 +2925,7 @@ public class PaymentService{
 			scPaymentCertDao.updateSCPaymentCertAdmin(paymentCert);
 		} catch (DatabaseOperationException e) {
 			logger.info(e.getLocalizedMessage());
-			return "Update Failure,please see the log. Log time:" + DateUtil.formatDate(new Date(), "dd/MM/yyyy hh:mm:ss");
+			return "Update Failure,please see the log. Log time:" + DateHelper.formatDate(new Date(), "dd/MM/yyyy hh:mm:ss");
 		}
 		return null;
 	}

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 public class FinanceSubcontractListGenerator {
@@ -46,7 +46,7 @@ public class FinanceSubcontractListGenerator {
 
 		excelFile = new ExcelFile();
 
-		excelFile.setFileName("Subcontract Enquiry " + DateUtil.formatDate(new Date(), "yyyyMMdd" )+ ExcelFile.EXTENSION);
+		excelFile.setFileName("Subcontract Enquiry " + DateHelper.formatDate(new Date(), "yyyyMMdd" )+ ExcelFile.EXTENSION);
 		excelFile.setEmpty(false);
 		excelFile.getDocument().setCurrentSheetName("Subcontract Enquiry");
 
@@ -83,7 +83,7 @@ public class FinanceSubcontractListGenerator {
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSoloJV(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJvPercentage()+"", false);
 			if(includeJobCompletionDate)
-				excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getJobAnticipatedCompletionDate(), "dd-MM-yyyy"), true);
+				excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getJobAnticipatedCompletionDate(), "dd-MM-yyyy"), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getClientNo(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPackageNo(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getVendorNo(), true);
@@ -115,15 +115,15 @@ public class FinanceSubcontractListGenerator {
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPaymentTerms(), true);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractTerm(), true);
 			
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getRequisitionApprovedDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getTenderAnalysisApprovedDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getPreAwardMeetingDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getLoaSignedDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getScDocScrDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getScDocLegalDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getWorkCommenceDate(), "dd-MM-yyyy"), false);
-			excelFile.getDocument().setCellValue(i+1, index++,DateUtil.formatDate(scListWrapper.getOnSiteStartDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getRequisitionApprovedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getTenderAnalysisApprovedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getPreAwardMeetingDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getLoaSignedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocScrDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocLegalDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getWorkCommenceDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getOnSiteStartDate(), "dd-MM-yyyy"), false);
 			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompletionStatus(), true);
 			
 			

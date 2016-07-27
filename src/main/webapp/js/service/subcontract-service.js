@@ -23,7 +23,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	inactivateSystemConstant:			inactivateSystemConstant,
     	createSystemConstant: 				createSystemConstant,
     	updateSubcontractAdmin:				updateSubcontractAdmin,
-    	obtainSubcontractListWithSCListWrapper:	obtainSubcontractListWithSCListWrapper,
+    	getSubcontractSnapShotList:			getSubcontractSnapShotList,
     	searchProvisionHistory:				searchProvisionHistory,
     	getSCDetailList:					getSCDetailList
     });
@@ -272,11 +272,16 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	return( request.then(handleSuccess, handleError));
     }
     
-    function obtainSubcontractListWithSCListWrapper(subcontractListWrapper){
+    function getSubcontractSnapShotList(noJob, year, month, showJobInfo){
     	var request = $http({
-    		method: 'post',
-    		url: 'service/subcontract/obtainSubcontractListWithSCListWrapper',
-    		data: subcontractListWrapper
+    		method: 'get',
+    		url: 'service/subcontract/getSubcontractSnapShotList',
+    		params: {
+    			noJob: noJob,
+    			year: year,
+    			month: month,
+    			showJobInfo: showJobInfo
+    		}
     	});
     	return( request.then( handleSuccess, handleError ) );
     }

@@ -2,11 +2,11 @@ package com.gammon.qs.dao;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -22,10 +22,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractSnapshot;
-import com.gammon.qs.util.DateUtil;
+import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
 
 /**
@@ -43,38 +45,40 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean orderBySubcontractorNo) throws DataAccessException {
+	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly) throws DataAccessException {
+		logger.info("Job: " + noJob + " Year: " + year + " Month: " + month);
 		Criteria criteria = getSession().createCriteria(this.getType());
-		logger.info("----> noJob: " + noJob + "] [" + year + "] [" + month + "] [" + awardedOnly + "] [" + orderBySubcontractorNo + "]");
-		// Where
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		
+		// Join
 		criteria.createAlias("jobInfo", "jobInfo");
+		// Where
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
+				.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
+		
 		if (StringUtils.isNotBlank(noJob))
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", noJob));
-		if (awardedOnly)
-			criteria.add(Restrictions.eq("subcontractStatus", new Integer(500)));
-		if (month.intValue()> 0 && year.intValue() > 0) {
-			Calendar startDate = Calendar.getInstance();
-			startDate.set(year.intValue(), month.intValue()-1, 1);
-			logger.info("------------> startDate "+startDate.getTime());
+		if (awardedOnly) {
+			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
+			criteria.add(Restrictions.isNotNull("subcontractStatus"));
+		}
+		if (month.intValue() > 0 && year.intValue() > 0) {
+			// start date (first day of the month)
+			Calendar startCalendar = new GregorianCalendar(year.intValue(), month.intValue(), 1, 0, 0, 0);
+			// end date (last day of the month)
+			Calendar endCalendar = new GregorianCalendar(year.intValue(), month.intValue(), startCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+
+			// Formatting
+			String startDate = DateHelper.formatDate(startCalendar.getTime(), GlobalParameter.DATE_FORMAT);
+			String endDate = DateHelper.formatDate(endCalendar.getTime(), GlobalParameter.DATE_FORMAT);
 			
-			Calendar endDate = Calendar.getInstance();
-			endDate.set(year.intValue(), month.intValue()-1, Calendar.getInstance().getActualMaximum(month.intValue()));
-			logger.info("------------> endDate "+endDate.getTime());
-			
-			criteria.add(Restrictions.le("snapshotDate", endDate.getTime()))
-					.add(Restrictions.ge("snapshotDate", startDate.getTime()));
+			criteria.add(Restrictions.between("snapshotDate", DateHelper.parseDate(startDate, GlobalParameter.DATE_FORMAT), DateHelper.parseDate(endDate, GlobalParameter.DATE_FORMAT)));
 		}
 
 		// order by
-		if (orderBySubcontractorNo)
-			criteria.addOrder(Order.asc("vendorNo"));
-		else {
-			criteria.addOrder(Order.asc("jobInfo.company"))
-					.addOrder(Order.asc("jobInfo.division"))
-					.addOrder(Order.asc("jobInfo.jobNumber"))
-					.addOrder(Order.asc("packageNo"));
-		}
+		criteria.addOrder(Order.asc("jobInfo.company"))
+				.addOrder(Order.asc("jobInfo.division"))
+				.addOrder(Order.asc("jobInfo.jobNumber"))
+				.addOrder(Order.asc("packageNo"));
 
 		return (List<SubcontractSnapshot>) criteria.list();
 	}
@@ -94,11 +98,11 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			
 			criteria.add(Restrictions.eq("packageNo", subcontractNo));
 			if(startMonth !=""){
-				criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-"+startMonth+"-"+startYear, "dd-MM-yyyy")));
-				criteria.add(Restrictions.lt("snapshotDate", DateUtil.parseDate("01-"+endMonth+"-"+endYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.ge("snapshotDate", DateHelper.parseDate("01-"+startMonth+"-"+startYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.lt("snapshotDate", DateHelper.parseDate("01-"+endMonth+"-"+endYear, "dd-MM-yyyy")));
 			}else {
-				criteria.add(Restrictions.ge("snapshotDate", DateUtil.parseDate("01-01-"+endYear, "dd-MM-yyyy")));
-				criteria.add(Restrictions.le("snapshotDate", DateUtil.parseDate("31-12-"+endYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.ge("snapshotDate", DateHelper.parseDate("01-01-"+endYear, "dd-MM-yyyy")));
+				criteria.add(Restrictions.le("snapshotDate", DateHelper.parseDate("31-12-"+endYear, "dd-MM-yyyy")));
 			}
 			
 			ProjectionList projectionList = Projections.projectionList();
@@ -116,30 +120,6 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		}
 	}
 	
-	private Date obtainSnapshotDate(BigDecimal month, BigDecimal year){
-		Date startDate = DateUtil.parseDate("01-"+convertToStringMonth(month.intValue())+"-"+year, "dd-MM-yyyy");
-		Date endDate = DateUtil.parseDate("31-"+convertToStringMonth(month.intValue())+"-"+year, "dd-MM-yyyy");
-		
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.ge("snapshotDate",startDate));
-		criteria.add(Restrictions.lt("snapshotDate",endDate));
-		criteria.setProjection(Projections.distinct(Projections.property("snapshotDate")));
-		criteria.addOrder(Order.desc("snapshotDate"));
-		criteria.setMaxResults(1);
-		
-		logger.info("Snapshot Date: "+(Date) criteria.uniqueResult());
-		
-		return (Date) criteria.uniqueResult();
-	}
-	
-	private String convertToStringMonth(Integer month) {
-		if (month < 10)
-			return "0" + String.valueOf(month);
-		else
-			return String.valueOf(month);
-	}
-
 	public Boolean callStoredProcedureToGenerateSnapshot() throws DatabaseOperationException {
 		Boolean completed = false;
 

@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.gammon.qs.domain.BpiItem;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.BQLineType;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.RoundingUtil;
 
 public class BpiItemReportGenerator {
@@ -24,7 +24,7 @@ public class BpiItemReportGenerator {
 	
 	public ExcelFile generate() throws Exception{
 		excelFile = new ExcelFile();
-		excelFile.setFileName("BQ Item Enquiry " + DateUtil.formatDate(new Date(), "yyyy-MM-dd")+ ExcelFile.EXTENSION);
+		excelFile.setFileName("BQ Item Enquiry " + DateHelper.formatDate(new Date(), "yyyy-MM-dd")+ ExcelFile.EXTENSION);
 		excelFile.getDocument().setCurrentSheetName("job("+ this.jobNumber+")");
 
 		generateBQItem();

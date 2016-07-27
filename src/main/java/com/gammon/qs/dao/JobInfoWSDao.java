@@ -34,12 +34,12 @@ import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.u
 import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.updateJobBudgetPostedFlag.UpdateJobBudgetPostedFlagRequestObj;
 import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.updateJobBudgetPostedFlag.UpdateJobBudgetPostedFlagRequestWhereFieldObj;
 import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.updateJobBudgetPostedFlag.UpdateJobBudgetPostedFlagResponseObj;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.JobDates;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -388,16 +388,16 @@ public class JobInfoWSDao{
 			requestObj.setUpdateWhereField(new UpdateBQMasterDatesByJobNumberRequestWhereField());
 			// set details to request object
 			requestObj.getUpdateWhereField().setJobNumber(jobdates.getJobNumber());
-			requestObj.getUpdateField().setActualEndDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getActualEndDate())));
-			requestObj.getUpdateField().setActualStartDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getActualStartDate())));
-			requestObj.getUpdateField().setAnticipatedCompletionDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getAnticipatedCompletionDate())));
+			requestObj.getUpdateField().setActualEndDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualEndDate())));
+			requestObj.getUpdateField().setActualStartDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualStartDate())));
+			requestObj.getUpdateField().setAnticipatedCompletionDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getAnticipatedCompletionDate())));
 			
-			requestObj.getUpdateField().setDateUpdate(DateUtil.parseDate(DateUtil.formatDate(new Date())));
+			requestObj.getUpdateField().setDateUpdate(DateHelper.parseDate(DateHelper.formatDate(new Date())));
 			requestObj.getUpdateField().setJobNumber(jobdates.getJobNumber());
-			requestObj.getUpdateField().setPlannedEndDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getPlannedEndDate())));
-			requestObj.getUpdateField().setPlannedStartDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getPlannedStartDate())));
+			requestObj.getUpdateField().setPlannedEndDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedEndDate())));
+			requestObj.getUpdateField().setPlannedStartDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedStartDate())));
 			requestObj.getUpdateField().setProgramId(WSPrograms.JP59U006_BUMasterUpdateManager);
-			requestObj.getUpdateField().setRevisedCompletionDate(DateUtil.parseDate(DateUtil.formatDate(jobdates.getRevisedCompletionDate())));
+			requestObj.getUpdateField().setRevisedCompletionDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getRevisedCompletionDate())));
 			int intTime = 0;
 			intTime += Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 10000;
 			intTime += Calendar.getInstance().get(Calendar.MINUTE) * 100;

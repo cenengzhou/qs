@@ -6,8 +6,8 @@ package com.gammon.qs.service.Payment;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.directPayment.SCPaymentExceptionalWrapper;
 
 /**
@@ -97,9 +97,9 @@ public class PaymentExceptionalExcelGenerator {
 					wrapper.getSubcontractorNumber(),
 					wrapper.getPaymentNo().toString(),
 					wrapper.getPaymentAmount()!=null?wrapper.getPaymentAmount().toString():"0.00",
-					wrapper.getAsAtDate()!=null?DateUtil.formatDate(wrapper.getAsAtDate()):"",
-					wrapper.getCertIssueDate()!=null?DateUtil.formatDate(wrapper.getCertIssueDate()):"",
-					wrapper.getDueDate()!=null?DateUtil.formatDate(wrapper.getDueDate()):"",
+					wrapper.getAsAtDate()!=null?DateHelper.formatDate(wrapper.getAsAtDate()):"",
+					wrapper.getCertIssueDate()!=null?DateHelper.formatDate(wrapper.getCertIssueDate()):"",
+					wrapper.getDueDate()!=null?DateHelper.formatDate(wrapper.getDueDate()):"",
 					wrapper.getCreateUser()
 				};
 				y++;

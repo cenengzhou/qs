@@ -19,10 +19,10 @@ import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.i
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderRequestObj;
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.admin.EnvironmentConfig;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -134,7 +134,7 @@ public class PaymentWSDao{
 		headerRequestObj.setProgramId(WSPrograms.JP58011I_SCPaymentHeaderInsertManager); 	// PID
 		headerRequestObj.setWorkStationId(environmentConfig.getNodeName()); 				// JOBN
 		headerRequestObj.setDateUpdated(new Date()); 										// UPMJ
-		headerRequestObj.setTimeLastUpdated(DateUtil.getTimeLastUpdated()); 				// UPMT
+		headerRequestObj.setTimeLastUpdated(DateHelper.getTimeLastUpdated()); 				// UPMT
 	
 		
 		headerRequestList.add(headerRequestObj);

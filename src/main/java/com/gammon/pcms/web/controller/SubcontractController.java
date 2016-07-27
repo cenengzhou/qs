@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +62,6 @@ public class SubcontractController {
 															@RequestParam(	required = true,
 																			defaultValue = "false") Boolean showJobInfo) {
 		try {
-			logger.info("--------------> [" + noJob + "] [" + year + "] [" + month + "] [" + showJobInfo + "]");
 			return subcontractService.getSubcontractList(noJob, year, month, showJobInfo);
 		} catch (Exception e) {
 			e.printStackTrace();

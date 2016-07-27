@@ -21,6 +21,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AuditResourceSummaryHBDao;
@@ -55,7 +56,6 @@ import com.gammon.qs.service.bpi.ResourceReportGenerator;
 import com.gammon.qs.service.bpi.UploadIVByExcelResponse;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.ComparatorUtilResource;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.BQItemPaginationWrapper;
 import com.gammon.qs.wrapper.BQPaginationWrapper;
@@ -1979,7 +1979,7 @@ public class BpiItemService implements Serializable {
 		
 		ExcelFile excel = new ExcelFile();
 		ExcelWorkbook doc = excel.getDocument();
-		String filename = jobNumber+" IVByBQItem "+DateUtil.formatDate(new Date())+ExcelFile.EXTENSION;
+		String filename = jobNumber+" IVByBQItem "+DateHelper.formatDate(new Date())+ExcelFile.EXTENSION;
 		excel.setFileName(filename);
 		logger.info("J#"+jobNumber+" Creating Excel file: "+filename);
 		
@@ -2075,7 +2075,7 @@ public class BpiItemService implements Serializable {
 		
 		ExcelFile excel = new ExcelFile();
 		ExcelWorkbook doc = excel.getDocument();
-		String filename = jobNumber+" IVByResource "+DateUtil.formatDate(new Date())+ExcelFile.EXTENSION;
+		String filename = jobNumber+" IVByResource "+DateHelper.formatDate(new Date())+ExcelFile.EXTENSION;
 		excel.setFileName(filename);
 		logger.info("J#"+jobNumber+" Creating Excel file: "+filename);
 		

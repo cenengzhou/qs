@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
@@ -37,7 +38,6 @@ import com.gammon.qs.service.SubcontractorService;
 import com.gammon.qs.service.TenderService;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeSearchingCriteriaWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 import com.lowagie.text.Document;
@@ -457,7 +457,7 @@ public class DownloadController{
 
 			if (outputStream != null) {
 				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Customer Ledger Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Customer Ledger Report " + DateHelper.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
 				response.getOutputStream().write(outputStream.toByteArray());
 				response.getOutputStream().flush();
 			} else {
@@ -500,7 +500,7 @@ public class DownloadController{
 
 			if (outputStream != null) {
 				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Supplier Ledger Report " + DateUtil.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Supplier Ledger Report " + DateHelper.formatDate(new Date(), "yyyy-MM-dd HHmmss") + "." + fileType + "\"");
 				response.getOutputStream().write(outputStream.toByteArray());
 				response.getOutputStream().flush();
 			} else {
@@ -544,7 +544,7 @@ public class DownloadController{
 //
 //			if (outputStream != null) {
 //				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Contract Receivable Settlement Report " + DateUtil.formatDate(new Date(), "dd-MM-yyyy") + "." + fileType + "\"");
+//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + "Contract Receivable Settlement Report " + DateHelper.formatDate(new Date(), "dd-MM-yyyy") + "." + fileType + "\"");
 //				response.getOutputStream().write(outputStream.toByteArray());
 //				response.getOutputStream().flush();
 //			} else {
@@ -888,8 +888,8 @@ public class DownloadController{
 		logger.info("generateIVPostingHistoryExcel");
 
 		try {
-			Date fromDate = fromDateString.equals("") ? null : DateUtil.parseDate(fromDateString, "dd/MM/yyyy");
-			Date toDate = toDateString.equals("") ? null : DateUtil.parseDate(toDateString, "dd/MM/yyyy");
+			Date fromDate = fromDateString.equals("") ? null : DateHelper.parseDate(fromDateString, "dd/MM/yyyy");
+			Date toDate = toDateString.equals("") ? null : DateHelper.parseDate(toDateString, "dd/MM/yyyy");
 
 			ExcelFile excelFile = ivPostingHistoryRepository.downloadIvPostingHistoryExcelFile(jobNumber, packageNo, objectCode, subsidiaryCode, fromDate, toDate);
 
@@ -1286,7 +1286,7 @@ public class DownloadController{
 		
 		logger.info("printUnpaidPaymentCertificateReportPdf");
 		try {
-			Date dueDate = dueDateString.trim().equals("") ? null : DateUtil.parseDate(dueDateString, "dd/MM/yyyy");
+			Date dueDate = dueDateString.trim().equals("") ? null : DateHelper.parseDate(dueDateString, "dd/MM/yyyy");
 			List<ByteArrayInputStream> outputStreamList = paymentRepository.obtainPaymentCertificatesReport(company, dueDate, jobNumber, dueDateType, supplierNumber);
 			
 			logger.info("Merge reprot");
@@ -1328,7 +1328,7 @@ public class DownloadController{
 		
 		logger.info("printPaymentCertificateReportPdf");
 		try {
-			Date dueDate = dueDateString.trim().equals("") ? null : DateUtil.parseDate(dueDateString, "dd/MM/yyyy");
+			Date dueDate = dueDateString.trim().equals("") ? null : DateHelper.parseDate(dueDateString, "dd/MM/yyyy");
 			List<ByteArrayInputStream> outputStreamList = paymentRepository.obtainAllPaymentCertificatesReport(company, dueDate, jobNumber, dueDateType);
 			
 			logger.info("Merge reprot");
@@ -1762,8 +1762,8 @@ public class DownloadController{
 															HttpServletRequest request, HttpServletResponse response ){		
 				
 		logger.info("generatePaymentCertificateEnquiryExcel");
-		Date dueDate = dueDateString.equals("")?null:DateUtil.parseDate(dueDateString, "dd/MM/yyyy");
-		Date certIssueDate = certIssueDateString.equals("")?null:DateUtil.parseDate(certIssueDateString, "dd/MM/yyyy");
+		Date dueDate = dueDateString.equals("")?null:DateHelper.parseDate(dueDateString, "dd/MM/yyyy");
+		Date certIssueDate = certIssueDateString.equals("")?null:DateHelper.parseDate(certIssueDateString, "dd/MM/yyyy");
 		
 
 		try {
@@ -1953,7 +1953,7 @@ public class DownloadController{
 				
 		logger.info("generateSubcontractPaymentExcel");
 		
-		Date dueDate = dueDateString.equals("")?null:DateUtil.parseDate(dueDateString, "dd/MM/yyyy");
+		Date dueDate = dueDateString.equals("")?null:DateHelper.parseDate(dueDateString, "dd/MM/yyyy");
 
 		try {
 			

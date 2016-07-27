@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
@@ -45,7 +46,6 @@ import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.DateUtil;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
@@ -1093,7 +1093,7 @@ public class ResourceSummaryService implements Serializable {
 		Collections.sort(resources);
 		ExcelFile excel = new ExcelFile();
 		ExcelWorkbook doc = excel.getDocument();
-		excel.setFileName(jobNumber + " IV By Resource Summary " + DateUtil.formatDate(new Date()) + ExcelFile.EXTENSION);
+		excel.setFileName(jobNumber + " IV By Resource Summary " + DateHelper.formatDate(new Date()) + ExcelFile.EXTENSION);
 		//Column headers
 		String[] colHeaders = new String[]{"Package No.", "Object Code", "Subsidiary Code", "Description", "Unit", "Quantity", "Rate", "Amount", "Cum. IV Amount", "Posted IV Amount"};
 		doc.insertRow(colHeaders);
