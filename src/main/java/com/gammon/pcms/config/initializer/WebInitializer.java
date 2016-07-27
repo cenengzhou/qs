@@ -7,6 +7,7 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.RequestContextFilter;
@@ -44,6 +45,9 @@ public class WebInitializer extends
 		requestContextFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
 		
 		System.setProperty("UseSunHttpHandler", "true");
+		//forward JUL to SLF4J
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 	}
 
 	@Override
