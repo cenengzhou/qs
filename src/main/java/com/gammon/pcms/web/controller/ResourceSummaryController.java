@@ -24,6 +24,7 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
+import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
 
 @RestController
 @RequestMapping(value = "service/resourceSummary/")
@@ -111,7 +112,7 @@ public class ResourceSummaryController {
 	
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
-									@RequestParam(name="repackagingEntryId") String repackagingEntryId,
+									@RequestParam(required =true) String repackagingEntryId,
 									@Valid @RequestBody ResourceSummary resourceSummary){
 		String result = "";
 		try {
@@ -139,6 +140,19 @@ public class ResourceSummaryController {
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		try {
 			wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return wrapper.getError();
+	}
+	
+	
+	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
+	public String splitOrMergeResources(@RequestParam(required =true) String repackagingEntryId, 
+										@Valid @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper){
+		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
+		try {
+			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingEntryId));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

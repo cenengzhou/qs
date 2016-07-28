@@ -1,3 +1,4 @@
+
 <div class="m-t-20 m-l-20 m-r-20">
 	<!-- begin breadcrumb -->
 	<ol class="breadcrumb pull-right">
@@ -58,12 +59,11 @@
 
 					<div class="row m-t-20">
 						<div class="col-md-12">
-							<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns
-								ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid"></div> <!-- style="height: 500px; width =: 1600px"  -->
+							<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit
+								ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid" style="height: 450px;"></div> 
 						</div>
 						<div class="col-md-12">
-							<!-- <a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a> -->
-							<button type="button" class="btn btn-primary btn-block">
+							<button type="button" class="btn btn-primary btn-block" ng-click="update()">
 								<i class="fa fa-floppy-o"></i> Update
 							</button>
 						</div>

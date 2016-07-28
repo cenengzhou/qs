@@ -7,6 +7,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     	addRepackaging:				addRepackaging,
     	updateRepackaging:			updateRepackaging,
     	deleteRepackaging:			deleteRepackaging,
+    	
     	generateSnapshot:			generateSnapshot
         
     });

@@ -1,26 +1,55 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'modalService', '$cookieStore', '$state',
-                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, modalService, $cookieStore, $state) {
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'unitService', 'modalService', '$cookieStore', '$state', 'roundUtil',
+                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, unitService, modalService, $cookieStore, $state, roundUtil) {
 
 	$scope.repackagingEntryId = modalParam;
 
+	$scope.units=[];
+	$scope.units.selected = "AM";
+	
+	$scope.excludes = {
+			options: {
+				"false": "Included" , 
+				"true": "Excluded"
+			},
+			levySelected: "false",
+			defectSelected: "false"
+			
+	};
+	
+	$scope.types = {
+			options: [
+				"OI", 
+				"VO"
+			],
+			selected: "VO",
+			
+	};
+	
 	$scope.resourceSummary = {
-			subsidiaryCode : "29999999",
-			objectCode : "140299",
-			resourceDescription : "Testing",
 			unit : "AM",
 			quantity : 100,
 			rate : 1,
-
-			resourceType : "OI",
-			//excludeLevy : false,
-			//excludeDefect : false,
-
-
 			amountBudget : 100
 	}
 
+	getUnitOfMeasurementList();
 
-
+	$scope.calculate = function(field){
+		if(field == "totalAmount" && $scope.resourceSummary.amountBudget != null){
+			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.amountBudget, 2);
+			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.rate, 4);
+			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.quantity, 2);
+		}else if(field == "quantity" && $scope.resourceSummary.quantity != null){
+			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.quantity, 4);
+			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
+			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.quantity, 2);
+		}else if (field == "rate" && $scope.resourceSummary.rate != null){
+			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.rate, 2);
+			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
+			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.rate, 4);
+		}
+	}
+	
 	//Save Function
 	$scope.save = function () {
 
@@ -29,10 +58,18 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 			return;
 		}
 
+		
+		$scope.resourceSummary.excludeLevy = $scope.excludes.levySelected;
+		$scope.resourceSummary.excludeDefect = $scope.excludes.defectSelected;
+		$scope.resourceSummary.unit = $scope.units.selected;
+		$scope.resourceSummary.resourceType = $scope.types.selected;
+		
+
 		addResourceSummary();
 	};
 
-
+	
+	
 	function addResourceSummary() {
 		resourceSummaryService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingEntryId, $scope.resourceSummary)
 		.then(
@@ -47,6 +84,18 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 				});
 	}
 
+	
+	function getUnitOfMeasurementList() {
+		unitService.getUnitOfMeasurementList()
+		.then(
+				function( data ) {
+					angular.forEach(data, function(value, key){
+						$scope.units.push(value.unitCode.trim());
+					});
+				});
+	}
+
+
 
 	$scope.cancel = function () {
 		$uibModalInstance.dismiss("cancel");
@@ -56,6 +105,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 	$scope.$on('$locationChangeStart', function(event){
 		$uibModalInstance.close();
 	});
-
+	
+	
 }]);
 

@@ -695,7 +695,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                            'js/controller/repackaging/repackaging-update.js',
                            'js/controller/repackaging/repackaging-add.js',
-                           'js/service/resource-summary-service.js'
+                           'js/controller/repackaging/repackaging-split.js',
+                           'js/service/resource-summary-service.js',
+                           'js/service/unit-service.js'
                     ] 
                 });
             }]
@@ -753,7 +755,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [	'js/controller/iv/iv-update.js',
+               	 files: [	'js/controller/iv/iv-update.js'
                     ] 
                 });
             }]

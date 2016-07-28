@@ -2044,17 +2044,17 @@ div.ui-grid-cell-contents.invalid {
 /* '雓蕭' */
 
 
-  .ui-grid-viewport .ui-grid-cell-contents2 {
+  .ui-grid-cell-contents2 {
   word-wrap: break-word;
   white-space: normal !important;
   height: auto !important;
 }
 
- .ui-grid-row, .ui-grid-cell {
+/*   .ui-grid-row, .ui-grid-cell {
   height: auto !important;
-}
-
+} 
+ */
 .ui-grid-row div[role=row] {
   display: flex ;
   align-content: stretch;
-} 
+}  

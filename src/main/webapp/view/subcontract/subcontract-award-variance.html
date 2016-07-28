@@ -19,7 +19,7 @@
 					<div class="row m-t-20">
 						<div class="col-md-12">
 							<div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-resize-columns
-								ui-grid-cellnav ui-grid-edit ui-grid-exporter  class="grid"></div>
+								ui-grid-cellnav ui-grid-edit ui-grid-exporter  ng-style="{height: (gridOptions.data.length*gridOptions.rowHeight)+32+'px'}"class="grid2"></div>
 						</div>
 						<div class="col-md-12">
 							<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-hide = "disableButtons" ng-disabled="disableButtons">

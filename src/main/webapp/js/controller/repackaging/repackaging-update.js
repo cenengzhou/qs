@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService', 'resourceSummaryService', '$cookieStore', '$stateParams', '$state',
-                                             function($scope , $http, modalService, resourceSummaryService, $cookieStore, $stateParams, $state) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookieStore', '$stateParams', '$state', 'uiGridConstants',
+                                             function($scope, modalService, resourceSummaryService, unitService, $cookieStore, $stateParams, $state, uiGridConstants) {
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
 
@@ -11,10 +11,15 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 
 	
 	loadResourceSummaries();
+	getUnitOfMeasurementList();
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
+	$scope.units=[];
 
+	var optionList = [{ id: 'true', value: 'Excluded' },
+                   { id: 'false', value: 'Included' }
+	];
 
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -24,56 +29,151 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 			enableSelectAll: true,
 			multiSelect: true,
 			enableCellEditOnFocus : true,
+			showColumnFooter : true,
 			showGridFooter : false,
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
 
+			rowEditWaitInterval :-1,
+			
 			columnDefs: [
-			             { field: 'packageNo', cellClass: "grid-theme-blue", enableCellEdit: true},
-			             { field: 'objectCode', enableCellEdit: false},
-			             { field: 'subsidiaryCode', enableCellEdit: false},
-			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
-			             { field: 'unit'},
-			             { field: 'quantity', enableCellEdit: false, enableFiltering: false},
-			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
-			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false},
+			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false},
+			             { field: 'objectCode', cellClass: "grid-blue"},
+			             { field: 'subsidiaryCode', cellClass: "grid-blue"},
+			             { field: 'resourceDescription', displayName: "Description", cellClass: "grid-blue"},
+			             { field: 'unit', cellClass: "grid-blue", enableFiltering: false, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units
+			             },
+			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, 
+			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 
+			            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+			             { field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 
+			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
+			             },
+			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false, 
+			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
+			             },
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
-			             { field: 'excludeDefect', displayName: "Defect"},
-			             { field: 'excludeLevy', displayName: "Levy"}
-			             ]
+			             { field: 'excludeDefect', displayName: "Defect", cellClass: "grid-blue", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             },
+			             { field: 'excludeLevy', displayName: "Levy", cellClass: "grid-blue", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             }
+			           ]
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
-
+		
+		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
+				return;
+			}
+			if(rowEntity.postedIVAmount != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
+				return;
+			}
+        });
+	
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-
-			//Alert to show what info about the edit is available
-			//alert('Column: ' + colDef.name + ' feedbackRate: ' + rowEntity.feedbackRate);
-			//rowEntity.feedbackRateHK = rowEntity.feedbackRate * $scope.exchangeRate;
+			if(colDef.name == "objectCode" && rowEntity.objectCode != null && rowEntity.objectCode.length < 6){
+				rowEntity.objectCode = oldValue;
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Object code should be in 6 digits.");
+				return;
+			}
+			if(colDef.name == "subsidiaryCode"){
+				if(rowEntity.subsidiaryCode != null && rowEntity.subsidiaryCode.length < 6){
+					rowEntity.subsidiaryCode = oldValue;
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subsidiary code should be in 8 digits.");
+					return;
+				}
+				if(rowEntity.resourceType == "VO" 
+					&& rowEntity.subsidiaryCode.substring(0, 1) != "4" 
+						&& rowEntity.subsidiaryCode.substring(2, 4) != "80"){
+					rowEntity.subsidiaryCode = oldValue;
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subsidiary code of VO should start with [4X80XXXX].");
+					return;
+				}
+			}
+			
 		});
 
 	}
-
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
-	};
 
 
 	//Open Window
 	$scope.open = function(view){
 
 		if(view=="split"){
-			console.log("mySelections: "+$scope.mySelections);
-			modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl');
+			var valid = validate(view);
+			if(valid){
+				var selectedRows = $scope.gridApi.selection.getSelectedRows();
+				modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl', 'Split', selectedRows);
+			}
 		}else if (view=="merge"){
-			modalService.open('lg', 'view/repackaging/modal/repackaging-merge.html', 'RepackagingMergeModalCtrl');
+			var valid = validate(view);
+			if(valid){
+				var selectedRows = $scope.gridApi.selection.getSelectedRows();
+				modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl' , 'Merge', selectedRows);
+			}
 		}else if (view=="add"){
 			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl', '', $scope.repackagingEntryId);
 		}
 	};
 
+	var validate = function(action){
+		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+		if(action == 'split' && selectedRows.length != 1){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please only select 1 row to split.");
+			return false;
+		}
+		else if(action == 'merge' && selectedRows.length < 2){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select at least 2 rows to merge.");
+			return false;
+		}
+		
+		var resourceType = '-';
+		for (i in selectedRows){
+			if(resourceType == '-'){
+				resourceType = selectedRows[i]['resourceType'];
+			}
+			if(selectedRows[i]['resourceType'] != resourceType){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources cannot be merged - resources must have the same type.");
+				return false;
+			}
+			if (selectedRows[i]['packageNo'] != null && selectedRows[i]['packageNo'].length > 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
+				return false;
+			}
+			if (selectedRows[i]['postedIVAmount'] != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	$scope.deleteResources = function(){
 		var selectedRows = $scope.gridApi.selection.getSelectedRows();
 		console.log(selectedRows);
@@ -84,6 +184,19 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 		deleteResources(selectedRows);
 	}
 
+	$scope.update = function() {
+		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		
+		if(dataRows.length==0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+			return;
+		}
+		
+		
+		updateResourceSummaries(dataRows);
+	}
+	
 	function deleteResources(rowsToDelete) {
 		resourceSummaryService.deleteResources(rowsToDelete)
 		.then(
@@ -102,6 +215,29 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 		.then(
 				function( data ) {
 					$scope.gridOptions.data= data;
+				});
+	}
+	
+	function getUnitOfMeasurementList() {
+		unitService.getUnitOfMeasurementList()
+		.then(
+				function( data ) {
+					angular.forEach(data, function(value, key){
+						$scope.units.push({'id': value.unitCode.trim(), 'value': value.unitCode.trim()});
+					});
+				});
+	}
+	
+	function updateResourceSummaries(resourceSummaryList) {
+		resourceSummaryService.updateResourceSummaries($scope.jobNo, resourceSummaryList)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
+						$state.reload();
+					}
 				});
 	}
 	
@@ -210,4 +346,19 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' , '$http', 'modalService',
 		}
 	 */
 
-}]);
+}])
+.filter('mapExclude', function() {
+  var excludeHash = {
+    'true': 'Excluded',
+    'false': 'Included'
+  };
+
+  return function(input) {
+      return excludeHash[input];
+  };
+})
+.directive('myCustomDropdown', function() {
+  return {
+    template: '<select class="form-control input-sm" ng-model="colFilter.term" ng-options="option.id as option.value for option in colFilter.options"></select>'
+  };
+});

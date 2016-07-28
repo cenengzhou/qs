@@ -1274,6 +1274,14 @@ public class ResourceSummaryService implements Serializable {
 		
 		resourceSummary.setJobInfo(jobDao.obtainJobInfo(jobNo));
 		
+		if("VO".equals(resourceSummary.getResourceType()) 
+				&& !resourceSummary.getSubsidiaryCode().startsWith("4") 
+				&& !"80".equals(resourceSummary.getSubsidiaryCode().substring(2, 4))){
+			result = "Subsidiary code of VO should start with [4X80XXXX]";
+			return result;
+		}
+		
+		
 		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
 		//Validate
 		result = validateResourceSummary(resourceSummary, packagesToReset);

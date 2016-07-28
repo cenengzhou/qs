@@ -94,7 +94,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	        });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			console.log(rowEntity);
+			//console.log(rowEntity);
 			if(newValue != oldValue )
 				updateWDandIV(rowEntity);
 		});

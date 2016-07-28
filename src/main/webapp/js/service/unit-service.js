@@ -1,14 +1,19 @@
 mainApp.service('unitService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getAllWorkScopes:		getAllWorkScopes
+    	getAllWorkScopes:		getAllWorkScopes,
+    	getUnitOfMeasurementList: getUnitOfMeasurementList
     });
    
     function getAllWorkScopes(){
-    	var request = $http.post('service/unit/getAllWorkScopes');
+    	var request = $http.get('service/unit/getAllWorkScopes');
     	return( request.then( handleSuccess, handleError ) );
     }
     
+    function getUnitOfMeasurementList(){
+    	var request = $http.get('service/unit/getUnitOfMeasurementList');
+    	return( request.then( handleSuccess, handleError ) );
+    }
 
     // ---
     // PRIVATE METHODS.

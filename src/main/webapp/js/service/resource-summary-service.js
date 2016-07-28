@@ -7,8 +7,8 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		getResourceSummariesByLineType:		getResourceSummariesByLineType,
 		addResourceSummary:					addResourceSummary,
 		updateResourceSummaries:			updateResourceSummaries,
-		deleteResources:					deleteResources
-
+		deleteResources:					deleteResources,
+		splitOrMergeResources:				splitOrMergeResources
 
 	});
 
@@ -111,6 +111,18 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 
+	 function splitOrMergeResources(repackagingEntryId, resourceSummarySplitMergeWrapper) {
+	        var request = $http({
+	            method: "post",
+	            url: "service/resourceSummary/splitOrMergeResources",
+	            dataType: "application/json;charset=UTF-8",
+	            params: {
+	            	repackagingEntryId: repackagingEntryId
+	            },
+	            data : resourceSummarySplitMergeWrapper
+	        });
+	        return( request.then( handleSuccess, handleError ) );
+	    }
 
 	// ---
 	// PRIVATE METHODS.

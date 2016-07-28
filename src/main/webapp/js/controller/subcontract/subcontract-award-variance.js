@@ -27,6 +27,20 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 			            	 cellTemplate:'<button class="btn btn-app btn-success m-t-10" ng-click="grid.appScope.deleteRow(row)"><i class="fa fa-remove"></i> Delete </button>',
 		                 }
 			             ]
+			/*columnDefs: [
+							{ field: 'id', visible: false},
+				             { field: 'clause', displayName: " ", 
+								}, 
+				             { field: 'generalCondition', displayName: "General Condition of Sub-Contract",
+				            	 }, 
+				             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin",
+				            	 }, 
+				             { field: 'reason', displayName: "Reason for the Variance",
+			            		 }, 
+				             { name: 'Action',
+				            	 cellTemplate:'<button class="btn btn-app btn-success m-t-10" ng-click="grid.appScope.deleteRow(row)"><i class="fa fa-remove"></i> Delete </button>',
+			                 }
+				             ]*/
 	
 	};
 
