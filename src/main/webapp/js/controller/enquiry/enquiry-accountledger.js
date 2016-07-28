@@ -101,7 +101,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquiryAccountLedger.start('Locading...')
+		$scope.blockEnquiryAccountLedger.start('Loading...')
 		adlService.getAccountLedgerList($scope.jobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
 				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
 		    .then(function(data) {

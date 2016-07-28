@@ -32,8 +32,6 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
 		noSubcontract = StringUtils.isNotBlank(noSubcontract) ?StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
 		
-		System.out.println("["+typeLedger+"] ["+typeDocument+"] ["+noJob+"] ["+noSubcontract+"]");
-		
 		// Where
 		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob))
 				.add(Restrictions.eq("accountTypeLedger", typeLedger));
