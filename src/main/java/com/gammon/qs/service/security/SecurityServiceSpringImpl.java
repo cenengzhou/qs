@@ -2,6 +2,7 @@ package com.gammon.qs.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.gammon.pcms.application.User;
 @Component
-public class SecurityServiceSpringImpl implements SecurityService {
+public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<String> {
 
 	@Autowired
 	Environment env;
@@ -32,5 +33,10 @@ public class SecurityServiceSpringImpl implements SecurityService {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String getCurrentAuditor() {
+		return getCurrentUser().getUsername();
 	}
 }

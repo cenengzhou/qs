@@ -3,12 +3,15 @@
 	<persistence-unit name="PCMSv2">
 		<mapping-file>META-INF/orm.xml</mapping-file>
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
 			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
 			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@erpodadev-scan.gamska.com:1521/jded_srv_dev"/>
 			<property name="hibernate.default_schema" value="pcmsdatadev"/>
 			<property name="hibernate.connection.username" value="qsuser3"/>
 			<property name="hibernate.connection.password" value="soa321"/>
+			<property name="org.hibernate.envers.audit_table_suffix" value="_AUDIT"/>
+			<property name="org.hibernate.envers.audit_strategy_validity_store_revend_timestamp" value="false"/>
+			<property name="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -21,11 +21,15 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
-
+@Audited
+@AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
 @Table(name = "SUBCONTRACT")
 @OptimisticLocking(type = OptimisticLockType.NONE)

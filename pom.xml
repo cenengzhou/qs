@@ -33,6 +33,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<hbm2ddl.skip>true</hbm2ddl.skip>
 		
 		<!-- ====== Versions for Project ====== -->
 		<!-- Version - Hosted by Maven -->
@@ -211,6 +212,10 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-aspects</artifactId>
 		</dependency>
 		
 		<!-- Spring: Object/XML Mapping of converting an XML document to and from an object -->
@@ -990,7 +995,7 @@
 				</configuration>
 			</plugin>
 			
-			<!-- ====== Step 3: Compile GWT by ANT plug-in ====== -->
+			<!-- ====== Step 3: Delete excluded source by ANT plug-in ====== -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -1025,6 +1030,33 @@
 				</configuration>
 			</plugin>
 			
+			<!-- ====== Generate DDL ====== -->
+			<!-- mvn hibernate:create -Dhbm2ddl.skip=false 
+				 support only single schema -->
+			<plugin>
+				<groupId>de.juplo</groupId>
+				<artifactId>hibernate-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<export>false</export>
+					<envers>true</envers>
+					<format>true</format>
+					<force>true</force>
+					<skip>${hbm2ddl.skip}</skip>
+					<delimiter>;</delimiter>
+					<type>CREATE</type>
+					<target>SCRIPT</target>
+					<hibernateDialect>org.hibernate.dialect.Oracle10gDialect</hibernateDialect>
+				</configuration>
+			</plugin>
+
 		</plugins>
 		
 		<pluginManagement>
@@ -1037,6 +1069,7 @@
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
+							
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.apache.maven.plugins</groupId>
@@ -1050,6 +1083,21 @@
 										<ignore />
 									</action>
 								</pluginExecution>
+								
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>de.juplo</groupId>
+										<artifactId>hibernate-maven-plugin</artifactId>
+										<versionRange>2.0.0</versionRange>
+										<goals>
+											<goal>create</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>

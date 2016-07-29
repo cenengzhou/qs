@@ -8,8 +8,12 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -20,16 +24,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Primary;
-
-import com.gammon.qs.aspect.AuditAspectHibernateInterceptor;
 
 @Configuration
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
 @PropertySource("file:${hibernate.properties}")
+@EnableJpaAuditing(auditorAwareRef = "securityServiceSpringImpl")
 @EnableJpaRepositories(
 		basePackages = {"com.gammon.pcms.dao" }, 
 		entityManagerFactoryRef = "entityManagerFactory",
@@ -57,6 +57,9 @@ public class HibernateConfig {
 	private String current_session_context_class;
 	@Value("${qsadmin.config}")
 	private String qsadminConfig;
+
+	@Autowired
+	private AuditConfig auditConfig;
 	@Autowired
 	private JdbcConfig jdbcConfig;
 
@@ -80,7 +83,7 @@ public class HibernateConfig {
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("com.gammon.qs.domain", "com.gammon.pcms.model");
+		factory.setPackagesToScan("com.gammon.qs.domain", "com.gammon.pcms.model", "com.gammon.pcms.audit");
 		factory.setDataSource(jdbcDataSource());
 		factory.setJpaProperties(databaseProperties());
 		factory.setPersistenceUnitName("PersistenceUnit");
@@ -110,11 +113,11 @@ public class HibernateConfig {
 		return transactionManager;
 	}
 
-	@Bean(name = "hibernateEntityInterceptor")
-	public AuditAspectHibernateInterceptor hibernateEntityInterceptor() {
-		AuditAspectHibernateInterceptor bean = new AuditAspectHibernateInterceptor();
-		return bean;
-	}
+//	@Bean(name = "hibernateEntityInterceptor")
+//	public AuditAspectHibernateInterceptor hibernateEntityInterceptor() {
+//		AuditAspectHibernateInterceptor bean = new AuditAspectHibernateInterceptor();
+//		return bean;
+//	}
 
 	@Bean(name = "hibernateInterceptor")
 	public OpenSessionInterceptor hibernateInterceptor(SessionFactory sessionFactory) {
@@ -134,8 +137,15 @@ public class HibernateConfig {
 		properties.setProperty("hibernate.format_sql", hibernateFormat_sql);
 		properties.setProperty("hibernate.jdbc.batch_size", hibernateJdbcBatch_size);
 		properties.setProperty("hibernate.jdbc.fetch_size", hibernateJdbcFetch_size);
+		properties.setProperty("hibernate.connection.username", jdbcConfig.getUsername());
+		properties.setProperty("hibernate.connection.password", jdbcConfig.getPassword());
+		properties.setProperty("hibernate.connection.driver_class", jdbcConfig.getDriverClassName());
+		properties.setProperty("hibernate.connection.url", jdbcConfig.getUrl());
 		properties.setProperty("current_session_context_class", current_session_context_class);
-		properties.put("hibernate.ejb.interceptor", hibernateEntityInterceptor());
+		properties.setProperty("org.hibernate.envers.audit_table_suffix", auditConfig.getAudit_table_suffix());
+		properties.setProperty("org.hibernate.envers.audit_strategy", auditConfig.getAudit_strategy());
+		properties.setProperty("org.hibernate.envers.audit_strategy_validity_store_revend_timestamp", auditConfig.getAudit_strategy_validity_store_revend_timestamp());
+//		properties.put("hibernate.ejb.interceptor", hibernateEntityInterceptor());
 
 		return properties;
 	}

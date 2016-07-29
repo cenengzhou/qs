@@ -1,7 +1,6 @@
 package com.gammon.pcms.model;
 // Generated Jun 24, 2016 9:58:00 PM by Hibernate Tools 4.3.1.Final
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -14,9 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
+import com.gammon.pcms.application.PcmsPersistedAuditObject;
 import com.gammon.qs.domain.Tender;
 
 /**
@@ -25,7 +23,7 @@ import com.gammon.qs.domain.Tender;
 @Entity
 @SequenceGenerator(name = "TENDER_VARIANCE_GEN", sequenceName = "TENDER_VARIANCE_SEQ", allocationSize = 1)
 @Table(name = "TENDER_VARIANCE")
-public class TenderVariance implements Serializable {
+public class TenderVariance extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = 4953394815065303271L;
 	
@@ -39,10 +37,6 @@ public class TenderVariance implements Serializable {
 	private String generalCondition;
 	private String proposedVariance;
 	private String reason;
-	private String usernameCreated;
-	private Date dateCreated;
-	private String usernameLastModified;
-	private Date dateLastModified;
 
 	public TenderVariance() {
 	}
@@ -169,44 +163,6 @@ public class TenderVariance implements Serializable {
 
 	public void setReason(String reason) {
 		this.reason = reason;
-	}
-
-	@Column(name = "USERNAME_CREATED", nullable = false, length = 40)
-	public String getUsernameCreated() {
-		return this.usernameCreated;
-	}
-
-	public void setUsernameCreated(String usernameCreated) {
-		this.usernameCreated = usernameCreated;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "DATE_CREATED", nullable = false, length = 7)
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	@Column(name = "USERNAME_LAST_MODIFIED", length = 40)
-	public String getUsernameLastModified() {
-		return this.usernameLastModified;
-	}
-
-	public void setUsernameLastModified(String usernameLastModified) {
-		this.usernameLastModified = usernameLastModified;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "DATE_LAST_MODIFIED", length = 7)
-	public Date getDateLastModified() {
-		return this.dateLastModified;
-	}
-
-	public void setDateLastModified(Date dateLastModified) {
-		this.dateLastModified = dateLastModified;
 	}
 
 }

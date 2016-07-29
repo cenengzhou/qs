@@ -12,10 +12,13 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.shared.util.CalculationUtil;
-
+@Audited
+@AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
 @Table(name = "PAYMENT_CERT_DETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)

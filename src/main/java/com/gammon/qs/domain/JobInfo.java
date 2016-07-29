@@ -17,12 +17,16 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
-
+@Audited
+@AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
 @Table(	name = "JOB_INFO",
 		uniqueConstraints = @UniqueConstraint(	columnNames = "ID",

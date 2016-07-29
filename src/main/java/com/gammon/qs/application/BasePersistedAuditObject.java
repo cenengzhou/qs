@@ -4,9 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class BasePersistedAuditObject implements Serializable {
 	
@@ -37,7 +45,8 @@ public abstract class BasePersistedAuditObject implements Serializable {
 				+ ", lastModifiedUser=" + lastModifiedUser + ", lastModifiedDate=" + lastModifiedDate
 				+ ", systemStatus=" + systemStatus + "]";
 	}
-
+	
+	@CreatedBy
 	@Column(name = "CREATED_USER", updatable = false, nullable = false)
 	public String getCreatedUser() {
 		return createdUser;
@@ -47,6 +56,7 @@ public abstract class BasePersistedAuditObject implements Serializable {
 		this.createdUser = createdUser;
 	}
 
+	@CreatedDate
 	@Column(name = "CREATED_DATE", updatable = false, nullable = false)
 	@Temporal(value = TemporalType.DATE)
 	public Date getCreatedDate() {
@@ -57,6 +67,7 @@ public abstract class BasePersistedAuditObject implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	@LastModifiedBy
 	@Column(name = "LAST_MODIFIED_USER", nullable = true)
 	public String getLastModifiedUser() {
 		return lastModifiedUser;
@@ -66,6 +77,7 @@ public abstract class BasePersistedAuditObject implements Serializable {
 		this.lastModifiedUser = lastModifiedUser;
 	}
 
+	@LastModifiedDate
 	@Column(name = "LAST_MODIFIED_DATE", nullable = true)
 	@Temporal(value = TemporalType.DATE)
 	public Date getLastModifiedDate() {
