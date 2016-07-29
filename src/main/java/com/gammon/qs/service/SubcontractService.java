@@ -5058,23 +5058,38 @@ public class SubcontractService {
 		return result;
 	}
 
-	
-	public List<Subcontract> getSubcontractList(String jobNo) throws DataAccessException {
+	/**
+	 * Get a list of Subcontract based on Job No. and status of Award
+	 *
+	 * @param jobNo
+	 * @param awardedOnly
+	 * @return
+	 * @throws DataAccessException
+	 * @author tikywong
+	 * @since Jul 28, 2016 6:09:18 PM
+	 */
+	public List<Subcontract> getSubcontractList(String jobNo, boolean awardedOnly) throws DataAccessException {
 		if (adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNo))
-			return subcontractHBDao.findSubcontractList(jobNo);
+			return subcontractHBDao.find(jobNo, awardedOnly);
 		else
 			return new ArrayList<Subcontract>();
 	}
 	
 	/**
 	 * For Subcontract Enquiry only </br>
-	 * Either search from Subcontract Snapshot or Subcontract Table
-	 * 
-	 * @author koeyyeung, tikywong modified on 26 Aug, 2014, 25 Jul, 2016
-	 * @throws Exception 
-	 * 
-	 **/
-	public List<SCListWrapper> getSubcontractList(String noJob, BigDecimal year, BigDecimal month, Boolean showJobInfo) throws Exception {
+	 * Either search from Subcontract Snapshot or Subcontract Table </br>
+	 *
+	 * @param noJob
+	 * @param year
+	 * @param month
+	 * @param awardedOnly
+	 * @param showJobInfo
+	 * @return
+	 * @throws Exception
+	 * @author	tikywong
+	 * @since	Jul 28, 2016 6:25:16 PM
+	 */
+	public List<SCListWrapper> getSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean showJobInfo) throws Exception {
 		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
 
 		// 1. check if there is any record from in subcontract snapshot table
@@ -5103,7 +5118,7 @@ public class SubcontractService {
 
 		if (StringUtils.isNotBlank(noJob)) {
 			if (adminServiceImpl.canAccessJob(username, noJob))
-				subcontractList = subcontractHBDao.findSubcontractList(noJob);
+				subcontractList = subcontractHBDao.find(noJob, true);
 			else
 				logger.info("User: " + username + " is not authorized to access Job: " + (StringUtils.isNotBlank(noJob) ? noJob : "ALL Job"));
 		}

@@ -57,15 +57,13 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		
 		if (StringUtils.isNotBlank(noJob))
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", noJob));
-		if (awardedOnly) {
+		if (awardedOnly)
 			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
-			criteria.add(Restrictions.isNotNull("subcontractStatus"));
-		}
 		if (month.intValue() > 0 && year.intValue() > 0) {
 			// start date (first day of the month)
-			Calendar startCalendar = new GregorianCalendar(year.intValue(), month.intValue(), 1, 0, 0, 0);
+			Calendar startCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, 1, 0, 0, 0);
 			// end date (last day of the month)
-			Calendar endCalendar = new GregorianCalendar(year.intValue(), month.intValue(), startCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+			Calendar endCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, startCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
 
 			// Formatting
 			String startDate = DateHelper.formatDate(startCalendar.getTime(), GlobalParameter.DATE_FORMAT);

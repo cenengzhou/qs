@@ -20,7 +20,7 @@ import org.hibernate.annotations.OptimisticLocking;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.gammon.pcms.dto.rs.provider.response.View;
+import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
@@ -50,9 +50,9 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	private static final long serialVersionUID = 4305414438779476211L;
 
-	@JsonView(View.JobInfoSummary.class)
+	@JsonView(JobInfoView.NameAndDescription.class)
 	private String jobNumber;
-	@JsonView(View.JobInfoSummary.class)
+	@JsonView(JobInfoView.NameAndDescription.class)
 	private String description;
 	private String company;
 	private String employer;

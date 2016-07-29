@@ -15,7 +15,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
@@ -39,31 +38,35 @@ import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 @RequestMapping(value = "service/subcontract/",
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class SubcontractController {
-	private Logger logger = Logger.getLogger(getClass());
+//	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private SubcontractService subcontractService;
 	
 	@RequestMapping(value = "getSubcontractList",
 					method = RequestMethod.GET)
-	public List<Subcontract> getSubcontractList(@RequestParam(required = true) String jobNo) {
+	public List<Subcontract> getSubcontractList(@RequestParam(required = true) String jobNo,
+												@RequestParam(	required = true,
+																defaultValue = "false") boolean awardedOnly) {
 		try {
-			return subcontractService.getSubcontractList(jobNo);
+			return subcontractService.getSubcontractList(jobNo, awardedOnly);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<Subcontract>();
 		}
 	}
-	
-	@RequestMapping(value = "getSubcontractSnapShotList",
-					method = RequestMethod.POST)
-	public List<SCListWrapper> getSubcontractSnapShotList(	@RequestParam(required = false) String noJob,
+
+	@RequestMapping(value = "getSubcontractSnapshotList",
+					method = RequestMethod.GET)
+	public List<SCListWrapper> getSubcontractSnapshotList(	@RequestParam(required = false) String noJob,
 															@RequestParam(required = true) BigDecimal year,
 															@RequestParam(required = true) BigDecimal month,
 															@RequestParam(	required = true,
-																			defaultValue = "false") Boolean showJobInfo) {
+																			defaultValue = "false") boolean awardedOnly,
+															@RequestParam(	required = true,
+																			defaultValue = "false") boolean showJobInfo) {
 		try {
-			return subcontractService.getSubcontractList(noJob, year, month, showJobInfo);
+			return subcontractService.getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<SCListWrapper>();

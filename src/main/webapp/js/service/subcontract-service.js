@@ -23,12 +23,12 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	inactivateSystemConstant:			inactivateSystemConstant,
     	createSystemConstant: 				createSystemConstant,
     	updateSubcontractAdmin:				updateSubcontractAdmin,
-    	getSubcontractSnapShotList:			getSubcontractSnapShotList,
+    	getSubcontractSnapshotList:			getSubcontractSnapshotList,
     	searchProvisionHistory:				searchProvisionHistory,
     	getSCDetailList:					getSCDetailList
     });
 	
-    function getSubcontractList(jobNo) {
+    function getSubcontractList(jobNo, awardedOnly) {
     	var myHeaders = {
     	        "Accept": "application/json",
     	        "Content-Type": "application/json",
@@ -272,10 +272,10 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	return( request.then(handleSuccess, handleError));
     }
     
-    function getSubcontractSnapShotList(noJob, year, month, showJobInfo){
+    function getSubcontractSnapshotList(noJob, year, month, showJobInfo){
     	var request = $http({
     		method: 'get',
-    		url: 'service/subcontract/getSubcontractSnapShotList',
+    		url: 'service/subcontract/getSubcontractSnapshotList',
     		params: {
     			noJob: noJob,
     			year: year,

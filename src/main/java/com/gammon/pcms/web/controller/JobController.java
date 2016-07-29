@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.gammon.pcms.dto.rs.provider.response.View;
+import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
 import com.gammon.qs.domain.JobDates;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
@@ -32,7 +32,7 @@ public class JobController {
 	@Autowired
 	private JobInfoService jobService;
 	
-	@JsonView(View.JobInfoSummary.class)
+	@JsonView(JobInfoView.NameAndDescription.class)
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 //	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
 	@RequestMapping(value = "getJobList", method = RequestMethod.GET)

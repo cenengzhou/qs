@@ -678,18 +678,23 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Subcontract> findSubcontractList(String jobNo) throws DataAccessException {
+	public List<Subcontract> find(String jobNo, boolean awardedOnly) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(this.getType());
 
 		// Join
 		criteria.createAlias("jobInfo", "jobInfo");
 
 		// Where
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
+				.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
 		if(StringUtils.isNotBlank(jobNo))
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+		if (awardedOnly)
+			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
 
 		// Order by
 		criteria.addOrder(Order.asc("packageNo"));
+		
 		return (List<Subcontract>) criteria.list();
 	}
 

@@ -9,14 +9,10 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
     loadSubcontractList();
     
     function loadSubcontractList() {
-    	subcontractService.getSubcontractList($scope.jobNo)
+    	subcontractService.getSubcontractList($scope.jobNo, false)
    	 .then(
 			 function( data ) {
 				 $scope.subcontracts= data;
-				 //Download file				 
-				 //$window.open("gammonqs/scPaymentDownload.smvc?jobNumber=13362&packageNumber=1006&paymentCertNo=5", "_blank", "");
-				//$window.open("gammonqs/subcontractReportExport.rpt?company=&division=&jobNumber=13362&subcontractNumber=&subcontractorNumber=&subcontractorNature=&paymentType=&workScope=&clientNo=&includeJobCompletionDate=false&splitTerminateStatus=&month=&year=", "_blank", "");
-
 			 });
     }
     
