@@ -144,6 +144,28 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getAwardedSubcontractNos", method = RequestMethod.GET)
+	public List<String> getAwardedSubcontractNos(@RequestParam(required =true) String jobNo){
+		List<String> awardedSubcontractNos = new ArrayList<String>();
+		try {
+			awardedSubcontractNos = subcontractService.getAwardedSubcontractNos(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return awardedSubcontractNos;
+	}
+	
+	@RequestMapping(value = "getUnawardedSubcontractNosUnderPaymentRequisition", method = RequestMethod.GET)
+	public List<String> getUnawardedSubcontractNosUnderPaymentRequisition(@RequestParam(required =true) String jobNo){
+		List<String> unawardedSubcontractNos = new ArrayList<String>();
+		try {
+			unawardedSubcontractNos = subcontractService.getUnawardedSubcontractNosUnderPaymentRequisition(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return unawardedSubcontractNos;
+	}
+	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;

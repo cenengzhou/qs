@@ -1,9 +1,10 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
-                                         function ($scope, resourceSummaryService, tenderService, subcontractService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
+mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'unitService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
+                                         function ($scope, resourceSummaryService, tenderService, subcontractService, unitService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
+
+	$scope.units=[];
+	var accountBalance = {};
 	
 	loadData();
-	
-	var accountBalance = {};
 
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -23,10 +24,12 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			             { field: 'subsidiaryCode'},
 			             { field: 'resourceDescription', displayName: "Description"},
 			             { field: 'unit'},
-			             { field: 'quantity', enableFiltering: false},
-			             { field: 'rate', enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
-		            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
+			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'rate', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
+			            	 cellClass: 'text-right', cellFilter: 'number:2',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
 			             ]
 
 	};
@@ -52,10 +55,13 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			             { field: 'objectCode'},
 			             { field: 'subsidiaryCode'},
 			             { field: 'description'},
-			             { field: 'unit'},
-			             { field: 'quantity', enableFiltering: false},
-			             { field: 'rateBudget', enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
+			             { field: 'unit',  editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
+			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'rateBudget', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
+			            	 cellClass: 'text-right', cellFilter: 'number:2',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
 
 			             ]
@@ -222,6 +228,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			getSubcontract();
 			getResourceSummariesBySC();
 			getTenderDetailList();
+			getUnitOfMeasurementList();
 		}
 	}
 	
@@ -286,7 +293,15 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 		}
 
-
+	function getUnitOfMeasurementList() {
+		unitService.getUnitOfMeasurementList()
+		.then(
+				function( data ) {
+					angular.forEach(data, function(value, key){
+						$scope.units.push({'id': value.unitCode.trim(), 'value': value.unitCode.trim()});
+					});
+				});
+	}
 
 }]);
 

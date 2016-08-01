@@ -45,6 +45,7 @@ import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
+import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
@@ -88,6 +89,8 @@ public class ResourceSummaryService implements Serializable {
 	private transient TenderHBDao tenderAnalysisHBDao;
 	@Autowired
 	private transient TenderDetailHBDao tenderAnalySisDetailHBDao;
+	@Autowired
+	private SecurityService securityService;
 	
 	private static final int RECORDS_PER_PAGE = 50;
 
@@ -655,19 +658,6 @@ public class ResourceSummaryService implements Serializable {
 		logger.info("saveResourceSummaryHelper - END");
 	}
 	
-	public Boolean updateResourceSummariesIVAmount(List<ResourceSummary> resourceSummaries) throws Exception{
-		logger.info("STARTED -> updateResourceSummariesIVAmount()");
-		for(ResourceSummary resourceSummary : resourceSummaries){
-			ResourceSummary summaryInDB = bqResourceSummaryDao.get(resourceSummary.getId());
-			summaryInDB.setCurrIVAmount(resourceSummary.getCurrIVAmount());
-//			logger.info("SAVE - BQResourceSummary J#"+summaryInDB.getJob().getJobNumber()+" ID: "+summaryInDB.getId()+
-//						" Current IV Amount: "+(summaryInDB.getCurrIVAmount()==null?"null":summaryInDB.getCurrIVAmount()));
-			bqResourceSummaryDao.saveOrUpdate(summaryInDB);
-		}
-//		logger.info("DONE -> updateResourceSummariesIVAmount()");
-		return Boolean.TRUE;
-	}
-	
 	/**
 	 * @author koeyyeung
 	 * created on 4th June,2015**/
@@ -863,9 +853,6 @@ public class ResourceSummaryService implements Serializable {
 		}
 	}
 	
-	public Boolean postIVAmounts(JobInfo job, String username, boolean finalized) throws Exception{
-		return ivPostingService.postIVAmounts(job, username, finalized);
-	}
 	
 	public Boolean groupResourcesIntoSummaries(JobInfo job) throws Exception{
 		List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
@@ -1502,6 +1489,34 @@ public class ResourceSummaryService implements Serializable {
 		}
 		
 		return resourceSummaryList;
+	}
+	
+	public String updateIVAmount(List<ResourceSummary> resourceSummaries) throws Exception{
+		logger.info("STARTED -> updateIVAmount()");
+		String error = "";
+		try {
+			for(ResourceSummary resourceSummary : resourceSummaries){
+				ResourceSummary summaryInDB = bqResourceSummaryDao.get(resourceSummary.getId());
+				summaryInDB.setCurrIVAmount(resourceSummary.getCurrIVAmount());
+//			logger.info("SAVE - BQResourceSummary J#"+summaryInDB.getJob().getJobNumber()+" ID: "+summaryInDB.getId()+
+//						" Current IV Amount: "+(summaryInDB.getCurrIVAmount()==null?"null":summaryInDB.getCurrIVAmount()));
+				bqResourceSummaryDao.saveOrUpdate(summaryInDB);
+			}
+		} catch (Exception e) {
+			error = "IV cannot be updated.";
+			e.printStackTrace();
+		}
+		logger.info("DONE -> updateIVAmount()");
+		return error;
+	}
+	
+	
+	public String postIVAmounts(String jobNo, boolean finalized) throws Exception{
+		String error = "";
+		Boolean posted = ivPostingService.postIVAmounts(jobDao.obtainJobInfo(jobNo), securityService.getCurrentUser().getUsername(), finalized);
+		if(!posted)
+			error = "IV is failed to be posted.";
+		return error;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

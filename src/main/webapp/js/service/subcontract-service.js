@@ -8,6 +8,9 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getSubcontractDetailForWD:			getSubcontractDetailForWD,
     	getSubcontractDetailsDashboardData:	getSubcontractDetailsDashboardData,
     	getSubcontractDashboardData:		getSubcontractDashboardData,
+    	getAwardedSubcontractNos:			getAwardedSubcontractNos,
+    	getUnawardedSubcontractNosUnderPaymentRequisition: getUnawardedSubcontractNosUnderPaymentRequisition,
+    	
     	upateSubcontract: 					upateSubcontract,
     	upateSubcontractDates: 				upateSubcontractDates,
     	updateWDandIV:						updateWDandIV,
@@ -126,6 +129,31 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
+    function getAwardedSubcontractNos(jobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getAwardedSubcontractNos",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getUnawardedSubcontractNosUnderPaymentRequisition(jobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getUnawardedSubcontractNosUnderPaymentRequisition",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo
             }
         });
         return( request.then( handleSuccess, handleError ) );

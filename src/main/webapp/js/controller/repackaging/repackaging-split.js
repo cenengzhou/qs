@@ -3,8 +3,6 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 
 	var action = modalStatus;
 	
-	console.log(modalParam);
-	
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.repackagingEntryId = $cookieStore.get("repackagingEntryId");
 	
@@ -64,7 +62,6 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	}
 	
 	$scope.gridOptions.data = modalParam;
-	
 
 	$scope.gridOptionsSplit = {
 			enableSorting: true,
@@ -285,7 +282,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	$scope.$on('$locationChangeStart', function(event){
 		$uibModalInstance.close();
 	});
-
+	
 }])
 .filter('mapExclude', function() {
 	var excludeHash = {

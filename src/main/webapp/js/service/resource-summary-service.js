@@ -8,8 +8,9 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		addResourceSummary:					addResourceSummary,
 		updateResourceSummaries:			updateResourceSummaries,
 		deleteResources:					deleteResources,
-		splitOrMergeResources:				splitOrMergeResources
-
+		splitOrMergeResources:				splitOrMergeResources,
+		updateIVAmount:						updateIVAmount,
+		postIVAmounts:						postIVAmounts
 	});
 
 	function getResourceSummaries(jobNo, subcontractNo, objectCode) {
@@ -25,7 +26,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
-	
+
 	function getResourceSummariesBySC(jobNo, subcontractNo, objectCode) {
 		var request = $http({
 			method: "get",
@@ -53,8 +54,8 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
-	
-	
+
+
 	function getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo) {
 		var request = $http({
 			method: "get",
@@ -71,8 +72,8 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
-	
-	
+
+
 	function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
 		var request = $http({
 			method: "post",
@@ -86,7 +87,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		});
 		return( request.then( handleSuccess, handleError ) );
 	}
-	
+
 	function updateResourceSummaries(jobNo, resourceSummaryList) {
 		var request = $http({
 			method: "post",
@@ -111,18 +112,41 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 
-	 function splitOrMergeResources(repackagingEntryId, resourceSummarySplitMergeWrapper) {
-	        var request = $http({
-	            method: "post",
-	            url: "service/resourceSummary/splitOrMergeResources",
-	            dataType: "application/json;charset=UTF-8",
-	            params: {
-	            	repackagingEntryId: repackagingEntryId
-	            },
-	            data : resourceSummarySplitMergeWrapper
-	        });
-	        return( request.then( handleSuccess, handleError ) );
-	    }
+	function splitOrMergeResources(repackagingEntryId, resourceSummarySplitMergeWrapper) {
+		var request = $http({
+			method: "post",
+			url: "service/resourceSummary/splitOrMergeResources",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				repackagingEntryId: repackagingEntryId
+			},
+			data : resourceSummarySplitMergeWrapper
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+
+	function updateIVAmount(resourceSummaryList) {
+		var request = $http({
+			method: "post",
+			url: "service/resourceSummary/updateIVAmount",
+			dataType: "application/json;charset=UTF-8",
+			data : resourceSummaryList
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+
+	function postIVAmounts(jobNo, finalized) {
+		var request = $http({
+			method: "post",
+			url: "service/resourceSummary/postIVAmounts",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				finalized: finalized
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
 
 	// ---
 	// PRIVATE METHODS.

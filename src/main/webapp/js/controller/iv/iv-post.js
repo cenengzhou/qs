@@ -1,4 +1,11 @@
-mainApp.controller('IVPostCtrl', ['$scope' , '$http', 'resourceSummaryService', function($scope , $http, resourceSummaryService) {
+mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', 'roundUtil', 'modalService', '$state',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, roundUtil, modalService, $state) {
+	
+	var optionList = [{ id: 'true', value: 'Excluded' },
+	                  { id: 'false', value: 'Included' }
+	];
+
+	loadData();
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -8,144 +15,120 @@ mainApp.controller('IVPostCtrl', ['$scope' , '$http', 'resourceSummaryService', 
 			enableSelectAll: true,
 			//enableFullRowSelection: true,
 			//multiSelect: true,
-			showGridFooter : true,
-			//showColumnFooter : true,
+			//showGridFooter : true,
+			showColumnFooter : true,
 			//fastWatch : true,
 
-			enableCellEditOnFocus : true,
 
-			paginationPageSizes: [50],
-			paginationPageSize: 50,
-
-
-			//Single Filter
-			/*onRegisterApi: function(gridApi){
-				$scope.gridApi = gridApi;
-				$scope.gridApi.grid.registerRowsProcessor( $scope.singleFilter);
-			},*/
 			columnDefs: [
-			             { field: 'packageNo', enableCellEdit: false, width:80, displayName:"Package No."},
-			             { field: 'objectCode', enableCellEdit: false , width:100},
-			             { field: 'subsidiaryCode',enableCellEdit: false},
-			             { field: 'description', enableCellEdit: false },
-			             { field: 'unit', enableCellEdit: false, enableFiltering: false},
-			             { field: 'quantity', enableCellEdit: false ,enableFiltering: false},
-			             { field: 'rate', enableCellEdit: false, enableFiltering: false },
-			             {field: 'amount', enableCellEdit: false, enableFiltering: false },
-			             {field: 'cumIvAmount', enableFiltering: false, 
-		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>'},
-		            	 {field: 'ivMovement', enableFiltering: false,
-	            		 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>'},
-	            		 {field: 'postedIvAmount', enableFiltering: false,
-            			 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>'},
-            			 {field: 'levyExcluded', enableCellEdit: false, enableFiltering: false },
-            			 {field: 'defectExcluded', enableCellEdit: false, enableFiltering: false}
-            			 ]
-			
-			
-
+			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false, width:80},
+			             { field: 'objectCode', enableCellEdit: false , width:80},
+			             { field: 'subsidiaryCode',enableCellEdit: false, width:80},
+			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false },
+			             { field: 'unit', enableCellEdit: false, enableFiltering: false, width:60},
+			             { field: 'quantity', enableCellEdit: false ,enableFiltering: false, width:100, 
+			            	 cellClass: 'text-right', cellFilter: 'number:2'},
+		            	 { field: 'rate', enableCellEdit: false, enableFiltering: false, width:100,
+		            		cellClass: 'text-right', cellFilter: 'number:2'},
+	            		 {field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableFiltering: false,
+	            			cellClass: 'text-right', cellFilter: 'number:2'},
+            			 {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, 
+            				cellClass: 'text-right', cellFilter: 'number:2',
+            				aggregationType: uiGridConstants.aggregationTypes.sum,
+            				footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+        				 {field: 'ivMovement', displayName: "IV Movement", enableFiltering: false, 
+        					 cellClass: 'text-right', cellFilter: 'number:2',
+        					 aggregationType: uiGridConstants.aggregationTypes.sum,
+        					 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+    					 {field: 'postedIVAmount', displayName: "Posted IV Amount", enableCellEdit: false, enableFiltering: false, 
+    						cellClass: 'text-right', cellFilter: 'number:2',
+    						aggregationType: uiGridConstants.aggregationTypes.sum, 
+    						footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+						 {field: 'excludeLevy', displayName: "Levy", enableCellEdit: false, width:80, 
+    							 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+    							 filter: { 
+    								 term: '',
+    								 options: optionList
+    							 }, 
+    							 cellFilter: 'mapExclude'},
+						 {field: 'excludeDefect', displayName: "Defect",  enableCellEdit: false, width:80, 
+							 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+							 filter: { 
+								 term: '',
+								 options: optionList
+							 }, 
+							 cellFilter: 'mapExclude'}
+						 ]
 	};
 
-	
-	$scope.gridOptions.onRegisterApi = function (gridApi) {
-		  $scope.gridApi = gridApi;
-		  $scope.gridApi.grid.registerRowsProcessor( $scope.packagaNoFilter);
-		  $scope.gridApi.grid.registerRowsProcessor( $scope.objectCodeFilter);
-		  $scope.gridApi.grid.registerRowsProcessor( $scope.subsiCodeFilter);
-		  //$scope.gridApi.grid.registerRowsProcessor( $scope.descriptionFilter);
-		  /*
-		  $scope.gridApi.core.on.filterChanged( $scope, function() {
 
-		        if($scope.gridApi.pagination.getPage() > 1){
-		            $scope.gridApi.pagination.seek(1);
-		        }
-		      });*/
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+	}
+
+	$scope.post = function() {
+		postIVAmounts();
+	}
+
+	function loadData() {
+		getResourceSummaries();
 	}
 	
-	
-	
-	$http.get('http://localhost:8080/pcms/data/iv.json')
-	.success(function(data) {
-		$scope.gridOptions.data = data;
-	});
+	function getResourceSummaries() {
+		resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
+		.then(
+				function( data ) {
+					$scope.nonFinalizedMovementAmount = 0;
+					$scope.finalizedMovementAmount = 0;
+					angular.forEach(data, function(value, key){
+						value.ivMovement = value.currIVAmount - value.postedIVAmount;
 
+					});
+
+					$timeout(function () {
+						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
+						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[9].getAggregationValue();
+						$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
+					}, 100);
+
+					
+					
+					var filteredData = data.filter(function(obj) {
+					    return (obj.ivMovement != 0);
+					});
+					$scope.gridOptions.data = filteredData;
+					
+				});
+	}
+
+
+	function postIVAmounts() {
+		resourceSummaryService.postIVAmounts($scope.jobNo, false)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IV has been posted.");
+						$state.reload();
+					}
+				});
+	}
 	
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
+
+}])
+.filter('mapExclude', function() {
+	var excludeHash = {
+			'true': 'Excluded',
+			'false': 'Included'
 	};
 
-	$scope.packagaNoFilter = function( renderableRows ){
-		var matcher = new RegExp($scope.packageNofilterValue);
-		console.log("$scope.packageNofilterValue: "+$scope.packageNofilterValue);
-		var newRenderableRows = new Array();
-		newRenderableRows= renderableRows;
-		renderableRows.forEach( function( row ) {
-			var match = false;
-			[ 'packageNo'].forEach(function( field ){
-				if ( row.entity[field].match(matcher) ){
-					match = true;
-				}
-			});
-			if ( !match ){
-				row.visible = false;
-			}
-		});
-		return newRenderableRows;
+	return function(input) {
+		return excludeHash[input];
 	};
-	
-	$scope.objectCodeFilter = function( renderableRows ){
-		var matcher = new RegExp($scope.objectCodefilterValue);
-		//console.log("$scope.objectCodefilterValue: "+$scope.objectCodefilterValue);
-		renderableRows.forEach( function( row ) {
-			var match = false;
-			[ 'objectCode'].forEach(function( field ){
-				if ( row.entity[field].match(matcher) ){
-					match = true;
-				}
-			});
-			if ( !match ){
-				row.visible = false;
-			}
-		});
-		return renderableRows;
+})
+.directive('myCustomDropdown', function() {
+	return {
+		template: '<select class="form-control input-sm" ng-model="colFilter.term" ng-options="option.id as option.value for option in colFilter.options"></select>'
 	};
-	
-	$scope.subsiCodeFilter = function( renderableRows ){
-		var matcher = new RegExp($scope.subsiCodefilterValue);
-		//console.log("$scope.subsiCodeFilter: "+$scope.subsiCodefilterValue);
-		var newRenderableRows = new Array();
-		newRenderableRows= renderableRows;
-		renderableRows.forEach( function( row ) {
-			var match = false;
-			['subsidiaryCode'].forEach(function( field ){
-				if ( row.entity[field].match(matcher) ){
-					match = true;
-					//newRenderableRows.indexOf(row);
-					//newRenderableRows.splice(newRenderableRows.indexOf(row), 1);
-				}
-			});
-			if ( !match ){
-				row.visible = false;
-			}
-		});
-		return newRenderableRows;
-	};
-	
-	/*$scope.descriptionFilter = function( renderableRows ){
-		var matcher = new RegExp($scope.filterValue);
-		renderableRows.forEach( function( row ) {
-			var match = false;
-			[ 'packageNo', 'objectCode', 'subsidiaryCode'].forEach(function( field ){
-				if ( row.entity[field].match(matcher) ){
-					match = true;
-				}
-			});
-			if ( !match ){
-				row.visible = false;
-			}
-		});
-		return renderableRows;
-	};*/
-
-	
-}]);
+});;

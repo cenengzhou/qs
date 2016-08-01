@@ -740,14 +740,20 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-               	         	'js/service/resource-summary-service.js'
+               	         	'js/service/resource-summary-service.js',
+               	         	'js/service/subcontract-service.js',
                     ] 
                 });
             }]
         },
         controller: 'NavMenuCtrl'
 	})
-	.state("iv.update", {
+	.state("iv.resource-summary", {
+		url: "/resource-summary",
+		templateUrl: "view/iv/iv-tab.html",
+		controller: "NavMenuCtrl",
+	})
+	.state("iv.resource-summary.update", {
 		url: "/update",
 		templateUrl: "view/iv/iv-update.html",
 		controller: "IVUpdateCtrl",
@@ -761,7 +767,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
             }]
         }
 	})
-	.state("iv.post", {
+	.state("iv.resource-summary.post", {
 		url: "/post",
 		templateUrl: "view/iv/iv-post.html",
 		controller: "IVPostCtrl",

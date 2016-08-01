@@ -1977,18 +1977,6 @@ public class SubcontractService {
 		return uneditableUnawardedPackageNos;
 	}
 	
-	public List<String> obtainUnawardedPackageNosUnderPaymentRequisition(JobInfo job) throws Exception{
-		logger.info("obtainUnawardedPackageNosUnderPaymentRequisition");
-		List<String> unawardedPackageNos = new ArrayList<String>();
-		List<Subcontract> unawardedPackageList = subcontractHBDao.getUnawardedPackages(job);
-		for(Subcontract scPackage: unawardedPackageList){
-			if(Subcontract.DIRECT_PAYMENT.equals(scPackage.getPaymentStatus())){
-				unawardedPackageNos.add(scPackage.getPackageNo());
-			}
-		}
-		logger.info("obtainUnawardedPackageNosUnderPaymentRequisition - END");
-		return unawardedPackageNos;
-	}
 	
 	/**
 	 * @author koeyyeung
@@ -4725,6 +4713,21 @@ public class SubcontractService {
 		return scDetailList;
 	}
 	
+	public List<String> getUnawardedSubcontractNosUnderPaymentRequisition(String jobNo) throws Exception{
+		List<String> unawardedPackageNos = new ArrayList<String>();
+		List<Subcontract> unawardedPackageList = subcontractHBDao.getUnawardedPackages(jobHBDao.obtainJobInfo(jobNo));
+		for(Subcontract scPackage: unawardedPackageList){
+			if(Subcontract.DIRECT_PAYMENT.equals(scPackage.getPaymentStatus())){
+				unawardedPackageNos.add(scPackage.getPackageNo());
+			}
+		}
+		return unawardedPackageNos;
+	}
+
+	public List<String> getAwardedSubcontractNos(String jobNo) throws Exception{
+		List<String> subcontratNoList = subcontractHBDao.getAwardedPackageNos(jobHBDao.obtainJobInfo(jobNo));
+		return subcontratNoList;
+	}
 	
 	/**
 	 * @author koeyyeung
@@ -5728,7 +5731,6 @@ public class SubcontractService {
 
 		return Boolean.TRUE;
 	}
-	
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 

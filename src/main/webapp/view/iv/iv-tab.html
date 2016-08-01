@@ -1,0 +1,36 @@
+<div id="content" class="content">
+	<!-- <ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Dashboard</li>
+	</ol> -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}} 
+	</h1>
+
+	<div id="wizard" class="bwizard clearfix">
+		<div class="hidden-print">
+			<ul class="bwizard-steps clearfix setup-panel">
+				<li ui-sref-active="active">
+					<a ui-sref="iv.resource-summary.update"><span class="label badge-inverse">1</span> 
+						Update Internal Valuation <small></small>
+					</a>
+				</li>
+				<li ui-sref-active="active"><a ui-sref="iv.resource-summary.post" > <span class="label">2</span>
+						Post Internal Valuation  <small></small>
+				</a></li>
+			</ul>
+		</div>
+
+		<div class="tab-content">
+			<div ui-view=""></div>
+		</div>
+
+		
+	</div>
+
+	<!-- end #wizard -->
+</div>
+

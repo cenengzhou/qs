@@ -113,7 +113,7 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
 									@RequestParam(required =true) String repackagingEntryId,
-									@Valid @RequestBody ResourceSummary resourceSummary){
+									 @RequestBody ResourceSummary resourceSummary){
 		String result = "";
 		try {
 			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingEntryId), resourceSummary);
@@ -124,7 +124,7 @@ public class ResourceSummaryController {
 	}
 	
 	@RequestMapping(value = "deleteResources", method = RequestMethod.POST)
-	public String deleteResources(@Valid @RequestBody List<ResourceSummary> resourceSummaryList){
+	public String deleteResources( @RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
 		try {
 			result = resourceSummaryService.deleteResources(resourceSummaryList);
@@ -136,7 +136,7 @@ public class ResourceSummaryController {
 
 	@RequestMapping(value = "updateResourceSummaries", method = RequestMethod.POST)
 	public String updateResourceSummaries(@RequestParam(required =true) String jobNo, 
-									@Valid @RequestBody List<ResourceSummary> resourceSummaryList){
+									 @RequestBody List<ResourceSummary> resourceSummaryList){
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		try {
 			wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
@@ -149,7 +149,7 @@ public class ResourceSummaryController {
 	
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
 	public String splitOrMergeResources(@RequestParam(required =true) String repackagingEntryId, 
-										@Valid @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper){
+										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper){
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		try {
 			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingEntryId));
@@ -159,6 +159,30 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
+	
+	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
+	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
+		String result = "";
+		try {
+			result = resourceSummaryService.updateIVAmount(resourceSummaryList);
+		} catch (Exception e) {
+			result = "IV cannot be updated.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
+	
+	@RequestMapping(value = "postIVAmounts", method = RequestMethod.POST)
+	public String postIVAmounts(@RequestParam(required =true) String jobNo, @RequestParam(required =true) boolean finalized){
+		String result = "";
+		try {
+			result = resourceSummaryService.postIVAmounts(jobNo, finalized);
+		} catch (Exception e) {
+			result = "IV cannot be updated.";
+			e.printStackTrace();
+		} 
+		return result;
+	}
 
 }
 

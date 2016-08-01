@@ -13,8 +13,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	loadResourceSummaries();
 	getUnitOfMeasurementList();
 	
-	$scope.editable = true;
-	$scope.mySelections=[];
 	$scope.units=[];
 
 	var optionList = [{ id: 'true', value: 'Excluded' },
@@ -46,16 +44,16 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units
 			             },
 			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, 
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+			            	cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 
-			            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+			            		cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            	cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
 			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false, 
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            	cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
