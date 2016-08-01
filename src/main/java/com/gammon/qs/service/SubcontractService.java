@@ -5398,7 +5398,7 @@ public class SubcontractService {
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
 					
-					double cumWorkDoneAmt = scDetail.getAmountCumulativeWD().doubleValue()*(1+percent/100);
+					double cumWorkDoneAmt = scDetail.getAmountCumulativeWD().doubleValue()*(percent/100);
 					calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
 				}
 			} finally {

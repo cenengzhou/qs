@@ -117,6 +117,20 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	        });*/
 	}
 
+	
+	$scope.applyPercentage = function(){
+		if($scope.percent != null){
+			angular.forEach($scope.gridOptions.data, function(value, key){
+				value.currIVAmount = value.amountBudget * ($scope.percent/100);
+				value.ivMovement = value.currIVAmount - value.postedIVAmount;
+			});
+			$scope.gridApi.grid.refresh();
+		}			
+		else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input %");
+	}
+
+	
 	$scope.update = function() {
 		//$scope.gridOptions.columnDefs.splice(9, 1);
 		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
@@ -131,7 +145,8 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		
 		updateIVAmount(dataRows);
 	}
-
+	
+	
 	function loadData() {
 		getResourceSummaries();
 		getUnawardedSubcontractNosUnderPaymentRequisition();

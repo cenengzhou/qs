@@ -158,7 +158,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	};
 
 	$scope.applyPercent = function (){
-		if($scope.percent != "")
+		if($scope.percent != null)
 			updateWDandIVByPercent($scope.percent);
 		else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input %");
