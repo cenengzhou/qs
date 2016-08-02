@@ -74,14 +74,14 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 	}
 
 
-	function addResourceSummary(jobNo, repackagingEntryId, resourceSummary) {
+	function addResourceSummary(jobNo, repackagingId, resourceSummary) {
 		var request = $http({
 			method: "post",
 			url: "service/resourceSummary/addResourceSummary",
 			dataType: "application/json;charset=UTF-8",
 			params: {
 				jobNo: jobNo,
-				repackagingEntryId: repackagingEntryId
+				repackagingId: repackagingId
 			},
 			data: resourceSummary
 		});
@@ -112,13 +112,13 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		return( request.then( handleSuccess, handleError ) );
 	}
 
-	function splitOrMergeResources(repackagingEntryId, resourceSummarySplitMergeWrapper) {
+	function splitOrMergeResources(repackagingId, resourceSummarySplitMergeWrapper) {
 		var request = $http({
 			method: "post",
 			url: "service/resourceSummary/splitOrMergeResources",
 			dataType: "application/json;charset=UTF-8",
 			params: {
-				repackagingEntryId: repackagingEntryId
+				repackagingId: repackagingId
 			},
 			data : resourceSummarySplitMergeWrapper
 		});

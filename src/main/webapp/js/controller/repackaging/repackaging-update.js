@@ -3,12 +3,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	$scope.jobNo = $cookieStore.get("jobNo");
 	$scope.jobDescription = $cookieStore.get("jobDescription");
 
-	if($stateParams.repackagingEntryId){
-		$cookieStore.put('repackagingEntryId', $stateParams.repackagingEntryId);
-	}
-
-	$scope.repackagingEntryId = $cookieStore.get("repackagingEntryId");
-
+	$scope.repackagingId = $cookieStore.get("repackagingId");
 	
 	loadResourceSummaries();
 	getUnitOfMeasurementList();
@@ -135,7 +130,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 				modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl' , 'Merge', selectedRows);
 			}
 		}else if (view=="add"){
-			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl', '', $scope.repackagingEntryId);
+			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl');
 		}
 	};
 

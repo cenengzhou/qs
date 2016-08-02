@@ -23,11 +23,11 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(	Repackaging repackagingEntry, String packageNo,
+	public List<RepackagingDetailComparisonWrapper> searchRepackagingDetails(	Repackaging repackaging, String packageNo,
 																				String objectCode, String subsidiaryCode) throws Exception {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("repackaging", "repackaging");
-		criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntry.getId()));
+		criteria.add(Restrictions.eq("repackaging.id", repackaging.getId()));
 		if(!GenericValidator.isBlankOrNull(packageNo)){
 			packageNo = packageNo.replace("*", "%");
 			if(packageNo.contains("%")){

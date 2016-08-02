@@ -1,7 +1,7 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'modalParam', 'resourceSummaryService', 'unitService', 'modalService', '$cookieStore', '$state', 'roundUtil',
-                                               function ($scope, $uibModalInstance, modalParam, resourceSummaryService, unitService, modalService, $cookieStore, $state, roundUtil) {
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'resourceSummaryService', 'unitService', 'modalService', '$cookieStore', '$state', 'roundUtil',
+                                               function ($scope, $uibModalInstance, resourceSummaryService, unitService, modalService, $cookieStore, $state, roundUtil) {
 
-	$scope.repackagingEntryId = modalParam;
+	$scope.repackagingId = $cookieStore.get("repackagingId");
 
 	$scope.units=[];
 	$scope.units.selected = "AM";
@@ -71,7 +71,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'm
 	
 	
 	function addResourceSummary() {
-		resourceSummaryService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingEntryId, $scope.resourceSummary)
+		resourceSummaryService.addResourceSummary($cookieStore.get("jobNo"), $scope.repackagingId, $scope.resourceSummary)
 		.then(
 				function( data ) {
 					if(data.length!=0){

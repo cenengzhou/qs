@@ -674,7 +674,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 name: 'app',
                	 files: [
                            'js/controller/repackaging/repackaging.js',
-                           'js/service/repackaging-service.js'
+                           'js/service/repackaging-service.js',
+                           'js/controller/repackaging/repackaging-confirm.js'
                     ] 
                 });
             }]
@@ -685,9 +686,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 		url: "/repackaging-update",
 		parent: "navigation",
 		templateUrl: "view/repackaging/repackaging-update.html",
-		params: {
-			'repackagingEntryId': null
-		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({

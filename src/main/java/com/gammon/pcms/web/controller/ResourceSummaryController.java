@@ -108,11 +108,11 @@ public class ResourceSummaryController {
 	
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
-									@RequestParam(required =true) String repackagingEntryId,
+									@RequestParam(required =true) String repackagingId,
 									 @RequestBody ResourceSummary resourceSummary){
 		String result = "";
 		try {
-			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingEntryId), resourceSummary);
+			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingId), resourceSummary);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -144,11 +144,11 @@ public class ResourceSummaryController {
 	
 	
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
-	public String splitOrMergeResources(@RequestParam(required =true) String repackagingEntryId, 
+	public String splitOrMergeResources(@RequestParam(required =true) String repackagingId, 
 										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper){
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		try {
-			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingEntryId));
+			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingId));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

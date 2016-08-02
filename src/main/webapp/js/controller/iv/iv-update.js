@@ -43,8 +43,8 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
             			 {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
             				 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD | number:2}}</div>',
             				 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
-        				 {field: 'ivMovement', displayName: "IV Movement", enableFiltering: false, aggregationType: 
-        					 uiGridConstants.aggregationTypes.sum,
+        				 {field: 'ivMovement', displayName: "IV Movement", enableFiltering: false, 
+            				 aggregationType: uiGridConstants.aggregationTypes.sum,
         					 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD | number:2}}</div>',
         					 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
     					 {field: 'postedIVAmount', displayName: "Posted IV Amount", enableCellEdit: false, enableFiltering: false, 

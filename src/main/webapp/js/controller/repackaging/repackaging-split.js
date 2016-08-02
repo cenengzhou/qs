@@ -4,7 +4,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	var action = modalStatus;
 	
 	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.repackagingEntryId = $cookieStore.get("repackagingEntryId");
+	$scope.repackagingId = $cookieStore.get("repackagingId");
 	
 	var resourceType = modalParam[0]['resourceType'];
 	var jobInfo = modalParam[0]['jobInfo'];
@@ -260,7 +260,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	}
 	
 	function splitOrMergeResources(resourceSummarySplitMergeWrapper) {
-		resourceSummaryService.splitOrMergeResources($scope.repackagingEntryId, resourceSummarySplitMergeWrapper)
+		resourceSummaryService.splitOrMergeResources($scope.repackagingId, resourceSummarySplitMergeWrapper)
 		.then(
 				function( data ) {
 					if(data.length!=0){

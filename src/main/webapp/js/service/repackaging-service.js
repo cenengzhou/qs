@@ -3,12 +3,14 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     return({
     	getLatestRepackaging:		getLatestRepackaging,
     	getRepackagingListByJobNo: 	getRepackagingListByJobNo,
+    	getRepackagingDetails:		getRepackagingDetails, 
     	
     	addRepackaging:				addRepackaging,
     	updateRepackaging:			updateRepackaging,
     	deleteRepackaging:			deleteRepackaging,
     	
-    	generateSnapshot:			generateSnapshot
+    	generateSnapshot:			generateSnapshot,
+    	confirmAndPostRepackaingDetails: confirmAndPostRepackaingDetails
         
     });
 	
@@ -35,6 +37,20 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function getRepackagingDetails(repackagingID, changesOnly) {
+        var request = $http({
+            method: "get",
+            url: "service/repackaging/getRepackagingDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	repackagingID: repackagingID,
+            	changesOnly: changesOnly
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function addRepackaging(jobNo) {
         var request = $http({
@@ -78,6 +94,19 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             dataType: "application/json;charset=UTF-8",
             params: {
                 id: id
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
+    function confirmAndPostRepackaingDetails(repackagingID) {
+        var request = $http({
+            method: "post",
+            url: "service/repackaging/confirmAndPostRepackaingDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	repackagingID: repackagingID
             }
         });
         return( request.then( handleSuccess, handleError ) );

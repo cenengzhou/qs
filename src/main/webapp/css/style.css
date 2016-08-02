@@ -9187,7 +9187,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     text-align: center;
 }
 .widget-stat-number {
-    font-size: 26px;
+    font-size: 20px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

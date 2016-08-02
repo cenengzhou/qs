@@ -1,0 +1,72 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-9">
+			<h4 class="modal-title">Confirm/Review Resources</h4>
+		</div>
+		<div class="col-md-2">
+			<input type="checkbox" data-ios-toggle="toggle" data-style="ios"
+				data-onstyle="primary" data-offstyle="warning"
+				data-on="Changes Only" data-off="Show All" ng-model="showChangesOnly" ng-change="refreshData()">
+				</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button"
+				confirmed-click="cancel()" ng-confirm-click>
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+
+	<div class="row">
+	
+		<div class="col-md-12">
+			<div class="col-md-3">
+				<div class="widget widget-stat bg-primary">
+					<div class="widget-stat-number">
+						<small>{{totalBudget | currency}}</small>
+					</div>
+					<div class="widget-stat-text">Current Budget</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget widget-stat bg-info">
+					<div class="widget-stat-number">
+						<small>{{previousBudget | currency}}</small>
+					</div>
+					<div class="widget-stat-text">Previous Budget</div>
+				</div>
+			</div>
+			
+			<div class="col-md-3">
+				<div class="widget widget-stat bg-primary">
+					<div class="widget-stat-number">
+						<small>{{totalSellingValue | currency}}</small>
+					</div>
+					<div class="widget-stat-text">Current Selling Value</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="widget widget-stat bg-info">
+					<div class="widget-stat-number">
+						<small>{{previousSellingValue | currency}}</small>
+					</div>
+					<div class="widget-stat-text">Previous Selling Value</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div id="" ui-grid="gridOptions" ui-grid-selection
+				ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter
+				class="grid" style="height: 450px;"></div>
+		</div>
+	</div>
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary btn-block" type="button"
+		ng-click="confirm()">
+		<span class="fa fa-save"></span> Confirm
+	</button>
+</div>
+

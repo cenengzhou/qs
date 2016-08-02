@@ -15,7 +15,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
 		}else if (view=="snapshot"){
 			generateSnapshot();
 		}else if (view=="confirm"){
-		//	$location.path("/subcontract/dashboard");
+			modalService.open('lg', 'view/repackaging/modal/repackaging-confirm.html', 'RepackagingConfirmModalCtrl');
 		}
 	};
 
@@ -27,11 +27,10 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
     function loadRepacakgingData() {
    	 repackagingService.getLatestRepackaging($scope.jobNo)
    	 .then(
-			 function( data ) {
-				 //console.log(data);
-				 $scope.repackaging = data;
-				console.log($scope.repackaging.status);
-			 });
+   			 function( data ) {
+   				 $scope.repackaging = data;
+   				 console.log("repackaging status: "+$scope.repackaging.status);
+   			 });
     }
     
     function addRepackaging() {
