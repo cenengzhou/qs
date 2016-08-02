@@ -27,7 +27,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	createSystemConstant: 				createSystemConstant,
     	updateSubcontractAdmin:				updateSubcontractAdmin,
     	getSubcontractSnapshotList:			getSubcontractSnapshotList,
-    	searchProvisionHistory:				searchProvisionHistory,
+    	getProvisionPostingHistList:		getProvisionPostingHistList,
     	getSCDetailList:					getSCDetailList
     });
 	
@@ -300,7 +300,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	return( request.then(handleSuccess, handleError));
     }
     
-    function getSubcontractSnapshotList(noJob, year, month, showJobInfo){
+    function getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo){
     	var request = $http({
     		method: 'get',
     		url: 'service/subcontract/getSubcontractSnapshotList',
@@ -308,19 +308,20 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     			noJob: noJob,
     			year: year,
     			month: month,
+    			awardedOnly: awardedOnly,
     			showJobInfo: showJobInfo
     		}
     	});
     	return( request.then( handleSuccess, handleError ) );
     }
     
-    function searchProvisionHistory(jobNumber, packageNo, year, month){
+    function getProvisionPostingHistList(jobNo, subcontractNo, year, month){
     	var request = $http({
-    		method: 'post',
-    		url: 'service/subcontract/searchProvisionHistory',
+    		method: 'get',
+    		url: 'service/subcontract/getProvisionPostingHistList',
     		params: {
-    			jobNumber: jobNumber,
-    			packageNo: packageNo,
+    			jobNo: jobNo,
+    			subcontractNo: subcontractNo,
     			year: year,
     			month: month
     		}

@@ -25,29 +25,29 @@ import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AuditResourceSummaryHBDao;
-import com.gammon.qs.dao.BpiItemHBDao;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.BpiBillHBDao;
+import com.gammon.qs.dao.BpiItemHBDao;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.BpiPageHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
-import com.gammon.qs.dao.RepackagingHBDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
-import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
-import com.gammon.qs.domain.ResourceSummaryAuditCustom;
+import com.gammon.qs.dao.RepackagingHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.BQLineType;
-import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.BpiBill;
 import com.gammon.qs.domain.BpiItem;
+import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.BpiPage;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.ResourceSummaryAuditCustom;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
@@ -57,13 +57,11 @@ import com.gammon.qs.service.bpi.UploadIVByExcelResponse;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.ComparatorUtilResource;
 import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.wrapper.BQItemPaginationWrapper;
-import com.gammon.qs.wrapper.BQPaginationWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiItemGroupedByIDWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBQItemWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiResourceSummaryGroupedBySCWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBQResourceSummaryWrapper;
+import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiItemGroupedByIDWrapper;
+import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiResourceSummaryGroupedBySCWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVInputByBQItemPaginationWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVInputByResourcePaginationWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
@@ -109,8 +107,6 @@ public class BpiItemService implements Serializable {
 	@Autowired
 	private AuditResourceSummaryHBDao auditDao;
 	
-	private ArrayList<BpiItem> cachedBQEnquiry;
-	private ArrayList<BpiItemResource> cachedResourceEnquiry;
 	private ArrayList<BpiItemResource> cachedResourceList;
 	
 	//For Update IV by BQ Item
@@ -220,76 +216,6 @@ public class BpiItemService implements Serializable {
 		return uneditableResourceIDs;
 	}
 	
-	/**
-	 * @author koeyyeung
-	 * modified on 6 Aug, 2013
-	 * **/
-	public BQPaginationWrapper obtainResourcesByWrapper(ResourceWrapper wrapper)  throws Exception {
-		logger.info("obtainResourcesByWrapper - STARTED");
-		cachedResourceEnquiry = new ArrayList<BpiItemResource>();
-		cachedResourceEnquiry.addAll(obtainResources(wrapper));
-		if (cachedResourceEnquiry == null || cachedResourceEnquiry.size()<1)
-			return null;
-		
-		return obtainResourcesByPage(0);
-	}
-
-	public BQPaginationWrapper obtainResourcesByPage(int pageNum){
-		BQPaginationWrapper wrapper = new BQPaginationWrapper();
-		wrapper.setCurrentPage(pageNum);
-		int size = cachedResourceEnquiry.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > cachedResourceEnquiry.size())
-			toInd = cachedResourceEnquiry.size();
-		ArrayList<BpiItemResource> resources = new ArrayList<BpiItemResource>();
-		resources.addAll(cachedResourceEnquiry.subList(fromInd, toInd));
-		wrapper.setCurrentPageContentList(resources);
-		double totalCost = 0.0;
-		for(BpiItemResource resource: cachedResourceEnquiry){
-			totalCost += (resource.getQuantity()==null?0.0: resource.getQuantity())* (resource.getCostRate()==null?0.0: resource.getCostRate()) * (resource.getRemeasuredFactor()==null?0.0: resource.getRemeasuredFactor());
-		}
-		wrapper.setTotalCost(totalCost);
-		
-		logger.info("obtainResourcesByWrapper - END");
-		return wrapper;
-	}	
-	
-	/**
-	 * @author koeyyeung
-	 * modified on 6 Aug, 2013
-	 * **/
-	public BQItemPaginationWrapper obtainBQItem(String jobNumber, String billNo, String subbillNo, String pageNo, String itemNo, String bqDesc)  throws Exception {
-		cachedBQEnquiry = new ArrayList<BpiItem>(obtainBQItemList(jobNumber, billNo, subbillNo, pageNo, itemNo, bqDesc));
-		if (cachedBQEnquiry == null||cachedBQEnquiry.size()<1){
-			return null;
-		}
-		return getBqItemsByPage(0);
-	}
-
-
-	public BQItemPaginationWrapper getBqItemsByPage(int pageNum){
-		BQItemPaginationWrapper wrapper = new BQItemPaginationWrapper();
-		wrapper.setCurrentPage(pageNum);
-		int size = cachedBQEnquiry.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > cachedBQEnquiry.size())
-			toInd = cachedBQEnquiry.size();
-		ArrayList<BpiItem> bqItems = new ArrayList<BpiItem>();
-		bqItems.addAll(cachedBQEnquiry.subList(fromInd, toInd));
-		wrapper.setCurrentPageContentList(bqItems);
-		double totalSellingValue = 0.0;
-		for(BpiItem curBQItem: cachedBQEnquiry){
-			totalSellingValue += (curBQItem.getSellingRate()==null?0.0:curBQItem.getSellingRate()) * (curBQItem.getRemeasuredQuantity()==null?0.0:curBQItem.getRemeasuredQuantity());
-		}
-		wrapper.setTotalSellingValue(totalSellingValue);
-		return wrapper;
-	}	
 	
 
 	/**
@@ -333,8 +259,6 @@ public class BpiItemService implements Serializable {
 				UpdateIVByResourceUpdateWrapper updateWrapper = new UpdateIVByResourceUpdateWrapper();
 				
 				String billItem = line[0];
-				
-//				logger.log(Level.SEVERE,line[0]);
 				
 				String tempBillItemStr = billItem;
 				

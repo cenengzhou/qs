@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 /**
  * koeyyeung
@@ -15,7 +15,7 @@ import com.gammon.qs.wrapper.sclist.SCListWrapper;
  */
 public class SubcontractLiabilityReportGenerator {
 	private ExcelFile excelFile;
-	private List<SCListWrapper> subcontractList;
+	private List<Subcontract> subcontractList;
 	private ArrayList<String[]> data = new ArrayList<String[]>();
 
 	private Double totalAddendum = new Double(0);
@@ -30,7 +30,7 @@ public class SubcontractLiabilityReportGenerator {
 	
 	private int sheetSize = 16;
 	
-	public SubcontractLiabilityReportGenerator(List<SCListWrapper>subcontractList){
+	public SubcontractLiabilityReportGenerator(List<Subcontract>subcontractList){
 		this.subcontractList = subcontractList;
 	}
 	
@@ -62,7 +62,7 @@ public class SubcontractLiabilityReportGenerator {
 
 	private void generateSubcontractLiabilitySheet() throws Exception {
 
-		for(SCListWrapper scListWrapper: subcontractList){
+		for(Subcontract scListWrapper: subcontractList){
 			String[] contentRow = createContentRow(scListWrapper);
 			if (contentRow.length>0){
 				if (contentRow[0]!=null && !contentRow[0].equals("")){
@@ -75,44 +75,44 @@ public class SubcontractLiabilityReportGenerator {
 
 	}
 
-	private String[] createContentRow(SCListWrapper scListWrapper) throws DatabaseOperationException{
+	private String[] createContentRow(Subcontract scListWrapper) throws DatabaseOperationException{
 		int index = 0;
 		String[] contentRows = new String[sheetSize];
-		contentRows[index++] = scListWrapper.getJobNumber();
-		contentRows[index++] = scListWrapper.getJobDescription();
-		
-		contentRows[index++] = scListWrapper.getPackageNo();
-		contentRows[index++] = scListWrapper.getVendorNo();
-		contentRows[index++] = scListWrapper.getVendorName();
-		contentRows[index++] = scListWrapper.getDescription();
-		
-		contentRows[index++] = scListWrapper.getAddendum()+"";
-		contentRows[index++] = scListWrapper.getSubcontractSum()+"";
-		contentRows[index++] = scListWrapper.getRetentionBalanceAmt()+"";
-		
-		contentRows[index++] = scListWrapper.getPaymentStatus();
-		
-		contentRows[index++] = scListWrapper.getTotalLiabilities()+"";
-		contentRows[index++] = scListWrapper.getTotalPostedCertAmt()+"";
-		contentRows[index++] = scListWrapper.getTotalProvision()+"";
-		contentRows[index++] = scListWrapper.getBalanceToComplete()+"";
-		contentRows[index++] = scListWrapper.getTotalCCPostedAmt()+"";
-		contentRows[index++] = scListWrapper.getTotalMOSPostedAmt()+"";
-		
-		
-		if(scListWrapper.getAddendum()!=null)
-			totalAddendum += scListWrapper.getAddendum();
-		if(scListWrapper.getSubcontractSum()!=null)
-			totalRevisedSubcontractSum += scListWrapper.getSubcontractSum();
-		
-		totalLiabilities += scListWrapper.getTotalLiabilities()!=null&&!scListWrapper.getTotalLiabilities().toString().trim().equals("")?scListWrapper.getTotalLiabilities():new Double(0);
-		totalProvision += scListWrapper.getTotalProvision()!=null&&!scListWrapper.getTotalProvision().toString().trim().equals("")?scListWrapper.getTotalProvision():new Double(0);
-		totalBalanceToComplete += scListWrapper.getBalanceToComplete()!=null&&!scListWrapper.getBalanceToComplete().toString().trim().equals("")?scListWrapper.getBalanceToComplete():new Double(0);
-		totalPostedCertAmt += scListWrapper.getTotalPostedCertAmt()!=null&&!scListWrapper.getTotalPostedCertAmt().toString().trim().equals("")?scListWrapper.getTotalPostedCertAmt():new Double(0);
-		totalCCPostedAmt += scListWrapper.getTotalCCPostedAmt()!=null&&!scListWrapper.getTotalCCPostedAmt().toString().trim().equals("")?scListWrapper.getTotalCCPostedAmt():new Double(0);
-		totalMOSPostedAmt += scListWrapper.getTotalMOSPostedAmt()!=null&&!scListWrapper.getTotalMOSPostedAmt().toString().trim().equals("")?scListWrapper.getTotalMOSPostedAmt():new Double(0);
-		totalRetentionBalanceAmt += scListWrapper.getRetentionBalanceAmt() != null && !scListWrapper.getRetentionBalanceAmt().toString().trim().equals("") ? scListWrapper.getRetentionBalanceAmt() : new Double(0);
-		
+//		contentRows[index++] = scListWrapper.getJobNumber();
+//		contentRows[index++] = scListWrapper.getJobDescription();
+//		
+//		contentRows[index++] = scListWrapper.getPackageNo();
+//		contentRows[index++] = scListWrapper.getVendorNo();
+//		contentRows[index++] = scListWrapper.getVendorName();
+//		contentRows[index++] = scListWrapper.getDescription();
+//		
+//		contentRows[index++] = scListWrapper.getAddendum()+"";
+//		contentRows[index++] = scListWrapper.getSubcontractSum()+"";
+//		contentRows[index++] = scListWrapper.getRetentionBalanceAmt()+"";
+//		
+//		contentRows[index++] = scListWrapper.getPaymentStatus();
+//		
+//		contentRows[index++] = scListWrapper.getTotalLiabilities()+"";
+//		contentRows[index++] = scListWrapper.getTotalPostedCertAmt()+"";
+//		contentRows[index++] = scListWrapper.getTotalProvision()+"";
+//		contentRows[index++] = scListWrapper.getBalanceToComplete()+"";
+//		contentRows[index++] = scListWrapper.getTotalCCPostedAmt()+"";
+//		contentRows[index++] = scListWrapper.getTotalMOSPostedAmt()+"";
+//		
+//		
+//		if(scListWrapper.getAddendum()!=null)
+//			totalAddendum += scListWrapper.getAddendum();
+//		if(scListWrapper.getSubcontractSum()!=null)
+//			totalRevisedSubcontractSum += scListWrapper.getSubcontractSum();
+//		
+//		totalLiabilities += scListWrapper.getTotalLiabilities()!=null&&!scListWrapper.getTotalLiabilities().toString().trim().equals("")?scListWrapper.getTotalLiabilities():new Double(0);
+//		totalProvision += scListWrapper.getTotalProvision()!=null&&!scListWrapper.getTotalProvision().toString().trim().equals("")?scListWrapper.getTotalProvision():new Double(0);
+//		totalBalanceToComplete += scListWrapper.getBalanceToComplete()!=null&&!scListWrapper.getBalanceToComplete().toString().trim().equals("")?scListWrapper.getBalanceToComplete():new Double(0);
+//		totalPostedCertAmt += scListWrapper.getTotalPostedCertAmt()!=null&&!scListWrapper.getTotalPostedCertAmt().toString().trim().equals("")?scListWrapper.getTotalPostedCertAmt():new Double(0);
+//		totalCCPostedAmt += scListWrapper.getTotalCCPostedAmt()!=null&&!scListWrapper.getTotalCCPostedAmt().toString().trim().equals("")?scListWrapper.getTotalCCPostedAmt():new Double(0);
+//		totalMOSPostedAmt += scListWrapper.getTotalMOSPostedAmt()!=null&&!scListWrapper.getTotalMOSPostedAmt().toString().trim().equals("")?scListWrapper.getTotalMOSPostedAmt():new Double(0);
+//		totalRetentionBalanceAmt += scListWrapper.getRetentionBalanceAmt() != null && !scListWrapper.getRetentionBalanceAmt().toString().trim().equals("") ? scListWrapper.getRetentionBalanceAmt() : new Double(0);
+//		
 		return contentRows;
 
 	}

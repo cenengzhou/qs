@@ -759,20 +759,6 @@ public class PackageRepositoryControllerTestData extends ControllerTestCase.Test
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.PackageRepositoryController#searchProvisionHistory(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	public Map<String, Object> testSearchProvisionHistory() {
-		init();
-		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
-		data.put("serviceClass", serviceClass);
-		data.put("methodName", methodName);
-		data.put("params", new Object[] {});
-		data.put("sql", "");
-		post();
-		return data;
-	}
-
-	/**
 	 * Test data for {@link com.gammon.qs.web.PackageRepositoryController#populateGridByPage(int)}.
 	 */
 	public Map<String, Object> testPopulateGridByPage() {

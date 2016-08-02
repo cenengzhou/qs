@@ -18,11 +18,11 @@
 						<form role="form" name="searchProvisionHistoryForm" id="searchJobCostForm" ng-submit="loadGridData()" class="form-input-flat">
 							<div class="form-group">
 								<div class="col-md-2">
-									<label for="searchJobNo">Job Number:</label> 
+									<label for="searchJobNo">Job No.:</label> 
 									<label class="form-control" id="searchJobNo" name="searchJobNo">{{jobNo}}</label>
 								</div>
 								<div class="col-md-2">
-									<label for="searchSubcontractNo">Subcontract Number:</label> <input
+									<label for="searchSubcontractNo">Subcontract No.:</label> <input
 										type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
 										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
 										<p ng-show="searchProvisionHistoryForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>

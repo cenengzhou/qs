@@ -325,7 +325,7 @@ public class ProvisionPostingService {
 						"No of Record deleted: " + scDetailProvisionHistoryDao.delete(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth));
 		else {
 			// Throw exception and exit if not overwriting
-			List<ProvisionPostingHist> checkProvisionHistList = scDetailProvisionHistoryDao.getSCDetailProvision(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth);
+			List<ProvisionPostingHist> checkProvisionHistList = scDetailProvisionHistoryDao.findByPeriod(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), postYr, postMonth);
 			if (checkProvisionHistList != null && checkProvisionHistList.size() > 0) 
 				throw new ValidateBusinessLogicException("Provision of " + postMonth + "/" + postYr + " in Job:" + scPackage.getJobInfo().getJobNumber() + " SC:" + scPackage.getPackageNo() + " posted already.");
 		}

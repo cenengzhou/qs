@@ -1,6 +1,7 @@
 package com.gammon.junit.testcase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.junit.testbase.TestBase;
 import com.gammon.junit.testsuite.ControllerTestSuite;
 import com.gammon.pcms.helper.JunitHelper;
-import com.gammon.qs.wrapper.PaginationWrapper;
 
 /**
  * @author paulnpyiu
@@ -122,8 +122,6 @@ public class ControllerTestCase extends TestBase {
 			Object returnObject = m.invoke(service, parameters);
 			if (returnObject instanceof Collection) {
 				resultSize = ((List<Object>) returnObject).size();
-			} else if (returnObject instanceof PaginationWrapper<?>) {
-				resultSize = ((PaginationWrapper<Object>) returnObject).getTotalRecords();
 			} else if (returnObject != null) {
 				resultSize = 1;
 			}

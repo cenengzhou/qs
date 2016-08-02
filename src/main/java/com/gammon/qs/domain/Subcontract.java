@@ -33,43 +33,52 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
 @Table(name = "SUBCONTRACT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "SUBCONTRACT_GEN",  sequenceName = "SUBCONTRACT_SEQ", allocationSize = 1)
-@AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
-public class Subcontract extends BasePersistedObject{
+@SequenceGenerator(	name = "SUBCONTRACT_GEN",
+					sequenceName = "SUBCONTRACT_SEQ",
+					allocationSize = 1)
+@AttributeOverride(	name = "id",
+					column = @Column(	name = "ID",
+										unique = true,
+										nullable = false,
+										insertable = false,
+										updatable = false,
+										precision = 19,
+										scale = 0))
+public class Subcontract extends BasePersistedObject {
 	private static final long serialVersionUID = 7458442200564333118L;
-	
-	//SC Award
+
+	// SC Award
 	public static final String APPROVAL_TYPE_AW = "AW";
-	public static final String APPROVAL_TYPE_ST = "ST"; //Over Budget
-	
-	//SC Award - Varied
+	public static final String APPROVAL_TYPE_ST = "ST"; // Over Budget
+
+	// SC Award - Varied
 	public static final String APPROVAL_TYPE_V5 = "V5";
-	public static final String APPROVAL_TYPE_V6 = "V6"; //Over Budget
-	
-	//Retention
+	public static final String APPROVAL_TYPE_V6 = "V6"; // Over Budget
+
+	// Retention
 	public static final String RETENTION_LUMPSUM = "Lump Sum Amount Retention";
 	public static final String RETENTION_ORIGINAL = "Percentage - Original SC Sum";
 	public static final String RETENTION_REVISED = "Percentage - Revised SC Sum";
-	
-	//CPF
+
+	// CPF
 	public static final String CPF_SUBJECT_TO = "Subject to CPF";
 	public static final String CPF_NOT_SUBJECT_TO = "Not Subject to CPF";
-	
-	//Addendum submitted status
+
+	// Addendum submitted status
 	public static final String ADDENDUM_SUBMITTED = "1";
 	public static final String ADDENDUM_NOT_SUBMITTED = " ";
-	
-	//Form of SC
+
+	// Form of SC
 	public static final String MAJOR = "Major";
 	public static final String MINOR = "Minor";
 	public static final String CONSULTANCY_AGREEMENT = "Consultancy Agreement";
 	public static final String INTERNAL_TRADING = "Internal trading";
-	
-	//SC Package Type
+
+	// SC Package Type
 	public static final String SUBCONTRACT_PACKAGE = "S";
 	public static final String MATERIAL_PACKAGE = "M";
-	
-	//Split Terminate Status
+
+	// Split Terminate Status
 	public static final String SPLIT = "S";
 	public static final String TERMINATE = "T";
 	public static final String SPLITTERMINATE_DEFAULT = "0";
@@ -79,48 +88,41 @@ public class Subcontract extends BasePersistedObject{
 	public static final String TERMINATE_APPROVED = "4";
 	public static final String SPLIT_REJECTED = "5";
 	public static final String TERMINATE_REJECTED = "6";
-	public static final String[][] SPLITTERMINATESTATUSES = new String[][] {new String[] { SPLITTERMINATE_DEFAULT, "Not Submitted" },
-																			new String[] { SPLIT_SUBMITTED, "Split SC Submitted" },
-																			new String[] { TERMINATE_SUBMITTED, "Terminate SC Submitted" },
-																			new String[] { SPLIT_APPROVED, "Split Approved" },
-																			new String[] { TERMINATE_APPROVED, "Terminate Approved" },
-																			new String[] { SPLIT_REJECTED, "Split Rejected" },
-																			new String[] { TERMINATE_REJECTED, "Terminate Rejected" }};
-	
-	//Sub-Contract Status
+	public static final String[][] SPLITTERMINATESTATUSES = new String[][] { new String[] { SPLITTERMINATE_DEFAULT, "Not Submitted" }, new String[] { SPLIT_SUBMITTED, "Split SC Submitted" }, new String[] { TERMINATE_SUBMITTED, "Terminate SC Submitted" }, new String[] { SPLIT_APPROVED, "Split Approved" }, new String[] { TERMINATE_APPROVED, "Terminate Approved" }, new String[] { SPLIT_REJECTED, "Split Rejected" }, new String[] { TERMINATE_REJECTED, "Terminate Rejected" } };
+
+	// Sub-Contract Status
 	public static final String SCSTATUS_500_AWARDED = "500";
 	public static final String SCSTATUS_340_AWARD_REJECTED = "340";
 	public static final String SCSTATUS_330_AWARD_SUBMITTED = "330";
 	public static final String SCSTATUS_160_TA_READY = "160";
 	public static final String SCSTATUS_100_PACKAGE_CREATED = "100";
 
-	//SC Document Signed Status
+	// SC Document Signed Status
 	public static final String SC_DOC_SIGNED = "Y";
 	public static final String SC_DOC_NOT_SIGNED = "N";
-	
-	
-	//SC Payment Status
+
+	// SC Payment Status
 	public static final String FINAL_PAYMENT = "F";
 	public static final String INTERIM_PAYMENT = "I";
 	public static final String DIRECT_PAYMENT = "D";
 	public static final String NO_PAYMENT = "N";
-	
+
 	private JobInfo jobInfo;
-	
+
 	private String packageNo;
 	private String description;
 	private String packageType;
 	private String vendorNo;
 	private String packageStatus;
-	
+
 	private Integer subcontractStatus; // <500 = not awarded , >= 500 = awarded
 	private String subcontractorNature;
-	
+
 	private Double originalSubcontractSum;
 	private Double approvedVOAmount;
 	private Double remeasuredSubcontractSum;
 	private String approvalRoute;
-	private String retentionTerms;	
+	private String retentionTerms;
 	private Double maxRetentionPercentage;
 	private Double interimRentionPercentage;
 	private Double mosRetentionPercentage;
@@ -129,7 +131,7 @@ public class Subcontract extends BasePersistedObject{
 	private Double retentionReleased;
 	private String paymentInformation;
 	private String paymentCurrency;
-	private Double exchangeRate;//	4
+	private Double exchangeRate;
 	private String paymentTerms;
 	private String subcontractTerm;
 	private String cpfCalculation;
@@ -143,7 +145,7 @@ public class Subcontract extends BasePersistedObject{
 	private String paymentTermsDescription;
 	private String notes;
 	private Integer workscope;
-	
+
 	private Date scCreatedDate;
 	private Date latestAddendumValueUpdatedDate;
 	private Date firstPaymentCertIssuedDate;
@@ -151,7 +153,7 @@ public class Subcontract extends BasePersistedObject{
 	private Date finalPaymentIssuedDate;
 	private Date scAwardApprovalRequestSentDate;
 	private Date scApprovalDate;
-	
+
 	private Boolean labourIncludedContract;
 	private Boolean plantIncludedContract;
 	private Boolean materialIncludedContract;
@@ -160,16 +162,11 @@ public class Subcontract extends BasePersistedObject{
 	private Double totalCumWorkDoneAmount;
 	private Double totalPostedCertifiedAmount;
 	private Double totalCumCertifiedAmount;
-	
+
 	private Double totalCCPostedCertAmount;
 	private Double totalMOSPostedCertAmount;
-	
-	
-	/**
-	 * koeyyeung
-	 * added on 03 Dec, 2013
-	 * requested by Finance
-	 */
+
+	// Dates
 	private Date requisitionApprovedDate;
 	private Date tenderAnalysisApprovedDate;
 	private Date preAwardMeetingDate;
@@ -178,148 +175,115 @@ public class Subcontract extends BasePersistedObject{
 	private Date scDocLegalDate;
 	private Date workCommenceDate;
 	private Date onSiteStartDate;
-	
-	@Transient
-	public static String getLUMPSUM_RETENTION() {
-		return RETENTION_LUMPSUM;
-	}
 
-	@Transient
-	public static String getORIGINAL_RETENTION() {
-		return RETENTION_ORIGINAL;
-	}
-
-	@Transient
-	public static String getREVISED_RETENTION() {
-		return RETENTION_REVISED;
-	}
-
-	@Transient
-	public static String getADDENDUM_SUBMITTED() {
-		return ADDENDUM_SUBMITTED;
-	}
-
-	@Transient
-	public static String getADDENDUM_NOT_SUBMITTED() {
-		return ADDENDUM_NOT_SUBMITTED;
-	}
-
-	@Transient
-	public static String getMAJOR() {
-		return MAJOR;
-	}
-
-	@Transient
-	public static String getMINOR() {
-		return MINOR;
-	}
-
-	@Transient
-	public static String getCONSULTANCY_AGREEMENT() {
-		return CONSULTANCY_AGREEMENT;
-	}
-
-	@Transient
-	public static String getINTERNAL_TRADING() {
-		return INTERNAL_TRADING;
-	}
-	
 	@Transient
 	public boolean isAwarded() {
-		if (subcontractStatus == null)
-			return false;
-		
-		return (subcontractStatus >= 500);
+		return (subcontractStatus == null ? false : (subcontractStatus >= 500));
 	}
 	
 	@Transient
 	public Double getSubcontractSum() {
-		return (remeasuredSubcontractSum!=null && approvedVOAmount!=null)?(CalculationUtil.round(remeasuredSubcontractSum+approvedVOAmount, 2)):0.00;		
+		return getRemeasuredSubcontractSum() + getApprovedVOAmount();
 	}
 	
 	@Transient
-	public String getSubcontractType() {
+	public Double getRetentionBalance() {
+		return getAccumlatedRetention() + getRetentionReleased();
+	}
+	
+	/**
+	 * Net Certified Amount = Total Posted Certified Amount + Total Posted Contra Charge Amount - Retention Balance
+	 *
+	 * @return
+	 * @author	tikywong
+	 * @since	Aug 1, 2016 5:16:58 PM
+	 */
+	@Transient
+	public Double getTotalNetPostedCertifiedAmount(){
+		return getTotalPostedCertifiedAmount() + getTotalCCPostedCertAmount() - getRetentionBalance();
+	}
+	
+	@Transient
+	public Double getTotalProvisionAmount(){
+		return getTotalCumWorkDoneAmount() - getTotalPostedCertifiedAmount();
+	}
+	
+	@Transient
+	public Double getBalanceToCompleteAmount(){
+		return getSubcontractSum() - getTotalCumWorkDoneAmount();
+	}
+	
+	@Transient
+	public String getSplitTerminateStatusText(){
+		return convertSplitTerminateStatus(getSplitTerminateStatus());
+	}
+	
+	@Transient
+	public String getPaymentStatusText(){
+		return convertPaymentStatus(getPaymentStatus());
+	}
+	
+	@Transient
+ 	public String getSubcontractType() {
 		String scType = "-";
 		boolean isFirst = true;
-		if(labourIncludedContract != null && labourIncludedContract.booleanValue()){
-				scType = "Labour";
-				isFirst = false;
+		if (labourIncludedContract != null && labourIncludedContract.booleanValue()) {
+			scType = "Labour";
+			isFirst = false;
 		}
-		if(plantIncludedContract != null && plantIncludedContract.booleanValue()){
-			if(isFirst){
+		if (plantIncludedContract != null && plantIncludedContract.booleanValue()) {
+			if (isFirst) {
 				scType = "Plant";
 				isFirst = false;
-			}else 
+			} else
 				scType = scType + " & Plant";
 		}
-		if(materialIncludedContract != null && materialIncludedContract.booleanValue()){
-			if(isFirst)
+		if (materialIncludedContract != null && materialIncludedContract.booleanValue()) {
+			if (isFirst)
 				scType = "Material";
 			else
 				scType = scType + " & Material";
 		}
-		return scType;	
+		return scType;
 	}
 
 	public static String convertSplitTerminateStatus(String splitTerminateStatus) {
-		if(splitTerminateStatus!=null && !"".equals(splitTerminateStatus)){
+		if (splitTerminateStatus != null && !"".equals(splitTerminateStatus)) {
 			int status = Integer.parseInt(splitTerminateStatus);
 			return Subcontract.SPLITTERMINATESTATUSES[status][1];
 		}
 		return "";
 	}
-	
-	public static String convertPaymentType(String paymentType){
-		if(paymentType!=null && paymentType.trim().length()==1){
-			if ("I".equals(paymentType.trim()) || "D".equals(paymentType.trim()))
+
+	/**
+	 * Payment Status: I - Interim, F - Final, D - Direct Payment, " " - No Payment 
+	 *
+	 * @param paymentStatus
+	 * @return
+	 * @author	tikywong
+	 * @since	Aug 1, 2016 5:06:20 PM
+	 */
+	public static String convertPaymentStatus(String paymentStatus) {
+		if (paymentStatus != null && paymentStatus.trim().length() == 1) {
+			if ("I".equals(paymentStatus.trim()) || "D".equals(paymentStatus.trim()))
 				return "Interim";
-			else if ("F".equals(paymentType.trim()))
-				return "Final";	
-			
+			else if ("F".equals(paymentStatus.trim()))
+				return "Final";
+
 		}
 		return "";
-	}
-	
-	@Override
-	public String toString() {
-		return "Subcontract [jobId=" + jobInfo.getId() + ", packageNo=" + packageNo + ", description=" + description + ", packageType="
-				+ packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus + ", subcontractStatus="
-				+ subcontractStatus + ", subcontractorNature=" + subcontractorNature + ", originalSubcontractSum="
-				+ originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount + ", remeasuredSubcontractSum="
-				+ remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute + ", retentionTerms=" + retentionTerms
-				+ ", maxRetentionPercentage=" + maxRetentionPercentage + ", interimRentionPercentage="
-				+ interimRentionPercentage + ", mosRetentionPercentage=" + mosRetentionPercentage + ", retentionAmount="
-				+ retentionAmount + ", accumlatedRetention=" + accumlatedRetention + ", retentionReleased="
-				+ retentionReleased + ", paymentInformation=" + paymentInformation + ", paymentCurrency="
-				+ paymentCurrency + ", exchangeRate=" + exchangeRate + ", paymentTerms=" + paymentTerms
-				+ ", subcontractTerm=" + subcontractTerm + ", cpfCalculation=" + cpfCalculation + ", cpfBasePeriod="
-				+ cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear + ", formOfSubcontract=" + formOfSubcontract
-				+ ", internalJobNo=" + internalJobNo + ", paymentStatus=" + paymentStatus + ", submittedAddendum="
-				+ submittedAddendum + ", splitTerminateStatus=" + splitTerminateStatus + ", paymentTermsDescription="
-				+ paymentTermsDescription + ", scCreatedDate=" + scCreatedDate + ", latestAddendumValueUpdatedDate="
-				+ latestAddendumValueUpdatedDate + ", firstPaymentCertIssuedDate=" + firstPaymentCertIssuedDate
-				+ ", lastPaymentCertIssuedDate=" + lastPaymentCertIssuedDate + ", finalPaymentIssuedDate="
-				+ finalPaymentIssuedDate + ", scAwardApprovalRequestSentDate=" + scAwardApprovalRequestSentDate
-				+ ", scApprovalDate=" + scApprovalDate + ", labourIncludedContract=" + labourIncludedContract
-				+ ", plantIncludedContract=" + plantIncludedContract + ", materialIncludedContract="
-				+ materialIncludedContract + ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount
-				+ ", totalCumWorkDoneAmount=" + totalCumWorkDoneAmount + ", totalPostedCertifiedAmount="
-				+ totalPostedCertifiedAmount + ", totalCumCertifiedAmount=" + totalCumCertifiedAmount
-				+ ", totalCCPostedCertAmount=" + totalCCPostedCertAmount + ", totalMOSPostedCertAmount="
-				+ totalMOSPostedCertAmount + ", requisitionApprovedDate=" + requisitionApprovedDate
-				+ ", tenderAnalysisApprovedDate=" + tenderAnalysisApprovedDate + ", preAwardMeetingDate="
-				+ preAwardMeetingDate + ", loaSignedDate=" + loaSignedDate + ", scDocScrDate=" + scDocScrDate
-				+ ", scDocLegalDate=" + scDocLegalDate + ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate="
-				+ onSiteStartDate+ ", notes=" + notes + ", toString()=" + super.toString() + "]";
 	}
 
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SUBCONTRACT_GEN")
-	public Long getId(){return super.getId();}
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "SUBCONTRACT_GEN")
+	public Long getId() {
+		return super.getId();
+	}
 
-	@JsonProperty("packageNo")
-	@Column(name = "packageNo", length = 10)
+	@Column(name = "packageNo",
+			length = 10)
 	public String getPackageNo() {
 		return packageNo;
 	}
@@ -328,7 +292,6 @@ public class Subcontract extends BasePersistedObject{
 		this.packageNo = packageNo;
 	}
 
-	@JsonProperty("description")
 	@Column(name = "description")
 	public String getDescription() {
 		return description;
@@ -338,7 +301,8 @@ public class Subcontract extends BasePersistedObject{
 		this.description = description;
 	}
 
-	@Column(name = "packageType", length = 4)
+	@Column(name = "packageType",
+			length = 4)
 	public String getPackageType() {
 		return packageType;
 	}
@@ -357,7 +321,8 @@ public class Subcontract extends BasePersistedObject{
 		this.vendorNo = vendorNo;
 	}
 
-	@Column(name = "packageStatus", length = 3)
+	@Column(name = "packageStatus",
+			length = 3)
 	public String getPackageStatus() {
 		return packageStatus;
 	}
@@ -371,11 +336,13 @@ public class Subcontract extends BasePersistedObject{
 	public Integer getSubcontractStatus() {
 		return subcontractStatus;
 	}
+
 	public void setSubcontractStatus(Integer scStatus) {
 		this.subcontractStatus = scStatus;
 	}
 
-	@Column(name = "scNature", length = 4)
+	@Column(name = "scNature",
+			length = 4)
 	public String getSubcontractorNature() {
 		return subcontractorNature;
 	}
@@ -384,98 +351,109 @@ public class Subcontract extends BasePersistedObject{
 		this.subcontractorNature = subcontractorNature;
 	}
 
-	@JsonProperty("originalSCSum")
 	@Column(name = "originalSCSum")
 	public Double getOriginalSubcontractSum() {
-		return (originalSubcontractSum!=null?CalculationUtil.round(originalSubcontractSum, 2):0.00);
+		return (originalSubcontractSum != null ? CalculationUtil.round(originalSubcontractSum, 2) : 0.00);
 	}
+
 	public void setOriginalSubcontractSum(Double originalContractSum) {
-		this.originalSubcontractSum = (originalContractSum!=null?CalculationUtil.round(originalContractSum, 2):0.00);
+		this.originalSubcontractSum = (originalContractSum != null ? CalculationUtil.round(originalContractSum, 2) : 0.00);
 	}
 
 	@Column(name = "approvedVOAmount")
 	public Double getApprovedVOAmount() {
-		return (approvedVOAmount!=null?CalculationUtil.round(approvedVOAmount, 2):0.00);
+		return (approvedVOAmount != null ? CalculationUtil.round(approvedVOAmount, 2) : 0.00);
 	}
+
 	public void setApprovedVOAmount(Double approvedVO) {
-		this.approvedVOAmount = (approvedVO!=null?CalculationUtil.round(approvedVO, 2):0.00);
+		this.approvedVOAmount = (approvedVO != null ? CalculationUtil.round(approvedVO, 2) : 0.00);
 	}
 
 	@Column(name = "remeasuredSCSum")
 	public Double getRemeasuredSubcontractSum() {
-		return (remeasuredSubcontractSum!=null?CalculationUtil.round(remeasuredSubcontractSum, 2):0.00);
-	}
-	public void setRemeasuredSubcontractSum(Double remeasuredContractSum) {
-		this.remeasuredSubcontractSum = (remeasuredContractSum!=null?CalculationUtil.round(remeasuredContractSum, 2):0.00);
+		return (remeasuredSubcontractSum != null ? CalculationUtil.round(remeasuredSubcontractSum, 2) : 0.00);
 	}
 
-	@Column(name = "approvalRoute", length = 5)
+	public void setRemeasuredSubcontractSum(Double remeasuredContractSum) {
+		this.remeasuredSubcontractSum = (remeasuredContractSum != null ? CalculationUtil.round(remeasuredContractSum, 2) : 0.00);
+	}
+
+	@Column(name = "approvalRoute",
+			length = 5)
 	public String getApprovalRoute() {
 		return approvalRoute;
 	}
-	
+
 	public void setApprovalRoute(String approvalRoute) {
 		this.approvalRoute = approvalRoute;
 	}
 
-	@Column(name = "retentionTerms", length = 30)
+	@Column(name = "retentionTerms",
+			length = 30)
 	public String getRetentionTerms() {
 		return retentionTerms;
 	}
-	
+
 	public void setRetentionTerms(String retentionTerms) {
 		this.retentionTerms = retentionTerms;
 	}
 
 	@Column(name = "maxRetPercent")
 	public Double getMaxRetentionPercentage() {
-		return (maxRetentionPercentage!=null?CalculationUtil.round(maxRetentionPercentage, 2):0.00);
+		return (maxRetentionPercentage != null ? CalculationUtil.round(maxRetentionPercentage, 2) : 0.00);
 	}
+
 	public void setMaxRetentionPercentage(Double maxiRetention) {
-		this.maxRetentionPercentage = (maxiRetention!=null?CalculationUtil.round(maxiRetention, 2):0.00);
+		this.maxRetentionPercentage = (maxiRetention != null ? CalculationUtil.round(maxiRetention, 2) : 0.00);
 	}
 
 	@Column(name = "interimRetPerent")
 	public Double getInterimRentionPercentage() {
-		return (interimRentionPercentage!=null?CalculationUtil.round(interimRentionPercentage, 2):0.00);
+		return (interimRentionPercentage != null ? CalculationUtil.round(interimRentionPercentage, 2) : 0.00);
 	}
+
 	public void setInterimRentionPercentage(Double interimRention) {
-		this.interimRentionPercentage = (interimRention!=null?CalculationUtil.round(interimRention, 2):0.00);
+		this.interimRentionPercentage = (interimRention != null ? CalculationUtil.round(interimRention, 2) : 0.00);
 	}
 
 	@Column(name = "mosRetPerent")
 	public Double getMosRetentionPercentage() {
-		return (mosRetentionPercentage!=null?CalculationUtil.round(mosRetentionPercentage, 2):0.00);
+		return (mosRetentionPercentage != null ? CalculationUtil.round(mosRetentionPercentage, 2) : 0.00);
 	}
+
 	public void setMosRetentionPercentage(Double mosRetentionPercentage) {
-		this.mosRetentionPercentage = (mosRetentionPercentage!=null?CalculationUtil.round(mosRetentionPercentage, 2):0.00);
+		this.mosRetentionPercentage = (mosRetentionPercentage != null ? CalculationUtil.round(mosRetentionPercentage, 2) : 0.00);
 	}
 
 	@Column(name = "retAmount")
 	public Double getRetentionAmount() {
-		return (retentionAmount!=null?CalculationUtil.round(retentionAmount, 2):0.00);
+		return (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
 	}
+
 	public void setRetentionAmount(Double retentionAmount) {
-		this.retentionAmount = (retentionAmount!=null?CalculationUtil.round(retentionAmount, 2):0.00);
+		this.retentionAmount = (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
 	}
 
 	@Column(name = "accumlatedRet")
 	public Double getAccumlatedRetention() {
-		return (accumlatedRetention!=null?CalculationUtil.round(accumlatedRetention, 2):0.00);
+		return (accumlatedRetention != null ? CalculationUtil.round(accumlatedRetention, 2) : 0.00);
 	}
+
 	public void setAccumlatedRetention(Double accumlatedRetentionAmount) {
-		this.accumlatedRetention = (accumlatedRetentionAmount!=null?CalculationUtil.round(accumlatedRetentionAmount, 2):0.00);
+		this.accumlatedRetention = (accumlatedRetentionAmount != null ? CalculationUtil.round(accumlatedRetentionAmount, 2) : 0.00);
 	}
 
 	@Column(name = "retRelease")
 	public Double getRetentionReleased() {
-		return (retentionReleased!=null?CalculationUtil.round(retentionReleased, 2):0.00);
-	}
-	public void setRetentionReleased(Double retentionReleased) {
-		this.retentionReleased = (retentionReleased!=null?CalculationUtil.round(retentionReleased, 2):0.00);
+		return (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
 	}
 
-	@Column(name = "paymentInfo", length = 50)
+	public void setRetentionReleased(Double retentionReleased) {
+		this.retentionReleased = (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
+	}
+
+	@Column(name = "paymentInfo",
+			length = 50)
 	public String getPaymentInformation() {
 		return paymentInformation;
 	}
@@ -484,7 +462,8 @@ public class Subcontract extends BasePersistedObject{
 		this.paymentInformation = paymentInfor;
 	}
 
-	@Column(name = "paymentCurrency", length = 3)
+	@Column(name = "paymentCurrency",
+			length = 3)
 	public String getPaymentCurrency() {
 		return paymentCurrency;
 	}
@@ -495,13 +474,15 @@ public class Subcontract extends BasePersistedObject{
 
 	@Column(name = "exchangeRate")
 	public Double getExchangeRate() {
-		return (exchangeRate!=null?CalculationUtil.round(exchangeRate, 4):0.00);
-	}
-	public void setExchangeRate(Double exchangeRate) {
-		this.exchangeRate = (exchangeRate!=null?CalculationUtil.round(exchangeRate, 4):0.00);
+		return (exchangeRate != null ? CalculationUtil.round(exchangeRate, 4) : 0.00);
 	}
 
-	@Column(name = "paymentTerms", length = 3)
+	public void setExchangeRate(Double exchangeRate) {
+		this.exchangeRate = (exchangeRate != null ? CalculationUtil.round(exchangeRate, 4) : 0.00);
+	}
+
+	@Column(name = "paymentTerms",
+			length = 3)
 	public String getPaymentTerms() {
 		return paymentTerms;
 	}
@@ -510,7 +491,8 @@ public class Subcontract extends BasePersistedObject{
 		this.paymentTerms = paymentTerm;
 	}
 
-	@Column(name = "scTerm", length = 15)
+	@Column(name = "scTerm",
+			length = 15)
 	public String getSubcontractTerm() {
 		return subcontractTerm;
 	}
@@ -519,11 +501,12 @@ public class Subcontract extends BasePersistedObject{
 		this.subcontractTerm = subcontractTerms;
 	}
 
-	@Column(name = "cpfCalculation", length = 20)
+	@Column(name = "cpfCalculation",
+			length = 20)
 	public String getCpfCalculation() {
 		return cpfCalculation;
 	}
-	
+
 	public void setCpfCalculation(String cpfCalculation) {
 		this.cpfCalculation = cpfCalculation;
 	}
@@ -541,11 +524,13 @@ public class Subcontract extends BasePersistedObject{
 	public Integer getCpfBaseYear() {
 		return cpfBaseYear;
 	}
+
 	public void setCpfBaseYear(Integer cpfBaseYear) {
 		this.cpfBaseYear = cpfBaseYear;
 	}
 
-	@Column(name = "formOfSubcontract", length = 22)
+	@Column(name = "formOfSubcontract",
+			length = 22)
 	public String getFormOfSubcontract() {
 		return formOfSubcontract;
 	}
@@ -554,7 +539,8 @@ public class Subcontract extends BasePersistedObject{
 		this.formOfSubcontract = formOfSubcontract;
 	}
 
-	@Column(name = "internalJobNo", length = 12)
+	@Column(name = "internalJobNo",
+			length = 12)
 	public String getInternalJobNo() {
 		return internalJobNo;
 	}
@@ -563,7 +549,8 @@ public class Subcontract extends BasePersistedObject{
 		this.internalJobNo = internalJobNo;
 	}
 
-	@Column(name = "paymentStatus", length = 1)
+	@Column(name = "paymentStatus",
+			length = 1)
 	public String getPaymentStatus() {
 		return paymentStatus;
 	}
@@ -572,7 +559,8 @@ public class Subcontract extends BasePersistedObject{
 		this.paymentStatus = paymentStatus;
 	}
 
-	@Column(name = "submittedAddendum", length = 1)
+	@Column(name = "submittedAddendum",
+			length = 1)
 	public String getSubmittedAddendum() {
 		return submittedAddendum;
 	}
@@ -608,7 +596,8 @@ public class Subcontract extends BasePersistedObject{
 		this.materialIncludedContract = materialIncludedContract;
 	}
 
-	@Column(name = "splitTerminateStatus", length = 1)
+	@Column(name = "splitTerminateStatus",
+			length = 1)
 	public String getSplitTerminateStatus() {
 		return splitTerminateStatus;
 	}
@@ -617,7 +606,8 @@ public class Subcontract extends BasePersistedObject{
 		this.splitTerminateStatus = splitTerminateStatus;
 	}
 
-	@Column(name = "paymentTermsDescription", length = 255)
+	@Column(name = "paymentTermsDescription",
+			length = 255)
 	public String getPaymentTermsDescription() {
 		return paymentTermsDescription;
 	}
@@ -631,6 +621,7 @@ public class Subcontract extends BasePersistedObject{
 	public Date getScCreatedDate() {
 		return scCreatedDate;
 	}
+
 	public void setScCreatedDate(Date scCreatedDate) {
 		this.scCreatedDate = scCreatedDate;
 	}
@@ -697,56 +688,56 @@ public class Subcontract extends BasePersistedObject{
 
 	@Column(name = "totalPostedCertAmt")
 	public Double getTotalPostedCertifiedAmount() {
-		return (totalPostedCertifiedAmount!=null?CalculationUtil.round(totalPostedCertifiedAmount, 2):0.00);
+		return (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
 	}
 
 	public void setTotalPostedCertifiedAmount(Double totalPostedCertifiedAmount) {
-		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount!=null?CalculationUtil.round(totalPostedCertifiedAmount, 2):0.00);
+		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalCumCertAmt")
 	public Double getTotalCumCertifiedAmount() {
-		return (totalCumCertifiedAmount!=null?CalculationUtil.round(totalCumCertifiedAmount, 2):0.00);
+		return (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
 	}
 
 	public void setTotalCumCertifiedAmount(Double totalCumCertifiedAmount) {
-		this.totalCumCertifiedAmount = (totalCumCertifiedAmount!=null?CalculationUtil.round(totalCumCertifiedAmount, 2):0.00);
+		this.totalCumCertifiedAmount = (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalPostedWDAmt")
 	public Double getTotalPostedWorkDoneAmount() {
-		return (totalPostedWorkDoneAmount!=null?CalculationUtil.round(totalPostedWorkDoneAmount, 2):0.00);
+		return (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
 	}
 
 	public void setTotalPostedWorkDoneAmount(Double totalPostedWorkDoneAmount) {
-		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount!=null?CalculationUtil.round(totalPostedWorkDoneAmount, 2):0.00);
+		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalCumWDAmt")
 	public Double getTotalCumWorkDoneAmount() {
-		return (totalCumWorkDoneAmount!=null?CalculationUtil.round(totalCumWorkDoneAmount, 2):0.00);
+		return (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
 	}
 
 	public void setTotalCumWorkDoneAmount(Double totalCumWorkDoneAmount) {
-		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount!=null?CalculationUtil.round(totalCumWorkDoneAmount, 2):0.00);
+		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalCCPostedCertAmt")
 	public Double getTotalCCPostedCertAmount() {
-		return (totalCCPostedCertAmount!=null?CalculationUtil.round(totalCCPostedCertAmount, 2):0.00);
+		return (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
 	}
 
 	public void setTotalCCPostedCertAmount(Double totalCCPostedCertAmount) {
-		this.totalCCPostedCertAmount = (totalCCPostedCertAmount!=null?CalculationUtil.round(totalCCPostedCertAmount, 2):0.00);
+		this.totalCCPostedCertAmount = (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalMOSPostedCertAmt")
 	public Double getTotalMOSPostedCertAmount() {
-		return (totalMOSPostedCertAmount!=null?CalculationUtil.round(totalMOSPostedCertAmount, 2):0.00);
+		return (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
 	}
 
 	public void setTotalMOSPostedCertAmount(Double totalMOSPostedCertAmount) {
-		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount!=null?CalculationUtil.round(totalMOSPostedCertAmount, 2):0.00);
+		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
 	}
 
 	@Column(name = "REQUISITION_APPROVED_DATE")
@@ -768,7 +759,7 @@ public class Subcontract extends BasePersistedObject{
 	public void setTenderAnalysisApprovedDate(Date tenderAnalysisApprovedDate) {
 		this.tenderAnalysisApprovedDate = tenderAnalysisApprovedDate;
 	}
-	
+
 	@Column(name = "PREAWARD_MEETING_DATE")
 	@Temporal(value = TemporalType.DATE)
 	public Date getPreAwardMeetingDate() {
@@ -789,7 +780,7 @@ public class Subcontract extends BasePersistedObject{
 		this.loaSignedDate = loaSignedDate;
 	}
 
-	@Column(name= "SC_DOC_SCR_DATE")
+	@Column(name = "SC_DOC_SCR_DATE")
 	@Temporal(value = TemporalType.DATE)
 	public Date getScDocScrDate() {
 		return scDocScrDate;
@@ -829,7 +820,8 @@ public class Subcontract extends BasePersistedObject{
 		this.onSiteStartDate = onSiteStartDate;
 	}
 
-	@Column(name = "NOTES", length = 1000)
+	@Column(name = "NOTES",
+			length = 1000)
 	public String getNotes() {
 		return notes;
 	}
@@ -837,7 +829,7 @@ public class Subcontract extends BasePersistedObject{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
 	@Column(name = "WORK_SCOPE")
 	public Integer getWorkscope() {
 		return workscope;
@@ -847,10 +839,10 @@ public class Subcontract extends BasePersistedObject{
 		this.workscope = workscope;
 	}
 
-	
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "Job_Info_ID", foreignKey = @ForeignKey(name = "FK_Subcontract_JobInfo_PK"))
+	@JoinColumn(name = "Job_Info_ID",
+				foreignKey = @ForeignKey(name = "FK_Subcontract_JobInfo_PK"))
 	public JobInfo getJobInfo() {
 		return jobInfo;
 	}
@@ -859,31 +851,27 @@ public class Subcontract extends BasePersistedObject{
 		this.jobInfo = jobInfo;
 	}
 
-	
-
-	public static class RepackagingType{
+	public static class RepackagingType {
 		public static final String Type1 = "1";
 		public static final String Type2 = "2";
 		public static final String Type3 = "3";
-		
-		public static boolean isType1(String type){
+
+		public static boolean isType1(String type) {
 			return Type1.equals(type);
 		}
-		public static boolean isType2(String type){
+
+		public static boolean isType2(String type) {
 			return Type2.equals(type);
 		}
-		public static boolean isType3(String type){
+
+		public static boolean isType3(String type) {
 			return Type3.equals(type);
 		}
 	}
-	public static class ApprovalResult{
-		public static final String Approved="A";
-		public static final String Rejected="R";
-		public static boolean isApproved(String approvalResult){
-			return Approved.equals(approvalResult);
-		}
-		public static boolean isRejected(String approvalResult){
-			return Rejected.equals(approvalResult);
-		}
+
+	@Override
+	public String toString() {
+		return "Subcontract [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description + ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus + ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature + ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount + ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute + ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage + ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage=" + mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention=" + accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation=" + paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate + ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation=" + cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear + ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus=" + paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus=" + splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription + ", notes=" + notes + ", workscope=" + workscope + ", scCreatedDate=" + scCreatedDate + ", latestAddendumValueUpdatedDate=" + latestAddendumValueUpdatedDate + ", firstPaymentCertIssuedDate=" + firstPaymentCertIssuedDate + ", lastPaymentCertIssuedDate=" + lastPaymentCertIssuedDate + ", finalPaymentIssuedDate=" + finalPaymentIssuedDate + ", scAwardApprovalRequestSentDate=" + scAwardApprovalRequestSentDate + ", scApprovalDate=" + scApprovalDate + ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract=" + plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract + ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount=" + totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount + ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount=" + totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount + ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate=" + tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate=" + loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate + ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + "]";
 	}
+
 }

@@ -299,16 +299,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	String testGetBqItemsByPage_bqDesc;
 	@Value("${BQRepositoryControllerTestData.testGetBqItemsByPage_sql}")
 	String testGetBqItemsByPage_sql;
-	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#getBqItemsByPage(int)}.
-	 */
-	public void initGetBqItemsByPage(){
-		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
-		try {//cachedBQEnquiry first
-			bqService.obtainBQItem(testGetBqItemsByPage_jobNumber, testGetBqItemsByPage_billNo, testGetBqItemsByPage_subbillNo, testGetBqItemsByPage_pageNo, testGetBqItemsByPage_itemNo, testGetBqItemsByPage_bqDesc);
-		} catch (Exception e) {e.printStackTrace();
-		}
-	}
+
 	public Map<String, Object> testGetBqItemsByPage() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
@@ -790,27 +781,7 @@ public class BQRepositoryControllerTestData extends ControllerTestCase.TestDataB
 	String testObtainResourcesByPage_packageType;
 	@Value("${BQRepositoryControllerTestData.testObtainResourcesByPage_sql}")
 	String testObtainResourcesByPage_sql;
-	/**
-	 * Test data for {@link com.gammon.qs.web.BQRepositoryController#obtainResourcesByPage(int)}.
-	 */
-	public void initObtainResourcesByPage(){
-		ResourceWrapper resourceWrapper = new ResourceWrapper();
-		resourceWrapper.setJobNumber(testObtainResourcesByWrapper_jobNumber);
-		resourceWrapper.setBillNo(testObtainResourcesByWrapper_billNo);
-		resourceWrapper.setSubBillNo(testObtainResourcesByWrapper_subBillNo);
-		resourceWrapper.setPageNo(testObtainResourcesByWrapper_pageNo);
-		resourceWrapper.setItemNo(testObtainResourcesByWrapper_itemNo);
-		resourceWrapper.setSubsidiaryCode(testObtainResourcesByWrapper_subsidiaryCode);
-		resourceWrapper.setObjectCode(testObtainResourcesByWrapper_objectCode);
-		resourceWrapper.setResDescription(testObtainResourcesByWrapper_resDescription);
-		resourceWrapper.setPackageNo(testObtainResourcesByWrapper_packageNo);
-		resourceWrapper.setPackageType(testObtainResourcesByWrapper_packageType);
-		BpiItemService bqService = applicationContext.getBean(BpiItemService.class);
-		try {//create cachedResourceEnquiry
-			bqService.obtainResourcesByWrapper(resourceWrapper);
-		} catch (Exception e) {e.printStackTrace();
-		}
-	}
+
 	public Map<String, Object> testObtainResourcesByPage() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}

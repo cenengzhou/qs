@@ -12,13 +12,11 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
-/**
- * modified by matthewlam Bug Fix #92: rearrange column names and order for SC
- * Provision History Panel
- */
 @Entity
 @Table(name = "PROVISION_POSTING_HIST")
 @OptimisticLocking(type = OptimisticLockType.NONE)
@@ -27,21 +25,31 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 	private static final long serialVersionUID = 8537068443776662258L;
 
 	private SubcontractDetail subcontractDetail;
+
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private Integer postedMonth;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private Integer postedYr;
 
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private String jobNo;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private String packageNo;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private String objectCode;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private String subsidiaryCode;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private Double scRate;
 	private Double cumLiabilitiesQty;
+	@JsonView(ProvisionPostingHistView.Native.class)
 	private Double cumLiabilitiesAmount;
-	private Double postedCertAmount;
 	private Double postedCertQty;
+	@JsonView(ProvisionPostingHistView.Native.class)
+	private Double postedCertAmount;
 
-	public ProvisionPostingHist() {
-	}
+	public ProvisionPostingHist() {}
+
 	public ProvisionPostingHist(SubcontractDetail subcontractDetail, Integer postedMonth, Integer postedYr) {
 		super();
 		this.subcontractDetail = subcontractDetail;
@@ -66,16 +74,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 
 	@Transient
 	public Double getProvision() {
-		return cumLiabilitiesAmount != null && postedCertAmount != null ? cumLiabilitiesAmount - postedCertAmount : 0;
-	}
-
-	@Override
-	public String toString() {
-		return "ProvisionPostingHist [subcontractDetail=" + subcontractDetail + ", postedMonth=" + postedMonth + ", postedYr="
-				+ postedYr + ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", objectCode=" + objectCode
-				+ ", subsidiaryCode=" + subsidiaryCode + ", scRate=" + scRate + ", cumLiabilitiesQty="
-				+ cumLiabilitiesQty + ", cumLiabilitiesAmount=" + cumLiabilitiesAmount + ", postedCertAmount="
-				+ postedCertAmount + ", postedCertQty=" + postedCertQty + ", toString()=" + super.toString() + "]";
+		return getCumLiabilitiesAmount() - getPostedCertAmount();
 	}
 
 	@Id
@@ -105,7 +104,9 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.postedYr = postedYr;
 	}
 
-	@Column(name = "objectCode", nullable = false, length = 6)
+	@Column(name = "objectCode",
+			nullable = false,
+			length = 6)
 	public String getObjectCode() {
 		return objectCode;
 	}
@@ -114,7 +115,9 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.objectCode = objectCode;
 	}
 
-	@Column(name = "subsidiaryCode", nullable = false, length = 8)
+	@Column(name = "subsidiaryCode",
+			nullable = false,
+			length = 8)
 	public String getSubsidiaryCode() {
 		return subsidiaryCode;
 	}
@@ -125,46 +128,38 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 
 	@Column(name = "certPostedAmount")
 	public Double getPostedCertAmount() {
-		return (postedCertAmount != null ? CalculationUtil.round(
-				postedCertAmount, 2) : 0.00);
+		return (postedCertAmount != null ? CalculationUtil.round(postedCertAmount, 2) : 0.00);
 	}
 
 	public void setPostedCertAmount(Double postedCertAmount) {
-		this.postedCertAmount = (postedCertAmount != null ? CalculationUtil
-				.round(postedCertAmount, 2) : 0.00);
+		this.postedCertAmount = (postedCertAmount != null ? CalculationUtil.round(postedCertAmount, 2) : 0.00);
 	}
 
 	@Column(name = "liabilitiesCumAmount")
 	public Double getCumLiabilitiesAmount() {
-		return (cumLiabilitiesAmount != null ? CalculationUtil.round(
-				cumLiabilitiesAmount, 2) : 0.00);
+		return (cumLiabilitiesAmount != null ? CalculationUtil.round(cumLiabilitiesAmount, 2) : 0.00);
 	}
 
 	public void setCumLiabilitiesAmount(Double cumLiabilitiesAmount) {
-		this.cumLiabilitiesAmount = (cumLiabilitiesAmount != null ? CalculationUtil
-				.round(cumLiabilitiesAmount, 2) : 0.00);
+		this.cumLiabilitiesAmount = (cumLiabilitiesAmount != null ? CalculationUtil.round(cumLiabilitiesAmount, 2) : 0.00);
 	}
 
 	@Column(name = "certPostedQty")
 	public Double getPostedCertQty() {
-		return (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4)
-				: 0.00);
+		return (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4) : 0.00);
 	}
 
 	public void setPostedCertQty(Double postedCertQty) {
-		this.postedCertQty = (postedCertQty != null ? CalculationUtil.round(
-				postedCertQty, 4) : 0.00);
+		this.postedCertQty = (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4) : 0.00);
 	}
 
 	@Column(name = "liabilitiesCumQty")
 	public Double getCumLiabilitiesQty() {
-		return (cumLiabilitiesQty != null ? CalculationUtil.round(
-				cumLiabilitiesQty, 4) : 0.00);
+		return (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}
 
 	public void setCumLiabilitiesQty(Double cumLiabilitiesQty) {
-		this.cumLiabilitiesQty = (cumLiabilitiesQty != null ? CalculationUtil
-				.round(cumLiabilitiesQty, 4) : 0.00);
+		this.cumLiabilitiesQty = (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}
 
 	@Column(name = "scRate")
@@ -176,7 +171,8 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.scRate = (scRate != null ? CalculationUtil.round(scRate, 4) : 0.00);
 	}
 
-	@Column(name = "jobNo", length = 12)
+	@Column(name = "jobNo",
+			length = 12)
 	public String getJobNo() {
 		return jobNo;
 	}
@@ -185,7 +181,8 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.jobNo = jobNo;
 	}
 
-	@Column(name = "packageNo", length = 10)
+	@Column(name = "packageNo",
+			length = 10)
 	public String getPackageNo() {
 		return packageNo;
 	}
@@ -193,4 +190,10 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
 	}
+
+	@Override
+	public String toString() {
+		return "ProvisionPostingHist [subcontractDetail=" + subcontractDetail + ", postedMonth=" + postedMonth + ", postedYr=" + postedYr + ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", scRate=" + scRate + ", cumLiabilitiesQty=" + cumLiabilitiesQty + ", cumLiabilitiesAmount=" + cumLiabilitiesAmount + ", postedCertAmount=" + postedCertAmount + ", postedCertQty=" + postedCertQty + "]";
+	}
+
 }

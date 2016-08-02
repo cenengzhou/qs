@@ -10,9 +10,6 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +26,6 @@ import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
 @RestController
 @RequestMapping(value = "service/resourceSummary/")
 public class ResourceSummaryController {
-	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;

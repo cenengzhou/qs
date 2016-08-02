@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -36,7 +35,6 @@ import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
  */
 @Repository
 public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapshot> {
-	private Logger logger = Logger.getLogger(this.getClass().getName());
 	@Autowired
 	private StoredProcedureConfig storedProcedureConfig;
 	
@@ -46,7 +44,6 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 
 	@SuppressWarnings("unchecked")
 	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly) throws DataAccessException {
-		logger.info("Job: " + noJob + " Year: " + year + " Month: " + month);
 		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		// Join

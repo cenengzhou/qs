@@ -42,8 +42,18 @@ animate-show,
 
 
 /* Font color */
-.grid-theme-blue { color: blue;  background-color: #aad5ff !important; }
-.grid-blue { color: blue; }
+.grid-theme-blue {
+	color: blue;
+	background-color: #aad5ff !important;
+}
+
+.grid-blue {
+	color: blue;
+}
+
+.red {
+	color: red;
+}
 
 /* Modal Position  */
 .modal {

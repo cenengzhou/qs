@@ -223,7 +223,7 @@ public class SCPackageLogic {
 
 			}
 		}
-		//scPackage.setOriginalSubcontractSum(scSum);	originalSCSum cannot be updated after being awarded
+		//scPackage.setOriginalSubcontractSum(scSum);	originalSubcontractSum cannot be updated after being awarded
 		scPackage.setRemeasuredSubcontractSum(scSum);
 		scPackage.setApprovedVOAmount(approvedVO);
 		

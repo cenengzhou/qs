@@ -1,7 +1,5 @@
 package com.gammon.qs.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseListObj;
-import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseObj;
-import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.model.TenderVariance;
@@ -56,13 +52,11 @@ import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.SubcontractSnapshotHBDao;
 import com.gammon.qs.dao.SubcontractWSDao;
-import com.gammon.qs.dao.SubcontractWorkScopeHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.domain.ProvisionPostingHist;
@@ -74,8 +68,6 @@ import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.domain.SubcontractSnapshot;
-import com.gammon.qs.domain.SubcontractWorkScope;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
@@ -83,32 +75,17 @@ import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.businessLogic.SCDetailsLogic;
 import com.gammon.qs.service.businessLogic.SCPackageLogic;
-import com.gammon.qs.service.jobCost.ScProvisionHistoryExcelGenerator;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.service.subcontractDetail.SubcontractDetailForJobReportGenerator;
 import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
-import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.domainWS.HedgingNotificationWrapper;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.FormatUtil;
-import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
-import com.gammon.qs.wrapper.PaginationWrapper;
-import com.gammon.qs.wrapper.SCDetailProvisionHistoryPaginationWrapper;
-import com.gammon.qs.wrapper.SCDetailProvisionHistoryWrapper;
-import com.gammon.qs.wrapper.SCDetailsWrapper;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.addAddendum.AddAddendumWrapper;
 import com.gammon.qs.wrapper.addendumApproval.AddendumApprovalResponseWrapper;
-import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeEnquiryReportWrapper;
-import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeEnquiryWrapper;
-import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargePaginationWrapper;
-import com.gammon.qs.wrapper.contraChargeEnquiry.ContraChargeSearchingCriteriaWrapper;
 import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrapper;
-import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalPaginationWrapper;
-import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
-import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
@@ -117,8 +94,6 @@ import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
 import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
-
-import net.sf.jasperreports.engine.JRException;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -126,113 +101,94 @@ import net.sf.jasperreports.engine.JRException;
 public class SubcontractService {
 	private transient Logger logger = Logger.getLogger(SubcontractService.class.getName());
 	
+	// Configurations
 	@Autowired
-	private TenderHBDao tenderAnalysisHBDao;
+	private MessageConfig messageConfig;
 	@Autowired
-	private TenderDetailHBDao tenderAnalysisDetailDao;
+	private ExcelWorkbookProcessor excelFileProcessor;
+	
+	// Administration
 	@Autowired
-	private HedgingNotificationWSDao hedgingNotificationWSDao;
-	@Autowired
-	private SubcontractWorkScopeHBDao scWorkScopeHBDao;
-	@Autowired
-	private TenderDetailHBDao tenderAnalysisDetailHBDao;
+	private AdminService adminService;
 	@Autowired
 	private SecurityService securityService;
-	//Job
+	@Autowired
+	private AttachPaymentHBDao attachmentPaymentDao;
+	@Autowired
+	private AppSubcontractStandardTermsHBDao appSubcontractStandardTermsHBDao;
+	
+	// Tender
+	@Autowired
+	private TenderHBDao tenderHBDao;
+	@Autowired
+	private TenderDetailHBDao tenderDetailDao;
+	@Autowired
+	private TenderVarianceHBDao tenderVarianceHBDao;
+	// Job
 	@Autowired
 	private JobInfoHBDao jobHBDao;
 	@Autowired
 	private JobInfoWSDao jobWSDao;
-	//BQ and Resource
+	// BQ and Resource
 	@Autowired
-	private BpiItemService bqRepository;
+	private BpiItemService bpiItemService;
 	@Autowired
-	private BpiItemResourceHBDao resourceHBDao;
-	//Resource Summary
+	private BpiItemResourceHBDao bpiItemResourceHBDao;
+	// Resource Summary
 	@Autowired
-	private ResourceSummaryHBDao bqResourceSummaryDao;
+	private ResourceSummaryService resourceSummaryService;
 	@Autowired
-	private ResourceSummaryService bqResourceSummaryRepositoryHB;
-	//Package
+	private ResourceSummaryHBDao resourceSummaryHBDao;
+	// Subcontract
 	@Autowired
 	private SubcontractHBDao subcontractHBDao;
 	@Autowired
 	private SubcontractWSDao subcontractWSDao;
-	//Payment
+	// Subcontract Snapshot
 	@Autowired
-	private PaymentService paymentHBRepository;
-	@Autowired
-	private PaymentCertHBDao paymentCertHBDao;
-	@Autowired
-	private PaymentCertDetailHBDao scPaymentDetailHBDao;
-	//Detail
-	@Autowired
-	private SubcontractDetailHBDao scDetailsHBDao;
-	//Job Cost
-	@Autowired
-	private JobCostWSDao jobCostDao;
-	//Tender Variance
-	@Autowired
-	private TenderVarianceHBDao tenderVarianceHBDao;
-	
-	//Master List
-	@Autowired
-	private MasterListService masterListRepository;
-	@Autowired
-	private MasterListWSDao masterListWSDao;
-	//Unit
-	@Autowired
-	private UnitService unitRepository;
-	//Account Code
-	@Autowired
-	private AccountCodeWSDao accountCodeWSDao;
-	//System Constant
-	@Autowired
-	private AppSubcontractStandardTermsHBDao systemConstantHBDaoImpl;
-	
-	@Autowired
-	private APWebServiceConnectionDao apWebServiceConnectionDao;
-	@Autowired
-	private ProvisionPostingHistHBDao scDetailProvisionHistoryDao;
-	@Autowired
-	private ExcelWorkbookProcessor excelFileProcessor;
-	@Autowired
-	private AdminService adminServiceImpl;
-	@Autowired
-	private SecurityService securityServiceImpl;
+	private PackageSnapshotGenerationService packageSnapshotGenerationService;
 	@Autowired
 	private SubcontractSnapshotHBDao subcontractSnapshotDao;
-	@Autowired
-	private AttachPaymentHBDao paymentAttachmentDao;
+
+	// Provision
 	@Autowired
 	private ProvisionPostingService provisionPostingService;
 	@Autowired
-	private PackageSnapshotGenerationService packageSnapshotGenerationService;
-	
-	//pagination cache
-	private static final int PAGE_SIZE = GlobalParameter.PAGE_SIZE;
-	private List<SubcontractDetail> cachedSCDetailsList = new ArrayList<SubcontractDetail>();
-	private List<ContraChargeEnquiryWrapper> cachedContraCharge = new ArrayList<ContraChargeEnquiryWrapper>();
-	private List<GetPerformanceAppraisalsResponseObj> cachedPerformanceAppraisalsList = new ArrayList<GetPerformanceAppraisalsResponseObj>();
-	private List<SCDetailProvisionHistoryWrapper> provisionHistoriesWrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
+	private ProvisionPostingHistHBDao provisionPostingHistHBDao;
+	// Payment
+	@Autowired
+	private PaymentService paymentService;
+	@Autowired
+	private PaymentCertHBDao paymentCertHBDao;
+	@Autowired
+	private PaymentCertDetailHBDao paymentCertDetailHBDao;
+	// Detail
+	@Autowired
+	private SubcontractDetailHBDao subcontractDetailHBDao;
 
+	// JDE
+	@Autowired
+	private JobCostWSDao jobCostWSDao;
+	@Autowired
+	private HedgingNotificationWSDao hedgingNotificationWSDao;
+	@Autowired
+	private MasterListService masterListService;
+	@Autowired
+	private MasterListWSDao masterListWSDao;
+	@Autowired
+	private UnitService unitService;
+	@Autowired
+	private AccountCodeWSDao accountCodeWSDao;
+
+	// Approval System
+	@Autowired
+	private APWebServiceConnectionDao apWebServiceConnectionDao;
+
+	private List<UDC> cachedWorkScopeList = new ArrayList<UDC>();
+	
 	static final int RECORDS_PER_PAGE = 100;
 
-	private List<UDC> cachedWorkScopeList= new ArrayList<UDC>();
-	@Autowired
-	private JasperConfig jasperConfig;
-	@Autowired
-	private MessageConfig messageConfig;
-
 	public SubcontractService(){		
-	}
-
-	public List<SubcontractDetail> getCachedSCDetailsList() {
-		return cachedSCDetailsList;
-	}
-
-	public void setCachedSCDetailsList(List<SubcontractDetail> cachedSCDetailsList) {
-		this.cachedSCDetailsList = cachedSCDetailsList;
 	}
 
 	public List<UDC> getCachedWorkScopeList() {
@@ -294,285 +250,6 @@ public class SubcontractService {
 
 	}
 
-	public PaginationWrapper<SCDetailsWrapper> getSCDetailsOfPackage(String jobNumber, String packageNumber, String packageType, boolean isFullSet) throws Exception {
-		List<SubcontractDetail> resultList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNumber);
-		Collections.sort(resultList, new Comparator<SubcontractDetail>(){
-
-			public int compare(SubcontractDetail scDetails1, SubcontractDetail scDetails2) {
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getBillItem() == null)
-					return 0;
-
-				return scDetails1.getBillItem().compareTo(scDetails2.getBillItem());
-			}
-
-		});
-		cachedSCDetailsList.clear();
-		cachedSCDetailsList.addAll(resultList);
-		logger.info("updated cachedSCDetailsList");
-		if(isFullSet)
-			return obtainSCDetailListAtPage(-1);
-		else
-			return obtainSCDetailListAtPage(0);
-	}
-
-	public PaginationWrapper<SCDetailsWrapper> obtainSCDetailListAtPage(int pageNum) throws Exception {
-		PaginationWrapper<SCDetailsWrapper> scDetailsListWrapper = new PaginationWrapper<SCDetailsWrapper>();
-
-		List<SCDetailsWrapper> currentSCDetailsWrapperListGroup1 = new ArrayList<SCDetailsWrapper>();
-		List<SCDetailsWrapper> currentSCDetailsWrapperListGroup2 = new ArrayList<SCDetailsWrapper>();
-		List<SCDetailsWrapper> currentSCDetailsWrapperList = new ArrayList<SCDetailsWrapper>();
-		List<SCDetailsWrapper> scDetailsWrapperList = new ArrayList<SCDetailsWrapper>();
-
-		List<SubcontractDetail> currentSCDetailsList = new ArrayList<SubcontractDetail>();
-
-
-		if(pageNum <0)//full set result list
-		{
-			currentSCDetailsList.addAll(this.cachedSCDetailsList);
-			for (SubcontractDetail scDetail: currentSCDetailsList){
-				SCDetailsWrapper scDetailWrapper = new SCDetailsWrapper();
-				scDetailWrapper.updateSCWrapper(scDetail);
-				currentSCDetailsWrapperListGroup1.add(scDetailWrapper);
-			}
-			scDetailsListWrapper.setCurrentPageContentList(currentSCDetailsWrapperListGroup1);
-			scDetailsListWrapper.setTotalPage(1);		
-			scDetailsListWrapper.setCurrentPage(0);
-			return scDetailsListWrapper;
-		}
-		else
-		{
-			currentSCDetailsList.addAll(this.cachedSCDetailsList);
-			ArrayList<SubcontractDetail> scDetailsGroup1 = new ArrayList<SubcontractDetail>();
-			ArrayList<SubcontractDetail> scDetailsGroup2 = new ArrayList<SubcontractDetail>();
-
-			for (SubcontractDetail scDetail: this.cachedSCDetailsList){
-				if ("BQ".equals(scDetail.getLineType()) || "B1".equals(scDetail.getLineType()) ||
-					"V1".equals(scDetail.getLineType()) || "V2".equals(scDetail.getLineType()) || "V3".equals(scDetail.getLineType()) ||
-					"L1".equals(scDetail.getLineType()) || "L2".equals(scDetail.getLineType()) ||
-					"D1".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType()) ||	
-					"BS".equals(scDetail.getLineType()) || "CF".equals(scDetail.getLineType()) ){
-					scDetailsGroup1.add(scDetail);
-				}
-				else{
-					scDetailsGroup2.add(scDetail);
-				}
-
-			}
-			// calculate subtotal (Group 1)
-			Double toBeApprovedAmount = new Double(0) ;
-			Double totalAmount = new Double(0) ;
-			Double totalProvisionAmt = new Double(0) ;
-			Double totalProjProvisionAmt = new Double(0) ;
-			Double thisProvisionAmt = new Double(0) ;
-			Double thisProjProvisionAmt = new Double(0) ;
-			Double totalCurrentCertAmt = new Double(0);
-			Double totalPostedCertAmt = new Double(0);
-			Double totalCurrentWorkdoneAmt = new Double(0);
-			Double totalPostedWorkdoneAmt = new Double(0);
-			Double thisCurrentCertAmt = new Double(0);
-			Double thisPostedCertAmt = new Double(0);
-			Double thisCurrentWorkdoneAmt = new Double(0);
-			Double thisPostedWorkdoneAmt = new Double(0);
-			Double thisIVAmount = new Double(0);
-			Double totalIVAmount = new Double(0);
-			Double grandTotalAmount = new Double(0);
-			Double grandToBeApprovedAmount = new Double(0);
-			Double grandTotalPostedWorkdoneAmt = new Double(0);
-			Double grandTotalCurrentWorkdoneAmt = new Double(0);
-			Double grandTotalIVAmount = new Double(0);
-			Double grandTotalPostedCertAmt = new Double(0);
-			Double grandTotalCurrentCertAmt = new Double(0);
-			Double grandTotalProvisionAmt = new Double(0);
-			Double grandTotalProjProvisionAmt = new Double(0);
-
-			// calculate sub-total (Group 1)
-			for (SubcontractDetail scDetail: scDetailsGroup1){
-				SCDetailsWrapper scDetailWrapper = new SCDetailsWrapper();
-				scDetailWrapper.updateSCWrapper(scDetail);
-				currentSCDetailsWrapperListGroup1.add(scDetailWrapper);
-			}
-			for (SubcontractDetail scDetail: scDetailsGroup1){
-//				String billItem = scDetail.getBillItem() == null ? "" : scDetail.getBillItem();
-				toBeApprovedAmount +=scDetail.getToBeApprovedAmount()!=null?scDetail.getToBeApprovedAmount():0.0 ;
-				totalAmount += scDetail.getTotalAmount()!=null?scDetail.getTotalAmount():0.0 ;
-				thisIVAmount = 0.0;
-				thisCurrentCertAmt = 0.00;
-				thisPostedCertAmt = 0.00;
-				thisCurrentWorkdoneAmt = 0.00;
-				thisPostedWorkdoneAmt = 0.00;
-
-				if (scDetail.getCostRate()!= null && scDetail.getCumWorkDoneQuantity()!=null)
-					thisIVAmount =scDetail.getCostRate() * scDetail.getCumWorkDoneQuantity();
-				if (scDetail.getScRate()!=null){
-					if (scDetail.getCumWorkDoneQuantity()!=null)
-						thisCurrentWorkdoneAmt =scDetail.getCumWorkDoneQuantity()*scDetail.getScRate();
-					if (scDetail.getPostedWorkDoneQuantity()!=null)
-						thisPostedWorkdoneAmt = scDetail.getPostedWorkDoneQuantity()*scDetail.getScRate();
-					if (scDetail.getPostedCertifiedQuantity()!=null)
-						thisPostedCertAmt =scDetail.getPostedCertifiedQuantity()*scDetail.getScRate();
-					if (scDetail.getCumCertifiedQuantity()!=null)
-						thisCurrentCertAmt = scDetail.getCumCertifiedQuantity()*scDetail.getScRate();
-
-				}
-				thisProvisionAmt = new Double(scDetail.getLineType().equals("C1")||scDetail.getLineType().equals("C2")||scDetail.getLineType().equals("RR")||scDetail.getLineType().equals("RT")||scDetail.getLineType().equals("MS")?0: thisCurrentWorkdoneAmt-thisPostedCertAmt);
-				thisProjProvisionAmt = new Double(scDetail.getLineType().equals("C1")||scDetail.getLineType().equals("C2")||scDetail.getLineType().equals("RR")||scDetail.getLineType().equals("RT")||scDetail.getLineType().equals("MS")? 0:thisCurrentWorkdoneAmt-thisCurrentCertAmt);
-				totalProvisionAmt += thisProvisionAmt;
-				totalProjProvisionAmt += thisProjProvisionAmt;
-				totalCurrentCertAmt += thisCurrentCertAmt;
-				totalCurrentWorkdoneAmt += thisCurrentWorkdoneAmt;
-				totalPostedCertAmt += thisPostedCertAmt;
-				totalPostedWorkdoneAmt += thisPostedWorkdoneAmt;
-				totalIVAmount += thisIVAmount;
-
-				grandToBeApprovedAmount += scDetail.getToBeApprovedAmount()!=null?scDetail.getToBeApprovedAmount():0.0 ;
-				grandTotalAmount += scDetail.getTotalAmount()!=null?scDetail.getTotalAmount():0.0 ;
-				grandTotalProvisionAmt += thisProvisionAmt;
-				grandTotalProjProvisionAmt += thisProjProvisionAmt;
-				grandTotalCurrentCertAmt += thisCurrentCertAmt;
-				grandTotalPostedCertAmt += thisPostedCertAmt;
-				grandTotalCurrentWorkdoneAmt += thisCurrentWorkdoneAmt;
-				grandTotalPostedWorkdoneAmt += thisPostedWorkdoneAmt;
-				grandTotalIVAmount += thisIVAmount;
-			}
-
-			// for add sub total and grand total
-			SCDetailsWrapper newSCDetailTotalLine = new SCDetailsWrapper();
-
-			// add total sc detail if the group have record
-			if(currentSCDetailsWrapperListGroup1 != null && currentSCDetailsWrapperListGroup1.size() > 0){
-				newSCDetailTotalLine.setDescription("SUB TOTAL:");
-				newSCDetailTotalLine.setToBeApprovedAmount(toBeApprovedAmount);
-				newSCDetailTotalLine.setTotalAmount(totalAmount);
-				newSCDetailTotalLine.setTotalProjProvisionAmt(totalProjProvisionAmt);
-				newSCDetailTotalLine.setTotalProvisionAmt(totalProvisionAmt);
-				newSCDetailTotalLine.setTotalCurrentCertAmt(totalCurrentCertAmt);
-				newSCDetailTotalLine.setTotalCurrentWorkdoneAmt(totalCurrentWorkdoneAmt);
-				newSCDetailTotalLine.setTotalPostedCertAmt(totalPostedCertAmt);
-				newSCDetailTotalLine.setTotalPostedWorkdoneAmt(totalPostedWorkdoneAmt);
-				newSCDetailTotalLine.setTotalIVAmt(totalIVAmount);
-				currentSCDetailsWrapperListGroup1.add(newSCDetailTotalLine);
-			}
-
-			toBeApprovedAmount = 0.00;
-			totalAmount = 0.00;
-			totalProvisionAmt = 0.00;
-			totalProjProvisionAmt = 0.00;
-			thisProvisionAmt = 0.00;
-			thisProjProvisionAmt = 0.00;
-			totalCurrentCertAmt = 0.00;
-			totalPostedCertAmt = 0.00;
-			totalCurrentWorkdoneAmt = 0.00;
-			totalPostedWorkdoneAmt = 0.00;
-			thisCurrentCertAmt = 0.00;
-			thisPostedCertAmt = 0.00;
-			thisCurrentWorkdoneAmt = 0.00;
-			thisPostedWorkdoneAmt = 0.00;
-			thisIVAmount = 0.00;
-			totalIVAmount = 0.00;
-
-			// calculate subtotal (Group 2)
-			for (SubcontractDetail scDetail: scDetailsGroup2){
-				SCDetailsWrapper scDetailWrapper = new SCDetailsWrapper();
-				scDetailWrapper.updateSCWrapper(scDetail);
-				currentSCDetailsWrapperListGroup2.add(scDetailWrapper);
-			}
-			for (SubcontractDetail scDetail: scDetailsGroup2){
-//				String billItem = scDetail.getBillItem() == null ? "" : scDetail.getBillItem();
-				toBeApprovedAmount +=scDetail.getToBeApprovedAmount()!=null?scDetail.getToBeApprovedAmount():0.0 ;
-				totalAmount += scDetail.getTotalAmount()!=null?scDetail.getTotalAmount():0.0 ;
-				thisIVAmount = 0.0;
-				thisCurrentCertAmt = 0.00;
-				thisPostedCertAmt = 0.00;
-				thisCurrentWorkdoneAmt = 0.00;
-				thisPostedWorkdoneAmt = 0.00;
-
-				if (scDetail.getCostRate()!= null && scDetail.getCumWorkDoneQuantity()!=null)
-					thisIVAmount =scDetail.getCostRate() * scDetail.getCumWorkDoneQuantity();
-				if (scDetail.getScRate()!=null){
-					if (scDetail.getCumWorkDoneQuantity()!=null)
-						thisCurrentWorkdoneAmt =scDetail.getCumWorkDoneQuantity()*scDetail.getScRate();
-					if (scDetail.getPostedWorkDoneQuantity()!=null)
-						thisPostedWorkdoneAmt = scDetail.getPostedWorkDoneQuantity()*scDetail.getScRate();
-					if (scDetail.getPostedCertifiedQuantity()!=null)
-						thisPostedCertAmt =scDetail.getPostedCertifiedQuantity()*scDetail.getScRate();
-					if (scDetail.getCumCertifiedQuantity()!=null)
-						thisCurrentCertAmt = scDetail.getCumCertifiedQuantity()*scDetail.getScRate();
-
-				}
-				thisProvisionAmt = new Double(scDetail.getLineType().equals("C1")||scDetail.getLineType().equals("C2")||scDetail.getLineType().equals("RR")||scDetail.getLineType().equals("RT")||scDetail.getLineType().equals("MS")?0: thisCurrentWorkdoneAmt-thisPostedCertAmt);
-				thisProjProvisionAmt = new Double(scDetail.getLineType().equals("C1")||scDetail.getLineType().equals("C2")||scDetail.getLineType().equals("RR")||scDetail.getLineType().equals("RT")||scDetail.getLineType().equals("MS")? 0:thisCurrentWorkdoneAmt-thisCurrentCertAmt);
-				totalProvisionAmt += thisProvisionAmt;
-				totalProjProvisionAmt += thisProjProvisionAmt;
-				totalCurrentCertAmt += thisCurrentCertAmt;
-				totalCurrentWorkdoneAmt += thisCurrentWorkdoneAmt;
-				totalPostedCertAmt += thisPostedCertAmt;
-				totalPostedWorkdoneAmt += thisPostedWorkdoneAmt;
-				totalIVAmount += thisIVAmount;
-
-				grandToBeApprovedAmount += scDetail.getToBeApprovedAmount()!=null?scDetail.getToBeApprovedAmount():0.0 ;
-				grandTotalAmount += scDetail.getTotalAmount()!=null?scDetail.getTotalAmount():0.0 ;
-				grandTotalProvisionAmt += thisProvisionAmt;
-				grandTotalProjProvisionAmt += thisProjProvisionAmt;
-				grandTotalCurrentCertAmt += thisCurrentCertAmt;
-				grandTotalPostedCertAmt += thisPostedCertAmt;
-				grandTotalCurrentWorkdoneAmt += thisCurrentWorkdoneAmt;
-				grandTotalPostedWorkdoneAmt += thisPostedWorkdoneAmt;
-				grandTotalIVAmount += thisIVAmount;
-			}
-
-			newSCDetailTotalLine = new SCDetailsWrapper();
-
-			if(currentSCDetailsWrapperListGroup2 != null && currentSCDetailsWrapperListGroup2.size() > 0){
-				newSCDetailTotalLine.setDescription("SUB TOTAL:");
-				newSCDetailTotalLine.setToBeApprovedAmount(toBeApprovedAmount);
-				newSCDetailTotalLine.setTotalAmount(totalAmount);
-				newSCDetailTotalLine.setTotalProjProvisionAmt(totalProjProvisionAmt);
-				newSCDetailTotalLine.setTotalProvisionAmt(totalProvisionAmt);
-				newSCDetailTotalLine.setTotalCurrentCertAmt(totalCurrentCertAmt);
-				newSCDetailTotalLine.setTotalCurrentWorkdoneAmt(totalCurrentWorkdoneAmt);
-				newSCDetailTotalLine.setTotalPostedCertAmt(totalPostedCertAmt);
-				newSCDetailTotalLine.setTotalPostedWorkdoneAmt(totalPostedWorkdoneAmt);
-				newSCDetailTotalLine.setTotalIVAmt(totalIVAmount);
-				currentSCDetailsWrapperListGroup2.add(newSCDetailTotalLine);
-			}
-
-			// combine currentSCDetailsWrapperListGroup1 + currentSCDetailsWrapperListGroup2
-			currentSCDetailsWrapperList.addAll(currentSCDetailsWrapperListGroup1);
-			currentSCDetailsWrapperList.addAll(currentSCDetailsWrapperListGroup2);
-
-			// add grand total at least have 1 data and 1 sub total
-			if(currentSCDetailsWrapperList != null && currentSCDetailsWrapperList.size() >= 2){
-				SCDetailsWrapper grandSCDetailTotalLine = new SCDetailsWrapper();
-				grandSCDetailTotalLine.setDescription("GRAND TOTAL:");
-				grandSCDetailTotalLine.setToBeApprovedAmount(grandToBeApprovedAmount);
-				grandSCDetailTotalLine.setTotalAmount(grandTotalAmount);
-				grandSCDetailTotalLine.setTotalProjProvisionAmt(grandTotalProjProvisionAmt);
-				grandSCDetailTotalLine.setTotalProvisionAmt(grandTotalProvisionAmt);
-				grandSCDetailTotalLine.setTotalCurrentCertAmt(grandTotalCurrentCertAmt);
-				grandSCDetailTotalLine.setTotalCurrentWorkdoneAmt(grandTotalCurrentWorkdoneAmt);
-				grandSCDetailTotalLine.setTotalPostedCertAmt(grandTotalPostedCertAmt);
-				grandSCDetailTotalLine.setTotalPostedWorkdoneAmt(grandTotalPostedWorkdoneAmt);
-				grandSCDetailTotalLine.setTotalIVAmt(grandTotalIVAmount);
-				currentSCDetailsWrapperList.add(grandSCDetailTotalLine);
-			}
-
-			int formIndex = PAGE_SIZE * pageNum;
-			int toIndex = PAGE_SIZE * (pageNum +1) <= currentSCDetailsWrapperList.size()?PAGE_SIZE * (pageNum +1): currentSCDetailsWrapperList.size(); 
-
-			scDetailsWrapperList.addAll(currentSCDetailsWrapperList.subList(formIndex, toIndex));
-			logger.info("NUMBER OF RECORDS (SCDetails): "+scDetailsWrapperList.size()+" ("+formIndex+"-"+(toIndex-1)+")");
-
-			scDetailsListWrapper.setCurrentPageContentList(scDetailsWrapperList);
-
-			scDetailsListWrapper.setTotalPage((currentSCDetailsWrapperList.size() + PAGE_SIZE - 1)/PAGE_SIZE);	
-			scDetailsListWrapper.setCurrentPage(pageNum);
-
-			return scDetailsListWrapper;
-
-		}
-	}
 
 	//Fixing: 20110331, 20131120
 	//Only for updating work done quantity & certified quantity
@@ -637,7 +314,7 @@ public class SubcontractService {
 				for (int x = 0; x < updateSCPackageSaveWrapperList.size(); x++) {
 					updateSCPackageSaveWrapper = updateSCPackageSaveWrapperList.get(x);
 
-					scDetails = scDetailsHBDao.getSCDetail(scPackage, updateSCPackageSaveWrapper.getSortSeqNo().toString());
+					scDetails = subcontractDetailHBDao.getSCDetail(scPackage, updateSCPackageSaveWrapper.getSortSeqNo().toString());
 					ccSCDetails = null;
 					
 					if (scDetails == null) {
@@ -770,7 +447,7 @@ public class SubcontractService {
 							// CC Detail - Have a unique sequence no.
 							if (((SubcontractDetailVO) scDetails).getCorrSCLineSeqNo() != null) {
 								try {
-									ccSCDetails = scDetailsHBDao.getSCDetail(ccSCPackage, ((SubcontractDetailVO) scDetails).getCorrSCLineSeqNo().toString());
+									ccSCDetails = subcontractDetailHBDao.getSCDetail(ccSCPackage, ((SubcontractDetailVO) scDetails).getCorrSCLineSeqNo().toString());
 								} catch (DatabaseOperationException dbException4) {
 									dbException4.printStackTrace();
 								}
@@ -821,7 +498,7 @@ public class SubcontractService {
 								
 								ResourceSummary checkResource = null;
 								if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
-									checkResource = bqResourceSummaryDao.get(scDetails.getResourceNo().longValue());
+									checkResource = resourceSummaryHBDao.get(scDetails.getResourceNo().longValue());
 									if (checkResource == null || !packageNo.equals(checkResource.getPackageNo()) ||
 										!checkResource.getObjectCode().equals(scDetails.getObjectCode()) ||
 										!checkResource.getSubsidiaryCode().equals(scDetails.getSubsidiaryCode()) ||
@@ -850,10 +527,10 @@ public class SubcontractService {
 					// ----------4. Update the SCDetail - START ----------
 					// Update the SCDetail in DB if it passes all validations
 					logger.info("Saving scDetails");
-					scDetailsHBDao.saveOrUpdate(scDetails);
+					subcontractDetailHBDao.saveOrUpdate(scDetails);
 					if (ccSCDetails != null) {
 						logger.info("Saving ccSCDetails");
-						scDetailsHBDao.saveOrUpdate(ccSCDetails);
+						subcontractDetailHBDao.saveOrUpdate(ccSCDetails);
 						ccSCDetailList.add(ccSCDetails.getSubcontract().getPackageNo());
 					}
 					// ----------4. Update the SCDetail - DONE ----------
@@ -877,7 +554,7 @@ public class SubcontractService {
 						logger.info("Start To triggerUpdateSCPaymentDetail");
 						boolean triggered = false;
 						try {
-							triggered = triggerUpdateSCPaymentDetail(jobNumber, ccPackageNo, null, securityServiceImpl.getCurrentUser().getUsername(), directPaymentIndicator);
+							triggered = triggerUpdateSCPaymentDetail(jobNumber, ccPackageNo, null, securityService.getCurrentUser().getUsername(), directPaymentIndicator);
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (Exception e) {
@@ -895,7 +572,7 @@ public class SubcontractService {
 					// ----------6. Trigger SC Payment recalculation - START ----------
 					if (updatedCERTQty) {
 						logger.info("Certification Quantities (and WorkDone Quantities) have been Updated - triggerUpdateSCPaymentDetail()");
-						boolean triggered = triggerUpdateSCPaymentDetail(jobNumber, packageNo, null, securityServiceImpl.getCurrentUser().getUsername(), directPaymentIndicator);
+						boolean triggered = triggerUpdateSCPaymentDetail(jobNumber, packageNo, null, securityService.getCurrentUser().getUsername(), directPaymentIndicator);
 						if (triggered)
 							logger.info("J" + jobNumber + " SC:" + packageNo + " SCPayment is recaclulated");
 						else
@@ -919,7 +596,7 @@ public class SubcontractService {
 	public Boolean triggerUpdateSCPaymentDetail(String jobNumber, String packageNo, String ifPayment, String createUser, String directPaymentIndicator) throws DatabaseOperationException {
 		if (jobNumber!=null && packageNo!=null){
 			Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
-			for(SubcontractDetail scDetails : scDetailsHBDao.obtainSCDetails(jobNumber, packageNo)){
+			for(SubcontractDetail scDetails : subcontractDetailHBDao.obtainSCDetails(jobNumber, packageNo)){
 				scDetails.setSubcontract(scPackage);
 			}
 
@@ -933,8 +610,8 @@ public class SubcontractService {
 					if (ifPayment==null && delPndCert.getIntermFinalPayment()!=null){
 						ifPayment=delPndCert.getIntermFinalPayment().trim();
 					}
-					List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.getPaymentDetail(jobNumber, packageNo, delPndCert.getPaymentCertNo());
-					scPaymentDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
+					List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.getPaymentDetail(jobNumber, packageNo, delPndCert.getPaymentCertNo());
+					paymentCertDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
 					for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
 						scPaymentDetail.setPaymentCert(delPndCert);						
 					}
@@ -961,7 +638,7 @@ public class SubcontractService {
 								paymentDetail = null;	
 							}
 						}
-						scPaymentDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
+						paymentCertDetailHBDao.deleteSCPaymentDetailBySCPaymentCert(delPndCert);
 					}
 				}
 				else
@@ -977,19 +654,19 @@ public class SubcontractService {
 			for (int i = 0;i<scPaymentCertList.size();i++)
 				if (scPaymentCertList.get(i).getPaymentCertNo().equals(largestAPRCertNo)){
 					previousSCPaymentCert = scPaymentCertList.get(i);
-					//scPackage.getScPaymentCertList().get(i).setScPaymentDetailList(scPaymentDetailHBDao.obtainSCPaymentDetail(jobNumber, packageNo,new Integer(largestAPRCertNo)));
+					//scPackage.getScPaymentCertList().get(i).setScPaymentDetailList(paymentCertDetailHBDao.obtainSCPaymentDetail(jobNumber, packageNo,new Integer(largestAPRCertNo)));
 				}
 
 			PaymentCert newPaymentCert;
 			try {
-				newPaymentCert = paymentHBRepository.createPaymentCert(previousSCPaymentCert, scPackage, ifPayment, createUser, directPaymentIndicator);
+				newPaymentCert = paymentService.createPaymentCert(previousSCPaymentCert, scPackage, ifPayment, createUser, directPaymentIndicator);
 				logger.info("newPaymentCert - Job: "+newPaymentCert.getJobNo()+" Package: "+newPaymentCert.getPackageNo()+" Payment: "+newPaymentCert.getPaymentCertNo());
 			} catch (ValidateBusinessLogicException vException) {
 				logger.info(vException.getMessage());
 				vException.printStackTrace();
 				return false;
 			}
-			List<PaymentCertDetail> newSCPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(newPaymentCert);
+			List<PaymentCertDetail> newSCPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(newPaymentCert);
 			for (PaymentCertDetail curSCPaymentDetailGPGR : scPaymentGPGRList){
 				int paymentDetailIndx=newSCPaymentDetailList.size()-1;
 				//look up whether the GST exist in the payment list generated.
@@ -1018,7 +695,7 @@ public class SubcontractService {
 				}
 			}
 
-			scPaymentDetailHBDao.deleteDetailByPaymentCertID(newPaymentCert.getId());
+			paymentCertDetailHBDao.deleteDetailByPaymentCertID(newPaymentCert.getId());
 			paymentCertHBDao.saveOrUpdate(newPaymentCert);
 		}
 		return true;
@@ -1044,7 +721,7 @@ public class SubcontractService {
 							return "Addendum Approval was submitted in Package"+wrapper.getOldPackageNo();
 
 						// check if addendum to update is created from repackaging (V1 or V3 types)
-						List <SubcontractDetail>scDetails = scDetailsHBDao.getSCDetailByResourceNo(oldPackage,wrapper.getResourceNo());
+						List <SubcontractDetail>scDetails = subcontractDetailHBDao.getSCDetailByResourceNo(oldPackage,wrapper.getResourceNo());
 
 						// if detail is not created from repackaging return error
 						if (scDetails == null || scDetails.size()!=1  ){
@@ -1062,7 +739,7 @@ public class SubcontractService {
 							return "Error deleting because addendum has been approved (description: "+wrapper.getBqDescription()+ ", quantity:" + wrapper.getBqQuantity()+")";
 
 						//delete addendum 
-						//scDetailsHBDao.delete(scDetail);
+						//subcontractDetailHBDao.delete(scDetail);
 						scDetailsToDelete.add(scDetail);
 					}
 
@@ -1088,7 +765,7 @@ public class SubcontractService {
 					if(oldPackage.isAwarded()){
 						System.err.println("Trying to Delete Addendum");
 						// check if addendum to update is created from repackaging (V1 or V3 types)
-						List <SubcontractDetail>scDetails = scDetailsHBDao.getSCDetailByResourceNo(oldPackage,wrapper.getResourceNo());
+						List <SubcontractDetail>scDetails = subcontractDetailHBDao.getSCDetailByResourceNo(oldPackage,wrapper.getResourceNo());
 
 						// if detail is not created from repackaging return error
 						if (scDetails == null || scDetails.size()!=1  ){
@@ -1129,7 +806,7 @@ public class SubcontractService {
 		//inactivate ScDetails after passing all possible errors
 		for(SubcontractDetail scDetailToDelete: scDetailsToDelete){
 			try{
-				scDetailsHBDao.inactivateSCDetails(scDetailToDelete);
+				subcontractDetailHBDao.inactivateSCDetails(scDetailToDelete);
 			}
 			catch (Exception e){
 				return "Error deleting addendum";
@@ -1157,7 +834,7 @@ public class SubcontractService {
 				scDetailToUpdate.setBillItem(newBillItem);
 			}
 			try{
-				scDetailsHBDao.addSCDetailVOWithBudget(scDetailToUpdate);
+				subcontractDetailHBDao.addSCDetailVOWithBudget(scDetailToUpdate);
 				startingSeqNumber = startingSeqNumber+1;
 			}
 			catch (Exception e){
@@ -1296,11 +973,11 @@ public class SubcontractService {
 					accountCodeWSDao.createAccountCode(wrapper.getJobNumber(), scDetailsCC.getObjectCode(), scDetailsCC.getSubsidiaryCode());
 					((SubcontractDetailVO)newVO).setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
 					((SubcontractDetailCC)scDetailsCC).setCorrSCLineSeqNo(newVO.getSequenceNo().longValue());
-					scDetailsHBDao.addSCDetail(scDetailsCC);
-					scDetailsHBDao.addSCDetail(newVO);
+					subcontractDetailHBDao.addSCDetail(scDetailsCC);
+					subcontractDetailHBDao.addSCDetail(newVO);
 				}
 				else
-					scDetailsHBDao.addSCDetail(newVO);
+					subcontractDetailHBDao.addSCDetail(newVO);
 			}
 			else 
 				return "Error found in adding addendum : <br>"+returnMsg;
@@ -1321,7 +998,7 @@ public class SubcontractService {
 		}
 
 		if ("RR".equals(newVO.getLineType())||"RA".equals(newVO.getLineType())||"CF".equals(newVO.getLineType())){
-			List<SubcontractDetail> tmpDetails = scDetailsHBDao.getSCDetails(newVO.getSubcontract().getJobInfo().getJobNumber(),
+			List<SubcontractDetail> tmpDetails = subcontractDetailHBDao.getSCDetails(newVO.getSubcontract().getJobInfo().getJobNumber(),
 					newVO.getSubcontract().getPackageNo(), newVO.getLineType());
 			if (tmpDetails!=null && tmpDetails.size()>0)
 				return "SC Line Type "+newVO.getLineType()+" exist in the package. Only one line can be added to package in this line type.";
@@ -1363,13 +1040,13 @@ public class SubcontractService {
 
 		String returnErr =null;
 		if (!(newVO instanceof SubcontractDetailRT) && !"MS".equals(newVO.getLineType())){
-			returnErr = masterListRepository.validateAndCreateAccountCode(newVO.getJobNo().trim(), newVO.getObjectCode().trim(), newVO.getSubsidiaryCode().trim());
+			returnErr = masterListService.validateAndCreateAccountCode(newVO.getJobNo().trim(), newVO.getObjectCode().trim(), newVO.getSubsidiaryCode().trim());
 			if (returnErr!=null)
 				return returnErr; 
 		}
 
 		if (newVO.getAltObjectCode()!=null && newVO.getAltObjectCode().length()>1){
-			returnErr = masterListRepository.checkObjectCodeInUCC(newVO.getAltObjectCode());
+			returnErr = masterListService.checkObjectCodeInUCC(newVO.getAltObjectCode());
 			if (returnErr!=null)
 				return returnErr.replaceAll("Object", "Alt Object");
 		}
@@ -1391,11 +1068,11 @@ public class SubcontractService {
 	}
 
 	public List<SubcontractDetail> getAddendumEnquiry(String jobNumber, String packageNo) throws Exception {
-		return scDetailsHBDao.getAddendumDetails(jobNumber, packageNo);
+		return subcontractDetailHBDao.getAddendumDetails(jobNumber, packageNo);
 	}
 
 	public SubcontractDetail getSCLine(String jobNumber, Integer subcontractNumber, Integer sequenceNumber, String billItem, Integer resourceNumber, String subsidiaryCode, String objectCode) throws Exception{
-		return scDetailsHBDao.obtainSCDetail(jobNumber, subcontractNumber.toString(), sequenceNumber.toString());
+		return subcontractDetailHBDao.obtainSCDetail(jobNumber, subcontractNumber.toString(), sequenceNumber.toString());
 	}
 
 	private boolean checkPostedQty(SubcontractDetail scDetail){
@@ -1404,17 +1081,17 @@ public class SubcontractService {
 
 	@SuppressWarnings("deprecation")
 	public Boolean updateAddendumByWrapper(UpdateAddendumWrapper wrapper) throws DatabaseOperationException, ValidateBusinessLogicException, Exception  {
-		SubcontractDetail scDetail = scDetailsHBDao.obtainSCDetail(wrapper.getJobNumber(), wrapper.getSubcontractNo().toString(),wrapper.getSequenceNo().toString());
+		SubcontractDetail scDetail = subcontractDetailHBDao.obtainSCDetail(wrapper.getJobNumber(), wrapper.getSubcontractNo().toString(),wrapper.getSequenceNo().toString());
 		if (scDetail.getSubcontract().getSubmittedAddendum()!=null && Subcontract.ADDENDUM_SUBMITTED.equals(scDetail.getSubcontract().getSubmittedAddendum().trim()))
 			throw new ValidateBusinessLogicException("Addendum Approval Request was submitted.");
 		if (wrapper.getSubsidiary()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 				!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
-			if (masterListRepository.checkSubsidiaryCodeInUCC(wrapper.getSubsidiary())!=null)
+			if (masterListService.checkSubsidiaryCodeInUCC(wrapper.getSubsidiary())!=null)
 				throw new DatabaseOperationException("Subsidiary Code does not exist in UCC");
 		}
 		if (wrapper.getObject()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 				!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
-			if (masterListRepository.checkObjectCodeInUCC(wrapper.getObject())!=null)
+			if (masterListService.checkObjectCodeInUCC(wrapper.getObject())!=null)
 				throw new DatabaseOperationException("Object Code does not exist in UCC");
 
 		}
@@ -1423,7 +1100,7 @@ public class SubcontractService {
 		
 		//Create Account
 		if (!"MS".equals(scDetail.getLineType().trim())&&!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ){
-			String errorMsg = masterListRepository.validateAndCreateAccountCode(wrapper.getJobNumber(), scDetail.getObjectCode(), scDetail.getSubsidiaryCode());
+			String errorMsg = masterListService.validateAndCreateAccountCode(wrapper.getJobNumber(), scDetail.getObjectCode(), scDetail.getSubsidiaryCode());
 			if (errorMsg!=null && !"".equals(errorMsg.trim()))
 				throw new ValidateBusinessLogicException(errorMsg);
 		}
@@ -1443,16 +1120,16 @@ public class SubcontractService {
 				if (ccLatestPaymentCert!=null && ("PCS".equals(ccLatestPaymentCert.getPaymentStatus())||"SBM".equals(ccLatestPaymentCert.getPaymentStatus())))
 					throw new ValidateBusinessLogicException("SC Payment of Package No:"+scDetail.getContraChargeSCNo()+" was submitted.");
 				if (((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo()!=null){					
-					SubcontractDetail ccSCDetail = scDetailsHBDao.obtainSCDetail(scDetail.getJobNo(),scDetail.getContraChargeSCNo().trim(), ((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo().toString());
+					SubcontractDetail ccSCDetail = subcontractDetailHBDao.obtainSCDetail(scDetail.getJobNo(),scDetail.getContraChargeSCNo().trim(), ((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo().toString());
 					if (ccSCDetail!=null){
 						ccSCDetail.setQuantity(scDetail.getToBeApprovedQuantity());
 						ccSCDetail.setScRate(scDetail.getToBeApprovedRate()*-1);
-						scDetailsHBDao.saveSCDetail(ccSCDetail);
+						subcontractDetailHBDao.saveSCDetail(ccSCDetail);
 					}
 				}
 			}
 
-		return scDetailsHBDao.saveSCDetail(scDetail);
+		return subcontractDetailHBDao.saveSCDetail(scDetail);
 	}
 
 	public AddendumApprovalResponseWrapper submitAddendumApproval(String jobNumber, Integer subcontractNumber, Double certAmount, String userID) throws Exception {
@@ -1460,7 +1137,7 @@ public class SubcontractService {
 		String resultMsg = null;
 		
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber.toString());
-		resultMsg = SCDetailsLogic.validateAddendumApproval(scPackage, scDetailsHBDao.getSCDetails(scPackage));
+		resultMsg = SCDetailsLogic.validateAddendumApproval(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
 		logger.info(resultMsg);
 		String currency = accountCodeWSDao.obtainCurrencyCode(scPackage.getJobInfo().getJobNumber());
 		double exchangeRateToHKD = 1.0;
@@ -1470,7 +1147,7 @@ public class SubcontractService {
 		try{
 			String company = scPackage.getJobInfo().getCompany();
 			String vendorNo = scPackage.getVendorNo();
-			String vendorName = masterListRepository.searchVendorAddressDetails(scPackage.getVendorNo().trim()).getVendorName();
+			String vendorName = masterListService.searchVendorAddressDetails(scPackage.getVendorNo().trim()).getVendorName();
 			String approvalType="SM";
 			if (RoundingUtil.round(certAmount*exchangeRateToHKD,2)>250000.0 || certAmount>RoundingUtil.round(scPackage.getOriginalSubcontractSum()*0.25,2))
 				approvalType = "SL";
@@ -1547,15 +1224,15 @@ public class SubcontractService {
 		
 		if ("MS".equals(scLineType.trim()))
 			//Get Obj from AAI-"SCMOS"
-			resultDetails.setObjectCode(jobCostDao.obtainAccountCode("SCMOS", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+			resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCMOS", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
 		else if ("RA".equals(scLineType.trim())||"RR".equals(scLineType.trim())){
 			if ("DSC".equals(scPackage.getSubcontractorNature()))
 				//Get Obj from AAI-"SCDRT"
-				resultDetails.setObjectCode(jobCostDao.obtainAccountCode("SCDRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCDRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
 			else
 				//SubcontractorNature is NSC/NDSC
 				//Get Obj from AAI-"SCNRT"
-				resultDetails.setObjectCode(jobCostDao.obtainAccountCode("SCNRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCNRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
 		}else if ("C1".equals(scLineType.trim())||"C2".equals(scLineType.trim()))
 			resultDetails.setObjectCode(defaultCCObj);
 		else 
@@ -1563,10 +1240,10 @@ public class SubcontractService {
 		
 		if ("CF".equals(scLineType.trim()))
 			//Get sub from AAI-"SCCPF"
-			resultDetails.setSubsidiaryCode(jobCostDao.obtainAccountCode("SCCPF", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getSubsidiary());
+			resultDetails.setSubsidiaryCode(jobCostWSDao.obtainAccountCode("SCCPF", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getSubsidiary());
 		
-		//resultDetails.setSequenceNo(SCDetailsLogic.generateSequenceNo(scDetailsHBDao.getSCDetailsAllStatus(scPackage.getJob().getJobNumber(), scPackage.getPackageNo())));
-		resultDetails.setSequenceNo(scDetailsHBDao.obtainSCDetailsMaxSeqNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo())+1);
+		//resultDetails.setSequenceNo(SCDetailsLogic.generateSequenceNo(subcontractDetailHBDao.getSCDetailsAllStatus(scPackage.getJob().getJobNumber(), scPackage.getPackageNo())));
+		resultDetails.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo())+1);
 		resultDetails.setBillItem(SCDetailsLogic.generateBillItem(scPackage,scLineType,resultDetails.getSequenceNo()));
 		resultDetails.setLineType(scLineType.trim());
 		return resultDetails;
@@ -1616,7 +1293,7 @@ public class SubcontractService {
 				if(importedSequenceNumber!=null && !importedSequenceNumber.equals("")){
 					SubcontractDetail currentSCDetail = null;
 					try {
-						currentSCDetail = scDetailsHBDao.obtainSCDetail(jobNumber, packageNo.toString(), importedSequenceNumber);
+						currentSCDetail = subcontractDetailHBDao.obtainSCDetail(jobNumber, packageNo.toString(), importedSequenceNumber);
 					} catch (DatabaseOperationException e) {
 						e.printStackTrace();
 					}
@@ -1795,23 +1472,18 @@ public class SubcontractService {
 		return uploadSCDetailByExcelResponse;
 	}
 
-	public PaginationWrapper<SubcontractDetail> getScDetailsByPage(String jobNumber, String packageNo, String billItem, String description, String lineType, int pageNum) throws Exception{
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
-		return scDetailsHBDao.getScDetailsByPage(scPackage, billItem, description, lineType, pageNum);
-	}
-
 	public String suspendAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
-		SubcontractDetail scDetails = scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
+		SubcontractDetail scDetails = subcontractDetailHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
 		//Validate Addendum was submitted
 		if (scDetails.getSubcontract().getSubmittedAddendum()!=null && Subcontract.ADDENDUM_SUBMITTED.equalsIgnoreCase(scDetails.getSubcontract().getSubmittedAddendum().trim()))
 			throw new ValidateBusinessLogicException("Addendum approval request submitted!");
 		if(scDetails.getApproved() == null || SubcontractDetail.NOT_APPROVED.equalsIgnoreCase(scDetails.getApproved())){
 			scDetails.setApproved(SubcontractDetail.SUSPEND);
-			scDetailsHBDao.saveSCDetail(scDetails);
+			subcontractDetailHBDao.saveSCDetail(scDetails);
 			return "Suspended";}
 		else if(SubcontractDetail.SUSPEND.equalsIgnoreCase(scDetails.getApproved().trim())){
 			scDetails.setApproved(SubcontractDetail.NOT_APPROVED);
-			scDetailsHBDao.saveSCDetail(scDetails);
+			subcontractDetailHBDao.saveSCDetail(scDetails);
 			return "Not approved";}
 		else if(SubcontractDetail.APPROVED.equalsIgnoreCase(scDetails.getApproved().trim())){
 			return "Approved Line cannot be suspended.";
@@ -1822,7 +1494,7 @@ public class SubcontractService {
 	}
 
 	public String deleteAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
-		SubcontractDetail scDetails = scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
+		SubcontractDetail scDetails = subcontractDetailHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
 		// if not bq/
 		if((!scDetails.getLineType().equals("BQ")) &&(!scDetails.getLineType().equals("B1"))
 				&& (!scDetails.getLineType().equals("V3")) ){
@@ -1831,7 +1503,7 @@ public class SubcontractService {
 				if (scDetails.getCostRate()!=null&&scDetails.getCostRate().doubleValue()!=0)
 					return "Cannot delete SC Detail with line type " + scDetails.getLineType() + " created from repackaging";
 				//				if ((scDetails.getResourceNo()!=null && scDetails.getResourceNo().intValue()>1) || (scDetails.getCostRate() != null && Math.abs(scDetails.getCostRate().doubleValue())>= 0.01)){
-				//					List<SCDetails> scDetailsList = scDetailsHBDao.getSCDetailByResourceNo(scDetails.getResourceNo());
+				//					List<SCDetails> scDetailsList = subcontractDetailHBDao.getSCDetailByResourceNo(scDetails.getResourceNo());
 				//					if (scDetailsList != null && scDetailsList.size()==1 )
 				//						return "Cannot delete SC Detail with line type " + scDetails.getLineType() + " created from repackaging";
 				//				}
@@ -1848,19 +1520,19 @@ public class SubcontractService {
 				return "Cannot delete SC Detail, package's payment status is 'F'";
 			if ("L2".equals(scDetails.getLineType())||"D2".equals(scDetails.getLineType()))
 				if (((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo()!=null ){
-					SubcontractDetail ccSCDetail = scDetailsHBDao.obtainSCDetail(jobNumber, ((SubcontractDetailVO)scDetails).getContraChargeSCNo(), ((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo().toString());
+					SubcontractDetail ccSCDetail = subcontractDetailHBDao.obtainSCDetail(jobNumber, ((SubcontractDetailVO)scDetails).getContraChargeSCNo(), ((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo().toString());
 					if (Math.abs(ccSCDetail.getPostedCertifiedQuantity().doubleValue())>0 || Math.abs(ccSCDetail.getCumCertifiedQuantity().doubleValue())>0)
 						return "Cannot delete SC Detail, cert qty of Corresponsing SC Line is not zero.";
 					PaymentCert ccLatestPaymentCert = paymentCertHBDao.getSCPaymentLatestCert(scPackage.getJobInfo(), scDetails.getContraChargeSCNo());
 					if (ccLatestPaymentCert!=null && ("SBM".equals(ccLatestPaymentCert.getPaymentStatus()) || "PCS".equals(ccLatestPaymentCert.getPaymentStatus())))
 						return "Cannot delete SC Detail, payment request was submitted in corresponsing SC "+scDetails.getContraChargeSCNo();
-					//					scDetailsHBDao.delete(scDetailsHBDao.getSCDetail(jobNumber, ((SCDetailsVO)scDetails).getContraChargeSCNo(), ((SCDetailsVO)scDetails).getCorrSCLineSeqNo().toString()));
-					scDetailsHBDao.inactivateSCDetails(ccSCDetail);
+					//					subcontractDetailHBDao.delete(subcontractDetailHBDao.getSCDetail(jobNumber, ((SCDetailsVO)scDetails).getContraChargeSCNo(), ((SCDetailsVO)scDetails).getCorrSCLineSeqNo().toString()));
+					subcontractDetailHBDao.inactivateSCDetails(ccSCDetail);
 				}
 			if ("C2".equals(scDetails.getLineType()))
 				if (((SubcontractDetailCC)scDetails).getCorrSCLineSeqNo()!=null )
 					return "C2 line cannot be deleted";
-			scDetailsHBDao.inactivateSCDetails(scDetails);
+			subcontractDetailHBDao.inactivateSCDetails(scDetails);
 			return null;
 		}
 		else if (scDetails.getLineType().equals("BQ") || scDetails.getLineType().equals("B1") || scDetails.getLineType().equals("V3") ){
@@ -1876,12 +1548,12 @@ public class SubcontractService {
 	public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNumber+"/"+packageNo+"/"+approvalResult);
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
-		List<SubcontractDetail> ccSCDetails = scDetailsHBDao.getSCDetailsWithCorrSC(scPackage);
+		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(scPackage);
 		if (ccSCDetails!=null && ccSCDetails.size()>0)
 			for (SubcontractDetail scDetail:ccSCDetails){
 				SubcontractDetailVO scDetailVO = (SubcontractDetailVO)scDetail;
 				if (scDetailVO.getCorrSCLineSeqNo()!=null){
-					SubcontractDetail ccDetail = scDetailsHBDao.getSCDetail(subcontractHBDao.obtainPackage(scPackage.getJobInfo(), scDetailVO.getContraChargeSCNo()), scDetailVO.getCorrSCLineSeqNo().toString());
+					SubcontractDetail ccDetail = subcontractDetailHBDao.getSCDetail(subcontractHBDao.obtainPackage(scPackage.getJobInfo(), scDetailVO.getContraChargeSCNo()), scDetailVO.getCorrSCLineSeqNo().toString());
 					if (ccDetail!=null ){
 						if ((Math.abs(scDetailVO.getToBeApprovedQuantity().doubleValue()-scDetailVO.getQuantity().doubleValue())>0)&&!SubcontractDetail.SUSPEND.equals(scDetailVO.getApproved())){
 							ccDetail.setQuantity(scDetailVO.getToBeApprovedQuantity());
@@ -1906,12 +1578,12 @@ public class SubcontractService {
 						 * 16th Apr, 2015
 						 * **/
 						ccDetail.setNewQuantity(ccDetail.getQuantity());
-						scDetailsHBDao.update(ccDetail);
+						subcontractDetailHBDao.update(ccDetail);
 					}
 				}
 			}
 
-		subcontractHBDao.saveOrUpdate(SCPackageLogic.updateApprovedAddendum(scPackage, scDetailsHBDao.getSCDetails(scPackage), approvalResult));
+		subcontractHBDao.saveOrUpdate(SCPackageLogic.updateApprovedAddendum(scPackage, subcontractDetailHBDao.getSCDetails(scPackage), approvalResult));
 		return true;
 	}
 
@@ -1992,9 +1664,9 @@ public class SubcontractService {
 			scPackage.setSubcontractStatus(500);
 			
 			PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNumber, packageNo);
-			if(latestPaymentCert!=null && scDetailsHBDao.getSCDetails(scPackage)!=null && scDetailsHBDao.getSCDetails(scPackage).size()>0){
+			if(latestPaymentCert!=null && subcontractDetailHBDao.getSCDetails(scPackage)!=null && subcontractDetailHBDao.getSCDetails(scPackage).size()>0){
 				//Insert, Update, Delete SC Detail
-				List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+				List<Tender> tenderAnalysisList = tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 				for (Tender TA: tenderAnalysisList){
 					if (Integer.valueOf(0).equals(TA.getVendorNo())){
 						budgetTA = TA;
@@ -2004,26 +1676,26 @@ public class SubcontractService {
 				for(Tender TA: tenderAnalysisList){
 					if(TA.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(TA.getStatus().trim())){
 						TA.setStatus(Tender.TA_STATUS_AWD);//Change status to "Awarded"
-						tenderAnalysisHBDao.updateTenderAnalysis(TA);
+						tenderHBDao.updateTenderAnalysis(TA);
 						logger.info("Tender Analysis Saved");
 
 						//---------------------Delete SC Detail-------------------------------//
-						List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(scPackage);
+						List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(scPackage);
 						Iterator<SubcontractDetail> scDetailsIterator = scDetailsList.iterator();
 						while(scDetailsIterator.hasNext()){
 							SubcontractDetail scDetails = scDetailsIterator.next();
 							if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && !"RR".equals(scDetails.getLineType())){
-								TenderDetail TADetailInDB = tenderAnalysisDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
+								TenderDetail TADetailInDB = tenderDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
 								if(TADetailInDB==null){
 									boolean notUsedInPayment = true;
 									if(!latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-										List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
+										List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
 										for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
 											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
 												notUsedInPayment=false;
 												//Inactive scDetail
 												scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
-												scDetailsHBDao.update(scDetails);
+												subcontractDetailHBDao.update(scDetails);
 												break;
 											}
 										}
@@ -2035,7 +1707,7 @@ public class SubcontractService {
 										//For DAO Transaction
 										//scPackage.getScDetails().remove(scDetails);
 										//For DAO Transaction ----END
-										scDetailsHBDao.delete(scDetails); 
+										subcontractDetailHBDao.delete(scDetails); 
 									}	
 								}
 							}
@@ -2043,17 +1715,17 @@ public class SubcontractService {
 						
 						//-------------------Update SC Detail------------------------------//
 						List<TenderDetail> taDetailList = new ArrayList<TenderDetail>();
-						taDetailList.addAll(tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA));
+						taDetailList.addAll(tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(TA));
 						Iterator<TenderDetail> taIterator = taDetailList.iterator();
 						while(taIterator.hasNext()){
 							TenderDetail taDetail = taIterator.next();
 							
-							SubcontractDetailBQ scDetailsInDB = scDetailsHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
+							SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 							if(scDetailsInDB!=null){
 								//Update SC Details
 								scDetailsInDB.setScRate(taDetail.getRateBudget());
 								scDetailsInDB.setApproved(SubcontractDetail.APPROVED);//Change status to "Approved"
-								scDetailsHBDao.update(scDetailsInDB);
+								subcontractDetailHBDao.update(scDetailsInDB);
 								
 								taIterator.remove();
 							}
@@ -2063,7 +1735,7 @@ public class SubcontractService {
 							addSCDetails(scPackage, TA, budgetTA, taDetailList, SubcontractDetail.APPROVED, false);
 						
 						//-------------------Update SC Package--------------------------//
-						recalculateSCPackageSubcontractSum(scPackage, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA));
+						recalculateSCPackageSubcontractSum(scPackage, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(TA));
 						
 						
 						break;
@@ -2073,8 +1745,8 @@ public class SubcontractService {
 				if(latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 					//Delete Pending Payment
 					
-					paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-					scPaymentDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+					attachmentPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 					paymentCertHBDao.delete(latestPaymentCert);
 					
 					logger.info("Deleting pending payment");
@@ -2082,11 +1754,11 @@ public class SubcontractService {
 					subcontractHBDao.update(scPackage);
 					
 					//Reset cumCertQuantity in ScDetail
-					List<SubcontractDetail> scDetailsList = scDetailsHBDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+					List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 					for(SubcontractDetail scDetails: scDetailsList){
 						if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
 							scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-							scDetailsHBDao.update(scDetails);
+							subcontractDetailHBDao.update(scDetails);
 						}
 					}
 				}
@@ -2101,18 +1773,18 @@ public class SubcontractService {
 					scDetailsIterator.remove();
 					
 					scPackage.getScDetails().remove(scDetails);
-					scDetailsHBDao.delete(scDetails); 
+					subcontractDetailHBDao.delete(scDetails); 
 				}*/
 				//For DAO Transaction ----END
 				logger.info("REMOVED DAO TRANSACTION - remove ALL SC detail (SC Award)");
 				//For SERVICE Transaction
-				for(SubcontractDetail scDetails: scDetailsHBDao.getSCDetails(scPackage)){
-					scDetailsHBDao.delete(scDetails);
+				for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(scPackage)){
+					subcontractDetailHBDao.delete(scDetails);
 				}
 				//For SERVICE Transaction ----END
 				
 				//Create SC Details from scratch
-				scPackage = SCPackageLogic.awardSCPackage(scPackage, tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
+				scPackage = SCPackageLogic.awardSCPackage(scPackage, tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
 				
 			}
 			
@@ -2122,8 +1794,8 @@ public class SubcontractService {
 				(JobInfo.REPACKAGING_TYPE_3.equals(scPackage.getJobInfo().getRepackagingType().trim()) ||
 				 JobInfo.REPACKAGING_TYPE_2.equals(scPackage.getJobInfo().getRepackagingType().trim()))) {
 				
-				List<BpiItemResource> resourceList = resourceHBDao.getResourcesByPackage(jobNumber, packageNo);
-				for (SubcontractDetail aSCDetail : scDetailsHBDao.getSCDetails(scPackage)) {
+				List<BpiItemResource> resourceList = bpiItemResourceHBDao.getResourcesByPackage(jobNumber, packageNo);
+				for (SubcontractDetail aSCDetail : subcontractDetailHBDao.getSCDetails(scPackage)) {
 					for (BpiItemResource resourceSearch : resourceList) {
 						String resourceBQItem = resourceSearch.getRefBillNo().trim() + "/";
 						
@@ -2196,9 +1868,9 @@ public class SubcontractService {
 
 
 	public Boolean updateNewQuantity(Long id, Double newQuantity) throws Exception{
-		if("ACTIVE".equalsIgnoreCase(scDetailsHBDao.get(id).getSystemStatus())){
-			scDetailsHBDao.get(id).setNewQuantity(newQuantity);
-			scDetailsHBDao.saveSCDetail(scDetailsHBDao.get(id));
+		if("ACTIVE".equalsIgnoreCase(subcontractDetailHBDao.get(id).getSystemStatus())){
+			subcontractDetailHBDao.get(id).setNewQuantity(newQuantity);
+			subcontractDetailHBDao.saveSCDetail(subcontractDetailHBDao.get(id));
 			return true;
 		}else{
 			return false;
@@ -2231,7 +1903,7 @@ public class SubcontractService {
 
 		logger.info("Job: "+jobNumber+" SCPackage: "+packageNumber+" Current Split/Terminate Status: "+splitTerminateStatus[status][1]);
 
-		List<SubcontractDetail> scDetailsIncludingInactive = scDetailsHBDao.getSCDetails(scPackage);
+		List<SubcontractDetail> scDetailsIncludingInactive = subcontractDetailHBDao.getSCDetails(scPackage);
 		for(SubcontractDetail scDetail:scDetailsIncludingInactive){
 			//Validation 2: skip the deleted SCDetail 
 			if(scDetail.getSystemStatus().equals(SubcontractDetail.INACTIVE)){
@@ -2322,17 +1994,17 @@ public class SubcontractService {
 			double movementProportion = 0;
 			
 			//Validation: No Resource Summary
-			List<ResourceSummary> resourceSummaries = bqResourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+			List<ResourceSummary> resourceSummaries = resourceSummaryHBDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
 			if (resourceSummaries == null){
 				logger.info("Resource Summary does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode);
 				return;
 			}
 			
 			HashMap<Long, SubcontractDetail> resourceIDofSCAddendum = new HashMap<Long, SubcontractDetail>();
-			for (SubcontractDetail scDetails : scDetailsHBDao.getBQSCDetails(job.getJobNumber(), packageNo)) {
+			for (SubcontractDetail scDetails : subcontractDetailHBDao.getBQSCDetails(job.getJobNumber(), packageNo)) {
 				ResourceSummary resourceSummaryInDB = null;
 				if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
-					resourceSummaryInDB = bqResourceSummaryDao.get(scDetails.getResourceNo().longValue());
+					resourceSummaryInDB = resourceSummaryHBDao.get(scDetails.getResourceNo().longValue());
 					
 					if (resourceSummaryInDB == null || 
 						!packageNo.equals(resourceSummaryInDB.getPackageNo()) || 
@@ -2365,7 +2037,7 @@ public class SubcontractService {
 				double resourceMovement = movementProportion * resourceAmount;
 				double currIv = resourceSummary.getCurrIVAmount() + resourceMovement;
 				resourceSummary.setCurrIVAmount(new Double(currIv));
-				bqResourceSummaryDao.saveOrUpdate(resourceSummary);
+				resourceSummaryHBDao.saveOrUpdate(resourceSummary);
 			}
 		}catch (DatabaseOperationException dbException){
 			dbException.printStackTrace();
@@ -2375,14 +2047,14 @@ public class SubcontractService {
 	private void updateResourceSummaryIVFromSCVO(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double movement,long resourceSummaryID){
 		logger.info("Job: " + job.getJobNumber() + " Package: " + packageNo + " Object: " + objectCode + " Subsidiary: " + subsidiaryCode +", ResourceSummaryID"+resourceSummaryID+ ", Movement: " + movement);
 		try {
-			ResourceSummary resourceSummary = bqResourceSummaryDao.get(resourceSummaryID);
+			ResourceSummary resourceSummary = resourceSummaryHBDao.get(resourceSummaryID);
 			if (resourceSummary == null){
 				logger.info("Resource Summary does not exist - Job: "+job.getJobNumber()+" Package: " + packageNo + " Object: " + objectCode + " Subsidiary: " + subsidiaryCode +", ResourceSummaryID"+resourceSummaryID);
 				return;
 			}
 			
 			resourceSummary.setCurrIVAmount(resourceSummary.getCurrIVAmount() + movement);
-			bqResourceSummaryDao.saveOrUpdate(resourceSummary);
+			resourceSummaryHBDao.saveOrUpdate(resourceSummary);
 		} catch (DataAccessException dbException) {
 			dbException.printStackTrace();
 		}
@@ -2409,7 +2081,7 @@ public class SubcontractService {
 			}
 			//Check if subcontractor is in the Tender Analysis.
 			
-			Tender rcmTender = tenderAnalysisHBDao.obtainRecommendedTender(jobNumber, subcontractNumber);
+			Tender rcmTender = tenderHBDao.obtainRecommendedTender(jobNumber, subcontractNumber);
 			
 			
 			if (rcmTender!=null){
@@ -2444,7 +2116,7 @@ public class SubcontractService {
 					}else
 						return "No Tender Analysis Detail";*/
 					
-					if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null)
+					if (tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null)
 						return "No Tender Analysis Detail";
 					
 					if("Lump Sum Amount Retention".equals(scPackage.getRetentionTerms())){ 
@@ -2524,7 +2196,7 @@ public class SubcontractService {
 								return "Selected vendor("+rcmTender.getVendorNo()+") does not match with paid vendor("+scPackage.getVendorNo()+")";
 
 							 // Check if the paid amount is smaller than to be award subcontract sum
-							List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(lastPaymentCert);
+							List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(lastPaymentCert);
 							for (PaymentCertDetail scPaymentDetail:scPaymentDetailList)
 								if (!"RT".equals(scPaymentDetail.getLineType())&&!"GP".equals(scPaymentDetail.getLineType())&&!"GR".equals(scPaymentDetail.getLineType()))
 									certedAmount += scPaymentDetail.getCumAmount();
@@ -2540,7 +2212,7 @@ public class SubcontractService {
 					 * Determine Approval Type **/
 					boolean variedSubcontract = false;
 					List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNumber, subcontractNumber, String.valueOf(rcmTender.getVendorNo()));
-					List<Tender> tenderList = tenderAnalysisHBDao.obtainTenderList(jobNumber, subcontractNumber);
+					List<Tender> tenderList = tenderHBDao.obtainTenderList(jobNumber, subcontractNumber);
 					
 					//1. Non-standard payment terms
 					if(deviated){
@@ -2623,7 +2295,7 @@ public class SubcontractService {
 					// the currency pass to approval system should be the company base currency
 					// so change the currencyCode to company base currency here since it will not affect other part of code
 					String currencyCode = getCompanyBaseCurrency(jobNumber);
-					String userID = securityServiceImpl.getCurrentUser().getUsername();
+					String userID = securityService.getCurrentUser().getUsername();
 					
 					msg = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, subcontractNumber, rcmTender.getVendorNo().toString(), rcmTender.getNameSubcontractor(), approvalType, approvalSubType, approvalAmount, currencyCode, userID);
 					if(msg!=null)
@@ -2635,7 +2307,7 @@ public class SubcontractService {
 						rcmTender.setUsernamePrepared(userID);
 						rcmTender.setDatePrepared(new Date());
 						try{
-							tenderAnalysisHBDao.update(rcmTender);
+							tenderHBDao.update(rcmTender);
 						}catch (Exception e){
 							e.printStackTrace();
 						}
@@ -2662,7 +2334,7 @@ public class SubcontractService {
 	}
 
 	public AppSubcontractStandardTermsHBDao getSystemConstantHBDaoImpl() {
-		return systemConstantHBDaoImpl;
+		return appSubcontractStandardTermsHBDao;
 	}
 
 	/**
@@ -2680,7 +2352,7 @@ public class SubcontractService {
 
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		//Excluded Inactive (deleted) scDetails
-		List<SubcontractDetail> scDetailList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNo);
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.obtainSCDetails(jobNumber, packageNo);
 
 		if ("A".equals(approvedOrRejected)){
 			if (scDetailList==null){
@@ -2709,7 +2381,7 @@ public class SubcontractService {
 						//scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0){
 				
 					//Assume the resource number is equal to the BQResourceSummary ID for V1(with budget) and V3
-					ResourceSummary resourceSummary = bqResourceSummaryDao.get(scDetail.getResourceNo().longValue());
+					ResourceSummary resourceSummary = resourceSummaryHBDao.get(scDetail.getResourceNo().longValue());
 
 					/**
 					 * @author koeyyeung
@@ -2744,7 +2416,7 @@ public class SubcontractService {
 			for (SubcontractDetail scDetail:scDetailVOList){
 				if (Math.abs(scDetail.getNewQuantity().doubleValue()-scDetail.getQuantity().doubleValue())>0){
 					try{
-						ResourceSummary bqResourceSummary = bqResourceSummaryRepositoryHB.releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(job, packageNo, scDetail);
+						ResourceSummary bqResourceSummary = resourceSummaryService.releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(job, packageNo, scDetail);
 						
 						logger.info("VO Resources Summary of " +
 									" SCDetails ID:" + scDetail.getId() +
@@ -2794,7 +2466,7 @@ public class SubcontractService {
 				//with different account code or end of the SCDetailBQ list
 				if(!isSameAccCode || numberOfProcessedscDetailBQ==scDetailBQList.size()){
 					try{
-						boolean isReleased = bqResourceSummaryRepositoryHB.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
+						boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
 
 						logger.info("Resources Summary of " +
 									" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
@@ -2831,7 +2503,7 @@ public class SubcontractService {
 			
 			//4. Release the last scDetail
 			try{
-				boolean isReleased = bqResourceSummaryRepositoryHB.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
+				boolean isReleased = resourceSummaryService.releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(job, packageNo, lastObjCode, lastSubsidCode, totalAmountWithSameAccCode, voIDResourceSummaryList);
 
 				logger.info("Resources Summary of " +
 							" Grouped SCDetatil ID(s): "+scDetailIDsForSameAccCode+
@@ -2856,7 +2528,7 @@ public class SubcontractService {
 
 
 			//calculate new figures
-			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, scDetailsHBDao.getSCDetails(scPackage));
+			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
 
 			if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
 				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_APPROVED);
@@ -2883,7 +2555,7 @@ public class SubcontractService {
 	private String toCompleteSplitTerminateMethodTwoOrMethodThree(JobInfo job, String packageNo, String approvedOrRejected, String splitOrTerminate) throws Exception{
 		String message = null;
 		Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
-		List<SubcontractDetail> scDetailsIncludingInactive = scDetailsHBDao.getSCDetails(scPackage);
+		List<SubcontractDetail> scDetailsIncludingInactive = subcontractDetailHBDao.getSCDetails(scPackage);
 
 		if("A".equalsIgnoreCase(approvedOrRejected)){
 			if (scDetailsIncludingInactive==null){
@@ -2901,7 +2573,7 @@ public class SubcontractService {
 				//BQ
 				if ("BQ".equalsIgnoreCase(scDetail.getLineType()) && RoundingUtil.round(scDetail.getQuantity().doubleValue(), 4)!=RoundingUtil.round(scDetail.getNewQuantity().doubleValue(), 4)){
 					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ scDetail.getQuantity() + " NewQuantity:" + scDetail.getNewQuantity());
-					bqRepository.splitTerminateResourceFromScDetail(scDetail);
+					bpiItemService.splitTerminateResourceFromScDetail(scDetail);
 				}
 				//V1/V3
 				else if (("V1".equalsIgnoreCase(scDetail.getLineType()) || "V3".equalsIgnoreCase(scDetail.getLineType())) && 
@@ -2909,7 +2581,7 @@ public class SubcontractService {
 						scDetail.getCostRate()!=null && Math.abs(scDetail.getCostRate())>0 &&
 						RoundingUtil.round(scDetail.getQuantity().doubleValue(), 4)!=RoundingUtil.round(scDetail.getNewQuantity().doubleValue(), 4)){
 					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ scDetail.getQuantity() + " NewQuantity:" + scDetail.getNewQuantity());
-					bqRepository.splitTerminateResourceFromScDetail(scDetail);
+					bpiItemService.splitTerminateResourceFromScDetail(scDetail);
 				}
 				else{
 					logger.info("SKIPPED - LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem());
@@ -2918,7 +2590,7 @@ public class SubcontractService {
 				//-----------------------------------------------------------------------------------------------------------------------------
 			}
 
-			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, scDetailsHBDao.getSCDetails(scPackage));
+			scPackage = SCPackageLogic.toCompleteSplitTerminate(scPackage, subcontractDetailHBDao.getSCDetails(scPackage));
 
 			if (Subcontract.SPLIT.equalsIgnoreCase(splitOrTerminate))
 				scPackage.setSplitTerminateStatus(Subcontract.SPLIT_APPROVED);
@@ -2937,17 +2609,17 @@ public class SubcontractService {
 	}
 
 	public AppSubcontractStandardTerms obtainSystemConstant(String systemCode, String company) throws DatabaseOperationException{
-		AppSubcontractStandardTerms result = systemConstantHBDaoImpl.getSystemConstant(systemCode, company);
+		AppSubcontractStandardTerms result = appSubcontractStandardTermsHBDao.getSystemConstant(systemCode, company);
 		if(result !=null)
 			return result;
 		else
-			return systemConstantHBDaoImpl.getSystemConstant("59", "00000");
+			return appSubcontractStandardTermsHBDao.getSystemConstant("59", "00000");
 	}
 
 	public List<AppSubcontractStandardTerms> searchSystemConstants(String systemCode, String company, String scPaymentTerm, Double scMaxRetentionPercent, Double scInterimRetentionPercent, Double scMOSRetentionPercent, String retentionType, String finQS0Review) {
 		List<AppSubcontractStandardTerms> appSubcontractStandardTermsList = null;
 		try {
-			appSubcontractStandardTermsList = systemConstantHBDaoImpl.searchSystemConstants(systemCode, company, scPaymentTerm, scMaxRetentionPercent, scInterimRetentionPercent, scMOSRetentionPercent, retentionType, finQS0Review);
+			appSubcontractStandardTermsList = appSubcontractStandardTermsHBDao.searchSystemConstants(systemCode, company, scPaymentTerm, scMaxRetentionPercent, scInterimRetentionPercent, scMOSRetentionPercent, retentionType, finQS0Review);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -2960,7 +2632,7 @@ public class SubcontractService {
 			username = securityService.getCurrentUser().getUsername();
 		}
 		try {
-			result = systemConstantHBDaoImpl.updateMultipleSystemConstants(requests, username);
+			result = appSubcontractStandardTermsHBDao.updateMultipleSystemConstants(requests, username);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -2968,7 +2640,7 @@ public class SubcontractService {
 	}
 
 	public List<UDC> obtainWorkScopeList() throws DatabaseOperationException{
-		cachedWorkScopeList = unitRepository.getAllWorkScopes();
+		cachedWorkScopeList = unitService.getAllWorkScopes();
 		return cachedWorkScopeList;
 	}
 
@@ -2976,7 +2648,7 @@ public class SubcontractService {
 		List<UDC> resultList = searchWorkScopeInLocalCacheList(searchStr);
 
 		if (resultList == null || resultList.size() == 0) {
-			this.cachedWorkScopeList = unitRepository.getAllWorkScopes();
+			this.cachedWorkScopeList = unitService.getAllWorkScopes();
 			resultList = searchWorkScopeInLocalCacheList(searchStr);
 		}
 		return resultList;
@@ -3029,7 +2701,7 @@ public class SubcontractService {
 	}
 
 	public UDC obtainWorkScope(String workScopeCode) throws DatabaseOperationException{
-		return unitRepository.obtainWorkScope(workScopeCode);
+		return unitService.obtainWorkScope(workScopeCode);
 	}
 
 	public String currencyCodeValidation(String currencyCode) throws Exception {
@@ -3095,7 +2767,7 @@ public class SubcontractService {
 		bpi += resource.getRefSectionNo() == null ? "/" : resource.getRefSectionNo() + "/";
 		bpi += resource.getRefPageNo() == null ? "/" : resource.getRefPageNo() + "/";
 		bpi += resource.getRefItemNo() == null ? "" : resource.getRefItemNo();
-		SubcontractDetailBQ scDetail = (SubcontractDetailBQ)scDetailsHBDao.getSCDetail(scPackage, bpi, resource.getResourceNo());
+		SubcontractDetailBQ scDetail = (SubcontractDetailBQ)subcontractDetailHBDao.getSCDetail(scPackage, bpi, resource.getResourceNo());
 		if(scDetail == null){
 			logger.info("Could not find sc detail - job: " + resource.getJobNumber() + ", packageNo: " + resource.getPackageNo() 
 					+ ",bpi: " + bpi + ", resourceNo: " + resource.getResourceNo());
@@ -3105,23 +2777,23 @@ public class SubcontractService {
 		scDetail.setToBeApprovedQuantity(resource.getQuantity()*resource.getRemeasuredFactor());
 		//		scDetail.setQuantity(resource.getQuantity()*resource.getRemeasuredFactor());
 		scDetail.setCostRate(resource.getCostRate());
-		scDetailsHBDao.saveOrUpdate(scDetail);
+		subcontractDetailHBDao.saveOrUpdate(scDetail);
 	}
 
 	public SubcontractDetail getSCDetail(Subcontract scPackage, String billItem, Integer resourceNo) throws Exception{
-		return scDetailsHBDao.getSCDetail(scPackage, billItem, resourceNo);
+		return subcontractDetailHBDao.getSCDetail(scPackage, billItem, resourceNo);
 	}
 
 	public void updateSCDetail(SubcontractDetail scDetail) throws DatabaseOperationException{
-		scDetailsHBDao.saveOrUpdate(scDetail);
+		subcontractDetailHBDao.saveOrUpdate(scDetail);
 	}
 
 	public void inactivateSCDetail(SubcontractDetail scDetail) throws Exception{
-		scDetailsHBDao.inactivateSCDetails(scDetail);
+		subcontractDetailHBDao.inactivateSCDetails(scDetail);
 	}
 
 	public Integer getNextSequenceNo(Subcontract scPackage) throws Exception{
-		return scDetailsHBDao.getNextSequenceNo(scPackage);
+		return subcontractDetailHBDao.getNextSequenceNo(scPackage);
 	}
 
 	public List<String> obtainSCPackageNosUnderPaymentRequisition(String jobNumber) throws DatabaseOperationException {
@@ -3132,311 +2804,11 @@ public class SubcontractService {
 		return subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 	}
 	
-	public List<ProvisionPostingHist> searchSCDetailProvision(String jobNumber, String packageNo, String year, String month){
-		return scDetailProvisionHistoryDao.searchSCDetailProvision(jobNumber, packageNo, year, month);
-	}
-	
 	public GetPerformanceAppraisalsResponseListObj getPerforamceAppraisalsList(String jobNumber, Integer sequenceNumber, String appraisalType, String groupCode, Integer vendorNumber, Integer subcontractNumber, String status) throws Exception {
 		return subcontractWSDao.GetPerformanceAppraisalsList(jobNumber, sequenceNumber, appraisalType, groupCode, vendorNumber, subcontractNumber, status);
 	}
-	// last modified: brian tse
-	// get the search result and populate
-	public PerformanceAppraisalPaginationWrapper getSearchAppraisalResult(
-			String userName, String jobNumber, Integer sequenceNumber, String appraisalType,
-			String groupCode, Integer vendorNumber, Integer subcontractNumber,
-			String status, int pageNumber) {
-
-		logger.info("[PackageRepositoryHBImpl][getSearchAppraisalResult] get the search result and populate");
-
-		cachedPerformanceAppraisalsList.clear();
-
-		GetPerformanceAppraisalsResponseListObj responseListObj;
-		try{
-			responseListObj = getPerforamceAppraisalsList(jobNumber, sequenceNumber, appraisalType, groupCode, vendorNumber, subcontractNumber, status);
-			if(responseListObj != null && responseListObj.getPerformanceAppraisalsList() != null && responseListObj.getPerformanceAppraisalsList().size() > 0){
-
-				// added by brian on 20110126
-				logger.info("Number of appraisals before filter: " + responseListObj.getPerformanceAppraisalsList().size());
-
-				// add Job security to filter out record that user is not allowed to access
-				for(int i = 0; i < responseListObj.getPerformanceAppraisalsList().size(); i++){
-					// added to cachedPerformanceAppraisalsList if allow to access
-					if(adminServiceImpl.canAccessJob(userName, responseListObj.getPerformanceAppraisalsList().get(i).getJobNumber().trim()))
-						cachedPerformanceAppraisalsList.add(responseListObj.getPerformanceAppraisalsList().get(i));
-				}
-
-				logger.info("Number of appraisals after filter: " + cachedPerformanceAppraisalsList.size());
-
-				//				cachedPerformanceAppraisalsList.addAll(responseListObj.getPerformanceAppraisalsList());
-
-				// sorting
-				Collections.sort(cachedPerformanceAppraisalsList, new Comparator<GetPerformanceAppraisalsResponseObj>(){
-					public int compare(GetPerformanceAppraisalsResponseObj first, GetPerformanceAppraisalsResponseObj second) {
-						if(first.getSubcontractNumber() > second.getSubcontractNumber())
-							return 1;
-						else if(first.getSubcontractNumber() < second.getSubcontractNumber())
-							return -1;
-						else if(first.getSequenceNumber() > second.getSequenceNumber())
-							return 1;
-						else if(first.getSequenceNumber() < second.getSequenceNumber())
-							return -1;
-						else if(first.getVendorNumber() > second.getVendorNumber())
-							return 1;
-						else if(first.getVendorNumber() < second.getVendorNumber())
-							return -1;
-						else
-							return 0;
-					}
-				});
-			}
-			return getAppraisalResultByPage(jobNumber, pageNumber);
-		}
-		catch(Exception e){
-			logger.info(e.getLocalizedMessage());
-			return null;
-		}
-	}
-
-	/* retrieve a list of PerformanceAppraisalWrapper object filtered by search criteria without pagination or caching - matthewatc 3/2/12 */
-	private List<PerformanceAppraisalWrapper> getPerformanceAppraisalWrapperList(String jobNumber, Integer sequenceNumber, String appraisalType, String groupCode, Integer vendorNumber, Integer subcontractNumber, String status) {
-		List<GetPerformanceAppraisalsResponseObj> performanceAppraisalsList;
-		GetPerformanceAppraisalsResponseListObj responseListObj;
-
-		try {
-			responseListObj = getPerforamceAppraisalsList(jobNumber, sequenceNumber, appraisalType, groupCode, vendorNumber, subcontractNumber, status);
-			if(responseListObj != null && responseListObj.getPerformanceAppraisalsList() != null && responseListObj.getPerformanceAppraisalsList().size() > 0){
-				logger.info("getPerformanceAppraisalWrapperList - jobNumber: " + jobNumber + ", sequenceNumber: " + sequenceNumber + ", appraisalType: " + appraisalType + ", groupCode: " + groupCode + ", vendorNumber: " + vendorNumber + ", subcontractNumber: " + subcontractNumber + ", status: " + status);
-
-				performanceAppraisalsList = responseListObj.getPerformanceAppraisalsList();
-
-				Collections.sort(performanceAppraisalsList, new Comparator<GetPerformanceAppraisalsResponseObj>(){
-					public int compare(GetPerformanceAppraisalsResponseObj first, GetPerformanceAppraisalsResponseObj second) {
-						if(first.getSubcontractNumber() > second.getSubcontractNumber())
-							return 1;
-						else if(first.getSubcontractNumber() < second.getSubcontractNumber())
-							return -1;
-						else if(first.getSequenceNumber() > second.getSequenceNumber())
-							return 1;
-						else if(first.getSequenceNumber() < second.getSequenceNumber())
-							return -1;
-						else if(first.getVendorNumber() > second.getVendorNumber())
-							return 1;
-						else if(first.getVendorNumber() < second.getVendorNumber())
-							return -1;
-						else
-							return 0;
-					}
-				});
-			} else {
-				return null;
-			}
-
-			List<PerformanceAppraisalWrapper> dataWrapperList = new ArrayList<PerformanceAppraisalWrapper>();
-
-			for(int i = 0; i < performanceAppraisalsList.size(); i++){
-				PerformanceAppraisalWrapper tempDataWrapper = new PerformanceAppraisalWrapper();
-
-				// map variable value
-				tempDataWrapper.setAppraisalType(performanceAppraisalsList.get(i).getAppraisalType());
-				tempDataWrapper.setApprovalType(performanceAppraisalsList.get(i).getApprovalType());
-				tempDataWrapper.setComment(performanceAppraisalsList.get(i).getComment());
-				tempDataWrapper.setDateUpdated(performanceAppraisalsList.get(i).getDateUpdated());
-				tempDataWrapper.setJobNumber(performanceAppraisalsList.get(i).getJobNumber());
-				tempDataWrapper.setPerformanceGroup(performanceAppraisalsList.get(i).getGroupCode());
-				tempDataWrapper.setReviewNumber(performanceAppraisalsList.get(i).getSequenceNumber());
-				tempDataWrapper.setScore(performanceAppraisalsList.get(i).getScore());
-				tempDataWrapper.setScoreFactor01(performanceAppraisalsList.get(i).getScoreFactor01());
-				tempDataWrapper.setScoreFactor02(performanceAppraisalsList.get(i).getScoreFactor02());
-				tempDataWrapper.setScoreFactor03(performanceAppraisalsList.get(i).getScoreFactor03());
-				tempDataWrapper.setScoreFactor04(performanceAppraisalsList.get(i).getScoreFactor04());
-				tempDataWrapper.setScoreFactor05(performanceAppraisalsList.get(i).getScoreFactor05());
-				tempDataWrapper.setScoreFactor06(performanceAppraisalsList.get(i).getScoreFactor06());
-				tempDataWrapper.setScoreFactor07(performanceAppraisalsList.get(i).getScoreFactor07());
-				tempDataWrapper.setScoreFactor08(performanceAppraisalsList.get(i).getScoreFactor08());
-				tempDataWrapper.setScoreFactor09(performanceAppraisalsList.get(i).getScoreFactor09());
-				tempDataWrapper.setStatus(performanceAppraisalsList.get(i).getStatus());
-				tempDataWrapper.setSubcontractDescription("");
-				tempDataWrapper.setSubcontractNumber(performanceAppraisalsList.get(i).getSubcontractNumber());
-				tempDataWrapper.setTimeLastUpdated(performanceAppraisalsList.get(i).getTimeLastUpdated());
-				tempDataWrapper.setVendorName("");
-				tempDataWrapper.setVendorNumber(performanceAppraisalsList.get(i).getVendorNumber());
-
-				dataWrapperList.add(tempDataWrapper);
-			}
-
-			List<Subcontract> packageList = new ArrayList<Subcontract>();
-			try{
-				packageList = this.subcontractHBDao.getPackages(jobNumber);
-			} catch(Exception e){
-				logger.info(e.getLocalizedMessage());
-			}
-
-			for(int i = 0; i < dataWrapperList.size(); i++){
-				for(int j = 0; j < packageList.size(); j++){
-					if(packageList.get(j).getPackageNo().equals(dataWrapperList.get(i).getSubcontractNumber().toString())){
-						dataWrapperList.get(i).setSubcontractDescription(packageList.get(j).getDescription());
-					}
-				}
-			}
-
-			List<String> addressNumList = new ArrayList<String>();
-			for(int i = 0; i < performanceAppraisalsList.size(); i++){
-				addressNumList.add(performanceAppraisalsList.get(i).getVendorNumber().toString());
-			}
-
-			List<MasterListVendor> vendorNameList = masterListWSDao.getVendorNameListByBatch(addressNumList);
-			for(int i = 0; i < dataWrapperList.size(); i++){
-				for(int j = 0; j < vendorNameList.size(); j++){
-					if(vendorNameList.get(j).getVendorNo().equals(dataWrapperList.get(i).getVendorNumber().toString())){
-						dataWrapperList.get(i).setVendorName(vendorNameList.get(j).getVendorName());
-					}
-				}
-			}
-
-			return dataWrapperList;
-
-		} catch(Exception e) {
-			logger.info(e.getLocalizedMessage());
-			return null;
-		}
-	}
-
-	public ExcelFile downloadPerformanceAppraisalExcelFile(String jobNumber, Integer sequenceNumber, String appraisalType, String groupCode, Integer vendorNumber, Integer subcontractNumber, String status) {
-		ExcelFile excelFile = new ExcelFile();
-		logger.info("PackageRepositoryHBImpl - jobNumber: " + jobNumber + ", sequenceNumber: " + sequenceNumber + ", appraisalType: " + appraisalType + ", groupCode: " + groupCode + ", vendorNumber: " + vendorNumber + ", subcontractNumber: " + subcontractNumber + ", status: " + status);
-
-		PerformanceAppraisalExcelGenerator excelGenerator = new PerformanceAppraisalExcelGenerator(getPerformanceAppraisalWrapperList(jobNumber, sequenceNumber, appraisalType, groupCode, vendorNumber, subcontractNumber, status), unitRepository.getAppraisalPerformanceGroupMap());			
-		excelFile = excelGenerator.generate();
-
-		return excelFile;
-
-	}
-
-	// last modified: brian tse
-	// popluate the performance appraisal by page
-	public PerformanceAppraisalPaginationWrapper getAppraisalResultByPage(String jobNumber, int pageNumber) {
-
-		logger.info("[PackageRepositoryHBImpl][getAppraisalResultByPage] popluate the performance appraisal of page " + pageNumber);
-
-		PerformanceAppraisalPaginationWrapper wrapper = new PerformanceAppraisalPaginationWrapper();
-		// for current page content
-		List<PerformanceAppraisalWrapper> dataWrapperList = new ArrayList<PerformanceAppraisalWrapper>();
-
-		if(pageNumber < 0){
-			return null;
-		}
-		else{
-			int dataSize = 0;
-			int pageSize = GlobalParameter.PAGE_SIZE;
-			int fromIndex = pageSize*pageNumber;
-			int toIndex = 1;
-			int totalPage = 1;
-
-			if(cachedPerformanceAppraisalsList != null && cachedPerformanceAppraisalsList.size() > 0){
-
-				dataSize = cachedPerformanceAppraisalsList.size();
-
-				// make toindex
-				if(pageSize * (pageNumber + 1) < this.cachedPerformanceAppraisalsList.size())
-					toIndex = pageSize * (pageNumber + 1);
-				else
-					toIndex = this.cachedPerformanceAppraisalsList.size();
-
-				if(fromIndex > toIndex)
-					return null;
-
-				totalPage = (dataSize + pageSize - 1) / pageSize;
 
 
-				List<GetPerformanceAppraisalsResponseObj> currentPageList = new ArrayList<GetPerformanceAppraisalsResponseObj>();
-				currentPageList.addAll(cachedPerformanceAppraisalsList.subList(fromIndex, toIndex));
-
-				// make the wrapper list based on the response object list
-				for(int i = 0; i < currentPageList.size(); i++){
-					PerformanceAppraisalWrapper tempDataWrapper = new PerformanceAppraisalWrapper();
-
-					// map variable value
-					tempDataWrapper.setAppraisalType(currentPageList.get(i).getAppraisalType());
-					tempDataWrapper.setApprovalType(currentPageList.get(i).getApprovalType());
-					tempDataWrapper.setComment(currentPageList.get(i).getComment());
-					tempDataWrapper.setDateUpdated(currentPageList.get(i).getDateUpdated());
-					tempDataWrapper.setJobNumber(currentPageList.get(i).getJobNumber());
-					tempDataWrapper.setPerformanceGroup(currentPageList.get(i).getGroupCode());
-					tempDataWrapper.setReviewNumber(currentPageList.get(i).getSequenceNumber());
-					tempDataWrapper.setScore(currentPageList.get(i).getScore());
-					tempDataWrapper.setScoreFactor01(currentPageList.get(i).getScoreFactor01());
-					tempDataWrapper.setScoreFactor02(currentPageList.get(i).getScoreFactor02());
-					tempDataWrapper.setScoreFactor03(currentPageList.get(i).getScoreFactor03());
-					tempDataWrapper.setScoreFactor04(currentPageList.get(i).getScoreFactor04());
-					tempDataWrapper.setScoreFactor05(currentPageList.get(i).getScoreFactor05());
-					tempDataWrapper.setScoreFactor06(currentPageList.get(i).getScoreFactor06());
-					tempDataWrapper.setScoreFactor07(currentPageList.get(i).getScoreFactor07());
-					tempDataWrapper.setScoreFactor08(currentPageList.get(i).getScoreFactor08());
-					tempDataWrapper.setScoreFactor09(currentPageList.get(i).getScoreFactor09());
-					tempDataWrapper.setStatus(currentPageList.get(i).getStatus());
-					tempDataWrapper.setSubcontractDescription("");
-					tempDataWrapper.setSubcontractNumber(currentPageList.get(i).getSubcontractNumber());
-					tempDataWrapper.setTimeLastUpdated(currentPageList.get(i).getTimeLastUpdated());
-					tempDataWrapper.setVendorName("");
-					tempDataWrapper.setVendorNumber(currentPageList.get(i).getVendorNumber());
-
-					dataWrapperList.add(tempDataWrapper);
-				}
-
-				// base on the list to find Package description
-				List<Subcontract> packageList = new ArrayList<Subcontract>();
-				try{
-					packageList = this.subcontractHBDao.getPackages(jobNumber);
-					logger.info("packageList size = " + packageList.size());
-				}
-				catch(Exception e){
-					logger.info(e.getLocalizedMessage());
-				}
-
-				for(int i = 0; i < dataWrapperList.size(); i++){
-					for(int j = 0; j < packageList.size(); j++){
-						if(packageList.get(j).getPackageNo().equals(dataWrapperList.get(i).getSubcontractNumber().toString())){
-							dataWrapperList.get(i).setSubcontractDescription(packageList.get(j).getDescription());
-						}
-					}
-				}
-
-				// make addressNumber list to call web service
-				List<String> addressNumList = new ArrayList<String>();
-				for(int i = 0; i < currentPageList.size(); i++){
-					addressNumList.add(currentPageList.get(i).getVendorNumber().toString());
-				}
-
-				logger.info("" + addressNumList.size());
-
-				//base on the list to find the vendor name
-				try{
-					List<MasterListVendor> vendorNameList = masterListWSDao.getVendorNameListByBatch(addressNumList);
-					for(int i = 0; i < dataWrapperList.size(); i++){
-						for(int j = 0; j < vendorNameList.size(); j++){
-							//							logger.info("vendor no = " + vendorNameList.get(j).getVendorNo());
-							//							logger.info("vendor name = " + vendorNameList.get(j).getVendorName());
-							if(vendorNameList.get(j).getVendorNo().equals(dataWrapperList.get(i).getVendorNumber().toString())){
-								//								logger.info("vendorNameList.get(j).getVendorNo() = " + vendorNameList.get(j).getVendorNo());
-								//								logger.info("dataWrapperList.get(i).getVendorNumber() = " + dataWrapperList.get(i).getVendorNumber());
-								dataWrapperList.get(i).setVendorName(vendorNameList.get(j).getVendorName());
-							}
-						}
-					}
-				}
-				catch(Exception e){
-					logger.info(e.getLocalizedMessage());
-				}
-
-				//set the wrapper and return
-				wrapper.setCurrentPage(pageNumber);
-				wrapper.setCurrentPageContentList(dataWrapperList);
-				wrapper.setTotalPage(totalPage);
-				wrapper.setTotalRecords(dataSize);
-			}
-		}
-		return wrapper;
-	}
 
 
 	// added by brian tse on 20110223
@@ -3453,125 +2825,8 @@ public class SubcontractService {
 		}
 	}
 
-	/**
-	 * modified by matthewlam, 2015-01-16
-	 * Bug Fix #92: rearrange column names and order for SC Provision History Panel
-	 */
-	public List<SCDetailProvisionHistoryWrapper> searchProvisionHistory(String jobNumber,
-																		String packageNo,
-																		String year,
-																		String month) {
-		logger.info("[PackageRespositoryHBImpl][searchProvisionHistory]");
-		List<ProvisionPostingHist> provisionHistoriesList = searchSCDetailProvision(
-				jobNumber,
-					packageNo,
-					year,
-					month);
-		provisionHistoriesWrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
-
-		for (int i = 0; i < provisionHistoriesList.size(); i++) {
-			ProvisionPostingHist history = provisionHistoriesList.get(i);
-			SCDetailProvisionHistoryWrapper wrapper = new SCDetailProvisionHistoryWrapper();
-
-			wrapper.setCumLiabilitiesAmount(history.getCumLiabilitiesAmount());
-			wrapper.setCumLiabilitiesQty(history.getCumLiabilitiesQty());
-			wrapper.setObjectCode(history.getObjectCode());
-			wrapper.setPackageNo(history.getPackageNo());
-			wrapper.setPostedCertAmount(history.getPostedCertAmount());
-			wrapper.setPostedCertQty(history.getPostedCertQty());
-			wrapper.setPostedMonth(history.getPostedMonth());
-			wrapper.setPostedYr(history.getPostedYr());
-			wrapper.setScRate(history.getScRate());
-			wrapper.setSubsidiaryCode(history.getSubsidiaryCode());
-			wrapper.setCumulativeCertifiedQuantity(history.getCumulativeCertifiedQuantity());
-			wrapper.setCreatedUser(history.getCreatedUser());
-
-			provisionHistoriesWrapperList.add(wrapper);
-		}
-
-		return provisionHistoriesWrapperList;
-	}
-
-	/**
-	 * modified by matthewlam, 2015-01-16
-	 * Bug Fix #92: rearrange column names and order for SC Provision History Panel
-	 */
-	public ExcelFile downloadScProvisionHistoryExcelFile(	String jobNumber,
-															String packageNo,
-															String postedYear,
-															String postedMonth) {
-		List<ProvisionPostingHist> provisionHistoriesList = searchSCDetailProvision(
-				jobNumber,
-					packageNo,
-					postedYear,
-					postedMonth);
-
-		logger.info("DOWNLOAD EXCEL - SC PROVISION HISTORY RECORDS SIZE:" + provisionHistoriesList.size());
-
-		if (provisionHistoriesList == null || provisionHistoriesList.size() == 0)
-			return null;
-
-		// Create Excel File
-		ExcelFile excelFile = new ExcelFile();
-
-		ScProvisionHistoryExcelGenerator excelGenerator = new ScProvisionHistoryExcelGenerator(provisionHistoriesList, jobNumber);
-		excelFile = excelGenerator.generate();
-
-		return excelFile;
-	}
-
-	/**
-	 * modified by matthewlam 2015-01-15
-	 * Bug Fix #91: Add "Total Amounts" to toolbar, and button icons in SC Provision History Panel
-	 */
-	public SCDetailProvisionHistoryPaginationWrapper populateGridByPage(int pageNumber) {
-		if (provisionHistoriesWrapperList == null || provisionHistoriesWrapperList.isEmpty())
-			return null;
-
-		SCDetailProvisionHistoryPaginationWrapper wrapper = new SCDetailProvisionHistoryPaginationWrapper();
-
-		int dataSize = 0;
-		int pageSize = GlobalParameter.PAGE_SIZE;
-		int fromIndex = pageSize * pageNumber;
-		int toIndex = 1;
-		int totalPage = 1;
-		double totalCumulativeAmount = 0.0;
-		double totalPostedCertifiedAmount = 0.0;
-
-		dataSize = provisionHistoriesWrapperList.size();
-
-		// make toindex
-		toIndex = pageSize * (pageNumber + 1) < this.provisionHistoriesWrapperList.size()
-																							? pageSize * (pageNumber + 1)
-																							: this.provisionHistoriesWrapperList.size();
-
-		if (fromIndex > toIndex)
-			return null;
-
-		totalPage = (dataSize + pageSize - 1) / pageSize;
-
-		List<SCDetailProvisionHistoryWrapper> currentPageList = new ArrayList<SCDetailProvisionHistoryWrapper>();
-		currentPageList.addAll(provisionHistoriesWrapperList.subList(fromIndex, toIndex));
-
-		for (SCDetailProvisionHistoryWrapper w : provisionHistoriesWrapperList) {
-			totalCumulativeAmount += w.getCumLiabilitiesAmount();
-			totalPostedCertifiedAmount += w.getPostedCertAmount();
-		}
-
-		wrapper.setTotalCumulativeAmount(totalCumulativeAmount);
-		wrapper.setTotalPostedCertifiedAmount(totalPostedCertifiedAmount);
-		wrapper.setCurrentPage(pageNumber);
-		wrapper.setCurrentPageContentList(currentPageList);
-		wrapper.setTotalPage(totalPage);
-		wrapper.setTotalRecords(dataSize);
-
-		return wrapper;
-	}
-
-	// added by brian on 20110429
-	// delete the provision history
 	public Integer deleteProvisionHistories(String jobNumber, String packageNo, Integer postYr, Integer postMonth)throws DatabaseOperationException{
-		return Integer.valueOf(scDetailProvisionHistoryDao.delete(jobNumber,packageNo, postYr, postMonth));
+		return Integer.valueOf(provisionPostingHistHBDao.delete(jobNumber,packageNo, postYr, postMonth));
 	}
 
 	/**
@@ -3644,7 +2899,7 @@ public class SubcontractService {
 	 * Apr 26, 2011 11:49:05 AM
 	 */
 	public SubcontractDetail getSCDetail(String jobNumber, String packageNo, String bpi, String objectCode, String subsidiaryCode, Integer resourceNo) throws Exception{
-		return scDetailsHBDao.getSCDetail(jobNumber, packageNo, bpi, objectCode, subsidiaryCode, resourceNo);
+		return subcontractDetailHBDao.getSCDetail(jobNumber, packageNo, bpi, objectCode, subsidiaryCode, resourceNo);
 	}
 
 	/**
@@ -3665,7 +2920,7 @@ public class SubcontractService {
 	 * Jun 13, 2011 5:02:25 PM
 	 */
 	public boolean updateSCDetailWorkdoneQtybyHQL(SubcontractDetail scDetail, String username) throws Exception{
-		return scDetailsHBDao.updateSCDetailWorkdoneQtybyHQL(scDetail, username);
+		return subcontractDetailHBDao.updateSCDetailWorkdoneQtybyHQL(scDetail, username);
 	}
 
 	public Boolean updateSCStatus(String jobNumber, String packageNo, String newValue) throws DatabaseOperationException {
@@ -3739,173 +2994,16 @@ public class SubcontractService {
 	}
 
 	Subcontract subcontractInDB = subcontractHBDao.get(subcontract.getId());
-//	SCPackageControl packageControl = assignSCPackageControl(packageInDB, subcontract);
-//	scPackageControlDao.saveOrUpdate(packageControl);
-	if(subcontractInDB == null) {
+	if(subcontractInDB == null)
 		return "Subcontract not found in database";
-	}
 	
 	subcontractHBDao.merge(subcontract);
 
 	return null;
     }
 
-	//TODO: remove entity | SCPackageControl | remark assignSCPackageControl(SCPackage oldPackage,SCPackage newPackage) 
-//	private SCPackageControl assignSCPackageControl(SCPackage oldPackage,SCPackage newPackage){
-//		
-//		SCPackageControl control = new SCPackageControl();
-//		control.setAfterJobId(newPackage.getJob().getId());
-//		control.setAfterPackageNo(newPackage.getPackageNo());
-//		control.setAfterDescription(newPackage.getDescription());
-//		control.setAfterPackageType(newPackage.getPackageType());
-//		control.setAfterVendorNo(newPackage.getVendorNo());
-//		control.setAfterPackageStatus(newPackage.getPackageStatus());
-//		control.setAfterSubcontractStatus(newPackage.getSubcontractStatus());
-//		control.setAfterSubcontractorNature(newPackage.getSubcontractorNature());
-//		control.setAfterOriginalSubcontractSum(newPackage.getOriginalSubcontractSum());
-//		control.setAfterApprovedVOAmount(newPackage.getApprovedVOAmount());
-//		control.setAfterRemeasuredSubcontractSum(newPackage.getRemeasuredSubcontractSum());
-//		control.setAfterApprovalRoute(newPackage.getApprovalRoute());
-//		control.setAfterRetentionTerms(newPackage.getRetentionTerms());
-//		control.setAfterMaxRetentionPercentage(newPackage.getMaxRetentionPercentage());
-//		control.setAfterInterimRentionPercentage(newPackage.getInterimRentionPercentage());
-//		control.setAfterMosRetentionPercentage(newPackage.getMosRetentionPercentage());
-//		control.setAfterRetentionAmount(newPackage.getRetentionAmount());
-//		control.setAfterAccumlatedRetention(newPackage.getAccumlatedRetention());
-//		control.setAfterRetentionReleased(newPackage.getRetentionReleased());
-//		control.setAfterPaymentInformation(newPackage.getPaymentInformation());
-//		control.setAfterPaymentCurrency(newPackage.getPaymentCurrency());
-//		control.setAfterExchangeRate(newPackage.getExchangeRate());
-//		control.setAfterPaymentTerms(newPackage.getPaymentTerms());
-//		control.setAfterSubcontractTerm(newPackage.getSubcontractTerm());
-//		control.setAfterCpfCalculation(newPackage.getCpfCalculation());
-//		control.setAfterCpfBasePeriod(newPackage.getCpfBasePeriod());
-//		control.setAfterCpfBaseYear(newPackage.getCpfBaseYear());
-//		control.setAfterFormOfSubcontract(newPackage.getFormOfSubcontract());
-//		control.setAfterInternalJobNo(newPackage.getInternalJobNo());
-//		control.setAfterPaymentStatus(newPackage.getPaymentStatus());
-//		control.setAfterSubmittedAddendum(newPackage.getSubmittedAddendum());
-//		control.setAfterSplitTerminateStatus(newPackage.getSplitTerminateStatus());
-//		control.setAfterScCreatedDate(newPackage.getScCreatedDate());
-//		control.setAfterLatestAddendumValueUpdatedDate(newPackage.getLatestAddendumValueUpdatedDate());
-//		control.setAfterFirstPaymentCertIssuedDate(newPackage.getFirstPaymentCertIssuedDate());
-//		control.setAfterLastPaymentCertIssuedDate(newPackage.getLastPaymentCertIssuedDate());
-//		control.setAfterFinalPaymentIssuedDate(newPackage.getFinalPaymentIssuedDate());
-//		control.setAfterScAwardApprovalRequestSentDate(newPackage.getScAwardApprovalRequestSentDate());
-//		control.setAfterScApprovalDate(newPackage.getScApprovalDate());
-//		control.setAfterLabourIncludedContract(newPackage.getLabourIncludedContract());
-//		control.setAfterPlantIncludedContract(newPackage.getPlantIncludedContract());
-//		control.setAfterMaterialIncludedContract(newPackage.getMaterialIncludedContract());
-//		control.setAfterTotalPostedWorkDoneAmount(newPackage.getTotalPostedWorkDoneAmount());
-//		control.setAfterTotalCumWorkDoneAmount(newPackage.getTotalCumWorkDoneAmount());
-//		control.setAfterTotalPostedCertifiedAmount(newPackage.getTotalPostedCertifiedAmount());
-//		control.setAfterTotalCumCertifiedAmount(newPackage.getTotalCumCertifiedAmount());
-//		control.setAfterTotalCCPostedCertAmount(newPackage.getTotalCCPostedCertAmount());
-//		control.setAfterTotalMOSPostedCertAmount(newPackage.getTotalMOSPostedCertAmount());
-//
-//		control.setBeforeJobId(oldPackage.getJob().getId());
-//		control.setBeforePackageNo(oldPackage.getPackageNo());
-//		control.setBeforeDescription(oldPackage.getDescription());
-//		control.setBeforePackageType(oldPackage.getPackageType());
-//		control.setBeforeVendorNo(oldPackage.getVendorNo());
-//		control.setBeforePackageStatus(oldPackage.getPackageStatus());
-//		control.setBeforeSubcontractStatus(oldPackage.getSubcontractStatus());
-//		control.setBeforeSubcontractorNature(oldPackage.getSubcontractorNature());
-//		control.setBeforeOriginalSubcontractSum(oldPackage.getOriginalSubcontractSum());
-//		control.setBeforeApprovedVOAmount(oldPackage.getApprovedVOAmount());
-//		control.setBeforeRemeasuredSubcontractSum(oldPackage.getRemeasuredSubcontractSum());
-//		control.setBeforeApprovalRoute(oldPackage.getApprovalRoute());
-//		control.setBeforeRetentionTerms(oldPackage.getRetentionTerms());
-//		control.setBeforeMaxRetentionPercentage(oldPackage.getMaxRetentionPercentage());
-//		control.setBeforeInterimRentionPercentage(oldPackage.getInterimRentionPercentage());
-//		control.setBeforeMosRetentionPercentage(oldPackage.getMosRetentionPercentage());
-//		control.setBeforeRetentionAmount(oldPackage.getRetentionAmount());
-//		control.setBeforeAccumlatedRetention(oldPackage.getAccumlatedRetention());
-//		control.setBeforeRetentionReleased(oldPackage.getRetentionReleased());
-//		control.setBeforePaymentInformation(oldPackage.getPaymentInformation());
-//		control.setBeforePaymentCurrency(oldPackage.getPaymentCurrency());
-//		control.setBeforeExchangeRate(oldPackage.getExchangeRate());
-//		control.setBeforePaymentTerms(oldPackage.getPaymentTerms());
-//		control.setBeforeSubcontractTerm(oldPackage.getSubcontractTerm());
-//		control.setBeforeCpfCalculation(oldPackage.getCpfCalculation());
-//		control.setBeforeCpfBasePeriod(oldPackage.getCpfBasePeriod());
-//		control.setBeforeCpfBaseYear(oldPackage.getCpfBaseYear());
-//		control.setBeforeFormOfSubcontract(oldPackage.getFormOfSubcontract());
-//		control.setBeforeInternalJobNo(oldPackage.getInternalJobNo());
-//		control.setBeforePaymentStatus(oldPackage.getPaymentStatus());
-//		control.setBeforeSubmittedAddendum(oldPackage.getSubmittedAddendum());
-//		control.setBeforeSplitTerminateStatus(oldPackage.getSplitTerminateStatus());
-//		control.setBeforeScCreatedDate(oldPackage.getScCreatedDate());
-//		control.setBeforeLatestAddendumValueUpdatedDate(oldPackage.getLatestAddendumValueUpdatedDate());
-//		control.setBeforeFirstPaymentCertIssuedDate(oldPackage.getFirstPaymentCertIssuedDate());
-//		control.setBeforeLastPaymentCertIssuedDate(oldPackage.getLastPaymentCertIssuedDate());
-//		control.setBeforeFinalPaymentIssuedDate(oldPackage.getFinalPaymentIssuedDate());
-//		control.setBeforeScAwardApprovalRequestSentDate(oldPackage.getScAwardApprovalRequestSentDate());
-//		control.setBeforeScApprovalDate(oldPackage.getScApprovalDate());
-//		control.setBeforeLabourIncludedContract(oldPackage.getLabourIncludedContract());
-//		control.setBeforePlantIncludedContract(oldPackage.getPlantIncludedContract());
-//		control.setBeforeMaterialIncludedContract(oldPackage.getMaterialIncludedContract());
-//		control.setBeforeTotalPostedWorkDoneAmount(oldPackage.getTotalPostedWorkDoneAmount());
-//		control.setBeforeTotalCumWorkDoneAmount(oldPackage.getTotalCumWorkDoneAmount());
-//		control.setBeforeTotalPostedCertifiedAmount(oldPackage.getTotalPostedCertifiedAmount());
-//		control.setBeforeTotalCumCertifiedAmount(oldPackage.getTotalCumCertifiedAmount());
-//		control.setBeforeTotalCCPostedCertAmount(oldPackage.getTotalCCPostedCertAmount());
-//		control.setBeforeTotalMOSPostedCertAmount(oldPackage.getTotalMOSPostedCertAmount());
-//		control.setActionType("UPDATE");
-//
-//		oldPackage.setPackageNo(newPackage.getPackageNo());
-//		oldPackage.setDescription(newPackage.getDescription());
-//		oldPackage.setPackageType(newPackage.getPackageType());
-//		oldPackage.setVendorNo(newPackage.getVendorNo());
-//		oldPackage.setPackageStatus(newPackage.getPackageStatus());
-//		oldPackage.setSubcontractStatus(newPackage.getSubcontractStatus());
-//		oldPackage.setSubcontractorNature(newPackage.getSubcontractorNature());
-//		oldPackage.setOriginalSubcontractSum(newPackage.getOriginalSubcontractSum());
-//		oldPackage.setApprovedVOAmount(newPackage.getApprovedVOAmount());
-//		oldPackage.setRemeasuredSubcontractSum(newPackage.getRemeasuredSubcontractSum());
-//		oldPackage.setApprovalRoute(newPackage.getApprovalRoute());
-//		oldPackage.setRetentionTerms(newPackage.getRetentionTerms());
-//		oldPackage.setMaxRetentionPercentage(newPackage.getMaxRetentionPercentage());
-//		oldPackage.setInterimRentionPercentage(newPackage.getInterimRentionPercentage());
-//		oldPackage.setMosRetentionPercentage(newPackage.getMosRetentionPercentage());
-//		oldPackage.setRetentionAmount(newPackage.getRetentionAmount());
-//		oldPackage.setAccumlatedRetention(newPackage.getAccumlatedRetention());
-//		oldPackage.setRetentionReleased(newPackage.getRetentionReleased());
-//		oldPackage.setPaymentInformation(newPackage.getPaymentInformation());
-//		oldPackage.setPaymentCurrency(newPackage.getPaymentCurrency());
-//		oldPackage.setExchangeRate(newPackage.getExchangeRate());
-//		oldPackage.setPaymentTerms(newPackage.getPaymentTerms());
-//		oldPackage.setSubcontractTerm(newPackage.getSubcontractTerm());
-//		oldPackage.setCpfCalculation(newPackage.getCpfCalculation());
-//		oldPackage.setCpfBasePeriod(newPackage.getCpfBasePeriod());
-//		oldPackage.setCpfBaseYear(newPackage.getCpfBaseYear());
-//		oldPackage.setFormOfSubcontract(newPackage.getFormOfSubcontract());
-//		oldPackage.setInternalJobNo(newPackage.getInternalJobNo());
-//		oldPackage.setPaymentStatus(newPackage.getPaymentStatus());
-//		oldPackage.setSubmittedAddendum(newPackage.getSubmittedAddendum());
-//		oldPackage.setSplitTerminateStatus(newPackage.getSplitTerminateStatus());
-//		oldPackage.setScCreatedDate(newPackage.getScCreatedDate());
-//		oldPackage.setLatestAddendumValueUpdatedDate(newPackage.getLatestAddendumValueUpdatedDate());
-//		oldPackage.setFirstPaymentCertIssuedDate(newPackage.getFirstPaymentCertIssuedDate());
-//		oldPackage.setLastPaymentCertIssuedDate(newPackage.getLastPaymentCertIssuedDate());
-//		oldPackage.setFinalPaymentIssuedDate(newPackage.getFinalPaymentIssuedDate());
-//		oldPackage.setScAwardApprovalRequestSentDate(newPackage.getScAwardApprovalRequestSentDate());
-//		oldPackage.setScApprovalDate(newPackage.getScApprovalDate());
-//		oldPackage.setLabourIncludedContract(newPackage.getLabourIncludedContract());
-//		oldPackage.setPlantIncludedContract(newPackage.getPlantIncludedContract());
-//		oldPackage.setMaterialIncludedContract(newPackage.getMaterialIncludedContract());
-//		oldPackage.setTotalPostedWorkDoneAmount(newPackage.getTotalPostedWorkDoneAmount());
-//		oldPackage.setTotalCumWorkDoneAmount(newPackage.getTotalCumWorkDoneAmount());
-//		oldPackage.setTotalPostedCertifiedAmount(newPackage.getTotalPostedCertifiedAmount());
-//		oldPackage.setTotalCumCertifiedAmount(newPackage.getTotalCumCertifiedAmount());
-//		oldPackage.setTotalCCPostedCertAmount(newPackage.getTotalCCPostedCertAmount());
-//		oldPackage.setTotalMOSPostedCertAmount(newPackage.getTotalMOSPostedCertAmount());
-//
-//		return control;
-//	}
-
 	public ExcelFile getSCDetailsExcelFileByJob(String jobNumber) throws Exception {
-		List<SubcontractDetail> scDetailsList = scDetailsHBDao.getScDetails(jobNumber);
+		List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getScDetails(jobNumber);
 		SubcontractDetailForJobReportGenerator reportGenerator = new SubcontractDetailForJobReportGenerator(scDetailsList, jobNumber);			
 		return reportGenerator.generate();
 	}
@@ -3927,7 +3025,7 @@ public class SubcontractService {
 				break;
 			}
 
-			SubcontractDetail scDetailInDB = scDetailsHBDao.get(scDetailWrapper.getId());
+			SubcontractDetail scDetailInDB = subcontractDetailHBDao.get(scDetailWrapper.getId());
 			if(scDetailInDB==null){
 				message = "SCDetail with id: "+scDetailWrapper.getId()+" doesn't exist.";
 				logger.info(message);
@@ -3938,7 +3036,7 @@ public class SubcontractService {
 			toBeUpdatedscDetails.add(scDetailInDB);
 		}
 
-		scDetailsHBDao.updateSCDetails(toBeUpdatedscDetails);
+		subcontractDetailHBDao.updateSCDetails(toBeUpdatedscDetails);
 
 		return message;
 	}
@@ -3993,8 +3091,8 @@ public class SubcontractService {
 				variedPackageAward = true;
 		}
 		
-		Tender vendorTender = tenderAnalysisHBDao.obtainTenderAnalysis(scPackage, Integer.valueOf(scPackage.getVendorNo()));
-		Tender budgetTender = tenderAnalysisHBDao.obtainTenderAnalysis(scPackage, 0);
+		Tender vendorTender = tenderHBDao.obtainTenderAnalysis(scPackage, Integer.valueOf(scPackage.getVendorNo()));
+		Tender budgetTender = tenderHBDao.obtainTenderAnalysis(scPackage, 0);
 		BigDecimal approvalAmount = new BigDecimal(0);
 		BigDecimal budgetAmount = new BigDecimal(0);
 		
@@ -4121,21 +3219,21 @@ public class SubcontractService {
 			return "SCPackage does not exist";
 		}
 		
-		List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+		List<Tender> tenderAnalysisList = tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 		
 		//Step 1 ----------------TA must be equal to Resource Summary for Payment Requisition---------------------------------------------//
 		if("1".equals(job.getRepackagingType())){
 			logger.info("Step 1: TA must be equal to Repackaging detail for Payment Requisition for Repackaging 1");
 			for (Tender ta: tenderAnalysisList){
 				if (Integer.valueOf(0).equals(ta.getVendorNo())){//Budget TA
-					for(TenderDetail taDetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
-						ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget());
-						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetails.getResourceNo()));
+					for(TenderDetail taDetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
+						ResourceSummary resourceSummary = resourceSummaryHBDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget());
+						//BQResourceSummary resourceSummary = resourceSummaryHBDao.get(Long.valueOf(taDetails.getResourceNo()));
 						if(resourceSummary==null)
 							return "Tender Analysis should be identical to Resource Summaries in Repackaging for making Payment Requisition.";
 					}
 				}else {//Vendor TA
-					for(TenderDetail TADetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
+					for(TenderDetail TADetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
 						if(TADetails.getResourceNo()==null){//If import from excel, no resourceNo will be found
 							return "Please input Tender Analysis again. Invalid Tender Analysis ID is found.";
 						}
@@ -4167,7 +3265,7 @@ public class SubcontractService {
 					if(Integer.valueOf(vendorNo).equals(ta.getVendorNo())){
 						ta.setStatus(Tender.TA_STATUS_RCM);
 						//Step 2.1: Remove existing SC Details AND Pending Payment Cert & Details
-						if(scDetailsHBDao.getSCDetails(scPackage).size()>0){
+						if(subcontractDetailHBDao.getSCDetails(scPackage).size()>0){
 							logger.info("Step 2.1: Remove All SC Details");
 							//--------------------------------Delete Pending Payment Cert & Details---------------------------//
 							/*if(latestPaymentCert!=null 
@@ -4175,12 +3273,12 @@ public class SubcontractService {
 							&& latestPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_PND_PENDING)){
 
 						
-							List<SCPaymentAttachment> attachments = paymentAttachmentDao.getSCPaymentAttachment(latestPaymentCert);
+							List<SCPaymentAttachment> attachments = attachmentPaymentDao.getSCPaymentAttachment(latestPaymentCert);
 							for(SCPaymentAttachment attachment: attachments){
-								paymentAttachmentDao.delete(attachment);
+								attachmentPaymentDao.delete(attachment);
 							}
 							
-							scPaymentDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+							paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 							scPackage.getScPaymentCertList().remove(latestPaymentCert);
 							packageHBDao.update(scPackage);
 							}*/
@@ -4188,15 +3286,15 @@ public class SubcontractService {
 
 							//--------------------------------Delete all existing scDetails---------------------------//
 							//For SERVICE Transaction
-							for(SubcontractDetail scDetails: scDetailsHBDao.getSCDetails(scPackage)){
-								scDetailsHBDao.delete(scDetails);
+							for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(scPackage)){
+								subcontractDetailHBDao.delete(scDetails);
 							}
 							//For SERVICE Transaction ----END
 						}
 						logger.info("Step 2.2: Generate New ScDetails");
-						addSCDetails(scPackage, ta, budgetTA, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, true);
+						addSCDetails(scPackage, ta, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, true);
 						//Calculate SCPackage Sum
-						recalculateSCPackageSubcontractSum(scPackage, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
+						recalculateSCPackageSubcontractSum(scPackage, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
 						
 					}else{
 						//Non-recommended tender analysis
@@ -4226,25 +3324,25 @@ public class SubcontractService {
 						ta.setStatus(Tender.TA_STATUS_RCM);
 						
 						//Step 3.2: Compare TA && SC Details --> Update SC Detail
-						if(scDetailsHBDao.getSCDetails(scPackage).size()>0){
+						if(subcontractDetailHBDao.getSCDetails(scPackage).size()>0){
 							logger.info("Step 3.2: Compare TA && SC Details --> Update SC Detail");
 							
 							//---------------------Delete SC Detail-------------------------------//
-							List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(scPackage);
+							List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(scPackage);
 							Iterator<SubcontractDetail> scDetailsIterator = scDetailsList.iterator();
 							while(scDetailsIterator.hasNext()){
 								SubcontractDetail scDetails = scDetailsIterator.next();
 								if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && !"RR".equals(scDetails.getLineType())){
-									TenderDetail TADetailInDB = tenderAnalysisDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
+									TenderDetail TADetailInDB = tenderDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
 									if(TADetailInDB==null){
 										boolean notUsedInPayment = true;
-										List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
+										List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
 										for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
 											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
 												notUsedInPayment=false;
 												//Inactive scDetail
 												scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
-												scDetailsHBDao.update(scDetails);
+												subcontractDetailHBDao.update(scDetails);
 												break;
 											}
 										}
@@ -4256,7 +3354,7 @@ public class SubcontractService {
 											//For DAO Transaction
 											//scPackage.getScDetails().remove(scDetails);
 											//For DAO Transaction ----END
-											scDetailsHBDao.delete(scDetails); 
+											subcontractDetailHBDao.delete(scDetails); 
 										}	
 									}
 								}
@@ -4264,16 +3362,16 @@ public class SubcontractService {
 							
 							//-------------------Add SC Detail------------------------------//
 							List<TenderDetail> taDetailList = new ArrayList<TenderDetail>();
-							taDetailList.addAll(tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
+							taDetailList.addAll(tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
 							Iterator<TenderDetail> taIterator = taDetailList.iterator();
 							while(taIterator.hasNext()){
 								TenderDetail taDetail = taIterator.next();
 								
-								SubcontractDetailBQ scDetailsInDB = scDetailsHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
+								SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 								if(scDetailsInDB!=null){
 									//Update SC Details
 									scDetailsInDB.setScRate(taDetail.getRateBudget());
-									scDetailsHBDao.update(scDetailsInDB);
+									subcontractDetailHBDao.update(scDetailsInDB);
 									
 									taIterator.remove();
 								}
@@ -4282,13 +3380,13 @@ public class SubcontractService {
 								addSCDetails(scPackage, ta, budgetTA, taDetailList, SubcontractDetail.NOT_APPROVED, false);
 							
 							//-------------------Update SC Detail--------------------------//
-							recalculateSCPackageSubcontractSum(scPackage, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
+							recalculateSCPackageSubcontractSum(scPackage, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
 							
 						}
 						//Step 3.3: Generate ALL SC Details if no existing SC details found
 						else{
 							logger.info("Step 3.3: Generate ALL SC Details since no existing SC details found");
-							addSCDetails(scPackage, ta, budgetTA, tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, false);
+							addSCDetails(scPackage, ta, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, false);
 						}
 						//Step 3.4: Update Package
 						subcontractHBDao.updateSubcontract(scPackage);
@@ -4323,7 +3421,7 @@ public class SubcontractService {
 
 		Integer nextSeqNo =	1;
 		if(!resetSCDetails)
-			nextSeqNo = scDetailsHBDao.getNextSequenceNo(scPackage);
+			nextSeqNo = subcontractDetailHBDao.getNextSequenceNo(scPackage);
 		
 		for(TenderDetail taDetails: taDetailsList){
 			SubcontractDetailBQ scDetails = new SubcontractDetailBQ();
@@ -4333,7 +3431,7 @@ public class SubcontractService {
 			
 			if("BQ".equalsIgnoreCase(taDetails.getLineType())){
 				if (budgetTA!=null){
-					for (TenderDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
+					for (TenderDetail budgetTADetail:tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
 						if (taDetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
 							scDetails.setCostRate(budgetTADetail.getRateBudget());
 						}
@@ -4405,10 +3503,10 @@ public class SubcontractService {
 		logger.info("recalculateSCDetailPostedCertQty");
 		boolean updated = false;
 		
-		List<SubcontractDetail> scDetailList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNo);
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.obtainSCDetails(jobNumber, packageNo);
 		for(SubcontractDetail scDetails: scDetailList){
 			//1. update SC Detail
-			Double accumulatedMovementAmount = scPaymentDetailHBDao.obtainAccumulatedPostedCertQtyByDetail(scDetails.getId());
+			Double accumulatedMovementAmount = paymentCertDetailHBDao.obtainAccumulatedPostedCertQtyByDetail(scDetails.getId());
 			if(accumulatedMovementAmount!=null){
 				if("RR".equals(scDetails.getLineType()) || "C1".equals(scDetails.getLineType()))
 					accumulatedMovementAmount=accumulatedMovementAmount * (-1);
@@ -4422,7 +3520,7 @@ public class SubcontractService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				scDetailsHBDao.update(scDetails);
+				subcontractDetailHBDao.update(scDetails);
 
 				updated = true;
 			}
@@ -4450,241 +3548,6 @@ public class SubcontractService {
 		
 	}
 
-	public ArrayList<String> obtainSystemConstantSearchOption(String fieldName)
-			throws DatabaseOperationException {
-		return systemConstantHBDaoImpl
-				.obtainSystemConstantsSelectionOption(fieldName);
-	}
-
-	public List<ContraChargeEnquiryWrapper> getContraChargeEnquiryWrapper (
-			ContraChargeSearchingCriteriaWrapper searchingCriteria, String packageNumber) throws DatabaseOperationException{
-		List<SubcontractDetail> SCDetailList = obtainContraCharge(searchingCriteria);
-		return updateWrapper(SCDetailList);
-	}
-	
-	private List<ContraChargeEnquiryWrapper> updateWrapper(List<SubcontractDetail> SCDetailList){
-		List<ContraChargeEnquiryWrapper> wrapperList = new ArrayList<ContraChargeEnquiryWrapper>();
-		for(SubcontractDetail details : SCDetailList){
-			ContraChargeEnquiryWrapper wrapper = new ContraChargeEnquiryWrapper();
-			wrapper.setLineType(details.getLineType());
-			wrapper.setBillItem(details.getBillItem());
-			wrapper.setBQQuantity(CalculationUtil.round(0.0,4));
-			wrapper.setDescription(details.getDescription());
-			wrapper.setScRate(CalculationUtil.round(details.getScRate(),4));
-			wrapper.setTotalAmount(CalculationUtil.round(details.getTotalAmount(),2));
-			wrapper.setTotalPostedCertAmt(CalculationUtil.round(CalculationUtil.round(details.getPostedCertifiedQuantity(),4) * CalculationUtil.round(details.getScRate(),4),2)); //not sure
-			wrapper.setCumCertifiedQuantity(CalculationUtil.round(CalculationUtil.round(details.getCumCertifiedQuantity(),4) * CalculationUtil.round(details.getScRate(),4),4));
-			wrapper.setTotalIVAmt(CalculationUtil.round(CalculationUtil.round(details.getPostedWorkDoneQuantity(),4)*CalculationUtil.round(details.getScRate(),4),2)); // not sure
-			wrapper.setObjectCode(details.getObjectCode());
-			wrapper.setSubsidiaryCode(details.getSubsidiaryCode());
-			wrapper.setUnit(details.getUnit());
-			wrapper.setRemark(details.getRemark());
-			wrapper.setSubcontractNumber(details.getSubcontract().getPackageNo());
-			wrapper.setChargedBySubcontractor(""); //not sure
-			wrapperList.add(wrapper);
-		}
-		
-		return wrapperList;
-		
-	}
-
-	private List<ContraChargeEnquiryReportWrapper> updateReportWrapper(JobInfo job, List<SubcontractDetail> SCDetailList){
-		List<ContraChargeEnquiryReportWrapper> wrapperList = new ArrayList<ContraChargeEnquiryReportWrapper>();
-		Subcontract scPackage;
-		String contractorChargeSCNo,chargedBySubcontractor;
-		for(SubcontractDetail details : SCDetailList){
-			
-			ContraChargeEnquiryReportWrapper wrapper = new ContraChargeEnquiryReportWrapper();
-			wrapper.setBillItem(FormatUtil.formatString(details.getBillItem()));
-			wrapper.setLineType(FormatUtil.formatString(details.getLineType()));
-			wrapper.setBQQuantity(FormatUtil.formatString(FormatUtil.doubleToString(details.getQuantity(),4,"#,##0.0000")));
-			wrapper.setDescription(FormatUtil.formatString(details.getDescription()));
-			wrapper.setScRate(FormatUtil.doubleToString(details.getScRate(),4,"#,##0.0000"));
-			wrapper.setTotalAmount(FormatUtil.doubleToString(details.getTotalAmount(),2,"#,##0.00"));
-			wrapper.setTotalPostedCertAmt(FormatUtil.doubleToString(CalculationUtil.round(details.getPostedCertifiedQuantity(),4) * CalculationUtil.round(details.getScRate(),4),2,"#,##0.00"));
-			wrapper.setCumCertifiedAmt(FormatUtil.doubleToString(CalculationUtil.round(details.getCumCertifiedQuantity(),4) * CalculationUtil.round(details.getScRate(),4),2,"#,##0.00"));
-			wrapper.setTotalIVAmt(FormatUtil.doubleToString(CalculationUtil.stringToDouble(wrapper.getCumCertifiedAmt())-CalculationUtil.stringToDouble(wrapper.getTotalPostedCertAmt()),2,"#,##0.00"));
-			wrapper.setObjectCode(FormatUtil.formatString(details.getObjectCode()));
-			wrapper.setSubsidiaryCode(FormatUtil.formatString(details.getSubsidiaryCode()));
-			wrapper.setUnit(FormatUtil.formatString(details.getUnit()));
-			wrapper.setRemark(FormatUtil.formatString(details.getRemark()));
-			wrapper.setSubcontractNumber(FormatUtil.formatString(details.getSubcontract().getPackageNo()));
-			contractorChargeSCNo = details.getContraChargeSCNo()==null?"":details.getContraChargeSCNo();
-			if(contractorChargeSCNo.contentEquals("0"))
-					contractorChargeSCNo="";
-			chargedBySubcontractor = "";
-			try {
-				scPackage = subcontractHBDao.obtainPackage(job, contractorChargeSCNo);
-				if(scPackage!=null)
-					chargedBySubcontractor = scPackage.getVendorNo();
-			} catch (DatabaseOperationException e) {
-				e.printStackTrace();
-			}
-			wrapper.setChargedBySubcontractPackageNo(contractorChargeSCNo); //not sure
-			wrapper.setChargedBySubcontractor(chargedBySubcontractor); //not sure
-			wrapperList.add(wrapper);
-		}
-		
-		return wrapperList;
-		
-	}
-
-	public List<SubcontractDetail> obtainContraCharge(ContraChargeSearchingCriteriaWrapper searchingCriteria)
-			throws DatabaseOperationException {
-		List<SubcontractDetail> scDetails = scDetailsHBDao.obtainContraChargeDetail(searchingCriteria);
-
-		Collections.sort(scDetails, new Comparator<SubcontractDetail>(){
-			public int compare(SubcontractDetail scDetails1, SubcontractDetail scDetails2) {
-				int result = 0;
-				result = sortBySCNo(scDetails1,scDetails2);
-				if(result == 0)
-					result = sortByLineType(scDetails1,scDetails2);
-				if(result == 0)
-					result = sortByBQItem(scDetails1,scDetails2);
-				return result;
-			}
-			//Sorted by Bill Item
-			private int sortBySCNo(SubcontractDetail scDetails1, SubcontractDetail scDetails2){
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getSubcontract()==null || scDetails2.getSubcontract()==null)
-					return 0;			
-				if(scDetails1.getSubcontract().getPackageNo()==null || scDetails2.getSubcontract().getPackageNo()==null)
-					return 0;			
-				return scDetails1.getSubcontract().getPackageNo().compareTo(scDetails2.getSubcontract().getPackageNo());
-			}
-
-			//Sorted by Line Type
-			private int sortByLineType(SubcontractDetail scDetails1, SubcontractDetail scDetails2){
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getLineType()==null || scDetails2.getLineType()==null)
-					return 0;			
-				return scDetails1.getLineType().compareTo(scDetails2.getLineType());
-			}
-
-			//Sorted by Bill Item
-			private int sortByBQItem(SubcontractDetail scDetails1, SubcontractDetail scDetails2){
-				if(scDetails1== null || scDetails2 == null)
-					return 0;
-				if(scDetails1.getBillItem()==null || scDetails2.getBillItem()==null)
-					return 0;			
-				return scDetails1.getBillItem().compareTo(scDetails2.getBillItem());
-			}
-		});
-		
-		if(scDetails==null)
-			logger.info("Job: "+searchingCriteria.getJobNumber()+" Package No.: "+" SCDetail List is null.");
-		else
-			logger.info("Job: "+searchingCriteria.getJobNumber()+" Package No.: "+" SCDetail List size: "+scDetails.size());
-
-		return scDetails;
-	}
-
-	public ContraChargePaginationWrapper<ContraChargeEnquiryWrapper> obtainContraChargeListPaginationWrapper(String jobNumber, String lineType, String BQItem, String description, String objectCode, String subsidiaryCode, String subcontractNumber, String subcontractorNumber) throws DatabaseOperationException{
-		ContraChargeSearchingCriteriaWrapper searchWrapper = new ContraChargeSearchingCriteriaWrapper();
-		searchWrapper.setJobNumber(jobNumber);
-		searchWrapper.setLineType(lineType);
-		searchWrapper.setBQItem(BQItem);
-		searchWrapper.setDescription(description);
-		searchWrapper.setObjectCode(objectCode);
-		searchWrapper.setSubsidiaryCode(subsidiaryCode);
-		searchWrapper.setSubcontractNumber(subcontractNumber);
-		searchWrapper.setSubcontractorNumber(subcontractorNumber);
-		List<SubcontractDetail> SCDetailList = obtainContraCharge(searchWrapper);
-		
-		cachedContraCharge = updateWrapper(SCDetailList);
-		if (cachedContraCharge == null)
-			return null;
-		else
-			return obtainContraChargeByPage(0);
-	}
-
-	public ContraChargePaginationWrapper<ContraChargeEnquiryWrapper> obtainContraChargeByPage(int pageNum) {
-		ContraChargePaginationWrapper<ContraChargeEnquiryWrapper> wrapper = new ContraChargePaginationWrapper<ContraChargeEnquiryWrapper>();
-		wrapper.setCurrentPage(pageNum);
-		int size = cachedContraCharge.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1) / RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if (toInd > cachedContraCharge.size())
-			toInd = cachedContraCharge.size();
-
-		ArrayList<ContraChargeEnquiryWrapper> scListWrappers = new ArrayList<ContraChargeEnquiryWrapper>(cachedContraCharge.subList(fromInd, toInd));
-
-		wrapper.setCurrentPageContentList(scListWrappers);
-		return wrapper;
-	}
-
-	public ByteArrayOutputStream obtainContraChargeReportPDF(ContraChargeSearchingCriteriaWrapper searchWrapper) throws DatabaseOperationException {
-		final String functionName = "obtainContraChargeReportPDF";
-		logger.info("Start -> "+functionName);
-		JobInfo job = jobHBDao.obtainJobInfo(searchWrapper.getJobNumber());
-
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("companyName", "Gammon Construnction");
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
-		parameters.put("mode", "pdf");
-		parameters.put("job",(searchWrapper.getJobNumber()==null?"":searchWrapper.getJobNumber())
-				+" - "
-				+(job.getDescription()==null?"":job.getDescription())
-				);
-		
-		List<SubcontractDetail> SCDetailList = obtainContraCharge(searchWrapper);
-		
-		List<ContraChargeEnquiryReportWrapper> wrapper = updateReportWrapper(job,SCDetailList);
-		
-		
-		logger.info("End -> "+functionName);		
-		try {
-			return JasperReportHelper.get().setCurrentReport(wrapper, jasperConfig.getTemplatePath()+"contraChargeEnquiryReport", parameters).compileAndAddReport().exportAsPDF();
-		} catch (IOException e) {
-			logger.info(e.getMessage());
-		} catch (JRException e) {
-			logger.info(e.getMessage());
-		}
-		return null;	
-	}
-
-	public ByteArrayOutputStream obtainContraChargeReportExcel(ContraChargeSearchingCriteriaWrapper searchWrapper)
-			throws DatabaseOperationException {
-		final String functionName = "obtainContraChargeReportExcel";
-		logger.info("Start -> "+functionName);
-		
-		JobInfo job = jobHBDao.obtainJobInfo(searchWrapper.getJobNumber());
-		
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("companyName", "Gammon Construnction");
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
-		parameters.put("mode", "excel");
-		parameters.put(JasperReportHelper.SHEET_NAMES, new String[]{"Job "+job.getJobNumber()});
-		parameters.put("job",(searchWrapper.getJobNumber()==null?"":searchWrapper.getJobNumber())
-				+" - "
-				+(job.getDescription()==null?"":job.getDescription())
-				);
-		
-		List<SubcontractDetail> SCDetailList = obtainContraCharge(searchWrapper);
-		
-		List<ContraChargeEnquiryReportWrapper> contraChargeList = updateReportWrapper(job,SCDetailList);
-		
-		logger.info("End -> "+functionName);		
-		try {
-			return JasperReportHelper.get().setCurrentReport(contraChargeList, jasperConfig.getTemplatePath()+"contraChargeEnquiryReport", parameters)
-					.compileAndAddReport()
-					.addSheetName(
-							(searchWrapper.getJobNumber()==null?"":searchWrapper.getJobNumber())
-							+" - "
-							+(job.getDescription()==null?"":job.getDescription()))
-					.exportAsExcel();
-		} catch (JRException e) {
-			logger.info(e.getMessage());			
-		} catch (IOException e) {
-			logger.info(e.getMessage());
-		}
-		return null;
-	}
-	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String username) {
 		Boolean result = false;
@@ -4692,7 +3555,7 @@ public class SubcontractService {
 			username = securityService.getCurrentUser().getUsername();
 		}
 		try {
-			result = systemConstantHBDaoImpl.createSystemConstant(request, username);
+			result = appSubcontractStandardTermsHBDao.createSystemConstant(request, username);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -4709,7 +3572,7 @@ public class SubcontractService {
 	 * @throws DatabaseOperationException 
 	 * **/
 	public List<SubcontractDetail> getSubcontractDetailForWD(String jobNo, String subcontractNo) throws DataAccessException {
-		List<SubcontractDetail> scDetailList = scDetailsHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSCDetailsForWD(jobNo, subcontractNo);
 		return scDetailList;
 	}
 	
@@ -4831,7 +3694,7 @@ public class SubcontractService {
 	public List<SubcontractDetail> getSubcontractDetailsDashboardData(String jobNo, String subcontractNo) {
 		List<SubcontractDetail> scDetailsDashboard = new ArrayList<SubcontractDetail>();
 		try {
-			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNo, subcontractNo);
+			List<SubcontractDetail> scDetails = subcontractDetailHBDao.obtainSCDetails(jobNo, subcontractNo);
 			double totalBQSCAmount = 0.0;
 			double postedBQCertifiedAmount = 0.0;
 			double postedBQWDAmount = 0.0;
@@ -4880,7 +3743,7 @@ public class SubcontractService {
 	 * 
 	 */
 	public List<SubcontractDetail> obtainSCDetails(String jobNo, String subcontractNo) throws DatabaseOperationException {
-		List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(jobNo, subcontractNo);
+		List<SubcontractDetail> scDetails = subcontractDetailHBDao.obtainSCDetails(jobNo, subcontractNo);
 
 		//Sorted by Bill Item
 		Collections.sort(scDetails, new Comparator<SubcontractDetail>(){
@@ -5045,7 +3908,7 @@ public class SubcontractService {
 			username = securityService.getCurrentUser().getUsername();
 		}
 		try {
-			result = systemConstantHBDaoImpl.inactivateSystemConstant(request, username);
+			result = appSubcontractStandardTermsHBDao.inactivateSystemConstant(request, username);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -5072,7 +3935,7 @@ public class SubcontractService {
 	 * @since Jul 28, 2016 6:09:18 PM
 	 */
 	public List<Subcontract> getSubcontractList(String jobNo, boolean awardedOnly) throws DataAccessException {
-		if (adminServiceImpl.canAccessJob(securityService.getCurrentUser().getUsername(), jobNo))
+		if (adminService.canAccessJob(securityService.getCurrentUser().getUsername(), jobNo))
 			return subcontractHBDao.find(jobNo, awardedOnly);
 		else
 			return new ArrayList<Subcontract>();
@@ -5092,218 +3955,30 @@ public class SubcontractService {
 	 * @author	tikywong
 	 * @since	Jul 28, 2016 6:25:16 PM
 	 */
-	public List<SCListWrapper> getSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean showJobInfo) throws Exception {
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-
-		// 1. check if there is any record from in subcontract snapshot table
-		scListWrapperList = prepareSubcontractSnapshotList(noJob, year, month, showJobInfo);
-		// 2. if no record is found, obtain from subcontract table
-		if (CollectionUtils.isEmpty(scListWrapperList))
-			scListWrapperList = prepareSubcontractList(noJob, showJobInfo);
-
-		return scListWrapperList;
-	}
-	
-	/**
-	 * For Subcontract Enquiry only
-	 *
-	 * @param noJob
-	 * @param showJobInfo
-	 * @return
-	 * @throws Exception
-	 * @author	tikywong
-	 * @since	Jul 25, 2016 3:27:12 PM
-	 */
-	// TODO: Further refine with ADL 
-	private List<SCListWrapper> prepareSubcontractList(String noJob, Boolean showJobInfo) throws Exception {
-		List<Subcontract> subcontractList = new ArrayList<Subcontract>();
-		String username = securityServiceImpl.getCurrentUser().getUsername();
-
+	public List<?> getSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean showJobInfo) throws Exception {
+		List<?> subcontractList = new ArrayList<Subcontract>();
+		
+		String username = securityService.getCurrentUser().getUsername();
 		if (StringUtils.isNotBlank(noJob)) {
-			if (adminServiceImpl.canAccessJob(username, noJob))
-				subcontractList = subcontractHBDao.find(noJob, true);
+			if (adminService.canAccessJob(username, noJob)){
+				// 1. check if there is any record from in subcontract snapshot table
+				subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, awardedOnly);
+				// 2. if no record is found, obtain from subcontract table
+				if (CollectionUtils.isEmpty(subcontractList))
+					subcontractList = subcontractHBDao.find(noJob, awardedOnly);
+			}
 			else
 				logger.info("User: " + username + " is not authorized to access Job: " + (StringUtils.isNotBlank(noJob) ? noJob : "ALL Job"));
 		}
-		logger.info("NUMBER OF RECORDS(SUBCONTRACT): " + (subcontractList == null ? "0" : subcontractList.size()));
-		
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-
-		for (Subcontract scPackage : subcontractList) {
-			SCListWrapper scListWrapper = new SCListWrapper();
-			scListWrapper.setClientNo(scPackage.getJobInfo().getEmployer());
-			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
-			if (scWorkScopeList != null && scWorkScopeList.size() > 0 && scWorkScopeList.get(0) != null)
-				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
-			scListWrapper.setPackageNo(scPackage.getPackageNo());
-			scListWrapper.setVendorNo(scPackage.getVendorNo());
-
-			//TODO: replace by ADL
-//			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackage.getVendorNo());
-			scListWrapper.setVendorName(/*vendor != null ? vendor.getVendorName() : */"");
-			scListWrapper.setDescription(scPackage.getDescription());
-			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum());
-			scListWrapper.setAddendum(scPackage.getApprovedVOAmount());
-			scListWrapper.setSubcontractSum(scPackage.getSubcontractSum());
-			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackage.getPaymentStatus()));
-			scListWrapper.setPaymentTerms(scPackage.getPaymentTerms());
-			scListWrapper.setSubcontractTerm(scPackage.getSubcontractTerm());
-			scListWrapper.setSubcontractorNature(scPackage.getSubcontractorNature());
-			scListWrapper.setTotalLiabilities(scPackage.getTotalCumWorkDoneAmount());
-			scListWrapper.setTotalPostedCertAmt(scPackage.getTotalPostedCertifiedAmount());
-			scListWrapper.setTotalCumCertAmt(scPackage.getTotalCumCertifiedAmount());
-			if (scPackage.getTotalCumWorkDoneAmount() != null && scPackage.getTotalPostedCertifiedAmount() != null)
-				scListWrapper.setTotalProvision(scPackage.getTotalCumWorkDoneAmount() - scPackage.getTotalPostedCertifiedAmount());
-			Double balanceToComplete = null;
-			if (scPackage.getSubcontractSum() != null && scPackage.getTotalCumWorkDoneAmount() != null)
-				balanceToComplete = new Double(scPackage.getSubcontractSum() - scPackage.getTotalCumWorkDoneAmount());
-			scListWrapper.setBalanceToComplete(balanceToComplete);
-			scListWrapper.setTotalCCPostedAmt(scPackage.getTotalCCPostedCertAmount());
-			scListWrapper.setTotalMOSPostedAmt(scPackage.getTotalMOSPostedCertAmount());
-			scListWrapper.setJobNumber(scPackage.getJobInfo().getJobNumber());
-			scListWrapper.setJobDescription(scPackage.getJobInfo().getDescription());
-			scListWrapper.setAccumlatedRetentionAmt(scPackage.getAccumlatedRetention());
-			scListWrapper.setRetentionReleasedAmt(scPackage.getRetentionReleased());
-			if (scPackage.getAccumlatedRetention() != null && scPackage.getRetentionReleased() != null)
-				scListWrapper.setRetentionBalanceAmt((scPackage.getAccumlatedRetention() + scPackage.getRetentionReleased()));
-
-			scListWrapper.setRequisitionApprovedDate(scPackage.getRequisitionApprovedDate());
-			scListWrapper.setTenderAnalysisApprovedDate(scPackage.getTenderAnalysisApprovedDate());
-			scListWrapper.setPreAwardMeetingDate(scPackage.getPreAwardMeetingDate());
-			scListWrapper.setLoaSignedDate(scPackage.getLoaSignedDate());
-			scListWrapper.setScDocScrDate(scPackage.getScDocScrDate());
-			scListWrapper.setScDocLegalDate(scPackage.getScDocLegalDate());
-			scListWrapper.setWorkCommenceDate(scPackage.getWorkCommenceDate());
-			scListWrapper.setOnSiteStartDate(scPackage.getOnSiteStartDate());
-			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackage.getSplitTerminateStatus()));
-
-			if (showJobInfo && StringUtils.isNotBlank(scPackage.getJobInfo().getJobNumber()))
-				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackage.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
-
-			/**
-			 * koeyyeung added on 27 Aug, 2014 requested by Finance
-			 */
-			scListWrapper.setCompany(scPackage.getJobInfo().getCompany());
-			scListWrapper.setDivision(scPackage.getJobInfo().getDivision());
-			scListWrapper.setSoloJV((scPackage.getJobInfo().getSoloJV().equals("S") ? "Solo" : scPackage.getJobInfo().getSoloJV()));
-			scListWrapper.setJvPercentage(scPackage.getJobInfo().getJvPercentage());
-			scListWrapper.setActualPCCDate(scPackage.getJobInfo().getActualPCCDate());
-			scListWrapper.setCompletionStatus(scPackage.getJobInfo().getCompletionStatus());
-			scListWrapper.setCurrency(scPackage.getPaymentCurrency());
-			scListWrapper.setOriginalSubcontractSum(scPackage.getOriginalSubcontractSum());
-
-			if (scPackage.getTotalPostedCertifiedAmount() != null && scListWrapper.getRetentionBalanceAmt() != null)
-				scListWrapper.setNetCertifiedAmount(scPackage.getTotalPostedCertifiedAmount() - scListWrapper.getRetentionBalanceAmt());
-
-			scListWrapperList.add(scListWrapper);
-		}
-		return scListWrapperList;
+			
+		return subcontractList;
 	}
 	
-	/**
-	 * For Subcontract ENquiry only
-	 *
-	 * @param noJob
-	 * @param year
-	 * @param month
-	 * @param showJobInfo
-	 * @return
-	 * @throws Exception
-	 * @author	tikywong
-	 * @since	Jul 25, 2016 3:28:18 PM
-	 */
-	//TODO: Further refine with ADL 
-	private List<SCListWrapper> prepareSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, Boolean showJobInfo) throws Exception {
-		List<SubcontractSnapshot> subcontractList = new ArrayList<SubcontractSnapshot>();
-		String username = securityServiceImpl.getCurrentUser().getUsername();
-		
-		if (adminServiceImpl.canAccessJob(username, noJob))
-			subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, true);
-		else
-			logger.info("User: " + username + " is not authorized to access Job: " + noJob);
-
-		logger.info("NUMBER OF RECORDS(SUBCONTRACT SNAPSHOT): " + (subcontractList == null ? "0" : subcontractList.size()));
-		
-		List<SCListWrapper> scListWrapperList = new ArrayList<SCListWrapper>();
-		
-		for(SubcontractSnapshot scPackageSnapshot: subcontractList){
-			SCListWrapper scListWrapper = new SCListWrapper();
-			scListWrapper.setClientNo(scPackageSnapshot.getJobInfo().getEmployer());
-			List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackageSnapshot.getSubcontract());
-			if(scWorkScopeList !=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
-				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
-			scListWrapper.setPackageNo(scPackageSnapshot.getPackageNo());
-			scListWrapper.setVendorNo(scPackageSnapshot.getVendorNo());
-			
-			//TODO: replace by ADL
-//			MasterListVendor vendor = masterListRepository.obtainVendorByVendorNo(scPackageSnapshot.getVendorNo());
-			scListWrapper.setVendorName(/*vendor != null ? vendor.getVendorName() :*/ "");
-			scListWrapper.setDescription(scPackageSnapshot.getDescription());
-			scListWrapper.setRemeasuredSubcontractSum(scPackageSnapshot.getRemeasuredSubcontractSum());
-			scListWrapper.setAddendum(scPackageSnapshot.getApprovedVOAmount());
-			scListWrapper.setSubcontractSum(scPackageSnapshot.getSubcontractSum());
-			scListWrapper.setPaymentStatus(Subcontract.convertPaymentType(scPackageSnapshot.getPaymentStatus()));
-			scListWrapper.setPaymentTerms(scPackageSnapshot.getPaymentTerms());
-			scListWrapper.setSubcontractTerm(scPackageSnapshot.getSubcontractTerm());
-			scListWrapper.setSubcontractorNature(scPackageSnapshot.getSubcontractorNature());
-			scListWrapper.setTotalLiabilities(scPackageSnapshot.getTotalCumWorkDoneAmount());
-			scListWrapper.setTotalPostedCertAmt(scPackageSnapshot.getTotalPostedCertifiedAmount());
-			scListWrapper.setTotalCumCertAmt(scPackageSnapshot.getTotalCumCertifiedAmount());
-			if (scPackageSnapshot.getTotalCumWorkDoneAmount()!=null && scPackageSnapshot.getTotalPostedCertifiedAmount()!=null)
-				scListWrapper.setTotalProvision(scPackageSnapshot.getTotalCumWorkDoneAmount() - scPackageSnapshot.getTotalPostedCertifiedAmount());			
-			Double balanceToComplete = null;
-			if (scPackageSnapshot.getSubcontractSum() !=null && scPackageSnapshot.getTotalCumWorkDoneAmount() !=null)
-				balanceToComplete = new Double (scPackageSnapshot.getSubcontractSum()-scPackageSnapshot.getTotalCumWorkDoneAmount());
-			scListWrapper.setBalanceToComplete(balanceToComplete);
-			scListWrapper.setTotalCCPostedAmt(scPackageSnapshot.getTotalCCPostedCertAmount());
-			scListWrapper.setTotalMOSPostedAmt(scPackageSnapshot.getTotalMOSPostedCertAmount());
-			scListWrapper.setJobNumber(scPackageSnapshot.getJobInfo().getJobNumber());
-			scListWrapper.setJobDescription(scPackageSnapshot.getJobInfo().getDescription());
-			scListWrapper.setAccumlatedRetentionAmt(scPackageSnapshot.getAccumlatedRetention());
-			scListWrapper.setRetentionReleasedAmt(scPackageSnapshot.getRetentionReleased());
-			if(scPackageSnapshot.getAccumlatedRetention()!=null && scPackageSnapshot.getRetentionReleased()!=null)
-				scListWrapper.setRetentionBalanceAmt((scPackageSnapshot.getAccumlatedRetention() + scPackageSnapshot.getRetentionReleased()));
-
-			scListWrapper.setRequisitionApprovedDate(scPackageSnapshot.getRequisitionApprovedDate());
-			scListWrapper.setTenderAnalysisApprovedDate(scPackageSnapshot.getTenderAnalysisApprovedDate());
-			scListWrapper.setPreAwardMeetingDate(scPackageSnapshot.getPreAwardMeetingDate());
-			scListWrapper.setLoaSignedDate(scPackageSnapshot.getLoaSignedDate());
-			scListWrapper.setScDocScrDate(scPackageSnapshot.getScDocScrDate());
-			scListWrapper.setScDocLegalDate(scPackageSnapshot.getScDocLegalDate());
-			scListWrapper.setWorkCommenceDate(scPackageSnapshot.getWorkCommenceDate());
-			scListWrapper.setOnSiteStartDate(scPackageSnapshot.getOnSiteStartDate());
-			scListWrapper.setSplitTerminateStatus(Subcontract.convertSplitTerminateStatus(scPackageSnapshot.getSplitTerminateStatus()));
-			
-			if(showJobInfo && StringUtils.isNotBlank(scPackageSnapshot.getJobInfo().getJobNumber()))
-				scListWrapper.setJobAnticipatedCompletionDate(jobWSDao.obtainJobDates(scPackageSnapshot.getJobInfo().getJobNumber()).getAnticipatedCompletionDate());
-			
-			/**
-			 * koeyyeung
-			 * added on 27 Aug, 2014
-			 * requested by Finance
-			 */
-			scListWrapper.setCompany(scPackageSnapshot.getJobInfo().getCompany());
-			scListWrapper.setDivision(scPackageSnapshot.getJobInfo().getDivision());
-			scListWrapper.setSoloJV((scPackageSnapshot.getJobInfo().getSoloJV().equals("S")?"Solo":scPackageSnapshot.getJobInfo().getSoloJV()));
-			scListWrapper.setJvPercentage(scPackageSnapshot.getJobInfo().getJvPercentage());
-			scListWrapper.setActualPCCDate(scPackageSnapshot.getJobInfo().getActualPCCDate());
-			scListWrapper.setCompletionStatus(scPackageSnapshot.getJobInfo().getCompletionStatus());
-			scListWrapper.setCurrency(scPackageSnapshot.getPaymentCurrency());
-			scListWrapper.setOriginalSubcontractSum(scPackageSnapshot.getOriginalSubcontractSum());
-			
-			if(scPackageSnapshot.getTotalPostedCertifiedAmount()!=null && scListWrapper.getRetentionBalanceAmt()!=null)
-				scListWrapper.setNetCertifiedAmount(scPackageSnapshot.getTotalPostedCertifiedAmount()-scListWrapper.getRetentionBalanceAmt());
-			
-			scListWrapper.setSnapshotDate(scPackageSnapshot.getSnapshotDate());
-			
-			scListWrapperList.add(scListWrapper);
-		}
-		return scListWrapperList;
-	}
 	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
-		return scDetailsHBDao.getScDetails(jobNumber);
+		return subcontractDetailHBDao.getScDetails(jobNumber);
 		
 	}
+	
 	/**
 	 * @author koeyyeung
 	 * creatd on 21 Jul, 2016
@@ -5337,7 +4012,7 @@ public class SubcontractService {
 
 		try {
 
-			SubcontractDetail scDetailInDB = scDetailsHBDao.getSCDetail(subcontract, subcontractDetail.getSequenceNo().toString());
+			SubcontractDetail scDetailInDB = subcontractDetailHBDao.getSCDetail(subcontract, subcontractDetail.getSequenceNo().toString());
 
 			if (scDetailInDB == null) {
 				message = "Job: " + jobNo + " Subcontract: " + subcontractNo + " SCDetail SeqNo: " + subcontractDetail.getSequenceNo() + " - SCDetail does not exist.";
@@ -5393,7 +4068,7 @@ public class SubcontractService {
 				return message;
 			}
 			
-			List<SubcontractDetail> subcontractDetailList = scDetailsHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+			List<SubcontractDetail> subcontractDetailList = subcontractDetailHBDao.getSCDetailsForWD(jobNo, subcontractNo);
 
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
@@ -5479,7 +4154,7 @@ public class SubcontractService {
 					
 					ResourceSummary checkResource = null;
 					if (scDetailInDB.getResourceNo() != null && scDetailInDB.getResourceNo() > 0) {
-						checkResource = bqResourceSummaryDao.get(scDetailInDB.getResourceNo().longValue());
+						checkResource = resourceSummaryHBDao.get(scDetailInDB.getResourceNo().longValue());
 						if (checkResource == null || !subcontract.getPackageNo().equals(checkResource.getPackageNo()) ||
 							!checkResource.getObjectCode().equals(scDetailInDB.getObjectCode()) ||
 							!checkResource.getSubsidiaryCode().equals(scDetailInDB.getSubsidiaryCode()) ||
@@ -5507,7 +4182,7 @@ public class SubcontractService {
 
 		// Update the SCDetail in DB if it passes all validations
 		logger.info("Saving scDetails");
-		scDetailsHBDao.saveOrUpdate(scDetailInDB);
+		subcontractDetailHBDao.saveOrUpdate(scDetailInDB);
 		// ----------5. Update the SC Package - START ----------
 		// Update the cumulative total work done amount
 		logger.info("J" + subcontract.getJobInfo().getJobNumber() + " SC" + scDetailInDB.getSubcontract().getPackageNo() + "-" + scDetailInDB.getLineType() + "-" + scDetailInDB.getObjectCode() + "-" + scDetailInDB.getSubsidiaryCode() +
@@ -5545,7 +4220,7 @@ public class SubcontractService {
 				Double totalMOSPostedCertAmount = 0.00;
 				Double totalRetentionReleasedAmount = 0.00;
 				try {
-					scDetails = scDetailsHBDao.getSCDetails(scPackage);
+					scDetails = subcontractDetailHBDao.getSCDetails(scPackage);
 
 					for (SubcontractDetail scDetail: scDetails){
 						// Not updating work done (C1, C2, RR, RA, AP, MS)
@@ -5605,7 +4280,7 @@ public class SubcontractService {
 							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
 								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
 									//RT+RA
-									Double retentionAmount = scPaymentDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
+									Double retentionAmount = paymentCertDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
 									if (retentionAmount != null)
 										accumulatedRetentionAmount = accumulatedRetentionAmount + retentionAmount;
 								}
@@ -5659,7 +4334,7 @@ public class SubcontractService {
 			}
 
 			//Obtain active SCDetail only
-			List<SubcontractDetail> scDetails = scDetailsHBDao.obtainSCDetails(job.getJobNumber(), packageNo);
+			List<SubcontractDetail> scDetails = subcontractDetailHBDao.obtainSCDetails(job.getJobNumber(), packageNo);
 			if (scDetails == null){
 				logger.info("No re-calculation of IV has been done because none of the SC Detail exists. Job: "+job.getJobNumber()+" Package: "+packageNo);
 				return Boolean.FALSE;
@@ -5669,7 +4344,7 @@ public class SubcontractService {
 			Map<String, Double> accountIV = new HashMap<String, Double>();
 
 			// Reset the currIVAmount of all the resources in the package (object code 14%)
-			bqResourceSummaryDao.resetIVAmountofPackage(job, packageNo);
+			resourceSummaryHBDao.resetIVAmountofPackage(job, packageNo);
 
 			// Iterate through scDetails and find total movements for each account code - separate the positive and negative iv amounts
 			for (SubcontractDetail scDetail : scDetails) {
@@ -5693,7 +4368,7 @@ public class SubcontractService {
 
 					//With Resource No. > 0 means it has a Resource Summary associated with
 					if (scDetail.getResourceNo() != null && scDetail.getResourceNo() > 0) {
-						resourceSummaryInDB = bqResourceSummaryDao.get(scDetail.getResourceNo().longValue());
+						resourceSummaryInDB = resourceSummaryHBDao.get(scDetail.getResourceNo().longValue());
 						if (resourceSummaryInDB != null &&
 							((resourceSummaryInDB.getJobInfo()!=null && resourceSummaryInDB.getJobInfo().getJobNumber()!=null && !resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber())) ||
 							 (resourceSummaryInDB.getPackageNo()!=null && !resourceSummaryInDB.getPackageNo().equals(packageNo)) ||
@@ -5730,6 +4405,21 @@ public class SubcontractService {
 		}
 
 		return Boolean.TRUE;
+	}
+
+	/**
+	 * Get Provision Posting History bY Job No., Subcontract No., Year and Month
+	 *
+	 * @param jobNo
+	 * @param subcontractNo
+	 * @param year
+	 * @param month
+	 * @return
+	 * @author	tikywong
+	 * @since	Aug 2, 2016 3:57:20 PM
+	 */
+	public List<ProvisionPostingHist> getProvisionPostingHistList(String jobNo, String subcontractNo, Integer year, Integer month) {
+		return provisionPostingHistHBDao.findByPeriod(jobNo, subcontractNo, year, month);
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

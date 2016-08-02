@@ -28,40 +28,44 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
 @Table(name = "SUBCONTRACT_SNAPSHOT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(name = "SUBCONTRACT_SNAPSHOT_GEN",  sequenceName = "SUBCONTRACT_SNAPSHOT_SEQ", allocationSize = 1)
-@AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 10, scale = 0))
-public class SubcontractSnapshot extends BasePersistedObject{
+@SequenceGenerator(	name = "SUBCONTRACT_SNAPSHOT_GEN",
+					sequenceName = "SUBCONTRACT_SNAPSHOT_SEQ",
+					allocationSize = 1)
+@AttributeOverride(	name = "id",
+					column = @Column(	name = "ID",
+										unique = true,
+										nullable = false,
+										insertable = false,
+										updatable = false,
+										precision = 10,
+										scale = 0))
+public class SubcontractSnapshot extends BasePersistedObject {
 	private static final long serialVersionUID = 3947380120841547841L;
-	/**
-	 * koeyyeung
-	 * Aug 22, 2014 12:15:21 PM
-	 */
-	
-	//Addendum submitted status
+
+	// Addendum submitted status
 	public static final String ADDENDUM_SUBMITTED = "1";
 
 	public static final String ADDENDUM_NOT_SUBMITTED = " ";
-	
-	//Split Terminate Status
+
+	// Split Terminate Status
 	public static final String SPLITTERMINATE_DEFAULT = "0";
 
-	
 	private JobInfo jobInfo;
-	
+
 	private String packageNo;
 	private String description;
 	private String packageType;
 	private String vendorNo;
 	private String packageStatus;
-	
+
 	private Integer subcontractStatus; // <500 = not awarded , >= 500 = awarded
 	private String subcontractorNature;
-	
+
 	private Double originalSubcontractSum;
 	private Double approvedVOAmount;
 	private Double remeasuredSubcontractSum;
 	private String approvalRoute;
-	private String retentionTerms;	
+	private String retentionTerms;
 	private Double maxRetentionPercentage;
 	private Double interimRentionPercentage;
 	private Double mosRetentionPercentage;
@@ -70,7 +74,7 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	private Double retentionReleased;
 	private String paymentInformation;
 	private String paymentCurrency;
-	private Double exchangeRate;//	4
+	private Double exchangeRate;// 4
 	private String paymentTerms;
 	private String subcontractTerm;
 	private String cpfCalculation;
@@ -82,7 +86,7 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	private String submittedAddendum = ADDENDUM_NOT_SUBMITTED;
 	private String splitTerminateStatus = SPLITTERMINATE_DEFAULT;
 	private String paymentTermsDescription;
-	
+
 	private Boolean labourIncludedContract;
 	private Boolean plantIncludedContract;
 	private Boolean materialIncludedContract;
@@ -91,16 +95,11 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	private Double totalCumWorkDoneAmount;
 	private Double totalPostedCertifiedAmount;
 	private Double totalCumCertifiedAmount;
-	
+
 	private Double totalCCPostedCertAmount;
 	private Double totalMOSPostedCertAmount;
-	
-	
-	/**
-	 * koeyyeung
-	 * added on 03 Dec, 2013
-	 * requested by Finance
-	 */
+
+	// Date
 	private Date requisitionApprovedDate;
 	private Date tenderAnalysisApprovedDate;
 	private Date preAwardMeetingDate;
@@ -109,315 +108,364 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	private Date scDocLegalDate;
 	private Date workCommenceDate;
 	private Date onSiteStartDate;
-	
-	/**
-	 * koeyyeung
-	 * added on 22 Aug, 2014
-	 * requested by Finance
-	 */
 	private Date snapshotDate;
 	private Subcontract subcontract;
-	
+
 	@Transient
 	public boolean isAwarded() {
-		if (subcontractStatus == null)
-			return false;
-		
-		return (subcontractStatus >= 500);
+		return (subcontractStatus == null ? false : (subcontractStatus >= 500));
 	}
 
 	@Transient
 	public Double getSubcontractSum() {
-		return (remeasuredSubcontractSum!=null && approvedVOAmount!=null)?(CalculationUtil.round(remeasuredSubcontractSum+approvedVOAmount, 2)):0.00;		
+		return getRemeasuredSubcontractSum() + getApprovedVOAmount();
+	}
+
+	@Transient
+	public Double getRetentionBalance() {
+		return getAccumlatedRetention() + getRetentionReleased();
+	}
+
+	/**
+	 * Net Certified Amount = Total Posted Certified Amount + Total Posted Contra Charge Amount - Retention Balance
+	 *
+	 * @return
+	 * @author tikywong
+	 * @since Aug 1, 2016 5:16:58 PM
+	 */
+	@Transient
+	public Double getTotalNetPostedCertifiedAmount() {
+		return getTotalPostedCertifiedAmount() + getTotalCCPostedCertAmount() - getRetentionBalance();
+	}
+
+	@Transient
+	public Double getTotalProvisionAmount() {
+		return getTotalCumWorkDoneAmount() - getTotalPostedCertifiedAmount();
+	}
+
+	@Transient
+	public Double getBalanceToCompleteAmount() {
+		return getSubcontractSum() - getTotalCumWorkDoneAmount();
+	}
+
+	@Transient
+	public String getSplitTerminateStatusText() {
+		return convertSplitTerminateStatus(getSplitTerminateStatus());
+	}
+
+	@Transient
+	public String getPaymentStatusText() {
+		return convertPaymentStatus(getPaymentStatus());
 	}
 
 	@Transient
 	public String getSubcontractType() {
 		String scType = "-";
 		boolean isFirst = true;
-		if(labourIncludedContract != null && labourIncludedContract.booleanValue()){
-				scType = "Labour";
-				isFirst = false;
+		if (labourIncludedContract != null && labourIncludedContract.booleanValue()) {
+			scType = "Labour";
+			isFirst = false;
 		}
-		if(plantIncludedContract != null && plantIncludedContract.booleanValue()){
-			if(isFirst){
+		if (plantIncludedContract != null && plantIncludedContract.booleanValue()) {
+			if (isFirst) {
 				scType = "Plant";
 				isFirst = false;
-			}else 
+			} else
 				scType = scType + " & Plant";
 		}
-		if(materialIncludedContract != null && materialIncludedContract.booleanValue()){
-			if(isFirst)
+		if (materialIncludedContract != null && materialIncludedContract.booleanValue()) {
+			if (isFirst)
 				scType = "Material";
 			else
 				scType = scType + " & Material";
 		}
-		return scType;	
+		return scType;
+	}
+
+	public static String convertSplitTerminateStatus(String splitTerminateStatus) {
+		if (splitTerminateStatus != null && !"".equals(splitTerminateStatus)) {
+			int status = Integer.parseInt(splitTerminateStatus);
+			return Subcontract.SPLITTERMINATESTATUSES[status][1];
+		}
+		return "";
+	}
+
+	/**
+	 * Payment Status: I - Interim, F - Final, D - Direct Payment, " " - No Payment
+	 *
+	 * @param paymentStatus
+	 * @return
+	 * @author tikywong
+	 * @since Aug 1, 2016 5:06:20 PM
+	 */
+	public static String convertPaymentStatus(String paymentStatus) {
+		if (paymentStatus != null && paymentStatus.trim().length() == 1) {
+			if ("I".equals(paymentStatus.trim()) || "D".equals(paymentStatus.trim()))
+				return "Interim";
+			else if ("F".equals(paymentStatus.trim()))
+				return "Final";
+
+		}
+		return "";
 	}
 
 	@Override
-	public String toString() {
-		return "SubcontractSnapshot [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description
-				+ ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus
-				+ ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature
-				+ ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount
-				+ ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute
-				+ ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage
-				+ ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage="
-				+ mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention="
-				+ accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation="
-				+ paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate
-				+ ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation="
-				+ cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear
-				+ ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus="
-				+ paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus="
-				+ splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription
-				+ ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract="
-				+ plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract
-				+ ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount="
-				+ totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount
-				+ ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount="
-				+ totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount
-				+ ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate="
-				+ tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate="
-				+ loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate
-				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + ", snapshotDate="
-				+ snapshotDate + ", subcontract=" + subcontract + ", toString()=" + super.toString() + "]";
-	}
-	
-	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SUBCONTRACT_SNAPSHOT_GEN")
-	public Long getId(){return super.getId();}
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "SUBCONTRACT_SNAPSHOT_GEN")
+	public Long getId() {
+		return super.getId();
+	}
 
 	@Column(name = "totalCCPostedCertAmt")
 	public Double getTotalCCPostedCertAmount() {
-		return (totalCCPostedCertAmount!=null?CalculationUtil.round(totalCCPostedCertAmount, 2):0.00);
+		return (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
 	}
 
 	public void setTotalCCPostedCertAmount(Double totalCCPostedCertAmount) {
-		this.totalCCPostedCertAmount = (totalCCPostedCertAmount!=null?CalculationUtil.round(totalCCPostedCertAmount, 2):0.00);
+		this.totalCCPostedCertAmount = (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalMOSPostedCertAmt")
 	public Double getTotalMOSPostedCertAmount() {
-		return (totalMOSPostedCertAmount!=null?CalculationUtil.round(totalMOSPostedCertAmount, 2):0.00);
+		return (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
 	}
 
 	public void setTotalMOSPostedCertAmount(Double totalMOSPostedCertAmount) {
-		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount!=null?CalculationUtil.round(totalMOSPostedCertAmount, 2):0.00);
+		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalPostedWDAmt")
 	public Double getTotalPostedWorkDoneAmount() {
-		return (totalPostedWorkDoneAmount!=null?CalculationUtil.round(totalPostedWorkDoneAmount, 2):0.00);
+		return (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
 	}
 
 	public void setTotalPostedWorkDoneAmount(Double totalPostedWorkDoneAmount) {
-		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount!=null?CalculationUtil.round(totalPostedWorkDoneAmount, 2):0.00);
+		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalCumWDAmt")
 	public Double getTotalCumWorkDoneAmount() {
-		return (totalCumWorkDoneAmount!=null?CalculationUtil.round(totalCumWorkDoneAmount, 2):0.00);
+		return (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
 	}
 
 	public void setTotalCumWorkDoneAmount(Double totalCumWorkDoneAmount) {
-		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount!=null?CalculationUtil.round(totalCumWorkDoneAmount, 2):0.00);
+		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalPostedCertAmt")
 	public Double getTotalPostedCertifiedAmount() {
-		return (totalPostedCertifiedAmount!=null?CalculationUtil.round(totalPostedCertifiedAmount, 2):0.00);
+		return (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
 	}
 
 	public void setTotalPostedCertifiedAmount(Double totalPostedCertifiedAmount) {
-		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount!=null?CalculationUtil.round(totalPostedCertifiedAmount, 2):0.00);
+		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
 	}
 
 	@Column(name = "totalCumCertAmt")
 	public Double getTotalCumCertifiedAmount() {
-		return (totalCumCertifiedAmount!=null?CalculationUtil.round(totalCumCertifiedAmount, 2):0.00);
+		return (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
 	}
 
 	public void setTotalCumCertifiedAmount(Double totalCumCertifiedAmount) {
-		this.totalCumCertifiedAmount = (totalCumCertifiedAmount!=null?CalculationUtil.round(totalCumCertifiedAmount, 2):0.00);
+		this.totalCumCertifiedAmount = (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
 	}
 
-	@Column(name = "submittedAddendum", length = 1)
+	@Column(name = "submittedAddendum",
+			length = 1)
 	public String getSubmittedAddendum() {
 		return submittedAddendum;
 	}
-	
+
 	public void setSubmittedAddendum(String submittedAddendum) {
 		this.submittedAddendum = submittedAddendum;
 	}
 
-
-	@Column(name = "paymentStatus", length = 1)
+	@Column(name = "paymentStatus",
+			length = 1)
 	public String getPaymentStatus() {
 		return paymentStatus;
 	}
-	
+
 	public void setPaymentStatus(String paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
-	
+
 	@Column(name = "scStatus")
 	public Integer getSubcontractStatus() {
 		return subcontractStatus;
 	}
+
 	public void setSubcontractStatus(Integer scStatus) {
 		this.subcontractStatus = scStatus;
 	}
-	
+
 	@Column(name = "maxRetPercent")
 	public Double getMaxRetentionPercentage() {
-		return (maxRetentionPercentage!=null?CalculationUtil.round(maxRetentionPercentage, 2):0.00);
+		return (maxRetentionPercentage != null ? CalculationUtil.round(maxRetentionPercentage, 2) : 0.00);
 	}
+
 	public void setMaxRetentionPercentage(Double maxiRetention) {
-		this.maxRetentionPercentage = (maxiRetention!=null?CalculationUtil.round(maxiRetention, 2):0.00);
+		this.maxRetentionPercentage = (maxiRetention != null ? CalculationUtil.round(maxiRetention, 2) : 0.00);
 	}
-	
+
 	@Column(name = "interimRetPerent")
 	public Double getInterimRentionPercentage() {
-		return (interimRentionPercentage!=null?CalculationUtil.round(interimRentionPercentage, 2):0.00);
+		return (interimRentionPercentage != null ? CalculationUtil.round(interimRentionPercentage, 2) : 0.00);
 	}
+
 	public void setInterimRentionPercentage(Double interimRention) {
-		this.interimRentionPercentage = (interimRention!=null?CalculationUtil.round(interimRention, 2):0.00);
+		this.interimRentionPercentage = (interimRention != null ? CalculationUtil.round(interimRention, 2) : 0.00);
 	}
-	
-	@Column(name = "scNature", length = 4)
+
+	@Column(name = "scNature",
+			length = 4)
 	public String getSubcontractorNature() {
 		return subcontractorNature;
 	}
+
 	public void setSubcontractorNature(String subcontractorNature) {
 		this.subcontractorNature = subcontractorNature;
 	}
-	
+
 	@Column(name = "remeasuredSCSum")
 	public Double getRemeasuredSubcontractSum() {
-		return (remeasuredSubcontractSum!=null?CalculationUtil.round(remeasuredSubcontractSum, 2):0.00);
+		return (remeasuredSubcontractSum != null ? CalculationUtil.round(remeasuredSubcontractSum, 2) : 0.00);
 	}
+
 	public void setRemeasuredSubcontractSum(Double remeasuredContractSum) {
-		this.remeasuredSubcontractSum = (remeasuredContractSum!=null?CalculationUtil.round(remeasuredContractSum, 2):0.00);
+		this.remeasuredSubcontractSum = (remeasuredContractSum != null ? CalculationUtil.round(remeasuredContractSum, 2) : 0.00);
 	}
-	
+
 	@Column(name = "originalSCSum")
 	public Double getOriginalSubcontractSum() {
-		return (originalSubcontractSum!=null?CalculationUtil.round(originalSubcontractSum, 2):0.00);
+		return (originalSubcontractSum != null ? CalculationUtil.round(originalSubcontractSum, 2) : 0.00);
 	}
+
 	public void setOriginalSubcontractSum(Double originalContractSum) {
-		this.originalSubcontractSum = (originalContractSum!=null?CalculationUtil.round(originalContractSum, 2):0.00);
+		this.originalSubcontractSum = (originalContractSum != null ? CalculationUtil.round(originalContractSum, 2) : 0.00);
 	}
-	
+
 	@Column(name = "approvedVOAmount")
 	public Double getApprovedVOAmount() {
-		return (approvedVOAmount!=null?CalculationUtil.round(approvedVOAmount, 2):0.00);
+		return (approvedVOAmount != null ? CalculationUtil.round(approvedVOAmount, 2) : 0.00);
 	}
+
 	public void setApprovedVOAmount(Double approvedVO) {
-		this.approvedVOAmount = (approvedVO!=null?CalculationUtil.round(approvedVO, 2):0.00);
+		this.approvedVOAmount = (approvedVO != null ? CalculationUtil.round(approvedVO, 2) : 0.00);
 	}
-	
-	@Column(name = "approvalRoute", length = 5)
+
+	@Column(name = "approvalRoute",
+			length = 5)
 	public String getApprovalRoute() {
 		return approvalRoute;
 	}
-	
+
 	public void setApprovalRoute(String approvalRoute) {
 		this.approvalRoute = approvalRoute;
 	}
 
 	@Column(name = "retAmount")
 	public Double getRetentionAmount() {
-		return (retentionAmount!=null?CalculationUtil.round(retentionAmount, 2):0.00);
+		return (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
 	}
+
 	public void setRetentionAmount(Double retentionAmount) {
-		this.retentionAmount = (retentionAmount!=null?CalculationUtil.round(retentionAmount, 2):0.00);
+		this.retentionAmount = (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
 	}
-	
+
 	@Column(name = "accumlatedRet")
 	public Double getAccumlatedRetention() {
-		return (accumlatedRetention!=null?CalculationUtil.round(accumlatedRetention, 2):0.00);
+		return (accumlatedRetention != null ? CalculationUtil.round(accumlatedRetention, 2) : 0.00);
 	}
+
 	public void setAccumlatedRetention(Double accumlatedRetentionAmount) {
-		this.accumlatedRetention = (accumlatedRetentionAmount!=null?CalculationUtil.round(accumlatedRetentionAmount, 2):0.00);
+		this.accumlatedRetention = (accumlatedRetentionAmount != null ? CalculationUtil.round(accumlatedRetentionAmount, 2) : 0.00);
 	}
-	
+
 	@Column(name = "retRelease")
 	public Double getRetentionReleased() {
-		return (retentionReleased!=null?CalculationUtil.round(retentionReleased, 2):0.00);
+		return (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
 	}
+
 	public void setRetentionReleased(Double retentionReleased) {
-		this.retentionReleased = (retentionReleased!=null?CalculationUtil.round(retentionReleased, 2):0.00);
+		this.retentionReleased = (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
 	}
-	
-	@Column(name = "paymentCurrency", length = 3)
+
+	@Column(name = "paymentCurrency",
+			length = 3)
 	public String getPaymentCurrency() {
 		return paymentCurrency;
 	}
-	
+
 	public void setPaymentCurrency(String paymentCurr) {
 		this.paymentCurrency = paymentCurr;
 	}
 
 	@Column(name = "exchangeRate")
 	public Double getExchangeRate() {
-		return (exchangeRate!=null?CalculationUtil.round(exchangeRate, 4):0.00);
+		return (exchangeRate != null ? CalculationUtil.round(exchangeRate, 4) : 0.00);
 	}
+
 	public void setExchangeRate(Double exchangeRate) {
-		this.exchangeRate = (exchangeRate!=null?CalculationUtil.round(exchangeRate, 4):0.00);
+		this.exchangeRate = (exchangeRate != null ? CalculationUtil.round(exchangeRate, 4) : 0.00);
 	}
-	
-	@Column(name = "paymentTerms", length = 3)
+
+	@Column(name = "paymentTerms",
+			length = 3)
 	public String getPaymentTerms() {
 		return paymentTerms;
 	}
-	
+
 	public void setPaymentTerms(String paymentTerm) {
 		this.paymentTerms = paymentTerm;
 	}
 
-	@Column(name = "retentionTerms", length = 30)
+	@Column(name = "retentionTerms",
+			length = 30)
 	public String getRetentionTerms() {
 		return retentionTerms;
 	}
-	
+
 	public void setRetentionTerms(String retentionTerms) {
 		this.retentionTerms = retentionTerms;
 	}
 
 	@Column(name = "mosRetPerent")
 	public Double getMosRetentionPercentage() {
-		return (mosRetentionPercentage!=null?CalculationUtil.round(mosRetentionPercentage, 2):0.00);
+		return (mosRetentionPercentage != null ? CalculationUtil.round(mosRetentionPercentage, 2) : 0.00);
 	}
+
 	public void setMosRetentionPercentage(Double mosRetentionPercentage) {
-		this.mosRetentionPercentage = (mosRetentionPercentage!=null?CalculationUtil.round(mosRetentionPercentage, 2):0.00);
+		this.mosRetentionPercentage = (mosRetentionPercentage != null ? CalculationUtil.round(mosRetentionPercentage, 2) : 0.00);
 	}
-	
-	@Column(name = "paymentInfo", length = 50)
+
+	@Column(name = "paymentInfo",
+			length = 50)
 	public String getPaymentInformation() {
 		return paymentInformation;
 	}
-	
+
 	public void setPaymentInformation(String paymentInfor) {
 		this.paymentInformation = paymentInfor;
 	}
 
-	@Column(name = "scTerm", length = 15)
+	@Column(name = "scTerm",
+			length = 15)
 	public String getSubcontractTerm() {
 		return subcontractTerm;
 	}
-	
+
 	public void setSubcontractTerm(String subcontractTerms) {
 		this.subcontractTerm = subcontractTerms;
 	}
 
-	@Column(name = "cpfCalculation", length = 20)
+	@Column(name = "cpfCalculation",
+			length = 20)
 	public String getCpfCalculation() {
 		return cpfCalculation;
 	}
-	
+
 	public void setCpfCalculation(String cpfCalculation) {
 		this.cpfCalculation = cpfCalculation;
 	}
@@ -426,28 +474,32 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	public Integer getCpfBasePeriod() {
 		return cpfBasePeriod;
 	}
+
 	public void setCpfBasePeriod(Integer cpfBasePeriod) {
 		this.cpfBasePeriod = cpfBasePeriod;
 	}
-	
+
 	@Column(name = "cpfBaseYear")
 	public Integer getCpfBaseYear() {
 		return cpfBaseYear;
 	}
+
 	public void setCpfBaseYear(Integer cpfBaseYear) {
 		this.cpfBaseYear = cpfBaseYear;
 	}
-	
-	@Column(name = "formOfSubcontract", length = 22)
+
+	@Column(name = "formOfSubcontract",
+			length = 22)
 	public String getFormOfSubcontract() {
 		return formOfSubcontract;
 	}
-	
+
 	public void setFormOfSubcontract(String formOfSubcontract) {
 		this.formOfSubcontract = formOfSubcontract;
 	}
 
-	@Column(name = "internalJobNo", length = 12)
+	@Column(name = "internalJobNo",
+			length = 12)
 	public String getInternalJobNo() {
 		return internalJobNo;
 	}
@@ -474,16 +526,18 @@ public class SubcontractSnapshot extends BasePersistedObject{
 		this.plantIncludedContract = plantIncludedContract;
 	}
 
-	@Column(name = "splitTerminateStatus", length = 1)
+	@Column(name = "splitTerminateStatus",
+			length = 1)
 	public String getSplitTerminateStatus() {
 		return splitTerminateStatus;
 	}
-	
+
 	public void setSplitTerminateStatus(String splitTerminateStatus) {
 		this.splitTerminateStatus = splitTerminateStatus;
 	}
 
-	@Column(name = "paymentTermsDescription", length = 255)
+	@Column(name = "paymentTermsDescription",
+			length = 255)
 	public String getPaymentTermsDescription() {
 		return paymentTermsDescription;
 	}
@@ -494,7 +548,8 @@ public class SubcontractSnapshot extends BasePersistedObject{
 
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "Job_Info_ID", foreignKey = @ForeignKey(name = "FK_SubcontractSnapshot_JobInfo_PK"))
+	@JoinColumn(name = "Job_Info_ID",
+				foreignKey = @ForeignKey(name = "FK_SubcontractSnapshot_JobInfo_PK"))
 	public JobInfo getJobInfo() {
 		return jobInfo;
 	}
@@ -503,7 +558,8 @@ public class SubcontractSnapshot extends BasePersistedObject{
 		this.jobInfo = jobInfo;
 	}
 
-	@Column(name = "packageNo", length = 10)
+	@Column(name = "packageNo",
+			length = 10)
 	public String getPackageNo() {
 		return packageNo;
 	}
@@ -521,7 +577,8 @@ public class SubcontractSnapshot extends BasePersistedObject{
 		this.description = description;
 	}
 
-	@Column(name = "packageType", length = 4)
+	@Column(name = "packageType",
+			length = 4)
 	public String getPackageType() {
 		return packageType;
 	}
@@ -539,7 +596,8 @@ public class SubcontractSnapshot extends BasePersistedObject{
 		this.vendorNo = vendorNo;
 	}
 
-	@Column(name = "packageStatus", length = 3)
+	@Column(name = "packageStatus",
+			length = 3)
 	public String getPackageStatus() {
 		return packageStatus;
 	}
@@ -559,7 +617,7 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	}
 
 	@Column(name = "TA_APPROVED_DATE")
-	@Temporal(value =TemporalType.DATE)
+	@Temporal(value = TemporalType.DATE)
 	public Date getTenderAnalysisApprovedDate() {
 		return tenderAnalysisApprovedDate;
 	}
@@ -629,7 +687,7 @@ public class SubcontractSnapshot extends BasePersistedObject{
 	}
 
 	@Column(name = "SNAPSHOT_DATE")
-	@Temporal(value =TemporalType.DATE)
+	@Temporal(value = TemporalType.DATE)
 	public Date getSnapshotDate() {
 		return snapshotDate;
 	}
@@ -640,7 +698,8 @@ public class SubcontractSnapshot extends BasePersistedObject{
 
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "Subcontract_ID", foreignKey = @ForeignKey(name = "FK_SubcontractSnapshot_Subcontract_PK"))
+	@JoinColumn(name = "Subcontract_ID",
+				foreignKey = @ForeignKey(name = "FK_SubcontractSnapshot_Subcontract_PK"))
 	public Subcontract getSubcontract() {
 		return subcontract;
 	}

@@ -24,14 +24,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
+import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
+import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
-import com.gammon.qs.wrapper.SCDetailProvisionHistoryWrapper;
 import com.gammon.qs.wrapper.UDC;
-import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 
 @RestController
@@ -58,7 +60,7 @@ public class SubcontractController {
 
 	@RequestMapping(value = "getSubcontractSnapshotList",
 					method = RequestMethod.GET)
-	public List<SCListWrapper> getSubcontractSnapshotList(	@RequestParam(required = false) String noJob,
+	public List<?> getSubcontractSnapshotList(	@RequestParam(required = false) String noJob,
 															@RequestParam(required = true) BigDecimal year,
 															@RequestParam(required = true) BigDecimal month,
 															@RequestParam(	required = true,
@@ -69,7 +71,7 @@ public class SubcontractController {
 			return subcontractService.getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ArrayList<SCListWrapper>();
+			return new ArrayList<Subcontract>();
 		}
 	}
 	
@@ -291,17 +293,30 @@ public class SubcontractController {
 		subcontractService.updateSubcontractAdmin(subcontract);
 	}
 
-	@RequestMapping(value = "searchProvisionHistory", method = RequestMethod.POST)
-	public List<SCDetailProvisionHistoryWrapper> searchProvisionHistory(@RequestParam String jobNumber, @RequestParam(required = false) String packageNo,
-			@RequestParam String year, @RequestParam String month) {
-		List<SCDetailProvisionHistoryWrapper> wrapperList = new ArrayList<SCDetailProvisionHistoryWrapper>();
-		try{
-			wrapperList.addAll(subcontractService.searchProvisionHistory(jobNumber, packageNo, year, month));
-		} catch (Exception e){
+	
+	/**
+	 * For Provision Posting History Enquiry
+	 *
+	 * @param jobNo
+	 * @param subcontractNo
+	 * @param year
+	 * @param month
+	 * @return
+	 * @author	tikywong
+	 * @since	Aug 2, 2016 3:59:30 PM
+	 */
+	@JsonView(ProvisionPostingHistView.Native.class)
+	@RequestMapping(value = "getProvisionPostingHistList",
+					method = RequestMethod.GET)
+	public List<ProvisionPostingHist> getProvisionPostingHistList(	@RequestParam(required = true) String jobNo,
+																@RequestParam(required = false) String subcontractNo,
+																@RequestParam(required = true) BigDecimal year,
+																@RequestParam(required = true) BigDecimal month) {
+		try {
+			return subcontractService.getProvisionPostingHistList(jobNo, subcontractNo, year.intValue(), month.intValue());
+		} catch (Exception e) {
 			e.printStackTrace();
+			return new ArrayList<ProvisionPostingHist>();
 		}
-		return wrapperList;
 	}
-
-
 }

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
+
 import com.gammon.junit.testcase.TransactionTestCase;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.wrapper.addAddendum.AddAddendumWrapper;
 
 /**
@@ -397,57 +397,6 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 				
 			}
 			
-		};
-	}
-
-	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#updateWDandCertQuantity(java.util.List)}.
-	 */
-	public TransactionTestCase.TestDataMethod testUpdateWDandCertQuantity() {
-		return new TransactionTestCase.TestDataMethod() {
-
-			private SubcontractService service = applicationContext.getBean(SubcontractService.class);
-			@SuppressWarnings("unused")
-			private SubcontractDetail testCaseObject;
-
-			private String jobNumber = "13389";
-			private String packageNo = "2010";
-			private String billItem = null;
-			private String description = null;
-			private String lineType = null;
-			private int pageNum = 0;
-
-			@Override
-			public Object obtainObjectFromDB() {
-				try {
-					return service.getScDetailsByPage(jobNumber, packageNo, billItem, description, lineType, pageNum)
-							.getCurrentPageContentList().get(0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			public Object obtainDataForCompare() {
-				List<Object> data = new ArrayList<Object>();
-				SubcontractDetail tempObj = (SubcontractDetail) obtainObjectFromDB();
-				data.add(tempObj.getCumCertifiedQuantity());
-				return data;
-			}
-
-			@Override
-			public void executeTestMethod() {
-//				testCaseObject = (SCDetails) obtainObjectFromDB();
-//				testCaseObject.setCumCertifiedQuantity(148.0);
-//				UpdateSCPackageSaveWrapper testWrapper = UpdateSCPackageSaveWrapper
-//						.updateWDandCertQtyWindowRecordToWrapper(testCaseObject, 0.0,
-//								UpdateSCPackageSaveWrapper.CUM_CERTIFIED_QTY, SecurityContextHolder.getContext().getAuthentication().getName());
-//				List<UpdateSCPackageSaveWrapper> pendingSaveWrapperList = new ArrayList<UpdateSCPackageSaveWrapper>();
-//				pendingSaveWrapperList.add(testWrapper);
-//
-//				service.updateWDandCertQuantity(pendingSaveWrapperList);
-			}
 		};
 	}
 
@@ -2958,33 +2907,6 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 	 * Test method for {@link com.gammon.qs.service.SubcontractService#getCurrencyCodeList(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetCurrencyCodeList() {
-		return new TransactionTestCase.TestDataMethod() {
-
-			@Override
-			public Object obtainObjectFromDB() {
-				return null;
-			}
-
-			@Override
-			public Object obtainDataForCompare() {
-				List<Object> data = new ArrayList<Object>();
-//				SCDetails tempObj = (SCDetails) obtainObjectFromDB();
-//				data.add(tempObj.getCumCertifiedQuantity());
-				return data;
-			}
-
-			@Override
-			public void executeTestMethod() {
-				
-			}
-			
-		};
-	}
-
-	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#searchProvisionHistory(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	public TransactionTestCase.TestDataMethod testSearchProvisionHistory() {
 		return new TransactionTestCase.TestDataMethod() {
 
 			@Override
