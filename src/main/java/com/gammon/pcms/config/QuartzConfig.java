@@ -27,6 +27,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.gammon.factory.AutowiringSpringBeanJobFactory;
+import com.gammon.pcms.scheduler.job.AuditHousekeepJob;
 import com.gammon.pcms.scheduler.job.JDEF58001SynchronizationQuartzJob;
 import com.gammon.pcms.scheduler.job.JDEF58011SynchronizationJob;
 import com.gammon.pcms.scheduler.job.MainCertificateSynchronizationJob;
@@ -105,6 +106,11 @@ public class QuartzConfig {
 	private String jobDescriptionMainCertificateSynchronization;
 	@Value("${pcms.scheduler.job.cronExpression.mainCertificateSynchronization}")
 	private String jobCronExpressionMainCertificateSynchronization;	
+	//7. Housekeep AUDIT Table
+	@Value("${pcms.scheduler.job.description.housekeepAuditTable}")
+	private String jobDescriptionHousekeepAuditTable;
+	@Value("${pcms.scheduler.job.cronExpression.housekeepAuditTable}")
+	private String jobCronExpressionHousekeepAuditTable;
 	
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -322,6 +328,31 @@ public class QuartzConfig {
 	}
 
 	/**
+	 * 7a. Housekeep Audit table Cron-Expression Trigger
+	 */
+	@Bean
+	public CronTriggerFactoryBean cronTriggerAuditHousekeep() {
+		CronTriggerFactoryBean bean = new CronTriggerFactoryBean();
+		bean.setStartDelay(10000);
+		bean.setTimeZone(TimeZone.getTimeZone(pcmsQuartzTimezone));
+		bean.setJobDetail(jobDetailAuditHousekeep().getObject());
+		bean.setCronExpression(jobCronExpressionHousekeepAuditTable);
+		bean.setDescription(jobDescriptionHousekeepAuditTable);
+		return bean;
+	}
+
+	/**
+	 * 7b. Housekeep Audit table Quartz Job Detail
+	 */
+	@Bean
+	public JobDetailFactoryBean jobDetailAuditHousekeep() {
+		JobDetailFactoryBean bean = new JobDetailFactoryBean();
+		bean.setJobClass(AuditHousekeepJob.class);
+		bean.setDurability(true);
+		return bean;
+	}
+	
+	/**
 	 * create a bean to create a scheduler
 	 *
 	 * @return
@@ -356,14 +387,16 @@ public class QuartzConfig {
 		                        jobDetailProvisionPosting().getObject(), 
 		                        jobDetailJDEF58001Synchronization().getObject(),
 		                        jobDetailJDEF58011Synchronization().getObject(), 
-		                        jobDetailMainCertificateSynchronization().getObject());
+		                        jobDetailMainCertificateSynchronization().getObject(),
+		                        jobDetailAuditHousekeep().getObject());
 		// setup triggers
 		scheduler.setTriggers(	cronTriggerPackageSnapshotGeneration().getObject(),
 								cronTriggerPaymentPosting().getObject(),
 								cronTriggerProvisionPosting().getObject(),
 								cronTriggerJDEF58001Synchronization().getObject(),
 								cronTriggerJDEF58011Synchronization().getObject(),
-								cronTriggerMainCertificateSynchronization().getObject());
+								cronTriggerMainCertificateSynchronization().getObject(),
+								cronTriggerAuditHousekeep().getObject());
 		return scheduler;
 	}
 
@@ -628,7 +661,13 @@ public class QuartzConfig {
 	public void setJobCronExpressionMainCertificateSynchronization(String jobCronExpressionMainCertificateSynchronization) {
 		this.jobCronExpressionMainCertificateSynchronization = jobCronExpressionMainCertificateSynchronization;
 	}
-	
-	
 
+	public String getJobDescriptionHousekeepAuditTable() {
+		return jobDescriptionHousekeepAuditTable;
+	}
+
+	public String getJobCronExpressionHousekeepAuditTable() {
+		return jobCronExpressionHousekeepAuditTable;
+	}
+	
 }

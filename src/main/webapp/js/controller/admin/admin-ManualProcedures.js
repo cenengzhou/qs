@@ -1,10 +1,35 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService',
-		function($scope, $rootScope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService) {
+		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService',
+		function($scope, $rootScope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService) {
 	$scope.provisionGlDate = moment();
-	
+	$scope.auditTables = [];
+	$scope.auditTableName = '';
 	$scope.blockProcedures = blockUI.instances.get('blockProcedures');
+	
+	$scope.loadAuditTableMap = function(){
+		audithousekeepService.getAuditTableMap()
+		.then(function(data){
+			angular.forEach(data, function(value, key){
+				  $scope.auditTables.push({
+				    name: key,
+				    auditInfo: value
+				  });
+			});
+			$scope.auditTableName = $scope.auditTables[1].name;
+		});
+	}
+	$scope.loadAuditTableMap();
+	
+	$scope.onSubmitAuditHousekeep = function(){
+		var tableName = $scope.auditTableName;
+		audithousekeepService.housekeepAuditTable($scope.auditTableName)
+		.then(function(data){
+			if(data > -1){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Removed ' + data + ' records from ' + tableName);
+			}
+		})
+	}
 	
 	$scope.onSubmitProvisionPosting = function(){
 		$scope.blockProcedures.start({hideMessage:true, hideAnimate:true});

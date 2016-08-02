@@ -33,8 +33,12 @@
 						</tr>
 						<tr>
 							<td>Description:</td>
-							<td><div class="well"
-									style="word-break: break-all; overflow: hidden">{{trigger.description}}</div></td>
+							<td><div ng-if="trigger.triggerName !='cronTriggerAuditHousekeep'" class="well"
+									style="word-break: break-all; overflow: hidden">{{trigger.description}}</div>
+									<div ng-if="trigger.triggerName =='cronTriggerAuditHousekeep'" class="well">{{trigger.description}}
+									 <button uib-popover-html="scheduleTip" popover-placement="bottom-left" type="button" 
+									 uib-popover-trigger="'mouseenter: mouseleave'" class="btn btn-primary" id="scheduleDetails" name="scheduleDetails">View details</button>
+									</div></td>
 						</tr>
 						<tr>
 							<td>Start Time:</td>
@@ -52,7 +56,7 @@
 									moment-picker="trigger.nextFireTime"
 									format="DD MMM YYYY HH:mm" start-view="hour" today="true"
 									>
-									<span class="input-group-addon"> <i
+									<span class="input-group-addon"><i
 										class="fa fa-calendar"></i></span> <input class="form-control" 
 										name="{{trigger.triggerName}}_nextFireTime" id="{{trigger.triggerName}}_nextFireTime"
 										ng-model="trigger.nextFireTime" timestamp-to-string>

@@ -14,6 +14,27 @@
 		<!-- Main content -->
 
 		<div class="col-md-4 col-sm-12">
+			<form id="auditHousekeepForm"
+				ng-submit="onSubmitAuditHousekeep()">
+				<div class="panel panel-primary panel" vertilize >
+					<div class="panel-heading">
+						<h3 class="panel-title">Audit Table Housekeep</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label for="jobNumber">Audit Table:</label> 
+							<select class="form-control"
+									ng-options="v.name as v.name for v in auditTables | orderBy:'name'"
+									id="auditTableName"
+									ng-model="auditTableName"></select>
+						</div>
+						<button type="submit" class="btn btn-block btn-primary">Housekeep</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<div class="col-md-4 col-sm-12">
 			<form id="provisionPostingForm"
 				ng-submit="onSubmitProvisionPosting()">
 				<div class="panel panel-primary panel" vertilize  block-ui="blockProcedures">
@@ -67,7 +88,8 @@
 				</div>
 			</form>
 		</div>
-
+	</div>
+	<div class="row row-eq-height col-sm-12" vertilize-container  block-ui="blockProcedures">
 		<div class="col-md-4 col-sm-12">
 			<form name="postSubcontractPaymentForm"
 				ng-submit="onSubmitPostSubcontractPayment()">
@@ -91,8 +113,7 @@
 				</div>
 			</form>
 		</div>
-	</div>
-	<div class="row row-eq-height col-sm-12" vertilize-container  block-ui="blockProcedures">
+
 		<div class="col-md-4 col-sm-12">
 			<form name="f58001Form" ng-submit="onSubmitF58001()">
 				<div class="panel panel-primary  panel" vertilize>

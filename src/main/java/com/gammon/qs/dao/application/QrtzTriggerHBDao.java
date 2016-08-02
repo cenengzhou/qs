@@ -3,6 +3,7 @@ package com.gammon.qs.dao.application;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 	@SuppressWarnings("unchecked")
 	public List<QrtzTriggers> getAllTriggers(){
 		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.addOrder(Order.asc("triggerName"));
 		return criteria.list();
 	}
 	

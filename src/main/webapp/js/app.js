@@ -1004,6 +1004,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	           'js/service/payment-service.js',
                	           'js/service/transit-service.js',
                	           'js/service/quartz-service.js',
+               	           'js/service/audithousekeep-service.js',
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',

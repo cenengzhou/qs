@@ -5736,6 +5736,8 @@ a.list-group-item-danger:hover {
     box-shadow: none;
     padding: 2px;
     border: 2px solid rgba(0,0,0,0.125);
+    max-width: 600px;
+  	width: auto;
 }
 .popover.top > .arrow { border-top-color: rgba(0,0,0,.125); }
 .popover.bottom > .arrow { border-bottom-color: rgba(0,0,0,.125); }

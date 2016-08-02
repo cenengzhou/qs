@@ -208,7 +208,7 @@
 						placeholder="{{resourceApplyOptions[resourceApplyTo].value}}: {{resourceApplyRegex}}">
 
 					<div class="input-group-btn">
-						<select class="form-control btn btn-primary text-info"
+						<select class="form-control btn btn-primary"
 							ng-options="v.id as v.value for v in resourceApplyOptions"
 							ng-model="resourceApplyTo"
 							uib-popover="Select which column to change"
@@ -216,7 +216,7 @@
 							popover-animation="true"></select>
 							</div>
 						<div class="input-group-btn">	
-						<button type="submit" class="form-control btn btn-primary text-info"
+						<button type="submit" class="btn btn-primary"
 							uib-popover="Change all {{resourceApplyOptions[resourceApplyTo].value}} to {{resourceApplyToText}}..."
 							popover-trigger="mouseenter" popover-title="Complete Transit"
 							popover-animation="true">Apply {{resourceApplyOptions[resourceApplyTo].value}}</button>

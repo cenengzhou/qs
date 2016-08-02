@@ -145,6 +145,7 @@ public class HibernateConfig {
 		properties.setProperty("org.hibernate.envers.audit_table_suffix", auditConfig.getAudit_table_suffix());
 		properties.setProperty("org.hibernate.envers.audit_strategy", auditConfig.getAudit_strategy());
 		properties.setProperty("org.hibernate.envers.audit_strategy_validity_store_revend_timestamp", auditConfig.getAudit_strategy_validity_store_revend_timestamp());
+		properties.setProperty("org.hibernate.envers.store_data_at_delete", auditConfig.getStore_data_at_delete());
 //		properties.put("hibernate.ejb.interceptor", hibernateEntityInterceptor());
 
 		return properties;
