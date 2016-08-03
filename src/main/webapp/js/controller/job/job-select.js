@@ -1,14 +1,11 @@
-mainApp.controller('JobSelectCtrl', ['$scope', '$rootScope', 'colorCode', 'jobService', '$animate',  '$cookies',
-                               function($scope, $rootScope, colorCode, jobService, $animate, $cookies) {
+mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies',
+                               function($scope, colorCode, jobService, $animate, $cookies) {
 	$scope.loading = true;
-	
+	$scope.selectedDivision = '';
 
 	$scope.searchquery = '';
 	
-	//$scope.searchJob = function () {
-		loadJobList();
-	//};
-	
+	loadJobList();
 	
     
 	function loadJobList() {
@@ -18,6 +15,12 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$rootScope', 'colorCode', 'jobSe
 					$scope.jobs= data;
 				});
 	}
+	
+	
+	$scope.updateJobInfo = function (jobNo, jobDescription) {
+    	$cookies.put('jobNo', jobNo);
+    	$cookies.put('jobDescription', jobDescription);
+    }
 	
 	$scope.removeDefaultAnimation = function (){
         $animate.enabled(false);

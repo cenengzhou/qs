@@ -45,7 +45,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	
 	.state('job-select', {
 		url: "/job-select",
-		//parent: "navigation",
+		parent: "navigation",
 		templateUrl: "view/job-select.html",
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -63,10 +63,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	}) 
 	  
 	
-	.state('announcement', {
+	/*.state('announcement', {
 		url: "/announcement",
 		templateUrl: "view/job/job-menu.html"
-	})
+	})*/
 	
 	
 	//Job
@@ -89,10 +89,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 	.state('job.dashboard', {
 		url: "/dashboard",
 		templateUrl: "view/job/job-dashboard.html",
-		params: {
-			"jobNo": null,
-			"jobDescription": null
-		},
 		controller: 'JobDashboardCtrl',
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -215,7 +211,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                	         'js/controller/subcontract/subcontract-award-ta.js',
                	         'js/service/resource-summary-service.js',
-               	         'js/service/tender-service.js'
+               	         'js/service/tender-service.js',
+               	         'js/service/unit-service.js'
                     ] 
                 });
             }]
@@ -543,44 +540,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
         },
         controller: 'PaymentInvoiceCtrl',
 	})
-	
-	
-	/*.state('subcontract.paymentdetails', {
-		url: "/payment/details",
-		templateUrl: "view/subcontract/payment/payment-details.html",
-		"params": {
-			"payment": null, 
-			"paymentTerms": null
-		},
-		controller: 'PaymentDetailsCtrl',
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/controller/subcontract/payment-details.js',
-                           'js/service/payment-service.js'
-                    ] 
-                });
-            }]
-        }
-	})
-	.state('subcontract.paymentInvoice', {
-		url: "/payment/invoice",
-		templateUrl: "view/subcontract/payment/payment-invoice.html",
-		controller: 'PaymentDetailsCtrl',
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/controller/subcontract/payment-details.js'
-                    ] 
-                });
-            }]
-        }
-	})*/
-	
 	
 	
 	.state('subcontract.split', {
@@ -1266,29 +1225,22 @@ mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location',
 
 
 /**
- * Event-Listner for Back-Button
+ * Event-Listner for Location change
  */
-mainApp.run(function($rootScope,$location, $uibModalStack){
-	  /*$rootScope.$on('$stateChangeStart',function(event,next)
-	  {
-	    if(next.url==='/state1')
-	    {
-	      event.preventDefault();
-	      $location.url('/state2',true);
-	      console.info('$rootScope.$$phase: ',$rootScope.$$phase);
-	      if(!$rootScope.$$phase)
-	      {
-	        $rootScope.$apply();
-	      }
-	    }
-	  });*/
+mainApp.run(function($rootScope,$location){
+	$rootScope.$on('$stateChangeStart',function(event,next) {
+		if(next.url==='/job-select'){
+			$rootScope.hideNavMenu = true;
+		}else
+			$rootScope.hideNavMenu = false;
+	});
 	
 	/*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-	      event.preventDefault();
-	      window.history.forward();
+	    event.preventDefault();
+	    window.history.forward();
 	});*/
-		
-	});
+
+});
 
 
 	

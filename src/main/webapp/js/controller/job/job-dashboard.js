@@ -1,5 +1,5 @@
-mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', '$animate', '$cookies',
-                               function($scope, colorCode, jobService, $animate, $cookies) {
+mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', '$cookies',
+                               function($scope, colorCode, jobService, $cookies) {
 	$scope.loading = true;
 	
 	//Initialize panel setting

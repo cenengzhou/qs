@@ -2,42 +2,80 @@
 
 
 	<div class="row">
-		<div class="col-xs-2"></div>
-		<div class="col-xs-8">
+		<div class="col-md-12">
+			<ol class="breadcrumb pull-right">
+				<li><a><i class="fa fa-dashboard"></i>
+						Project Cost Management System</a></li>
+			</ol>
+		</div>
+		<div class="col-md-4">
+			<div class="btn-group btn-group-justifie">
+
+				<label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == 'BDG', 'btn-white' : selectedDivision != 'BDG'}"
+					ng-model="selectedDivision" uib-btn-radio="'BDG'"><i
+					class="icofont icofont-building-alt"></i> BDG</label> <label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == 'CVL', 'btn-white' : selectedDivision != 'CVL'}"
+					ng-model="selectedDivision" uib-btn-radio="'CVL'"><i
+					class="icofont icofont-barricade"></i> CVL</label> <label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == 'E&M', 'btn-white' : selectedDivision != 'E&M'}"
+					ng-model="selectedDivision" uib-btn-radio="'E&M'"><i
+					class="icofont icofont-energy-oil"></i> E&M</label> <label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == 'FDN', 'btn-white' : selectedDivision != 'FDN'}"
+					ng-model="selectedDivision" uib-btn-radio="'FDN'"><i
+					class="icofont icofont-mining"></i> FDN</label> <label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == 'SGP', 'btn-white' : selectedDivision != 'SGP'}"
+					ng-model="selectedDivision" uib-btn-radio="'SGP'"><i
+					class="icofont icofont-cur-dollar-true"></i> SGP</label> <label class="btn"
+					ng-class="{'btn-primary' : selectedDivision == '', 'btn-white' : selectedDivision != ''}"
+					ng-model="selectedDivision" uib-btn-radio="''"><i
+					class="fa fa-th"></i> All</label>
+			</div>
+		</div>
+		<div class="col-md-5">
 			<div class="input-group">
 				<input ng-model="searchquery" placeholder="Search Job here.."
 					class="form-control" ng-click="removeDefaultAnimation()" /> <span
 					class="input-group-btn">
-					<button class="btn btn-flat bg-primary"
-						ng-click="searchJob()">
+					<button class="btn btn-flat bg-primary" ng-click="searchJob()">
 						<span class="fa fa-search"></span>
 					</button>
 				</span>
 			</div>
 		</div>
 
+		<div class="col-md-1"></div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-danger btn-block pull-right"
+				ui-sref="subcontract-award.hearder"
+				ng-click="updateSubcontractNo('', '')">
+				<i class="fa fa-plus-circle"></i><span> Create</span>
+		</div>
 	</div>
-
 
 	<br>
 
 	<div class="fixed-container">
 		<div class="row">
 			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery">
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">
 				<div class="box box-widget sc-panel">
-					<a
-						ui-sref="job.dashboard({jobNo: job.jobNo, jobDescription: job.description})">
+					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
 						<div class="sc-panel-header bg-primary">
 							<div class="sc-panel-icon">
-								<span class="fa fa-bank"></span>
+								<span class="icofont" 
+										ng-class="	job.division == 'BDG' ? 'icofont-building-alt' : 
+													job.division == 'CVL' ?	'icofont-barricade' : 
+													job.division == 'E&M' ? 'icofont-energy-oil' :  
+													job.division == 'FDN' ? 'icofont-mining' : 
+													job.division == 'SGP' ? 'icofont-cur-dollar-true' : 'icofont-engineer'"></span>
 							</div>
 							
 							<h3 class="job-panel-no">
 								<b>{{job.jobNo}}</b>
 							</h3>
 							<h3 class="job-panel-name">
-								<b>{{job.description}}<b>
+								<b>{{job.description}}</b>
 							</h3>
 						</div>
 					</a>

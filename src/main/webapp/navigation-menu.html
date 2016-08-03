@@ -18,47 +18,47 @@
 			<!-- end mobile sidebar expand / collapse button -->
 
 				<ul class="nav navbar-nav">
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging'}" >
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging'}" ng-hide = "hideNavMenu">
 						<a ui-sref="repackaging" ng-click="activeMenu = 'Repackaging'"> 
 							<i class="fa fa-codepen"></i> Repackaging
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}" ng-hide = "hideNavMenu">
 						<a 	ui-sref="cert-dashboard" ng-click="activeMenu = 'Certificate'">
 							<i class="fa fa-certificate"></i>
 							Main Contract Certificate
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract'}" ng-hide = "hideNavMenu">
 						<a	ui-sref="subcontract-select" ng-click="activeMenu = 'Subcontract'"> 	
 							<i class="fa fa-trophy"></i>
 							Subcontract
 						</a></li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'IV'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'IV'}" ng-hide = "hideNavMenu">
 						<a ui-sref="iv.resource-summary.update" ng-click="activeMenu = 'IV'"> 
 							<i class="fa fa-line-chart"></i>
 							Internal Valuation
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}" ng-hide = "hideNavMenu">
 						<a ui-sref="enquiry.jobCost" ng-click="activeMenu = 'Enquiry'"> 
 							<i class="fa fa-info-circle"></i>
 							Enquiry
 						</a>
 					</li>
-						<li ng-class="{'bg-primary-light' : activeMenu == 'Reports'}">
+						<li ng-class="{'bg-primary-light' : activeMenu == 'Reports'}" ng-hide = "hideNavMenu">
 						<a ui-sref="reports" ng-click="activeMenu = 'Reports'"> 
 							<i class="fa fa-book"></i>
 							Reports
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}" ng-hide = "hideNavMenu">
 						<a ui-sref="transit" ng-click="activeMenu = 'Transit'"> 
 							<i class="fa fa-file-text"></i>
 							Transit 
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}" ng-hide = "hideNavMenu">
 						<a ui-sref="admin.session" ng-click="activeMenu = 'Admin'">
 							<i class="fa fa-user"></i>
 							Admin 

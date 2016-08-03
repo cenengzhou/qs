@@ -1,10 +1,6 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope', '$cookies', '$stateParams', 'masterListService', 'modalService',
-                                   function($http, $scope, $location, $rootScope, $cookies, $stateParams, masterListService, modalService) {
-	if($stateParams.jobNo){
-		$cookies.put('jobNo', $stateParams.jobNo);
-		$cookies.put('jobDescription', $stateParams.jobDescription);
-	}
-
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService',
+                                   function($http, $scope, $location, $cookies, masterListService, modalService) {
+	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.subcontractNo = $cookies.get("subcontractNo");
@@ -33,6 +29,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope',
 	}
 	$scope.getCurrentUser();
 
+	
 	if($scope.currentPath.indexOf("/job")==0){	
 		$scope.activeMenu = '';
 	}
