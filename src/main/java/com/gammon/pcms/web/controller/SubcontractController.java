@@ -305,7 +305,7 @@ public class SubcontractController {
 	 * @author	tikywong
 	 * @since	Aug 2, 2016 3:59:30 PM
 	 */
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	@RequestMapping(value = "getProvisionPostingHistList",
 					method = RequestMethod.GET)
 	public List<ProvisionPostingHist> getProvisionPostingHistList(	@RequestParam(required = true) String jobNo,

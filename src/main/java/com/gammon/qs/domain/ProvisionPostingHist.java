@@ -26,26 +26,26 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 
 	private SubcontractDetail subcontractDetail;
 
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Integer postedMonth;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Integer postedYr;
 
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private String jobNo;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private String packageNo;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private String objectCode;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private String subsidiaryCode;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double scRate;
 	private Double cumLiabilitiesQty;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double cumLiabilitiesAmount;
 	private Double postedCertQty;
-	@JsonView(ProvisionPostingHistView.Native.class)
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double postedCertAmount;
 
 	public ProvisionPostingHist() {}
@@ -72,6 +72,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		return subcontractDetail != null ? subcontractDetail.getCumCertifiedQuantity() : 0;
 	}
 
+	@JsonView(ProvisionPostingHistView.Detached.class)
 	@Transient
 	public Double getProvision() {
 		return getCumLiabilitiesAmount() - getPostedCertAmount();

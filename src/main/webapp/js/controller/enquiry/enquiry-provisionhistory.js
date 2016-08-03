@@ -26,9 +26,9 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 			enableCellSelection: false,
 			columnDefs: [
 			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false, width:'120' },
-			             { field: 'postedMonth', displayName: "Month", enableCellEdit: false, width:'60'},
-			             { field: 'postedYr', displayName: "Year", enableCellEdit: false, width:'60'},
-			             { field: 'objectCode', displayName: "Object", enableCellEdit: false, width:'60'},
+			             { field: 'postedMonth', displayName: "Month", enableCellEdit: false, width:'80'},
+			             { field: 'postedYr', displayName: "Year", enableCellEdit: false, width:'80'},
+			             { field: 'objectCode', displayName: "Object", enableCellEdit: false, width:'100'},
 			             { field: 'subsidiaryCode', displayName: "Subsidiary", enableCellEdit: false, width:'100'},
 			             { field: 'cumLiabilitiesAmount', displayName: "Workdone Amount (Cumulative)", cellFilter: 'number:2', enableCellEdit: false, width:'220',
 								cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -92,9 +92,8 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 				            		 }
 				            		 return c;
 				            	 }
-		            	 },
-			             { field: 'createdUser', displayName: "Username", enableCellEdit: false, width:'120'},
-            			 ]
+		            	 }
+			             ]
 	};
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {

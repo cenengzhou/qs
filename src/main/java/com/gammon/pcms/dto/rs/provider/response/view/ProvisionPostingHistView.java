@@ -8,5 +8,5 @@
 package com.gammon.pcms.dto.rs.provider.response.view;
 
 public class ProvisionPostingHistView {
-	public interface Native {}
+	public interface Detached {}
 }
