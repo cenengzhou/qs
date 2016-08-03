@@ -39,8 +39,10 @@ public class AuditHousekeepService {
 		
 		try {
 			for(Entry<String, AuditInfo> entry : auditConfig.getAuditInfoMap().entrySet()){
-				logger.info("Housekeeping: " + entry.getKey());
-				housekeepAuditTable(entry.getValue().getTableName());
+				if(entry.getValue().isHousekeep()){
+					logger.info("Housekeeping: " + entry.getKey());
+					housekeepAuditTable(entry.getValue().getTableName());
+				}
 			}
 		} catch (Exception e) {
 			String exceptionMessage = e.getMessage(); 

@@ -36,8 +36,8 @@
 							<td><div ng-if="trigger.triggerName !='cronTriggerAuditHousekeep'" class="well"
 									style="word-break: break-all; overflow: hidden">{{trigger.description}}</div>
 									<div ng-if="trigger.triggerName =='cronTriggerAuditHousekeep'" class="well">{{trigger.description}}
-									 <button uib-popover-html="scheduleTip" popover-placement="bottom-left" type="button" 
-									 uib-popover-trigger="'mouseenter: mouseleave'" class="btn btn-primary" id="scheduleDetails" name="scheduleDetails">View details</button>
+									 <label popover-title="Schedule details" uib-popover-html="scheduleTip" popover-placement="bottom-left" type="button" 
+									 popover-trigger="outsideClick" class="btn btn-primary" id="scheduleDetails" name="scheduleDetails">View details</label>
 									</div></td>
 						</tr>
 						<tr>
@@ -50,16 +50,16 @@
 						</tr>
 						<tr>
 							<td>
-								<label for="{{trigger.triggerName}}_nextFireTime">Next Fire Time:</label></td>
+								<label for="{{trigger.triggerName}}_nextFireDatetime">Next Fire Time:</label></td>
 							<td>
 								<div class="input-group"
-									moment-picker="trigger.nextFireTime"
+									moment-picker="trigger.nextFireDatetime"
 									format="DD MMM YYYY HH:mm" start-view="hour" today="true"
 									>
 									<span class="input-group-addon"><i
 										class="fa fa-calendar"></i></span> <input class="form-control" 
-										name="{{trigger.triggerName}}_nextFireTime" id="{{trigger.triggerName}}_nextFireTime"
-										ng-model="trigger.nextFireTime" timestamp-to-string>
+										name="{{trigger.triggerName}}_nextFireDatetime" id="{{trigger.triggerName}}_nextFireDatetime"
+										ng-model="trigger.nextFireDatetime">
 								</div>
 							</td>
 						</tr>
@@ -68,6 +68,7 @@
 									State:</label></td>
 							<td><select name="{{trigger.triggerName}}_triggerState" id="{{trigger.triggerName}}_triggerState"
 								class="form-control" ng-model="trigger.triggerState">
+									<option>ACQUIRED</option>
 									<option>PAUSED</option>
 									<option>WAITING</option>
 							</select></td>

@@ -16,7 +16,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 				    auditInfo: value
 				  });
 			});
-			$scope.auditTableName = $scope.auditTables[1].name;
+			$scope.auditTableName = $scope.auditTables[0].name;
 		});
 	}
 	$scope.loadAuditTableMap();

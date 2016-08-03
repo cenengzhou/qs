@@ -1,7 +1,7 @@
 package com.gammon.pcms.config;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -25,49 +25,49 @@ public class AuditConfig {
 	@Value("${audit.table.addendum.housekeep}")
 	private boolean auditTableAddendumHousekeep;
 	@Value("${audit.table.addendum.period}")
-	private int auditTableAddendumPeriod;
+	private String auditTableAddendumPeriod;
 	
 	@Value("${audit.table.addendum_detail}")
 	private String auditTableAddendumDetail;
 	@Value("${audit.table.addendum_detail.housekeep}")
 	private boolean auditTableAddendumDetailHousekeep;
 	@Value("${audit.table.addendum_detail.period}")
-	private int auditTableAddendumDetailPeriod;
+	private String auditTableAddendumDetailPeriod;
 	
 	@Value("${audit.table.job_info}")
 	private String auditTableJobInfo;
 	@Value("${audit.table.job_info.housekeep}")
 	private boolean auditTableJobInfoHousekeep;
 	@Value("${audit.table.job_info.period}")
-	private int auditTableJobInfoPeriod;
+	private String auditTableJobInfoPeriod;
 
 	@Value("${audit.table.payment_cert}")
 	private String auditTablePaymentCert;
 	@Value("${audit.table.payment_cert.housekeep}")
 	private boolean auditTablePaymentCertHousekeep;
 	@Value("${audit.table.payment_cert.period}")
-	private int auditTablePaymentCertPeriod;
+	private String auditTablePaymentCertPeriod;
 	
 	@Value("${audit.table.payment_cert_detail}")
 	private String auditTablePaymentCertDetail;
 	@Value("${audit.table.payment_cert_detail.housekeep}")
 	private boolean auditTablePaymentCertDetailHousekeep;
 	@Value("${audit.table.payment_cert_detail.period}")
-	private int auditTablePaymentCertDetailPeriod;
+	private String auditTablePaymentCertDetailPeriod;
 	
 	@Value("${audit.table.resource_summary}")
 	private String auditTableResourceSummary;
 	@Value("${audit.table.resource_summary.housekeep}")
 	private boolean auditTableResourceSummaryHousekeep;
 	@Value("${audit.table.resource_summary.period}")
-	private int auditTableResourceSummaryPeriod;
+	private String auditTableResourceSummaryPeriod;
 	
 	@Value("${audit.table.subcontract}")
 	private String auditTableSubcontract;
 	@Value("${audit.table.subcontract.housekeep}")
 	private boolean auditTableSubcontractHousekeep;
 	@Value("${audit.table.subcontract.period}")
-	private int auditTableSubcontractPeriod;
+	private String auditTableSubcontractPeriod;
 	
 	
 	@Value("${audit.table.subcontract_detail}")
@@ -75,7 +75,7 @@ public class AuditConfig {
 	@Value("${audit.table.subcontract_detail.housekeep}")
 	private boolean auditTableSubcontractDetailHousekeep;
 	@Value("${audit.table.subcontract_detail.period}")
-	private int auditTableSubcontractDetailPeriod;
+	private String auditTableSubcontractDetailPeriod;
 	
 	private Map<String, AuditInfo> auditInfoMap;
 	/**
@@ -106,7 +106,7 @@ public class AuditConfig {
 
 	public Map<String, AuditInfo> getAuditInfoMap(){
 		if(auditInfoMap == null){
-			auditInfoMap = new HashMap<String, AuditInfo>();
+			auditInfoMap = new TreeMap<String, AuditInfo>();
 			auditInfoMap.put(auditTableAddendum, getAuditInfoAddendum());
 			auditInfoMap.put(auditTableAddendumDetail, getAuditInfoAddendumDetail());
 			auditInfoMap.put(auditTableJobInfo, getAuditInfoJobInfo());
@@ -154,10 +154,10 @@ public class AuditConfig {
 	public static class AuditInfo{
 		private String tableName;
 		private boolean housekeep;
-		private int period;
+		private String period;
 		
 		public AuditInfo(){}
-		public AuditInfo(String tableName, boolean housekeep, int period) {
+		public AuditInfo(String tableName, boolean housekeep, String period) {
 			super();
 			this.tableName = tableName;
 			this.housekeep = housekeep;
@@ -180,11 +180,11 @@ public class AuditConfig {
 			this.housekeep = housekeep;
 		}
 
-		public int getPeriod() {
+		public String getPeriod() {
 			return period;
 		}
 
-		public void setPeriod(int period) {
+		public void setPeriod(String period) {
 			this.period = period;
 		}
 		
