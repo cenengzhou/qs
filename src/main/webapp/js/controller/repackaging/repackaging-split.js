@@ -1,10 +1,10 @@
-mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitService', 'resourceSummaryService', '$uibModalInstance', 'uiGridConstants', '$cookieStore', 'modalStatus', 'modalParam', 'modalService', 'roundUtil', '$state', 
-                                                 function ($scope, $location, unitService, resourceSummaryService, $uibModalInstance, uiGridConstants, $cookieStore, modalStatus, modalParam, modalService, roundUtil, $state) {
+mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitService', 'resourceSummaryService', '$uibModalInstance', 'uiGridConstants', '$cookies', 'modalStatus', 'modalParam', 'modalService', 'roundUtil', '$state', 
+                                                 function ($scope, $location, unitService, resourceSummaryService, $uibModalInstance, uiGridConstants, $cookies, modalStatus, modalParam, modalService, roundUtil, $state) {
 
 	var action = modalStatus;
 	
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.repackagingId = $cookieStore.get("repackagingId");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.repackagingId = $cookies.get("repackagingId");
 	
 	var resourceType = modalParam[0]['resourceType'];
 	var jobInfo = modalParam[0]['jobInfo'];

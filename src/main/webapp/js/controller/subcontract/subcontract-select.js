@@ -1,8 +1,8 @@
-mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookieStore', '$window',
-                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookieStore, $window) {
+mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookies', '$window',
+                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookies, $window) {
 	
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	$scope.subcontractStatus = "";
 	
@@ -25,8 +25,8 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
     
 
     $scope.updateSubcontractNo = function (subcontractNo, subcontractDescription) {
-    	$cookieStore.put('subcontractNo', subcontractNo);
-    	$cookieStore.put('subcontractDescription', subcontractDescription);
+    	$cookies.put('subcontractNo', subcontractNo);
+    	$cookies.put('subcontractDescription', subcontractDescription);
     }
     
     $scope.openSubcontractCreateModal = function () {

@@ -1,5 +1,5 @@
-mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '$cookieStore', 'paymentService', 'modalService', 'confirmService', 'roundUtil',
-                                          function($scope , $state, $stateParams, $cookieStore, paymentService, modalService, confirmService, roundUtil) {
+mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil',
+                                          function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil) {
 	
 	$scope.disableButtons = true;
 	loadData();
@@ -32,7 +32,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 	}
 
 	function loadData() {
-		if($cookieStore.get('paymentCertNo') != ""){
+		if($cookies.get('paymentCertNo') != ""){
 			getPaymentCert();
 			getPaymentCertSummary();
 		}else
@@ -40,7 +40,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 	}
 
 	function getPaymentCert() {
-		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
+		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
 		.then(
 				function( data ) {
 					//console.log(data);
@@ -55,7 +55,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 
 
 	function getPaymentCertSummary() {
-		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
+		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
 		.then(
 				function( data ) {
 					//console.log(data);
@@ -65,7 +65,7 @@ mainApp.controller('PaymentInvoiceCtrl', ['$scope' , '$state', '$stateParams', '
 	}
 	
 	function submitPayment() {
-		paymentService.submitPayment($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'))
+		paymentService.submitPayment($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
 		.then(
 				function( data ) {
 					if(data.length != 0){

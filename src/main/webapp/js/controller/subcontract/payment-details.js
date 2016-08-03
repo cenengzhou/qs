@@ -1,5 +1,5 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookieStore', 'paymentService', 
-                                          function($scope , $http, $stateParams, $cookieStore, paymentService) {
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$cookies', 'paymentService', 
+                                          function($scope , $http, $stateParams, $cookies, paymentService) {
 	$scope.disableButtons = true;
 
 	$scope.mainCertNo = {
@@ -13,12 +13,12 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 	};
 
 	if($stateParams.payment){
-		$cookieStore.put('paymentCertNo', $stateParams.payment.paymentCertNo);
-		$cookieStore.put('paymentTerms', $stateParams.paymentTerms);
+		$cookies.put('paymentCertNo', $stateParams.payment.paymentCertNo);
+		$cookies.put('paymentTerms', $stateParams.paymentTerms);
 
 	}
-	$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
-	$scope.paymentTerms = $cookieStore.get('paymentTerms');
+	$scope.paymentCertNo = $cookies.get('paymentCertNo');
+	$scope.paymentTerms = $cookies.get('paymentTerms');
 
 
 	$scope.payment = $stateParams.payment;

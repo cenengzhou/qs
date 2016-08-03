@@ -1,7 +1,7 @@
-mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', '$cookieStore', function($scope, $http, colorCode, $cookieStore) {
+mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', '$cookies', function($scope, $http, colorCode, $cookies) {
     
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	
     $scope.linChartParameters = {

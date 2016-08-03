@@ -1,8 +1,8 @@
-mainApp.controller('SubcontractFlowCtrl', ['$scope', '$location', 'colorCode', 'modalService', '$cookieStore', 
-                                           function($scope, $location, colorCode, modalService, $cookieStore) {
+mainApp.controller('SubcontractFlowCtrl', ['$scope', '$location', 'colorCode', 'modalService', '$cookies', 
+                                           function($scope, $location, colorCode, modalService, $cookies) {
 
-	$scope.subcontractNo = $cookieStore.get("subcontractNo");
-	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
+	$scope.subcontractNo = $cookies.get("subcontractNo");
+	$scope.subcontractDescription = $cookies.get("subcontractDescription");
 	
 	$scope.budget = 226789000;
 	$scope.taBudget = 244789000;

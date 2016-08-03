@@ -1,5 +1,5 @@
-mainApp.controller('JobSelectCtrl', ['$scope', '$rootScope', 'colorCode', 'jobService', '$animate',  '$cookieStore',
-                               function($scope, $rootScope, colorCode, jobService, $animate, $cookieStore) {
+mainApp.controller('JobSelectCtrl', ['$scope', '$rootScope', 'colorCode', 'jobService', '$animate',  '$cookies',
+                               function($scope, $rootScope, colorCode, jobService, $animate, $cookies) {
 	$scope.loading = true;
 	
 

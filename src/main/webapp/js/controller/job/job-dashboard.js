@@ -1,13 +1,13 @@
-mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', '$animate', '$cookieStore',
-                               function($scope, colorCode, jobService, $animate, $cookieStore) {
+mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', '$animate', '$cookies',
+                               function($scope, colorCode, jobService, $animate, $cookies) {
 	$scope.loading = true;
 	
 	//Initialize panel setting
 	App.initComponent();
 	
 	
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 
     loadJobData();
     

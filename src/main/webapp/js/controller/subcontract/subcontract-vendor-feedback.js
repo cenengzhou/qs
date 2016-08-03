@@ -1,9 +1,9 @@
-mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookieStore', 'tenderService', '$state', 'modalService', 'roundUtil',
-                                                          function ($scope, $location, $uibModalInstance, uiGridConstants, modalParam, $cookieStore, tenderService, $state, modalService, roundUtil) {
+mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookies', 'tenderService', '$state', 'modalService', 'roundUtil',
+                                                          function ($scope, $location, $uibModalInstance, uiGridConstants, modalParam, $cookies, tenderService, $state, modalService, roundUtil) {
 
 	$scope.vendorNo= modalParam;
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.subcontractNo = $cookieStore.get("subcontractNo");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.subcontractNo = $cookies.get("subcontractNo");
 
 	$scope.currencyCode = {
 			options: ["HKD",

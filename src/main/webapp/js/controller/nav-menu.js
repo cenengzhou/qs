@@ -1,14 +1,14 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope', '$cookieStore', '$stateParams', 'masterListService', 'modalService',
-                                   function($http, $scope, $location, $rootScope, $cookieStore, $stateParams, masterListService, modalService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$rootScope', '$cookies', '$stateParams', 'masterListService', 'modalService',
+                                   function($http, $scope, $location, $rootScope, $cookies, $stateParams, masterListService, modalService) {
 	if($stateParams.jobNo){
-		$cookieStore.put('jobNo', $stateParams.jobNo);
-		$cookieStore.put('jobDescription', $stateParams.jobDescription);
+		$cookies.put('jobNo', $stateParams.jobNo);
+		$cookies.put('jobDescription', $stateParams.jobDescription);
 	}
 
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
-	$scope.subcontractNo = $cookieStore.get("subcontractNo");
-	$scope.subcontractDescription = $cookieStore.get("subcontractDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
+	$scope.subcontractNo = $cookies.get("subcontractNo");
+	$scope.subcontractDescription = $cookies.get("subcontractDescription");
 	
 	$scope.userIcon = 'resources/images/profile.png';
 	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/' //<= require login

@@ -1,10 +1,10 @@
 
-mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookieStore', 'GlobalParameter',
-                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookieStore, GlobalParameter) {
+mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter',
+                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter) {
 	
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 
 	$scope.printUnpaidPaymentCertDueDateType = 'onOrBefore';
 	$scope.printUnpaidPaymentCertJobNumber = $scope.jobNo;

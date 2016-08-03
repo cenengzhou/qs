@@ -1,8 +1,8 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookieStore', 'transitService',  '$window', '$timeout', 'blockUI',
-                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookieStore, transitService, $window, $timeout, blockUI) {
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'blockUI',
+                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, blockUI) {
 	$scope.loading = true;
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	$scope.blockStepBar = blockUI.instances.get('blockStepBar');
 	$scope.blockBqGrid = blockUI.instances.get('blockBqGrid');

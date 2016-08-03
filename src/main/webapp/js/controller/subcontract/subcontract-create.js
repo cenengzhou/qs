@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookieStore', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter',
-                                                  function ($scope, jobService, subcontractService, $cookieStore, modalService, subcontractRetentionTerms, $state, GlobalParameter) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter',
+                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter) {
 	getSubcontract();
 	getJob();
 	
@@ -218,15 +218,15 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	}
 
 	function upateSubcontract(){
-	subcontractService.upateSubcontract($cookieStore.get("jobNo"), $scope.subcontractToUpdate)
+	subcontractService.upateSubcontract($cookies.get("jobNo"), $scope.subcontractToUpdate)
 	.then(
 			function( data ) {
 				if(data.length>0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 				}else{
 			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
-					$cookieStore.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
-			    	$cookieStore.put('subcontractDescription', $scope.subcontractToUpdate.description);
+					$cookies.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
+			    	$cookies.put('subcontractDescription', $scope.subcontractToUpdate.description);
 			    	$state.reload();
 				}
 

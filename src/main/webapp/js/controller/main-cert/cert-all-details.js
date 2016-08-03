@@ -1,4 +1,4 @@
-mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location','$cookieStore', function ($scope, $http, $location, $cookieStore) {
+mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location','$cookies', function ($scope, $http, $location, $cookies) {
 	 /*$scope.showInfo = function(row) {
 	     var modalInstance = $modal.open({
 	          controller: 'InfoController',
@@ -16,8 +16,8 @@ mainApp.controller('CertAllDetailsCtrl', ['$scope', '$http', '$location','$cooki
 	       $log.info('Modal dismissed at: ' + new Date());
 	     });
 	  }*/
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	var today = new Date();
     $scope.gridOptions = {

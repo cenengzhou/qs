@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$cookieStore', 'paymentService', 'mainCertService', 'modalService', 
-                                       function($scope , $state, $stateParams, $cookieStore, paymentService, mainCertService, modalService) {
+mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 
+                                       function($scope , $state, $stateParams, $cookies, paymentService, mainCertService, modalService) {
 
 	$scope.disableButtons = true;
 
@@ -10,16 +10,16 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 
 	if($stateParams.paymentCertNo){
 		if($stateParams.paymentCertNo == '0'){
-			$cookieStore.put('paymentCertNo', '');
-			$cookieStore.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
+			$cookies.put('paymentCertNo', '');
+			$cookies.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
 			createPayment();
 		}else{
-			$cookieStore.put('paymentCertNo', $stateParams.paymentCertNo);
-			$cookieStore.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
+			$cookies.put('paymentCertNo', $stateParams.paymentCertNo);
+			$cookies.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
 		}
 	}
-	$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
-	$scope.paymentTermsDesc = $cookieStore.get('paymentTermsDesc');
+	$scope.paymentCertNo = $cookies.get('paymentCertNo');
+	$scope.paymentTermsDesc = $cookies.get('paymentTermsDesc');
 	$scope.paymentTerms = $scope.paymentTermsDesc.substring(0, 3);
 
 	//Initiation
@@ -82,7 +82,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 
 	$scope.updatePaymentType = function(paymentType){
 		if(!$scope.disableButtons)
-			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookieStore.get('paymentCertNo'), paymentType)
+			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), paymentType)
 			.then(
 					function( data ) {
 						if(data.length != 0){
@@ -170,8 +170,8 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 				function( data ) {
 					$scope.payment = data;
 
-					$cookieStore.put('paymentCertNo', $scope.payment.paymentCertNo);
-					$scope.paymentCertNo = $cookieStore.get('paymentCertNo');
+					$cookies.put('paymentCertNo', $scope.payment.paymentCertNo);
+					$scope.paymentCertNo = $cookies.get('paymentCertNo');
 
 					getPaidMainCertList();
 

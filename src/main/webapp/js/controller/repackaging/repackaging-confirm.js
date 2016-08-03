@@ -1,12 +1,14 @@
-mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookieStore',  'uiGridConstants', '$uibModalInstance',
-                                             function($scope, modalService, repackagingService, $cookieStore, uiGridConstants, $uibModalInstance) {
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookies',  'uiGridConstants', '$uibModalInstance',
+                                             function($scope, modalService, repackagingService, $cookies, uiGridConstants, $uibModalInstance) {
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 
 
-	$scope.repackagingId = $cookieStore.get("repackagingId");
+	$scope.repackagingId = $cookies.get("repackagingId");
 	
 	$scope.showChangesOnly = true;
+	
+	getLatestRepackaging();
 	getRepackagingDetails(true);
 	
 	$scope.gridOptions = {
@@ -51,14 +53,16 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 	}
 
 	$scope.confirm = function() {
+		$scope.disableButtons = true;
 		repackagingService.confirmAndPostRepackaingDetails($scope.repackagingId)
 		.then(
 				function( data ) {
 					if(data.length!=0){
+						$scope.disableButtons = false;
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Repackaging has been confirmed.");
-						//$state.reload();
+						$state.reload();
 					}
 				});
 	}
@@ -67,8 +71,20 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		getRepackagingDetails($scope.showChangesOnly);
 	}
 	
+	function getLatestRepackaging() {
+		repackagingService.getLatestRepackaging($scope.jobNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					if(data.status !="300")
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
+				});
+	}
 	
 	function getRepackagingDetails(showChangesOnly) {
+		console.log("$scope.repackagingId: "+$scope.repackagingId);
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {

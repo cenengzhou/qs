@@ -1,9 +1,9 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookieStore', '$stateParams', '$state', 'uiGridConstants',
-                                             function($scope, modalService, resourceSummaryService, unitService, $cookieStore, $stateParams, $state, uiGridConstants) {
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookies', '$stateParams', '$state', 'uiGridConstants',
+                                             function($scope, modalService, resourceSummaryService, unitService, $cookies, $stateParams, $state, uiGridConstants) {
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 
-	$scope.repackagingId = $cookieStore.get("repackagingId");
+	$scope.repackagingId = $cookies.get("repackagingId");
 	
 	loadResourceSummaries();
 	getUnitOfMeasurementList();

@@ -1,8 +1,8 @@
-mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'repackagingService', 'modalService',
-                                       function($scope, $location, $cookieStore, repackagingService, modalService) {
+mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'modalService',
+                                       function($scope, $location, $cookies, repackagingService, modalService) {
 
-	$scope.jobNo = $cookieStore.get("jobNo");
-	$scope.jobDescription = $cookieStore.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	$scope.repackaging = "";
 	loadRepacakgingData();
@@ -29,6 +29,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookieStore', 'r
    	 .then(
    			 function( data ) {
    				 $scope.repackaging = data;
+   				 $cookies.put('repackagingId', data.id);
    				 console.log("repackaging status: "+$scope.repackaging.status);
    			 });
     }
