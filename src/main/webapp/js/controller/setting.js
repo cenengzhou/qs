@@ -9,11 +9,8 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
     	SessionHelper.validateSession()
     	.then(function(data){
-    		if(data){
-    			//console.log('validate session:' + data);
-    		}else{
+    		if(!data){
     			if(toState.name != 'logout'){
-//    				console.log("login.htm?validateSession=stateChangeStart");
     				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
     			}
     		}

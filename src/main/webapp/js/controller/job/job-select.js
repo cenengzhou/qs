@@ -2,8 +2,13 @@ mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$anim
                                function($scope, colorCode, jobService, $animate, $cookies) {
 	$scope.loading = true;
 	$scope.selectedDivision = '';
-
 	$scope.searchquery = '';
+
+	//Clear cookies
+	var cookies = $cookies.getAll();
+	angular.forEach(cookies, function (v, k) {
+		$cookies.remove(k);
+	});
 	
 	loadJobList();
 	

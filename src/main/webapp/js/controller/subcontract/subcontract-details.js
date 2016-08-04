@@ -68,11 +68,6 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 			
 	};
 
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
-	};;
-	
-	
 	function getSCDetails() {
 		subcontractService.getSCDetails($scope.jobNo, $scope.subcontractNo)
 		.then(
