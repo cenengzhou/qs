@@ -9,8 +9,10 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
@@ -18,6 +20,8 @@ import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "PROVISION_POSTING_HIST")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @IdClass(ProvisionPostingHistId.class)

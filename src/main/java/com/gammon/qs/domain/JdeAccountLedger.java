@@ -15,11 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "JDE_ACCOUNT_LEDGER")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "JDE_ACCOUNT_LEDGER_GEN",  sequenceName = "JDE_ACCOUNT_LEDGER_SEQ", allocationSize = 1)

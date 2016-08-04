@@ -6,12 +6,16 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "APP_SUBCONTRACT_STANDARD_TERMS")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @IdClass(AppSubcontractStandardTermsId.class)

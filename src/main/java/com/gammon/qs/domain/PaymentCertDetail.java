@@ -10,8 +10,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -20,6 +22,8 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "PAYMENT_CERT_DETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @IdClass(PaymentCertDetailId.class)
@@ -36,7 +40,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 	private String billItem;
 	private String objectCode;
 	private String subsidiaryCode;
-	private String description; //not in table!
+	private String description;
 	private Double movementAmount;
 	private Double cumAmount=0.0;
 	
@@ -99,7 +103,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 		this.subsidiaryCode = subsidiaryCode;
 	}
 	
-	@Transient
+	@Column(name = "DESCRIPTION", length = 255)
 	public String getDescription() {
 		return description;
 	}

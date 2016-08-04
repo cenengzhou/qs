@@ -4,10 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 /**
  * CC Type includes: C1, C2
  */
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 //@Lazy(value = false)
 @DiscriminatorValue("CC")
 public class SubcontractDetailCC extends SubcontractDetail {

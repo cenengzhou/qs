@@ -21,10 +21,12 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -34,6 +36,8 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "SUBCONTRACT_DETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -76,7 +80,7 @@ public class SubcontractDetail extends BasePersistedObject {
 	
 	private BigDecimal amountCumulativeWD = new BigDecimal(0);
 	private BigDecimal amountPostedWD = new BigDecimal(0);
-	
+	private BigDecimal amountSubcontractNew = new BigDecimal(0);
 	/**
 	 * @author koeyyeung
 	 * newQuantity should be set for every line type: BQ, B1, V1, V2, V3, D1, D2, C1, C2, CP, OA, RR, RT, RA
@@ -108,17 +112,6 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.balanceType = balanceType;
 	}
 
-	public boolean equals(Object object){
-		if (object instanceof SubcontractDetail){
-			if (this.billItem.equals(((SubcontractDetail) object).getBillItem()) && this.getSubcontract().getJobInfo().getJobNumber().equals(((SubcontractDetail)object).getSubcontract().getJobInfo().getJobNumber()) && this.getSubcontract().getPackageNo().equals(((SubcontractDetail)object).getSubcontract().getPackageNo())&& this.getSequenceNo().equals(((SubcontractDetail)object).getSequenceNo()))
-				return true;
-			else 
-				return false;
-		}
-		else
-		return false;
-	}
-	
 	public void updateSCDetails(SubcontractDetail scDetails){
 		this.setDescription(scDetails.getDescription());
 		this.setQuantity(scDetails.getQuantity());
@@ -131,6 +124,7 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.setPostedCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
 		this.setCumCertifiedQuantity(scDetails.getCumCertifiedQuantity());
 		this.setOriginalQuantity(scDetails.getOriginalQuantity());
+		this.setAmountSubcontractNew(scDetails.getAmountSubcontractNew());
 	}
 
 	/**
@@ -220,18 +214,6 @@ public class SubcontractDetail extends BasePersistedObject {
 	@Transient
 	public Double getProjectedProvision(){
 		return 0.00;
-	}
-	
-	@Override
-	public String toString() {
-		return "SubcontractDetail [jobNo=" + jobNo + ", sequenceNo=" + sequenceNo + ", resourceNo=" + resourceNo + ", billItem="
-				+ billItem + ", description=" + description + ", quantity=" + quantity + ", scRate=" + scRate
-				+ ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", lineType=" + lineType
-				+ ", approved=" + approved + ", unit=" + unit + ", remark=" + remark + ", postedCertifiedQuantity="
-				+ postedCertifiedQuantity + ", cumCertifiedQuantity=" + cumCertifiedQuantity + ", newQuantity="
-				+ newQuantity + ", originalQuantity=" + originalQuantity + ", tenderAnalysisDetail_ID="
-				+ tenderAnalysisDetail_ID + ", subcontract=" + subcontract + ", balanceType=" + balanceType
-				+ ", toString()=" + super.toString() + "]";
 	}
 
 	@Override
@@ -398,6 +380,14 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.amountSubcontract = (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
 	}
 
+	@Column(name = "AMT_SUBCONTRACT_NEW")
+	public BigDecimal getAmountSubcontractNew() {
+		return amountSubcontractNew;
+	}
+	public void setAmountSubcontractNew(BigDecimal amountSubcontractNew) {
+		this.amountSubcontractNew = amountSubcontractNew;
+	}
+
 	@Column(name = "AMT_BUDGET")
 	public Double getAmountBudget() {
 		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
@@ -457,8 +447,6 @@ public class SubcontractDetail extends BasePersistedObject {
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
 	}
-	
-	
 	
 	public static class LineType{
 		public static String BQ = "BQ";
@@ -551,4 +539,218 @@ public class SubcontractDetail extends BasePersistedObject {
 			return BD.equalsIgnoreCase(lineType);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SubcontractDetail [jobNo=" + jobNo + ", sequenceNo=" + sequenceNo + ", resourceNo=" + resourceNo
+				+ ", billItem=" + billItem + ", description=" + description + ", quantity=" + quantity + ", scRate="
+				+ scRate + ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", lineType="
+				+ lineType + ", approved=" + approved + ", unit=" + unit + ", remark=" + remark
+				+ ", postedCertifiedQuantity=" + postedCertifiedQuantity + ", cumCertifiedQuantity="
+				+ cumCertifiedQuantity + ", amountCumulativeCert=" + amountCumulativeCert + ", amountPostedCert="
+				+ amountPostedCert + ", amountCumulativeWD=" + amountCumulativeWD + ", amountPostedWD=" + amountPostedWD
+				+ ", amountSubcontractNew=" + amountSubcontractNew + ", newQuantity=" + newQuantity
+				+ ", originalQuantity=" + originalQuantity + ", tenderAnalysisDetail_ID=" + tenderAnalysisDetail_ID
+				+ ", subcontract=" + subcontract + ", amountSubcontract=" + amountSubcontract + ", amountBudget="
+				+ amountBudget + ", amountSubcontractTBA=" + amountSubcontractTBA + ", balanceType=" + balanceType
+				+ "]";
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((amountBudget == null) ? 0 : amountBudget.hashCode());
+		result = prime * result + ((amountCumulativeCert == null) ? 0 : amountCumulativeCert.hashCode());
+		result = prime * result + ((amountCumulativeWD == null) ? 0 : amountCumulativeWD.hashCode());
+		result = prime * result + ((amountPostedCert == null) ? 0 : amountPostedCert.hashCode());
+		result = prime * result + ((amountPostedWD == null) ? 0 : amountPostedWD.hashCode());
+		result = prime * result + ((amountSubcontract == null) ? 0 : amountSubcontract.hashCode());
+		result = prime * result + ((amountSubcontractNew == null) ? 0 : amountSubcontractNew.hashCode());
+		result = prime * result + ((amountSubcontractTBA == null) ? 0 : amountSubcontractTBA.hashCode());
+		result = prime * result + ((approved == null) ? 0 : approved.hashCode());
+		result = prime * result + ((balanceType == null) ? 0 : balanceType.hashCode());
+		result = prime * result + ((billItem == null) ? 0 : billItem.hashCode());
+		result = prime * result + ((cumCertifiedQuantity == null) ? 0 : cumCertifiedQuantity.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((jobNo == null) ? 0 : jobNo.hashCode());
+		result = prime * result + ((lineType == null) ? 0 : lineType.hashCode());
+		result = prime * result + ((newQuantity == null) ? 0 : newQuantity.hashCode());
+		result = prime * result + ((objectCode == null) ? 0 : objectCode.hashCode());
+		result = prime * result + ((originalQuantity == null) ? 0 : originalQuantity.hashCode());
+		result = prime * result + ((postedCertifiedQuantity == null) ? 0 : postedCertifiedQuantity.hashCode());
+		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
+		result = prime * result + ((remark == null) ? 0 : remark.hashCode());
+		result = prime * result + ((resourceNo == null) ? 0 : resourceNo.hashCode());
+		result = prime * result + ((scRate == null) ? 0 : scRate.hashCode());
+		result = prime * result + ((sequenceNo == null) ? 0 : sequenceNo.hashCode());
+		result = prime * result + ((subcontract == null) ? 0 : subcontract.hashCode());
+		result = prime * result + ((subsidiaryCode == null) ? 0 : subsidiaryCode.hashCode());
+		result = prime * result + ((tenderAnalysisDetail_ID == null) ? 0 : tenderAnalysisDetail_ID.hashCode());
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SubcontractDetail other = (SubcontractDetail) obj;
+		if (amountBudget == null) {
+			if (other.amountBudget != null)
+				return false;
+		} else if (!amountBudget.equals(other.amountBudget))
+			return false;
+		if (amountCumulativeCert == null) {
+			if (other.amountCumulativeCert != null)
+				return false;
+		} else if (!amountCumulativeCert.equals(other.amountCumulativeCert))
+			return false;
+		if (amountCumulativeWD == null) {
+			if (other.amountCumulativeWD != null)
+				return false;
+		} else if (!amountCumulativeWD.equals(other.amountCumulativeWD))
+			return false;
+		if (amountPostedCert == null) {
+			if (other.amountPostedCert != null)
+				return false;
+		} else if (!amountPostedCert.equals(other.amountPostedCert))
+			return false;
+		if (amountPostedWD == null) {
+			if (other.amountPostedWD != null)
+				return false;
+		} else if (!amountPostedWD.equals(other.amountPostedWD))
+			return false;
+		if (amountSubcontract == null) {
+			if (other.amountSubcontract != null)
+				return false;
+		} else if (!amountSubcontract.equals(other.amountSubcontract))
+			return false;
+		if (amountSubcontractNew == null) {
+			if (other.amountSubcontractNew != null)
+				return false;
+		} else if (!amountSubcontractNew.equals(other.amountSubcontractNew))
+			return false;
+		if (amountSubcontractTBA == null) {
+			if (other.amountSubcontractTBA != null)
+				return false;
+		} else if (!amountSubcontractTBA.equals(other.amountSubcontractTBA))
+			return false;
+		if (approved == null) {
+			if (other.approved != null)
+				return false;
+		} else if (!approved.equals(other.approved))
+			return false;
+		if (balanceType == null) {
+			if (other.balanceType != null)
+				return false;
+		} else if (!balanceType.equals(other.balanceType))
+			return false;
+		if (billItem == null) {
+			if (other.billItem != null)
+				return false;
+		} else if (!billItem.equals(other.billItem))
+			return false;
+		if (cumCertifiedQuantity == null) {
+			if (other.cumCertifiedQuantity != null)
+				return false;
+		} else if (!cumCertifiedQuantity.equals(other.cumCertifiedQuantity))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (jobNo == null) {
+			if (other.jobNo != null)
+				return false;
+		} else if (!jobNo.equals(other.jobNo))
+			return false;
+		if (lineType == null) {
+			if (other.lineType != null)
+				return false;
+		} else if (!lineType.equals(other.lineType))
+			return false;
+		if (newQuantity == null) {
+			if (other.newQuantity != null)
+				return false;
+		} else if (!newQuantity.equals(other.newQuantity))
+			return false;
+		if (objectCode == null) {
+			if (other.objectCode != null)
+				return false;
+		} else if (!objectCode.equals(other.objectCode))
+			return false;
+		if (originalQuantity == null) {
+			if (other.originalQuantity != null)
+				return false;
+		} else if (!originalQuantity.equals(other.originalQuantity))
+			return false;
+		if (postedCertifiedQuantity == null) {
+			if (other.postedCertifiedQuantity != null)
+				return false;
+		} else if (!postedCertifiedQuantity.equals(other.postedCertifiedQuantity))
+			return false;
+		if (quantity == null) {
+			if (other.quantity != null)
+				return false;
+		} else if (!quantity.equals(other.quantity))
+			return false;
+		if (remark == null) {
+			if (other.remark != null)
+				return false;
+		} else if (!remark.equals(other.remark))
+			return false;
+		if (resourceNo == null) {
+			if (other.resourceNo != null)
+				return false;
+		} else if (!resourceNo.equals(other.resourceNo))
+			return false;
+		if (scRate == null) {
+			if (other.scRate != null)
+				return false;
+		} else if (!scRate.equals(other.scRate))
+			return false;
+		if (sequenceNo == null) {
+			if (other.sequenceNo != null)
+				return false;
+		} else if (!sequenceNo.equals(other.sequenceNo))
+			return false;
+		if (subcontract == null) {
+			if (other.subcontract != null)
+				return false;
+		} else if (!subcontract.equals(other.subcontract))
+			return false;
+		if (subsidiaryCode == null) {
+			if (other.subsidiaryCode != null)
+				return false;
+		} else if (!subsidiaryCode.equals(other.subsidiaryCode))
+			return false;
+		if (tenderAnalysisDetail_ID == null) {
+			if (other.tenderAnalysisDetail_ID != null)
+				return false;
+		} else if (!tenderAnalysisDetail_ID.equals(other.tenderAnalysisDetail_ID))
+			return false;
+		if (unit == null) {
+			if (other.unit != null)
+				return false;
+		} else if (!unit.equals(other.unit))
+			return false;
+		return true;
+	}
+	
 }

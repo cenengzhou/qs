@@ -95,5 +95,60 @@ public abstract class BasePersistedAuditObject implements Serializable {
 
 	public void setSystemStatus(String systemStatus) {
 		this.systemStatus = systemStatus;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+		result = prime * result + ((createdUser == null) ? 0 : createdUser.hashCode());
+		result = prime * result + ((lastModifiedDate == null) ? 0 : lastModifiedDate.hashCode());
+		result = prime * result + ((lastModifiedUser == null) ? 0 : lastModifiedUser.hashCode());
+		result = prime * result + ((systemStatus == null) ? 0 : systemStatus.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BasePersistedAuditObject other = (BasePersistedAuditObject) obj;
+		if (createdDate == null) {
+			if (other.createdDate != null)
+				return false;
+		} else if (!createdDate.equals(other.createdDate))
+			return false;
+		if (createdUser == null) {
+			if (other.createdUser != null)
+				return false;
+		} else if (!createdUser.equals(other.createdUser))
+			return false;
+		if (lastModifiedDate == null) {
+			if (other.lastModifiedDate != null)
+				return false;
+		} else if (!lastModifiedDate.equals(other.lastModifiedDate))
+			return false;
+		if (lastModifiedUser == null) {
+			if (other.lastModifiedUser != null)
+				return false;
+		} else if (!lastModifiedUser.equals(other.lastModifiedUser))
+			return false;
+		if (systemStatus == null) {
+			if (other.systemStatus != null)
+				return false;
+		} else if (!systemStatus.equals(other.systemStatus))
+			return false;
+		return true;
 	}	
 }

@@ -13,15 +13,19 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "BPI_ITEM_RESOURCE")
 @BatchSize(size = 20)
 @OptimisticLocking(type = OptimisticLockType.NONE)

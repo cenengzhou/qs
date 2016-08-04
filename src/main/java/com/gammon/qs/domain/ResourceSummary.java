@@ -14,10 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -27,6 +29,8 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "RESOURCE_SUMMARY")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "RESOURCE_SUMMARY_GEN",  sequenceName = "RESOURCE_SUMMARY_SEQ", allocationSize = 1)

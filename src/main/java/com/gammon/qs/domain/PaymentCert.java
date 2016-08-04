@@ -20,10 +20,12 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -33,6 +35,8 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "PAYMENT_CERT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "PAYMENT_CERT_GEN", sequenceName = "PAYMENT_CERT_SEQ", allocationSize = 1)

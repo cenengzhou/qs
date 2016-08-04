@@ -34,6 +34,14 @@
 	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVISION" TO "QSUSER3_ROLE";
 	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVISION" TO "PCMSUSER_ROLE";
 
+	create table pcmsdatadev.REVCHANGES (
+        REV number(10,0) CONSTRAINT REVCHANGES_REV_NN not null,
+        ENTITYNAME varchar2(255 char)
+    )
+    TABLESPACE "QSDATADEVT" ;
+	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVCHANGES" TO "QSUSER3_ROLE";
+	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVCHANGES" TO "PCMSUSER_ROLE";
+
 	create table pcmsdatadev.ADDENDUM_AUDIT (
 		ID number(19,2) CONSTRAINT ADDENDUM_AUDIT_ID_NN not null,
 		REV number(10,0) CONSTRAINT ADDENDUM_AUDIT_REV_NN not null,
@@ -328,6 +336,7 @@
         WORK_COMMENCE_DATE date,
         WORK_SCOPE number(10,0),
         Job_Info_ID number(19,0),
+        NAME_SUBCONTRACTOR varchar2(500 char) default ' ',
         CONSTRAINT SUBCONTRACT_AUDIT_PK primary key (ID, REV)
     )
 	TABLESPACE "QSDATADEVT" ;
@@ -370,12 +379,18 @@
         TENDER_ID number(19,0),
         unit varchar2(10 char),
         SUBCONTRACT_ID number(19,0),
+        AMT_SUBCONTRACT_NEW number(19,2),
         CONSTRAINT SUBCONTRACTDETAIL_AUDIT_PK primary key (ID, REV)
     )
 	TABLESPACE "QSDATADEVT" ;
 	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."SUBCONTRACT_DETAIL_AUDIT" TO "QSUSER3_ROLE";
 	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."SUBCONTRACT_DETAIL_AUDIT" TO "PCMSUSER_ROLE";
 	
+    alter table pcmsdatadev.REVCHANGES 
+        add constraint REVCHANGES_FK 
+        foreign key (REV) 
+        references pcmsdatadev.REVISION;
+
     alter table pcmsdatadev.ADDENDUM_AUDIT 
         add constraint ADDENDUM_AUDIT_FK
         foreign key (REV) 

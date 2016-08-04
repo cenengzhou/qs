@@ -13,9 +13,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "MAIN_CERT_RETENTION_RELEASE")
 @SequenceGenerator(name = "MAIN_CERT_RETENTION_RELEASE_GEN",  sequenceName = "MAIN_CERT_RETENTION_RELEASE_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))

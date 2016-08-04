@@ -15,8 +15,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -28,21 +30,12 @@ import com.gammon.qs.application.BasePersistedObject;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
-@Table(	name = "JOB_INFO",
-		uniqueConstraints = @UniqueConstraint(	columnNames = "ID",
-												name = "JOB_INFO_PK"))
+@DynamicUpdate
+@SelectBeforeUpdate
+@Table(	name = "JOB_INFO", uniqueConstraints = @UniqueConstraint(	columnNames = "ID", name = "JOB_INFO_PK"))
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(	name = "JOB_INFO_GEN",
-					sequenceName = "JOB_INFO_SEQ",
-					allocationSize = 1)
-@AttributeOverride(	name = "id",
-					column = @Column(	name = "ID",
-										unique = true,
-										nullable = false,
-										insertable = false,
-										updatable = false,
-										precision = 19,
-										scale = 0))
+@SequenceGenerator(	name = "JOB_INFO_GEN", sequenceName = "JOB_INFO_SEQ", allocationSize = 1)
+@AttributeOverride(	name = "id", column = @Column(	name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> {
 	public static final String FINQS0REVIEW_D = "D"; /* Depends on the company - Default */
 	public static final String FINQS0REVIEW_N = "N"; /* Does not need Finance Review */
@@ -712,9 +705,393 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		return diff != 0 ? diff : company.compareTo(o.getCompany());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "JobInfo [jobNumber=" + jobNumber + ", description=" + description + ", company=" + company + ", employer=" + employer + ", contractType=" + contractType + ", division=" + division + ", department=" + department + ", internalJob=" + internalJob + ", soloJV=" + soloJV + ", completionStatus=" + completionStatus + ", insuranceCAR=" + insuranceCAR + ", insuranceECI=" + insuranceECI + ", insuranceTPL=" + insuranceTPL + ", clientContractNo=" + clientContractNo + ", parentJobNo=" + parentJobNo + ", jvPartnerNo=" + jvPartnerNo + ", jvPercentage=" + jvPercentage + ", originalContractValue=" + originalContractValue + ", projectedContractValue=" + projectedContractValue + ", orginalNominatedSCContractValue=" + orginalNominatedSCContractValue + ", tenderGP=" + tenderGP + ", forecastEndYear=" + forecastEndYear + ", forecastEndPeriod=" + forecastEndPeriod + ", maxRetentionPercentage=" + maxRetentionPercentage + ", interimRetentionPercentage=" + interimRetentionPercentage + ", mosRetentionPercentage=" + mosRetentionPercentage + ", valueOfBSWork=" + valueOfBSWork + ", grossFloorArea=" + grossFloorArea + ", grossFloorAreaUnit=" + grossFloorAreaUnit + ", billingCurrency=" + billingCurrency + ", paymentTermsForNominatedSC=" + paymentTermsForNominatedSC + ", defectProvisionPercentage=" + defectProvisionPercentage + ", cpfApplicable=" + cpfApplicable + ", cpfIndexName=" + cpfIndexName + ", cpfBaseYear=" + cpfBaseYear + ", cpfBasePeriod=" + cpfBasePeriod + ", levyApplicable=" + levyApplicable + ", levyCITAPercentage=" + levyCITAPercentage + ", levyPCFBPercentage=" + levyPCFBPercentage + ", expectedPCCDate=" + expectedPCCDate + ", actualPCCDate=" + actualPCCDate + ", expectedMakingGoodDate=" + expectedMakingGoodDate + ", actualMakingGoodDate=" + actualMakingGoodDate + ", defectLiabilityPeriod=" + defectLiabilityPeriod + ", defectListIssuedDate=" + defectListIssuedDate + ", financialEndDate=" + financialEndDate + ", dateFinalACSettlement=" + dateFinalACSettlement + ", yearOfCompletion=" + yearOfCompletion + ", bqFinalizedFlag=" + bqFinalizedFlag + ", allowManualInputSCWorkDone=" + allowManualInputSCWorkDone + ", legacyJob=" + legacyJob + ", conversionStatus=" + conversionStatus + ", repackagingType=" + repackagingType + ", budgetPosted=" + budgetPosted + ", finQS0Review=" + finQS0Review + "]";
+		return "JobInfo [jobNumber=" + jobNumber + ", description=" + description + ", company=" + company
+				+ ", employer=" + employer + ", contractType=" + contractType + ", division=" + division
+				+ ", department=" + department + ", internalJob=" + internalJob + ", soloJV=" + soloJV
+				+ ", completionStatus=" + completionStatus + ", insuranceCAR=" + insuranceCAR + ", insuranceECI="
+				+ insuranceECI + ", insuranceTPL=" + insuranceTPL + ", clientContractNo=" + clientContractNo
+				+ ", parentJobNo=" + parentJobNo + ", jvPartnerNo=" + jvPartnerNo + ", jvPercentage=" + jvPercentage
+				+ ", originalContractValue=" + originalContractValue + ", projectedContractValue="
+				+ projectedContractValue + ", orginalNominatedSCContractValue=" + orginalNominatedSCContractValue
+				+ ", tenderGP=" + tenderGP + ", forecastEndYear=" + forecastEndYear + ", forecastEndPeriod="
+				+ forecastEndPeriod + ", maxRetentionPercentage=" + maxRetentionPercentage
+				+ ", interimRetentionPercentage=" + interimRetentionPercentage + ", mosRetentionPercentage="
+				+ mosRetentionPercentage + ", valueOfBSWork=" + valueOfBSWork + ", grossFloorArea=" + grossFloorArea
+				+ ", grossFloorAreaUnit=" + grossFloorAreaUnit + ", billingCurrency=" + billingCurrency
+				+ ", paymentTermsForNominatedSC=" + paymentTermsForNominatedSC + ", defectProvisionPercentage="
+				+ defectProvisionPercentage + ", cpfApplicable=" + cpfApplicable + ", cpfIndexName=" + cpfIndexName
+				+ ", cpfBaseYear=" + cpfBaseYear + ", cpfBasePeriod=" + cpfBasePeriod + ", levyApplicable="
+				+ levyApplicable + ", levyCITAPercentage=" + levyCITAPercentage + ", levyPCFBPercentage="
+				+ levyPCFBPercentage + ", expectedPCCDate=" + expectedPCCDate + ", actualPCCDate=" + actualPCCDate
+				+ ", expectedMakingGoodDate=" + expectedMakingGoodDate + ", actualMakingGoodDate="
+				+ actualMakingGoodDate + ", defectLiabilityPeriod=" + defectLiabilityPeriod + ", defectListIssuedDate="
+				+ defectListIssuedDate + ", financialEndDate=" + financialEndDate + ", dateFinalACSettlement="
+				+ dateFinalACSettlement + ", yearOfCompletion=" + yearOfCompletion + ", bqFinalizedFlag="
+				+ bqFinalizedFlag + ", allowManualInputSCWorkDone=" + allowManualInputSCWorkDone + ", legacyJob="
+				+ legacyJob + ", conversionStatus=" + conversionStatus + ", repackagingType=" + repackagingType
+				+ ", budgetPosted=" + budgetPosted + ", finQS0Review=" + finQS0Review + "]";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((actualMakingGoodDate == null) ? 0 : actualMakingGoodDate.hashCode());
+		result = prime * result + ((actualPCCDate == null) ? 0 : actualPCCDate.hashCode());
+		result = prime * result + ((allowManualInputSCWorkDone == null) ? 0 : allowManualInputSCWorkDone.hashCode());
+		result = prime * result + ((billingCurrency == null) ? 0 : billingCurrency.hashCode());
+		result = prime * result + ((bqFinalizedFlag == null) ? 0 : bqFinalizedFlag.hashCode());
+		result = prime * result + ((budgetPosted == null) ? 0 : budgetPosted.hashCode());
+		result = prime * result + ((clientContractNo == null) ? 0 : clientContractNo.hashCode());
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + ((completionStatus == null) ? 0 : completionStatus.hashCode());
+		result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
+		result = prime * result + ((conversionStatus == null) ? 0 : conversionStatus.hashCode());
+		result = prime * result + ((cpfApplicable == null) ? 0 : cpfApplicable.hashCode());
+		result = prime * result + ((cpfBasePeriod == null) ? 0 : cpfBasePeriod.hashCode());
+		result = prime * result + ((cpfBaseYear == null) ? 0 : cpfBaseYear.hashCode());
+		result = prime * result + ((cpfIndexName == null) ? 0 : cpfIndexName.hashCode());
+		result = prime * result + ((dateFinalACSettlement == null) ? 0 : dateFinalACSettlement.hashCode());
+		result = prime * result + ((defectLiabilityPeriod == null) ? 0 : defectLiabilityPeriod.hashCode());
+		result = prime * result + ((defectListIssuedDate == null) ? 0 : defectListIssuedDate.hashCode());
+		result = prime * result + ((defectProvisionPercentage == null) ? 0 : defectProvisionPercentage.hashCode());
+		result = prime * result + ((department == null) ? 0 : department.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((division == null) ? 0 : division.hashCode());
+		result = prime * result + ((employer == null) ? 0 : employer.hashCode());
+		result = prime * result + ((expectedMakingGoodDate == null) ? 0 : expectedMakingGoodDate.hashCode());
+		result = prime * result + ((expectedPCCDate == null) ? 0 : expectedPCCDate.hashCode());
+		result = prime * result + ((finQS0Review == null) ? 0 : finQS0Review.hashCode());
+		result = prime * result + ((financialEndDate == null) ? 0 : financialEndDate.hashCode());
+		result = prime * result + ((forecastEndPeriod == null) ? 0 : forecastEndPeriod.hashCode());
+		result = prime * result + ((forecastEndYear == null) ? 0 : forecastEndYear.hashCode());
+		result = prime * result + ((grossFloorArea == null) ? 0 : grossFloorArea.hashCode());
+		result = prime * result + ((grossFloorAreaUnit == null) ? 0 : grossFloorAreaUnit.hashCode());
+		result = prime * result + ((insuranceCAR == null) ? 0 : insuranceCAR.hashCode());
+		result = prime * result + ((insuranceECI == null) ? 0 : insuranceECI.hashCode());
+		result = prime * result + ((insuranceTPL == null) ? 0 : insuranceTPL.hashCode());
+		result = prime * result + ((interimRetentionPercentage == null) ? 0 : interimRetentionPercentage.hashCode());
+		result = prime * result + ((internalJob == null) ? 0 : internalJob.hashCode());
+		result = prime * result + ((jobNumber == null) ? 0 : jobNumber.hashCode());
+		result = prime * result + ((jvPartnerNo == null) ? 0 : jvPartnerNo.hashCode());
+		result = prime * result + ((jvPercentage == null) ? 0 : jvPercentage.hashCode());
+		result = prime * result + ((legacyJob == null) ? 0 : legacyJob.hashCode());
+		result = prime * result + ((levyApplicable == null) ? 0 : levyApplicable.hashCode());
+		result = prime * result + ((levyCITAPercentage == null) ? 0 : levyCITAPercentage.hashCode());
+		result = prime * result + ((levyPCFBPercentage == null) ? 0 : levyPCFBPercentage.hashCode());
+		result = prime * result + ((maxRetentionPercentage == null) ? 0 : maxRetentionPercentage.hashCode());
+		result = prime * result + ((mosRetentionPercentage == null) ? 0 : mosRetentionPercentage.hashCode());
+		result = prime * result
+				+ ((orginalNominatedSCContractValue == null) ? 0 : orginalNominatedSCContractValue.hashCode());
+		result = prime * result + ((originalContractValue == null) ? 0 : originalContractValue.hashCode());
+		result = prime * result + ((parentJobNo == null) ? 0 : parentJobNo.hashCode());
+		result = prime * result + ((paymentTermsForNominatedSC == null) ? 0 : paymentTermsForNominatedSC.hashCode());
+		result = prime * result + ((projectedContractValue == null) ? 0 : projectedContractValue.hashCode());
+		result = prime * result + ((repackagingType == null) ? 0 : repackagingType.hashCode());
+		result = prime * result + ((soloJV == null) ? 0 : soloJV.hashCode());
+		result = prime * result + ((tenderGP == null) ? 0 : tenderGP.hashCode());
+		result = prime * result + ((valueOfBSWork == null) ? 0 : valueOfBSWork.hashCode());
+		result = prime * result + ((yearOfCompletion == null) ? 0 : yearOfCompletion.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JobInfo other = (JobInfo) obj;
+		if (actualMakingGoodDate == null) {
+			if (other.actualMakingGoodDate != null)
+				return false;
+		} else if (!actualMakingGoodDate.equals(other.actualMakingGoodDate))
+			return false;
+		if (actualPCCDate == null) {
+			if (other.actualPCCDate != null)
+				return false;
+		} else if (!actualPCCDate.equals(other.actualPCCDate))
+			return false;
+		if (allowManualInputSCWorkDone == null) {
+			if (other.allowManualInputSCWorkDone != null)
+				return false;
+		} else if (!allowManualInputSCWorkDone.equals(other.allowManualInputSCWorkDone))
+			return false;
+		if (billingCurrency == null) {
+			if (other.billingCurrency != null)
+				return false;
+		} else if (!billingCurrency.equals(other.billingCurrency))
+			return false;
+		if (bqFinalizedFlag == null) {
+			if (other.bqFinalizedFlag != null)
+				return false;
+		} else if (!bqFinalizedFlag.equals(other.bqFinalizedFlag))
+			return false;
+		if (budgetPosted == null) {
+			if (other.budgetPosted != null)
+				return false;
+		} else if (!budgetPosted.equals(other.budgetPosted))
+			return false;
+		if (clientContractNo == null) {
+			if (other.clientContractNo != null)
+				return false;
+		} else if (!clientContractNo.equals(other.clientContractNo))
+			return false;
+		if (company == null) {
+			if (other.company != null)
+				return false;
+		} else if (!company.equals(other.company))
+			return false;
+		if (completionStatus == null) {
+			if (other.completionStatus != null)
+				return false;
+		} else if (!completionStatus.equals(other.completionStatus))
+			return false;
+		if (contractType == null) {
+			if (other.contractType != null)
+				return false;
+		} else if (!contractType.equals(other.contractType))
+			return false;
+		if (conversionStatus == null) {
+			if (other.conversionStatus != null)
+				return false;
+		} else if (!conversionStatus.equals(other.conversionStatus))
+			return false;
+		if (cpfApplicable == null) {
+			if (other.cpfApplicable != null)
+				return false;
+		} else if (!cpfApplicable.equals(other.cpfApplicable))
+			return false;
+		if (cpfBasePeriod == null) {
+			if (other.cpfBasePeriod != null)
+				return false;
+		} else if (!cpfBasePeriod.equals(other.cpfBasePeriod))
+			return false;
+		if (cpfBaseYear == null) {
+			if (other.cpfBaseYear != null)
+				return false;
+		} else if (!cpfBaseYear.equals(other.cpfBaseYear))
+			return false;
+		if (cpfIndexName == null) {
+			if (other.cpfIndexName != null)
+				return false;
+		} else if (!cpfIndexName.equals(other.cpfIndexName))
+			return false;
+		if (dateFinalACSettlement == null) {
+			if (other.dateFinalACSettlement != null)
+				return false;
+		} else if (!dateFinalACSettlement.equals(other.dateFinalACSettlement))
+			return false;
+		if (defectLiabilityPeriod == null) {
+			if (other.defectLiabilityPeriod != null)
+				return false;
+		} else if (!defectLiabilityPeriod.equals(other.defectLiabilityPeriod))
+			return false;
+		if (defectListIssuedDate == null) {
+			if (other.defectListIssuedDate != null)
+				return false;
+		} else if (!defectListIssuedDate.equals(other.defectListIssuedDate))
+			return false;
+		if (defectProvisionPercentage == null) {
+			if (other.defectProvisionPercentage != null)
+				return false;
+		} else if (!defectProvisionPercentage.equals(other.defectProvisionPercentage))
+			return false;
+		if (department == null) {
+			if (other.department != null)
+				return false;
+		} else if (!department.equals(other.department))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (division == null) {
+			if (other.division != null)
+				return false;
+		} else if (!division.equals(other.division))
+			return false;
+		if (employer == null) {
+			if (other.employer != null)
+				return false;
+		} else if (!employer.equals(other.employer))
+			return false;
+		if (expectedMakingGoodDate == null) {
+			if (other.expectedMakingGoodDate != null)
+				return false;
+		} else if (!expectedMakingGoodDate.equals(other.expectedMakingGoodDate))
+			return false;
+		if (expectedPCCDate == null) {
+			if (other.expectedPCCDate != null)
+				return false;
+		} else if (!expectedPCCDate.equals(other.expectedPCCDate))
+			return false;
+		if (finQS0Review == null) {
+			if (other.finQS0Review != null)
+				return false;
+		} else if (!finQS0Review.equals(other.finQS0Review))
+			return false;
+		if (financialEndDate == null) {
+			if (other.financialEndDate != null)
+				return false;
+		} else if (!financialEndDate.equals(other.financialEndDate))
+			return false;
+		if (forecastEndPeriod == null) {
+			if (other.forecastEndPeriod != null)
+				return false;
+		} else if (!forecastEndPeriod.equals(other.forecastEndPeriod))
+			return false;
+		if (forecastEndYear == null) {
+			if (other.forecastEndYear != null)
+				return false;
+		} else if (!forecastEndYear.equals(other.forecastEndYear))
+			return false;
+		if (grossFloorArea == null) {
+			if (other.grossFloorArea != null)
+				return false;
+		} else if (!grossFloorArea.equals(other.grossFloorArea))
+			return false;
+		if (grossFloorAreaUnit == null) {
+			if (other.grossFloorAreaUnit != null)
+				return false;
+		} else if (!grossFloorAreaUnit.equals(other.grossFloorAreaUnit))
+			return false;
+		if (insuranceCAR == null) {
+			if (other.insuranceCAR != null)
+				return false;
+		} else if (!insuranceCAR.equals(other.insuranceCAR))
+			return false;
+		if (insuranceECI == null) {
+			if (other.insuranceECI != null)
+				return false;
+		} else if (!insuranceECI.equals(other.insuranceECI))
+			return false;
+		if (insuranceTPL == null) {
+			if (other.insuranceTPL != null)
+				return false;
+		} else if (!insuranceTPL.equals(other.insuranceTPL))
+			return false;
+		if (interimRetentionPercentage == null) {
+			if (other.interimRetentionPercentage != null)
+				return false;
+		} else if (!interimRetentionPercentage.equals(other.interimRetentionPercentage))
+			return false;
+		if (internalJob == null) {
+			if (other.internalJob != null)
+				return false;
+		} else if (!internalJob.equals(other.internalJob))
+			return false;
+		if (jobNumber == null) {
+			if (other.jobNumber != null)
+				return false;
+		} else if (!jobNumber.equals(other.jobNumber))
+			return false;
+		if (jvPartnerNo == null) {
+			if (other.jvPartnerNo != null)
+				return false;
+		} else if (!jvPartnerNo.equals(other.jvPartnerNo))
+			return false;
+		if (jvPercentage == null) {
+			if (other.jvPercentage != null)
+				return false;
+		} else if (!jvPercentage.equals(other.jvPercentage))
+			return false;
+		if (legacyJob == null) {
+			if (other.legacyJob != null)
+				return false;
+		} else if (!legacyJob.equals(other.legacyJob))
+			return false;
+		if (levyApplicable == null) {
+			if (other.levyApplicable != null)
+				return false;
+		} else if (!levyApplicable.equals(other.levyApplicable))
+			return false;
+		if (levyCITAPercentage == null) {
+			if (other.levyCITAPercentage != null)
+				return false;
+		} else if (!levyCITAPercentage.equals(other.levyCITAPercentage))
+			return false;
+		if (levyPCFBPercentage == null) {
+			if (other.levyPCFBPercentage != null)
+				return false;
+		} else if (!levyPCFBPercentage.equals(other.levyPCFBPercentage))
+			return false;
+		if (maxRetentionPercentage == null) {
+			if (other.maxRetentionPercentage != null)
+				return false;
+		} else if (!maxRetentionPercentage.equals(other.maxRetentionPercentage))
+			return false;
+		if (mosRetentionPercentage == null) {
+			if (other.mosRetentionPercentage != null)
+				return false;
+		} else if (!mosRetentionPercentage.equals(other.mosRetentionPercentage))
+			return false;
+		if (orginalNominatedSCContractValue == null) {
+			if (other.orginalNominatedSCContractValue != null)
+				return false;
+		} else if (!orginalNominatedSCContractValue.equals(other.orginalNominatedSCContractValue))
+			return false;
+		if (originalContractValue == null) {
+			if (other.originalContractValue != null)
+				return false;
+		} else if (!originalContractValue.equals(other.originalContractValue))
+			return false;
+		if (parentJobNo == null) {
+			if (other.parentJobNo != null)
+				return false;
+		} else if (!parentJobNo.equals(other.parentJobNo))
+			return false;
+		if (paymentTermsForNominatedSC == null) {
+			if (other.paymentTermsForNominatedSC != null)
+				return false;
+		} else if (!paymentTermsForNominatedSC.equals(other.paymentTermsForNominatedSC))
+			return false;
+		if (projectedContractValue == null) {
+			if (other.projectedContractValue != null)
+				return false;
+		} else if (!projectedContractValue.equals(other.projectedContractValue))
+			return false;
+		if (repackagingType == null) {
+			if (other.repackagingType != null)
+				return false;
+		} else if (!repackagingType.equals(other.repackagingType))
+			return false;
+		if (soloJV == null) {
+			if (other.soloJV != null)
+				return false;
+		} else if (!soloJV.equals(other.soloJV))
+			return false;
+		if (tenderGP == null) {
+			if (other.tenderGP != null)
+				return false;
+		} else if (!tenderGP.equals(other.tenderGP))
+			return false;
+		if (valueOfBSWork == null) {
+			if (other.valueOfBSWork != null)
+				return false;
+		} else if (!valueOfBSWork.equals(other.valueOfBSWork))
+			return false;
+		if (yearOfCompletion == null) {
+			if (other.yearOfCompletion != null)
+				return false;
+		} else if (!yearOfCompletion.equals(other.yearOfCompletion))
+			return false;
+		return true;
+	}
+
 
 }

@@ -13,12 +13,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "MAIN_CERT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "MAIN_CERT_GEN",  sequenceName = "MAIN_CERT_SEQ", allocationSize = 1)

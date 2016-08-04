@@ -4422,8 +4422,17 @@ public class SubcontractService {
 		return provisionPostingHistHBDao.findByPeriod(jobNo, subcontractNo, year, month);
 	}
 	
-	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
-
+	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
+	public Object[] testModifySubcontractAndDetail(String jobNo, String subcontractNo) throws DatabaseOperationException{
+		Subcontract subcontract = obtainSubcontract(jobNo, subcontractNo);
+		List<SubcontractDetail> subcontractDetailList = obtainSCDetails(jobNo, subcontractNo);
+		subcontract.setDescription(subcontract.getDescription() + " |test|");
+		subcontractDetailList.get(0).setDescription(subcontractDetailList.get(0).getDescription() + " |test|");
+		subcontractHBDao.update(subcontract);
+		subcontractDetailHBDao.update(subcontractDetailList.get(0));
+		Object[] results = {subcontract, subcontractDetailList};
+		return results;
+	}
 	
 }

@@ -2,6 +2,7 @@ package com.gammon.pcms.scheduler.service;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -15,7 +16,7 @@ import com.gammon.pcms.config.AuditConfig.AuditInfo;
 import com.gammon.pcms.dao.AuditHousekeepHBDao;
 import com.gammon.qs.service.admin.MailContentGenerator;
 @Component
-@Transactional(rollbackFor = Exception.class, value = "transactionManager")
+@Transactional(rollbackFor = Exception.class, value = "transactionManager", readOnly = true)
 public class AuditHousekeepService {
 
 	private Logger logger = Logger.getLogger(getClass().getName());
@@ -41,7 +42,7 @@ public class AuditHousekeepService {
 			for(Entry<String, AuditInfo> entry : auditConfig.getAuditInfoMap().entrySet()){
 				if(entry.getValue().isHousekeep()){
 					logger.info("Housekeeping: " + entry.getKey());
-					housekeepAuditTable(entry.getValue().getTableName());
+					housekeekpByAuditTableName(entry.getValue().getTableName());
 				}
 			}
 		} catch (Exception e) {
@@ -64,7 +65,20 @@ public class AuditHousekeepService {
 		logger.info("-----------------------housekeepAuditTable(END)------------------------------");
 	}
 	
-	public int housekeepAuditTable(String tableName) throws DataAccessException, SQLException{
-		return auditHousekeepHBDao.housekeekpByAuditInfo(tableName);
+	public int housekeekpByAuditTableName(String tableName) throws DataAccessException, SQLException{
+		return auditHousekeepHBDao.housekeekpByAuditTableName(tableName);
 	}
+	
+	public <T> T findEntityByIdRevision(Class<T> clazz, long id, int rev){
+		return auditHousekeepHBDao.findEntityByIdRevision(clazz, id, rev);
+	}
+	
+	public <T> List<Object[]> findRevisionsByEntity(Class<T> clazz){
+		return auditHousekeepHBDao.findRevisionsByEntity(clazz);
+	}
+	
+	public List<Object> findByRevision(Number revision){
+		return auditHousekeepHBDao.findByRevision(revision);
+	}
+	
 }

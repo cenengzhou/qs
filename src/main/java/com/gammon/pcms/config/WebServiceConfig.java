@@ -173,6 +173,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
 		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		bean.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		bean.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		return bean;
 	}
 
@@ -189,6 +190,7 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
 		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		bean.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		bean.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		return bean;
 	}
 	

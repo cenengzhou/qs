@@ -9,12 +9,16 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "APP_TRANSIT_UOM")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "APP_TRANSIT_UOM_GEN", sequenceName = "APP_TRANSIT_UOM_SEQ", allocationSize = 1)

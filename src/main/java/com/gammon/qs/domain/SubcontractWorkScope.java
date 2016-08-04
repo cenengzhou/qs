@@ -14,12 +14,16 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "SUBCONTRACT_WORKSCOPE")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "SUBCONTRACT_WORKSCOPE_GEN", sequenceName = "SUBCONTRACT_WORKSCOPE_SEQ", allocationSize = 1)

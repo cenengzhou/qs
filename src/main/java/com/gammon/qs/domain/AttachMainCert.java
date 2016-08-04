@@ -12,10 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "ATTACH_MAIN_CERT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @IdClass(AttachMainCertId.class)

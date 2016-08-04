@@ -12,12 +12,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "BPI_PAGE")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "BPI_PAGE_GEN",  sequenceName = "BPI_PAGE_SEQ", allocationSize = 1)

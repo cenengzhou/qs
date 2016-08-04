@@ -12,14 +12,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "TRANSIT_BPI")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "TRANSIT_BPI_GEN", sequenceName = "TRANSIT_BPI_SEQ", allocationSize = 1)

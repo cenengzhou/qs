@@ -5,8 +5,13 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 //@Lazy(value = false)
 @DiscriminatorValue("BQ")
 public class SubcontractDetailBQ extends SubcontractDetailOA {

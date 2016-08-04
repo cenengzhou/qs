@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.Audited;
 
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
@@ -23,6 +25,8 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
  */
 @Audited
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "ADDENDUM_DETAIL")
 @SequenceGenerator(name = "ADDENDUM_DETAIL_GEN", sequenceName = "ADDENDUM_DETAIL_SEQ", allocationSize = 1)
 public class AddendumDetail extends PcmsPersistedAuditObject {

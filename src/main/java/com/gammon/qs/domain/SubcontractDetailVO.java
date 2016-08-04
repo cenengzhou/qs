@@ -5,12 +5,17 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 import com.gammon.qs.shared.util.CalculationUtil;
 
 /**
  * VO Type includes: V1, V2, V3, L1, L2, D1, D2, CF
  */
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 //@Lazy(value = false)
 @DiscriminatorValue("VO")
 public class SubcontractDetailVO extends SubcontractDetailBQ {

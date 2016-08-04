@@ -19,6 +19,8 @@ public class AuditConfig {
 	private String audit_strategy_validity_store_revend_timestamp;
 	@Value("${org.hibernate.envers.store_data_at_delete}")
 	private String store_data_at_delete;
+	@Value("${org.hibernate.envers.track_entities_changed_in_revision}")
+	private String track_entities_changed_in_revision;
 	
 	@Value("${audit.table.addendum}")
 	private String auditTableAddendum;
@@ -102,6 +104,14 @@ public class AuditConfig {
 	 */
 	public String getStore_data_at_delete() {
 		return store_data_at_delete;
+	}
+
+
+	/**
+	 * @return the track_entities_changed_in_revision
+	 */
+	public String getTrack_entities_changed_in_revision() {
+		return track_entities_changed_in_revision;
 	}
 
 	public Map<String, AuditInfo> getAuditInfoMap(){
@@ -194,5 +204,4 @@ public class AuditConfig {
 		}
 		
 	}
-
 }

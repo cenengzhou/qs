@@ -10,7 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "V_CONTRACT_RECEIVABLE_RPT")
 public class ContractReceivableWrapper implements Serializable{
 

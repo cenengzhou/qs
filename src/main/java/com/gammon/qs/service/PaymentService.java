@@ -2971,5 +2971,14 @@ public class PaymentService{
 		return paymentCertWrapperList;
 	}
 
-	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
+	
+	public Object[] testModifyPaymentCertAndDetail(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception{
+		PaymentCert paymentCert = obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+		List<PaymentCertDetail> paymentCertDetailList = obtainPaymentDetailList(jobNo, subcontractNo, paymentCertNo);
+		paymentCert.setCertAmount(paymentCert.getCertAmount() + 10);
+		paymentCertDetailList.get(0).setDescription(paymentCertDetailList.get(0).getDescription() != null ? paymentCertDetailList.get(0).getDescription() + "| Test|" : " | Test");
+		Object[] results = {paymentCert, paymentCertDetailList.get(0)};
+		return results;
+	}
 }

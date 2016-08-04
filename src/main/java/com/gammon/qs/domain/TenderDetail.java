@@ -14,13 +14,17 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "TENDER_DETAIL")
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "TENDER_DETAIL_GEN", sequenceName = "TENDER_DETAIL_SEQ", allocationSize = 1)

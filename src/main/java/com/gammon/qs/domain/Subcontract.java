@@ -19,8 +19,10 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
@@ -31,19 +33,12 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "SUBCONTRACT")
 @OptimisticLocking(type = OptimisticLockType.NONE)
-@SequenceGenerator(	name = "SUBCONTRACT_GEN",
-					sequenceName = "SUBCONTRACT_SEQ",
-					allocationSize = 1)
-@AttributeOverride(	name = "id",
-					column = @Column(	name = "ID",
-										unique = true,
-										nullable = false,
-										insertable = false,
-										updatable = false,
-										precision = 19,
-										scale = 0))
+@SequenceGenerator(	name = "SUBCONTRACT_GEN", sequenceName = "SUBCONTRACT_SEQ", allocationSize = 1)
+@AttributeOverride(	name = "id", column = @Column(	name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class Subcontract extends BasePersistedObject {
 	private static final long serialVersionUID = 7458442200564333118L;
 
@@ -145,7 +140,8 @@ public class Subcontract extends BasePersistedObject {
 	private String paymentTermsDescription;
 	private String notes;
 	private Integer workscope;
-
+	private String nameSubcontractor = " ";
+	
 	private Date scCreatedDate;
 	private Date latestAddendumValueUpdatedDate;
 	private Date firstPaymentCertIssuedDate;
@@ -839,6 +835,15 @@ public class Subcontract extends BasePersistedObject {
 		this.workscope = workscope;
 	}
 
+	@Column(name = "NAME_SUBCONTRACTOR", length = 500)
+	public String getNameSubcontractor() {
+		return nameSubcontractor;
+	}
+
+	public void setNameSubcontractor(String nameSubcontractor) {
+		this.nameSubcontractor = nameSubcontractor;
+	}
+	
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "Job_Info_ID",
@@ -869,9 +874,429 @@ public class Subcontract extends BasePersistedObject {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Subcontract [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description + ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus + ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature + ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount + ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute + ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage + ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage=" + mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention=" + accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation=" + paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate + ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation=" + cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear + ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus=" + paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus=" + splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription + ", notes=" + notes + ", workscope=" + workscope + ", scCreatedDate=" + scCreatedDate + ", latestAddendumValueUpdatedDate=" + latestAddendumValueUpdatedDate + ", firstPaymentCertIssuedDate=" + firstPaymentCertIssuedDate + ", lastPaymentCertIssuedDate=" + lastPaymentCertIssuedDate + ", finalPaymentIssuedDate=" + finalPaymentIssuedDate + ", scAwardApprovalRequestSentDate=" + scAwardApprovalRequestSentDate + ", scApprovalDate=" + scApprovalDate + ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract=" + plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract + ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount=" + totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount + ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount=" + totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount + ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate=" + tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate=" + loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate + ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + "]";
+		return "Subcontract [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description
+				+ ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus
+				+ ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature
+				+ ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount
+				+ ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute
+				+ ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage
+				+ ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage="
+				+ mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention="
+				+ accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation="
+				+ paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate
+				+ ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation="
+				+ cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear
+				+ ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus="
+				+ paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus="
+				+ splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription + ", notes=" + notes
+				+ ", workscope=" + workscope + ", nameSubcontractor=" + nameSubcontractor + ", scCreatedDate="
+				+ scCreatedDate + ", latestAddendumValueUpdatedDate=" + latestAddendumValueUpdatedDate
+				+ ", firstPaymentCertIssuedDate=" + firstPaymentCertIssuedDate + ", lastPaymentCertIssuedDate="
+				+ lastPaymentCertIssuedDate + ", finalPaymentIssuedDate=" + finalPaymentIssuedDate
+				+ ", scAwardApprovalRequestSentDate=" + scAwardApprovalRequestSentDate + ", scApprovalDate="
+				+ scApprovalDate + ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract="
+				+ plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract
+				+ ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount="
+				+ totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount
+				+ ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount="
+				+ totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount
+				+ ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate="
+				+ tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate="
+				+ loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate
+				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + "]";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accumlatedRetention == null) ? 0 : accumlatedRetention.hashCode());
+		result = prime * result + ((approvalRoute == null) ? 0 : approvalRoute.hashCode());
+		result = prime * result + ((approvedVOAmount == null) ? 0 : approvedVOAmount.hashCode());
+		result = prime * result + ((cpfBasePeriod == null) ? 0 : cpfBasePeriod.hashCode());
+		result = prime * result + ((cpfBaseYear == null) ? 0 : cpfBaseYear.hashCode());
+		result = prime * result + ((cpfCalculation == null) ? 0 : cpfCalculation.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((exchangeRate == null) ? 0 : exchangeRate.hashCode());
+		result = prime * result + ((finalPaymentIssuedDate == null) ? 0 : finalPaymentIssuedDate.hashCode());
+		result = prime * result + ((firstPaymentCertIssuedDate == null) ? 0 : firstPaymentCertIssuedDate.hashCode());
+		result = prime * result + ((formOfSubcontract == null) ? 0 : formOfSubcontract.hashCode());
+		result = prime * result + ((interimRentionPercentage == null) ? 0 : interimRentionPercentage.hashCode());
+		result = prime * result + ((internalJobNo == null) ? 0 : internalJobNo.hashCode());
+		result = prime * result + ((jobInfo == null) ? 0 : jobInfo.hashCode());
+		result = prime * result + ((labourIncludedContract == null) ? 0 : labourIncludedContract.hashCode());
+		result = prime * result + ((lastPaymentCertIssuedDate == null) ? 0 : lastPaymentCertIssuedDate.hashCode());
+		result = prime * result
+				+ ((latestAddendumValueUpdatedDate == null) ? 0 : latestAddendumValueUpdatedDate.hashCode());
+		result = prime * result + ((loaSignedDate == null) ? 0 : loaSignedDate.hashCode());
+		result = prime * result + ((materialIncludedContract == null) ? 0 : materialIncludedContract.hashCode());
+		result = prime * result + ((maxRetentionPercentage == null) ? 0 : maxRetentionPercentage.hashCode());
+		result = prime * result + ((mosRetentionPercentage == null) ? 0 : mosRetentionPercentage.hashCode());
+		result = prime * result + ((nameSubcontractor == null) ? 0 : nameSubcontractor.hashCode());
+		result = prime * result + ((notes == null) ? 0 : notes.hashCode());
+		result = prime * result + ((onSiteStartDate == null) ? 0 : onSiteStartDate.hashCode());
+		result = prime * result + ((originalSubcontractSum == null) ? 0 : originalSubcontractSum.hashCode());
+		result = prime * result + ((packageNo == null) ? 0 : packageNo.hashCode());
+		result = prime * result + ((packageStatus == null) ? 0 : packageStatus.hashCode());
+		result = prime * result + ((packageType == null) ? 0 : packageType.hashCode());
+		result = prime * result + ((paymentCurrency == null) ? 0 : paymentCurrency.hashCode());
+		result = prime * result + ((paymentInformation == null) ? 0 : paymentInformation.hashCode());
+		result = prime * result + ((paymentStatus == null) ? 0 : paymentStatus.hashCode());
+		result = prime * result + ((paymentTerms == null) ? 0 : paymentTerms.hashCode());
+		result = prime * result + ((paymentTermsDescription == null) ? 0 : paymentTermsDescription.hashCode());
+		result = prime * result + ((plantIncludedContract == null) ? 0 : plantIncludedContract.hashCode());
+		result = prime * result + ((preAwardMeetingDate == null) ? 0 : preAwardMeetingDate.hashCode());
+		result = prime * result + ((remeasuredSubcontractSum == null) ? 0 : remeasuredSubcontractSum.hashCode());
+		result = prime * result + ((requisitionApprovedDate == null) ? 0 : requisitionApprovedDate.hashCode());
+		result = prime * result + ((retentionAmount == null) ? 0 : retentionAmount.hashCode());
+		result = prime * result + ((retentionReleased == null) ? 0 : retentionReleased.hashCode());
+		result = prime * result + ((retentionTerms == null) ? 0 : retentionTerms.hashCode());
+		result = prime * result + ((scApprovalDate == null) ? 0 : scApprovalDate.hashCode());
+		result = prime * result
+				+ ((scAwardApprovalRequestSentDate == null) ? 0 : scAwardApprovalRequestSentDate.hashCode());
+		result = prime * result + ((scCreatedDate == null) ? 0 : scCreatedDate.hashCode());
+		result = prime * result + ((scDocLegalDate == null) ? 0 : scDocLegalDate.hashCode());
+		result = prime * result + ((scDocScrDate == null) ? 0 : scDocScrDate.hashCode());
+		result = prime * result + ((splitTerminateStatus == null) ? 0 : splitTerminateStatus.hashCode());
+		result = prime * result + ((subcontractStatus == null) ? 0 : subcontractStatus.hashCode());
+		result = prime * result + ((subcontractTerm == null) ? 0 : subcontractTerm.hashCode());
+		result = prime * result + ((subcontractorNature == null) ? 0 : subcontractorNature.hashCode());
+		result = prime * result + ((submittedAddendum == null) ? 0 : submittedAddendum.hashCode());
+		result = prime * result + ((tenderAnalysisApprovedDate == null) ? 0 : tenderAnalysisApprovedDate.hashCode());
+		result = prime * result + ((totalCCPostedCertAmount == null) ? 0 : totalCCPostedCertAmount.hashCode());
+		result = prime * result + ((totalCumCertifiedAmount == null) ? 0 : totalCumCertifiedAmount.hashCode());
+		result = prime * result + ((totalCumWorkDoneAmount == null) ? 0 : totalCumWorkDoneAmount.hashCode());
+		result = prime * result + ((totalMOSPostedCertAmount == null) ? 0 : totalMOSPostedCertAmount.hashCode());
+		result = prime * result + ((totalPostedCertifiedAmount == null) ? 0 : totalPostedCertifiedAmount.hashCode());
+		result = prime * result + ((totalPostedWorkDoneAmount == null) ? 0 : totalPostedWorkDoneAmount.hashCode());
+		result = prime * result + ((vendorNo == null) ? 0 : vendorNo.hashCode());
+		result = prime * result + ((workCommenceDate == null) ? 0 : workCommenceDate.hashCode());
+		result = prime * result + ((workscope == null) ? 0 : workscope.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Subcontract other = (Subcontract) obj;
+		if (accumlatedRetention == null) {
+			if (other.accumlatedRetention != null)
+				return false;
+		} else if (!accumlatedRetention.equals(other.accumlatedRetention))
+			return false;
+		if (approvalRoute == null) {
+			if (other.approvalRoute != null)
+				return false;
+		} else if (!approvalRoute.equals(other.approvalRoute))
+			return false;
+		if (approvedVOAmount == null) {
+			if (other.approvedVOAmount != null)
+				return false;
+		} else if (!approvedVOAmount.equals(other.approvedVOAmount))
+			return false;
+		if (cpfBasePeriod == null) {
+			if (other.cpfBasePeriod != null)
+				return false;
+		} else if (!cpfBasePeriod.equals(other.cpfBasePeriod))
+			return false;
+		if (cpfBaseYear == null) {
+			if (other.cpfBaseYear != null)
+				return false;
+		} else if (!cpfBaseYear.equals(other.cpfBaseYear))
+			return false;
+		if (cpfCalculation == null) {
+			if (other.cpfCalculation != null)
+				return false;
+		} else if (!cpfCalculation.equals(other.cpfCalculation))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (exchangeRate == null) {
+			if (other.exchangeRate != null)
+				return false;
+		} else if (!exchangeRate.equals(other.exchangeRate))
+			return false;
+		if (finalPaymentIssuedDate == null) {
+			if (other.finalPaymentIssuedDate != null)
+				return false;
+		} else if (!finalPaymentIssuedDate.equals(other.finalPaymentIssuedDate))
+			return false;
+		if (firstPaymentCertIssuedDate == null) {
+			if (other.firstPaymentCertIssuedDate != null)
+				return false;
+		} else if (!firstPaymentCertIssuedDate.equals(other.firstPaymentCertIssuedDate))
+			return false;
+		if (formOfSubcontract == null) {
+			if (other.formOfSubcontract != null)
+				return false;
+		} else if (!formOfSubcontract.equals(other.formOfSubcontract))
+			return false;
+		if (interimRentionPercentage == null) {
+			if (other.interimRentionPercentage != null)
+				return false;
+		} else if (!interimRentionPercentage.equals(other.interimRentionPercentage))
+			return false;
+		if (internalJobNo == null) {
+			if (other.internalJobNo != null)
+				return false;
+		} else if (!internalJobNo.equals(other.internalJobNo))
+			return false;
+		if (jobInfo == null) {
+			if (other.jobInfo != null)
+				return false;
+		} else if (!jobInfo.equals(other.jobInfo))
+			return false;
+		if (labourIncludedContract == null) {
+			if (other.labourIncludedContract != null)
+				return false;
+		} else if (!labourIncludedContract.equals(other.labourIncludedContract))
+			return false;
+		if (lastPaymentCertIssuedDate == null) {
+			if (other.lastPaymentCertIssuedDate != null)
+				return false;
+		} else if (!lastPaymentCertIssuedDate.equals(other.lastPaymentCertIssuedDate))
+			return false;
+		if (latestAddendumValueUpdatedDate == null) {
+			if (other.latestAddendumValueUpdatedDate != null)
+				return false;
+		} else if (!latestAddendumValueUpdatedDate.equals(other.latestAddendumValueUpdatedDate))
+			return false;
+		if (loaSignedDate == null) {
+			if (other.loaSignedDate != null)
+				return false;
+		} else if (!loaSignedDate.equals(other.loaSignedDate))
+			return false;
+		if (materialIncludedContract == null) {
+			if (other.materialIncludedContract != null)
+				return false;
+		} else if (!materialIncludedContract.equals(other.materialIncludedContract))
+			return false;
+		if (maxRetentionPercentage == null) {
+			if (other.maxRetentionPercentage != null)
+				return false;
+		} else if (!maxRetentionPercentage.equals(other.maxRetentionPercentage))
+			return false;
+		if (mosRetentionPercentage == null) {
+			if (other.mosRetentionPercentage != null)
+				return false;
+		} else if (!mosRetentionPercentage.equals(other.mosRetentionPercentage))
+			return false;
+		if (nameSubcontractor == null) {
+			if (other.nameSubcontractor != null)
+				return false;
+		} else if (!nameSubcontractor.equals(other.nameSubcontractor))
+			return false;
+		if (notes == null) {
+			if (other.notes != null)
+				return false;
+		} else if (!notes.equals(other.notes))
+			return false;
+		if (onSiteStartDate == null) {
+			if (other.onSiteStartDate != null)
+				return false;
+		} else if (!onSiteStartDate.equals(other.onSiteStartDate))
+			return false;
+		if (originalSubcontractSum == null) {
+			if (other.originalSubcontractSum != null)
+				return false;
+		} else if (!originalSubcontractSum.equals(other.originalSubcontractSum))
+			return false;
+		if (packageNo == null) {
+			if (other.packageNo != null)
+				return false;
+		} else if (!packageNo.equals(other.packageNo))
+			return false;
+		if (packageStatus == null) {
+			if (other.packageStatus != null)
+				return false;
+		} else if (!packageStatus.equals(other.packageStatus))
+			return false;
+		if (packageType == null) {
+			if (other.packageType != null)
+				return false;
+		} else if (!packageType.equals(other.packageType))
+			return false;
+		if (paymentCurrency == null) {
+			if (other.paymentCurrency != null)
+				return false;
+		} else if (!paymentCurrency.equals(other.paymentCurrency))
+			return false;
+		if (paymentInformation == null) {
+			if (other.paymentInformation != null)
+				return false;
+		} else if (!paymentInformation.equals(other.paymentInformation))
+			return false;
+		if (paymentStatus == null) {
+			if (other.paymentStatus != null)
+				return false;
+		} else if (!paymentStatus.equals(other.paymentStatus))
+			return false;
+		if (paymentTerms == null) {
+			if (other.paymentTerms != null)
+				return false;
+		} else if (!paymentTerms.equals(other.paymentTerms))
+			return false;
+		if (paymentTermsDescription == null) {
+			if (other.paymentTermsDescription != null)
+				return false;
+		} else if (!paymentTermsDescription.equals(other.paymentTermsDescription))
+			return false;
+		if (plantIncludedContract == null) {
+			if (other.plantIncludedContract != null)
+				return false;
+		} else if (!plantIncludedContract.equals(other.plantIncludedContract))
+			return false;
+		if (preAwardMeetingDate == null) {
+			if (other.preAwardMeetingDate != null)
+				return false;
+		} else if (!preAwardMeetingDate.equals(other.preAwardMeetingDate))
+			return false;
+		if (remeasuredSubcontractSum == null) {
+			if (other.remeasuredSubcontractSum != null)
+				return false;
+		} else if (!remeasuredSubcontractSum.equals(other.remeasuredSubcontractSum))
+			return false;
+		if (requisitionApprovedDate == null) {
+			if (other.requisitionApprovedDate != null)
+				return false;
+		} else if (!requisitionApprovedDate.equals(other.requisitionApprovedDate))
+			return false;
+		if (retentionAmount == null) {
+			if (other.retentionAmount != null)
+				return false;
+		} else if (!retentionAmount.equals(other.retentionAmount))
+			return false;
+		if (retentionReleased == null) {
+			if (other.retentionReleased != null)
+				return false;
+		} else if (!retentionReleased.equals(other.retentionReleased))
+			return false;
+		if (retentionTerms == null) {
+			if (other.retentionTerms != null)
+				return false;
+		} else if (!retentionTerms.equals(other.retentionTerms))
+			return false;
+		if (scApprovalDate == null) {
+			if (other.scApprovalDate != null)
+				return false;
+		} else if (!scApprovalDate.equals(other.scApprovalDate))
+			return false;
+		if (scAwardApprovalRequestSentDate == null) {
+			if (other.scAwardApprovalRequestSentDate != null)
+				return false;
+		} else if (!scAwardApprovalRequestSentDate.equals(other.scAwardApprovalRequestSentDate))
+			return false;
+		if (scCreatedDate == null) {
+			if (other.scCreatedDate != null)
+				return false;
+		} else if (!scCreatedDate.equals(other.scCreatedDate))
+			return false;
+		if (scDocLegalDate == null) {
+			if (other.scDocLegalDate != null)
+				return false;
+		} else if (!scDocLegalDate.equals(other.scDocLegalDate))
+			return false;
+		if (scDocScrDate == null) {
+			if (other.scDocScrDate != null)
+				return false;
+		} else if (!scDocScrDate.equals(other.scDocScrDate))
+			return false;
+		if (splitTerminateStatus == null) {
+			if (other.splitTerminateStatus != null)
+				return false;
+		} else if (!splitTerminateStatus.equals(other.splitTerminateStatus))
+			return false;
+		if (subcontractStatus == null) {
+			if (other.subcontractStatus != null)
+				return false;
+		} else if (!subcontractStatus.equals(other.subcontractStatus))
+			return false;
+		if (subcontractTerm == null) {
+			if (other.subcontractTerm != null)
+				return false;
+		} else if (!subcontractTerm.equals(other.subcontractTerm))
+			return false;
+		if (subcontractorNature == null) {
+			if (other.subcontractorNature != null)
+				return false;
+		} else if (!subcontractorNature.equals(other.subcontractorNature))
+			return false;
+		if (submittedAddendum == null) {
+			if (other.submittedAddendum != null)
+				return false;
+		} else if (!submittedAddendum.equals(other.submittedAddendum))
+			return false;
+		if (tenderAnalysisApprovedDate == null) {
+			if (other.tenderAnalysisApprovedDate != null)
+				return false;
+		} else if (!tenderAnalysisApprovedDate.equals(other.tenderAnalysisApprovedDate))
+			return false;
+		if (totalCCPostedCertAmount == null) {
+			if (other.totalCCPostedCertAmount != null)
+				return false;
+		} else if (!totalCCPostedCertAmount.equals(other.totalCCPostedCertAmount))
+			return false;
+		if (totalCumCertifiedAmount == null) {
+			if (other.totalCumCertifiedAmount != null)
+				return false;
+		} else if (!totalCumCertifiedAmount.equals(other.totalCumCertifiedAmount))
+			return false;
+		if (totalCumWorkDoneAmount == null) {
+			if (other.totalCumWorkDoneAmount != null)
+				return false;
+		} else if (!totalCumWorkDoneAmount.equals(other.totalCumWorkDoneAmount))
+			return false;
+		if (totalMOSPostedCertAmount == null) {
+			if (other.totalMOSPostedCertAmount != null)
+				return false;
+		} else if (!totalMOSPostedCertAmount.equals(other.totalMOSPostedCertAmount))
+			return false;
+		if (totalPostedCertifiedAmount == null) {
+			if (other.totalPostedCertifiedAmount != null)
+				return false;
+		} else if (!totalPostedCertifiedAmount.equals(other.totalPostedCertifiedAmount))
+			return false;
+		if (totalPostedWorkDoneAmount == null) {
+			if (other.totalPostedWorkDoneAmount != null)
+				return false;
+		} else if (!totalPostedWorkDoneAmount.equals(other.totalPostedWorkDoneAmount))
+			return false;
+		if (vendorNo == null) {
+			if (other.vendorNo != null)
+				return false;
+		} else if (!vendorNo.equals(other.vendorNo))
+			return false;
+		if (workCommenceDate == null) {
+			if (other.workCommenceDate != null)
+				return false;
+		} else if (!workCommenceDate.equals(other.workCommenceDate))
+			return false;
+		if (workscope == null) {
+			if (other.workscope != null)
+				return false;
+		} else if (!workscope.equals(other.workscope))
+			return false;
+		return true;
+	}
+
+	
 }
