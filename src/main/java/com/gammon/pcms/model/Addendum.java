@@ -22,7 +22,6 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
-import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.domain.Subcontract;
 
 /**
@@ -300,6 +299,170 @@ public class Addendum extends PcmsPersistedAuditObject {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Addendum [id=" + id + ", idSubcontract=" + idSubcontract + ", noJob=" + noJob + ", noSubcontract="
+				+ noSubcontract + ", descriptionSubcontract=" + descriptionSubcontract + ", noSubcontractor="
+				+ noSubcontractor + ", nameSubcontractor=" + nameSubcontractor + ", no=" + no + ", title=" + title
+				+ ", amtSubcontractRemeasured=" + amtSubcontractRemeasured + ", amtSubcontractRevised="
+				+ amtSubcontractRevised + ", amtAddendumTotal=" + amtAddendumTotal + ", amtAddendumTotalTba="
+				+ amtAddendumTotalTba + ", amtAddendum=" + amtAddendum + ", amtSubcontractRevisedTba="
+				+ amtSubcontractRevisedTba + ", dateSubmission=" + dateSubmission + ", dateApproval=" + dateApproval
+				+ ", status=" + status + ", statusApproval=" + statusApproval + ", usernamePreparedBy="
+				+ usernamePreparedBy + ", remarks=" + remarks + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((amtAddendum == null) ? 0 : amtAddendum.hashCode());
+		result = prime * result + ((amtAddendumTotal == null) ? 0 : amtAddendumTotal.hashCode());
+		result = prime * result + ((amtAddendumTotalTba == null) ? 0 : amtAddendumTotalTba.hashCode());
+		result = prime * result + ((amtSubcontractRemeasured == null) ? 0 : amtSubcontractRemeasured.hashCode());
+		result = prime * result + ((amtSubcontractRevised == null) ? 0 : amtSubcontractRevised.hashCode());
+		result = prime * result + ((amtSubcontractRevisedTba == null) ? 0 : amtSubcontractRevisedTba.hashCode());
+		result = prime * result + ((dateApproval == null) ? 0 : dateApproval.hashCode());
+		result = prime * result + ((dateSubmission == null) ? 0 : dateSubmission.hashCode());
+		result = prime * result + ((descriptionSubcontract == null) ? 0 : descriptionSubcontract.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((idSubcontract == null) ? 0 : idSubcontract.hashCode());
+		result = prime * result + ((nameSubcontractor == null) ? 0 : nameSubcontractor.hashCode());
+		result = prime * result + (int) (no ^ (no >>> 32));
+		result = prime * result + ((noJob == null) ? 0 : noJob.hashCode());
+		result = prime * result + ((noSubcontract == null) ? 0 : noSubcontract.hashCode());
+		result = prime * result + ((noSubcontractor == null) ? 0 : noSubcontractor.hashCode());
+		result = prime * result + ((remarks == null) ? 0 : remarks.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((statusApproval == null) ? 0 : statusApproval.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((usernamePreparedBy == null) ? 0 : usernamePreparedBy.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Addendum other = (Addendum) obj;
+		if (amtAddendum == null) {
+			if (other.amtAddendum != null)
+				return false;
+		} else if (!amtAddendum.equals(other.amtAddendum))
+			return false;
+		if (amtAddendumTotal == null) {
+			if (other.amtAddendumTotal != null)
+				return false;
+		} else if (!amtAddendumTotal.equals(other.amtAddendumTotal))
+			return false;
+		if (amtAddendumTotalTba == null) {
+			if (other.amtAddendumTotalTba != null)
+				return false;
+		} else if (!amtAddendumTotalTba.equals(other.amtAddendumTotalTba))
+			return false;
+		if (amtSubcontractRemeasured == null) {
+			if (other.amtSubcontractRemeasured != null)
+				return false;
+		} else if (!amtSubcontractRemeasured.equals(other.amtSubcontractRemeasured))
+			return false;
+		if (amtSubcontractRevised == null) {
+			if (other.amtSubcontractRevised != null)
+				return false;
+		} else if (!amtSubcontractRevised.equals(other.amtSubcontractRevised))
+			return false;
+		if (amtSubcontractRevisedTba == null) {
+			if (other.amtSubcontractRevisedTba != null)
+				return false;
+		} else if (!amtSubcontractRevisedTba.equals(other.amtSubcontractRevisedTba))
+			return false;
+		if (dateApproval == null) {
+			if (other.dateApproval != null)
+				return false;
+		} else if (!dateApproval.equals(other.dateApproval))
+			return false;
+		if (dateSubmission == null) {
+			if (other.dateSubmission != null)
+				return false;
+		} else if (!dateSubmission.equals(other.dateSubmission))
+			return false;
+		if (descriptionSubcontract == null) {
+			if (other.descriptionSubcontract != null)
+				return false;
+		} else if (!descriptionSubcontract.equals(other.descriptionSubcontract))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (idSubcontract == null) {
+			if (other.idSubcontract != null)
+				return false;
+		} else if (!idSubcontract.equals(other.idSubcontract))
+			return false;
+		if (nameSubcontractor == null) {
+			if (other.nameSubcontractor != null)
+				return false;
+		} else if (!nameSubcontractor.equals(other.nameSubcontractor))
+			return false;
+		if (no != other.no)
+			return false;
+		if (noJob == null) {
+			if (other.noJob != null)
+				return false;
+		} else if (!noJob.equals(other.noJob))
+			return false;
+		if (noSubcontract == null) {
+			if (other.noSubcontract != null)
+				return false;
+		} else if (!noSubcontract.equals(other.noSubcontract))
+			return false;
+		if (noSubcontractor == null) {
+			if (other.noSubcontractor != null)
+				return false;
+		} else if (!noSubcontractor.equals(other.noSubcontractor))
+			return false;
+		if (remarks == null) {
+			if (other.remarks != null)
+				return false;
+		} else if (!remarks.equals(other.remarks))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (statusApproval == null) {
+			if (other.statusApproval != null)
+				return false;
+		} else if (!statusApproval.equals(other.statusApproval))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (usernamePreparedBy == null) {
+			if (other.usernamePreparedBy != null)
+				return false;
+		} else if (!usernamePreparedBy.equals(other.usernamePreparedBy))
+			return false;
+		return true;
 	}
 
 }

@@ -57,6 +57,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	private String codeSubsidiary;
 	private String unit;
 	private String remarks;
+	private BigDecimal idHeaderRef;
 
 	public AddendumDetail() {
 	}
@@ -79,7 +80,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 			BigDecimal amtAddendum, BigDecimal rateBudget, BigDecimal amtBudget, BigDecimal quantityTba,
 			BigDecimal rateAddendumTba, BigDecimal amtAddendumTba, BigDecimal rateBudgetTba, BigDecimal amtBudgetTba,
 			String codeObject, String codeSubsidiary, String unit, String remarks, String usernameCreated,
-			Date dateCreated, String usernameLastModified, Date dateLastModified) {
+			Date dateCreated, String usernameLastModified, Date dateLastModified, BigDecimal idHeaderRef) {
 		this.id = id;
 		this.idAddendum = idAddendum;
 		this.noJob = noJob;
@@ -107,6 +108,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.dateCreated = dateCreated;
 		this.usernameLastModified = usernameLastModified;
 		this.dateLastModified = dateLastModified;
+		this.idHeaderRef = idHeaderRef;
 	}
 
 	@Id
@@ -317,6 +319,196 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	
+	@Column(name = "ID_HEADER_REF", precision = 19, scale = 0)
+	public BigDecimal getIdHeaderRef() {
+		return this.idHeaderRef;
+	}
+
+	public void setIdHeaderRef(BigDecimal idHeaderRef) {
+		this.idHeaderRef = idHeaderRef;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AddendumDetail [id=" + id + ", idAddendum=" + idAddendum + ", noJob=" + noJob + ", noSubcontract="
+				+ noSubcontract + ", no=" + no + ", typeHd=" + typeHd + ", typeVo=" + typeVo + ", bpi=" + bpi
+				+ ", description=" + description + ", quantity=" + quantity + ", rateAddendum=" + rateAddendum
+				+ ", amtAddendum=" + amtAddendum + ", rateBudget=" + rateBudget + ", amtBudget=" + amtBudget
+				+ ", quantityTba=" + quantityTba + ", rateAddendumTba=" + rateAddendumTba + ", amtAddendumTba="
+				+ amtAddendumTba + ", rateBudgetTba=" + rateBudgetTba + ", amtBudgetTba=" + amtBudgetTba
+				+ ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", unit=" + unit + ", remarks="
+				+ remarks + ", idHeaderRef=" + idHeaderRef + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((amtAddendum == null) ? 0 : amtAddendum.hashCode());
+		result = prime * result + ((amtAddendumTba == null) ? 0 : amtAddendumTba.hashCode());
+		result = prime * result + ((amtBudget == null) ? 0 : amtBudget.hashCode());
+		result = prime * result + ((amtBudgetTba == null) ? 0 : amtBudgetTba.hashCode());
+		result = prime * result + ((bpi == null) ? 0 : bpi.hashCode());
+		result = prime * result + ((codeObject == null) ? 0 : codeObject.hashCode());
+		result = prime * result + ((codeSubsidiary == null) ? 0 : codeSubsidiary.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((idAddendum == null) ? 0 : idAddendum.hashCode());
+		result = prime * result + ((idHeaderRef == null) ? 0 : idHeaderRef.hashCode());
+		result = prime * result + (int) (no ^ (no >>> 32));
+		result = prime * result + ((noJob == null) ? 0 : noJob.hashCode());
+		result = prime * result + ((noSubcontract == null) ? 0 : noSubcontract.hashCode());
+		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
+		result = prime * result + ((quantityTba == null) ? 0 : quantityTba.hashCode());
+		result = prime * result + ((rateAddendum == null) ? 0 : rateAddendum.hashCode());
+		result = prime * result + ((rateAddendumTba == null) ? 0 : rateAddendumTba.hashCode());
+		result = prime * result + ((rateBudget == null) ? 0 : rateBudget.hashCode());
+		result = prime * result + ((rateBudgetTba == null) ? 0 : rateBudgetTba.hashCode());
+		result = prime * result + ((remarks == null) ? 0 : remarks.hashCode());
+		result = prime * result + ((typeHd == null) ? 0 : typeHd.hashCode());
+		result = prime * result + ((typeVo == null) ? 0 : typeVo.hashCode());
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AddendumDetail other = (AddendumDetail) obj;
+		if (amtAddendum == null) {
+			if (other.amtAddendum != null)
+				return false;
+		} else if (!amtAddendum.equals(other.amtAddendum))
+			return false;
+		if (amtAddendumTba == null) {
+			if (other.amtAddendumTba != null)
+				return false;
+		} else if (!amtAddendumTba.equals(other.amtAddendumTba))
+			return false;
+		if (amtBudget == null) {
+			if (other.amtBudget != null)
+				return false;
+		} else if (!amtBudget.equals(other.amtBudget))
+			return false;
+		if (amtBudgetTba == null) {
+			if (other.amtBudgetTba != null)
+				return false;
+		} else if (!amtBudgetTba.equals(other.amtBudgetTba))
+			return false;
+		if (bpi == null) {
+			if (other.bpi != null)
+				return false;
+		} else if (!bpi.equals(other.bpi))
+			return false;
+		if (codeObject == null) {
+			if (other.codeObject != null)
+				return false;
+		} else if (!codeObject.equals(other.codeObject))
+			return false;
+		if (codeSubsidiary == null) {
+			if (other.codeSubsidiary != null)
+				return false;
+		} else if (!codeSubsidiary.equals(other.codeSubsidiary))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (idAddendum == null) {
+			if (other.idAddendum != null)
+				return false;
+		} else if (!idAddendum.equals(other.idAddendum))
+			return false;
+		if (idHeaderRef == null) {
+			if (other.idHeaderRef != null)
+				return false;
+		} else if (!idHeaderRef.equals(other.idHeaderRef))
+			return false;
+		if (no != other.no)
+			return false;
+		if (noJob == null) {
+			if (other.noJob != null)
+				return false;
+		} else if (!noJob.equals(other.noJob))
+			return false;
+		if (noSubcontract == null) {
+			if (other.noSubcontract != null)
+				return false;
+		} else if (!noSubcontract.equals(other.noSubcontract))
+			return false;
+		if (quantity == null) {
+			if (other.quantity != null)
+				return false;
+		} else if (!quantity.equals(other.quantity))
+			return false;
+		if (quantityTba == null) {
+			if (other.quantityTba != null)
+				return false;
+		} else if (!quantityTba.equals(other.quantityTba))
+			return false;
+		if (rateAddendum == null) {
+			if (other.rateAddendum != null)
+				return false;
+		} else if (!rateAddendum.equals(other.rateAddendum))
+			return false;
+		if (rateAddendumTba == null) {
+			if (other.rateAddendumTba != null)
+				return false;
+		} else if (!rateAddendumTba.equals(other.rateAddendumTba))
+			return false;
+		if (rateBudget == null) {
+			if (other.rateBudget != null)
+				return false;
+		} else if (!rateBudget.equals(other.rateBudget))
+			return false;
+		if (rateBudgetTba == null) {
+			if (other.rateBudgetTba != null)
+				return false;
+		} else if (!rateBudgetTba.equals(other.rateBudgetTba))
+			return false;
+		if (remarks == null) {
+			if (other.remarks != null)
+				return false;
+		} else if (!remarks.equals(other.remarks))
+			return false;
+		if (typeHd == null) {
+			if (other.typeHd != null)
+				return false;
+		} else if (!typeHd.equals(other.typeHd))
+			return false;
+		if (typeVo == null) {
+			if (other.typeVo != null)
+				return false;
+		} else if (!typeVo.equals(other.typeVo))
+			return false;
+		if (unit == null) {
+			if (other.unit != null)
+				return false;
+		} else if (!unit.equals(other.unit))
+			return false;
+		return true;
 	}
 
 }
