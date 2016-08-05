@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>PCMS - Gammon Project Cost Management System</title>
-	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE8" />
+	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE11" />
 	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
 	<!-- Bootstrap 3.3.5 -->
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/plugins/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -33,9 +33,9 @@ boolean disableTextBox=false;
 String auth = request.getHeader("Authorization");
 System.out.println("auth:"+auth);
 if (auth == null) {
-	response.setStatus(response.SC_UNAUTHORIZED);
-	response.addHeader("WWW-Authenticate", "Negotiate");
-	return;
+	//response.setStatus(response.SC_UNAUTHORIZED);
+	//response.addHeader("WWW-Authenticate", "Negotiate");
+	//return;
 }
 
 System.out.println("username:" + usernameString);

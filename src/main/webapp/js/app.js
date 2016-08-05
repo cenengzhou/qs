@@ -1163,13 +1163,13 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:900"><i class="fa fa-connectdevelop fa-fw fa-pulse text-grey" style="width:100%; font-size: 1000px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
 	
 	// Disable automatically blocking of the user interface
-	blockUIConfig.autoBlock = false;
+	blockUIConfig.autoBlock = true;
 	
 	// Change the default delay to 100ms before the blocking is visible
 	blockUIConfig.delay = 100;
 	
 	// Disable auto body block
-	blockUIConfig.autoInjectBodyBlock = false;
+	blockUIConfig.autoInjectBodyBlock = true;
 	
 	blockUIConfig.requestFilter = function(config) {
 
@@ -1177,11 +1177,11 @@ mainApp.config(function(blockUIConfig, colorCode) {
 
 		  switch(config.method) {
 		    case 'GET':
-		      message = 'Getting ...';
+		      message = 'Loading ...';
 		      break;
 
 		    case 'POST':
-		      message = 'Posting ...';
+		      message = 'Loading ...';
 		      break;
 
 		    case 'DELETE':

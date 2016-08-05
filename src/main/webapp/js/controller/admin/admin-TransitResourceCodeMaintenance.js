@@ -4,10 +4,10 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl',
 	
 		$scope.blockCodeMaintenance = blockUI.instances.get('blockCodeMaintenance');
 		$scope.loadData = function() {
-		$scope.blockCodeMaintenance.start('Loading...')
+//		$scope.blockCodeMaintenance.start('Loading...')
 		transitService.obtainTransitCodeMatcheList().then(
 				function(data) {
-					$scope.blockCodeMaintenance.stop();
+//					$scope.blockCodeMaintenance.stop();
 					$scope.gridOptions.data = data;
 				});
 	};

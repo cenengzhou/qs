@@ -6,7 +6,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 	$scope.searchYear = $scope.currentDate.getFullYear();
 	$scope.searchMonth = $scope.currentDate.getMonth()+1;
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.blockEnquirySubcontract = blockUI.instances.get('blockEnquirySubcontract');
+//	$scope.blockEnquirySubcontract = blockUI.instances.get('blockEnquirySubcontract');
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -61,13 +61,13 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquirySubcontract.start("Loading...")
+//		$scope.blockEnquirySubcontract.start("Loading...")
 		subcontractService.getSubcontractSnapshotList($scope.searchJobNo, $scope.searchYear, $scope.searchMonth, true, false)
 		.then(function(data){
 				$scope.gridOptions.data = data;
-				$scope.blockEnquirySubcontract.stop();
+//				$scope.blockEnquirySubcontract.stop();
 			}, function(data){
-				$scope.blockEnquirySubcontract.stop();
+//				$scope.blockEnquirySubcontract.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			})
 	}

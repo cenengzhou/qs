@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants',
                                   function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants ) {
 	
-	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
+//	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -55,15 +55,15 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquiryIvHistory.start('Loading...')
+//		$scope.blockEnquiryIvHistory.start('Loading...')
 		ivpostinghistService.obtainIVPostingHistoryList($scope.jobNo, $scope.searchPackageNo, $scope.searchObjectCode, $scope.searchSubsidiaryCode, $scope.searchFromDate, $scope.searchToDate)
 		.then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				}
-				$scope.blockEnquiryIvHistory.stop();
+//				$scope.blockEnquiryIvHistory.stop();
 		}, function(data){
-			$scope.blockEnquiryIvHistory.stop();
+//			$scope.blockEnquiryIvHistory.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		})
 	}

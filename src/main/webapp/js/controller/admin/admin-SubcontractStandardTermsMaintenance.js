@@ -3,10 +3,10 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		 function($scope, $rootScope, $http, modalService, blockUI, subcontractService, GlobalParameter ) {
 	$scope.blockStandardTerms = blockUI.instances.get('blockStandardTerms');
 	$scope.loadData = function(){
-		$scope.blockStandardTerms.start('Loading...');
+//		$scope.blockStandardTerms.start('Loading...');
 		subcontractService.searchSystemConstants().then(
 			function(data) {
-				$scope.blockStandardTerms.stop();
+//				$scope.blockStandardTerms.stop();
 				$scope.gridOptions.data = data;
 			});
 	};

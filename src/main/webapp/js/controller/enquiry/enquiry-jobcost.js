@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 
                                   function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService) {
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
+//	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
 	
 	$scope.columnDefs = [
 			             { field: 'accountObject', displayName: 'Object', enableCellEdit: false},
@@ -123,16 +123,16 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
     }
 	
 	$scope.loadGridData = function(){
-		$scope.blockJobCost.start('Loading...')
+//		$scope.blockJobCost.start('Loading...')
 		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.addVarianceData(data);
 					$scope.changeCumMovement();
 				} 
-				$scope.blockJobCost.stop();
+//				$scope.blockJobCost.stop();
 			}, function(data){
-			$scope.blockAccountLedger.stop();
+//			$scope.blockAccountLedger.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 	}

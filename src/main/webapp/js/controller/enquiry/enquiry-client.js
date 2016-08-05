@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractorService', 
                                 function($scope , $rootScope, $http, modalService, blockUI, subcontractorService) {
 	
-	$scope.blockEnquiryClient = blockUI.instances.get('blockEnquiryClient');
+//	$scope.blockEnquiryClient = blockUI.instances.get('blockEnquiryClient');
 	$scope.searchClient = '';
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -32,15 +32,15 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 	
 	$scope.loadGridData = function(){
 		if($scope.searchClient !== ''){
-		$scope.blockEnquiryClient.start('Loading...')
+//		$scope.blockEnquiryClient.start('Loading...')
 		subcontractorService.obtainClientWrappers('*' + $scope.searchClient + '*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
-					$scope.blockEnquiryClient.stop();
+//					$scope.blockEnquiryClient.stop();
 				}
 		}, function(data){
-			$scope.blockEnquiryClient.stop();
+//			$scope.blockEnquiryClient.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		})
 		} else {

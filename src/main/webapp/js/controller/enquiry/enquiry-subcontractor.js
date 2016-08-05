@@ -5,7 +5,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 	$scope.allWorkScopes = {};
 	$scope.searchWorkScopes = null;
 	$scope.searchSubcontractorNo = '';
-	$scope.blockEnquirySubcontractor = blockUI.instances.get('blockEnquirySubcontractor');
+//	$scope.blockEnquirySubcontractor = blockUI.instances.get('blockEnquirySubcontractor');
 	$scope.loadWorkScope = function(){
 		unitService.getAllWorkScopes()
 		.then(function(data){
@@ -64,16 +64,16 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 		if($scope.searchWorkScopes === null && $scope.searchSubcontractorNo === '') {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
 		} else {
-		$scope.blockEnquirySubcontractor.start('Loading...');
+//		$scope.blockEnquirySubcontractor.start('Loading...');
 		subcontractorService.obtainSubcontractorWrappers($scope.searchWorkScopes, $scope.searchSubcontractorNo !== '' ? '*' + $scope.searchSubcontractorNo + '*' : '')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.convertAbbr(data);
 					$scope.gridOptions.data = data;
-					$scope.blockEnquirySubcontractor.stop();
+//					$scope.blockEnquirySubcontractor.stop();
 				} 
 			}, function(data){
-				$scope.blockEnquirySubcontractor.stop();
+//				$scope.blockEnquirySubcontractor.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});
 		}

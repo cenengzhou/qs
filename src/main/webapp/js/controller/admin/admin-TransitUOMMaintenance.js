@@ -2,7 +2,7 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'transitService',
 		function($scope, $rootScope, $http, modalService, blockUI, transitService) {
 	
-	$scope.blockUOM = blockUI.instances.get('blockUOM');
+//	$scope.blockUOM = blockUI.instances.get('blockUOM');
 	$scope.onSubmit = function(){
 		var formData = new FormData();
 		formData.append('files', uploadFile1.files[0]);
@@ -23,10 +23,10 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 	};
 	
 	$scope.loadData = function(){
-		$scope.blockUOM.start('Loading...')
+//		$scope.blockUOM.start('Loading...')
 		transitService.obtainTransitUomMatcheList().then(
 			function(data) {
-				$scope.blockUOM.stop();
+//				$scope.blockUOM.stop();
 				$scope.gridOptions.data = data;
 			});
 	};

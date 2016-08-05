@@ -4,9 +4,9 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	
-	$scope.blockStepBar = blockUI.instances.get('blockStepBar');
-	$scope.blockBqGrid = blockUI.instances.get('blockBqGrid');
-	$scope.blockResourceGrid = blockUI.instances.get('blockResourceGrid');
+//	$scope.blockStepBar = blockUI.instances.get('blockStepBar');
+//	$scope.blockBqGrid = blockUI.instances.get('blockBqGrid');
+//	$scope.blockResourceGrid = blockUI.instances.get('blockResourceGrid');
 	
     Chart.defaults.global.colours = ['#00c0ef', '#FF5252'];
 
@@ -160,7 +160,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     }
     
     $scope.getTransit = function(){
-    	$scope.blockStepBar.start({hideMessage:true});
+//    	$scope.blockStepBar.start({hideMessage:true});
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	if(data instanceof Object) {
@@ -238,7 +238,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			$scope.resourceEdit = false;
     		}
     		
-    		$scope.blockStepBar.stop();
+//    		$scope.blockStepBar.stop();
 	    }, function(data){
 	    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Error:" + data.replace('<br/>', '\n'));
 	    })
@@ -246,7 +246,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     $scope.getTransit();
     
     $scope.onSubmitTransitUpload = function(item, type){
-    	$scope.blockStepBar.start({hideMessage:true});
+//    	$scope.blockStepBar.start({hideMessage:true});
 		var formData = new FormData();
 		formData.append('files', item.files[0]);
 		formData.append('type', type);
@@ -266,7 +266,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 					"Success:" + msg.success + 
 					"\r\nNumber Record Imported:" + msg.numRecordImported + 
 					"\r\nHave warning:" + msg.haveWarning);
-			$scope.blockStepBar.stop();
+//			$scope.blockStepBar.stop();
 		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
 		});
@@ -298,7 +298,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     }
     
     $scope.confirmResources = function(){
-    	$scope.blockStepBar.start({hideMessage:true});
+//    	$scope.blockStepBar.start({hideMessage:true});
     	transitService.confirmResourcesAndCreatePackages($scope.jobNo)
     	.then(function(data){
     		$scope.getTransit();
@@ -308,7 +308,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		}else{
     			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.replace('<br/>', '\n') );
     		}
-    		$scope.blockStepBar.stop();
+//    		$scope.blockStepBar.stop();
     	}, function(data){
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
     	});
@@ -317,7 +317,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     $scope.completeTransitMsg = '';
     $scope.completeTransitErr = false;
     $scope.completeTransit = function(){
-    	$scope.blockStepBar.start({hideMessage:true});
+//    	$scope.blockStepBar.start({hideMessage:true});
     	transitService.completeTransit($scope.jobNo)
     	.then(function(data){
     		$scope.getTransit();
@@ -327,7 +327,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		$scope.completeTransitErr = false;
     		
     		if(data === ''){
-    			$scope.blockStepBar.start({hideMessage:true});
+//    			$scope.blockStepBar.start({hideMessage:true});
     			$scope.completeTransitMsg += 'Complete Transit: Success\n';
     			budgetpostingService.postBudget($scope.jobNo)
     			.then(function(data){
@@ -338,41 +338,41 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     					$scope.completeTransitErr = true;
     				}
     				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', msg.replace('<br/>', '\n') );
-    				$scope.blockStepBar.stop();
+//    				$scope.blockStepBar.stop();
     			}, function(data){
     				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-    				$scope.blockStepBar.stop();
+//    				$scope.blockStepBar.stop();
     			});
     		} else {
     			$scope.completeTransitMsg +=  'Complete Transit:' + data + '\n';
     			$scope.completeTransitErr = true;
     			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
     		}
-    		$scope.blockStepBar.stop();
+//    		$scope.blockStepBar.stop();
     	}, function(data){
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
-    		$scope.blockStepBar.stop();
+//    		$scope.blockStepBar.stop();
     	});
    	
     }
     
     $scope.loadBqItems = function(){
-    	$scope.blockBqGrid.start('Loading BQ items...');
+//    	$scope.blockBqGrid.start('Loading BQ items...');
 		transitService.getTransitBQItems($scope.jobNo)
 		.then(function(data) {
 			$scope.addBpiColumnData(data);
 			$scope.bqGridOptions.data = data;
-			$scope.blockBqGrid.stop();
+//			$scope.blockBqGrid.stop();
 		});
     }
  
     $scope.loadResources = function(){
-    	$scope.blockResourceGrid.start('Loading Resources...');
+//    	$scope.blockResourceGrid.start('Loading Resources...');
 		transitService.getTransitResources($scope.jobNo)
 		.then(function(data) {
 			$scope.addBpiColumnData(data);
 			$scope.resourcesGridOptions.data = data;
-			$scope.blockResourceGrid.stop();
+//			$scope.blockResourceGrid.stop();
 		});
     }
     
@@ -595,13 +595,13 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 			var code = val;
 			var type = applyType;
 //			dataRowsForSubmit = angular.copy(dataRows, dataRowsForSubmit);
-			$scope.blockResourceGrid.start('Updating ' + type + ' to ' + code + ' for ' + dataRows.length + ' Resources...');
+//			$scope.blockResourceGrid.start('Updating ' + type + ' to ' + code + ' for ' + dataRows.length + ' Resources...');
 			angular.forEach(dataRows, function(row){
 				type === 'Object Code' ? row.objectCode = code : row.subsidiaryCode = code;
 			})
 			transitService.saveTransitResourcesList($scope.jobNo, dataRows)
 			.then(function(data){
-				$scope.blockResourceGrid.stop();
+//				$scope.blockResourceGrid.stop();
 				if(data === '') {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success',  "Updated " 
 							+ type + ' to ' + code + ' for ' + dataRows.length + " records");
@@ -610,7 +610,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 				}
 				$scope.loadResources();
 			}, function(data){
-				$scope.blockResourceGrid.stop();
+//				$scope.blockResourceGrid.stop();
 				$scope.loadResources();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Fail " + data.replace('</br>', ''));
 			});

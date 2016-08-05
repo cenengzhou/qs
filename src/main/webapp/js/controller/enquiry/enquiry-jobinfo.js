@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'jobService', 
                                   function($scope , $rootScope, $http, modalService, blockUI, jobService) {
 	
-	$scope.blockEnquiryJobInfo = blockUI.instances.get('blockEnquiryJobInfo');
+//	$scope.blockEnquiryJobInfo = blockUI.instances.get('blockEnquiryJobInfo');
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -82,15 +82,15 @@ mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquiryJobInfo.start('Loading...')
+//		$scope.blockEnquiryJobInfo.start('Loading...')
 		jobService.getJobDetailList()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-				$scope.blockEnquiryJobInfo.stop();
+//				$scope.blockEnquiryJobInfo.stop();
 			}, function(data){
-				$scope.blockEnquiryJobInfo.stop();
+//				$scope.blockEnquiryJobInfo.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});
 	}

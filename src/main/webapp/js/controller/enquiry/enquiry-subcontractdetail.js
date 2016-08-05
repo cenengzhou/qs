@@ -2,8 +2,7 @@ mainApp.controller('EnquirySubcontractDetailCtrl',
 		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants',
 function($scope, $rootScope, $http, modalService, blockUI, subcontractService, uiGridConstants) {
 
-	$scope.blockEnquirySubcontractDetail = blockUI.instances
-			.get('blockEnquirySubcontractDetail');
+//	$scope.blockEnquirySubcontractDetail = blockUI.instances.get('blockEnquirySubcontractDetail');
 
 	$scope.gridOptions = {
 		enableFiltering : true,
@@ -382,8 +381,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 	}
 
 	$scope.loadGridData = function() {
-		$scope.blockEnquirySubcontractDetail
-				.start('Loading...');
+//		$scope.blockEnquirySubcontractDetail.start('Loading...');
 		subcontractService
 				.getSCDetailList($scope.jobNo)
 				.then(
@@ -391,12 +389,10 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 							if (angular.isArray(data)) {
 								$scope.gridOptions.data = data;
 							}
-							$scope.blockEnquirySubcontractDetail
-									.stop();
+//							$scope.blockEnquirySubcontractDetail.stop();
 						},
 						function(data) {
-							$scope.blockEnquirySubcontractDetail
-									.stop();
+//							$scope.blockEnquirySubcontractDetail.stop();
 							modalService
 									.open(
 											'md',

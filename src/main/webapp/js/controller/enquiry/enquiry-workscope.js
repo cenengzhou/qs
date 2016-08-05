@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 
                                    function($scope, $rootScope, $http, modalService, blockUI, unitService) {
 	
-	$scope.blockEnquiryWorkScope = blockUI.instances.get('blockEnquiryWorkScope');
+//	$scope.blockEnquiryWorkScope = blockUI.instances.get('blockEnquiryWorkScope');
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -30,15 +30,15 @@ mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquiryWorkScope.start('Loading...');
+//		$scope.blockEnquiryWorkScope.start('Loading...');
 		unitService.getAllWorkScopes()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-				$scope.blockEnquiryWorkScope.stop();
+//				$scope.blockEnquiryWorkScope.stop();
 		}, function(data){
-			$scope.blockEnquiryWorkScope.stop();
+//			$scope.blockEnquiryWorkScope.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 

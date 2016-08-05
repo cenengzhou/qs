@@ -3,7 +3,7 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
                                 function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchDueDateType = 'onOrBefore';
-	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
+//	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -61,16 +61,16 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 		paymentCertWrapper.certIssueDate = $scope.searchCertIssueDate;
 		
 		var dueDateType = $scope.searchDueDateType !== undefined ? $scope.searchDueDateType : 'ignore';
-		$scope.blockEnquiryPayment.start('Loading...')
+//		$scope.blockEnquiryPayment.start('Loading...')
 		paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType)
 		.then(function(data){
 				if(angular.isArray(data)){
 					$scope.convertAbbr(data);
 					$scope.gridOptions.data = data;
 				} 
-				$scope.blockEnquiryPayment.stop();
+//				$scope.blockEnquiryPayment.stop();
 		}, function(data){
-			$scope.blockEnquiryPayment.stop();
+//			$scope.blockEnquiryPayment.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 

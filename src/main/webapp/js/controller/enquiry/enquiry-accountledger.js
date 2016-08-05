@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 
                                         function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService) {
 	
-	$scope.blockEnquiryAccountLedger = blockUI.instances.get('blockEnquiryAccountLedger');
+//	$scope.blockEnquiryAccountLedger = blockUI.instances.get('blockEnquiryAccountLedger');
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -101,16 +101,16 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 	}
 	
 	$scope.loadGridData = function(){
-		$scope.blockEnquiryAccountLedger.start('Loading...')
+//		$scope.blockEnquiryAccountLedger.start('Loading...')
 		adlService.getAccountLedgerList($scope.jobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
 				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-				$scope.blockEnquiryAccountLedger.stop()
+//				$scope.blockEnquiryAccountLedger.stop()
 			}, function(data){
-				$scope.blockEnquiryAccountLedger.stop();
+//				$scope.blockEnquiryAccountLedger.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});	
 	}
