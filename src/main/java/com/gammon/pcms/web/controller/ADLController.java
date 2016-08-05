@@ -210,14 +210,26 @@ public class ADLController {
 
 	// TODO: migrate from web service to ADL
 	@RequestMapping(value = "getAddressBook",
-			method = RequestMethod.GET)
-	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal noAddressBook){
-		try{
-			return adlService.getAddressBook(noAddressBook);
-		}catch(Exception e){
+					method = RequestMethod.GET)
+	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal addressBookNo) {
+		try {
+			return adlService.getAddressBook(addressBookNo);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	// TODO: migrate from web service to ADL
+	@RequestMapping(value = "getBusinessUnit",
+					method = RequestMethod.GET)
+	public BusinessUnit getBusinessUnitList(@RequestParam(required = true) String jobNo) {
+		try {
+			return adlService.getBusinessUnit(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@RequestMapping(value = "getApprovalHeaderList",
@@ -266,16 +278,4 @@ public class ADLController {
 			return new ArrayList<ApprovalDetail>();
 		}
 	}
-	
-	//TODO: Test BusinessUnit
-	@RequestMapping(value = "getBusinessUnit", method = RequestMethod.POST)
-	public BusinessUnit getBusinessUnitList(@RequestBody AddressBook addressbook){
-		try {
-			return adlService.getBusinessUnit(addressbook);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 }

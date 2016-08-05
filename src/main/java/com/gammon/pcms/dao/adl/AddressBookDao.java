@@ -17,11 +17,13 @@ public class AddressBookDao extends BaseAdlHibernateDao<AddressBook> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(List<String> typeAddressBooks) throws DataAccessException {
+	public List<AddressBook> findByAddressBookTypeList(List<String> addressBookTypeList) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(getType());
-		criteria.add(Restrictions.in("addressBookTypeCode", typeAddressBooks));
-		List<AddressBook> resultList =  criteria.list();
-		return resultList;
+
+		// Where
+		criteria.add(Restrictions.in("addressBookTypeCode", addressBookTypeList));
+		
+		return (List<AddressBook>) criteria.list();
 	}
-	
+
 }

@@ -193,29 +193,26 @@ public class ADLService {
 		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
 	}
 	
-	//TODO: pending for AddressBook object
 	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(){
-		List<String> typeAddressBooks = new ArrayList<String>();
+		List<String> addressBookTypeList = new ArrayList<String>();
 		// should be enum of AddressBook class
-		typeAddressBooks.add(AddressBook.TYPE_VENDOR);
-		typeAddressBooks.add(AddressBook.TYPE_CLIENT);
+		addressBookTypeList.add(AddressBook.TYPE_VENDOR);
+		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
 		
-		return addressBookDao.getAddressBookListOfSubcontractorAndClient(typeAddressBooks);
+		return addressBookDao.findByAddressBookTypeList(addressBookTypeList);
 	}
 	
-	//TODO: pending for AddressBook object
-	public AddressBook getAddressBook(BigDecimal noAddressBook) throws DataAccessException {
-		return addressBookDao.get(noAddressBook);
+	public AddressBook getAddressBook(BigDecimal addressBookNo) throws DataAccessException {
+		return addressBookDao.get(addressBookNo);
 	}
 	
-	//TODO: testing businessUnit
-	public BusinessUnit getBusinessUnit(AddressBook addressbook) throws DatabaseOperationException {
-		return businessUnitDao.getBusinessUnit(addressbook.getAddressBookNumber().toString());
+	public BusinessUnit getBusinessUnit(String jobNo) throws DataAccessException {
+		return businessUnitDao.find(jobNo);
 	}
+	
 	/*
 	 * ----------------------------------------------- Approval System @ Data Layer -----------------------------------------------
 	 */
-
 	/**
 	 * 
 	 *
