@@ -3,15 +3,20 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
                                   function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService) {
 	$scope.GlobalParameter = GlobalParameter;
 //	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
-	
+	$scope.currentDate = new Date();
+	$scope.showCumulative = true;
+	$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
+	$scope.searchMonth = $scope.currentDate.getMonth() + 1;
+	$scope.searchJobNo = $scope.jobNo;
+
 	$scope.columnDefs = [
 			             { field: 'accountObject', displayName: 'Object', enableCellEdit: false},
 			             { field: 'accountSubsidiary', displayName: 'Subsidiary', enableCellEdit: false},
 			             { field: 'accountDescription', displayName: 'Description', enableCellEdit: false},
-			             { field: 'internalValue', displayName: 'Internal Value', aggregationHideLabel: true, 
+			             { field: 'jiAmountPeriod', displayName: "Internal Valuation", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
-			            		 if(row.entity.internalValue < 0){
+			            		 if(row.entity.jiAmountPeriod < 0){
 			            			 c +=' red';
 			            		 }
 			            		 return c;
@@ -24,13 +29,12 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            			 c +=' red';
 			            		 }
 			            		 return c;
-			            	 }, 
-			            	 cellFilter: 'number:2', enableCellEdit: false
+			            	 } 
 			             },
-			             { field: 'actualValue', displayName: 'Actual Value', 
+			             { field: 'jiAmountAccum', displayName: "Internal Valuation", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
-			            		 if(row.entity.actualValue < 0){
+			            		 if(row.entity.jiAmountAccum < 0){
 			            			 c +=' red';
 			            		 }
 			            		 return c;
@@ -43,13 +47,48 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            			 c +=' red';
 			            		 }
 			            		 return c;
-			            	 }, 
-			            	 cellFilter: 'number:2', enableCellEdit: false
+			            	 }
 			             },
-			             { field: 'variance', displayName: 'Variance', 
+			             { field: 'aaAmountPeriod', displayName: 'Actual Value', cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
-			            		 if(row.entity.variance < 0){
+			            		 if(row.entity.aaAmountPeriod < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }
+			             },
+			             { field: 'aaAmountAccum', displayName: 'Actual Value', cellFilter: 'number:2', enableCellEdit: false,
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.aaAmountAccum < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }
+			             },
+			             { field: 'variancePeriod', displayName: 'Variance', cellFilter: 'number:2', enableCellEdit: false,
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.variancePeriod < 0){
 			            			 c +=' red';
 			            		 }
 			            		 return c;
@@ -62,9 +101,26 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            			 c +=' red';
 			            		 }
 			            		 return c;
-			            	 }, 
-			            	 cellFilter: 'number:2', enableCellEdit: false
+			            	 }
 			             },
+			             { field: 'varianceAccum', displayName: 'Variance', cellFilter: 'number:2', enableCellEdit: false,
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.varianceAccum < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }
+			             }
             			 ];
 	
 	$scope.gridOptions = {
@@ -89,47 +145,37 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
-//		$scope.changeCumMovement();
 	}
 	
-	$scope.changeCumMovement = function(){
-		if($scope.searchCumMovement === false){
-			$scope.gridOptions.data = $scope.cumulativeData;
-		} else {
-			$scope.gridOptions.data = $scope.movementData;
+	$scope.triggerShowCumulative = function(){
+		// odd - Period (3,5,7), even - Cumulative (4,6,8)
+		if($scope.showCumulative){
+			$scope.gridOptions.columnDefs[3].visible = false;
+	    	$scope.gridOptions.columnDefs[5].visible = false;
+	    	$scope.gridOptions.columnDefs[7].visible = false;
+	    	
+	    	$scope.gridOptions.columnDefs[4].visible = true;
+	    	$scope.gridOptions.columnDefs[6].visible = true;
+	    	$scope.gridOptions.columnDefs[8].visible = true;
+		}
+		else{
+			$scope.gridOptions.columnDefs[3].visible = true;
+	    	$scope.gridOptions.columnDefs[5].visible = true;
+	    	$scope.gridOptions.columnDefs[7].visible = true;
+	    	
+	    	$scope.gridOptions.columnDefs[4].visible = false;
+	    	$scope.gridOptions.columnDefs[6].visible = false;
+	    	$scope.gridOptions.columnDefs[8].visible = false;
 		}
 		$scope.gridApi.grid.refresh();
 	}
-	$scope.currentDate = new Date();
-	$scope.searchCumMovement = false;
-	$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
-	$scope.searchMonth = $scope.currentDate.getMonth() + 1;
-	$scope.searchJobNo = $scope.jobNo;
-	$scope.cumulativeData = {};
-	$scope.movementData = {};
-    $scope.addVarianceData = function(data){
-    	$scope.cumulativeData = angular.copy(data);
-    	$scope.movementData = angular.copy(data);
-    	$scope.cumulativeData.forEach(function(d){
-    		d.actualValue = d.aaAmountAccum;
-    		d.internalValue = d.jiAmountAccum;
-    		d.variance = d.jiAmountAccum - d.aaAmountAccum;
-    	});
-    	$scope.movementData.forEach(function(d){
-    		d.actualValue = d.aaAmountPeriod;
-    		d.internalValue = d.jiAmountPeriod;
-    		d.variance = d.jiAmountPeriod - d.aaAmountPeriod;
-    	});
-    }
 	
 	$scope.loadGridData = function(){
 //		$scope.blockJobCost.start('Loading...')
 		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
 		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.addVarianceData(data);
-					$scope.changeCumMovement();
-				} 
+		    	$scope.gridOptions.data = data;
+		    	$scope.triggerShowCumulative();
 //				$scope.blockJobCost.stop();
 			}, function(data){
 //			$scope.blockAccountLedger.stop();
@@ -140,6 +186,6 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-	$scope.loadGridData();
 	
+	$scope.loadGridData();
 }]);

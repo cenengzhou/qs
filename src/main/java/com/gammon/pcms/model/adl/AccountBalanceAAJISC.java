@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.gammon.pcms.model.adl.id.AccountBalanceAAJISCId;
 
@@ -86,7 +87,17 @@ public class AccountBalanceAAJISC implements Serializable {
 		this.aaAmountAccum = aaAmountAccum;
 		this.jiAmountAccum = jiAmountAccum;
 	}
-
+	
+	@Transient
+	public BigDecimal getVariancePeriod(){
+		return getJiAmountPeriod().subtract(getAaAmountPeriod());
+	}
+	
+	@Transient
+	public BigDecimal getVarianceAccum(){
+		return getJiAmountAccum().subtract(getAaAmountAccum());
+	}
+	
 	@Id
 	public AccountMaster getAccountMaster() {
 		return this.accountMaster;

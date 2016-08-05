@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.gammon.pcms.model.adl.id.AccountBalanceAAJIId;
 
@@ -71,12 +72,23 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		this.jiAmountAccum = jiAmountAccum;
 	}
 
+	@Transient
+	public BigDecimal getVariancePeriod() {
+		return getJiAmountPeriod().subtract(getAaAmountPeriod());
+	}
+
+	@Transient
+	public BigDecimal getVarianceAccum() {
+		return getJiAmountAccum().subtract(getAaAmountAccum());
+	}
+
 	@Id
 	public AccountMaster getAccountMaster() {
 		return this.accountMaster;
 	}
 
-	public void setAccountMaster(AccountMaster accountMaster) {
+	public void setAccountMaster(
+									AccountMaster accountMaster) {
 		this.accountMaster = accountMaster;
 	}
 
@@ -85,7 +97,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.fiscalYear;
 	}
 
-	public void setFiscalYear(BigDecimal fiscalYear) {
+	public void setFiscalYear(
+								BigDecimal fiscalYear) {
 		this.fiscalYear = fiscalYear;
 	}
 
@@ -94,7 +107,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.accountPeriod;
 	}
 
-	public void setAccountPeriod(BigDecimal accountPeriod) {
+	public void setAccountPeriod(
+									BigDecimal accountPeriod) {
 		this.accountPeriod = accountPeriod;
 	}
 
@@ -104,7 +118,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.entityBusinessUnitKey;
 	}
 
-	public void setEntityBusinessUnitKey(String entityBusinessUnitKey) {
+	public void setEntityBusinessUnitKey(
+											String entityBusinessUnitKey) {
 		this.entityBusinessUnitKey = entityBusinessUnitKey;
 	}
 
@@ -114,7 +129,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.accountObject;
 	}
 
-	public void setAccountObject(String accountObject) {
+	public void setAccountObject(
+									String accountObject) {
 		this.accountObject = accountObject;
 	}
 
@@ -124,7 +140,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.accountSubsidiary;
 	}
 
-	public void setAccountSubsidiary(String accountSubsidiary) {
+	public void setAccountSubsidiary(
+										String accountSubsidiary) {
 		this.accountSubsidiary = accountSubsidiary;
 	}
 
@@ -134,7 +151,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.accountDescription;
 	}
 
-	public void setAccountDescription(String accountDescription) {
+	public void setAccountDescription(
+										String accountDescription) {
 		this.accountDescription = accountDescription;
 	}
 
@@ -144,7 +162,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.currencyLocal;
 	}
 
-	public void setCurrencyLocal(String currencyLocal) {
+	public void setCurrencyLocal(
+									String currencyLocal) {
 		this.currencyLocal = currencyLocal;
 	}
 
@@ -155,7 +174,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.aaAmountPeriod;
 	}
 
-	public void setAaAmountPeriod(BigDecimal aaAmountPeriod) {
+	public void setAaAmountPeriod(
+									BigDecimal aaAmountPeriod) {
 		this.aaAmountPeriod = aaAmountPeriod;
 	}
 
@@ -166,7 +186,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.jiAmountPeriod;
 	}
 
-	public void setJiAmountPeriod(BigDecimal jiAmountPeriod) {
+	public void setJiAmountPeriod(
+									BigDecimal jiAmountPeriod) {
 		this.jiAmountPeriod = jiAmountPeriod;
 	}
 
@@ -177,7 +198,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.aaAmountAccum;
 	}
 
-	public void setAaAmountAccum(BigDecimal aaAmountAccum) {
+	public void setAaAmountAccum(
+									BigDecimal aaAmountAccum) {
 		this.aaAmountAccum = aaAmountAccum;
 	}
 
@@ -188,7 +210,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 		return this.jiAmountAccum;
 	}
 
-	public void setJiAmountAccum(BigDecimal jiAmountAccum) {
+	public void setJiAmountAccum(
+									BigDecimal jiAmountAccum) {
 		this.jiAmountAccum = jiAmountAccum;
 	}
 
@@ -217,7 +240,8 @@ public class AccountBalanceAAJI implements java.io.Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(
+							Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
