@@ -2,7 +2,6 @@
 mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 
                                   function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService) {
 	$scope.GlobalParameter = GlobalParameter;
-//	$scope.blockJobCost = blockUI.instances.get('blockJobCost');
 	$scope.currentDate = new Date();
 	$scope.showCumulative = true;
 	$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
@@ -171,14 +170,11 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockJobCost.start('Loading...')
 		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
 		    .then(function(data) {
 		    	$scope.gridOptions.data = data;
 		    	$scope.triggerShowCumulative();
-//				$scope.blockJobCost.stop();
 			}, function(data){
-//			$scope.blockAccountLedger.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 	}

@@ -2,8 +2,6 @@
 mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'jobService', 
                                   function($scope , $rootScope, $http, modalService, blockUI, jobService) {
 	
-//	$scope.blockEnquiryJobInfo = blockUI.instances.get('blockEnquiryJobInfo');
-	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -14,66 +12,64 @@ mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
-			allowCellFocus: false,
-			enableCellSelection: false,
+			enableCellEdit: false,
+			exporterMenuPdf: false,
 			columnDefs: [
-			             { field: 'jobNo', width: '100', displayName: "Job Number", enableCellEdit: false },
-			             { field: 'description', width: '200', displayName: "Description", enableCellEdit: false },
-			             { field: 'company', width: '100', displayName: "Company", enableCellEdit: false },
-			             { field: 'employer', width: '100', displayName: "Employer", enableCellEdit: false },
-			             { field: 'contractType', width: '100', displayName: "Contract Type", enableCellEdit: false },
-			             { field: 'division', width: '100', displayName: "Division", enableCellEdit: false },
-			             { field: 'department', width: '100', displayName: "Department", enableCellEdit: false },
-			             { field: 'internalJob', width: '100', displayName: "Internal Job", enableCellEdit: false },
-			             { field: 'soloJV', width: '100', displayName: "Solo JV", enableCellEdit: false },
-			             { field: 'completionStatus', width: '100', displayName: "Completion Status", enableCellEdit: false },
-			             { field: 'insuranceCAR', width: '100', displayName: "Insurance CAR", enableCellEdit: false },
-			             { field: 'insuranceECI', width: '100', displayName: "Insurance ECI", enableCellEdit: false },
-			             { field: 'insuranceTPL', width: '100', displayName: "Insurance TPL", enableCellEdit: false },
-			             { field: 'clientContractNo', width: '100', displayName: "Client Contract No", enableCellEdit: false },
-			             { field: 'tenderGP', width: '100', displayName: "Tender GP", enableCellEdit: false },
-			             { field: 'parentJobNo', width: '100', displayName: "Parent No", enableCellEdit: false },
-			             { field: 'jvPartnerNo', width: '100', displayName: "JV Partner No", enableCellEdit: false },
-			             { field: 'jvPercentage', width: '100', displayName: "JV %", enableCellEdit: false },
-			             { field: 'originalContractValue', width: '100', displayName: "Original Contract Value", enableCellEdit: false },
-			             { field: 'projectedContractValue', width: '100', displayName: "Projected Contract Value", enableCellEdit: false },
-			             { field: 'orginalNominatedSCContractValue', width: '100', displayName: "Orginal Nominated SC Contract Value", enableCellEdit: false },
-			             { field: 'forecastEndYear', width: '100', displayName: "Forecast End Year", enableCellEdit: false },
-			             { field: 'forecastEndPeriod', width: '100', displayName: "Forecast End Period", enableCellEdit: false },
-			             { field: 'maxRetentionPercentage', width: '100', displayName: "Max Retention %", enableCellEdit: false },
-			             { field: 'interimRetentionPercentage', width: '100', displayName: "Interim Retention %", enableCellEdit: false },
-			             { field: 'mosRetentionPercentage', width: '100', displayName: "MOS Retention %", enableCellEdit: false },
-			             { field: 'valueOfBSWork', width: '100', displayName: "Value of BS Work", enableCellEdit: false },
-			             { field: 'grossFloorArea', width: '100', displayName: "Gross Floor Area", enableCellEdit: false },
-			             { field: 'grossFloorAreaUnit', width: '100', displayName: "Gross Floor Area Unit", enableCellEdit: false },
-			             { field: 'billingCurrency', width: '100', displayName: "Billing Currency", enableCellEdit: false },
-			             { field: 'paymentTermsForNominatedSC', width: '100', displayName: "Payment Terms for Nominated SC", enableCellEdit: false },
-			             { field: 'defectProvisionPercentage', width: '100', displayName: "Defect Provision %", enableCellEdit: false },
-			             { field: 'cpfApplicable', width: '100', displayName: "CPF Applicable", enableCellEdit: false },
-			             { field: 'cpfIndexName', width: '100', displayName: "CPF Applicable", enableCellEdit: false },
-			             { field: 'cpfBaseYear', width: '100', displayName: "CPF Base Year", enableCellEdit: false },
-			             { field: 'cpfBasePeriod', width: '100', displayName: "CPF Base Period", enableCellEdit: false },
-			             { field: 'levyApplicable', width: '100', displayName: "Levy Applicable", enableCellEdit: false },
-			             { field: 'levyCITAPercentage', width: '100', displayName: "Levy CITA %", enableCellEdit: false },
-			             { field: 'levyPCFBPercentage', width: '100', displayName: "Levy PCFB %", enableCellEdit: false },
-			             { field: 'expectedPCCDate', width: '100', displayName: "Expected PCC Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'actualPCCDate', width: '100', displayName: "Actual PCC Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'expectedMakingGoodDate', width: '100', displayName: "Expected making Good Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'actualMakingGoodDate', width: '100', displayName: "Actual Making Good Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'defectLiabilityPeriod', width: '100', displayName: "Defect Liability Period", enableCellEdit: false },
-			             { field: 'defectListIssuedDate', width: '100', displayName: "DefectList Issue Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'financialEndDate', width: '100', displayName: "Financial End Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'dateFinalACSettlement', width: '100', displayName: "Final AC Settlement Date", cellFilter: 'date:"MM/dd/yyyy"', enableCellEdit: false },
-			             { field: 'yearOfCompletion', width: '100', displayName: "Year of Completion", enableCellEdit: false },
-			             { field: 'bqFinalizedFlag', width: '100', displayName: "BQ Finalized Flag", enableCellEdit: false },
-			             { field: 'allowManualInputSCWorkDone', width: '100', displayName: "Allow Manual Input SC Work Done", enableCellEdit: false },
-			             { field: 'legacyJob', width: '100', displayName: "Legacy Job", enableCellEdit: false },
-			             { field: 'conversionStatus', width: '100', displayName: "Conversion Status", enableCellEdit: false },
-			             { field: 'repackagingType', width: '100', displayName: "Repackaging Type", enableCellEdit: false },
-			             { field: 'budgetPosted', width: '100', displayName: "Budget Posted", enableCellEdit: false },
-			             { field: 'finQS0Review', width: '100', displayName: "Finance QS Review", enableCellEdit: false }
+			             { field: 'jobNo', width: '100', displayName: "Job No."},
+			             { field: 'description', width: '250', displayName: "Description" },
+			             { field: 'company', width: '80', displayName: "Company"},
+			             { field: 'employer', width: '80', displayName: "Employer"},
+			             { field: 'contractType', width: '120', displayName: "Contract Type", visible: false},
+			             { field: 'division', width: '80', displayName: "Division"},
+			             { field: 'department', width: '100', displayName: "Department"},
+			             { field: 'internalJob', width: '100', displayName: "Internal Job", visible: false},
+			             { field: 'soloJV', width: '80', displayName: "Solo JV"},
+			             { field: 'completionStatus', width: '150', displayName: "Completion Status"},
+			             { field: 'insuranceCAR', width: '130', displayName: "Insurance CAR %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'insuranceECI', width: '130', displayName: "Insurance ECI %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'insuranceTPL', width: '130', displayName: "Insurance TPL %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'clientContractNo', width: '200', displayName: "Client Contract No"},
+			             { field: 'tenderGP', width: '120', displayName: "Tender GP", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'parentJobNo', width: '100', displayName: "Parent No", cellClass: 'text-right'},
+			             { field: 'jvPartnerNo', width: '130', displayName: "JV Partner No", cellClass: 'text-right'},
+			             { field: 'jvPercentage', width: '50', displayName: "JV %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'originalContractValue', width: '180', displayName: "Original Contract Value", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'projectedContractValue', width: '180', displayName: "Projected Contract Value", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'orginalNominatedSCContractValue', width: '200', displayName: "Orginal NSC Contract Value", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'forecastEndYear', width: '100', displayName: "Forecast End Year", visible: false},
+			             { field: 'forecastEndPeriod', width: '100', displayName: "Forecast End Period", visible: false},
+			             { field: 'maxRetentionPercentage', width: '150', displayName: "Max Retention %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'interimRetentionPercentage', width: '150', displayName: "Interim Retention %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'mosRetentionPercentage', width: '150', displayName: "MOS Retention %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'valueOfBSWork', width: '100', displayName: "Value of BS Work", visible: false},
+			             { field: 'grossFloorArea', width: '100', displayName: "Gross Floor Area", visible: false},
+			             { field: 'grossFloorAreaUnit', width: '100', displayName: "Gross Floor Area Unit", visible: false},
+			             { field: 'billingCurrency', width: '120', displayName: "Billing Currency"},
+			             { field: 'paymentTermsForNominatedSC', width: '150', displayName: "Payment Terms for NSC"},
+			             { field: 'defectProvisionPercentage', width: '150', displayName: "Defect Provision %", cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'cpfApplicable', width: '130', displayName: "CPF Applicable"},
+			             { field: 'cpfIndexName', width: '150', displayName: "CPF Index Name", visible: false},
+			             { field: 'cpfBaseYear', width: '120', displayName: "CPF Base Year", visible: false},
+			             { field: 'cpfBasePeriod', width: '100', displayName: "CPF Base Period", visible: false},
+			             { field: 'levyApplicable', width: '130', displayName: "Levy Applicable"},
+			             { field: 'levyCITAPercentage', width: '100', displayName: "Levy CITA %", cellFilter: 'number:2'},
+			             { field: 'levyPCFBPercentage', width: '120', displayName: "Levy PCFB %", cellFilter: 'number:2'},
+			             { field: 'expectedPCCDate', width: '150', displayName: "Expected PCC Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'actualPCCDate', width: '150', displayName: "Actual PCC Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'expectedMakingGoodDate', width: '200', displayName: "Expected making Good Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'actualMakingGoodDate', width: '180', displayName: "Actual Making Good Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'defectLiabilityPeriod', width: '180', displayName: "Defect Liability Period"},
+			             { field: 'defectListIssuedDate', width: '150', displayName: "DefectList Issue Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'financialEndDate', width: '150', displayName: "Financial End Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'dateFinalACSettlement', width: '180', displayName: "Final AC Settlement Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'yearOfCompletion', width: '150', displayName: "Year of Completion", cellClass: 'text-right'},
+//			             { field: 'bqFinalizedFlag', width: '100', displayName: "BQ Finalized Flag", visible: false},
+//			             { field: 'allowManualInputSCWorkDone', width: '100', displayName: "Allow Manual Input SC Work Done", visible: false},
+//			             { field: 'legacyJob', width: '100', displayName: "Legacy Job", visible: false},
+//			             { field: 'conversionStatus', width: '100', displayName: "Conversion Status", visible: false},
+			             { field: 'repackagingType', width: '150', displayName: "Repackaging Type"},
+			             { field: 'budgetPosted', width: '100', displayName: "Budget Posted", visible: false},
+			             { field: 'finQS0Review', width: '100', displayName: "Finance QS Review", visible: false}
             			 ]
 	};
 	
@@ -82,15 +78,12 @@ mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryJobInfo.start('Loading...')
 		jobService.getJobDetailList()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-//				$scope.blockEnquiryJobInfo.stop();
 			}, function(data){
-//				$scope.blockEnquiryJobInfo.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});
 	}
