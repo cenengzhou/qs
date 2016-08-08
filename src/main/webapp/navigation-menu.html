@@ -41,7 +41,7 @@
 						</a>
 					</li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}" ng-hide = "hideNavMenu">
-						<a ui-sref="enquiry.jobCost" ng-click="activeMenu = 'Enquiry'"> 
+						<a ui-sref="enquiry.info" ng-click="activeMenu = 'Enquiry'"> 
 							<i class="fa fa-info-circle"></i>
 							Enquiry
 						</a>
@@ -101,8 +101,9 @@
 		    <div data-scrollbar="true" data-height="100%">
 		        <!-- begin sidebar-nav -->
 		        <ul class="nav nav-tabs" role="tablist">
-		            <li class="width-half active"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
-		            <li class="width-half"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self">Account Code</a></li>
+		            <li class="width-50 active"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
+		            <li class="width-100"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self">Account Code</a></li>
+		            <li class="width-100"><a href="#" data-target="#AddressBook" data-toggle="tab" target="_self">Address Book</a></li>
 		        </ul>
 		        <div class="tab-content">
 		            <div class="tab-pane active" id="links">
@@ -197,11 +198,11 @@
 							<ul class="nav nav-tabs" role="tablist">
 								<li class="width-half active"><a href
 									data-target="#AccountCodeObjectCode" data-toggle="tab"
-									target="_self">Object Code</a></li>
+									target="_self" >Object Code</a></li>
 									
 								<li class="width-half"><a href
 									data-target="#AccountCodeSubsidiaryCode" data-toggle="tab"
-									target="_self">Subsidiary Code</a></li>
+									target="_self" >Subsidiary Code</a></li>
 							</ul>
 							<div class="tab-pane active" id="AccountCodeObjectCode">
 								<div id="" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-selection ui-grid-resize-columns class="grid"
@@ -214,7 +215,15 @@
 						</div>
 					</ul>
 				</div>
-			</div>
+				<div class="tab-pane box box-primary" id="AddressBook">
+					<ul class="nav">
+						<div class="tab-content">
+								<div id="" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-selection ui-grid-resize-columns class="grid"
+									resize ng-style="resizeWithOffset(120)"></div>
+						</div>
+					</ul>
+				</div>
+				</div>
 		        <!-- end sidebar-nav -->
 		    </div>
 		    <!-- end sidebar scrollbar -->

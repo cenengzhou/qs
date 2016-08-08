@@ -2,7 +2,8 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
     	getMonthlyJobCostList:		getMonthlyJobCostList,
-    	getAccountLedgerList:	getAccountLedgerList
+    	getAccountLedgerList:	getAccountLedgerList,
+    	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient
     });
    
     function getMonthlyJobCostList(noJob, noSubcontract, year, month){
@@ -36,6 +37,11 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
     			codeSubsidiary: codeSubsidiary
     		}
     	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getAddressBookListOfSubcontractorAndClient(){
+    	var request = $http.get('service/adl/getAddressBookListOfSubcontractorAndClient');
     	return( request.then( handleSuccess, handleError ) );
     }
     

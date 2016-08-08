@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalHelper', 'uiGridConstants',
                                   function($scope , $rootScope, $http, modalService, blockUI, subcontractService, GlobalHelper, uiGridConstants) {
 	
-//	$scope.blockEnquiryProvisionHistory = blockUI.instances.get('blockEnquiryProvisionHistory');
+	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date();
 	$scope.searchCumMovement = false;
 	$scope.searchYear = $scope.currentDate.getFullYear();
@@ -101,13 +101,10 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryProvisionHistory.start('Loading...');
-		subcontractService.getProvisionPostingHistList($scope.jobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
+		subcontractService.getProvisionPostingHistList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
 		.then(function(data){
 				$scope.gridOptions.data = data;
-//				$scope.blockEnquiryProvisionHistory.stop();
 		}, function(data){
-//			$scope.blockEnquiryProvisionHistory.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 	} 

@@ -21,11 +21,10 @@ public class IVPostingHistController {
 	private IVPostingHistService ivPostingHistService;
 	
 	@RequestMapping(value = "obtainIVPostingHistoryList", method = RequestMethod.POST)
-	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestParam String jobNumber, @RequestParam(required = false) String packageNo, @RequestParam(required = false) String objectCode, 
-			@RequestParam(required = false) String subsidiaryCode, @RequestParam(required = false) Date fromDate, @RequestParam(required = false) Date toDate){
+	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestParam String jobNumber, Date fromDate, Date toDate){
 		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
 		try {
-			resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, packageNo, objectCode, subsidiaryCode, fromDate, toDate));
+			resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, fromDate, toDate));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

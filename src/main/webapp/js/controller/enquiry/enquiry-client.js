@@ -20,9 +20,8 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'subcontractorNo', displayName: "Subcontractor Number", enableCellEdit: false },
-			             { field: 'subcontractorName', displayName: "Subcontractor Name", enableCellEdit: false },
-			             { field: 'businessRegistrationNo', displayName: "Business Registration Number", enableCellEdit: false}
+			             { field: 'subcontractorNo', displayName: "Client Number", enableCellEdit: false },
+			             { field: 'subcontractorName', displayName: "Client Name", enableCellEdit: false }
             			 ]
 	};
 	
@@ -31,9 +30,8 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 	}
 	
 	$scope.loadGridData = function(){
-		if($scope.searchClient !== ''){
 //		$scope.blockEnquiryClient.start('Loading...')
-		subcontractorService.obtainClientWrappers('*' + $scope.searchClient + '*')
+		subcontractorService.obtainClientWrappers('*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
@@ -42,13 +40,9 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'moda
 		}, function(data){
 //			$scope.blockEnquiryClient.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-		})
-		} else {
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter client number or name to search' ); 
-		}
-
+		});
 	}
-	
+	$scope.loadGridData();
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};

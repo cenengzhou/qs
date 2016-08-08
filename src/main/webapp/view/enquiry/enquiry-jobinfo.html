@@ -1,7 +1,7 @@
 <div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
-			<li><a ui-sref="enquiry.jobInfo"><i class="fa fa-dashboard"></i>
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
 					Home</a></li>
 			<li class="active">Dashboard</li>
 		</ol>
@@ -12,12 +12,18 @@
 	<section class="content">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="col-md-12" block-ui="blockEnquiryJobInfo">
-					<div id="" ui-grid="gridOptions" external-scopes="clickHandler"
-						ui-grid-grouping ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title">Job Information</h3>
+						
+						<div class="col-md-12">
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" 
+								ui-grid-grouping ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter
 						ui-grid-cellnav ui-grid-edit class="grid" resize ng-style="resizeWithOffset(215)"></div>
+					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 	</section>
 

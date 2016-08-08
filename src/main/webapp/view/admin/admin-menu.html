@@ -28,14 +28,14 @@
 					<span>Revisions</span>
 				</a>
 			</li>		
-			<li class="has-sub">
+			<li class="has-sub" ui-sref-active="active">
 				<a href="javascript:;">
 				    <b class="caret pull-right"></b>
 				    <i class="fa fa-file-text"></i>
 				    <span>Transit</span>
 			    </a>
 			 <ul class="sub-menu">
-			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitUOMMaintenance'}">
+			<li ng-class="{active : activeAdminSideMenu == '/admin/TransitUOMMaintenance'}" >
 				<a ui-sref="admin.TransitUOMMaintenance" ng-click="activeAdminSideMenu = '/admin/TransitUOMMaintenance'">
 					<i class="fa fa-circle-o"></i>
 					<span>UOM Maintenance</span>
@@ -49,7 +49,7 @@
 			</li>		
 			 </ul>
 			 </li>
-			 <li class="has-sub">
+			 <li class="has-sub" ui-sref-active="active">
 				<a href="javascript:;">
 				    <b class="caret pull-right"></b>
 				    <i class="fa fa-trophy"></i>

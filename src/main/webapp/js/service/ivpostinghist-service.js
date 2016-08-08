@@ -4,15 +4,12 @@ mainApp.service('ivpostinghistService', ['$http', '$q',  function($http, $q){
     	obtainIVPostingHistoryList:		obtainIVPostingHistoryList
     });
    
-    function obtainIVPostingHistoryList(jobNumber, packageNo, objectCode, subsidiaryCode, fromDate, toDate){
+    function obtainIVPostingHistoryList(jobNumber, fromDate, toDate){
     	var request = $http({
     		method: 'POST',
     		url: 'service/ivpostinghist/obtainIVPostingHistoryList',
     		params:{
     			jobNumber: jobNumber,
-    			packageNo: packageNo,
-    			objectCode: objectCode,
-    			subsidiaryCode: subsidiaryCode,
     			fromDate: fromDate,
     			toDate: toDate
     		}

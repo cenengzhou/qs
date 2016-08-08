@@ -1,7 +1,7 @@
 <div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
-			<li><a ui-sref="enquiry.subcontract"><i class="fa fa-dashboard"></i>
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
 					Home</a></li>
 			<li class="active">Dashboard</li>
 		</ol>
@@ -17,17 +17,11 @@
 						<h3 class="box-title">Provision History</h3>
 						<form role="form" name="searchProvisionHistoryForm" id="searchJobCostForm" ng-submit="loadGridData()" class="form-input-flat">
 							<div class="form-group">
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<label for="searchJobNo">Job No.:</label> 
-									<label class="form-control" id="searchJobNo" name="searchJobNo">{{jobNo}}</label>
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
 								</div>
-								<div class="col-md-2">
-									<label for="searchSubcontractNo">Subcontract No.:</label> <input
-										type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
-										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
-										<p ng-show="searchProvisionHistoryForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
-								</div>
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<label for="searchYear">Year:</label>
 									<div class="input-group" moment-picker="searchYear"
 										format="YYYY" start-view="year" today="true">
@@ -35,11 +29,11 @@
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="searchYear" name="searchYear"
 											ng-model="searchYear"
-											pattern=".{4,4}" title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+											pattern=".{4,4}" title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }" required>
 									</div>
 									<p ng-show="searchProvisionHistoryForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
 								</div>
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<label for="searchMonth">Month:</label>
 									<div class="input-group" moment-picker="searchMonth"
 										format="M" start-view="month" today="true">
@@ -47,12 +41,12 @@
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="searchMonth" name="searchMonth"
 											ng-model="searchMonth"
-											pattern=".{1,2}" title="Please select Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
+											pattern=".{1,2}" title="Please select Month from the date picker" ng-model-options="{ updateOn: 'blur' }" required>
 									</div>
 									<p ng-show="searchProvisionHistoryForm.searchMonth.$error.pattern" class="red">Please select Month from the date picker</p>
 								</div>
 
-								<div class="col-md-4">
+								<div class="col-md-3">
 									<label>&nbsp;</label>
 									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 								</div>

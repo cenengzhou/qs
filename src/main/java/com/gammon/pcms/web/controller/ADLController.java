@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
+import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -22,7 +23,6 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.pcms.service.ADLService;
-import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
 @RequestMapping(value = "service/adl/",
@@ -146,22 +146,15 @@ public class ADLController {
 
 	@RequestMapping(value = "getAccountLedgerList",
 					method = RequestMethod.GET)
-	public List<AccountLedger> getAccountLedgerList(@RequestParam(required = true) String noJob,
-													@RequestParam(	required = true,
-																	defaultValue = "AA") String typeLedger,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearStart,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearEnd,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal monthStart,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal monthEnd,
-													@RequestParam(	required = false,
-																	defaultValue = "JS") String typeDocument,
+	public List<AccountLedger> getAccountLedgerList(@RequestParam String noJob,
+													@RequestParam String typeLedger,
+													@RequestParam(defaultValue = "0") BigDecimal yearStart,
+													@RequestParam(defaultValue = "0") BigDecimal yearEnd,
+													@RequestParam(defaultValue = "0") BigDecimal monthStart,
+													@RequestParam(defaultValue = "0") BigDecimal monthEnd,
+													@RequestParam(required = false) String typeDocument,
 													@RequestParam(required = false) String noSubcontract,
-													@RequestParam(	required = false,
-																	defaultValue = "3440") String codeObject,
+													@RequestParam(required = false) String codeObject,
 													@RequestParam(required = false) String codeSubsidiary) {
 		try {
 			return adlService.getAccountLedgerList(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
@@ -197,6 +190,7 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
+	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
 					method = RequestMethod.GET)
 	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {

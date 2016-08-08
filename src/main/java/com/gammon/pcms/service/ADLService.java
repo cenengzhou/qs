@@ -28,7 +28,8 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
-import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.service.admin.AdminService;
+import com.gammon.qs.service.security.SecurityService;
 
 @Service
 @Transactional(	readOnly = true,
@@ -55,7 +56,10 @@ public class ADLService {
 	private AddressBookDao addressBookDao;
 	@Autowired
 	private BusinessUnitDao businessUnitDao;
-
+	@Autowired
+	private SecurityService securityService;
+	@Autowired
+	private AdminService adminService;
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
 	 */
@@ -164,7 +168,11 @@ public class ADLService {
 	 * @since Jul 11, 2016 3:17:56 PM
 	 */
 	public List<AccountLedger> getAccountLedgerList(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
-		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+		if(adminService.canAccessJob(securityService.getCurrentUser().getUsername(), noJob)){
+			return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+		} else {
+			return null;
+		}
 	}
 	
 	/**

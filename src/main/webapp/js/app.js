@@ -19,7 +19,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/master-list-service.js'
+                           'js/service/master-list-service.js',
+                           'js/service/adl-service.js'
                     ] 
                 });
             }]
@@ -750,6 +751,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
+               	         	'js/controller/enquiry/enquiry-info.js',
 							'js/controller/enquiry/enquiry-jobinfo.js',
 							'js/controller/enquiry/enquiry-jobcost.js',
 							'js/controller/enquiry/enquiry-ivhistory.js',
@@ -785,6 +787,15 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
         },
         controller: 'NavMenuCtrl',
         controllerAs: 'navMenuCtrl'
+	})
+	.state('enquiry.info', {
+		url: '/info',
+		templateUrl: 'view/enquiry/enquiry-info.html',
+		'params': {
+			'jobNo': null,
+			'jobDescription': null,
+		},
+		controller: 'EnquiryInfoCtrl'
 	})
 	.state('enquiry.jobInfo', {
 		url: '/jobInfo',

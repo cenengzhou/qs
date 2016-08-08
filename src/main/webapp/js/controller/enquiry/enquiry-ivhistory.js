@@ -4,6 +4,11 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	
+	$scope.searchJobNo = $scope.jobNo;
+	$scope.searchToDate = moment().format('DD MMM YYYY');
+	$scope.searchFromDate =  moment().year(moment().year() -1 ).format('DD MMM YYYY');
+//	$scope.searchFromDate.setFullYear($scope.searchToDate.getFullYear()-1);
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -56,7 +61,7 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 	
 	$scope.loadGridData = function(){
 //		$scope.blockEnquiryIvHistory.start('Loading...')
-		ivpostinghistService.obtainIVPostingHistoryList($scope.jobNo, $scope.searchPackageNo, $scope.searchObjectCode, $scope.searchSubsidiaryCode, $scope.searchFromDate, $scope.searchToDate)
+		ivpostinghistService.obtainIVPostingHistoryList($scope.searchJobNo, $scope.searchFromDate, $scope.searchToDate)
 		.then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;

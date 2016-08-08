@@ -1,0 +1,73 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Home</a></li>
+			<li class="active">Dashboard</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content">
+		<div class="row" vertilize-container>
+			<div class="col-md-4" >
+				<div class="panel panel-primary" vertilize>
+					<div class="panel-heading">Job</div>
+					<div class="panel-body">
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.jobInfo" ng-click="activeEnquirySideMenu = '/enquiry/jobInfo'">Job Information</a><p>&nbsp;<p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.jobCost" ng-click="activeEnquirySideMenu = '/enquiry/jobCost'">Job Cost</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.ivHistory" ng-click="activeEnquirySideMenu = '/enquiry/ivHistory'">Internal Valuation History</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4" >
+				<div class="panel panel-primary" vertilize>
+					<div class="panel-heading">Subcontract</div>
+					<div class="panel-body">
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontract" ng-click="activeEnquirySideMenu = '/enquiry/subcontract'">Subcontract</a><p>&nbsp;<p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontractDetail" ng-click="activeEnquirySideMenu = '/enquiry/subcontractDetail'">Subcontract Detail</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.payment" ng-click="activeEnquirySideMenu = '/enquiry/payment'">Payment</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.provisionHistory" ng-click="activeEnquirySideMenu = '/enquiry/provisionHistory'">Provision History</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.workScope" ng-click="activeEnquirySideMenu = '/enquiry/workScope'">Work Scope</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4" >
+				<div class="panel panel-primary" vertilize>
+					<div class="panel-heading">Address Book</div>
+					<div class="panel-body">
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontractor" ng-click="activeEnquirySideMenu = '/enquiry/subcontractor'">Subcontractor</a><p>&nbsp;<p>
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.client" ng-click="activeEnquirySideMenu = '/enquiry/client'">Client</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4" >
+				<div class="panel panel-primary" vertilize>
+					<div class="panel-heading">Purchase Order</div>
+					<div class="panel-body">
+						<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.purchaseOrder" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrder'">Purchase Order</a><p>&nbsp;<p>
+						<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.purchaseOrderDetail" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrderDetail'">Purchase Order Detail</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4" >
+				<div class="panel panel-primary" vertilize>
+					<div class="panel-heading">JDE</div>
+					<div class="panel-body">
+						<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.accountLedger" ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'">Account Ledger</a><p>&nbsp;<p>
+						<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.customerLedger" ng-click="activeEnquirySideMenu = '/enquiry/customerLedger'">Customer Ledger</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.supplierLedger" ng-click="activeEnquirySideMenu = '/enquiry/supplierLedger'">Supplier Ledger</a><p>&nbsp;</p>
+						<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.performanceAppraisal" ng-click="activeEnquirySideMenu = '/enquiry/performanceAppraisal'">Internal Valuation History</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+</div>

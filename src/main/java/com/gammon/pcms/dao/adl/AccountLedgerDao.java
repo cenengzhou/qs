@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -36,14 +37,34 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob))
 				.add(Restrictions.eq("accountTypeLedger", typeLedger));
 		
-		if (yearEnd.intValue() > 0)
-			criteria.add(Restrictions.le("accountFiscalYear", yearEnd));
-		if (yearStart.intValue() > 0)
-			criteria.add(Restrictions.ge("accountFiscalYear", yearStart));
-		if (monthEnd.intValue() > 0)
-			criteria.add(Restrictions.le("accountPeriod", monthEnd));
-		if (monthStart.intValue() > 0)
-			criteria.add(Restrictions.ge("accountPeriod", monthStart));
+		Criterion sameYear = Restrictions.and(
+				Restrictions.eq("accountFiscalYear", yearStart),
+				Restrictions.eq("accountFiscalYear", yearEnd),
+				Restrictions.ge("accountPeriod", monthStart)
+				);
+		Criterion middlePeriod = Restrictions.and(
+				Restrictions.gt("accountFiscalYear", yearStart),
+				Restrictions.lt("accountFiscalYear", yearEnd)
+				);
+		Criterion lastYear = Restrictions.and(
+				Restrictions.eq("accountFiscalYear", yearEnd),
+				Restrictions.le("accountPeriod", monthEnd)
+				);
+		if(yearEnd.intValue() > 0 && yearStart.intValue() > 0){
+			if(yearEnd.intValue() < yearStart.intValue()){
+			// yearEnd < yearStart
+				throw new IllegalArgumentException("yearEnd less then yearStart");
+			} else if(yearEnd.intValue() == yearStart.intValue()){
+			// yearEnd == yearStart
+				if(monthEnd.intValue() < monthStart.intValue()){
+					throw new IllegalArgumentException("monthEnd less then monthStart when yearEnd eq year yearStart");
+				}
+				criteria.add(sameYear);
+			} else if(yearEnd.intValue() > yearStart.intValue()){
+			// yearEnd > yearStart
+				criteria.add(Restrictions.or(sameYear, middlePeriod, lastYear));
+			}
+		}
 		
 		// Where (optional)
 		if(StringUtils.isNotBlank(typeDocument))

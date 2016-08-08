@@ -1,5 +1,5 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService',
-                                   function($http, $scope, $location, $cookies, masterListService, modalService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService',
+                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService) {
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -88,15 +88,15 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			enableGridMenu : false,
 			enableRowSelection: false,
 			enableSelectAll: false,
-			enableFullRowSelection: true,
+			enableFullRowSelection: false,
 			multiSelect: false,
 			showGridFooter : false,
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'objectCode', displayName: "Code", width: '80', enableCellEdit: false },
-			             { field: 'description', displayName: "Description", width: '120', enableCellEdit: false }
+			             { field: 'objectCode', displayName: "Code", width: '100', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '180', enableCellEdit: false }
             			 ]
 	};
 	
@@ -126,15 +126,15 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			enableGridMenu : false,
 			enableRowSelection: false,
 			enableSelectAll: false,
-			enableFullRowSelection: true,
+			enableFullRowSelection: false,
 			multiSelect: false,
 			showGridFooter : false,
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			              { field: 'subsidiaryCode', displayName: "Code", width: '80', enableCellEdit: false },
-			             { field: 'description', displayName: "Description", width: '120', enableCellEdit: false }
+			              { field: 'subsidiaryCode', displayName: "Code", width: '100', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '180', enableCellEdit: false }
             			 ]
 	};
 	
@@ -157,11 +157,52 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		})
 	}
 	
-	$scope.filter = function() {
-		$scope.ObjectCodeGridApi.grid.refresh();
-		$scope.SubsidiaryCodeGridApi.grid.refresh();
+	$scope.AddressBookGridOptions = {
+			enableFiltering: true,
+			enableColumnResizing : true,
+			enableGridMenu : false,
+			enableRowSelection: false,
+			enableSelectAll: false,
+			enableFullRowSelection: false,
+			multiSelect: false,
+			showGridFooter : false,
+			enableCellEditOnFocus : false,
+			allowCellFocus: false,
+			enableCellSelection: false,
+			columnDefs: [
+			             { field: 'addressBookNumber', displayName: "No.", width: '50', enableCellEdit: false },
+			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },
+			             { field: 'supplierApproval', displayName: "Approved", width: '80', enableCellEdit: false }
+            			 ]
 	};
+	
+	$scope.AddressBookGridOptions.onRegisterApi = function (gridApi) {
+		  $scope.ObjectCodeGridApi = gridApi;
+		  $scope.ObjectCodeGridApi.grid.refresh();
+	}
+	
+	$scope.AddressBookloadGridData = function(){
+			adlService.getAddressBookListOfSubcontractorAndClient()
+		    .then(function(data) {
+				if(angular.isArray(data)){
+					$scope.AddressBookGridOptions.data = data;
+				}
+		}, function(data){
+//			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+		})
+	}
+
+	//	$scope.filter = function() {
+//		$scope.ObjectCodeGridApi.grid.refresh();
+//		$scope.SubsidiaryCodeGridApi.grid.refresh();
+//	};
 	
 	$scope.ObjectCodeloadGridData();
 	$scope.SubsidiaryCodeloadGridData();
+	$scope.AddressBookloadGridData();
+	
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+    	$scope.currentPath = $location.path();
+    	$scope.activeEnquirySideMenu = $scope.currentPath;
+    });
 }]);

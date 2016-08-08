@@ -1,8 +1,7 @@
 
 mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 
                                         function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService) {
-	
-//	$scope.blockEnquiryAccountLedger = blockUI.instances.get('blockEnquiryAccountLedger');
+
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -22,7 +21,23 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			columnDefs: [
 			             { field: 'typeDocument', width:'100', displayName: "Document Type", enableCellEdit: false },
 			             { field: 'numberDocument', width:'100', displayName: "Document", enableCellEdit: false },
-			             { field: 'dateGl', width:'100', displayName: "G/L Date", cellFilter: 'date', enableCellEdit: false },
+			             { field: 'dateGl', width:'100', displayName: "G/L Date", 
+			            	 cellFilter: 'date:"MMM dd yyyy"', 
+			            	 filterCellFiltered:true, 
+//			                 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div class="input-group" moment-picker="colFilter.term" format="MM-DD-YYYY" start-view="year" today="true"><span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input class="form-control" id="colFilter.term" name="colFilter.term" ng-model="colFilter.term" ng-model-options="{ updateOn: \'blur\' }"></div></div>',
+//			                 filters:[
+//			                 {
+//				                 filterName: "greaterThan",
+//				                 condition: uiGridConstants.filter.GREATER_THAN,
+//				                 placeholder: 'greater than'
+//			                 },
+//			                 {
+//				                 filterName: "lessThan",
+//				                 condition: uiGridConstants.filter.LESS_THAN,
+//				                 placeholder: 'less than'
+//			                 }],
+			            	 enableCellEdit: false
+			             },
 			             { field: 'taxExplCode', width:'100', displayName: "Explanation", enableCellEdit: false },
 			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -100,17 +115,26 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 		  $scope.gridApi = gridApi;
 	}
 	
+	$scope.searchJobNo = $scope.jobNo;
+	$scope.searchTypeLedger = 'AA';
+	$scope.searchFromYearMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
+	$scope.searchToYearMonth = moment().format('YYYY-MM');
+	$scope.searchTypeDocument = '';
+	$scope.searchCodeObject = ''
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryAccountLedger.start('Loading...')
-		adlService.getAccountLedgerList($scope.jobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
+		$scope.searchFrom = $scope.searchFromYearMonth.split('-');
+		$scope.searchYearStart = $scope.searchFrom[0].substring(2);
+		$scope.searchMonthStart = $scope.searchFrom[1];
+		$scope.searchTo = $scope.searchToYearMonth.split('-');
+		$scope.searchYearEnd = $scope.searchTo[0].substring(2);
+		$scope.searchMonthEnd = $scope.searchTo[1];
+		adlService.getAccountLedgerList($scope.searchJobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
 				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-//				$scope.blockEnquiryAccountLedger.stop()
 			}, function(data){
-//				$scope.blockEnquiryAccountLedger.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});	
 	}
