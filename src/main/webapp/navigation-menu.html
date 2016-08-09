@@ -102,8 +102,8 @@
 		        <!-- begin sidebar-nav -->
 		        <ul class="nav nav-tabs" role="tablist">
 		            <li class="width-50 active"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
-		            <li class="width-100"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self">Account Code</a></li>
-		            <li class="width-100"><a href="#" data-target="#AddressBook" data-toggle="tab" target="_self">Address Book</a></li>
+		            <li class="width-100"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self" ng-click="showCodePanel('Account')">Account Code</a></li>
+		            <li class="width-100"><a href="#" data-target="#AddressBook" data-toggle="tab" target="_self" ng-click="showCodePanel('Address')">Address Book</a></li>
 		        </ul>
 		        <div class="tab-content">
 		            <div class="tab-pane active" id="links">
@@ -198,18 +198,18 @@
 							<ul class="nav nav-tabs" role="tablist">
 								<li class="width-half active"><a href
 									data-target="#AccountCodeObjectCode" data-toggle="tab"
-									target="_self" >Object Code</a></li>
+									target="_self" ng-click="showCodePanel('Object')" ng-init="showSubsidiaryCode=false">Object Code</a></li>
 									
 								<li class="width-half"><a href
 									data-target="#AccountCodeSubsidiaryCode" data-toggle="tab"
-									target="_self" >Subsidiary Code</a></li>
+									target="_self" ng-click="showCodePanel('Subsidiary')" ng-init="showObjectCode=false">Subsidiary Code</a></li>
 							</ul>
 							<div class="tab-pane active" id="AccountCodeObjectCode">
-								<div id="" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-selection ui-grid-resize-columns class="grid"
+								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 							<div class="tab-pane" id="AccountCodeSubsidiaryCode">
-							<div id="" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-selection ui-grid-resize-columns class="grid"
+							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 						</div>
@@ -218,7 +218,7 @@
 				<div class="tab-pane box box-primary" id="AddressBook">
 					<ul class="nav">
 						<div class="tab-content">
-								<div id="" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-selection ui-grid-resize-columns class="grid"
+								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(120)"></div>
 						</div>
 					</ul>

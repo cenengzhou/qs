@@ -11,6 +11,26 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 //	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.user = {name:'No one'};
 	
+	$scope.showCodePanel = function(panel){
+		$scope.showObjectCode = false;
+		$scope.showSubsidiaryCode=false;
+		$scope.showAddressBook=false;
+		switch(panel){
+		case 'Address':
+			$scope.showAddressBook = true;
+			break;
+		case 'Object':
+			$scope.showObjectCode = true;
+			break;
+		case 'Subsidiary':
+			$scope.showSubsidiaryCode = true;
+			break;
+		case 'Account':
+			$scope.showObjectCode = true;
+			$scope.showSubsidiaryCode = true;
+			break;
+		}
+	}
 
 	$scope.currentPath = $location.path();
 
@@ -95,8 +115,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'objectCode', displayName: "Code", width: '100', enableCellEdit: false },
-			             { field: 'description', displayName: "Description", width: '180', enableCellEdit: false }
+			             { field: 'objectCode', displayName: "Code", width: '80', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '170', enableCellEdit: false }
             			 ]
 	};
 	
@@ -133,8 +153,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
-			              { field: 'subsidiaryCode', displayName: "Code", width: '100', enableCellEdit: false },
-			             { field: 'description', displayName: "Description", width: '180', enableCellEdit: false }
+			              { field: 'subsidiaryCode', displayName: "Code", width: '80', enableCellEdit: false },
+			             { field: 'description', displayName: "Description", width: '170', enableCellEdit: false }
             			 ]
 	};
 	
@@ -172,7 +192,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			columnDefs: [
 			             { field: 'addressBookNumber', displayName: "No.", width: '50', enableCellEdit: false },
 			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },
-			             { field: 'supplierApproval', displayName: "Approved", width: '80', enableCellEdit: false }
+			             { field: 'supplierApproval', displayName: "Approved", width: '100', enableCellEdit: false }
             			 ]
 	};
 	
