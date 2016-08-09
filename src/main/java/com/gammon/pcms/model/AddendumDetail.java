@@ -168,7 +168,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.typeHd = typeHd;
 	}
 
-	@Column(name = "TYPE_VO", nullable = false, length = 4)
+	@Column(name = "TYPE_VO", length = 4)
 	public String getTypeVo() {
 		return this.typeVo;
 	}
