@@ -9,10 +9,10 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	$scope.searchJobNo = $scope.jobNo;
 
 	$scope.columnDefs = [
-			             { field: 'accountObject', displayName: 'Object', enableCellEdit: false},
-			             { field: 'accountSubsidiary', displayName: 'Subsidiary', enableCellEdit: false},
-			             { field: 'accountDescription', displayName: 'Description', enableCellEdit: false},
-			             { field: 'jiAmountPeriod', displayName: "Internal Valuation", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			             { field: 'accountObject', width: '150', displayName: 'Object', enableCellEdit: false},
+			             { field: 'accountSubsidiary', width: '150', displayName: 'Subsidiary', enableCellEdit: false},
+			             { field: 'accountDescription', width: '300', displayName: 'Description', enableCellEdit: false},
+			             { field: 'jiAmountPeriod', width: '230', displayName: "Internal Valuation (Movement)", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.jiAmountPeriod < 0){
@@ -30,7 +30,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 } 
 			             },
-			             { field: 'jiAmountAccum', displayName: "Internal Valuation", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false,
+			             { field: 'jiAmountAccum', width: '230', displayName: "Internal Valuation (Cumulative)", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.jiAmountAccum < 0){
@@ -48,7 +48,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 }
 			             },
-			             { field: 'aaAmountPeriod', displayName: 'Actual Value', cellFilter: 'number:2', enableCellEdit: false,
+			             { field: 'aaAmountPeriod', width: '200', displayName: 'Actual Value (Movement)', cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.aaAmountPeriod < 0){
@@ -66,7 +66,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 }
 			             },
-			             { field: 'aaAmountAccum', displayName: 'Actual Value', cellFilter: 'number:2', enableCellEdit: false,
+			             { field: 'aaAmountAccum', width: '200', displayName: 'Actual Value (Cumulative)', cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.aaAmountAccum < 0){
@@ -84,7 +84,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 }
 			             },
-			             { field: 'variancePeriod', displayName: 'Variance', cellFilter: 'number:2', enableCellEdit: false,
+			             { field: 'variancePeriod', width: '180', displayName: 'Variance (Movement)', cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.variancePeriod < 0){
@@ -102,7 +102,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            		 return c;
 			            	 }
 			             },
-			             { field: 'varianceAccum', displayName: 'Variance', cellFilter: 'number:2', enableCellEdit: false,
+			             { field: 'varianceAccum', width: '180', displayName: 'Variance (Cumulative)', cellFilter: 'number:2', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.varianceAccum < 0){
