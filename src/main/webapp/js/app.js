@@ -635,7 +635,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	 files: [
                            'js/controller/repackaging/repackaging.js',
                            'js/service/repackaging-service.js',
-                           'js/controller/repackaging/repackaging-confirm.js'
+                           'js/controller/repackaging/repackaging-confirm.js',
+                           'js/service/attachment-service.js'
                     ] 
                 });
             }]
@@ -772,7 +773,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
 							'js/controller/enquiry/enquiry-customerledger.js',
 							'js/controller/enquiry/enquiry-supplierledger.js',
 							'js/controller/enquiry/enquiry-performanceappraisal.js',
-							
+
                	         	'js/service/main-cert-service.js',
                	         	'js/service/payment-service.js',
                	         	'js/service/subcontract-service.js',
@@ -780,7 +781,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                	         	'js/service/unit-service.js',
                	         	'js/service/subcontractor-service.js',
                	         	'js/service/ivpostinghist-service.js',
-               	         	'js/service/job-service.js'
+               	         	'js/service/job-service.js',
+               	         	'js/service/master-list-service.js',
+               	         	'js/controller/nav-menu.js',
                     ] 
                 });
             }]

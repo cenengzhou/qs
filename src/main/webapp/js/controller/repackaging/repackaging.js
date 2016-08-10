@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'modalService',
-                                       function($scope, $location, $cookies, repackagingService, modalService) {
+mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'modalService', 'attachmentService',
+                                       function($scope, $location, $cookies, repackagingService, modalService, attachmentService) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -31,7 +31,18 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
    				 $scope.repackaging = data;
    				 $cookies.put('repackagingId', data.id);
    				 console.log("repackaging status: "+$scope.repackaging.status);
+   				$scope.loadAttachment($scope.repackaging.id);
    			 });
+    }
+    
+    $scope.loadAttachment = function(repackagingEntryID){
+    	attachmentService.getRepackagingAttachments(repackagingEntryID)
+    	.then(
+    			function(data){
+    				if(angular.isArray(data)){
+    					$scope.repackagingAttachments = data;
+    				}
+    			})
     }
     
     function addRepackaging() {

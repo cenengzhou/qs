@@ -50,36 +50,38 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.getCurrentUser();
 
 	
-	if($scope.currentPath.indexOf("/job")==0){	
-		$scope.activeMenu = '';
-	}
-	else if ($scope.currentPath.indexOf("/cert")==0){
-		$scope.activeMenu = 'Certificate';
-
-	}
-	else if ($scope.currentPath.indexOf("/repackaging")==0){
-		$scope.activeMenu = 'Repackaging';
-
-	}
-	else if ($scope.currentPath.indexOf("/subcontract")==0){
-		$scope.activeMenu = 'Subcontract';
-		$scope.activeSubcontractSideMenu = $scope.currentPath;
-	}
-	else if ($scope.currentPath.indexOf("/iv")==0){
-		$scope.activeMenu = 'IV';
-
-	}else if ($scope.currentPath.indexOf('/transit')==0){
-		$scope.activeMenu = 'Transit';
-	}else if ($scope.currentPath.indexOf('/admin')==0){
-		$scope.activeMenu = 'Admin';
-		$scope.activeAdminSideMenu = $scope.currentPath;
-	}else if($scope.currentPath.indexOf('/enquiry')==0){
-		$scope.activeMenu= 'Enquiry';
-		$scope.activeEnquirySideMenu = $scope.currentPath;
-	}else if($scope.currentPath.indexOf('/reports')==0){
-		$scope.activeMenu= 'Reports'
-	}
-
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+    	$scope.currentPath = $location.path();
+	    if($scope.currentPath.indexOf("/job")==0){	
+			$scope.activeMenu = '';
+		}
+		else if ($scope.currentPath.indexOf("/cert")==0){
+			$scope.activeMenu = 'Certificate';
+	
+		}
+		else if ($scope.currentPath.indexOf("/repackaging")==0){
+			$scope.activeMenu = 'Repackaging';
+	
+		}
+		else if ($scope.currentPath.indexOf("/subcontract")==0){
+			$scope.activeMenu = 'Subcontract';
+			$scope.activeSubcontractSideMenu = $scope.currentPath;
+		}
+		else if ($scope.currentPath.indexOf("/iv")==0){
+			$scope.activeMenu = 'IV';
+	
+		}else if ($scope.currentPath.indexOf('/transit')==0){
+			$scope.activeMenu = 'Transit';
+		}else if ($scope.currentPath.indexOf('/admin')==0){
+			$scope.activeMenu = 'Admin';
+			$scope.activeAdminSideMenu = $scope.currentPath;
+		}else if($scope.currentPath.indexOf('/enquiry')==0){
+			$scope.activeMenu= 'Enquiry';
+			$scope.activeEnquirySideMenu = $scope.currentPath;
+		}else if($scope.currentPath.indexOf('/reports')==0){
+			$scope.activeMenu= 'Reports'
+		}
+    });
 //	function convertImgToBase64URL(url, callback, outputFormat){
 //	    var img = new Image();
 //	    img.crossOrigin = 'Anonymous';
@@ -221,8 +223,4 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.SubsidiaryCodeloadGridData();
 	$scope.AddressBookloadGridData();
 	
-    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-    	$scope.currentPath = $location.path();
-    	$scope.activeEnquirySideMenu = $scope.currentPath;
-    });
 }]);
