@@ -21,7 +21,7 @@
 					<h4><i class="fa fa-trophy fa-fw"></i> Total Addendum Amount</h4>
 				</div>
 				<div class="widget-stat-text m-b-10">V1, V2, V3, L1, L2, D1, D2, CF</div>
-				<div class="widget-stat-number m-b-10">1,302,493</div>
+				<div class="widget-stat-number m-b-10">{{totalAddendumAmount | currency}}</div>
 				<div class="widget-stat-chart">
 					<div id="sparkline-line-chart"></div>
 				</div>
@@ -40,8 +40,8 @@
 	<div class="col-lg-6">
 		<div class="fixed-container">
 			<div class="col-lg-12"
-				ng-show="latestAddendumStatus=='Approved'">
-				<a ui-sref="subcontract.addendumDetails"
+				ng-show="latestAddendumStatus=='APPROVED' || latestAddendumStatus==''">
+				<a ui-sref="subcontract.addendum.title"
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Addendum
 				</a> <br> <br>
@@ -49,7 +49,7 @@
 			<div class="col-lg-12 animated fadeInUp"
 				ng-repeat="addendum in addendums | orderBy:'addendumNo':true">
 
-				<div class="panel"	ng-class="{'panel-grey' : addendum.addendumStatus=='Approved', 'panel-lime' : addendum.addendumStatus!='Approved'}">
+				<div class="panel"	ng-class="{'panel-grey' : addendum.status=='Approved', 'panel-lime' : addendum.status!='Approved'}">
 					<div class="panel-heading">
 						<div class="panel-heading-btn">
 							<a href="javascript:;"
@@ -57,32 +57,32 @@
 								data-click="panel-collapse"> <i class="fa fa-minus"></i>
 							</a>
 						</div>
-						<h3 class="panel-title">Addendum No. {{addendum.addendumNo}}
-							- Addendum Amount {{addendum.addendumAmount| currency}}</h3>
+						<h3 class="panel-title">Addendum No. {{addendum.no}}
+							- Addendum Amount {{addendum.amtAddendumTotal| currency}}</h3>
 
 					</div>
 					<!-- /.box-header -->
 					<div class="panel-body"
-						ng-style="{display: (addendum.addendumNo != maxPaymentNo ? 'none' : 'block')}">
+						ng-style="{display: (addendum.no != maxAddendumNo ? 'none' : 'block')}">
 
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="pull-right">
-									<a class="btn" ui-sref="subcontract.addendumDetails.title" 
-									ng-class="{'btn-grey' : addendum.addendumStatus=='Approved', 'btn-lime' : addendum.addendumStatus!='Approved'}">
+									<a class="btn" ui-sref="subcontract.addendum.title({addendumNo: addendum.no})" 
+									ng-class="{'btn-grey' : addendum.status=='Approved', 'btn-lime' : addendum.status!='Approved'}">
 									View details</a>
 								</div>
 								<dl class="dl-horizontal">
 									<dt>Addendum Status:</dt>
 									<dd>
-										<div ng-class="{'text-danger' : addendum.addendumStatus=='Approved', 'text-green' : addendum.addendumStatus!='Approved'}">
-											<b>{{addendum.addendumStatus}}</b>
+										<div ng-class="{'text-danger' : addendum.status=='Approved', 'text-green' : addendum.status!='Approved'}">
+											<b>{{addendum.status}}</b>
 										</div>
 									</dd>
 									<dt>Approval Status:</dt>
 									<dd>
-										<div ng-class="{'text-danger' : addendum.addendumStatus=='Approved', 'text-green' : addendum.addendumStatus!='Approved'}">
-											<b>{{addendum.approvalStatus}}</b>
+										<div ng-class="{'text-danger' : addendum.status=='Approved', 'text-green' : addendum.status!='Approved'}">
+											<b>{{addendum.statusApproval}}</b>
 										</div>
 									</dd>
 								</dl>
@@ -94,21 +94,17 @@
 
 									<!-- <dt>Created by:</dt> <dd>Koey Yeung</dd> -->
 									<dt>Addendum Title</dt>
-									<dd>{{addendum.maincertNo}}</dd>
+									<dd>{{addendum.title}}</dd>
 									<dt>Submission Date:</dt>
-									<dd>{{addendum.submissionDate}}</dd>
+									<dd>{{addendum.dateSubmission | jsonDate : 'ddMMM,yyyy'}}</dd>
 									<dt>Approved Date:</dt>
-									<dd>{{addendum.approvedDate}}</dd>
+									<dd>{{addendum.dateApproval | jsonDate : 'ddMMM,yyyy'}}</dd>
 								</dl>
 							</div>
 							<div class="col-lg-7">
 								<dl class="dl-horizontal">
 									<dt>Prepared by:</dt>
-									<dd>{{addendum.preparedBy}}</dd>
-									<dt>Subcontractor No.:</dt>
-									<dd>{{addendum.invoiceReceivedDate}}</dd>
-									<dt>Subcontractor Name.:</dt>
-									<dd>{{addendum.requisition}}</dd>
+									<dd>{{addendum.usernamePreparedBy}}</dd>
 								</dl>
 							</div>
 						</div>
@@ -118,11 +114,11 @@
 									<dt>Completed:</dt>
 									<dd>
 										<div class="progress progress-striped  m-b-sm"
-										ng-class="{'active' : addendum.addendumStatus!='Approved'}">
+										ng-class="{'active' : addendum.status!='Approved'}">
 											<div class="progress-bar" 
-												ng-style="{width: progress_bar(addendum.addendumStatus)}"
-												ng-class="{'progress-bar-grey' : addendum.addendumStatus=='Approved', 'progress-bar-lime' : addendum.addendumStatus!='Approved'}">
-											{{progress_bar(addendum.addendumStatus)}}</div>
+												ng-style="{width: progress_bar(addendum.status)}"
+												ng-class="{'progress-bar-grey' : addendum.status=='Approved', 'progress-bar-lime' : addendum.status!='Approved'}">
+											{{progress_bar(addendum.status)}}</div>
 										</div>
 									</dd>
 								</dl>

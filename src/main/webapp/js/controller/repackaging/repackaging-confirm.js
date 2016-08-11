@@ -75,7 +75,6 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		repackagingService.getLatestRepackaging($scope.jobNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.status !="300")
 						$scope.disableButtons = true;
 					else
@@ -84,7 +83,7 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 	}
 	
 	function getRepackagingDetails(showChangesOnly) {
-		console.log("$scope.repackagingId: "+$scope.repackagingId);
+		//console.log("$scope.repackagingId: "+$scope.repackagingId);
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {

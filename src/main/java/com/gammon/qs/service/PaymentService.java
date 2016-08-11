@@ -110,9 +110,9 @@ public class PaymentService{
 	@Autowired
 	private SubcontractDetailHBDao scDetailDao;
 	@Autowired
-	private PaymentCertHBDao scPaymentCertDao;
+	private PaymentCertHBDao paymentCertDao;
 	@Autowired
-	private PaymentCertDetailHBDao scPaymentDetailDao;
+	private PaymentCertDetailHBDao paymentDetailDao;
 	@Autowired
 	private AttachPaymentHBDao paymentAttachmentDao;
 	@Autowired
@@ -256,11 +256,11 @@ public class PaymentService{
 	}
 	
 	public List<PaymentCert> obtainSCPaymentCertListByStatus(String jobNumber, String packageNo, String status, String directPayment) throws DatabaseOperationException{
-		return scPaymentCertDao.obtainSCPaymentCertListByStatus(jobNumber, packageNo, status, directPayment);
+		return paymentCertDao.obtainSCPaymentCertListByStatus(jobNumber, packageNo, status, directPayment);
 	}
 	
 	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, String packageNo) throws DatabaseOperationException{
-		return scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
+		return paymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 	}
 	
 	// add lineType for filtering function in the UI
@@ -268,7 +268,7 @@ public class PaymentService{
 		cachedResults = new ArrayList<PaymentCertDetail>();
 
 		// add wild card
-		cachedResults.addAll(filterbyLineType(scPaymentCertDao.obtainPaymentDetailList(jobNumber, packageNo, paymentCertNo), lineTypeFilter));
+		cachedResults.addAll(filterbyLineType(paymentCertDao.obtainPaymentDetailList(jobNumber, packageNo, paymentCertNo), lineTypeFilter));
 
 		if (cachedResults == null)
 			return null;
@@ -344,8 +344,8 @@ public class PaymentService{
 
 	public PaymentCertViewWrapper calculatePaymentCertificateSummary(String jobNumber, String packageNo, Integer paymentCertNo) throws Exception {
 		PaymentCertViewWrapper result = new PaymentCertViewWrapper();
-		List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailDao.getPaymentDetail(jobNumber, packageNo, paymentCertNo);
-		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
+		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.getPaymentDetail(jobNumber, packageNo, paymentCertNo);
+		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
 		Subcontract scPackage = scPaymentCert.getSubcontract();
 
 		result.setJobNumber(jobNumber);
@@ -397,13 +397,13 @@ public class PaymentService{
 
 		Integer lastPaymentCert = result.getPaymentCertNo() - 1;
 
-		PaymentCert preSCPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, lastPaymentCert);
+		PaymentCert preSCPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, lastPaymentCert);
 
 		if (preSCPaymentCert == null)
 			result.setLessPreviousCertificationsMovement(new Double(0));
 		else {
 			PaymentCertViewWrapper preResult = new PaymentCertViewWrapper();
-			generatePaymentCertPreview(scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(preSCPaymentCert), preResult);
+			generatePaymentCertPreview(paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(preSCPaymentCert), preResult);
 			result.setLessPreviousCertificationsMovement(preResult.getSubTotal5());
 		}
 
@@ -559,7 +559,7 @@ public class PaymentService{
 		logger.info("jobNumber:" + jobNumber + " packageNo:" + packageNo + " approvalDecision:" + approvalDecision);
 
 		// initialization
-		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
+		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 		if (scPaymentCert == null) {
 			logger.info("Latest SCPayment Certificate does not exist! (Job:" + jobNumber + " SC:" + packageNo + ")");
 			return Boolean.FALSE;
@@ -619,7 +619,7 @@ public class PaymentService{
 
 			logger.info("jobNumber: " + jobNumber + " packageNo:" + packageNo + " paymentCertNo:" + paymentCertNo + " certAmount:" + certAmount + " userID:" + userID);
 			JobInfo job = jobHBDaoImpl.obtainJobInfo(jobNumber);
-			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
+			PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
 			String company = paymentCert.getSubcontract().getJobInfo().getCompany();
 			String vendorNo = paymentCert.getSubcontract().getVendorNo();
 			String vendorName = masterListWSDao.getOneVendor(vendorNo).getVendorName();
@@ -664,7 +664,7 @@ public class PaymentService{
 	}
 
 	public PaginationWrapper<PaymentCertDetail> getSCPaymentDetailsOfPackage(String jobNumber, String packageNo, String paymentCertNo, boolean isFullSet) throws Exception {
-		List<PaymentCertDetail> resultList = scPaymentDetailDao.getPaymentDetail(jobNumber, packageNo, new Integer(paymentCertNo));
+		List<PaymentCertDetail> resultList = paymentDetailDao.getPaymentDetail(jobNumber, packageNo, new Integer(paymentCertNo));
 		Collections.sort(resultList, new Comparator<PaymentCertDetail>() {
 
 			public int compare(PaymentCertDetail scPaymentDetails1, PaymentCertDetail scPaymentDetails2) {
@@ -708,7 +708,7 @@ public class PaymentService{
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
 
 		// BEGIN: Get the Payment Cert additional information
-		PaymentCert scpaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
+		PaymentCert scpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
 		Subcontract scPackage = scpaymentCert.getSubcontract();
 
 		MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
@@ -839,7 +839,7 @@ public class PaymentService{
 				logger.info("InvoiceNo. :" + jobNumber + "-" + packageNo + "-" + paymentCertNo);
 
 				PaymentCert scPaymentCert = new PaymentCert();
-				scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
+				scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
 
 				// Only if there is a payment cert
 				if (scPaymentCert != null) {
@@ -1199,7 +1199,7 @@ public class PaymentService{
 			logger.info(e.getLocalizedMessage());
 			throw new DatabaseOperationException("Invalid Payment Cert No");
 		}
-		return scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt);
+		return paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt);
 	}
 
 	public Boolean updateSCPaymentCertStatus(String jobNumber,
@@ -1213,9 +1213,9 @@ public class PaymentService{
 			logger.info(e.getLocalizedMessage());
 			throw new DatabaseOperationException("Invalid Payment Cert No");
 		}
-		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt);
+		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNoInt);
 		scPaymentCert.setPaymentStatus(newValue.trim());
-		scPaymentCertDao.update(scPaymentCert);
+		paymentCertDao.update(scPaymentCert);
 		return Boolean.TRUE;
 	}
 
@@ -1274,7 +1274,7 @@ public class PaymentService{
 			} else if ("all".equals(scStatus))
 				scStatusList = null;
 		}
-		List<PaymentCert> scPaymentList = scPaymentCertDao.obtainDirectPaymentRecords(division, company, jobNumber, vendorNo, packageNo, scStatusList);
+		List<PaymentCert> scPaymentList = paymentCertDao.obtainDirectPaymentRecords(division, company, jobNumber, vendorNo, packageNo, scStatusList);
 
 		List<SCPaymentExceptionalWrapper> resultList = new ArrayList<SCPaymentExceptionalWrapper>();
 		Set<String> accessibleJobList = new HashSet<String>();
@@ -1388,7 +1388,7 @@ public class PaymentService{
 		double cumAmount_CF = 0.0;
 		double cumAmount_MOS = 0.0;
 		double cumAmount_MR = 0.0;
-		List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(scPaymentCert);
+		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(scPaymentCert);
 		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
 			if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_RT += scPaymentDetail.getMovementAmount();
@@ -1490,7 +1490,7 @@ public class PaymentService{
 						scPaymentDetail.setMovementAmount(scPaymentDetail.getCumAmount()-newPostedAmount);
 
 						if(previousPaymentCert!=null){
-							PaymentCertDetail previousSCPaymentDetail = scPaymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
+							PaymentCertDetail previousSCPaymentDetail = paymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
 							if(previousSCPaymentDetail!=null && newPostedAmount!=previousSCPaymentDetail.getCumAmount()){
 								logger.info("J"+scPaymentCert.getJobNo()+" SC"+scPaymentCert.getSubcontract().getPackageNo()+"-"+scPaymentDetail.getLineType()+"-"+scPaymentDetail.getObjectCode()+"-"+scPaymentDetail.getSubsidiaryCode()+" New Posted: "+newPostedAmount+" VS Previous Posted: "+previousSCPaymentDetail.getCumAmount());	
 								scPaymentDetail.setMovementAmount(scPaymentDetail.getCumAmount()-previousSCPaymentDetail.getCumAmount());
@@ -1532,7 +1532,7 @@ public class PaymentService{
 					scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPaymentCert.getJobNo(), scPaymentCert.getSubcontract().getPackageNo());
 					for (PaymentCert searchSCPaymentCert:scPaymentCertList){
 						if (searchSCPaymentCert.getPaymentCertNo().equals(scPaymentCert.getPaymentCertNo()-1)){
-							List<PaymentCertDetail> searchSCPaymentDetailList = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(searchSCPaymentCert);
+							List<PaymentCertDetail> searchSCPaymentDetailList = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(searchSCPaymentCert);
 							for (PaymentCertDetail preSCPaymentDetail:searchSCPaymentDetailList)
 								if ("RT".equals(preSCPaymentDetail.getLineType()))
 									preRTAmount = preSCPaymentDetail.getCumAmount();
@@ -1648,8 +1648,8 @@ public class PaymentService{
 		try {
 
 			paymentAttachmentDao.deleteAttachmentByByPaymentCertID(scPaymentCert.getId());
-			scPaymentDetailDao.deleteDetailByPaymentCertID(scPaymentCert.getId());
-			scPaymentCertDao.deleteById(scPaymentCert.getId());
+			paymentDetailDao.deleteDetailByPaymentCertID(scPaymentCert.getId());
+			paymentCertDao.deleteById(scPaymentCert.getId());
 			
 			//Reset cumCertQuantity in ScDetail
 			List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNo, packageNo);
@@ -1675,7 +1675,7 @@ public class PaymentService{
 		boolean completed = false;
 		
 		try {
-			completed = scPaymentCertDao.callStoredProcedureToUpdateF58011();
+			completed = paymentCertDao.callStoredProcedureToUpdateF58011();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1867,7 +1867,7 @@ public class PaymentService{
 				logger.info("InvoiceNo. :" + splittedTextKey[0].trim() + "-" + packageNo + "-" + paymentCertNo);
 
 				PaymentCert scPaymentCert = new PaymentCert();
-				scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(splittedTextKey[0].trim(), packageNo, Integer.parseInt(paymentCertNo));
+				scPaymentCert = paymentCertDao.obtainPaymentCertificate(splittedTextKey[0].trim(), packageNo, Integer.parseInt(paymentCertNo));
 
 				// Only if there is a payment cert
 				if (scPaymentCert != null) {
@@ -1990,19 +1990,19 @@ public class PaymentService{
 	}
 	
 	public PaymentCert obtainPaymentLatestCert(String jobNumber, String packageNo) throws DatabaseOperationException{
-		return scPaymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
+		return paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
 	}
 	
 	
 	public Double obtainPaymentGstAmount(String jobNo, String subcontractNo, Integer paymentCertNo, String lineType) {
 		Double gstAmount = 0.0;
 		try {
-			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+			PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 			if(paymentCert!=null){
 				if("GP".equals(lineType))
-					gstAmount = scPaymentDetailDao.obtainPaymentGstPayable(paymentCert);
+					gstAmount = paymentDetailDao.obtainPaymentGstPayable(paymentCert);
 				if("GR".equals(lineType))
-					gstAmount = scPaymentDetailDao.obtainPaymentGstReceivable(paymentCert);
+					gstAmount = paymentDetailDao.obtainPaymentGstReceivable(paymentCert);
 			}
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
@@ -2011,19 +2011,22 @@ public class PaymentService{
 	}
 	
 	public List<PaymentCert> getPaymentCertList(String jobNumber, String packageNo) throws DatabaseOperationException {
-		List<PaymentCert> paymeneCertList = scPaymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
+		List<PaymentCert> paymeneCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
 		return paymeneCertList;
 	}
 	
 	public PaymentCert obtainPaymentCertificate(String jobNumber, String packageNo,Integer paymentCertNo) throws DatabaseOperationException{
-		PaymentCert scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
+		PaymentCert scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
 		return scPaymentCert;	
 	}
 	
 	public List<PaymentCertDetail> obtainPaymentDetailList(String jobNumber, String packageNo, Integer paymentCertNo) throws Exception {
-		return scPaymentCertDao.obtainPaymentDetailList(jobNumber, packageNo, paymentCertNo);
+		return paymentCertDao.obtainPaymentDetailList(jobNumber, packageNo, paymentCertNo);
 	}
 	
+	public Double getTotalPostedCertAmount(String jobNo, String subcontractNo) {
+		return paymentCertDao.getTotalPostedCertAmount(jobNo, subcontractNo);
+	}
 		
 // Generate Payment Cert Report
 	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo, boolean addendumIncluded) throws Exception {
@@ -2033,7 +2036,7 @@ public class PaymentService{
 		PaymentCertViewWrapper paymentCertViewWrapper = this.calculatePaymentCertificateSummary(jobNumber, packageNo, Integer.parseInt(paymentCertNo));
 
 		// BEGIN: Get the Payment Cert additional information
-		PaymentCert scpaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
+		PaymentCert scpaymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(paymentCertNo));
 		Subcontract scPackage = scpaymentCert.getSubcontract();
 
 		MasterListVendor companyName = masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(company)).toString().trim()).get(0);
@@ -2132,7 +2135,7 @@ public class PaymentService{
 				return error;
 			}
 
-			PaymentCert latestPaymentCert = scPaymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 			if(latestPaymentCert!=null && !"APR".equals(latestPaymentCert.getPaymentStatus())){
 				error = "Payment number " +latestPaymentCert.getPaymentCertNo()+  " has not completed yet.";
 				return error;
@@ -2161,7 +2164,7 @@ public class PaymentService{
 			newPayment.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
 			newPayment.setCertAmount(0.0);
 			
-			scPaymentCertDao.insert(newPayment);
+			paymentCertDao.insert(newPayment);
 			
 			//2. Generate Payment Details
 			createPaymentDetail(latestPaymentCert, newPayment);
@@ -2229,7 +2232,7 @@ public class PaymentService{
 				PaymentCertDetail scPaymentDetailRT = new PaymentCertDetail();
 				if (scPaymentCert.getPaymentCertNo()>1){
 					try {
-						List<PaymentCertDetail> prePaymentDetailList = scPaymentDetailDao.getPaymentDetail(scPaymentCert.getJobNo(), scPaymentCert.getPackageNo(), scPaymentCert.getPaymentCertNo()-1);
+						List<PaymentCertDetail> prePaymentDetailList = paymentDetailDao.getPaymentDetail(scPaymentCert.getJobNo(), scPaymentCert.getPackageNo(), scPaymentCert.getPaymentCertNo()-1);
 						for (PaymentCertDetail preSCPaymentDetail: prePaymentDetailList)
 							if ("RT".equals(preSCPaymentDetail.getLineType()))
 								preRTAmount = preSCPaymentDetail.getCumAmount();
@@ -2300,7 +2303,7 @@ public class PaymentService{
 				resultList.add(scPaymentDetailGR);
 				
 				for (PaymentCertDetail paymentDetail: resultList){
-					scPaymentDetailDao.insert(paymentDetail);
+					paymentDetailDao.insert(paymentDetail);
 				}
 				return error;
 			}
@@ -2350,7 +2353,7 @@ public class PaymentService{
 			double preRTAmount = 0.0;
 			double preMRAmount = 0.0;
 			if(paymentCertNo > 1){
-				List<PaymentCertDetail> prePaymentDetailList = scPaymentDetailDao.getPaymentDetail(jobNo, subcontractNo, paymentCertNo-1);
+				List<PaymentCertDetail> prePaymentDetailList = paymentDetailDao.getPaymentDetail(jobNo, subcontractNo, paymentCertNo-1);
 				for (PaymentCertDetail preSCPaymentDetail: prePaymentDetailList){
 					if ("RT".equals(preSCPaymentDetail.getLineType()))
 						preRTAmount = preSCPaymentDetail.getCumAmount();
@@ -2362,7 +2365,7 @@ public class PaymentService{
 			if(paymentDetails != null)
 				for(PaymentCertDetail paymentDetail: paymentDetails){
 					if(paymentDetail.getLineType() != "RT" && paymentDetail.getLineType() != "MR" && paymentDetail.getLineType() != "GP" && paymentDetail.getLineType() != "GR"){
-						PaymentCertDetail paymentDetailInDB = 	scPaymentDetailDao.obtainPaymentDetail(paymentCert, paymentDetail.getSubcontractDetail());
+						PaymentCertDetail paymentDetailInDB = 	paymentDetailDao.obtainPaymentDetail(paymentCert, paymentDetail.getSubcontractDetail());
 						
 						if(paymentDetailInDB != null){
 							SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
@@ -2398,7 +2401,7 @@ public class PaymentService{
 	
 							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
 							paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
-							scPaymentDetailDao.update(paymentDetailInDB);	
+							paymentDetailDao.update(paymentDetailInDB);	
 	
 						}
 					}		
@@ -2423,28 +2426,28 @@ public class PaymentService{
 				cumMOSRetention = preMRAmount;
 			}
 			
-			List<PaymentCertDetail> paymentDetailRTList = scPaymentDetailDao.getSCPaymentDetail(paymentCert, "RT");
+			List<PaymentCertDetail> paymentDetailRTList = paymentDetailDao.getSCPaymentDetail(paymentCert, "RT");
 			
 			if(paymentDetailRTList != null && paymentDetailRTList.size()==1){
 				PaymentCertDetail paymentDetailRT = paymentDetailRTList.get(0);
 				paymentDetailRT.setCumAmount(cumRetention);
 				paymentDetailRT.setMovementAmount(cumRetention - preRTAmount);
-				scPaymentDetailDao.update(paymentDetailRT);
+				paymentDetailDao.update(paymentDetailRT);
 			}
 			
-			List<PaymentCertDetail> paymentDetailMRList = scPaymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
+			List<PaymentCertDetail> paymentDetailMRList = paymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
 			if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){
 				PaymentCertDetail paymentDetailMR = paymentDetailMRList.get(0);
 				paymentDetailMR.setCumAmount(cumMOSRetention);
 				paymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
-				scPaymentDetailDao.update(paymentDetailMR);
+				paymentDetailDao.update(paymentDetailMR);
 			}
 			
 			//6. Update Payment Cert Amount
 			double cumAmount = calculatePaymentCertAmount(paymentCert);
 			
 			paymentCert.setCertAmount(cumAmount);
-			scPaymentCertDao.update(paymentCert);
+			paymentCertDao.update(paymentCert);
 
 			//4. Recalculate Subcintract Total Amounts
 			subcontractService.calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
@@ -2463,7 +2466,7 @@ public class PaymentService{
 		double cumAmount_CF = 0.0;
 		double cumAmount_MOS = 0.0;
 		double cumAmount_MR = 0.0;
-		List<PaymentCertDetail> paymentDetailListInDB = scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
+		List<PaymentCertDetail> paymentDetailListInDB = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
 		for (PaymentCertDetail scPaymentDetail: paymentDetailListInDB){
 			if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_RT += scPaymentDetail.getMovementAmount();
@@ -2529,7 +2532,7 @@ public class PaymentService{
 		logger.info("1. Obtain payment certificate");
 		PaymentCert scPaymentCert = null;
 		try {
-			scPaymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+			scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 			error = ("Unable to obtain Payment Certificate \n" +
@@ -2599,7 +2602,7 @@ public class PaymentService{
 				PaymentCertDetail gstPayableInDB = null;
 				PaymentCertDetail gstReceivableInDB = null;
 				try {
-					List<PaymentCertDetail> gstPayableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
+					List<PaymentCertDetail> gstPayableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
 					if (gstPayableList == null || gstPayableList.size() > 1) {
 						error = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
 						return error;
@@ -2610,7 +2613,7 @@ public class PaymentService{
 					else
 						gstPayableInDB = gstPayableList.get(0);
 
-					List<PaymentCertDetail> gstReceivableList = scPaymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
+					List<PaymentCertDetail> gstReceivableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
 					if (gstReceivableList == null || gstReceivableList.size() > 1) {
 						error = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
 						return error;
@@ -2636,7 +2639,7 @@ public class PaymentService{
 					gstPayableInDB.setScSeqNo(100003);
 					gstPayableInDB.setPaymentCert(scPaymentCert);
 					try {
-						scPaymentDetailDao.insert(gstPayableInDB);
+						paymentDetailDao.insert(gstPayableInDB);
 					} catch (DataAccessException e) {
 						e.printStackTrace();
 						error = ("Unable to insert Payment Certificate GST Payable");
@@ -2654,7 +2657,7 @@ public class PaymentService{
 					gstReceivableInDB.setScSeqNo(100004);
 					gstReceivableInDB.setPaymentCert(scPaymentCert);
 					try {
-						scPaymentDetailDao.insert(gstReceivableInDB);
+						paymentDetailDao.insert(gstReceivableInDB);
 					} catch (DataAccessException e) {
 						e.printStackTrace();
 						error = ("Unable to insert Payment Certificate GST Receviable");
@@ -2676,8 +2679,8 @@ public class PaymentService{
 
 				// 5f. Update GST
 				try {
-					scPaymentDetailDao.update(gstPayableInDB);
-					scPaymentDetailDao.update(gstReceivableInDB);
+					paymentDetailDao.update(gstPayableInDB);
+					paymentDetailDao.update(gstReceivableInDB);
 				} catch (DataAccessException e) {
 					e.printStackTrace();
 					error = ("Unable to insert Payment Certificate GST");
@@ -2693,7 +2696,7 @@ public class PaymentService{
 		//5. Update SC Payment Certificate
 		logger.info("4. Update SC Payment Certificate");
 		try {
-			scPaymentCertDao.update(scPaymentCert);
+			paymentCertDao.update(scPaymentCert);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			error = ("Unable to update Payment Certificate \n" +
@@ -2738,7 +2741,7 @@ public class PaymentService{
 				return error;
 			}	
 			
-			PaymentCert paymentCert = scPaymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo.toString(), paymentCertNo);
+			PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo.toString(), paymentCertNo);
 
 			//Validation 3: Payment should be in Pending status
 			if(paymentCert!=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
@@ -2794,7 +2797,7 @@ public class PaymentService{
 					return error;
 				}
 				PaymentCertViewWrapper result = new PaymentCertViewWrapper();
-				generatePaymentCertPreview(scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert), result);
+				generatePaymentCertPreview(paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert), result);
 
 				double totalCertAmount = CalculationUtil.round((result.getSubTotal5() - result.getGstPayableTotal() + result.getLessGSTReceivableTotal()), 2);
 
@@ -2873,7 +2876,7 @@ public class PaymentService{
 				// ValidateBusinessLogicException will be thrown for invalid payment 
 				List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNo, subcontractNo);
 				List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(paymentCert.getSubcontract());
-				if (SCPaymentLogic.ableToSubmit(paymentCert, scPaymentCertList, scDetailsList, scPaymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
+				if (SCPaymentLogic.ableToSubmit(paymentCert, scPaymentCertList, scDetailsList, paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
 					// the currency pass to approval system should be the company base currency
 					currencyCode = getCompanyBaseCurrency(jobNo);
 
@@ -2896,7 +2899,7 @@ public class PaymentService{
 					else
 						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED);
 
-					scPaymentCertDao.updateSCPaymentCert(paymentCert);
+					paymentCertDao.updateSCPaymentCert(paymentCert);
 				} else {
 					error = resultMsg;
 				}
@@ -2922,7 +2925,7 @@ public class PaymentService{
 			return "Invalid payment Cert";
 
 		try {
-			scPaymentCertDao.updateSCPaymentCertAdmin(paymentCert);
+			paymentCertDao.updateSCPaymentCertAdmin(paymentCert);
 		} catch (DatabaseOperationException e) {
 			logger.info(e.getLocalizedMessage());
 			return "Update Failure,please see the log. Log time:" + DateHelper.formatDate(new Date(), "dd/MM/yyyy hh:mm:ss");
@@ -2944,7 +2947,7 @@ public class PaymentService{
 		 */
 		if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobNo())){
 			if(adminServiceImpl.canAccessJob(username, paymentCertWrapper.getJobNo()))
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
 		}else {
@@ -2955,11 +2958,11 @@ public class PaymentService{
 				companyList.add(jobSecurity.getCompany());
 
 			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
+				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
 			}else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
 				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
 			else{
-				paymentCerts = scPaymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
+				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
 			}
 		}
 		
@@ -2981,4 +2984,6 @@ public class PaymentService{
 		Object[] results = {paymentCert, paymentCertDetailList.get(0)};
 		return results;
 	}
+
+	
 }

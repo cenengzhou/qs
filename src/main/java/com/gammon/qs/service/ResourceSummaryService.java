@@ -15,31 +15,32 @@ import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.PaymentCertDetailHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
-import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
-import com.gammon.qs.domain.ResourceSummaryAuditCustom;
-import com.gammon.qs.domain.ResourceSummary;
-import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.ResourceSummaryAuditCustom;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
@@ -1249,6 +1250,10 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryDao.obtainResourceSummariesForIV(job);
 	}
 
+	public List<ResourceSummary> getResourceSummariesForAddendum(String jobNo) throws DataAccessException {
+		return bqResourceSummaryDao.getResourceSummariesForAddendum(jobNo);
+	}
+	
 	
 	public String addResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
 		String result = "";
@@ -1518,7 +1523,8 @@ public class ResourceSummaryService implements Serializable {
 			error = "IV is failed to be posted.";
 		return error;
 	}
-	
+
+
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 	

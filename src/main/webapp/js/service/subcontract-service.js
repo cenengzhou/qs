@@ -1,34 +1,35 @@
 mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
 	// Return public API.
     return({
-    	getSubcontract: 					getSubcontract,
-    	getSubcontractList: 				getSubcontractList,
-    	getWorkScope: 						getWorkScope,
-    	getSCDetails:						getSCDetails,
-    	getSubcontractDetailForWD:			getSubcontractDetailForWD,
-    	getSubcontractDetailsDashboardData:	getSubcontractDetailsDashboardData,
-    	getSubcontractDashboardData:		getSubcontractDashboardData,
-    	getAwardedSubcontractNos:			getAwardedSubcontractNos,
-    	getUnawardedSubcontractNosUnderPaymentRequisition: getUnawardedSubcontractNosUnderPaymentRequisition,
+    	getSubcontract: 									getSubcontract,
+    	getSubcontractList: 								getSubcontractList,
+    	getWorkScope: 										getWorkScope,
+    	getSCDetails:										getSCDetails,
+    	getSubcontractDetailForWD:							getSubcontractDetailForWD,
+    	getSubcontractDetailsDashboardData:					getSubcontractDetailsDashboardData,
+    	getSubcontractDashboardData:						getSubcontractDashboardData,
+    	getAwardedSubcontractNos:							getAwardedSubcontractNos,
+    	getUnawardedSubcontractNosUnderPaymentRequisition: 	getUnawardedSubcontractNosUnderPaymentRequisition,
+    	getDefaultValuesForAddendumDetails:				getDefaultValuesForAddendumDetails,
     	
-    	upateSubcontract: 					upateSubcontract,
-    	upateSubcontractDates: 				upateSubcontractDates,
-    	updateWDandIV:						updateWDandIV,
-    	updateWDandIVByPercent:				updateWDandIVByPercent,
-    	submitAwardApproval:				submitAwardApproval,
-    	recalculateResourceSummaryIV:		recalculateResourceSummaryIV,
+    	upateSubcontract: 									upateSubcontract,
+    	upateSubcontractDates: 								upateSubcontractDates,
+    	updateWDandIV:										updateWDandIV,
+    	updateWDandIVByPercent:								updateWDandIVByPercent,
+    	submitAwardApproval:								submitAwardApproval,
+    	recalculateResourceSummaryIV:						recalculateResourceSummaryIV,
     	
-    	runProvisionPostingManually:		runProvisionPostingManually,
-    	generateSCPackageSnapshotManually: 	generateSCPackageSnapshotManually,
-    	updateF58001FromSCPackageManually: 	updateF58001FromSCPackageManually,
-    	searchSystemConstants:				searchSystemConstants,
-    	updateMultipleSystemConstants:		updateMultipleSystemConstants,
-    	inactivateSystemConstant:			inactivateSystemConstant,
-    	createSystemConstant: 				createSystemConstant,
-    	updateSubcontractAdmin:				updateSubcontractAdmin,
-    	getSubcontractSnapshotList:			getSubcontractSnapshotList,
-    	getProvisionPostingHistList:		getProvisionPostingHistList,
-    	getSCDetailList:					getSCDetailList
+    	runProvisionPostingManually:						runProvisionPostingManually,
+    	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
+    	updateF58001FromSCPackageManually: 					updateF58001FromSCPackageManually,
+    	searchSystemConstants:								searchSystemConstants,
+    	updateMultipleSystemConstants:						updateMultipleSystemConstants,
+    	inactivateSystemConstant:							inactivateSystemConstant,
+    	createSystemConstant: 								createSystemConstant,
+    	updateSubcontractAdmin:								updateSubcontractAdmin,
+    	getSubcontractSnapshotList:							getSubcontractSnapshotList,
+    	getProvisionPostingHistList:						getProvisionPostingHistList,
+    	getSCDetailList:									getSCDetailList
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -170,6 +171,21 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getDefaultValuesForAddendumDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo, 
+            	lineType: lineType
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function upateSubcontract(jobNo, subcontract) {
         var request = $http({

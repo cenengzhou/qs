@@ -23,18 +23,18 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			rowEditWaitInterval :-1,
 			
 			columnDefs: [
-			             { field: 'packageNo', cellClass: "grid-theme-blue", enableCellEdit: true},
+			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "grid-theme-blue", enableCellEdit: true},
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
 			             { field: 'unit',  enableCellEdit: false},
-			             { field: 'quantity', enableCellEdit: false, enableFiltering: false},
-			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
-			             { field: 'amountBudget', displayName: "Amount",  enableCellEdit: false, enableCellEdit: false, enableFiltering: false},
-			             { field: 'postedIvAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false},
+			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'amountBudget', displayName: "Amount",  enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
-			             { field: 'excludeDefect', displayName: "Defect", enableCellEdit: false},
-			             { field: 'excludeLevy', displayName: "Levy", enableCellEdit: false}
+			             { field: 'excludeDefect', displayName: "Defect", enableCellEdit: false, cellFilter: 'mapExclude'},
+			             { field: 'excludeLevy', displayName: "Levy", enableCellEdit: false, cellFilter: 'mapExclude'}
 			             ]
           /* rowTemplate: "<div ng-dblclick=\"grid.appScope.onDblClickRow(row)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" ui-grid-cell></div>",*/
 	};
@@ -132,4 +132,14 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	}
 	
 	
-}]);
+}])
+.filter('mapExclude', function() {
+  var excludeHash = {
+    'true': 'Excluded',
+    'false': 'Included'
+  };
+
+  return function(input) {
+      return excludeHash[input];
+  };
+});

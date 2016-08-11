@@ -37,6 +37,17 @@ import com.gammon.qs.domain.Subcontract;
 public class Addendum extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = -730074274051941598L;
+	
+	//Addendum Status
+	public static final String STATUS_PENDING = "PENDING";
+	public static final String STATUS_SUBMITTED = "SUBMITTED";
+	public static final String STATUS_APPROVED = "APPROVED";
+	
+	//Addendum Approval Status
+	public static final String APPROVAL_STATUS_NA = "N/A";
+	public static final String APPROVAL_STATUS_APPROVED = "APPROVED";
+	public static final String APPROVAL_STATUS_REJECTED = "REJECTED";
+
 	private BigDecimal id;
 	private Subcontract idSubcontract;
 	private String noJob;
@@ -55,9 +66,10 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private Date dateSubmission;
 	private Date dateApproval;
 	private String status;
-	private String statusApproval;
+	private String statusApproval = APPROVAL_STATUS_NA;
 	private String usernamePreparedBy;
 	private String remarks;
+	
 
 	public Addendum() {
 	}

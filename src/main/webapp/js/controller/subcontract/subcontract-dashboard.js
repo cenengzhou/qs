@@ -25,7 +25,6 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.subcontract = data;
 					$scope.revisedSCSum = data.remeasuredSubcontractSum + data.approvedVOAmount;
 
@@ -60,7 +59,6 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		subcontractService.getSubcontractDashboardData($scope.jobNo, $scope.subcontractNo, year)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.length > 0){
 						
 						var certData = null;
@@ -108,8 +106,6 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		subcontractService.getSubcontractDetailsDashboardData($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
-
 					//Chart: Subcontract Details Distribution
 					var barChartJson = {
 							labels : [''],

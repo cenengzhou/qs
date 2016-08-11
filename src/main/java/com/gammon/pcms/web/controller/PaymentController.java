@@ -89,6 +89,18 @@ public class PaymentController {
 		return paymentDetailList;
 	}
 	
+	@RequestMapping(value = "getTotalPostedCertAmount", method = RequestMethod.GET)
+	public Double getTotalPostedCertAmount(@RequestParam(required = true) String jobNo, 
+																	@RequestParam(required = true) String subcontractNo){
+		Double totalPostedCertAmount = null;
+		try{
+			totalPostedCertAmount = paymentService.getTotalPostedCertAmount(jobNo, subcontractNo);
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return totalPostedCertAmount;
+	}
+	
 	@RequestMapping(value = "getPaymentCertSummary", method = RequestMethod.GET)
 	public PaymentCertViewWrapper getSCPaymentCertSummary(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo,

@@ -34,6 +34,15 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 public class AddendumDetail extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = -844399764451138531L;
+
+	public static enum TYPE_HD {
+		HEADER, DETAIL
+	}
+	
+	public static enum TYPE_ACTION {
+		ADD, UPDATE, DELETE
+	}
+
 	private BigDecimal id;
 	private Addendum idAddendum;
 	private String noJob;
@@ -58,7 +67,11 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	private String unit;
 	private String remarks;
 	private BigDecimal idHeaderRef;
-
+	private String codeObjectForDaywork;
+	private String noSubcontractChargedRef;
+	private String typeAction; //ADD, UPDATE, DELETE
+	private BigDecimal idResourceSummary; //ADD, UPDATE, DELETE
+	
 	public AddendumDetail() {
 	}
 
@@ -320,7 +333,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
 	@Column(name = "ID_HEADER_REF", precision = 19, scale = 0)
 	public BigDecimal getIdHeaderRef() {
 		return this.idHeaderRef;
@@ -330,6 +343,42 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.idHeaderRef = idHeaderRef;
 	}
 
+	@Column(name = "NO_SUBCONTRACT_CHARGED_REF", length = 4)
+	public String getNoSubcontractChargedRef() {
+		return noSubcontractChargedRef;
+	}
+
+	public void setNoSubcontractChargedRef(String noSubcontractChargedRef) {
+		this.noSubcontractChargedRef = noSubcontractChargedRef;
+	}
+
+	@Column(name = "CODE_OBJECT_FOR_DAYWORK", length = 6)
+	public String getCodeObjectForDaywork() {
+		return codeObjectForDaywork;
+	}
+
+	public void setCodeObjectForDaywork(String codeObjectForDaywork) {
+		this.codeObjectForDaywork = codeObjectForDaywork;
+	}
+
+	@Column(name = "TYPE_ACTION", length = 10)
+	public String getTypeAction() {
+		return typeAction;
+	}
+
+	public void setTypeAction(String typeAction) {
+		this.typeAction = typeAction;
+	}
+	
+	@Column(name = "ID_RESOURCE_SUMMARY")
+	public BigDecimal getIdResourceSummary() {
+		return idResourceSummary;
+	}
+
+	public void setIdResourceSummary(BigDecimal idResourceSummary) {
+		this.idResourceSummary = idResourceSummary;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -510,5 +559,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 			return false;
 		return true;
 	}
+
+	
+
 
 }

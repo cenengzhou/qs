@@ -13,6 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -444,6 +445,19 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		return completed;
 	}
 	
+	public Double getTotalPostedCertAmount(String jobNo, String subcontractNo) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.createAlias("subcontract","subcontract" );
+		criteria.createAlias("subcontract.jobInfo","jobInfo" );
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+		criteria.add(Restrictions.eq("paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
+		criteria.setProjection(Projections.sum("certAmount"));
+		
+		return criteria.uniqueResult() == null ? 0.0 : (Double) criteria.uniqueResult();
+	}
+	
 	private Date obtainDateStart(Date date) {
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(date);
@@ -467,5 +481,6 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 	public PaymentCertHBDao() {
 		super(PaymentCert.class);
 	}
+
 	
 }

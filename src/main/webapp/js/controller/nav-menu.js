@@ -50,7 +50,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.getCurrentUser();
 
 	
-    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+	$scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     	$scope.currentPath = $location.path();
 	    if($scope.currentPath.indexOf("/job")==0){	
 			$scope.activeMenu = '';
@@ -65,7 +65,6 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		}
 		else if ($scope.currentPath.indexOf("/subcontract")==0){
 			$scope.activeMenu = 'Subcontract';
-			$scope.activeSubcontractSideMenu = $scope.currentPath;
 		}
 		else if ($scope.currentPath.indexOf("/iv")==0){
 			$scope.activeMenu = 'IV';

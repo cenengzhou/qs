@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
+import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.ProvisionPostingHist;
@@ -166,6 +167,20 @@ public class SubcontractController {
 		}
 		return unawardedSubcontractNos;
 	}
+	
+	@RequestMapping(value = "getDefaultValuesForAddendumDetails", method = RequestMethod.GET)
+	public AddendumDetail getDefaultValuesForAddendumDetails(@RequestParam(required =true) String jobNo,
+																	@RequestParam(required =true) String subcontractNo, 
+																	@RequestParam(required =true) String lineType){
+		AddendumDetail addendumDetail = new AddendumDetail();
+		try {
+			addendumDetail = subcontractService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return addendumDetail;
+	}
+	
 	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){

@@ -2,31 +2,28 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
                                    function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter) {
 
 
-	loadPaymentCertList();
-
-
+	loadData();
 
 	$scope.removeDefaultAnimation = function (){
 		$animate.enabled(false);
 	};
 
+	function loadData(){
+		getPaymentCertList();
+		getTotalPostedCertAmount();
+	}
+	
 
-
-	function loadPaymentCertList() {
+	function getPaymentCertList() {
 		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
-					//$scope.payments = data.scPaymentCertWithGSTWrapperList;
+					//console.log(data);
 					$scope.payments = data;
-					//$scope.totalCertificateAmount = data.totalCertificateAmount;
-					//$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.scPackage.paymentTerms);
-
 
 					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
 
 					var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
-					//console.log(obj);
 					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
 					$scope.latestPaymentType = obj[0]['intermFinalPayment'];
 					
@@ -36,6 +33,13 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 				});
 	}
 
+	function getTotalPostedCertAmount() {
+		paymentService.getTotalPostedCertAmount($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.totalCertificateAmount = data;
+				});
+	}
 	
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)

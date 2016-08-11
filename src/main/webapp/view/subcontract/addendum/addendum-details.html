@@ -1,23 +1,81 @@
-
-<!-- Addendum Details  -->
-<div class="animated fadeIn" >
+<!-- Addendum -->
+<div class="animated fadeIn">
 	<div class="row">
-		<div class="col-md-12 m-b-30 m-t-20 ">
-			<div ui-grid="gridOptions" ui-grid-selection class="grid "></div>
+		<div class="col-md-10 col-md-offset-1">
+			<h3 class="form-header form-header-lg m-b-10">
+				<span class="icon text-primary"><i class="fa fa-dollar"></i></span>
+				Addendum Detail
+			</h3>
+
+			<div class="form-group col-md-12">
+				<div class="col-md-8">
+					<label>Addendum Detail Header</label> <input type="text" class="form-control " ng-model="detailHeader.description"/>
+				</div>
+
+				<div class="col-md-2 m-t-20">
+					<button class="btn btn-primary btn-block"
+						ng-click="saveDetailHeader()">
+						<span class="fa fa-save"></span> Save Header
+					</button>
+				</div>
+				<div class="col-md-2 m-t-20">
+					<button class="btn btn-success btn-block"
+						ng-click="deleteDetailHeader()">
+						<span class="fa fa-remove"></span> Delete Header
+					</button>
+				</div>
+			</div>
+
+
+			<div class="col-md-12 m-t-20">
+
+				<div class="col-md-4 col-xs-6">
+					<button type="button" class="btn btn-lg btn-block btn-danger"
+						ng-click="open('noBudget')">
+						<i class="fa fa-plus-circle"></i> <small>Add V1/V2
+							(No Budget)</small>
+					</button>
+				</div>
+
+				<div class="col-md-4 col-xs-6">
+					<button type="button" class="btn btn-lg btn-block btn-danger"
+						ng-click="open('withBudget')">
+						<i class="fa fa-plus-circle"></i> <small>Add V1/V3 (With
+							Budget)</small>
+					</button>
+				</div>
+				
+				<div class="col-md-4 col-xs-6">
+					<button type="button" class="btn btn-lg btn-block btn-warning"
+						ng-click="open('update')">
+						<i class="fa fa-edit"></i> <small>Update Subcontract Detail</small>
+					</button>
+				</div>
+
+				<div class="col-md-12 m-b-30 m-t-20 ">
+					<div ui-grid="gridOptions" ui-grid-selection class="grid "></div>
+				</div>
+
+				<div class="col-md-6 col-xs-6">
+					<button type="button" class="btn btn-lg btn-block btn-primary"
+						ng-click="open('update')">
+						<i class="fa fa-save"></i> <small>Update Detail</small>
+					</button>
+				</div>
+				<div class="col-md-6 col-xs-6">
+					<button type="button" class="btn btn-lg btn-block btn-success"
+						ng-click="open('delete')">
+						<i class="fa fa-remove"></i> <small>Delete Detail</small>
+					</button>
+				</div>
+
+			</div>
+
+
 		</div>
 
-		<div class="col-md-6">
-			<button class="m-t-10 btn btn-primary btn-block"
-				ng-click="edit()" ui-sref="subcontract.addendumDetails.details">
-				<span class="fa fa-arrow-left"></span> Edit
-			</button>
-		</div>
 
-		<div class="col-md-6">
-			<button class="m-t-10 btn btn-primary btn-block" ui-sref="subcontract.addendumDetails.attachment">
-				Next <span class="fa fa-arrow-right"></span>
-			</button>
-		</div>
+
 	</div>
 </div>
 

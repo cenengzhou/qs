@@ -1,20 +1,21 @@
 mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getPaymentCertList: 	getPaymentCertList,
-    	getLatestPaymentCert:	getLatestPaymentCert,
-    	getPaymentCert: 		getPaymentCert,
-    	getPaymentDetailList: 	getPaymentDetailList,
-    	getPaymentCertSummary: 	getPaymentCertSummary, 
-    	getGSTAmount:			getGSTAmount,
-    	createPayment:			createPayment,
-    	updatePaymentCertificate: updatePaymentCertificate,
-    	calculatePaymentDueDate:calculatePaymentDueDate,
-    	updatePaymentDetails:	updatePaymentDetails,
-    	updatePaymentCert:		updatePaymentCert,
-    	submitPayment:			submitPayment,
+    	getPaymentCertList: 		getPaymentCertList,
+    	getLatestPaymentCert:		getLatestPaymentCert,
+    	getPaymentCert: 			getPaymentCert,
+    	getPaymentDetailList: 		getPaymentDetailList,
+    	getPaymentCertSummary: 		getPaymentCertSummary, 
+    	getGSTAmount:				getGSTAmount,
+    	getTotalPostedCertAmount: 	getTotalPostedCertAmount,
+    	createPayment:				createPayment,
+    	updatePaymentCertificate: 	updatePaymentCertificate,
+    	calculatePaymentDueDate:	calculatePaymentDueDate,
+    	updatePaymentDetails:		updatePaymentDetails,
+    	updatePaymentCert:			updatePaymentCert,
+    	submitPayment:				submitPayment,
     	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
-    	runPaymentPosting:		runPaymentPosting,
+    	runPaymentPosting:			runPaymentPosting,
     	obtainPaymentCertificateList:	obtainPaymentCertificateList
     	
     });
@@ -117,6 +118,20 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function getTotalPostedCertAmount(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/payment/getTotalPostedCertAmount",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate) {
         var request = $http({

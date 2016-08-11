@@ -45,6 +45,18 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
+	@RequestMapping(value = "getResourceSummariesForAddendum", method = RequestMethod.GET)
+	public List<ResourceSummary> getResourceSummariesForAddendum(@RequestParam(required =true) String jobNo){
+		List<ResourceSummary> resourceSummaries = null;
+		try {
+			
+			resourceSummaries = resourceSummaryService.getResourceSummariesForAddendum(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return resourceSummaries;
+	}
+	
 	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo 

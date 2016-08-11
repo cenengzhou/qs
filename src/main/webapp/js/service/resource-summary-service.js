@@ -5,6 +5,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 		getResourceSummariesBySC:			getResourceSummariesBySC,
 		getResourceSummariesByAccountCode: 	getResourceSummariesByAccountCode,
 		getResourceSummariesByLineType:		getResourceSummariesByLineType,
+		getResourceSummariesForAddendum:	getResourceSummariesForAddendum,
 		addResourceSummary:					addResourceSummary,
 		updateResourceSummaries:			updateResourceSummaries,
 		deleteResources:					deleteResources,
@@ -22,6 +23,18 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
 				objectCode: objectCode
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getResourceSummariesForAddendum(jobNo) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getResourceSummariesForAddendum",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );

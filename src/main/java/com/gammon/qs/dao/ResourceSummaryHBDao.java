@@ -22,6 +22,7 @@ import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -1592,6 +1593,29 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		catch(HibernateException ex){
 			throw new DatabaseOperationException(ex);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResourceSummary> getResourceSummariesForAddendum(String jobNo) throws DataAccessException{
+		List<ResourceSummary> resourceSummaries = null;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			criteria.add(Restrictions.or(Restrictions.eq("packageNo", "0"), Restrictions.isNull("packageNo")));
+			criteria.add(Restrictions.like("objectCode", "14%"));
+			criteria.add(Restrictions.eq("postedIVAmount", 0.0));
+			
+			criteria.addOrder(Order.asc("objectCode"));
+			criteria.addOrder(Order.asc("subsidiaryCode"));
+			resourceSummaries = criteria.list();
+			return resourceSummaries;
+		}
+		catch(HibernateException ex){
+			ex.printStackTrace();
+		}
+		return resourceSummaries;
 	}
 	
 	@SuppressWarnings("unchecked")

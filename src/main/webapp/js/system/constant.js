@@ -41,6 +41,22 @@ mainApp.constant('GlobalParameter', {
 	        }
 	    }
 	},
+	addendumTypes:[
+	      		{id:"V1", value: "V1 - External VO - No Budget" },
+	      		{id:"V2", value: "V2 - Internal VO - No Budget" },
+	      		{id:"L1", value: "L1 - Claims vs GSL"},
+	      		{id:"L2", value: "L2 - Claims vs other Subcontract"},
+	      		{id:"D1", value: "D1 - Day Work for GCL"},
+	      		{id:"D2", value: "D2 - Day Work for other Subcontract"},
+	      		{id:"CP", value: "CPF"},
+	      		{id:"AP", value: "AP - Advanced Payment"},
+	      		{id:"C1", value: "C1 - Contra Charges by GSL"},
+	      		{id:"C2", value: "C2 - Contra Charges by other SC"},
+	      		{id:"MS", value: "MS - Material On Site"},
+	      		{id:"OA", value: "OA - Other Adjustment"},
+	      		{id:"RA", value: "RA - Retention Adjustment"},
+	      		{id:"RR", value: "RR - Release Retention"}
+	      	],
 	paymentTerms:[
 		{id:"QS0", value: "QS0 - Manual Input Due Date"},
 		{id:"QS1", value: "QS1 - Pay when Paid + 7 days"},
@@ -73,7 +89,7 @@ mainApp.constant('GlobalParameter', {
 		{id:100, value:'100 - SC Created'},
 		{id:160, value:'160 - TA Analysis Ready'},
 		{id:330, value:'330 - Award Request Submitted'},
-		{id:550, value:'550 - SC Awarded'}
+		{id:500, value:'500 - SC Awarded'}
 	],
 	packageStatus: [
 		{id:100, value:'100 - SC Created'},
