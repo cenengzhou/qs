@@ -197,19 +197,19 @@
 						<div class="tab-content">
 							<ul class="nav nav-tabs" role="tablist">
 								<li class="width-half active"><a href
-									data-target="#AccountCodeObjectCode" data-toggle="tab"
+									data-target="#AccountCodeObjectCode" data-toggle="tab" 
 									target="_self" ng-click="showCodePanel('Object')" ng-init="showSubsidiaryCode=false">Object Code</a></li>
 									
 								<li class="width-half"><a href
-									data-target="#AccountCodeSubsidiaryCode" data-toggle="tab"
+									data-target="#AccountCodeSubsidiaryCode" data-toggle="tab" 
 									target="_self" ng-click="showCodePanel('Subsidiary')" ng-init="showObjectCode=false">Subsidiary Code</a></li>
 							</ul>
 							<div class="tab-pane active" id="AccountCodeObjectCode">
-								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
+								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 							<div class="tab-pane" id="AccountCodeSubsidiaryCode">
-							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
+							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 						</div>
@@ -218,7 +218,7 @@
 				<div class="tab-pane box box-primary" id="AddressBook">
 					<ul class="nav">
 						<div class="tab-content">
-								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-resize-columns class="grid"
+								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(120)"></div>
 						</div>
 					</ul>

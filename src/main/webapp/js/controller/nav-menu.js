@@ -10,24 +10,39 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/' //<= require login
 //	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.user = {name:'No one'};
-	
+	$scope.objectLoaded = false;
+	$scope.subsidiaryLoaded = false;
+	$scope.addressLoaded = false;
+	$scope.subAccountPanel = 'Object';
 	$scope.showCodePanel = function(panel){
 		$scope.showObjectCode = false;
 		$scope.showSubsidiaryCode=false;
 		$scope.showAddressBook=false;
+		
 		switch(panel){
 		case 'Address':
+			$scope.AddressBookloadGridData();
 			$scope.showAddressBook = true;
 			break;
 		case 'Object':
+			$scope.ObjectCodeloadGridData();
 			$scope.showObjectCode = true;
+			$scope.subAccountPanel = 'Object';
 			break;
 		case 'Subsidiary':
+			$scope.SubsidiaryCodeloadGridData();
 			$scope.showSubsidiaryCode = true;
+			$scope.subAccountPanel = 'Subsidiary';
 			break;
 		case 'Account':
-			$scope.showObjectCode = true;
-			$scope.showSubsidiaryCode = true;
+			if($scope.subAccountPanel === 'Object'){
+				$scope.ObjectCodeloadGridData();
+				$scope.showObjectCode = true;
+			}
+			if($scope.subAccountPanel === 'Subsidiary'){
+				$scope.SubsidiaryCodeloadGridData();
+				$scope.showSubsidiaryCode = true;
+			}
 			break;
 		}
 	}
@@ -106,7 +121,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.ObjectCodeGridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
-			enableGridMenu : false,
+			enableGridMenu : true,
+			exporterMenuPdf: false,
 			enableRowSelection: false,
 			enableSelectAll: false,
 			enableFullRowSelection: false,
@@ -127,24 +143,25 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.ObjectCodeloadGridData = function(){
-//		$scope.blockEnquiryClient.start('Loading...')
+		if($scope.objectLoaded === false){
 			masterListService.searchObjectList('*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.ObjectCodeGridOptions.data = data;
-//					$scope.blockEnquiryClient.stop();
+					$scope.objectLoaded = true;
 				}
 		}, function(data){
-//			$scope.blockEnquiryClient.stop();
 //			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-		})
+		});
+		}
 
 	}
 	
 	$scope.SubsidiaryCodeGridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
-			enableGridMenu : false,
+			enableGridMenu : true,
+			exporterMenuPdf: false,
 			enableRowSelection: false,
 			enableSelectAll: false,
 			enableFullRowSelection: false,
@@ -165,23 +182,24 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.SubsidiaryCodeloadGridData = function(){
-//		$scope.blockEnquiryClient.start('Loading...')
+		if($scope.subsidiaryLoaded === false){
 			masterListService.searchSubsidiaryList('*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.SubsidiaryCodeGridOptions.data = data;
-//					$scope.blockEnquiryClient.stop();
+					$scope.subsidiaryLoaded = true;
 				}
 		}, function(data){
-//			$scope.blockEnquiryClient.stop();
 //			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-		})
+		});
+		}
 	}
 	
 	$scope.AddressBookGridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
-			enableGridMenu : false,
+			enableGridMenu : true,
+			exporterMenuPdf: false,
 			enableRowSelection: false,
 			enableSelectAll: false,
 			enableFullRowSelection: false,
@@ -203,14 +221,17 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.AddressBookloadGridData = function(){
+		if($scope.addressLoaded === false){
 			adlService.getAddressBookListOfSubcontractorAndClient()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.AddressBookGridOptions.data = data;
+					$scope.addressLoaded = true;
 				}
 		}, function(data){
 //			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-		})
+		});
+		}
 	}
 
 	//	$scope.filter = function() {
@@ -218,8 +239,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 //		$scope.SubsidiaryCodeGridApi.grid.refresh();
 //	};
 	
-	$scope.ObjectCodeloadGridData();
-	$scope.SubsidiaryCodeloadGridData();
-	$scope.AddressBookloadGridData();
+//	$scope.ObjectCodeloadGridData();
+//	$scope.SubsidiaryCodeloadGridData();
+//	$scope.AddressBookloadGridData();
 	
 }]);
