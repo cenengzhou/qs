@@ -113,8 +113,10 @@
 				</div>
 			</div>
 		</div>
-
+</div>
+<div class="row">
 		<div class="col-md-4">
+		<div>
 			<div class="box">
 				<div class="box box-info">
 					<div class="box-header with-border">
@@ -151,10 +153,8 @@
 				</div>
 			</div>
 		</div>
-
-
 		<!-- Remark -->
-		<div class="col-md-4">
+		<div>
 			<div class="box box-warning">
 				<div class="box-header with-border">
 					<h3 class="box-title">Remarks</h3>
@@ -188,52 +188,67 @@
 			</div>
 			<!-- /.box -->
 		</div>
-
+	</div>
+				
 		<!-- Attachment -->
-		<div class="col-md-4 animated fadeIn">
-			<div class="box">
-				<div class="box-header with-border">
-					<h3 class="box-title">Attachment</h3>
+		<div class="col-md-8 animated fadeIn">
 
-					<div class="box-tools pull-right">
-						<button type="button" class="btn btn-box-tool"
-							data-widget="collapse">
-							<i class="fa fa-minus"></i>
-						</button>
+                   <div class="panel panel-primary">
+				    <div class="panel-heading">Attachment</div>
+				    <div class="panel-body" style="padding:0 !important">
+					<div class="table-responsive" resize ng-style="resizeWithOffset(480)">
+					<form class="form" role="form" id="attachmentForm">
+                        <table class="table table-hover ">
+                            <thead>
+								<tr class="primary">
+									<th>No.</th>
+									<th>File name</th>
+									<th>Type</th>
+									<th>Created By</th>
+								</tr>
+                            </thead>
+                            <tbody>
+								<tr ng-repeat="attach in repackagingAttachments"" style="cursor: pointer">
+									<td>
+									<label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
+									<input type="checkbox" id="fileRadiobox-{{$index}}" ng-change="checkSelected()" name="fileRadiobox-{{$index}}" ng-model="attach.selectedAttachement">
+									</td>
+									<td ng-click="attachmentClick()">{{attach.fileName}}</td>
+									<td ng-click="attachmentClick()"><span class="{{attach.fileIconClass}}"></span></td>
+									<td ng-click="attachmentClick()"><img class="rounded-corner" height="30" width="30" data-ng-src="{{attach.user.userIcon}}"> {{attach.user.UserName}}</td>
+								</tr>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
 					</div>
-				</div>
+				    <div class="panel-footer">
 
-				<div class="box-body">
-					<!-- ng-style="{height: 90 + 'px'}" -->
-					<div class="well">
-						<form action="" class="dropzone" id="dropzone" style="min-height: 90px !important;padding:0;margin:0">
-							<div class="dz-default">
-								<div class="dz-message" style="width:100%;height:105px;background-position: 0 0;background-size: 370px;background-image: url('plugins/images/spritemap.png');background-repeat: no-repeat"></div>
-							</div>
-						</form>
+					
+			<table class="col-md-12">
+			<tr>
+				<td><form name="uploadAttachmentFiles" id="uploadAttachmentFiles" ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
+					<label class="btn btn-block btn-primary">
+					<i class="glyphicon glyphicon-upload"></i> Upload File Attachment&hellip;
+					<input style="display: none;" class="form-control file-loading" type="file" name="files" id="attachmentFiles" ng-model="attachmentFiles"
+						onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)" multiple/>
+					</label></form>
+				</td>
+				<td ng-show="selectedAttachement">
+					<label class="btn btn-block btn-danger" ng-click="deleteAttachment()" ng-disabled="!selectedAttachement">
+						<i class="glyphicon glyphicon-remove-circle"></i> Delete selected Item</label>
+				</td>
+				<td>
+					<button
+						class="btn btn-block btn-info"
+						ng-click="addTextAttachment()"><i class="glyphicon glyphicon-plus-sign"></i> Add Text Attachment</button>
+				</td>
+			</tr>
+		</table>
+					
+			
 					</div>
-					<div class="pull-right">
-						<button class="btn btn-success" ng-click="uploadFile()">Upload
-							File</button>
-						<button class="btn btn-danger" ng-click="reset()">Reset
-							Dropzone</button>
-					</div>
-					<div>
-						<form>
-							<label>File to download</label> <input ng-model="filename"
-								type="text" placeholder="Filename" /> <a
-								class="btn btn-primary"
-								ng-href="{{ partialDownloadLink + filename }}">Download File</a>
-						</form>
-					</div>
-				</div>
-
-				<div class="box-footer">
-					<!-- <a class="btn btn-twitter btn-block" ui-sref="cert-all-details">Upload <i class="fa fa-save"></i></a> -->
-				</div>
-			</div>
+ 					</div>
 		</div>
-
-
 	</div>
 </div>

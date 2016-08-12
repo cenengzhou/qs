@@ -19,14 +19,14 @@ public class AttachRepackagingHBDao extends BaseHibernateDao<AttachRepackaging> 
 	@SuppressWarnings("unchecked")
 	public List<AttachRepackaging> getRepackagingAttachments(Repackaging repackagingEntry) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("repackagingEntry", repackagingEntry));
+		criteria.add(Restrictions.eq("repackaging", repackagingEntry));
 		criteria.addOrder(Order.asc("sequenceNo"));
 		return criteria.list();
 	}
 	
 	public AttachRepackaging getRepackagingAttachment(Long repackagingEntryID, Integer sequenceNo) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("repackagingEntry.id", repackagingEntryID));
+		criteria.add(Restrictions.eq("repackaging.id", repackagingEntryID));
 		criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 		return (AttachRepackaging) criteria.uniqueResult();
 	}

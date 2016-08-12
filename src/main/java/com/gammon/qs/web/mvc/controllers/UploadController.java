@@ -421,40 +421,40 @@ public class UploadController {
 		}
 	}
 	
-	@RequestMapping(value = "/gammonqs/repackagingAttachmentUpload.smvc", method = RequestMethod.POST)
-	public void uploadRepackingAttachment(@RequestParam(required = true, value = "repackagingEntryID") String repackagingEntryID, 
-								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
-								@RequestParam("files") List<MultipartFile> multipartFiles,
-								HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.info("Upload Repacking Attachment - START");
-		
-		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
-		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
-
-//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
-
-
-		for (MultipartFile multipartFile : multipartFiles) {
-			
-			byte[] file = multipartFile.getBytes();
-			if (file != null) {
-//				Integer seqNo = attachmentRepository.addFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo), multipartFile.getOriginalFilename(), file);
-				Integer seqNo = attachmentRepository.addRepackagingFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo), multipartFile.getOriginalFilename(), file);
-
-				Map<String, Object> resultMap = new HashMap<String, Object>();
-				if(seqNo != null){
-					resultMap.put("success", Boolean.TRUE);
-					resultMap.put("fileName", multipartFile.getOriginalFilename());
-				}
-				else{
-					resultMap.put("success", Boolean.FALSE);
-				}
-//				response.setContentType("text/html");
-				response.getWriter().print((new Gson()).toJson(resultMap));
-				logger.info("Upload Repacking Attachment -END");
-			}
-		}
-	}
+//	@RequestMapping(value = "/gammonqs/repackagingAttachmentUpload.smvc", method = RequestMethod.POST)
+//	public void uploadRepackingAttachment(@RequestParam(required = true, value = "repackagingEntryID") String repackagingEntryID, 
+//								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
+//								@RequestParam("files") List<MultipartFile> multipartFiles,
+//								HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		logger.info("Upload Repacking Attachment - START");
+//		
+//		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+//		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+//
+////		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//
+//
+//		for (MultipartFile multipartFile : multipartFiles) {
+//			
+//			byte[] file = multipartFile.getBytes();
+//			if (file != null) {
+////				Integer seqNo = attachmentRepository.addFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo), multipartFile.getOriginalFilename(), file);
+//				Integer seqNo = attachmentRepository.addRepackagingFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo), multipartFile.getOriginalFilename(), file);
+//
+//				Map<String, Object> resultMap = new HashMap<String, Object>();
+//				if(seqNo != null){
+//					resultMap.put("success", Boolean.TRUE);
+//					resultMap.put("fileName", multipartFile.getOriginalFilename());
+//				}
+//				else{
+//					resultMap.put("success", Boolean.FALSE);
+//				}
+////				response.setContentType("text/html");
+//				response.getWriter().print((new Gson()).toJson(resultMap));
+//				logger.info("Upload Repacking Attachment -END");
+//			}
+//		}
+//	}
 	
 	@RequestMapping(value = "/gammonqs/scAttachmentUpload.smvc", method = RequestMethod.POST)
 	public void uploadSCAttachment(@RequestParam(required = true, value = "jobNumber") String jobNumber,

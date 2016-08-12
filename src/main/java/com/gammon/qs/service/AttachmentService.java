@@ -150,7 +150,7 @@ public class AttachmentService {
 		return sequenceNo;
 	}
 
-	public Integer addRepackagingTextAttachment(Long repackagingEntryID, Integer sequenceNo, String fileName)
+	public Integer addRepackagingTextAttachment(Long repackagingEntryID, Integer sequenceNo, String fileName, String textAttachment)
 			throws Exception{
 		if(repackagingEntry == null || !repackagingEntry.getId().equals(repackagingEntryID))
 			repackagingEntry = repackagingEntryDao.getRepackagingEntryWithJob(repackagingEntryID);
@@ -159,6 +159,7 @@ public class AttachmentService {
 		attachment.setSequenceNo(sequenceNo);
 		attachment.setFileName(fileName);
 		attachment.setDocumentType(AttachRepackaging.TEXT);
+		attachment.setTextAttachment(textAttachment);
 		repackagingAttachmentDao.saveOrUpdate(attachment);
 		return sequenceNo;
 	}
@@ -213,11 +214,12 @@ public class AttachmentService {
 		return repackagingAttachmentDao.getRepackagingAttachments(repackagingEntry);
 	}
 
-	public Boolean saveRepackagingTextAttachment(Long repackagingEntryID, Integer sequenceNo, String content) throws Exception {
+	public Boolean saveRepackagingTextAttachment(Long repackagingEntryID, Integer sequenceNo, String fileName, String textAttachment) throws Exception {
 		AttachRepackaging attachment = repackagingAttachmentDao.getRepackagingAttachment(repackagingEntryID, sequenceNo);
 		if(attachment == null)
 			return Boolean.FALSE;
-		attachment.setTextAttachment(content);
+		attachment.setTextAttachment(textAttachment);
+		attachment.setFileName(fileName);
 		repackagingAttachmentDao.saveOrUpdate(attachment);
 		return Boolean.TRUE;
 	}

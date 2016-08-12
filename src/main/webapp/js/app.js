@@ -1,5 +1,5 @@
 var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize',
-                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery',
+                                     'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery', 'ui.tinymce',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping']);  
 
 
@@ -681,6 +681,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', functio
                            'js/controller/repackaging/repackaging.js',
                            'js/service/repackaging-service.js',
                            'js/controller/repackaging/repackaging-confirm.js',
+                           'js/controller/repackaging/repackaging-textattachment.js',
                            'js/service/attachment-service.js'
                     ] 
                 });

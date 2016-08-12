@@ -4,9 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import com.gammon.qs.application.BasePersistedObject;
+import com.gammon.qs.application.BasePersistedAuditObject;
 @MappedSuperclass
-public abstract class AbstractAttachment extends BasePersistedObject {
+public abstract class AbstractAttachment extends BasePersistedAuditObject {
 	private static final long serialVersionUID = -6618718965182740034L;
 	public static final String SCPaymentNameObject = "GT58012";
 	public static final String SCPackageNameObject = "GT58010";

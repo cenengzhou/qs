@@ -655,42 +655,42 @@ public class DownloadController{
 		}
 	}
 	
-	@RequestMapping(value="/gammonqs/repackagingAttachmentDownload.smvc",method=RequestMethod.GET)
-	public void generateRepackingAttachment(@RequestParam(required=true,value="repackagingEntryID") String repackagingEntryID,
-															@RequestParam(required=true,value="sequenceNo") String sequenceNo,
-															HttpServletRequest request, HttpServletResponse response ){		
-				
-		logger.info("generateMainCertificateAttachment");
-
-		try {
-			
-			AttachmentFile attachementFile = attachmentService.getRepackagingFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo));
-
-			if (attachementFile != null) {
-				byte[] file = attachementFile.getBytes();
-				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-				response.setContentLength(file.length);
-				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachementFile.getFileName() + "\"");
-
-				response.getOutputStream().write(file);
-				response.getOutputStream().flush();
-			} else{
-				showAttachmentError(response);
-			}			
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showAttachmentError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	} 
-	
+//	@RequestMapping(value="/gammonqs/repackagingAttachmentDownload.smvc",method=RequestMethod.GET)
+//	public void generateRepackingAttachment(@RequestParam(required=true,value="repackagingEntryID") String repackagingEntryID,
+//															@RequestParam(required=true,value="sequenceNo") String sequenceNo,
+//															HttpServletRequest request, HttpServletResponse response ){		
+//				
+//		logger.info("generateMainCertificateAttachment");
+//
+//		try {
+//			
+//			AttachmentFile attachementFile = attachmentService.getRepackagingFileAttachment(new Long(repackagingEntryID), Integer.valueOf(sequenceNo));
+//
+//			if (attachementFile != null) {
+//				byte[] file = attachementFile.getBytes();
+//				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+//				response.setContentLength(file.length);
+//				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachementFile.getFileName() + "\"");
+//
+//				response.getOutputStream().write(file);
+//				response.getOutputStream().flush();
+//			} else{
+//				showAttachmentError(response);
+//			}			
+//		} catch (Exception e) {
+//			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+//			e.printStackTrace();
+//			logger.info("Error: "+e.getLocalizedMessage());
+//			showAttachmentError(response);
+//		} finally{
+//			try {
+//				response.getOutputStream().close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	} 
+//	
 	@RequestMapping(value="/gammonqs/scAttachmentDownload.smvc",method=RequestMethod.GET)
 	public void generateSCAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
 															@RequestParam(required=true,value="textKey") String textKey,
