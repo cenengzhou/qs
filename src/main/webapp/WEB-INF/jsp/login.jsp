@@ -101,7 +101,7 @@ if(new String(window.location).indexOf("/login.htm")<0){
 
 			<br>
 			<div align="center">
-				<a href="" class="text-center">Create account</a> or <a href="#">Forgot
+				<a href="http://gammon/BMS/Project%20Delivery/PDS%2018%20IMS%20Final%20Documents/PDS_18%20Form%201%20User%20Account%20Administration%20Form.pdf" class="text-center">Create account</a> or <a href="https://eportal.gammonconstruction.com/WindowsAccountSelfService/">Forgot
 					password</a>
 			</div>
 		</div>

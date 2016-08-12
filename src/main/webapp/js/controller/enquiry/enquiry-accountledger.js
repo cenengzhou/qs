@@ -119,7 +119,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 	$scope.searchTypeLedger = 'AA';
 	$scope.searchFromYearMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
 	$scope.searchToYearMonth = moment().format('YYYY-MM');
-	$scope.searchTypeDocument = '';
+	$scope.searchTypeDocument = 'PS';
 	$scope.searchCodeObject = ''
 	$scope.loadGridData = function(){
 		$scope.searchFrom = $scope.searchFromYearMonth.split('-');
