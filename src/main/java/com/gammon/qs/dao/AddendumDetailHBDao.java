@@ -30,7 +30,25 @@ public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 
 		return (AddendumDetail) criteria.uniqueResult();
 	}
+	
+	public AddendumDetail getAddendumDetail(BigDecimal id) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("id", id));
 
+		return (AddendumDetail) criteria.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(String noJob, String noSubcontract, Long addendumNo) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noJob", noJob));
+		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.eq("no", addendumNo));
+		criteria.add(Restrictions.isNull("idHeaderRef"));
+		criteria.add(Restrictions.eq("typeHd", AddendumDetail.TYPE_HD.DETAIL.toString()));
+		return criteria.list();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<AddendumDetail> getAddendumDetailsByHeaderRef(BigDecimal addendumDetailHeaderRef) throws DataAccessException{
 		Criteria criteria = getSession().createCriteria(this.getType());
@@ -51,12 +69,12 @@ public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 		return criteria.list();
 	}
 
-
-
+	
 
 	public AddendumDetailHBDao() {
 		super(AddendumDetail.class);
 	}
+
 
 
 }

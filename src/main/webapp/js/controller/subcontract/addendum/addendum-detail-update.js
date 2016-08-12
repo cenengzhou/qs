@@ -7,7 +7,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 
-	getSCDetails();
+	getSCDetailForAddendumUpdate();
 
 	$scope.gridOptions = {
 			enableSorting: true,
@@ -22,8 +22,8 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			showColumnFooter : true,
 			//fastWatch : true,
 
-			enableCellEditOnFocus : true,
-
+			exporterMenuPdf: false,
+			
 			//Single Filter
 			onRegisterApi: function(gridApi){
 				$scope.gridApi = gridApi;
@@ -71,8 +71,8 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			
 	};
 
-	function getSCDetails() {
-		subcontractService.getSCDetails(jobNo, subcontractNo)
+	function getSCDetailForAddendumUpdate() {
+		subcontractService.getSCDetailForAddendumUpdate(jobNo, subcontractNo)
 		.then(
 				function( data ) {
 					$scope.gridOptions.data = data;
@@ -83,7 +83,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 		if(subcontractNo!="" && subcontractNo!=null){
 			var dataRows = $scope.gridApi.selection.getSelectedRows();
 			if(dataRows.length == 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to insert addendum.");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to update addendum.");
 				return;
 			}
 			

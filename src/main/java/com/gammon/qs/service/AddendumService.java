@@ -26,6 +26,7 @@ import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.JobInfo;
@@ -56,6 +57,8 @@ public class AddendumService{
 	@Autowired
 	private SubcontractDetailHBDao subcontractDetailHBDao;
 	@Autowired
+	private ResourceSummaryHBDao resourceSummaryHBDao;
+	@Autowired
 	private SubcontractService subcontractService;
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;
@@ -67,7 +70,7 @@ public class AddendumService{
 	private AccountCodeWSDao accountCodeWSDao;
 	@Autowired
 	private MasterListService masterListService;
-	
+
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
 	public Addendum getLatestAddendum(String noJob, String noSubcontract) {
@@ -96,7 +99,16 @@ public class AddendumService{
 	}
 
 	public List<AddendumDetail> getAllAddendumDetails(String jobNo, String subcontractNo, Long addendumNo) {
-		return addendumDetailHBDao.getAllAddendumDetails(jobNo, subcontractNo, addendumNo);
+		List<AddendumDetail> list = addendumDetailHBDao.getAllAddendumDetails(jobNo, subcontractNo, addendumNo);
+		for(AddendumDetail a : list){
+			logger.info("Amount TBA: "+a.getAmtAddendumTba() +" - "+ "Amount Budget TBA: "+a.getAmtBudgetTba()+"-"+"Rate TBA: "+a.getRateAddendumTba()+"-"+"QUantity TBA: "+a.getQuantityTba());
+			
+		}
+		return list;
+	}
+
+	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(String jobNo, String subcontractNo, Long addendumNo) {
+		return addendumDetailHBDao.getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, addendumNo);
 	}
 
 	public String createAddendum(Addendum addendum) {
@@ -178,6 +190,12 @@ public class AddendumService{
 		try {
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetailHeaderRef);
 			addendumDetailHBDao.delete(addendumDetailHeader);
+
+			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
+			for(AddendumDetail addendumDetail: addendumDetailList){
+				addendumDetail.setIdHeaderRef(null);
+				addendumDetailHBDao.update(addendumDetail);
+			}
 		} catch (DataAccessException e) {
 			error = "Addendum Detail Header cannot be deleted.";
 			e.printStackTrace();
@@ -188,9 +206,13 @@ public class AddendumService{
 		return error;
 	}
 
-	public String createAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
+	public String addAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
 		String error = "";
 		try {
+			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetail.getIdHeaderRef());
+			addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
+			addendumDetailHBDao.update(addendumDetailHeader);
+
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
 			addendumDetail.setNoJob(noJob);
 			addendumDetail.setNoSubcontract(noSubcontract);
@@ -198,13 +220,13 @@ public class AddendumService{
 			addendumDetail.setIdAddendum(addendum);
 			addendumDetail.setTypeHd(AddendumDetail.TYPE_HD.DETAIL.toString());
 			addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.ADD.toString());
-			
+
 			if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
 				addendumDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
 			}
-			
+
 			error = addVOValidate(addendumDetail);
-			
+
 			if(error == null || error.length()==0){
 				accountCodeWSDao.createAccountCode(addendumDetail.getNoJob(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary());
 				addendumDetailHBDao.insert(addendumDetail);
@@ -215,7 +237,155 @@ public class AddendumService{
 		}
 		return error;
 	}
-	
+
+
+
+	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) {
+		String error = "";
+
+		try {
+			//Step 1: Check if any approval existed
+			String ableToSubmitAddendum = ableToSubmitAddendum(jobNo, subcontractNo);
+			if (ableToSubmitAddendum !=null){
+				error= "Subcontract "+subcontractNo+" cannot add new line (" +ableToSubmitAddendum +")";
+				logger.info(error);
+				return error;
+			}
+
+			JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
+
+			//Step 2 : Validation
+			//Validation 2.1: Repackaging status !=900
+			Repackaging repackaging = repackagingService.getLatestRepackaging(job);
+			if("900".equals(repackaging.getStatus())){
+				error = "This entry has already been confirmed";
+				logger.info(error);
+				return error;
+			}
+
+			//Validation 2.2: No duplicate resources made
+			error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
+			if(error!= null && error.length()>0){
+				logger.info(error);
+				return error;
+			}
+			List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
+			for(ResourceSummary resourceSummary: resourceSummaryList){
+				Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
+
+				String lineType = "";
+				if ("VO".equals(resourceSummary.getResourceType()))
+					lineType = "V1";
+				else
+					lineType = "V3";
+
+				AddendumDetail addendumDetail = subcontractService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
+				addendumDetail.setNoJob(jobNo);
+				addendumDetail.setNoSubcontract(subcontractNo);
+				addendumDetail.setNo(addendumNo);
+				addendumDetail.setIdAddendum(addendum);
+				addendumDetail.setTypeHd(AddendumDetail.TYPE_HD.DETAIL.toString());
+				addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.ADD.toString());
+				addendumDetail.setIdHeaderRef(idHeaderRef);
+
+				if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
+					addendumDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
+				}else
+					addendumDetail.setDescription(addendumDetail.getDescription());
+
+				addendumDetail.setIdResourceSummary(new BigDecimal(resourceSummary.getId()));
+				addendumDetail.setUnit(resourceSummary.getUnit());
+				addendumDetail.setCodeObject(resourceSummary.getObjectCode());
+				addendumDetail.setCodeSubsidiary(resourceSummary.getSubsidiaryCode());
+				addendumDetail.setAmtAddendumTba(new BigDecimal(resourceSummary.getAmountBudget()));
+				addendumDetail.setRateAddendumTba(new BigDecimal(resourceSummary.getRate()));
+				addendumDetail.setQuantityTba(new BigDecimal(resourceSummary.getQuantity()));
+				addendumDetail.setAmtBudgetTba(new BigDecimal(resourceSummary.getAmountBudget()));
+				addendumDetail.setRateBudgetTba(new BigDecimal(resourceSummary.getRate()));
+
+				error = addVOValidate(addendumDetail);
+				if (error==null){
+					accountCodeWSDao.createAccountCode(jobNo, addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary());
+				}else
+					return error;
+				addendumDetailList.add(addendumDetail);
+			}
+
+			
+			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(idHeaderRef);
+			addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
+			addendumDetailHBDao.update(addendumDetailHeader);
+			
+			for (AddendumDetail addendumDetail: addendumDetailList){
+				addendumDetailHBDao.insert(addendumDetail);
+			}
+
+			resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
+		} catch (Exception e) {
+			error = "Addendum detail cannot be created from Resource Summary.";
+			e.printStackTrace();
+		}
+		return error;
+
+	}
+
+	public String deleteAddendumDetail(String jobNo, String subcontractNo, List<AddendumDetail> addendumDetailList) {
+		String error = "";
+		List<ResourceSummary> resourceSummaryList = new ArrayList<ResourceSummary>();
+		Repackaging repackaging = null;
+		try {
+			//Step 1: Check if any approval existed
+			String ableToSubmitAddendum = ableToSubmitAddendum(jobNo, subcontractNo);
+			if (ableToSubmitAddendum !=null){
+				error= "Addendum cannot be removed. " +ableToSubmitAddendum +")";
+				return error;
+			}
+
+			for(AddendumDetail addendumDetail: addendumDetailList){
+				//Delete V1/V2 without budget
+				if(addendumDetail.getRateBudgetTba().doubleValue()== 0){
+					AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
+					addendumDetailHBDao.delete(addendumDetailInDB);
+				}
+				//Delete V1/V3 with budget
+				else{
+					JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
+
+					//Step 2 : Validation
+					//Validation 2.1: Repackaging status !=900
+					repackaging = repackagingService.getLatestRepackaging(job);
+					if("900".equals(repackaging.getStatus())){
+						error = "This entry has already been confirmed";
+						logger.info(error);
+						return error;
+					}
+
+					//Validation 2.2: No duplicate resources made
+					ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
+					resource.setPackageNo(null);
+
+					resourceSummaryList.add(resource);
+					error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
+					if(error!= null && error.length()>0){
+						logger.info(error);
+						return error;
+					}
+
+					AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
+					addendumDetailHBDao.delete(addendumDetailInDB);
+				}
+			}
+			if(repackaging!= null && resourceSummaryList.size()>0){
+				resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
+			}
+		} catch (Exception e) {
+			error = "Addendum cannot be removed.";
+			e.printStackTrace();
+		}
+		return error;
+	}
+
+
 	private String addVOValidate(AddendumDetail addendumDetail) throws Exception {
 		String ableToSubmitAddendum = ableToSubmitAddendum(addendumDetail.getNoJob(), addendumDetail.getNoSubcontract());
 		if (ableToSubmitAddendum !=null){
@@ -291,7 +461,7 @@ public class AddendumService{
 
 	}
 
-	
+
 	public String ableToSubmitAddendum(String jobNo, String subcontractNo){
 		try {
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(jobNo, subcontractNo);
@@ -306,86 +476,6 @@ public class AddendumService{
 		}
 		return null;
 	}
-	
-	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) {
-		String error = "";
-		 
-		try {
-			//Step 1: Check if any approval existed
-			String ableToSubmitAddendum = ableToSubmitAddendum(jobNo, subcontractNo);
-			if (ableToSubmitAddendum !=null){
-				error= "Subcontract "+subcontractNo+" cannot add new line (" +ableToSubmitAddendum +")";
-				return error;
-			}
-			
-			JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
-			
-			//Step 2 : Validation
-			//Validation 2.1: Repackaging status !=900
-			Repackaging repackaging = repackagingService.getLatestRepackaging(job);
-			if("900".equals(repackaging.getStatus())){
-				error = "This entry has already been confirmed";
-				return error;
-			}
-			
-			//Validation 2.2: No duplicate resources made
-			error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
-			if(error!= null && error.length()>0)
-				return error;
-			List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>();
-			for(ResourceSummary resourceSummary: resourceSummaryList){
-				Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
-				
-				String lineType = "";
-				if ("VO".equals(resourceSummary.getResourceType()))
-					lineType = "V1";
-				else
-					lineType = "V3";
-				
-				AddendumDetail addendumDetail = subcontractService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
-				addendumDetail.setNoJob(jobNo);
-				addendumDetail.setNoSubcontract(subcontractNo);
-				addendumDetail.setNo(addendumNo);
-				addendumDetail.setIdAddendum(addendum);
-				addendumDetail.setTypeHd(AddendumDetail.TYPE_HD.DETAIL.toString());
-				addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.ADD.toString());
-				addendumDetail.setIdHeaderRef(idHeaderRef);
-				
-				if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
-					addendumDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
-				}
-				
-				addendumDetail.setIdResourceSummary(new BigDecimal(resourceSummary.getId()));
-				addendumDetail.setUnit(resourceSummary.getUnit());
-				addendumDetail.setCodeObject(resourceSummary.getObjectCode());
-				addendumDetail.setCodeSubsidiary(resourceSummary.getSubsidiaryCode());
-				addendumDetail.setAmtAddendumTba(new BigDecimal(resourceSummary.getAmountBudget()));
-				addendumDetail.setRateAddendumTba(new BigDecimal(resourceSummary.getRate()));
-				addendumDetail.setQuantityTba(new BigDecimal(resourceSummary.getQuantity()));
-				addendumDetail.setAmtBudgetTba(new BigDecimal(resourceSummary.getAmountBudget()));
-				addendumDetail.setRateBudgetTba(new BigDecimal(resourceSummary.getRate()));
-				
-				error = addVOValidate(addendumDetail);
-				if (error==null){
-					accountCodeWSDao.createAccountCode(jobNo, addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary());
-				}else
-					return error;
-				addendumDetailList.add(addendumDetail);
-			}
 
-			for (AddendumDetail addendumDetail: addendumDetailList){
-				addendumDetailHBDao.insert(addendumDetail);
-			}
-			
-			resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
-		} catch (Exception e) {
-			error = "Addendum detail cannot be created from Resource Summary.";
-			e.printStackTrace();
-		}
-		return error;
-		
-	}
-
-	
-		/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
+	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

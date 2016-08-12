@@ -1,19 +1,21 @@
 mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getLatestAddendum: 				getLatestAddendum,
-    	getAddendum:					getAddendum,
-    	getAddendumList:				getAddendumList,
-    	getTotalApprovedAddendumAmount: getTotalApprovedAddendumAmount,
-    	getAddendumDetailHeader:		getAddendumDetailHeader,
-    	getAddendumDetailsByHeaderRef:	getAddendumDetailsByHeaderRef,
-    	getAllAddendumDetails:			getAllAddendumDetails,
-    	createAddendum:					createAddendum,
-    	updateAddendum:					updateAddendum,
-    	updateAddendumDetailHeader:		updateAddendumDetailHeader,
-    	deleteAddendumDetailHeader:		deleteAddendumDetailHeader,
-    	createAddendumDetail:			createAddendumDetail,
-    	addAddendumFromResourceSummaries: addAddendumFromResourceSummaries
+    	getLatestAddendum: 					getLatestAddendum,
+    	getAddendum:						getAddendum,
+    	getAddendumList:					getAddendumList,
+    	getTotalApprovedAddendumAmount: 	getTotalApprovedAddendumAmount,
+    	getAddendumDetailHeader:			getAddendumDetailHeader,
+    	getAddendumDetailsByHeaderRef:		getAddendumDetailsByHeaderRef,
+    	getAllAddendumDetails:				getAllAddendumDetails,
+    	getAddendumDetailsWithoutHeaderRef:	getAddendumDetailsWithoutHeaderRef,
+    	createAddendum:						createAddendum,
+    	updateAddendum:						updateAddendum,
+    	updateAddendumDetailHeader:			updateAddendumDetailHeader,
+    	deleteAddendumDetailHeader:			deleteAddendumDetailHeader,
+    	addAddendumDetail:				addAddendumDetail,
+    	addAddendumFromResourceSummaries: 	addAddendumFromResourceSummaries,
+    	deleteAddendumDetail:				deleteAddendumDetail
     });
 	
     function getLatestAddendum(jobNo, subcontractNo) {
@@ -108,6 +110,21 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, addendumNo) {
+        var request = $http({
+            method: "get",
+            url: "service/addendum/getAddendumDetailsWithoutHeaderRef",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	addendumNo: addendumNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
     function createAddendum(addendum) {
         var request = $http({
             method: "post",
@@ -158,10 +175,10 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
     }
     
     
-    function createAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail) {
+    function addAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail) {
         var request = $http({
             method: "post",
-            url: "service/addendum/createAddendumDetail",
+            url: "service/addendum/addAddendumDetail",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo,
@@ -189,6 +206,19 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function deleteAddendumDetail(jobNo, subcontractNo, addendumDetailList) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/deleteAddendumDetail",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            },
+            data: addendumDetailList
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
     
     
    // ---

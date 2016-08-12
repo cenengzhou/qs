@@ -52,19 +52,19 @@
 					</button>
 				</div>
 
-				<div class="col-md-12 m-b-30 m-t-20 ">
-					<div ui-grid="gridOptions" ui-grid-selection class="grid "></div>
+				<div class="col-md-12 m-b-10 m-t-20 ">
+					<div ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter class="grid "></div>
 				</div>
 
 				<div class="col-md-6 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-primary"
-						ng-click="open('update')">
+						ng-click="updateDetail()">
 						<i class="fa fa-save"></i> <small>Update Detail</small>
 					</button>
 				</div>
 				<div class="col-md-6 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-success"
-						ng-click="open('delete')">
+						ng-click="deleteDetail()">
 						<i class="fa fa-remove"></i> <small>Delete Detail</small>
 					</button>
 				</div>

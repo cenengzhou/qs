@@ -3511,6 +3511,16 @@ public class SubcontractService {
 		return subcontractHBDao.obtainSubcontract(jobNo, packageNo);
 	}
 	
+	
+	/**
+	 * @author koeyyeung
+	 * created on 8 Aug, 2016
+	 * @throws DatabaseOperationException 
+	 * **/
+	public List<SubcontractDetail> getSCDetailForAddendumUpdate(String jobNo, String subcontractNo) {
+		return subcontractDetailHBDao.getSCDetailForAddendumUpdate(jobNo, subcontractNo);
+	}
+	
 	/**
 	 * @author koeyyeung
 	 * created on 21 Jul, 2016
@@ -3631,6 +3641,7 @@ public class SubcontractService {
 
 		return subcontractDashboardWrappeList;
 	}
+	
 	
 	/**
 	 * @author koeyyeung
@@ -4480,5 +4491,5 @@ public class SubcontractService {
 		Object[] results = {subcontract, subcontractDetailList};
 		return results;
 	}
-	
+
 }

@@ -119,6 +119,17 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getSCDetailForAddendumUpdate", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSCDetailForAddendumUpdate(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		try {
+			scDetails = subcontractService.getSCDetailForAddendumUpdate(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
 	@RequestMapping(value = "getSCDetailList", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo){
 		List<SubcontractDetail> scDetails = new ArrayList<SubcontractDetail>();

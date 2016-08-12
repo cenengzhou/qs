@@ -101,6 +101,19 @@ public class AddendumController {
 		return addendumDetailList;
 	}
 	
+	@RequestMapping(value = "getAddendumDetailsWithoutHeaderRef", method = RequestMethod.GET)
+	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(@RequestParam(required = true) String jobNo, 
+												@RequestParam(required = true) String subcontractNo,
+												@RequestParam(required = true) String addendumNo){
+		List<AddendumDetail> addendumDetailList = null;
+		try{
+			addendumDetailList = addendumService.getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, Long.valueOf(addendumNo));
+		}catch(DataAccessException ex){
+			ex.printStackTrace();
+		}
+		return addendumDetailList;
+	}
+	
 	@RequestMapping(value = "getAllAddendumDetails", method = RequestMethod.GET)
 	public List<AddendumDetail> getAllAddendumDetails(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo, 
@@ -169,14 +182,28 @@ public class AddendumController {
 		return result;
 	}
 	
-	@RequestMapping(value = "createAddendumDetail", method = RequestMethod.POST)
-	public String createAddendumDetail(@RequestParam(required = true) String jobNo, 
+	@RequestMapping(value = "deleteAddendumDetail", method = RequestMethod.POST)
+	public String deleteAddendumDetail(@RequestParam(required = true) String jobNo, 
+										@RequestParam(required = true) String subcontractNo,
+										@RequestBody List<AddendumDetail> addendumDetailList){
+		String result = "";
+		try{
+			result = addendumService.deleteAddendumDetail(jobNo, subcontractNo, addendumDetailList);
+		}catch(Exception exception){
+			result  = "Addendum Detail Header cannot be deleted.";
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "addAddendumDetail", method = RequestMethod.POST)
+	public String addAddendumDetail(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
 										@RequestParam(required = true) String addendumNo, 
 										@RequestBody AddendumDetail addendumDetail){
 		String result = "";
 		try{
-			result = addendumService.createAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetail);
+			result = addendumService.addAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetail);
 		}catch(Exception exception){
 			result  = "Addendum Detail cannot be created.";
 			exception.printStackTrace();

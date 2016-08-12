@@ -27,9 +27,11 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	inactivateSystemConstant:							inactivateSystemConstant,
     	createSystemConstant: 								createSystemConstant,
     	updateSubcontractAdmin:								updateSubcontractAdmin,
+
     	getSubcontractSnapshotList:							getSubcontractSnapshotList,
     	getProvisionPostingHistList:						getProvisionPostingHistList,
-    	getSCDetailList:									getSCDetailList
+    	getSCDetailList:									getSCDetailList,
+    	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -355,6 +357,21 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+
+    function getSCDetailForAddendumUpdate(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSCDetailForAddendumUpdate",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+    
     
     // ---
     // PRIVATE METHODS.

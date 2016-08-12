@@ -778,6 +778,12 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}
 	}
 	
+	/**
+	 * @author koeyyeung
+	 * created on 20 Jul, 2016
+	 * @throws DatabaseOperationException 
+	 * **/
+	
 	@SuppressWarnings("unchecked")
 	public List<SubcontractDetail> getSCDetailsForWD(String jobNo, String subcontractNo) throws DataAccessException{
 		List<String> lineTypeList = new ArrayList<String>();
@@ -808,6 +814,39 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		resultList = criteria.list();
 		return resultList;
 
+	}
+
+	/**
+	 * @author koeyyeung
+	 * created on 8 Aug, 2016
+	 * @throws DatabaseOperationException 
+	 * **/
+	@SuppressWarnings("unchecked")
+	public List<SubcontractDetail> getSCDetailForAddendumUpdate(String jobNo, String subcontractNo) {
+		List<String> lineTypeList = new ArrayList<String>();
+		lineTypeList.add("V1");
+		lineTypeList.add("V2");
+		lineTypeList.add("L1");
+		lineTypeList.add("L2");
+		lineTypeList.add("D1");
+		lineTypeList.add("D2");
+		lineTypeList.add("CF");
+		List<SubcontractDetail> resultList;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
+
+		criteria.add(Restrictions.eq("jobNo",jobNo));
+
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+		criteria.add(Restrictions.eq("costRate", 0.0));
+
+		criteria.add(Restrictions.in("lineType", lineTypeList));
+		
+		criteria.addOrder(Order.asc("lineType"));
+	    
+		resultList = criteria.list();
+		return resultList;
 	}
 	
 }

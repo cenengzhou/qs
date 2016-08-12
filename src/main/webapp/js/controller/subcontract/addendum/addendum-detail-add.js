@@ -76,12 +76,12 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 		}
 
 		console.log($scope.addendumDetailToAdd);
-		createAddendumDetail($scope.addendumDetailToAdd);
+		addAddendumDetail($scope.addendumDetailToAdd);
 
 	};
 	
-	function createAddendumDetail(addendumDetail){
-		addendumService.createAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
+	function addAddendumDetail(addendumDetail){
+		addendumService.addAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
 		.then(
 				function( data ) {
 					if(data.length != 0){
@@ -110,7 +110,6 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 		.then(
 				function( data ) {
 					if(data.length != 0){
-						console.log(data);
 						$scope.addendumDetail = data;
 						/*$scope.addendumDetail.bpi = data.billItem;
 						$scope.addendumDetail.codeObject = data.objectCode;	

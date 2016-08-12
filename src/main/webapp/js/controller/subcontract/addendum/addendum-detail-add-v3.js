@@ -42,20 +42,29 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
+		
+		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+	       row.entity.packageNo = subcontractNo;
+	     });
 	}
 
 	$scope.save = function () {
+		$scope.disableButtons = true;
 		if(subcontractNo!="" && subcontractNo!=null){
 			var dataRows = $scope.gridApi.selection.getSelectedRows();
 			if(dataRows.length == 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to add addendum.");
+				$scope.disableButtons = false;
 				return;
 			}
+			
+			
 			
 			addAddendumFromResourceSummaries(dataRows);
 
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
+			$scope.disableButtons = false;
 		}
 	};
 
@@ -107,8 +116,10 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 					console.log(data);
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendums have been created.");
+						$uibModalInstance.close();
 						$state.reload();
 					}
 				});
