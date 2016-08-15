@@ -64,7 +64,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 			if(type === 'pdf'){
 				url += 'printPaymentCertificateReportPdf.rpt';
 			} else {
-				return;
+				url += 'paymentCertificateEnquiryExcelExport.smvc';
 			}
 			url += '?dueDateType=';
 			url += $scope.printPaymentCertDueDateType? 'onOrBefore': 'exactDate';
@@ -79,7 +79,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	}
 
 	$scope.printSubcontractJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontract = function(report, type){
+	$scope.onPrintSubcontract = function(type){1
 		var baseUrl = $window.location.href.split('home.html')[0];
 		if($scope.printSubcontractForm.$valid){
 			var url = baseUrl + 'gammonqs/';
@@ -119,7 +119,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	}
 
 	$scope.printSubcontractLiabilityJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontractLiability = function(report, type){
+	$scope.onPrintSubcontractLiability = function(type){
 		var baseUrl = $window.location.href.split('home.html')[0];
 		if($scope.printSubcontractLiabilityForm.$valid){
 			var url = baseUrl + 'gammonqs/';
@@ -159,7 +159,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	}
 
 	$scope.printSubcontractAnalysisJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontractAnalysis = function(report, type){
+	$scope.onPrintSubcontractAnalysis = function(type){
 		var baseUrl = $window.location.href.split('home.html')[0];
 		if($scope.printSubcontractAnalysisForm.$valid){
 			var url = baseUrl + 'gammonqs/';

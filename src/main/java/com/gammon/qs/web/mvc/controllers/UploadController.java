@@ -420,7 +420,8 @@ public class UploadController {
 			}
 		}
 	}
-	
+
+//	moved to AttachmentController
 //	@RequestMapping(value = "/gammonqs/repackagingAttachmentUpload.smvc", method = RequestMethod.POST)
 //	public void uploadRepackingAttachment(@RequestParam(required = true, value = "repackagingEntryID") String repackagingEntryID, 
 //								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 

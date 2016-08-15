@@ -259,5 +259,42 @@ animate-show,
     margin-bottom: 13px;
 }
 
+button.enquiryInfoBtn {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: 700;
+	color: #ffffff;
+	padding: 20px 20px 30px 20px;
+	background: -moz-linear-gradient(
+		top,
+		#8cbef7 0%,
+		#8bc1ff 10%,
+		#5080bb 85%,
+		#476a8f 90%,
+		#0f518a);
+	background: -webkit-gradient(
+		linear, left top, left bottom,
+		from(#8cbef7),
+		color-stop(0.10, #8bc1ff),
+		color-stop(0.85, #5080bb),
+		color-stop(0.90, #476a8f),
+		to(#0f518a));
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 0px solid #171717;
+	-moz-box-shadow:
+		1px 1px 5px rgba(000,000,000,0.5),
+		inset 0px 0px 10px rgba(087,087,087,0.6);
+	-webkit-box-shadow:
+		1px 1px 5px rgba(000,000,000,0.5),
+		inset 0px 0px 10px rgba(087,087,087,0.6);
+	box-shadow:
+		1px 1px 5px rgba(000,000,000,0.5),
+		inset 0px 0px 10px rgba(087,087,087,0.6);
+	text-shadow:
+		0px -1px 0px rgba(080,130,186,0.4),
+		0px 1px 0px rgba(059,098,148,0.3);
+}
 
 

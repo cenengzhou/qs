@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.PaymentService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.SubcontractorService;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.shared.GlobalParameter;
@@ -42,7 +44,9 @@ import com.lowagie.text.pdf.PdfWriter;
 public class DownloadController{
 	private Logger logger = Logger.getLogger(DownloadController.class.getName());
 
+	private String RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM = "application/octet-stream";
 	private String RESPONSE_CONTENT_TYPE_APPLICATION_PDF = "application/pdf";
+	private String RESPONSE_HEADER_NAME_CONTENT_DISPOSITION = "Content-Disposition";
 
 	@Autowired
 	private SubcontractorService subcontractorService;
@@ -52,6 +56,8 @@ public class DownloadController{
 	private TransitService transitService;
 	@Autowired
 	private AttachmentService attachmentService;
+	@Autowired
+	private SubcontractService subcontractService;
 	
 	@RequestMapping(value="/gammonqs/subcontractorExcelExport.rpt",method=RequestMethod.GET)
 	public void generateSubcontractorExcel(	@RequestParam(required=true,value="subcontractor") String subcontractor,
@@ -105,18 +111,18 @@ public class DownloadController{
 		
 		logger.info("generateSubcontractReport");
 		try {
-//			ByteArrayOutputStream outputStream = packageRepository.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
-//																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractReport");
-//			if (outputStream!=null){
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(outputStream.size());
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractReport."+".pdf\"");
-//				response.getOutputStream().write(outputStream.toByteArray());
-//				response.getOutputStream().flush();
-//			}else{
-//				logger.info("No file is generated.");
-//				showReportError(response);
-//			}
+			ByteArrayOutputStream outputStream = subcontractService.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
+																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractReport");
+			if (outputStream!=null){
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(outputStream.size());
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractReport."+".pdf\"");
+				response.getOutputStream().write(outputStream.toByteArray());
+				response.getOutputStream().flush();
+			}else{
+				logger.info("No file is generated.");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.info("No file is generated.");
 			e.printStackTrace();
@@ -149,18 +155,18 @@ public class DownloadController{
 		
 		logger.info("generateSubcontractLiabilityReport");
 		try {
-//			ByteArrayOutputStream outputStream = packageRepository.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
-//																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractLiabilityReport");
-//			if (outputStream!=null){
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(outputStream.size());
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractLiabilityReport."+".pdf\"");
-//				response.getOutputStream().write(outputStream.toByteArray());
-//				response.getOutputStream().flush();
-//			}else{
-//				logger.info("No file is generated.");
-//				showReportError(response);
-//			}
+			ByteArrayOutputStream outputStream = subcontractService.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
+																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractLiabilityReport");
+			if (outputStream!=null){
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(outputStream.size());
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractLiabilityReport."+".pdf\"");
+				response.getOutputStream().write(outputStream.toByteArray());
+				response.getOutputStream().flush();
+			}else{
+				logger.info("No file is generated.");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.info("No file is generated.");
 			e.printStackTrace();
@@ -194,25 +200,25 @@ public class DownloadController{
 		logger.info("generateSubcontractLiabilityExcel");
 
 		try {
-//			Boolean includeJobCompletionDate = false;
-//			if("true".equals(includeJobCompletionDateString))
-//				includeJobCompletionDate = true;
-//			
-//			ExcelFile excelFile = packageRepository.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
-//					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year,"subcontractLiabilityReport");
-//
-//			if (excelFile != null) {
-//				byte[] file = excelFile.getBytes();
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(file.length);
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
-//
-//				response.getOutputStream().write(file);
-//				response.getOutputStream().flush();
-//			} else{
-//				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
-//				showReportError(response);
-//			}
+			Boolean includeJobCompletionDate = false;
+			if("true".equals(includeJobCompletionDateString))
+				includeJobCompletionDate = true;
+			
+			ExcelFile excelFile = subcontractService.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
+					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year,"subcontractLiabilityReport");
+
+			if (excelFile != null) {
+				byte[] file = excelFile.getBytes();
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(file.length);
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
 			e.printStackTrace();
@@ -246,18 +252,18 @@ public class DownloadController{
 		
 		logger.info("generateSubcontractorAnalysisReport");
 		try {
-//			ByteArrayOutputStream outputStream = packageRepository.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
-//																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractorAnalysisReport");
-//			if (outputStream!=null){
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(outputStream.size());
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractorAnalysisReport."+".pdf\"");
-//				response.getOutputStream().write(outputStream.toByteArray());
-//				response.getOutputStream().flush();
-//			}else{
-//				logger.info("No file is generated.");
-//				showReportError(response);
-//			}
+			ByteArrayOutputStream outputStream = subcontractService.downloadSubcontractEnquiryReportPDFFile(company, ("EM".equals(division)?"E&M":division), jobNumber, subcontractNumber, subcontractorNumber, subcontractorNature, 
+																									paymentType, workScope, clientNo, false, splitTerminateStatus, month, year, "SubcontractorAnalysisReport");
+			if (outputStream!=null){
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(outputStream.size());
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"SubcontractorAnalysisReport."+".pdf\"");
+				response.getOutputStream().write(outputStream.toByteArray());
+				response.getOutputStream().flush();
+			}else{
+				logger.info("No file is generated.");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.info("No file is generated.");
 			e.printStackTrace();
@@ -293,25 +299,25 @@ public class DownloadController{
 		logger.info("generateSubcontractorAnalysisExcel");
 
 		try {
-//			Boolean includeJobCompletionDate = false;
-//			if("true".equals(includeJobCompletionDateString))
-//				includeJobCompletionDate = true;
-//			
-//			ExcelFile excelFile = packageRepository.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
-//					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year, "SubcontractorAnalysisReport");
-//
-//			if (excelFile != null) {
-//				byte[] file = excelFile.getBytes();
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(file.length);
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
-//
-//				response.getOutputStream().write(file);
-//				response.getOutputStream().flush();
-//			} else{
-//				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
-//				showReportError(response);
-//			}
+			Boolean includeJobCompletionDate = false;
+			if("true".equals(includeJobCompletionDateString))
+				includeJobCompletionDate = true;
+			
+			ExcelFile excelFile = subcontractService.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
+					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year, "SubcontractorAnalysisReport");
+
+			if (excelFile != null) {
+				byte[] file = excelFile.getBytes();
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(file.length);
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
 			e.printStackTrace();
@@ -345,25 +351,25 @@ public class DownloadController{
 		logger.info("generateFinanceSubcontractListExcel");
 
 		try {
-//			Boolean includeJobCompletionDate = false;
-//			if("true".equals(includeJobCompletionDateString))
-//				includeJobCompletionDate = true;
-//			
-//			ExcelFile excelFile = packageRepository.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
-//					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year, "subcontractListReport");
-//
-//			if (excelFile != null) {
-//				byte[] file = excelFile.getBytes();
-//				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
-//				response.setContentLength(file.length);
-//				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
-//
-//				response.getOutputStream().write(file);
-//				response.getOutputStream().flush();
-//			} else{
-//				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
-//				showReportError(response);
-//			}
+			Boolean includeJobCompletionDate = false;
+			if("true".equals(includeJobCompletionDateString))
+				includeJobCompletionDate = true;
+			
+			ExcelFile excelFile = subcontractService.downloadSubcontractEnquiryReportExcelFile(company,("EM".equals(division)?"E&M":division),jobNumber,subcontractNumber,
+					subcontractorNumber, subcontractorNature, paymentType, workScope, clientNo, splitTerminateStatus, includeJobCompletionDate, month, year, "subcontractListReport");
+
+			if (excelFile != null) {
+				byte[] file = excelFile.getBytes();
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(file.length);
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				logger.info("Download Controller : generateFinanceSubcontractListExcel - Excel File Error (File is Null)");
+				showReportError(response);
+			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
 			e.printStackTrace();
@@ -487,6 +493,54 @@ public class DownloadController{
 				response.getOutputStream().flush();
 			} else{
 				logger.info("Download Controller : Error in Print Payment Certificate Report");
+				showReportError(response);
+			}			
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+			e.printStackTrace();
+			logger.info("Error: "+e.getLocalizedMessage());
+			showReportError(response);
+		} finally{
+			try {
+				response.getOutputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@RequestMapping(value="/gammonqs/paymentCertificateEnquiryExcelExport.smvc",method=RequestMethod.GET)
+	public void generatePaymentCertificateEnquiryExcel(@RequestParam(required=true,value="jobNumber") String jobNumber,
+															@RequestParam(required=true,value="company") String company,
+															@RequestParam(required=false,value="packageNo") String packageNo,
+															@RequestParam(required=false,value="subcontractorNo") String subcontractorNo,
+															@RequestParam(required=false,value="paymentStatus") String paymentStatus,
+															@RequestParam(required=false,value="paymentType") String paymentType,
+															@RequestParam(required=false,value="directPayment") String directPayment,
+															@RequestParam(required=false,value="paymentTerm") String paymentTerm,
+															@RequestParam(required=true,value="dueDateType") String dueDateType,
+															@RequestParam(required=true,value="dueDate") String dueDateString,
+															@RequestParam(required=false,value="certIssueDate") String certIssueDateString,
+															HttpServletRequest request, HttpServletResponse response ){		
+				
+		logger.info("generatePaymentCertificateEnquiryExcel");
+		Date dueDate =StringUtils.isEmpty(dueDateString)?null:DateHelper.parseDate(dueDateString, "dd/MM/yyyy");
+		Date certIssueDate = StringUtils.isEmpty(certIssueDateString)?null:DateHelper.parseDate(certIssueDateString, "dd/MM/yyyy");
+		
+
+		try {
+			
+			ExcelFile excelFile = paymentService.generatePaymentCertificateEnquiryExcel(jobNumber, company, packageNo, subcontractorNo, paymentStatus, paymentType, directPayment, paymentTerm, dueDateType, dueDate, certIssueDate);
+
+			if (excelFile != null) {
+				byte[] file = excelFile.getBytes();
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(file.length);
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
 				showReportError(response);
 			}			
 		} catch (Exception e) {
@@ -655,6 +709,7 @@ public class DownloadController{
 		}
 	}
 	
+//	moved to AttachmentController
 //	@RequestMapping(value="/gammonqs/repackagingAttachmentDownload.smvc",method=RequestMethod.GET)
 //	public void generateRepackingAttachment(@RequestParam(required=true,value="repackagingEntryID") String repackagingEntryID,
 //															@RequestParam(required=true,value="sequenceNo") String sequenceNo,
@@ -691,6 +746,7 @@ public class DownloadController{
 //		}
 //	} 
 //	
+	
 	@RequestMapping(value="/gammonqs/scAttachmentDownload.smvc",method=RequestMethod.GET)
 	public void generateSCAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
 															@RequestParam(required=true,value="textKey") String textKey,

@@ -2,10 +2,12 @@ package com.gammon.qs.dao;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -35,6 +37,8 @@ import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
  */
 @Repository
 public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapshot> {
+	
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 	@Autowired
 	private StoredProcedureConfig storedProcedureConfig;
 	
@@ -139,4 +143,99 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		return completed;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<SubcontractSnapshot> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber, String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> companyList, Integer status, String month, String year, String reportType) throws DatabaseOperationException {
+		List<SubcontractSnapshot> result = null;
+		try{			
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+			criteria.createAlias("jobInfo", "jobInfo");
+			if (company!=null && !"".equals(company))
+				criteria.add(Restrictions.eq("jobInfo.company", company));
+			else if (companyList!=null)
+				criteria.add(Restrictions.in("jobInfo.company", companyList));
+			if (division!=null && !"".equals(division))
+				criteria.add(Restrictions.eq("jobInfo.division", division));
+			if (jobNumber!=null && !"".equals(jobNumber))
+				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+			if (clientNo!=null && !"".equals(clientNo))
+				criteria.add(Restrictions.eq("jobInfo.employer", clientNo));
+			if (subcontractNumber!=null && !"".equals(subcontractNumber))
+				criteria.add(Restrictions.eq("packageNo", subcontractNumber));
+			if (subcontractorNumber!=null && !"".equals(subcontractorNumber))
+				criteria.add(Restrictions.eq("vendorNo", subcontractorNumber)); 
+			if (subcontractorNature!=null && !"".equals(subcontractorNature))
+				criteria.add(Restrictions.eq("subcontractorNature", subcontractorNature));
+			if (paymentStatus!=null && !"".equals(paymentStatus)){
+				if("NDI".equals(paymentStatus))
+					criteria.add(Restrictions.or(	Restrictions.eq("paymentStatus", "N"),
+								 Restrictions.or(	Restrictions.eq("paymentStatus", "D"),
+										 			Restrictions.eq("paymentStatus", "I"))));
+				else 
+					criteria.add(Restrictions.eq("paymentStatus", paymentStatus));
+			}
+				
+			if(splitTerminateStatus!=null && !"".equals(splitTerminateStatus))
+				criteria.add(Restrictions.eq("splitTerminateStatus", splitTerminateStatus));
+				
+			//Awarded Subcontracts
+			criteria.add(Restrictions.eq("subcontractStatus", new Integer(500)));
+			
+			
+			if(workScope!=null && !"".equals(workScope)){
+				throw new RuntimeException("Subcontract does not contain SCWorkscope due to remove one to many linking");
+//				criteria.createAlias("subcontract", "subcontract");
+//				criteria.createAlias("subcontract.scWorkscope", "scWorkscope");
+//				criteria.add(Restrictions.eq("scWorkscope.workScope", workScope));
+			}
+			if(status!=null && !"".equals(status)){
+				criteria.add(Restrictions.eq("subcontractStatus", status));
+			}
+			
+			if(!"".equals(month) && !"".equals(year)){
+				Date snapshotDate = obtainSnapshotDate(month, year);
+				criteria.add(Restrictions.eq("snapshotDate", snapshotDate));
+			}
+			
+			
+			if(reportType!=null && "SubcontractorAnalysisReport".equals(reportType))
+				criteria.addOrder(Order.asc("vendorNo"));
+			else{
+				criteria.addOrder(Order.asc("jobInfo.company"))
+						.addOrder(Order.asc("jobInfo.division"))
+						.addOrder(Order.asc("jobInfo.jobNumber"))
+						.addOrder(Order.asc("packageNo"));
+			}
+			
+			result = (List<SubcontractSnapshot>)criteria.list();
+		}catch (HibernateException he){
+			throw new DatabaseOperationException(he);
+		}
+		return result;
+	}
+
+	private Date obtainSnapshotDate(String month, String year){
+		Date startDate = DateHelper.parseDate("01-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
+		Date endDate = DateHelper.parseDate("31-"+convertToStringMonth(Integer.parseInt(month))+"-"+year, "dd-MM-yyyy");
+		
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.add(Restrictions.ge("snapshotDate",startDate));
+		criteria.add(Restrictions.lt("snapshotDate",endDate));
+		criteria.setProjection(Projections.distinct(Projections.property("snapshotDate")));
+		criteria.addOrder(Order.desc("snapshotDate"));
+		criteria.setMaxResults(1);
+		
+		logger.info("Snapshot Date: "+(Date) criteria.uniqueResult());
+		
+		return (Date) criteria.uniqueResult();
+	}
+	
+	public String convertToStringMonth(Integer month){
+		if(month<10){
+			return "0"+String.valueOf(month);
+		}else{
+			return String.valueOf(month);
+		}
+	}
 }

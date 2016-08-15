@@ -7,202 +7,26 @@
 		</ol>
 	</section>
 	<div class="clearfix"></div>
-
 	<!-- Main content -->
 	<section class="content" style="margin-left: 0px !important">
-		<div class="row" vertilize-container>
-			<div class="col-md-4" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Job</h3></div>
-					<div class="box-body">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-5x fa-file-text"></i></td>
-							<td>
-							<blockquote>
-								<table class="table">
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.jobInfo" ng-click="activeEnquirySideMenu = '/enquiry/jobInfo'"><span class="fa fa-search"></span> Job Information</a>
-										<small>The report contain all job related information for enquiry</small>
-										</td>
-									</tr>									
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.jobCost" ng-click="activeEnquirySideMenu = '/enquiry/jobCost'"><span class="fa fa-search"></span> Job Cost</a>
-										<small>The report contain job cost related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.ivHistory" ng-click="activeEnquirySideMenu = '/enquiry/ivHistory'"><span class="fa fa-search"></span> Internal Valuation History</a>
-										<small>The report contain internal valuation history related information for enquiry</small>
-										</td>
-									</tr>
-								</table>
-							</blockquote>
-							</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Address Book</h3></div>
-					<div class="box-body">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-5x fa-file-text"></i></td>
-							<td>
-							<blockquote>
-								<table class="table">
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontractor" ng-click="activeEnquirySideMenu = '/enquiry/subcontractor'"><span class="fa fa-search"></span> Subcontractor</a>
-										<small>The report contain all sub-contractor related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.client" ng-click="activeEnquirySideMenu = '/enquiry/client'"><span class="fa fa-search"></span> Client</a>
-										<small>The report contain all client related information for enquiry</small>
-										</td>
-									</tr>
-								</table>
-							</blockquote>
-							</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Purchase Order</h3></div>
-					<div class="box-body">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-5x fa-file-text"></i></td>
-							<td>
-							<blockquote>
-								<table class="table">
-									<tr>
-										<td uib-popover="Under construction..." popover-trigger="mouseenter" popover-title="Report" >
-										<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.purchaseOrder" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrder'"><span class="fa fa-search"></span> Purchase Order</a>
-										<small>The report contain all PO related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td uib-popover="Under construction..." popover-trigger="mouseenter" popover-title="Report">
-										<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.purchaseOrderDetail" ng-click="activeEnquirySideMenu = '/enquiry/purchaseOrderDetail'"><span class="fa fa-search"></span> Purchase Order Detail</a>
-										<small>The report contain all PO details information for enquiry</small>
-										</td>
-									</tr>
-								</table>
-							</blockquote>
-							</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
+	<div class="row col-md-8 col-md-push-2">
+	<table class="table">
+	<tr ng-repeat="btn in btns">
+	<td class="col-md-3" style="text-align:right">
+	<button type="button" name="{{btn.name}}" id="{{btn.name}}" value="" class="enquiryInfoBtn" style="width:200px"
+uib-popover-html="btn.popoverHtml" 
+popover-placement="right"
+popover-trigger="outsideClick" ng-mouseover="showPopover(btn.name)"
+popover-is-open="{{btn.name}}.show"
+>{{btn.title}}<br></button>
+	</td>
+	<td class="col-md-9">
+		<div class="box box-primary" style="padding:3px;height:70px" ng-bind-html="btn.description">
 		</div>
-		<div class="row" vertilize-container>
-			<div class="col-md-4" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Subcontract</h3></div>
-					<div class="box-body">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-5x fa-file-text"></i></td>
-							<td>
-							<blockquote>
-								<table class="table">
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontract" ng-click="activeEnquirySideMenu = '/enquiry/subcontract'"><span class="fa fa-search"></span> Subcontract</a>
-										<small>The report contain subcontract related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.subcontractDetail" ng-click="activeEnquirySideMenu = '/enquiry/subcontractDetail'"><span class="fa fa-search"></span> Subcontract Detail</a>
-										<small>The report contain subcontract detail information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.payment" ng-click="activeEnquirySideMenu = '/enquiry/payment'"><span class="fa fa-search"></span> Payment</a>
-										<small>The report contain payment information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.provisionHistory" ng-click="activeEnquirySideMenu = '/enquiry/provisionHistory'"><span class="fa fa-search"></span> Provision History</a>
-										<small>The report contain provision history for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.workScope" ng-click="activeEnquirySideMenu = '/enquiry/workScope'"><span class="fa fa-search"></span> Work Scope</a>
-										<small>The report contain work scope for enquiry</small>
-										</td>
-									</tr>
-								</table>
-							</blockquote>
-							</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-md-4" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">JDE</h3></div>
-					<div class="box-body">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-5x fa-file-text"></i></td>
-							<td>
-							<blockquote>
-								<table class="table">
-									<tr>
-										<td>
-										<a class="btn btn-primary col-md-12" role="button" ui-sref="enquiry.accountLedger" ng-click="activeEnquirySideMenu = '/enquiry/accountLedger'"><span class="fa fa-search"></span> Account Ledger</a>
-										<small>The report contain account ledger related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td uib-popover="Under construction..." popover-trigger="mouseenter" popover-title="Report" >
-										<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.customerLedger" ng-click="activeEnquirySideMenu = '/enquiry/customerLedger'"><span class="fa fa-search"></span> Customer Ledger</a>
-										<small>The report contain account ledger related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td uib-popover="Under construction..." popover-trigger="mouseenter" popover-title="Report" >
-										<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.supplierLedger" ng-click="activeEnquirySideMenu = '/enquiry/supplierLedger'"><span class="fa fa-search"></span> Supplier Ledger</a>
-										<small>The report contain supplier ledger related information for enquiry</small>
-										</td>
-									</tr>
-									<tr>
-										<td uib-popover="Under construction..." popover-trigger="mouseenter" popover-title="Report" >
-										<a class="btn btn-primary col-md-12 disabled" role="button" ui-sref="enquiry.performanceAppraisal" ng-click="activeEnquirySideMenu = '/enquiry/performanceAppraisal'"><span class="fa fa-search"></span> Internal Valuation History</a>
-										<small>The report contain internal valuation history for enquiry</small>
-										</td>
-									</tr>
-								</table>
-							</blockquote>
-							</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
+	</td>
+	</tr>
+	</table>
+	</div>
 	</section>
 
 </div>

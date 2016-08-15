@@ -5,12 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.gammon.pcms.helper.DateHelper;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.io.ExcelFile;
+import com.gammon.qs.wrapper.sclist.SCListWrapper;
 
 public class FinanceSubcontractListGenerator {
 	private ExcelFile excelFile;
-	private List<Subcontract> subcontractList;
+	private List<SCListWrapper> subcontractList;
 	private ArrayList<String[]> data = new ArrayList<String[]>();
 	
 	private Double totalOriginalSubcontractSum = new Double(0);
@@ -34,8 +34,8 @@ public class FinanceSubcontractListGenerator {
 	
 	private int sheetSize = 43;
 	
-	public FinanceSubcontractListGenerator(List<Subcontract>subcontractList, Boolean includeJobCompletionDate){
-		this.subcontractList = subcontractList;
+	public FinanceSubcontractListGenerator(List<SCListWrapper> scListWrapper, Boolean includeJobCompletionDate){
+		this.subcontractList = scListWrapper;
 		this.includeJobCompletionDate=includeJobCompletionDate;
 		
 		if(includeJobCompletionDate)
@@ -71,81 +71,81 @@ public class FinanceSubcontractListGenerator {
 	}
 
 	private void generateSubcontractSheet() throws Exception {
-//		for(int i =0; i<subcontractList.size(); i++){
-//			Subcontract scListWrapper = subcontractList.get(i);
-//
-//			int index=0;
-//			
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompany(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getDivision(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJobNumber(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJobDescription(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSoloJV(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJvPercentage()+"", false);
-//			if(includeJobCompletionDate)
-//				excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getJobAnticipatedCompletionDate(), "dd-MM-yyyy"), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getClientNo(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPackageNo(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getVendorNo(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getVendorName(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getDescription(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractorNature(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCurrency(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getWorkScope(), true);
-//			
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getOriginalSubcontractSum()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRemeasuredSubcontractSum()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getAddendum()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractSum()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getAccumlatedRetentionAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRetentionReleasedAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRetentionBalanceAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getNetCertifiedAmount()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalPostedCertAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalCumCertAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalLiabilities()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalProvision()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getBalanceToComplete()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalCCPostedAmt()+"", false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalMOSPostedAmt()+"", false);
-//
-//			
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSplitTerminateStatus(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPaymentStatus(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPaymentTerms(), true);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractTerm(), true);
-//			
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getRequisitionApprovedDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getTenderAnalysisApprovedDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getPreAwardMeetingDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getLoaSignedDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocScrDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocLegalDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getWorkCommenceDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getOnSiteStartDate(), "dd-MM-yyyy"), false);
-//			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompletionStatus(), true);
-//			
-//			
-//			totalRemeasuredSubcontractSum += scListWrapper.getRemeasuredSubcontractSum()!=null&&!scListWrapper.getRemeasuredSubcontractSum().toString().trim().equals("")?scListWrapper.getRemeasuredSubcontractSum():new Double(0);
-//			totalAddendum += scListWrapper.getAddendum()!=null&&!scListWrapper.getAddendum().toString().trim().equals("")?scListWrapper.getAddendum():new Double(0);
-//			totalRevisedSubcontractSum += scListWrapper.getSubcontractSum()!=null&&!scListWrapper.getSubcontractSum().toString().trim().equals("")?scListWrapper.getSubcontractSum():new Double(0);
-//			totalLiabilities += scListWrapper.getTotalLiabilities()!=null&&!scListWrapper.getTotalLiabilities().toString().trim().equals("")?scListWrapper.getTotalLiabilities():new Double(0);
-//			totalProvision += scListWrapper.getTotalProvision()!=null&&!scListWrapper.getTotalProvision().toString().trim().equals("")?scListWrapper.getTotalProvision():new Double(0);
-//			totalBalanceToComplete += scListWrapper.getBalanceToComplete()!=null&&!scListWrapper.getBalanceToComplete().toString().trim().equals("")?scListWrapper.getBalanceToComplete():new Double(0);
-//			totalPostedCertAmt += scListWrapper.getTotalPostedCertAmt()!=null&&!scListWrapper.getTotalPostedCertAmt().toString().trim().equals("")?scListWrapper.getTotalPostedCertAmt():new Double(0);
-//			totalCumCertAmt += scListWrapper.getTotalCumCertAmt()!=null&&!scListWrapper.getTotalCumCertAmt().toString().trim().equals("")?scListWrapper.getTotalCumCertAmt():new Double(0);
-//			totalCCPostedAmt += scListWrapper.getTotalCCPostedAmt()!=null&&!scListWrapper.getTotalCCPostedAmt().toString().trim().equals("")?scListWrapper.getTotalCCPostedAmt():new Double(0);
-//			totalMOSPostedAmt += scListWrapper.getTotalMOSPostedAmt()!=null&&!scListWrapper.getTotalMOSPostedAmt().toString().trim().equals("")?scListWrapper.getTotalMOSPostedAmt():new Double(0);
-//			totalAccumlatedRetentionAmt += scListWrapper.getAccumlatedRetentionAmt() != null && !scListWrapper.getAccumlatedRetentionAmt().toString().trim().equals("") ? scListWrapper.getAccumlatedRetentionAmt() : new Double(0);
-//			totalRetentionReleasedAmt += scListWrapper.getRetentionReleasedAmt() != null && !scListWrapper.getRetentionReleasedAmt().toString().trim().equals("") ? scListWrapper.getRetentionReleasedAmt() : new Double(0);
-//			totalRetentionBalanceAmt += scListWrapper.getRetentionBalanceAmt() != null && !scListWrapper.getRetentionBalanceAmt().toString().trim().equals("") ? scListWrapper.getRetentionBalanceAmt() : new Double(0);
-//			totalNetCertAmt += scListWrapper.getNetCertifiedAmount() != null && !scListWrapper.getNetCertifiedAmount().toString().trim().equals("") ? scListWrapper.getNetCertifiedAmount() : new Double(0);
-//			totalOriginalSubcontractSum += scListWrapper.getOriginalSubcontractSum() != null && !scListWrapper.getOriginalSubcontractSum().toString().trim().equals("") ? scListWrapper.getOriginalSubcontractSum() : new Double(0);
-//			
-//		}
-//		//Create last row (total)
-//		data.add(createLastRow());
+		for(int i =0; i<subcontractList.size(); i++){
+			SCListWrapper scListWrapper = subcontractList.get(i);
+
+			int index=0;
+			
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompany(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getDivision(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJobNumber(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJobDescription(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSoloJV(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getJvPercentage()+"", false);
+			if(includeJobCompletionDate)
+				excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getJobAnticipatedCompletionDate(), "dd-MM-yyyy"), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getClientNo(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPackageNo(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getVendorNo(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getVendorName(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getDescription(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractorNature(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCurrency(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getWorkScope(), true);
+			
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getOriginalSubcontractSum()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRemeasuredSubcontractSum()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getAddendum()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractSum()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getAccumlatedRetentionAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRetentionReleasedAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getRetentionBalanceAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getNetCertifiedAmount()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalPostedCertAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalCumCertAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalLiabilities()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalProvision()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getBalanceToComplete()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalCCPostedAmt()+"", false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getTotalMOSPostedAmt()+"", false);
+
+			
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSplitTerminateStatus(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPaymentStatus(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getPaymentTerms(), true);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getSubcontractTerm(), true);
+			
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getActualPCCDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getRequisitionApprovedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getTenderAnalysisApprovedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getPreAwardMeetingDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getLoaSignedDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocScrDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getScDocLegalDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getWorkCommenceDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,DateHelper.formatDate(scListWrapper.getOnSiteStartDate(), "dd-MM-yyyy"), false);
+			excelFile.getDocument().setCellValue(i+1, index++,scListWrapper.getCompletionStatus(), true);
+			
+			
+			totalRemeasuredSubcontractSum += scListWrapper.getRemeasuredSubcontractSum()!=null&&!scListWrapper.getRemeasuredSubcontractSum().toString().trim().equals("")?scListWrapper.getRemeasuredSubcontractSum():new Double(0);
+			totalAddendum += scListWrapper.getAddendum()!=null&&!scListWrapper.getAddendum().toString().trim().equals("")?scListWrapper.getAddendum():new Double(0);
+			totalRevisedSubcontractSum += scListWrapper.getSubcontractSum()!=null&&!scListWrapper.getSubcontractSum().toString().trim().equals("")?scListWrapper.getSubcontractSum():new Double(0);
+			totalLiabilities += scListWrapper.getTotalLiabilities()!=null&&!scListWrapper.getTotalLiabilities().toString().trim().equals("")?scListWrapper.getTotalLiabilities():new Double(0);
+			totalProvision += scListWrapper.getTotalProvision()!=null&&!scListWrapper.getTotalProvision().toString().trim().equals("")?scListWrapper.getTotalProvision():new Double(0);
+			totalBalanceToComplete += scListWrapper.getBalanceToComplete()!=null&&!scListWrapper.getBalanceToComplete().toString().trim().equals("")?scListWrapper.getBalanceToComplete():new Double(0);
+			totalPostedCertAmt += scListWrapper.getTotalPostedCertAmt()!=null&&!scListWrapper.getTotalPostedCertAmt().toString().trim().equals("")?scListWrapper.getTotalPostedCertAmt():new Double(0);
+			totalCumCertAmt += scListWrapper.getTotalCumCertAmt()!=null&&!scListWrapper.getTotalCumCertAmt().toString().trim().equals("")?scListWrapper.getTotalCumCertAmt():new Double(0);
+			totalCCPostedAmt += scListWrapper.getTotalCCPostedAmt()!=null&&!scListWrapper.getTotalCCPostedAmt().toString().trim().equals("")?scListWrapper.getTotalCCPostedAmt():new Double(0);
+			totalMOSPostedAmt += scListWrapper.getTotalMOSPostedAmt()!=null&&!scListWrapper.getTotalMOSPostedAmt().toString().trim().equals("")?scListWrapper.getTotalMOSPostedAmt():new Double(0);
+			totalAccumlatedRetentionAmt += scListWrapper.getAccumlatedRetentionAmt() != null && !scListWrapper.getAccumlatedRetentionAmt().toString().trim().equals("") ? scListWrapper.getAccumlatedRetentionAmt() : new Double(0);
+			totalRetentionReleasedAmt += scListWrapper.getRetentionReleasedAmt() != null && !scListWrapper.getRetentionReleasedAmt().toString().trim().equals("") ? scListWrapper.getRetentionReleasedAmt() : new Double(0);
+			totalRetentionBalanceAmt += scListWrapper.getRetentionBalanceAmt() != null && !scListWrapper.getRetentionBalanceAmt().toString().trim().equals("") ? scListWrapper.getRetentionBalanceAmt() : new Double(0);
+			totalNetCertAmt += scListWrapper.getNetCertifiedAmount() != null && !scListWrapper.getNetCertifiedAmount().toString().trim().equals("") ? scListWrapper.getNetCertifiedAmount() : new Double(0);
+			totalOriginalSubcontractSum += scListWrapper.getOriginalSubcontractSum() != null && !scListWrapper.getOriginalSubcontractSum().toString().trim().equals("") ? scListWrapper.getOriginalSubcontractSum() : new Double(0);
+			
+		}
+		//Create last row (total)
+		data.add(createLastRow());
 	}
 
 
