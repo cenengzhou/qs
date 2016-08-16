@@ -30,17 +30,22 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 @DynamicUpdate
 @SelectBeforeUpdate
 @Table(name = "ADDENDUM_DETAIL")
-@SequenceGenerator(name = "ADDENDUM_DETAIL_GEN", sequenceName = "ADDENDUM_DETAIL_SEQ", allocationSize = 1)
+@SequenceGenerator(	name = "ADDENDUM_DETAIL_GEN",
+					sequenceName = "ADDENDUM_DETAIL_SEQ",
+					allocationSize = 1)
 public class AddendumDetail extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = -844399764451138531L;
 
 	public static enum TYPE_HD {
-		HEADER, DETAIL
+								HEADER,
+								DETAIL
 	}
-	
+
 	public static enum TYPE_ACTION {
-		ADD, UPDATE, DELETE
+									ADD,
+									UPDATE,
+									DELETE
 	}
 
 	private BigDecimal id;
@@ -69,14 +74,20 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	private BigDecimal idHeaderRef;
 	private String codeObjectForDaywork;
 	private String noSubcontractChargedRef;
-	private String typeAction; //ADD, UPDATE, DELETE
-	private BigDecimal idResourceSummary; //ADD, UPDATE, DELETE
-	
-	public AddendumDetail() {
-	}
+	private String typeAction; // ADD, UPDATE, DELETE
+	private BigDecimal idResourceSummary; // ADD, UPDATE, DELETE
 
-	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no,
-			String typeHd, String typeVo, String usernameCreated, Date dateCreated) {
+	public AddendumDetail() {}
+
+	public AddendumDetail(	BigDecimal id,
+							Addendum idAddendum,
+							String noJob,
+							String noSubcontract,
+							long no,
+							String typeHd,
+							String typeVo,
+							String usernameCreated,
+							Date dateCreated) {
 		this.id = id;
 		this.idAddendum = idAddendum;
 		this.noJob = noJob;
@@ -88,12 +99,34 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.dateCreated = dateCreated;
 	}
 
-	public AddendumDetail(BigDecimal id, Addendum idAddendum, String noJob, String noSubcontract, long no,
-			String typeHd, String typeVo, String bpi, String description, BigDecimal quantity, BigDecimal rateAddendum,
-			BigDecimal amtAddendum, BigDecimal rateBudget, BigDecimal amtBudget, BigDecimal quantityTba,
-			BigDecimal rateAddendumTba, BigDecimal amtAddendumTba, BigDecimal rateBudgetTba, BigDecimal amtBudgetTba,
-			String codeObject, String codeSubsidiary, String unit, String remarks, String usernameCreated,
-			Date dateCreated, String usernameLastModified, Date dateLastModified, BigDecimal idHeaderRef) {
+	public AddendumDetail(	BigDecimal id,
+							Addendum idAddendum,
+							String noJob,
+							String noSubcontract,
+							long no,
+							String typeHd,
+							String typeVo,
+							String bpi,
+							String description,
+							BigDecimal quantity,
+							BigDecimal rateAddendum,
+							BigDecimal amtAddendum,
+							BigDecimal rateBudget,
+							BigDecimal amtBudget,
+							BigDecimal quantityTba,
+							BigDecimal rateAddendumTba,
+							BigDecimal amtAddendumTba,
+							BigDecimal rateBudgetTba,
+							BigDecimal amtBudgetTba,
+							String codeObject,
+							String codeSubsidiary,
+							String unit,
+							String remarks,
+							String usernameCreated,
+							Date dateCreated,
+							String usernameLastModified,
+							Date dateLastModified,
+							BigDecimal idHeaderRef) {
 		this.id = id;
 		this.idAddendum = idAddendum;
 		this.noJob = noJob;
@@ -125,8 +158,12 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADDENDUM_DETAIL_GEN")
-	@Column(name = "ID", unique = true, nullable = false, scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "ADDENDUM_DETAIL_GEN")
+	@Column(name = "ID",
+			unique = true,
+			nullable = false,
+			scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -136,7 +173,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ADDENDUM", nullable = false)
+	@JoinColumn(name = "ID_ADDENDUM",
+				nullable = false)
 	public Addendum getIdAddendum() {
 		return this.idAddendum;
 	}
@@ -145,7 +183,9 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.idAddendum = idAddendum;
 	}
 
-	@Column(name = "NO_JOB", nullable = false, length = 10)
+	@Column(name = "NO_JOB",
+			nullable = false,
+			length = 10)
 	public String getNoJob() {
 		return this.noJob;
 	}
@@ -154,7 +194,9 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.noJob = noJob;
 	}
 
-	@Column(name = "NO_SUBCONTRACT", nullable = false, length = 8)
+	@Column(name = "NO_SUBCONTRACT",
+			nullable = false,
+			length = 8)
 	public String getNoSubcontract() {
 		return this.noSubcontract;
 	}
@@ -163,7 +205,10 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.noSubcontract = noSubcontract;
 	}
 
-	@Column(name = "NO", nullable = false, precision = 10, scale = 0)
+	@Column(name = "NO",
+			nullable = false,
+			precision = 10,
+			scale = 0)
 	public long getNo() {
 		return this.no;
 	}
@@ -172,7 +217,9 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.no = no;
 	}
 
-	@Column(name = "TYPE_HD", nullable = false, length = 20)
+	@Column(name = "TYPE_HD",
+			nullable = false,
+			length = 20)
 	public String getTypeHd() {
 		return this.typeHd;
 	}
@@ -181,7 +228,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.typeHd = typeHd;
 	}
 
-	@Column(name = "TYPE_VO", length = 4)
+	@Column(name = "TYPE_VO",
+			length = 4)
 	public String getTypeVo() {
 		return this.typeVo;
 	}
@@ -190,7 +238,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.typeVo = typeVo;
 	}
 
-	@Column(name = "BPI", length = 510)
+	@Column(name = "BPI",
+			length = 510)
 	public String getBpi() {
 		return this.bpi;
 	}
@@ -199,7 +248,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.bpi = bpi;
 	}
 
-	@Column(name = "DESCRIPTION", length = 4000)
+	@Column(name = "DESCRIPTION",
+			length = 4000)
 	public String getDescription() {
 		return this.description;
 	}
@@ -208,7 +258,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.description = description;
 	}
 
-	@Column(name = "QUANTITY", scale = 4)
+	@Column(name = "QUANTITY",
+			scale = 4)
 	public BigDecimal getQuantity() {
 		return this.quantity;
 	}
@@ -217,7 +268,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.quantity = quantity;
 	}
 
-	@Column(name = "RATE_ADDENDUM", scale = 4)
+	@Column(name = "RATE_ADDENDUM",
+			scale = 4)
 	public BigDecimal getRateAddendum() {
 		return this.rateAddendum;
 	}
@@ -235,7 +287,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.amtAddendum = amtAddendum;
 	}
 
-	@Column(name = "RATE_BUDGET", scale = 4)
+	@Column(name = "RATE_BUDGET",
+			scale = 4)
 	public BigDecimal getRateBudget() {
 		return this.rateBudget;
 	}
@@ -253,7 +306,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.amtBudget = amtBudget;
 	}
 
-	@Column(name = "QUANTITY_TBA", scale = 4)
+	@Column(name = "QUANTITY_TBA",
+			scale = 4)
 	public BigDecimal getQuantityTba() {
 		return this.quantityTba;
 	}
@@ -262,7 +316,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.quantityTba = quantityTba;
 	}
 
-	@Column(name = "RATE_ADDENDUM_TBA", scale = 4)
+	@Column(name = "RATE_ADDENDUM_TBA",
+			scale = 4)
 	public BigDecimal getRateAddendumTba() {
 		return this.rateAddendumTba;
 	}
@@ -280,7 +335,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.amtAddendumTba = amtAddendumTba;
 	}
 
-	@Column(name = "RATE_BUDGET_TBA", scale = 4)
+	@Column(name = "RATE_BUDGET_TBA",
+			scale = 4)
 	public BigDecimal getRateBudgetTba() {
 		return this.rateBudgetTba;
 	}
@@ -298,7 +354,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.amtBudgetTba = amtBudgetTba;
 	}
 
-	@Column(name = "CODE_OBJECT", length = 12)
+	@Column(name = "CODE_OBJECT",
+			length = 12)
 	public String getCodeObject() {
 		return this.codeObject;
 	}
@@ -307,7 +364,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.codeObject = codeObject;
 	}
 
-	@Column(name = "CODE_SUBSIDIARY", length = 16)
+	@Column(name = "CODE_SUBSIDIARY",
+			length = 16)
 	public String getCodeSubsidiary() {
 		return this.codeSubsidiary;
 	}
@@ -316,7 +374,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.codeSubsidiary = codeSubsidiary;
 	}
 
-	@Column(name = "UNIT", length = 20)
+	@Column(name = "UNIT",
+			length = 20)
 	public String getUnit() {
 		return this.unit;
 	}
@@ -325,7 +384,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.unit = unit;
 	}
 
-	@Column(name = "REMARKS", length = 1000)
+	@Column(name = "REMARKS",
+			length = 1000)
 	public String getRemarks() {
 		return this.remarks;
 	}
@@ -334,7 +394,9 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.remarks = remarks;
 	}
 
-	@Column(name = "ID_HEADER_REF", precision = 19, scale = 0)
+	@Column(name = "ID_HEADER_REF",
+			precision = 19,
+			scale = 0)
 	public BigDecimal getIdHeaderRef() {
 		return this.idHeaderRef;
 	}
@@ -343,7 +405,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.idHeaderRef = idHeaderRef;
 	}
 
-	@Column(name = "NO_SUBCONTRACT_CHARGED_REF", length = 4)
+	@Column(name = "NO_SUBCONTRACT_CHARGED_REF",
+			length = 4)
 	public String getNoSubcontractChargedRef() {
 		return noSubcontractChargedRef;
 	}
@@ -352,7 +415,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.noSubcontractChargedRef = noSubcontractChargedRef;
 	}
 
-	@Column(name = "CODE_OBJECT_FOR_DAYWORK", length = 6)
+	@Column(name = "CODE_OBJECT_FOR_DAYWORK",
+			length = 6)
 	public String getCodeObjectForDaywork() {
 		return codeObjectForDaywork;
 	}
@@ -361,7 +425,8 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.codeObjectForDaywork = codeObjectForDaywork;
 	}
 
-	@Column(name = "TYPE_ACTION", length = 10)
+	@Column(name = "TYPE_ACTION",
+			length = 10)
 	public String getTypeAction() {
 		return typeAction;
 	}
@@ -369,7 +434,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	public void setTypeAction(String typeAction) {
 		this.typeAction = typeAction;
 	}
-	
+
 	@Column(name = "ID_RESOURCE_SUMMARY")
 	public BigDecimal getIdResourceSummary() {
 		return idResourceSummary;
@@ -378,23 +443,20 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	public void setIdResourceSummary(BigDecimal idResourceSummary) {
 		this.idResourceSummary = idResourceSummary;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "AddendumDetail [id=" + id + ", idAddendum=" + idAddendum + ", noJob=" + noJob + ", noSubcontract="
-				+ noSubcontract + ", no=" + no + ", typeHd=" + typeHd + ", typeVo=" + typeVo + ", bpi=" + bpi
-				+ ", description=" + description + ", quantity=" + quantity + ", rateAddendum=" + rateAddendum
-				+ ", amtAddendum=" + amtAddendum + ", rateBudget=" + rateBudget + ", amtBudget=" + amtBudget
-				+ ", quantityTba=" + quantityTba + ", rateAddendumTba=" + rateAddendumTba + ", amtAddendumTba="
-				+ amtAddendumTba + ", rateBudgetTba=" + rateBudgetTba + ", amtBudgetTba=" + amtBudgetTba
-				+ ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", unit=" + unit + ", remarks="
-				+ remarks + ", idHeaderRef=" + idHeaderRef + "]";
+		return "AddendumDetail [id=" + id + ", idAddendum=" + idAddendum + ", noJob=" + noJob + ", noSubcontract=" + noSubcontract + ", no=" + no + ", typeHd=" + typeHd + ", typeVo=" + typeVo + ", bpi=" + bpi + ", description=" + description + ", quantity=" + quantity + ", rateAddendum=" + rateAddendum + ", amtAddendum=" + amtAddendum + ", rateBudget=" + rateBudget + ", amtBudget=" + amtBudget + ", quantityTba=" + quantityTba + ", rateAddendumTba=" + rateAddendumTba + ", amtAddendumTba=" + amtAddendumTba + ", rateBudgetTba=" + rateBudgetTba + ", amtBudgetTba=" + amtBudgetTba + ", codeObject=" + codeObject + ", codeSubsidiary=" + codeSubsidiary + ", unit=" + unit + ", remarks=" + remarks + ", idHeaderRef=" + idHeaderRef + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -428,7 +490,9 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -559,8 +623,5 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 			return false;
 		return true;
 	}
-
-	
-
 
 }

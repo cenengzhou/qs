@@ -1,32 +1,27 @@
 <div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
-			<li><a ui-sref="job.dashboard" ng-click="activeMenu = ''"><i class="fa fa-dashboard"></i>
-					Dashboard</a></li>
+			<li><a ui-sref="job.dashboard" ng-click="activeMenu = ''"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 			<li class="active">Enquiry</li>
 		</ol>
 	</section>
 	<div class="clearfix"></div>
 	<!-- Main content -->
-	<section class="content" style="margin-left: 0px !important">
-	<div class="row col-md-8 col-md-push-2">
-	<table class="table">
-	<tr ng-repeat="btn in btns">
-	<td class="col-md-3" style="text-align:right">
-	<button type="button" name="{{btn.name}}" id="{{btn.name}}" value="" class="enquiryInfoBtn" style="width:200px"
-uib-popover-html="btn.popoverHtml" 
-popover-placement="right"
-popover-trigger="outsideClick" ng-mouseover="showPopover(btn.name)"
-popover-is-open="{{btn.name}}.show"
->{{btn.title}}<br></button>
-	</td>
-	<td class="col-md-9">
-		<div class="box box-primary" style="padding:3px;height:70px" ng-bind-html="btn.description">
+	<section style="margin-left: 0px !important">
+		<div class="row col-md-8 col-md-push-2">
+			<div ng-repeat="btn in btns">
+				<div class="col-md-4" style="text-align: right">
+					<button type="button" name="{{btn.name}}" id="{{btn.name}}" value="" 
+							class="btn btn-lg btn-inverse" style="width: 250px" uib-popover-html="btn.popoverHtml" popover-placement="right"
+							popover-trigger="outsideClick" ng-mouseover="showPopover(btn.name)" popover-is-open="{{btn.name}}.show">
+						<i class="fa fa-search fa-2x pull-left"></i> <b>{{btn.title}}</b><br> <small>version 1.2.3</small>
+					</button>
+				</div>
+				<div class="col-md-8" style="padding: 3px; height: 80px">
+					<div class="panel panel-primary" ng-bind-html="btn.description"></div>
+				</div>
+			</div>
 		</div>
-	</td>
-	</tr>
-	</table>
-	</div>
 	</section>
 
 </div>

@@ -33,17 +33,19 @@ import com.gammon.qs.domain.Subcontract;
 @DynamicUpdate
 @SelectBeforeUpdate
 @Table(name = "ADDENDUM")
-@SequenceGenerator(name = "ADDENDUM_GEN", sequenceName = "ADDENDUM_SEQ", allocationSize = 1)
+@SequenceGenerator(	name = "ADDENDUM_GEN",
+					sequenceName = "ADDENDUM_SEQ",
+					allocationSize = 1)
 public class Addendum extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = -730074274051941598L;
-	
-	//Addendum Status
+
+	// Addendum Status
 	public static final String STATUS_PENDING = "PENDING";
 	public static final String STATUS_SUBMITTED = "SUBMITTED";
 	public static final String STATUS_APPROVED = "APPROVED";
-	
-	//Addendum Approval Status
+
+	// Addendum Approval Status
 	public static final String APPROVAL_STATUS_NA = "N/A";
 	public static final String APPROVAL_STATUS_APPROVED = "APPROVED";
 	public static final String APPROVAL_STATUS_REJECTED = "REJECTED";
@@ -57,25 +59,28 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private String nameSubcontractor;
 	private long no;
 	private String title;
-	private BigDecimal amtSubcontractRemeasured;
-	private BigDecimal amtSubcontractRevised;
-	private BigDecimal amtAddendumTotal;
-	private BigDecimal amtAddendumTotalTba;
-	private BigDecimal amtAddendum;
-	private BigDecimal amtSubcontractRevisedTba;
+	private BigDecimal amtSubcontractRemeasured = new BigDecimal(0.00);
+	private BigDecimal amtSubcontractRevised = new BigDecimal(0.00);
+	private BigDecimal amtAddendumTotal = new BigDecimal(0.00);
+	private BigDecimal amtAddendumTotalTba = new BigDecimal(0.00);
+	private BigDecimal amtAddendum = new BigDecimal(0.00);
+	private BigDecimal amtSubcontractRevisedTba = new BigDecimal(0.00);
 	private Date dateSubmission;
 	private Date dateApproval;
 	private String status;
 	private String statusApproval = APPROVAL_STATUS_NA;
 	private String usernamePreparedBy;
 	private String remarks;
-	
 
-	public Addendum() {
-	}
+	public Addendum() {}
 
-	public Addendum(BigDecimal id, String noJob, String noSubcontract, String noSubcontractor, long no,
-			String usernameCreated, Date dateCreated) {
+	public Addendum(BigDecimal id,
+					String noJob,
+					String noSubcontract,
+					String noSubcontractor,
+					long no,
+					String usernameCreated,
+					Date dateCreated) {
 		this.id = id;
 		this.noJob = noJob;
 		this.noSubcontract = noSubcontract;
@@ -85,13 +90,31 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.dateCreated = dateCreated;
 	}
 
-	public Addendum(BigDecimal id, Subcontract idSubcontract, String noJob, String noSubcontract,
-			String descriptionSubcontract, String noSubcontractor, String nameSubcontractor, long no, String title,
-			BigDecimal amtSubcontractRemeasured, BigDecimal amtSubcontractRevised, BigDecimal amtAddendumTotal,
-			BigDecimal amtAddendumTotalTba, BigDecimal amtAddendum, BigDecimal amtSubcontractRevisedTba,
-			Date dateSubmission, Date dateApproval, String status, String statusApproval, String usernamePreparedBy,
-			String remarks, String usernameCreated, Date dateCreated, String usernameLastModified,
-			Date dateLastModified) {
+	public Addendum(BigDecimal id,
+					Subcontract idSubcontract,
+					String noJob,
+					String noSubcontract,
+					String descriptionSubcontract,
+					String noSubcontractor,
+					String nameSubcontractor,
+					long no,
+					String title,
+					BigDecimal amtSubcontractRemeasured,
+					BigDecimal amtSubcontractRevised,
+					BigDecimal amtAddendumTotal,
+					BigDecimal amtAddendumTotalTba,
+					BigDecimal amtAddendum,
+					BigDecimal amtSubcontractRevisedTba,
+					Date dateSubmission,
+					Date dateApproval,
+					String status,
+					String statusApproval,
+					String usernamePreparedBy,
+					String remarks,
+					String usernameCreated,
+					Date dateCreated,
+					String usernameLastModified,
+					Date dateLastModified) {
 		this.id = id;
 		this.idSubcontract = idSubcontract;
 		this.noJob = noJob;
@@ -120,8 +143,12 @@ public class Addendum extends PcmsPersistedAuditObject {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADDENDUM_GEN")
-	@Column(name = "ID", unique = true, nullable = false, scale = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "ADDENDUM_GEN")
+	@Column(name = "ID",
+			unique = true,
+			nullable = false,
+			scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -129,9 +156,10 @@ public class Addendum extends PcmsPersistedAuditObject {
 	public void setId(BigDecimal id) {
 		this.id = id;
 	}
-	
+
 	@ManyToOne
-	@JoinColumn(name = "ID_SUBCONTRACT", nullable = false)
+	@JoinColumn(name = "ID_SUBCONTRACT",
+				nullable = false)
 	public Subcontract getIdSubcontract() {
 		return this.idSubcontract;
 	}
@@ -140,7 +168,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.idSubcontract = idSubcontract;
 	}
 
-	@Column(name = "NO_JOB", nullable = false, length = 10)
+	@Column(name = "NO_JOB",
+			nullable = false,
+			length = 10)
 	public String getNoJob() {
 		return this.noJob;
 	}
@@ -149,7 +179,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.noJob = noJob;
 	}
 
-	@Column(name = "NO_SUBCONTRACT", nullable = false, length = 8)
+	@Column(name = "NO_SUBCONTRACT",
+			nullable = false,
+			length = 8)
 	public String getNoSubcontract() {
 		return this.noSubcontract;
 	}
@@ -158,7 +190,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.noSubcontract = noSubcontract;
 	}
 
-	@Column(name = "DESCRIPTION_SUBCONTRACT", length = 510)
+	@Column(name = "DESCRIPTION_SUBCONTRACT",
+			length = 510)
 	public String getDescriptionSubcontract() {
 		return this.descriptionSubcontract;
 	}
@@ -167,7 +200,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.descriptionSubcontract = descriptionSubcontract;
 	}
 
-	@Column(name = "NO_SUBCONTRACTOR", nullable = false, length = 20)
+	@Column(name = "NO_SUBCONTRACTOR",
+			nullable = false,
+			length = 20)
 	public String getNoSubcontractor() {
 		return this.noSubcontractor;
 	}
@@ -176,7 +211,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.noSubcontractor = noSubcontractor;
 	}
 
-	@Column(name = "NAME_SUBCONTRACTOR", length = 510)
+	@Column(name = "NAME_SUBCONTRACTOR",
+			length = 510)
 	public String getNameSubcontractor() {
 		return this.nameSubcontractor;
 	}
@@ -185,7 +221,10 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.nameSubcontractor = nameSubcontractor;
 	}
 
-	@Column(name = "NO", nullable = false, precision = 10, scale = 0)
+	@Column(name = "NO",
+			nullable = false,
+			precision = 10,
+			scale = 0)
 	public long getNo() {
 		return this.no;
 	}
@@ -194,7 +233,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.no = no;
 	}
 
-	@Column(name = "TITLE", length = 510)
+	@Column(name = "TITLE",
+			length = 510)
 	public String getTitle() {
 		return this.title;
 	}
@@ -203,7 +243,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.title = title;
 	}
 
-	@Column(name = "AMT_SUBCONTRACT_REMEASURED")
+	@Column(name = "AMT_SUBCONTRACT_REMEASURED",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtSubcontractRemeasured() {
 		return this.amtSubcontractRemeasured;
 	}
@@ -212,7 +254,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtSubcontractRemeasured = amtSubcontractRemeasured;
 	}
 
-	@Column(name = "AMT_SUBCONTRACT_REVISED")
+	@Column(name = "AMT_SUBCONTRACT_REVISED",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtSubcontractRevised() {
 		return this.amtSubcontractRevised;
 	}
@@ -221,7 +265,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtSubcontractRevised = amtSubcontractRevised;
 	}
 
-	@Column(name = "AMT_ADDENDUM_TOTAL")
+	@Column(name = "AMT_ADDENDUM_TOTAL",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtAddendumTotal() {
 		return this.amtAddendumTotal;
 	}
@@ -230,7 +276,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtAddendumTotal = amtAddendumTotal;
 	}
 
-	@Column(name = "AMT_ADDENDUM_TOTAL_TBA")
+	@Column(name = "AMT_ADDENDUM_TOTAL_TBA",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtAddendumTotalTba() {
 		return this.amtAddendumTotalTba;
 	}
@@ -239,7 +287,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtAddendumTotalTba = amtAddendumTotalTba;
 	}
 
-	@Column(name = "AMT_ADDENDUM")
+	@Column(name = "AMT_ADDENDUM",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtAddendum() {
 		return this.amtAddendum;
 	}
@@ -248,7 +298,9 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtAddendum = amtAddendum;
 	}
 
-	@Column(name = "AMT_SUBCONTRACT_REVISED_TBA")
+	@Column(name = "AMT_SUBCONTRACT_REVISED_TBA",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmtSubcontractRevisedTba() {
 		return this.amtSubcontractRevisedTba;
 	}
@@ -258,7 +310,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "DATE_SUBMISSION", length = 7)
+	@Column(name = "DATE_SUBMISSION",
+			length = 7)
 	public Date getDateSubmission() {
 		return this.dateSubmission;
 	}
@@ -268,7 +321,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "DATE_APPROVAL", length = 7)
+	@Column(name = "DATE_APPROVAL",
+			length = 7)
 	public Date getDateApproval() {
 		return this.dateApproval;
 	}
@@ -277,7 +331,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.dateApproval = dateApproval;
 	}
 
-	@Column(name = "STATUS", length = 40)
+	@Column(name = "STATUS",
+			length = 40)
 	public String getStatus() {
 		return this.status;
 	}
@@ -286,7 +341,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.status = status;
 	}
 
-	@Column(name = "STATUS_APPROVAL", length = 40)
+	@Column(name = "STATUS_APPROVAL",
+			length = 40)
 	public String getStatusApproval() {
 		return this.statusApproval;
 	}
@@ -295,7 +351,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.statusApproval = statusApproval;
 	}
 
-	@Column(name = "USERNAME_PREPARED_BY", length = 40)
+	@Column(name = "USERNAME_PREPARED_BY",
+			length = 40)
 	public String getUsernamePreparedBy() {
 		return this.usernamePreparedBy;
 	}
@@ -304,7 +361,8 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.usernamePreparedBy = usernamePreparedBy;
 	}
 
-	@Column(name = "REMARKS", length = 2000)
+	@Column(name = "REMARKS",
+			length = 2000)
 	public String getRemarks() {
 		return this.remarks;
 	}
@@ -313,25 +371,11 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.remarks = remarks;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Addendum [id=" + id + ", idSubcontract=" + idSubcontract + ", noJob=" + noJob + ", noSubcontract="
-				+ noSubcontract + ", descriptionSubcontract=" + descriptionSubcontract + ", noSubcontractor="
-				+ noSubcontractor + ", nameSubcontractor=" + nameSubcontractor + ", no=" + no + ", title=" + title
-				+ ", amtSubcontractRemeasured=" + amtSubcontractRemeasured + ", amtSubcontractRevised="
-				+ amtSubcontractRevised + ", amtAddendumTotal=" + amtAddendumTotal + ", amtAddendumTotalTba="
-				+ amtAddendumTotalTba + ", amtAddendum=" + amtAddendum + ", amtSubcontractRevisedTba="
-				+ amtSubcontractRevisedTba + ", dateSubmission=" + dateSubmission + ", dateApproval=" + dateApproval
-				+ ", status=" + status + ", statusApproval=" + statusApproval + ", usernamePreparedBy="
-				+ usernamePreparedBy + ", remarks=" + remarks + "]";
+		return "Addendum [id=" + id + ", idSubcontract=" + idSubcontract + ", noJob=" + noJob + ", noSubcontract=" + noSubcontract + ", descriptionSubcontract=" + descriptionSubcontract + ", noSubcontractor=" + noSubcontractor + ", nameSubcontractor=" + nameSubcontractor + ", no=" + no + ", title=" + title + ", amtSubcontractRemeasured=" + amtSubcontractRemeasured + ", amtSubcontractRevised=" + amtSubcontractRevised + ", amtAddendumTotal=" + amtAddendumTotal + ", amtAddendumTotalTba=" + amtAddendumTotalTba + ", amtAddendum=" + amtAddendum + ", amtSubcontractRevisedTba=" + amtSubcontractRevisedTba + ", dateSubmission=" + dateSubmission + ", dateApproval=" + dateApproval + ", status=" + status + ", statusApproval=" + statusApproval + ", usernamePreparedBy=" + usernamePreparedBy + ", remarks=" + remarks + "]";
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -360,9 +404,6 @@ public class Addendum extends PcmsPersistedAuditObject {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -3,7 +3,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 		function($scope, $rootScope, $http, modalService, $sce) {
 
 			$scope.jobBtn = {
-					'title': 'Job',
+					'title': 'JOB',
 					'name': 'jobBtn',
 					'show': false,
 					'description': $sce.trustAsHtml('<b>The report contain all job related information for enquiry and export to csv.</b><br>\
@@ -27,7 +27,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 					         ]
 			};
 			$scope.subcontractBtn = {
-					'title': 'Subcontract',
+					'title': 'SUBCONTRACT',
 					'name': 'subcontractBtn',
 					'show': false,
 					'description': '<b>The report contain all Subcontract related information for enquiry and export to csv.</b><br>\
@@ -61,7 +61,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 					         ]
 			};
 			$scope.addressBookBtn = {
-					'title': 'Address Book',
+					'title': 'ADDRESS BOOK',
 					'name': 'addressBookBtn',
 					'show': false,
 					'description': '<b>The report contain all Address Book related information for enquiry and export to csv.</b><br>\
@@ -80,7 +80,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 					         ]
 			};
 			$scope.purchaseOrderBtn = {
-					'title': 'Purchase Order',
+					'title': 'PURCHASE ORDER',
 					'name': 'purchaseOrderBtn',
 					'show': false,
 					'description': '<b>The report contain all job related information for enquiry and export to csv.</b><br>\
