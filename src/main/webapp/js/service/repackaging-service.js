@@ -11,11 +11,6 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
     	
     	generateSnapshot:			generateSnapshot,
     	confirmAndPostRepackaingDetails: confirmAndPostRepackaingDetails,
-    	
-    	uploadRepackingAttachment:	uploadRepackingAttachment,
-    	deleteRepackagingAttachment:	deleteRepackagingAttachment,
-    	saveRepackagingTextAttachment:	saveRepackagingTextAttachment,
-    	addRepackagingTextAttachment:	addRepackagingTextAttachment
     });
 	
     function getLatestRepackaging(jobNo) {
@@ -115,59 +110,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
-    
-    function uploadRepackingAttachment(formData){
-    	var request = $http({
-			method : 'POST',
-			url : 'service/attachment/uploadRepackingAttachment',
-			data : formData,
-			headers : {
-				'Content-Type' : undefined
-			}
-    	});
-    	return( request.then( handleSuccess, handleError ) );
-    }
 
-    function deleteRepackagingAttachment(repackagingEntryID, sequenceNo){
-    	var request = $http({
-			method : 'POST',
-			url : 'service/attachment/deleteRepackagingAttachment',
-            params: {
-            	repackagingEntryID: repackagingEntryID,
-            	sequenceNo: sequenceNo
-            }
-    	});
-    	return( request.then( handleSuccess, handleError ) );
-    }
-
-    function saveRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
-    	var request = $http({
-			method : 'POST',
-			url : 'service/attachment/saveRepackagingTextAttachment',
-            params: {
-            	repackagingEntryID: repackagingEntryID,
-            	sequenceNo: sequenceNo,
-            	fileName: fileName,
-            	textAttachment: textAttachment
-            }
-    	});
-    	return( request.then( handleSuccess, handleError ) );
-    }
-   
-    function addRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
-    	var request = $http({
-			method : 'POST',
-			url : 'service/attachment/addRepackagingTextAttachment',
-            params: {
-            	repackagingEntryID: repackagingEntryID,
-            	sequenceNo: sequenceNo,
-            	fileName: fileName,
-            	textAttachment: textAttachment
-            }
-    	});
-    	return( request.then( handleSuccess, handleError ) );
-    }
-   
     // ---
     // PRIVATE METHODS.
     // ---

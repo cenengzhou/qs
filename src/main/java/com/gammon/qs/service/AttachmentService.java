@@ -21,28 +21,29 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AttachMainCertHBDao;
-import com.gammon.qs.dao.MainCertHBDao;
-import com.gammon.qs.dao.SubcontractWSDao;
+import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.AttachRepackagingHBDao;
-import com.gammon.qs.dao.RepackagingHBDao;
-import com.gammon.qs.dao.AttachSubcontractHBDao;
 import com.gammon.qs.dao.AttachSubcontractDetailHBDao;
+import com.gammon.qs.dao.AttachSubcontractHBDao;
+import com.gammon.qs.dao.MainCertHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
+import com.gammon.qs.dao.SubcontractWSDao;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachMainCert;
-import com.gammon.qs.domain.MainCert;
-import com.gammon.qs.domain.AttachRepackaging;
-import com.gammon.qs.domain.Repackaging;
-import com.gammon.qs.domain.AttachSubcontract;
-import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.AttachSubcontractDetail;
 import com.gammon.qs.domain.AttachPayment;
+import com.gammon.qs.domain.AttachRepackaging;
+import com.gammon.qs.domain.AttachSubcontract;
+import com.gammon.qs.domain.AttachSubcontractDetail;
+import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.PaymentCert;
+import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
+import com.gammon.qs.service.security.SecurityService;
 
 /**
  * koeyyeung
@@ -55,6 +56,8 @@ import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 public class AttachmentService {
 	@Autowired
 	private AttachmentConfig serviceConfig;
+	@Autowired
+	private SecurityService securityService;
 	
 	//Repackaging Attachment
 	@Autowired
@@ -558,17 +561,18 @@ public class AttachmentService {
 
 	}
 
-	public Boolean uploadTextAttachment(String nameObject, String textKey, Integer sequenceNo, String textContent, String user) throws Exception {
+	public Boolean uploadTextAttachment(String nameObject, String textKey, Integer sequenceNo, String filename, String textContent) throws Exception {
 		if (AttachSubcontract.VendorNameObject.equals(nameObject)) {
 			return new Boolean(packageWSDao.addUpdateSCTextAttachment(nameObject, textKey, sequenceNo, textContent));
 		}
+		String user = securityService.getCurrentUser().getUsername();
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
 		if (AttachSubcontract.SCPackageNameObject.equals(nameObject)){
 			AttachSubcontract dbObj = new AttachSubcontract();
 			dbObj.setTextAttachment(textContent);
-			dbObj.setFileName(AttachSubcontract.TEXTFileName);
+			dbObj.setFileName(filename);
 			dbObj.setFileLink(AttachSubcontract.FileLinkForText);
 			dbObj.setDocumentType(AttachSubcontract.TEXT);
 			dbObj.setSequenceNo(sequenceNo);
@@ -577,7 +581,7 @@ public class AttachmentService {
 		}else if (AttachSubcontract.SCPaymentNameObject.equals(nameObject)){
 			AttachPayment dbObj = new AttachPayment();
 			dbObj.setTextAttachment(textContent);
-			dbObj.setFileName(AttachSubcontract.TEXTFileName);
+			dbObj.setFileName(filename);
 			dbObj.setFileLink(AttachSubcontract.FileLinkForText);
 			dbObj.setDocumentType(AttachSubcontract.TEXT);
 			dbObj.setSequenceNo(sequenceNo);
@@ -591,7 +595,7 @@ public class AttachmentService {
 		}else if (AttachSubcontract.SCDetailsNameObject.equals(nameObject)) {
 			AttachSubcontractDetail dbObj = new AttachSubcontractDetail();
 			dbObj.setTextAttachment(textContent);
-			dbObj.setFileName(AttachSubcontract.TEXTFileName);
+			dbObj.setFileName(filename);
 			dbObj.setFileLink(AttachSubcontract.FileLinkForText);
 			dbObj.setDocumentType(AttachSubcontract.TEXT);
 			dbObj.setSequenceNo(sequenceNo);
@@ -716,123 +720,6 @@ public class AttachmentService {
 		}
 	}
 	
-	@Transactional(readOnly = true, value = "transactionManager")
-	public List<? extends AbstractAttachment> getAttachmentListForPCMS(String nameObject, String textKey) throws Exception{
-		@SuppressWarnings("unused")
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
-		String splittedTextKey[]=null;
-		String jobNumber="";
-		String packageNo="";
-		if (!AbstractAttachment.VendorNameObject.equals(nameObject)){
-			splittedTextKey = textKey.split("\\|");
-			jobNumber= splittedTextKey[0].trim();
-			packageNo = splittedTextKey[1].trim();
-		}
-		try{
-			if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 
-				List<AttachSubcontract> resultList = scAttachmentDao.getSCAttachment(jobNumber, packageNo);
-				if (resultList==null || resultList.size()<1)
-					return new ArrayList<AttachSubcontract>();
-				Collections.sort(resultList, new Comparator<AttachSubcontract>(){
-					public int compare(AttachSubcontract scAttachment1, AttachSubcontract scAttachment2) {
-						if(scAttachment1== null || scAttachment2 == null)
-							return 0;
-
-						return scAttachment1.getSequenceNo().compareTo(scAttachment2.getSequenceNo());				
-					}
-				});
-
-				//Set the file link with server path 
-				/*for(SCAttachment scAttachment: resultList){
-					if(scAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
-						scAttachment.setFileLink(serverPath + scAttachment.getFileLink());
-				}*/
-				
-				return resultList;
-			}else if (AttachSubcontract.SCPaymentNameObject.equals(nameObject)){
-				List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
-				if (resultList==null || resultList.size()<1)
-					return new ArrayList<AttachPayment>();
-				
-				Collections.sort(resultList, new Comparator<AttachPayment>(){
-					public int compare(AttachPayment scPaymentAttachment1, AttachPayment scPaymentAttachment2) {
-						if(scPaymentAttachment1== null || scPaymentAttachment2 == null)
-							return 0;
-
-						return scPaymentAttachment1.getSequenceNo().compareTo(scPaymentAttachment2.getSequenceNo());				
-					}
-				});
-				
-				//Set the file link with server path 
-//				for(SCPaymentAttachment scPaymentAttachment: resultList){
-//					if(scPaymentAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
-//						scPaymentAttachment.setFileLink(serverPath + scPaymentAttachment.getFileLink());
-//				}
-				
-				return resultList;
-			}else if (AttachSubcontract.SCDetailsNameObject.equals(nameObject.trim())){;
-				List<AttachSubcontractDetail> resultList = scDetailAttachmentDao.getSCDetailsAttachment(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo,splittedTextKey[2]));
-				if (resultList==null || resultList.size()<1)
-					return new ArrayList<AttachSubcontractDetail>();
-				Collections.sort(resultList, new Comparator<AttachSubcontractDetail>(){
-					public int compare(AttachSubcontractDetail scDetailAttachment1, AttachSubcontractDetail scDetailAttachment2) {
-						if(scDetailAttachment1== null || scDetailAttachment2 == null)
-							return 0;
-						return scDetailAttachment1.getSequenceNo().compareTo(scDetailAttachment2.getSequenceNo());				
-					}
-				});
-				
-				//Set the file link with server path 
-//				for(SCDetailsAttachment scDetailsAttachment: resultList){
-//					if(scDetailsAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
-//						scDetailsAttachment.setFileLink(serverPath + scDetailsAttachment.getFileLink());
-//				}
-				
-				return resultList;
-			}else if (AttachSubcontract.VendorNameObject.equals(nameObject.trim())){
-				List<AttachSubcontract> resultList = packageWSDao.getAttachmentList(nameObject, textKey);
-				if (resultList==null || resultList.size()<1)
-					return new ArrayList<AttachSubcontract>();
-				Collections.sort(resultList, new Comparator<AttachSubcontract>(){
-
-					public int compare(AttachSubcontract scAttachment1, AttachSubcontract scAttachment2) {
-						if(scAttachment1== null || scAttachment2 == null)
-							return 0;
-						return scAttachment1.getSequenceNo().compareTo(scAttachment2.getSequenceNo());				
-					}
-
-				});
-				return resultList;
-			}else if (AttachSubcontract.MainCertNameObject.equals(nameObject.trim())){;
-			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)));
-			if (resultList==null || resultList.size()<1)
-				return new ArrayList<AttachMainCert>();
-			Collections.sort(resultList, new Comparator<AttachMainCert>(){
-				public int compare(AttachMainCert mainCertificateAttachment1, AttachMainCert mainCertificateAttachment2) {
-					if(mainCertificateAttachment1== null || mainCertificateAttachment2 == null)
-						return 0;
-					return mainCertificateAttachment1.getSequenceNo().compareTo(mainCertificateAttachment2.getSequenceNo());				
-				}
-			});
-			
-			//Set the file link with server path 
-			/*for(MainCertificateAttachment mainCertificateAttachment: resultList){
-				if(mainCertificateAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
-					mainCertificateAttachment.setFileLink(serverPath + mainCertificateAttachment.getFileLink());
-			}*/
-			
-			return resultList;
-		}else {
-				logger.log(Level.SEVERE, "Invalid nameObject:"+nameObject+":found.");
-				return new ArrayList<AttachSubcontract>();
-
-			}
-		}catch(Exception e){
-			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
-			return new ArrayList<AttachSubcontract>();
-		}
-	}
-
 	
 	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAddendumAttachmentList(String nameObject, String textKey) throws Exception{
@@ -1081,5 +968,123 @@ public class AttachmentService {
 		}
 		return "";
 	}
+	
+	@Transactional(readOnly = true, value = "transactionManager")
+	public List<? extends AbstractAttachment> getAttachmentListForPCMS(String nameObject, String textKey) throws Exception{
+		@SuppressWarnings("unused")
+		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String splittedTextKey[]=null;
+		String jobNumber="";
+		String packageNo="";
+		if (!AbstractAttachment.VendorNameObject.equals(nameObject)){
+			splittedTextKey = textKey.split("\\|");
+			jobNumber= splittedTextKey[0].trim();
+			packageNo = splittedTextKey[1].trim();
+		}
+		try{
+			if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 
+				List<AttachSubcontract> resultList = scAttachmentDao.getSCAttachment(jobNumber, packageNo);
+				if (resultList==null || resultList.size()<1)
+					return new ArrayList<AttachSubcontract>();
+				Collections.sort(resultList, new Comparator<AttachSubcontract>(){
+					public int compare(AttachSubcontract scAttachment1, AttachSubcontract scAttachment2) {
+						if(scAttachment1== null || scAttachment2 == null)
+							return 0;
+
+						return scAttachment1.getSequenceNo().compareTo(scAttachment2.getSequenceNo());				
+					}
+				});
+
+				//Set the file link with server path 
+				/*for(SCAttachment scAttachment: resultList){
+					if(scAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
+						scAttachment.setFileLink(serverPath + scAttachment.getFileLink());
+				}*/
+				
+				return resultList;
+			}else if (AttachSubcontract.SCPaymentNameObject.equals(nameObject)){
+				List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])));
+				if (resultList==null || resultList.size()<1)
+					return new ArrayList<AttachPayment>();
+				
+				Collections.sort(resultList, new Comparator<AttachPayment>(){
+					public int compare(AttachPayment scPaymentAttachment1, AttachPayment scPaymentAttachment2) {
+						if(scPaymentAttachment1== null || scPaymentAttachment2 == null)
+							return 0;
+
+						return scPaymentAttachment1.getSequenceNo().compareTo(scPaymentAttachment2.getSequenceNo());				
+					}
+				});
+				
+				//Set the file link with server path 
+//				for(SCPaymentAttachment scPaymentAttachment: resultList){
+//					if(scPaymentAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
+//						scPaymentAttachment.setFileLink(serverPath + scPaymentAttachment.getFileLink());
+//				}
+				
+				return resultList;
+			}else if (AttachSubcontract.SCDetailsNameObject.equals(nameObject.trim())){;
+				List<AttachSubcontractDetail> resultList = scDetailAttachmentDao.getSCDetailsAttachment(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo,splittedTextKey[2]));
+				if (resultList==null || resultList.size()<1)
+					return new ArrayList<AttachSubcontractDetail>();
+				Collections.sort(resultList, new Comparator<AttachSubcontractDetail>(){
+					public int compare(AttachSubcontractDetail scDetailAttachment1, AttachSubcontractDetail scDetailAttachment2) {
+						if(scDetailAttachment1== null || scDetailAttachment2 == null)
+							return 0;
+						return scDetailAttachment1.getSequenceNo().compareTo(scDetailAttachment2.getSequenceNo());				
+					}
+				});
+				
+				//Set the file link with server path 
+//				for(SCDetailsAttachment scDetailsAttachment: resultList){
+//					if(scDetailsAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
+//						scDetailsAttachment.setFileLink(serverPath + scDetailsAttachment.getFileLink());
+//				}
+				
+				return resultList;
+			}else if (AttachSubcontract.VendorNameObject.equals(nameObject.trim())){
+				List<AttachSubcontract> resultList = packageWSDao.getAttachmentList(nameObject, textKey);
+				if (resultList==null || resultList.size()<1)
+					return new ArrayList<AttachSubcontract>();
+				Collections.sort(resultList, new Comparator<AttachSubcontract>(){
+
+					public int compare(AttachSubcontract scAttachment1, AttachSubcontract scAttachment2) {
+						if(scAttachment1== null || scAttachment2 == null)
+							return 0;
+						return scAttachment1.getSequenceNo().compareTo(scAttachment2.getSequenceNo());				
+					}
+
+				});
+				return resultList;
+			}else if (AttachSubcontract.MainCertNameObject.equals(nameObject.trim())){;
+			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)));
+			if (resultList==null || resultList.size()<1)
+				return new ArrayList<AttachMainCert>();
+			Collections.sort(resultList, new Comparator<AttachMainCert>(){
+				public int compare(AttachMainCert mainCertificateAttachment1, AttachMainCert mainCertificateAttachment2) {
+					if(mainCertificateAttachment1== null || mainCertificateAttachment2 == null)
+						return 0;
+					return mainCertificateAttachment1.getSequenceNo().compareTo(mainCertificateAttachment2.getSequenceNo());				
+				}
+			});
+			
+			//Set the file link with server path 
+			/*for(MainCertificateAttachment mainCertificateAttachment: resultList){
+				if(mainCertificateAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
+					mainCertificateAttachment.setFileLink(serverPath + mainCertificateAttachment.getFileLink());
+			}*/
+			
+			return resultList;
+		}else {
+				logger.log(Level.SEVERE, "Invalid nameObject:"+nameObject+":found.");
+				return new ArrayList<AttachSubcontract>();
+
+			}
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
+			return new ArrayList<AttachSubcontract>();
+		}
+	}
+
 	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 }

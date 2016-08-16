@@ -746,45 +746,45 @@ public class DownloadController{
 //		}
 //	} 
 //	
-	
-	@RequestMapping(value="/gammonqs/scAttachmentDownload.smvc",method=RequestMethod.GET)
-	public void generateSCAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
-															@RequestParam(required=true,value="textKey") String textKey,
-															@RequestParam(required=true,value="sequenceNo") String sequenceNoString,
-															HttpServletRequest request, HttpServletResponse response ) {		
-				
-		logger.info("generateSCAttachment");
+//	moved to AttachmentController
+//	@RequestMapping(value="/gammonqs/scAttachmentDownload.smvc",method=RequestMethod.GET)
+//	public void generateSCAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
+//															@RequestParam(required=true,value="textKey") String textKey,
+//															@RequestParam(required=true,value="sequenceNo") String sequenceNoString,
+//															HttpServletRequest request, HttpServletResponse response ) {		
+//				
+//		logger.info("generateSCAttachment");
+//
+//		try {
+//			
+//			Integer sequenceNo = Integer.parseInt(sequenceNoString);
+//			AttachmentFile attachmentFile = attachmentService.obtainFileAttachment(nameObject.trim(), textKey, sequenceNo);
+//
+//			if (attachmentFile != null) {
+//				byte[] file = attachmentFile.getBytes();
+//				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+//				response.setContentLength(file.length);
+//				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentFile.getFileName() + "\"");
+//
+//				response.getOutputStream().write(file);
+//				response.getOutputStream().flush();
+//			} else{
+//				showAttachmentError(response);
+//			}			
+//		} catch (Exception e) {
+//			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+//			e.printStackTrace();
+//			logger.info("Error: "+e.getLocalizedMessage());
+//			showAttachmentError(response);
+//		} finally{
+//			try {
+//				response.getOutputStream().close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
-		try {
-			
-			Integer sequenceNo = Integer.parseInt(sequenceNoString);
-			AttachmentFile attachmentFile = attachmentService.obtainFileAttachment(nameObject.trim(), textKey, sequenceNo);
-
-			if (attachmentFile != null) {
-				byte[] file = attachmentFile.getBytes();
-				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-				response.setContentLength(file.length);
-				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentFile.getFileName() + "\"");
-
-				response.getOutputStream().write(file);
-				response.getOutputStream().flush();
-			} else{
-				showAttachmentError(response);
-			}			
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-			logger.info("Error: "+e.getLocalizedMessage());
-			showAttachmentError(response);
-		} finally{
-			try {
-				response.getOutputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	@RequestMapping(value="/gammonqs/scPaymentExceptionReportDownload.smvc",method=RequestMethod.GET)
 	public void generateSubcontractorPaymentExceptionalExcel(@RequestParam(required=false,value="division") String division,
 															@RequestParam(required=false,value="company") String company,

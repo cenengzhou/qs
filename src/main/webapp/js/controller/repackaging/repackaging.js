@@ -94,7 +94,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
     $scope.attachmentClick = function(){
     	$scope.isAddTextAttachment = false;
     	if(this.attach.documentType === 5){
-	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
+//	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 	    	url = 'service/attachment/downloadRepackagingAttachment?repackagingEntryID='+$scope.repackaging.id+'&sequenceNo='+this.attach.sequenceNo;
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
@@ -122,7 +122,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 		});
 		formData.append('repackagingEntryID', $scope.repackaging.id);
 		formData.append('sequenceNo', $scope.sequenceNo+1);
-		repackagingService.uploadRepackingAttachment(formData)
+		attachmentService.uploadRepackingAttachment(formData)
 		.then(function(data){
 			f.value = null;
 			$scope.loadAttachment($scope.repackaging.id);
@@ -142,7 +142,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 	$scope.deleteAttachment = function(){
 		angular.forEach($scope.repackagingAttachments, function(att){
 			if(att.selectedAttachement === true){
-				repackagingService.deleteRepackagingAttachment(parseInt($scope.repackaging.id), parseInt(att.sequenceNo))
+				attachmentService.deleteRepackagingAttachment(parseInt($scope.repackaging.id), parseInt(att.sequenceNo))
 				.then(function(data){
 					$scope.loadAttachment($scope.repackaging.id);
 					$scope.selectedAttachement = false;

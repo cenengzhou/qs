@@ -224,6 +224,14 @@ mainApp.constant('GlobalParameter', {
 			return 'Yes';
 		}
 		return 'No';
+	},
+	AbstractAttachment:{
+	                    'SCPaymentNameObject' : 'GT58012',
+	                   'SCPackageNameObject' :'GT58010',
+	                    'SCDetailsNameObject' : 'GT58011',
+//						'TenderAnalysisNameObject' : 'GT58023'; //Never used
+	                    'VendorNameObject' : 'GT58024',
+	                    'MainCertNameObject' : 'GT59026'
 	}
 	   
 });

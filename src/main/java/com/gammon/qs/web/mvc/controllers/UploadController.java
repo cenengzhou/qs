@@ -457,40 +457,41 @@ public class UploadController {
 //		}
 //	}
 	
-	@RequestMapping(value = "/gammonqs/scAttachmentUpload.smvc", method = RequestMethod.POST)
-	public void uploadSCAttachment(@RequestParam(required = true, value = "jobNumber") String jobNumber,
-								@RequestParam(required = true, value = "subcontractNo") String subcontractNo, 
-								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
-								@RequestParam(required = true, value = "nameObject") String nameObject,
-								@RequestParam(required = true, value = "textKey") String textKey,
-								@RequestParam(required = true, value = "createdUser") String createdUser,
-								@RequestParam("files") List<MultipartFile> multipartFiles,
-								HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.info("Upload SC Attachment - START");
-
-		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
-		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
-
-//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
-
-		for (MultipartFile multipartFile : multipartFiles) {
-			byte[] file = multipartFile.getBytes();
-			if (file != null) {
-
-				UploadSCAttachmentResponseObj result = attachmentRepository.uploadAttachment(nameObject, textKey, new Integer(sequenceNo), multipartFile.getOriginalFilename(), file, createdUser);
-				Map<String, Object> resultMap = new HashMap<String, Object>();
-				if (result != null) {
-					resultMap.put("success", true);
-					resultMap.put("fileName", multipartFile.getOriginalFilename());
-					logger.info("Upload Attachment: success.");
-				} else {
-					resultMap.put("success", false);
-					logger.info("error: ");
-				}
-//				response.setContentType("text/html");
-				response.getWriter().print((new Gson()).toJson(result));
-				logger.info("Upload SC Attachment -END");
-			}
-		}
-	}
+// moved to AttachmentContractor
+//	@RequestMapping(value = "/gammonqs/scAttachmentUpload.smvc", method = RequestMethod.POST)
+//	public void uploadSCAttachment(@RequestParam(required = true, value = "jobNumber") String jobNumber,
+//								@RequestParam(required = true, value = "subcontractNo") String subcontractNo, 
+//								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
+//								@RequestParam(required = true, value = "nameObject") String nameObject,
+//								@RequestParam(required = true, value = "textKey") String textKey,
+//								@RequestParam(required = true, value = "createdUser") String createdUser,
+//								@RequestParam("files") List<MultipartFile> multipartFiles,
+//								HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		logger.info("Upload SC Attachment - START");
+//
+//		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+//		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+//
+////		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+//
+//		for (MultipartFile multipartFile : multipartFiles) {
+//			byte[] file = multipartFile.getBytes();
+//			if (file != null) {
+//
+//				UploadSCAttachmentResponseObj result = attachmentRepository.uploadAttachment(nameObject, textKey, new Integer(sequenceNo), multipartFile.getOriginalFilename(), file, createdUser);
+//				Map<String, Object> resultMap = new HashMap<String, Object>();
+//				if (result != null) {
+//					resultMap.put("success", true);
+//					resultMap.put("fileName", multipartFile.getOriginalFilename());
+//					logger.info("Upload Attachment: success.");
+//				} else {
+//					resultMap.put("success", false);
+//					logger.info("error: ");
+//				}
+////				response.setContentType("text/html");
+//				response.getWriter().print((new Gson()).toJson(result));
+//				logger.info("Upload SC Attachment -END");
+//			}
+//		}
+//	}
 }

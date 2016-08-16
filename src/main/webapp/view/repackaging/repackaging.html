@@ -192,7 +192,8 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="attach in repackagingAttachments" style="cursor: pointer">
+									<tr ng-repeat="attach in repackagingAttachments"
+										style="cursor: pointer">
 										<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
 											<input type="checkbox" id="fileRadiobox-{{$index}}"
 											ng-change="checkSelected()" name="fileRadiobox-{{$index}}"

@@ -1,9 +1,44 @@
 mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getRepackagingAttachments:		getRepackagingAttachments
+
+    	uploadRepackingAttachment:		uploadRepackingAttachment,
+    	deleteRepackagingAttachment:	deleteRepackagingAttachment,
+    	getRepackagingAttachments:		getRepackagingAttachments,
+    	saveRepackagingTextAttachment:	saveRepackagingTextAttachment,
+    	addRepackagingTextAttachment:	addRepackagingTextAttachment,
+    
+    	uploadSCAttachment:				uploadSCAttachment,
+    	deleteAttachment:				deleteAttachment,
+    	getAttachmentListForPCMS:		getAttachmentListForPCMS,
+    	uploadTextAttachment:			uploadTextAttachment
+    	
     });
    
+    function uploadRepackingAttachment(formData){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/uploadRepackingAttachment',
+			data : formData,
+			headers : {
+				'Content-Type' : undefined
+			}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function deleteRepackagingAttachment(repackagingEntryID, sequenceNo){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/deleteRepackagingAttachment',
+            params: {
+            	repackagingEntryID: repackagingEntryID,
+            	sequenceNo: sequenceNo
+            }
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
     function getRepackagingAttachments(repackagingEntryID){
     	var request = $http({
     		method: 'POST',
@@ -15,7 +50,86 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
     
+    function saveRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/saveRepackagingTextAttachment',
+            params: {
+            	repackagingEntryID: repackagingEntryID,
+            	sequenceNo: sequenceNo,
+            	fileName: fileName,
+            	textAttachment: textAttachment
+            }
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+   
+    function addRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/addRepackagingTextAttachment',
+            params: {
+            	repackagingEntryID: repackagingEntryID,
+            	sequenceNo: sequenceNo,
+            	fileName: fileName,
+            	textAttachment: textAttachment
+            }
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+   
+    function uploadSCAttachment(formData){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/uploadSCAttachment',
+			data : formData,
+			headers : {
+				'Content-Type' : undefined
+			}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
 
+    function deleteAttachment(nameObject, textKey, sequenceNumber){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/deleteAttachment',
+            params: {
+            	nameObject: nameObject,
+            	textKey: textKey,
+            	sequenceNumber: sequenceNumber
+            }
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function getAttachmentListForPCMS(nameObject, textKey){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/attachment/getAttachmentListForPCMS',
+    		params:{
+    			nameObject: nameObject,
+    			textKey: textKey
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function uploadTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/uploadTextAttachment',
+            params: {
+            	nameObject: nameObject,
+            	textKey: textKey,
+            	sequenceNo: sequenceNo,
+            	fileName: fileName,
+            	textAttachment: textAttachment
+            }
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+   
     // ---
     // PRIVATE METHODS.
     // ---

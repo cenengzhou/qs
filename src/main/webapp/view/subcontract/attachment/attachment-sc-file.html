@@ -1,0 +1,74 @@
+
+	<div class="row">{{nameObjectTest}}
+		<div class="col-md-12animated fadeIn">
+			<div class="panel panel-inverse">
+				<div class="panel-heading">Attachment</div>
+				<div class="panel-body" style="padding: 0 !important">
+					<div class="table-responsive" resize
+						ng-style="resizeWithOffset(offsetTop)">
+						<form class="form" role="form" id="attachmentForm">
+							<table class="table table-hover ">
+								<thead>
+									<tr class="inverse">
+										<th>No.</th>
+										<th>File name</th>
+										<th>Type</th>
+										<th>Created By</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="attach in attachments" style="cursor: pointer">
+										<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
+											<input type="checkbox" id="fileRadiobox-{{$index}}"
+											ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
+											ng-model="attach.selectedAttachement"></td>
+										<td ng-click="attachmentClick()">{{attach.fileName}}</td>
+										<td ng-click="attachmentClick()"><span
+											class="{{attach.fileIconClass}}"></span></td>
+										<td ng-click="attachmentClick()"><img
+											class="rounded-corner" height="30" width="30"
+											data-ng-src="{{attach.user.userIcon}}">
+											{{attach.user.UserName}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+				</div>
+				<div class="box-footer">
+					<div class="col-md-12">
+						<div class="col-md-4">
+							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
+								ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
+								<label class="btn btn-block btn-primary"> <i
+									class="glyphicon glyphicon-upload"></i> Upload File
+									Attachment&hellip; <input style="display: none;"
+									class="form-control file-loading" type="file" name="files"
+									id="attachmentFiles" ng-model="attachmentFiles"
+									onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
+									multiple />
+								</label>
+							</form>
+						</div>
+
+						<div class="col-md-4" ng-show="selectedAttachement">
+							<label
+								class="btn btn-block btn-success" ng-click="deleteAttachment()"
+								ng-disabled="!selectedAttachement"> 
+								<i class="glyphicon glyphicon-remove-circle"></i> 
+								Delete selected	Item
+							</label>
+						</div>
+						<div class="col-md-4">
+							<button class="btn btn-block btn-danger"
+								ng-click="addTextAttachment()">
+								<i class="glyphicon glyphicon-plus-sign"></i> Add Text
+								Attachment
+							</button>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		</div>
