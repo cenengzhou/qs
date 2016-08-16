@@ -179,20 +179,6 @@ public class SubcontractController {
 		return unawardedSubcontractNos;
 	}
 	
-	@RequestMapping(value = "getDefaultValuesForAddendumDetails", method = RequestMethod.GET)
-	public AddendumDetail getDefaultValuesForAddendumDetails(@RequestParam(required =true) String jobNo,
-																	@RequestParam(required =true) String subcontractNo, 
-																	@RequestParam(required =true) String lineType){
-		AddendumDetail addendumDetail = new AddendumDetail();
-		try {
-			addendumDetail = subcontractService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return addendumDetail;
-	}
-	
-	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;

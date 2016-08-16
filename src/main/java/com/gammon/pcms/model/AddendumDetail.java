@@ -59,11 +59,11 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 	private String typeVo;
 	private String bpi;
 	private String description;
-	private BigDecimal quantity;
-	private BigDecimal rateAddendum;
-	private BigDecimal amtAddendum;
-	private BigDecimal rateBudget;
-	private BigDecimal amtBudget;
+	private BigDecimal quantity  = new BigDecimal(0.00);
+	private BigDecimal rateAddendum = new BigDecimal(0.00);
+	private BigDecimal amtAddendum = new BigDecimal(0.00);
+	private BigDecimal rateBudget = new BigDecimal(0.00);
+	private BigDecimal amtBudget = new BigDecimal(0.00);
 	private String codeObject;
 	private String codeSubsidiary;
 	private String unit;
