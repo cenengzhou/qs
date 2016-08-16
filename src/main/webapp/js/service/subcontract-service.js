@@ -10,7 +10,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getSubcontractDashboardData:						getSubcontractDashboardData,
     	getAwardedSubcontractNos:							getAwardedSubcontractNos,
     	getUnawardedSubcontractNosUnderPaymentRequisition: 	getUnawardedSubcontractNosUnderPaymentRequisition,
-    	getDefaultValuesForAddendumDetails:				getDefaultValuesForAddendumDetails,
     	
     	upateSubcontract: 									upateSubcontract,
     	upateSubcontractDates: 								upateSubcontractDates,
@@ -169,20 +168,6 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             dataType: "application/json;charset=UTF-8",
             params: {
             	workScopeCode: workScopeCode
-            }
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-    
-    function getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType) {
-        var request = $http({
-            method: "get",
-            url: "service/subcontract/getDefaultValuesForAddendumDetails",
-            dataType: "application/json;charset=UTF-8",
-            params: {
-            	jobNo: jobNo,
-            	subcontractNo: subcontractNo, 
-            	lineType: lineType
             }
         });
         return( request.then( handleSuccess, handleError ) );

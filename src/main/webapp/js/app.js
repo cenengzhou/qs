@@ -525,7 +525,32 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.addendum.summary', {
 		url: "/summary",
 		templateUrl: "view/subcontract/addendum/addendum-summary.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/addendum/addendum-summary.js',
+                    ] 
+                });
+            }]
+        },
 		controller: 'AddendumSummaryCtrl'
+	})
+	.state('subcontract.addendum.form2', {
+		url: "/form2",
+		templateUrl: "view/subcontract/addendum/addendum-form2.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/addendum/addendum-form2.js',
+                    ] 
+                });
+            }]
+        },
+		controller: 'AddendumForm2Ctrl'
 	})
 	
 	.state('subcontract.payment-select', {

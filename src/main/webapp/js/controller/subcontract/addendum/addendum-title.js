@@ -7,7 +7,7 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 
 	$scope.addendum = [];
 	$scope.addendum.no = $cookies.get('addendumNo');
-
+	
 	loadData();
 	
 	
@@ -47,9 +47,8 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendum.no)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.addendum = data;
-					if($scope.addendum.status == "PENDING")
+					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;

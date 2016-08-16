@@ -21,19 +21,21 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'id', width:80, visible: false},
-			             { field: 'typeVo', displayName:"Type", width:80},
-		            	 { field: 'bpi',  displayName:"BPI",  width:100 },
+			             { field: 'typeVo', displayName:"Type", width:50},
+		            	 { field: 'bpi',  displayName:"BPI",  width:90 },
 		            	 {field: 'description' ,  width:100 },
-		            	 { field: 'rateBudgetTba',  width:100 },
-			             { field: 'rateAddendumTba' ,  width:100 },
-			             { field: 'quantityTba' ,  width:100 },
-			             { field: 'amtBudgetTba' ,  width:100 },
-			             { field: 'amtAddendumTba' ,  width:100 },
-		            	 {field: 'codeObject',  displayName:"Object Code",  width:100 },
-		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:100 },
-		            	 {field: 'unit' ,  width:100 },
+		            	 { field: 'quantity' , displayName:"Quantity", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+		            	 { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'amtAddendum' , displayName:"Amount",  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+		            	 {field: 'codeObject',  displayName:"Object Code",  width:80 },
+		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:80 },
+		            	 {field: 'unit' ,  width:50 },
 		            	 {field: 'remarks' ,  width:100 },
-		            	 {field: 'idHeaderRef', visible: false}
+		            	 {field: 'idHeaderRef', width:100, visible: false},
+		            	 {field: 'idResourceSummary', width:100, visible: false},
+		            	 {field: 'typeAction', width:100, visible: false}
 		            	 ]
 	};
 
@@ -78,27 +80,17 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	$scope.updateDetail = function () {
 		var dataRows = $scope.gridApi.selection.getSelectedRows();
-		if(dataRows.length == 0){
+		if(dataRows.length == 0 || dataRows.length > 1){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select 1 row to update addendum.");
-			return;
-		}else if(dataRows.length > 1){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please only select 1 row to update addendum.");
 			return;
 		}
 
 		console.log(dataRows[0]);
-		if(dataRows[0]['typeAction'] == 'ADD'){
-			if(dataRows[0]['rateBudgetTba'] == 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Budgetd resource cannot be updated here. Only Add or Remove is allowed here.");
-				return;
-			}else{
-				
-			}
-		}else if(dataRows[0]['typeAction'] == 'UPDATE'){
-			
-		}else if(dataRows[0]['typeAction'] == 'DELETE'){
+		if(dataRows[0]['typeAction'] == 'DELETE'){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
+		}else{
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'UPDATE', dataRows[0]);
 		}
 
 
@@ -106,7 +98,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	$scope.open = function(view){
 		if(view == 'noBudget')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl');
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'ADD');
 		else if(view == 'withBudget')
 			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-v3-modal.html', 'AddendumDetailV3Ctrl');
 		else if(view == 'update')
@@ -129,7 +121,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log("Subcontract");
 					console.log(data);
 					var subcontract = data;
 					if(subcontract.subcontractStatus < 500){
@@ -184,7 +175,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 	}
 	
 	function deleteAddendumDetail(addendumDetailList){
-		addendumService.deleteAddendumDetail($scope.jobNo, $scope.subcontractNo, addendumDetailList)
+		addendumService.deleteAddendumDetail($scope.jobNo, $scope.subcontractNo, $scope.addendumNo, addendumDetailList)
 		.then(
 				function( data ) {
 					if(data.length != 0){

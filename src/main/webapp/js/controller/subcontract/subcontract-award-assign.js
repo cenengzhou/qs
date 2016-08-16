@@ -15,15 +15,12 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			enableRowSelection: true,
 			enableSelectAll: true,
 			multiSelect: true,
-			enableCellEditOnFocus : true,
 			showGridFooter : false,
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
 			
-			rowEditWaitInterval :-1,
-			
 			columnDefs: [
-			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "grid-theme-blue", enableCellEdit: true},
+			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "grid-theme-blue", enableCellEdit: false},
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
@@ -41,13 +38,22 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
-		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+		
+		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+			if(row.isSelected) { 
+				row.entity.packageNo = $scope.subcontractNo;
+			}else{
+				row.entity.packageNo = '';
+			}
+		});
+		
+		/*gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 
 			if(newValue!= null && newValue.length !=0  &&  newValue!= parseInt($scope.subcontractNo)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources can be assigned to the current subcontract only.");
 				return;
 			}
-		});
+		});*/
 
 	}
 
@@ -58,8 +64,9 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+//			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+//			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+			var dataRows =	$scope.gridOptions.data;
 			
 			if(dataRows.length==0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");

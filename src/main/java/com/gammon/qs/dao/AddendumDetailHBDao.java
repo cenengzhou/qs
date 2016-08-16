@@ -18,22 +18,23 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.qs.domain.SubcontractDetail;
 @Repository
 public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 	private Logger logger = Logger.getLogger(AddendumDetailHBDao.class.getName());
 
 
-	public AddendumDetail getAddendumDetailHeader(BigDecimal addendumDetailHeaderRef) throws DataAccessException{
+	public AddendumDetail getAddendumDetail(BigDecimal id) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("id", addendumDetailHeaderRef));
-		criteria.add(Restrictions.eq("typeHd", AddendumDetail.TYPE_HD.HEADER.toString()));
+		criteria.add(Restrictions.eq("id", id));
 
 		return (AddendumDetail) criteria.uniqueResult();
 	}
 	
-	public AddendumDetail getAddendumDetail(BigDecimal id) throws DataAccessException {
+	public AddendumDetail getAddendumDetailHeader(BigDecimal addendumDetailHeaderRef) throws DataAccessException{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("id", id));
+		criteria.add(Restrictions.eq("id", addendumDetailHeaderRef));
+		criteria.add(Restrictions.eq("typeHd", AddendumDetail.TYPE_HD.HEADER.toString()));
 
 		return (AddendumDetail) criteria.uniqueResult();
 	}
@@ -70,11 +71,30 @@ public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 	}
 
 	
+	public int getAddendumDetailsSeqNo(String noJob, String noSubcontract) {
+		int sequenceNo = 1;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noJob", noJob));
+		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.eq("typeHd", AddendumDetail.TYPE_HD.DETAIL.toString()));
+		
+		if(criteria.list()!=null)
+			sequenceNo = criteria.list().size()+1;
+		
+		return sequenceNo;
+	}
+	
+
+	public AddendumDetail getAddendumDetailBySubcontractDetail(SubcontractDetail subcontractDetail) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("idSubcontractDetail", "idSubcontractDetail");
+		criteria.add(Restrictions.eq("idSubcontractDetail.id", subcontractDetail.getId()));
+
+		return (AddendumDetail) criteria.uniqueResult();
+	}
 
 	public AddendumDetailHBDao() {
 		super(AddendumDetail.class);
 	}
-
-
 
 }

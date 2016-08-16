@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.AddendumService;
 
 @RestController
@@ -128,6 +130,21 @@ public class AddendumController {
 	}
 	
 	
+
+	@RequestMapping(value = "getDefaultValuesForAddendumDetails", method = RequestMethod.GET)
+	public AddendumDetail getDefaultValuesForAddendumDetails(@RequestParam(required = true) String jobNo, 
+												@RequestParam(required = true) String subcontractNo, 
+												@RequestParam(required = true) String lineType
+												){
+		AddendumDetail addendumDetail = null;
+		try{
+			addendumDetail = addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
+		}catch(DatabaseOperationException ex){
+			ex.printStackTrace();
+		}
+		return addendumDetail;
+	}
+	
 	@RequestMapping(value = "createAddendum", method = RequestMethod.POST)
 	public String createAddendum(@RequestBody Addendum addendum){
 		String result = "";
@@ -185,10 +202,11 @@ public class AddendumController {
 	@RequestMapping(value = "deleteAddendumDetail", method = RequestMethod.POST)
 	public String deleteAddendumDetail(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
+										@RequestParam(required = true) String addendumNo,
 										@RequestBody List<AddendumDetail> addendumDetailList){
 		String result = "";
 		try{
-			result = addendumService.deleteAddendumDetail(jobNo, subcontractNo, addendumDetailList);
+			result = addendumService.deleteAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailList);
 		}catch(Exception exception){
 			result  = "Addendum Detail Header cannot be deleted.";
 			exception.printStackTrace();
@@ -211,6 +229,22 @@ public class AddendumController {
 		return result;
 	}
 	
+	@RequestMapping(value = "updateAddendumDetail", method = RequestMethod.POST)
+	public String updateAddendumDetail(@RequestParam(required = true) String jobNo, 
+										@RequestParam(required = true) String subcontractNo,
+										@RequestParam(required = true) String addendumNo, 
+										@RequestBody AddendumDetail addendumDetail){
+		String result = "";
+		try{
+			result = addendumService.updateAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetail);
+		}catch(Exception exception){
+			result  = "Addendum Detail cannot be updated.";
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 	@RequestMapping(value = "addAddendumFromResourceSummaries", method = RequestMethod.POST)
 	public String addAddendumFromResourceSummaries(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -220,6 +254,22 @@ public class AddendumController {
 		String result = "";
 		try{
 			result = addendumService.addAddendumFromResourceSummaries(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailHeaderRef, resourceSummaryList);
+		}catch(Exception exception){
+			result  = "Addendum Detail cannot be created.";
+			exception.printStackTrace();
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "deleteAddendumFromSCDetails", method = RequestMethod.POST)
+	public String deleteAddendumFromSCDetails(@RequestParam(required = true) String jobNo, 
+										@RequestParam(required = true) String subcontractNo,
+										@RequestParam(required = true) String addendumNo, 
+										@RequestParam(required = true)BigDecimal addendumDetailHeaderRef,
+										@RequestBody List<SubcontractDetail> subcontractDetailList){
+		String result = "";
+		try{
+			result = addendumService.deleteAddendumFromSCDetails(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailHeaderRef, subcontractDetailList);
 		}catch(Exception exception){
 			result  = "Addendum Detail cannot be created.";
 			exception.printStackTrace();

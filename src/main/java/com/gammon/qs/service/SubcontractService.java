@@ -923,14 +923,14 @@ public class SubcontractService {
 		newVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
 		newVO.setUnit(addendumDetail.getUnit());
 		if (newVO instanceof SubcontractDetailVO){
-			((SubcontractDetailVO) newVO).setToBeApprovedQuantity(addendumDetail.getQuantityTba().doubleValue());
-			((SubcontractDetailVO) newVO).setToBeApprovedRate(addendumDetail.getRateAddendumTba().doubleValue());
+			((SubcontractDetailVO) newVO).setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
+			((SubcontractDetailVO) newVO).setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
 			((SubcontractDetailVO) newVO).setCumWorkDoneQuantity(new Double(0));
 			((SubcontractDetailVO) newVO).setPostedWorkDoneQuantity(new Double(0));
 			newVO.setQuantity(new Double(0));
 			newVO.setApproved(SubcontractDetail.NOT_APPROVED);
 		}else{
-			newVO.setQuantity(addendumDetail.getQuantityTba().doubleValue());
+			newVO.setQuantity(addendumDetail.getQuantity().doubleValue());
 			newVO.setApproved(SubcontractDetail.APPROVED);
 		}
 		
@@ -941,7 +941,7 @@ public class SubcontractService {
 		 * **/
 		newVO.setNewQuantity(newVO.getQuantity());
 		
-		newVO.setScRate(addendumDetail.getRateAddendumTba().doubleValue());
+		newVO.setScRate(addendumDetail.getRateAddendum().doubleValue());
 		newVO.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
 		newVO.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
 		newVO.setRemark(addendumDetail.getRemarks());
@@ -964,7 +964,7 @@ public class SubcontractService {
 					scDetailsCC.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
 					scDetailsCC.setUnit(addendumDetail.getUnit());
 					scDetailsCC.setScRate(newVO.getScRate()*-1);
-					scDetailsCC.setQuantity(addendumDetail.getQuantityTba().doubleValue());
+					scDetailsCC.setQuantity(addendumDetail.getQuantity().doubleValue());
 					scDetailsCC.setPostedCertifiedQuantity(new Double(0));
 					scDetailsCC.setCumCertifiedQuantity(new Double(0));
 					scDetailsCC.setResourceNo(new Integer(0));
@@ -4433,56 +4433,6 @@ public class SubcontractService {
 		return resultDetails;
 	}
 
-	/**
-	 * modified on 09 Aug, 2016
-	 * @author koeyyeung
-	 * **/
-	public AddendumDetail getDefaultValuesForAddendumDetails(String jobNo, String subcontractNo, String lineType) throws Exception{
-		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
-			return null;
-		AddendumDetail resultDetails = new AddendumDetail();
-		String defaultObj="140299";
-		String defaultCCObj="140288";
-		//Check labour/Plant/Material
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-		//if (scPackage==null || !scPackage.isAwarded()||"F".equals(scPackage.getPaymentStatus()))
-		if (scPackage==null ||"F".equals(scPackage.getPaymentStatus()))	
-			throw new ValidateBusinessLogicException("Invalid status of package:"+scPackage.getPackageNo());
-		if (Subcontract.CONSULTANCY_AGREEMENT.equals(scPackage.getFormOfSubcontract())){
-			defaultObj="140399";
-			defaultCCObj="140388";
-		}
-		else if (scPackage.getLabourIncludedContract()&&!scPackage.getPlantIncludedContract()&&!scPackage.getMaterialIncludedContract()){
-			defaultObj="140199";
-			defaultCCObj="140188";
-		}
-
-		if ("MS".equals(lineType.trim()))
-			//Get Obj from AAI-"SCMOS"
-			resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCMOS", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-		else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
-			if ("DSC".equals(scPackage.getSubcontractorNature()))
-				//Get Obj from AAI-"SCDRT"
-				resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCDRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-			else
-				//SubcontractorNature is NSC/NDSC
-				//Get Obj from AAI-"SCNRT"
-				resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCNRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-		}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim()))
-			resultDetails.setCodeObject(defaultCCObj);
-		else 
-			resultDetails.setCodeObject(defaultObj);
-
-		if ("CF".equals(lineType.trim()))
-			//Get sub from AAI-"SCCPF"
-			resultDetails.setCodeSubsidiary(jobCostWSDao.obtainAccountCode("SCCPF", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getSubsidiary());
-
-		
-		int sequenceNo = subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo())+1;
-		resultDetails.setBpi(SCDetailsLogic.generateBillItem(scPackage,lineType,sequenceNo));
-		resultDetails.setTypeVo(lineType.trim());
-		return resultDetails;
-	}
 	
 	/**
 	 * Get Provision Posting History bY Job No., Subcontract No., Year and Month

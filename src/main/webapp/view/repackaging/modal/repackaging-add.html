@@ -55,7 +55,7 @@
 
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>Quantity</label> <input type="number" ng-change="calculate('quantity')" ng-paste="calculate('quantity')"
+									<label>Quantity</label> <input data-parsley-type="number" ng-change="calculate('quantity')" ng-paste="calculate('quantity')"
 										class="form-control" ng-model="resourceSummary.quantity"
 										required />
 								</div>
@@ -63,14 +63,14 @@
 
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>SC Rate</label> <input type="number"  ng-change="calculate('rate')" ng-paste="calculate('rate')"
+									<label>SC Rate</label> <input data-parsley-type="number"  ng-change="calculate('rate')" ng-paste="calculate('rate')"
 										class="form-control " ng-model="resourceSummary.rate" required />
 								</div>
 							</div>
 
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>Total Amount</label> <input type="number"  ng-model="resourceSummary.amountBudget" ng-change="calculate('totalAmount')" ng-paste="calculate('totalAmount')"
+									<label>Total Amount</label> <input data-parsley-type="number"  ng-model="resourceSummary.amountBudget" ng-change="calculate('totalAmount')" ng-paste="calculate('totalAmount')"
 										class="form-control" required />
 								</div>
 							</div>

@@ -1,11 +1,13 @@
-mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'unitService', '$stateParams', '$cookies', '$state', '$uibModalInstance', 'roundUtil',
-                                              function($scope ,modalService, addendumService, subcontractService, unitService, $stateParams, $cookies, $state, $uibModalInstance, roundUtil) {
+mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'unitService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', 
+                                              function($scope ,modalService, addendumService, subcontractService, unitService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam) {
 
 	var jobNo = $cookies.get('jobNo');
 	var subcontractNo = $cookies.get('subcontractNo');
 	var addendumNo = $cookies.get('addendumNo');
 	
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
+	if(addendumDetailHeaderRef=='Empty')
+		addendumDetailHeaderRef = '';
 	
 	$scope.addendumDetail = [];
 	$scope.units=[];
@@ -27,61 +29,88 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	
 
 	$scope.calculate = function(field){
-		if(field == "totalAmount" && $scope.addendumDetail.amtAddendumTba != null){
-			$scope.addendumDetail.amtAddendumTba = roundUtil.round($scope.addendumDetail.amtAddendumTba, 2);
-			$scope.addendumDetail.quantityTba = roundUtil.round($scope.addendumDetail.amtAddendumTba/$scope.addendumDetail.rateAddendumTba, 4);
-			$scope.addendumDetail.rateAddendumTba = roundUtil.round($scope.addendumDetail.amtAddendumTba/$scope.addendumDetail.quantityTba, 2);
-		}else if(field == "quantity" && $scope.addendumDetail.quantityTba != null){
-			$scope.addendumDetail.quantityTba = roundUtil.round($scope.addendumDetail.quantityTba, 4);
-			$scope.addendumDetail.amtAddendumTba = roundUtil.round($scope.addendumDetail.quantityTba*$scope.addendumDetail.rateAddendumTba, 2);
-			$scope.addendumDetail.rateAddendumTba = roundUtil.round($scope.addendumDetail.amtAddendumTba/$scope.addendumDetail.quantityTba, 2);
-		}else if (field == "rate" && $scope.addendumDetail.rateAddendumTba != null){
-			$scope.addendumDetail.rateAddendumTba = roundUtil.round($scope.addendumDetail.rateAddendumTba, 2);
-			$scope.addendumDetail.amtAddendumTba = roundUtil.round($scope.addendumDetail.quantityTba*$scope.addendumDetail.rateAddendumTba, 2);
-			$scope.addendumDetail.quantityTba = roundUtil.round($scope.addendumDetail.amtAddendumTba/$scope.addendumDetail.rateAddendumTba, 4);
+		if(field == "totalAmount" && $scope.addendumDetail.amtAddendum != null){
+			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.amtAddendum, 2);
+			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
+			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 2);
+		}else if(field == "quantity" && $scope.addendumDetail.quantity != null){
+			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.quantity, 4);
+			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 2);
+		}else if (field == "rate" && $scope.addendumDetail.rateAddendum != null){
+			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 2);
+			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
 		}
 	}
 
 	//Save Function
 	$scope.save = function () {
+		$scope.disableButtons = true;
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
 			event.preventDefault();  
+			$scope.disableButtons = false;
 			return;
 		}
 
-		//Addendum without budget
-		$scope.addendumDetail.rateBudgetTba = 0;
-		$scope.addendumDetail.amtBudgetTba = 0;
-		$scope.addendumDetail.typeVo = $scope.subcontractorNature;
 		
-		//Set Header if exist
-		if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
-			$scope.addendumDetail.idHeaderRef = addendumDetailHeaderRef;
+		if(modalStatus == 'ADD'){
+			if($scope.addendumDetail.idResourceSummary == null ){//&& idSubcontractDetail ==null
+				//Addendum without budget
+				$scope.addendumDetail.rateBudget = 0;
+				$scope.addendumDetail.amtBudget = 0;
+			}
+			
+			//Set line type
+			$scope.addendumDetail.typeVo = $scope.subcontractorNature;
+			
+			//Set Header if exist
+			if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
+				$scope.addendumDetail.idHeaderRef = addendumDetailHeaderRef;
+			}
+			
+			var addendumDetailToAdd = {
+					bpi:				$scope.addendumDetail.bpi,
+					codeObject: 		$scope.addendumDetail.codeObject,	
+					codeSubsidiary:		$scope.addendumDetail.codeSubsidiary,
+					description:		$scope.addendumDetail.description,
+					quantity:			$scope.addendumDetail.quantity,
+					rateAddendum:		$scope.addendumDetail.rateAddendum, 
+					amtAddendum:		$scope.addendumDetail.amtAddendum, 
+					rateBudget: 		$scope.addendumDetail.rateBudget,
+					amtBudget: 			$scope.addendumDetail.amtBudget,
+					unit:				$scope.units.selected,
+					remarks:			$scope.addendumDetail.remarks,
+					idHeaderRef:		$scope.addendumDetail.idHeaderRef,
+					typeVo: 			$scope.addendumDetail.typeVo,
+					//idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
+			}
+			console.log("ADD");
+			console.log(addendumDetailToAdd);
+			addAddendumDetail(addendumDetailToAdd);
 		}
-		
-		$scope.addendumDetailToAdd = {
-				bpi:				$scope.addendumDetail.bpi,
-				codeObject: 		$scope.addendumDetail.codeObject,	
-				codeSubsidiary:		$scope.addendumDetail.codeSubsidiary,
-				description:		$scope.addendumDetail.description,
-				quantityTba:		$scope.addendumDetail.quantityTba,
-				rateAddendumTba:	$scope.addendumDetail.rateAddendumTba, 
-				amtAddendumTba:		$scope.addendumDetail.amtAddendumTba, 
-				rateBudgetTba: 		$scope.addendumDetail.rateBudgetTba,
-				amtBudgetTba: 		$scope.addendumDetail.amtBudgetTba,
-				unit:				$scope.units.selected,
-				remarks:			$scope.addendumDetail.remarks,
-				idHeaderRef:		$scope.addendumDetail.idHeaderRef,
-				typeVo : 			$scope.addendumDetail.typeVo,
+		else if(modalStatus == 'UPDATE'){			console.log("UPDATE");
+			updateAddendumDetail($scope.addendumDetail);
 		}
-
-		console.log($scope.addendumDetailToAdd);
-		addAddendumDetail($scope.addendumDetailToAdd);
-
 	};
 	
 	function addAddendumDetail(addendumDetail){
 		addendumService.addAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
+		.then(
+				function( data ) {
+					if(data.length != 0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been created.");
+						$uibModalInstance.close();
+						$state.reload();
+					}
+				});
+	}
+	
+	function updateAddendumDetail(addendumDetail){
+		addendumService.updateAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
 		.then(
 				function( data ) {
 					if(data.length != 0){
@@ -106,16 +135,27 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	}
 
 	$scope.$watch('subcontractorNature', function(newValue, oldValue) {
-		subcontractService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, newValue)
-		.then(
-				function( data ) {
-					if(data.length != 0){
-						$scope.addendumDetail = data;
-						/*$scope.addendumDetail.bpi = data.billItem;
-						$scope.addendumDetail.codeObject = data.objectCode;	
-						$scope.addendumDetail.codeSubsidiary = data.codeSubsidiary;*/
-					}
-				});
+		if(modalStatus == 'ADD' && modalParam == null){console.log("ADD");
+			//1. Add new VO (no budget)
+			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, newValue)
+			.then(
+					function( data ) {
+						if(data.length != 0){console.log(data);
+							$scope.addendumDetail = data;
+						}
+					});
+		}
+		else {
+			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
+			$scope.addendumDetail = modalParam;
+			$scope.subcontractorNature = modalParam.typeVo;
+			$scope.disableSelect = true;
+			
+			if(modalParam.idResourceSummary != null){
+				$scope.disableFields = true;
+			}
+		}
+		
 	});
 	
 

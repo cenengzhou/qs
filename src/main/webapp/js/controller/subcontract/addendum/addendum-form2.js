@@ -1,4 +1,4 @@
-mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 
+mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 
                                            function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
@@ -54,7 +54,6 @@ mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumS
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.addendum = data;
 					if($scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;

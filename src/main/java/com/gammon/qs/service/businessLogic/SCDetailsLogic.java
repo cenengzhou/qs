@@ -44,13 +44,6 @@ public class SCDetailsLogic {
 					throw new ValidateBusinessLogicException("posted Cert Qty and posted Workdone Qty must be zero!");
 				if (Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getCumCertifiedQuantity()) < 0 || Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getPostedCertifiedQuantity()) < 0)
 					throw new ValidateBusinessLogicException("To be approved Quantity must be larger than Cert Quantity!");
-				// Workdone are not neccessary to check
-				// if (Math.abs(wrapper.getToBeApprovedQty())-Math.abs(scDetails.getCumWorkDoneQuantity())<0 ||Math.abs(wrapper.getToBeApprovedQty())-Math.abs(scDetails.getPostedWorkDoneQuantity())<0)
-				// throw new ValidateBusinessLogicException("To be approved Quantity must be larger than Workdone Quantity!");
-//				if (wrapper.getToBeApprovedQty() != null && (scDetails.getCostRate() == null || !(Math.abs(scDetails.getCostRate()) > 0)))
-//					scDetails.setToBeApprovedQuantity(wrapper.getToBeApprovedQty()); //@Deprecated
-//				if (wrapper.getToBeApprovedRate() != null)
-//					scDetails.setToBeApprovedRate(wrapper.getToBeApprovedRate()); //@Deprecated
 			}
 			if (!(scDetails instanceof SubcontractDetailBQ)) {
 				if (wrapper.getBqQuantity() != null)

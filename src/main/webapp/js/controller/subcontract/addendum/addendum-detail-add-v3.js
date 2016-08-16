@@ -6,7 +6,10 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 	var subcontractNo = $cookies.get('subcontractNo');
 	var addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
-
+	if(addendumDetailHeaderRef=='Empty')
+		addendumDetailHeaderRef = '';
+	
+	
 	getLatestRepackaging();
 
 	$scope.editable = true;
@@ -25,7 +28,7 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 
 
 			columnDefs: [
-			             { field: 'packageNo', displayName: "Subcontract No", visible: false},
+			             { field: 'packageNo', displayName: "Subcontract No"},
 			             { field: 'objectCode'},
 			             { field: 'subsidiaryCode'},
 			             { field: 'resourceDescription', displayName: "Description"},
@@ -44,8 +47,14 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 		$scope.gridApi = gridApi;
 		
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
-	       row.entity.packageNo = subcontractNo;
-	     });
+			if(row.isSelected) { 
+				row.entity.packageNo = subcontractNo;
+			}else{
+				row.entity.packageNo = '';
+			}
+		
+
+		});
 	}
 
 	$scope.save = function () {
@@ -57,8 +66,6 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 				$scope.disableButtons = false;
 				return;
 			}
-			
-			
 			
 			addAddendumFromResourceSummaries(dataRows);
 
@@ -109,11 +116,10 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 				});
 	}
 
-	function addAddendumFromResourceSummaries(resourceSummaryList) {
+	function addAddendumFromResourceSummaries(resourceSummaryList) {console.log("addendumDetailHeaderRef: "+addendumDetailHeaderRef);
 		addendumService.addAddendumFromResourceSummaries(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummaryList)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 						$scope.disableButtons = false;

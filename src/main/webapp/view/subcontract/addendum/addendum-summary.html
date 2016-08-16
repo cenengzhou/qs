@@ -11,7 +11,7 @@
 							data-click="panel-collapse"> <i class="fa fa-minus"></i>
 						</a>
 					</div>
-					<h3 class="panel-title">Addendum No.5 - Addendum Title 1</h3>
+					<h3 class="panel-title">Addendum No.{{addendum.no}} - Addendum Amount: {{addendum.amtAddendum}}</h3>
 
 				</div>
 				<div class="panel-body">
@@ -21,8 +21,8 @@
 							<label>Addendum Status:</label>
 						</div>
 						<div class="col-md-6"
-							ng-class="{'text-danger' : addendum.addendumStatus=='Approved', 'text-green' : addendum.addendumStatus!='Approved'}">
-							<b>Pending</b>
+							ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
+							<b>{{addendum.status}}</b>
 						</div>
 					</div>
 
@@ -32,7 +32,7 @@
 							<label>Prepared by:</label>
 						</div>
 						<div class="col-md-6">
-							<label>Koey Yeung</label>
+							<label>{{addendum.usernamePreparedBy}}</label>
 						</div>
 					</div>
 
@@ -41,8 +41,8 @@
 							<label>Approval Status:</label>
 						</div>
 						<div class="col-md-6"
-							ng-class="{'text-danger' : addendum.addendumStatus=='Approved', 'text-green' : addendum.addendumStatus!='Approved'}">
-							<b>{{addendum.approvalStatus}}</b>
+							ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
+							<b>{{addendum.statusApproval}}</b>
 						</div>
 					</div>
 
@@ -53,7 +53,7 @@
 							<label>Submission Date:</label>
 						</div>
 						<div class="col-md-6">
-							<label></label>
+							<label>{{addendum.dateSubmission}}</label>
 						</div>
 					</div>
 
@@ -62,7 +62,7 @@
 							<label>Subcontractor No.:</label>
 						</div>
 						<div class="col-md-6">
-							<label>31347</label>
+							<label>{{addendum.noSubcontractor}}</label>
 						</div>
 					</div>
 
@@ -71,7 +71,7 @@
 							<label>Approved Date:</label>
 						</div>
 						<div class="col-md-6">
-							<label></label>
+							<label>{{addendum.dateApproval}}</label>
 						</div>
 					</div>
 
@@ -82,7 +82,7 @@
 							<label>Subcontractor Name.:</label>
 						</div>
 						<div class="col-md-6">
-							<label>VSL Limited Company</label>
+							<label>{{addendum.nameSubcontractor}}</label>
 						</div>
 					</div>
 
@@ -97,15 +97,19 @@
 								</div>
 								<div class="widget-stat-info">
 									<div class="widget-stat-title">Revised Subcontract Sum</div>
-									<div class="widget-stat-number">$23,010,000.00</div>
+									<div class="widget-stat-number">{{addendum.amtSubcontractRevised | currency}}</div>
 									<div class="widget-stat-text">(Current)</div>
 								</div>
 							</div>
 							<ul class="list-group list-group-unbordered">
-								<li class="list-group-item"><b>Remeasured Subcontract
-										Sum</b> <b class="pull-right">$23,010,000.00</b></li>
-								<li class="list-group-item"><b>Total Addendum Amount</b> <b
-									class="pull-right">$0</b></li>
+								<li class="list-group-item">
+									<b>Remeasured Subcontract Sum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRemeasured | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b>Total Addendum Amount</b> 
+									<b class="pull-right">{{addendum.amtAddendumTotal | currency}}</b>
+								</li>
 
 							</ul>
 
@@ -121,29 +125,28 @@
 									<i class="fa fa-calculator"></i>
 								</div>
 								<div class="widget-stat-info">
-									<div class="widget-stat-title ">To be Approved Revised
-										Subcontract Sum</div>
-									<div class="widget-stat-number ">$23,020,000.00</div>
+									<div class="widget-stat-title ">To be Approved Revised Subcontract Sum</div>
+									<div class="widget-stat-number ">{{addendum.amtSubcontractRevisedTba | currency}}</div>
 									<div class="widget-stat-text">(Not Approved)</div>
 								</div>
 							</div>
 							<ul class="list-group list-group-unbordered">
-								<li class="list-group-item"><b>Remeasured Subcontract
-										Sum</b> <b class="pull-right">$23,010,000.00</b></li>
-								<li class="list-group-item text-red"><b>To be Approved
-										Total Addendum Amount</b> <b class="pull-right text-red">$10,000.00</b></li>
+								<li class="list-group-item">
+									<b>Remeasured Subcontract Sum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRemeasured | currency}}</b>
+								</li>
+								<li class="list-group-item text-red">
+									<b>To be Approved Total Addendum Amount</b> 
+									<b class="pull-right text-red">{{addendum.amtAddendumTotalTba | currency}}</b>
+								</li>
 							</ul>
 
 						</div>
 					</div>
 				</div>
-				<button id="activate-step-6" class="m-t-5 btn btn-primary btn-block">
-					Submit Addendum <span class="fa fa-arrow-right"></span>
-				</button>
 
 			</div>
 		</div>
 
 	</div>
-</div>
 </div>

@@ -16,7 +16,6 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.subcontract = data;
 				});
 	}
@@ -26,7 +25,6 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 		addendumService.getLatestAddendum($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.latestAddendum = data;
 				});
 	}
@@ -35,7 +33,6 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 		addendumService.getAddendumList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					if(data != null && data.length > 0){
 						$scope.addendums = data;
 
@@ -55,7 +52,6 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 		addendumService.getTotalApprovedAddendumAmount($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.totalAddendumAmount = data;
 				});
 	}

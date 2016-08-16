@@ -26,16 +26,18 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			             { field: 'typeVo', width:80},
 			             { field: 'bpi',  width:100 },
 			             {field: 'description' ,  width:100 },
-			             { field: 'rateBudgetTba',  width:100 },
-			             { field: 'rateAddendumTba' ,  width:100 },
-			             { field: 'quantityTba' ,  width:100 },
-			             { field: 'amtBudgetTba' ,  width:100 },
-			             { field: 'amtAddendumTba' ,  width:100 },
+			             { field: 'rateBudget',  width:100 },
+			             { field: 'rateAddendum' ,  width:100 },
+			             { field: 'quantity' ,  width:100 },
+			             { field: 'amtBudget' ,  width:100 },
+			             { field: 'amtAddendum' ,  width:100 },
 			             {field: 'codeObject' ,  width:100 },
 			             {field: 'codeSubsidiary' ,  width:100 },
 			             {field: 'unit' ,  width:100 },
 			             {field: 'remarks' ,  width:100 },
-			             {field: 'idHeaderRef' ,  width:100 }
+			             {field: 'idHeaderRef',width:80, visible: true},
+		            	 {field: 'idResourceSummary',width:80, visible: true}
+			             
 			             ]
 	};
 
@@ -83,7 +85,6 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.gridOptions.data = data;
 				});
 	}
