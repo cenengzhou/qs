@@ -134,11 +134,13 @@ public class AddendumController {
 	@RequestMapping(value = "getDefaultValuesForAddendumDetails", method = RequestMethod.GET)
 	public AddendumDetail getDefaultValuesForAddendumDetails(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo, 
-												@RequestParam(required = true) String lineType
+												@RequestParam(required = true) String addendumNo,
+												@RequestParam(required = true) String lineType,
+												@RequestParam(required = false) Integer nextSeqNo
 												){
 		AddendumDetail addendumDetail = null;
 		try{
-			addendumDetail = addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
+			addendumDetail = addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo), lineType, nextSeqNo);
 		}catch(DatabaseOperationException ex){
 			ex.printStackTrace();
 		}
@@ -277,6 +279,18 @@ public class AddendumController {
 		return result;
 	}
 	
+	@RequestMapping(value = "submitAddendumApproval", method = RequestMethod.POST)
+	public String submitAddendumApproval(@RequestParam(required = true) String jobNo, 
+										@RequestParam(required = true) String subcontractNo,
+										@RequestParam(required = true) String addendumNo){
+		String result = "";
+		try{
+			result = addendumService.submitAddendumApproval(jobNo, subcontractNo, Long.valueOf(addendumNo));
+		}catch(Exception exception){
+			result  = "Addendum failed to be submitted to Approval System.";
+			exception.printStackTrace();
+		}
+		return result;
+	}
 	
-
 }

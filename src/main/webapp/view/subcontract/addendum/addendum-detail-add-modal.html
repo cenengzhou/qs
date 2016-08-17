@@ -86,8 +86,7 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Quantity</label> 
-										<input data-parsley-type="number"
-											step="0.01" class="form-control" 
+										<input class="form-control" data-parsley-type="number"
 											ng-model="addendumDetail.quantity"
 											ng-change="calculate('quantity')" 
 											ng-paste="calculate('quantity')"
@@ -101,7 +100,7 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Subcontract Rate</label> 
-										<input data-parsley-type="number" class="form-control" step="0.01" 
+										<input  data-parsley-type="number" class="form-control"
 												ng-model="addendumDetail.rateAddendum" 
 												ng-change="calculate('rate')" 
 												ng-paste="calculate('rate')"
@@ -112,7 +111,7 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Total Amount</label> 
-										<input data-parsley-type="number" class="form-control" step="0.01" 
+										<input  data-parsley-type="number" class="form-control" parsley-type-step="0.01"
 											ng-model="addendumDetail.amtAddendum" 
 											ng-change="calculate('totalAmount')"
 											ng-paste="calculate('totalAmount')"

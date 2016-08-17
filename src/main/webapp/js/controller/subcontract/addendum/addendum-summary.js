@@ -56,7 +56,7 @@ mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumS
 				function( data ) {
 					console.log(data);
 					$scope.addendum = data;
-					if($scope.addendum.status == "PENDING")
+					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;

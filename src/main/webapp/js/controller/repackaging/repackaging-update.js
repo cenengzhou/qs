@@ -31,10 +31,10 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			
 			columnDefs: [
 			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false},
-			             { field: 'objectCode', cellClass: "grid-blue"},
-			             { field: 'subsidiaryCode', cellClass: "grid-blue"},
-			             { field: 'resourceDescription', displayName: "Description", cellClass: "grid-blue"},
-			             { field: 'unit', cellClass: "grid-blue", enableFiltering: false, 
+			             { field: 'objectCode', cellClass: "blue"},
+			             { field: 'subsidiaryCode', cellClass: "blue"},
+			             { field: 'resourceDescription', displayName: "Description", cellClass: "blue"},
+			             { field: 'unit', cellClass: "blue", enableFiltering: false, 
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units
 			             },
@@ -53,7 +53,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
-			             { field: 'excludeDefect', displayName: "Defect", cellClass: "grid-blue", 
+			             { field: 'excludeDefect', displayName: "Defect", cellClass: "blue", 
 			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
 			                 filter: { 
 			                   term: '',
@@ -62,7 +62,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 			             },
-			             { field: 'excludeLevy', displayName: "Levy", cellClass: "grid-blue", 
+			             { field: 'excludeLevy', displayName: "Levy", cellClass: "blue", 
 			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
 			                 filter: { 
 			                   term: '',

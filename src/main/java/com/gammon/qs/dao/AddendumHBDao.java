@@ -56,7 +56,7 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("noJob", noJob));
 		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
-		criteria.add(Restrictions.eq("status", Addendum.STATUS_APPROVED));
+		criteria.add(Restrictions.eq("status", Addendum.STATUS.APPROVED.toString()));
 		
 		criteria.setProjection(Projections.sum("amtAddendum"));
 		

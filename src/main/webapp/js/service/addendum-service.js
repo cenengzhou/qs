@@ -18,7 +18,8 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
     	addAddendumFromResourceSummaries: 	addAddendumFromResourceSummaries,
     	updateAddendumDetail:				updateAddendumDetail,
     	deleteAddendumDetail:				deleteAddendumDetail,
-    	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails
+    	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails,
+    	submitAddendumApproval:						submitAddendumApproval
     });
 	
     function getLatestAddendum(jobNo, subcontractNo) {
@@ -128,7 +129,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
     }
     
     
-    function getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType) {
+    function getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, lineType, nextSeqNo) {
         var request = $http({
             method: "get",
             url: "service/addendum/getDefaultValuesForAddendumDetails",
@@ -136,7 +137,9 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             params: {
             	jobNo: jobNo,
             	subcontractNo: subcontractNo,
-            	lineType: lineType
+            	addendumNo: addendumNo,
+            	lineType: lineType, 
+            	nextSeqNo: nextSeqNo
             	
             }
         });
@@ -268,6 +271,20 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumDetailHeaderRef: addendumDetailHeaderRef
             },
             data: subcontractDetailList
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function submitAddendumApproval(jobNo, subcontractNo, addendumNo) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/submitAddendumApproval",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	addendumNo: addendumNo,
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }

@@ -40,15 +40,18 @@ public class Addendum extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = -730074274051941598L;
 
-	// Addendum Status
-	public static final String STATUS_PENDING = "PENDING";
-	public static final String STATUS_SUBMITTED = "SUBMITTED";
-	public static final String STATUS_APPROVED = "APPROVED";
+	public static enum STATUS {
+		PENDING,
+		SUBMITTED,
+		APPROVED
+	}
+	
+	public static enum APPROVAL_STATUS {
+		NA,
+		APPROVED,
+		REJECTED
+	}
 
-	// Addendum Approval Status
-	public static final String APPROVAL_STATUS_NA = "N/A";
-	public static final String APPROVAL_STATUS_APPROVED = "APPROVED";
-	public static final String APPROVAL_STATUS_REJECTED = "REJECTED";
 
 	private BigDecimal id;
 	private Subcontract idSubcontract;
@@ -68,9 +71,10 @@ public class Addendum extends PcmsPersistedAuditObject {
 	private Date dateSubmission;
 	private Date dateApproval;
 	private String status;
-	private String statusApproval = APPROVAL_STATUS_NA;
+	private String statusApproval = APPROVAL_STATUS.NA.toString();
 	private String usernamePreparedBy;
 	private String remarks;
+	private BigDecimal noAddendumDetailNext = new BigDecimal(1);
 
 	public Addendum() {}
 
@@ -111,6 +115,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 					String statusApproval,
 					String usernamePreparedBy,
 					String remarks,
+					BigDecimal noAddendumDetailNext,
 					String usernameCreated,
 					Date dateCreated,
 					String usernameLastModified,
@@ -136,6 +141,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.statusApproval = statusApproval;
 		this.usernamePreparedBy = usernamePreparedBy;
 		this.remarks = remarks;
+		this.noAddendumDetailNext = noAddendumDetailNext;
 		this.usernameCreated = usernameCreated;
 		this.dateCreated = dateCreated;
 		this.usernameLastModified = usernameLastModified;
@@ -370,10 +376,21 @@ public class Addendum extends PcmsPersistedAuditObject {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+	
+	@Column(name = "NO_ADDENDUM_DETAIL_NEXT",
+			precision = 10,
+			scale = 0)
+	public BigDecimal getNoAddendumDetailNext() {
+		return noAddendumDetailNext;
+	}
+
+	public void setNoAddendumDetailNext(BigDecimal noAddendumDetailNext) {
+		this.noAddendumDetailNext = noAddendumDetailNext;
+	}
 
 	@Override
 	public String toString() {
-		return "Addendum [id=" + id + ", idSubcontract=" + idSubcontract + ", noJob=" + noJob + ", noSubcontract=" + noSubcontract + ", descriptionSubcontract=" + descriptionSubcontract + ", noSubcontractor=" + noSubcontractor + ", nameSubcontractor=" + nameSubcontractor + ", no=" + no + ", title=" + title + ", amtSubcontractRemeasured=" + amtSubcontractRemeasured + ", amtSubcontractRevised=" + amtSubcontractRevised + ", amtAddendumTotal=" + amtAddendumTotal + ", amtAddendumTotalTba=" + amtAddendumTotalTba + ", amtAddendum=" + amtAddendum + ", amtSubcontractRevisedTba=" + amtSubcontractRevisedTba + ", dateSubmission=" + dateSubmission + ", dateApproval=" + dateApproval + ", status=" + status + ", statusApproval=" + statusApproval + ", usernamePreparedBy=" + usernamePreparedBy + ", remarks=" + remarks + "]";
+		return "Addendum [id=" + id + ", idSubcontract=" + idSubcontract + ", noJob=" + noJob + ", noSubcontract=" + noSubcontract + ", descriptionSubcontract=" + descriptionSubcontract + ", noSubcontractor=" + noSubcontractor + ", nameSubcontractor=" + nameSubcontractor + ", no=" + no + ", title=" + title + ", amtSubcontractRemeasured=" + amtSubcontractRemeasured + ", amtSubcontractRevised=" + amtSubcontractRevised + ", amtAddendumTotal=" + amtAddendumTotal + ", amtAddendumTotalTba=" + amtAddendumTotalTba + ", amtAddendum=" + amtAddendum + ", amtSubcontractRevisedTba=" + amtSubcontractRevisedTba + ", dateSubmission=" + dateSubmission + ", dateApproval=" + dateApproval + ", status=" + status + ", statusApproval=" + statusApproval + ", usernamePreparedBy=" + usernamePreparedBy + ", remarks=" + remarks + ", noAddendumDetailNext=" + noAddendumDetailNext + "]";
 	}
 
 	@Override
@@ -401,6 +418,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		result = prime * result + ((statusApproval == null) ? 0 : statusApproval.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((usernamePreparedBy == null) ? 0 : usernamePreparedBy.hashCode());
+		result = prime * result + ((noAddendumDetailNext == null) ? 0 : noAddendumDetailNext.hashCode());
 		return result;
 	}
 
@@ -515,7 +533,13 @@ public class Addendum extends PcmsPersistedAuditObject {
 				return false;
 		} else if (!usernamePreparedBy.equals(other.usernamePreparedBy))
 			return false;
+		if (noAddendumDetailNext == null) {
+			if (other.noAddendumDetailNext != null)
+				return false;
+		} else if (!noAddendumDetailNext.equals(other.noAddendumDetailNext))
+			return false;
 		return true;
 	}
+
 
 }

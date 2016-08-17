@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
-import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.ProvisionPostingHist;

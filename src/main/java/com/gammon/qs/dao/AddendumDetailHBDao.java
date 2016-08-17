@@ -70,21 +70,17 @@ public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 		return criteria.list();
 	}
 
-	
-	public int getAddendumDetailsSeqNo(String noJob, String noSubcontract) {
-		int sequenceNo = 1;
+	@SuppressWarnings("unchecked")
+	public List<AddendumDetail> getAddendumDetails(String noJob, String noSubcontract, Long addendumNo) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("noJob", noJob));
 		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.add(Restrictions.eq("no", addendumNo));
 		criteria.add(Restrictions.eq("typeHd", AddendumDetail.TYPE_HD.DETAIL.toString()));
 		
-		if(criteria.list()!=null)
-			sequenceNo = criteria.list().size()+1;
-		
-		return sequenceNo;
+		return criteria.list();
 	}
 	
-
 	public AddendumDetail getAddendumDetailBySubcontractDetail(SubcontractDetail subcontractDetail) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("idSubcontractDetail", "idSubcontractDetail");

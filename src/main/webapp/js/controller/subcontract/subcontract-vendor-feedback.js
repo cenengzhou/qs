@@ -62,7 +62,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80},
 			             /*{ field: "amountBudget" ,displayName:"Budget", enableCellEdit: false, width:100 },*/
 			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, cellClass: "grid-theme-blue", width:80 },
-			             { field: "amountSubcontract" ,displayName:"SC Amount", cellClass: "grid-blue", enableCellEdit: true, width:90 },
+			             { field: "amountSubcontract" ,displayName:"SC Amount", cellClass: "blue", enableCellEdit: true, width:90 },
 			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 }
 			             ]
 

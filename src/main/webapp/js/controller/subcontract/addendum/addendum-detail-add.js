@@ -83,13 +83,12 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					remarks:			$scope.addendumDetail.remarks,
 					idHeaderRef:		$scope.addendumDetail.idHeaderRef,
 					typeVo: 			$scope.addendumDetail.typeVo,
-					//idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
+					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
 			}
-			console.log("ADD");
 			console.log(addendumDetailToAdd);
 			addAddendumDetail(addendumDetailToAdd);
 		}
-		else if(modalStatus == 'UPDATE'){			console.log("UPDATE");
+		else if(modalStatus == 'UPDATE'){
 			updateAddendumDetail($scope.addendumDetail);
 		}
 	};
@@ -137,7 +136,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	$scope.$watch('subcontractorNature', function(newValue, oldValue) {
 		if(modalStatus == 'ADD' && modalParam == null){console.log("ADD");
 			//1. Add new VO (no budget)
-			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, newValue)
+			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, newValue)
 			.then(
 					function( data ) {
 						if(data.length != 0){console.log(data);

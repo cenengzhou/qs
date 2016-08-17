@@ -33,10 +33,11 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:80 },
 		            	 {field: 'unit' ,  width:50 },
 		            	 {field: 'remarks' ,  width:100 },
+		            	 {field: 'typeAction', displayName:"Action", width:100, visible: true},
 		            	 {field: 'idHeaderRef', width:100, visible: false},
-		            	 {field: 'idResourceSummary', width:100, visible: false},
-		            	 {field: 'typeAction', width:100, visible: false}
-		            	 ]
+		            	 {field: 'idResourceSummary', width:100, visible: false}
+		            	 ],
+   			rowTemplate: '<div ng-class="{\'red\':row.entity.typeAction==\'DELETE\', \'blue\':row.entity.typeAction==\'UPDATE\' }"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>'
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {

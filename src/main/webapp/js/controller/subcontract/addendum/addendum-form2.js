@@ -8,54 +8,17 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	getAddendum();
 	getAllAddendumDetails();
 	
-	$scope.save = function(){
+	$scope.submit = function(){
 		$scope.disableButtons = true;
-		if (false === $('form[name="form-validate"]').parsley().validate()) {
-			event.preventDefault();  
-			$scope.disableButtons = false;
-			return;
-		}
-		
-		if($scope.addendum.id == null){
-			$scope.addendumToInsert = {
-					id:  null,
-					noJob : $scope.jobNo,
-					noSubcontract: $scope.subcontractNo,
-					no: $scope.addendum.no,
-					title: $scope.addendum.title,
-					remarks: $scope.addendum.remarks,
-			}
-			createAddendum($scope.addendumToInsert);
-		}
-		else
-			updateAddendum($scope.addendum);
+		submitAddendumApproval();
 	}
-	
-	/*function getSubcontract(){
-		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					console.log("Subcontract");
-					console.log(data);
-					var subcontract = data;
-					if(subcontract.subcontractStatus < 500){
-						//Subcontract not awarded
-						$scope.disableButtons = true;
-					}
-					if(subcontract.submittedAddendum == '1' || subcontract.splitTerminateStatus =='1' || subcontract.splitTerminateStatus =='2'){
-						//Addendum/Split/Terminate submitted
-						$scope.disableButtons = true;
-					}
-				});
-	}*/
-	
 	
 	function getAddendum(){
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
 		.then(
 				function( data ) {
 					$scope.addendum = data;
-					if($scope.addendum.status == "PENDING")
+					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
@@ -70,6 +33,19 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 				});
 	}
 	
+	function submitAddendumApproval(){
+		addendumService.submitAddendumApproval($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been submitted for approval.");
+						$state.reload();
+					}
+				});
+	}
 
 
 }]);

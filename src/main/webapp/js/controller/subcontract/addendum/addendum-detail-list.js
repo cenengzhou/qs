@@ -19,26 +19,27 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			//showColumnFooter : true,
 			//fastWatch : true,
 			exporterMenuPdf: false,
-
+			 
 			columnDefs: [
 			             { field: 'id', width:80, visible: false},
-			             { field: 'typeHd', width:80},
-			             { field: 'typeVo', width:80},
+			             { field: 'typeHd', width:80, visible: false},
+			             { field: 'typeVo', displayName:"Type", width:50},
 			             { field: 'bpi',  width:100 },
 			             {field: 'description' ,  width:100 },
-			             { field: 'rateBudget',  width:100 },
-			             { field: 'rateAddendum' ,  width:100 },
-			             { field: 'quantity' ,  width:100 },
-			             { field: 'amtBudget' ,  width:100 },
-			             { field: 'amtAddendum' ,  width:100 },
+			             { field: 'quantity' ,  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amtAddendum' , displayName:"SC Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             {field: 'codeObject' ,  width:100 },
 			             {field: 'codeSubsidiary' ,  width:100 },
 			             {field: 'unit' ,  width:100 },
 			             {field: 'remarks' ,  width:100 },
 			             {field: 'idHeaderRef',width:80, visible: true},
-		            	 {field: 'idResourceSummary',width:80, visible: true}
+			             {field: 'typeAction',displayName:"Action", width:80, visible: true}
 			             
-			             ]
+			             ],
+			rowTemplate: '<div ng-class="{\'red\':row.entity.typeAction==\'DELETE\', \'blue\':row.entity.typeAction==\'UPDATE\' }"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>'
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
@@ -88,5 +89,7 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 					$scope.gridOptions.data = data;
 				});
 	}
+	
+	
 
 }]);

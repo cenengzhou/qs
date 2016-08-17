@@ -8,6 +8,7 @@ package com.gammon.qs.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
@@ -36,7 +39,10 @@ import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.security.SecurityService;
+import com.gammon.qs.util.RoundingUtil;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -62,16 +68,20 @@ public class AddendumService{
 	@Autowired
 	private JobCostWSDao jobCostWSDao;
 	@Autowired
+	private AccountCodeWSDao accountCodeWSDao;
+	@Autowired
+	private APWebServiceConnectionDao apWebServiceConnectionDao;
+	@Autowired
 	private ResourceSummaryService resourceSummaryService;
 	@Autowired
 	private RepackagingService repackagingService;
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
-	private AccountCodeWSDao accountCodeWSDao;
-	@Autowired
 	private MasterListService masterListService;
-
+	@Autowired
+	private SubcontractService subcontractService;
+	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
 	public Addendum getLatestAddendum(String noJob, String noSubcontract) {
@@ -124,7 +134,7 @@ public class AddendumService{
 			addendum.setNoSubcontractor(subcontract.getVendorNo());
 			addendum.setNameSubcontractor(subcontract.getNameSubcontractor());
 			addendum.setUsernamePreparedBy(securityService.getCurrentUser().getFullname());
-			addendum.setStatus(Addendum.STATUS_PENDING);
+			addendum.setStatus(Addendum.STATUS.PENDING.toString());
 			
 			addendum.setAmtSubcontractRemeasured(new BigDecimal(subcontract.getRemeasuredSubcontractSum()));
 			addendum.setAmtAddendumTotal(new BigDecimal(subcontract.getApprovedVOAmount()));
@@ -146,7 +156,7 @@ public class AddendumService{
 		String error = "";
 		try {
 			addendum.setUsernamePreparedBy(securityService.getCurrentUser().getFullname());
-			addendum.setStatus(Addendum.STATUS_PENDING);
+			addendum.setStatus(Addendum.STATUS.PENDING.toString());
 			addendumHBDao.update(addendum);
 		} catch (DataAccessException e) {
 			error = "Addendum failed to be updated.";
@@ -262,9 +272,7 @@ public class AddendumService{
 				addendumDetailHBDao.insert(addendumDetail);
 				
 				//Update Addendum Amount
-				addendum.setAmtAddendum(addendum.getAmtAddendum().add(addendumDetail.getAmtAddendum()));
-				addendumHBDao.update(addendum);
-				
+				recalculateAddendumAmount(noJob, noSubcontract, addendumNo);
 			}
 		} catch (Exception e) {
 			error = "Addendum Detail cannot be created";
@@ -287,14 +295,10 @@ public class AddendumService{
 			}
 			
 			if(error == null || error.length()==0){
-				AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
+				addendumDetailHBDao.update(addendumDetail);
 				
 				//Update Addendum Amount
-				Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
-				addendum.setAmtAddendum(addendum.getAmtAddendum().subtract(addendumDetailInDB.getAmtAddendum()).add(addendumDetail.getAmtAddendum()));
-				addendumHBDao.update(addendum);
-				
-				addendumDetailHBDao.update(addendumDetail);
+				recalculateAddendumAmount(noJob, noSubcontract, addendumNo);
 			}
 		} catch (Exception e) {
 			error = "Addendum Detail cannot be created";
@@ -335,6 +339,7 @@ public class AddendumService{
 			}
 			
 			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
+			int nextSeqNo = addendum.getNoAddendumDetailNext().intValue();
 			for(ResourceSummary resourceSummary: resourceSummaryList){
 				String lineType = "";
 				if ("VO".equals(resourceSummary.getResourceType()))
@@ -342,7 +347,7 @@ public class AddendumService{
 				else
 					lineType = "V3";
 
-				AddendumDetail addendumDetail = getDefaultValuesForAddendumDetails(jobNo, subcontractNo, lineType);
+				AddendumDetail addendumDetail = getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, lineType, nextSeqNo);
 				addendumDetail.setNoJob(jobNo);
 				addendumDetail.setNoSubcontract(subcontractNo);
 				addendumDetail.setNo(addendumNo);
@@ -367,17 +372,20 @@ public class AddendumService{
 				if (error!=null)
 					return error;
 				
-				//Update Addendum Amount
-				addendum.setAmtAddendum(addendum.getAmtAddendum().add(addendumDetail.getAmtAddendum()));
-				addendum.setAmtSubcontractRevisedTba(addendum.getAmtSubcontractRevisedTba().add(addendum.getAmtAddendum()));
-				addendumHBDao.update(addendum);
-				
+							
 				addendumDetailHBDao.insert(addendumDetail);
+				
+				//Update Addendum Amount
+				recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 				
 				//Assign subcontract number to resources
 				resourceSummary.setPackageNo(subcontractNo);
+				
+				nextSeqNo += 1;
 			}
-
+			
+			addendum.setNoAddendumDetailNext(new BigDecimal(nextSeqNo));
+			addendumHBDao.update(addendum);
 			
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(idHeaderRef);
 			if(addendumDetailHeader!= null && addendumDetailHeader.getId()!=null){
@@ -405,7 +413,6 @@ public class AddendumService{
 				return error;
 			}
 			
-			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
 			for(AddendumDetail addendumDetail: addendumDetailList){
 				//Delete V1/V2 without budget
 				if(addendumDetail.getRateBudget().doubleValue()== 0){
@@ -436,13 +443,12 @@ public class AddendumService{
 						return error;
 					}
 
-					//Update Addendum Amount
-					addendum.setAmtAddendum(addendum.getAmtAddendum().subtract(addendumDetail.getAmtAddendum()));
-					addendum.setAmtSubcontractRevisedTba(addendum.getAmtSubcontractRevisedTba().add(addendum.getAmtAddendum()));
-					addendumHBDao.update(addendum);
 					
 					AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
 					addendumDetailHBDao.delete(addendumDetailInDB);
+					
+					//Update Addendum Amount
+					recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 				}
 			}
 			if(repackaging!= null && resourceSummaryList.size()>0){
@@ -466,6 +472,12 @@ public class AddendumService{
 					logger.info(error);
 					return error;
 				}else{
+					//Validation for Delete
+					if (Math.abs(subcontractDetail.getAmountPostedCert().doubleValue()) > 0 || Math.abs(subcontractDetail.getAmountPostedWD().doubleValue()) > 0){
+						error = "Posted Cert Amount and posted Workdone Amount must be zero!";
+						return error;
+					}
+					
 					Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
 					addendumDetail = new AddendumDetail();
 
@@ -489,14 +501,12 @@ public class AddendumService{
 					addendumDetail.setUnit(subcontractDetail.getUnit());
 					addendumDetail.setRemarks(subcontractDetail.getRemark());
 					addendumDetail.setTypeVo(subcontractDetail.getLineType());
-
-					
-					//Update Addendum Amount
-					addendum.setAmtAddendum(addendum.getAmtAddendum().subtract(addendumDetail.getAmtAddendum()));
-					addendum.setAmtSubcontractRevisedTba(addendum.getAmtSubcontractRevisedTba().add(addendum.getAmtAddendum()));
-					addendumHBDao.update(addendum);
+					addendumDetail.setIdSubcontractDetail(subcontractDetail);
 					
 					addendumDetailHBDao.insert(addendumDetail);
+					
+					//Update Addendum Amount
+					recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 				}
 
 			}
@@ -507,6 +517,33 @@ public class AddendumService{
 		return error;
 	}
 
+	public void recalculateAddendumAmount(String noJob, String noSubcontract, Long addendumNo){
+		try {
+			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
+			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetails(noJob, noSubcontract, addendumNo);
+			
+			BigDecimal addendumAmount = new BigDecimal(0);
+			
+			for(AddendumDetail addendumDetail: addendumDetailList){
+				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
+					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum());
+				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction())){
+					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum()).subtract(new BigDecimal(addendumDetail.getIdSubcontractDetail().getAmountSubcontract()));
+				}else if(AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
+					addendumAmount = addendumAmount.subtract(addendumDetail.getAmtAddendum());
+				}
+			}
+			
+			//Update Addendum Amount
+			addendum.setAmtAddendum(addendumAmount);
+			addendum.setAmtAddendumTotalTba(addendum.getAmtAddendumTotal().add(addendumAmount));
+			addendum.setAmtSubcontractRevisedTba(addendum.getAmtSubcontractRevised().add(addendumAmount));
+			addendumHBDao.update(addendum);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private String addVOValidate(AddendumDetail addendumDetail) throws Exception {
 		String ableToSubmitAddendum = ableToSubmitAddendum(addendumDetail.getNoJob(), addendumDetail.getNoSubcontract());
 		if (ableToSubmitAddendum !=null){
@@ -592,7 +629,7 @@ public class AddendumService{
 	 * @author koeyyeung
 	 * @throws DatabaseOperationException 
 	 * **/
-	public AddendumDetail getDefaultValuesForAddendumDetails(String jobNo, String subcontractNo, String lineType) throws DatabaseOperationException{
+	public AddendumDetail getDefaultValuesForAddendumDetails(String jobNo, String subcontractNo, Long addendumNo, String lineType, Integer nextSeqNo) throws DatabaseOperationException{
 		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
 			return null;
 		AddendumDetail resultDetails = new AddendumDetail();
@@ -629,17 +666,21 @@ public class AddendumService{
 			//Get sub from AAI-"SCCPF"
 			resultDetails.setCodeSubsidiary(jobCostWSDao.obtainAccountCode("SCCPF", subcontract.getJobInfo().getCompany(),subcontract.getJobInfo().getJobNumber()).getSubsidiary());
 
-		
-		int sequenceNo = addendumDetailHBDao.getAddendumDetailsSeqNo(jobNo, subcontractNo);
-		resultDetails.setBpi(generateBillItem(subcontract,lineType,sequenceNo));
+		if(nextSeqNo == null){
+			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
+			nextSeqNo = addendum.getNoAddendumDetailNext().intValue();
+			addendum.setNoAddendumDetailNext(addendum.getNoAddendumDetailNext().add(new BigDecimal(1)));
+			addendumHBDao.update(addendum);
+		}
+		resultDetails.setBpi(generateBillItem(subcontract, addendumNo.toString(), lineType, nextSeqNo));
 		resultDetails.setTypeVo(lineType.trim());
 		return resultDetails;
 	}
 	
-	public static String generateBillItem(Subcontract scPackage, String scLineType, Integer maxSeqNo) {
+	public static String generateBillItem(Subcontract scPackage, String addendumNo, String scLineType, Integer maxSeqNo) {
 		String maxSeqNoStr="";
-		String billItemMid="/ /"+scLineType.trim()+"/";
-		for (int i=0;i<4-maxSeqNo.toString().length();i++)
+		String billItemMid="/"+addendumNo+"/"+scLineType.trim()+"/";
+		for (int i=0; i<4-maxSeqNo.toString().length(); i++)
 			maxSeqNoStr+="0";
 		maxSeqNoStr+=maxSeqNo;
 		if ("D1".equals(scLineType)||"D2".equals(scLineType))
@@ -672,6 +713,157 @@ public class AddendumService{
 		return null;
 	}
 
+	public String submitAddendumApproval(String noJob, String noSubcontract, Long noAddendum) {
+		String resultMsg  = null;
+		try {
+			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
+			
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract.toString());
+			resultMsg = ableToSubmitAddendum(noJob, noSubcontract);
+			if(resultMsg!= null && resultMsg.length()>0){
+				logger.info(resultMsg);
+				return resultMsg;
+			}
+			String currency = accountCodeWSDao.obtainCurrencyCode(subcontract.getJobInfo().getJobNumber());
+			double exchangeRateToHKD = 1.0;
+			if ("SGP".equals(currency))
+				exchangeRateToHKD = 5.0;
 
+				String company = subcontract.getJobInfo().getCompany();
+				String vendorNo = subcontract.getVendorNo();
+				String vendorName = masterListService.searchVendorAddressDetails(subcontract.getVendorNo().trim()).getVendorName();
+				String approvalType="SM";
+				if (RoundingUtil.round(addendum.getAmtAddendum().doubleValue()*exchangeRateToHKD,2)>250000.0 || addendum.getAmtAddendum().doubleValue()>RoundingUtil.round(subcontract.getOriginalSubcontractSum()*0.25,2))
+					approvalType = "SL";
+				String approvalSubType = subcontract.getApprovalRoute();
+
+				// added by brian on 20110401 - start
+				// the currency pass to approval system should be the company base currency
+				// so change the currencyCode to company base currency here since it will not affect other part of code
+				String currencyCode = subcontractService.getCompanyBaseCurrency(noJob);
+				// added by brian on 20110401 - end
+
+				if(resultMsg == null || resultMsg.length()==0){
+					resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, noJob, noSubcontract.toString(), vendorNo, vendorName,
+							approvalType, approvalSubType, addendum.getAmtAddendum().doubleValue(), currencyCode, securityService.getCurrentUser().getUsername());
+				}else{
+					logger.info(resultMsg);
+					return resultMsg;
+				}
+				logger.info("resultMsg"+resultMsg);
+
+				if(resultMsg == null || resultMsg.length()==0){
+					addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
+					addendumHBDao.update(addendum);
+					
+					subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_SUBMITTED);
+					subcontractHBDao.updateSubcontract(subcontract);
+				}
+		} catch (Exception e) {
+			resultMsg = "Addendum Approval cannot be submitted.";
+			e.printStackTrace();
+		}
+		return resultMsg;
+	}
+
+	public Boolean toCompleteAddendumApproval(String jobNo, String subcontractNo, String user, String approvalResult) throws Exception{
+		logger.info("Approval:"+jobNo+"/"+subcontractNo+"/"+approvalResult);
+		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
+		
+		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(subcontract);
+		if (ccSCDetails!=null && ccSCDetails.size()>0)
+			for (SubcontractDetail scDetail:ccSCDetails){
+				SubcontractDetailVO scDetailVO = (SubcontractDetailVO)scDetail;
+				if (scDetailVO.getCorrSCLineSeqNo()!=null){
+					SubcontractDetail ccDetail = subcontractDetailHBDao.getSCDetail(subcontractHBDao.obtainPackage(subcontract.getJobInfo(), scDetailVO.getContraChargeSCNo()), scDetailVO.getCorrSCLineSeqNo().toString());
+					if (ccDetail!=null ){
+						if ((Math.abs(scDetailVO.getToBeApprovedQuantity().doubleValue()-scDetailVO.getQuantity().doubleValue())>0)&&!SubcontractDetail.SUSPEND.equals(scDetailVO.getApproved())){
+							ccDetail.setQuantity(scDetailVO.getToBeApprovedQuantity());
+						}
+						if ((Math.abs(scDetailVO.getToBeApprovedRate().doubleValue()-scDetailVO.getScRate().doubleValue())>0)&&!SubcontractDetail.SUSPEND.equals(scDetailVO.getApproved())){
+							double originalCumCert = RoundingUtil.multiple(ccDetail.getCumCertifiedQuantity(),ccDetail.getScRate());
+							double originalPostCert = RoundingUtil.multiple(ccDetail.getPostedCertifiedQuantity(),ccDetail.getScRate());
+							if (Double.valueOf(0).equals(scDetail.getToBeApprovedRate())){
+								ccDetail.setCumCertifiedQuantity(Double.valueOf(0.0));
+								if (originalPostCert!=0.0)
+									ccDetail.setQuantity(0.0);
+							}else{
+								ccDetail.setCumCertifiedQuantity(originalCumCert/ccDetail.getScRate());
+								ccDetail.setPostedCertifiedQuantity(originalPostCert/ccDetail.getScRate());
+								ccDetail.setScRate(-1*scDetailVO.getToBeApprovedRate());
+							}
+						}
+						/**
+						 * @author koeyyeung
+						 * newQuantity should be set as BQ Quantity as initial setup
+						 * 16th Apr, 2015
+						 * **/
+						ccDetail.setNewQuantity(ccDetail.getQuantity());
+						subcontractDetailHBDao.update(ccDetail);
+					}
+				}
+			}
+
+		subcontractHBDao.saveOrUpdate(updateApprovedAddendum(subcontract, approvalResult));
+		return true;
+	}
+	
+	private Subcontract updateApprovedAddendum(Subcontract subcontract, String approvalResult){
+		try {
+			Double cum = new Double(0);
+			BigDecimal remeasureSum = new BigDecimal(0);
+			List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(subcontract);
+			
+			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
+			if (!"A".equals(approvalResult))
+				return subcontract;
+			for(SubcontractDetail scDetails: scDetailsList){
+				if(scDetails instanceof SubcontractDetailVO){
+					if(scDetails.getSystemStatus().equals(BasePersistedAuditObject.ACTIVE) && (scDetails.getApproved()==null || !(SubcontractDetail.SUSPEND.equalsIgnoreCase(scDetails.getApproved().trim())))){
+						if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
+							scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
+						if(scDetails.getToBeApprovedRate() != scDetails.getScRate())
+							if (Double.valueOf(0.0).equals(scDetails.getToBeApprovedRate()) && !Double.valueOf(0).equals(scDetails.getPostedCertifiedQuantity())){
+								scDetails.setQuantity(0.0);
+								scDetails.setCumCertifiedQuantity(0.0);
+							}
+							else
+								scDetails.setScRate(scDetails.getToBeApprovedRate());
+						
+						scDetails.setApproved(SubcontractDetail.APPROVED);
+						cum+=scDetails.getTotalAmount();
+					}
+				}else if (scDetails instanceof SubcontractDetailBQ){
+					if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
+						scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
+					remeasureSum=remeasureSum.add(BigDecimal.valueOf(scDetails.getTotalAmount()));
+				}
+				/**
+				 * @author koeyyeung
+				 * newQuantity should be set as BQ Quantity as initial setup
+				 * 16th Apr, 2015
+				 * **/
+				scDetails.setNewQuantity(scDetails.getQuantity());
+				scDetails.setJobNo(subcontract.getJobInfo().getJobNumber());
+			}
+			subcontract.setLatestAddendumValueUpdatedDate(new Date());
+			subcontract.setApprovedVOAmount(cum);
+			if (subcontract.getJobInfo().getRepackagingType()!=null &&("2".equals(subcontract.getJobInfo().getRepackagingType().trim())||"3".equals(subcontract.getJobInfo().getRepackagingType().trim())))
+				subcontract.setRemeasuredSubcontractSum(remeasureSum.doubleValue());
+			if(subcontract.getRetentionTerms() == null){
+				subcontract.setRetentionAmount(0.00);
+			}else if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(subcontract.getRetentionTerms().trim())){
+				subcontract.setRetentionAmount(RoundingUtil.round(subcontract.getMaxRetentionPercentage()*(subcontract.getApprovedVOAmount()+subcontract.getRemeasuredSubcontractSum())/100.00,2));
+			}else if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(subcontract.getRetentionTerms().trim())){
+				subcontract.setRetentionAmount(RoundingUtil.round(subcontract.getMaxRetentionPercentage()*subcontract.getOriginalSubcontractSum()/100.00,2));
+			}
+			return subcontract;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subcontract;
+	}
+	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }
