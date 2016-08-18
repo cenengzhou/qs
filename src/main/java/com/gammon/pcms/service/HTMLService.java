@@ -14,6 +14,7 @@ import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -43,6 +44,7 @@ import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
+@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class HTMLService implements Serializable{
 
 	private static final long serialVersionUID = -6313629009064651927L;
@@ -273,7 +275,8 @@ public class HTMLService implements Serializable{
 				data.put("comparableBudgetAmount",comparableBudgetAmount);
 				data.put("recommendVendor", recommendVendor);
 				data.put("vendorNoZero", vendorNumZero);
-				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
+//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
+				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
 			}
 			
 			if (htmlVersion.equals("B")) {

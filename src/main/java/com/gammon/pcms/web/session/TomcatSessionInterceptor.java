@@ -22,11 +22,11 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 	private SessionRegistry sessionRegistry;
 	
 	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#postHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
+	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
 	 */
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
 		Manager tomcatManager = TomcatSessionController.getTomcatManager(request.getSession().getServletContext());
 		Session session = tomcatManager.findSession(request.getSession().getId());
 		SessionInformation sessionInformation = sessionRegistry.getSessionInformation(session.getId());
@@ -38,7 +38,7 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 			request.setAttribute("username", user.getUsername());
 			request.setAttribute("domain", user.getDomainName());
 		}
-		super.postHandle(request, response, handler, modelAndView);
+		return super.preHandle(request, response, handler);
 	}
 
 }

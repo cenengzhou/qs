@@ -34,12 +34,12 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gammon.pcms.service.HTMLService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.HTMLStringForApprovalContentService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertService;
-import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.PaymentService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.serviceProvider.awardSCPackage.AwardSCPackageRequest;
 import com.gammon.qs.webservice.serviceProvider.awardSCPackage.AwardSCPackageResponse;
@@ -536,12 +536,12 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForPaymentEndpoint")
 	public MarshallingMakeHTMLStrForPaymentEndpoint marshallingMakeHTMLStrForPaymentEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl,
+			HTMLService htmlService,
 			@Qualifier("makeHTMLStrForPaymentMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForPaymentUnmarshaller") JibxMarshaller unmarshaller) {
 
 		MarshallingMakeHTMLStrForPaymentEndpoint bean = new MarshallingMakeHTMLStrForPaymentEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 
@@ -578,11 +578,11 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForPaymentCertEndpoint")
 	public MarshallingMakeHTMLStrForPaymentCertEndpoint marshallingMakeHTMLStrForPaymentCertEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl,
+			HTMLService htmlService,
 			@Qualifier("makeHTMLStrForPaymentCertMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForPaymentCertUnmarshaller") JibxMarshaller unmarshaller) {
 		MarshallingMakeHTMLStrForPaymentCertEndpoint bean = new MarshallingMakeHTMLStrForPaymentCertEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 
@@ -618,12 +618,12 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForAddendumEndpoint")
 	public MarshallingMakeHTMLStrForAddendumEndpoint marshallingMakeHTMLStrForAddendumEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl, 
+			HTMLService htmlService, 
 			@Qualifier("makeHTMLStrForAddendumMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForAddendumUnmarshaller") JibxMarshaller unmarshaller){
 		marshaller.setTargetClass(makeHTMLStrForAddendumServiceRequest.class);
 		MarshallingMakeHTMLStrForAddendumEndpoint bean = new MarshallingMakeHTMLStrForAddendumEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 
@@ -659,11 +659,11 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForAwardEndpoint")
 	public MarshallingMakeHTMLStrForAwardEndpoint marshallingMakeHTMLStrForAwardEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl,
+			HTMLService htmlService,
 			@Qualifier("makeHTMLStrForAwardMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForAwardUnmarshaller") JibxMarshaller unmarshaller){
 		MarshallingMakeHTMLStrForAwardEndpoint bean = new MarshallingMakeHTMLStrForAwardEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 
@@ -699,11 +699,11 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForSplitTerminateEndpoint")
 	public MarshallingMakeHTMLStrForSplitTerminateEndpoint marshallingMakeHTMLStrForSplitTerminateEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl,
+			HTMLService htmlService,
 			@Qualifier("makeHTMLStrForSplitTerminateMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForSplitTerminateUnmarshaller") JibxMarshaller unmarshaller) {
 		MarshallingMakeHTMLStrForSplitTerminateEndpoint bean = new MarshallingMakeHTMLStrForSplitTerminateEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 
@@ -739,11 +739,11 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 
 	@Bean(name = "marshallingMakeHTMLStrForMainCertEndpoint")
 	public MarshallingMakeHTMLStrForMainCertEndpoint marshallingMakeHTMLStrForMainCertEndpoint(
-			HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl,
+			HTMLService htmlService,
 			@Qualifier("makeHTMLStrForMainCertMarshaller") JibxMarshaller marshaller,
 			@Qualifier("makeHTMLStrForMainCertUnmarshaller") JibxMarshaller unmarshaller){
 		MarshallingMakeHTMLStrForMainCertEndpoint bean = new MarshallingMakeHTMLStrForMainCertEndpoint(
-				htmlStringForApprovalContentHBImpl, marshaller);
+				htmlService, marshaller);
 		return bean;
 	}
 

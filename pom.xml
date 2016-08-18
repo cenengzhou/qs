@@ -929,32 +929,32 @@
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForAddendumService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForAwardService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForMainCertService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForPaymentCertService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForPaymentService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-makeHTMLStrForSplitTerminateService</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-17</version>
 		</dependency>
 	</dependencies>
 	

@@ -3,7 +3,7 @@ package com.gammon.qs.webservice.serviceProvider.makeHTMLStrForMainCertService;
 import org.springframework.oxm.Marshaller;
 import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 
-import com.gammon.qs.service.HTMLStringForApprovalContentService;
+import com.gammon.pcms.service.HTMLService;
 
 /**
  * koeyyeung
@@ -11,18 +11,18 @@ import com.gammon.qs.service.HTMLStringForApprovalContentService;
  */
 public class MarshallingMakeHTMLStrForMainCertEndpoint extends AbstractMarshallingPayloadEndpoint{
 
-	private HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl;
+	private HTMLService htmlService;
 
-	public MarshallingMakeHTMLStrForMainCertEndpoint(HTMLStringForApprovalContentService htmlStringForApprovalContentHBImpl, Marshaller marshaller){
+	public MarshallingMakeHTMLStrForMainCertEndpoint(HTMLService htmlService, Marshaller marshaller){
 		super(marshaller);
-		this.htmlStringForApprovalContentHBImpl = htmlStringForApprovalContentHBImpl;
+		this.htmlService = htmlService;
 	}
 
  
 	protected Object invokeInternal(Object request) throws Exception {
 		MakeHTMLStrForMainCertServiceRequest requestObj = (MakeHTMLStrForMainCertServiceRequest)request;
 		MakeHTMLStrForMainCertServiceResponse responseObj = new MakeHTMLStrForMainCertServiceResponse();
-		responseObj.setHtmlStr(htmlStringForApprovalContentHBImpl.makeHTMLStringForMainCert(requestObj.getJobNumber(), requestObj.getMainCertNo(), requestObj.getHtmlVersion()));
+		responseObj.setHtmlStr(htmlService.makeHTMLStringForMainCert(requestObj.getJobNumber(), requestObj.getMainCertNo(), requestObj.getHtmlVersion()));
 		return responseObj;
 	}
 

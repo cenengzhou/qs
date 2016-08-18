@@ -69,7 +69,7 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("subcontract", "subcontract");
 			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("subcontract.jobNumber", jobNumber.trim()));
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
 			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.trim()));
 			criteria.addOrder(Order.asc("vendorNo"));
 			result = criteria.list();
