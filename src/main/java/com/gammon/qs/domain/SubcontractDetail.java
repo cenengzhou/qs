@@ -96,9 +96,9 @@ public class SubcontractDetail extends BasePersistedObject {
 	 * Convert to Amount Based
 	 * 04 Jul, 2016
 	 * **/
-	private Double amountSubcontract;
-	private Double amountBudget;
-	private Double amountSubcontractTBA;
+	private BigDecimal amountSubcontract = new BigDecimal(0);
+	private BigDecimal amountBudget = new BigDecimal(0);
+	//private Double amountSubcontractTBA;
 
 	
 
@@ -372,15 +372,19 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.tenderAnalysisDetail_ID = tenderAnalysisDetail_ID;
 	}
 	
-	@Column(name = "AMT_SUBCONTRACT")
-	public Double getAmountSubcontract() {
-		return (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	@Column(name = "AMT_SUBCONTRACT",
+			precision = 19,
+			scale = 2)
+	public BigDecimal getAmountSubcontract() {
+		return amountSubcontract;
 	}
-	public void setAmountSubcontract(Double amountSubcontract) {
-		this.amountSubcontract = (amountSubcontract!=null?CalculationUtil.round(amountSubcontract, 2):0.00);
+	public void setAmountSubcontract(BigDecimal amountSubcontract) {
+		this.amountSubcontract = amountSubcontract;
 	}
 
-	@Column(name = "AMT_SUBCONTRACT_NEW")
+	@Column(name = "AMT_SUBCONTRACT_NEW",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmountSubcontractNew() {
 		return amountSubcontractNew;
 	}
@@ -388,22 +392,16 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.amountSubcontractNew = amountSubcontractNew;
 	}
 
-	@Column(name = "AMT_BUDGET")
-	public Double getAmountBudget() {
-		return (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	@Column(name = "AMT_BUDGET",
+			precision = 19,
+			scale = 2)
+	public BigDecimal getAmountBudget() {
+		return amountBudget;
 	}
-	public void setAmountBudget(Double amountBudget) {
-		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
+	public void setAmountBudget(BigDecimal amountBudget) {
+		this.amountBudget = amountBudget;
 	}
 	
-	@Column(name = "AMT_SUBCONTRACT_TBA")
-	public Double getAmountSubcontractTBA() {
-		return (amountSubcontractTBA!=null?CalculationUtil.round(amountSubcontractTBA, 2):0.00);
-	}
-	public void setAmountSubcontractTBA(Double amountSubcontractTBA) {
-		this.amountSubcontractTBA = (amountSubcontractTBA!=null?CalculationUtil.round(amountSubcontractTBA, 2):0.00);
-	}
-
 	@Column(name = "AMT_CUMULATIVE_CERT")
 	public BigDecimal getAmountCumulativeCert() {
 		return amountCumulativeCert;
@@ -555,7 +553,7 @@ public class SubcontractDetail extends BasePersistedObject {
 				+ ", amountSubcontractNew=" + amountSubcontractNew + ", newQuantity=" + newQuantity
 				+ ", originalQuantity=" + originalQuantity + ", tenderAnalysisDetail_ID=" + tenderAnalysisDetail_ID
 				+ ", subcontract=" + subcontract + ", amountSubcontract=" + amountSubcontract + ", amountBudget="
-				+ amountBudget + ", amountSubcontractTBA=" + amountSubcontractTBA + ", balanceType=" + balanceType
+				+ amountBudget + ", balanceType=" + balanceType
 				+ "]";
 	}
 	
@@ -574,7 +572,6 @@ public class SubcontractDetail extends BasePersistedObject {
 		result = prime * result + ((amountPostedWD == null) ? 0 : amountPostedWD.hashCode());
 		result = prime * result + ((amountSubcontract == null) ? 0 : amountSubcontract.hashCode());
 		result = prime * result + ((amountSubcontractNew == null) ? 0 : amountSubcontractNew.hashCode());
-		result = prime * result + ((amountSubcontractTBA == null) ? 0 : amountSubcontractTBA.hashCode());
 		result = prime * result + ((approved == null) ? 0 : approved.hashCode());
 		result = prime * result + ((balanceType == null) ? 0 : balanceType.hashCode());
 		result = prime * result + ((billItem == null) ? 0 : billItem.hashCode());
@@ -644,11 +641,6 @@ public class SubcontractDetail extends BasePersistedObject {
 			if (other.amountSubcontractNew != null)
 				return false;
 		} else if (!amountSubcontractNew.equals(other.amountSubcontractNew))
-			return false;
-		if (amountSubcontractTBA == null) {
-			if (other.amountSubcontractTBA != null)
-				return false;
-		} else if (!amountSubcontractTBA.equals(other.amountSubcontractTBA))
 			return false;
 		if (approved == null) {
 			if (other.approved != null)

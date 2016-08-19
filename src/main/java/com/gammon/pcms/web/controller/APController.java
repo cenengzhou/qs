@@ -59,6 +59,7 @@ import com.gammon.qs.domain.AttachPayment;
 import com.gammon.qs.domain.AttachSubcontract;
 import com.gammon.qs.domain.AttachSubcontractDetail;
 import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertService;
@@ -73,6 +74,8 @@ public class APController {
 	private JobInfoService jobInfoService;
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private AddendumService addendumService;
 	@Autowired
 	private PaymentService paymentService;
 	@Autowired
@@ -186,7 +189,7 @@ public class APController {
 		if (result.hasErrors())
 			throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteAddendumApprovalResponse responseObj = new CompleteAddendumApprovalResponse();
-		responseObj.setCompleted(subcontractService.toCompleteAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getUser(), requestObj.getApprovalDecision()));
+		responseObj.setCompleted(addendumService.toCompleteAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getUser(), requestObj.getApprovalDecision()));
 		return responseObj;
 	}
 

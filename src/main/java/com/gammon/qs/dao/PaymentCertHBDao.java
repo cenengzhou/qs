@@ -228,28 +228,6 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public PaymentCert getSCPaymentLatestCert(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
-		if (jobInfo==null)
-			throw new DatabaseOperationException("Job is null");
-
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontract","subcontract" );
-			criteria.add(Restrictions.eq("subcontract.jobInfo", jobInfo ));
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo.toString()));
-			criteria.addOrder(Order.desc("paymentCertNo"));
-			criteria.setFetchMode("subcontract", FetchMode.JOIN);
-			List<PaymentCert> resultList = criteria.list();
-			if (resultList!=null && !resultList.isEmpty())
-				return resultList.get(0);
-			return null;
-		}catch (HibernateException he){
-			logger.info("Fail: getSCPaymentLatestCert(Job job, String packageNo)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
 	/**
 	 * 
 	 * To obtain a payment certificate with a specific payment status

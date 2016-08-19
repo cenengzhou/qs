@@ -17,7 +17,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.domain.SubcontractDetail;
 @Repository
 public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {

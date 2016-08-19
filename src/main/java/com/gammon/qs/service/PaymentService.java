@@ -2179,7 +2179,7 @@ public class PaymentService{
 	private String createPaymentDetail(PaymentCert previousPaymentCert, PaymentCert scPaymentCert){	
 		String error = "";
 		try {
-			List<SubcontractDetail> scDetailList = scDetailsHBDao.getSCDetails(scPaymentCert.getSubcontract());
+			List<SubcontractDetail> scDetailList = scDetailsHBDao.getApprovedSCDetails(scPaymentCert.getSubcontract());
 
 			if (scDetailList!=null){
 				List<PaymentCertDetail> resultList = new ArrayList<PaymentCertDetail>();
@@ -2377,14 +2377,14 @@ public class PaymentService{
 	
 	
 							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
-							if(scDetail.getAmountSubcontract() >= 0){
-								if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract()) {
+							if(scDetail.getAmountSubcontract().doubleValue() >= 0){
+								if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract().doubleValue()) {
 									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}
 							}else{
-								if (paymentDetail.getCumAmount() < scDetail.getAmountSubcontract() || paymentDetail.getCumAmount() >0) {
+								if (paymentDetail.getCumAmount().doubleValue() < scDetail.getAmountSubcontract().doubleValue() || paymentDetail.getCumAmount() >0) {
 									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;

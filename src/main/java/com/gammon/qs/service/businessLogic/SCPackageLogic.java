@@ -169,9 +169,8 @@ public class SCPackageLogic {
 						 * @author koeyyeung
 						 * created on 12 July, 2016
 						 * Convert to amount based**/
-						scDetails.setAmountBudget(TADetails.getAmountBudget());
-						scDetails.setAmountSubcontract(TADetails.getAmountSubcontract());
-						scDetails.setAmountSubcontractTBA(TADetails.getAmountSubcontract());
+						scDetails.setAmountBudget(new BigDecimal(TADetails.getAmountBudget()));
+						scDetails.setAmountSubcontract(new BigDecimal(TADetails.getAmountSubcontract()));
 					}
 				} catch (DataAccessException e) {
 					e.printStackTrace();

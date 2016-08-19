@@ -21,14 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
-import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
+import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
+import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
@@ -39,7 +40,7 @@ import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
@@ -65,6 +66,10 @@ public class AddendumService{
 	private SubcontractDetailHBDao subcontractDetailHBDao;
 	@Autowired
 	private ResourceSummaryHBDao resourceSummaryHBDao;
+	@Autowired
+	private AttachPaymentHBDao attachmentPaymentDao;
+	@Autowired
+	private PaymentCertDetailHBDao paymentCertDetailHBDao;
 	@Autowired
 	private JobCostWSDao jobCostWSDao;
 	@Autowired
@@ -241,13 +246,36 @@ public class AddendumService{
 				
 				SubcontractDetail scDetail = subcontractDetailHBDao.get(addendumDetail.getIdSubcontractDetail().getId());
 				if(scDetail !=null){
-					if (Math.abs(scDetail.getAmountPostedCert().doubleValue()) > 0 || Math.abs(scDetail.getAmountPostedWD().doubleValue()) > 0){
-						error = "Posted Cert Amount and posted Workdone Amount must be zero!";
+					if (Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountPostedCert().doubleValue()) 
+							|| Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountCumulativeWD().doubleValue())){
+						error = "Addendum Amount should not be smaller than posted Cert amount and cumulative workdone amount";
 						return error;
 					}
+					
+					//Warn if pending payment exists in C2 SUbcontract 
+					if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+						PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, addendumDetail.getNoSubcontractChargedRef());
+						if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus())||PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED.equals(ccLatestPaymentCert.getPaymentStatus()))){
+							error = "Payment of Subcontract No:"+scDetail.getContraChargeSCNo()+" is being submitted.";
+							return error;
+						}
+					}
+					
+					//Delete Pending Payment
+					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
+					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
+						paymentCertHBDao.delete(paymentCert);
+
+						logger.info("Deleting pending payment");
+						paymentCertHBDao.delete(paymentCert);
+					}
+					
+					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
+					subcontractDetailHBDao.update(scDetail);
+					
 				}
-				
-				
 				addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.UPDATE.toString());
 				
 			}
@@ -289,8 +317,35 @@ public class AddendumService{
 			if(addendumDetail.getIdSubcontractDetail() != null){
 				SubcontractDetail scDetail = subcontractDetailHBDao.get(addendumDetail.getIdSubcontractDetail().getId());
 				if(scDetail !=null){
-					if (Math.abs(scDetail.getAmountPostedCert().doubleValue()) > 0 || Math.abs(scDetail.getAmountPostedWD().doubleValue()) > 0)
-						error = "Posted Cert Amount and posted Workdone Amount must be zero!";
+					if (Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountPostedCert().doubleValue()) 
+							|| Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountCumulativeWD().doubleValue())){
+						error = "Addendum Amount should not be smaller than posted Cert amount and cumulative workdone amount";
+						return error;
+					}
+					
+					//Warn if pending payment exists in C2 SUbcontract 
+					if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+						PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, addendumDetail.getNoSubcontractChargedRef());
+						if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus())||PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED.equals(ccLatestPaymentCert.getPaymentStatus()))){
+							error = "Payment of Subcontract No:"+scDetail.getContraChargeSCNo()+" is being submitted.";
+							return error;
+						}
+					}
+
+					//Delete Pending Payment
+					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
+					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
+						paymentCertHBDao.delete(paymentCert);
+
+						logger.info("Deleting pending payment");
+						paymentCertHBDao.delete(paymentCert);
+					}
+					
+					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
+					subcontractDetailHBDao.update(scDetail);
+					
 				}
 			}
 			
@@ -414,42 +469,46 @@ public class AddendumService{
 			}
 			
 			for(AddendumDetail addendumDetail: addendumDetailList){
-				//Delete V1/V2 without budget
-				if(addendumDetail.getRateBudget().doubleValue()== 0){
-					AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
-					addendumDetailHBDao.delete(addendumDetailInDB);
-				}
-				//Delete V1/V3 with budget
-				else{
-					JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
+				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
+					//V1/V3 with budget
+					if(addendumDetail.getIdResourceSummary() != null){
+						JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
 
-					//Step 2 : Validation
-					//Validation 2.1: Repackaging status !=900
-					repackaging = repackagingService.getLatestRepackaging(job);
-					if("900".equals(repackaging.getStatus())){
-						error = "This entry has already been confirmed";
-						logger.info(error);
-						return error;
+						//Step 2 : Validation
+						//Validation 2.1: Repackaging status !=900
+						repackaging = repackagingService.getLatestRepackaging(job);
+						if("900".equals(repackaging.getStatus())){
+							error = "This entry has already been confirmed";
+							logger.info(error);
+							return error;
+						}
+
+						//Validation 2.2: No duplicate resources made
+						ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
+						resource.setPackageNo(null);
+
+						resourceSummaryList.add(resource);
+						error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
+						if(error!= null && error.length()>0){
+							logger.info(error);
+							return error;
+						}
+
 					}
+				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction()) 
+						|| AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
+					SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
 
-					//Validation 2.2: No duplicate resources made
-					ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
-					resource.setPackageNo(null);
+					scDetail.setApproved(SubcontractDetail.APPROVED);
+					subcontractDetailHBDao.update(scDetail);
 
-					resourceSummaryList.add(resource);
-					error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
-					if(error!= null && error.length()>0){
-						logger.info(error);
-						return error;
-					}
-
-					
-					AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
-					addendumDetailHBDao.delete(addendumDetailInDB);
-					
-					//Update Addendum Amount
-					recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 				}
+				//Delete Addendum Detail
+				AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
+				addendumDetailHBDao.delete(addendumDetailInDB);
+				
+				//Update Addendum Amount
+				recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 			}
 			if(repackaging!= null && resourceSummaryList.size()>0){
 				resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
@@ -478,6 +537,19 @@ public class AddendumService{
 						return error;
 					}
 					
+					//Warn if pending payment exists in C2 SUbcontract 
+					if(subcontractDetail.getContraChargeSCNo() != null && subcontractDetail.getContraChargeSCNo().trim().length()>0){
+						PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractDetail.getContraChargeSCNo());
+						if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus())||PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED.equals(ccLatestPaymentCert.getPaymentStatus()))){
+							error = "Payment of Subcontract No:"+subcontractDetail.getContraChargeSCNo()+" is being submitted.";
+							return error;
+						}
+					}
+					
+					subcontractDetail.setApproved(SubcontractDetail.NOT_APPROVED);
+					subcontractDetailHBDao.update(subcontractDetail);
+					
+					
 					Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
 					addendumDetail = new AddendumDetail();
 
@@ -495,9 +567,9 @@ public class AddendumService{
 					addendumDetail.setDescription(subcontractDetail.getDescription());
 					addendumDetail.setQuantity(new BigDecimal(subcontractDetail.getQuantity()));
 					addendumDetail.setRateAddendum(new BigDecimal(subcontractDetail.getScRate()));
-					addendumDetail.setAmtAddendum(new BigDecimal(subcontractDetail.getAmountSubcontract()));
+					addendumDetail.setAmtAddendum(subcontractDetail.getAmountSubcontract());
 					addendumDetail.setRateBudget(new BigDecimal(subcontractDetail.getCostRate()));
-					addendumDetail.setAmtBudget(new BigDecimal(subcontractDetail.getAmountBudget()));
+					addendumDetail.setAmtBudget(subcontractDetail.getAmountBudget());
 					addendumDetail.setUnit(subcontractDetail.getUnit());
 					addendumDetail.setRemarks(subcontractDetail.getRemark());
 					addendumDetail.setTypeVo(subcontractDetail.getLineType());
@@ -528,7 +600,7 @@ public class AddendumService{
 				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
 					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum());
 				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction())){
-					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum()).subtract(new BigDecimal(addendumDetail.getIdSubcontractDetail().getAmountSubcontract()));
+					addendumAmount = addendumAmount.add(addendumDetail.getAmtAddendum()).subtract(addendumDetail.getIdSubcontractDetail().getAmountSubcontract());
 				}else if(AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
 					addendumAmount = addendumAmount.subtract(addendumDetail.getAmtAddendum());
 				}
@@ -771,86 +843,202 @@ public class AddendumService{
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
 		
-		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(subcontract);
-		if (ccSCDetails!=null && ccSCDetails.size()>0)
-			for (SubcontractDetail scDetail:ccSCDetails){
-				SubcontractDetailVO scDetailVO = (SubcontractDetailVO)scDetail;
-				if (scDetailVO.getCorrSCLineSeqNo()!=null){
-					SubcontractDetail ccDetail = subcontractDetailHBDao.getSCDetail(subcontractHBDao.obtainPackage(subcontract.getJobInfo(), scDetailVO.getContraChargeSCNo()), scDetailVO.getCorrSCLineSeqNo().toString());
-					if (ccDetail!=null ){
-						if ((Math.abs(scDetailVO.getToBeApprovedQuantity().doubleValue()-scDetailVO.getQuantity().doubleValue())>0)&&!SubcontractDetail.SUSPEND.equals(scDetailVO.getApproved())){
-							ccDetail.setQuantity(scDetailVO.getToBeApprovedQuantity());
-						}
-						if ((Math.abs(scDetailVO.getToBeApprovedRate().doubleValue()-scDetailVO.getScRate().doubleValue())>0)&&!SubcontractDetail.SUSPEND.equals(scDetailVO.getApproved())){
-							double originalCumCert = RoundingUtil.multiple(ccDetail.getCumCertifiedQuantity(),ccDetail.getScRate());
-							double originalPostCert = RoundingUtil.multiple(ccDetail.getPostedCertifiedQuantity(),ccDetail.getScRate());
-							if (Double.valueOf(0).equals(scDetail.getToBeApprovedRate())){
-								ccDetail.setCumCertifiedQuantity(Double.valueOf(0.0));
-								if (originalPostCert!=0.0)
-									ccDetail.setQuantity(0.0);
-							}else{
-								ccDetail.setCumCertifiedQuantity(originalCumCert/ccDetail.getScRate());
-								ccDetail.setPostedCertifiedQuantity(originalPostCert/ccDetail.getScRate());
-								ccDetail.setScRate(-1*scDetailVO.getToBeApprovedRate());
-							}
-						}
-						/**
-						 * @author koeyyeung
-						 * newQuantity should be set as BQ Quantity as initial setup
-						 * 16th Apr, 2015
-						 * **/
-						ccDetail.setNewQuantity(ccDetail.getQuantity());
-						subcontractDetailHBDao.update(ccDetail);
-					}
-				}
+		if (!"A".equals(approvalResult)){
+
+			//Delete Pending Payment
+			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
+				paymentCertHBDao.delete(paymentCert);
+
+				logger.info("Deleting pending payment");
+				paymentCertHBDao.delete(paymentCert);
 			}
 
-		subcontractHBDao.saveOrUpdate(updateApprovedAddendum(subcontract, approvalResult));
+			int sequenceNo = subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(jobNo, subcontractNo)+1;
+			List<AddendumDetail> addendumDetails = addendumDetailHBDao.getAddendumDetails(jobNo, subcontractNo, addendum.getNo());
+			
+			for (AddendumDetail addendumDetail: addendumDetails){
+				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
+					sequenceNo = addSCDetails(subcontract, addendumDetail, sequenceNo);
+					
+				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction())){
+					updateSCDetails(jobNo, subcontractNo, addendumDetail);
+					
+				}else if(AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
+					deleteSCDetails(jobNo, subcontractNo, addendumDetail);
+				}
+			}
+			
+			//Update Subcontract Amount
+			subcontract = updateSubcontractAmount(subcontract, addendum);
+			
+			addendum.setStatus(Addendum.STATUS.PENDING.toString());
+			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.APPROVED.toString());
+			addendumHBDao.update(addendum);
+			
+			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
+			subcontractHBDao.update(subcontract);
+			
+		}else{
+			addendum.setStatus(Addendum.STATUS.PENDING.toString());
+			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.REJECTED.toString());
+			addendumHBDao.update(addendum);
+			
+			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
+			subcontractHBDao.update(subcontract);
+		}
 		return true;
 	}
 	
-	private Subcontract updateApprovedAddendum(Subcontract subcontract, String approvalResult){
-		try {
-			Double cum = new Double(0);
-			BigDecimal remeasureSum = new BigDecimal(0);
-			List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(subcontract);
+	private int addSCDetails(Subcontract subcontract, AddendumDetail addendumDetail, int sequenceNo) throws Exception{
+		SubcontractDetailVO scDetail = new SubcontractDetailVO();
+		scDetail.setJobNo(addendumDetail.getNoJob().trim());
+		scDetail.setSubcontract(subcontract);
+
+		if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
+			scDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
+		}else 
+			scDetail.setDescription(addendumDetail.getDescription());
+
+		scDetail.setObjectCode(addendumDetail.getCodeObject());
+		scDetail.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
+		scDetail.setUnit(addendumDetail.getUnit());
+
+		scDetail.setScRate(addendumDetail.getRateAddendum().doubleValue());
+		scDetail.setCostRate(addendumDetail.getRateBudget().doubleValue());
+		scDetail.setQuantity(addendumDetail.getQuantity().doubleValue());
+		scDetail.setAmountSubcontract(addendumDetail.getAmtAddendum());
+		scDetail.setAmountBudget(addendumDetail.getAmtBudget());
+
+
+		/**
+		 * @author koeyyeung
+		 * newQuantity should be set as BQ Quantity as initial setup
+		 * Split & Terminate
+		 * 16th Apr, 2015
+		 * **/
+		scDetail.setNewQuantity(scDetail.getQuantity());
+		scDetail.setAmountSubcontractNew(addendumDetail.getAmtAddendum());
+
+
+		scDetail.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
+		scDetail.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
+		scDetail.setRemark(addendumDetail.getRemarks());
+		scDetail.setSequenceNo(sequenceNo);
+
+		scDetail.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
+		scDetail.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
+
+		scDetail.setApproved(SubcontractDetail.APPROVED);
+
+		sequenceNo += 1;
+
+		//Add C2
+		if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+			SubcontractDetail scDetailsCC = subcontractService.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo(), "C2");
+			scDetailsCC.setJobNo(addendumDetail.getNoJob());
+			scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo()));
+			scDetailsCC.setDescription(scDetail.getDescription());
+			scDetailsCC.setSubsidiaryCode(scDetail.getSubsidiaryCode());
+			scDetailsCC.setUnit(scDetail.getUnit());
+			scDetailsCC.setScRate(scDetail.getScRate()*-1);
+			scDetailsCC.setQuantity(scDetail.getQuantity());
+			scDetailsCC.setAmountSubcontract(scDetail.getAmountSubcontract());
+
+			scDetailsCC.setApproved(SubcontractDetail.APPROVED);
+			scDetailsCC.setContraChargeSCNo(addendumDetail.getNoSubcontract());
 			
-			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
-			if (!"A".equals(approvalResult))
-				return subcontract;
-			for(SubcontractDetail scDetails: scDetailsList){
-				if(scDetails instanceof SubcontractDetailVO){
-					if(scDetails.getSystemStatus().equals(BasePersistedAuditObject.ACTIVE) && (scDetails.getApproved()==null || !(SubcontractDetail.SUSPEND.equalsIgnoreCase(scDetails.getApproved().trim())))){
-						if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
-							scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
-						if(scDetails.getToBeApprovedRate() != scDetails.getScRate())
-							if (Double.valueOf(0.0).equals(scDetails.getToBeApprovedRate()) && !Double.valueOf(0).equals(scDetails.getPostedCertifiedQuantity())){
-								scDetails.setQuantity(0.0);
-								scDetails.setCumCertifiedQuantity(0.0);
-							}
-							else
-								scDetails.setScRate(scDetails.getToBeApprovedRate());
-						
-						scDetails.setApproved(SubcontractDetail.APPROVED);
-						cum+=scDetails.getTotalAmount();
-					}
-				}else if (scDetails instanceof SubcontractDetailBQ){
-					if(scDetails.getToBeApprovedQuantity() != scDetails.getQuantity())
-						scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
-					remeasureSum=remeasureSum.add(BigDecimal.valueOf(scDetails.getTotalAmount()));
+			scDetailsCC.setNewQuantity(scDetailsCC.getQuantity());
+			scDetailsCC.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
+
+			accountCodeWSDao.createAccountCode(addendumDetail.getNoJob(), scDetailsCC.getObjectCode(), scDetailsCC.getSubsidiaryCode());
+			((SubcontractDetailVO)scDetail).setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
+			((SubcontractDetailCC)scDetailsCC).setCorrSCLineSeqNo(scDetail.getSequenceNo().longValue());
+			
+			subcontractDetailHBDao.insert(scDetailsCC);
+		}
+
+		subcontractDetailHBDao.insert(scDetail);
+		
+		return sequenceNo;
+	}
+	
+	private void updateSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
+		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
+		
+		if(scDetail !=null){
+			scDetail.setScRate(addendumDetail.getRateAddendum().doubleValue());
+			scDetail.setQuantity(addendumDetail.getQuantity().doubleValue());
+			scDetail.setAmountSubcontract(addendumDetail.getAmtAddendum());
+			/**
+			 * @author koeyyeung
+			 * newQuantity should be set as BQ Quantity as initial setup
+			 * Split & Terminate
+			 * 16th Apr, 2015
+			 * **/
+			scDetail.setNewQuantity(scDetail.getQuantity());
+			scDetail.setAmountSubcontractNew(addendumDetail.getAmtAddendum());
+			
+			scDetail.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
+			scDetail.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
+			scDetail.setRemark(addendumDetail.getRemarks());
+			
+			scDetail.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
+			scDetail.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
+			
+
+			scDetail.setApproved(SubcontractDetail.APPROVED);
+			subcontractDetailHBDao.update(scDetail);
+			
+			//Update C2
+			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), scDetail.getLineType());
+				if(scDetailsCC != null){
+					scDetailsCC.setJobNo(addendumDetail.getNoJob());
+					scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo()));
+					scDetailsCC.setDescription(scDetail.getDescription());
+					scDetailsCC.setSubsidiaryCode(scDetail.getSubsidiaryCode());
+					scDetailsCC.setUnit(scDetail.getUnit());
+					scDetailsCC.setScRate(scDetail.getScRate()*-1);
+					scDetailsCC.setQuantity(scDetail.getQuantity());
+					scDetailsCC.setAmountSubcontract(scDetail.getAmountSubcontract());
+
+					scDetailsCC.setApproved(SubcontractDetail.APPROVED);
+					scDetailsCC.setContraChargeSCNo(addendumDetail.getNoSubcontract());
+
+					scDetailsCC.setNewQuantity(scDetailsCC.getQuantity());
+					scDetailsCC.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
+
+					subcontractDetailHBDao.update(scDetailsCC);
 				}
-				/**
-				 * @author koeyyeung
-				 * newQuantity should be set as BQ Quantity as initial setup
-				 * 16th Apr, 2015
-				 * **/
-				scDetails.setNewQuantity(scDetails.getQuantity());
-				scDetails.setJobNo(subcontract.getJobInfo().getJobNumber());
 			}
+			
+		}
+		
+	}
+	
+	private void deleteSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
+		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
+		if(scDetail != null){
+			//Delete C2
+			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), scDetail.getLineType());
+				if(scDetailsCC != null){
+					subcontractDetailHBDao.inactivate(scDetailsCC);				
+				}
+			}
+
+			subcontractDetailHBDao.inactivate(scDetail);
+		}
+	}
+	
+	private Subcontract updateSubcontractAmount(Subcontract subcontract, Addendum addendum){
+		try {
+			subcontract.setApprovedVOAmount(addendum.getAmtAddendumTotalTba().doubleValue());
 			subcontract.setLatestAddendumValueUpdatedDate(new Date());
-			subcontract.setApprovedVOAmount(cum);
-			if (subcontract.getJobInfo().getRepackagingType()!=null &&("2".equals(subcontract.getJobInfo().getRepackagingType().trim())||"3".equals(subcontract.getJobInfo().getRepackagingType().trim())))
-				subcontract.setRemeasuredSubcontractSum(remeasureSum.doubleValue());
+
 			if(subcontract.getRetentionTerms() == null){
 				subcontract.setRetentionAmount(0.00);
 			}else if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(subcontract.getRetentionTerms().trim())){

@@ -440,7 +440,7 @@ public class SubcontractService {
 							logger.info("job:" + scDetails.getJobNo() + " Package:" + scDetails.getSubcontract().getPackageNo() + " Linetype:" + scDetails.getLineType() + " SeqNo:" + scDetails.getSequenceNo());
 
 							// SC Payment Certificate
-							PaymentCert scPayment = paymentCertHBDao.getSCPaymentLatestCert(scDetails.getSubcontract().getJobInfo(), scDetails.getContraChargeSCNo());
+							PaymentCert scPayment = paymentCertHBDao.obtainPaymentLatestCert(scDetails.getSubcontract().getJobInfo().getJobNumber(), scDetails.getContraChargeSCNo());
 							if (scPayment == null) {
 								bypassWarnings = false;
 								message = "Job: " + jobNumber + " CCPackage: " + scDetails.getContraChargeSCNo() + " - SCPayment does not exist.";
@@ -1129,7 +1129,7 @@ public class SubcontractService {
 			scDetail.setContraChargeSCNo(wrapper.getCorrSCNo().toString());
 		if (scDetail.getContraChargeSCNo()!=null && !"".equals(scDetail.getContraChargeSCNo().trim())&&!"0".equals(scDetail.getContraChargeSCNo().trim()))
 			if (!SubcontractDetail.APPROVED.equals(scDetail.getApproved())){
-				PaymentCert ccLatestPaymentCert = paymentCertHBDao.getSCPaymentLatestCert(scDetail.getSubcontract().getJobInfo(), scDetail.getContraChargeSCNo());
+				PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(scDetail.getSubcontract().getJobInfo().getJobNumber(), scDetail.getContraChargeSCNo());
 				if (ccLatestPaymentCert!=null && ("PCS".equals(ccLatestPaymentCert.getPaymentStatus())||"SBM".equals(ccLatestPaymentCert.getPaymentStatus())))
 					throw new ValidateBusinessLogicException("SC Payment of Package No:"+scDetail.getContraChargeSCNo()+" was submitted.");
 				if (((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo()!=null){					
@@ -1488,7 +1488,7 @@ public class SubcontractService {
 					SubcontractDetail ccSCDetail = subcontractDetailHBDao.obtainSCDetail(jobNumber, ((SubcontractDetailVO)scDetails).getContraChargeSCNo(), ((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo().toString());
 					if (Math.abs(ccSCDetail.getPostedCertifiedQuantity().doubleValue())>0 || Math.abs(ccSCDetail.getCumCertifiedQuantity().doubleValue())>0)
 						return "Cannot delete SC Detail, cert qty of Corresponsing SC Line is not zero.";
-					PaymentCert ccLatestPaymentCert = paymentCertHBDao.getSCPaymentLatestCert(scPackage.getJobInfo(), scDetails.getContraChargeSCNo());
+					PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scDetails.getContraChargeSCNo());
 					if (ccLatestPaymentCert!=null && ("SBM".equals(ccLatestPaymentCert.getPaymentStatus()) || "PCS".equals(ccLatestPaymentCert.getPaymentStatus())))
 						return "Cannot delete SC Detail, payment request was submitted in corresponsing SC "+scDetails.getContraChargeSCNo();
 					//					subcontractDetailHBDao.delete(subcontractDetailHBDao.getSCDetail(jobNumber, ((SCDetailsVO)scDetails).getContraChargeSCNo(), ((SCDetailsVO)scDetails).getCorrSCLineSeqNo().toString()));
@@ -1510,7 +1510,7 @@ public class SubcontractService {
 		return "Error exists in deleting SC Detail";
 	}
 
-	public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
+	/*public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNumber+"/"+packageNo+"/"+approvalResult);
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(scPackage);
@@ -1537,11 +1537,11 @@ public class SubcontractService {
 								ccDetail.setScRate(-1*scDetailVO.getToBeApprovedRate());
 							}
 						}
-						/**
+						*//**
 						 * @author koeyyeung
 						 * newQuantity should be set as BQ Quantity as initial setup
 						 * 16th Apr, 2015
-						 * **/
+						 * **//*
 						ccDetail.setNewQuantity(ccDetail.getQuantity());
 						subcontractDetailHBDao.update(ccDetail);
 					}
@@ -1550,7 +1550,7 @@ public class SubcontractService {
 
 		subcontractHBDao.saveOrUpdate(SCPackageLogic.updateApprovedAddendum(scPackage, subcontractDetailHBDao.getSCDetails(scPackage), approvalResult));
 		return true;
-	}
+	}*/
 
 	public List<ListNonAwardedSCPackageWrapper> retrieveNonAwardedSCPackageList(
 			String jobNumber) {
@@ -3680,11 +3680,11 @@ public class SubcontractService {
 			
 			for (SubcontractDetail scDetail: scDetails){
 				if(scDetail instanceof SubcontractDetailVO){
-					totalVOSCAmount += scDetail.getAmountSubcontract();
+					totalVOSCAmount += scDetail.getAmountSubcontract().doubleValue();
 					postedVOCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedVOWDAmount += scDetail.getAmountPostedWD().doubleValue();
 				}else if(scDetail instanceof SubcontractDetailBQ){
-					totalBQSCAmount += scDetail.getAmountSubcontract();
+					totalBQSCAmount += scDetail.getAmountSubcontract().doubleValue();
 					postedBQCertifiedAmount += scDetail.getAmountPostedCert().doubleValue();
 					postedBQWDAmount += scDetail.getAmountPostedWD().doubleValue();
 				} 
@@ -3692,14 +3692,14 @@ public class SubcontractService {
 			
 			SubcontractDetail scDetailBQ = new SubcontractDetail();
 			scDetailBQ.setLineType("BQ");
-			scDetailBQ.setAmountSubcontract(totalBQSCAmount);
+			scDetailBQ.setAmountSubcontract(new BigDecimal(totalBQSCAmount));
 			scDetailBQ.setAmountPostedCert(new BigDecimal(postedBQCertifiedAmount));
 			scDetailBQ.setAmountPostedWD(new BigDecimal(postedBQWDAmount));
 			scDetailsDashboard.add(scDetailBQ);
 			
 			SubcontractDetail scDetailVO = new SubcontractDetail();
 			scDetailVO.setLineType("VO");
-			scDetailVO.setAmountSubcontract(totalVOSCAmount);
+			scDetailVO.setAmountSubcontract(new BigDecimal(totalVOSCAmount));
 			scDetailVO.setAmountPostedCert(new BigDecimal(postedVOCertifiedAmount));
 			scDetailVO.setAmountPostedWD(new BigDecimal(postedVOWDAmount));
 			scDetailsDashboard.add(scDetailVO);
@@ -4079,40 +4079,39 @@ public class SubcontractService {
 				"V3".equalsIgnoreCase(scDetailInDB.getLineType())) {
 			if (scDetailInDB.getApproved() != null){
 				if(SubcontractDetail.APPROVED.equals(scDetailInDB.getApproved())) {
-					if(scDetailInDB.getAmountSubcontract() >= 0){
-						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontract()) {
+					if(scDetailInDB.getAmountSubcontract().doubleValue() >= 0){
+						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontract().doubleValue()) {
 							message = "New Work Done Amount: " + cumWorkDoneAmt+ " cannot be larger than Subcontract Amount: " + scDetailInDB.getAmountSubcontract() ;
 							logger.info(message);
 							return message;
 						}
 					}else{
-						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontract() || cumWorkDoneAmt >0) {
+						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontract().doubleValue() || cumWorkDoneAmt >0) {
 							message = "New Work Done Amount: " + cumWorkDoneAmt + " cannot be smaller than Subcontract Amount: " + scDetailInDB.getAmountSubcontract() ;
 							logger.info(message);
 							return message;
 						}
 					}
-				}else{
+				}/*else{
 					//SUSPEND,NOT_APPROVED,NOT_APPROVED_BUT_PAID
-					if(scDetailInDB.getAmountSubcontractTBA() >= 0){
-						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontractTBA()) {
+					if(scDetailInDB.getAmountSubcontractTBA().doubleValue() >= 0){
+						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontractTBA().doubleValue()) {
 							message = "New Work Done Amount: " + cumWorkDoneAmt+ " cannot be larger than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
 							logger.info(message);
 							return message;
 						}
 					}else{
-						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontractTBA() || cumWorkDoneAmt >0) {
+						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontractTBA().doubleValue() || cumWorkDoneAmt >0) {
 							message = "New Work Done Amount: " + cumWorkDoneAmt + " cannot be smaller than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
 							logger.info(message);
 							return message;
 						}
 					}
-				}
+				}*/
 
 			}
 		}
-		logger.info(" cumWorkDoneAmt:"+ cumWorkDoneAmt);
-		logger.info("scDetailInDB.getAmountCumulativeWD(): "+scDetailInDB.getAmountCumulativeWD());
+
 		if (scDetailInDB.getAmountCumulativeWD().doubleValue() != cumWorkDoneAmt){
 			cumWorkDoneAmtMovement = cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue();
 			scDetailInDB.setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
