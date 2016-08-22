@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -62,6 +63,7 @@ import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.domain.VendorAddress;
@@ -2874,9 +2876,8 @@ public class PaymentService{
 				}
 
 				// ValidateBusinessLogicException will be thrown for invalid payment 
-				List<PaymentCert> scPaymentCertList = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNo, subcontractNo);
 				List<SubcontractDetail> scDetailsList = scDetailsHBDao.getSCDetails(paymentCert.getSubcontract());
-				if (SCPaymentLogic.ableToSubmit(paymentCert, scPaymentCertList, scDetailsList, paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
+				if (this.ableToSubmit(paymentCert, scDetailsList, paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert))) {
 					// the currency pass to approval system should be the company base currency
 					currencyCode = getCompanyBaseCurrency(jobNo);
 
@@ -2918,6 +2919,87 @@ public class PaymentService{
 
 
 		return error;
+	}
+	
+	public boolean ableToSubmit(PaymentCert scPaymentCert, List<SubcontractDetail> scDetailsList, List<PaymentCertDetail> scPaymentDetailList) throws ValidateBusinessLogicException{
+		logger.info("SCPaymentLogic.ableToSubmit");
+		
+		// Validation 1 - Payment Status that can submit for payment
+		if (!"PND".equals(scPaymentCert.getPaymentStatus()) && !"UFR".equals(scPaymentCert.getPaymentStatus()))
+			throw new ValidateBusinessLogicException("SC Payment Status is not Pending or not to be Reviewed by Finance");
+		
+		// Validation 2 - Check on any pending addendum
+		String checkResult = subcontractService.ableToSubmitAddendum(scPaymentCert.getSubcontract());
+		if (checkResult!=null)
+			throw new ValidateBusinessLogicException("SC status invalid:"+checkResult);
+
+		// Validation 3 - No further payment to be submitted if Final Paid
+		if ("F".equals(scPaymentCert.getSubcontract().getPaymentStatus()))
+			throw new ValidateBusinessLogicException("Subcontract was Final Paid");
+		
+		//Validation 4 - Calculate Retention Amount
+		double retentionAmount=0.00;
+		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
+			if ("RR".equals(scPaymentDetail.getLineType().trim()) || "RA".equals(scPaymentDetail.getLineType().trim()) || "RT".equals(scPaymentDetail.getLineType().trim()))
+				retentionAmount+=scPaymentDetail.getCumAmount();
+		}
+		
+		//RT + RA + RR must be less than or equal to maximum retention amount (round to 2 d.p. for comparison)
+		int roundingDP = 2;
+		if (!PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
+			if (RoundingUtil.round(scPaymentCert.getSubcontract().getRetentionAmount(), roundingDP) < RoundingUtil.round(retentionAmount, roundingDP))
+				throw new ValidateBusinessLogicException("Cum Retention exceed Retention Amount(limited)");
+		
+		Calendar currentPeriod = Calendar.getInstance();
+		if (currentPeriod.get(Calendar.DATE)>25)
+			if (currentPeriod.get(currentPeriod.MONTH)!=Calendar.DECEMBER)
+				currentPeriod.set(currentPeriod.MONTH,currentPeriod.get(currentPeriod.MONTH)+1);
+			else
+				//last date of period 12 is 31.
+				;
+		
+		if (currentPeriod.get(currentPeriod.MONTH)==Calendar.DECEMBER)
+			currentPeriod.set(currentPeriod.DATE, 31);
+		else
+			currentPeriod.set(currentPeriod.DATE, 25);
+
+		if ("QS0".equals(scPaymentCert.getSubcontract().getPaymentTerms())&& scPaymentCert.getDueDate()==null )
+			throw new ValidateBusinessLogicException("Due Date cannot be null");
+		
+		// for check if AsAtDate is null
+		if(scPaymentCert.getAsAtDate() == null)
+			throw new ValidateBusinessLogicException("As at Date is required to submit payment");
+		else if(scPaymentCert.getAsAtDate().after(currentPeriod.getTime()))
+			throw new ValidateBusinessLogicException("As at Date should be on or before current period");
+
+		if (retentionAmount<0 && !PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
+			throw new ValidateBusinessLogicException("Retention Balance is less than zero");
+
+		//Validation 5 - Final Payment (To be submitted one)
+		if ("F".equals(scPaymentCert.getIntermFinalPayment())){
+			for (SubcontractDetail scDetail:scDetailsList){
+				//Skip inactive line
+				if (SubcontractDetail.INACTIVE.equals(scDetail.getSystemStatus())){
+					logger.info("SKIPPED - Line Type: "+scDetail.getLineType()+" ID: "+scDetail.getId()+"System Status: "+scDetail.getSystemStatus());
+					continue;
+				}
+				//No provision allowed
+				if (scDetail instanceof SubcontractDetailOA){ 
+					if (Math.abs(scDetail.getScRate()*(((SubcontractDetailOA)scDetail).getCumCertifiedQuantity()-((SubcontractDetailOA)scDetail).getCumWorkDoneQuantity()))>0)
+						throw new ValidateBusinessLogicException("Provision existed in "+scDetail.getSequenceNo());
+				}
+			}
+
+			//Retention must be released
+			if (RoundingUtil.round(retentionAmount,2)>=0.01)
+				throw new ValidateBusinessLogicException("Retention balance must be zero");
+		}
+		
+		// Check Split/Terminate Status if it implement
+
+		// Valid Main Certificate /Main certificate received date
+
+		return true;
 	}
 	
 	public String updateSCPaymentCertAdmin(PaymentCert paymentCert) {

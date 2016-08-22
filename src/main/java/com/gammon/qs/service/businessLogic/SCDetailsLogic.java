@@ -3,7 +3,6 @@ package com.gammon.qs.service.businessLogic;
 import java.util.List;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailAP;
@@ -12,82 +11,10 @@ import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 
 public class SCDetailsLogic {
 		
-	/**
-	 * modified by matthew lam
-	 * This method sets values to the scDetails object <b style="color:red">ONLY</b>:<br />
-	 * data in database are NOT updated in this method
-	 *
-	 * @param scDetails
-	 * @param wrapper
-	 * @return
-	 * @throws ValidateBusinessLogicException
-	 * @since Feb 11, 2015 4:30:16 PM
-	 */
-	public static final boolean updateSCDetails(SubcontractDetail scDetails, UpdateAddendumWrapper wrapper) throws ValidateBusinessLogicException {
-		double postedWDQty = 0;
-		if (scDetails instanceof SubcontractDetailOA) {
-			postedWDQty = ((SubcontractDetailOA) scDetails).getPostedWorkDoneQuantity();
-		}
-
-		if (scDetails.getCostRate() != null && (Math.abs(scDetails.getCostRate()) > 0))
-			if (RoundingUtil.round(Math.abs(wrapper.getToBeApprovedQty() - scDetails.getToBeApprovedQuantity()), 7) > 0)
-				throw new ValidateBusinessLogicException("Cannot change the quantity of VO line with budget!");
-
-		if (Math.abs(scDetails.getPostedCertifiedQuantity()) > 0 || Math.abs(postedWDQty) > 0) {
-			if (scDetails instanceof SubcontractDetailVO) {
-				if (RoundingUtil.round(Math.abs(wrapper.getToBeApprovedRate() - scDetails.getToBeApprovedRate()), 7) > 0)
-					throw new ValidateBusinessLogicException("posted Cert Qty and posted Workdone Qty must be zero!");
-				if (Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getCumCertifiedQuantity()) < 0 || Math.abs(wrapper.getToBeApprovedQty()) - Math.abs(scDetails.getPostedCertifiedQuantity()) < 0)
-					throw new ValidateBusinessLogicException("To be approved Quantity must be larger than Cert Quantity!");
-			}
-			if (!(scDetails instanceof SubcontractDetailBQ)) {
-				if (wrapper.getBqQuantity() != null)
-					scDetails.setQuantity(wrapper.getBqQuantity());
-				/* 
-				 * modified by matthewlam
-				 * Bug fix #9 -SCRATE of C1 can be updated even with certified quantity > 0
-				 * the logic was not changed, however, the custom algorithm comparison of doubles is replaced
-				 * and the exception message is updated 
-				 */
-				if (Double.compare(wrapper.getScRate(), scDetails.getScRate()) != 0)
-					throw new ValidateBusinessLogicException("SC Rate cannot be changed");
-			}
-
-			if (scDetails.getObjectCode() == null) {
-				if (wrapper.getObject() != null)
-					return false;
-			} else if (!scDetails.getObjectCode().equals(wrapper.getObject()))
-				return false;
-			if (scDetails.getSubsidiaryCode() == null || "".equals(scDetails.getSubsidiaryCode().trim())) {
-				if (wrapper.getSubsidiary() != null && !"".equals(wrapper.getSubsidiary().trim()))
-					return false;
-			} else if (!scDetails.getSubsidiaryCode().equals(wrapper.getSubsidiary()))
-				return false;
-		} else {
-
-			scDetails.setObjectCode(wrapper.getObject());
-			scDetails.setSubsidiaryCode(wrapper.getSubsidiary());
-			if (scDetails instanceof SubcontractDetailBQ) {
-				((SubcontractDetailBQ) scDetails).setToBeApprovedQuantity(wrapper.getToBeApprovedQty());
-			} else
-				scDetails.setQuantity(wrapper.getBqQuantity());
-			if (scDetails instanceof SubcontractDetailVO) {
-				((SubcontractDetailVO) scDetails).setToBeApprovedRate(wrapper.getToBeApprovedRate());
-				if (!SubcontractDetail.APPROVED.equals(scDetails.getApproved()))
-					scDetails.setScRate(wrapper.getToBeApprovedRate());
-			} else if (!(scDetails instanceof SubcontractDetailBQ))
-				scDetails.setScRate(wrapper.getScRate());
-		}
-		if (wrapper.getAltObjectCode() != null && !"".equals(wrapper.getAltObjectCode().trim()) && !wrapper.getAltObjectCode().startsWith(
-				"11"))
-			throw new ValidateBusinessLogicException("Alternate Object Code must be in Labour Object Code!");
-		return true;
-	}
+	
 		
 	public static final boolean isToBeApprovedLine(SubcontractDetail scDetails){
 		
@@ -278,7 +205,7 @@ public class SCDetailsLogic {
 //		return null;
 //	}
 
-	public static String generateBillItem(Subcontract scPackage, String scLineType, Integer maxSeqNo) {
+	public static String generateBillItem(String scLineType, Integer maxSeqNo) {
 		String maxSeqNoStr="";
 		String billItemMid="/ /"+scLineType.trim()+"/";
 		for (int i=0;i<4-maxSeqNo.toString().length();i++)

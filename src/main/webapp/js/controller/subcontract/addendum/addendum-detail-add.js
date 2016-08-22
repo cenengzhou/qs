@@ -24,7 +24,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			"D2": "D2 - Day Work for other Subcontract" ,
 			"CF": "CPF" 
 	};
-	$scope.subcontractorNature = "V2";
+	$scope.lineType = "V2";
 
 	
 
@@ -62,7 +62,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			}
 			
 			//Set line type
-			$scope.addendumDetail.typeVo = $scope.subcontractorNature;
+			$scope.addendumDetail.typeVo = $scope.lineType;
 			
 			//Set Header if exist
 			if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
@@ -133,8 +133,8 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 				});
 	}
 
-	$scope.$watch('subcontractorNature', function(newValue, oldValue) {
-		if(modalStatus == 'ADD' && modalParam == null){console.log("ADD");
+	$scope.$watch('lineType', function(newValue, oldValue) {
+		if(modalStatus == 'ADD' && modalParam == null){
 			//1. Add new VO (no budget)
 			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, newValue)
 			.then(
@@ -147,7 +147,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 		else {
 			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
 			$scope.addendumDetail = modalParam;
-			$scope.subcontractorNature = modalParam.typeVo;
+			$scope.lineType = modalParam.typeVo;
 			$scope.disableSelect = true;
 			
 			if(modalParam.idResourceSummary != null){

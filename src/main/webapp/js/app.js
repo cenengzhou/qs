@@ -379,7 +379,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/attachment",
 		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
 		controller: 'AttachmentSCFileCtrl',
-		'params':{
+		params:{
 			'nameObject': GlobalParameter['AbstractAttachment'].SCPackageNameObject,
 			'offsetTop':280
 		},
@@ -504,7 +504,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.addendum.attachment', {
 		url: "/attachment",
 		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
-		"params": {
+		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].SCDetailsNameObject,
 			'offsetTop':440
 		},
@@ -553,6 +553,53 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: 'AddendumForm2Ctrl'
 	})
 	
+	
+	.state('subcontract.otherAddendum', {
+		url: "/otherAddendum/tab",
+		templateUrl: "view/subcontract/addendum/other-addendum-tab.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/service/addendum-service.js' 
+                    ] 
+                });
+            }]
+        }
+	})
+	.state('subcontract.otherAddendum.detail', {
+		url: "/detail",
+		templateUrl: "view/subcontract/addendum/other-addendum-detail.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/addendum/other-addendum-detail.js',
+                           'js/service/unit-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'OtherAddendumDetailCtrl'
+	})
+	.state('subcontract.otherAddendum.list', {
+		url: "/list",
+		templateUrl: "view/subcontract/addendum/other-addendum-list.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/addendum/other-addendum-list.js',
+                    ] 
+                });
+            }]
+        },
+        controller: 'OtherAddendumListCtrl'
+	})
+	
 	.state('subcontract.payment-select', {
 		url: "/payment-select",
 		templateUrl: "view/subcontract/payment/payment-select.html",
@@ -587,7 +634,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.payment.certificate', {
 		url: "/certificate",
 		templateUrl: "view/subcontract/payment/payment-certificate.html",
-		"params": {
+		params: {
 			"paymentCertNo": null, 
 			"paymentTermsDesc": null
 		},
@@ -622,7 +669,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.payment.attachment', {
 		url: "/attachment",
 		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
-		"params": {
+		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].SCPaymentNameObject,
 			'offsetTop':440
 		},
@@ -784,7 +831,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/transit",
 		parent: "navigation",
 		templateUrl: "view/transit/transit-dashboard.html",
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -910,7 +957,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.info', {
 		url: '/info',
 		templateUrl: 'view/enquiry/enquiry-info.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null,
 		},
@@ -919,7 +966,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.jobInfo', {
 		url: '/jobInfo',
 		templateUrl: 'view/enquiry/enquiry-jobinfo.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -928,7 +975,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.jobCost', {
 		url: '/jobCost',
 		templateUrl: 'view/enquiry/enquiry-jobcost.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -937,7 +984,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.ivHistory', {
 		url: '/ivHistory',
 		templateUrl: 'view/enquiry/enquiry-ivhistory.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -946,7 +993,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.subcontract', {
 		url: '/subcontract',
 		templateUrl: 'view/enquiry/enquiry-subcontract.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -955,7 +1002,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.subcontractDetail', {
 		url: '/subcontractDetail',
 		templateUrl: 'view/enquiry/enquiry-subcontractdetail.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -964,7 +1011,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.payment', {
 		url: '/payment',
 		templateUrl: 'view/enquiry/enquiry-payment.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -973,7 +1020,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.provisionHistory', {
 		url: '/provisionHistory',
 		templateUrl: 'view/enquiry/enquiry-provisionhistory.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -982,7 +1029,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.workScope', {
 		url: '/workScope',
 		templateUrl: 'view/enquiry/enquiry-workscope.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -991,7 +1038,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.subcontractor', {
 		url: '/subcontractor',
 		templateUrl: 'view/enquiry/enquiry-subcontractor.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1000,7 +1047,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.client', {
 		url: '/client',
 		templateUrl: 'view/enquiry/enquiry-client.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1009,7 +1056,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.purchaseOrder', {
 		url: '/purchaseOrder',
 		templateUrl: 'view/enquiry/enquiry-purchaseorder.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1018,7 +1065,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.purchaseOrderDetail', {
 		url: '/purchaseOrderDetail',
 		templateUrl: 'view/enquiry/enquiry-purchaseorderdetail.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1027,7 +1074,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.accountLedger', {
 		url: '/accountLedger',
 		templateUrl: 'view/enquiry/enquiry-accountledger.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1036,7 +1083,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.customerLedger', {
 		url: '/customerLedger',
 		templateUrl: 'view/enquiry/enquiry-customerledger.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1045,7 +1092,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.supplierLedger', {
 		url: '/supplierLedger',
 		templateUrl: 'view/enquiry/enquiry-supplierledger.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1054,7 +1101,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('enquiry.performanceAppraisal', {
 		url: '/performanceAppraisal',
 		templateUrl: 'view/enquiry/enquiry-performanceappraisal.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription' : null,
 		},
@@ -1117,7 +1164,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.session',{
 		url: '/session',
 		templateUrl: 'view/admin/admin-session.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1127,7 +1174,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.ManualProcedures',{
 		url: '/ManualProcedures',
 		templateUrl: 'view/admin/admin-ManualProcedures.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1137,7 +1184,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.Revisions',{
 		url: '/Revisions',
 		templateUrl: 'view/admin/admin-Revisions.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1147,7 +1194,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',
 		templateUrl: 'view/admin/admin-TransitUOMMaintenance.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1157,7 +1204,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.TransitResourceCodeMaintenance',{
 		url: '/TransitResourceCodeMaintenance',
 		templateUrl: 'view/admin/admin-TransitResourceCodeMaintenance.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1167,7 +1214,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.SubcontractStandardTermsMaintenance',{
 		url: '/SubcontractStandardTermsMaintenance',
 		templateUrl: 'view/admin/admin-SubcontractStandardTermsMaintenance.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},
@@ -1177,7 +1224,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.SchedulerMaintenance',{
 		url: '/SchedulerMaintenance',
 		templateUrl: 'view/admin/admin-SchedulerMaintenance.html',
-		'params': {
+		params: {
 			'jobNo': null,
 			'jobDescription': null
 		},

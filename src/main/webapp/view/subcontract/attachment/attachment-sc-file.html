@@ -19,7 +19,7 @@
 								<tbody>
 									<tr ng-repeat="attach in attachments" style="cursor: pointer">
 										<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
-											<input type="checkbox" id="fileRadiobox-{{$index}}"
+											<input type="checkbox" ng-Icheck id="fileRadiobox-{{$index}}"
 											ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
 											ng-model="attach.selectedAttachement"></td>
 										<td ng-click="attachmentClick()">{{attach.fileName}}</td>

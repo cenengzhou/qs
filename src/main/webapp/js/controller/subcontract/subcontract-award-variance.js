@@ -12,18 +12,24 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
 			rowEditWaitInterval :-1,
-
+			rowHeight: 80,
+			
 			columnDefs: [
 						{ field: 'id', visible: false},
-			             { field: 'clause', displayName: " ", 
-							cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { field: 'generalCondition', displayName: "General Condition of Sub-Contract",
-			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin",
-			            	 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { field: 'reason', displayName: "Reason for the Variance",
-		            		 cellTemplate: '<div class="ui-grid-cell-contents2">{{grid.getCellValue(row, col)}}</div>'}, 
-			             { name: 'Action',
+			             { field: 'clause', displayName: " ", width: '20%' }, 
+			             { field: 'generalCondition', displayName: "General Condition of Sub-Contract", width: '20%',
+			            	 cellTooltip: function(row){ return row.entity.generalCondition; },
+			            	 cellTemplate: '<div class="ui-grid-cell-contents wrap" white-space: normal title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>'
+			            },
+			             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin", width: '30%',
+			            	 cellTooltip: function(row){ return row.entity.proposedVariance; },
+			            	 cellTemplate: '<div class="ui-grid-cell-contents wrap" white-space: normal title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>'
+			            },
+			             { field: 'reason', displayName: "Reason for the Variance", width: '20%',
+			            	cellTooltip: function(row){ return row.entity.reason; },
+			            	 cellTemplate: '<div class="ui-grid-cell-contents wrap" white-space: normal title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>'
+			             },
+			             { name: 'Action', width: '10%',
 			            	 cellTemplate:'<button class="btn btn-app btn-success m-t-10" ng-click="grid.appScope.deleteRow(row)"><i class="fa fa-remove"></i> Delete </button>',
 		                 }
 			             ]

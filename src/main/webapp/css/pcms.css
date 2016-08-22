@@ -54,6 +54,10 @@ animate-show,
 	color: red;
 }
 
+.wrap {
+  white-space: normal;
+}
+
 /* Modal Position  */
 .modal {
   text-align: center;

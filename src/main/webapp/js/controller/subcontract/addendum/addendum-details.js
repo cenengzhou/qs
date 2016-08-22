@@ -73,7 +73,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 	$scope.deleteDetail = function(addendumDetail){
 		var dataRows = $scope.gridApi.selection.getSelectedRows();
 		if(dataRows.length == 0){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to add addendum.");
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to delete addendum.");
 			return;
 		}
 		deleteAddendumDetail(dataRows);

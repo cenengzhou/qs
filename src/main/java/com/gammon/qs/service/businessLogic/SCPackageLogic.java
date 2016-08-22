@@ -11,7 +11,6 @@ import org.springframework.dao.DataAccessException;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.dao.TenderDetailHBDao;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailAP;
@@ -38,15 +37,7 @@ public class SCPackageLogic {
 	public static final String RevisedSCSum = Subcontract.RETENTION_REVISED;
 	public static final String LumpSum= Subcontract.RETENTION_LUMPSUM;
 	
-	public static final String ableToSubmitAddendum(Subcontract scPackage, List<PaymentCert> scPaymentCertList){
-		if ("1".equals(scPackage.getSubmittedAddendum()))
-			return "Addendum Submitted";
-		for (PaymentCert paymentCert:scPaymentCertList)
-			if (!"APR".equals(paymentCert.getPaymentStatus()) && !"PND".equals(paymentCert.getPaymentStatus()))
-				return "Payment Submitted";
-		return null;
-	}
-
+	
 	public static SubcontractDetail createSCDetailByLineType(String scLineType) {
 		if ("V1".equals(scLineType)||"V2".equals(scLineType)||"D1".equals(scLineType)||
 			"D2".equals(scLineType)||"L1".equals(scLineType)||"L2".equals(scLineType)||"CF".equals(scLineType))
@@ -241,4 +232,6 @@ public class SCPackageLogic {
 	public static void setTenderAnalysisDetailHBDao(TenderDetailHBDao tenderAnalysisDetailHBDao) {
 		SCPackageLogic.tenderAnalysisDetailHBDao = tenderAnalysisDetailHBDao;
 	}
+
+	
 }

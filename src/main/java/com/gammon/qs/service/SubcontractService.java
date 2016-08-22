@@ -32,7 +32,6 @@ import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
-import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.PackageSnapshotGenerationService;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
@@ -71,7 +70,6 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
@@ -96,8 +94,6 @@ import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.UDC;
-import com.gammon.qs.wrapper.addAddendum.AddAddendumWrapper;
-import com.gammon.qs.wrapper.addendumApproval.AddendumApprovalResponseWrapper;
 import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
@@ -105,7 +101,6 @@ import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
-import com.gammon.qs.wrapper.updateAddendum.UpdateAddendumWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
 import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
@@ -725,7 +720,7 @@ public class SubcontractService {
 	/**
 	 *  This method is called only from Repackaging- to edit/delete/add those addendum created from repackaging screen
 	 */
-	public String addAddendumByWrapperListStr(List<AddAddendumWrapper> wrapperList) throws Exception{
+	/*public String addAddendumByWrapperListStr(List<AddAddendumWrapper> wrapperList) throws Exception{
 		String error = null;
 		ArrayList<SubcontractDetail> scDetailsToDelete = new ArrayList<SubcontractDetail>();
 		ArrayList<SubcontractDetail> scDetailsToUpdate = new ArrayList<SubcontractDetail>();
@@ -767,9 +762,9 @@ public class SubcontractService {
 					else if(Integer.valueOf(330).equals(oldPackage.getSubcontractStatus())){
 						return "Error removing resource from package. The package has been submitted for approval.<br/> Package No: " + wrapper.getOldPackageNo() + ", Description: " + wrapper.getBqDescription();
 					}
-					/*else if(oldPackage.getSubcontractStatus() != null){
+					else if(oldPackage.getSubcontractStatus() != null){
 						taPackagesToReset.add(oldPackage);
-					}*/
+					}
 				}
 			}
 			// Add addendum
@@ -809,8 +804,8 @@ public class SubcontractService {
 
 					else if(Integer.valueOf(330).equals(oldPackage.getSubcontractStatus()))
 						return "Error removing resource from package. The package has been submitted for approval.<br/> Package No: " + wrapper.getOldPackageNo() + ", Description: " + wrapper.getBqDescription();
-					/*else if(oldPackage.getSubcontractStatus() != null)
-						taPackagesToReset.add(oldPackage);*/
+					else if(oldPackage.getSubcontractStatus() != null)
+						taPackagesToReset.add(oldPackage);
 				}
 				// add addendum
 				if (wrapper.getSubcontractNo()!=null)
@@ -833,8 +828,8 @@ public class SubcontractService {
 				return "Error deleting addendum";
 			}
 		}
-		/*for(SCPackage taPackage : taPackagesToReset)
-			packageHBDao.resetPackageTA(taPackage);*/
+		for(SCPackage taPackage : taPackagesToReset)
+			packageHBDao.resetPackageTA(taPackage);
 		// Add SCDetals after passing all possible errors
 		Integer startingSeqNumber = null;
 		for(int i =0; i< scDetailsToUpdate.size(); i++){
@@ -863,9 +858,9 @@ public class SubcontractService {
 			}
 		}
 		return "";
-	}
+	}*/
 
-	@SuppressWarnings("deprecation")
+	/*@SuppressWarnings("deprecation")
 	public String addAddendumByWrapperStrFromRepackaging(AddAddendumWrapper wrapper, List<SubcontractDetail> scDetailsToUpdate) throws Exception {
 		SubcontractDetail newVO = getDefaultValuesForSubcontractDetails(wrapper.getJobNumber(),wrapper.getSubcontractNo().toString(), wrapper.getScLineType());
 		newVO.setSubcontract(subcontractHBDao.obtainSCPackage(wrapper.getJobNumber(), wrapper.getSubcontractNo().toString()));
@@ -906,179 +901,8 @@ public class SubcontractService {
 			return "Error found in adding addendum : <br>"+returnMsg;
 		return"";
 
-	}
+	}*/
 	
-	// add Addendum with error message return
-	// By Peter Chan
-	@SuppressWarnings("deprecation")
-	public String addAddendumToSCDetail(AddendumDetail addendumDetail) throws Exception {
-		SubcontractDetail newVO = this.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(),addendumDetail.getNoSubcontract(), addendumDetail.getTypeVo());
-		newVO.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), addendumDetail.getNoSubcontract()));
-		
-		if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
-			newVO.setDescription(addendumDetail.getDescription().substring(0, 255));
-		}
-		
-		newVO.setObjectCode(addendumDetail.getCodeObject());
-		newVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
-		newVO.setUnit(addendumDetail.getUnit());
-		if (newVO instanceof SubcontractDetailVO){
-			((SubcontractDetailVO) newVO).setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
-			((SubcontractDetailVO) newVO).setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
-			((SubcontractDetailVO) newVO).setCumWorkDoneQuantity(new Double(0));
-			((SubcontractDetailVO) newVO).setPostedWorkDoneQuantity(new Double(0));
-			newVO.setQuantity(new Double(0));
-			newVO.setApproved(SubcontractDetail.NOT_APPROVED);
-		}else{
-			newVO.setQuantity(addendumDetail.getQuantity().doubleValue());
-			newVO.setApproved(SubcontractDetail.APPROVED);
-		}
-		
-		/**
-		 * @author koeyyeung
-		 * newQuantity should be set as BQ Quantity as initial setup
-		 * 16th Apr, 2015
-		 * **/
-		newVO.setNewQuantity(newVO.getQuantity());
-		
-		newVO.setScRate(addendumDetail.getRateAddendum().doubleValue());
-		newVO.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
-		newVO.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
-		newVO.setRemark(addendumDetail.getRemarks());
-		newVO.setCreatedDate(new Date());
-		newVO.setPostedCertifiedQuantity(new Double(0));
-		newVO.setJobNo(addendumDetail.getNoJob().trim());
-		newVO.setCumCertifiedQuantity(new Double(0));
-		newVO.setResourceNo(new Integer(0)); //non-zero resource no means the scDetail has a corresponding resource/resourceSummary
-//		if ("C1".equals(newVO.getLineType())&&newVO.getScRate()>0)
-//			newVO.setScRate(newVO.getScRate()*-1);
-		String returnMsg = addVOValidate(newVO,true);
-		try {
-			if (returnMsg==null){
-				// corrSC Part
-				accountCodeWSDao.createAccountCode(addendumDetail.getNoJob(), newVO.getObjectCode(), newVO.getSubsidiaryCode());
-				if (newVO.getContraChargeSCNo()!=null && !"0".equals(newVO.getContraChargeSCNo().trim()) && newVO.getContraChargeSCNo().length()>0 ){
-					SubcontractDetail scDetailsCC = getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), newVO.getContraChargeSCNo(), "C2");
-					scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), newVO.getContraChargeSCNo()));
-					scDetailsCC.setDescription(addendumDetail.getDescription());
-					scDetailsCC.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
-					scDetailsCC.setUnit(addendumDetail.getUnit());
-					scDetailsCC.setScRate(newVO.getScRate()*-1);
-					scDetailsCC.setQuantity(addendumDetail.getQuantity().doubleValue());
-					scDetailsCC.setPostedCertifiedQuantity(new Double(0));
-					scDetailsCC.setCumCertifiedQuantity(new Double(0));
-					scDetailsCC.setResourceNo(new Integer(0));
-					scDetailsCC.setApproved(SubcontractDetail.APPROVED);
-					scDetailsCC.setContraChargeSCNo(addendumDetail.getNoSubcontract());
-					scDetailsCC.setJobNo(addendumDetail.getNoJob().trim());
-					//					scDetailsCC.setResourceNo(newVO.getSequenceNo());
-					/**
-					 * @author koeyyeung
-					 * newQuantity should be set as BQ Quantity as initial setup
-					 * 16th Apr, 2015
-					 * **/
-					scDetailsCC.setNewQuantity(scDetailsCC.getQuantity());
-					logger.info("scDetailsCC new Qty: "+scDetailsCC.getNewQuantity());
-					
-					returnMsg = addVOValidate(scDetailsCC,true);
-					if (returnMsg!=null)
-						return "Error found in adding Contra Charge Line : <br>"+returnMsg;
-					accountCodeWSDao.createAccountCode(addendumDetail.getNoJob(), scDetailsCC.getObjectCode(), scDetailsCC.getSubsidiaryCode());
-					((SubcontractDetailVO)newVO).setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
-					((SubcontractDetailCC)scDetailsCC).setCorrSCLineSeqNo(newVO.getSequenceNo().longValue());
-					subcontractDetailHBDao.addSCDetail(scDetailsCC);
-					subcontractDetailHBDao.addSCDetail(newVO);
-				}
-				else
-					subcontractDetailHBDao.addSCDetail(newVO);
-			}
-			else 
-				return "Error found in adding addendum : <br>"+returnMsg;
-			return "";
-		} catch (DatabaseOperationException e) {
-			logger.info(e.getMessage());
-			return e.getLocalizedMessage();
-		}
-
-	}
-
-	private String addVOValidate(SubcontractDetail newVO, boolean saving) throws Exception {
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(newVO.getSubcontract().getJobInfo().getJobNumber(), newVO.getSubcontract().getPackageNo());
-		List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(newVO.getSubcontract().getJobInfo().getJobNumber(), scPackage.getPackageNo());
-		String ableToSubmitAddendum = SCPackageLogic.ableToSubmitAddendum(scPackage, scPaymentCertList);
-		if (ableToSubmitAddendum !=null){
-			return "Subcontract "+newVO.getSubcontract().getPackageNo()+" cannot add new line (" +ableToSubmitAddendum +")";
-		}
-
-		if ("RR".equals(newVO.getLineType())||"RA".equals(newVO.getLineType())||"CF".equals(newVO.getLineType())){
-			List<SubcontractDetail> tmpDetails = subcontractDetailHBDao.getSCDetails(newVO.getSubcontract().getJobInfo().getJobNumber(),
-					newVO.getSubcontract().getPackageNo(), newVO.getLineType());
-			if (tmpDetails!=null && tmpDetails.size()>0)
-				return "SC Line Type "+newVO.getLineType()+" exist in the package. Only one line can be added to package in this line type.";
-		}else
-			if (saving)
-				if(newVO.getUnit()==null || newVO.getUnit().trim().length()<1)
-					return "Unit must be provided";
-		if (saving){
-			if ("L2".equals(newVO.getLineType())||"D2".equals(newVO.getLineType())||"C2".equals(newVO.getLineType()))
-				if (newVO.getContraChargeSCNo()==null||newVO.getContraChargeSCNo().trim().length()<1||Integer.parseInt(newVO.getContraChargeSCNo())<1)
-					return "Corresponsing Subcontract must be provided";
-				else{
-					if (newVO.getSubcontract().getPackageNo().equals(newVO.getContraChargeSCNo()))
-						return "Invalid Contra Charging. SCPackage: "+newVO.getSubcontract().getPackageNo()+" To be contra charged SCPackage: "+newVO.getContraChargeSCNo();
-					Subcontract tmpsc = subcontractHBDao.obtainSCPackage(newVO.getSubcontract().getJobInfo().getJobNumber(), newVO.getContraChargeSCNo().trim());
-					if (tmpsc==null)
-						return "SCPackage does not existed";
-					if (!tmpsc.isAwarded())
-						return "SCPackage is not awarded";
-					if ("F".equals(tmpsc.getPaymentStatus()))
-						return "SCPackage was final paid";
-				}
-			else if (newVO.getContraChargeSCNo()!=null&&newVO.getContraChargeSCNo().trim().length()>0&&Integer.parseInt(newVO.getContraChargeSCNo())>0)
-				return "No Corresponsing Subcontract allowed";
-			if ("D1".equals(newVO.getLineType())||"D2".equals(newVO.getLineType())){
-				if (newVO.getAltObjectCode()==null ||newVO.getAltObjectCode().length()<1)
-					return "Must have Alternate Object Code";
-				else {
-					int altObj = Integer.parseInt(newVO.getAltObjectCode());
-					if (altObj<100000 || altObj>199999)
-						return "Alternate Object Accout must be labour accounts";
-				}
-			}
-			if ("D1".equals(newVO.getLineType())||"D2".equals(newVO.getLineType())||"L1".equals(newVO.getLineType())||"L2".equals(newVO.getLineType())||"CF".equals(newVO.getLineType()))
-				if (newVO.getToBeApprovedAmount()<0)
-					return "Amount must be larger than 0";
-
-		}
-
-		String returnErr =null;
-		if (!(newVO instanceof SubcontractDetailRT) && !"MS".equals(newVO.getLineType())){
-			returnErr = masterListService.validateAndCreateAccountCode(newVO.getJobNo().trim(), newVO.getObjectCode().trim(), newVO.getSubsidiaryCode().trim());
-			if (returnErr!=null)
-				return returnErr; 
-		}
-
-		if (newVO.getAltObjectCode()!=null && newVO.getAltObjectCode().length()>1){
-			returnErr = masterListService.checkObjectCodeInUCC(newVO.getAltObjectCode());
-			if (returnErr!=null)
-				return returnErr.replaceAll("Object", "Alt Object");
-		}
-
-		/* 
-		 * added by matthewlam
-		 * Bug fix #9 -SCRATE of C1 can be updated even with certified quantity > 0
-		 */
-		if ("C1".equals(newVO.getLineType()) && newVO.getScRate() > 0)
-			returnErr = "SCRate of C1 cannot be larger than zero";
-
-		if ("C1".equals(newVO.getLineType())||"C2".equals(newVO.getLineType())){
-			if (newVO.getScRate()>0)
-				return "Contra Charge rate must be negative";
-		}
-
-		return null;
-
-	}
 
 	public List<SubcontractDetail> getAddendumEnquiry(String jobNumber, String packageNo) throws Exception {
 		return subcontractDetailHBDao.getAddendumDetails(jobNumber, packageNo);
@@ -1092,60 +916,9 @@ public class SubcontractService {
 		return scDetail.getPostedCertifiedQuantity()==0 && scDetail.getPostedWorkDoneQuantity()==0;
 	}
 
-	@SuppressWarnings("deprecation")
-	public Boolean updateAddendumByWrapper(UpdateAddendumWrapper wrapper) throws DatabaseOperationException, ValidateBusinessLogicException, Exception  {
-		SubcontractDetail scDetail = subcontractDetailHBDao.obtainSCDetail(wrapper.getJobNumber(), wrapper.getSubcontractNo().toString(),wrapper.getSequenceNo().toString());
-		if (scDetail.getSubcontract().getSubmittedAddendum()!=null && Subcontract.ADDENDUM_SUBMITTED.equals(scDetail.getSubcontract().getSubmittedAddendum().trim()))
-			throw new ValidateBusinessLogicException("Addendum Approval Request was submitted.");
-		if (wrapper.getSubsidiary()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
-				!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
-			if (masterListService.checkSubsidiaryCodeInUCC(wrapper.getSubsidiary())!=null)
-				throw new DatabaseOperationException("Subsidiary Code does not exist in UCC");
-		}
-		if (wrapper.getObject()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
-				!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
-			if (masterListService.checkObjectCodeInUCC(wrapper.getObject())!=null)
-				throw new DatabaseOperationException("Object Code does not exist in UCC");
+	
 
-		}
-		if (!SCDetailsLogic.updateSCDetails(scDetail, wrapper))
-			return false;
-		
-		//Create Account
-		if (!"MS".equals(scDetail.getLineType().trim())&&!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ){
-			String errorMsg = masterListService.validateAndCreateAccountCode(wrapper.getJobNumber(), scDetail.getObjectCode(), scDetail.getSubsidiaryCode());
-			if (errorMsg!=null && !"".equals(errorMsg.trim()))
-				throw new ValidateBusinessLogicException(errorMsg);
-		}
-		if (wrapper.getUnit()!=null) 
-			scDetail.setUnit(wrapper.getUnit());
-		if (wrapper.getAltObjectCode()!=null) 
-			scDetail.setAltObjectCode(wrapper.getAltObjectCode());
-		if (wrapper.getBqDescription()!=null) 
-			scDetail.setDescription(wrapper.getBqDescription());
-		if (wrapper.getRemark()!=null) 
-			scDetail.setRemark(wrapper.getRemark());
-		if (wrapper.getCorrSCNo()!=null && checkPostedQty(scDetail)) 
-			scDetail.setContraChargeSCNo(wrapper.getCorrSCNo().toString());
-		if (scDetail.getContraChargeSCNo()!=null && !"".equals(scDetail.getContraChargeSCNo().trim())&&!"0".equals(scDetail.getContraChargeSCNo().trim()))
-			if (!SubcontractDetail.APPROVED.equals(scDetail.getApproved())){
-				PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(scDetail.getSubcontract().getJobInfo().getJobNumber(), scDetail.getContraChargeSCNo());
-				if (ccLatestPaymentCert!=null && ("PCS".equals(ccLatestPaymentCert.getPaymentStatus())||"SBM".equals(ccLatestPaymentCert.getPaymentStatus())))
-					throw new ValidateBusinessLogicException("SC Payment of Package No:"+scDetail.getContraChargeSCNo()+" was submitted.");
-				if (((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo()!=null){					
-					SubcontractDetail ccSCDetail = subcontractDetailHBDao.obtainSCDetail(scDetail.getJobNo(),scDetail.getContraChargeSCNo().trim(), ((SubcontractDetailVO)scDetail).getCorrSCLineSeqNo().toString());
-					if (ccSCDetail!=null){
-						ccSCDetail.setQuantity(scDetail.getToBeApprovedQuantity());
-						ccSCDetail.setScRate(scDetail.getToBeApprovedRate()*-1);
-						subcontractDetailHBDao.saveSCDetail(ccSCDetail);
-					}
-				}
-			}
-
-		return subcontractDetailHBDao.saveSCDetail(scDetail);
-	}
-
-	public AddendumApprovalResponseWrapper submitAddendumApproval(String jobNumber, Integer subcontractNumber, Double certAmount, String userID) throws Exception {
+	/*public AddendumApprovalResponseWrapper submitAddendumApproval(String jobNumber, Integer subcontractNumber, Double certAmount, String userID) throws Exception {
 		AddendumApprovalResponseWrapper responseObj = new AddendumApprovalResponseWrapper();
 		String resultMsg = null;
 		
@@ -1192,25 +965,11 @@ public class SubcontractService {
 		// if the submission failed, the status will not be updated
 		if(responseObj.getIsFinished() && "".equalsIgnoreCase(resultMsg))
 			scPackage.setSubmittedAddendum(Subcontract.ADDENDUM_SUBMITTED);
-		/*
-		 * It is not necessary to reset the Submitted Addendum status if error exist.
-		 * On of the error is the addendum approval request was submitted.
-		 * Remarked by Peter Chan @ 2012-03-22
-		 */
-		//		else
-		//			scPackage.setSubmittedAddendum(SCPackage.ADDENDUM_NOT_SUBMITTED);
-		/*
-		 * Ended 
-		 * Remarked by Peter Chan @ 2012-03-22
-		 */
-		// old code
-		//		scPackage.setSubmittedAddendum(SCPackage.ADDENDUM_SUBMITTED);
-
-		// added by brian on 20110414 - end
+	
 
 		subcontractHBDao.updateSubcontract(scPackage);
 		return responseObj;
-	}
+	}*/
 
 	
 
@@ -1458,59 +1217,9 @@ public class SubcontractService {
 		}
 	}
 
-	public String deleteAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
-		SubcontractDetail scDetails = subcontractDetailHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
-		// if not bq/
-		if((!scDetails.getLineType().equals("BQ")) &&(!scDetails.getLineType().equals("B1"))
-				&& (!scDetails.getLineType().equals("V3")) ){
-			// check V1 status
-			if (scDetails.getLineType().equals("V1")){
-				if (scDetails.getCostRate()!=null&&scDetails.getCostRate().doubleValue()!=0)
-					return "Cannot delete SC Detail with line type " + scDetails.getLineType() + " created from repackaging";
-				//				if ((scDetails.getResourceNo()!=null && scDetails.getResourceNo().intValue()>1) || (scDetails.getCostRate() != null && Math.abs(scDetails.getCostRate().doubleValue())>= 0.01)){
-				//					List<SCDetails> scDetailsList = subcontractDetailHBDao.getSCDetailByResourceNo(scDetails.getResourceNo());
-				//					if (scDetailsList != null && scDetailsList.size()==1 )
-				//						return "Cannot delete SC Detail with line type " + scDetails.getLineType() + " created from repackaging";
-				//				}
-			}
-			Subcontract scPackage = scDetails.getSubcontract();
-			if (!(scDetails.getPostedCertifiedQuantity().equals(0.00))  ||!(scDetails.getPostedWorkDoneQuantity().equals(0.00)) 
-					|| !(scDetails.getCumCertifiedQuantity().equals(0.00)) || !(scDetails.getCumWorkDoneQuantity().equals(0.00)))
-				return "Cannot delete SC Detail because Cum/Posted Work Done/Cert is not zero.";
-			if(scPackage.getSubmittedAddendum() != null && scPackage.getSubmittedAddendum().trim().equals("1"))
-				return "Cannot delete SC Detail, package already submitted";
-			if(scPackage.getSplitTerminateStatus()!= null && scPackage.getSplitTerminateStatus().trim().equals("1") || scPackage.getSplitTerminateStatus().trim().equals("2"))
-				return "Cannot delete SC Detail, package's split/terminate status is '1' or '2'";
-			if(scPackage.getPaymentStatus() !=null && scPackage.getPaymentStatus().trim().equals("F"))
-				return "Cannot delete SC Detail, package's payment status is 'F'";
-			if ("L2".equals(scDetails.getLineType())||"D2".equals(scDetails.getLineType()))
-				if (((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo()!=null ){
-					SubcontractDetail ccSCDetail = subcontractDetailHBDao.obtainSCDetail(jobNumber, ((SubcontractDetailVO)scDetails).getContraChargeSCNo(), ((SubcontractDetailVO)scDetails).getCorrSCLineSeqNo().toString());
-					if (Math.abs(ccSCDetail.getPostedCertifiedQuantity().doubleValue())>0 || Math.abs(ccSCDetail.getCumCertifiedQuantity().doubleValue())>0)
-						return "Cannot delete SC Detail, cert qty of Corresponsing SC Line is not zero.";
-					PaymentCert ccLatestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scDetails.getContraChargeSCNo());
-					if (ccLatestPaymentCert!=null && ("SBM".equals(ccLatestPaymentCert.getPaymentStatus()) || "PCS".equals(ccLatestPaymentCert.getPaymentStatus())))
-						return "Cannot delete SC Detail, payment request was submitted in corresponsing SC "+scDetails.getContraChargeSCNo();
-					//					subcontractDetailHBDao.delete(subcontractDetailHBDao.getSCDetail(jobNumber, ((SCDetailsVO)scDetails).getContraChargeSCNo(), ((SCDetailsVO)scDetails).getCorrSCLineSeqNo().toString()));
-					subcontractDetailHBDao.inactivateSCDetails(ccSCDetail);
-				}
-			if ("C2".equals(scDetails.getLineType()))
-				if (((SubcontractDetailCC)scDetails).getCorrSCLineSeqNo()!=null )
-					return "C2 line cannot be deleted";
-			subcontractDetailHBDao.inactivateSCDetails(scDetails);
-			return null;
-		}
-		else if (scDetails.getLineType().equals("BQ") || scDetails.getLineType().equals("B1") || scDetails.getLineType().equals("V3") ){
-			return "Cannot delete SC Detail with line type " + scDetails.getLineType();
-		}
-		else if (!(scDetails.getPostedCertifiedQuantity().equals(0.00))  ||!(scDetails.getPostedWorkDoneQuantity().equals(0.00)) 
-				|| !(scDetails.getCumCertifiedQuantity().equals(0.00)) || !(scDetails.getCumWorkDoneQuantity().equals(0.00))){
-			return "Cannot delete SC Detail because Cum/Posted Work Done/Cert is not zero.";
-		}
-		return "Error exists in deleting SC Detail";
-	}
+	
 
-	public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
+	/*public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNumber+"/"+packageNo+"/"+approvalResult);
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(scPackage);
@@ -1537,11 +1246,11 @@ public class SubcontractService {
 								ccDetail.setScRate(-1*scDetailVO.getToBeApprovedRate());
 							}
 						}
-						/**
+						*//**
 						 * @author koeyyeung
 						 * newQuantity should be set as BQ Quantity as initial setup
 						 * 16th Apr, 2015
-						 * **/
+						 * **//*
 						ccDetail.setNewQuantity(ccDetail.getQuantity());
 						subcontractDetailHBDao.update(ccDetail);
 					}
@@ -1550,7 +1259,7 @@ public class SubcontractService {
 
 		subcontractHBDao.saveOrUpdate(SCPackageLogic.updateApprovedAddendum(scPackage, subcontractDetailHBDao.getSCDetails(scPackage), approvalResult));
 		return true;
-	}
+	}*/
 
 	public List<ListNonAwardedSCPackageWrapper> retrieveNonAwardedSCPackageList(
 			String jobNumber) {
@@ -3514,6 +3223,10 @@ public class SubcontractService {
 	}
 
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	public SubcontractDetail getSubcontractDetailByID(Long id) {
+		return subcontractDetailHBDao.get(id);
+	}
+	
 	public Boolean createSystemConstant(AppSubcontractStandardTerms request, String username) {
 		Boolean result = false;
 		if(username == null || username.equals("")){
@@ -3547,7 +3260,17 @@ public class SubcontractService {
 	 * @throws DatabaseOperationException 
 	 * **/
 	public List<SubcontractDetail> getSubcontractDetailForWD(String jobNo, String subcontractNo) throws DataAccessException {
-		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSubcontractDetailsForWD(jobNo, subcontractNo);
+		return scDetailList;
+	}
+	
+	/**
+	 * @author koeyyeung
+	 * created on 10 Aug, 2016
+	 * @throws DatabaseOperationException 
+	 * **/
+	public List<SubcontractDetail> getOtherSubcontractDetails(String jobNo, String subcontractNo) throws DataAccessException {
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getOtherSubcontractDetails(jobNo, subcontractNo);
 		return scDetailList;
 	}
 	
@@ -3997,7 +3720,7 @@ public class SubcontractService {
 			}
 
 			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? subcontractDetail.getAmountCumulativeWD().doubleValue():0.0;
-			calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneAmt);
+			message = calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneAmt);
 
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
@@ -4044,13 +3767,13 @@ public class SubcontractService {
 				return message;
 			}
 			
-			List<SubcontractDetail> subcontractDetailList = subcontractDetailHBDao.getSCDetailsForWD(jobNo, subcontractNo);
+			List<SubcontractDetail> subcontractDetailList = subcontractDetailHBDao.getSubcontractDetailsForWD(jobNo, subcontractNo);
 
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
 					
 					double cumWorkDoneAmt = scDetail.getAmountCumulativeWD().doubleValue()*(percent/100);
-					calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
+					message = calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails
@@ -4380,56 +4103,6 @@ public class SubcontractService {
 		}
 
 		return Boolean.TRUE;
-	}
-
-	/**
-	 * modified on 09 Aug, 2016
-	 * @author koeyyeung
-	 * **/
-	public SubcontractDetail getDefaultValuesForSubcontractDetails(String jobNo, String subcontractNo, String lineType) throws Exception{
-		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
-			return null;
-		SubcontractDetail resultDetails = SCDetailsLogic.createSCDetailByLineType(lineType);
-		String defaultObj="140299";
-		String defaultCCObj="140288";
-		//Check labour/Plant/Material
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-		//if (scPackage==null || !scPackage.isAwarded()||"F".equals(scPackage.getPaymentStatus()))
-		if (scPackage==null ||"F".equals(scPackage.getPaymentStatus()))	
-			throw new ValidateBusinessLogicException("Invalid status of package:"+scPackage.getPackageNo());
-		if (Subcontract.CONSULTANCY_AGREEMENT.equals(scPackage.getFormOfSubcontract())){
-			defaultObj="140399";
-			defaultCCObj="140388";
-		}
-		else if (scPackage.getLabourIncludedContract()&&!scPackage.getPlantIncludedContract()&&!scPackage.getMaterialIncludedContract()){
-			defaultObj="140199";
-			defaultCCObj="140188";
-		}
-
-		if ("MS".equals(lineType.trim()))
-			//Get Obj from AAI-"SCMOS"
-			resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCMOS", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-		else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
-			if ("DSC".equals(scPackage.getSubcontractorNature()))
-				//Get Obj from AAI-"SCDRT"
-				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCDRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-			else
-				//SubcontractorNature is NSC/NDSC
-				//Get Obj from AAI-"SCNRT"
-				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCNRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
-		}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim()))
-			resultDetails.setObjectCode(defaultCCObj);
-		else 
-			resultDetails.setObjectCode(defaultObj);
-
-		if ("CF".equals(lineType.trim()))
-			//Get sub from AAI-"SCCPF"
-			resultDetails.setSubsidiaryCode(jobCostWSDao.obtainAccountCode("SCCPF", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getSubsidiary());
-
-		resultDetails.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo())+1);
-		resultDetails.setBillItem(SCDetailsLogic.generateBillItem(scPackage,lineType,resultDetails.getSequenceNo()));
-		resultDetails.setLineType(lineType.trim());
-		return resultDetails;
 	}
 
 	
@@ -4782,6 +4455,250 @@ public class SubcontractService {
 		}
 		return scListWrapperList;
 	}
+
+
+	public String addAddendumToSubcontractDetail(String jobNo, String subcontractNo, SubcontractDetail subcontractDetail) throws Exception {
+		String returnMsg = null;
+		try {
+		//SubcontractDetail newVO = this.getDefaultValuesForSubcontractDetails(subcontractDetail.getJobNo(),subcontractDetail.getSubcontract().getPackageNo(), subcontractDetail.getLineType());
+		subcontractDetail.setJobNo(jobNo);
+		subcontractDetail.setSubcontract(subcontractHBDao.obtainSCPackage(jobNo, subcontractNo));
+		
+		if(subcontractDetail.getDescription()!=null && subcontractDetail.getDescription().length()>255){
+			subcontractDetail.setDescription(subcontractDetail.getDescription().substring(0, 255));
+		}
+
+		/*subcontractDetail.setObjectCode(subcontractDetail.getObjectCode());
+		subcontractDetail.setSubsidiaryCode(subcontractDetail.getSubsidiaryCode());
+		subcontractDetail.setUnit(subcontractDetail.getUnit());
+		subcontractDetail.setQuantity(subcontractDetail.getQuantity().doubleValue());
+		
+		subcontractDetail.setScRate(subcontractDetail.getScRate());
+		subcontractDetail.setAmountSubcontract(subcontractDetail.getAmountSubcontract());
+		subcontractDetail.setRemark(subcontractDetail.getRemark());*/
+		
+		subcontractDetail.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(jobNo, subcontractNo)+1);
+		subcontractDetail.setBillItem(SCDetailsLogic.generateBillItem(subcontractDetail.getLineType(),subcontractDetail.getSequenceNo()));
+		
+		subcontractDetail.setNewQuantity(subcontractDetail.getQuantity());
+		subcontractDetail.setResourceNo(new Integer(0)); //non-zero resource no means the scDetail has a corresponding resource/resourceSummary
+		subcontractDetail.setApproved(SubcontractDetail.APPROVED);
+
+		returnMsg = addVOValidate(subcontractDetail);
+		
+		if (returnMsg==null){
+			accountCodeWSDao.createAccountCode(jobNo, subcontractDetail.getObjectCode(), subcontractDetail.getSubsidiaryCode());
+
+			subcontractDetailHBDao.addSCDetail(subcontractDetail);
+		}
+		else 
+			return "Error found in adding addendum : <br>"+returnMsg;
+		
+		} catch (Exception e) {
+			returnMsg = "Addendum cannot be created.";
+			logger.info(e.getMessage());
+		}
+		return returnMsg;
+	}
+	
+	public String updateSubcontractDetailAddendum(SubcontractDetail subcontractDetail){
+		String error = "";
+		try {
+			SubcontractDetail scDetail = subcontractDetailHBDao.obtainSCDetail(subcontractDetail.getJobNo(),subcontractDetail.getSubcontract().getPackageNo(),subcontractDetail.getSequenceNo().toString());
+			if (scDetail.getSubcontract().getSubmittedAddendum()!=null && Subcontract.ADDENDUM_SUBMITTED.equals(scDetail.getSubcontract().getSubmittedAddendum().trim())){
+				error = "Addendum Approval Request was submitted.";
+				return error;
+			}
+			if (subcontractDetail.getSubsidiaryCode()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
+				if (masterListService.checkSubsidiaryCodeInUCC(subcontractDetail.getSubsidiaryCode())!=null){
+					error = "Subsidiary Code does not exist in UCC";
+					return error;
+				}
+			}
+			if (subcontractDetail.getObjectCode()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
+				if (masterListService.checkObjectCodeInUCC(subcontractDetail.getObjectCode())!=null){
+					error = "Object Code does not exist in UCC";
+					return error;
+				}
+			}
+			
+			//Create Account
+			if (!"MS".equals(scDetail.getLineType().trim())&&!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ){
+				String errorMsg = masterListService.validateAndCreateAccountCode(subcontractDetail.getJobNo(), scDetail.getObjectCode(), scDetail.getSubsidiaryCode());
+				if (errorMsg!=null && !"".equals(errorMsg.trim()))
+					return error;
+			}
+			
+			String returnMsg = addVOValidate(subcontractDetail);
+			if(returnMsg!=null)
+				return returnMsg;
+			
+			/*if (subcontractDetail.getUnit()!=null) 
+				scDetail.setUnit(subcontractDetail.getUnit());*/
+			scDetail.setQuantity(subcontractDetail.getQuantity());
+			scDetail.setScRate(subcontractDetail.getScRate());
+			scDetail.setAmountSubcontract(subcontractDetail.getAmountSubcontract());
+			if (subcontractDetail.getDescription()!=null) 
+				scDetail.setDescription(subcontractDetail.getDescription());
+			if (subcontractDetail.getRemark()!=null) 
+				scDetail.setRemark(subcontractDetail.getRemark());
+
+			boolean updated =  subcontractDetailHBDao.saveSCDetail(scDetail);
+			if(!updated)
+				error = "Subcontract Detail cannot be updated.";
+		} catch (Exception e) {
+			error = "Subcontract Detail cannot be updated.";
+			e.printStackTrace();
+		}
+		return error;
+	}
+
+	
+	public String deleteSubcontractDetailAddendum(String jobNo, String subcontractNo, Integer sequenceNo, String lineType) throws Exception{
+		String error = null; 
+			
+		try {
+			SubcontractDetail scDetails = subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, subcontractNo, sequenceNo, lineType);
+			if(scDetails.getLineType().equals("AP") || scDetails.getLineType().equals("OA") || scDetails.getLineType().equals("C1") ||
+				scDetails.getLineType().equals("MS") || scDetails.getLineType().equals("RA") || scDetails.getLineType().equals("RR")){
+				
+				Subcontract subcontract = scDetails.getSubcontract();
+				if (!(scDetails.getAmountPostedCert().equals(0.00))  ||!(scDetails.getAmountPostedWD().equals(0.00)) 
+						|| !(scDetails.getAmountCumulativeCert().equals(0.00)) || !(scDetails.getAmountCumulativeWD().equals(0.00))){
+					error = "Cannot delete SC Detail because Cum/Posted Work Done/Cert is not zero.";
+					return error;
+				}
+				if(subcontract.getSubmittedAddendum() != null && subcontract.getSubmittedAddendum().trim().equals("1")){
+					error = "Cannot delete SC Detail, addendum is being submitted";
+					return error;
+				}
+				if(subcontract.getSplitTerminateStatus()!= null && subcontract.getSplitTerminateStatus().trim().equals("1") || subcontract.getSplitTerminateStatus().trim().equals("2")){
+					error = "Cannot delete SC Detail, subcontract split/terminate is being submitted";
+					return error;
+				}
+				if(subcontract.getPaymentStatus() !=null && subcontract.getPaymentStatus().trim().equals("F")){
+					error = "Cannot delete SC Detail, subcontract has been finalized.";
+					return error;
+				}
+				PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+				if (paymentCert!= null && !PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus()) && !PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+					error= "Payment Submitted";
+					return error;
+				}
+				
+				subcontractDetailHBDao.inactivateSCDetails(scDetails);
+			}else {
+				error =  "Only AP, C1, MS, OA, RA, RR can be deleted in here.";
+				return error;
+			}
+		} catch (Exception e) {
+			error = "Error exists in deleting SC Detail";
+			e.printStackTrace();
+		}
+		return error;
+	}
+	
+	private String addVOValidate(SubcontractDetail newVO) throws Exception {
+		Subcontract scPackage = subcontractHBDao.obtainSCPackage(newVO.getJobNo(), newVO.getSubcontract().getPackageNo());
+		String ableToSubmitAddendum = this.ableToSubmitAddendum(scPackage);
+		if (ableToSubmitAddendum !=null){
+			return "Subcontract "+newVO.getSubcontract().getPackageNo()+" cannot be edited(" +ableToSubmitAddendum +")";
+		}
+
+		if ("RR".equals(newVO.getLineType())||"RA".equals(newVO.getLineType())){
+			List<SubcontractDetail> tmpDetails = subcontractDetailHBDao.getSCDetails(newVO.getSubcontract().getJobInfo().getJobNumber(),
+					newVO.getSubcontract().getPackageNo(), newVO.getLineType());
+			if (tmpDetails!=null && tmpDetails.size()>0)
+				return "SC Line Type "+newVO.getLineType()+" exist in the package. Only one line can be added to package in this line type.";
+		}else{
+			if(newVO.getUnit()==null || newVO.getUnit().trim().length()<1)
+				return "Unit must be provided";
+		}
+		
+		if ("C1".equals(newVO.getLineType())){
+			if (newVO.getScRate()>0)
+				return "Contra Charge rate must be negative";
+			if (newVO.getAmountSubcontract().doubleValue() > 0)
+				return "Contra Amount must be negative";
+		}
+
+		String returnErr =null;
+		if (!(newVO instanceof SubcontractDetailRT) && !"MS".equals(newVO.getLineType())){
+			returnErr = masterListService.validateAndCreateAccountCode(newVO.getJobNo().trim(), newVO.getObjectCode().trim(), newVO.getSubsidiaryCode().trim());
+			if (returnErr!=null)
+				return returnErr; 
+		}
+
+		return null;
+
+	}
+	
+	
+	/**
+	 * modified on 09 Aug, 2016
+	 * @author koeyyeung
+	 * **/
+	public SubcontractDetail getDefaultValuesForSubcontractDetails(String jobNo, String subcontractNo, String lineType) throws Exception{
+		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
+			return null;
+		SubcontractDetail resultDetails = SCDetailsLogic.createSCDetailByLineType(lineType);
+		String defaultObj="140299";
+		String defaultCCObj="140288";
+		//Check labour/Plant/Material
+		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+		if (scPackage==null ||"F".equals(scPackage.getPaymentStatus()))	
+			throw new ValidateBusinessLogicException("Invalid status of package:"+scPackage.getPackageNo());
+		if (Subcontract.CONSULTANCY_AGREEMENT.equals(scPackage.getFormOfSubcontract())){
+			defaultObj="140399";
+			defaultCCObj="140388";
+		}
+		else if (scPackage.getLabourIncludedContract()&&!scPackage.getPlantIncludedContract()&&!scPackage.getMaterialIncludedContract()){
+			defaultObj="140199";
+			defaultCCObj="140188";
+		}
+
+		if ("MS".equals(lineType.trim()))
+			//Get Obj from AAI-"SCMOS"
+			resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCMOS", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+		else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
+			if ("DSC".equals(scPackage.getSubcontractorNature()))
+				//Get Obj from AAI-"SCDRT"
+				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCDRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+			else
+				//SubcontractorNature is NSC/NDSC
+				//Get Obj from AAI-"SCNRT"
+				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCNRT", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getObjectAccount());
+		}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim()))
+			resultDetails.setObjectCode(defaultCCObj);
+		else 
+			resultDetails.setObjectCode(defaultObj);
+
+		if ("CF".equals(lineType.trim()))
+			//Get sub from AAI-"SCCPF"
+			resultDetails.setSubsidiaryCode(jobCostWSDao.obtainAccountCode("SCCPF", scPackage.getJobInfo().getCompany(),scPackage.getJobInfo().getJobNumber()).getSubsidiary());
+
+		resultDetails.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo())+1);
+		resultDetails.setBillItem(SCDetailsLogic.generateBillItem(lineType,resultDetails.getSequenceNo()));
+		resultDetails.setLineType(lineType.trim());
+		return resultDetails;
+	}
+
+	public String ableToSubmitAddendum(Subcontract scPackage){
+		if ("1".equals(scPackage.getSubmittedAddendum()))
+			return "Addendum Submitted";
+		try {
+			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+			if (paymentCert!= null && !PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus()) && !PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus()))
+				return "Payment Submitted";
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 	
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
@@ -4795,5 +4712,7 @@ public class SubcontractService {
 		Object[] results = {subcontract, subcontractDetailList};
 		return results;
 	}
+
+	
 
 }

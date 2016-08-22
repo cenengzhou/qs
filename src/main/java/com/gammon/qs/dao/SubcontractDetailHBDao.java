@@ -530,13 +530,13 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		return criteria.list();
 	}
 
-	public SubcontractDetail getSCDetailsBySequenceNo(String jobNo, String subcontractNo, int sequenceNo, String lineType) {
+	public SubcontractDetail getSCDetailsBySequenceNo(String jobNo, String subcontractNo, Integer sequenceNo, String lineType) {
 		Criteria criteria = getSession().createCriteria(getType());
 		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("jobNo", jobNo));
 		criteria.createAlias("subcontract", "subcontract");
 		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-		criteria.add(Restrictions.eq("sequenceNo", new Integer(sequenceNo)));
+		criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 		criteria.add(Restrictions.eq("lineType", lineType));
 		return (SubcontractDetail) criteria.uniqueResult();
 	}
@@ -805,7 +805,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	 * **/
 	
 	@SuppressWarnings("unchecked")
-	public List<SubcontractDetail> getSCDetailsForWD(String jobNo, String subcontractNo) throws DataAccessException{
+	public List<SubcontractDetail> getSubcontractDetailsForWD(String jobNo, String subcontractNo) throws DataAccessException{
 		List<String> lineTypeList = new ArrayList<String>();
 		lineTypeList.add("BQ");
 		lineTypeList.add("B1");
@@ -867,6 +867,34 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 	    
 		resultList = criteria.list();
 		return resultList;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<SubcontractDetail> getOtherSubcontractDetails(String jobNo, String subcontractNo) throws DataAccessException{
+		List<String> lineTypeList = new ArrayList<String>();
+		lineTypeList.add("AP");
+		lineTypeList.add("C1");
+		lineTypeList.add("MS");
+		lineTypeList.add("OA");
+		lineTypeList.add("RA");
+		lineTypeList.add("RR");
+		List<SubcontractDetail> resultList;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
+
+		criteria.add(Restrictions.eq("jobNo",jobNo));
+
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+
+		criteria.add(Restrictions.in("lineType", lineTypeList));
+		
+		criteria.addOrder(Order.asc("lineType"));
+	    
+		resultList = criteria.list();
+		return resultList;
+
 	}
 	
 }

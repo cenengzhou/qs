@@ -1456,7 +1456,7 @@ public class ResourceSummaryService implements Serializable {
 			}else{
 				JobInfo job = jobDao.obtainJobInfo(jobNo);
 				List<ResourceSummary> resourceSummaries =  bqResourceSummaryDao.getResourceSummariesForAccount(job, subcontractNo, objectCode, subsidiaryCode);
-				List<SubcontractDetail> scDetailList = scDetailsHBDaoImpl.getSCDetailsForWD(jobNo, subcontractNo);
+				List<SubcontractDetail> scDetailList = scDetailsHBDaoImpl.getSubcontractDetailsForWD(jobNo, subcontractNo);
 				
 				
 				HashMap<Long, SubcontractDetail> resourceIDofAddendum = new HashMap<Long, SubcontractDetail>();

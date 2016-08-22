@@ -6,6 +6,8 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getWorkScope: 										getWorkScope,
     	getSCDetails:										getSCDetails,
     	getSubcontractDetailForWD:							getSubcontractDetailForWD,
+    	getSubcontractDetailByID:							getSubcontractDetailByID,
+    	getOtherSubcontractDetails:							getOtherSubcontractDetails,
     	getSubcontractDetailsDashboardData:					getSubcontractDetailsDashboardData,
     	getSubcontractDashboardData:						getSubcontractDashboardData,
     	getAwardedSubcontractNos:							getAwardedSubcontractNos,
@@ -17,6 +19,9 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	updateWDandIVByPercent:								updateWDandIVByPercent,
     	submitAwardApproval:								submitAwardApproval,
     	recalculateResourceSummaryIV:						recalculateResourceSummaryIV,
+    	addAddendumToSubcontractDetail:						addAddendumToSubcontractDetail,
+    	updateSubcontractDetailAddendum:					updateSubcontractDetailAddendum,
+    	deleteSubcontractDetailAddendum:					deleteSubcontractDetailAddendum,
     	
     	runProvisionPostingManually:						runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
@@ -26,11 +31,13 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	inactivateSystemConstant:							inactivateSystemConstant,
     	createSystemConstant: 								createSystemConstant,
     	updateSubcontractAdmin:								updateSubcontractAdmin,
+    	
 
     	getSubcontractSnapshotList:							getSubcontractSnapshotList,
     	getProvisionPostingHistList:						getProvisionPostingHistList,
     	getSCDetailList:									getSCDetailList,
-    	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate
+    	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate,
+    	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -109,6 +116,31 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
+    function getSubcontractDetailByID(id) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetailByID",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	id: id
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getOtherSubcontractDetails(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getOtherSubcontractDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     function getSubcontractDashboardData(jobNo, subcontractNo, year) {
         var request = $http({
             method: "get",
@@ -173,6 +205,20 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
     
+    
+    function getDefaultValuesForSubcontractDetails(jobNo, subcontractNo, lineType) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getDefaultValuesForSubcontractDetails",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	lineType: lineType
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
     
     function upateSubcontract(jobNo, subcontract) {
         var request = $http({
@@ -241,6 +287,49 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    
+    function addAddendumToSubcontractDetail(jobNo, subcontractNo, subcontractDetail) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/addAddendumToSubcontractDetail",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo
+            },
+            data: subcontractDetail
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function updateSubcontractDetailAddendum(subcontractDetail) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/updateSubcontractDetailAddendum",
+            dataType: "application/json;charset=UTF-8",
+            data: subcontractDetail
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
+    
+    function deleteSubcontractDetailAddendum(jobNo, subcontractNo, sequenceNo, lineType) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/deleteSubcontractDetailAddendum",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                sequenceNo: sequenceNo,
+                lineType:lineType
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
     
     function submitAwardApproval(jobNo, subcontractNo) {
         var request = $http({

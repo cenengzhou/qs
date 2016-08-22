@@ -619,10 +619,10 @@ public class AddendumService{
 	private String addVOValidate(AddendumDetail addendumDetail) throws Exception {
 		String ableToSubmitAddendum = ableToSubmitAddendum(addendumDetail.getNoJob(), addendumDetail.getNoSubcontract());
 		if (ableToSubmitAddendum !=null){
-			return "Subcontract "+addendumDetail.getNoSubcontract()+" cannot add new line (" +ableToSubmitAddendum +")";
+			return "Subcontract "+addendumDetail.getNoSubcontract()+" cannot be edited(" +ableToSubmitAddendum +")";
 		}
 
-		if ("RR".equals(addendumDetail.getTypeVo())||"RA".equals(addendumDetail.getTypeVo())||"CF".equals(addendumDetail.getTypeVo())){
+		if ("CF".equals(addendumDetail.getTypeVo())){
 			List<SubcontractDetail> tmpDetails = subcontractDetailHBDao.getSCDetails(addendumDetail.getNoJob(),
 					addendumDetail.getNoSubcontract(), addendumDetail.getTypeVo());
 			if (tmpDetails!=null && tmpDetails.size()>0)
@@ -662,12 +662,14 @@ public class AddendumService{
 				return "Amount must be larger than 0";
 		}
 
-		String returnErr =null;
-		if (!"RT".equals(addendumDetail.getTypeVo()) && !"RA".equals(addendumDetail.getTypeVo()) && !"RR".equals(addendumDetail.getTypeVo()) && !"MS".equals(addendumDetail.getTypeVo())){
-			returnErr = masterListService.validateAndCreateAccountCode(addendumDetail.getNoJob().trim(), addendumDetail.getCodeObject().trim(), addendumDetail.getCodeSubsidiary().trim());
-			if (returnErr!=null)
-				return returnErr; 
+		
+		if ("C2".equals(addendumDetail.getTypeVo())){
+			if (addendumDetail.getRateAddendum().doubleValue()>0)
+				return "Contra Charge rate must be negative";
 		}
+
+		
+		String returnErr =null;
 
 		if (addendumDetail.getCodeObjectForDaywork()!=null 	&& !"".equals(addendumDetail.getCodeObjectForDaywork().trim())){
 			if(!addendumDetail.getCodeObjectForDaywork().startsWith("11")){
@@ -679,19 +681,11 @@ public class AddendumService{
 			if (returnErr!=null)
 				return returnErr;
 		}
-
-		/* 
-		 * added by matthewlam
-		 * Bug fix #9 -SCRATE of C1 can be updated even with certified quantity > 0
-		 */
-		if ("C1".equals(addendumDetail.getTypeVo()) && addendumDetail.getRateAddendum().doubleValue() > 0)
-			returnErr = "SCRate of C1 cannot be larger than zero";
-
-		if ("C1".equals(addendumDetail.getTypeVo())||"C2".equals(addendumDetail.getTypeVo())){
-			if (addendumDetail.getRateAddendum().doubleValue()>0)
-				return "Contra Charge rate must be negative";
-		}
-
+		
+		returnErr = masterListService.validateAndCreateAccountCode(addendumDetail.getNoJob().trim(), addendumDetail.getCodeObject().trim(), addendumDetail.getCodeSubsidiary().trim());
+		if (returnErr!=null)
+			return returnErr; 
+		
 		return null;
 
 	}
@@ -718,18 +712,7 @@ public class AddendumService{
 			defaultCCObj="140188";
 		}
 
-		if ("MS".equals(lineType.trim()))
-			//Get Obj from AAI-"SCMOS"
-			resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCMOS", subcontract.getJobInfo().getCompany(),subcontract.getJobInfo().getJobNumber()).getObjectAccount());
-		else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
-			if ("DSC".equals(subcontract.getSubcontractorNature()))
-				//Get Obj from AAI-"SCDRT"
-				resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCDRT", subcontract.getJobInfo().getCompany(),subcontract.getJobInfo().getJobNumber()).getObjectAccount());
-			else
-				//SubcontractorNature is NSC/NDSC
-				//Get Obj from AAI-"SCNRT"
-				resultDetails.setCodeObject(jobCostWSDao.obtainAccountCode("SCNRT", subcontract.getJobInfo().getCompany(),subcontract.getJobInfo().getJobNumber()).getObjectAccount());
-		}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim()))
+		if ("C2".equals(lineType.trim()))
 			resultDetails.setCodeObject(defaultCCObj);
 		else 
 			resultDetails.setCodeObject(defaultObj);
@@ -744,12 +727,12 @@ public class AddendumService{
 			addendum.setNoAddendumDetailNext(addendum.getNoAddendumDetailNext().add(new BigDecimal(1)));
 			addendumHBDao.update(addendum);
 		}
-		resultDetails.setBpi(generateBillItem(subcontract, addendumNo.toString(), lineType, nextSeqNo));
+		resultDetails.setBpi(generateBillItem(addendumNo.toString(), lineType, nextSeqNo));
 		resultDetails.setTypeVo(lineType.trim());
 		return resultDetails;
 	}
 	
-	public static String generateBillItem(Subcontract scPackage, String addendumNo, String scLineType, Integer maxSeqNo) {
+	public static String generateBillItem(String addendumNo, String scLineType, Integer maxSeqNo) {
 		String maxSeqNoStr="";
 		String billItemMid="/"+addendumNo+"/"+scLineType.trim()+"/";
 		for (int i=0; i<4-maxSeqNo.toString().length(); i++)
@@ -773,12 +756,12 @@ public class AddendumService{
 	public String ableToSubmitAddendum(String jobNo, String subcontractNo){
 		try {
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(jobNo, subcontractNo);
-			List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNo, subcontractNo);
 			if (Subcontract.ADDENDUM_SUBMITTED.equals(subcontract.getSubmittedAddendum()))
 				return "Addendum Submitted";
-			for (PaymentCert paymentCert:scPaymentCertList)
-				if (!PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus()) && !PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus()))
-					return "Payment Submitted";
+			
+			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			if (paymentCert!= null && !PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus()) && !PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus()))
+				return "Payment Submitted";
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}

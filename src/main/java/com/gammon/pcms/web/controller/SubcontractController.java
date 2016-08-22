@@ -44,6 +44,17 @@ public class SubcontractController {
 	@Autowired
 	private SubcontractService subcontractService;
 	
+	
+	@RequestMapping(value = "getSubcontractDetailByID",	method = RequestMethod.GET)
+	public SubcontractDetail getSubcontractDetailByID(@RequestParam(required = true) String id) {
+		try {
+			return subcontractService.getSubcontractDetailByID(Long.valueOf(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@RequestMapping(value = "getSubcontractList",
 					method = RequestMethod.GET)
 	public List<Subcontract> getSubcontractList(@RequestParam(required = true) String jobNo,
@@ -118,6 +129,18 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@RequestMapping(value = "getOtherSubcontractDetails", method = RequestMethod.GET)
+	public List<SubcontractDetail> getOtherSubcontractDetails(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		try {
+			scDetails = subcontractService.getOtherSubcontractDetails(jobNo, subcontractNo);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
+	
 	@RequestMapping(value = "getSCDetailForAddendumUpdate", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSCDetailForAddendumUpdate(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		List<SubcontractDetail> scDetails = null;
@@ -176,6 +199,62 @@ public class SubcontractController {
 			e.printStackTrace();
 		}
 		return unawardedSubcontractNos;
+	}
+	
+	@RequestMapping(value = "getDefaultValuesForSubcontractDetails", method = RequestMethod.GET)
+	public SubcontractDetail getDefaultValuesForSubcontractDetails(@RequestParam(required =true) String jobNo, 
+																@RequestParam(required =true) String subcontractNo, 
+																@RequestParam(required =true) String lineType){
+		SubcontractDetail subcontractDetail = new SubcontractDetail();
+		try {
+			subcontractDetail = subcontractService.getDefaultValuesForSubcontractDetails(jobNo, subcontractNo, lineType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return subcontractDetail;
+	}
+	
+	
+	
+	@RequestMapping(value = "addAddendumToSubcontractDetail", method = RequestMethod.POST)
+	public String addAddendumToSubcontractDetail(@RequestParam(required =true) String jobNo, 
+												@RequestParam(required =true) String subcontractNo, 
+												@RequestBody SubcontractDetail subcontractDetail){
+		String result = null;
+		try {
+			result = subcontractService.addAddendumToSubcontractDetail(jobNo, subcontractNo, subcontractDetail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "updateSubcontractDetailAddendum", method = RequestMethod.POST)
+	public String updateSubcontractDetailAddendum(@RequestBody SubcontractDetail subcontractDetail){
+		String result = null;
+		try {
+			result = subcontractService.updateSubcontractDetailAddendum(subcontractDetail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "deleteSubcontractDetailAddendum", method = RequestMethod.POST)
+	public String deleteSubcontractDetailAddendum(@RequestParam(required =true) String jobNo, 
+								@RequestParam(required =true) String subcontractNo, 
+								@RequestParam(required =true) Integer sequenceNo,
+								@RequestParam(required =true) String lineType
+								){
+		String result = null;
+		try {
+			result = subcontractService.deleteSubcontractDetailAddendum(jobNo, subcontractNo, sequenceNo, lineType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)

@@ -1,0 +1,173 @@
+
+
+<!-- Addendum -->
+<div class="animated fadeIn">
+	<form name="form-validate" id="form-validate"
+				class="ng-pristine ng-valid">
+		<fieldset>
+			<div class="row">
+				<div class="col-md-7 col-md-offset-2">
+					<h3 class="form-header form-header-lg m-b-10">
+						<span class="icon text-primary"><i class="fa fa-dollar"></i></span>
+						Addendum Detail <small>(No approval is required)</small>
+					</h3>
+					<p class="m-b-20">Please input the required fields below.</p>
+					<div class="form-group">
+						<label>Line Type - <strong>{{lineTypes[lineType]}}</strong>
+						</label>
+						<!-- <div class="controls">
+											<select class="form-control " ng-model="addendum.selected"
+												ng-options="obj.value as obj.text for obj in addendum.lineTypes"></select>
+										</div> -->
+						<div class="btn-group btn-group-justified">
+							<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'AP', 'btn-inverse' : lineType != 'AP'}"
+								ng-model="lineType" uib-btn-radio="'AP'">AP</label> 
+								<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'C1', 'btn-inverse' : lineType != 'C1'}"
+								ng-model="lineType" uib-btn-radio="'C1'">C1</label> 
+								<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'MS', 'btn-inverse' : lineType != 'MS'}"
+								ng-model="lineType" uib-btn-radio="'MS'">MS</label> 
+								<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'OA', 'btn-inverse' : lineType != 'OA'}"
+								ng-model="lineType" uib-btn-radio="'OA'">OA</label> 
+								<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'RA', 'btn-inverse' : lineType != 'RA'}"
+								ng-model="lineType" uib-btn-radio="'RA'">RA</label> 
+								<label class="btn" ng-disabled="disableSelect"
+								ng-class="{'btn-primary' : lineType == 'RR', 'btn-inverse' : lineType != 'RR'}"
+								ng-model="lineType" uib-btn-radio="'RR'">RR</label>
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label>Description</label> <input type="text"
+							class="form-control " ng-model="subcontractDetail.description"
+							ng-disabled="disableFields" required />
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>BQ Item</label> <input type="text" class="form-control "
+									ng-model="subcontractDetail.billItem" disabled required />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Object Code</label> <input type="text"
+									class="form-control" ng-model="subcontractDetail.objectCode"
+									data-parsley-length="[6,6]"
+									ng-disabled="lineType != 'C1' || disableFields" required />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Subsidiary Code</label> <input type="text"
+									class="form-control" ng-model="subcontractDetail.subsidiaryCode"
+									data-parsley-length="[8,8]"
+									ng-disabled="disableFields" required />
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Quantity</label> <input class="form-control"
+									data-parsley-type="number" ng-model="subcontractDetail.quantity"
+									ng-change="calculate('quantity')"
+									ng-paste="calculate('quantity')"
+									required />
+								<!-- data-parsley-pattern="^[0-9]*\.[0-9]{2}$"
+											data-parsley-error-message="Max. 4 decimal places only" -->
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Subcontract Rate</label> <input
+									data-parsley-type="number" class="form-control"
+									ng-model="subcontractDetail.scRate"
+									ng-change="calculate('rate')" ng-paste="calculate('rate')"
+									required />
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Total Amount</label> <input data-parsley-type="number"
+									class="form-control" parsley-type-step="0.01"
+									ng-model="subcontractDetail.amountSubcontract"
+									ng-change="calculate('totalAmount')"
+									ng-paste="calculate('totalAmount')" required />
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Unit</label> <select class="form-control"
+									ng-model="units.selected" ng-options="o as o for o in units"
+									ng-disabled="disableFields" required></select>
+							</div>
+						</div>
+
+
+						<div class="col-md-8">
+							<div class="form-group">
+								<label>Remark</label> <input type="text" class="form-control "
+									ng-model="subcontractDetail.remark" />
+							</div>
+						</div>
+
+					</div>
+
+					<button class="m-t-5 btn btn-primary btn-block" ng-click="save()">
+						Save <span class="fa fa-save"></span>
+					</button>
+				</div>
+
+
+				<!-- <div class="col-md-3 m-l-20">
+							<div class="box no-border">
+								<div class="box-body">
+									<div class="widget widget-stat bg-primary text-white">
+										<div class="widget-stat-btn">
+											<a href="#" data-click="widget-reload"><i
+												class="fa fa-repeat"></i></a>
+										</div>
+										<div class="widget-stat-icon">
+											<i class="fa fa-calculator"></i>
+										</div>
+										<div class="widget-stat-info">
+											<div class="widget-stat-title">Total Addendum Amount</div>
+											<div class="widget-stat-number">$10,000.00</div>
+											<div class="widget-stat-text">(Not Approved)</div>
+										</div>
+									</div>
+									<ul class="list-group list-group-unbordered">
+										<li class="list-group-item"><b>AP</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>C1</b> <b
+											class="pull-right">10000</b></li>
+										<li class="list-group-item"><b>MS</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>OA</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>RA</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>RR</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>D2</b> <b
+											class="pull-right">0</b></li>
+										<li class="list-group-item"><b>CF</b> <b
+											class="pull-right">0</b></li>
+									</ul>
+
+								</div>
+							</div>
+						</div> -->
+
+			</div>
+		</fieldset>
+	</form>
+</div>

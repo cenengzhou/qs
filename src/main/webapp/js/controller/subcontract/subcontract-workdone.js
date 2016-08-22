@@ -207,8 +207,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		subcontractService.updateWDandIV($scope.jobNo, $scope.subcontractNo, scDetail)
 	   	 .then(
 				 function( data ) {
-					 if(data.length!=0)
+					 if(data.length!=0){
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+						 $state.reload();
+						}
 					 else
 						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
 				 });
@@ -220,8 +222,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				 function( data ) {
 					 if(data.length!=0)
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
-					 else
-						 $state.reload();
+					 $state.reload();
 				 });
 	    }
 	

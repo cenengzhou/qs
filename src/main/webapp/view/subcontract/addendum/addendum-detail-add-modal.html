@@ -26,30 +26,30 @@
 							</h3>
 							<p class="m-b-20">Please input the required fields below.</p>
 							<div class="form-group">
-								<label>Line Type - <strong>{{lineTypes[subcontractorNature]}}</strong>
+								<label>Line Type - <strong>{{lineTypes[lineType]}}</strong>
 								</label>
 								<div class="btn-group btn-group-justified">
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'V1', 'btn-inverse' : subcontractorNature != 'V1'}"
-										ng-model="subcontractorNature" uib-btn-radio="'V1'">V1</label>
+										ng-class="{'btn-primary' : lineType == 'V1', 'btn-inverse' : lineType != 'V1'}"
+										ng-model="lineType" uib-btn-radio="'V1'">V1</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'V2', 'btn-inverse' : subcontractorNature != 'V2'}"
-										ng-model="subcontractorNature" uib-btn-radio="'V2'">V2</label>
+										ng-class="{'btn-primary' : lineType == 'V2', 'btn-inverse' : lineType != 'V2'}"
+										ng-model="lineType" uib-btn-radio="'V2'">V2</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'L1', 'btn-inverse' : subcontractorNature != 'L1'}"
-										ng-model="subcontractorNature" uib-btn-radio="'L1'">L1</label>
+										ng-class="{'btn-primary' : lineType == 'L1', 'btn-inverse' : lineType != 'L1'}"
+										ng-model="lineType" uib-btn-radio="'L1'">L1</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'L2', 'btn-inverse' : subcontractorNature != 'L2'}"
-										ng-model="subcontractorNature" uib-btn-radio="'L2'">L2</label>
+										ng-class="{'btn-primary' : lineType == 'L2', 'btn-inverse' : lineType != 'L2'}"
+										ng-model="lineType" uib-btn-radio="'L2'">L2</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'D1', 'btn-inverse' : subcontractorNature != 'D1'}"
-										ng-model="subcontractorNature" uib-btn-radio="'D1'">D1</label>
+										ng-class="{'btn-primary' : lineType == 'D1', 'btn-inverse' : lineType != 'D1'}"
+										ng-model="lineType" uib-btn-radio="'D1'">D1</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'D2', 'btn-inverse' : subcontractorNature != 'D2'}"
-										ng-model="subcontractorNature" uib-btn-radio="'D2'">D2</label>
+										ng-class="{'btn-primary' : lineType == 'D2', 'btn-inverse' : lineType != 'D2'}"
+										ng-model="lineType" uib-btn-radio="'D2'">D2</label>
 									<label class="btn" ng-disabled="disableSelect"
-										ng-class="{'btn-primary' : subcontractorNature == 'CF', 'btn-inverse' : subcontractorNature != 'CF'}"
-										ng-model="subcontractorNature" uib-btn-radio="'CF'">CF</label>
+										ng-class="{'btn-primary' : lineType == 'CF', 'btn-inverse' : lineType != 'CF'}"
+										ng-model="lineType" uib-btn-radio="'CF'">CF</label>
 								</div>
 
 							</div>
@@ -78,7 +78,7 @@
 										<label>Subsidiary Code</label> 
 										<input type="text" class="form-control"
 											ng-model="addendumDetail.codeSubsidiary" 
-											ng-disabled="subcontractorNature=='CF' || disableFields"
+											ng-disabled="lineType=='CF' || disableFields"
 											required />
 									</div>
 								</div>
@@ -135,8 +135,8 @@
 										<input type="number"
 											 class="form-control "
 											ng-model="addendumDetail.corrSCNo"
-											ng-disabled="subcontractorNature!='D2' && subcontractorNature!='L2'"
-											data-ng-required="subcontractorNature=='D2' || subcontractorNature=='L2'"/>
+											ng-disabled="lineType!='D2' && lineType!='L2'"
+											data-ng-required="lineType=='D2' || lineType=='L2'"/>
 									</div>
 								</div>
 
@@ -146,8 +146,8 @@
 										<input type="number"
 											 class="form-control "
 											ng-model="addendumDetail.altObjectCode"
-											ng-disabled="subcontractorNature!='D1' && subcontractorNature!='D2'"
-											data-ng-required="subcontractorNature=='D1' || subcontractorNature=='D2'" />
+											ng-disabled="lineType!='D1' && lineType!='D2'"
+											data-ng-required="lineType=='D1' || lineType=='D2'" />
 									</div>
 								</div>
 
