@@ -22,7 +22,6 @@ import org.springframework.stereotype.Repository;
 import com.gammon.pcms.config.StoredProcedureConfig;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;

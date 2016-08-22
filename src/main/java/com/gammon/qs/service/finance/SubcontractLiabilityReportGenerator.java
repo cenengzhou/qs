@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 

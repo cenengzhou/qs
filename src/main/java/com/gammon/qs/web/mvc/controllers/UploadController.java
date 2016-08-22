@@ -22,7 +22,6 @@ import com.gammon.qs.service.JdeAccountLedgerService;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.TenderService;
-import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
 import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;

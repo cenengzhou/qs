@@ -1510,7 +1510,7 @@ public class SubcontractService {
 		return "Error exists in deleting SC Detail";
 	}
 
-	/*public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
+	public Boolean toCompleteAddendumApproval(String jobNumber, String packageNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNumber+"/"+packageNo+"/"+approvalResult);
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		List<SubcontractDetail> ccSCDetails = subcontractDetailHBDao.getSCDetailsWithCorrSC(scPackage);
@@ -1537,11 +1537,11 @@ public class SubcontractService {
 								ccDetail.setScRate(-1*scDetailVO.getToBeApprovedRate());
 							}
 						}
-						*//**
+						/**
 						 * @author koeyyeung
 						 * newQuantity should be set as BQ Quantity as initial setup
 						 * 16th Apr, 2015
-						 * **//*
+						 * **/
 						ccDetail.setNewQuantity(ccDetail.getQuantity());
 						subcontractDetailHBDao.update(ccDetail);
 					}
@@ -1550,7 +1550,7 @@ public class SubcontractService {
 
 		subcontractHBDao.saveOrUpdate(SCPackageLogic.updateApprovedAddendum(scPackage, subcontractDetailHBDao.getSCDetails(scPackage), approvalResult));
 		return true;
-	}*/
+	}
 
 	public List<ListNonAwardedSCPackageWrapper> retrieveNonAwardedSCPackageList(
 			String jobNumber) {
