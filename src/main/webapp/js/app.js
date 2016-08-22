@@ -888,6 +888,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/enquiry-customerledger.js',
 							'js/controller/enquiry/enquiry-supplierledger.js',
 							'js/controller/enquiry/enquiry-performanceappraisal.js',
+							'js/controller/enquiry/modal/enquiry-jobcostdetails.js',
 
                	         	'js/service/main-cert-service.js',
                	         	'js/service/payment-service.js',

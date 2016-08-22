@@ -1,0 +1,68 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12">
+		<tr>
+		<td><label for="accountCode">Detail - Account Code: {{parentScope.searchAccountLedger.accountCode}}</label></td>
+		</tr>
+		</table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+
+	<div class="row col-md-12">
+						<form role="form" name="searchAccountLedgerForm" id="searchAccountLedgerForm" ng-submit="loadAccountLedgerList()" class="form-input-flat">
+							<div class="form-group">
+								<div class="col-md-2">
+									<label for="noSubcontract">Subcontract No:</label> 
+									<input type="text" class="form-control" id="noSubcontract" name="noSubcontract" ng-model="noSubcontract">
+								</div>
+								<div class="col-md-2">
+									<label for="typeLedger">Ledger Type:</label> 
+									<input type="text" class="form-control" id="typeLedger" name="typeLedger" ng-model="typeLedger">
+								</div>
+
+								<div class="col-md-3">
+									<label for="fromDate">From Date:</label>
+									<div class="input-group" moment-picker="fromDate"
+										format="YYYY-MM-DD" start-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="fromDate" name="fromDate"
+											ng-model="fromDate"
+											 title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+									</div>
+								</div>
+								<div class="col-md-3">
+									<label for="thruDate">Thru Date:</label>
+									<div class="input-group" moment-picker="thruDate"
+										format="YYYY-MM-DD" start-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="thruDate" name="thruDate"
+											ng-model="thruDate"
+											title="Please select Year and Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
+									</div>
+								</div>
+
+								<div class="col-md-2">
+										<label>&nbsp;</label>
+										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									</div>
+								</div>
+							</form>
+	</div>
+	<div class="clearfix"></div><br>
+	<div class="row">
+<div ui-grid="gridOptions" external-scopes="clickHandler"
+							ui-grid-resize-columns ui-grid-pagination ui-grid-selection
+							ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
+							</div>
+</div>

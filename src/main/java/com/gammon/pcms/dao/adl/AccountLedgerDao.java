@@ -29,7 +29,6 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 
 		// Data Formatting
 		typeLedger = typeLedger.toUpperCase();
-		typeDocument = typeDocument.toUpperCase();
 		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
 		noSubcontract = StringUtils.isNotBlank(noSubcontract) ?StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
 		
@@ -67,8 +66,10 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 		}
 		
 		// Where (optional)
-		if(StringUtils.isNotBlank(typeDocument))
+		if(StringUtils.isNotBlank(typeDocument)){
+			typeDocument = typeDocument.toUpperCase();
 			criteria.add(Restrictions.eq("typeDocument", typeDocument));
+		}
 		if (StringUtils.isNotBlank(noSubcontract)) {
 			criteria.add(Restrictions.eq("accountSubLedger", noSubcontract));
 			criteria.add(Restrictions.eq("accountTypeSubLedger", AccountBalanceAAJISC.TYPE_SUBLEDGER_X));

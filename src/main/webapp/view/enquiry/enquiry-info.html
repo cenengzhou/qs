@@ -12,7 +12,7 @@
 			<div ng-repeat="btn in btns">
 				<div class="col-md-4" style="text-align: right">
 					<button type="button" name="{{btn.name}}" id="{{btn.name}}" value="" 
-							class="btn btn-lg btn-inverse" style="width: 250px" uib-popover-html="btn.popoverHtml" popover-placement="right"
+							class="btn btn-lg btn-inverse" style="width: 250px" uib-popover-html="btn.popoverHtml" popover-placement="right-top"
 							popover-trigger="outsideClick" ng-mouseover="showPopover(btn.name)" popover-is-open="{{btn.name}}.show">
 						<i class="fa fa-search fa-2x pull-left"></i> <b>{{btn.title}}</b><br> <small>version 1.2.3</small>
 					</button>
