@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.gammon.pcms.service.HTMLService;
+import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertService;
@@ -292,12 +293,12 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	
 	@Bean(name = "marshallingCompleteAddendumApprovalEndpoint")
 	public MarshallingCompleteAddendumApprovalEndpoint marshallingCompleteAddendumApprovalEndpoint(
-			SubcontractService packageHBRepository,
+			AddendumService addendumService,
 			@Qualifier("completeAddendumApprovalMarshaller") JibxMarshaller marshaller,
 			@Qualifier("completeAddendumApprovalUnmarshaller") JibxMarshaller unmarshaller)
 			throws Exception {
 		MarshallingCompleteAddendumApprovalEndpoint bean = new MarshallingCompleteAddendumApprovalEndpoint(
-				packageHBRepository, marshaller);
+				addendumService, marshaller);
 		return bean;
 	}
 

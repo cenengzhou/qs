@@ -24,8 +24,8 @@
 	<properties>
 		<!-- START: Customize the following properties after checking out the project -->
 		<!-- Java -->
-		<java.version>1.7</java.version>
-		<java.home>C:\Program Files\Java\jdk1.7.0_79</java.home>
+		<java.version>1.8</java.version>
+		<jdk1.8>C:\Program Files\Java\jdk1.8.0_102</jdk1.8>
 		<!-- END -->
 		
 		<!-- Maven -->
@@ -899,7 +899,7 @@
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
 			<artifactId>ws-completeAddendumApproval</artifactId>
-			<version>2016-06-14</version>
+			<version>2016-08-23</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.ws</groupId>
@@ -986,7 +986,7 @@
 				<configuration>
 					<verbose>true</verbose>
 					<fork>true</fork>
-					<executable>"${java.home}\bin\javac.exe"</executable>
+					<executable>"${jdk1.8}\bin\javac.exe"</executable>
 					<compilerVersion>${java.version}</compilerVersion>
 					<excludes>
 						<exclude>com/gammon/qs/webservice/serviceProvider/</exclude>
