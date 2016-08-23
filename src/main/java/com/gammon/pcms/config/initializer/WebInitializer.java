@@ -44,6 +44,8 @@ public class WebInitializer extends
 		requestContextFilterRegistration.setAsyncSupported(true);
 		requestContextFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
 		
+		servletContext.getSessionCookieConfig().setName("PCMS_SESSIONID");
+
 		System.setProperty("UseSunHttpHandler", "true");
 		//forward JUL to SLF4J
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
