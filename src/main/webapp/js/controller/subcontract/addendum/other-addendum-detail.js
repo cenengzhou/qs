@@ -9,6 +9,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 	$scope.units.selected = "AM";
 	
 	getUnitOfMeasurementList();
+	getSubcontract();
 	
 	$scope.lineTypes = {
 			"AP": "AP - Advanced Payment" , 
@@ -20,23 +21,6 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 	};
 	$scope.lineType = "C1";
 
-	
-
-	$scope.calculate = function(field){
-		if(field == "totalAmount" && $scope.subcontractDetail.amountSubcontract != null){
-			$scope.subcontractDetail.amountSubcontract = roundUtil.round($scope.subcontractDetail.amountSubcontract, 2);
-			$scope.subcontractDetail.quantity = roundUtil.round($scope.subcontractDetail.amountSubcontract/$scope.subcontractDetail.scRate, 4);
-			$scope.subcontractDetail.scRate = roundUtil.round($scope.subcontractDetail.amountSubcontract/$scope.subcontractDetail.quantity, 2);
-		}else if(field == "quantity" && $scope.subcontractDetail.quantity != null){
-			$scope.subcontractDetail.quantity = roundUtil.round($scope.subcontractDetail.quantity, 4);
-			$scope.subcontractDetail.amountSubcontract = roundUtil.round($scope.subcontractDetail.quantity*$scope.subcontractDetail.scRate, 2);
-			$scope.subcontractDetail.scRate = roundUtil.round($scope.subcontractDetail.amountSubcontract/$scope.subcontractDetail.quantity, 2);
-		}else if (field == "rate" && $scope.subcontractDetail.scRate != null){
-			$scope.subcontractDetail.scRate = roundUtil.round($scope.subcontractDetail.scRate, 2);
-			$scope.subcontractDetail.amountSubcontract = roundUtil.round($scope.subcontractDetail.quantity*$scope.subcontractDetail.scRate, 2);
-			$scope.subcontractDetail.quantity = roundUtil.round($scope.subcontractDetail.amountSubcontract/$scope.subcontractDetail.scRate, 4);
-		}
-	}
 
 	//Save Function
 	$scope.save = function () {
@@ -52,7 +36,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 			$scope.disableButtons = false;
 		}
 		
-		if(scDetailID.length==0){
+		if(scDetailID == null || scDetailID.length==0){
 			var scDetailToAdd = {
 					billItem:			$scope.subcontractDetail.billItem,
 					objectCode: 		$scope.subcontractDetail.objectCode,	
@@ -65,7 +49,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 					unit:				$scope.units.selected,
 					remarks:			$scope.subcontractDetail.remarks,
 			}
-			console.log(scDetailToAdd);
+			//console.log(scDetailToAdd);
 			addAddendumToSubcontractDetail(scDetailToAdd);
 		}
 		else {
@@ -103,6 +87,18 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 				});
 	}
 	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data.paymentStatus == 'F'){
+						$scope.disableButton = true;
+					}else 
+						$scope.disableButton = false;
+				});
+	}
+	
+	
 	function getUnitOfMeasurementList() {
 		unitService.getUnitOfMeasurementList()
 		.then(
@@ -114,8 +110,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 	}
 
 	$scope.$watch('lineType', function(newValue, oldValue) {
-		console.log("scDetailID: "+scDetailID);
-		if(scDetailID.length !=0){
+		if(scDetailID !=null && scDetailID.length !=0){
 			subcontractService.getSubcontractDetailByID(scDetailID)
 			.then(
 					function( data ) {
@@ -129,7 +124,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 							$scope.disableFields = true;
 						}
 					});
-		}else {console.log("get Default Value");
+		}else {
 			subcontractService.getDefaultValuesForSubcontractDetails($scope.jobNo, $scope.subcontractNo, newValue)
 			.then(
 					function( data ) {
@@ -141,6 +136,8 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 		}
 		
 	});
+
+	
 	
 
 }]);

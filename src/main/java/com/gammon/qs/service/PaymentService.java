@@ -2374,37 +2374,47 @@ public class PaymentService{
 	
 							if(scDetail != null){
 								scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
-								scDetailDao.update(scDetail);
-							}
-	
-	
-							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
-							if(scDetail.getAmountSubcontract().doubleValue() >= 0){
-								if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract().doubleValue()) {
-									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
-									logger.info(error);
-									return error;
+
+
+								//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
+								if(!"C1".equals(scDetail.getLineType())  && !"OA".equals(scDetail.getLineType()) && 	
+										!"RR".equals(scDetail.getLineType()) && !"RA".equals(scDetail.getLineType()) &&
+										!"AP".equals(scDetail.getLineType()) && !"MS".equals(scDetail.getLineType())){
+
+									if(scDetail.getAmountSubcontract().doubleValue() >= 0){
+										if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract().doubleValue()) {
+											error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
+											logger.info(error);
+											return error;
+										}
+									}else{
+										if (paymentDetail.getCumAmount()< CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue(), 2) || paymentDetail.getCumAmount() >0) {
+											error = "Contrac charge should be in negative amount. New Certified Amount: " + paymentDetail.getCumAmount() + " Sequence No.: " + scDetail.getSequenceNo();
+											logger.info(error);
+											return error;
+										}
+									}
 								}
-							}else{
-								if (paymentDetail.getCumAmount().doubleValue() < scDetail.getAmountSubcontract().doubleValue() || paymentDetail.getCumAmount() >0) {
+								
+								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
 									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
 									logger.info(error);
 									return error;
 								}
+								
+								if (scDetail instanceof SubcontractDetailBQ)
+									totalCertAmount += paymentDetail.getCumAmount();
+
+
+								if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
+									totalMOSAmount += paymentDetail.getCumAmount();
+								}
+								scDetailDao.update(scDetail);
+								
+								paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
+								paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
+								paymentDetailDao.update(paymentDetailInDB);	
 							}
-	
-							if (scDetail instanceof SubcontractDetailBQ)
-								totalCertAmount += paymentDetail.getCumAmount();
-							
-	
-							if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
-								totalMOSAmount += paymentDetail.getCumAmount();
-							}
-	
-							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
-							paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
-							paymentDetailDao.update(paymentDetailInDB);	
-	
 						}
 					}		
 				}

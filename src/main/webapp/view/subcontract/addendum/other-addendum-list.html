@@ -8,13 +8,13 @@
 		</div>
 
 		<div class="col-md-6">
-			<button class="m-t-5 btn btn-primary btn-block" ng-click="edit()">
-				<span class="fa fa-edit"></span> Edit
+			<button class="m-t-5 btn btn-primary btn-block" ng-click="edit()" ng-disabled ="disableButton">
+				<span class="fa fa-edit" ></span> Edit
 			</button>
 		</div>
 		<div class="col-md-6">
-			<button class="m-t-5 btn btn-primary btn-block"
-				ng-click="deleteDetail()">
+			<button class="m-t-5 btn btn-success btn-block"
+				ng-click="deleteDetail()" ng-disabled ="disableButton">
 				<span class="fa fa-remove"></span> Delete
 			</button>
 		</div>

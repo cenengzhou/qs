@@ -876,24 +876,24 @@ public class AddendumService{
 	}
 	
 	private int addSCDetails(Subcontract subcontract, AddendumDetail addendumDetail, int sequenceNo) throws Exception{
-		SubcontractDetailVO scDetail = new SubcontractDetailVO();
-		scDetail.setJobNo(addendumDetail.getNoJob().trim());
-		scDetail.setSubcontract(subcontract);
+		SubcontractDetailVO scDetailVO = new SubcontractDetailVO();
+		scDetailVO.setJobNo(addendumDetail.getNoJob().trim());
+		scDetailVO.setSubcontract(subcontract);
 
 		if(addendumDetail.getDescription()!=null && addendumDetail.getDescription().length()>255){
-			scDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
+			scDetailVO.setDescription(addendumDetail.getDescription().substring(0, 255));
 		}else 
-			scDetail.setDescription(addendumDetail.getDescription());
+			scDetailVO.setDescription(addendumDetail.getDescription());
 
-		scDetail.setObjectCode(addendumDetail.getCodeObject());
-		scDetail.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
-		scDetail.setUnit(addendumDetail.getUnit());
+		scDetailVO.setObjectCode(addendumDetail.getCodeObject());
+		scDetailVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
+		scDetailVO.setUnit(addendumDetail.getUnit());
 
-		scDetail.setScRate(addendumDetail.getRateAddendum().doubleValue());
-		scDetail.setCostRate(addendumDetail.getRateBudget().doubleValue());
-		scDetail.setQuantity(addendumDetail.getQuantity().doubleValue());
-		scDetail.setAmountSubcontract(addendumDetail.getAmtAddendum());
-		scDetail.setAmountBudget(addendumDetail.getAmtBudget());
+		scDetailVO.setScRate(addendumDetail.getRateAddendum().doubleValue());
+		scDetailVO.setCostRate(addendumDetail.getRateBudget().doubleValue());
+		scDetailVO.setQuantity(addendumDetail.getQuantity().doubleValue());
+		scDetailVO.setAmountSubcontract(addendumDetail.getAmtAddendum());
+		scDetailVO.setAmountBudget(addendumDetail.getAmtBudget());
 
 
 		/**
@@ -902,48 +902,48 @@ public class AddendumService{
 		 * Split & Terminate
 		 * 16th Apr, 2015
 		 * **/
-		scDetail.setNewQuantity(scDetail.getQuantity());
-		scDetail.setAmountSubcontractNew(addendumDetail.getAmtAddendum());
+		scDetailVO.setNewQuantity(scDetailVO.getQuantity());
+		scDetailVO.setAmountSubcontractNew(addendumDetail.getAmtAddendum());
 
 
-		scDetail.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
-		scDetail.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
-		scDetail.setRemark(addendumDetail.getRemarks());
-		scDetail.setSequenceNo(sequenceNo);
+		scDetailVO.setContraChargeSCNo(addendumDetail.getNoSubcontractChargedRef()==null?"":addendumDetail.getNoSubcontractChargedRef().toString());
+		scDetailVO.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
+		scDetailVO.setRemark(addendumDetail.getRemarks());
+		scDetailVO.setSequenceNo(sequenceNo);
 
-		scDetail.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
-		scDetail.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
+		scDetailVO.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
+		scDetailVO.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
 
-		scDetail.setApproved(SubcontractDetail.APPROVED);
+		scDetailVO.setApproved(SubcontractDetail.APPROVED);
 
 		sequenceNo += 1;
 
 		//Add C2
 		if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
-			SubcontractDetail scDetailsCC = subcontractService.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo(), "C2");
+			SubcontractDetailCC scDetailsCC = ((SubcontractDetailCC)subcontractService.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo(), "C2"));
 			scDetailsCC.setJobNo(addendumDetail.getNoJob());
-			scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo()));
-			scDetailsCC.setDescription(scDetail.getDescription());
-			scDetailsCC.setSubsidiaryCode(scDetail.getSubsidiaryCode());
-			scDetailsCC.setUnit(scDetail.getUnit());
-			scDetailsCC.setScRate(scDetail.getScRate()*-1);
-			scDetailsCC.setQuantity(scDetail.getQuantity());
-			scDetailsCC.setAmountSubcontract(scDetail.getAmountSubcontract());
+			scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo()));
+			scDetailsCC.setDescription(scDetailVO.getDescription());
+			scDetailsCC.setSubsidiaryCode(scDetailVO.getSubsidiaryCode());
+			scDetailsCC.setUnit(scDetailVO.getUnit());
+			scDetailsCC.setScRate(scDetailVO.getScRate()*-1);
+			scDetailsCC.setQuantity(scDetailVO.getQuantity());
+			scDetailsCC.setAmountSubcontract(scDetailVO.getAmountSubcontract());
 
 			scDetailsCC.setApproved(SubcontractDetail.APPROVED);
 			scDetailsCC.setContraChargeSCNo(addendumDetail.getNoSubcontract());
 			
 			scDetailsCC.setNewQuantity(scDetailsCC.getQuantity());
-			scDetailsCC.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
+			scDetailsCC.setAmountSubcontractNew(scDetailVO.getAmountSubcontractNew());
 
 			accountCodeWSDao.createAccountCode(addendumDetail.getNoJob(), scDetailsCC.getObjectCode(), scDetailsCC.getSubsidiaryCode());
-			((SubcontractDetailVO)scDetail).setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
-			((SubcontractDetailCC)scDetailsCC).setCorrSCLineSeqNo(scDetail.getSequenceNo().longValue());
+			scDetailVO.setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
+			scDetailsCC.setCorrSCLineSeqNo(scDetailVO.getSequenceNo().longValue());
 			
 			subcontractDetailHBDao.insert(scDetailsCC);
 		}
 
-		subcontractDetailHBDao.insert(scDetail);
+		subcontractDetailHBDao.insert(scDetailVO);
 		
 		return sequenceNo;
 	}

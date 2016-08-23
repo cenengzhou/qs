@@ -1,6 +1,7 @@
 mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcontractService','$location', '$state', '$cookies',
                                               function($scope , modalService, subcontractService, $location, $state, $cookies) {
 	$cookies.put('scDetailID', '');
+	getSubcontract();
 	getOtherSubcontractDetails();
 
 
@@ -20,20 +21,19 @@ mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcont
 			 
 			columnDefs: [
 			             { field: 'id',  width:100, visible: false},
-			             { field: 'type',displayName:"Type",  width:50 },
 			             { field: 'lineType',displayName:"Line Type",  width:50 },
 			             { field: 'billItem',  width:100 },
+			             {field: 'objectCode' ,  width:80 },
+			             {field: 'subsidiaryCode' ,  width:100 },
 			             {field: 'description' ,  width:100 },
+			             { field: 'amountPostedCert' , displayName:"Posted Cert. Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amountCumulativeCert' , displayName:"Cum. Cert. Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amountPostedWD' , displayName:"Posted WD Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amountCumulativeWD', displayName:"Cum. WD Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             { field: 'quantity' ,  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             { field: 'scRate' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             { field: 'amountSubcontract' , displayName:"SC Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             /*{ field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },*/
-			             { field: 'amountPostedCert' , displayName:"Posted Cert. Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amountPostedWD' , displayName:"Posted WD Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             {field: 'objectCode' ,  width:100 },
-			             {field: 'subsidiaryCode' ,  width:100 },
-			             {field: 'unit' ,  width:100 },
+			             {field: 'unit' ,  width:50 },
 			             {field: 'remark' ,  width:150 }
 			             ]
 	};
@@ -83,10 +83,22 @@ mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcont
 						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract Detail has been deleted.");
-						$uibModalInstance.close();
 						$state.reload();
 					}
 				});
 	}
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					if(data.paymentStatus == 'F'){
+						$scope.disableButton = true;
+					}else 
+						$scope.disableButton = false;
+				});
+	}
+	
 	
 }]);
