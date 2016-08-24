@@ -33,6 +33,7 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
+import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
 
 @RestController
@@ -382,6 +383,20 @@ public class SubcontractController {
 		subcontractService.updateSubcontractAdmin(subcontract);
 	}
 
+	@RequestMapping(value = "getPerforamceAppraisalsList", method = RequestMethod.POST)
+	public List<PerformanceAppraisalWrapper> getPerforamceAppraisalsList(
+			@RequestParam String jobNumber, 
+			@RequestParam(required = false) Integer vendorNumber, 
+			@RequestParam(required = false) Integer subcontractNumber, 
+			@RequestParam(required = false) String groupCode, 
+			@RequestParam(required = false) String status){
+		try {
+			return subcontractService.getPerformanceAppraisalWrapperList(jobNumber, null, null, groupCode, vendorNumber, subcontractNumber, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	/**
 	 * For Provision Posting History Enquiry

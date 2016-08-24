@@ -98,7 +98,7 @@ public class IVPostingHistService implements Serializable{
 		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
 		String username = securityService.getCurrentUser().getUsername();
 		logger.info("User:" + username + " Job: " + jobNumber + " Package: " +  " From Date: " + fromDate + " To Date: " + toDate);
-		if(adminService.canAccessJob(username, jobNumber)){
+		if(adminService.canAccessJob(jobNumber)){
 			resultList.addAll(ivPostingHistoryDao.obtainIVPostingHistory(jobNumber, null, null, null, fromDate, toDate));
 		}
 		return resultList;

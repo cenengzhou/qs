@@ -1282,7 +1282,7 @@ public class PaymentService{
 		Set<String> accessibleJobList = new HashSet<String>();
 		if (scPaymentList != null && !scPaymentList.isEmpty()) {
 			for (PaymentCert scPaymentCert : scPaymentList) {
-				if (accessibleJobList.contains(scPaymentCert.getJobNo().trim()) || adminServiceImpl.canAccessJob(username, scPaymentCert.getJobNo())) {
+				if (accessibleJobList.contains(scPaymentCert.getJobNo().trim()) || adminServiceImpl.canAccessJob(scPaymentCert.getJobNo())) {
 
 					if (!accessibleJobList.contains(scPaymentCert.getJobNo().trim()))
 						accessibleJobList.add(scPaymentCert.getJobNo().trim());
@@ -3038,7 +3038,7 @@ public class PaymentService{
 		 * Apply job security
 		 */
 		if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobNo())){
-			if(adminServiceImpl.canAccessJob(username, paymentCertWrapper.getJobNo()))
+			if(adminServiceImpl.canAccessJob(paymentCertWrapper.getJobNo()))
 				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());

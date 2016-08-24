@@ -947,6 +947,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         	'js/service/job-service.js',
                	         	'js/service/master-list-service.js',
                	         	'js/controller/nav-menu.js',
+               	         	'js/service/jobcost-service.js',
                     ] 
                 });
             }]

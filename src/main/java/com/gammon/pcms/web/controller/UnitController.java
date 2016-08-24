@@ -2,6 +2,7 @@ package com.gammon.pcms.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,5 +43,24 @@ public class UnitController {
 		return unitList;
 	}
 	
+	@RequestMapping(value = "getAppraisalPerformanceGroupMap", method = RequestMethod.GET)
+	public Map<String, String> getAppraisalPerformanceGroupMap(){
+		try{
+			return unitService.getAppraisalPerformanceGroupMap();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "getSCStatusCodeMap", method = RequestMethod.GET)
+	public Map<String, String> getSCStatusCodeMap(){
+		try{
+			return unitService.getSCStatusCodeMap();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

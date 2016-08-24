@@ -1,26 +1,25 @@
-create or replace
-PROCEDURE P_QS_UPDATE_F58011  AS
-	Type Qscurtype Is Ref Cursor; 
- 
+create or replace PROCEDURE            P_QS_UPDATE_F58011  AS
+	Type Qscurtype Is Ref Cursor;
+
 	v_mcu	CHAR(12);
-  V_Dc07	Number;
-  V_Algn	Number;
-  V_Prst Char(3);
-  V_Urab	Number;
-  V_Urdt	Number;
-  V_Apdj Number;
-  V_Apd Number; 
-  V_Pipf	Char(1);
-  V_Cuma	Number;
-  v_Aaa	NUMBER;
-  v_upmj	NUMBER;
-  V_Upmt	Number;
-  
+	V_Dc07	Number;
+	V_Algn	Number;
+	V_Prst 	Char(3);
+	V_Urab	Number;
+	V_Urdt	Number;
+	V_Apdj 	Number;
+	V_Apd 	Number;
+	V_Pipf	Char(1);
+	V_Cuma	Number;
+	v_Aaa	NUMBER;
+	v_upmj	NUMBER;
+	V_Upmt	Number;
+
 	C_Qs_Scpayment_Cert Qscurtype;
- 
- 
-   V_Sql Varchar2(2000) := 
-    ' Select Lpad(To_Char(Qsp.Jobno),12, '' '') Jobno, 
+
+
+   V_Sql Varchar2(2000) :=
+    ' Select Lpad(To_Char(Qsp.Jobno),12, '' '') Jobno,
               To_Number(Qsp.Packageno) As Packageno,
               To_Number(Qsp.Paymentcertno) As Paymentcertno,
               Decode(Qsp.Paymentstatus, Null, Lpad('' '', 3, '' ''), Qsp.Paymentstatus) As Paymentstatus,
@@ -31,22 +30,22 @@ PROCEDURE P_QS_UPDATE_F58011  AS
               Decode(qsp.paymenttype, Null, '' '', Qsp.paymenttype) As paymenttype,
               Round(To_Number(Decode(qsp.remeasuredscsum, Null, 0, Qsp.remeasuredscsum*100)), 0) As remeasuredscsum,
               Round(To_Number(Decode(qsp.addendumamount, Null, 0, Qsp.addendumamount*100)), 0) As addendumamount
-      FROM Qsdatadev.Qs_Scpayment_Cert Qsp
+      FROM PCMSDATADEV.PAYMENT_CERT Qsp
       Where Not Exists (Select 1
-                        From Crystalusr_Dev.F58011 Jde
+                        From TESTDTA.F58011 Jde
                         Where  jde.Pcmcu = Lpad(To_Char(Qsp.Jobno),12, '' '')
                         And Jde.Pcdc07 = Qsp.Packageno
                         And Jde.Pcalgn = Qsp.Paymentcertno)
       And Qsp.System_Status = ''ACTIVE''
       And qsp.paymentstatus = ''APR''';
-	
+
 Begin
   Open C_Qs_Scpayment_Cert For V_Sql;
 
 	SELECT to_number(to_char(sysdate,'yyddd')) + 100000 INTO v_upmj FROM dual;
 	Select To_Number(To_Char(Sysdate,'hh24miss')) Into V_Upmt From Dual;
-  Dbms_Output.Enable(10000000);
-  
+	Dbms_Output.Enable(10000000);
+
 		Loop
 			Fetch C_Qs_Scpayment_Cert
 			Into  V_Mcu,
@@ -60,11 +59,11 @@ Begin
             V_Pipf,
             V_Cuma,
             v_Aaa;
-      
+
 			Exit When C_Qs_Scpayment_Cert%Notfound;
-      DBMS_OUTPUT.PUT_LINE('Insert Job:' || V_Mcu || ' ' || V_Dc07  || ' ' || V_Algn);
-			Begin	
-            Insert Into Crystalusr_Dev.F58011(Pcmcu, Pcdc07, Pcalgn, Pcprst, Pcpipf, Pcdoc, Pcdctv, Pcapd, Pccuma, Pcaaa, Pciicu, Pcxicu, Pcldoc, Pcxdct,             Pcadtj, Pcapdj, Pcev01, Pcev02, Pcev03, Pcurab, Pcurat,   Pcurcd, Pcurdt, Pcurog, Pcurrc, 			      Pcurrf, 		        Pctorg,		  Pcuser,	 	   Pcpid,		    Pcjobn,	    Pcupmj, Pcupmt)
+			DBMS_OUTPUT.PUT_LINE('Insert Job:' || V_Mcu || ' ' || V_Dc07  || ' ' || V_Algn);
+			Begin
+            Insert Into Crystalusr_DEV.F58011(Pcmcu, Pcdc07, Pcalgn, Pcprst, Pcpipf, Pcdoc, Pcdctv, Pcapd, Pccuma, Pcaaa, Pciicu, Pcxicu, Pcldoc, Pcxdct,             Pcadtj, Pcapdj, Pcev01, Pcev02, Pcev03, Pcurab, Pcurat,   Pcurcd, Pcurdt, Pcurog, Pcurrc, 			      Pcurrf, 		        Pctorg,		  Pcuser,	 	   Pcpid,		    Pcjobn,	    Pcupmj, Pcupmt)
                                        Values(V_Mcu, V_Dc07, V_Algn, V_Prst, V_Pipf, 0, 	  'PS',   V_Apd, V_Cuma, V_Aaa, 0,		  0,		  0,	    Lpad(' ', 2, ' '),  0,		  V_Apdj, ' ', 	  ' ', 	  ' ', 	  V_Urab, 0, 		    0,      V_Urdt, 0,		  Lpad(' ', 2, ' '),	Lpad(' ', 4, ' '),  'QSSPROC03',  'QSSPROC03',	'QS58011', 'ERPWLS02', v_upmj, V_Upmt);
 
 			EXCEPTION
@@ -74,9 +73,11 @@ Begin
 			END;
 		End Loop;
     CLOSE C_Qs_Scpayment_Cert;
-      
-  DBMS_OUTPUT.PUT_LINE('Duration:  ' || ((To_Number(To_Char(Sysdate,'hh24miss'))) - V_Upmt));
+
+	DBMS_OUTPUT.PUT_LINE('Duration:  ' || ((To_Number(To_Char(Sysdate,'hh24miss'))) - V_Upmt));
 	COMMIT;
 	<<Exit_Here>>
   Null;
 END P_QS_UPDATE_F58011;
+
+grant EXECUTE on "PCMSDATADEV"."P_QS_UPDATE_F58011" to "PCMSUSER_ROLE";

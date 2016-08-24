@@ -1,5 +1,4 @@
-mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
-		'modalService', '$sce',
+mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalService', '$sce',
 		function($scope, $rootScope, $http, modalService, $sce) {
 
 			$scope.jobBtn = {
@@ -87,7 +86,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 							Report include: Purchase Order (Under Construction), Purchase Order Detail (Under Construction)',
 					'items': [
 						         {
-						        	 'title': 'Purchase Order (Under Construction)',
+						        	 'title': 'Purchase Order',
 						        	 'description': 'The report contain all PO related information for enquiry',
 						        	 'href': '#/enquiry/purchaseOrder'
 						         },
@@ -121,7 +120,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http',
 					        	 'href': '#/enquiry/supplierLedger'
 					         },
 					         {
-					        	 'title': 'Performance Appralisal (Under Construction)',
+					        	 'title': 'Performance Appraisal',
 					        	 'description': 'The report contain internal valuation history for enquiry',
 					        	 'href': '#/enquiry/performanceAppraisal'
 					         }

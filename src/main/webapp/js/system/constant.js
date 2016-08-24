@@ -232,8 +232,38 @@ mainApp.constant('GlobalParameter', {
 //						'TenderAnalysisNameObject' : 'GT58023'; //Never used
 	                    'VendorNameObject' : 'GT58024',
 	                    'MainCertNameObject' : 'GT59026'
-	}
-	   
+	},
+	PurchaseOrderType:[
+		{id:'GH', value:'GH - Plant Blanket Sundry Order'},
+		{id:'P3', value:'P3 - Payment Requisition'},
+		{id:'GB', value:'GB - Blanket Purchase Order'},
+		{id:'GE', value:'GE - Plant Sundry Release Order'},
+		{id:'GL', value:'GL - Release Purchase Order'},
+		{id:'GM', value:'GM - Purchase Order of Fixed Asset'},
+		{id:'GP', value:'GP - Purchase Order'},
+		{id:'GX', value:'GX - Order exceed or w/o budget'},
+		{id:'GY', value:'GY - BPO exceed or w/o budget'},
+		{id:'OB', value:'OB - Blanket Purchase Order'},
+		{id:'OF', value:'OF - PO of Fixed Asset'},
+		{id:'OH', value:'OH - Blanket Sundry Order'},
+		{id:'OL', value:'OL - Release Purchase Order'},
+		{id:'ON', value:'ON - Sundry Release Order'},
+		{id:'OP', value:'OP - Purchase Order'},
+		{id:'OS', value:'OS - Purchase Order of Fixed Asset'},
+		{id:'OX', value:'OX - Order exceed or w/o budget'},
+		{id:'OY', value:'OY - BPO exceed or w/o budget'},
+		{id:'O2', value:'O2 - Supplier Catalog Order'},
+		{id:'OR', value:'OR - Purchase Requisition'},
+		{id:'GR', value:'GR - Purchase Requisition - CSD'},
+		{id:'P4', value:'P4 - Reimbursement of Expense'}
+	],
+	PerformanceAppraisalStatus: [
+		{id:'A', value:'Approved'},
+		{id:'E', value:'Evaluated'},
+		{id:'N', value:'Not Evaluated'},
+		{id:'P', value:'Pending for approval'},
+		{id:'V', value:'Verified for approval'}
+	],
 });
 
 mainApp.constant('GlobalMessage', {

@@ -37,7 +37,8 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     	getProvisionPostingHistList:						getProvisionPostingHistList,
     	getSCDetailList:									getSCDetailList,
     	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate,
-    	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails
+    	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails,
+    	getPerforamceAppraisalsList:						getPerforamceAppraisalsList
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -445,7 +446,20 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
         return( request.then( handleSuccess, handleError ) );
     }
 
-    
+    function getPerforamceAppraisalsList(jobNumber, vendorNumber, subcontractNumber, groupCode, status){
+    	var request = $http({
+    		method: 'post',
+    		url: 'service/subcontract/getPerforamceAppraisalsList',
+    		params: {
+    			jobNumber: jobNumber,
+    			vendorNumber: vendorNumber,
+    			subcontractNumber: subcontractNumber,
+    			groupCode: groupCode,
+    			status: status
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }   
     
     // ---
     // PRIVATE METHODS.

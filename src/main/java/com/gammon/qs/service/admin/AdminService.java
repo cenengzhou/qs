@@ -16,6 +16,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetRequest;
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetResponse;
+import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.service.GSFService;
@@ -107,14 +108,25 @@ public class AdminService {
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
-	public Boolean canAccessJob(String nameUser, String noJob) throws DataAccessException {
-		if (securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll()))
+	public Boolean canAccessJob(String noJob) throws DataAccessException {
+		User user = securityService.getCurrentUser();
+		return canAccessJob(user, noJob);
+	}
+	
+	public Boolean canAccessJob(String username, String noJob){
+		User user = gsfService.getRole(username);
+		return canAccessJob(user, noJob);
+	}
+	
+	public Boolean canAccessJob(User user, String noJob){
+		if (user.hasRole(securityConfig.getRolePcmsJobAll())) {
 			return true;
-		else {
-			if (StringUtils.isNotBlank(noJob))
-				return obtainCanAccessJobNoList(nameUser).contains(noJob);
-			else
-				return false;
+		} else {
+			if (StringUtils.isNotBlank(noJob)){
+				return obtainCanAccessJobNoList(user.getUsername()).contains(noJob);
+			} 
+			logger.warning(user.getUsername() + " cannot access Job:" + noJob);
+			return false;
 		}
 	}
 

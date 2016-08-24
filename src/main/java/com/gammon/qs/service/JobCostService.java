@@ -28,6 +28,7 @@ import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.io.ExcelFile;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.jobCost.AccountPayableExcelGenerator;
 import com.gammon.qs.service.jobCost.PurchaseOrderExcelGenerator;
 import com.gammon.qs.shared.GlobalParameter;
@@ -57,6 +58,8 @@ public class JobCostService implements Serializable {
 	private transient MasterListService masterListRepository;
 	@Autowired
 	private transient JasperConfig jasperConfig;
+	@Autowired
+	private AdminService adminService;
 	
 	private transient Logger logger = Logger.getLogger(JobCostService.class.getName());
 	
@@ -334,19 +337,6 @@ public class JobCostService implements Serializable {
 	}
 
 	
-	// Last Modified : Brian Tse @ 20101019 1100
-	public List<PORecord> getPORecordList(String jobNumber, String orderNumber, String orderType, String supplierNumber) throws Exception {
-		List<PORecord> listOfpoRecord = jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber);
-		/*
-		logger.info(orderNumber + orderType + supplierNumber);
-		for(int i = 0; i < poRecordList.size(); i++)
-		{
-			logger.info(poRecordList.get(i).getAcctNoInputMode());
-		}
-		*/
-		return listOfpoRecord;
-	}
-	
 	// Last modified : Brian Tse
 	public PurchaseOrderEnquiryWrapper getPurchaseOrderEnquiryWrapperByPage(Integer pageNum){
 		int dataSize = 0;
@@ -594,4 +584,17 @@ public class JobCostService implements Serializable {
 		return null;
 	}
 	
+	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
+	public List<PORecord> getPORecordList(String jobNumber, String orderNumber, String orderType, String supplierNumber) throws Exception {
+		List<PORecord> listOfpoRecord = new ArrayList<>();
+		if(adminService.canAccessJob(jobNumber)){
+			listOfpoRecord.addAll(jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber));
+		}
+		return listOfpoRecord;
+	}
+	
+
+	
+	/*************************************** FUNCTIONS FOR PCMS - END *******************************************************/
+
 }

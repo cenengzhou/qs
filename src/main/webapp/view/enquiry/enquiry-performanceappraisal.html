@@ -1,4 +1,4 @@
-<div class="content-wrapper" block-ui="blockEnquiryPerformanceAppraisal">
+<div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
@@ -15,11 +15,49 @@
 				<div class="box box-info">
 					<div class="box-header with-border">
 						<h3 class="box-title">Performance Appraisal</h3>
-						
-						<div class="col-md-12">
-								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination
+						<form role="form" name="searchPerformanceAppraisalForm" id="searchAccountLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
+							<div class="form-group">
+								<div class="col-md-2">
+									<label for="searchJobNo">Job No.:</label> 
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
+								</div>
+								
+								<div class="col-md-2">
+									<label for="searchVendorNo">Vendor No:</label> 
+									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo" ng-model="searchVendorNo">
+								</div>
+
+								<div class="col-md-2">
+									<label for="searchSubcontractNo">Subcontract No:</label> 
+									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo">
+								</div>
+								
+								<div class="col-md-2">
+									<label for="searchStatus">Performance Group:</label> 									
+									<select class="form-control" id="searchStatus" name="searchGroup" 
+										ng-options="v.id as (v.id + ': ' + v.value) for v in performanceAppraisalGroup | orderBy:'id'" ng-model="searchGroup">
+										<option value="">All</option>
+									</select>
+								</div>
+
+								<div class="col-md-2">
+									<label for="searchStatus">Status:</label> 									
+									<select class="form-control" id="searchStatus" name="searchStatus" 
+										ng-options="v.id as v.value for v in GlobalParameter.PerformanceAppraisalStatus | orderBy: 'id'" ng-model="searchStatus">
+										<option value="">All</option>
+									</select>
+								</div>
+
+								<div class="col-md-2">
+										<label>&nbsp;</label>
+										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									</div>
+								</div>
+							</form>
+						<div class="col-md-12"><br>
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-pagination ui-grid-exporter
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									resize ng-style="resizeWithOffset(310)"></div>
 					</div>
 				</div>
 			</div>

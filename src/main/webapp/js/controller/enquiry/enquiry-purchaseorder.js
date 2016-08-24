@@ -1,10 +1,9 @@
 
-mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
+mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService',
+                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService) {
 	
-	$scope.blockEnquiryPurchaseOrder = blockUI.instances.get('blockEnquiryPurchaseOrder');
-	$scope.blockEnquiryPurchaseOrder.start('Under Construction');
-	
+	$scope.GlobalParameter = GlobalParameter;
+	$scope.searchJobNo = $scope.jobNo;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -14,19 +13,42 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http'
 			enableFullRowSelection: false,
 			multiSelect: true,
 			showGridFooter : true,
+			showColumnFooter: true,
 			enableCellEditOnFocus : false,
 			paginationPageSizes : [ ],
 			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
-//			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-//			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-//			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-//			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'maxInactiveInterval', enableCellEdit: false},
+			             { field: 'addressNumber', displayName: 'Supplier No', enableCellEdit: false },
+			             { field: 'documentOrderInvoiceE', displayName: 'Order No', enableCellEdit: false },
+			             { field: 'orderType', displayName: 'Order Type', enableCellEdit: false },
+			             { field: 'descriptionLine1', displayName: 'Line Description', enableCellEdit: false },
+			             { field: 'descriptionLine2', displayName: 'Line Description 2', enableCellEdit: false },
+			             { field: 'objectAccount', displayName: 'Object Code', enableCellEdit: false },
+			             { field: 'subsidiary', displayName: 'Subsidiary Code', enableCellEdit: false },
+			             { field: 'currencyCodeFrom', displayName: 'Currency', enableCellEdit: false },
+			             { field: 'amountExtendedPrice', displayName: 'Original Ordered Amount', cellFilter: 'number:2', enableCellEdit: false,
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.amountExtendedPrice < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(col.getAggregationValue() < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 },
+			             },
+			             { field: 'dateTransactionJulian', displayName: 'Order Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
+			             { field: 'dtForGLAndVouch1', displayName: 'G/L Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
             			 ]
 	};
 	
@@ -35,20 +57,19 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http'
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
-		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
-				}
-			});			
-		})
-
+		if($scope.searchOrderNo === undefined && $scope.searchOrderType === undefined && $scope.searchSupplierNo === undefined) {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please search with at least one of the following searching criteria: Supplier Number, Order No or Order Type' ); 
+		} else {
+		jobcostService.getPORecordList($scope.jobNo, $scope.searchOrderNo, $scope.searchOrderType, $scope.searchSupplierNo)
+	    .then(function(data) {
+			if(angular.isArray(data)){
+				$scope.gridOptions.data = data;
+			} 
+			
+		});	
+		}
 	}
+
 	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();

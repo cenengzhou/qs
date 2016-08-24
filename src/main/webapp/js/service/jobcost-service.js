@@ -1,33 +1,25 @@
-mainApp.service('unitService', ['$http', '$q',  function($http, $q){
+mainApp.service('jobcostService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getAllWorkScopes:		getAllWorkScopes,
-    	getUnitOfMeasurementList: getUnitOfMeasurementList,
-    	getAppraisalPerformanceGroupMap: getAppraisalPerformanceGroupMap,
-    	getSCStatusCodeMap: getSCStatusCodeMap
+    	getPORecordList:		getPORecordList
     });
-   
-    function getAllWorkScopes(){
-    	var request = $http.get('service/unit/getAllWorkScopes');
+ 
+    function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/jobcost/getPORecordList',
+    		params:{
+    			jobNumber: jobNumber,
+    			orderNumber: orderNumber,
+    			orderType: orderType,
+    			supplierNumber: supplierNumber
+    		}
+    	});
     	return( request.then( handleSuccess, handleError ) );
     }
     
-    function getUnitOfMeasurementList(){
-    	var request = $http.get('service/unit/getUnitOfMeasurementList');
-    	return( request.then( handleSuccess, handleError ) );
-    }
 
-    function getAppraisalPerformanceGroupMap(){
-    	var request = $http.get('service/unit/getAppraisalPerformanceGroupMap');
-    	return( request.then( handleSuccess, handleError ) );
-    }
-
-    function getSCStatusCodeMap(){
-    	var request = $http.get('service/unit/getSCStatusCodeMap');
-    	return( request.then( handleSuccess, handleError ) );
-    }
-
-     // ---
+    // ---
     // PRIVATE METHODS.
     // ---
     // Transform the error response, unwrapping the application dta from

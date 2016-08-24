@@ -57,8 +57,6 @@ public class ADLService {
 	@Autowired
 	private BusinessUnitDao businessUnitDao;
 	@Autowired
-	private SecurityService securityService;
-	@Autowired
 	private AdminService adminService;
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
@@ -168,7 +166,7 @@ public class ADLService {
 	 * @since Jul 11, 2016 3:17:56 PM
 	 */
 	public List<AccountLedger> getAccountLedgerList(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
-		if(adminService.canAccessJob(securityService.getCurrentUser().getUsername(), noJob)){
+		if(adminService.canAccessJob(noJob)){
 			return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} else {
 			return null;

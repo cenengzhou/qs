@@ -23,10 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseListObj;
+import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseObj;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.config.WebServiceConfig;
@@ -96,6 +98,7 @@ import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrapper;
+import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
@@ -3634,7 +3637,7 @@ public class SubcontractService {
 	 * @since Jul 28, 2016 6:09:18 PM
 	 */
 	public List<Subcontract> getSubcontractList(String jobNo, boolean awardedOnly) throws DataAccessException {
-		if (adminService.canAccessJob(securityService.getCurrentUser().getUsername(), jobNo))
+		if (adminService.canAccessJob(jobNo))
 			return subcontractHBDao.find(jobNo, awardedOnly);
 		else
 			return new ArrayList<Subcontract>();
@@ -3659,7 +3662,7 @@ public class SubcontractService {
 		
 		String username = securityService.getCurrentUser().getUsername();
 		if (StringUtils.isNotBlank(noJob)) {
-			if (adminService.canAccessJob(username, noJob)){
+			if (adminService.canAccessJob(noJob)){
 				// 1. check if there is any record from in subcontract snapshot table
 				subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, awardedOnly);
 				// 2. if no record is found, obtain from subcontract table
@@ -4225,7 +4228,7 @@ public class SubcontractService {
 		 */
 		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
 			//Access by peer systems via web service or users
-			if(webServiceConfig.getQsWsUsername().equals(username) || adminService.canAccessJob(username, searchWrapper.getJobNumber()))
+			if(webServiceConfig.getQsWsUsername().equals(username) || adminService.canAccessJob(searchWrapper.getJobNumber()))
 				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
@@ -4343,7 +4346,7 @@ public class SubcontractService {
 		 * Apply job security
 		 */
 		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
-			if(adminService.canAccessJob(username, searchWrapper.getJobNumber()))
+			if(adminService.canAccessJob(searchWrapper.getJobNumber()))
 				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
@@ -4764,7 +4767,113 @@ public class SubcontractService {
 		return null;
 	}
 
-	
+	/* retrieve a list of PerformanceAppraisalWrapper object filtered by search criteria without pagination or caching - matthewatc 3/2/12 */
+	public List<PerformanceAppraisalWrapper> getPerformanceAppraisalWrapperList(String jobNumber, Integer sequenceNumber, String appraisalType, String groupCode, Integer vendorNumber, Integer subcontractNumber, String status) {
+		if(!adminService.canAccessJob(jobNumber)){
+			throw new AccessDeniedException("Cannot access Job:" + jobNumber);
+		}
+		List<GetPerformanceAppraisalsResponseObj> performanceAppraisalsList;
+		GetPerformanceAppraisalsResponseListObj responseListObj;
+
+		try {
+			responseListObj = getPerforamceAppraisalsList(jobNumber, sequenceNumber, appraisalType, groupCode, vendorNumber, subcontractNumber, status);
+			if(responseListObj != null && responseListObj.getPerformanceAppraisalsList() != null && responseListObj.getPerformanceAppraisalsList().size() > 0){
+				logger.info("getPerformanceAppraisalWrapperList - jobNumber: " + jobNumber + ", sequenceNumber: " + sequenceNumber + ", appraisalType: " + appraisalType + ", groupCode: " + groupCode + ", vendorNumber: " + vendorNumber + ", subcontractNumber: " + subcontractNumber + ", status: " + status);
+
+				performanceAppraisalsList = responseListObj.getPerformanceAppraisalsList();
+
+				Collections.sort(performanceAppraisalsList, new Comparator<GetPerformanceAppraisalsResponseObj>(){
+					public int compare(GetPerformanceAppraisalsResponseObj first, GetPerformanceAppraisalsResponseObj second) {
+						if(first.getSubcontractNumber() > second.getSubcontractNumber())
+							return 1;
+						else if(first.getSubcontractNumber() < second.getSubcontractNumber())
+							return -1;
+						else if(first.getSequenceNumber() > second.getSequenceNumber())
+							return 1;
+						else if(first.getSequenceNumber() < second.getSequenceNumber())
+							return -1;
+						else if(first.getVendorNumber() > second.getVendorNumber())
+							return 1;
+						else if(first.getVendorNumber() < second.getVendorNumber())
+							return -1;
+						else
+							return 0;
+					}
+				});
+			} else {
+				return null;
+			}
+
+			List<PerformanceAppraisalWrapper> dataWrapperList = new ArrayList<PerformanceAppraisalWrapper>();
+
+			for(int i = 0; i < performanceAppraisalsList.size(); i++){
+				PerformanceAppraisalWrapper tempDataWrapper = new PerformanceAppraisalWrapper();
+
+				// map variable value
+				tempDataWrapper.setAppraisalType(performanceAppraisalsList.get(i).getAppraisalType());
+				tempDataWrapper.setApprovalType(performanceAppraisalsList.get(i).getApprovalType());
+				tempDataWrapper.setComment(performanceAppraisalsList.get(i).getComment());
+				tempDataWrapper.setDateUpdated(performanceAppraisalsList.get(i).getDateUpdated());
+				tempDataWrapper.setJobNumber(performanceAppraisalsList.get(i).getJobNumber());
+				tempDataWrapper.setPerformanceGroup(performanceAppraisalsList.get(i).getGroupCode());
+				tempDataWrapper.setReviewNumber(performanceAppraisalsList.get(i).getSequenceNumber());
+				tempDataWrapper.setScore(performanceAppraisalsList.get(i).getScore());
+				tempDataWrapper.setScoreFactor01(performanceAppraisalsList.get(i).getScoreFactor01());
+				tempDataWrapper.setScoreFactor02(performanceAppraisalsList.get(i).getScoreFactor02());
+				tempDataWrapper.setScoreFactor03(performanceAppraisalsList.get(i).getScoreFactor03());
+				tempDataWrapper.setScoreFactor04(performanceAppraisalsList.get(i).getScoreFactor04());
+				tempDataWrapper.setScoreFactor05(performanceAppraisalsList.get(i).getScoreFactor05());
+				tempDataWrapper.setScoreFactor06(performanceAppraisalsList.get(i).getScoreFactor06());
+				tempDataWrapper.setScoreFactor07(performanceAppraisalsList.get(i).getScoreFactor07());
+				tempDataWrapper.setScoreFactor08(performanceAppraisalsList.get(i).getScoreFactor08());
+				tempDataWrapper.setScoreFactor09(performanceAppraisalsList.get(i).getScoreFactor09());
+				tempDataWrapper.setStatus(performanceAppraisalsList.get(i).getStatus());
+				tempDataWrapper.setSubcontractDescription("");
+				tempDataWrapper.setSubcontractNumber(performanceAppraisalsList.get(i).getSubcontractNumber());
+				tempDataWrapper.setTimeLastUpdated(performanceAppraisalsList.get(i).getTimeLastUpdated());
+				tempDataWrapper.setVendorName("");
+				tempDataWrapper.setVendorNumber(performanceAppraisalsList.get(i).getVendorNumber());
+
+				dataWrapperList.add(tempDataWrapper);
+			}
+
+			List<Subcontract> packageList = new ArrayList<Subcontract>();
+			try{
+				packageList = this.subcontractHBDao.getPackages(jobNumber);
+			} catch(Exception e){
+				logger.info(e.getLocalizedMessage());
+			}
+
+			for(int i = 0; i < dataWrapperList.size(); i++){
+				for(int j = 0; j < packageList.size(); j++){
+					if(packageList.get(j).getPackageNo().equals(dataWrapperList.get(i).getSubcontractNumber().toString())){
+						dataWrapperList.get(i).setSubcontractDescription(packageList.get(j).getDescription());
+					}
+				}
+			}
+
+			List<String> addressNumList = new ArrayList<String>();
+			for(int i = 0; i < performanceAppraisalsList.size(); i++){
+				addressNumList.add(performanceAppraisalsList.get(i).getVendorNumber().toString());
+			}
+
+			List<MasterListVendor> vendorNameList = masterListWSDao.getVendorNameListByBatch(addressNumList);
+			for(int i = 0; i < dataWrapperList.size(); i++){
+				for(int j = 0; j < vendorNameList.size(); j++){
+					if(vendorNameList.get(j).getVendorNo().equals(dataWrapperList.get(i).getVendorNumber().toString())){
+						dataWrapperList.get(i).setVendorName(vendorNameList.get(j).getVendorName());
+					}
+				}
+			}
+
+			return dataWrapperList;
+
+		} catch(Exception e) {
+			logger.info(e.getLocalizedMessage());
+			return null;
+		}
+	}
+
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
 	public Object[] testModifySubcontractAndDetail(String jobNo, String subcontractNo) throws DatabaseOperationException{
