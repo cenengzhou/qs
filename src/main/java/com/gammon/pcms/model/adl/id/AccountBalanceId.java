@@ -17,8 +17,10 @@ import com.gammon.pcms.model.adl.AccountMaster;
 public class AccountBalanceId implements Serializable {
 
 	private static final long serialVersionUID = -6209048153370339914L;
+	
 	private AccountMaster accountMaster;
 	private BigDecimal fiscalYear;
+	private BigDecimal accountPeriod;
 	private String accountTypeLedger;
 
 	public AccountBalanceId() {
@@ -27,10 +29,12 @@ public class AccountBalanceId implements Serializable {
 
 	public AccountBalanceId(AccountMaster accountMaster,
 							BigDecimal fiscalYear,
+							BigDecimal accountPeriod,
 							String accountTypeLedger) {
 		super();
 		this.accountMaster = accountMaster;
 		this.fiscalYear = fiscalYear;
+		this.accountPeriod = accountPeriod;
 		this.accountTypeLedger = accountTypeLedger;
 	}
 
@@ -57,6 +61,15 @@ public class AccountBalanceId implements Serializable {
 		this.fiscalYear = fiscalYear;
 	}
 
+	@Column(name="ACCOUNT_PERIOD")
+	public BigDecimal getAccountPeriod() {
+		return this.accountPeriod;
+	}
+
+	public void setAccountPeriod(BigDecimal accountPeriod) {
+		this.accountPeriod = accountPeriod;
+	}
+
 	@Column(name = "ACCOUNT_TYPE_LEDGER",
 			nullable = false,
 			length = 8)
@@ -68,21 +81,32 @@ public class AccountBalanceId implements Serializable {
 		this.accountTypeLedger = accountTypeLedger;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "AccountBalanceId [accountMaster=" + accountMaster + ", fiscalYear=" + fiscalYear + ", accountTypeLedger=" + accountTypeLedger + "]";
+		return "AccountBalanceId [accountMaster=" + accountMaster + ", fiscalYear=" + fiscalYear + ", accountPeriod="
+				+ accountPeriod + ", accountTypeLedger=" + accountTypeLedger + "]";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((accountMaster == null) ? 0 : accountMaster.hashCode());
+		result = prime * result + ((accountPeriod == null) ? 0 : accountPeriod.hashCode());
 		result = prime * result + ((accountTypeLedger == null) ? 0 : accountTypeLedger.hashCode());
 		result = prime * result + ((fiscalYear == null) ? 0 : fiscalYear.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -96,6 +120,11 @@ public class AccountBalanceId implements Serializable {
 			if (other.accountMaster != null)
 				return false;
 		} else if (!accountMaster.equals(other.accountMaster))
+			return false;
+		if (accountPeriod == null) {
+			if (other.accountPeriod != null)
+				return false;
+		} else if (!accountPeriod.equals(other.accountPeriod))
 			return false;
 		if (accountTypeLedger == null) {
 			if (other.accountTypeLedger != null)

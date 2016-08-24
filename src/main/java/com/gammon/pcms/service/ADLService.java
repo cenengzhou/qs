@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJIDao;
 import com.gammon.pcms.dao.adl.AccountBalanceAAJISCDao;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
+import com.gammon.pcms.dao.adl.AccountBalanceSCDao;
 import com.gammon.pcms.dao.adl.AccountLedgerDao;
 import com.gammon.pcms.dao.adl.AccountMasterDao;
 import com.gammon.pcms.dao.adl.AddressBookDao;
@@ -22,6 +23,7 @@ import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
+import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.pcms.model.adl.AddressBook;
@@ -29,12 +31,9 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.qs.service.admin.AdminService;
-import com.gammon.qs.service.security.SecurityService;
 
 @Service
-@Transactional(	readOnly = true,
-				rollbackFor = Exception.class,
-				value = "adlTransactionManager")
+@Transactional(	readOnly = true, rollbackFor = Exception.class, value = "adlTransactionManager")
 public class ADLService {
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -44,6 +43,8 @@ public class ADLService {
 	private AccountLedgerDao accountLedgerDao;
 	@Autowired
 	private AccountBalanceDao accountBalanceDao;
+	@Autowired
+	private AccountBalanceSCDao accountBalanceSCDao;
 	@Autowired
 	private AccountBalanceAAJIDao accountBalanceAAJIDao;
 	@Autowired
@@ -127,6 +128,14 @@ public class ADLService {
 		return accountBalanceDao.find(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
 	}
 
+	public List<AccountBalanceSC> getAccountBalanceSCList(	BigDecimal yearStart,
+			BigDecimal yearEnd,
+			String typeLedger,
+			String noJob,
+			String codeObject,
+			String codeSubsidiary) {
+		return accountBalanceSCDao.find(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
+	}
 	/**
 	 * Monthly Cash Flow for Job Dash Board
 	 *
@@ -143,6 +152,7 @@ public class ADLService {
 
 		List<AccountBalance> contractReceivableList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 		List<AccountBalance> turnoverList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+		
 		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.OB.toString(), noJob);
 
 		return new JobDashboardDTO(contractReceivableList, turnoverList, originalBudgetList, null);

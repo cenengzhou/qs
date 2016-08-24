@@ -16,6 +16,7 @@ import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
+import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.pcms.model.adl.AddressBook;
@@ -141,6 +142,23 @@ public class ADLController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountBalance>();
+		}
+	}
+
+	@RequestMapping(value = "getAccountBalanceSCList", method = RequestMethod.GET)
+	public List<AccountBalanceSC> getAccountBalanceSCList(	@RequestParam(required = true) String noJob,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal yearStart,
+													@RequestParam(	required = false,
+																	defaultValue = "0") BigDecimal yearEnd,
+													@RequestParam(required = false) String typeLedger,
+													@RequestParam(required = false) String codeObject,
+													@RequestParam(required = false) String codeSubsidiary) {
+		try {
+			return adlService.getAccountBalanceSCList(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<AccountBalanceSC>();
 		}
 	}
 

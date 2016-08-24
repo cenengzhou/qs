@@ -9,15 +9,15 @@ import java.math.BigDecimal;
 
 
 /**
- * The persistent class for the FACT_ACCT_BAL_SL_UNPIVOT database table.
+ * The persistent class for the FACT_ACCT_BAL_UNPIVOT database table.
  * 
  */
 @Entity
 @IdClass(AccountBalanceId.class)
-@Table(name="FACT_ACCT_BAL_SL_UNPIVOT")
-public class AccountBalance implements Serializable {
-
-	private static final long serialVersionUID = 438482297814712229L;
+@Table(name="FACT_ACCT_BAL_UNPIVOT")
+public class AccountBalanceSC implements Serializable {
+	
+	private static final long serialVersionUID = -4371344564244304514L;
 	
 	private BigDecimal accountPeriod;
 	private String accountTypeLedger;
@@ -25,28 +25,14 @@ public class AccountBalance implements Serializable {
 	private AccountMaster accountMaster;
 
 	private String accountObject;
-	private String accountSubLedger;
 	private String accountSubsidiary;
-	private String accountTypeSubLedger;
 	private BigDecimal amountAccum;
 	private BigDecimal amountPeriod;
 	private BigDecimal amountYtd;
 	private String currencyLocal;
 	private String entityBusinessUnitKey;
-	
-	public static enum TYPE_LEDGER {
-											AA, // Actual Cost (Subcontract in SCRate + Labor, Plant, Material and Others CostRate)
-											JI, // Turnover / Internal Valuation / Work Done (Subcontract CostRate + Labor, Plant, Material and Others in CostRate)
-											OB, // Original Budget posted right after Transit is completed (Budget + Margin account code 199999.9XXXXXXX)
-											OC // Original Budget posted right after Transit is completed (Budget only, not including Margin account code 199999.9XXXXXXX)
-									}
 
-	public static final String CODE_OBJECT_TURNOVER = "221110";
-	public static final String CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX = "2312";
-	public static final String CODE_OBJECT_EMPTY = "      ";
-	public static final String CODE_SUBSIDIARY_EMPTY = "        ";
-
-	public AccountBalance() {
+	public AccountBalanceSC() {
 	}
 
 
@@ -67,7 +53,6 @@ public class AccountBalance implements Serializable {
 	public void setAccountTypeLedger(String accountTypeLedger) {
 		this.accountTypeLedger = accountTypeLedger;
 	}
-
 
 	@Id
 	public BigDecimal getFiscalYear() {
@@ -96,15 +81,6 @@ public class AccountBalance implements Serializable {
 		this.accountObject = accountObject;
 	}
 
-	@Column(name="ACCOUNT_SUB_LEDGER", length=8)
-	public String getAccountSubLedger() {
-		return this.accountSubLedger;
-	}
-
-	public void setAccountSubLedger(String accountSubLedger) {
-		this.accountSubLedger = accountSubLedger;
-	}
-
 
 	@Column(name="ACCOUNT_SUBSIDIARY", length=8)
 	public String getAccountSubsidiary() {
@@ -114,16 +90,6 @@ public class AccountBalance implements Serializable {
 	public void setAccountSubsidiary(String accountSubsidiary) {
 		this.accountSubsidiary = accountSubsidiary;
 	}
-
-	@Column(name="ACCOUNT_TYPE_SUB_LEDGER", length=1)
-	public String getAccountTypeSubLedger() {
-		return this.accountTypeSubLedger;
-	}
-
-	public void setAccountTypeSubLedger(String accountTypeSubLedger) {
-		this.accountTypeSubLedger = accountTypeSubLedger;
-	}
-
 
 	@Column(name="AMOUNT_ACCUM")
 	public BigDecimal getAmountAccum() {
@@ -174,18 +140,16 @@ public class AccountBalance implements Serializable {
 		this.entityBusinessUnitKey = entityBusinessUnitKey;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "AccountBalance [accountPeriod=" + accountPeriod + ", accountTypeLedger=" + accountTypeLedger
-				+ ", fiscalYear=" + fiscalYear + ", accountMaster=" + accountMaster + ", accountObject=" + accountObject
-				+ ", accountSubLedger=" + accountSubLedger + ", accountSubsidiary=" + accountSubsidiary
-				+ ", accountTypeSubLedger=" + accountTypeSubLedger + ", amountAccum=" + amountAccum + ", amountPeriod="
-				+ amountPeriod + ", amountYtd=" + amountYtd + ", currencyLocal=" + currencyLocal
-				+ ", entityBusinessUnitKey=" + entityBusinessUnitKey + "]";
+		return "AccountBalanceSC [accountObject=" + accountObject + ", accountPeriod=" + accountPeriod
+				+ ", accountSubsidiary=" + accountSubsidiary + ", accountTypeLedger=" + accountTypeLedger
+				+ ", amountAccum=" + amountAccum + ", amountPeriod=" + amountPeriod + ", amountYtd=" + amountYtd
+				+ ", currencyLocal=" + currencyLocal + ", entityBusinessUnitKey=" + entityBusinessUnitKey
+				+ ", fiscalYear=" + fiscalYear + ", accountMaster=" + accountMaster + "]";
 	}
 
 
@@ -199,10 +163,8 @@ public class AccountBalance implements Serializable {
 		result = prime * result + ((accountMaster == null) ? 0 : accountMaster.hashCode());
 		result = prime * result + ((accountObject == null) ? 0 : accountObject.hashCode());
 		result = prime * result + ((accountPeriod == null) ? 0 : accountPeriod.hashCode());
-		result = prime * result + ((accountSubLedger == null) ? 0 : accountSubLedger.hashCode());
 		result = prime * result + ((accountSubsidiary == null) ? 0 : accountSubsidiary.hashCode());
 		result = prime * result + ((accountTypeLedger == null) ? 0 : accountTypeLedger.hashCode());
-		result = prime * result + ((accountTypeSubLedger == null) ? 0 : accountTypeSubLedger.hashCode());
 		result = prime * result + ((amountAccum == null) ? 0 : amountAccum.hashCode());
 		result = prime * result + ((amountPeriod == null) ? 0 : amountPeriod.hashCode());
 		result = prime * result + ((amountYtd == null) ? 0 : amountYtd.hashCode());
@@ -224,7 +186,7 @@ public class AccountBalance implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AccountBalance other = (AccountBalance) obj;
+		AccountBalanceSC other = (AccountBalanceSC) obj;
 		if (accountMaster == null) {
 			if (other.accountMaster != null)
 				return false;
@@ -240,11 +202,6 @@ public class AccountBalance implements Serializable {
 				return false;
 		} else if (!accountPeriod.equals(other.accountPeriod))
 			return false;
-		if (accountSubLedger == null) {
-			if (other.accountSubLedger != null)
-				return false;
-		} else if (!accountSubLedger.equals(other.accountSubLedger))
-			return false;
 		if (accountSubsidiary == null) {
 			if (other.accountSubsidiary != null)
 				return false;
@@ -254,11 +211,6 @@ public class AccountBalance implements Serializable {
 			if (other.accountTypeLedger != null)
 				return false;
 		} else if (!accountTypeLedger.equals(other.accountTypeLedger))
-			return false;
-		if (accountTypeSubLedger == null) {
-			if (other.accountTypeSubLedger != null)
-				return false;
-		} else if (!accountTypeSubLedger.equals(other.accountTypeSubLedger))
 			return false;
 		if (amountAccum == null) {
 			if (other.amountAccum != null)

@@ -8,10 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -80,53 +77,49 @@ public class AccountBalanceDao extends BaseAdlHibernateDao<AccountBalance> {
 		if (yearStart.intValue() > 0)
 			criteria.add(Restrictions.ge("fiscalYear", yearStart));
 		
-		//group by
-		// Select (Convert to DTO)
-		ProjectionList projectionList = Projections.projectionList();
-		projectionList	.add(Projections.property("fiscalYear"), "fiscalYear")
-						.add(Projections.property("accountTypeLedger"), "accountTypeLedger")
-						.add(Projections.property("entityBusinessUnitKey"), "entityBusinessUnitKey")
-						.add(Projections.property("entityCompanyKey"), "entityCompanyKey")
-						.add(Projections.sum("amountPeriod01"), "amountPeriod01")
-						.add(Projections.sum("amountPeriod02"), "amountPeriod02")
-						.add(Projections.sum("amountPeriod03"), "amountPeriod03")
-						.add(Projections.sum("amountPeriod04"), "amountPeriod04")
-						.add(Projections.sum("amountPeriod05"), "amountPeriod05")
-						.add(Projections.sum("amountPeriod06"), "amountPeriod06")
-						.add(Projections.sum("amountPeriod07"), "amountPeriod07")
-						.add(Projections.sum("amountPeriod08"), "amountPeriod08")
-						.add(Projections.sum("amountPeriod09"), "amountPeriod09")
-						.add(Projections.sum("amountPeriod10"), "amountPeriod10")
-						.add(Projections.sum("amountPeriod11"), "amountPeriod11")
-						.add(Projections.sum("amountPeriod12"), "amountPeriod12")
-						.add(Projections.sum("amountPeriod13"), "amountPeriod13")
-						.add(Projections.sum("amountPeriod14"), "amountPeriod14")
-						.add(Projections.sum("amountAccumPeriod01"), "amountAccumPeriod01")
-						.add(Projections.sum("amountAccumPeriod02"), "amountAccumPeriod02")
-						.add(Projections.sum("amountAccumPeriod03"), "amountAccumPeriod03")
-						.add(Projections.sum("amountAccumPeriod04"), "amountAccumPeriod04")
-						.add(Projections.sum("amountAccumPeriod05"), "amountAccumPeriod05")
-						.add(Projections.sum("amountAccumPeriod06"), "amountAccumPeriod06")
-						.add(Projections.sum("amountAccumPeriod07"), "amountAccumPeriod07")
-						.add(Projections.sum("amountAccumPeriod08"), "amountAccumPeriod08")
-						.add(Projections.sum("amountAccumPeriod09"), "amountAccumPeriod09")
-						.add(Projections.sum("amountAccumPeriod10"), "amountAccumPeriod10")
-						.add(Projections.sum("amountAccumPeriod11"), "amountAccumPeriod11")
-						.add(Projections.sum("amountAccumPeriod12"), "amountAccumPeriod12")
-						.add(Projections.sum("amountAccumPeriod13"), "amountAccumPeriod13")
-						.add(Projections.sum("amountAccumPeriod14"), "amountAccumPeriod14")
-						.add(Projections.groupProperty("fiscalYear"))
-						.add(Projections.groupProperty("accountTypeLedger"))
-						.add(Projections.groupProperty("entityBusinessUnitKey"))
-						.add(Projections.groupProperty("entityCompanyKey"));
-		criteria.setProjection(projectionList);
-		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountBalance.class));
+		// TODO: FACT_ACCT_BAL_SL_UNPIVOT : group by Select (Convert to DTO)
+//		ProjectionList projectionList = Projections.projectionList();
+//		projectionList	.add(Projections.property("fiscalYear"), "fiscalYear")
+//						.add(Projections.property("accountTypeLedger"), "accountTypeLedger")
+//						.add(Projections.property("entityBusinessUnitKey"), "entityBusinessUnitKey")
+//						.add(Projections.property("entityCompanyKey"), "entityCompanyKey")
+//						.add(Projections.sum("amountPeriod01"), "amountPeriod01")
+//						.add(Projections.sum("amountPeriod02"), "amountPeriod02")
+//						.add(Projections.sum("amountPeriod03"), "amountPeriod03")
+//						.add(Projections.sum("amountPeriod04"), "amountPeriod04")
+//						.add(Projections.sum("amountPeriod05"), "amountPeriod05")
+//						.add(Projections.sum("amountPeriod06"), "amountPeriod06")
+//						.add(Projections.sum("amountPeriod07"), "amountPeriod07")
+//						.add(Projections.sum("amountPeriod08"), "amountPeriod08")
+//						.add(Projections.sum("amountPeriod09"), "amountPeriod09")
+//						.add(Projections.sum("amountPeriod10"), "amountPeriod10")
+//						.add(Projections.sum("amountPeriod11"), "amountPeriod11")
+//						.add(Projections.sum("amountPeriod12"), "amountPeriod12")
+//						.add(Projections.sum("amountPeriod13"), "amountPeriod13")
+//						.add(Projections.sum("amountPeriod14"), "amountPeriod14")
+//						.add(Projections.sum("amountAccumPeriod01"), "amountAccumPeriod01")
+//						.add(Projections.sum("amountAccumPeriod02"), "amountAccumPeriod02")
+//						.add(Projections.sum("amountAccumPeriod03"), "amountAccumPeriod03")
+//						.add(Projections.sum("amountAccumPeriod04"), "amountAccumPeriod04")
+//						.add(Projections.sum("amountAccumPeriod05"), "amountAccumPeriod05")
+//						.add(Projections.sum("amountAccumPeriod06"), "amountAccumPeriod06")
+//						.add(Projections.sum("amountAccumPeriod07"), "amountAccumPeriod07")
+//						.add(Projections.sum("amountAccumPeriod08"), "amountAccumPeriod08")
+//						.add(Projections.sum("amountAccumPeriod09"), "amountAccumPeriod09")
+//						.add(Projections.sum("amountAccumPeriod10"), "amountAccumPeriod10")
+//						.add(Projections.sum("amountAccumPeriod11"), "amountAccumPeriod11")
+//						.add(Projections.sum("amountAccumPeriod12"), "amountAccumPeriod12")
+//						.add(Projections.sum("amountAccumPeriod13"), "amountAccumPeriod13")
+//						.add(Projections.sum("amountAccumPeriod14"), "amountAccumPeriod14")
+//						.add(Projections.groupProperty("fiscalYear"))
+//						.add(Projections.groupProperty("accountTypeLedger"))
+//						.add(Projections.groupProperty("entityBusinessUnitKey"))
+//						.add(Projections.groupProperty("entityCompanyKey"));
+//		criteria.setProjection(projectionList);
+//		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountBalance.class));
 		
 		// Order By
 		criteria.addOrder(Order.asc("fiscalYear"));
-		
-		
-
 		return new ArrayList<AccountBalance>(criteria.list());
 	}
 
