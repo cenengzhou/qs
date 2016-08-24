@@ -24,8 +24,6 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,

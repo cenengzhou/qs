@@ -50,8 +50,6 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl',
 		allowCellFocus : false,
 		enableCellSelection : false,
 		enablePaginationControls : true,
-		paginationPageSizes : [ ],
-		paginationPageSize : 100,
 		columnDefs : [ {
 			field : 'matchingType',
 			displayName : "Matching Type",

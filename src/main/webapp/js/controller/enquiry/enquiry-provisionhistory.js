@@ -19,8 +19,6 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,

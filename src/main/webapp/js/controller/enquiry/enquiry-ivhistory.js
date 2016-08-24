@@ -20,8 +20,6 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			exporterMenuPdf: false,

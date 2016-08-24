@@ -300,4 +300,10 @@ button.enquiryInfoBtn {
 		0px 1px 0px rgba(059,098,148,0.3);
 }
 
+.gridHeaderText{
+	color:white;
+}
+.gridHeaderText select{
+	color:black;
+}
 

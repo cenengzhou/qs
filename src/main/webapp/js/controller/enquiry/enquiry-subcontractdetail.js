@@ -15,8 +15,6 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 		showGridFooter : true,
 		showColumnFooter : true,
 		enableCellEditOnFocus : false,
-		paginationPageSizes : [],
-		paginationPageSize : 100,
 		allowCellFocus : false,
 		enableCellSelection : false,
 		exporterMenuPdf: false,

@@ -15,8 +15,6 @@ mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [

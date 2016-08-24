@@ -13,8 +13,6 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,

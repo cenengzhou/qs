@@ -35,6 +35,11 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 	
 	$scope.loadAccountLedgerList();
 	
+	var postedOptions = [
+	                        {label: 'Posted', value:'Posted'},
+	                        {label: 'Unposted', value:'Unposted'}
+	                        ];
+
 	$scope.columnDefs = [
 			             { field: 'typeDocument', width: '80', displayName: 'DOC Type', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -63,7 +68,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            		 return c;
 			            	 }			            	 
 			             },
-			             { field: 'explanationRemark', width: '200', displayName: 'Explanation', enableCellEdit: false,
+			             { field: 'taxExplanationDescription', width: '200', displayName: 'Explanation', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = '';
 			            		 if(row.entity.typeDocument === 'JE' || row.entity.typeDocument === 'PX'){
@@ -101,7 +106,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            		 return c;
 			            	 }			            	 
 			             },
-			             { field: 'statusPost', width: '80', displayName: 'Post', enableCellEdit: false,
+			             { field: 'statusPostDescription', width: '80', displayName: 'Post', enableCellEdit: false,headerCellClass:'gridHeaderText',
+			            	 filter: { selectOptions: postedOptions, type: uiGridConstants.filter.SELECT  },			             
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = '';
 			            		 if(row.entity.typeDocument === 'JE' || row.entity.typeDocument === 'PX'){
@@ -110,6 +116,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            		 return c;
 			            	 }			            	 
 			             },
+			             { field: 'accountTypeSubLedger', width: '80', displayName: 'SubLedger Type', enableCellEdit: false, visible:false},
 			             { field: 'accountSubLedger', width: '80', displayName: 'SubLedger', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = '';
@@ -119,6 +126,16 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            		 return c;
 			            	 }			            	 
 			             },
+			             { field: 'entityCompanyKey', width: '80', displayName: 'Company', enableCellEdit: false, visible:false},
+			             { field: 'currencyCode', width: '80', displayName: 'Currency', enableCellEdit: false, visible:false},
+			             { field: 'quantity', width: '80', displayName: 'Units', enableCellEdit: false, visible:false},
+			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Originator', enableCellEdit: false, visible:false},
+			             { field: 'entityGlPostedBy', width: '200', displayName: 'User ID', enableCellEdit: false, visible:false},
+			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:false},
+			             { field: 'numberInvoice', width: '80', displayName: 'Purchase Order Number', enableCellEdit: false, visible:false},
+			             { field: 'typeBatch', width: '80', displayName: 'Batch Type', enableCellEdit: false, visible:false},
+			             { field: 'numberBatch', width: '80', displayName: 'Batch No', enableCellEdit: false, visible:false},
+			             { field: 'dateBatch', width: '120', displayName: 'Batch Date', cellFilter: 'date:\'MM/dd/yyyy\'', enableCellEdit: false, visible:false},
 			            ];
 
 	$scope.gridOptions = {
@@ -132,8 +149,6 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [],
-			paginationPageSize : 100,
 			totalServerItems: 0,
 			allowCellFocus: false,
 			enableCellSelection: false,

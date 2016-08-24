@@ -15,8 +15,6 @@ mainApp.controller('EnquirySupplierLedgerCtrl', ['$scope' , '$rootScope', '$http
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [

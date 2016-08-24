@@ -15,8 +15,6 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http'
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			exporterMenuPdf: false,

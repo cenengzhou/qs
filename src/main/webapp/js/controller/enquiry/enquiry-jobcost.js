@@ -18,14 +18,14 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 		$scope.searchAccountLedger.ledgerType = 'AA';
 		$scope.searchAccountLedger.subLedger = $scope.searchSubcontractNo;
 		$scope.searchAccountLedger.subLedgerType = $scope.searchSubcontractNo != null?"X":null;
-		$scope.searchAccountLedger.postFlag = "P";
+		$scope.searchAccountLedger.postFlag = "";
 		$scope.searchAccountLedger.fromDate = new Date();
 		$scope.searchAccountLedger.thruDate = new Date();
 		//from year - yearComboBox=110-->1900+110=2010
 		//movement --> current year
 		//cumulative --> current year-2
 		if($scope.showCumulative){
-			$scope.searchAccountLedger.fromDate.setFullYear($scope.searchAccountLedger.fromDate.getYear()-2 + 1900);
+			$scope.searchAccountLedger.fromDate.setFullYear($scope.searchAccountLedger.fromDate.getYear()-1 + 1900);
 		}
 		//from month - periodComboBox=3-->March, setMonth=2
 		//January --> January
@@ -186,8 +186,6 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			showGridFooter : true,
 			showColumnFooter: true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [],
-			paginationPageSize : 100,
 			totalServerItems: 0,
 			allowCellFocus: false,
 			enableCellSelection: false,

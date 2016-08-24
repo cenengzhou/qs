@@ -14,8 +14,6 @@ mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'm
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes : [ ],
-			paginationPageSize : 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			exporterMenuPdf: false,

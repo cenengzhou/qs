@@ -13,8 +13,6 @@ mainApp.controller('AdminSessionCtrl',
 			multiSelect: true,
 			showGridFooter : true,
 			enableCellEditOnFocus : false,
-			paginationPageSizes: [],
-			paginationPageSize: 100,
 			allowCellFocus: false,
 			enableCellSelection: false,
 			isRowSelectable: function(row){

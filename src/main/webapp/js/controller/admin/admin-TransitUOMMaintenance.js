@@ -42,8 +42,6 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 		showGridFooter : true,
 		enableCellEditOnFocus : false,
 		enablePaginationControls : true,
-		paginationPageSizes : [ ],
-		paginationPageSize : 100,
 		allowCellFocus : false,
 		enableCellSelection : false,
 		columnDefs : [ {

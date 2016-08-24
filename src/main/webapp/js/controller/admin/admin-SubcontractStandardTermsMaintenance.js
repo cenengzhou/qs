@@ -27,8 +27,6 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		enableCellSelection : false,
 		enablePaginationControls : true,
 		rowEditWaitInterval : -1,
-		paginationPageSizes : [ ],
-		paginationPageSize : 100,
 		enableCellEditOnFocus : true,
 		columnDefs : [ {
 			field : 'systemCode',
