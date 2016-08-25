@@ -205,7 +205,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.failureHandler(loginFailureHandler()).and()
 			.logout().permitAll()
 			.invalidateHttpSession(true)
-			.deleteCookies("JSESSIONID")
+			.deleteCookies("PCMS_SESSIONID")
 			.logoutSuccessUrl(securityConfig.getLoginPath() + "?logout").and()
 			.exceptionHandling().accessDeniedPage("/403.html").and()
 			.addFilterAfter(spnegoAuthenticationProcessingFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);

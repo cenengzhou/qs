@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -347,6 +348,7 @@ public class UploadController {
 		}
 	}
     
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "/gammonqs/transitUpload.smvc", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "type") String type, 

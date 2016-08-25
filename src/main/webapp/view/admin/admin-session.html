@@ -16,10 +16,10 @@
 			<div class="col-md-12">
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" 
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									style="height:590px"></div>
 							</div>
 							<div class="col-md-12">
-								<button type="button" class="btn bg-blue btn-block" ng-click="expiredSelected()"><i class="fa fa-floppy-o"></i> Expire Selected</button>
+								<button ng-show="showIMSAdmin" type="button" class="btn bg-blue btn-block" ng-click="expiredSelected()"><i class="fa fa-floppy-o"></i> Expire Selected</button>
 							</div>
 		</div>
 

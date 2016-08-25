@@ -1,8 +1,7 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants',
+mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 
                                             function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
-	
 	$scope.cancel = function () {
 		$uibModalInstance.close();
 	};
@@ -128,11 +127,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			             },
 			             { field: 'entityCompanyKey', width: '80', displayName: 'Company', enableCellEdit: false, visible:false},
 			             { field: 'currencyCode', width: '80', displayName: 'Currency', enableCellEdit: false, visible:false},
-			             { field: 'quantity', width: '80', displayName: 'Units', enableCellEdit: false, visible:false},
-			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Originator', enableCellEdit: false, visible:false},
-			             { field: 'entityGlPostedBy', width: '200', displayName: 'User ID', enableCellEdit: false, visible:false},
+			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
+			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},
 			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:false},
-			             { field: 'numberInvoice', width: '80', displayName: 'Purchase Order Number', enableCellEdit: false, visible:false},
+			             { field: 'recordKeyMatchedPo', width: '80', displayName: 'PO Record Key', enableCellEdit: false, visible:false},
 			             { field: 'typeBatch', width: '80', displayName: 'Batch Type', enableCellEdit: false, visible:false},
 			             { field: 'numberBatch', width: '80', displayName: 'Batch No', enableCellEdit: false, visible:false},
 			             { field: 'dateBatch', width: '120', displayName: 'Batch Date', cellFilter: 'date:\'MM/dd/yyyy\'', enableCellEdit: false, visible:false},

@@ -21,7 +21,7 @@ body.block-ui > .block-ui-container,
 
 .block-ui-container {
   position: absolute;
-  z-index: 100;
+  z-index: 10000;
   top: 0;
   right: 0;
   bottom: 0;
@@ -34,7 +34,7 @@ body.block-ui > .block-ui-container,
 
 .block-ui-active > .block-ui-container {
   height: 100%;
-  /* cursor: wait; */
+  cursor: wait; 
 }
 
 .block-ui-active .block-ui-active > .block-ui-container {

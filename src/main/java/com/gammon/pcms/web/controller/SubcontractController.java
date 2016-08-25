@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -337,16 +338,19 @@ public class SubcontractController {
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){
 		subcontractService.runProvisionPostingManually(jobNumber, glDate, false, null);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
 	public void generateSCPackageSnapshotManually(){
 		subcontractService.generateSCPackageSnapshotManually();
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateF58001FromSCPackageManually", method = RequestMethod.POST)
 	public void updateF58001FromSCPackageManually(){
 		subcontractService.updateF58001FromSCPackageManually();
@@ -357,16 +361,19 @@ public class SubcontractController {
 		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
 	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, null);
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
 	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
 		subcontractService.inactivateSystemConstantList(appSubcontractStandardTermsList);
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "createSystemConstant", method = RequestMethod.POST)
 	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -377,6 +384,7 @@ public class SubcontractController {
 		}
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractAdmin", method = RequestMethod.POST)
 	public void updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");

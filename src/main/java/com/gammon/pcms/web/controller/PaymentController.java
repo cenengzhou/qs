@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -204,12 +205,13 @@ public class PaymentController {
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updatePaymentCert", method = RequestMethod.POST)
 	public String updatePaymentCert(@RequestBody PaymentCert paymentCert) {
 		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
@@ -217,6 +219,7 @@ public class PaymentController {
 		return result;
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();

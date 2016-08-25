@@ -25,7 +25,7 @@
 						</a></li>
 					<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}" ng-hide = "hideNavMenu">
 						<a 	ui-sref="cert-dashboard" ng-click="activeMenu = 'Certificate'">
-							<i class="ion ion-bookmark""></i>
+							<i class="ion ion-bookmark"></i>
 							Main Contract Certificate
 						</a>
 					</li>
@@ -58,7 +58,7 @@
 							Transit 
 						</a>
 					</li>
-					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}" ng-hide = "hideNavMenu">
+					<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}" ng-hide = "hideNavMenu || !showAdminMenu">
 						<a ui-sref="admin.session" ng-click="activeMenu = 'Admin'">
 							<i class="fa fa-user"></i>
 							Admin 

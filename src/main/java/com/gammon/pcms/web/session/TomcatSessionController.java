@@ -15,6 +15,7 @@ import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ApplicationContextFacade;
 import org.apache.catalina.core.StandardContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,7 @@ public class TomcatSessionController {
 		return sessionDTOList;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "InvalidateSessionList")
 	public boolean invalidateSessionList(@RequestParam(required = false)List<String> sessionIdList, HttpServletRequest request, HttpServletResponse response){
 		JavaType valueType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);

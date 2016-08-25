@@ -12,6 +12,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,11 +74,13 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateMainCertFromF03B14Manually", method = RequestMethod.POST)
 	public void updateMainCertFromF03B14Manually(){
 		mainCertService.updateMainCertFromF03B14Manually();
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateCertificate", method = RequestMethod.POST)
 	public String updateCertificate(@RequestBody MainCert mainCert){
 		return mainCertService.updateMainContractCert(mainCert);

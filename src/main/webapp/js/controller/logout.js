@@ -1,6 +1,6 @@
 mainApp.controller('LogoutCtrl', ['$http', '$cookies',
                                   function($http, $cookies) {
-	$http.post('logout');
+	$http.get('logout');
 	
 	//Clear cookies when logout
 	var cookies = $cookies.getAll();

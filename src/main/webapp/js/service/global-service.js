@@ -223,7 +223,8 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 
 mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
 	return{
-		checkNull: checkNull
+		checkNull: checkNull,
+		containRole: containRole
 	}
 	
 	function checkNull(objectArray){
@@ -238,6 +239,16 @@ mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
 		return result;
 	}
 	
+	function containRole(role, roles){
+		var result = false;
+		angular.forEach(roles, function(r){
+			if(r.RoleName === role){
+				result = true;
+			}
+		})
+		return result;
+	}
+
 })
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {
