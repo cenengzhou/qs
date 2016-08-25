@@ -10,6 +10,7 @@ import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
@@ -27,11 +28,11 @@ import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.ResourceSummaryAuditCustom;
-import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.domain.ResourceSummaryAuditCustom;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
@@ -65,7 +66,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			return resourceSummaries;
 		}
 		catch(HibernateException ex){
-			logger.info("BQResourceSummary Dao: obtainSCResourceSummariesByJobNumber - " + jobNumber);
+			logger.info("ResourceSummary Dao: obtainSCResourceSummariesByJobNumber - " + jobNumber);
 			throw new DatabaseOperationException(ex);
 		}
 	}
@@ -82,7 +83,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			return resourceSummaries;
 		}
 		catch(HibernateException ex){
-			logger.info("BQResourceSummary Dao: getResourceSummariesByJobNumber - " + jobNumber);
+			logger.info("ResourceSummary Dao: getResourceSummariesByJobNumber - " + jobNumber);
 			throw new DatabaseOperationException(ex);
 		}
 	}
@@ -98,7 +99,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			return resourceSummaries;
 		}
 		catch(HibernateException ex){
-			logger.info("BQResourceSummary Dao: getResourceSummariesByJob - " + jobInfo.getJobNumber());
+			logger.info("ResourceSummary Dao: getResourceSummariesByJob - " + jobInfo.getJobNumber());
 			throw new DatabaseOperationException(ex);
 		}
 	}
@@ -106,7 +107,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummariesSearch(JobInfo jobInfo, 
 			String packageNo, String objectCode, String subsidiaryCode) throws DatabaseOperationException{
-		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -147,7 +148,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	@SuppressWarnings("unchecked")
 	public RepackagingPaginationWrapper<ResourceSummary> obtainResourceSummariesSearchByPage(JobInfo jobInfo, 
 			String packageNo, String objectCode, String subsidiaryCode, String description, String type, String levyExcluded, String defectExcluded, int pageNum) throws DatabaseOperationException{
-		logger.info("BQResourceSummary Dao: getResourceSummariesSearchByPage - " + jobInfo.getJobNumber());
+		logger.info("ResourceSummary Dao: getResourceSummariesSearchByPage - " + jobInfo.getJobNumber());
 		
 		try{
 			RepackagingPaginationWrapper<ResourceSummary> paginationWrapper = new RepackagingPaginationWrapper<ResourceSummary>();
@@ -216,7 +217,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			}
 			
 			//Get 1 page of records
-			String hql = "from BQResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
+			String hql = "from ResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				if(packageNo.contains("%")){
 					hql += " and packageNo like '" + packageNo + "'";
@@ -380,7 +381,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			}
 			
 			//Get 1 page of records
-			String hql = "from BQResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
+			String hql = "from ResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				if(packageNo.contains("%")){
 					hql += " and packageNo like '" + packageNo + "'";
@@ -523,7 +524,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					resourceSummary.setCurrIVAmount(Double.valueOf(0));
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
-//				logger.info("Created Non-SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
+//				logger.info("Created Non-SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 			
@@ -569,7 +570,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				}
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
-//				logger.info("Created SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
+//				logger.info("Created SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 		}
@@ -637,7 +638,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					resourceSummary.setCurrIVAmount(Double.valueOf(0));
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
-//				logger.info("Created Non-SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
+//				logger.info("Created Non-SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 			
@@ -683,7 +684,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				}
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
-//				logger.info("Created SC BQResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
+//				logger.info("Created SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 		}
@@ -977,7 +978,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	public Boolean updateBQResourceSummariesAfterPostingForRepackaging3(JobInfo jobInfo, String username) throws DatabaseOperationException{
 		logger.info("updateBQResourceSummariesAfterPosting(Job job, String username)");
 		try{
-			String hql = "UPDATE BQResourceSummary SET postedIVAmount = currIVAmount, lastModifiedUser = :user, lastModifiedDate = :date WHERE job = :job AND postedIVAmount != currIVAmount";
+			String hql = "UPDATE ResourceSummary SET postedIVAmount = currIVAmount, lastModifiedUser = :user, lastModifiedDate = :date WHERE job = :job AND postedIVAmount != currIVAmount";
 			Query query = getSession().createQuery(hql);
 			query.setString("user", username);
 			query.setDate("date", new Date());
@@ -1252,13 +1253,13 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	 * Jun 14, 2011 3:17:35 PM
 	 */
 	public boolean updateBQResourceSummaryIVAmountByHQL(ResourceSummary bqResourceSummary, String username) throws DatabaseOperationException{
-//		logger.info("UPDATE: updateBQResourceSummaryIVAmountByHQL(BQResourceSummary bqResourceSummary, String username)");
+//		logger.info("UPDATE: updateBQResourceSummaryIVAmountByHQL(ResourceSummary bqResourceSummary, String username)");
 		try{
 			Long bqResourceSummaryID = bqResourceSummary.getId();
 			JobInfo jobInfo = bqResourceSummary.getJobInfo();
 			Double updatedIVCumulativeAmount = bqResourceSummary.getCurrIVAmount();
 
-			String hql = "UPDATE BQResourceSummary SET currIVAmount = :updatedIVCumulativeAmount, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :bqResourceSummaryID AND job = :job";
+			String hql = "UPDATE ResourceSummary SET currIVAmount = :updatedIVCumulativeAmount, lastModifiedUser = :username, lastModifiedDate = :date WHERE id = :bqResourceSummaryID AND job = :job";
 			Query query = getSession().createQuery(hql);
 
 			query.setDouble("updatedIVCumulativeAmount", updatedIVCumulativeAmount);
@@ -1319,7 +1320,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			resourceSummaries = criteria.list();
 			return resourceSummaries;
 		} catch (HibernateException ex) {
-			logger.info("BQResourceSummary Dao: getResourceSummariesByJobNumber - " + jobNumber);
+			logger.info("ResourceSummary Dao: getResourceSummariesByJobNumber - " + jobNumber);
 			throw new DatabaseOperationException(ex);
 		}
 	}
@@ -1369,7 +1370,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			resourceSummaries = criteria.list();
 			return resourceSummaries;
 		} catch (HibernateException ex) {
-			logger.info("BQResourceSummary Dao: obtainBQResourceSummaries - " + jobNumber);
+			logger.info("ResourceSummary Dao: obtainBQResourceSummaries - " + jobNumber);
 			throw new DatabaseOperationException(ex);
 		}
 	}
@@ -1567,7 +1568,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	/**************************************************** FUNCTIONS FOR PCMS **************************************************************/
 	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummaries(JobInfo jobInfo, String packageNo, String objectCode) throws DatabaseOperationException{
-		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -1620,7 +1621,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	
 	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummariesBySC(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
-		logger.info("BQResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -1669,7 +1670,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				return paginationWrapper;
 			}*/
 			
-			String hql = "from BQResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
+			String hql = "from ResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
 			Query query = getSession().createQuery(hql);
 			query.setEntity("jobInfo", job);
@@ -1679,6 +1680,19 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		catch(HibernateException ex){
 			throw new DatabaseOperationException(ex);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(JobInfo job) {
+		String hql = "select objectcode, sum(amt_budget) as amt_budget from (select SUBSTR(objectcode, 1, 2) as objectcode, amt_budget "
+					+ "from ResourceSummary where job = :job and systemStatus = 'ACTIVE') "
+					+ "GROUP BY objectcode"; 
+		
+		SQLQuery query = getSession().createSQLQuery(hql);
+		query.addEntity(ResourceSummary.class);
+		query.setParameter("job", job);
+		
+		return query.list();
 	}
 	/**************************************************** FUNCTIONS FOR PCMS - END **************************************************************/	
 }

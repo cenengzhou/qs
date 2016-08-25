@@ -97,7 +97,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/job/job-dashboard.js'
+                           'js/controller/job/job-dashboard.js',
+                           'js/service/adl-service.js',
+                           'js/service/resource-summary-service.js'
                     ] 
                 });
             }]
@@ -1284,10 +1286,10 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
 	    return label.datasetLabel + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}; 
     // Configure all charts 
-    ChartJsProvider.setOptions({
+    /*ChartJsProvider.setOptions({
     	colours: [colorCode.blue, colorCode.red, colorCode.green, colorCode.yellow, colorCode.purple],
       	responsive: true
-    });
+    });*/
     // Configure all line charts 
     ChartJsProvider.setOptions('Line', {
       datasetFill: false

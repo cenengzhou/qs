@@ -118,6 +118,18 @@ public class ResourceSummaryController {
 		return ivInputPaginationWrapper;
 	}
 	
+	@RequestMapping(value = "getResourceSummariesGroupByObjectCode", method = RequestMethod.GET)
+	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
+		List<ResourceSummary> rsList = null;
+		try {
+			rsList = resourceSummaryService.getResourceSummariesGroupByObjectCode(jobNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return rsList;
+	}
+
+
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
 									@RequestParam(required =true) String repackagingId,

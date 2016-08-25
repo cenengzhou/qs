@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Repackaging;
@@ -143,4 +144,19 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		return entryInDB;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Repackaging> getRepackagingMonthlySummary(String jobNo, String year) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("jobInfo", "jobInfo");
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
+		criteria.add(Restrictions.eq("status", "900"));
+
+		criteria.add(Restrictions.ge("createDate", DateHelper.parseDate("01-01-20"+year, "dd-MM-yyyy")));
+		criteria.add(Restrictions.lt("createDate", DateHelper.parseDate("31-12-20"+year, "dd-MM-yyyy")));
+		criteria.addOrder(Order.asc("createDate"));
+		
+		return criteria.list();
+	}
+
+	
 }

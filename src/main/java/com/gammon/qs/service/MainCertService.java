@@ -728,6 +728,11 @@ public class MainCertService {
 		return Boolean.TRUE;
 		
 	}
+
+	public MainCert getCertificateDashboardData(String jobNo) {
+		
+		return null;
+	}
 	
 
 	

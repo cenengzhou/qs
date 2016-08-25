@@ -2,7 +2,8 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
                                        function($scope, colorCode, subcontractService) {
 	$scope.paymentAmount = 100256;
 
-	//Chart.defaults.global.colours = [colorCode.blue, colorCode.red, colorCode.green, colorCode.pink, colorCode.purple];
+	//Config Line chart color
+	Chart.defaults.global.colours = [colorCode.blue, colorCode.red];
 
 	loadData();
 
@@ -93,8 +94,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 								        	bezierCurve : true,
 								        	datasetFill : false,
 								        	animation : true,
-								        	scaleLabel: " <%= Number(value / 1000) + ' K'%>"
-
+								        	scaleLabel: " <%= Number(value / 1000).toFixed(2) + ' K'%>"
 								        }
 						};
 					}
@@ -112,11 +112,12 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 							series : ['Total', 'Certified', 'Work Done'],
 							bqData : [],
 							voData : [],
-							colours: [{
-								strokeColor: colorCode.red,
-								fillColor: colorCode.red,
-								highlightFill: colorCode.red,
-								highlightStroke: colorCode.red
+							colours: [
+							{
+								strokeColor: colorCode.green,
+								fillColor: colorCode.green,
+								highlightFill: colorCode.green,
+								highlightStroke: colorCode.green
 							}, 
 							{
 								strokeColor: colorCode.blue,
@@ -125,11 +126,12 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 								highlightStroke: colorCode.blue
 							},
 							{
-								strokeColor: colorCode.green,
-								fillColor: colorCode.green,
-								highlightFill: colorCode.green,
-								highlightStroke: colorCode.green
-							}],
+								strokeColor: colorCode.red,
+								fillColor: colorCode.red,
+								highlightFill: colorCode.red,
+								highlightStroke: colorCode.red
+							}
+							],
 							options : {
 								/*'onAnimationComplete': function () {
 				     	        	 //this.showTooltip(this.segments, true);
@@ -144,7 +146,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 								responsive : true,
 								maintainAspectRatio : true,
 								animation : true,
-								scaleLabel: " <%= Number(value / 1000) + ' K'%>",
+								scaleLabel: " <%= Number(value / 1000).toFixed(2) + ' K'%>",
 								//'scaleLabel' : "<%= Number(value).toFixed(2).replace('.', ',') + ' $'%>"
 								/*'scaleOverride':true,
 				     	        'scaleSteps':2,

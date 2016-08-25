@@ -7,9 +7,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
     	updateJobInfo: 	updateJobInfo,
     	updateJobDates:	updateJobDates,
     	
-    	obtainJobInfo: obtainJobInfo,
-    	obtainJobDashboardData: obtainJobDashboardData,
-    	getJobDetailList: 	getJobDetailList,
+    	getJobDetailList: 	getJobDetailList
     });
 	
     function getJob(jobNo) {
@@ -65,21 +63,6 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function obtainJobInfo() {
-        var request = $http({
-            method: "get",
-            url: "data/job.json"
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
-    
-    function obtainJobDashboardData() {
-        var request = $http({
-            method: "get",
-            url: "data/job-dashboard.json"
-        });
-        return( request.then( handleSuccess, handleError ) );
-    }
     
     function getJobDetailList() {
         var request = $http({

@@ -1,11 +1,31 @@
 mainApp.service('adlService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getMonthlyJobCostList:		getMonthlyJobCostList,
-    	getAccountLedgerList:	getAccountLedgerList,
+    	getJobDashboardData:						getJobDashboardData,
+    	getMonthlyJobCostList:						getMonthlyJobCostList,
+    	getAccountLedgerList:						getAccountLedgerList,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient
     });
-   
+    
+    function getJobDashboardData(noJob, type, year){
+    	var deferred = $q.defer();
+    	$http({
+    		method: 'GET',
+    		url: 'service/adl/getJobDashboardData',
+    		params:{
+    			noJob: noJob,
+    			type: type,
+    			year: year
+    		}
+    	}).success(function(data) { 
+    		deferred.resolve(data);
+    	}).error(function(msg, code) {
+    		deferred.reject(msg);
+    		$log.error(msg, code);
+    	});
+    	return deferred.promise;
+    }
+    
     function getMonthlyJobCostList(noJob, noSubcontract, year, month){
     	var request = $http({
     		method: 'GET',
@@ -45,28 +65,15 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
     
-
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
     function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
         if (
             ! angular.isObject( response.data ) ||
             ! response.data.message
             ) {
             return( $q.reject( "An unknown error occurred." ) );
         }
-        // Otherwise, use expected error message.
         return( $q.reject( response.data.message ) );
     }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
     function handleSuccess( response ) {
         return( response.data );
     }

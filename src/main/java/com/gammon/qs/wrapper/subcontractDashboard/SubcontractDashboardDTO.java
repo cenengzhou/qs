@@ -6,7 +6,7 @@ import java.util.List;
  * @author koeyyeung
  * created on 19 Jul, 2016
  */
-public class SubcontractDashboardWrapper {
+public class SubcontractDashboardDTO {
 	private String category;
 	private String startYear;
 	private String endYear;

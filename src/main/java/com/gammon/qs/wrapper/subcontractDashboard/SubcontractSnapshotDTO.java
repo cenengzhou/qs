@@ -6,7 +6,7 @@ import java.util.Date;
  * @author koeyyeung
  * created on 19 Jul, 2016
  */
-public class SubcontractSnapshotWrapper implements Comparable<SubcontractSnapshotWrapper>{
+public class SubcontractSnapshotDTO implements Comparable<SubcontractSnapshotDTO>{
 	
 	private Double totalPostedCertifiedAmount;
 	private Double totalPostedWorkDoneAmount;
@@ -34,7 +34,7 @@ public class SubcontractSnapshotWrapper implements Comparable<SubcontractSnapsho
 	
 	
 	 @Override
-	  public int compareTo(SubcontractSnapshotWrapper wrapper) {
+	  public int compareTo(SubcontractSnapshotDTO wrapper) {
 		 if (getSnapshotDate() == null || wrapper.getSnapshotDate() == null)
 		      return 0;
 	    return getSnapshotDate().compareTo(wrapper.getSnapshotDate());

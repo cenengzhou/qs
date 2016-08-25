@@ -66,6 +66,11 @@ public class MainCertController {
 		return mainCertService.getCertificate(jobNo, certificateNumber);
 	}
 	
+	@RequestMapping(value = "getCertificateDashboardData", method = RequestMethod.GET)
+	public MainCert getCertificateDashboardData(@RequestParam String jobNo){
+		return mainCertService.getCertificateDashboardData(jobNo);
+	}
+	
 	// ---------------- update / calculate ----------------
 	@RequestMapping(value = "updateRetentionRelease",
 					method = RequestMethod.POST)

@@ -66,7 +66,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
      	       'showTooltips' : true,
      	        'responsive' : false,
      	        'maintainAspectRatio' : true,
-     	       'scaleLabel': " <%= Number(value / 1000000) + ' M'%>"
+     	       'scaleLabel': " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
      	     }
      
     };

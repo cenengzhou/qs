@@ -63,7 +63,7 @@ public class ResourceSummaryService implements Serializable {
 	private static final long serialVersionUID = -5837715659002620319L;
 	private transient Logger logger = Logger.getLogger(ResourceSummaryService.class.getName());
 	@Autowired
-	private transient ResourceSummaryHBDao bqResourceSummaryDao;
+	private transient ResourceSummaryHBDao resourceSummaryDao;
 	@Autowired
 	private transient JobInfoHBDao jobDao;
 	@Autowired
@@ -105,18 +105,18 @@ public class ResourceSummaryService implements Serializable {
 
 	public List<ResourceSummary> getResourceSummariesByJob(JobInfo job)
 			throws Exception {
-		return bqResourceSummaryDao.getResourceSummariesByJob(job);
+		return resourceSummaryDao.getResourceSummariesByJob(job);
 	}
 
 	public List<ResourceSummary> getResourceSummariesByJobNumber(
 			String jobNumber) throws Exception {
-		return bqResourceSummaryDao.getResourceSummariesByJobNumber(jobNumber);
+		return resourceSummaryDao.getResourceSummariesByJobNumber(jobNumber);
 	}
 
 	public List<ResourceSummary> getResourceSummariesSearch(JobInfo job,
 			String packageNo, String objectCode, String subsidiaryCode)
 			throws Exception {
-		return bqResourceSummaryDao.getResourceSummariesSearch(job, packageNo, objectCode, subsidiaryCode);
+		return resourceSummaryDao.getResourceSummariesSearch(job, packageNo, objectCode, subsidiaryCode);
 	}
 
 	/**@author koeyyeung
@@ -125,10 +125,10 @@ public class ResourceSummaryService implements Serializable {
 	public List<ResourceSummary> obtainBQResourceSummaries(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, String description, boolean finalizedPackage) throws Exception {
 		List<ResourceSummary> bqResourceSummaryList = new ArrayList<ResourceSummary>();
 		if(finalizedPackage){
-			bqResourceSummaryList = bqResourceSummaryDao.obtainBQResourceSummariesForFinalIVPosting(jobNumber, packageNo, objectCode, subsidiaryCode, description);
+			bqResourceSummaryList = resourceSummaryDao.obtainBQResourceSummariesForFinalIVPosting(jobNumber, packageNo, objectCode, subsidiaryCode, description);
 		}
 		else
-			bqResourceSummaryList = bqResourceSummaryDao.obtainBQResourceSummaries(jobNumber, packageNo, objectCode, subsidiaryCode, description);
+			bqResourceSummaryList = resourceSummaryDao.obtainBQResourceSummaries(jobNumber, packageNo, objectCode, subsidiaryCode, description);
 
 		return bqResourceSummaryList;
 	}
@@ -136,7 +136,7 @@ public class ResourceSummaryService implements Serializable {
 	public boolean recalculateResourceSummaryIVForFinalizedPackage(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, String description) throws DatabaseOperationException{
 		boolean recalculated = false;
 		
-		List<String> finalizedPackageNoList = bqResourceSummaryDao.obtainPackageNoForIVRecalculation(job.getJobNumber(), packageNo, objectCode, subsidiaryCode, description);
+		List<String> finalizedPackageNoList = resourceSummaryDao.obtainPackageNoForIVRecalculation(job.getJobNumber(), packageNo, objectCode, subsidiaryCode, description);
 		for (String finalizedPackageNo: finalizedPackageNoList){
 			packageRepository.recalculateResourceSummaryIV(job.getJobNumber(), finalizedPackageNo, true);
 			recalculated = true;
@@ -147,8 +147,8 @@ public class ResourceSummaryService implements Serializable {
 	
 	public RepackagingPaginationWrapper<ResourceSummary> obtainResourceSummariesSearchByPage(JobInfo job, 
 			String packageNo, String objectCode, String subsidiaryCode, String description, String type, String levyExcluded, String defectExcluded, int pageNum) throws Exception{
-		RepackagingPaginationWrapper<ResourceSummary> wrapper = bqResourceSummaryDao.obtainResourceSummariesSearchByPage(job, packageNo, objectCode, subsidiaryCode, description, type, levyExcluded, defectExcluded, pageNum);
-		Double markup = bqResourceSummaryDao.getMarkupAmountInSearch(job, packageNo, objectCode, subsidiaryCode, description);
+		RepackagingPaginationWrapper<ResourceSummary> wrapper = resourceSummaryDao.obtainResourceSummariesSearchByPage(job, packageNo, objectCode, subsidiaryCode, description, type, levyExcluded, defectExcluded, pageNum);
+		Double markup = resourceSummaryDao.getMarkupAmountInSearch(job, packageNo, objectCode, subsidiaryCode, description);
 		if(markup == null)
 			markup = Double.valueOf(0);
 		if(wrapper!=null && wrapper.getTotalSellingValue()!=null)
@@ -162,10 +162,10 @@ public class ResourceSummaryService implements Serializable {
 	public List<Double> obtainIVMovementByJob(JobInfo job, boolean finalized) throws DatabaseOperationException{
 		List<Double> ivMovementList = new ArrayList<Double>();
 		Double ivMovement = 0.0;
-		Double ivFinalMovement = bqResourceSummaryDao.obtainIVMovementByJob(job, true);
+		Double ivFinalMovement = resourceSummaryDao.obtainIVMovementByJob(job, true);
 
 		if(!finalized)
-			ivMovement = bqResourceSummaryDao.obtainIVMovementByJob(job, false);
+			ivMovement = resourceSummaryDao.obtainIVMovementByJob(job, false);
 		
 		ivMovementList.add(ivFinalMovement!=null?CalculationUtil.round(ivFinalMovement, 2):0.0);
 		ivMovementList.add(ivMovement!=null?CalculationUtil.round(ivMovement, 2):0.0);
@@ -240,7 +240,7 @@ public class ResourceSummaryService implements Serializable {
 	public List<String> obtainUneditableResourceSummaries(JobInfo job) throws Exception {
 		List<String> uneditableResourceSummaryIDs = new ArrayList<String>(); 
 
-		List<ResourceSummary> resourceSummaries = bqResourceSummaryDao.obtainSCResourceSummariesByJobNumber(job.getJobNumber());
+		List<ResourceSummary> resourceSummaries = resourceSummaryDao.obtainSCResourceSummariesByJobNumber(job.getJobNumber());
 		List<String> uneditablePackageNos = scPackageDao.getUneditablePackageNos(job);
 		List<String> unawardedPackageNosUnderRequisition = scPackageDao.obtainSCPackageNosUnderPaymentRequisition(job.getJobNumber());
 		
@@ -400,7 +400,7 @@ public class ResourceSummaryService implements Serializable {
 			String subsidiaryCode = resourceSummary.getSubsidiaryCode();
 			String unit = resourceSummary.getUnit();
 			String resourceDescription = resourceSummary.getResourceDescription();
-			ResourceSummary resourceInDB = bqResourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
+			ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
 			if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId()))
 				errorMsg.append("Changing the package number will create a duplicate resource: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
 		}
@@ -419,7 +419,7 @@ public class ResourceSummaryService implements Serializable {
 		String unit = resourceSummary.getUnit();
 		String resourceDescription = resourceSummary.getResourceDescription();
 		//check for duplicates
-		ResourceSummary resourceInDB = bqResourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
+		ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
 		if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId())){
 			boolean match = false;
 			if(oldSummaryIds != null && oldSummaryIds.length > 0){
@@ -449,7 +449,7 @@ public class ResourceSummaryService implements Serializable {
 		}
 		//Check if package no was changed - if so, add old package no to reset list.
 		if(resourceSummary.getId() != null && (resourceInDB == null || !resourceInDB.getId().equals(resourceSummary.getId())))
-			resourceInDB = bqResourceSummaryDao.get(resourceSummary.getId());
+			resourceInDB = resourceSummaryDao.get(resourceSummary.getId());
 		//Concurrency issues
 		if(resourceInDB != null){
 			//Check if resource is inactive - another user could have split/merged/deleted the resource
@@ -535,7 +535,7 @@ public class ResourceSummaryService implements Serializable {
 		Long id = resourceSummary.getId();
 		ResourceSummary resourceInDB = null;
 		if(id != null && id.longValue() > 0){
-			resourceInDB = bqResourceSummaryDao.get(id);
+			resourceInDB = resourceSummaryDao.get(id);
 		}
 		if(resourceInDB != null){ //Update
 			if((resourceInDB.getPackageNo() == null &&  resourceSummary.getPackageNo() != null) 
@@ -548,7 +548,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_PACKAGE);
 				audit.setValueFrom(resourceInDB.getPackageNo());
 				audit.setValueTo(resourceSummary.getPackageNo());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setPackageNo(resourceSummary.getPackageNo());
 			}
 			if(!resourceSummary.getObjectCode().equals(resourceInDB.getObjectCode())){
@@ -560,7 +560,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_OBJECT);
 				audit.setValueFrom(resourceInDB.getObjectCode());
 				audit.setValueTo(resourceSummary.getObjectCode());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setObjectCode(resourceSummary.getObjectCode());
 			}
 			if(!resourceSummary.getSubsidiaryCode().equals(resourceInDB.getSubsidiaryCode())){
@@ -572,7 +572,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_SUBSID);
 				audit.setValueFrom(resourceInDB.getSubsidiaryCode());
 				audit.setValueTo(resourceSummary.getSubsidiaryCode());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setSubsidiaryCode(resourceSummary.getSubsidiaryCode());
 			}
 			if(!resourceSummary.getResourceDescription().equals(resourceInDB.getResourceDescription())){
@@ -584,7 +584,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_DESCRIPT);
 				audit.setValueFrom(resourceInDB.getResourceDescription());
 				audit.setValueTo(resourceSummary.getResourceDescription());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setResourceDescription(resourceSummary.getResourceDescription());
 			}
 			if(!resourceSummary.getUnit().equals(resourceInDB.getUnit())){
@@ -596,7 +596,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_UNIT);
 				audit.setValueFrom(resourceInDB.getUnit());
 				audit.setValueTo(resourceSummary.getUnit());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setUnit(resourceSummary.getUnit());
 			}
 			//Added By Tiky Wong
@@ -610,7 +610,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_QUANTITY);
 				audit.setValueFrom(resourceInDB.getQuantity().toString());
 				audit.setValueTo(resourceSummary.getQuantity().toString());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setQuantity(resourceSummary.getQuantity());
 			}
 			if(!resourceSummary.getExcludeLevy().equals(resourceInDB.getExcludeLevy())){
@@ -622,7 +622,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_LEVY);
 				audit.setValueFrom(resourceInDB.getExcludeLevy().toString());
 				audit.setValueTo(resourceSummary.getExcludeLevy().toString());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setExcludeLevy(resourceSummary.getExcludeLevy());
 			}
 			if(!resourceSummary.getExcludeDefect().equals(resourceInDB.getExcludeDefect())){
@@ -634,14 +634,14 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueType(ResourceSummaryAuditCustom.VALUE_DEFECT);
 				audit.setValueFrom(resourceInDB.getExcludeDefect().toString());
 				audit.setValueTo(resourceSummary.getExcludeDefect().toString());
-				bqResourceSummaryDao.saveAudit(audit);
+				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setExcludeDefect(resourceSummary.getExcludeDefect());
 			}
-			bqResourceSummaryDao.saveOrUpdate(resourceInDB);
+			resourceSummaryDao.saveOrUpdate(resourceInDB);
 		}
 		else{ //Add new
 			resourceSummary.setId(null);
-			bqResourceSummaryDao.saveOrUpdate(resourceSummary);
+			resourceSummaryDao.saveOrUpdate(resourceSummary);
 			ResourceSummaryAuditCustom audit = new ResourceSummaryAuditCustom();
 			audit.setResourceSummaryId(resourceSummary.getId());
 			audit.setDataType(ResourceSummaryAuditCustom.TYPE_RESOURCE_SUMMARY);
@@ -654,7 +654,7 @@ public class ResourceSummaryService implements Serializable {
 			}
 			else
 				audit.setActionType(ResourceSummaryAuditCustom.ACTION_ADD);
-			bqResourceSummaryDao.saveAudit(audit);
+			resourceSummaryDao.saveAudit(audit);
 		}
 		logger.info("saveResourceSummaryHelper - END");
 	}
@@ -666,7 +666,7 @@ public class ResourceSummaryService implements Serializable {
 		List<String> toBeUpdatedPackageNoList = new ArrayList<String>();
 		String 	jobNumber = "";
 		for(ResourceSummary resourceSummary : resourceSummaries){
-			ResourceSummary summaryInDB = bqResourceSummaryDao.get(resourceSummary.getId());
+			ResourceSummary summaryInDB = resourceSummaryDao.get(resourceSummary.getId());
 			if(summaryInDB!=null){
 				jobNumber = summaryInDB.getJobInfo().getJobNumber();
 				if(!ResourceSummary.POSTED.equals(summaryInDB.getFinalized())){
@@ -675,17 +675,17 @@ public class ResourceSummaryService implements Serializable {
 					if(!toBeUpdatedPackageNoList.contains(summaryInDB.getPackageNo()) && ResourceSummary.NOT_FINALIZED.equals(summaryInDB.getFinalized()))
 						toBeUpdatedPackageNoList.add(summaryInDB.getPackageNo());
 					
-					bqResourceSummaryDao.saveOrUpdate(summaryInDB);
+					resourceSummaryDao.saveOrUpdate(summaryInDB);
 				}
 			}
 		}
 
 		//Update the status to "Updated" for all the resources under the same package no.
 		for (String packageNo: toBeUpdatedPackageNoList){
-			List<ResourceSummary> resourceList = bqResourceSummaryDao.obtainBQResourceSummariesForFinalIVPosting(jobNumber, packageNo, "14*", null, null);
+			List<ResourceSummary> resourceList = resourceSummaryDao.obtainBQResourceSummariesForFinalIVPosting(jobNumber, packageNo, "14*", null, null);
 			for(ResourceSummary resource: resourceList){
 				resource.setFinalized(ResourceSummary.UPDATED);
-				bqResourceSummaryDao.update(resource);
+				resourceSummaryDao.update(resource);
 			}
 		}
 
@@ -722,7 +722,7 @@ public class ResourceSummaryService implements Serializable {
 																		(isBill80?new Double(1):resource.getCostRate()));
 				}
 				else{ //Subcontract
-					List<ResourceSummary> scBQResourceSummaries = bqResourceSummaryDao.getResourceSummariesForAccount(	jobDao.obtainJobInfo(resource.getJobNumber()), 
+					List<ResourceSummary> scBQResourceSummaries = resourceSummaryDao.getResourceSummariesForAccount(	jobDao.obtainJobInfo(resource.getJobNumber()), 
 																									packageNo, resource.getObjectCode(), resource.getSubsidiaryCode());
 //					logger.info("Number of SCBQResourceSummaries:"+(scBQResourceSummaries==null?0:scBQResourceSummaries.size()));
 					if(scBQResourceSummaries!=null && scBQResourceSummaries.size()==1)
@@ -792,7 +792,7 @@ public class ResourceSummaryService implements Serializable {
 		StringBuilder errors = new StringBuilder();
 		try {
 			for(ResourceSummary resourceSummary : oldResources){
-				ResourceSummary resourceInDB = bqResourceSummaryDao.get(resourceSummary.getId()); 
+				ResourceSummary resourceInDB = resourceSummaryDao.get(resourceSummary.getId()); 
 				if(resourceInDB.getPackageNo()!=null && !"".equals(resourceInDB.getPackageNo())){
 					PaymentCert latestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(resourceInDB.getJobInfo().getJobNumber(), resourceInDB.getPackageNo());
 					SubcontractDetail scDetail = scDetailsHBDaoImpl.obtainSCDetailsByResourceNo(resourceInDB.getJobInfo().getJobNumber(), resourceInDB.getPackageNo(), Integer.valueOf(resourceInDB.getId().toString()));
@@ -832,24 +832,24 @@ public class ResourceSummaryService implements Serializable {
 		//SPLIT
 		if(oldResources.size() == 1){
 			ResourceSummary oldResource = oldResources.get(0);
-			ResourceSummary oldResourceDB = bqResourceSummaryDao.get(oldResource.getId());
+			ResourceSummary oldResourceDB = resourceSummaryDao.get(oldResource.getId());
 			for(ResourceSummary newResource : newResources){
-				ResourceSummary newResourceDB = bqResourceSummaryDao.get(newResource.getId());
+				ResourceSummary newResourceDB = resourceSummaryDao.get(newResource.getId());
 				newResourceDB.setSplitFrom(oldResourceDB);
-				bqResourceSummaryDao.saveOrUpdate(newResourceDB);
+				resourceSummaryDao.saveOrUpdate(newResourceDB);
 			}
 			oldResourceDB.inactivate();
-			bqResourceSummaryDao.saveOrUpdate(oldResourceDB);
+			resourceSummaryDao.saveOrUpdate(oldResourceDB);
 		}
 		//MERGE
 		else{
 			ResourceSummary newResource = newResources.get(0);
-			ResourceSummary newResourceDB = bqResourceSummaryDao.get(newResource.getId());
+			ResourceSummary newResourceDB = resourceSummaryDao.get(newResource.getId());
 			for(ResourceSummary oldResource : oldResources){
-				ResourceSummary oldResourceDB = bqResourceSummaryDao.get(oldResource.getId());
+				ResourceSummary oldResourceDB = resourceSummaryDao.get(oldResource.getId());
 				oldResourceDB.setMergeTo(newResourceDB);
 				oldResourceDB.inactivate();
-				bqResourceSummaryDao.saveOrUpdate(oldResourceDB);
+				resourceSummaryDao.saveOrUpdate(oldResourceDB);
 			}
 		}
 	}
@@ -859,7 +859,7 @@ public class ResourceSummaryService implements Serializable {
 		List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
 		if(entries != null && entries.size() > 0)
 			return null;
-		return bqResourceSummaryDao.groupResourcesIntoSummaries(job);
+		return resourceSummaryDao.groupResourcesIntoSummaries(job);
 	}
 	
 	/**
@@ -870,7 +870,7 @@ public class ResourceSummaryService implements Serializable {
 	public Boolean releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double newAmount, List<Long> voIDResourceSummaryList) throws Exception{
 		logger.info("Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode+" New Amount: "+newAmount);
 		
-		List<ResourceSummary> resourceSummaries = bqResourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+		List<ResourceSummary> resourceSummaries = resourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
 		
 		if(resourceSummaries == null || resourceSummaries.size() == 0)
 			throw new ValidateBusinessLogicException("Resource Summary does not exist with Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode);
@@ -925,13 +925,13 @@ public class ResourceSummaryService implements Serializable {
 			}
 			message += "Resource Summary id: " + resourceSummary.getId() + " New Quantity: " + newQuantity + " for BQ\n";
 			resourceSummary.setQuantity(newQuantity);
-			bqResourceSummaryDao.saveOrUpdate(resourceSummary);
+			resourceSummaryDao.saveOrUpdate(resourceSummary);
 			counter +=1;
 		}
 		logger.info(message);
 		
 		//Create new BQResourceSummary
-		Integer count = bqResourceSummaryDao.getCountOfSCSplitResources(job, packageNo, objectCode, subsidiaryCode);
+		Integer count = resourceSummaryDao.getCountOfSCSplitResources(job, packageNo, objectCode, subsidiaryCode);
 		ResourceSummary newResource = new ResourceSummary();
 		newResource.setJobInfo(job);
 		newResource.setObjectCode(objectCode);
@@ -941,7 +941,7 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setRate(Double.valueOf(1));
 		newResource.setQuantity(totalAmountofSameAccountCode - newAmount);
 		if (newResource.getQuantity().doubleValue()!=0){
-			bqResourceSummaryDao.saveOrUpdate(newResource);
+			resourceSummaryDao.saveOrUpdate(newResource);
 			logger.info(job.getJobNumber()+"."+objectCode+"."+subsidiaryCode+" X "+packageNo+" new Resource summary saved.");
 		}
 		else
@@ -959,7 +959,7 @@ public class ResourceSummaryService implements Serializable {
 	public ResourceSummary releaseResourceSummariesOfVOAfterSubcontractSplitTerminate(JobInfo job, String packageNo,SubcontractDetail scDetail ) throws Exception{
 		logger.info("[VO] Job: "+job.getJobNumber()+"LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ scDetail.getQuantity() + " NewQuantity:" + scDetail.getNewQuantity());
 		
-		ResourceSummary resourceSummary = bqResourceSummaryDao.get(scDetail.getResourceNo().longValue());
+		ResourceSummary resourceSummary = resourceSummaryDao.get(scDetail.getResourceNo().longValue());
 		if(resourceSummary == null){
 			logger.info("resourceSummary is null. id:"+scDetail.getResourceNo().longValue());
 			//return Boolean.FALSE;
@@ -975,10 +975,10 @@ public class ResourceSummaryService implements Serializable {
 			return null;
 		}
 		resourceSummary.setQuantity(scDetail.getNewQuantity());
-		bqResourceSummaryDao.saveOrUpdate(resourceSummary);
+		resourceSummaryDao.saveOrUpdate(resourceSummary);
 		logger.info("Update resource[VO]. Quantity: "+scDetail.getNewQuantity());
 		
-		Integer count = bqResourceSummaryDao.getCountOfSCSplitResources(job, packageNo, resourceSummary.getObjectCode(), resourceSummary.getSubsidiaryCode());
+		Integer count = resourceSummaryDao.getCountOfSCSplitResources(job, packageNo, resourceSummary.getObjectCode(), resourceSummary.getSubsidiaryCode());
 		ResourceSummary newResource = new ResourceSummary();
 		newResource.setJobInfo(job);
 		newResource.setObjectCode(resourceSummary.getObjectCode());
@@ -987,7 +987,7 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setUnit(resourceSummary.getUnit());
 		newResource.setRate(Double.valueOf(1));
 		newResource.setQuantity(amount - newAmount);
-		bqResourceSummaryDao.saveOrUpdate(newResource);
+		resourceSummaryDao.saveOrUpdate(newResource);
 		logger.info("Add new resource[VO]. Quantity: "+(amount - newAmount));
 		
 		//return Boolean.TRUE;
@@ -1000,7 +1000,7 @@ public class ResourceSummaryService implements Serializable {
 		//Put old summaries in map
 		HashMap<ResourceSummary, ResourceSummary> oldSummariesMap = getMapOfSummaries(job);
 		//generate list of new summaries
-		List<ResourceSummary> newSummaries = bqResourceSummaryDao.groupResourcesIntoSummariesForMethodTwo(job);
+		List<ResourceSummary> newSummaries = resourceSummaryDao.groupResourcesIntoSummariesForMethodTwo(job);
 		//iterate through newSummaries and check if old one exists
 		//if oldSummary exists:
 		// if quant doesn't match, update oldSummary quant and set IV as 0, then save oldSummary
@@ -1011,24 +1011,24 @@ public class ResourceSummaryService implements Serializable {
 				if(!summary.getQuantity().equals(oldSummary.getQuantity())){
 					oldSummary.setQuantity(summary.getQuantity());
 					oldSummary.setCurrIVAmount(Double.valueOf(0));
-					bqResourceSummaryDao.saveOrUpdate(oldSummary);
+					resourceSummaryDao.saveOrUpdate(oldSummary);
 				}
 			}
 			else
-				bqResourceSummaryDao.saveOrUpdate(summary);
+				resourceSummaryDao.saveOrUpdate(summary);
 		}
 		//for old Summaries left in map:
 		// if postedIV = 0, delete
 		// else, set quant and current iv = 0, forIvRollbackOnly = true, description = description + ' - Rollback IV' save
 		for(ResourceSummary oldSummary : oldSummariesMap.values()){
 			if(oldSummary.getPostedIVAmount().equals(Double.valueOf(0)))
-				bqResourceSummaryDao.delete(oldSummary);
+				resourceSummaryDao.delete(oldSummary);
 			else if(!(oldSummary.getForIvRollbackOnly())){
 				oldSummary.setQuantity(Double.valueOf(0));
 				oldSummary.setCurrIVAmount(Double.valueOf(0));
 				oldSummary.setResourceDescription(oldSummary.getResourceDescription() + " - Rollback IV");
 				oldSummary.setForIvRollbackOnly(Boolean.TRUE);
-				bqResourceSummaryDao.saveOrUpdate(oldSummary);
+				resourceSummaryDao.saveOrUpdate(oldSummary);
 			}
 		}
 
@@ -1046,17 +1046,17 @@ public class ResourceSummaryService implements Serializable {
 		List<ResourceSummary> tobedeletedBQResourceSummaries = getResourceSummariesByJob(job);
 		logger.info("NUMBER OF BQRESOURCESUMMARIES TO BE DELETED: "+tobedeletedBQResourceSummaries.size());
 		for(ResourceSummary bqResourceSummary : tobedeletedBQResourceSummaries)
-			bqResourceSummaryDao.delete(bqResourceSummary);
+			resourceSummaryDao.delete(bqResourceSummary);
 		
 		//Create new BQResourceSummaries
-		bqResourceSummaryDao.groupResourcesIntoSummariesMethodThree(job);
+		resourceSummaryDao.groupResourcesIntoSummariesMethodThree(job);
 		
 		updated=true;
 		return updated;
 	}
 	
 	private HashMap<ResourceSummary, ResourceSummary> getMapOfSummaries(JobInfo job) throws Exception{
-		List<ResourceSummary> summaries = bqResourceSummaryDao.getResourceSummariesByJob(job);
+		List<ResourceSummary> summaries = resourceSummaryDao.getResourceSummariesByJob(job);
 		HashMap<ResourceSummary, ResourceSummary> summariesMap = new HashMap<ResourceSummary, ResourceSummary>(summaries.size(), 1.0f);
 		for(ResourceSummary summary : summaries){
 			summariesMap.put(summary, summary);
@@ -1152,7 +1152,7 @@ public class ResourceSummaryService implements Serializable {
 				Double cumIV = Double.valueOf(line[8].trim());
 				logger.info("Line " + (i+1) + " - Obj: " + objectCode + ", Sub: " + subsidiaryCode + 
 						", Desc: " + resourceDescription + ", Unit: " + unit + ", Rate: " + rate.toString());
-				ResourceSummary resourceInDB = bqResourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
+				ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
 				if(resourceInDB == null)
 					return "Could not find resource in DB. Row " + (i+1);
 				else
@@ -1175,7 +1175,7 @@ public class ResourceSummaryService implements Serializable {
 			}
 			//Save resources
 			for(ResourceSummary resource : updatedResources)
-				bqResourceSummaryDao.saveOrUpdate(resource);
+				resourceSummaryDao.saveOrUpdate(resource);
 			return null;
 		}catch(Exception e){
 			logger.severe(e.getMessage());
@@ -1219,39 +1219,39 @@ public class ResourceSummaryService implements Serializable {
 
 	public ResourceSummary getResourceSummary(String jobNumber, String packageNo, String objectCode, String subsidiaryCode,
 												String resourceDescription, String unit, Double rate)throws Exception {
-		return bqResourceSummaryDao.getResourceSummary(jobDao.obtainJobInfo(jobNumber), packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
+		return resourceSummaryDao.getResourceSummary(jobDao.obtainJobInfo(jobNumber), packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
 	}
 	
 	
 
 	public Double getIVMovementOfJobFromResourceSummary(JobInfo job) {
-		return bqResourceSummaryDao.getIVMovementOfJob(job);
+		return resourceSummaryDao.getIVMovementOfJob(job);
 	}
 
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public List<ResourceSummary> getResourceSummaries(String jobNo, String packageNo, String objectCode) throws Exception {
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		return bqResourceSummaryDao.getResourceSummaries(job, packageNo, objectCode);
+		return resourceSummaryDao.getResourceSummaries(job, packageNo, objectCode);
 	}
 	
 	public List<ResourceSummary> getResourceSummariesBySC(String jobNo, String packageNo) throws Exception {
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		return bqResourceSummaryDao.getResourceSummariesBySC(job, packageNo);
+		return resourceSummaryDao.getResourceSummariesBySC(job, packageNo);
 	}
 	
 	public List<ResourceSummary> getResourceSummariesByAccountCode(String jobNo, String packageNo, String objectCode, String subsidiaryCode) throws Exception{
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		return bqResourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+		return resourceSummaryDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
 	}
 
 	public IVInputPaginationWrapper obtainResourceSummariesForIV(String jobNo) throws DatabaseOperationException{
 		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		return bqResourceSummaryDao.obtainResourceSummariesForIV(job);
+		return resourceSummaryDao.obtainResourceSummariesForIV(job);
 	}
 
 	public List<ResourceSummary> getResourceSummariesForAddendum(String jobNo) throws DataAccessException {
-		return bqResourceSummaryDao.getResourceSummariesForAddendum(jobNo);
+		return resourceSummaryDao.getResourceSummariesForAddendum(jobNo);
 	}
 	
 	
@@ -1422,7 +1422,7 @@ public class ResourceSummaryService implements Serializable {
 		if(resourceSummaries == null || resourceSummaries.size() == 0)
 			return null;
 		for(ResourceSummary resourceSummary : resourceSummaries){
-			ResourceSummary summaryInDb = bqResourceSummaryDao.get(resourceSummary.getId());
+			ResourceSummary summaryInDb = resourceSummaryDao.get(resourceSummary.getId());
 			if(!"VO".equals(summaryInDb.getResourceType()) && !"OI".equals(summaryInDb.getResourceType()))
 				return "Only VO/OI resources can be deleted";
 			if(summaryInDb.getPackageNo() != null && summaryInDb.getPackageNo().trim().length() != 0)
@@ -1430,7 +1430,7 @@ public class ResourceSummaryService implements Serializable {
 			if(summaryInDb.getCurrIVAmount().doubleValue() != 0)
 				return "Resources with non-zero posted IV cannot be deleted";
 			summaryInDb.inactivate();
-			bqResourceSummaryDao.saveOrUpdate(summaryInDb);
+			resourceSummaryDao.saveOrUpdate(summaryInDb);
 		}
 		
 		JobInfo job = resourceSummaries.get(0).getJobInfo();
@@ -1451,11 +1451,11 @@ public class ResourceSummaryService implements Serializable {
 		try {
 			
 			if(lineType=="V1" || lineType =="V3"){
-				ResourceSummary resourceSummary =  bqResourceSummaryDao.get(Long.valueOf(resourceNo));
+				ResourceSummary resourceSummary =  resourceSummaryDao.get(Long.valueOf(resourceNo));
 				resourceSummaryList.add(resourceSummary);
 			}else{
 				JobInfo job = jobDao.obtainJobInfo(jobNo);
-				List<ResourceSummary> resourceSummaries =  bqResourceSummaryDao.getResourceSummariesForAccount(job, subcontractNo, objectCode, subsidiaryCode);
+				List<ResourceSummary> resourceSummaries =  resourceSummaryDao.getResourceSummariesForAccount(job, subcontractNo, objectCode, subsidiaryCode);
 				List<SubcontractDetail> scDetailList = scDetailsHBDaoImpl.getSubcontractDetailsForWD(jobNo, subcontractNo);
 				
 				
@@ -1463,7 +1463,7 @@ public class ResourceSummaryService implements Serializable {
 				for (SubcontractDetail scDetails : scDetailList) {
 					ResourceSummary resourceSummaryInDB = null;
 					if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
-						resourceSummaryInDB = bqResourceSummaryDao.get(scDetails.getResourceNo().longValue());
+						resourceSummaryInDB = resourceSummaryDao.get(scDetails.getResourceNo().longValue());
 						
 						if (resourceSummaryInDB == null || 
 							!subcontractNo.equals(resourceSummaryInDB.getPackageNo()) || 
@@ -1501,11 +1501,11 @@ public class ResourceSummaryService implements Serializable {
 		String error = "";
 		try {
 			for(ResourceSummary resourceSummary : resourceSummaries){
-				ResourceSummary summaryInDB = bqResourceSummaryDao.get(resourceSummary.getId());
+				ResourceSummary summaryInDB = resourceSummaryDao.get(resourceSummary.getId());
 				summaryInDB.setCurrIVAmount(resourceSummary.getCurrIVAmount());
 //			logger.info("SAVE - BQResourceSummary J#"+summaryInDB.getJob().getJobNumber()+" ID: "+summaryInDB.getId()+
 //						" Current IV Amount: "+(summaryInDB.getCurrIVAmount()==null?"null":summaryInDB.getCurrIVAmount()));
-				bqResourceSummaryDao.saveOrUpdate(summaryInDB);
+				resourceSummaryDao.saveOrUpdate(summaryInDB);
 			}
 		} catch (Exception e) {
 			error = "IV cannot be updated.";
@@ -1524,7 +1524,21 @@ public class ResourceSummaryService implements Serializable {
 		return error;
 	}
 
-
+	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(String jobNo){
+		JobInfo job = null;
+		try {
+			job = jobDao.obtainJobInfo(jobNo);
+			List<ResourceSummary> rsList = resourceSummaryDao.getResourceSummariesGroupByObjectCode(job);
+			for(ResourceSummary rs: rsList){
+				logger.info(rs.toString());
+			}
+			
+			return rsList;
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<ResourceSummary>();
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 	

@@ -17,75 +17,78 @@
 		<!-- Main content -->
 		<div class="row">
 			<div class="col-md-3 col-xs-12">
-				<!-- small box -->
-				<div class="small-box bg-green">
-					<div class="inner">
-						<h3>{{job.totalBudget | currency}}</h3>
-
-						<p>Total Budget</p>
+				<div class="widget widget-stat bg-inverse text-white">
+					<div class="widget-stat-btn">
+						<a ui-sref="repackaging"><i class="fa fa-info-circle"></i></a>
 					</div>
-					<div class="icon">
-						<i class="ion ion-calculator"></i>
+					<div class="widget-stat-icon">
+						<i class="fa fa-calculator"></i>
 					</div>
-					<a ui-sref="repackaging" class="small-box-footer">More info <i
-						class="fa fa-arrow-circle-right"></i></a>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Total Budget</div>
+						<div class="widget-stat-number">{{totalBudget | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
 
 			</div>
 			<!-- ./col -->
 			<div class="col-md-3 col-xs-12">
-				<!-- small box -->
-				<div class="small-box bg-aqua">
-					<div class="inner">
-						<h3 class="text-white">{{job.internalValuation | currency}}</h3>
-						<p>Internal Valuation</p>
+				<div class="widget widget-stat bg-success text-white">
+					<div class="widget-stat-btn">
+						<a ui-sref="iv.resource-summary.update"><i class="fa fa-info-circle"></i></a>
 					</div>
-					<div class="icon">
-						<i class="ion ion-stats-bars"></i>
+					<div class="widget-stat-icon">
+						<i class="fa fa-bar-chart"></i>
 					</div>
-					<a ui-sref="iv.update" class="small-box-footer">More info <i
-						class="fa fa-arrow-circle-right"></i></a>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Internal Valuation</div>
+						<div class="widget-stat-number">{{turnover | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
+				
 			</div>
 			<!-- ./col -->
 			<div class="col-md-3 col-xs-12">
-				<!-- small box -->
-				<div class="small-box bg-danger">
-					<div class="inner">
-						<h3 class="text-white">{{job.actualValue | currency}}</h3>
-
-						<p>Actual Value</p>
+				<div class="widget widget-stat bg-primary text-white">
+					<div class="widget-stat-btn">
+						<a ui-sref="iv.resource-summary.update"><i class="fa fa-info-circle"></i></a>
 					</div>
-					<div class="icon">
-						<i class="ion ion-social-usd"></i>
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
 					</div>
-					<a class="small-box-footer">More info <i
-						class="fa fa-arrow-circle-right"></i></a>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Actual Value</div>
+						<div class="widget-stat-number">{{0 | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
+				
 			</div>
 
 			<div class="col-md-3 col-xs-12">
-				<!-- small box -->
-				<div class="small-box bg-purple">
-					<div class="inner">
-						<h3 class="text-white">{{job.mainCert | currency}}</h3>
-
-						<p>Main Contract Certificate</p>
+				<div class="widget widget-stat bg-purple text-white">
+					<div class="widget-stat-btn">
+						<a ui-sref="iv.resource-summary.update"><i class="fa fa-info-circle"></i></a>
 					</div>
-					<div class="icon">
-						<i class="ion ion-document-text"></i>
+					<div class="widget-stat-icon">
+						<i class="fa fa-file"></i>
 					</div>
-					<a ui-sref="cert-dashboard" class="small-box-footer">More info
-						<i class="fa fa-arrow-circle-right"></i>
-					</a>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Contract Receivable</div>
+						<div class="widget-stat-number">{{contractReceivable | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
+				
 			</div>
 		</div>
 
 		<br>
 		<div class="row">
 			<div class="col-md-7">
-				<div class="panel panel-primary">
+				<div class="panel panel-inverse ">
 					<div class="panel-heading">
 						<div class="panel-heading-btn">
 							<a href="javascript:;"
@@ -100,8 +103,20 @@
 						</h4>
 					</div>
 					<div class="panel-body">
-						<div class="panel-option bg-white">
+						<div class="panel-option bg-grey-light">
 							<div class="dropdown pull-right">
+								<a href="javascript:;"
+									class="btn btn-white btn-rounded btn-sm"
+									data-toggle="dropdown">{{selectedYear}} <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li ng-repeat="year in yearList">
+										<a	ng-click="getJobDashboardData(year)">{{year}}</a>
+									</li>
+								</ul>
+							</div>
+							<div class="text-center">Jan {{selectedYear}} -	Dec {{selectedYear}}</div>
+							<!-- <div class="dropdown pull-right">
 								<a href="javascript:;"
 									class="btn btn-primary btn-rounded btn-sm"
 									data-toggle="dropdown">Change Date <b class="caret"></b></a>
@@ -112,7 +127,7 @@
 								</ul>
 							</div>
 							<div class="text-center">Date: 1 November 2015 - 30
-								November 2015</div>
+								November 2015</div> -->
 						</div>
 
 						<div>

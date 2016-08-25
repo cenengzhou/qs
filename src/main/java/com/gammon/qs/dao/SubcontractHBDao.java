@@ -36,7 +36,7 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotDTO;
 @Repository
 public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 
@@ -698,7 +698,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return (List<Subcontract>) criteria.list();
 	}
 
-	public SubcontractSnapshotWrapper obtainSubcontractCurrentStat(String jobNo, String subcontractNo) throws DatabaseOperationException {
+	public SubcontractSnapshotDTO obtainSubcontractCurrentStat(String jobNo, String subcontractNo) throws DatabaseOperationException {
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
@@ -715,9 +715,9 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			
 			criteria.setProjection(projectionList);
 			
-			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotWrapper.class));
+			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotDTO.class));
 			
-			return (SubcontractSnapshotWrapper) criteria.uniqueResult();
+			return (SubcontractSnapshotDTO) criteria.uniqueResult();
 		}catch (HibernateException he){
 			throw new DatabaseOperationException(he);
 		}

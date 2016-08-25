@@ -114,12 +114,14 @@ public class ADLController {
 	@RequestMapping(value = "getJobDashboardData",
 					method = RequestMethod.GET)
 	public JobDashboardDTO getJobDashboardData(	@RequestParam(required = true) String noJob,
+												@RequestParam(	required = true) String type,
 												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal year,
+												defaultValue = "0") BigDecimal year,
 												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal month) {
+												defaultValue = "0") BigDecimal month 
+												) {
 		try {
-			return adlService.getJobDashboardData(year, month, noJob);
+			return adlService.getJobDashboardData(year, month, noJob, type);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new JobDashboardDTO();

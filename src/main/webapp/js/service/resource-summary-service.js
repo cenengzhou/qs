@@ -1,17 +1,18 @@
 mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 	// Return public API.
 	return({
-		getResourceSummaries: 				getResourceSummaries,
-		getResourceSummariesBySC:			getResourceSummariesBySC,
-		getResourceSummariesByAccountCode: 	getResourceSummariesByAccountCode,
-		getResourceSummariesByLineType:		getResourceSummariesByLineType,
-		getResourceSummariesForAddendum:	getResourceSummariesForAddendum,
-		addResourceSummary:					addResourceSummary,
-		updateResourceSummaries:			updateResourceSummaries,
-		deleteResources:					deleteResources,
-		splitOrMergeResources:				splitOrMergeResources,
-		updateIVAmount:						updateIVAmount,
-		postIVAmounts:						postIVAmounts
+		getResourceSummaries: 					getResourceSummaries,
+		getResourceSummariesBySC:				getResourceSummariesBySC,
+		getResourceSummariesByAccountCode: 		getResourceSummariesByAccountCode,
+		getResourceSummariesByLineType:			getResourceSummariesByLineType,
+		getResourceSummariesForAddendum:		getResourceSummariesForAddendum,
+		getResourceSummariesGroupByObjectCode: 	getResourceSummariesGroupByObjectCode,
+		addResourceSummary:						addResourceSummary,
+		updateResourceSummaries:				updateResourceSummaries,
+		deleteResources:						deleteResources,
+		splitOrMergeResources:					splitOrMergeResources,
+		updateIVAmount:							updateIVAmount,
+		postIVAmounts:							postIVAmounts
 	});
 
 	function getResourceSummaries(jobNo, subcontractNo, objectCode) {
@@ -81,6 +82,18 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				subsidiaryCode: subsidiaryCode,
 				lineType: lineType,
 				resourceNo: resourceNo
+			}
+		});
+		return( request.then( handleSuccess, handleError ) );
+	}
+	
+	function getResourceSummariesGroupByObjectCode(jobNo) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getResourceSummariesGroupByObjectCode",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo
 			}
 		});
 		return( request.then( handleSuccess, handleError ) );

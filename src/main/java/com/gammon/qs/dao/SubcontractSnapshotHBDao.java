@@ -29,7 +29,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotDTO;
 
 /**
  * koeyyeung
@@ -87,7 +87,7 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 	 * created on 20 Jul,2016
 	 * Subcontract Dashboard**/
 	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshotWrapper> obtainSubcontractMonthlyStat(String jobNo, String subcontractNo, String startMonth, String startYear, String endMonth, String endYear) throws DatabaseOperationException {
+	public List<SubcontractSnapshotDTO> obtainSubcontractMonthlyStat(String jobNo, String subcontractNo, String startMonth, String startYear, String endMonth, String endYear) throws DatabaseOperationException {
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
@@ -111,7 +111,7 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			projectionList.add(Projections.groupProperty("snapshotDate"), "snapshotDate");
 			criteria.setProjection(projectionList);
 			
-			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotWrapper.class));
+			criteria.setResultTransformer(Transformers.aliasToBean(SubcontractSnapshotDTO.class));
 			
 			return criteria.list();
 		}catch (HibernateException he){

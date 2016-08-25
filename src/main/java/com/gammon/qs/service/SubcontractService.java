@@ -73,7 +73,6 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailOA;
-import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.domain.SubcontractWorkScope;
@@ -102,8 +101,8 @@ import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardWrapper;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotWrapper;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardDTO;
+import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotDTO;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
 import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
@@ -3295,10 +3294,9 @@ public class SubcontractService {
 	
 	/**
 	 * @author koeyyeung
-	 * modified on 26 Aug, 2014
-	 * add period search from SCPackage Snapshot
+	 * modified on 26 Jul, 2016
 	 * **/
-	public List<SubcontractDashboardWrapper> getSubcontractDashboardData(String jobNo, String subcontractNo, String year) {
+	public List<SubcontractDashboardDTO> getSubcontractDashboardData(String jobNo, String subcontractNo, String year) {
 		String startMonth = "";
 		String startYear = "";
 		String endMonth = "";
@@ -3334,10 +3332,9 @@ public class SubcontractService {
 		
 		logger.info("start:"+startMonth+"-"+startYear+"; End: "+endMonth+"-"+endYear ); 
 		
-		List<SubcontractDashboardWrapper> subcontractDashboardWrappeList = new ArrayList<SubcontractDashboardWrapper>();
+		List<SubcontractDashboardDTO> subcontractDashboardWrappeList = new ArrayList<SubcontractDashboardDTO>();
 		try {
-			List<SubcontractSnapshotWrapper> snapshotWrapperList = subcontractSnapshotDao.obtainSubcontractMonthlyStat(jobNo, subcontractNo, startMonth, startYear, endMonth, endYear);
-			logger.info("snapshotWrapperList size: "+snapshotWrapperList.size());
+			List<SubcontractSnapshotDTO> snapshotWrapperList = subcontractSnapshotDao.obtainSubcontractMonthlyStat(jobNo, subcontractNo, startMonth, startYear, endMonth, endYear);
 
 			Collections.sort(snapshotWrapperList); 
 			
@@ -3345,7 +3342,7 @@ public class SubcontractService {
 			List<Double> certList = new ArrayList<Double>();
 			List<Double> wdList = new ArrayList<Double>();
 
-			for (SubcontractSnapshotWrapper result: snapshotWrapperList){
+			for (SubcontractSnapshotDTO result: snapshotWrapperList){
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(result.getSnapshotDate());
 				int month = calendar.get(Calendar.MONTH)+1;
@@ -3357,20 +3354,20 @@ public class SubcontractService {
 			}
 			
 			if(monthList.size()<12){
-				SubcontractSnapshotWrapper currentSCWrapper = subcontractHBDao.obtainSubcontractCurrentStat(jobNo, subcontractNo);
+				SubcontractSnapshotDTO currentSCWrapper = subcontractHBDao.obtainSubcontractCurrentStat(jobNo, subcontractNo);
 				monthList.add(monthHashMap.get(cal.get(Calendar.MONTH)+1));
 				certList.add(currentSCWrapper.getTotalPostedCertifiedAmount());
 				wdList.add(currentSCWrapper.getTotalPostedWorkDoneAmount());
 			
 			}
-			SubcontractDashboardWrapper subcontractDashboardCertWrapper = new SubcontractDashboardWrapper();
+			SubcontractDashboardDTO subcontractDashboardCertWrapper = new SubcontractDashboardDTO();
 			subcontractDashboardCertWrapper.setCategory("CERT");
 			subcontractDashboardCertWrapper.setStartYear(startYear);
 			subcontractDashboardCertWrapper.setEndYear(endYear);
 			subcontractDashboardCertWrapper.setMonthList(monthList);
 			subcontractDashboardCertWrapper.setDetailList(certList);
 
-			SubcontractDashboardWrapper subcontractDashboardWDWrapper = new SubcontractDashboardWrapper();
+			SubcontractDashboardDTO subcontractDashboardWDWrapper = new SubcontractDashboardDTO();
 			subcontractDashboardWDWrapper.setCategory("WD");
 			subcontractDashboardWDWrapper.setStartYear(startYear);
 			subcontractDashboardWDWrapper.setEndYear(endYear);
