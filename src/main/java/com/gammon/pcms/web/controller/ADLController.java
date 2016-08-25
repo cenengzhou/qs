@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
-import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -106,7 +105,7 @@ public class ADLController {
 	 * Payment - SC Rate * SC Certified Quantity & Cost Rate * LPMO Certified Quantity (AA-311100+311200) </br>
 	 *
 	 * @param noJob
-	 * @param yearStart
+	 * @param year
 	 * @param yearEnd
 	 * @return
 	 * @author tikywong
@@ -116,11 +115,11 @@ public class ADLController {
 					method = RequestMethod.GET)
 	public JobDashboardDTO getJobDashboardData(	@RequestParam(required = true) String noJob,
 												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearStart,
+																defaultValue = "0") BigDecimal year,
 												@RequestParam(	required = false,
-																defaultValue = "0") BigDecimal yearEnd) {
+																defaultValue = "0") BigDecimal month) {
 		try {
-			return adlService.getJobDashboardData(yearStart, yearEnd, noJob);
+			return adlService.getJobDashboardData(year, month, noJob);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new JobDashboardDTO();
@@ -129,33 +128,17 @@ public class ADLController {
 
 	@RequestMapping(value = "getAccountBalanceList",
 					method = RequestMethod.GET)
-	public List<AccountBalance> getAccountBalanceList(	@RequestParam(required = true) String noJob,
-														@RequestParam(	required = false,
-																		defaultValue = "0") BigDecimal yearStart,
-														@RequestParam(	required = false,
-																		defaultValue = "0") BigDecimal yearEnd,
-														@RequestParam(required = false) String typeLedger,
-														@RequestParam(required = false) String codeObject,
-														@RequestParam(required = false) String codeSubsidiary) {
+	public List<?> getAccountBalanceList(	@RequestParam(required = true) String noJob,
+											@RequestParam(	required = false,
+															defaultValue = "0") BigDecimal year,
+											@RequestParam(	required = false,
+															defaultValue = "0") BigDecimal month,
+											@RequestParam(required = false) String noSubcontract,
+											@RequestParam(required = false) String typeLedger,
+											@RequestParam(required = false) String codeObject,
+											@RequestParam(required = false) String codeSubsidiary) {
 		try {
-			return adlService.getAccountBalanceList(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ArrayList<AccountBalance>();
-		}
-	}
-
-	@RequestMapping(value = "getAccountBalanceSCList", method = RequestMethod.GET)
-	public List<AccountBalanceSC> getAccountBalanceSCList(	@RequestParam(required = true) String noJob,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearStart,
-													@RequestParam(	required = false,
-																	defaultValue = "0") BigDecimal yearEnd,
-													@RequestParam(required = false) String typeLedger,
-													@RequestParam(required = false) String codeObject,
-													@RequestParam(required = false) String codeSubsidiary) {
-		try {
-			return adlService.getAccountBalanceSCList(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
+			return adlService.getAccountBalanceList(year, month, typeLedger, noJob, noSubcontract, codeObject, codeSubsidiary);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<AccountBalanceSC>();

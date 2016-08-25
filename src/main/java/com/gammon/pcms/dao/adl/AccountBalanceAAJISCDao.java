@@ -79,7 +79,8 @@ public class AccountBalanceAAJISCDao extends BaseAdlHibernateDao<AccountBalanceA
 		criteria.addOrder(Order.asc("fiscalYear"))
 				.addOrder(Order.asc("accountPeriod"))
 				.addOrder(Order.asc("accountObject"))
-				.addOrder(Order.asc("accountSubsidiary"));
+				.addOrder(Order.asc("accountSubsidiary"))
+				.addOrder(Order.asc("accountSubLedger"));
 		
 		return new ArrayList<AccountBalanceAAJISC>(criteria.list());
 	}

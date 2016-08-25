@@ -55,9 +55,6 @@ public class HibernateConfig {
 	private String hibernateJdbcFetch_size;
 	@Value("${current_session_context_class}")
 	private String current_session_context_class;
-	@Value("${qsadmin.config}")
-	private String qsadminConfig;
-
 	@Autowired
 	private AuditConfig auditConfig;
 	@Autowired
@@ -96,11 +93,6 @@ public class HibernateConfig {
 	public HibernateJpaSessionFactoryBean sessionFactory() {
 		HibernateJpaSessionFactoryBean bean = new HibernateJpaSessionFactoryBean();
 		bean.setEntityManagerFactory(entityManagerFactory().getObject());
-		// bean.setConfigLocations(new PathResource(qsadminConfig));
-		// bean.setDataSource(jdbcDataSource());
-		// bean.setHibernateProperties(databaseProperties());
-		// bean.setPackagesToScan("com.gammon.pcms.model","com.gammon.qs.domain");
-		// bean.setEntityInterceptor(hibernateEntityInterceptor());
 		return bean;
 	}
 

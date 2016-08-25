@@ -7,22 +7,21 @@
  */
 package com.gammon.pcms.dto.rs.provider.response.adl;
 
+import java.math.BigDecimal;
 import java.util.List;
-
-import com.gammon.pcms.model.adl.AccountBalance;
 
 public class JobDashboardDTO {
 
-	private List<AccountBalance> contractReceivableList;
-	private List<AccountBalance> turnoverList;
-	private List<AccountBalance> originalBudgetList;
-	private List<AccountBalance> paymentList;
+	private List<BigDecimal> contractReceivableList;
+	private List<BigDecimal> turnoverList;
+	private List<BigDecimal> originalBudgetList;
+	private List<BigDecimal> paymentList;
 
 	public JobDashboardDTO() {
 		super();
 	}
 
-	public JobDashboardDTO(List<AccountBalance> contractReceivableList, List<AccountBalance> turnoverList, List<AccountBalance> originalBudgetList, List<AccountBalance> paymentList) {
+	public JobDashboardDTO(List<BigDecimal> contractReceivableList, List<BigDecimal> turnoverList, List<BigDecimal> originalBudgetList, List<BigDecimal> paymentList) {
 		super();
 		this.contractReceivableList = contractReceivableList;
 		this.turnoverList = turnoverList;
@@ -30,35 +29,35 @@ public class JobDashboardDTO {
 		this.paymentList = paymentList;
 	}
 
-	public List<AccountBalance> getContractReceivableList() {
+	public List<BigDecimal> getContractReceivableList() {
 		return contractReceivableList;
 	}
 
-	public void setContractReceivableList(List<AccountBalance> contractReceivableList) {
+	public void setContractReceivableList(List<BigDecimal> contractReceivableList) {
 		this.contractReceivableList = contractReceivableList;
 	}
 
-	public List<AccountBalance> getTurnoverList() {
+	public List<BigDecimal> getTurnoverList() {
 		return turnoverList;
 	}
 
-	public void setTurnoverList(List<AccountBalance> turnoverList) {
+	public void setTurnoverList(List<BigDecimal> turnoverList) {
 		this.turnoverList = turnoverList;
 	}
 
-	public List<AccountBalance> getOriginalBudgetList() {
+	public List<BigDecimal> getOriginalBudgetList() {
 		return originalBudgetList;
 	}
 
-	public void setOriginalBudgetList(List<AccountBalance> originalBudgetList) {
+	public void setOriginalBudgetList(List<BigDecimal> originalBudgetList) {
 		this.originalBudgetList = originalBudgetList;
 	}
 
-	public List<AccountBalance> getPaymentList() {
+	public List<BigDecimal> getPaymentList() {
 		return paymentList;
 	}
 
-	public void setPaymentList(List<AccountBalance> paymentList) {
+	public void setPaymentList(List<BigDecimal> paymentList) {
 		this.paymentList = paymentList;
 	}
 

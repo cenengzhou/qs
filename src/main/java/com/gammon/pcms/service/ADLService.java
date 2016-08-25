@@ -86,76 +86,72 @@ public class ADLService {
 	/**
 	 * General searching with account code in AA & JI Ledger only
 	 *
-	 * @param yearStart
-	 * @param yearEnd
-	 * @param noJob
-	 * @param codeObject
+	 * @param startYear
+	 * @param endYear
+	 * @param jobNo
+	 * @param objectCode
 	 * @return
 	 * @author tikywong
 	 * @since Jul 5, 2016 10:06:26 AM
 	 */
-	public List<?> getAAJILedgerList(	BigDecimal yearStart,
-										BigDecimal yearEnd,
-										String noJob,
-										String noSubcontract,
-										String codeObject,
-										String codeSubsidiary) {
-		if (StringUtils.isEmpty(noSubcontract))
-			return accountBalanceAAJIDao.find(yearStart, yearEnd, noJob, codeObject, codeSubsidiary);
+	public List<?> getAAJILedgerList(	BigDecimal startYear,
+										BigDecimal endYear,
+										String jobNo,
+										String subcontractNo,
+										String objectCode,
+										String subsidiaryCode) {
+		if (StringUtils.isEmpty(subcontractNo))
+			return accountBalanceAAJIDao.find(startYear, endYear, jobNo, objectCode, subsidiaryCode);
 		else
-			return accountBalanceAAJISCDao.find(yearStart, yearEnd, noJob, noSubcontract, codeObject, codeSubsidiary);
+			return accountBalanceAAJISCDao.find(startYear, endYear, jobNo, subcontractNo, objectCode, subsidiaryCode);
 	}
 
 	/**
 	 * Account Balance with all Ledger Types
 	 *
-	 * @param yearStart
-	 * @param yearEnd
-	 * @param typeLedger
-	 * @param noJob
-	 * @param codeObject
-	 * @param codeSubsidiary
+	 * @param year
+	 * @param month
+	 * @param ledgerType
+	 * @param jobNo
+	 * @param subcontractNo
+	 * @param objectCode
+	 * @param subsidiaryCode
 	 * @return
-	 * @author tikywong
-	 * @since Jul 7, 2016 5:01:29 PM
+	 * @author	tikywong
+	 * @since	Aug 24, 2016 5:10:00 PM
 	 */
-	public List<AccountBalance> getAccountBalanceList(	BigDecimal yearStart,
-														BigDecimal yearEnd,
-														String typeLedger,
-														String noJob,
-														String codeObject,
-														String codeSubsidiary) {
-		return accountBalanceDao.find(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
-	}
+	public List<?> getAccountBalanceList(	BigDecimal year,
+											BigDecimal month,
+											String ledgerType,
+											String jobNo,
+											String subcontractNo,
+											String objectCode,
+											String subsidiaryCode) {
 
-	public List<AccountBalanceSC> getAccountBalanceSCList(	BigDecimal yearStart,
-			BigDecimal yearEnd,
-			String typeLedger,
-			String noJob,
-			String codeObject,
-			String codeSubsidiary) {
-		return accountBalanceSCDao.find(yearStart, yearEnd, typeLedger, noJob, codeObject, codeSubsidiary);
+		if (StringUtils.isEmpty(subcontractNo))
+			return accountBalanceDao.find(year, month, ledgerType, jobNo, objectCode, subsidiaryCode);
+		else
+			return accountBalanceSCDao.find(year, month, ledgerType, jobNo, subcontractNo, objectCode, subsidiaryCode);
 	}
+	
 	/**
 	 * Monthly Cash Flow for Job Dash Board
 	 *
-	 * @param yearStart
+	 * @param year
 	 * @param yearEnd
 	 * @param noJob
 	 * @return
 	 * @author tikywong
 	 * @since Jul 12, 2016 2:16:59 PM
 	 */
-	public JobDashboardDTO getJobDashboardData(	BigDecimal yearStart,
-												BigDecimal yearEnd,
+	public JobDashboardDTO getJobDashboardData(	BigDecimal year,
+	                                           	BigDecimal month,
 												String noJob) {
 
-		List<AccountBalance> contractReceivableList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_PREFIX, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-		List<AccountBalance> turnoverList = accountBalanceDao.find(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+		List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+		List<BigDecimal> turnoverList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 		
-		List<AccountBalance> originalBudgetList = accountBalanceDao.findAndGroup(yearStart, yearEnd, AccountBalance.TYPE_LEDGER.OB.toString(), noJob);
-
-		return new JobDashboardDTO(contractReceivableList, turnoverList, originalBudgetList, null);
+		return new JobDashboardDTO(contractReceivableList, turnoverList, null, null);
 	}
 
 	/**
