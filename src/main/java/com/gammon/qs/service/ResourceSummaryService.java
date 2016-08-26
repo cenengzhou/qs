@@ -19,6 +19,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -1524,20 +1525,9 @@ public class ResourceSummaryService implements Serializable {
 		return error;
 	}
 
-	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(String jobNo){
-		JobInfo job = null;
-		try {
-			job = jobDao.obtainJobInfo(jobNo);
-			List<ResourceSummary> rsList = resourceSummaryDao.getResourceSummariesGroupByObjectCode(job);
-			for(ResourceSummary rs: rsList){
-				logger.info(rs.toString());
-			}
-			
+	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(String jobNo){
+			List<ResourceSummayDashboardDTO> rsList = resourceSummaryDao.getResourceSummariesGroupByObjectCode(jobNo);
 			return rsList;
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<ResourceSummary>();
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	

@@ -5,18 +5,22 @@ mainApp.constant("colorCode", {
     lightBlue: "#4D9CE1",
     green: "#17B6A4",
     lightGreen:"#98ded7",
-    yellow: "#f39c12",
-    lightYellow:"#FFBD51",
-    grey: "#d2d6de",
-    lightGrey: "#DFE2E9",
+    yellow: "#fcaf41",
+    lightYellow:"#FCBF67",
+    grey: "#aab3ba",
+    lightGrey: "#BBC2C7",
     purple: "#9b59b6",
     lightPurple: "#cfafdc",
     pink: "#f94877",
     lightPink: "#f71752",
     primary:"#2184DA",
    	lime:"#65C56F",
+   	lightLime: "#83D08B",
+   	info:"#38AFD3",
+   	lightInfo:"#5FBFDB",	
    	white:"#fff",
-   	black: "#3C454D"
+   	black: "#3C454D",
+   	
 });
 //#ffaaaa - Pink
 

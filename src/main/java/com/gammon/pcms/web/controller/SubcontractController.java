@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
@@ -35,7 +36,6 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractDashboardDTO;
 
 @RestController
 @RequestMapping(value = "service/subcontract/",

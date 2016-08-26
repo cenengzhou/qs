@@ -30,8 +30,53 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     	resourceSummaryService.getResourceSummariesGroupByObjectCode($scope.jobNo)
     	.then(
     			function( data ) {
-    				console.log(data);
+    				$scope.resourceSummary = data;
+    				var objectCodeList = [];
+    				var amountBudgetList = [];
+    				
+    				angular.forEach(data, function(value, key){
+    					if(value.objectCode != '19')
+    						amountBudgetList.push(value.amountBudget);
+    					else
+    						$scope.genuineMarkup = value.amountBudget;
+					});
+    				
+					var resourceSummaryJson = {
+							"data": amountBudgetList,
+							"labels": ["Labour", "Plant", "Material", "Subcontract", "Others"],
+							"colours": [
+							{
+								"strokeColor": colorCode.red,
+								"pointHighlightStroke": colorCode.lightRed
+							}, 
+							{
+								"strokeColor": colorCode.purple,
+								"pointHighlightStroke": colorCode.lightPurple
+							},
+							{
+								"strokeColor": colorCode.green,
+								"pointHighlightStroke": colorCode.lightGreen
+							}, 
+							{
+								"strokeColor": colorCode.blue,
+								"pointHighlightStroke": colorCode.lightBlue
+							},
+							{
+								"strokeColor": colorCode.grey,
+								"pointHighlightStroke": colorCode.lightGrey
+							}
+							],
+							'options' : {
+								showTooltips: true,
 
+								//SHow Tooltip by default
+								/*onAnimationComplete: function () {
+				    				this.showTooltip(this.segments, true);
+				    			}*/
+							}
+					};
+
+					$scope.resourceSummaryChart = resourceSummaryJson;
 
     	});
 

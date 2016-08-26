@@ -23,13 +23,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
+import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotDTO;
 
 /**
  * koeyyeung

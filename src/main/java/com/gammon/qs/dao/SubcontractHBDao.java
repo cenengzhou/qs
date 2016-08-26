@@ -27,6 +27,7 @@ import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -36,7 +37,6 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
-import com.gammon.qs.wrapper.subcontractDashboard.SubcontractSnapshotDTO;
 @Repository
 public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
@@ -119,8 +120,8 @@ public class ResourceSummaryController {
 	}
 	
 	@RequestMapping(value = "getResourceSummariesGroupByObjectCode", method = RequestMethod.GET)
-	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
-		List<ResourceSummary> rsList = null;
+	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
+		List<ResourceSummayDashboardDTO> rsList = null;
 		try {
 			rsList = resourceSummaryService.getResourceSummariesGroupByObjectCode(jobNo);
 		} catch (Exception e) {

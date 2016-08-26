@@ -96,22 +96,21 @@
 						<!-- /.box-header -->
 						<div class="box-body">
 							<div class="col-md-12">
-								<canvas id="pie" class="chart chart-pie"
-									chart-data="subcontractPieChart.data"
-									chart-labels="subcontractPieChart.labels"
-									chart-options="subcontractPieChart.options"
-									chart-colours="subcontractPieChart.colours" height="80">
-									<!--100  -->
+								<canvas id="doughnut" class="chart chart-doughnut"
+									chart-data="subcontractChart.data"
+									chart-labels="subcontractChart.labels"
+									chart-options="subcontractChart.options"
+									chart-colours="subcontractChart.colours" height="80">
 									</canvas>
 							</div>
 							<div class="col-md-12">
 								<ul class="chart-legend clearfix">
-									<li class="pull-left"><i class="fa fa-circle text-primary"></i>
-										<label>{{subcontractPieChart.labels[0]}} :
-											{{subcontractPieChart.data[0] | currency}} (Original: {{subcontract.originalSubcontractSum | currency}})</label></li>
-									<li class="pull-left"><i class="fa fa-circle text-success"></i>
-										<label>{{subcontractPieChart.labels[1]}}:
-											{{subcontractPieChart.data[1] | currency}}</label></li>
+									<li class="pull-left"><i class="fa fa-circle text-inverse"></i>
+										<label>{{subcontractChart.labels[0]}} :
+											{{subcontractChart.data[0] | currency}} (Original: {{subcontract.originalSubcontractSum | currency}})</label></li>
+									<li class="pull-left"><i class="fa fa-circle text-info"></i>
+										<label>{{subcontractChart.labels[1]}}:
+											{{subcontractChart.data[1] | currency}}</label></li>
 								</ul>
 							</div>
 						</div>

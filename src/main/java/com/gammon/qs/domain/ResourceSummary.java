@@ -223,7 +223,7 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 		return "ResourceSummary [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", subsidiaryCode=" + subsidiaryCode
 				+ ", objectCode=" + objectCode + ", resourceDescription=" + resourceDescription + ", unit=" + unit
 				+ ", quantity=" + quantity + ", rate=" + rate + ", postedIVAmount=" + postedIVAmount + ", currIVAmount="
-				+ currIVAmount + ", splitFrom=" + splitFrom.getId() + ", mergeTo=" + mergeTo.getId() + ", resourceType=" + resourceType
+				//+ currIVAmount + ", splitFrom=" + splitFrom.getId() + ", mergeTo=" + mergeTo.getId() + ", resourceType=" + resourceType
 				+ ", excludeLevy=" + excludeLevy + ", excludeDefect=" + excludeDefect + ", forIvRollbackOnly="
 				+ forIvRollbackOnly + ", finalized=" + finalized + ", toString()=" + super.toString() + "]";
 	}

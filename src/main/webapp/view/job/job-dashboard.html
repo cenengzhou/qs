@@ -87,7 +87,7 @@
 
 		<br>
 		<div class="row">
-			<div class="col-md-7">
+			<div class="col-md-8">
 				<div class="panel panel-inverse ">
 					<div class="panel-heading">
 						<div class="panel-heading-btn">
@@ -116,18 +116,6 @@
 								</ul>
 							</div>
 							<div class="text-center">Jan {{selectedYear}} -	Dec {{selectedYear}}</div>
-							<!-- <div class="dropdown pull-right">
-								<a href="javascript:;"
-									class="btn btn-primary btn-rounded btn-sm"
-									data-toggle="dropdown">Change Date <b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li><a href="javascript:;">Last Week</a></li>
-									<li><a href="javascript:;">Last Month</a></li>
-									<li><a href="javascript:;">Last Year</a></li>
-								</ul>
-							</div>
-							<div class="text-center">Date: 1 November 2015 - 30
-								November 2015</div> -->
 						</div>
 
 						<div>
@@ -143,124 +131,70 @@
 				</div>
 
 
-
-				<!-- <div class="box">
-			           <div class="box-header with-border">
-			             <h3 class="box-title">Job Cost</h3>
-			
-			          	<div class="box-tools pull-right">
-			               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-			               </button>
-			             </div>
-			             
-			           </div>
-			           <div class="box-body">
-			             <div class="row">
-			               <div class="col-md-12">
-			                 <p class="text-center">
-			                   <strong>1 Jan, 2015 - 30 Dec, 2015</strong>
-			                 </p>
-			
-			                 <div class="chart">
-			                  <canvas id="line" class="chart chart-line" 
-				                   chart-data="chartParameters.data" 
-				                   chart-labels="chartParameters.labels" 
-				                   chart-series="chartParameters.series" 
-				                   chart-options="chartParameters.options"
-				                   chart-legend = "true"
-				                   chart-click="onClick">
-				           </canvas> 
-			                 </div>
-			               </div>
-			             </div>
-			           </div>
-			         </div> -->
-
 			</div>
 			<!-- /.col -->
 
-			<!-- Main row -->
-			<!-- Left col -->
-			<div class="col-md-5">
-				<!-- TABLE: LATEST ORDERS -->
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">Recently Updated Items</h3>
-
-						<div class="box-tools pull-right">
-							<button type="button" class="btn btn-box-tool"
-								data-widget="collapse">
-								<i class="fa fa-minus"></i>
-							</button>
+			<div class="col-md-4">
+				<div class="col-md-12">
+					<div class="panel panel-inverse ">
+						<div class="panel-heading">
+							<div class="panel-heading-btn">
+								<a href="javascript:;"
+									class="btn btn-xs btn-icon btn-circle btn-inverse"
+									data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+									href="javascript:;"
+									class="btn btn-xs btn-icon btn-circle btn-inverse"
+									data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+							</div>
+							<h4 class="panel-title">
+								Resourses Distribution <small></small>
+							</h4>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<canvas id="doughnut" class="chart chart-doughnut"
+										chart-data="resourceSummaryChart.data" chart-labels="resourceSummaryChart.labels"
+										chart-colours="resourceSummaryChart.colours" height="150">
+											</canvas>
+								</div>
+								<div class="col-md-12">
+									<ul class="chart-legend clearfix">
+										<li class="col-md-12"><i class="fa fa-circle text-red"></i> <label>{{resourceSummaryChart.labels[0]}}:
+												{{resourceSummaryChart.data[0] | currency}}</label></li>
+										<li v><i class="fa fa-circle text-purple-light"></i> <label>{{resourceSummaryChart.labels[1]}}:
+												{{resourceSummaryChart.data[1] | currency}}</label></li>
+										<li class="col-md-12"><i class="fa fa-circle text-success"></i> <label>{{resourceSummaryChart.labels[2]}}:
+												{{resourceSummaryChart.data[2] | currency}}</label></li>
+										<li class="col-md-12"><i class="fa fa-circle text-primary"></i> <label>{{resourceSummaryChart.labels[3]}}:
+												{{resourceSummaryChart.data[3] | currency}}</label></li>
+										<li class="col-md-12"><i class="fa fa-circle text-muted"></i> <label>{{resourceSummaryChart.labels[4]}}:
+												{{resourceSummaryChart.data[4] | currency}}</label></li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div class="widget widget-stat bg-inverse text-white">
+										<div class="widget-stat-icon">
+											<i class="fa fa-dollar"></i>
+										</div>
+										<div class="widget-stat-info">
+											<div class="widget-stat-title">Genuine Markup</div>
+											<div class="widget-stat-number">{{genuineMarkup |
+												currency}}</div>
+											<div class="widget-stat-text">(Cumulative to date)</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<!-- /.box-header -->
-					<div class="box-body" ng-style="{height: 450 + 'px'}">
-						<div class="table-responsive">
-							<table class="table no-margin">
-								<thead>
-									<tr>
-										<th>Date</th>
-										<th>Item</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>November 30, 2015</td>
-										<td>SC1001 Payment No.2 submitted</td>
-										<td><span class="label label-success">Submitted</span></td>
-									</tr>
-									<tr>
-										<td>November 28, 2015</td>
-										<td>SC1002 updated</td>
-										<td><span class="label label-warning">TA Ready</span></td>
-									</tr>
-									<tr>
-										<td>November 20, 2015</td>
-										<td>SC1001 Payment No.2 updated</td>
-										<td><span class="label label-danger">Updated</span></td>
-									</tr>
-									<tr>
-										<td>November 10, 2015</td>
-										<td>SC1001 Payment No.2 created</td>
-										<td><span class="label label-info">Pending</span></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+					
 				</div>
+				
+				
+
 			</div>
 		</div>
 	</div>
 </div>
 <!-- end #content -->
-
-
-<!-- <div ng-show="loading" class="loading"><img src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif">LOADING...</div> -->
-<!-- <div class="modal show" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
-        <div class="modal-header">
-            <h1>Processing...</h1>
-        </div>
-        <div class="modal-body">
-            <div class="progress progress-striped active">
-                <div class="bar" style="width: 100%;"></div>
-            </div>
-        </div>
-    </div> -->
-
-<!-- <div class="box box-danger box-solid" ng-show = "loading">
-                <div class="box-header">
-                  <h3 class="box-title">Loading state</h3>
-                </div>
-                <div class="box-body">
-                  The body of the box
-                </div>/.box-body
-                <div class="overlay">
-                  <i class="fa fa-refresh fa-spin"></i>
-                </div>
-              </div> -->
-
-
-<!-- <div class="spinner" ng-show="loading"></div> -->

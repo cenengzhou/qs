@@ -3,7 +3,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 	$scope.paymentAmount = 100256;
 
 	//Config Line chart color
-	Chart.defaults.global.colours = [colorCode.blue, colorCode.red];
+	Chart.defaults.global.colours = [colorCode.red, colorCode.blue];
 
 	loadData();
 
@@ -34,12 +34,12 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 							"data": [$scope.subcontract.remeasuredSubcontractSum, $scope.subcontract.approvedVOAmount],
 							"labels": ["Remeasured Subcontract Sum", "Addendum"],
 							"colours": [{
-								"strokeColor": colorCode.blue,
-								"pointHighlightStroke": colorCode.lightBlue
+								"strokeColor": colorCode.black,
+								"pointHighlightStroke": colorCode.grey
 							}, 
 							{
-								"strokeColor": colorCode.green,
-								"pointHighlightStroke": colorCode.lightGreen
+								"strokeColor": colorCode.info,
+								"pointHighlightStroke": colorCode.lightInfo
 							}
 							],
 							'options' : {
@@ -52,7 +52,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 							}
 					};
 
-					$scope.subcontractPieChart = subcontractJson;
+					$scope.subcontractChart = subcontractJson;
 				});
 	}
 

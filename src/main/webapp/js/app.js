@@ -1282,7 +1282,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 //Config color code for charts
 mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, colorCode) {
 	Chart.defaults.global.tooltipTemplate = function (label) {
-	    return label.datasetLabel + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	    return label.label + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}; 
 	Chart.defaults.global.multiTooltipTemplate = function (label) {
 	    return label.datasetLabel + ': $' + Number(label.value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");

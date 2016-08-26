@@ -19,13 +19,16 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.hibernate.type.DoubleType;
+import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.BpiItemResource;
@@ -1683,16 +1686,26 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResourceSummary> getResourceSummariesGroupByObjectCode(JobInfo job) {
-		String hql = "select objectcode, sum(amt_budget) as amt_budget from (select SUBSTR(objectcode, 1, 2) as objectcode, amt_budget "
-					+ "from ResourceSummary where job = :job and systemStatus = 'ACTIVE') "
-					+ "GROUP BY objectcode"; 
+	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(String jobNo) {
+		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+						
+	
+		List<ResourceSummayDashboardDTO> rsList = new ArrayList<ResourceSummayDashboardDTO>();
+		String hql =
+				"select objectCode, Sum(Amt_Budget) As amountBudget from "
+				+"(select Substr (Objectcode, 1, 2) As objectCode, Amt_Budget" 
+				+ " from "+schema+".RESOURCE_SUMMARY where job_info_id = (select id from "+schema+".JOB_INFO where jobNo = '"+jobNo+"') and system_Status = 'ACTIVE')"
+				+" Group By Objectcode order by Objectcode";
 		
-		SQLQuery query = getSession().createSQLQuery(hql);
-		query.addEntity(ResourceSummary.class);
-		query.setParameter("job", job);
+		//Object Code: 11,12,13,14,15,19
 		
-		return query.list();
+		SQLQuery query = getSession().createSQLQuery(hql)
+									.addScalar("objectCode", StringType.INSTANCE)
+									.addScalar("amountBudget", DoubleType.INSTANCE);
+		
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummayDashboardDTO.class)).list();
+		
+		return rsList;
 	}
 	/**************************************************** FUNCTIONS FOR PCMS - END **************************************************************/	
 }

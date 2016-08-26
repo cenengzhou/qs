@@ -30,6 +30,7 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
+import com.gammon.qs.service.RepackagingService;
 import com.gammon.qs.service.admin.AdminService;
 
 @Service
@@ -59,6 +60,8 @@ public class ADLService {
 	private BusinessUnitDao businessUnitDao;
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private RepackagingService repackagingService;
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
 	 */
@@ -134,6 +137,7 @@ public class ADLService {
 			return accountBalanceSCDao.find(year, month, ledgerType, jobNo, subcontractNo, objectCode, subsidiaryCode);
 	}
 	
+
 	/**
 	 * Monthly Cash Flow for Job Dash Board
 	 *
@@ -145,16 +149,46 @@ public class ADLService {
 	 * @since Jul 12, 2016 2:16:59 PM
 	 */
 	public JobDashboardDTO getJobDashboardData(	BigDecimal year,
-	                                           	BigDecimal month,
-												String noJob) {
-
-		List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-		List<BigDecimal> turnoverList = accountBalanceDao.findFiguresOnly(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-		List<BigDecimal> actualValueList = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
+									           	BigDecimal month,
+												String noJob, 
+												String type) {
 		
-		return new JobDashboardDTO(contractReceivableList, turnoverList, null, null, actualValueList);
-	}
+		JobDashboardDTO jobDashboard = new JobDashboardDTO();
+		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
+		logger.info("getJobDashboardData: "+ type);
+		try {
+			if("ContractReceivable".equals(type)){
+				dataList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			}else if("Turnover".equals(type)){
+				dataList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			}else if("TotalBudget".equals(type)){
+				dataList = repackagingService.getRepackagingMonthlySummary(noJob, year.toString());
+			}else {
+				List<BigDecimal> actualValueList = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
+			}
 
+			if (dataList != null && dataList.size()>0){
+				while(dataList.size()<12){
+					dataList.add(dataList.get(dataList.size()-1));
+				}
+			}else{
+				while(dataList.size()<12){
+					dataList.add(new BigDecimal(0));
+
+				}
+			}
+			
+			jobDashboard.setDataList(dataList);
+
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return jobDashboard;
+	}
+	
 	/**
 	 * Account Ledger general searching
 	 *
