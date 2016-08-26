@@ -2,7 +2,9 @@ mainApp.service('jobcostService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
     	getPORecordList:		getPORecordList,
-    	getARRecordList:		getARRecordList
+    	getARRecordList:		getARRecordList,
+    	obtainAPRecordList:	obtainAPRecordList,
+    	getAPPaymentHistories:	getAPPaymentHistories
     });
  
     function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
@@ -29,6 +31,37 @@ mainApp.service('jobcostService', ['$http', '$q',  function($http, $q){
     			customerNumber: customerNumber,
     			documentNumber: documentNumber,
     			documentType: documentType
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/jobcost/obtainAPRecordList',
+    		params:{
+    			jobNumber: jobNumber,
+    			invoiceNumber: invoiceNumber,
+    			supplierNumber: supplierNumber,
+    			documentNumber: documentNumber,
+    			documentType: documentType,
+    			subledger: subledger,
+    			subledgerType: subledgerType
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+
+    function getAPPaymentHistories(company, documentType, supplierNumber, documentNumber){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/jobcost/getAPPaymentHistories',
+    		params:{
+    			company: company,
+    			documentType: documentType,
+    			supplierNumber: supplierNumber,
+    			documentNumber: documentNumber
     		}
     	});
     	return( request.then( handleSuccess, handleError ) );

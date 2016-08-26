@@ -106,11 +106,6 @@ public class JobCostService implements Serializable {
 		return this.jobCostDao.getAccountMasterList(jobNumber, objectCode, subsidiaryCode);
 	}
 	
-	private List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws Exception{
-		return jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);	
-	}
-
-
 	public String createAccountMasterByGroup(Boolean scResource,
 			Boolean bqResourceSummary, Boolean scDetails, Boolean forecast, String jobNumber) {
 		List<AccountCodeWrapper> accountList = new LinkedList<AccountCodeWrapper>();
@@ -442,36 +437,6 @@ public class JobCostService implements Serializable {
 	}   
 	
 	/**
-	 * @author Brian Tse
-	 * Account Payable's Payment History
-	 */
-	public List<PaymentHistoriesWrapper> getAPPaymentHistories(String company, String documentType, Integer supplierNumber, Integer documentNumber) {
-		// Web Service
-		List<GetPaymentHistoriesResponseObj> responseList = jobCostDao.getAPPaymentHistories(company, documentType, supplierNumber, documentNumber);
-
-		List<PaymentHistoriesWrapper> wrapperList = new ArrayList<PaymentHistoriesWrapper>();
-		if (responseList != null) {
-			for (int i = 0; i < responseList.size(); i++) {
-				PaymentHistoriesWrapper wrapper = new PaymentHistoriesWrapper();
-				wrapper.setForeignPaymentAmount(responseList.get(i).getForeignPaymentAmount());
-				wrapper.setMatchingDocType(responseList.get(i).getMatchingDocType());
-				wrapper.setPaymentCurrency(responseList.get(i).getPaymentCurrency());
-				wrapper.setPaymentDate(responseList.get(i).getPaymentDate());
-				wrapper.setPaymentID(responseList.get(i).getPaymentID());
-				wrapper.setPaymentLineNumber(responseList.get(i).getPaymentLineNumber());
-				wrapper.setPaymntAmount(responseList.get(i).getPaymntAmount());
-				wrapper.setSupplierNumber(responseList.get(i).getSupplierNumber());
-				wrapperList.add(wrapper);
-			}
-		}
-		
-		logger.info("RETURNED AR PAYMENT HISTORY RECORDS TOTAL SIZE: "+wrapperList.size());
-		return wrapperList;
-	}
-
-	
-	
-	/**
 	 * add by paulyiu 20150730
 	 */
 
@@ -597,6 +562,42 @@ public class JobCostService implements Serializable {
 		return resultList;
 	}
 	
+	public List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws Exception{
+		List<APRecord> resultList = null;
+		if(adminService.canAccessJob(jobNumber)) {
+			resultList = jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
+		}
+		return resultList;
+	}
+
+	/**
+	 * @author Brian Tse
+	 * Account Payable's Payment History
+	 */
+	public List<PaymentHistoriesWrapper> getAPPaymentHistories(String company, String documentType, Integer supplierNumber, Integer documentNumber) {
+		// Web Service
+		List<GetPaymentHistoriesResponseObj> responseList = jobCostDao.getAPPaymentHistories(company, documentType, supplierNumber, documentNumber);
+
+		List<PaymentHistoriesWrapper> wrapperList = new ArrayList<PaymentHistoriesWrapper>();
+		if (responseList != null) {
+			for (int i = 0; i < responseList.size(); i++) {
+				PaymentHistoriesWrapper wrapper = new PaymentHistoriesWrapper();
+				wrapper.setForeignPaymentAmount(responseList.get(i).getForeignPaymentAmount());
+				wrapper.setMatchingDocType(responseList.get(i).getMatchingDocType());
+				wrapper.setPaymentCurrency(responseList.get(i).getPaymentCurrency());
+				wrapper.setPaymentDate(responseList.get(i).getPaymentDate());
+				wrapper.setPaymentID(responseList.get(i).getPaymentID());
+				wrapper.setPaymentLineNumber(responseList.get(i).getPaymentLineNumber());
+				wrapper.setPaymntAmount(responseList.get(i).getPaymntAmount());
+				wrapper.setSupplierNumber(responseList.get(i).getSupplierNumber());
+				wrapperList.add(wrapper);
+			}
+		}
+		
+		logger.info("RETURNED AR PAYMENT HISTORY RECORDS TOTAL SIZE: "+wrapperList.size());
+		return wrapperList;
+	}
+
 	/*************************************** FUNCTIONS FOR PCMS - END *******************************************************/
 
 }

@@ -939,6 +939,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/enquiry-performanceappraisal.js',
 							'js/controller/enquiry/modal/enquiry-jobcostdetails.js',
 							'js/controller/enquiry/modal/enquiry-customerledgerdetails.js',
+							'js/controller/enquiry/modal/enquiry-supplierledgerdetails.js',
 
                	         	'js/service/main-cert-service.js',
                	         	'js/service/payment-service.js',

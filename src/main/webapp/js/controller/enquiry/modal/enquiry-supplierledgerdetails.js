@@ -1,5 +1,6 @@
-mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'mainCertService', 'uiGridConstants', 'GlobalHelper',
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, mainCertService, uiGridConstants, GlobalHelper){
+mainApp.controller('EnquirySupplierLedgerDetailsCtrl', 
+			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'jobcostService', 'masterListService', 'uiGridConstants', 'GlobalHelper',
+    function($scope, modalStatus, modalParam, $uibModalInstance, jobcostService, masterListService, uiGridConstants, GlobalHelper){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -8,17 +9,26 @@ mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus',
 	
 	$scope.entity = $scope.parentScope.searchEntity;
 	
-	$scope.loadCustomerLedgerList = function(){
-		
-		mainCertService.getMainCertReceiveDateAndAmount($scope.entity.company, $scope.entity.documentNumber)
+	$scope.loadSupplierLedgerList = function(){
+		jobcostService.getAPPaymentHistories(
+				$scope.entity.company, 
+				$scope.entity.documentType, 
+				$scope.entity.supplierNumber, 
+				$scope.entity.documentNumber)
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;
 			};
 		});
+		masterListService.getSubcontractorList($scope.entity.supplierNumber)
+		.then(function(data){
+			if(angular.isArray(data)){
+				$scope.supplierName = data[0].vendorName;
+			}
+		})
 	}
 	
-	$scope.loadCustomerLedgerList();
+	$scope.loadSupplierLedgerList();
 	
 	var postedOptions = [
 	                        {label: 'Posted', value:'Posted'},
@@ -27,9 +37,9 @@ mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus',
 
 	$scope.columnDefs = [			             
 			             { field: 'paymentDate', displayName: "Payment Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'paymentAmount', displayName: "Payment Amount", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			             { field: 'paymntAmount', displayName: "Payment Amount", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            		 return GlobalHelper.numberClass(row.entity.paymentAmount);
+			            		 return GlobalHelper.numberClass(row.entity.paymntAmount);
 			            	 }, 
 			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',

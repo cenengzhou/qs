@@ -20,16 +20,19 @@
 								<div class="col-md-2">
 									<label for="searchJobNo">Job No.:</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
+									<p ng-show="searchPerformanceAppraisalForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
 								</div>
 								
 								<div class="col-md-2">
 									<label for="searchVendorNo">Vendor No:</label> 
-									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo" ng-model="searchVendorNo">
+									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo" ng-model="searchVendorNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchPerformanceAppraisalForm.searchVendorNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 
 								<div class="col-md-2">
 									<label for="searchSubcontractNo">Subcontract No:</label> 
-									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo">
+									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchPerformanceAppraisalForm.searchSubcontractNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 								
 								<div class="col-md-2">

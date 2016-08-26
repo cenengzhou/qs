@@ -3,7 +3,7 @@
 		<div class="col-md-11">
 		<table class="col-md-12">
 		<tr>
-		<td><span class="fa fa-history"></span> <label>Account Receivable Details</label></td>
+		<td><span class="fa fa-dollar"></span> <label>Account Payable Details</label></td>
 		</tr>
 		</table>
 		</div>
@@ -19,16 +19,13 @@
 	<div class="row">
 		<table class="table table-striped">
 			<tr>
-				<th colspan=2>Customer No:</th><th colspan=2>{{entity.customerNumber}}</th>
+				<th>Supplier No:</th><th>{{entity.supplierNumber}}</th><th colspan=2>{{supplierName}}</th>
 			</tr>
 			<tr>
-				<td>Reference:</td><td>{{entity.reference}}</td><td>Doc No/ Type/ Co</td><td>{{entity.documentNumber}}/{{entity.documentType}}/{{entity.company}}</td>
+				<td>Invoice No:</td><td>{{entity.invoiceNumber}}</td><td>Doc No/ Type/ Co</td><td>{{entity.documentNumber}}/{{entity.documentType}}/{{entity.company}}</td>
 			</tr>
 			<tr>
 				<td>Invoice Date:</td><td>{{entity.invoiceDate | date: 'dd/MM/yyyy'}}</td><td>G/L Date:</td><td>{{entity.glDate | date: 'dd/MM/yyyy'}}</td>
-			</tr>
-			<tr>
-				<td>Due Date:</td><td>{{entity.dueDate | date: 'dd/MM/yyyy'}}</td><td>Date Closed:</td><td>{{entity.dateClosed | date: 'dd/MM/yyyy'}}</td>
 			</tr>
 			<tr>
 				<td>Currency:</td><td>{{entity.currency}}</td><td>Pay Status:</td><td>{{entity.payStatus}}</td>
@@ -39,12 +36,6 @@
 			<tr>
 				<td>Foreign Amount:</td><td ng-class="{'red':entity.foreignAmount<0}">{{entity.foreignAmount | number:2}}</td><td>Foreign Open Amount:</td><td ng-class="{'red':entity.foreignOpenAmount<0}">{{entity.foreignOpenAmount | number:2}}</td>
 			</tr>
-			<tr>
-				<td>Description:</td><td colspan=3>{{entity.customerDescription}}</td>
-			</tr>
-			<tr>		
-				<td>Remark:</td><td colspan=3>{{entity.remark}}</td>
-			</tr>	
 		</table>
 	</div>
 	<div class="row">

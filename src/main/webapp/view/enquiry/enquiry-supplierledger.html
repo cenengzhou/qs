@@ -1,4 +1,4 @@
-<div class="content-wrapper" block-ui="blockEnquirySupplierLedger">
+<div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
@@ -14,12 +14,55 @@
 			<div class="col-md-12">
 				<div class="box box-info">
 					<div class="box-header with-border">
-						<h3 class="box-title">Supplier Ledger</h3>
-						
+						<h3 class="box-title">Supplier Ledger</h3><br><br>
+						<form role="form" name="searchSupplierLedgerForm" id="searchSupplierLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
+							<div class="form-group col-md-6" style="padding-right:0px">
+								<div class="col-md-4">
+									<label for="searchJobNo">Job No.:</label> 
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
+									<p ng-show="searchSupplierLedgerForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+								</div>
+								
+								<div class="col-md-4">
+									<label for="searchSubcontractNo">Subcontract No:</label> 
+									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchSupplierLedgerForm.searchSubcontractNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+
+								<div class="col-md-4">
+									<label for="searchSupplierNo">Supplier No:</label> 
+									<input type="text" class="form-control" id="searchSupplierNo" name="searchSupplierNo" ng-model="searchSupplierNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchSupplierLedgerForm.searchSupplierNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+							</div>
+							<div class="form-group col-md-6" style="padding-left:0px">
+								<div class="col-md-3">
+									<label for="searchInvoiceNo">Invoice No:</label> 
+									<input type="text" class="form-control" id="searchInvoiceNo" name="searchInvoiceNo" ng-model="searchInvoiceNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchSupplierLedgerForm.searchInvoiceNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+								
+								<div class="col-md-3">
+									<label for="searchDocumentNo">Document No:</label> 
+									<input type="text" class="form-control" id="searchDocumentNo" name="searchDocumentNo" ng-model="searchDocumentNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchSupplierLedgerForm.searchDocumentNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+								
+								<div class="col-md-3">
+									<label for="searchDocumentType">Document Type:</label> 
+									<input type="text" class="form-control" id="searchDocumentType" name="searchDocumentType" ng-model="searchDocumentType">
+								</div>
+								
+								<div class="col-md-3">
+										<label>&nbsp;</label>
+										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									</div>
+								</div>
+							</form>
 						<div class="col-md-12">
-								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-pinning ui-grid-resize-columns ui-grid-exporter
 									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
-									resize ng-style="resizeWithOffset(215)"></div>
+									style="height:450px"></div>
 					</div>
 				</div>
 			</div>

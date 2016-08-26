@@ -110,12 +110,12 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalS
 					        	 'href': '#/enquiry/accountLedger'
 					         },
 					         {
-					        	 'title': 'Customer Ledger (Under Construction)',
+					        	 'title': 'Customer Ledger',
 					        	 'description': 'The report contain customer ledger related information for enquiry',
 					        	 'href': '#/enquiry/customerLedger'
 					         },
 					         {
-					        	 'title': 'Supplier Ledger (Under Construction)',
+					        	 'title': 'Supplier Ledger',
 					        	 'description': 'The report contain supplier ledger related information for enquiry',
 					        	 'href': '#/enquiry/supplierLedger'
 					         },
