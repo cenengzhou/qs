@@ -25,8 +25,16 @@ public class AccountBalance implements Serializable {
 	
 	public static final String CODE_OBJECT_TURNOVER = "221110";
 	public static final String CODE_OBJECT_CONTRACT_RECEIVABLE = "221120";
+	public static final String CODE_OBJECT_COSTCODE_STARTER = "1";
 	public static final String CODE_SUBSIDIARY_EMPTY = "        ";
 	public static final String TYPE_SUBLEDGER_X = "X";
+	
+	public static enum TYPE_LEDGER {
+									AA, // Actual Cost (Subcontract in SCRate + Labor, Plant, Material and Others CostRate)
+									JI, // Turnover / Internal Valuation / Work Done (Subcontract CostRate + Labor, Plant, Material and Others in CostRate)
+									OB, // Original Budget posted right after Transit is completed (Budget + Margin account code 199999.9XXXXXXX)
+									OC // Original Budget posted right after Transit is completed (Budget only, not including Margin account code 199999.9XXXXXXX)
+	}
 	
 	private BigDecimal accountPeriod;
 	private String accountTypeLedger;
