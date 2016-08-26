@@ -115,7 +115,7 @@ public class AccountBalanceDao extends BaseAdlHibernateDao<AccountBalance> {
 	 * @since	Aug 25, 2016 5:39:03 PM
 	 */
 	@SuppressWarnings("unchecked")
-	public List<BigDecimal> calculateSumOfActualValue(	BigDecimal year,
+	public List<AccountBalance> calculateSumOfActualValue(	BigDecimal year,
 														BigDecimal month,
 														String ledgerType,
 														String jobNo,
@@ -142,20 +142,18 @@ public class AccountBalanceDao extends BaseAdlHibernateDao<AccountBalance> {
 
 		// Order By
 		criteria.addOrder(Order.asc("fiscalYear"))
-				.addOrder(Order.asc("accountPeriod"))
-				.addOrder(Order.asc("accountObject"))
-				.addOrder(Order.asc("accountSubsidiary"));
+				.addOrder(Order.asc("accountPeriod"));
 		
 		// group By
-		criteria
-				.setProjection(Projections.projectionList()
-				.add(Projections.groupProperty("fiscalYear"), "year")
-				.add(Projections.groupProperty("accountPeriod"), "month")
-				.add(Projections.sum("amountAccum"), "amountAccum"))
-				.setProjection(Projections.projectionList()
-						.add(Projections.property("amountAccum")));
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.sum("amountAccum"), "amountAccum")
+				.add(Projections.groupProperty("fiscalYear"), "fiscalYear")
+				.add(Projections.groupProperty("accountPeriod"), "accountPeriod"));
 				
-		return new ArrayList<BigDecimal>(criteria.list());
+				
+		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountBalance.class));
+		
+		return criteria.list();
 	}
 
 }

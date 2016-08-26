@@ -699,10 +699,6 @@ public class MainCertService {
 		
 	}
 
-	public MainCert getCertificateDashboardData(String jobNo) {
-		
-		return null;
-	}
 	
 	/**
 	 * @author tikywong
@@ -733,6 +729,11 @@ public class MainCertService {
 		logger.info("RETURNED RECORDS TOTAL SIZE: " + wrapperList.size());
 		return wrapperList;
 	}
+
 	
+	public MainCert getCertificateDashboardData(String jobNo) {
+		
+		return null;
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

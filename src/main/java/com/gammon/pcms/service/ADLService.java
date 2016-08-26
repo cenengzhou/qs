@@ -158,13 +158,26 @@ public class ADLService {
 		logger.info("getJobDashboardData: "+ type);
 		try {
 			if("ContractReceivable".equals(type)){
-				dataList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				for(int i=0 ; i < contractReceivableList.size(); i++){
+					if(i<=12)
+						dataList.add(contractReceivableList.get(i).negate());
+				}
 			}else if("Turnover".equals(type)){
-				dataList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				List<BigDecimal> tunrnoverList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				for(int i=0 ; i < tunrnoverList.size(); i++){
+					if(i<=12)
+						dataList.add(tunrnoverList.get(i));
+				}
 			}else if("TotalBudget".equals(type)){
 				dataList = repackagingService.getRepackagingMonthlySummary(noJob, year.toString());
-			}else {
-				List<BigDecimal> actualValueList = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
+			}else if("ActualValue".equals(type)){
+				List<AccountBalance> accountBalance = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
+				
+				for(AccountBalance account : accountBalance){
+					if(account.getAccountPeriod().compareTo(new BigDecimal(12)) <= 0)
+						dataList.add(account.getAmountAccum());
+				}
 			}
 
 			if (dataList != null && dataList.size()>0){
@@ -177,7 +190,6 @@ public class ADLService {
 
 				}
 			}
-			
 			jobDashboard.setDataList(dataList);
 
 		} catch (DataAccessException e) {

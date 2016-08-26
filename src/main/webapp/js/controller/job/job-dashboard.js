@@ -5,7 +5,7 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 	//Initialize panel setting
 	App.initComponent();
 	
-	Chart.defaults.global.colours = [colorCode.black, colorCode.green, colorCode.purple];
+	Chart.defaults.global.colours = [colorCode.black, colorCode.green, colorCode.purple,  colorCode.blue];
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -26,6 +26,50 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     	getResourceSummariesGroupByObjectCode();
     }
 
+   
+
+    function getJobData(year) {
+    	var contractReceivableList = adlService.getJobDashboardData($scope.jobNo, 'ContractReceivable', year);
+    	var turnoverList = adlService.getJobDashboardData($scope.jobNo,  'Turnover', year);
+    	var totalBudgetList = adlService.getJobDashboardData($scope.jobNo, 'TotalBudget', year);
+    	var actualValueList = adlService.getJobDashboardData($scope.jobNo, 'ActualValue', year);
+    	
+
+    	$q.all([turnoverList, contractReceivableList, totalBudgetList, actualValueList])
+    		.then(function (data){
+    			setDashboardData(data[0].dataList, data[1].dataList, data[2].dataList, data[3].dataList);
+    	});
+    }
+ 
+    
+    function setDashboardData(contractReceivableList, turnoverList, totalBudgetList, actualValueList) {
+    	$scope.contractReceivable = contractReceivableList[11];
+    	$scope.turnover = turnoverList[11];
+    	//$scope.originalBudget = originalBudgetData;
+    	$scope.totalBudget = totalBudgetList[11];
+    	$scope.actualValue = actualValueList[11];
+    	
+    	$scope.chartParameters = {
+    			labels : ['Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    			series : ['Total Budget', 'Internal Value', 'Contract Receivable', 'Actual Value'],//  'Tender Budget'
+    			//data : data.data,
+    			data: [totalBudgetList, turnoverList, contractReceivableList, actualValueList],
+    			options : {
+    				showScale : true,
+    				showTooltips : true,
+    				responsive : true,
+    				maintainAspectRatio : true,
+    				pointDot : true,
+    				bezierCurve : true,
+    				datasetFill : false,
+    				//scaleStartValue: 725000000,
+    				animation : true,
+    				scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
+    					//scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
+    			}
+    	};
+    }
+    
     function getResourceSummariesGroupByObjectCode(){
     	resourceSummaryService.getResourceSummariesGroupByObjectCode($scope.jobNo)
     	.then(
@@ -80,46 +124,6 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 
     	});
 
-    }
-
-    function getJobData(year) {
-    	var contractReceivableList = adlService.getJobDashboardData($scope.jobNo, 'ContractReceivable', year);
-    	var turnoverList = adlService.getJobDashboardData($scope.jobNo,  'Turnover', year);
-    	var totalBudgetList = adlService.getJobDashboardData($scope.jobNo, 'TotalBudget', year);
-    	
-
-    	$q.all([turnoverList, contractReceivableList, totalBudgetList])
-    		.then(function (data){
-    			setDashboardData(data[0].dataList, data[1].dataList, data[2].dataList);
-    	});
-    }
- 
-    
-    function setDashboardData(contractReceivableList, turnoverList, totalBudgetList) {
-    	$scope.contractReceivable = contractReceivableList[11];
-    	$scope.turnover = turnoverList[11];
-    	//$scope.originalBudget = originalBudgetData;
-    	$scope.totalBudget = totalBudgetList[11];
-
-    	$scope.chartParameters = {
-    			labels : ['Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    			series : ['Total Budget', 'Internal Value', 'Contract Receivable'],//  'Actual Value' ,'Tender Budget'
-    			//data : data.data,
-    			data: [totalBudgetList, turnoverList, contractReceivableList],
-    			options : {
-    				showScale : true,
-    				showTooltips : true,
-    				responsive : true,
-    				maintainAspectRatio : true,
-    				pointDot : true,
-    				bezierCurve : true,
-    				datasetFill : false,
-    				//scaleStartValue: 725000000,
-    				animation : true,
-    				scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
-    					//scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
-    			}
-    	};
     }
     
 }]);
