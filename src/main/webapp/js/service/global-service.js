@@ -224,7 +224,8 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
 	return{
 		checkNull: checkNull,
-		containRole: containRole
+		containRole: containRole,
+		numberClass: numberClass
 	}
 	
 	function checkNull(objectArray){
@@ -248,7 +249,14 @@ mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
 		})
 		return result;
 	}
-
+	
+	function numberClass(n){
+		var c = 'text-right';
+		 if(n < 0){
+			 c +=' red';
+		 }
+		 return c;
+	}
 })
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

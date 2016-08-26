@@ -1,0 +1,55 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12">
+		<tr>
+		<td><span class="fa fa-history"></span> <label>Account Receivable Details</label></td>
+		</tr>
+		</table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<table class="table table-striped">
+			<tr>
+				<th colspan=2>Customer Number:</th><th colspan=2>{{entity.customerNumber}}</th>
+			</tr>
+			<tr>
+				<td>Reference:</td><td>{{entity.reference}}</td><td>Doc No/ Type/ Co</td><td>{{entity.documentNumber}}/{{entity.documentType}}/{{entity.company}}</td>
+			</tr>
+			<tr>
+				<td>Invoice Date:</td><td>{{entity.invoiceDate | date: 'dd/MM/yyyy'}}</td><td>G/L Date:</td><td>{{entity.glDate | date: 'dd/MM/yyyy'}}</td>
+			</tr>
+			<tr>
+				<td>Due Date:</td><td>{{entity.dueDate | date: 'dd/MM/yyyy'}}</td><td>Date Closed:</td><td>{{entity.dateClosed | date: 'dd/MM/yyyy'}}</td>
+			</tr>
+			<tr>
+				<td>Currency:</td><td>{{entity.currency}}</td><td>Pay Status:</td><td>{{entity.payStatus}}</td>
+			</tr>
+			<tr>
+				<td>Gross Amount:</td><td ng-class="{'red':entity.grossAmount<0}">{{entity.grossAmount | number:2}}</td><td>Open Amount:</td><td ng-class="{'red':entity.openAmount<0}">{{entity.openAmount | number:2}}</td>
+			</tr>
+			<tr>
+				<td>Foreign Amount:</td><td ng-class="{'red':entity.foreignAmount<0}">{{entity.foreignAmount | number:2}}</td><td>Foreign Open Amount:</td><td ng-class="{'red':entity.foreignOpenAmount<0}">{{entity.foreignOpenAmount | number:2}}</td>
+			</tr>
+			<tr>
+				<td>Description:</td><td colspan=3>{{entity.customerDescription}}</td>
+			</tr>
+			<tr>		
+				<td>Remark:</td><td colspan=3>{{entity.remark}}</td>
+			</tr>	
+		</table>
+	</div>
+	<div class="row">
+		<div ui-grid="gridOptions" external-scopes="clickHandler" style="height:200px"
+		ui-grid-resize-columns ui-grid-selection
+		ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
+	</div>
+</div>

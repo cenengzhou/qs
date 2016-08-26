@@ -1,10 +1,9 @@
 
-mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
+mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper',
+                                  function($scope , $rootScope, $http, modalService, jobcostService, uiGridConstants, GlobalHelper) {
 	
-	$scope.blockEnquiryCustomerLedger = blockUI.instances.get('blockEnquiryCustomerLedger');
-	$scope.blockEnquiryCustomerLedger.start('Under Construction');
 	
+	$scope.searchJobNo = $scope.jobNo;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -14,43 +13,98 @@ mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http
 			enableFullRowSelection: false,
 			multiSelect: true,
 			showGridFooter : true,
+			showColumnFooter: true,
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			columnDefs: [
-//			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
-//			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
-//			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-//			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'maxInactiveInterval', enableCellEdit: false},
+			             { field: 'jobNumber', displayName: "Job No", width: '80', enableCellEdit: false },
+			             { field: 'reference', displayName: "Reference", width: '100', enableCellEdit: false },
+			             { field: 'customerNumber', displayName: "Customer No", width: '100', enableCellEdit: false },
+			             { field: 'customerDescription', displayName: "Customer Description", width: '250', enableCellEdit: false },
+			             { field: 'documentType', displayName: "Document Type", width: '120', enableCellEdit: false },
+			             { field: 'documentNumber', displayName: "Document No", width: '120', enableCellEdit: false },
+			             { field: 'grossAmount', displayName: "Gross Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.grossAmount);
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(col.getAggregationValue());
+			            	 } 
+			             },
+			             { field: 'openAmount', displayName: "Open Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.openAmount);
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(col.getAggregationValue());
+			            	 } 
+			             },
+			             { field: 'foreignAmount', displayName: "Foreign Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.foreignAmount);
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(col.getAggregationValue());
+			            	 } 
+			             },
+			             { field: 'foreignOpenAmount', displayName: "Foreign Open Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.foreignOpenAmount);
+			            	 }, 
+			            	 aggregationHideLabel: true, aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents">{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(col.getAggregationValue());
+			            	 } 
+			             },
+			             { field: 'payStatus', displayName: "Pay Status", width: '100', enableCellEdit: false },
+			             { field: 'company', displayName: "Company", width: '100', enableCellEdit: false },
+			             { field: 'currency', displayName: "Currency Code",width: '120',  enableCellEdit: false },
+			             { field: 'glDate', width: '100', displayName: "G/L Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'invoiceDate', width: '100', displayName: "Invoice Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'dueDate', width: '100', displayName: "Due Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'dateClosed', width: '100', displayName: "Date Closed", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'batchNumber', displayName: "Batch No", width: '100', enableCellEdit: false },
+			             { field: 'batchType', displayName: "Batch Type", width: '100', enableCellEdit: false },
+			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'remark', displayName: "Remark", width: '250', enableCellEdit: false },
+			             {name: 'Details', width: '180', displayName: 'Receipt History', enableCellEdit: false, enableFiltering: false, pinnedRight:true,
+			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-default" ng-click="grid.appScope.showReceiptHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px;" ></span> Receipt History</button></div>'
+			             }
             			 ]
 	};
+	
+	$scope.showReceiptHistory = function(entity){
+		$scope.searchEntity = entity;
+		modalService.open('md', 'view/enquiry/modal/enquiry-customerledgerdetails.html', 'EnquiryCustomerLedgerDetailsCtrl', 'Success', $scope);
+		};
 	
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
+		jobcostService.getARRecordList($scope.searchJobNo, $scope.searchReference, $scope.searchCustomerNo, $scope.searchDocumentNo, $scope.searchDocumentType)
 		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
-				}
-			});			
+			if(angular.isObject(data)){
+				$scope.gridOptions.data = data;
+			} else {
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Cannot access Job:' + $scope.searchJobNo);
+			}
 		})
-
 	}
 	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-//	$scope.loadGridData();
+	$scope.loadGridData();
 	
 }]);

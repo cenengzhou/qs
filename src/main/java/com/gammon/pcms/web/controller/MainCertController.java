@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
+import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
@@ -91,5 +92,14 @@ public class MainCertController {
 		return mainCertService.updateMainContractCert(mainCert);
 	}
 	
+	@RequestMapping(value = "getMainCertReceiveDateAndAmount", method = RequestMethod.POST)
+	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(@RequestParam String company, @RequestParam String refDocNo){
+		try{
+			return mainCertService.getMainCertReceiveDateAndAmount(company, refDocNo);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

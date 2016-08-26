@@ -7,6 +7,7 @@ mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
         getCertificate: getCertificate,
         updateCertificate: updateCertificate,
         updateMainCertFromF03B14Manually: updateMainCertFromF03B14Manually,
+        getMainCertReceiveDateAndAmount: getMainCertReceiveDateAndAmount
     });
 	
     function getMainCertList() {
@@ -51,6 +52,18 @@ mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
         
+    function getMainCertReceiveDateAndAmount(company, refDocNo) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/getMainCertReceiveDateAndAmount",
+            params: {
+            	company: company,
+            	refDocNo: refDocNo
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
     // ---
     // PRIVATE METHODS.
     // ---

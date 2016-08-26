@@ -343,36 +343,6 @@ public class MainCertService {
 	
 
 	/**
-	 * @author tikywong
-	 * modified on May 14, 2013
-	 * 
-	 * Obtain AR receipt amount and receipt date
-	 */
-	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(String company, String refDocNo) throws DatabaseOperationException {
-		List<MainCertReceiveDateResponse> wrapperList = new ArrayList<MainCertReceiveDateResponse>();
-
-		// Web Service
-		GetMainCertReceiveDateResponseObj responseObj = mainCertWSDao.getMainCertReceiveDateAndAmount(company, refDocNo);
-
-		// No record found
-		if (responseObj == null || responseObj.getGetMainCertReceiveDateResponseObjFields() == null)
-			return wrapperList;
-
-		for (int i = 0; i < responseObj.getGetMainCertReceiveDateResponseObjFields().size(); i++) {
-			MainCertReceiveDateResponse wrapper = new MainCertReceiveDateResponse();
-			wrapper.setCompany(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getCompanyKey());
-			wrapper.setDocumentNumber(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDocVoucherInvoiceE());
-			wrapper.setDocumentType(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDocumentType());
-			wrapper.setPaymentAmount(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getPaymentAmount());
-			wrapper.setPaymentDate(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDateMatchingCheckOr());
-			wrapperList.add(wrapper);
-		}
-
-		logger.info("RETURNED RECORDS TOTAL SIZE: " + wrapperList.size());
-		return wrapperList;
-	}
-
-	/**
 	 * @author koeyyeung
 	 * Created on 22 Sep, 2014
 	 * Obtain Paid Main Cert No List
@@ -734,7 +704,35 @@ public class MainCertService {
 		return null;
 	}
 	
+	/**
+	 * @author tikywong
+	 * modified on May 14, 2013
+	 * 
+	 * Obtain AR receipt amount and receipt date
+	 */
+	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(String company, String refDocNo) throws DatabaseOperationException {
+		List<MainCertReceiveDateResponse> wrapperList = new ArrayList<MainCertReceiveDateResponse>();
 
+		// Web Service
+		GetMainCertReceiveDateResponseObj responseObj = mainCertWSDao.getMainCertReceiveDateAndAmount(company, refDocNo);
+
+		// No record found
+		if (responseObj == null || responseObj.getGetMainCertReceiveDateResponseObjFields() == null)
+			return wrapperList;
+
+		for (int i = 0; i < responseObj.getGetMainCertReceiveDateResponseObjFields().size(); i++) {
+			MainCertReceiveDateResponse wrapper = new MainCertReceiveDateResponse();
+			wrapper.setCompany(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getCompanyKey());
+			wrapper.setDocumentNumber(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDocVoucherInvoiceE());
+			wrapper.setDocumentType(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDocumentType());
+			wrapper.setPaymentAmount(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getPaymentAmount());
+			wrapper.setPaymentDate(responseObj.getGetMainCertReceiveDateResponseObjFields().get(i).getDateMatchingCheckOr());
+			wrapperList.add(wrapper);
+		}
+
+		logger.info("RETURNED RECORDS TOTAL SIZE: " + wrapperList.size());
+		return wrapperList;
+	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

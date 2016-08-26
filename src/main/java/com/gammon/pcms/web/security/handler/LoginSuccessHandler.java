@@ -17,12 +17,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private Logger logger = Logger.getLogger(getClass());
-	private String loginSuccessPath = "/index.html";
-	private boolean forwardUponSuccess = true;
+//	private String loginSuccessPath = "/index.html";
+//	private boolean forwardUponSuccess = true;
 
 	public LoginSuccessHandler(String loginSuccessPath, boolean forwardUponSuccess) {
-		this.loginSuccessPath = loginSuccessPath;
-		this.forwardUponSuccess = forwardUponSuccess;
+//		this.loginSuccessPath = loginSuccessPath;
+//		this.forwardUponSuccess = forwardUponSuccess;
 	}
 
 	@Override
@@ -30,13 +30,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			HttpServletResponse response,
 			Authentication auth) throws IOException, ServletException {
 		logger.debug("login successs, auth = " + auth);
-		if (forwardUponSuccess) {
-			logger.debug("forwarding: " + loginSuccessPath);
-			request.getRequestDispatcher(loginSuccessPath).forward(request, response);
-		} else {
-			logger.debug("redirecting: " + loginSuccessPath);
-			response.sendRedirect(loginSuccessPath);
-		}
+//		if (forwardUponSuccess) {
+//			logger.debug("forwarding: " + loginSuccessPath);
+//			request.getRequestDispatcher(loginSuccessPath).forward(request, response);
+//		} else {
+//			logger.debug("redirecting: " + loginSuccessPath);
+//			response.sendRedirect(loginSuccessPath);
+//		}
+		response.setHeader("login", "Sucess");
 	}
 }
 	

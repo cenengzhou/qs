@@ -381,4 +381,18 @@ mainApp.filter('dropdownFilter', function (GlobalParameter) {
       };
 });
 
+mainApp.directive('imageonload', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('load', function() {
+
+            });
+            element.bind('error', function(){
+                console.dir(element);
+                element[0].src = attrs.rollBackImage;
+            });
+        }
+    };
+});
 

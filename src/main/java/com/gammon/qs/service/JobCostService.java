@@ -310,10 +310,6 @@ public class JobCostService implements Serializable {
 		return apRecordPaginationWrapper;
 	}
 	
-	public List<ARRecord> getARRecordList(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType) throws Exception {
-		return jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-	}
-	
 	public PaginationWrapper<ARRecord> getARRecordListByPage(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType, int pageNum, int recordsPerPage) throws Exception {
 		List<ARRecord> recordList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
 		PaginationWrapper<ARRecord> wrapper = new PaginationWrapper<ARRecord>();
@@ -593,7 +589,13 @@ public class JobCostService implements Serializable {
 		return listOfpoRecord;
 	}
 	
-
+	public List<ARRecord> getARRecordList(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType) throws Exception {
+		List<ARRecord> resultList = null;
+		if(adminService.canAccessJob(jobNumber)){
+			resultList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
+		}
+		return resultList;
+	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END *******************************************************/
 

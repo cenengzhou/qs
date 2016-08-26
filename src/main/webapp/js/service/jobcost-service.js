@@ -1,7 +1,8 @@
 mainApp.service('jobcostService', ['$http', '$q',  function($http, $q){
 	// Return public API.
     return({
-    	getPORecordList:		getPORecordList
+    	getPORecordList:		getPORecordList,
+    	getARRecordList:		getARRecordList
     });
  
     function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
@@ -18,6 +19,20 @@ mainApp.service('jobcostService', ['$http', '$q',  function($http, $q){
     	return( request.then( handleSuccess, handleError ) );
     }
     
+    function getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/jobcost/getARRecordList',
+    		params:{
+    			jobNumber: jobNumber,
+    			reference: reference,
+    			customerNumber: customerNumber,
+    			documentNumber: documentNumber,
+    			documentType: documentType
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
 
     // ---
     // PRIVATE METHODS.

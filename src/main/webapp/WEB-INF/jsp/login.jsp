@@ -58,11 +58,13 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 	            	password: $scope.user.password
 	            }
 	    	}).then(function(response){
-				if(response.data) {
+				if(response.headers('login') === 'Sucess') {
 					$window.location = 'home.html';
+				} else {
+					$scope.loginError = true;
 				}
 		    });
-		}
+		};
 		
 		if(new String(window.location).indexOf("error=true")>=0){
 			$scope.loginError = true;

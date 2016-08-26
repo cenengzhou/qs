@@ -35,7 +35,8 @@ public class LoginFailureHandler implements AuthenticationFailureHandler, Initia
 		request.setAttribute("error", ex.getMessage());
 		logger.debug("forward to : " + loginPath);
 //		request.getRequestDispatcher(loginPath).forward(request, response);
-		response.sendRedirect(request.getContextPath() + "/badCredentials.jsp");
+		response.setHeader("login", "Failed");
+//		response.sendRedirect(request.getContextPath() + "/badCredentials.jsp");
 	}
 
 	@Override
