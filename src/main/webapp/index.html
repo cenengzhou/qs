@@ -20,7 +20,7 @@ var initApp = angular.module('initApp', []);
 initApp.run(['$http', '$window', function($http,$window){
 
 	var userAgent = $window.navigator.userAgent;
-    var browsers = {chrome: /chrome/i, safari: /safari/i, firefox: /firefox/i, ie: /Trident/i};
+    var browsers = {chrome: /chrome/i, safari: /safari/i, firefox: /firefox/i, edge: /Edge/i, ie: /Trident/i};
     
 	var validateSession = function(){
 		console.log("init");
@@ -36,7 +36,7 @@ initApp.run(['$http', '$window', function($http,$window){
 		});
 	};
 	
-	if (browsers['chrome'].test(userAgent)) {
+	if (browsers['chrome'].test(userAgent) && !browsers['edge'].test(userAgent)) {
     	window.location.href = 'home.html';
     } else {
     	validateSession();

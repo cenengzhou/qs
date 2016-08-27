@@ -38,19 +38,22 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 		$scope.user = {};
 		$scope.userIcon = 'resources/images/profile.png';
 		$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/';
-		$http.get('service/security/getCurrentUser')
-		.then(function(response){
-			if(angular.isObject(response.data)){
-				$scope.user = response.data;
-				$scope.loggedUsername = $scope.user.username;
-				$scope.logged = true;
-				$scope.userIcon = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
-				angular.element('#password').focus();
-			} else {
-				angular.element('#username').focus();
-			}
-		});
-		
+		$scope.getCurrentUser = function(){
+			if($window.location.toString().substr('ValidateCurrentSessionFailed') > 0){
+				$http.get('service/security/getCurrentUser')
+				.then(function(response){
+					if(angular.isObject(response.data)){
+						$scope.user = response.data;
+						$scope.loggedUsername = $scope.user.username;
+						$scope.logged = true;
+						$scope.userIcon = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
+						angular.element('#password').focus();
+					} 
+				});
+			} 
+			angular.element('#username').focus();
+		};
+		$scope.getCurrentUser();
 		$scope.unifyCharacters = function(){
 			if($scope.logged){
 				$scope.user.username = $scope.loggedUsername.toLowerCase();
