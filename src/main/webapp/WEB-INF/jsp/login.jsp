@@ -11,11 +11,6 @@
 			window.location = 'login.htm';
 		}
 	</script>
-	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
-	<!-- Bootstrap 3.3.5 -->
-	<link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="css/adminLTE.css">
 	<!-- jQuery 2.1.4 -->
 	<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
 	<!-- angularJS 1.4.9 -->
@@ -84,10 +79,16 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 		window.location = "login.htm";
 	};
 	</script>
+	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
+	<!-- Bootstrap 3.3.5 -->
+	<link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="css/adminLTE.css">
+	
 </head>
 <body ng-controller="loginCtrl">
 	<br>
-	<img alt="Brand" src="resources/images/gammon.png" style="width: 128px">
+	<img alt="Brand" ng-src="resources/images/gammon.png" style="width: 128px"/>
 	<div class="login-box">
 		<div class="login-logo">
 			<font color="white"><b>Project Cost Management System</b></font>

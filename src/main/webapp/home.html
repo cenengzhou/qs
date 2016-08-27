@@ -14,8 +14,7 @@
 		window.location = 'login.htm';
 	}
 </script>
-<link rel="icon" type="image/gif" href="image/gammon.gif" sizes="128x128" />
- 
+
   <!-- Bootstrap 3.3.5 -->
   <link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -59,17 +58,8 @@
   <link href="css/style.css" rel="stylesheet" />
   <link href="css/invoice-print.css" rel="stylesheet" />
 
-  
-</head>
-<body ng-cloak ng-controller="AppCtrl">
-
-	<div id="page-loader" class="page-loader fade in"><span class="spinner">Loading...</span></div>
-	<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar">
-		<div ui-view=""></div>  
-		
-   	</div>
-
 <!-- JavaScript Library -->
+
 <!-- jQuery 2.1.4 -->
 <script src="plugins/jquery/jquery-1.9.1.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -77,14 +67,12 @@
 <!-- Bootstrap Toggle 2.2.1 -->
 <script src="plugins/bootstrap-toggle/2.2.1/bootstrap-toggle.min.js"></script>
 
-
 <!-- angularJS 1.4.9 -->
 <script src="plugins/angularjs/1.4.9/angular.js"></script>
 <script src="plugins/angular-cookies/1.4.9/angular-cookies.min.js"></script>
 <script src="plugins/ui-router/0.2.17/ui-router.min.js"></script>
 <script src="plugins/angular-vertilize/angular-vertilize.js"></script>
 <script src="plugins/angularjs/ocLazyLoad.min.js"></script>
-
 
 <!-- ChartJS 1.0.2 -->
 <script src="plugins/chartjs/1.0.2/chart.min.js"></script>
@@ -124,8 +112,6 @@
  <!-- Dropzone -->
  <script src="plugins/dropzone/dropzone.js"></script> 
 
-
-
 <!-- Source Admin -->
 <script src="plugins/sourceAdmin/apps.js"></script>
 <script src="plugins/slimscroll/jquery.slimscroll.min.js"></script>
@@ -144,8 +130,6 @@
 <!-- Constant  -->
 <script src="js/system/constant.js"></script>
 
-
-
 <!-- Controller  -->
 <script src="js/controller/setting.js"></script>
 <script src="js/controller/nav-menu.js"></script>
@@ -154,6 +138,17 @@
 <!-- Service  -->
 <script src="js/service/global-service.js"></script>
 <script src="js/controller/message-modal.js"></script>
+
+<link rel="icon" type="image/gif" href="image/gammon.gif" sizes="128x128" />
+  
+</head>
+<body ng-cloak ng-controller="AppCtrl">
+
+	<div id="page-loader" class="page-loader fade in"><span class="spinner">Loading...</span></div>
+	<div id="page-container" class="fade page-container page-header-fixed page-sidebar-fixed page-with-two-sidebar">
+		<div ui-view=""></div>  
+		
+   	</div>
   
 </body>
 </html>

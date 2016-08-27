@@ -24,15 +24,24 @@ initApp.run(['$http', '$window', function($http,$window){
     
 	var validateSession = function(){
 		console.log("init");
-		$http.post('service/ValidateCurrentSession')
+		$http.get('home.html')
 		.then(function(response){
-			if(response.data){
-				$window.location.href = 'home.html';
-			} else {
-				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
-			}
-		}, function(data){
-			$window.location.href = 'login.htm?ValidateCurrentSessionError';
+			$http.post('service/ValidateCurrentSession')
+			.then(function(response){
+				if(response.data){
+					console.log('redirect to home.html');
+					$window.location.href = 'home.html';					
+				} else {
+					console.log('redirect to login.htm');
+					$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
+				}
+			}, function(error){
+				console.log('error ValidateCurrentSession:'+error);
+				$window.location.href = 'login.htm?ValidateCurrentSessionError';
+			});
+		}, function(error){
+			console.log('error get home.html:'+error);
+			$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
 		});
 	};
 	
