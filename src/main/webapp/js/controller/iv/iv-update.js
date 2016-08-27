@@ -209,7 +209,16 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				});
 	}
 	
+	$scope.read = function (workbook) {
+        /* DO SOMETHING WITH workbook HERE */
+        console.log(workbook);
+      }
 
+      $scope.error = function (e) {
+        /* DO SOMETHING WHEN ERROR IS THROWN */
+        console.log(e);
+      }
+      
 }])
 .filter('mapExclude', function() {
 	var excludeHash = {
