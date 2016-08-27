@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html ng-app="initApp">
 <head>
 
 <meta charset="BIG5">
@@ -11,10 +11,39 @@
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="expires" content="0" />
 <meta charset="utf-8">
-<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE11" />
+<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 <title>Index</title>
+<script src="plugins/angularjs/1.4.9/angular.js"></script>
 <script>
-window.location = 'home.html';
+var initApp = angular.module('initApp', []);
+
+initApp.run(['$http', '$window', function($http,$window){
+
+	var userAgent = $window.navigator.userAgent;
+    var browsers = {chrome: /chrome/i, safari: /safari/i, firefox: /firefox/i, ie: /Trident/i};
+    
+	var validateSession = function(){
+		console.log("init");
+		$http.post('service/ValidateCurrentSession')
+		.then(function(response){
+			if(response.data){
+				$window.location.href = 'home.html';
+			} else {
+				$window.location.href = 'login.htm?ValidateCurrentSessionFailed';
+			}
+		}, function(data){
+			$window.location.href = 'login.htm?ValidateCurrentSessionError';
+		});
+	};
+	
+	if (browsers['chrome'].test(userAgent)) {
+    	window.location.href = 'home.html';
+    } else {
+    	validateSession();
+    }
+
+}]); 
+
 </script>
  
 </head>

@@ -5,7 +5,7 @@
 <html ng-app = "loginApp">
 <head>
 	<title>PCMS - Gammon Project Cost Management System</title>
-	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=EmulateIE11" />
+	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 	<script>
 		window.onerror = function(errorMsg, url, lineNumber) {
 			window.location = 'login.htm';
