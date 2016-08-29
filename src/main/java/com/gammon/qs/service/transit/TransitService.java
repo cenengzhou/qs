@@ -24,28 +24,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.JasperConfig;
-import com.gammon.qs.dao.BpiItemHBDao;
+import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.application.exception.ValidateBusinessLogicException;
+import com.gammon.qs.dao.AppTransitUomHBDao;
 import com.gammon.qs.dao.BpiBillHBDao;
+import com.gammon.qs.dao.BpiItemHBDao;
 import com.gammon.qs.dao.BpiPageHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TransitBpiHBDao;
 import com.gammon.qs.dao.TransitCodeMatchHBDao;
 import com.gammon.qs.dao.TransitHBDao;
 import com.gammon.qs.dao.TransitResourceHBDao;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.AppTransitUomHBDao;
+import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.domain.BpiBill;
 import com.gammon.qs.domain.BpiItem;
+import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.BpiPage;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitCodeMatch;
-import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitResource;
-import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
@@ -55,7 +55,6 @@ import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.PaginationWrapper;
-import com.gammon.qs.wrapper.TransitHeaderResultWrapper;
 import com.gammon.qs.wrapper.TransitResourceWrapper;
 import com.gammon.qs.wrapper.transitBQMasterReconciliationReport.TransitBQMasterReconciliationReportRecordWrapper;
 import com.gammon.qs.wrapper.transitBQResourceReconciliationReportRecordWrapper.TransitBQResourceReconciliationReportRecordWrapper;
@@ -109,52 +108,6 @@ public class TransitService implements Serializable {
 	
 	private transient Logger logger = Logger.getLogger(TransitService.class.getName());
 	
-	public TransitHeaderResultWrapper createOrUpdateTransitHeader(String jobNumber, String estimateNo, String matchingCode, 
-			boolean newJob) throws Exception{
-		TransitHeaderResultWrapper result = new TransitHeaderResultWrapper();
-		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(header == null){
-			JobInfo job = jobRepository.obtainJob(jobNumber);
-			//If job doesn't exist, create it.
-			if(job == null){
-				job = jobRepository.createNewJob(jobNumber);
-				if(job == null){
-					result.setError("There was an error creating this job. Please ensure that it already exists in the JDE system.");
-					return result;
-				}
-				result.setJob(job);
-			}
-			else if(newJob){
-				result.setError("This job already exists. Please open the job before continuing the transit process.");
-				return result;
-			}
-			//If job already exists make sure there are no BQ records
-			else if(billDao.billsExistUnderJob(job)){
-				result.setError("Transit for the job has already been completed.");
-				return result;
-			}
-			
-			header = new Transit();
-			header.setJobNumber(jobNumber);
-			header.setJobDescription(job.getDescription());
-			header.setCompany(job.getCompany());
-			header.setStatus(Transit.HEADER_CREATED);
-		}
-		else if(newJob){
-			result.setError("This job already exists. Please open the job before continuing the transit process.");
-			return result;
-		}
-		//make sure transit has not been completed
-		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
-			result.setError("Transit for the job has already been completed.");
-			return result;
-		}
-		//Update and save
-		header.setEstimateNo(estimateNo);
-		header.setMatchingCode(matchingCode);
-		transitHeaderDao.saveOrUpdate(header);
-		return result;
-	}
 	
 	public PaginationWrapper<TransitBpi> getTransitBQItemsNewSearch(String jobNumber, String billNo, String subBillNo, 
 			String pageNo, String itemNo, String description) throws Exception{
@@ -1728,7 +1681,58 @@ public class TransitService implements Serializable {
 		else
 			return sbError.toString();
 	}
+
 	
+	public String createOrUpdateTransitHeader(String jobNo, String estimateNo, String matchingCode, boolean newJob) throws Exception{
+		String error = "";
+
+		try {
+			Transit header = transitHeaderDao.getTransitHeader(jobNo);
+			if(header == null){
+				JobInfo job = jobRepository.obtainJob(jobNo);
+				//If job doesn't exist, create it.
+				if(job == null){
+					job = jobRepository.createNewJob(jobNo);
+					if(job == null){
+						error = "There was an error creating this job. Please ensure that it already exists in the JDE system.";
+						return error;
+					}
+				}
+				else if(newJob){
+					error = "This job already exists. Please open the job before continuing the transit process.";
+					return error;
+				}
+				//If job already exists make sure there are no BQ records
+				else if(billDao.billsExistUnderJob(job)){
+					error = "Transit for the job has already been completed.";
+					return error;
+				}
+				
+				header = new Transit();
+				header.setJobNumber(jobNo);
+				header.setJobDescription(job.getDescription());
+				header.setCompany(job.getCompany());
+				header.setStatus(Transit.HEADER_CREATED);
+			}
+			else if(newJob){
+				error ="This job already exists. Please open the job before continuing the transit process.";
+				return error;
+			}
+			//make sure transit has not been completed
+			else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
+				error = "Transit for the job has already been completed.";
+				return error;
+			}
+			//Update and save
+			header.setEstimateNo(estimateNo);
+			header.setMatchingCode(matchingCode);
+			transitHeaderDao.saveOrUpdate(header);
+		} catch (Exception e) {
+			error = "Job header cannot be created.";
+			e.printStackTrace();
+		}
+		return error;
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 
 }

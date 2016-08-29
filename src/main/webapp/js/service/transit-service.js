@@ -1,16 +1,17 @@
 mainApp.service('transitService', ['$http', '$q', 'modalService', function($http, $q, modalService){
 	// Return public API.
     return({
-    	obtainTransitCodeMatcheList:	obtainTransitCodeMatcheList,
-    	obtainTransitUomMatcheList:		obtainTransitUomMatcheList,
-    	transitUpload:					transitUpload,
-    	getTransit:						getTransit,
-    	getTransitBQItems:				getTransitBQItems,
-    	getTransitResources:			getTransitResources,
-    	confirmResourcesAndCreatePackages: confirmResourcesAndCreatePackages,
-    	completeTransit:				completeTransit,
-    	saveTransitResources:			saveTransitResources,
-    	saveTransitResourcesList:		saveTransitResourcesList
+    	obtainTransitCodeMatcheList:		obtainTransitCodeMatcheList,
+    	obtainTransitUomMatcheList:			obtainTransitUomMatcheList,
+    	transitUpload:						transitUpload,
+    	getTransit:							getTransit,
+    	getTransitBQItems:					getTransitBQItems,
+    	getTransitResources:				getTransitResources,
+    	confirmResourcesAndCreatePackages: 	confirmResourcesAndCreatePackages,
+    	completeTransit:					completeTransit,
+    	saveTransitResources:				saveTransitResources,
+    	saveTransitResourcesList:			saveTransitResourcesList,
+    	createOrUpdateTransitHeader: 		createOrUpdateTransitHeader
     });
    
     function obtainTransitCodeMatcheList(){
@@ -121,7 +122,22 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     	return( request.then( handleSuccess, handleError ) );
     }
     
-
+    
+    function createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/transit/createOrUpdateTransitHeader',
+    		params:{
+    			jobNo: jobNo,
+    			estimateNo: estimateNo,
+    			matchingCode: matchingCode,
+    			newJob: newJob
+    		}
+    	});
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
     // ---
     // PRIVATE METHODS.
     // ---

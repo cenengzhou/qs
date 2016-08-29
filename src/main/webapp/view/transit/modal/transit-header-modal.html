@@ -1,0 +1,81 @@
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h3 class="modal-title">Create New Job</h3>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-default pull-right" type="button" ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+
+	<div class="animated fadeIn">
+		<form name="form-validate" id="form-validate"
+			class="form-input-flat ng-valid">
+			<fieldset>
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<h3 class="form-header form-header-lg m-b-10">
+							<span class="icon text-primary"><i class="fa fa-star"></i></span>
+						</h3>
+						<p class="m-b-20">Please input the required fields below.</p>
+						
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Job Number</label> <input type="text"
+										class="form-control " ng-model="transit.jobNumber" required />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Estimate Number</label> <input type="text"
+										placeholder="" class="form-control "
+										ng-model="transit.estimateNo" required />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Matching Code</label> 
+									<select class="form-control"
+										ng-model="matchingCodes.selected"
+										ng-options="key as value for (key, value) in matchingCodes.options" required></select>
+								</div>
+							</div>
+
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Status</label> 
+									<label>{{transit.status}}</label>
+								</div>
+							</div>
+
+						</div>
+
+
+					</div>
+
+
+
+				</div>
+			</fieldset>
+		</form>
+
+	</div>
+
+
+
+
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary btn-block" type="button"
+		ng-click="save()">
+		<span class="fa fa-save"></span> Add
+	</button>
+</div>
+

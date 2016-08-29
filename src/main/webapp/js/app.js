@@ -55,7 +55,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/job/job-select.js',
-                           'js/service/job-service.js'
+                           'js/service/job-service.js',
+                           'js/service/transit-service.js',
+                           'js/controller/transit/transit-header.js'
                     ] 
                 });
             }]

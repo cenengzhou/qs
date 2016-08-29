@@ -1,5 +1,5 @@
-mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies',
-                               function($scope, colorCode, jobService, $animate, $cookies) {
+mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService',
+                               function($scope, colorCode, jobService, $animate, $cookies, modalService) {
 	$scope.loading = true;
 	$scope.selectedDivision = '';
 	$scope.searchquery = '';
@@ -26,6 +26,10 @@ mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$anim
     	$cookies.put('jobNo', jobNo);
     	$cookies.put('jobDescription', jobDescription);
     }
+	
+	$scope.createJob = function (){
+		modalService.open('md', 'view/transit/modal/transit-header-modal.html', 'TransitHeaderModalCtrl');
+	}
 	
 	$scope.removeDefaultAnimation = function (){
         $animate.enabled(false);

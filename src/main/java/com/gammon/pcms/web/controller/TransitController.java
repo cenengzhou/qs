@@ -100,5 +100,20 @@ public class TransitController {
 		return result;
 	}
 
+	
+	@RequestMapping(value = "createOrUpdateTransitHeader", method = RequestMethod.POST)
+	public String createOrUpdateTransitHeader(@RequestParam(required = true) String jobNo, 
+												@RequestParam(required = true) String estimateNo, 
+												@RequestParam(required = true) String matchingCode, 
+												@RequestParam(required = true) boolean newJob){
+		String result = null;
+		try{
+			result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
+		return result;
+	}
+	
 }
