@@ -1,43 +1,21 @@
-	create or replace procedure audit_Housekeep(tableName in varchar2, period in int, rcount out number) AS
-		stmt varchar2(1000);
-		l_date  DATE := SYSDATE - period;
-	Begin
-	  stmt := 'delete from '||tableName||' where REVTYPE != 2 and REV in (select r.id from pcmsdatadev.revision r join '||tableName||' t on r.id = t.rev and unix_ts_to_date(r.timestamp/1000) < to_date('''|| l_date ||'''))' ;
-	  dbms_output.put_line(stmt);
-	  execute IMMEDIATE stmt;
-	  rcount := SQL%ROWCOUNT;
-	  dbms_output.put_line('SQL%ROWCOUNT:'||rcount);
-	End;
-	grant EXECUTE on "PCMSDATADEV"."AUDIT_HOUSEKEEP" to "PCMSUSER_ROLE";
+    -------------------------------------------------------------------------
+	-- Create 10 PCMS Audit Tables and 1 Sequence
+	-------------------------------------------------------------------------
+	create sequence pcmsdataUAT.REVISION_SEQ start with 1 increment by 1 NOCYCLE NOCACHE NOORDER;
 	
-	create or replace FUNCTION unix_ts_to_date( p_unix_ts IN NUMBER ) RETURN DATE AS
-	  l_date DATE;
-	BEGIN
-	  l_date := date '1970-01-01' + p_unix_ts/60/60/24;
-	  RETURN l_date;
-	END;
-	grant EXECUTE on "PCMSDATADEV"."UNIX_TS_TO_DATE" to "PCMSUSER_ROLE" ;
-	
-    create sequence pcmsdatadev.REVISION_SEQ start with 1 increment by 1;
-	GRANT SELECT ON "PCMSDATADEV"."REVISION_SEQ" TO "PCMSUSER_ROLE";
-	
-	create table pcmsdatadev.REVISION (
+	create table pcmsdataUAT.REVISION (
         ID number(10,0) CONSTRAINT REVISION_ID_NN not null,
         timestamp number(19,0) CONSTRAINT REVISION_TIMESTAMP_NN not null,
         username varchar2(255 char),
         CONSTRAINT REVISION_PK primary key (ID)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVISION" TO "PCMSUSER_ROLE";
 
-	create table pcmsdatadev.REVCHANGES (
+	create table pcmsdataUAT.REVCHANGES (
         REV number(10,0) CONSTRAINT REVCHANGES_REV_NN not null,
         ENTITYNAME varchar2(255 char)
     )
-    TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."REVCHANGES" TO "PCMSUSER_ROLE";
 
-	create table pcmsdatadev.ADDENDUM_AUDIT (
+	create table pcmsdataUAT.ADDENDUM_AUDIT (
 		ID number(19,2) CONSTRAINT ADDENDUM_AUDIT_ID_NN not null,
 		REV number(10,0) CONSTRAINT ADDENDUM_AUDIT_REV_NN not null,
 		REVTYPE number(3,0),
@@ -68,10 +46,8 @@
 		NO_ADDENDUM_DETAIL_NEXT number(19,0),
 		CONSTRAINT ADDENDUM_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."ADDENDUM_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.ADDENDUM_DETAIL_AUDIT (
+    create table pcmsdataUAT.ADDENDUM_DETAIL_AUDIT (
         ID number(19,2) CONSTRAINT ADDENDUM_DETAIL_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT ADDENDUM_DETAIL_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -109,10 +85,8 @@
 		ID_SUBCONTRACT_DETAIL NUMBER(19, 0),
         CONSTRAINT ADDENDUM_DETAIL_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."ADDENDUM_DETAIL_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.JOB_INFO_AUDIT (
+    create table pcmsdataUAT.JOB_INFO_AUDIT (
         ID number(19,0) CONSTRAINT JOB_INFO_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT JOB_INFO_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -177,10 +151,8 @@
         yearOfCompletion number(10,0),
         CONSTRAINT JOB_INFO_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."JOB_INFO_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.PAYMENT_CERT_AUDIT (
+    create table pcmsdataUAT.PAYMENT_CERT_AUDIT (
         ID number(19,0) CONSTRAINT PAYMENT_CERT_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT PAYMENT_CERT_AUDIT_REV_NN  not null,
         REVTYPE number(3,0),
@@ -206,10 +178,8 @@
         SUBCONTRACT_ID number(19,0),
         CONSTRAINT PAYMENT_CERT_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."PAYMENT_CERT_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.PAYMENT_CERT_DETAIL_AUDIT (
+    create table pcmsdataUAT.PAYMENT_CERT_DETAIL_AUDIT (
         Payment_Cert_ID number(19,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_ID_NN not null,
         scSeqNo number(10,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_SEQ_NN not null,
         REV number(10,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_REV_NN not null,
@@ -229,10 +199,8 @@
         SUBCONTRACT_DETAIL_ID number(19,0),
         CONSTRAINT PAYMENT_CERT_DETAIL_AUDIT_PK primary key (Payment_Cert_ID, scSeqNo, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."PAYMENT_CERT_DETAIL_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.RESOURCE_SUMMARY_AUDIT (
+    create table pcmsdataUAT.RESOURCE_SUMMARY_AUDIT (
         ID number(19,0) CONSTRAINT RESOURCE_SUMMARY_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT RESOURCE_SUMMARY_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -261,10 +229,8 @@
         SPLIT_FROM_ID number(19,0),
         CONSTRAINT RESOURCE_SUMMARY_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."RESOURCE_SUMMARY_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.SUBCONTRACT_AUDIT (
+    create table pcmsdataUAT.SUBCONTRACT_AUDIT (
         ID number(19,0) CONSTRAINT SUBCONTRACT_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT SUBCONTRACT_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -335,10 +301,8 @@
         NAME_SUBCONTRACTOR varchar2(500 char) default ' ',
         CONSTRAINT SUBCONTRACT_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."SUBCONTRACT_AUDIT" TO "PCMSUSER_ROLE";
 
-    create table pcmsdatadev.SUBCONTRACT_DETAIL_AUDIT (
+    create table pcmsdataUAT.SUBCONTRACT_DETAIL_AUDIT (
         ID number(19,0) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_REV_NN not null,
         TYPE varchar2(2 char) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_TYP_NN not null,
@@ -377,50 +341,48 @@
         AMT_SUBCONTRACT_NEW number(19,2),
         CONSTRAINT SUBCONTRACTDETAIL_AUDIT_PK primary key (ID, REV)
     )
-	TABLESPACE "QSDATADEVT" ;
-	GRANT DELETE, INSERT, SELECT, UPDATE ON "PCMSDATADEV"."SUBCONTRACT_DETAIL_AUDIT" TO "PCMSUSER_ROLE";
 	
-    alter table pcmsdatadev.REVCHANGES 
+    alter table pcmsdataUAT.REVCHANGES 
         add constraint REVCHANGES_FK 
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.ADDENDUM_AUDIT 
+    alter table pcmsdataUAT.ADDENDUM_AUDIT 
         add constraint ADDENDUM_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.ADDENDUM_DETAIL_AUDIT 
+    alter table pcmsdataUAT.ADDENDUM_DETAIL_AUDIT 
         add constraint ADDENDUMDETAIL_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-	alter table pcmsdatadev.JOB_INFO_AUDIT 
+	alter table pcmsdataUAT.JOB_INFO_AUDIT 
         add constraint JOB_INFO_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.PAYMENT_CERT_AUDIT 
+    alter table pcmsdataUAT.PAYMENT_CERT_AUDIT 
         add constraint PAYMENT_CERT_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.PAYMENT_CERT_DETAIL_AUDIT 
+    alter table pcmsdataUAT.PAYMENT_CERT_DETAIL_AUDIT 
         add constraint PAYMENTCERTDETAIL_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-	alter table pcmsdatadev.RESOURCE_SUMMARY_AUDIT 
+	alter table pcmsdataUAT.RESOURCE_SUMMARY_AUDIT 
         add constraint RESOURCE_SUMMARY_AUDIT_FK 
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.SUBCONTRACT_AUDIT 
+    alter table pcmsdataUAT.SUBCONTRACT_AUDIT 
         add constraint SUBCONTRACT_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
 
-    alter table pcmsdatadev.SUBCONTRACT_DETAIL_AUDIT 
+    alter table pcmsdataUAT.SUBCONTRACT_DETAIL_AUDIT 
         add constraint SUBCONTRACT_DETAIL_AUDIT_FK
         foreign key (REV) 
-        references pcmsdatadev.REVISION;
+        references pcmsdataUAT.REVISION;
