@@ -37,7 +37,7 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 
     	$q.all([turnoverList, contractReceivableList, totalBudgetList, actualValueList])
     		.then(function (data){
-    			setDashboardData(data[0].dataList, data[1].dataList, data[2].dataList, data[3].dataList);
+    			setDashboardData(data[0], data[1], data[2], data[3]);
     	});
     }
  

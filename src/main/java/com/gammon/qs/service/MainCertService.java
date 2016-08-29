@@ -1,6 +1,7 @@
 package com.gammon.qs.service;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -19,10 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddressBookWithSCStatus.GetAddressBookWithSCStatusRequestObj;
 import com.gammon.jde.webservice.serviceRequester.MainCertReceiveDateQueryManager.getMainCertReceiveDate.GetMainCertReceiveDateResponseObj;
 import com.gammon.pcms.config.JasperConfig;
+import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
+import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
+import com.gammon.pcms.model.adl.AccountBalance;
+import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
@@ -82,7 +87,8 @@ public class MainCertService {
 	private MainCertHBDao mainCertHBDao;
 	@Autowired
 	private MasterListWSDao masterListWSDao;
-	
+	@Autowired
+	private AccountBalanceDao accountBalanceDao;
 
 	/*****************************************
 	 * Web Services
@@ -730,10 +736,50 @@ public class MainCertService {
 		return wrapperList;
 	}
 
-	
-	public MainCert getCertificateDashboardData(String jobNo) {
+	/**
+	 * Main Cert Dash Board
+	 * @param year
+	 * @param month
+	 * @param type
+	 * @param noJob
+	 * @return
+	 * @author koeyyeung
+	 * @since Jul 12, 2016 2:16:59 PM
+	 */
+	public List<BigDecimal> getCertificateDashboardData(BigDecimal year,
+									           	BigDecimal month,
+												String noJob, 
+												String type) {
+		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
 		
-		return null;
+		if("ContractReceivable".equals(type)){
+			//Actual receipt
+			List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			List<BigDecimal> contractReceivableOutstandingList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+			for(int i=0 ; i < contractReceivableList.size(); i++){
+				if(i<=12){
+					dataList.add(contractReceivableList.get(i).subtract(contractReceivableOutstandingList.get(i)));
+				}
+			}
+			
+		}else if("IPA".equals(type)){
+			
+		}else if("IPC".equals(type)){
+			
+		}
+		
+		if (dataList != null && dataList.size()>0){
+			while(dataList.size()<12){
+				dataList.add(dataList.get(dataList.size()-1));
+			}
+		}else{
+			while(dataList.size()<12){
+				dataList.add(new BigDecimal(0));
+
+			}
+		}
+		
+		return dataList;
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

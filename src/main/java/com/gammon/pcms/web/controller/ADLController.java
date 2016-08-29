@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
@@ -113,7 +112,7 @@ public class ADLController {
 	 */
 	@RequestMapping(value = "getJobDashboardData",
 					method = RequestMethod.GET)
-	public JobDashboardDTO getJobDashboardData(	@RequestParam(required = true) String noJob,
+	public List<BigDecimal> getJobDashboardData(	@RequestParam(required = true) String noJob,
 												@RequestParam(	required = true) String type,
 												@RequestParam(	required = false,
 												defaultValue = "0") BigDecimal year,
@@ -124,7 +123,7 @@ public class ADLController {
 			return adlService.getJobDashboardData(year, month, noJob, type);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new JobDashboardDTO();
+			return new ArrayList<BigDecimal>();
 		}
 	}
 

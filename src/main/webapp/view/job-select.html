@@ -15,16 +15,16 @@
 					ng-class="{'btn-primary' : selectedDivision == 'BDG', 'btn-white' : selectedDivision != 'BDG'}"
 					ng-model="selectedDivision" uib-btn-radio="'BDG'"><i
 					class="icofont icofont-building-alt"></i> BDG</label> <label class="btn"
-					ng-class="{'btn-primary' : selectedDivision == 'CVL', 'btn-white' : selectedDivision != 'CVL'}"
+					ng-class="{'btn-warning' : selectedDivision == 'CVL', 'btn-white' : selectedDivision != 'CVL'}"
 					ng-model="selectedDivision" uib-btn-radio="'CVL'"><i
 					class="icofont icofont-barricade"></i> CVL</label> <label class="btn"
-					ng-class="{'btn-primary' : selectedDivision == 'E&M', 'btn-white' : selectedDivision != 'E&M'}"
+					ng-class="{'btn-success' : selectedDivision == 'E&M', 'btn-white' : selectedDivision != 'E&M'}"
 					ng-model="selectedDivision" uib-btn-radio="'E&M'"><i
 					class="icofont icofont-energy-oil"></i> E&M</label> <label class="btn"
-					ng-class="{'btn-primary' : selectedDivision == 'FDN', 'btn-white' : selectedDivision != 'FDN'}"
+					ng-class="{'btn-inverse' : selectedDivision == 'FDN', 'btn-white' : selectedDivision != 'FDN'}"
 					ng-model="selectedDivision" uib-btn-radio="'FDN'"><i
 					class="icofont icofont-mining"></i> FDN</label> <label class="btn"
-					ng-class="{'btn-primary' : selectedDivision == 'SGP', 'btn-white' : selectedDivision != 'SGP'}"
+					ng-class="{'btn-purple' : selectedDivision == 'SGP', 'btn-white' : selectedDivision != 'SGP'}"
 					ng-model="selectedDivision" uib-btn-radio="'SGP'"><i
 					class="icofont icofont-cur-dollar-true"></i> SGP</label> <label class="btn"
 					ng-class="{'btn-primary' : selectedDivision == '', 'btn-white' : selectedDivision != ''}"
@@ -57,17 +57,13 @@
 	<div class="fixed-container">
 		<div class="row">
 			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'BDG'} | orderBy : jobNo : true"
+				ng-hide ="selectedDivision != 'BDG' && selectedDivision != ''">
 				<div class="box box-widget sc-panel">
 					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
 						<div class="sc-panel-header bg-primary">
 							<div class="sc-panel-icon">
-								<span class="icofont" 
-										ng-class="	job.division == 'BDG' ? 'icofont-building-alt' : 
-													job.division == 'CVL' ?	'icofont-barricade' : 
-													job.division == 'E&M' ? 'icofont-energy-oil' :  
-													job.division == 'FDN' ? 'icofont-mining' : 
-													job.division == 'SGP' ? 'icofont-cur-dollar-true' : 'icofont-engineer'"></span>
+								<span class="icofont icofont-building-alt"></span>
 							</div>
 							
 							<h3 class="job-panel-no">
@@ -80,6 +76,92 @@
 					</a>
 				</div>
 			</div>
+			
+			<div class="col-md-4 col-lg-3 animated fadeIn"
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'CVL'} | orderBy : jobNo : true"
+				ng-hide ="selectedDivision != 'CVL' && selectedDivision != ''">
+				<div class="box box-widget sc-panel">
+					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
+						<div class="sc-panel-header bg-orange text-white">
+							<div class="sc-panel-icon">
+								<span class="icofont icofont-barricade"></span>
+							</div>
+							
+							<h3 class="job-panel-no">
+								<b>{{job.jobNo}}</b>
+							</h3>
+							<h3 class="job-panel-name">
+								<b>{{job.description}}</b>
+							</h3>
+						</div>
+					</a>
+				</div>
+			</div>
+			
+			<div class="col-md-4 col-lg-3 animated fadeIn"
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'E&M'} | orderBy : jobNo : true"
+				ng-hide ="selectedDivision != 'E&M' && selectedDivision != ''">
+				<div class="box box-widget sc-panel">
+					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
+						<div class="sc-panel-header bg-success text-white">
+							<div class="sc-panel-icon">
+								<span class="icofont icofont-energy-oil"></span>
+							</div>
+							
+							<h3 class="job-panel-no">
+								<b>{{job.jobNo}}</b>
+							</h3>
+							<h3 class="job-panel-name">
+								<b>{{job.description}}</b>
+							</h3>
+						</div>
+					</a>
+				</div>
+			</div>
+			
+			<div class="col-md-4 col-lg-3 animated fadeIn"
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'FDN'} | orderBy : jobNo : true"
+				ng-hide ="selectedDivision != 'FDN' && selectedDivision != ''">
+				<div class="box box-widget sc-panel">
+					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
+						<div class="sc-panel-header bg-inverse text-white">
+							<div class="sc-panel-icon">
+								<span class="icofont icofont-mining"></span>
+							</div>
+							
+							<h3 class="job-panel-no">
+								<b>{{job.jobNo}}</b>
+							</h3>
+							<h3 class="job-panel-name">
+								<b>{{job.description}}</b>
+							</h3>
+						</div>
+					</a>
+				</div>
+			</div>
+			
+			<div class="col-md-4 col-lg-3 animated fadeIn"
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'SGP'} | orderBy : jobNo : true"
+				ng-hide ="selectedDivision != 'SGP' && selectedDivision != ''">
+				<div class="box box-widget sc-panel">
+					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
+						<div class="sc-panel-header bg-purple">
+							<div class="sc-panel-icon">
+								<span class="icofont icofont-cur-dollar-true"></span>
+							</div>
+							
+							<h3 class="job-panel-no">
+								<b>{{job.jobNo}}</b>
+							</h3>
+							<h3 class="job-panel-name">
+								<b>{{job.description}}</b>
+							</h3>
+						</div>
+					</a>
+				</div>
+			</div>
+			
+			
 		</div>
 	</div>
 </div>

@@ -157,6 +157,23 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		
 		return criteria.list();
 	}
-
 	
+	public Repackaging getLatestLockedRepackaging(String jobNumber) throws DatabaseOperationException{
+		Repackaging repackaging;
+		try{
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+			criteria.add(Restrictions.eq("status", "900"));
+			criteria.addOrder(Order.desc("repackagingVersion"));
+			criteria.setMaxResults(1);
+			repackaging = (Repackaging) criteria.uniqueResult();
+			return repackaging;
+		}
+		catch(HibernateException ex){
+			throw new DatabaseOperationException(ex);
+		}
+	}
+
+
 }

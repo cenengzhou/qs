@@ -21,7 +21,6 @@ import com.gammon.pcms.dao.adl.AddressBookDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
-import com.gammon.pcms.dto.rs.provider.response.adl.JobDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -148,12 +147,11 @@ public class ADLService {
 	 * @author tikywong
 	 * @since Jul 12, 2016 2:16:59 PM
 	 */
-	public JobDashboardDTO getJobDashboardData(	BigDecimal year,
+	public List<BigDecimal> getJobDashboardData(	BigDecimal year,
 									           	BigDecimal month,
 												String noJob, 
 												String type) {
 		
-		JobDashboardDTO jobDashboard = new JobDashboardDTO();
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
 		logger.info("getJobDashboardData: "+ type);
 		try {
@@ -171,6 +169,9 @@ public class ADLService {
 				}
 			}else if("TotalBudget".equals(type)){
 				dataList = repackagingService.getRepackagingMonthlySummary(noJob, year.toString());
+				if(dataList == null || dataList.size()==0){
+					
+				}
 			}else if("ActualValue".equals(type)){
 				List<AccountBalance> accountBalance = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
 				
@@ -190,7 +191,6 @@ public class ADLService {
 
 				}
 			}
-			jobDashboard.setDataList(dataList);
 
 		} catch (DataAccessException e) {
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class ADLService {
 			e.printStackTrace();
 		}
 
-		return jobDashboard;
+		return dataList;
 	}
 	
 	/**

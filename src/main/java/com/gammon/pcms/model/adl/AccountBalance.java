@@ -25,6 +25,7 @@ public class AccountBalance implements Serializable {
 	
 	public static final String CODE_OBJECT_TURNOVER = "221110";
 	public static final String CODE_OBJECT_CONTRACT_RECEIVABLE = "221120";
+	public static final String CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING = "231210";
 	public static final String CODE_OBJECT_COSTCODE_STARTER = "1";
 	public static final String CODE_SUBSIDIARY_EMPTY = "        ";
 	public static final String TYPE_SUBLEDGER_X = "X";

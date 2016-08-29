@@ -59,6 +59,14 @@ public class RepackagingService {
 	public List<BigDecimal> getRepackagingMonthlySummary(String jobNo, String year) throws Exception {
 		
 		List<Repackaging> repackagingList = repackagingDao.getRepackagingMonthlySummary(jobNo, year);
+		if(repackagingList == null || repackagingList.size()==0){
+			Repackaging repackaging = repackagingDao.getLatestLockedRepackaging(jobNo);
+			if(repackaging!= null){
+				repackagingList.add(repackaging);
+			}
+		}
+		
+		
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
 
 		if (repackagingList != null && repackagingList.size()>0){

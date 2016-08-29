@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -68,8 +69,14 @@ public class MainCertController {
 	}
 	
 	@RequestMapping(value = "getCertificateDashboardData", method = RequestMethod.GET)
-	public MainCert getCertificateDashboardData(@RequestParam String jobNo){
-		return mainCertService.getCertificateDashboardData(jobNo);
+	public List<BigDecimal> getCertificateDashboardData(@RequestParam(required = true) String noJob,
+														@RequestParam(	required = true) String type,
+														@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal year,
+														@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal month 
+														) {
+		return mainCertService.getCertificateDashboardData(year, month, noJob, type);
 	}
 	
 	// ---------------- update / calculate ----------------
