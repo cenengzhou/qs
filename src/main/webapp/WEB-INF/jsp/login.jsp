@@ -11,10 +11,9 @@
 			window.location = 'login.htm';
 		}
 	</script>
-	<!-- jQuery 2.1.4 -->
 	<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
-	<!-- angularJS 1.4.9 -->
 	<script src="plugins/angularjs/1.4.9/angular.js"></script>	
+	<script src="plugins/angular-block-ui/v0.2/js/angular-block-ui.js"></script>
 
 	<style type="text/css">
 	body {
@@ -28,8 +27,15 @@
 request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 %>
 	<script type="text/javascript">
-	var loginApp = angular.module('loginApp', []);
-	loginApp.controller('loginCtrl', ['$scope', '$http', '$window', function($scope, $http, $window){
+	var loginApp = angular.module('loginApp', ['blockUI'])
+	.config(function(blockUIConfig) {		
+		blockUIConfig.autoBlock = true;
+		blockUIConfig.delay = 100;
+		blockUIConfig.autoInjectBodyBlock = true;
+	})
+	.controller('loginCtrl', 
+				['$scope', '$http', '$window', 
+		function($scope, $http, $window){
 		$scope.user = {};
 		$scope.userIcon = 'resources/images/profile.png';
 		$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/';
@@ -74,6 +80,7 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 		}
 	}]);
 	
+	
 	document.execCommand("ClearAuthenticationCache"); 
 	if(new String(window.location).indexOf("/login.htm")<0){
 		window.location = "login.htm";
@@ -84,6 +91,7 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 	<link rel="stylesheet" href="plugins/bootstrap/3.3.6/css/bootstrap.min.css">
 	<!-- Theme style -->
 	<link rel="stylesheet" href="css/adminLTE.css">
+	<link rel="stylesheet" href="plugins/angular-block-ui/v0.2/css/angular-block-ui.min.css"/>
 	
 </head>
 <body ng-controller="loginCtrl">

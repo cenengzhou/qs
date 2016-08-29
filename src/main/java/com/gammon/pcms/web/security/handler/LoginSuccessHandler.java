@@ -7,8 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.gammon.pcms.config.SecurityConfig;
 
 /**
  * custom authentication success handler
@@ -19,6 +22,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private Logger logger = Logger.getLogger(getClass());
 //	private String loginSuccessPath = "/index.html";
 //	private boolean forwardUponSuccess = true;
+	@Autowired 
+	SecurityConfig securityConfig;
 
 	public LoginSuccessHandler(String loginSuccessPath, boolean forwardUponSuccess) {
 //		this.loginSuccessPath = loginSuccessPath;
@@ -37,6 +42,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 //			logger.debug("redirecting: " + loginSuccessPath);
 //			response.sendRedirect(loginSuccessPath);
 //		}
+		request.getSession().setMaxInactiveInterval(Integer.valueOf(securityConfig.getDefaultMaxInactiveInterval()));
 		response.setHeader("login", "Sucess");
 	}
 }

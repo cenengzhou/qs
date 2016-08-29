@@ -57,19 +57,12 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 				$rootScope.showAdminMenu = GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $scope.user.UserRoles);
 				$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $scope.user.UserRoles);
 				$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $scope.user.UserRoles);
+				var iconPath = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
 				//As the config of http://gammon/ not allow CORS so cannot check if the image is available or 401
 				//check with the authType, if Kerberos change the image, if LDAP keep the default
-				var iconPath = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
-//				$http.get(iconPath)
-//				.then(function(response){
-//					if(rsponse.status !== 401){
-//						
-//					}
-//				})
-				$scope.userIcon = iconPath;
-//				if($scope.user.authType === 'Kerberos'){
-//					
-//				}
+				if($scope.user.authType === 'Kerberos'){
+					$scope.userIcon = iconPath;
+				}
 			}
 		});
 	}

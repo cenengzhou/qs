@@ -3,14 +3,27 @@
 angular.module('angular-js-xlsx', [])
   .directive('jsXls', function () {
     return {
-      restrict: 'E',
-      template: '<input type="file" />',
-      replace: true,
+      restrict: 'A',
+//      template: '<input type="file" />',
+//      replace: true,
       link: function (scope, element, attrs) {
 
         function handleSelect() {
           var files = this.files;
           for (var i = 0, f = files[i]; i != files.length; ++i) {
+    	  if(files[i].name.indexOf('.csv')>0){
+         	 var handleRead = scope[attrs.onreadcsv];
+         	 try{
+         		 handleRead(files[i]);
+         	 } catch (e) {
+         		if (attrs.onerror) {
+                    var handleError = scope[attrs.onerror];
+                    if (typeof handleError === "function") {
+                      handleError(e);
+                    }
+                 }
+         	 }
+           } else {
             var reader = new FileReader();
             var name = f.name;
             reader.onload = function (e) {
@@ -38,9 +51,6 @@ angular.module('angular-js-xlsx', [])
                   }
                 }
               }
-
-              // Clear input file
-              element.val('');
             };
 
             //extend FileReader
@@ -64,10 +74,11 @@ angular.module('angular-js-xlsx', [])
             }
 
             reader.readAsBinaryString(f);
-
           }
         }
-
+          // Clear input file
+          element.val('');
+        }
         element.on('change', handleSelect);
       }
     };

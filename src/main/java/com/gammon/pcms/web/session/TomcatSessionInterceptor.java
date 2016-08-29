@@ -13,12 +13,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.gammon.pcms.application.User;
+import com.gammon.pcms.config.SecurityConfig;
 
 @Component(value = "SessionInterceptor")
 public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private SessionRegistry sessionRegistry;
+	@Autowired
+	private SecurityConfig securityConfig;
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
@@ -36,6 +39,7 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 			session.setAuthType(user.getAuthType());
 			request.setAttribute("username", user.getUsername());
 			request.setAttribute("domain", user.getDomainName());
+			session.setMaxInactiveInterval(Integer.valueOf(securityConfig.getDefaultMaxInactiveInterval()));
 		}
 		return super.preHandle(request, response, handler);
 	}

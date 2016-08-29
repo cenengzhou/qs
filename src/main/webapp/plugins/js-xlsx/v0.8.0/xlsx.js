@@ -1321,7 +1321,8 @@ function safegetzipfile(zip, file) {
 
 function getzipfile(zip, file) {
 	var o = safegetzipfile(zip, file);
-	if(o == null) throw new Error("Cannot find file " + file + " in zip");
+	//window.onerror redirect to login.htm issue
+	if(o == null) console.log("Cannot find file " + file + " in zip");//throw new Error("Cannot find file " + file + " in zip");
 	return o;
 }
 
