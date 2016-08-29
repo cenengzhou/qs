@@ -16,8 +16,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var MSG_UPDATE_SUBCONTRACT_DETAILS = 'Please update IV for this resource in the subcontract details section';
 	var MSG_GREATER_THEN_BUDGET = 'Cumulative IV Amount cannot be greater than budget amount';
 	var MSG_IMPORT_OBJECT_NOT_FOUND = 'Import object not found';
-	var MSG_NOT_EQUAL_AMOUNTBUDGET = 'Cumulative IV Amount + IV Movement != Budget amount';
 	var MSG_NOCHANGE = 'Cumulative IV Amount and IV Movement are same as row record';
+	var MSG_WRONG_CURRIVAMOUNT = 'Cumulative IV Amount not equal to IV Movement + Posted IV Amount. ';
+	var MSG_WRONG_IVMOVEMENT = 'IV Movement not equal to Cumulative IV Amount - Posted IV Amount. ';
 	var STATUS_IGNORED = 'Ignored';
 	var STATUS_IMPORTED = 'Imported';
 	var STATUS_NOCHANGE = 'No Change';
@@ -68,16 +69,28 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     		return;
     	}
     	
-    	if(parseFloat(row.entity.amountBudget) + parseFloat(importObj.ivMovement) !== parseFloat(importObj.currIVAmount)){
-    		statusObj.message = MSG_NOT_EQUAL_AMOUNTBUDGET;
-    		statusObj.importStatus = STATUS_IGNORED;
-    		return;
-    	}
-    	
     	if(parseFloat(importObj.currIVAmount) === row.entity.currIVAmount && parseFloat(importObj.ivMovement) === row.entity.ivMovement){
     		statusObj.message = MSG_NOCHANGE;
     		statusObj.importStatus = STATUS_NOCHANGE;
     		return;
+    	} else {
+    		if(parseFloat(importObj.currIVAmount) > row.entity.amountBudget){
+        		statusObj.message = MSG_GREATER_THEN_BUDGET;
+        		statusObj.importStatus = STATUS_IGNORED;
+        		return; 			
+    		} 
+
+    		if(parseFloat(importObj.currIVAmount) !== parseFloat(importObj.ivMovement) + row.entity.postedIVAmount) {
+        		statusObj.message = MSG_WRONG_CURRIVAMOUNT;
+        		statusObj.importStatus = STATUS_IGNORED;
+        		return
+    		}
+    		
+    		if(parseFloat(importObj.ivMovement) !== parseFloat(importObj.currIVAmount) - row.entity.postedIVAmount){
+    			statusObj.message = MSG_WRONG_IVMOVEMENT;
+    			statusObj.importStatus = STATUS_IGNORED;
+    			return
+    		}
     	}
     	
     	row.entity.currIVAmount = importObj.currIVAmount;
