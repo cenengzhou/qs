@@ -59,6 +59,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String department;
 	private String internalJob;
 	private String soloJV;
+	@JsonView(JobInfoView.NameAndDescription.class)
 	private String completionStatus;
 	private String insuranceCAR;
 	private String insuranceECI;

@@ -1726,7 +1726,7 @@ public class TransitService implements Serializable {
 			//Update and save
 			header.setEstimateNo(estimateNo);
 			header.setMatchingCode(matchingCode);
-			transitHeaderDao.saveOrUpdate(header);
+			transitHeaderDao.insert(header);
 		} catch (Exception e) {
 			error = "Job header cannot be created.";
 			e.printStackTrace();
