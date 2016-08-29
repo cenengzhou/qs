@@ -57,18 +57,32 @@
 	<div class="fixed-container">
 		<div class="row">
 			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'BDG'} | orderBy : jobNo : true"
-				ng-hide ="selectedDivision != 'BDG' && selectedDivision != ''">
+				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">
 				<div class="box box-widget sc-panel">
 					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
-						<div class="sc-panel-header bg-primary">
+						<div class="sc-panel-header text-white" 
+								ng-class="	job.division == 'BDG' ? 'bg-primary' : 
+											job.division == 'CVL' ?	'bg-orange' : 
+											job.division == 'E&M' ? 'bg-success' :  
+											job.division == 'FDN' ? 'bg-inverse' : 
+											job.division == 'SGP' ? 'bg-purple' : 'bg-primary'">
 							<div class="sc-panel-icon">
-								<span class="icofont icofont-building-alt"></span>
+								<span class="icofont" 
+										ng-class="	job.division == 'BDG' ? 'icofont-building-alt' : 
+													job.division == 'CVL' ?	'icofont-barricade' : 
+													job.division == 'E&M' ? 'icofont-energy-oil' :  
+													job.division == 'FDN' ? 'icofont-mining' : 
+													job.division == 'SGP' ? 'icofont-cur-dollar-true' : 'icofont-engineer'"></span>
 							</div>
 							
 							<h3 class="job-panel-no">
 								<b>{{job.jobNo}}</b>
-								<b ng-show="job.completionStatus !='1'"><span class="pull-right badge bg-inverse">Completed</span></b>
+								<b ng-show="job.completionStatus !='1'">
+									<span class="pull-right badge"
+										ng-class="job.division == 'FDN' ? 'bg-white text-black' : 'bg-inverse'">
+										Completed
+									</span>
+								</b>
 							</h3>
 							<h3 class="job-panel-name">
 								<b>{{job.description}}</b>
@@ -77,95 +91,6 @@
 					</a>
 				</div>
 			</div>
-			
-			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'CVL'} | orderBy : jobNo : true"
-				ng-hide ="selectedDivision != 'CVL' && selectedDivision != ''">
-				<div class="box box-widget sc-panel">
-					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
-						<div class="sc-panel-header bg-orange text-white">
-							<div class="sc-panel-icon">
-								<span class="icofont icofont-barricade"></span>
-							</div>
-							
-							<h3 class="job-panel-no">
-								<b>{{job.jobNo}}</b>
-								<b ng-show="job.completionStatus !='1'"><span class="pull-right badge bg-inverse">Completed</span></b>
-							</h3>
-							<h3 class="job-panel-name">
-								<b>{{job.description}}</b>
-							</h3>
-						</div>
-					</a>
-				</div>
-			</div>
-			
-			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'E&M'} | orderBy : jobNo : true"
-				ng-hide ="selectedDivision != 'E&M' && selectedDivision != ''">
-				<div class="box box-widget sc-panel">
-					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
-						<div class="sc-panel-header bg-success text-white">
-							<div class="sc-panel-icon">
-								<span class="icofont icofont-energy-oil"></span>
-							</div>
-							
-							<h3 class="job-panel-no">
-								<b>{{job.jobNo}}</b>
-								<b ng-show="job.completionStatus !='1'"><span class="pull-right badge bg-inverse">Completed</span></b>
-							</h3>
-							<h3 class="job-panel-name">
-								<b>{{job.description}}</b>
-							</h3>
-						</div>
-					</a>
-				</div>
-			</div>
-			
-			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'FDN'} | orderBy : jobNo : true"
-				ng-hide ="selectedDivision != 'FDN' && selectedDivision != ''">
-				<div class="box box-widget sc-panel">
-					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
-						<div class="sc-panel-header bg-inverse text-white">
-							<div class="sc-panel-icon">
-								<span class="icofont icofont-mining"></span>
-							</div>
-							
-							<h3 class="job-panel-no">
-								<b>{{job.jobNo}}</b>
-								<b ng-show="job.completionStatus !='1' && job.completionStatus !=''"><span class="pull-right badge bg-white text-black">Completed</span></b>
-							</h3>
-							<h3 class="job-panel-name">
-								<b>{{job.description}}</b>
-							</h3>
-						</div>
-					</a>
-				</div>
-			</div>
-			
-			<div class="col-md-4 col-lg-3 animated fadeIn"
-				ng-repeat="job in jobs | filter:searchquery | filter:{division: 'SGP'} | orderBy : jobNo : true"
-				ng-hide ="selectedDivision != 'SGP' && selectedDivision != ''">
-				<div class="box box-widget sc-panel">
-					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
-						<div class="sc-panel-header bg-purple">
-							<div class="sc-panel-icon">
-								<span class="icofont icofont-cur-dollar-true"></span>
-							</div>
-							
-							<h3 class="job-panel-no">
-								<b>{{job.jobNo}}</b>
-								<b ng-show="job.completionStatus !='1'"><span class="pull-right badge bg-inverse">Completed</span></b>
-							</h3>
-							<h3 class="job-panel-name">
-								<b>{{job.description}}</b>
-							</h3>
-						</div>
-					</a>
-				</div>
-			</div>
-			
 			
 		</div>
 	</div>
