@@ -374,7 +374,17 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('subcontract.taDetails', {
 		url: "/taDetails",
 		templateUrl: "view/subcontract/subcontract-ta-details.html",
-		controller: 'SubcontractTaDetailsCtrl'
+		controller: 'SubcontractTaDetailsCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-ta-details.js'
+                    ] 
+                });
+            }]
+        }
 	})
 	.state('subcontract.attachment', {
 		templateUrl: "view/subcontract/subcontract-attachment.html",

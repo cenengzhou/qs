@@ -68,13 +68,13 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     		return;
     	}
     	
-    	if(row.entity.amountBudget + importObj.ivMovement !== importObj.currIVAmount){
+    	if(parseFloat(row.entity.amountBudget) + parseFloat(importObj.ivMovement) !== parseFloat(importObj.currIVAmount)){
     		statusObj.message = MSG_NOT_EQUAL_AMOUNTBUDGET;
     		statusObj.importStatus = STATUS_IGNORED;
     		return;
     	}
     	
-    	if(importObj.currIVAmount === row.entity.currIVAmount && importObj.ivMovement === row.entity.ivMovement){
+    	if(parseFloat(importObj.currIVAmount) === row.entity.currIVAmount && parseFloat(importObj.ivMovement) === row.entity.ivMovement){
     		statusObj.message = MSG_NOCHANGE;
     		statusObj.importStatus = STATUS_NOCHANGE;
     		return;
@@ -320,7 +320,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				}
 			}
 			else if(colDef.name == "ivMovement"){
-				var cumIVAmount = roundUtil.round(rowEntity.ivMovement + rowEntity.postedIVAmount, 2); 
+				var cumIVAmount = roundUtil.round(parseFloat(rowEntity.ivMovement) + parseFloat(rowEntity.postedIVAmount), 2); 
 				if(cumIVAmount > rowEntity.amountBudget){
 					rowEntity.ivMovement = oldValue;
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
