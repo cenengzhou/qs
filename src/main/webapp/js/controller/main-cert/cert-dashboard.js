@@ -1,111 +1,128 @@
-mainApp.controller('CertCtrl', ['$scope', '$http', 'colorCode', '$cookies', function($scope, $http, colorCode, $cookies) {
-    
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants) {
+
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	
-	
-    $scope.linChartParameters = {
-    	    'labels' : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    	    'series' : ['IPA', 'IPC', 'CC(IPA)', 'CC(IPC)'],
-    	    'data' : [
-    	      [65, 69, 80, 81, 90, 95, 100, 110, 120, 130, 140, 156],
-    	      [55, 59, 70, 71, 80, 85, 90, 100, 110, 120, 130, 146],
-    	      [19, 29, 32, 40, 47, 48, 49, 59, 60, 61, 63, 68],
-    	      [8, 18, 20, 29, 36, 37, 40, 45, 49, 50, 51, 56]
-    	    ],
-    	    'options' : {
-    	        'showScale' : true,
-    	        'showTooltips' : true,
-    	        'responsive' : true,
-    	        'maintainAspectRatio' : true,
-    	        'pointDot' : true,
-    	        'bezierCurve' : true,
-    	        'datasetFill' : false,
-    	        'animation' : true,
 
-    	     }
-    
-    };
-    
+	Chart.defaults.global.colours = [colorCode.green, colorCode.blue, colorCode.purple];
 
-   /* var today = new Date();
-    $scope.gridOptions = {
-      enableFiltering: true,
-      enableColumnResizing : true,
-      enableGridMenu : true,
-      enableRowSelection: true,
-      enableFullRowSelection: true,
-      multiSelect: false,
-      
-      //showGridFooter : true,
-      //showColumnFooter : true,
-      //fastWatch : true,
-      
-      paginationPageSizes: [50],
-      paginationPageSize: 50,
-      
-      onRegisterApi: function(gridApi){
-        $scope.gridApi = gridApi;
-        $scope.gridApi.grid.registerRowsProcessor( $scope.singleFilter, 200 );
-      },
-      columnDefs: [
-        { field: 'id' },
-        { field: 'name', enableCellEdit: true },
-        { field: 'gender', cellFilter: 'mapGender' },
-        { field: 'company' },
-        { field: 'email' },
-        { field: 'phone' },
-        { field: 'age' },
-        { field: 'mixedDate' },
-        {field: 'balance' }
-        
-      ]
-    };
-    
-    $scope.gridOptions1 = {
-      enableFiltering: true,
-      enableColumnResizing : true,
-      enableGridMenu : true,
-      enableAnimations: true,
-      //showGridFooter : true,
-      //showColumnFooter : true,
-      //fastWatch : true,
-      
-      //enablePaginationControls: false,
-      paginationPageSizes: [50],
-      paginationPageSize: 50,
-      
-      onRegisterApi: function(gridApi){
-        $scope.gridApi2 = gridApi;
-        $scope.gridApi.grid2.registerRowsProcessor( $scope.singleFilter, 200 );
-      },
-      columnDefs: [
-        { field: 'id' },
-        { field: 'name' },
-        { field: 'gender', cellFilter: 'mapGender' },
-        { field: 'company' },
-        { field: 'email' },
-        { field: 'phone' },
-        { field: 'age' },
-        { field: 'mixedDate' },
-        {field: 'balance' }
-        
-      ]
-    };
-   
-    $http.get('http://localhost:8080/pcms/data/500_complex.json')
-      .success(function(data) {
-        $scope.gridOptions.data = data;
-        $scope.gridOptions1.data = data;
-        $scope.gridOptions.data[0].age = -5;
-   
-        data.forEach( function addDates( row, index ){
-          row.mixedDate = new Date();
-          row.mixedDate.setDate(today.getDate() + ( index % 14 ) );
-         // row.gender = row.gender==='male' ? '1' : '2';
-        });
-      });*/
-      
 
-    
-}]);
+	var year =  new Date().getFullYear();
+	$scope.selectedYear = year;
+	$scope.yearList = [year, year-1, year-2];
+
+	loadData();
+
+	$scope.gridOptions = {
+			enableFiltering: false,
+			enableColumnResizing : true,
+			enableGridMenu : true,
+			enableRowSelection: true,
+			enableSelectAll: true,
+			multiSelect: true,
+			enableCellEditOnFocus : true,
+			showColumnFooter : true,
+			showGridFooter : false,
+			//showColumnFooter : true,
+			exporterMenuPdf: false,
+
+			rowEditWaitInterval :-1,
+
+			columnDefs: [
+			             { field: 'mainCertNo', displayName: "Cert No."},
+			             { field: 'contractualDueDate'},
+			             { field: 'dueDate', displayName: "Forecast/Actual Due Date"},
+			             { field: 'releasePercent', displayName: "Percent", 
+			            	 cellClass: 'text-right', cellFilter: 'number:2', 
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+		            	 { field: 'amount',  displayName: "Amount",
+		            		 cellClass: 'text-right', cellFilter: 'number:2', 
+		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
+		            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+	            		 { field: 'status', cellFilter: 'convertString'}	
+	            		 ]
+	};
+
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+	}
+
+	$scope.getMainCertDashboardData = function (year){
+		$scope.selectedYear = year;
+		getMainCertData(year.toString().substring(2, 4));
+	}
+
+
+	function loadData(){
+		getMainCertData(year.toString().substring(2, 4));	
+		getRetentionReleaseList();
+	}
+
+	function getMainCertData(year) {
+		var contractReceivableList = mainCertService.getCertificateDashboardData($scope.jobNo, 'ContractReceivable', year);
+		var ipaList = mainCertService.getCertificateDashboardData($scope.jobNo,  'IPA', year);
+		var ipcList = mainCertService.getCertificateDashboardData($scope.jobNo, 'IPC', year);
+
+
+		$q.all([contractReceivableList, ipaList, ipcList])
+		.then(function (data){
+			setDashboardData(data[0], data[1], data[2]);
+		});
+	}
+
+
+	function setDashboardData(contractReceivableList, ipaList, ipcList) {
+		console.log("contractReceivableList "+contractReceivableList.length);
+		$scope.contractReceivable = contractReceivableList[11];
+		$scope.ipa = ipaList[11];
+		$scope.ipc = ipcList[11];
+
+		$scope.linChartParameters = {
+				labels : ['Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				series : ['IPA', 'IPC', 'Contract Receivable'],
+				data: [ipaList, ipcList, contractReceivableList],
+				options : {
+					showScale : true,
+					showTooltips : true,
+					responsive : true,
+					maintainAspectRatio : true,
+					pointDot : true,
+					bezierCurve : true,
+					datasetFill : false,
+					animation : true,
+					//scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
+					scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
+				}
+		};
+	}
+
+	function getRetentionReleaseList(){
+		mainCertService.getRetentionReleaseList($scope.jobNo)
+		.then( function (data){
+			console.log(data);
+			$scope.gridOptions.data= data;
+			//$scope.retentionReleaseList = data;
+
+			angular.forEach(data, function(value, key){
+				if(value.status = 'F')
+					value.amount = value.forecastReleaseAmt;
+				else
+					value.amount = value.actualReleaseAmt;
+				
+			});
+		});
+
+	}
+
+}])
+.filter('convertString', function() {
+	var excludeHash = {
+			'F': 'Forecast',
+			'A': 'Actual'
+	};
+
+	return function(input) {
+		return excludeHash[input];
+	};
+});

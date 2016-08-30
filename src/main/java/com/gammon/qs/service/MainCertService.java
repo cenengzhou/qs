@@ -25,6 +25,7 @@ import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -750,35 +751,78 @@ public class MainCertService {
 												String noJob, 
 												String type) {
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
-		
-		if("ContractReceivable".equals(type)){
-			//Actual receipt
-			List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-			List<BigDecimal> contractReceivableOutstandingList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
-			for(int i=0 ; i < contractReceivableList.size(); i++){
-				if(i<=12){
-					dataList.add(contractReceivableList.get(i).subtract(contractReceivableOutstandingList.get(i)));
+		try {
+			if("ContractReceivable".equals(type)){
+				//Actual receipt
+				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				List<BigDecimal> contractReceivableOutstandingList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
+				for(int i=0 ; i < contractReceivableList.size(); i++){
+					if(i<12){
+						dataList.add(contractReceivableList.get(i).subtract(contractReceivableOutstandingList.get(i)).negate());
+					}
+				}
+				
+			}else if("IPA".equals(type)){
+				List<MainCertDashboardDTO> ipaList = mainCertHBDao.getMonthlySummayIPA(noJob, year.toString());
+				if(ipaList !=null && ipaList.size() >0)
+					dataList = convertToDashboardData(ipaList);
+				else{
+					//Get latest cert amount if current year has no data to show
+					BigDecimal netIPAamount = new BigDecimal(0);
+					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob);
+					if(mainCert != null)
+						netIPAamount = new BigDecimal(mainCert.calculateAppliedNetAmount());
+					dataList.add(netIPAamount);
+				}
+			}else if("IPC".equals(type)){
+				List<MainCertDashboardDTO> ipcList = mainCertHBDao.getMonthlySummayIPC(noJob, year.toString());
+				if(ipcList !=null && ipcList.size() >0)
+					dataList = convertToDashboardData(ipcList);
+				else{
+					//Get latest cert amount if current year has no data to show
+					BigDecimal netIPCamount = new BigDecimal(0);
+					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob);
+					if(mainCert != null)
+						netIPCamount = new BigDecimal(mainCert.calculateCertifiedNetAmount());
+					dataList.add(netIPCamount);
 				}
 			}
 			
-		}else if("IPA".equals(type)){
-			
-		}else if("IPC".equals(type)){
-			
-		}
-		
-		if (dataList != null && dataList.size()>0){
-			while(dataList.size()<12){
-				dataList.add(dataList.get(dataList.size()-1));
-			}
-		}else{
-			while(dataList.size()<12){
-				dataList.add(new BigDecimal(0));
+			if (dataList != null && dataList.size()>0){
+				while(dataList.size()<12){
+					dataList.add(dataList.get(dataList.size()-1));
+				}
+			}else{
+				while(dataList.size()<12){
+					dataList.add(new BigDecimal(0));
 
+				}
 			}
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		return dataList;
+	}
+	
+	private List<BigDecimal> convertToDashboardData(List<MainCertDashboardDTO> certList){
+		logger.info(" convertToDashboardData: ");
+		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
+		int counter = 1;
+		
+		for(MainCertDashboardDTO cert: certList){
+			while(Integer.valueOf(cert.getMonth()) != counter){
+				logger.info(Integer.valueOf(cert.getMonth()) + " - "+counter);
+				dataList.add(dataList.get(dataList.size()-1));
+				counter += 1;
+			}
+			dataList.add(cert.getAmount());
+			counter += 1;
 		}
 		
 		return dataList;
 	}
+	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

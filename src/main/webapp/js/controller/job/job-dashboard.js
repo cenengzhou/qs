@@ -35,7 +35,7 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     	var actualValueList = adlService.getJobDashboardData($scope.jobNo, 'ActualValue', year);
     	
 
-    	$q.all([turnoverList, contractReceivableList, totalBudgetList, actualValueList])
+    	$q.all([contractReceivableList, turnoverList, totalBudgetList, actualValueList])
     		.then(function (data){
     			setDashboardData(data[0], data[1], data[2], data[3]);
     	});
@@ -64,8 +64,8 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     				datasetFill : false,
     				//scaleStartValue: 725000000,
     				animation : true,
-    				scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
-    					//scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
+    				//scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
+    				scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
     			}
     	};
     }

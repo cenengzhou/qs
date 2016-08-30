@@ -1,13 +1,16 @@
-mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
+mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, $log){
 	// Return public API.
     return({
-        getMainCertList: getMainCertList,
+        getMainCertList: 					getMainCertList,
 
-        getPaidMainCertList:	getPaidMainCertList,
-        getCertificate: getCertificate,
-        updateCertificate: updateCertificate,
-        updateMainCertFromF03B14Manually: updateMainCertFromF03B14Manually,
-        getMainCertReceiveDateAndAmount: getMainCertReceiveDateAndAmount
+        getPaidMainCertList:				getPaidMainCertList,
+        getCertificate: 					getCertificate,
+        getMainCertReceiveDateAndAmount:	getMainCertReceiveDateAndAmount,
+        getCertificateDashboardData: 		getCertificateDashboardData,
+        getRetentionReleaseList: 			getRetentionReleaseList,
+        
+        updateCertificate: 					updateCertificate,
+        updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
     });
 	
     function getMainCertList() {
@@ -29,12 +32,7 @@ mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
         return( request.then( handleSuccess, handleError ) );
     }
     
-    
-    function updateMainCertFromF03B14Manually(){
-    	var request = $http.post("service/mainCert/updateMainCertFromF03B14Manually");
-    	return( request.then( handleSuccess, handleError ) );
-    }
-    
+   
     function getCertificate(jobNo, certificateNumber) {
         var request = $http({
             method: "get",
@@ -46,12 +44,39 @@ mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
-
-    function updateCertificate(mainCert){
-    	var request = $http.post("service/mainCert/updateCertificate", mainCert);
-    	return( request.then( handleSuccess, handleError ) );
+    
+    function getRetentionReleaseList(noJob) {
+        var request = $http({
+            method: "get",
+            url: "service/mainCert/getRetentionReleaseList",
+            params: {
+            	noJob: noJob
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
     }
-        
+    
+    //Asyn Call
+    function getCertificateDashboardData(noJob, type, year, month){
+    	var deferred = $q.defer();
+    	$http({
+    		method: 'GET',
+    		url: 'service/mainCert/getCertificateDashboardData',
+    		 params: {
+             	noJob: noJob,
+             	type: type,
+             	year: year,
+             	month: month
+             }
+    	}).success(function(data) { 
+    		deferred.resolve(data);
+    	}).error(function(msg, code) {
+    		deferred.reject(msg);
+    		$log.error(msg, code);
+    	});
+    	return deferred.promise;
+    }
+    
     function getMainCertReceiveDateAndAmount(company, refDocNo) {
         var request = $http({
             method: "POST",
@@ -63,6 +88,19 @@ mainApp.service('mainCertService', ['$http', '$q',  function($http, $q){
         });
         return( request.then( handleSuccess, handleError ) );
     }
+    
+    function updateMainCertFromF03B14Manually(){
+    	var request = $http.post("service/mainCert/updateMainCertFromF03B14Manually");
+    	return( request.then( handleSuccess, handleError ) );
+    }
+    
+    
+    function updateCertificate(mainCert){
+    	var request = $http.post("service/mainCert/updateCertificate", mainCert);
+    	return( request.then( handleSuccess, handleError ) );
+    }
+        
+   
 
     // ---
     // PRIVATE METHODS.

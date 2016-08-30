@@ -12,164 +12,112 @@
 	</h1>
 
 	<div class="row">
-		<div class="col-md-8">
-			<div class="box">
-				<div class="box-header with-border">
-					<h3 class="box-title">Monthly Statistics</h3>
-
-
-				</div>
-				<!-- /.box-header -->
-				<div class="box-body">
-					<div class="row">
-						<div class="col-md-8">
-							<p class="text-center">
-								<strong>1 Jan, 2014 - 30 Jul, 2014</strong>
-							</p>
-
-							<div class="chart">
-								<canvas id="line" class="chart chart-line"
-									chart-data="linChartParameters.data"
-									chart-labels="linChartParameters.labels"
-									chart-series="linChartParameters.series"
-									chart-options="linChartParameters.options">
-						           	</canvas>
-							</div>
-							<!-- /.chart-responsive -->
+		<div class="col-md-7">
+			<div class="panel panel-purple ">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+								href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 						</div>
-						<!-- /.col -->
-						<div class="col-md-4">
-							<p class="text-center">
-								<strong>Goal Completion</strong>
-							</p>
-
-							<div>
-								<span>IPA</span> <span class="pull-right"><b>160</b>/200</span>
-
-								<div class="progress m-b-10">
-									<div class="progress-bar progress-bar-aqua" style="width: 40%"></div>
-								</div>
+						<h4 class="panel-title">
+							<b>Main Contract Certificate Monthly Summary</b>
+						</h4>
+					</div>
+					<div class="panel-body">
+						<div class="panel-option bg-purple-light">
+							<div class="dropdown pull-right">
+								<a href="javascript:;"
+									class="btn btn-white btn-rounded btn-sm"
+									data-toggle="dropdown">{{selectedYear}} <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li ng-repeat="year in yearList">
+										<a	ng-click="getMainCertDashboardData(year)">{{year}}</a>
+									</li>
+								</ul>
 							</div>
-
-
-							<div>
-								<span>IPC</span> <span class="pull-right"><b>310</b>/400</span>
-								<div class="progress m-b-10">
-									<div class="progress-bar progress-bar-danger"
-										style="width: 40%"></div>
-								</div>
-							</div>
-
-							<div>
-								<span>CC(IPA)</span> <span class="pull-right"><b>160</b>/200</span>
-
-								<div class="progress m-b-10">
-									<div class="progress-bar progress-bar-success"
-										style="width: 40%"></div>
-								</div>
-							</div>
-
-							<div>
-								<span>CC(IPC)</span> <span class="pull-right"><b>310</b>/400</span>
-
-								<div class="progress m-b-10">
-									<div class="progress-bar progress-bar-warning"
-										style="width: 40%"></div>
-								</div>
-							</div>
-
-
+							<div class="text-center text-white">Jan {{selectedYear}} -	Dec {{selectedYear}}</div>
 						</div>
-						<!-- /.col -->
-					</div>
-					<!-- /.row -->
-				</div>
-				<a class="btn btn-primary btn-block" ui-sref="cert-all-details">More
-					Info <i class="fa fa-arrow-circle-right"></i>
-				</a>
-				<!-- ./box-body -->
-			</div>
-			<!-- /.box -->
-		</div>
-		<!-- /.col -->
 
-		<!-- Main row -->
-		<!-- Left col -->
-		<div class="col-md-4">
-			<!-- TABLE: LATEST ORDERS -->
-			<div class="box box-info">
-				<div class="box-header with-border">
-					<h3 class="box-title">Retention Release Schedule</h3>
-
-					<div class="box-tools pull-right">
-						<button type="button" class="btn btn-box-tool"
-							data-widget="collapse">
-							<i class="fa fa-minus"></i>
-						</button>
+						<div>
+							<canvas id="line" class="chart chart-line"
+								chart-data="linChartParameters.data"
+								chart-labels="linChartParameters.labels"
+								chart-series="linChartParameters.series"
+								chart-options="linChartParameters.options" chart-legend="true"
+								height="120">
+						           		</canvas>
+						</div>
+					</div>
+					<div class="panel-footer bg-white">
+						<a class="btn btn-primary btn-block" ui-sref="cert-all-details">More
+							Info <i class="fa fa-arrow-circle-right"></i>
+						</a>
 					</div>
 				</div>
-				<!-- /.box-header -->
-				<div class="box-body">
-					<div class="table-responsive">
-						<table class="table no-margin">
-							<thead>
-								<tr>
-									<th>Sequence</th>
-									<th>Cert No.</th>
-									<th>Contractual Due Date</th>
-									<th>Forecast/Actual Due Date</th>
-									<th>Release Amount</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>1</td>
-									<td>14-01-2016</td>
-									<td>14-01-2016</td>
-									<td>100</td>
-									<td><span class="label label-success">Actual</span></td>
-								</tr>
-								<tr>
-									<td>2</td>
-									<td>2</td>
-									<td>14-01-2016</td>
-									<td>14-01-2016</td>
-									<td>200</td>
-									<td><span class="label label-warning">Actual</span></td>
-								</tr>
-								<tr>
-									<td>3</td>
-									<td>3</td>
-									<td>14-01-2016</td>
-									<td>14-01-2016</td>
-									<td>300</td>
-									<td><span class="label label-danger">Actual</span></td>
-								</tr>
-								<tr>
-									<td>4</td>
-									<td>4</td>
-									<td>14-01-2016</td>
-									<td>14-01-2016</td>
-									<td>400</td>
-									<td><span class="label label-info">Forecast</span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<!-- /.table-responsive -->
-				</div>
-				<!-- /.box-body -->
-				<!-- /.box-footer -->
-			</div>
-			<!-- /.box -->
+				
 		</div>
-		<!-- /.col -->
+
+		<div class="col-md-5">
+			<div class="panel panel-purple ">
+					<div class="panel-heading">
+						<div class="panel-heading-btn">
+							<a href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+								href="javascript:;"
+								class="btn btn-xs btn-icon btn-circle btn-white"
+								data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+						</div>
+						<h4 class="panel-title">
+							<b>Retention Release Schedule</b>
+						</h4>
+					</div>
+					<div class="panel-body">
+					<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns 
+								 ui-grid-exporter class="grid" style="height: 480px;"></div> 
+								
+						<!-- <div class="table-responsive" ng-style = "{height: 500 + 'px', 'overflow': 'auto'}">  ng-style = "{height: 400 + 'px', 'overflow': 'auto'}" 
+							<table class="table">
+								<thead class="">
+									<tr>
+										<th class = "bg-inverse text-white">Cert No.</th>
+										<th class = "bg-inverse text-white">Contractual Due Date</th>
+										<th class = "bg-inverse text-white">Forecast/Actual Due Date</th>
+										<th class = "bg-inverse text-white">Release %</th>
+										<th class = "bg-inverse text-white">Release Amount</th>
+										<th class = "bg-inverse text-white">Status</th>
+									</tr>
+								</thead>
+								<tbody class="">
+									<tr ng-repeat="rr in retentionReleaseList" >
+										<td>{{rr.mainCertNo}}</td>
+										<td>{{rr.contractualDueDate}}</td>
+										<td>{{rr.dueDate}}</td>
+										<td class= "text-right">{{rr.releasePercent | number: 2 }}</td>
+										<td class= "text-right">{{rr.actualReleaseAmt | currency}}</td>
+										<td>{{rr.forecastReleaseAmt}}</td>
+										<td><span class="label" ng-class="rr.status=='F' ? 'label-success' :'label-danger'">{{rr.status==='F' ? 'Forecast':'Actual'}}</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div> -->
+						</div>
+						<!-- <div class="panel-footer bg-white">
+							<a class="btn btn-primary btn-block" ui-sref="cert-all-details">More
+								Info <i class="fa fa-arrow-circle-right"></i>
+							</a>
+						</div> -->
+					</div>
+
 
 
 		<!-- Info boxes -->
-		<div class="col-md-12">
+		<!-- <div class="col-md-12">
 			<div class="box box-primary box-solid">
 				<div class="box-header with-border">
 					<h3 class="box-title">Reports</h3>
@@ -186,7 +134,7 @@
 							</button>
 						</div>
 					</div>
-					<!-- /.col -->
+					/.col
 					<div class="col-md-3 col-sm-6 col-xs-12">
 						<h5 class="m-t-0">Retention Release Report</h5>
 						<div class="clearfix m-b-25">
@@ -198,9 +146,9 @@
 							</button>
 						</div>
 					</div>
-					<!-- /.col -->
+					/.col
 
-					<!-- fix for small devices only -->
+					fix for small devices only
 					<div class="clearfix visible-sm-block"></div>
 
 					<div class="col-md-3 col-sm-6 col-xs-12">
@@ -214,7 +162,7 @@
 							</button>
 						</div>
 					</div>
-					<!-- /.col -->
+					/.col
 					<div class="col-md-3 col-sm-6 col-xs-12">
 						<h5 class="m-t-0">All in One</h5>
 						<div class="clearfix m-b-25">
@@ -226,9 +174,10 @@
 							</button>
 						</div>
 					</div>
-					<!-- /.row -->
+					/.row
 				</div>
 			</div>
-		</div>
+		</div> -->
+		
 	</div>
 </div>

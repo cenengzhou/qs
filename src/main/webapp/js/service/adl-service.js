@@ -7,6 +7,7 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient
     });
     
+  //Asyn Call
     function getJobDashboardData(noJob, type, year){
     	var deferred = $q.defer();
     	$http({

@@ -1,7 +1,5 @@
 package com.gammon.pcms.dto.rs.provider.response.resourceSummary;
 
-import java.io.Serializable;
-
 /**
  * @author koeyyeung
  * created on 25 Aug, 2016

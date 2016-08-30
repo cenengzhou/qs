@@ -153,18 +153,18 @@ public class ADLService {
 												String type) {
 		
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
-		logger.info("getJobDashboardData: "+ type);
+		//logger.info("getJobDashboardData: "+ type);
 		try {
 			if("ContractReceivable".equals(type)){
 				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 				for(int i=0 ; i < contractReceivableList.size(); i++){
-					if(i<=12)
+					if(i< 12)
 						dataList.add(contractReceivableList.get(i).negate());
 				}
 			}else if("Turnover".equals(type)){
 				List<BigDecimal> tunrnoverList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_TURNOVER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 				for(int i=0 ; i < tunrnoverList.size(); i++){
-					if(i<=12)
+					if(i< 12)
 						dataList.add(tunrnoverList.get(i));
 				}
 			}else if("TotalBudget".equals(type)){

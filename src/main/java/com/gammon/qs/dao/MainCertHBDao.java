@@ -1,5 +1,6 @@
 package com.gammon.qs.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -16,12 +18,17 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
+import com.gammon.pcms.dto.rs.provider.response.maincert.MainCertDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.JobInfo;
@@ -152,6 +159,124 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 				.addOrder(Order.asc("certificateNumber"));
 
 		return criteria.list();
+	}
+	
+	
+	/**
+	 * @author koeyyeung
+	 * @since Aug, 28, 2016**/
+	public MainCert getLatestMainCert(String noJob) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Where
+		criteria.add(Restrictions.eq("jobNo", noJob));
+		
+		//Order By
+		criteria.addOrder(Order.desc("certificateNumber"));
+		criteria.setMaxResults(1);
+
+		return (MainCert) criteria.uniqueResult();
+	}
+	
+	/**
+	 * Main Cert Dashboard IPA
+	 * @author koeyyeung
+	 * @since Aug, 28, 2016**/
+	@SuppressWarnings("unchecked")
+	public List<MainCertDashboardDTO> getMonthlySummayIPA(String jobNo, String year) {
+		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+						
+	
+		List<MainCertDashboardDTO> rsList = new ArrayList<MainCertDashboardDTO>();
+		String hql =
+				"Select Certmax.Month,"
+				+"  (cert2.appmaincontractoramt"
+				+"   + cert2.appnscndscamt"
+				+"   + cert2.appmosamt" 
+				+"   - cert2.appmaincontractorret" 
+				+"   + cert2.appmaincontractorretrel" 
+				+"   - cert2.appretfornscndsc" 
+				+"   + cert2.appretrelfornscndsc" 
+				+"   - cert2.appmosret" 
+				+"   + cert2.appmosretrel" 
+				+"   - cert2.appccamt" 
+				+"   + cert2.appadjustmentamt" 
+				+"   + Cert2.appadvancepayment"
+				+"   + Cert2.Appcpfamt) As Amount"
+				+" From "
+				+"    (Select Certmonth.Month as month," 
+				+"      Max(cert.Certno) as Certno"
+				+"    From "
+				+"        (Select To_Char(Cert_Issue_Date, 'MM') as month," 
+				+"        Max(Cert_Issue_Date) as CertDate"
+				+"        From "+schema+".Main_Cert"
+				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
+				+"        Group By To_Char(Cert_Issue_Date, 'MM')) Certmonth"
+				+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
+				+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Month, Certmonth.Certdate) Certmax"
+				+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
+				+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.month";
+				
+		
+		SQLQuery query = getSession().createSQLQuery(hql)
+									.addScalar("month", StringType.INSTANCE)
+									.addScalar("amount", BigDecimalType.INSTANCE);
+		
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertDashboardDTO.class)).list();
+		
+		return rsList;
+	}
+	
+	
+	
+	/**
+	 * Main Cert Dashboard IPC
+	 * @author koeyyeung
+	 * @since Aug, 28, 2016**/
+
+	@SuppressWarnings("unchecked")
+	public List<MainCertDashboardDTO> getMonthlySummayIPC(String jobNo, String year) {
+		String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+						
+	
+		List<MainCertDashboardDTO> rsList = new ArrayList<MainCertDashboardDTO>();
+		String hql =
+				"Select Certmax.Month,"
+				+ " (cert2.Certmaincontractoramt" 
+				+ " + cert2.Certnscndscamt" 
+				+ " + cert2.Certmosamt" 
+				+ " - cert2.Certmaincontractorret" 
+				+ " + cert2.Certmaincontractorretrel" 
+				+ " - cert2.Certretfornscndsc" 
+				+ " + cert2.Certretrelfornscndsc" 
+				+ " - cert2.Certmosret" 
+				+ " + cert2.Certmosretrel" 
+				+ " - cert2.Certccamt"
+				+ " + cert2.Certadjustmentamt"
+				+ " + Cert2.Certadvancepayment "
+				+ " + Cert2.Certcpfamt) As Amount"
+				+" From "
+				+"    (Select Certmonth.Month as month," 
+				+"      Max(cert.Certno) as Certno"
+				+"    From "
+				+"        (Select To_Char(Cert_Issue_Date, 'MM') as month," 
+				+"        Max(Cert_Issue_Date) as CertDate"
+				+"        From "+schema+".Main_Cert"
+				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
+				+"        Group By To_Char(Cert_Issue_Date, 'MM')) Certmonth"
+				+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
+				+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Month, Certmonth.Certdate) Certmax"
+				+" Inner Join "+schema+".Main_Cert Cert2 On Certmax.Certno = Cert2.Certno"
+				+" Where Cert2.Jobno = '"+jobNo+"' And Cert2.System_Status = 'ACTIVE' order by Certmax.month";
+				
+		
+		SQLQuery query = getSession().createSQLQuery(hql)
+									.addScalar("month", StringType.INSTANCE)
+									.addScalar("amount", BigDecimalType.INSTANCE);
+		
+		rsList = query.setResultTransformer(new AliasToBeanResultTransformer(MainCertDashboardDTO.class)).list();
+		
+		return rsList;
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

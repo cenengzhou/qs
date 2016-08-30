@@ -5,9 +5,6 @@ package com.gammon.qs.domain;
 
 import java.util.Date;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 /**
  * @author briantse
  * @Create_Date May 3, 2011
@@ -41,7 +38,6 @@ public class JobDates {
 		this.jobNumber = jobNumber;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getPlannedStartDate() {
 		return plannedStartDate;
 	}
@@ -50,7 +46,6 @@ public class JobDates {
 		this.plannedStartDate = plannedStartDate;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getActualStartDate() {
 		return actualStartDate;
 	}
@@ -59,7 +54,6 @@ public class JobDates {
 		this.actualStartDate = actualStartDate;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getPlannedEndDate() {
 		return plannedEndDate;
 	}
@@ -68,7 +62,6 @@ public class JobDates {
 		this.plannedEndDate = plannedEndDate;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getActualEndDate() {
 		return actualEndDate;
 	}
@@ -77,7 +70,6 @@ public class JobDates {
 		this.actualEndDate = actualEndDate;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getAnticipatedCompletionDate() {
 		return anticipatedCompletionDate;
 	}
@@ -86,7 +78,6 @@ public class JobDates {
 		this.anticipatedCompletionDate = anticipatedCompletionDate;
 	}
 
-	@Temporal(value = TemporalType.DATE)
 	public Date getRevisedCompletionDate() {
 		return revisedCompletionDate;
 	}
