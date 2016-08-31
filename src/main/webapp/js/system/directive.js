@@ -255,23 +255,27 @@ mainApp.directive('ngCurrency', function ($filter, $locale) {
     };
 });
 
-
-//Loading
-mainApp.directive('loading', function () {
+mainApp.directive('numberformat', ['$filter', function ($filter) {
     return {
-      restrict: 'E',
-      replace:true,
-      template: '<div class="loading"><img src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="20" height="20" />LOADING...</div>',
-      link: function (scope, element, attr) {
-            scope.$watch('loading', function (val) {
-                if (val)
-                    $(element).show();
-                else
-                    $(element).hide();
+        require: '?ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            if (!ctrl) return;
+
+
+            ctrl.$formatters.unshift(function (a) {
+                return $filter(attrs.format)(ctrl.$modelValue)
             });
-      }
-    }
-});
+
+
+            ctrl.$parsers.unshift(function (viewValue) {
+                var plainNumber = viewValue.replace(/[^\d|\-+|\.+]/g, '');
+                elem.val($filter(attrs.format)(plainNumber));
+                return plainNumber;
+            });
+        }
+    };
+}]);
+
 
 
 /*app.directive('myDatepicker', function() {

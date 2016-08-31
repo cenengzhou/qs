@@ -1,479 +1,547 @@
 <div class="content">
-	<ol class="breadcrumb pull-right">
-		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
-				Home</a></li>
-		<li class="active">Dashboard</li>
-	</ol>
-
-	<h1 class="page-header">
+	<!-- <h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
-	</h1>
-	
-		<div class="row">
-		
-			<div class="stepwizard">
-			    <div class="stepwizard-row">
-			        <div class="liner"></div>
-			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-open img-circle text-primary"></span>Send out IPA</a>
-			            <p>
-			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>120</strong></small>
-			            </p>
-			        </div>
-			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-ok img-circle text-primary"></span>Confirm</a>
-			            <p>
-			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>150</strong></small>
-			            </p>
-			        </div>
-			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-primary" href="#"><span	class="glyphicon btn-glyphicon glyphicon-refresh img-circle text-primary"></span>Reset</a>
-			        </div>
-			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-check img-circle text-primary"></span>Send out Approval</a>
-			            <p>
-			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>200</strong></small>
-			            </p>
-			        </div>
-			        <div class="stepwizard-step">
-			            <a class="btn icon-btn btn-primary" href="#"><span class="glyphicon btn-glyphicon glyphicon-saved img-circle text-primary"></span>Post</a>
-			            <p>
-			                <small class="text-muted"><i class="glyphicon glyphicon-info-sign"></i> Status <strong>300</strong></small>
-			            </p>
-			        </div>
-			    </div>
+	</h1> -->
+
+	<div class="row">
+
+		<div class="stepwizard">
+			<div class="stepwizard-row">
+				<div class="liner"></div>
+				<div class="stepwizard-step">
+					<button class="btn icon-btn btn-primary"
+						ng-disabled="disableButtons">
+						<span
+							class="glyphicon btn-glyphicon glyphicon-open img-circle text-primary"></span>Send
+						out IPA
+					</button>
+					<p>
+						<small class="text-muted"><i
+							class="glyphicon glyphicon-info-sign"></i> Status <strong>120</strong></small>
+					</p>
+				</div>
+				<div class="stepwizard-step">
+					<button class="btn icon-btn btn-primary"
+						ng-disabled="disableButtons">
+						<span
+							class="glyphicon btn-glyphicon glyphicon-ok img-circle text-primary"></span>Confirm
+					</button>
+					<p>
+						<small class="text-muted"><i
+							class="glyphicon glyphicon-info-sign"></i> Status <strong>150</strong></small>
+					</p>
+				</div>
+				<div class="stepwizard-step">
+					<button class="btn icon-btn btn-primary"
+						ng-disabled="disableButtons">
+						<span
+							class="glyphicon btn-glyphicon glyphicon-refresh img-circle text-primary"></span>Reset
+					</button>
+				</div>
+				<div class="stepwizard-step">
+					<button class="btn icon-btn btn-primary"
+						ng-disabled="disableButtons">
+						<span
+							class="glyphicon btn-glyphicon glyphicon-check img-circle text-primary"></span>Send
+						out Approval
+					</button>
+					<p>
+						<small class="text-muted"><i
+							class="glyphicon glyphicon-info-sign"></i> Status <strong>200</strong></small>
+					</p>
+				</div>
+				<div class="stepwizard-step">
+					<button class="btn icon-btn btn-primary"
+						ng-disabled="disableButtons">
+						<span
+							class="glyphicon btn-glyphicon glyphicon-saved img-circle text-primary"></span>Post
+					</button>
+					<p>
+						<small class="text-muted"><i
+							class="glyphicon glyphicon-info-sign"></i> Status <strong>300</strong></small>
+					</p>
+				</div>
 			</div>
-			
-			<div class="col-lg-3 col-xs-12">
-		       <!-- small box -->
-				<div class="small-box bg-purple">
-					<div class="inner">
-						<h3>$167,341,485</h3>
-						<p>IPA Net Amount</p>
+		</div>
+
+		<div class="col-lg-3 col-xs-12">
+			<div class="widget widget-stat bg-success text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-file"></i>
+				</div>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">IPA Net Amount</div>
+					<div class="widget-stat-number">{{cert.appNetAmount |
+						currency}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-12">
+			<div class="widget widget-stat bg-success text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-file"></i>
+				</div>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">IPA Gross Amount</div>
+					<div class="widget-stat-number">{{cert.appGrossAmount |
+						currency}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-12">
+			<div class="widget widget-stat bg-purple text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-bookmark"></i>
+				</div>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">IPC Net Amount</div>
+					<div class="widget-stat-number">{{cert.certNetAmount |
+						currency}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-12">
+			<div class="widget widget-stat bg-purple text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-bookmark"></i>
+				</div>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">IPC Gross Amount</div>
+					<div class="widget-stat-number">{{cert.certGrossAmount |
+						currency}}</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Certificate Info -->
+		<div class="col-md-8">
+			<!-- Horizontal Form -->
+			<div class="panel panel-inverse ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i> </a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i> </a>
 					</div>
-					<div class="icon">
-						<i class="ion ion-document-text"></i>
+					<h4 class="panel-title">
+						<b>Certificate No.: {{cert.certificateNumber}}</b>
+					</h4>
+
+				</div>
+
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-md-4 "></label> <label
+							class="text-light-blue col-md-4">IPA</label> <label
+							class="text-light-blue col-md-4">IPC</label>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Main Contractor
+							Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedMainContractorAmount"
+									ng-disabled="disableButtons">
+								<!-- <span class="input-group-addon">.00</span> -->
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMainContractorAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ NSC / NDSC Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedNSCNDSCAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedNSCNDSCAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ MOS Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedMOSAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMOSAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ Main Contractor
+							Retention Released</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedMainContractorRetentionReleased"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMainContractorRetentionReleased"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ Retention for NSC
+							/ NDSC Released</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedRetentionforNSCNDSCReleased"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedRetentionforNSCNDSCReleased"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ MOS Retention
+							Released</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedMOSRetentionReleased"
+									 ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMOSRetentionReleased"
+									 ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ Adjustment Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedAdjustmentAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedAdjustmentAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ Advance Payment</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedAdvancePayment"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedAdvancePayment"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">+ CPF Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedCPFAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format
+									class="form-control input-sm text-right text-right"
+									ng-model="cert.certifiedCPFAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">- Main Contractor
+							Retention</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									class="form-control input-sm text-right text-right"
+									number-format ng-model="cert.appliedMainContractorRetention"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMainContractorRetention"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">- Retention for NSC
+							/ NDSC</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedRetentionforNSCNDSC"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedRetentionforNSCNDSC"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">- MOS Retention</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedMOSRetention"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedMOSRetention"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">- Contra Charge
+							Amount</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.appliedContraChargeAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.certifiedContraChargeAmount"
+									ng-disabled="disableButtons">
+							</div>
+						</div>
+						
+					</div>
+
+				</div>
+				<div class="panel-footer bg-white">
+					<div class="row">
+						<div class=" col-md-6">
+							<button class="btn btn-primary btn-block" ui-sref="cert.details">
+								Attachment <i class="fa fa-file-text"></i>
+							</button>
+						</div>
+						<div class=" col-md-6">
+							<button class="btn btn-primary btn-block" ui-sref="cert.details"
+								ng-disabled="disableButtons" ng-hide="disableButtons"
+								ng-click="save()">
+								Save <i class="fa fa-floppy-o"></i>
+							</button>
+
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+
+
+		<!-- GST -->
+		<div class="col-md-4" ng-show="jobNo.indexOf('14')>-1">
+			<div class="box box-default">
+				<div class="box-body">
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label>GST Amount (Receivable)</label>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.gstReceivable">
+							</div>
+						</div>
+						<div class="form-group col-md-6">
+							<label>GST Contra Charge (Payable)</label>
+							<div class="input-group">
+								<span class="input-group-addon">$</span> <input type="text"
+									number-format class="form-control input-sm text-right"
+									ng-model="cert.gstPayable">
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+		</div>
+
+		<!-- Date  -->
+		<div class="col-md-4">
+			<div class="box box-primary">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>IPA Submission Date:</label>
+								<div class="input-group" moment-picker="cert.ipaSubmissionDate"
+									ng-model="cert.ipaSubmissionDate" format="YYYY-MM-DD"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="cert.ipaSubmissionDate"
+										ng-disabled="disableButtons" required>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Certificate Issue Date:</label>
+								<div class="input-group" moment-picker="cert.certIssueDate"
+									ng-model="cert.certIssueDate" format="YYYY-MM-DD"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="cert.certIssueDate"
+										ng-disabled="disableButtons" required>
+
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="form-group">
+								<label> Certificate As At Date:</label>
+								<div class="input-group" moment-picker="cert.certAsAtDate"
+									ng-model="cert.certAsAtDate" format="YYYY-MM-DD"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="cert.certAsAtDate"
+										ng-disabled="disableButtons" required>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Certificate Due Date:</label>
+								<div class="input-group" moment-picker="cert.certDueDate"
+									ng-model="cert.certDueDate" format="YYYY-MM-DD"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="cert.certDueDate"
+										ng-disabled="disableButtons" required>
+
+								</div>
+							</div>
+						</div>
+
+
+
+						<div class="col-md-12">
+							<a class="btn btn-warning btn-block" ui-sref="cert.details">Retention
+								Release Schedule <i class="fa fa-calendar"></i>
+							</a>
+						</div>
+
+
 					</div>
 				</div>
 			</div>
-	     <div class="col-lg-3 col-xs-12">
-	       <!-- small box -->
-	       <div class="small-box bg-purple">
-	         <div class="inner">
-	           <h3>$167,341,485</h3>
-	
-	           <p>IPA Gross Amount</p>
-	         </div>
-	         <div class="icon">
-	           <i class="ion ion-document-text"></i>
-	         </div>
-	       </div>
-	     </div>
-	     <div class="col-lg-3 col-xs-12">
-	       <!-- small box -->
-	       <div class="small-box bg-green">
-	         <div class="inner">
-	           <h3>$167,341,485</h3>
-	
-	           <p>IPC Net Amount</p>
-	         </div>
-	         <div class="icon">
-	           <i class="ion ion-document-text"></i>
-	         </div>
-	       </div>
-	     </div>
-	     <div class="col-lg-3 col-xs-12">
-	       <!-- small box -->
-	       <div class="small-box bg-green">
-	         <div class="inner">
-	           <h3>$167,341,485</h3>
-	
-	           <p>IPC Gross Amount</p>
-	         </div>
-	         <div class="icon">
-	           <i class="ion ion-document-text"></i>
-	         </div>
-	       </div>
-	     </div>
-			
-			
-			<!-- Certificate Info -->
-	       	<div class="col-md-8" >
-	              <!-- Horizontal Form -->
-	              <div class="box box-info">
-	                <div class="box-header with-border">
-	                  <h3 class="box-title col-md-4">Certificate No.: {{certNo}}</h3>
-	                  <h3 class="box-title col-md-5">Client Certificate No.: {{clientCertNo}}</h3>
-	                  <div class=" col-md-3">
-	                  <a class="btn btn-info btn-block" ui-sref="cert.details">Attachment <i class="fa fa-file-text"></i></a>
-	                  </div>
-	                </div><!-- /.box-header -->
-	                <!-- form start -->
-	                <form> <!-- class="form-horizontal" -->
-	                  <div class="box-body">
-			            <div class="form-group">
-			                <label class="col-md-4 "></label>
-		                  	<label class="text-light-blue col-md-4">IPA</label>
-							<label class="text-light-blue col-md-4">IPC</label>
-			            </div>
-	                    <div class="form-group">
-	                      <label class="col-md-4 control-label">Main Contractor Amount</label>
-	                      <div class="col-md-4">
-	                         <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value={{cert.mainCertAmount}}>
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-							 <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value={{cert.mainCertAmount}}>
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label class="col-md-4 control-label">+ NSC / NDSC Amount</label>
-	                     <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ MOS Amount</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ Main Contractor Retention Released</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value={{cert.mainCertRetentionReleased}}>
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value={{cert.mainCertRetentionReleased}}>
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ Retention for NSC / NDSC Released</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ MOS Retention Released</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ Adjustment Amount</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ Advance Payment</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">+ CPF Amount</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">- Main Contractor Retention</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text-right" class="form-control input-sm" value={{cert.mainCertRetention}}>
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value={{cert.mainCertRetention}}>
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">- Retention for NSC / NDSC</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                      <label  class="col-md-4 control-label">- MOS Retention</label>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                    </div>
-	                    <div class="form-group">
-	                     <label  class="col-md-4 control-label">- Contra Charge Amount</label>
-	                     <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-			                    <!-- <span class="input-group-addon">.00</span> -->
-		                  	</div>
-	                      </div>
-	                      <div class="col-md-4">
-	                        <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm" value="0">
-		                  	</div>
-	                      </div>
-	                     <!-- <div class="col-md-4">
-	                       <div class="form-group has-error">
-		                      <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>Contra Charge Amount</label>
-		                      <input type="text" class="form-control" id="inputError" placeholder="Enter ...">
-		                    </div>
-	                     </div>
-	                     <div class="col-md-4">
-	                       <div class="form-group has-error">
-	                       <label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i>..</label>
-	                       <div class="input-group">
-		                      
-		                      <span class="input-group-addon">$</span>
-		                      <input type="text" class="form-control" id="inputError" placeholder="Enter ...">
-		                    </div>
-		                    </div>
-	                     </div> -->
-	                   </div>
-	                    
-	                </div><!-- /.box-body -->
-<!-- 	                <div class="box-footer">
-	                  <a class="btn btn-twitter btn-block" ui-sref="cert.details">Save <i class="fa fa-floppy-o"></i></a>
-	                </div>/.box-footer
- -->	              </form>
-	            </div><!-- /.box -->
-	         </div>
-	        
-	        <!-- GST -->
-	       	<div class="col-md-4">
-	         <div class="box box-default">
-                <div class="box-body">
-                  <div class="row">
-	                    <div class="form-group col-md-6">
-	                      <label>GST Amount (Receivable)</label>
-	                      <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm"  value="0">
-		                  </div>
-	                    </div>
-	                    <div class="form-group col-md-6">
-	                      <label>GST Contra Charge (Payable)</label>
-	                      <div class="input-group">
-			                    <span class="input-group-addon">$</span>
-			                    <input type="text" class="form-control input-sm"  value="0">
-		                  </div>
-	                    </div>
-                  </div>
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
-	         </div>
-	         
-	         <!-- Date  -->
-	         <div class="col-md-4">
-	         	<div class="box box-primary">
-	                <!-- <div class="box-header">
-	                  <h3 class="box-title">Date</h3>
-	                </div> -->
-	                <div class="box-body">
-	                  <div class="row">
-	                  	<div class="col-md-6">
-		                  <div class="form-group">
-		                    <label>IPA Submission Date:</label>
-		                    <div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right"   ng-model="ipaSubmissionDate">
-		                    </div><!-- /.input group -->
-		                  </div><!-- /.form group -->
-						</div>
-						<div class="col-md-6">
-		                  <!-- Date and time range -->
-		                  <div class="form-group">
-		                    <label>Certificate Issue Date:</label>
-		                    <div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right" ng-model="certIssueDate">
-		                    </div><!-- /.input group -->
-		                  </div><!-- /.form group -->
-						</div>
-		
-						<div class="col-md-6">
-		                  <div class="form-group">
-		                    <label> Certificate As At Date:</label>
-		                    <div class="input-group date">
-							   	<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-							    <input type="text" ng-class={inputError:dp.validDate==false} class="form-control pull-right" ng-model="asAtDAte"/>
-							</div>
-		                  </div><!-- /.form group -->
-						</div>
-						<div class="col-md-6">
-		                  <!-- Date and time range -->
-		                  <div class="form-group">
-		                    <label>Certificate Due Date:</label>
-		                    <div class="input-group date">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right" ng-model="certDueDate">
-		                    </div><!-- /.input group -->
-		                  </div><!-- /.form group -->
-						</div>
-		                  
-		                 
-		               <!--  <div class="col-md-6">
-		                  Date and time range
-		                  <div class="form-group">
-		                    <label>Actual Receipt Date:</label>
-		                    <div class="input-group">
-		                      <div class="input-group-addon">
-		                        <i class="fa fa-calendar"></i>
-		                      </div>
-		                      <input type="text" class="form-control pull-right" id="datepicker1" data-date-format="dd-mm-yyyy" input-sm value="19-08-2014">data-ng-datepicker data-ng-options="datepickerOptions" data-ng-model="date"
-		                    </div>
-		                  </div>
-						</div> -->
-		                
-		                
-		                <div class="col-md-12">
-			                <a class="btn btn-warning btn-block" ui-sref="cert.details">Retention Release Schedule <i class="fa fa-calendar"></i></a>
-		                </div>
-		                
-		                
-	                	</div><!-- /.row -->
-		         	</div><!-- /.box-body -->
-	       		 </div>
-	         </div>
-	         
+		</div>
 
-	         <!-- Remark -->
-	         <div class="col-md-4">
-		         <div class="box box-warning">
-	                <!-- <div class="box-header with-border">
-	                  <h3 class="box-title">Remark</h3>
-	                </div>/.box-header -->
-	                <div class="box-body">
-	                  <form role="form">
-	                    <!-- textarea -->
-	                    <div class="form-group">
-	                    	<label>Remark</label>
-	                      <textarea class="form-control" rows="3" placeholder="Enter ..." ng-style="{height: 50 + 'px'}"></textarea>
-	                    </div>
-	                  </form>
-	                </div><!-- /.box-body -->
-	              </div><!-- /.box -->
-	         </div>
-	         
-        </div><!-- /.row -->    
-        <a class="btn btn-primary btn-block" ui-sref="cert.details" ng-click="save()">Save <i class="fa fa-floppy-o"></i></a>
-   </div><!-- /.content-wrapper -->
+		<!-- Remark -->
+		<div class="col-md-4">
+			<div class="box box-warning">
+				<div class="box-body">
+					<form role="form">
+						<div class="form-group">
+							<label>Remark</label>
+							<textarea class="form-control" rows="3" placeholder="Enter ..."
+								ng-model="cert.remark" ng-style="{height: 50 + 'px'}"></textarea>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
+
+	</div>
+</div>

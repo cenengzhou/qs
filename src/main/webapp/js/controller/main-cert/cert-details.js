@@ -1,28 +1,36 @@
-mainApp.controller('CertDetailsCtrl', ['$scope', '$http', '$location',  function ($scope, $http, $location) {
+mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', '$stateParams',
+                                       function ($scope,  mainCertService, $cookies, $stateParams) {
 
-	$scope.certNo = "10";
-	$scope.clientCertNo = "10";
-	$scope.certStatus = "300";
+	if($stateParams.mainCertNo){
+		$cookies.put('mainCertNo', $stateParams.mainCertNo);
+	}else
+		$cookies.put('mainCertNo', '');
 	
-
-	$scope.ipaSubmissionDate = "";
-	$scope.asAtDate = "";
-	$scope.certIssueDate = "";
-	$scope.certDueDate = "";
-   
-   $scope.cert = {
-   	    'mainCertAmount' : "167,341,485",
-   	    'mainCertRetentionReleased' : "7,443,000",
-   	    'mainCertRetention' : "7,443,000"
-   };
-   
-   
+	$scope.mainCertNo = $cookies.get("mainCertNo");
+	
+	if($scope.mainCertNo != null && $scope.mainCertNo.length > 0)
+		getCertificate();
    
  //Save Function
 	$scope.save = function () {
 		console.log("ipaSubmissionDate: " + $scope.ipaSubmissionDate);
 
 	};
+	
+	
+	function getCertificate(){
+		mainCertService.getCertificate($scope.jobNo, $scope.mainCertNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.cert = data;
+					if($scope.cert.length==0 || $scope.cert.status < 300)
+						$scope.disableButtons = false;
+					else
+						$scope.disableButtons = true;
+				});
+	}
+	
 	
 }]);
 

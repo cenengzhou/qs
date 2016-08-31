@@ -813,6 +813,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('cert.details', {
 		url: "/details",
 		templateUrl: "view/main-cert/cert-details.html",
+		params: {
+			'mainCertNo': null
+		},
 		controller: 'CertDetailsCtrl'
 	})
 	
