@@ -79,6 +79,11 @@ public class MainCertController {
 		return mainCertService.getCertificateDashboardData(year, month, noJob, type);
 	}
 	
+	@RequestMapping(value = "getLatestPostedMainCert", method = RequestMethod.GET)
+	public MainCert getLatestPostedMainCert(@RequestParam(required = true) String noJob) {
+		return mainCertService.getLatestPostedMainCert(noJob);
+	}
+	
 	// ---------------- update / calculate ----------------
 	@RequestMapping(value = "updateRetentionRelease",
 					method = RequestMethod.POST)

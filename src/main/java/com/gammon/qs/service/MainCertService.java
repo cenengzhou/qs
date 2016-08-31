@@ -769,7 +769,7 @@ public class MainCertService {
 				else{
 					//Get latest cert amount if current year has no data to show
 					BigDecimal netIPAamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob);
+					MainCert mainCert = mainCertHBDao.getLatestPostedMainCert(noJob);
 					if(mainCert != null)
 						netIPAamount = new BigDecimal(mainCert.calculateAppliedNetAmount());
 					dataList.add(netIPAamount);
@@ -781,7 +781,7 @@ public class MainCertService {
 				else{
 					//Get latest cert amount if current year has no data to show
 					BigDecimal netIPCamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob);
+					MainCert mainCert = mainCertHBDao.getLatestPostedMainCert(noJob);
 					if(mainCert != null)
 						netIPCamount = new BigDecimal(mainCert.calculateCertifiedNetAmount());
 					dataList.add(netIPCamount);
@@ -799,7 +799,6 @@ public class MainCertService {
 				}
 			}
 		} catch (DataAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
@@ -807,14 +806,15 @@ public class MainCertService {
 	}
 	
 	private List<BigDecimal> convertToDashboardData(List<MainCertDashboardDTO> certList){
-		logger.info(" convertToDashboardData: ");
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
 		int counter = 1;
 		
 		for(MainCertDashboardDTO cert: certList){
 			while(Integer.valueOf(cert.getMonth()) != counter){
-				logger.info(Integer.valueOf(cert.getMonth()) + " - "+counter);
-				dataList.add(dataList.get(dataList.size()-1));
+				if(dataList.size()>0)
+					dataList.add(dataList.get(dataList.size()-1));
+				else
+					dataList.add(cert.getAmount());
 				counter += 1;
 			}
 			dataList.add(cert.getAmount());
@@ -822,6 +822,10 @@ public class MainCertService {
 		}
 		
 		return dataList;
+	}
+	
+	public MainCert getLatestPostedMainCert (String noJob){
+		return mainCertHBDao.getLatestPostedMainCert(noJob);
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

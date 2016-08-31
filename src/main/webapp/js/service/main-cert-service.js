@@ -1,22 +1,28 @@
 mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, $log){
 	// Return public API.
     return({
-        getMainCertList: 					getMainCertList,
+    	getCertificateList: 				getCertificateList,
 
         getPaidMainCertList:				getPaidMainCertList,
         getCertificate: 					getCertificate,
         getMainCertReceiveDateAndAmount:	getMainCertReceiveDateAndAmount,
         getCertificateDashboardData: 		getCertificateDashboardData,
         getRetentionReleaseList: 			getRetentionReleaseList,
+        getLatestPostedMainCert:			getLatestPostedMainCert,
         
         updateCertificate: 					updateCertificate,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
     });
 	
-    function getMainCertList() {
-        var request = $http({
+    
+    
+    function getCertificateList(noJob) {
+    	var request = $http({
             method: "get",
-            url: "data/cert-data.json"
+            url: "service/mainCert/getCertificateList",
+            params: {
+            	noJob: noJob
+            }
         });
         return( request.then( handleSuccess, handleError ) );
     }
@@ -49,6 +55,17 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
         var request = $http({
             method: "get",
             url: "service/mainCert/getRetentionReleaseList",
+            params: {
+            	noJob: noJob
+            }
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+    
+    function getLatestPostedMainCert(noJob) {
+    	var request = $http({
+            method: "get",
+            url: "service/mainCert/getLatestPostedMainCert",
             params: {
             	noJob: noJob
             }

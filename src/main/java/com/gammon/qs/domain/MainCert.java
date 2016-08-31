@@ -17,7 +17,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.springframework.data.annotation.Transient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.BasePersistedObject;
 
 @Entity
@@ -86,6 +88,7 @@ public class MainCert extends BasePersistedObject {
 	private String clientCertNo;
 	private String remark;
 	private Double totalReceiptAmount;
+	
 
 	public MainCert() {
 	}
@@ -171,8 +174,10 @@ public class MainCert extends BasePersistedObject {
 			this.remark = updatedMainCert.getRemark();
 	}
 	
+	@JsonProperty("certNetAmount")
+	@Transient
 	public Double calculateCertifiedNetAmount(){
-		return 	 (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
+		return  (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
 				+(certifiedMOSAmount==null?0:certifiedMOSAmount)
 				-(certifiedMainContractorRetention==null?0:certifiedMainContractorRetention)
@@ -186,6 +191,9 @@ public class MainCert extends BasePersistedObject {
 				+(certifiedAdvancePayment==null?0:certifiedAdvancePayment)
 				+(certifiedCPFAmount==null?0:certifiedCPFAmount);
 	}
+	
+	@JsonProperty("appNetAmount")
+	@Transient
 	public Double calculateAppliedNetAmount(){
 		return 	 (appliedMainContractorAmount==null?0:appliedMainContractorAmount)
 				+(appliedNSCNDSCAmount==null?0:appliedNSCNDSCAmount)
@@ -201,6 +209,9 @@ public class MainCert extends BasePersistedObject {
 				+(appliedAdvancePayment==null?0:appliedAdvancePayment)
 				+(appliedCPFAmount==null?0:appliedCPFAmount);	
 	}
+	
+	@JsonProperty("certGrossAmount")
+	@Transient
 	public Double calculateCertifiedGrossAmount(){
 		return 	 (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
@@ -209,6 +220,9 @@ public class MainCert extends BasePersistedObject {
 				+(certifiedAdvancePayment==null?0:certifiedAdvancePayment)
 				+(certifiedCPFAmount==null?0:certifiedCPFAmount);
 	}
+	
+	@JsonProperty("appGrossAmount")
+	@Transient
 	public Double calculateAppliedGrossAmount(){
 		return 	 (appliedMainContractorAmount==null?0:appliedMainContractorAmount)
 				+(appliedNSCNDSCAmount==null?0:appliedNSCNDSCAmount)
@@ -217,6 +231,8 @@ public class MainCert extends BasePersistedObject {
 				+(appliedAdvancePayment==null?0:appliedAdvancePayment)
 				+(appliedCPFAmount==null?0:appliedCPFAmount);
 	}	
+	
+	
 	
 	public String toNormalString(){
 		String result = "\"jobNumber = " + getJobNo();

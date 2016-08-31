@@ -155,8 +155,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		criteria.add(Restrictions.eq("jobNo", noJob));
 		
 		//Order By
-		criteria.addOrder(Order.asc("jobNo"))
-				.addOrder(Order.asc("certificateNumber"));
+		criteria.addOrder(Order.desc("certificateNumber"));
 
 		return criteria.list();
 	}
@@ -165,11 +164,12 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	/**
 	 * @author koeyyeung
 	 * @since Aug, 28, 2016**/
-	public MainCert getLatestMainCert(String noJob) throws DataAccessException {
+	public MainCert getLatestPostedMainCert(String noJob) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(getType());
 
 		// Where
 		criteria.add(Restrictions.eq("jobNo", noJob));
+		criteria.add(Restrictions.eq("certificateStatus", "300"));
 		
 		//Order By
 		criteria.addOrder(Order.desc("certificateNumber"));
@@ -210,7 +210,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 				+"        (Select To_Char(Cert_Issue_Date, 'MM') as month," 
 				+"        Max(Cert_Issue_Date) as CertDate"
 				+"        From "+schema+".Main_Cert"
-				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
+				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
 				+"        Group By To_Char(Cert_Issue_Date, 'MM')) Certmonth"
 				+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
 				+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Month, Certmonth.Certdate) Certmax"
@@ -262,7 +262,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 				+"        (Select To_Char(Cert_Issue_Date, 'MM') as month," 
 				+"        Max(Cert_Issue_Date) as CertDate"
 				+"        From "+schema+".Main_Cert"
-				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
+				+"        Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' and certificateStatus = '300' And Cert_Issue_Date>=to_date('01-01-20"+year+"', 'dd-mm-yyyy') And Cert_Issue_Date <= to_date('31-12-20"+year+"', 'dd-mm-yyyy')"
 				+"        Group By To_Char(Cert_Issue_Date, 'MM')) Certmonth"
 				+"    Inner Join "+schema+".Main_Cert Cert On Certmonth.Certdate = Cert.Cert_Issue_Date"
 				+"    Where Jobno = '"+jobNo+"' And System_Status = 'ACTIVE' Group By Certmonth.Month, Certmonth.Certdate) Certmax"

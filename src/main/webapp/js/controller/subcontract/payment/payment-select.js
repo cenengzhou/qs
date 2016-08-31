@@ -1,7 +1,9 @@
 mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter',
                                    function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter) {
 
-
+	$scope.maxPaymentNo = 0;
+	$scope.latestPaymentStatus = '';
+	
 	loadData();
 
 	$scope.removeDefaultAnimation = function (){
@@ -18,17 +20,17 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
-					$scope.payments = data;
-
-					$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
-
-					var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
-					$scope.latestPaymentStatus = obj[0]['paymentStatus'];
-					$scope.latestPaymentType = obj[0]['intermFinalPayment'];
-					
+					if(data != null && data.length > 0){
+						$scope.payments = data;
+	
+						$scope.maxPaymentNo = Math.max.apply(Math,$scope.payments.map(function(item){return item.paymentCertNo;}));
+	
+						var obj = $scope.payments.filter(function(item){ return item.paymentCertNo == $scope.maxPaymentNo; });
+						$scope.latestPaymentStatus = obj[0]['paymentStatus'];
+						$scope.latestPaymentType = obj[0]['intermFinalPayment'];
+						
+					}
 					getSubcontract();
-					
 					prepareCalendar();
 				});
 	}
@@ -45,7 +47,6 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
 				});
 	}

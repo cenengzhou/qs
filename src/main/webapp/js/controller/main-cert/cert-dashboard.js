@@ -73,7 +73,6 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 
 	function setDashboardData(contractReceivableList, ipaList, ipcList) {
-		console.log("contractReceivableList "+contractReceivableList.length);
 		$scope.contractReceivable = contractReceivableList[11];
 		$scope.ipa = ipaList[11];
 		$scope.ipc = ipcList[11];
@@ -100,7 +99,6 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 	function getRetentionReleaseList(){
 		mainCertService.getRetentionReleaseList($scope.jobNo)
 		.then( function (data){
-			console.log(data);
 			$scope.gridOptions.data= data;
 			//$scope.retentionReleaseList = data;
 

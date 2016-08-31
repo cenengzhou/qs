@@ -758,6 +758,24 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'CertCtrl'
 	})
+	.state('main-cert-select', {
+		url: "/main-cert-select",
+		parent: "navigation",
+		templateUrl: "view/main-cert/main-cert-select.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/main-cert/main-cert-select.js',
+                           'js/service/main-cert-service.js'
+                    ] 
+                });
+            }]
+        },
+		controller: 'MainCertCtrl'
+	})
+	
 	.state('cert-all-details', {
 		url: "/cert-all-details",
 		parent: "navigation",
