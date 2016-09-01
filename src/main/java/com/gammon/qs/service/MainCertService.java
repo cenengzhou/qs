@@ -660,6 +660,7 @@ public class MainCertService {
 	public Boolean toCompleteMainCertApproval(	String jobNumber,
 												String mainCertNo,
 												String approvalDecision) throws DatabaseOperationException {
+//		adminService.canAccessJob(jobNumber);
 		if (jobNumber == null || jobNumber.trim().equals("")) {
 			logger.info("Job Number = null");
 			return Boolean.FALSE;

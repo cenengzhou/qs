@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -18,6 +18,7 @@ import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetR
 import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetResponse;
 import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.SecurityConfig;
+import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -46,6 +47,8 @@ public class AdminService {
 	private SecurityConfig securityConfig;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private WebServiceConfig webServiceConfig;
 	
 	public Set<String> obtainCompanyListByUsernameViaWS(String username) throws Exception {
 		Set<String> companySet = new HashSet<String>();
@@ -69,18 +72,6 @@ public class AdminService {
 		List<String> jobNumberList = new ArrayList<String>();
 		for(JobSecurity jobSecurity : jobSecurityList){
 			List<String> jobNumberByCompanyList = new ArrayList<String>();
-//			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
-//				try {
-//					List<String> allJobCompany = jobInfoHBDao.obtainAllJobCompany();
-//					for(String company : allJobCompany){
-//						jobNumberByCompanyList.addAll(jobInfoHBDao.obtainJobNumberByCompany(company));
-//					}
-//					jobNumberList.addAll(jobNumberByCompanyList);
-//				} catch (DatabaseOperationException e) {
-//					e.printStackTrace();
-//				}
-//				break;
-//			}
 			try {
 				jobNumberByCompanyList = jobInfoHBDao.obtainJobNumberByCompany(jobSecurity.getCompany());
 				jobNumberList.addAll(jobNumberByCompanyList);
@@ -108,9 +99,14 @@ public class AdminService {
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
-	public Boolean canAccessJob(String noJob) throws DataAccessException {
+	public Boolean canAccessJob(String noJob) {
 		User user = securityService.getCurrentUser();
-		return canAccessJob(user, noJob);
+		if(user != null && !user.getUsername().equals(webServiceConfig.getQsWsUsername())){
+			return canAccessJob(user, noJob);
+		} else {
+			//bypass checking for ws provider and quartz
+			return true;
+		}
 	}
 	
 	public Boolean canAccessJob(String username, String noJob){
@@ -118,15 +114,23 @@ public class AdminService {
 		return canAccessJob(user, noJob);
 	}
 	
-	public Boolean canAccessJob(User user, String noJob){
+	/**
+	 * Return true if user have access right to the jobNo
+	 * or throw AccessDeniedException (*never return false)
+	 * @param user
+	 * @param noJob
+	 * @return
+	 * @throws AccessDeniedException
+	 */
+	public Boolean canAccessJob(User user, String noJob) {
 		if (user.hasRole(securityConfig.getRolePcmsJobAll())) {
 			return true;
 		} else {
 			if (StringUtils.isNotBlank(noJob)){
-				return obtainCanAccessJobNoList(user.getUsername()).contains(noJob);
+				List<String> jobList = obtainCanAccessJobNoList(user.getUsername());
+				if(jobList.contains(noJob)) return true;
 			} 
-			logger.warning(user.getUsername() + " cannot access Job:" + noJob);
-			return false;
+			throw new AccessDeniedException(user.getFullname() + " cannot access job " + noJob);
 		}
 	}
 

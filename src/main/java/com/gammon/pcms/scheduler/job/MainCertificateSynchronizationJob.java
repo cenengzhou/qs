@@ -25,6 +25,7 @@ public class MainCertificateSynchronizationJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		quartzConfig.prepareQuartzUser();
 		logger.info("Scheduler: "+quartzConfig.getJobDescriptionMainCertificateSynchronization());
 		mainCertificateSynchronizationService.updateMainCertFromF03B14();
 	}

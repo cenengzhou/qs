@@ -95,12 +95,12 @@ public class IVPostingHistService implements Serializable{
 	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public List<IVPostingHist> obtainIVPostingHistoryList(String jobNumber, Date fromDate, Date toDate) throws Exception {
+//		adminService.canAccessJob(jobNumber);
 		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
 		String username = securityService.getCurrentUser().getUsername();
 		logger.info("User:" + username + " Job: " + jobNumber + " Package: " +  " From Date: " + fromDate + " To Date: " + toDate);
-		if(adminService.canAccessJob(jobNumber)){
-			resultList.addAll(ivPostingHistoryDao.obtainIVPostingHistory(jobNumber, null, null, null, fromDate, toDate));
-		}
+		resultList.addAll(ivPostingHistoryDao.obtainIVPostingHistory(jobNumber, null, null, null, fromDate, toDate));
+
 		return resultList;
 		
 	}

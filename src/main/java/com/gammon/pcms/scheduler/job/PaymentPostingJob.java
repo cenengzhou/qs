@@ -25,6 +25,7 @@ public class PaymentPostingJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		quartzConfig.prepareQuartzUser();
 		logger.info("Scheduler: "+quartzConfig.getJobDescriptionPaymentPosting());
 		paymentPostingService.runPaymentPosting();
 	}

@@ -1,4 +1,4 @@
-mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, $log){
+mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
     	getCertificateList: 				getCertificateList,
@@ -24,7 +24,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	noJob: noJob
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getPaidMainCertList(noJob) {
@@ -35,7 +35,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	noJob: noJob
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
    
@@ -48,7 +48,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	certificateNumber: certificateNumber
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getRetentionReleaseList(noJob) {
@@ -59,7 +59,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	noJob: noJob
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getLatestMainCert(noJob, status) {
@@ -71,7 +71,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	status: status
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     //Asyn Call
@@ -104,7 +104,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
             	refDocNo: refDocNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateMainCertFromF03B14Manually(){
@@ -115,34 +115,34 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
     
     function updateCertificate(mainCert){
     	var request = $http.post("service/mainCert/updateCertificate", mainCert);
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
         
    
 
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response ) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response ) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 

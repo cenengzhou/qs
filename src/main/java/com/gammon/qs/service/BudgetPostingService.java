@@ -15,10 +15,11 @@ import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactions
 import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactionsManager.getInsertJournalEntryTransactions.InsertJournalEntryTransactionsRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.getValidateAAICompletely.ValidateAAICompletelyResponseObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.BudgetPostingWSDao;
 import com.gammon.qs.dao.JobInfoWSDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.webservice.WSConfig;
@@ -43,6 +44,8 @@ public class BudgetPostingService {
 	private WSConfig wsConfig;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private AdminService adminService;
 
 	private static final String ocTransactionNumber = "1";
 	private static final String obTransactionNumber = "2";
@@ -105,6 +108,7 @@ public class BudgetPostingService {
 
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public String postBudget(String jobNumber, String username) {
+//		adminService.canAccessJob(jobNumber);
 		if(username == null || username.equals("")){
 			username = securityService.getCurrentUser().getUsername();
 		}

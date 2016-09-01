@@ -13,6 +13,7 @@ import com.gammon.qs.domain.quartz.QrtzTriggers;
 import com.gammon.qs.service.admin.QrtzTriggerService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/quartz", method = RequestMethod.POST)
 public class QuartzController {
 

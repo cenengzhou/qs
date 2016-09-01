@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.service.transit.TransitService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/transit/")
 public class TransitController {
 	@Autowired
@@ -62,56 +64,60 @@ public class TransitController {
 		return transitService.searchTransitResources(jobNumber);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
 	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber){
 		return transitService.confirmResourcesAndCreatePackages(jobNumber);
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "completeTransit", method = RequestMethod.POST)
 	public String completeTransit(@RequestParam String jobNumber){
 		return transitService.completeTransit(jobNumber);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "saveTransitResourcesList", method = RequestMethod.POST)
 	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList,
-																HttpServletRequest request, HttpServletResponse response){
+																HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = null;
-		try{
+//		try{
 			result = transitService.saveTransitResources(jobNumber, resourcesList);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 		if(result != null){
 			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
 		}
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "saveTransitResources", method = RequestMethod.POST)
 	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources,
-													HttpServletRequest request, HttpServletResponse response){
+													HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = null;
-		try{
+//		try{
 			result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources), request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 
 		return result;
 	}
 
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createOrUpdateTransitHeader", method = RequestMethod.POST)
 	public String createOrUpdateTransitHeader(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String estimateNo, 
 												@RequestParam(required = true) String matchingCode, 
-												@RequestParam(required = true) boolean newJob){
+												@RequestParam(required = true) boolean newJob) throws Exception{
 		String result = null;
-		try{
+//		try{
 			result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 
 		return result;
 	}

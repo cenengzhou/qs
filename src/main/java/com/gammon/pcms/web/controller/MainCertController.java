@@ -29,6 +29,7 @@ import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/mainCert/")
 public class MainCertController {
 
@@ -38,27 +39,24 @@ public class MainCertController {
 	private MainCertRetentionReleaseService mainCertRetentionReleaseService;
 
 	// ---------------- get ----------------
-	@RequestMapping(value = "getCertificateList",
-					method = RequestMethod.GET)
+	@RequestMapping(value = "getCertificateList", method = RequestMethod.GET)
 	public List<MainCert> getCertificateList(@RequestParam(required = true) String noJob) {
 
 		return mainCertService.getCertificateList(noJob);
 	}
 
 	@RequestMapping(value = "getPaidMainCertList", method = RequestMethod.GET)
-	public List<Integer> getPaidMainCertList(@RequestParam(required = true) String noJob) {
+	public List<Integer> getPaidMainCertList(@RequestParam(required = true) String noJob) throws DatabaseOperationException {
 		List<Integer> mainCertList= null;
-		try {
+//		try {
 			mainCertList= mainCertService.getPaidMainCertList(noJob);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
 		return mainCertList;
 	}
 	
-	
-	@RequestMapping(value = "getRetentionReleaseList",
-					method = RequestMethod.GET)
+	@RequestMapping(value = "getRetentionReleaseList", method = RequestMethod.GET)
 	public List<MainCertRetentionRelease> getRetentionReleaseList(@RequestParam(required = true) String noJob) {
 		return mainCertRetentionReleaseService.getRetentionReleaseList(noJob);
 	}
@@ -85,8 +83,8 @@ public class MainCertController {
 	}
 	
 	// ---------------- update / calculate ----------------
-	@RequestMapping(value = "updateRetentionRelease",
-					method = RequestMethod.POST)
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateRetentionRelease", method = RequestMethod.POST)
 	public PCMSDTO updateRetentionRelease(	@RequestParam(required = true) String noJob,
 											@Valid @RequestBody List<MainCertRetentionRelease> retentionReleaseList) {
 		return mainCertRetentionReleaseService.updateRetentionRelease(noJob, retentionReleaseList);
@@ -105,13 +103,13 @@ public class MainCertController {
 	}
 	
 	@RequestMapping(value = "getMainCertReceiveDateAndAmount", method = RequestMethod.POST)
-	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(@RequestParam String company, @RequestParam String refDocNo){
-		try{
+	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(@RequestParam String company, @RequestParam String refDocNo) throws DatabaseOperationException{
+//		try{
 			return mainCertService.getMainCertReceiveDateAndAmount(company, refDocNo);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 
 }

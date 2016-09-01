@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +40,8 @@ import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 
 @RestController
-@RequestMapping(value = "service/subcontract/",
-				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+@RequestMapping(value = "service/subcontract/", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class SubcontractController {
 //	private Logger logger = Logger.getLogger(getClass());
 	
@@ -49,16 +51,15 @@ public class SubcontractController {
 	
 	@RequestMapping(value = "getSubcontractDetailByID",	method = RequestMethod.GET)
 	public SubcontractDetail getSubcontractDetailByID(@RequestParam(required = true) String id) {
-		try {
+//		try {
 			return subcontractService.getSubcontractDetailByID(Long.valueOf(id));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
 
-	@RequestMapping(value = "getSubcontractList",
-					method = RequestMethod.GET)
+	@RequestMapping(value = "getSubcontractList", method = RequestMethod.GET)
 	public List<Subcontract> getSubcontractList(@RequestParam(required = true) String jobNo,
 												@RequestParam(	required = true,
 																defaultValue = "false") boolean awardedOnly) {
@@ -66,68 +67,69 @@ public class SubcontractController {
 			return subcontractService.getSubcontractList(jobNo, awardedOnly);
 		} catch (Exception e) {
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 			return new ArrayList<Subcontract>();
 		}
 	}
 
-	@RequestMapping(value = "getSubcontractSnapshotList",
-					method = RequestMethod.GET)
+	@RequestMapping(value = "getSubcontractSnapshotList", method = RequestMethod.GET)
 	public List<?> getSubcontractSnapshotList(	@RequestParam(required = false) String noJob,
 															@RequestParam(required = true) BigDecimal year,
 															@RequestParam(required = true) BigDecimal month,
-															@RequestParam(	required = true,
-																			defaultValue = "false") boolean awardedOnly,
-															@RequestParam(	required = true,
-																			defaultValue = "false") boolean showJobInfo) {
+															@RequestParam(	required = true, defaultValue = "false") boolean awardedOnly,
+															@RequestParam(	required = true, defaultValue = "false") boolean showJobInfo) {
 		try {
 			return subcontractService.getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 			return new ArrayList<Subcontract>();
 		}
 	}
 	
 	@RequestMapping(value = "getWorkScope", method = RequestMethod.GET)
-	public UDC getWorkScope(@RequestParam(required =true) String workScopeCode){
+	public UDC getWorkScope(@RequestParam(required =true) String workScopeCode) throws DatabaseOperationException{
 		UDC obtainWorkScope = null;
-		try {
+//		try {
 			obtainWorkScope = subcontractService.obtainWorkScope(workScopeCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return obtainWorkScope;
 	}
 	
 	@RequestMapping(value = "getSubcontract", method = RequestMethod.GET)
-	public Subcontract getSubcontract(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+	public Subcontract getSubcontract(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo) throws DatabaseOperationException{
 		Subcontract subcontract = null;
-		try {
+//		try {
 			subcontract = subcontractService.obtainSubcontract(jobNo, subcontractNo);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
 		return subcontract;
 	}
 	
 	@RequestMapping(value = "getSCDetails", method = RequestMethod.GET)
-	public List<SubcontractDetail> getSCDetails(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+	public List<SubcontractDetail> getSCDetails(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo) throws DatabaseOperationException{
 		List<SubcontractDetail> scDetails = null;
-		try {
+//		try {
 			scDetails = subcontractService.obtainSCDetails(jobNo, subcontractNo);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
 		return scDetails;
 	}
 	
 	@RequestMapping(value = "getSubcontractDetailForWD", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSubcontractDetailForWD(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		List<SubcontractDetail> scDetails = null;
-		try {
+//		try {
 			scDetails = subcontractService.getSubcontractDetailForWD(jobNo, subcontractNo);
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-		}
+//		} catch (DataAccessException e) {
+//			e.printStackTrace();
+//		}
 		return scDetails;
 	}
 	
@@ -146,22 +148,22 @@ public class SubcontractController {
 	@RequestMapping(value = "getSCDetailForAddendumUpdate", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSCDetailForAddendumUpdate(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		List<SubcontractDetail> scDetails = null;
-		try {
+//		try {
 			scDetails = subcontractService.getSCDetailForAddendumUpdate(jobNo, subcontractNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return scDetails;
 	}
 	
 	@RequestMapping(value = "getSCDetailList", method = RequestMethod.GET)
-	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo){
+	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo) throws DatabaseOperationException{
 		List<SubcontractDetail> scDetails = new ArrayList<SubcontractDetail>();
-		try {
+//		try {
 			scDetails.addAll(subcontractService.getScDetails(jobNo));
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
+//		} catch (DatabaseOperationException e) {
+//			e.printStackTrace();
+//		}
 		return scDetails;
 	}
 	
@@ -182,83 +184,83 @@ public class SubcontractController {
 	}
 	
 	@RequestMapping(value = "getAwardedSubcontractNos", method = RequestMethod.GET)
-	public List<String> getAwardedSubcontractNos(@RequestParam(required =true) String jobNo){
+	public List<String> getAwardedSubcontractNos(@RequestParam(required =true) String jobNo) throws Exception{
 		List<String> awardedSubcontractNos = new ArrayList<String>();
-		try {
+//		try {
 			awardedSubcontractNos = subcontractService.getAwardedSubcontractNos(jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return awardedSubcontractNos;
 	}
 	
 	@RequestMapping(value = "getUnawardedSubcontractNosUnderPaymentRequisition", method = RequestMethod.GET)
-	public List<String> getUnawardedSubcontractNosUnderPaymentRequisition(@RequestParam(required =true) String jobNo){
+	public List<String> getUnawardedSubcontractNosUnderPaymentRequisition(@RequestParam(required =true) String jobNo) throws Exception{
 		List<String> unawardedSubcontractNos = new ArrayList<String>();
-		try {
+//		try {
 			unawardedSubcontractNos = subcontractService.getUnawardedSubcontractNosUnderPaymentRequisition(jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return unawardedSubcontractNos;
 	}
 	
 	@RequestMapping(value = "getDefaultValuesForSubcontractDetails", method = RequestMethod.GET)
 	public SubcontractDetail getDefaultValuesForSubcontractDetails(@RequestParam(required =true) String jobNo, 
 																@RequestParam(required =true) String subcontractNo, 
-																@RequestParam(required =true) String lineType){
+																@RequestParam(required =true) String lineType) throws Exception{
 		SubcontractDetail subcontractDetail = new SubcontractDetail();
-		try {
+//		try {
 			subcontractDetail = subcontractService.getDefaultValuesForSubcontractDetails(jobNo, subcontractNo, lineType);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return subcontractDetail;
 	}
 	
-	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumToSubcontractDetail", method = RequestMethod.POST)
 	public String addAddendumToSubcontractDetail(@RequestParam(required =true) String jobNo, 
 												@RequestParam(required =true) String subcontractNo, 
-												@RequestBody SubcontractDetail subcontractDetail){
+												@RequestBody SubcontractDetail subcontractDetail) throws Exception{
 		String result = null;
-		try {
+//		try {
 			result = subcontractService.addAddendumToSubcontractDetail(jobNo, subcontractNo, subcontractDetail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateSubcontractDetailAddendum", method = RequestMethod.POST)
 	public String updateSubcontractDetailAddendum(@RequestBody SubcontractDetail subcontractDetail){
 		String result = null;
-		try {
+//		try {
 			result = subcontractService.updateSubcontractDetailAddendum(subcontractDetail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteSubcontractDetailAddendum", method = RequestMethod.POST)
 	public String deleteSubcontractDetailAddendum(@RequestParam(required =true) String jobNo, 
 								@RequestParam(required =true) String subcontractNo, 
 								@RequestParam(required =true) Integer sequenceNo,
 								@RequestParam(required =true) String lineType
-								){
+								) throws Exception{
 		String result = null;
-		try {
+//		try {
 			result = subcontractService.deleteSubcontractDetailAddendum(jobNo, subcontractNo, sequenceNo, lineType);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "upateSubcontract", method = RequestMethod.POST)
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
@@ -267,10 +269,13 @@ public class SubcontractController {
 		} catch (Exception e) {
 			result = "Subcontract cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateWDandIV", method = RequestMethod.POST)
 	public String updateWDandIV(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
@@ -281,11 +286,13 @@ public class SubcontractController {
 		} catch (Exception e) {
 			result = "Subcontract Details cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateWDandIVByPercent", method = RequestMethod.POST)
 	public String updateWDandIVByPercent(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
@@ -296,11 +303,13 @@ public class SubcontractController {
 		} catch (Exception e) {
 			result = "Subcontract Details cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
 	public String upateSubcontractDates(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
@@ -309,22 +318,25 @@ public class SubcontractController {
 		} catch (Exception e) {
 			result = "Subcontract cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
 	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
 		boolean result = false;
-		try {
+//		try {
 			result = subcontractService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return result;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
 	public String submitAwardApproval(@RequestParam(required =true) String jobNo, 
 			@RequestParam(required =true) String subcontractNo){
@@ -334,6 +346,8 @@ public class SubcontractController {
 		} catch (Exception e) {
 			result = "Subcontract cannot be submitted.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
@@ -398,12 +412,12 @@ public class SubcontractController {
 			@RequestParam(required = false) Integer subcontractNumber, 
 			@RequestParam(required = false) String groupCode, 
 			@RequestParam(required = false) String status){
-		try {
+//		try {
 			return subcontractService.getPerformanceAppraisalWrapperList(jobNumber, null, null, groupCode, vendorNumber, subcontractNumber, status);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	/**
@@ -428,6 +442,8 @@ public class SubcontractController {
 			return subcontractService.getProvisionPostingHistList(jobNo, subcontractNo, year.intValue(), month.intValue());
 		} catch (Exception e) {
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 			return new ArrayList<ProvisionPostingHist>();
 		}
 	}

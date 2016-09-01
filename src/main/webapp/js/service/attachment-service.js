@@ -1,4 +1,4 @@
-mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
+mainApp.service('attachmentService', ['$http', '$q', 'modalService',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
 
@@ -24,7 +24,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
 				'Content-Type' : undefined
 			}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function deleteRepackagingAttachment(repackagingEntryID, sequenceNo){
@@ -36,7 +36,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
             	sequenceNo: sequenceNo
             }
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getRepackagingAttachments(repackagingEntryID){
@@ -47,7 +47,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
     			repackagingEntryID: repackagingEntryID
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function saveRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
@@ -61,7 +61,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
             	textAttachment: textAttachment
             }
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
    
     function addRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment){
@@ -75,7 +75,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
             	textAttachment: textAttachment
             }
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
    
     function uploadSCAttachment(formData){
@@ -87,7 +87,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
 				'Content-Type' : undefined
 			}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function deleteAttachment(nameObject, textKey, sequenceNumber){
@@ -100,7 +100,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
             	sequenceNumber: sequenceNumber
             }
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getAttachmentListForPCMS(nameObject, textKey){
@@ -112,7 +112,7 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
     			textKey: textKey
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function uploadTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment){
@@ -127,33 +127,34 @@ mainApp.service('attachmentService', ['$http', '$q',  function($http, $q){
             	textAttachment: textAttachment
             }
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
    
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.data.message );
+////        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

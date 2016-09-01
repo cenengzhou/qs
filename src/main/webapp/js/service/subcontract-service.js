@@ -1,4 +1,4 @@
-mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http, Base64, $q){
+mainApp.service('subcontractService', ['$http', 'Base64', '$q', 'GlobalHelper',  function($http, Base64, $q, GlobalHelper){
 	// Return public API.
     return({
     	getSubcontract: 									getSubcontract,
@@ -75,7 +75,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             responseType: 'arraybuffer'
             */
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontract(jobNo, subcontractNo) {
@@ -88,7 +88,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSCDetails(jobNo, subcontractNo) {
@@ -101,7 +101,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontractDetailForWD(jobNo, subcontractNo) {
@@ -114,7 +114,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontractDetailByID(id) {
@@ -126,7 +126,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	id: id
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getOtherSubcontractDetails(jobNo, subcontractNo) {
@@ -139,7 +139,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontractDashboardData(jobNo, subcontractNo, year) {
@@ -153,7 +153,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	year: year
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontractDetailsDashboardData(jobNo, subcontractNo) {
@@ -166,7 +166,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -179,7 +179,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getUnawardedSubcontractNosUnderPaymentRequisition(jobNo) {
@@ -191,7 +191,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getWorkScope(workScopeCode) {
@@ -203,7 +203,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	workScopeCode: workScopeCode
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -218,7 +218,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	lineType: lineType
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function upateSubcontract(jobNo, subcontract) {
@@ -231,7 +231,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             data: subcontract
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function upateSubcontractDates(jobNo, subcontract) {
@@ -244,7 +244,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             data: subcontract
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateWDandIV(jobNo, subcontractNo, scDetail) {
@@ -258,7 +258,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             data: scDetail
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateWDandIVByPercent(jobNo, subcontractNo, percent) {
@@ -272,7 +272,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 percent: percent
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage) {
@@ -286,7 +286,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 recalculateFinalizedPackage: recalculateFinalizedPackage
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -301,7 +301,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             },
             data: subcontractDetail
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateSubcontractDetailAddendum(subcontractDetail) {
@@ -311,7 +311,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             dataType: "application/json;charset=UTF-8",
             data: subcontractDetail
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -328,7 +328,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 lineType:lineType
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -342,7 +342,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
                 subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function runProvisionPostingManually(jobNumber, glDate){
@@ -355,42 +355,42 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     			glDate: glDate
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function generateSCPackageSnapshotManually(){
     	var request = $http.post("service/subcontract/generateSCPackageSnapshotManually");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateF58001FromSCPackageManually(){
     	var request = $http.post("service/subcontract/updateF58001FromSCPackageManually");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
 	function searchSystemConstants(){
     	var request = $http.post("service/subcontract/searchSystemConstants");
-    	return( request.then(handleSuccess, handleError));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 	function updateMultipleSystemConstants(systemConstants){
     	var request = $http.post("service/subcontract/updateMultipleSystemConstants", systemConstants);
-    	return( request.then(handleSuccess, handleError));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 	function inactivateSystemConstant(systemConstants){
     	var request = $http.post('service/subcontract/inactivateSystemConstant', systemConstants);
-    	return( request.then(handleSuccess, handleError));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 	function createSystemConstant(newRecord){
     	var request = $http.post('service/subcontract/createSystemConstant', newRecord);
-    	return( request.then(handleSuccess, handleError));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateSubcontractAdmin(subcontract){
        	var request = $http.post('service/subcontract/updateSubcontractAdmin', subcontract);
-    	return( request.then(handleSuccess, handleError));
+       	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo){
@@ -405,7 +405,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     			showJobInfo: showJobInfo
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getProvisionPostingHistList(jobNo, subcontractNo, year, month){
@@ -419,7 +419,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     			month: month
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getSCDetailList(jobNo) {
@@ -430,7 +430,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 
@@ -443,7 +443,7 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getPerforamceAppraisalsList(jobNumber, vendorNumber, subcontractNumber, groupCode, status){
@@ -458,33 +458,33 @@ mainApp.service('subcontractService', ['$http', 'Base64', '$q',  function($http,
     			status: status
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }   
     
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

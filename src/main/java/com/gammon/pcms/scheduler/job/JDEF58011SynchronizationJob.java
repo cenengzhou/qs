@@ -25,6 +25,7 @@ public class JDEF58011SynchronizationJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		quartzConfig.prepareQuartzUser();
 		logger.info("Scheduler: "+quartzConfig.getJobDescriptionJDEF58011Synchronization());
 		jdef58011SynchronizationService.updateF58011FromSCPaymentCert();
 	}

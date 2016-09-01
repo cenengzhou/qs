@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailVO;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
 @Service
@@ -86,22 +88,28 @@ public class AddendumService{
 	private MasterListService masterListService;
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private AdminService adminService;
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 
 	public Addendum getLatestAddendum(String noJob, String noSubcontract) {
+//		adminService.canAccessJob(noJob);
 		return addendumHBDao.getLatestAddendum(noJob, noSubcontract);
 	}
 
 	public Addendum getAddendum(String noJob, String noSubcontract, Long noAddendum) {
+//		adminService.canAccessJob(noJob);
 		return addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
 	}
 
 	public List<Addendum> getAddendumList(String noJob, String noSubcontract) {
+//		adminService.canAccessJob(noJob);
 		return addendumHBDao.getAddendumList(noJob, noSubcontract);
 	}
 
 	public Double getTotalApprovedAddendumAmount(String noJob, String noSubcontract) {
+//		adminService.canAccessJob(noJob);
 		return addendumHBDao.getTotalApprovedAddendumAmount(noJob, noSubcontract);
 	}
 
@@ -115,11 +123,13 @@ public class AddendumService{
 	}
 
 	public List<AddendumDetail> getAllAddendumDetails(String jobNo, String subcontractNo, Long addendumNo) {
+//		adminService.canAccessJob(jobNo);
 		List<AddendumDetail> list = addendumDetailHBDao.getAllAddendumDetails(jobNo, subcontractNo, addendumNo);
 		return list;
 	}
 
 	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(String jobNo, String subcontractNo, Long addendumNo) {
+//		adminService.canAccessJob(jobNo);
 		return addendumDetailHBDao.getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, addendumNo);
 	}
 
@@ -173,6 +183,7 @@ public class AddendumService{
 
 	public String updateAddendumDetailHeader(String noJob, String noSubcontract, Long addendumNo,
 			String addendumDetailHeaderRef, String description) {
+//		adminService.canAccessJob(noJob);
 		String error = "";
 		//update
 		try {
@@ -226,6 +237,7 @@ public class AddendumService{
 	}
 
 	public String addAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
+//		adminService.canAccessJob(noJob);
 		String error = "";
 		try {
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetail.getIdHeaderRef());
@@ -310,6 +322,7 @@ public class AddendumService{
 	}
 
 	public String updateAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
+//		adminService.canAccessJob(noJob);
 		String error = "";
 		try {
 			error = addVOValidate(addendumDetail);
@@ -364,6 +377,7 @@ public class AddendumService{
 
 	
 	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) {
+//		adminService.canAccessJob(jobNo);
 		String error = "";
 
 		try {
@@ -457,6 +471,7 @@ public class AddendumService{
 	}
 
 	public String deleteAddendumDetail(String jobNo, String subcontractNo, Long addendumNo, List<AddendumDetail> addendumDetailList) {
+//		adminService.canAccessJob(jobNo);
 		String error = "";
 		List<ResourceSummary> resourceSummaryList = new ArrayList<ResourceSummary>();
 		Repackaging repackaging = null;
@@ -521,6 +536,7 @@ public class AddendumService{
 	}
 	
 	public String deleteAddendumFromSCDetails(String jobNo, String subcontractNo, Long addendumNo, BigDecimal addendumDetailHeaderRef, List<SubcontractDetail> subcontractDetailList) {
+//		adminService.canAccessJob(jobNo);
 		String error = "";
 		
 		try {
@@ -590,6 +606,7 @@ public class AddendumService{
 	}
 
 	public void recalculateAddendumAmount(String noJob, String noSubcontract, Long addendumNo){
+//		adminService.canAccessJob(noJob);
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, addendumNo);
 			List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAddendumDetails(noJob, noSubcontract, addendumNo);
@@ -696,6 +713,7 @@ public class AddendumService{
 	 * @throws DatabaseOperationException 
 	 * **/
 	public AddendumDetail getDefaultValuesForAddendumDetails(String jobNo, String subcontractNo, Long addendumNo, String lineType, Integer nextSeqNo) throws DatabaseOperationException{
+//		adminService.canAccessJob(jobNo);
 		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
 			return null;
 		AddendumDetail resultDetails = new AddendumDetail();
@@ -754,6 +772,7 @@ public class AddendumService{
 	}
 
 	public String ableToSubmitAddendum(String jobNo, String subcontractNo){
+//		adminService.canAccessJob(jobNo);
 		try {
 			Subcontract subcontract = subcontractHBDao.obtainSubcontract(jobNo, subcontractNo);
 			if (Subcontract.ADDENDUM_SUBMITTED.equals(subcontract.getSubmittedAddendum()))
@@ -769,6 +788,7 @@ public class AddendumService{
 	}
 
 	public String submitAddendumApproval(String noJob, String noSubcontract, Long noAddendum) {
+//		adminService.canAccessJob(noJob);
 		String resultMsg  = null;
 		try {
 			Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
@@ -822,6 +842,7 @@ public class AddendumService{
 	}
 
 	public Boolean toCompleteAddendumApproval(String jobNo, String subcontractNo, String user, String approvalResult) throws Exception{
+//		adminService.canAccessJob(jobNo);
 		logger.info("Approval:"+jobNo+"/"+subcontractNo+"/"+approvalResult);
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
@@ -949,6 +970,7 @@ public class AddendumService{
 	}
 	
 	private void updateSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
+//		adminService.canAccessJob(jobNo);
 		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
 		
 		if(scDetail !=null){
@@ -1003,6 +1025,7 @@ public class AddendumService{
 	}
 	
 	private void deleteSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
+//		adminService.canAccessJob(jobNo);
 		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
 		if(scDetail != null){
 			//Delete C2

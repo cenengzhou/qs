@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import com.gammon.qs.domain.ARRecord;
 import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.jobCost.AccountPayableExcelGenerator;
@@ -548,25 +550,25 @@ public class JobCostService implements Serializable {
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public List<PORecord> getPORecordList(String jobNumber, String orderNumber, String orderType, String supplierNumber) throws Exception {
 		List<PORecord> listOfpoRecord = new ArrayList<>();
-		if(adminService.canAccessJob(jobNumber)){
+//		if(adminService.canAccessJob(jobNumber)){
 			listOfpoRecord.addAll(jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber));
-		}
+//		}
 		return listOfpoRecord;
 	}
 	
 	public List<ARRecord> getARRecordList(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType) throws Exception {
 		List<ARRecord> resultList = null;
-		if(adminService.canAccessJob(jobNumber)){
+//		if(adminService.canAccessJob(jobNumber)){
 			resultList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-		}
+//		}
 		return resultList;
 	}
 	
-	public List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws Exception{
+	public List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws AccessDeniedException{
 		List<APRecord> resultList = null;
-		if(adminService.canAccessJob(jobNumber)) {
+//		if(adminService.canAccessJob(jobNumber)) {
 			resultList = jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-		}
+//		}
 		return resultList;
 	}
 

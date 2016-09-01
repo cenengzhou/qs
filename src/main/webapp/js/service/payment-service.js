@@ -1,4 +1,4 @@
-mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
+mainApp.service('paymentService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getPaymentCertList: 		getPaymentCertList,
@@ -38,7 +38,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getLatestPaymentCert(jobNo, subcontractNo) {
@@ -52,7 +52,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -69,7 +69,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getPaymentDetailList(jobNo, subcontractNo, paymentCertNo) {
@@ -85,7 +85,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getPaymentCertSummary(jobNo, subcontractNo, paymentCertNo) {
@@ -101,7 +101,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getGSTAmount(jobNo, subcontractNo, paymentCertNo, lineType) {
@@ -116,7 +116,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             	lineType: lineType
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getTotalPostedCertAmount(jobNo, subcontractNo) {
@@ -129,7 +129,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -148,7 +148,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
             }
     
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function createPayment(jobNo, subcontractNo) {
@@ -161,7 +161,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
                 subcontractNo:subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms, gstPayable, gstReceivable, paymentCert) {
@@ -179,7 +179,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 			},
 			data: paymentCert
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
     
     function updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails) {
@@ -195,7 +195,7 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 			},
 			data: paymentDetails
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
     
     function submitPayment(jobNo, subcontractNo, paymentCertNo) {
@@ -209,22 +209,22 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 				paymentCertNo: paymentCertNo,
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
     
     function updatePaymentCert(paymentCert) {
         var request = $http.post('service/payment/updatePaymentCert', paymentCert)
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateF58011FromSCPaymentCertManually(){
     	var request = $http.post("service/payment/updateF58011FromSCPaymentCertManually");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function runPaymentPosting(){
     	var request = $http.post("service/payment/runPaymentPosting");
-    	return( request.then(handleSuccess, handleError));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function obtainPaymentCertificateList(paymentCertWrapper, dueDateType) {
@@ -236,33 +236,33 @@ mainApp.service('paymentService', ['$http', '$q',  function($http, $q){
 			},
 			data: paymentCertWrapper
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
     
-   // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//   // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

@@ -1,4 +1,4 @@
-mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
+mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getLatestRepackaging:		getLatestRepackaging,
@@ -22,7 +22,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getRepackagingListByJobNo(jobNo) {
@@ -34,7 +34,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getRepackagingDetails(repackagingID, changesOnly) {
@@ -47,7 +47,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             	changesOnly: changesOnly
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -60,7 +60,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
                 jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateRepackaging(repackaging) {
@@ -70,7 +70,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             dataType: "application/json;charset=UTF-8",
             data : repackaging
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function generateSnapshot(id, jobNo) {
@@ -83,7 +83,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
                 jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function deleteRepackaging(id) {
@@ -95,7 +95,7 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
                 id: id
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -108,32 +108,32 @@ mainApp.service('repackagingService', ['$http', '$q', function($http, $q){
             	repackagingID: repackagingID
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response ) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response ) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 

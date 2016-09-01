@@ -27,6 +27,7 @@ public class PackageSnapshotGenerationJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		quartzConfig.prepareQuartzUser();
 		logger.info("Scheduler: "+quartzConfig.getJobDescriptionPackageSnapshotGeneration());
 		packageSnapshotGenerationService.generateSCPackageSnapshot();
 	}

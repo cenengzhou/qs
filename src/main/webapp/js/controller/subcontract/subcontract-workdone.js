@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state',
-                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state) {
+mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', '$timeout',
+                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, $timeout) {
 
 	$scope.percent = "";
 	$scope.lastID ="";
@@ -21,7 +21,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			
 			enableCellEditOnFocus : true,
 
-			//rowEditWaitInterval :-1,
+			rowEditWaitInterval :-1,
 			
 			columnDefs: [
 		             	{ field: 'id', width: 20, enableCellEdit: false, visible:false},
@@ -94,13 +94,14 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	        });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			//console.log(rowEntity);
-			if(newValue != oldValue )
-				updateWDandIV(rowEntity);
+			if(newValue !== oldValue){
+				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
+				$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+			}
 		});
 
 	}
-	
+	$scope.gridDirtyRows = [];
 
 	$scope.gridOptionsIV = {
 			enableFiltering: true,
@@ -109,7 +110,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			showColumnFooter : true,
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
-			//rowEditWaitInterval :-1,
+			rowEditWaitInterval :-1,
 
 
 			columnDefs: [
@@ -146,15 +147,21 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			
-			$scope.$apply();
+//			$scope.$apply();
 		});
 
 	}
 	
 
 	//Save Function
-	$scope.save = function () {
-
+	$scope.update = function () {
+		var cleanRows = [];
+		$scope.gridDirtyRows.forEach(function(row){
+			updateWDandIV(row.entity);
+			cleanRows.push(row.entity);
+		});
+		$scope.gridApi.rowEdit.setRowsClean(cleanRows);
+		$scope.gridDirtyRows = [];
 	};
 
 	$scope.applyPercent = function (){
@@ -208,11 +215,11 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	   	 .then(
 				 function( data ) {
 					 if(data.length!=0){
-						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
-						 $state.reload();
+//						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+//						 $state.reload();
 						}
-					 else
-						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
+//					 else
+//						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
 				 });
 	    }
 	

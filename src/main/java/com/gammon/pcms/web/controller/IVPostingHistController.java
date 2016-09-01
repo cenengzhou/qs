@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.service.IVPostingHistService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/ivpostinghist/")
 public class IVPostingHistController {
 
@@ -21,13 +23,13 @@ public class IVPostingHistController {
 	private IVPostingHistService ivPostingHistService;
 	
 	@RequestMapping(value = "obtainIVPostingHistoryList", method = RequestMethod.POST)
-	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestParam String jobNumber, Date fromDate, Date toDate){
+	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestParam String jobNumber, Date fromDate, Date toDate) throws Exception{
 		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
-		try {
+//		try {
 			resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, fromDate, toDate));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return resultList;
 	}
 

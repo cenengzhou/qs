@@ -1,4 +1,4 @@
-mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
+mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
 	return({
 		getResourceSummaries: 					getResourceSummaries,
@@ -26,7 +26,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				objectCode: objectCode
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 	
 	function getResourceSummariesForAddendum(jobNo) {
@@ -38,7 +38,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				jobNo: jobNo
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function getResourceSummariesBySC(jobNo, subcontractNo, objectCode) {
@@ -51,7 +51,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				subcontractNo: subcontractNo
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode) {
@@ -66,7 +66,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				subsidiaryCode: subsidiaryCode
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 
@@ -84,7 +84,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				resourceNo: resourceNo
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 	
 	function getResourceSummariesGroupByObjectCode(jobNo) {
@@ -96,7 +96,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				jobNo: jobNo
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 
@@ -111,7 +111,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 			},
 			data: resourceSummary
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function updateResourceSummaries(jobNo, resourceSummaryList) {
@@ -124,7 +124,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 			},
 			data: resourceSummaryList
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 
@@ -135,7 +135,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 			dataType: "application/json;charset=UTF-8",
 			data: resourceSummaryList
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function splitOrMergeResources(repackagingId, resourceSummarySplitMergeWrapper) {
@@ -148,7 +148,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 			},
 			data : resourceSummarySplitMergeWrapper
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function updateIVAmount(resourceSummaryList) {
@@ -158,7 +158,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 			dataType: "application/json;charset=UTF-8",
 			data : resourceSummaryList
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
 	function postIVAmounts(jobNo, finalized) {
@@ -171,32 +171,32 @@ mainApp.service('resourceSummaryService', ['$http', '$q', function($http, $q){
 				finalized: finalized
 			}
 		});
-		return( request.then( handleSuccess, handleError ) );
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	// ---
-	// PRIVATE METHODS.
-	// ---
-	// Transform the error response, unwrapping the application dta from
-	// the API response payload.
-	function handleError( response ) {
-		// The API response from the server should be returned in a
-		// normalized format. However, if the request was not handled by the
-		// server (or what not handles properly - ex. server error), then we
-		// may have to normalize it on our end, as best we can.
-		if (
-				! angular.isObject( response.data ) ||
-				! response.data.message
-		) {
-			return( $q.reject( "An unknown error occurred." ) );
-		}
-		// Otherwise, use expected error message.
-		return( $q.reject( response.data.message ) );
-	}
-	// Transform the successful response, unwrapping the application data
-	// from the API response payload.
-	function handleSuccess( response ) {
-		return( response.data );
-	}
+//	// ---
+//	// PRIVATE METHODS.
+//	// ---
+//	// Transform the error response, unwrapping the application dta from
+//	// the API response payload.
+//	function handleError( response ) {
+//		// The API response from the server should be returned in a
+//		// normalized format. However, if the request was not handled by the
+//		// server (or what not handles properly - ex. server error), then we
+//		// may have to normalize it on our end, as best we can.
+//		if (
+//				! angular.isObject( response.data ) ||
+//				! response.data.message
+//		) {
+//			return( $q.reject( "An unknown error occurred." ) );
+//		}
+//		// Otherwise, use expected error message.
+//		return( $q.reject( response.data.message ) );
+//	}
+//	// Transform the successful response, unwrapping the application data
+//	// from the API response payload.
+//	function handleSuccess( response ) {
+//		return( response.data );
+//	}
 }]);
 

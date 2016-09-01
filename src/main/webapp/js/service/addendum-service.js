@@ -1,4 +1,4 @@
-mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
+mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getLatestAddendum: 					getLatestAddendum,
@@ -32,7 +32,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 
@@ -47,7 +47,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumNo: addendumNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddendumList(jobNo, subcontractNo) {
@@ -60,7 +60,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getTotalApprovedAddendumAmount(jobNo, subcontractNo) {
@@ -73,7 +73,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	subcontractNo: subcontractNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddendumDetailHeader(addendumDetailHeaderRef) {
@@ -85,7 +85,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumDetailHeaderRef: addendumDetailHeaderRef
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddendumDetailsByHeaderRef(addendumDetailHeaderRef) {
@@ -97,7 +97,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumDetailHeaderRef: addendumDetailHeaderRef
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAllAddendumDetails(jobNo, subcontractNo, addendumNo) {
@@ -111,7 +111,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumNo: addendumNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, addendumNo) {
@@ -125,7 +125,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumNo: addendumNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -143,7 +143,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function createAddendum(addendum) {
@@ -153,7 +153,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             dataType: "application/json;charset=UTF-8",
             data: addendum
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -164,7 +164,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             dataType: "application/json;charset=UTF-8",
             data: addendum
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateAddendumDetailHeader(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, description) {
@@ -180,7 +180,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	description: description
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function deleteAddendumDetailHeader(addendumDetailHeaderRef) {
@@ -192,7 +192,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumDetailHeaderRef: addendumDetailHeaderRef
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -208,7 +208,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             },
             data: addendumDetail
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function addAddendumFromResourceSummaries(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummaryList) {
@@ -224,7 +224,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             },
             data: resourceSummaryList
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
 
@@ -240,7 +240,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             },
             data: addendumDetail
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -256,7 +256,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             },
             data: addendumDetailList
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function deleteAddendumFromSCDetails(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, subcontractDetailList) {
@@ -272,7 +272,7 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             },
             data: subcontractDetailList
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function submitAddendumApproval(jobNo, subcontractNo, addendumNo) {
@@ -286,34 +286,35 @@ mainApp.service('addendumService', ['$http', '$q',  function($http, $q){
             	addendumNo: addendumNo,
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
-   // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//   // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.data.message ); 
+////        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

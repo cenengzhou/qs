@@ -1,4 +1,4 @@
-mainApp.service('transitService', ['$http', '$q', 'modalService', function($http, $q, modalService){
+mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	obtainTransitCodeMatcheList:		obtainTransitCodeMatcheList,
@@ -16,12 +16,12 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
    
     function obtainTransitCodeMatcheList(){
     	var request = $http.post("service/transit/obtainTransitCodeMatcheList");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function obtainTransitUomMatcheList(){
     	var request = $http.post("service/transit/obtainTransitUomMatcheList");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function transitUpload(formData){
@@ -33,7 +33,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
 				'Content-Type' : undefined
 			}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getTransit(jobNo){
@@ -44,7 +44,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     				jobNumber: jobNo
     			}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getTransitBQItems(jobNo){
@@ -55,7 +55,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     			jobNumber: jobNo
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function getTransitResources(jobNo){
@@ -66,7 +66,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     			jobNumber: jobNo
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function confirmResourcesAndCreatePackages(jobNo){
@@ -77,7 +77,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     			jobNumber: jobNo
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function completeTransit(jobNo){
@@ -88,7 +88,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     			jobNumber: jobNo
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function saveTransitResources(jobNo, resources){
@@ -119,7 +119,7 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     		},
     		data: resourcesList
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -134,34 +134,34 @@ mainApp.service('transitService', ['$http', '$q', 'modalService', function($http
     			newJob: newJob
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
-    // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

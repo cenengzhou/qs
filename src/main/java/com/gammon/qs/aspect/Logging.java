@@ -23,16 +23,16 @@ public class Logging {
 	
 	public Logging(){}
 	
-	@Pointcut("within(com.gammon.qs.web..*)")
+	@Pointcut("within(com.gammon.*.web..*)")
 	public void inWebLayer(){}
 	
-	@Pointcut("within(com.gammon.qs.service..*)")
+	@Pointcut("within(com.gammon.*.service..*)")
 	public void inServiceLayer(){}
 	
-	@Pointcut("within(com.gammon.qs.dao..*)")
+	@Pointcut("within(com.gammon.*.dao..*)")
 	public void inDataAccessLayer(){}
 	
-	@Pointcut("!execution(* com.gammon.qs.service.security.SecurityService.*(..))")
+	@Pointcut("!execution(* com.gammon.*.service.security.SecurityService.*(..))")
 	public void excludeSecurityService(){}
 	
 	@Pointcut("execution(public * *(..))")

@@ -41,6 +41,7 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -75,9 +76,11 @@ public class HTMLService implements Serializable{
 	private SubcontractDetailHBDao subcontractDetailHBDao;
 	@Autowired
 	private TenderDetailHBDao tenderDetailHBDao;
+	@Autowired
+	private AdminService adminService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
-		
+//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		JobInfo job = new JobInfo();
 		Subcontract scPackage = new Subcontract();
@@ -167,7 +170,7 @@ public class HTMLService implements Serializable{
 	}
 	
 	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
-		
+//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
 		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
@@ -357,7 +360,7 @@ public class HTMLService implements Serializable{
 	}
 	
 	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){
-
+//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
 		boolean boolChangedLine = false;
@@ -498,7 +501,7 @@ public class HTMLService implements Serializable{
 }
 
 	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){
-		
+//		adminService.canAccessJob(jobNumber);
 		JobInfo jobHeaderInfo = new JobInfo();
 		double newSCSum = 0.00;
 		String strHTMLCodingContent = "";
@@ -568,7 +571,7 @@ public class HTMLService implements Serializable{
 	 * HTML String For Main Cert Information being called by Web Service
 	 * **/
 	public String makeHTMLStringForMainCert(String jobNumber, String mainCertNo, String htmlVersion) {
-
+//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		logger.info("makeHTMLStringForSCMainCert --> Input parameter: jobNo["+jobNumber+"] - Main Cert No["+mainCertNo+"]");
 		if(!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)){

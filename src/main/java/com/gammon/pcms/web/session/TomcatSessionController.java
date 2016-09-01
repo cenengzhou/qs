@@ -29,6 +29,7 @@ import com.gammon.pcms.dto.rs.provider.response.SessionDTO;
 import com.gammon.pcms.helper.JsonHelper;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service", method = RequestMethod.POST)
 public class TomcatSessionController {
 

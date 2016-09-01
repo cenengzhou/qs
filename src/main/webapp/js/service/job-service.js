@@ -1,4 +1,4 @@
-mainApp.service('jobService', ['$http', '$q',  function($http, $q){
+mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getJob: 		getJob,
@@ -19,7 +19,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getJobList() {
@@ -28,7 +28,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             url: "service/job/getJobList",
             dataType: "application/json;charset=UTF-8"
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getJobDates(jobNo) {
@@ -40,7 +40,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             	jobNo: jobNo
             }
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateJobDates(jobDates) {
@@ -50,7 +50,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             dataType: "application/json;charset=UTF-8",
             data: jobDates
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function updateJobInfo(job) {
@@ -60,7 +60,7 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             dataType: "application/json;charset=UTF-8",
             data: job
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     
@@ -69,33 +69,34 @@ mainApp.service('jobService', ['$http', '$q',  function($http, $q){
             method: "POST",
             url: "service/job/getJobDetailList",
         });
-        return( request.then( handleSuccess, handleError ) );
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-   // ---
-    // PRIVATE METHODS.
-    // ---
-    // Transform the error response, unwrapping the application dta from
-    // the API response payload.
-    function handleError( response ) {
-        // The API response from the server should be returned in a
-        // normalized format. However, if the request was not handled by the
-        // server (or what not handles properly - ex. server error), then we
-        // may have to normalize it on our end, as best we can.
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        // Otherwise, use expected error message.
-        return( $q.reject( response.data.message ) );
-    }
-    // Transform the successful response, unwrapping the application data
-    // from the API response payload.
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//   // ---
+//    // PRIVATE METHODS.
+//    // ---
+//    // Transform the error response, unwrapping the application dta from
+//    // the API response payload.
+//    function handleError( response ) {
+//        // The API response from the server should be returned in a
+//        // normalized format. However, if the request was not handled by the
+//        // server (or what not handles properly - ex. server error), then we
+//        // may have to normalize it on our end, as best we can.
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        // Otherwise, use expected error message.
+//        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.data.message );
+////        return( $q.reject( response.data.message ) );
+//    }
+//    // Transform the successful response, unwrapping the application data
+//    // from the API response payload.
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

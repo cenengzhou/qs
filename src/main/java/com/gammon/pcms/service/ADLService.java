@@ -79,6 +79,7 @@ public class ADLService {
 											BigDecimal month,
 											String noJob,
 											String noSubcontract) {
+//		adminService.canAccessJob(noJob);
 		if (StringUtils.isEmpty(noSubcontract))
 			return accountBalanceAAJIDao.findMonthlyJobCost(year, month, noJob);
 		else
@@ -102,6 +103,7 @@ public class ADLService {
 										String subcontractNo,
 										String objectCode,
 										String subsidiaryCode) {
+//		adminService.canAccessJob(jobNo);
 		if (StringUtils.isEmpty(subcontractNo))
 			return accountBalanceAAJIDao.find(startYear, endYear, jobNo, objectCode, subsidiaryCode);
 		else
@@ -129,7 +131,7 @@ public class ADLService {
 											String subcontractNo,
 											String objectCode,
 											String subsidiaryCode) {
-
+//		adminService.canAccessJob(jobNo);
 		if (StringUtils.isEmpty(subcontractNo))
 			return accountBalanceDao.find(year, month, ledgerType, jobNo, objectCode, subsidiaryCode);
 		else
@@ -151,7 +153,7 @@ public class ADLService {
 									           	BigDecimal month,
 												String noJob, 
 												String type) {
-		
+//		adminService.canAccessJob(noJob);
 		List<BigDecimal> dataList = new ArrayList<BigDecimal>();
 		//logger.info("getJobDashboardData: "+ type);
 		try {
@@ -219,11 +221,8 @@ public class ADLService {
 	 * @since Jul 11, 2016 3:17:56 PM
 	 */
 	public List<AccountLedger> getAccountLedgerList(BigDecimal yearStart, BigDecimal yearEnd, BigDecimal monthStart, BigDecimal monthEnd, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
-		if(adminService.canAccessJob(noJob)){
-			return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
-		} else {
-			return null;
-		}
+//		adminService.canAccessJob(noJob);
+		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 	
 	/**
@@ -235,6 +234,7 @@ public class ADLService {
 	 * @since Jul 22, 2016 11:44:46 AM
 	 */
 	public List<AccountMaster> getAccountMasterList(String noJob) {
+//		adminService.canAccessJob(noJob);
 		return accountMasterDao.find(noJob);
 	}
 	
@@ -249,6 +249,7 @@ public class ADLService {
 	 * @since	Jul 22, 2016 12:00:56 PM
 	 */
 	public AccountMaster getAccountMaster(String noJob, String codeObject, String codeSubsidiary){
+//		adminService.canAccessJob(noJob);
 		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
 	}
 	
@@ -266,6 +267,7 @@ public class ADLService {
 	}
 	
 	public BusinessUnit getBusinessUnit(String jobNo) throws DataAccessException {
+//		adminService.canAccessJob(jobNo);
 		return businessUnitDao.find(jobNo);
 	}
 	
@@ -287,6 +289,7 @@ public class ADLService {
 	 * @since Jul 12, 2016 2:24:46 PM
 	 */
 	public List<ApprovalHeader> getApprovalHeaderList(String statusApproval, String noJob, String typeApprovalCategory, String typeApproval, String noSubcontract, String noPayment, String noMainCert, String noAddendum, BigDecimal recordKeyInstance) {
+//		adminService.canAccessJob(noJob);
 		// Search with recordKeyInstance
 		if (recordKeyInstance.longValue() > 0) {
 			List<ApprovalHeader> approvalHeaderList = new ArrayList<ApprovalHeader>();

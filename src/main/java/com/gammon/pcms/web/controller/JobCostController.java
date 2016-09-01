@@ -2,7 +2,10 @@ package com.gammon.pcms.web.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +18,7 @@ import com.gammon.qs.service.JobCostService;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/jobcost/")
 public class JobCostController {
 
@@ -26,13 +30,13 @@ public class JobCostController {
 			@RequestParam String jobNumber, 
 			@RequestParam(required = false) String orderNumber, 
 			@RequestParam(required = false) String orderType, 
-			@RequestParam(required = false)  String supplierNumber){
-		try {
+			@RequestParam(required = false)  String supplierNumber) throws Exception{
+//		try {
 			return jobCostService.getPORecordList(jobNumber, orderNumber, orderType, supplierNumber);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	@RequestMapping(value = "getARRecordList", method = RequestMethod.POST)
@@ -41,13 +45,13 @@ public class JobCostController {
 			@RequestParam(required = false) String reference, 
 			@RequestParam(required = false)  String customerNumber, 
 			@RequestParam(required = false)  String documentNumber, 
-			@RequestParam(required = false)  String documentType){
-		try{
+			@RequestParam(required = false)  String documentType) throws Exception{
+//		try{
 			return jobCostService.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 
 	@RequestMapping(value = "obtainAPRecordList", method = RequestMethod.POST)
@@ -58,13 +62,14 @@ public class JobCostController {
 			@RequestParam(required = false) String documentNumber, 
 			@RequestParam(required = false) String documentType, 
 			@RequestParam(required = false) String subledger, 
-			@RequestParam(required = false) String subledgerType){
-		try{
+			@RequestParam(required = false) String subledgerType) {
+//		try{
 			return jobCostService.obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch(Exception e){
+//			e.printStackTrace();
+//			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+//			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+//		}
 	}
 	
 	@RequestMapping(value = "getAPPaymentHistories", method = RequestMethod.POST)
@@ -72,12 +77,13 @@ public class JobCostController {
 			@RequestParam String company, 
 			@RequestParam String documentType, 
 			@RequestParam Integer supplierNumber, 
-			@RequestParam Integer documentNumber){
-		try{
+			@RequestParam Integer documentNumber,
+			HttpServletResponse response){
+//		try{
 			return jobCostService.getAPPaymentHistories(company, documentType, supplierNumber, documentNumber);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 }

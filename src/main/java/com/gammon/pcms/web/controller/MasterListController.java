@@ -12,17 +12,20 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.MasterListService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/masterList/")
 public class MasterListController {
 	private Logger logger = Logger.getLogger(getClass());
@@ -31,54 +34,54 @@ public class MasterListController {
 	private MasterListService masterListService;
 	
 	@RequestMapping(value = "getSubcontractor", method = RequestMethod.GET)
-	public MasterListVendor getSubcontractor(@RequestParam(name="subcontractorNo") String subcontractorNo){
+	public MasterListVendor getSubcontractor(@RequestParam(name="subcontractorNo") String subcontractorNo) throws DatabaseOperationException{
 
 		MasterListVendor masterListVendor = null;
-		try {
+//		try {
 			
 			masterListVendor = masterListService.obtainVendorByVendorNo(subcontractorNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return masterListVendor;
 	}
 	
 	
 	@RequestMapping(value = "getSubcontractorList", method = RequestMethod.GET)
-	public List<MasterListVendor> getSubcontractorList(@RequestParam(name="searchStr") String searchStr){
+	public List<MasterListVendor> getSubcontractorList(@RequestParam(name="searchStr") String searchStr) throws Exception{
 
 		List<MasterListVendor> masterListVendor = null;
-		try {
+//		try {
 			
 			masterListVendor = masterListService.searchVendorList(searchStr);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return masterListVendor;
 	}
 	
 	@RequestMapping(value = "searchObjectList", method = RequestMethod.POST)
-	public List<MasterListObject> searchObjectList(@RequestParam String searchStr){
+	public List<MasterListObject> searchObjectList(@RequestParam String searchStr) throws Exception{
 
 		List<MasterListObject> masterListObject = null;
-		try {
+//		try {
 			
 			masterListObject = masterListService.searchObjectList(searchStr);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return masterListObject;
 	}
 	
 	@RequestMapping(value = "searchSubsidiaryList", method = RequestMethod.POST)
-	public List<MasterListSubsidiary> searchSubsidiaryList(@RequestParam String searchStr){
+	public List<MasterListSubsidiary> searchSubsidiaryList(@RequestParam String searchStr) throws Exception{
 
 		List<MasterListSubsidiary> masterListSubsidiary = null;
-		try {
+//		try {
 			masterListSubsidiary = masterListService.searchSubsidiaryList(searchStr);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return masterListSubsidiary;
 	}
 	

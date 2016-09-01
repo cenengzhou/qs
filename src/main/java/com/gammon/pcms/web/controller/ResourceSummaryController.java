@@ -8,9 +8,12 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
@@ -25,6 +29,7 @@ import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/resourceSummary/")
 public class ResourceSummaryController {
 	
@@ -35,40 +40,40 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummaries(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo, 
-													@RequestParam(name="objectCode") String objectCode){
+													@RequestParam(name="objectCode") String objectCode) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-		try {
+//		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, subcontractNo, objectCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return resourceSummaries;
 	}
 	
 	@RequestMapping(value = "getResourceSummariesForAddendum", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesForAddendum(@RequestParam(required =true) String jobNo){
 		List<ResourceSummary> resourceSummaries = null;
-		try {
+//		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummariesForAddendum(jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return resourceSummaries;
 	}
 	
 	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo 
-													){
+													) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-		try {
+//		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, subcontractNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return resourceSummaries;
 	}
 	
@@ -77,14 +82,14 @@ public class ResourceSummaryController {
 													@RequestParam(name="subcontractNo") String subcontractNo,
 													@RequestParam(name="objectCode") String objectCode,
 													@RequestParam(name="subsidiaryCode") String subsidiaryCode
-													){
+													) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-		try {
+//		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return resourceSummaries;
 	}
 	
@@ -97,90 +102,92 @@ public class ResourceSummaryController {
 													@RequestParam(name="resourceNo") Integer resourceNo
 													){
 		List<ResourceSummary> resourceSummaries = null;
-		try {
+//		try {
 			
 			resourceSummaries = resourceSummaryService.getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return resourceSummaries;
 	}
 	
 	
 	@RequestMapping(value = "getResourceSummariesForIV", method = RequestMethod.GET)
-	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(required =true) String jobNo){
+	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(required =true) String jobNo) throws DatabaseOperationException{
 		IVInputPaginationWrapper ivInputPaginationWrapper = null;
-		try {
+//		try {
 			
 			ivInputPaginationWrapper = resourceSummaryService.obtainResourceSummariesForIV(jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return ivInputPaginationWrapper;
 	}
 	
 	@RequestMapping(value = "getResourceSummariesGroupByObjectCode", method = RequestMethod.GET)
 	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
 		List<ResourceSummayDashboardDTO> rsList = null;
-		try {
+//		try {
 			rsList = resourceSummaryService.getResourceSummariesGroupByObjectCode(jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return rsList;
 	}
 
-
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
 									@RequestParam(required =true) String repackagingId,
-									 @RequestBody ResourceSummary resourceSummary){
+									 @RequestBody ResourceSummary resourceSummary) throws NumberFormatException, Exception{
 		String result = "";
-		try {
+//		try {
 			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingId), resourceSummary);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteResources", method = RequestMethod.POST)
-	public String deleteResources( @RequestBody List<ResourceSummary> resourceSummaryList){
+	public String deleteResources( @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		String result = "";
-		try {
+//		try {
 			result = resourceSummaryService.deleteResources(resourceSummaryList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return result;
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateResourceSummaries", method = RequestMethod.POST)
 	public String updateResourceSummaries(@RequestParam(required =true) String jobNo, 
-									 @RequestBody List<ResourceSummary> resourceSummaryList){
+									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-		try {
+//		try {
 			wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return wrapper.getError();
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
 	public String splitOrMergeResources(@RequestParam(required =true) String repackagingId, 
-										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper){
+										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper) throws NumberFormatException, Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-		try {
+//		try {
 			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingId));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
 		return wrapper.getError();
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
 	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -189,10 +196,13 @@ public class ResourceSummaryController {
 		} catch (Exception e) {
 			result = "IV cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "postIVAmounts", method = RequestMethod.POST)
 	public String postIVAmounts(@RequestParam(required =true) String jobNo, @RequestParam(required =true) boolean finalized){
 		String result = "";
@@ -201,6 +211,8 @@ public class ResourceSummaryController {
 		} catch (Exception e) {
 			result = "IV cannot be updated.";
 			e.printStackTrace();
+			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
 		} 
 		return result;
 	}

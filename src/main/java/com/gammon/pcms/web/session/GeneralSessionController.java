@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class GeneralSessionController {
 	@Autowired
 	private SessionRegistry sessionRegistry;
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "GetCurrentSessionId")
 	public String getCurrentSessionId(HttpSession session, HttpServletRequest request, HttpServletResponse response){
 		return session.getId();	

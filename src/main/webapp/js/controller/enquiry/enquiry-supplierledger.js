@@ -100,7 +100,9 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 				} else {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Subcontract ' + $scope.searchSubcontractNo + ' does not exist' ); 
 				}
-			})
+			}, function(error){
+//				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', error ); 
+			});
 		} else {
 			$scope.obtainAPRecordList();
 		}
@@ -120,6 +122,8 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 					if(angular.isObject(data)){
 						$scope.gridOptions.data = data;
 					}
+				}, function(error){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', error ); 
 				})
 	}
 	

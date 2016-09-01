@@ -1,4 +1,4 @@
-mainApp.service('adlService', ['$http', '$q',  function($http, $q){
+mainApp.service('adlService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getJobDashboardData:						getJobDashboardData,
@@ -38,7 +38,7 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
     			month: month
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAccountLedgerList(noJob, typeLedger, yearStart, yearEnd, monthStart, monthEnd, typeDocument, noSubcontract, codeObject, codeSubsidiary){
@@ -58,26 +58,27 @@ mainApp.service('adlService', ['$http', '$q',  function($http, $q){
     			codeSubsidiary: codeSubsidiary
     		}
     	});
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getAddressBookListOfSubcontractorAndClient(){
     	var request = $http.get('service/adl/getAddressBookListOfSubcontractorAndClient');
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function handleError( response) {
-        if (
-            ! angular.isObject( response.data ) ||
-            ! response.data.message
-            ) {
-            return( $q.reject( "An unknown error occurred." ) );
-        }
-        return( $q.reject( response.data.message ) );
-    }
-    function handleSuccess( response ) {
-        return( response.data );
-    }
+//    function handleError( response) {
+//        if (
+//            ! angular.isObject( response.data ) ||
+//            ! response.data.message
+//            ) {
+//            return( $q.reject( "An unknown error occurred." ) );
+//        }
+//        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.data.message ); 
+////        return( $q.reject( response.data.message ) );
+//    }
+//    function handleSuccess( response ) {
+//        return( response.data );
+//    }
 }]);
 
 

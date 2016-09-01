@@ -22,7 +22,7 @@ public class TransactionalInterceptor {
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
 	
-	@Pointcut("within(com.gammon.qs.service..*)")
+	@Pointcut("within(com.gammon.*.service..*)")
 	public void inServiceLayer(){}
 	
 	@Pointcut("!execution(* com.gammon.qs.service.security.SecurityService.*(..))")

@@ -24,6 +24,9 @@ import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.gammon.factory.AutowiringSpringBeanJobFactory;
@@ -122,6 +125,8 @@ public class QuartzConfig {
 	private ApplicationConfig applicationConfig;
 	@Autowired
 	private Environment env;
+	@Autowired
+	private WebServiceConfig webServiceConfig;
 	
 	@PostConstruct  
 	private void postConstruct() throws NamingException, SchedulerException {
@@ -670,4 +675,8 @@ public class QuartzConfig {
 		return jobCronExpressionHousekeepAuditTable;
 	}
 	
+	public void prepareQuartzUser(){
+		Authentication quartzUser = new UsernamePasswordAuthenticationToken(webServiceConfig.getPcmsApiUsername(), null, null);
+		SecurityContextHolder.getContext().setAuthentication(quartzUser);
+	}
 }

@@ -343,8 +343,10 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					rowEntity.currIVAmount = cumIVAmount;
 				}
 			}
-			$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
-			$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+			if(newValue !== oldValue){
+				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
+				$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+			}
 		});
 		/*gridApi.selection.on.rowSelectionChanged($scope, function () {
 	            $scope.selection = gridApi.selection.getSelectedRows();

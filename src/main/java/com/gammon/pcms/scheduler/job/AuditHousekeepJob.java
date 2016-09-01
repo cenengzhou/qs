@@ -25,6 +25,7 @@ public class AuditHousekeepJob implements Job {
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		quartzConfig.prepareQuartzUser();
 		logger.info("Scheduler: "+quartzConfig.getJobDescriptionHousekeepAuditTable());
 		auditHousekeepService.housekeepAuditTable();
 	}

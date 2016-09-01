@@ -1,9 +1,11 @@
 package com.gammon.pcms.web.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.pcms.config.AuditConfig;
 import com.gammon.pcms.config.AuditConfig.AuditInfo;
 import com.gammon.pcms.scheduler.service.AuditHousekeepService;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsEnq()) or (principal.user.username == @webServiceConfig.pcmsApiUsername())")
 @RequestMapping(value = "service/audithousekeep/")
 public class AuditHousekeepController {
 
@@ -37,13 +41,13 @@ public class AuditHousekeepController {
 
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "housekeepAuditTable", method = RequestMethod.POST)
-	public int housekeepAuditTable(@RequestParam String tableName){
-		try {
+	public int housekeepAuditTable(@RequestParam String tableName) throws DataAccessException, SQLException{
+//		try {
 			return auditHousekeepService.housekeekpByAuditTableName(tableName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return -1;
 	}
 	
 	@RequestMapping(value = "findEntityByIdRevision", method = RequestMethod.POST)
@@ -51,25 +55,25 @@ public class AuditHousekeepController {
 			@RequestParam(defaultValue = "com.gammon.qs.domain.Subcontract") String clazz, 
 			@RequestParam(defaultValue = "8243") long id, 
 			@RequestParam(defaultValue = "1") int rev,
-			@RequestParam(defaultValue = "Return specific entity instance of corresponding revision") String description){
-		try {
+			@RequestParam(defaultValue = "Return specific entity instance of corresponding revision") String description) throws ClassNotFoundException{
+//		try {
 			return auditHousekeepService.findEntityByIdRevision(Class.forName(clazz) , id, rev);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	@RequestMapping(value = "findRevisionsByEntity", method = RequestMethod.POST)
 	public @ResponseBody List<Object[]> findRevisionsByEntity(
 			@RequestParam(defaultValue = "com.gammon.qs.domain.Subcontract") String clazz,
-			@RequestParam(defaultValue = "Return all entity instance, revision entity, type of the revision corresponding to the revision at which the entity was modified.") String description){
-		try {
+			@RequestParam(defaultValue = "Return all entity instance, revision entity, type of the revision corresponding to the revision at which the entity was modified.") String description) throws ClassNotFoundException{
+//		try {
 			return auditHousekeepService.findRevisionsByEntity(Class.forName(clazz));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 
 	@RequestMapping(value = "findByRevision", method = RequestMethod.POST)
@@ -79,32 +83,34 @@ public class AuditHousekeepController {
 		return auditHousekeepService.findByRevision(revision);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "testModifySubcontractAndDetail", method = RequestMethod.POST)
 	public Object[] testModifySubcontractAndDetail(
 			@RequestParam(defaultValue = "13389") String jobNo,
 			@RequestParam(defaultValue = "1001") String subcontractNo,
-			@RequestParam(defaultValue = "Change Subcontract and details's description") String description){
+			@RequestParam(defaultValue = "Change Subcontract and details's description") String description) throws DatabaseOperationException{
 		Object[] results = null;
-		try {
+//		try {
 			results = subcontractService.testModifySubcontractAndDetail(jobNo, subcontractNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return results;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "testModifyPaymentCertAndDetail", method = RequestMethod.POST)
 	public Object[] testModifyPaymentCertAndDetail(
 			@RequestParam(defaultValue = "13389") String jobNo,
 			@RequestParam(defaultValue = "1001") String subcontractNo,
 			@RequestParam(defaultValue = "1") Integer paymentCertNo,
-			@RequestParam(defaultValue = "Change Cert Amount and details's description") String description){
+			@RequestParam(defaultValue = "Change Cert Amount and details's description") String description) throws Exception{
 		Object[] results = null;
-		try {
+//		try {
 			results = paymentService.testModifyPaymentCertAndDetail(jobNo, subcontractNo, paymentCertNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return results;
 	}
 

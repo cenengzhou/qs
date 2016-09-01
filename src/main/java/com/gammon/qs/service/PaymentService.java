@@ -136,8 +136,6 @@ public class PaymentService{
 	@Autowired
 	private APWebServiceConnectionDao apWebServiceConnectionDao;
 	@Autowired
-	private JobInfoService jobRepository;
-	@Autowired
 	private JobCostService jobCostRepository;
 	@Autowired
 	private AdminService adminServiceImpl;
@@ -157,7 +155,8 @@ public class PaymentService{
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
 	@Autowired
 	private SubcontractService subcontractService;
-	
+	@Autowired
+	private AdminService adminService;
 	
 	private List<PaymentCertDetail> cachedResults;
 	private List<SCPaymentExceptionalWrapper> cachedSCPaymentReportResults;
@@ -541,6 +540,7 @@ public class PaymentService{
 	 * Enhancement for SCPayment Review by Finance
 	 */
 	public Boolean toCompleteSCPayment(String jobNumber, String packageNo, String approvalDecision) throws Exception {
+		adminServiceImpl.canAccessJob(jobNumber);
 		/**
 		 * @author tikywong
 		 * Created on March 20, 2013
@@ -2931,6 +2931,7 @@ public class PaymentService{
 		return error;
 	}
 	
+	@SuppressWarnings("static-access")
 	public boolean ableToSubmit(PaymentCert scPaymentCert, List<SubcontractDetail> scDetailsList, List<PaymentCertDetail> scPaymentDetailList) throws ValidateBusinessLogicException{
 		logger.info("SCPaymentLogic.ableToSubmit");
 		
@@ -3069,6 +3070,7 @@ public class PaymentService{
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
 	public Object[] testModifyPaymentCertAndDetail(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception{
+//		adminService.canAccessJob(jobNo);
 		PaymentCert paymentCert = obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 		List<PaymentCertDetail> paymentCertDetailList = obtainPaymentDetailList(jobNo, subcontractNo, paymentCertNo);
 		paymentCert.setCertAmount(paymentCert.getCertAmount() + 10);

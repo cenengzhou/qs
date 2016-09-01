@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.google.gson.Gson;
 
 @RestController
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/attachment/")
 public class AttachmentController {
 
@@ -40,16 +42,17 @@ public class AttachmentController {
 	private AttachmentService attachmentService;
 
 	@RequestMapping(value = "getRepackagingAttachments", method = RequestMethod.POST)
-	public List<AttachRepackaging> getRepackagingAttachments(@RequestParam Long repackagingEntryID) {
+	public List<AttachRepackaging> getRepackagingAttachments(@RequestParam Long repackagingEntryID) throws Exception {
 		List<AttachRepackaging> resultList = new ArrayList<AttachRepackaging>();
-		try{
+//		try{
 			resultList.addAll(attachmentService.getRepackagingAttachments(repackagingEntryID));
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
 		return resultList;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "uploadRepackingAttachment", method = RequestMethod.POST)
 	public void uploadRepackingAttachment(@RequestParam(required = true, value = "repackagingEntryID") String repackagingEntryID, 
 								@RequestParam(required = true, value = "sequenceNo") String sequenceNo, 
@@ -121,47 +124,50 @@ public class AttachmentController {
 		}
 	} 
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteRepackagingAttachment", method = RequestMethod.POST)
-	public Boolean deleteRepackagingAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo){
-		try {
+	public Boolean deleteRepackagingAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo) throws Exception{
+//		try {
 			return attachmentService.deleteRepackagingAttachment(repackagingEntryID, sequenceNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return false;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "saveRepackagingTextAttachment", method = RequestMethod.POST)
-	public Boolean saveRepackagingTextAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment){
-		try{
+	public Boolean saveRepackagingTextAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment) throws Exception{
+//		try{
 			return attachmentService.saveRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addRepackagingTextAttachment", method = RequestMethod.POST)
-	public Integer addRepackagingTextAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo, @RequestParam String fileName, String textAttachment){
-		try{
+	public Integer addRepackagingTextAttachment(@RequestParam Long repackagingEntryID, @RequestParam Integer sequenceNo, @RequestParam String fileName, String textAttachment) throws Exception{
+//		try{
 			return attachmentService.addRepackagingTextAttachment(repackagingEntryID, sequenceNo, fileName, textAttachment);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	@RequestMapping(value = "getAttachmentListForPCMS", method = RequestMethod.POST)
-	public List<? extends AbstractAttachment> getAttachmentListForPCMS(@RequestParam String nameObject, @RequestParam String textKey) {
-		try{
+	public List<? extends AbstractAttachment> getAttachmentListForPCMS(@RequestParam String nameObject, @RequestParam String textKey) throws Exception {
+//		try{
 			return attachmentService.getAttachmentListForPCMS(nameObject, textKey);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "uploadSCAttachment", method = RequestMethod.POST)
 	public void uploadSCAttachment( 
 								@RequestParam(required = true, value = "nameObject") String nameObject,
@@ -198,25 +204,27 @@ public class AttachmentController {
 		}
 	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteAttachment", method = RequestMethod.POST)
-	public Boolean deleteAttachment(String nameObject, String textKey, Integer sequenceNumber){
-		try {
+	public Boolean deleteAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception{
+//		try {
 			return attachmentService.deleteAttachment(nameObject, textKey,sequenceNumber);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return false;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "uploadTextAttachment", method = RequestMethod.POST)
 	public Boolean uploadTextAttachment(@RequestParam String nameObject, @RequestParam String textKey, 
-				@RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment ){
-		try{
+				@RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment ) throws Exception{
+//		try{
 			return attachmentService.uploadTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return null;
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	@RequestMapping(value="downloadScAttachment",method=RequestMethod.GET)
