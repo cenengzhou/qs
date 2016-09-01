@@ -158,13 +158,10 @@ public class HTMLService implements Serializable{
 		data.put("currentPaymentNo", currentPaymentNo);
 		
 		if (htmlVersion.equals("W"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_W.ftl", data);
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.ftl", data);
 
 		if (htmlVersion.equals("B"))
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_B.ftl", data);
-		
-		if (htmlVersion.equals("A"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.html", data);
 			
 		return strHTMLCodingContent;
 	}

@@ -1,6 +1,6 @@
 mainApp.controller('PaymentInvoiceCtrl', 
-		['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil', 'htmlService', '$sce',
-        function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService, $sce) {
+		['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil', 'htmlService', 
+        function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService) {
 	
 	$scope.disableButtons = true;
 	loadData();
@@ -62,9 +62,11 @@ mainApp.controller('PaymentInvoiceCtrl',
 //					//console.log(data);
 //					$scope.paymentCertSummary = data;
 //				});
-		htmlService.makeHTMLStringForSCPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), 'A')
+		htmlService.makeHTMLStringForSCPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), 'W')
 		.then(function(data){
-			$scope.invoiceHtml = $sce.trustAsHtml(data);
+			var bodyStart = data.indexOf('<body>');
+			var bodyEnd = data.indexOf('</body>');
+			$scope.invoiceHtml = data.substring(bodyStart, bodyEnd);
 		});
 	}
 	

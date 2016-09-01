@@ -1,2 +1,10 @@
 <div ng-bind-html="invoiceHtml">
 </div>
+
+<div class="col-md-12">
+	<button class="m-t-5 btn btn-primary btn-block"
+		ng-hide="disableButtons" ng-click="submit()"
+		ng-disabled="disableButtons">
+		Submit <span class="fa fa-send-o"></span>
+	</button>
+</div>
