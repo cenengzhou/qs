@@ -28,9 +28,7 @@ import com.gammon.qs.domain.ARRecord;
 import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.jobCost.AccountPayableExcelGenerator;
 import com.gammon.qs.service.jobCost.PurchaseOrderExcelGenerator;
 import com.gammon.qs.shared.GlobalParameter;
@@ -60,8 +58,6 @@ public class JobCostService implements Serializable {
 	private transient MasterListService masterListRepository;
 	@Autowired
 	private transient JasperConfig jasperConfig;
-	@Autowired
-	private AdminService adminService;
 	
 	private transient Logger logger = Logger.getLogger(JobCostService.class.getName());
 	

@@ -1,6 +1,5 @@
 package com.gammon.pcms.aspect;
 
-import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,9 +34,7 @@ public class CanAccessJobAspect {
 			+ "excludeAdminService() && (args(str, ..) || args(.., str) || "
 			+ "args(*, str, ..) || args(*, *, str, ..) || args(*, *, *, str, ..) || "
 			+ "args(.., str, *) || args(.., str, *, *) || args(.., str, *, *, *))")
-	public void strInServiceLayer(String str){
-		System.out.println(str);
-	}
+	public void strInServiceLayer(String str){}
 	
 	@Pointcut("@annotation(CanAccessJobChecking)")
 	public void canAcceJobChecking(){}

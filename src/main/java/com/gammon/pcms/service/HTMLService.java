@@ -41,7 +41,6 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -76,8 +75,6 @@ public class HTMLService implements Serializable{
 	private SubcontractDetailHBDao subcontractDetailHBDao;
 	@Autowired
 	private TenderDetailHBDao tenderDetailHBDao;
-	@Autowired
-	private AdminService adminService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
 //		adminService.canAccessJob(jobNumber);
@@ -165,6 +162,9 @@ public class HTMLService implements Serializable{
 
 		if (htmlVersion.equals("B"))
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_B.ftl", data);
+		
+		if (htmlVersion.equals("A"))
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.html", data);
 			
 		return strHTMLCodingContent;
 	}
@@ -278,8 +278,8 @@ public class HTMLService implements Serializable{
 				data.put("comparableBudgetAmount",comparableBudgetAmount);
 				data.put("recommendVendor", recommendVendor);
 				data.put("vendorNoZero", vendorNumZero);
-//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
-				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
+				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
+//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
 			}
 			
 			if (htmlVersion.equals("B")) {

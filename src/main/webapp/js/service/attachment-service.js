@@ -1,4 +1,4 @@
-mainApp.service('attachmentService', ['$http', '$q', 'modalService',  function($http, $q, GlobalHelper){
+mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
 

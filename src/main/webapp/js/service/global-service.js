@@ -221,7 +221,7 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	}
 }]);
 
-mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
+mainApp.factory('GlobalHelper', ['$q', 'modalService', function GlobalHelperFactory($q, modalService){
 	return{
 		handleError: handleError,
 		handleSuccess: handleSuccess,
@@ -285,7 +285,7 @@ mainApp.factory('GlobalHelper', function GlobalHelperFactory(){
 		 }
 		 return c;
 	}
-})
+}]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {
      return {

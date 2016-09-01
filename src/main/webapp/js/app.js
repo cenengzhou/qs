@@ -710,6 +710,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/payment/payment-invoice.js',
+                           'js/service/html-service.js'
                     ] 
                 });
             }]

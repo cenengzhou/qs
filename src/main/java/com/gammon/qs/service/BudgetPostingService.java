@@ -19,7 +19,6 @@ import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.BudgetPostingWSDao;
 import com.gammon.qs.dao.JobInfoWSDao;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.webservice.WSConfig;
@@ -44,8 +43,6 @@ public class BudgetPostingService {
 	private WSConfig wsConfig;
 	@Autowired
 	private SecurityService securityService;
-	@Autowired
-	private AdminService adminService;
 
 	private static final String ocTransactionNumber = "1";
 	private static final String obTransactionNumber = "2";

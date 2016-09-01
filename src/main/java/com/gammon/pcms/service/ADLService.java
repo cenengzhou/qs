@@ -30,7 +30,6 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.qs.service.RepackagingService;
-import com.gammon.qs.service.admin.AdminService;
 
 @Service
 @Transactional(	readOnly = true, rollbackFor = Exception.class, value = "adlTransactionManager")
@@ -57,8 +56,6 @@ public class ADLService {
 	private AddressBookDao addressBookDao;
 	@Autowired
 	private BusinessUnitDao businessUnitDao;
-	@Autowired
-	private AdminService adminService;
 	@Autowired
 	private RepackagingService repackagingService;
 	/*

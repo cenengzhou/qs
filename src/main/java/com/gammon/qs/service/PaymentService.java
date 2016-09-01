@@ -155,8 +155,6 @@ public class PaymentService{
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
 	@Autowired
 	private SubcontractService subcontractService;
-	@Autowired
-	private AdminService adminService;
 	
 	private List<PaymentCertDetail> cachedResults;
 	private List<SCPaymentExceptionalWrapper> cachedSCPaymentReportResults;

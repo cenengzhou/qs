@@ -42,7 +42,6 @@ import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.io.AttachmentFile;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.security.SecurityService;
 
@@ -93,10 +92,7 @@ public class AttachmentService {
 	private PaymentCertHBDao scPaymentCertHBDao;
 	//Detail
 	@Autowired
-	private SubcontractDetailHBDao scDetailsHBDao;
-	@Autowired
-	private AdminService adminService;
-	
+	private SubcontractDetailHBDao scDetailsHBDao;	
 	
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
 

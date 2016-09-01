@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,6 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
 @Service
@@ -88,8 +86,6 @@ public class AddendumService{
 	private MasterListService masterListService;
 	@Autowired
 	private SubcontractService subcontractService;
-	@Autowired
-	private AdminService adminService;
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 

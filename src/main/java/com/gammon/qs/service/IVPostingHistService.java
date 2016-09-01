@@ -16,7 +16,6 @@ import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.IVPostingHistDaoHB;
 import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.jobCost.IvPostingHistoryExcelGenerator;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.wrapper.IVHistoryPaginationWrapper;
@@ -31,8 +30,6 @@ public class IVPostingHistService implements Serializable{
 	private static final int RECORDS_PER_PAGE = 200;
 	@Autowired
 	private transient IVPostingHistDaoHB ivPostingHistoryDao;
-	@Autowired
-	private AdminService adminService;
 	@Autowired
 	private SecurityService securityService;
 	private List<IVPostingHist> cachedIVHistoryList = new ArrayList<IVPostingHist>();
