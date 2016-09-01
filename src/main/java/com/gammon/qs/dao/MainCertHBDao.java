@@ -164,12 +164,14 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	/**
 	 * @author koeyyeung
 	 * @since Aug, 28, 2016**/
-	public MainCert getLatestPostedMainCert(String noJob) throws DataAccessException {
+	public MainCert getLatestMainCert(String noJob, String status) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(getType());
 
 		// Where
 		criteria.add(Restrictions.eq("jobNo", noJob));
-		criteria.add(Restrictions.eq("certificateStatus", "300"));
+		if(!GenericValidator.isBlankOrNull(status)){
+			criteria.add(Restrictions.eq("certificateStatus", status));
+		}
 		
 		//Order By
 		criteria.addOrder(Order.desc("certificateNumber"));

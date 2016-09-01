@@ -12,7 +12,7 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 
 	function loadData(){
 		getCertificateList();
-		getLatestPostedMainCert();
+		getLatestMainCert();
 	}
 	
 
@@ -51,11 +51,10 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 				});
 	}
 
-	function getLatestPostedMainCert() {
-		mainCertService.getLatestPostedMainCert($scope.jobNo)
+	function getLatestMainCert() {
+		mainCertService.getLatestMainCert($scope.jobNo, '300')
 		.then(
 				function( data ) {
-					//console.log(data);
 					if(data.length !=0){
 						$scope.totalCertificateAmount = data.certNetAmount;
 					}

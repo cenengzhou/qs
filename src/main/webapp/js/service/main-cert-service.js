@@ -8,7 +8,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
         getMainCertReceiveDateAndAmount:	getMainCertReceiveDateAndAmount,
         getCertificateDashboardData: 		getCertificateDashboardData,
         getRetentionReleaseList: 			getRetentionReleaseList,
-        getLatestPostedMainCert:			getLatestPostedMainCert,
+        getLatestMainCert:			getLatestMainCert,
         
         updateCertificate: 					updateCertificate,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
@@ -62,12 +62,13 @@ mainApp.service('mainCertService', ['$http', '$q', '$log',  function($http, $q, 
         return( request.then( handleSuccess, handleError ) );
     }
     
-    function getLatestPostedMainCert(noJob) {
+    function getLatestMainCert(noJob, status) {
     	var request = $http({
             method: "get",
-            url: "service/mainCert/getLatestPostedMainCert",
+            url: "service/mainCert/getLatestMainCert",
             params: {
-            	noJob: noJob
+            	noJob: noJob,
+            	status: status
             }
         });
         return( request.then( handleSuccess, handleError ) );

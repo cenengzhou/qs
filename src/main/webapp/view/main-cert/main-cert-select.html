@@ -44,7 +44,7 @@
 		<div class="fixed-container">
 			<div class="col-lg-12"
 				ng-show="latestCertStatus=='300' || latestCertStatus==''">
-				<a ui-sref="cert.details({mainCertNo: ''})" 
+				<a ui-sref="cert.details({mainCertNo: '0'})" 
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Payment
 				</a> <br> <br>
@@ -74,7 +74,7 @@
 									ng-class="{'btn-grey' : cert.certificateStatus=='300', 'btn-purple' : cert.certificateStatus!='300'}">
 									View details</a>
 								</div>
-								<dl class="dl-horizontal">
+								<dl class="dl-horizontal md-4">
 									<dt>Certificate Status:</dt>
 									<dd>
 										<div ng-class="{'text-black' : cert.certificateStatus=='300', 'text-purple' : cert.certificateStatus!='300'}">
@@ -137,6 +137,8 @@
 									<dd>{{cert.certAsAtDate | jsonDate : 'dd MMM,yyyy'}}</dd>
 									<dt>Cert Issue Date:</dt>
 									<dd>{{cert.certIssueDate | jsonDate : 'dd MMM,yyyy'}}</dd>
+									<dt>Prepared by:</dt>
+									<dd>{{cert.lastModifiedUser}}</dd>
 								</dl>
 							</div>
 						</div>

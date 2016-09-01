@@ -79,9 +79,9 @@ public class MainCertController {
 		return mainCertService.getCertificateDashboardData(year, month, noJob, type);
 	}
 	
-	@RequestMapping(value = "getLatestPostedMainCert", method = RequestMethod.GET)
-	public MainCert getLatestPostedMainCert(@RequestParam(required = true) String noJob) {
-		return mainCertService.getLatestPostedMainCert(noJob);
+	@RequestMapping(value = "getLatestMainCert", method = RequestMethod.GET)
+	public MainCert getLatestMainCert(@RequestParam(required = true) String noJob, @RequestParam(required = false) String status) {
+		return mainCertService.getLatestMainCert(noJob, status);
 	}
 	
 	// ---------------- update / calculate ----------------

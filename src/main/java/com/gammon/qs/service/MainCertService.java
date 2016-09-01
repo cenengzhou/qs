@@ -769,7 +769,7 @@ public class MainCertService {
 				else{
 					//Get latest cert amount if current year has no data to show
 					BigDecimal netIPAamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestPostedMainCert(noJob);
+					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob, "300");
 					if(mainCert != null)
 						netIPAamount = new BigDecimal(mainCert.calculateAppliedNetAmount());
 					dataList.add(netIPAamount);
@@ -781,7 +781,7 @@ public class MainCertService {
 				else{
 					//Get latest cert amount if current year has no data to show
 					BigDecimal netIPCamount = new BigDecimal(0);
-					MainCert mainCert = mainCertHBDao.getLatestPostedMainCert(noJob);
+					MainCert mainCert = mainCertHBDao.getLatestMainCert(noJob, "300");
 					if(mainCert != null)
 						netIPCamount = new BigDecimal(mainCert.calculateCertifiedNetAmount());
 					dataList.add(netIPCamount);
@@ -824,8 +824,8 @@ public class MainCertService {
 		return dataList;
 	}
 	
-	public MainCert getLatestPostedMainCert (String noJob){
-		return mainCertHBDao.getLatestPostedMainCert(noJob);
+	public MainCert getLatestMainCert (String noJob, String status){
+		return mainCertHBDao.getLatestMainCert(noJob, status);
 	}
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
