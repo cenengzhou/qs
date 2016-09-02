@@ -138,6 +138,7 @@ public class MainCertService {
 				mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(),(newMainContractCert.getCertificateNumber()-1));
 				newMainContractCert.setCreatedDate(new Date());
 			}	
+			newMainContractCert.setCertificateStatus(MainCert.CERT_CREATED);
 			mainCertHBDao.insert(newMainContractCert);
 		}
 		
@@ -159,9 +160,9 @@ public class MainCertService {
 	 * modified on 22 August, 2012
 	 * Fixing: Main Certificate is posted to JDE but the status doesn't update at QS System
 	 */
-	public String insertAndPostMainContractCert(String jobNumber, Integer mainCertNumber, Date asAtDate) throws DatabaseOperationException {
+	public String insertAndPostMainContractCert(String jobNo, Integer mainCertNumber) throws DatabaseOperationException {
 		long numberOfRecordInserted = 0;
-		MainCert mainCert = getCertificate(jobNumber, mainCertNumber);
+		MainCert mainCert = getCertificate(jobNo, mainCertNumber);
 		List<MainCertContraCharge> mainCertContraChargeList = mainCertContraChargeService.getMainCertContraChargeList(mainCert);
 		
 		//1. Populate Main Contract Certificate Wrapper
@@ -184,7 +185,7 @@ public class MainCertService {
 		logger.info("Job: "+mainCertRequest.getJobNumber()+" No of Main Contract Certificate Contra Charge inserted to JDE: "+numberOfRecordInserted);
 		
 		//5. Insert As At Date of Main Certificate to JDE
-		numberOfRecordInserted = insertAsAtDate(mainCertRequest.getJobNumber(), mainCertRequest.getCertificateNumber(), asAtDate, mainCertRequest.getUserId());
+		numberOfRecordInserted = insertAsAtDate(mainCertRequest.getJobNumber(), mainCertRequest.getCertificateNumber(), mainCert.getCertAsAtDate(), mainCertRequest.getUserId());
 		logger.info("Job: "+mainCertRequest.getJobNumber()+" No of Main Contract Certificate As At Date inserted to JDE: "+numberOfRecordInserted);
 		
 		//6. Post Main Certificate to JDE's AR
@@ -390,7 +391,7 @@ public class MainCertService {
 	 * Submit Negative Main Cert for Approval
 	 * @throws DatabaseOperationException 
 	 * **/
-	public String submitNegativeMainCertForApproval(String jobNumber, Integer mainCertNumber, Double certAmount, String userID) throws DatabaseOperationException{
+	public String submitNegativeMainCertForApproval(String jobNumber, Integer mainCertNumber, Double certAmount) throws DatabaseOperationException{
 		String resultMsg = "";
 		
 		JobInfo job = jobInfoService.obtainJob(jobNumber);
@@ -419,7 +420,7 @@ public class MainCertService {
 		
 		logger.info("Submitting Negative Main Cert for Approval------> Job: "+jobNumber+" - Main Cert No.:"+mainCertNumber+" - Cert Amount: "+CalculationUtil.round(certAmount,2));
 		resultMsg = apWebServiceConnectionDao.createApprovalRoute(job.getCompany(), jobNumber, mainCertNumber.toString(), "0", "",
-				approvalType, "", certAmount, currency, userID);
+				approvalType, "", certAmount, currency, securityService.getCurrentUser().getUsername());
 		
 		//Update Main Cert Status = 200 (Waiting For Approval)
 		if (resultMsg == null || "".equals(resultMsg.trim())) {
@@ -680,7 +681,7 @@ public class MainCertService {
 
 			if("A".equals(approvalDecision)){
 				//Approved Main Cert
-				String errorMsg = insertAndPostMainContractCert(jobNumber, mainCert.getCertificateNumber(), mainCert.getCertAsAtDate());
+				String errorMsg = insertAndPostMainContractCert(jobNumber, mainCert.getCertificateNumber());
 
 				if(errorMsg==null){
 					logger.info("Job: "+jobNumber+" Main Contract Certificate has been posted successfully.");

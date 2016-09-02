@@ -39,10 +39,11 @@ public class MainCertRetentionReleaseService {
 	/**
 	 * @author koeyyeung modified on 18 Dec, 2013
 	 **/
-	public PCMSDTO calculateCumulativeRetentionReleaseByJob(MainCert mainCert) throws DataAccessException {
+	public PCMSDTO getCumulativeRetentionReleaseByJob(String jobNo, Integer mainCertNumber) throws DataAccessException {
 		String errorMessage = "";
 
-		List<MainCertRetentionRelease> rrList = retentionReleaseHBDao.findByJobNo(mainCert.getJobNo());
+		List<MainCertRetentionRelease> rrList = retentionReleaseHBDao.findByJobNo(jobNo);
+		MainCert mainCert = mainCertService.getCertificate(jobNo, mainCertNumber);
 		Double cumRRCalculatedByMainCert = mainCert.getCertifiedMainContractorRetentionReleased() + mainCert.getCertifiedRetentionforNSCNDSCReleased() + mainCert.getCertifiedMOSRetentionReleased();
 		Double cumRetentionRelease = 0.0;
 		Double cumActualRetentionRelease = 0.0;

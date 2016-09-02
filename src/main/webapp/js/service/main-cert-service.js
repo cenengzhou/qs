@@ -8,8 +8,15 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         getMainCertReceiveDateAndAmount:	getMainCertReceiveDateAndAmount,
         getCertificateDashboardData: 		getCertificateDashboardData,
         getRetentionReleaseList: 			getRetentionReleaseList,
-        getLatestMainCert:			getLatestMainCert,
+        getLatestMainCert:					getLatestMainCert,
+        getCumulativeRetentionReleaseByJob:	getCumulativeRetentionReleaseByJob,
         
+        createMainCert:						createMainCert,
+        insertIPA:							insertIPA,
+        confirmIPC:							confirmIPC,
+        resetIPC:							resetIPC,
+        postIPC:							postIPC,
+        submitNegativeMainCertForApproval:	submitNegativeMainCertForApproval,
         updateCertificate: 					updateCertificate,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
     });
@@ -102,6 +109,83 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
             params: {
             	company: company,
             	refDocNo: refDocNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function getCumulativeRetentionReleaseByJob(noJob, noMainCert) {
+        var request = $http({
+            method: "GET",
+            url: "service/mainCert/getCumulativeRetentionReleaseByJob",
+            params: {
+            	noJob: noJob,
+            	noMainCert: noMainCert
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function createMainCert(mainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/createMainCert",
+            data: mainCert
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function insertIPA(mainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/insertIPA",
+            data: mainCert
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function confirmIPC(mainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/confirmIPC",
+            data: mainCert
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function resetIPC(mainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/resetIPC",
+            data: mainCert
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function postIPC(noJob, noMainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/postIPC",
+            params: {
+            	noJob: noJob,
+            	noMainCert: noMainCert
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function submitNegativeMainCertForApproval(noJob, noMainCert, certAmount) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/submitNegativeMainCertForApproval",
+            params: {
+            	noJob: noJob,
+            	noMainCert: noMainCert, 
+            	certAmount: certAmount
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

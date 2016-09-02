@@ -43,7 +43,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>Due Date</label>
-									<div class="input-group" moment-picker="payment.dueDate" ng-model="payment.dueDate"
+									<div class="input-group" moment-picker="payment.dueDate" start-view="day"
 										format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
@@ -56,7 +56,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label>As At Date</label>
-									<div class="input-group" moment-picker="payment.asAtDate"
+									<div class="input-group" moment-picker="payment.asAtDate" start-view="day"
 										format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
@@ -74,7 +74,7 @@
 									<label ng-hide="paymentTerms== 'QS3'">Invoice Received Date</label>
 									<label ng-show="paymentTerms== 'QS3'"> IPA Received Date</label>
 									<div class="input-group"
-										moment-picker=payment.ipaOrInvoiceReceivedDate format="YYYY-MM-DD" ng-model-options="{ updateOn: 'blur' }">
+										moment-picker=payment.ipaOrInvoiceReceivedDate format="YYYY-MM-DD" start-view="day" ng-model-options="{ updateOn: 'blur' }">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control"

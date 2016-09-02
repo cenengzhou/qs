@@ -82,7 +82,27 @@ public class MainCertController {
 		return mainCertService.getLatestMainCert(noJob, status);
 	}
 	
+	
+	@RequestMapping(value = "getCumulativeRetentionReleaseByJob", method = RequestMethod.GET)
+	public PCMSDTO getCumulativeRetentionReleaseByJob(@RequestParam(required = true) String noJob, @RequestParam(required = true) Integer noMainCert) {
+		return mainCertRetentionReleaseService.getCumulativeRetentionReleaseByJob(noJob, noMainCert);
+	}
+	
 	// ---------------- update / calculate ----------------
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "createMainCert",	method = RequestMethod.POST)
+	public String createMainCert(@Valid @RequestBody MainCert mainCert) {
+		String result = "";
+		try {
+			return mainCertService.createMainCert(mainCert);
+		} catch (DatabaseOperationException e) {
+			result = "Main Cert caanot be created.";
+			e.printStackTrace();
+		}
+		return result;
+		
+	}
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateRetentionRelease", method = RequestMethod.POST)
 	public PCMSDTO updateRetentionRelease(	@RequestParam(required = true) String noJob,
@@ -111,5 +131,39 @@ public class MainCertController {
 //		}
 //		return null;
 	}
-
+	
+	
+	@RequestMapping(value = "insertIPA", method = RequestMethod.POST)
+	public String insertIPA(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
+		return mainCertService.insertIPAAndUpdateMainContractCert(mainCert);
+	}
+	
+	
+	@RequestMapping(value = "confirmIPC", method = RequestMethod.POST)
+	public String confirmIPC(@Valid @RequestBody MainCert mainCert){
+		return mainCertService.confirmMainContractCert(mainCert);
+	}
+	
+	
+	@RequestMapping(value = "resetIPC", method = RequestMethod.POST)
+	public String resetIPC(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
+		return mainCertService.resetMainContractCert(mainCert);
+	}
+	
+	
+	@RequestMapping(value = "postIPC", method = RequestMethod.POST)
+	public String postIPC(@RequestParam(required = true) String noJob, @RequestParam(required = true) Integer noMainCert) throws DatabaseOperationException{
+		return mainCertService.insertAndPostMainContractCert(noJob, noMainCert);
+	}
+	
+	@RequestMapping(value = "submitNegativeMainCertForApproval", method = RequestMethod.POST)
+	public String submitNegativeMainCertForApproval(@RequestParam(required = true) String noJob, 
+													@RequestParam(required = true) Integer noMainCert,
+													@RequestParam(required = true) Double certAmount
+													) throws DatabaseOperationException{
+		return mainCertService.submitNegativeMainCertForApproval(noJob, noMainCert, certAmount);
+	}
+	
+	
+	
 }
