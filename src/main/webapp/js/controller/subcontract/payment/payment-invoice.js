@@ -1,10 +1,13 @@
 mainApp.controller('PaymentInvoiceCtrl', 
-		['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil', 'htmlService', 
-        function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService) {
+		['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil', 'htmlService', 'GlobalHelper',
+        function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService, GlobalHelper) {
 	
 	$scope.disableButtons = true;
 	loadData();
 	
+	$scope.testsubmit = function(type){
+		console.log('testing sumbit:' + type);
+	}
 	$scope.submit =  function(){
 		if($scope.payment.paymentStatus == "PND"){
 			
@@ -52,9 +55,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 				});
 
 	}
-
-
-
+	$scope.invoiceHtml = '{{1+1+1}}';
 	function getPaymentCertSummary() {
 //		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
 //		.then(
@@ -64,9 +65,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 //				});
 		htmlService.makeHTMLStringForSCPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), 'W')
 		.then(function(data){
-			var bodyStart = data.indexOf('<body>');
-			var bodyEnd = data.indexOf('</body>');
-			$scope.invoiceHtml = data.substring(bodyStart, bodyEnd);
+			$scope.invoiceHtml = GlobalHelper.formTemplate(data);
 		});
 	}
 	

@@ -12,12 +12,16 @@ import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.config.FreemarkerConfig;
+import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.helper.FreeMarkerHelper;
+import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
@@ -38,7 +42,6 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
-import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
@@ -54,27 +57,33 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private MasterListWSDao masterListDao;
 	@Autowired
+	private MasterListService masterListService;
+	@Autowired
 	private JobInfoHBDao jobInfoHBDao;
 	@Autowired
 	private SubcontractHBDao subcontractHBDao;
+	@Autowired
+	private SubcontractDetailHBDao subcontractDetailHBDao;
+	@Autowired
+	private PaymentService paymentService;
 	@Autowired
 	private PaymentCertHBDao paymentCertHBDao;
 	@Autowired
 	private	TenderHBDao tenderHBDao;
 	@Autowired
+	private TenderDetailHBDao tenderDetailHBDao;
+	@Autowired
+	private TenderVarianceHBDao tenderVarianceHBDao;
+	@Autowired
 	private MainCertHBDao mainCertHBDao;
-	@Autowired
-	private ResourceSummaryHBDao resourceSummaryHBDao;
-	@Autowired
-	private PaymentService paymentService;
 	@Autowired
 	private MainCertWSDao mainCertWSDao;
 	@Autowired
-	private MasterListService masterListService;
+	private ResourceSummaryHBDao resourceSummaryHBDao;
 	@Autowired
-	private SubcontractDetailHBDao subcontractDetailHBDao;
+	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
-	private TenderDetailHBDao tenderDetailHBDao;
+	private FreemarkerConfig freemarkerConfig;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
 //		adminService.canAccessJob(jobNumber);
@@ -158,7 +167,7 @@ public class HTMLService implements Serializable{
 		data.put("currentPaymentNo", currentPaymentNo);
 		
 		if (htmlVersion.equals("W"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.ftl", data);
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.ftl.html", data);
 
 		if (htmlVersion.equals("B"))
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_B.ftl", data);
@@ -166,194 +175,218 @@ public class HTMLService implements Serializable{
 		return strHTMLCodingContent;
 	}
 	
-	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
-//		adminService.canAccessJob(jobNumber);
-		String strHTMLCodingContent = "";
-		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
-		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
-			try {
-				listTenderAnalysis = tenderHBDao.obtainTenderAnalysis(jobNumber, subcontractNumber);
-			} catch (NumberFormatException e4) {
-				e4.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
+		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
+		Subcontract subcontract = subcontractHBDao.obtainSubcontract(noJob, noSubcontract);
+		Tender budgetTender = tenderHBDao.obtainTender(noJob, noSubcontract, 0);
+		List<Tender> tenderList = tenderHBDao.obtainTenderList(noJob, noSubcontract);
+		Tender rcmTenderer = tenderHBDao.obtainRecommendedTender(noJob, noSubcontract);
+		List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(noJob, noSubcontract, String.valueOf(rcmTenderer.getVendorNo()));
 		
-			@SuppressWarnings("unused")
-			List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
-			JobInfo jobHeaderInfo = new JobInfo();
-			String vendorName = "";
-			Double totalSubcontractSum = new Double(0);
-			List<String> vendorNameList = null;
-			List<Double> totalSubcontractSumList = null;
-			List<Boolean> vendorNumZero = null;
-			
-			Subcontract scPackage = new Subcontract();
-			
-			try {
-				jobHeaderInfo = jobInfoHBDao.obtainJobInfo(jobNumber);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			try {
-				scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-			try {
-				scDetailsList = subcontractDetailHBDao.getSCDetails(subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber));
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			
-			//Set it to be the budget amount of TA
-			Double comparableBudgetAmount = new Double(0);
-			String recommendVendor = "";
-
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("jobNumber", jobNumber);
-			data.put("jobHeaderInfo", jobHeaderInfo);
-			data.put("subcontractNumber", subcontractNumber);
-			data.put("scPackage", scPackage);
-			data.put("listTenderAnalysis", listTenderAnalysis);
-			
-			if (htmlVersion.equals("W")) {
-				vendorNameList = new ArrayList<String>();
-				totalSubcontractSumList = new ArrayList<Double>();
-				vendorNumZero = new ArrayList<Boolean>();
-				
-				for(int i=0; i < listTenderAnalysis.size();  i++ )
-				{
-					Tender curTenderAnalysis = listTenderAnalysis.get(i);
-					if (curTenderAnalysis.getVendorNo().equals(0)){
-						try {
-							for(TenderDetail curTenderAnalysisDetail: tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-								comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget()*curTenderAnalysisDetail.getQuantity();
-							}
-						} catch (DataAccessException e) {
-							e.printStackTrace();
-						}
-						vendorNameList.add(i, "");
-						totalSubcontractSumList.add(i,0.0);
-						vendorNumZero.add(i,true);
-					}else{
-					    logger.info("Vendor Number: "+curTenderAnalysis.getVendorNo());
-						try {
-							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
-							vendorNameList.add(i, vendorName);
-							logger.info("Vendor Name: " + vendorName);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						if ("RCM".equals(curTenderAnalysis.getStatus())){
-							recommendVendor=vendorName;
-						}
-							logger.info("RecommendVendor: " + recommendVendor);
-							
-						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
-						try {
-							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);//tenderHBDao.getTenderAnalysisDetail(jobNumber, new Integer(curTenderAnalysis.getVendorNo().toString()), new Integer(subcontractNumber));
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-							TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
-							if (curTenderAnalysisDetail.getRateBudget()!=null && curTenderAnalysisDetail.getQuantity()!=null)
-								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getRateBudget();
-						}
-						totalSubcontractSumList.add(i,totalSubcontractSum);
-						totalSubcontractSum = new Double(0);
-						vendorNumZero.add(i,false);
-					}
-				}
-				data.put("totalSubcontractSumList", totalSubcontractSumList);
-				data.put("vendorNameList", vendorNameList);
-				data.put("comparableBudgetAmount",comparableBudgetAmount);
-				data.put("recommendVendor", recommendVendor);
-				data.put("vendorNoZero", vendorNumZero);
-				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
-//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
-			}
-			
-			if (htmlVersion.equals("B")) {
-				comparableBudgetAmount = new Double(0);
-				recommendVendor = "";
-				vendorNameList = new ArrayList<String>();
-				vendorNumZero = new ArrayList<Boolean>();
-				totalSubcontractSumList = new ArrayList<Double>();
-				
-				for(int i=0; i < listTenderAnalysis.size();  i++ )
-				{
-					Tender curTenderAnalysis = listTenderAnalysis.get(i);
-					if (!curTenderAnalysis.getVendorNo().equals(0)){
-						try {
-							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
-							vendorNameList.add(i, vendorName);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						if ("RCM".equals(curTenderAnalysis.getStatus()) || "AWD".equals(curTenderAnalysis.getStatus()))
-							recommendVendor=vendorName;
-
-						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
-
-						try {
-							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);				} catch (NumberFormatException e) {
-								e.printStackTrace();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-
-							for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-								TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
-
-								if (curTenderAnalysisDetail.getRateBudget()!=null)
-									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getRateBudget());
-								if (curTenderAnalysisDetail.getQuantity()!=null)
-									logger.info("curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty()" + curTenderAnalysisDetail.getQuantity());
-
-								if (curTenderAnalysisDetail.getRateBudget()!=new Double(0))
-									totalSubcontractSum +=((curTenderAnalysisDetail.getQuantity()!=null?curTenderAnalysisDetail.getQuantity():new Double(0))
-											*(curTenderAnalysisDetail.getRateBudget()!=null?curTenderAnalysisDetail.getRateBudget():new Double(0)));
-
-							}
-							totalSubcontractSumList.add(i,totalSubcontractSum);
-							totalSubcontractSum = new Double(0);
-							vendorNumZero.add(i,false);
-						}
-						/**
-						 * modified by Tiky Wong on 22/05/2012
-						 * 
-						 * Fixing: Blackberry version's Tender Budget cannot be shown correctly which always shows 0
-						 */
-						else {
-							try {
-								for (TenderDetail curTenderAnalysisDetail : tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-									comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget() * curTenderAnalysisDetail.getQuantity();
-								}
-							} catch (DataAccessException e) {
-								e.printStackTrace();
-							}
-							vendorNameList.add(i, "");
-							totalSubcontractSumList.add(i, 0.0);
-							vendorNumZero.add(i, true);
-						}
-					}
-					
-					data.put("totalSubcontractSumList", totalSubcontractSumList);
-					data.put("vendorNameList", vendorNameList);
-					data.put("comparableBudgetAmount",comparableBudgetAmount);
-					data.put("recommendVendor", recommendVendor);
-					data.put("vendorNoZero", vendorNumZero);
-					strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_B.ftl", data);			
-		}
-
-			return strHTMLCodingContent;
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("job", job);
+		data.put("subcontract", subcontract);
+		data.put("budgetTender", budgetTender);
+		data.put("tenderList", tenderList);
+		data.put("rcmTenderer", rcmTenderer);
+		data.put("tenderVarianceList", tenderVarianceList);
+		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("award"), data);
+	}
+//	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
+////		adminService.canAccessJob(jobNumber);
+//		String strHTMLCodingContent = "";
+//		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
+//		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
+//			try {
+//				listTenderAnalysis = tenderHBDao.obtainTenderAnalysis(jobNumber, subcontractNumber);
+//			} catch (NumberFormatException e4) {
+//				e4.printStackTrace();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		
+//			@SuppressWarnings("unused")
+//			List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
+//			JobInfo jobHeaderInfo = new JobInfo();
+//			String vendorName = "";
+//			Double totalSubcontractSum = new Double(0);
+//			List<String> vendorNameList = null;
+//			List<Double> totalSubcontractSumList = null;
+//			List<Boolean> vendorNumZero = null;
+//			
+//			Subcontract scPackage = new Subcontract();
+//			
+//			try {
+//				jobHeaderInfo = jobInfoHBDao.obtainJobInfo(jobNumber);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+//			try {
+//				scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
+//			} catch (Exception e1) {
+//				e1.printStackTrace();
+//			}
+//			
+//			try {
+//				scDetailsList = subcontractDetailHBDao.getSCDetails(subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber));
+//			} catch (Exception e2) {
+//				e2.printStackTrace();
+//			}
+//			
+//			//Set it to be the budget amount of TA
+//			Double comparableBudgetAmount = new Double(0);
+//			String recommendVendor = "";
+//
+//			Map<String, Object> data = new HashMap<String, Object>();
+//			data.put("jobNumber", jobNumber);
+//			data.put("jobHeaderInfo", jobHeaderInfo);
+//			data.put("subcontractNumber", subcontractNumber);
+//			data.put("scPackage", scPackage);
+//			data.put("listTenderAnalysis", listTenderAnalysis);
+//			
+//			if (htmlVersion.equals("W")) {
+//				vendorNameList = new ArrayList<String>();
+//				totalSubcontractSumList = new ArrayList<Double>();
+//				vendorNumZero = new ArrayList<Boolean>();
+//				
+//				for(int i=0; i < listTenderAnalysis.size();  i++ )
+//				{
+//					Tender curTenderAnalysis = listTenderAnalysis.get(i);
+//					if (curTenderAnalysis.getVendorNo().equals(0)){
+//						try {
+//							for(TenderDetail curTenderAnalysisDetail: tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
+//								comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget()*curTenderAnalysisDetail.getQuantity();
+//							}
+//						} catch (DataAccessException e) {
+//							e.printStackTrace();
+//						}
+//						vendorNameList.add(i, "");
+//						totalSubcontractSumList.add(i,0.0);
+//						vendorNumZero.add(i,true);
+//					}else{
+//					    logger.info("Vendor Number: "+curTenderAnalysis.getVendorNo());
+//						try {
+//							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
+//							vendorNameList.add(i, vendorName);
+//							logger.info("Vendor Name: " + vendorName);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						if ("RCM".equals(curTenderAnalysis.getStatus())){
+//							recommendVendor=vendorName;
+//						}
+//							logger.info("RecommendVendor: " + recommendVendor);
+//							
+//						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
+//						try {
+//							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);//tenderHBDao.getTenderAnalysisDetail(jobNumber, new Integer(curTenderAnalysis.getVendorNo().toString()), new Integer(subcontractNumber));
+//						} catch (NumberFormatException e) {
+//							e.printStackTrace();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
+//							TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
+//							if (curTenderAnalysisDetail.getRateBudget()!=null && curTenderAnalysisDetail.getQuantity()!=null)
+//								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getRateBudget();
+//						}
+//						totalSubcontractSumList.add(i,totalSubcontractSum);
+//						totalSubcontractSum = new Double(0);
+//						vendorNumZero.add(i,false);
+//					}
+//				}
+//				data.put("totalSubcontractSumList", totalSubcontractSumList);
+//				data.put("vendorNameList", vendorNameList);
+//				data.put("comparableBudgetAmount",comparableBudgetAmount);
+//				data.put("recommendVendor", recommendVendor);
+//				data.put("vendorNoZero", vendorNumZero);
+//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
+////				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
+//			}
+//			
+//			if (htmlVersion.equals("B")) {
+//				comparableBudgetAmount = new Double(0);
+//				recommendVendor = "";
+//				vendorNameList = new ArrayList<String>();
+//				vendorNumZero = new ArrayList<Boolean>();
+//				totalSubcontractSumList = new ArrayList<Double>();
+//				
+//				for(int i=0; i < listTenderAnalysis.size();  i++ )
+//				{
+//					Tender curTenderAnalysis = listTenderAnalysis.get(i);
+//					if (!curTenderAnalysis.getVendorNo().equals(0)){
+//						try {
+//							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
+//							vendorNameList.add(i, vendorName);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//
+//						if ("RCM".equals(curTenderAnalysis.getStatus()) || "AWD".equals(curTenderAnalysis.getStatus()))
+//							recommendVendor=vendorName;
+//
+//						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
+//
+//						try {
+//							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);				} catch (NumberFormatException e) {
+//								e.printStackTrace();
+//							} catch (Exception e) {
+//								e.printStackTrace();
+//							}
+//
+//							for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
+//								TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
+//
+//								if (curTenderAnalysisDetail.getRateBudget()!=null)
+//									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getRateBudget());
+//								if (curTenderAnalysisDetail.getQuantity()!=null)
+//									logger.info("curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty()" + curTenderAnalysisDetail.getQuantity());
+//
+//								if (curTenderAnalysisDetail.getRateBudget()!=new Double(0))
+//									totalSubcontractSum +=((curTenderAnalysisDetail.getQuantity()!=null?curTenderAnalysisDetail.getQuantity():new Double(0))
+//											*(curTenderAnalysisDetail.getRateBudget()!=null?curTenderAnalysisDetail.getRateBudget():new Double(0)));
+//
+//							}
+//							totalSubcontractSumList.add(i,totalSubcontractSum);
+//							totalSubcontractSum = new Double(0);
+//							vendorNumZero.add(i,false);
+//						}
+//						/**
+//						 * modified by Tiky Wong on 22/05/2012
+//						 * 
+//						 * Fixing: Blackberry version's Tender Budget cannot be shown correctly which always shows 0
+//						 */
+//						else {
+//							try {
+//								for (TenderDetail curTenderAnalysisDetail : tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
+//									comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget() * curTenderAnalysisDetail.getQuantity();
+//								}
+//							} catch (DataAccessException e) {
+//								e.printStackTrace();
+//							}
+//							vendorNameList.add(i, "");
+//							totalSubcontractSumList.add(i, 0.0);
+//							vendorNumZero.add(i, true);
+//						}
+//					}
+//					
+//					data.put("totalSubcontractSumList", totalSubcontractSumList);
+//					data.put("vendorNameList", vendorNameList);
+//					data.put("comparableBudgetAmount",comparableBudgetAmount);
+//					data.put("recommendVendor", recommendVendor);
+//					data.put("vendorNoZero", vendorNumZero);
+//					strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_B.ftl", data);			
+//		}
+//
+//			return strHTMLCodingContent;
+//	}
+	
+	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion){
+		List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("addendumDetailList", addendumDetailList);
+		return FreeMarkerHelper.returnHtmlString("AddendumApproval_A.ftl.html", data);
 	}
 	
 	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){

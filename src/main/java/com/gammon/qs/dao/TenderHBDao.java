@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -249,7 +250,10 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("jobNo", jobNumber.trim()));
 			criteria.add(Restrictions.eq("packageNo", packageNo.trim()));
-			criteria.add(Restrictions.eq("status", Tender.TA_STATUS_RCM));
+			Disjunction or = Restrictions.disjunction();
+			or.add(Restrictions.eq("status", Tender.TA_STATUS_RCM));
+			or.add(Restrictions.eq("status", Tender.TA_STATUS_AWD));
+			criteria.add(or);
 			return (Tender)criteria.uniqueResult();
 		}catch (HibernateException he){
 			he.printStackTrace();

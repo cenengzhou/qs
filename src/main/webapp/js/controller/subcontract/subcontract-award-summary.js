@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'masterListService', 'modalService', 'confirmService','GlobalMessage', '$state',
-                                            function($scope, tenderVarianceService, tenderService, subcontractService, masterListService, modalService, confirmService, GlobalMessage, $state) {
+mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'masterListService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper',
+                                            function($scope, tenderVarianceService, tenderService, subcontractService, masterListService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper) {
 	loadData();
 	
     $scope.submit = function () {
@@ -43,9 +43,13 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
     function loadData(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
-			getTender();
-			getTenderList();
-			getRecommendedTender();
+			htmlService.makeHTMLStringForTenderAnalysis($scope.jobNo, $scope.subcontractNo, 'A')
+			.then(function(data){
+				$scope.awardHtml = GlobalHelper.formTemplate(data);
+			});
+//			getTender();
+//			getTenderList();
+//			getRecommendedTender();
 		}
 	}
  
@@ -63,42 +67,42 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 				});
 	}
 	
-    function getTender() {
-		tenderService.getTender($scope.jobNo, $scope.subcontractNo, 0)
-		.then(
-				function( data ) {
-					$scope.budgetTender = data;
-				});
-	}
+//    function getTender() {
+//		tenderService.getTender($scope.jobNo, $scope.subcontractNo, 0)
+//		.then(
+//				function( data ) {
+//					$scope.budgetTender = data;
+//				});
+//	}
     
-    function getTenderList() {
-		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					$scope.tenderList = data;
-				});
-	}
+//    function getTenderList() {
+//		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
+//		.then(
+//				function( data ) {
+//					$scope.tenderList = data;
+//				});
+//	}
 
-	function getRecommendedTender() {
-		tenderService.getRecommendedTender($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					if(data.length==0){
-						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
-					}else{
-						$scope.rcmTenderer = data;
-						getTenderVarianceList($scope.rcmTenderer.vendorNo);
-					}
-				});
-	}
+//	function getRecommendedTender() {
+//		tenderService.getRecommendedTender($scope.jobNo, $scope.subcontractNo)
+//		.then(
+//				function( data ) {
+//					if(data.length==0){
+//						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
+//					}else{
+//						$scope.rcmTenderer = data;
+//						getTenderVarianceList($scope.rcmTenderer.vendorNo);
+//					}
+//				});
+//	}
 
-	function getTenderVarianceList(tenderNo) {
-		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
-		.then(
-				function( data ) {
-					$scope.tenderVarianceList = data;
-				});
-	}
+//	function getTenderVarianceList(tenderNo) {
+//		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
+//		.then(
+//				function( data ) {
+//					$scope.tenderVarianceList = data;
+//				});
+//	}
 	
 	function submitAwardApproval(){
 		subcontractService.submitAwardApproval($scope.jobNo, $scope.subcontractNo, $scope.rcmTenderer.vendorNo)

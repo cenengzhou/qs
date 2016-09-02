@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize',
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize', 
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery', 'ui.tinymce',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping', 'ui.grid.validate', 'angular-js-xlsx']);  
 
@@ -286,7 +286,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/controller/subcontract/subcontract-award-summary.js',
                	         'js/service/tender-variance-service.js',
                	         'js/service/tender-service.js',
-               	         'js/service/master-list-service.js'
+               	         'js/service/master-list-service.js',
+               	         'js/service/html-service.js'
                     ] 
                 });
             }]
@@ -560,6 +561,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/addendum/addendum-form2.js',
+                           'js/service/html-service.js'
                     ] 
                 });
             }]

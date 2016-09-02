@@ -136,13 +136,14 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	}
 }]);
 
-mainApp.factory('GlobalHelper', ['$q', 'modalService', function GlobalHelperFactory($q, modalService){
+mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHelperFactory($q, modalService, $sce){
 	return{
 		handleError: handleError,
 		handleSuccess: handleSuccess,
 		checkNull: checkNull,
 		containRole: containRole,
-		numberClass: numberClass
+		numberClass: numberClass,
+		formTemplate: formTemplate
 	}
 	
     // ---
@@ -200,6 +201,16 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', function GlobalHelperFact
 		 }
 		 return c;
 	}
+	
+	function formTemplate(data){
+		data = data.replace(/<!-- PCMS start /g, '').replace(/ PCMS end -->/g, '');
+		data = data.replace(/<!-- AP start -->.*<!-- AP end -->/g, '');
+		var bodyStart = data.indexOf('<body>');
+		var bodyEnd = data.indexOf('</body>');
+		var html = $sce.trustAsHtml(data.substring(bodyStart, bodyEnd)).toString();
+		return html;
+	}
+	
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

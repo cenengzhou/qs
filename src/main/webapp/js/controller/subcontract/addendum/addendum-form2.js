@@ -1,5 +1,5 @@
-mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 
-                                           function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state) {
+mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 
+                                 function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
@@ -26,10 +26,11 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	}
 	
 	function getAllAddendumDetails(){
-		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+//		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+		htmlService.makeHTMLStringForAddendumApproval($scope.jobNo, $scope.subcontractNo, $scope.addendumNo, 'W')
 		.then(
 				function( data ) {
-					$scope.addendumDetailList = data;
+					$scope.form2Html = GlobalHelper.formTemplate(data);
 				});
 	}
 	
