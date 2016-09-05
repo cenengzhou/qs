@@ -56,13 +56,15 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		});
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(colDef.name == "cumAmount"){
-				rowEntity.cumAmount  = roundUtil.round(newValue, 2);
-				rowEntity.movementAmount = roundUtil.round(rowEntity.cumAmount - rowEntity.postedAmount, 2);
-			}
-			if(colDef.name == "movementAmount"){
-				rowEntity.movementAmount  = roundUtil.round(newValue, 2);
-				rowEntity.cumAmount = roundUtil.round(rowEntity.movementAmount + rowEntity.postedAmount, 2);
+			if(rowEntity.lineType != "GR" && rowEntity.lineType != "GP" && rowEntity.lineType != "RT" && rowEntity.lineType != "MR"){
+				if(colDef.name == "cumAmount"){
+					rowEntity.cumAmount  = roundUtil.round(newValue, 2);
+					rowEntity.movementAmount = roundUtil.round(rowEntity.cumAmount - rowEntity.postedAmount, 2);
+				}
+				if(colDef.name == "movementAmount"){
+					rowEntity.movementAmount  = roundUtil.round(newValue, 2);
+					rowEntity.cumAmount = roundUtil.round(rowEntity.movementAmount + rowEntity.postedAmount, 2);
+				}
 			}
 		});
 

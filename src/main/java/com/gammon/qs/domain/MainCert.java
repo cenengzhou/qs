@@ -543,6 +543,7 @@ public class MainCert extends BasePersistedObject {
 	public Double getCertifiedAdvancePayment() {
 		return certifiedAdvancePayment;
 	}
+	
 	public void setCertifiedAdvancePayment(Double certifiedAdvancePayment) {
 		this.certifiedAdvancePayment = certifiedAdvancePayment;
 	}

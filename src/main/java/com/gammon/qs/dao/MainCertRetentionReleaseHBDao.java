@@ -41,10 +41,10 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		return criteria.list();
 	}
 	
-	public MainCertRetentionRelease obtainActualRetentionReleaseByMainCertNo(String jobNumber, Integer mainCertNo) {
+	public MainCertRetentionRelease obtainActualRetentionReleaseByMainCertNo(String jobNo, Integer mainCertNo) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("jobNumber", jobNumber));
+		criteria.add(Restrictions.eq("jobNo", jobNo));
 		criteria.add(Restrictions.eq("mainCertNo", mainCertNo));
 		criteria.add(Restrictions.eq("status", "A")); 				//status = actual
 		
@@ -69,10 +69,10 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		}
 	}
 	
-	private MainCertRetentionRelease internalSelectByJobSeq(String jobNumber,Integer seqNo ){
+	private MainCertRetentionRelease internalSelectByJobSeq(String jobNo,Integer seqNo ){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("jobNumber", jobNumber));
+		criteria.add(Restrictions.eq("jobNo", jobNo));
 		criteria.add(Restrictions.eq("sequenceNo",seqNo));
 		return (MainCertRetentionRelease) criteria.uniqueResult();
 	}
@@ -81,8 +81,8 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 	public List<MainCertRetentionRelease> searchByJobList(List<String> jobList) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.in("jobNumber", jobList.toArray()));
-		criteria.addOrder(Order.asc("jobNumber"));
+		criteria.add(Restrictions.in("jobNo", jobList.toArray()));
+		criteria.addOrder(Order.asc("jobNo"));
 		criteria.addOrder(Order.asc("sequenceNo"));
 		return criteria.list();
 	}

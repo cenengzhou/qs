@@ -1,4 +1,4 @@
-mainApp.service('subcontractService', ['$http', 'Base64', '$q', 'GlobalHelper',  function($http, Base64, $q, GlobalHelper){
+mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
     	getSubcontract: 									getSubcontract,

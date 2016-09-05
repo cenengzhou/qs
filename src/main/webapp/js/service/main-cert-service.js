@@ -17,6 +17,8 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         resetIPC:							resetIPC,
         postIPC:							postIPC,
         submitNegativeMainCertForApproval:	submitNegativeMainCertForApproval,
+        getCalculatedRetentionRelease:		getCalculatedRetentionRelease,
+        updateRetentionRelease: 			updateRetentionRelease,
         updateCertificate: 					updateCertificate,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
     });
@@ -187,6 +189,32 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
             	noMainCert: noMainCert, 
             	certAmount: certAmount
             }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function getCalculatedRetentionRelease(noJob, noMainCert) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/getCalculatedRetentionRelease",
+            params: {
+            	noJob: noJob,
+            	noMainCert: noMainCert 
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function updateRetentionRelease(noJob, retentionReleaseList) {
+        var request = $http({
+            method: "POST",
+            url: "service/mainCert/updateRetentionRelease",
+            params: {
+            	noJob: noJob
+            },
+            data: retentionReleaseList 
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

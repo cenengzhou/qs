@@ -779,23 +779,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: 'MainCertCtrl'
 	})
 	
-	.state('cert-all-details', {
-		url: "/cert-all-details",
-		parent: "navigation",
-		templateUrl: "view/main-cert/cert-all-details.html",
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/controller/main-cert/cert-all-details.js',
-                           'js/service/main-cert-service.js'
-                    ] 
-                });
-            }]
-        },
-		controller: 'CertAllDetailsCtrl'
-	})
+	
 	.state('cert', {
 		url: "/cert",
 		parent: "navigation",
@@ -805,7 +789,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/main-cert/cert-details.js',
                            'js/service/main-cert-service.js'
                     ] 
                 });
@@ -819,6 +802,19 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		params: {
 			'mainCertNo': null
 		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/main-cert/cert-details.js',
+                           'js/controller/main-cert/retention-release-modal.js',
+                           'js/service/job-service.js'
+                           
+                    ] 
+                });
+            }]
+        },
 		controller: 'CertDetailsCtrl'
 	})
 	

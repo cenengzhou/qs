@@ -39,6 +39,21 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 			updateCertificate();
 	};
 
+	$scope.$watch('cert', function(newValue, oldValue) {
+		if(oldValue != null){
+			$scope.fieldChanged = true;
+		}
+
+	}, true);
+
+
+	$scope.openRetentionReleaseSchedule = function() {
+		if(!$scope.fieldChanged){
+			modalService.open('lg', 'view/main-cert/modal/retention-release-modal.html', 'RetentionReleaseModalCtrl');
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+	}
 
 	function getCertificate(mainCertNo){
 		mainCertService.getCertificate($scope.jobNo, mainCertNo)
@@ -91,6 +106,129 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 	}
 
 
+	$scope.insertIPA = function() {
+		if(!$scope.fieldChanged){
+			mainCertService.insertIPA($scope.cert)
+			.then(
+					function( data ) {
+						if(data.length!=0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPA has been sent out.");
+							$state.reload();
+						}
+					});
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+	}
+
+
+	$scope.confirmIPC = function() {
+		if(!$scope.fieldChanged){
+			mainCertService.getCumulativeRetentionReleaseByJob($scope.jobNo, $scope.cert.certificateNumber)
+			.then(
+					function (data) {
+						if(data.status == 'FAIL'){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.message);
+							return;
+						}else{
+							mainCertService.confirmIPC($scope.cert)
+							.then(
+									function( data ) {
+										if(data.length!=0){
+											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+										}else{
+											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been confirmed.");
+											$state.reload();
+										}
+									});
+						}
+
+					});
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+
+	}
+
+	$scope.resetIPC = function() {
+		if(!$scope.fieldChanged){
+			mainCertService.resetIPC($scope.cert)
+			.then(
+					function( data ) {
+						if(data.length!=0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been reset.");
+							$state.reload();
+						}
+					});
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+	}
+
+	$scope.postIPC = function() {
+		if(!$scope.fieldChanged){
+			if($scope.postingAmount < 0){
+				var modalOptions = {
+						bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+roundUtil.round($scope.postingAmount, 2)+"<br/>" 
+						+" Net GST Receivable Movement Amount: $" + roundUtil.round($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>" 
+						+ "Net GST Payable Movement Amount: $" + roundUtil.round($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/><br/>"
+						+ "Are you sure you want to post this Main Certificate?<br/>" 
+						+ "Approval with approval route(RM) is required."
+				};
+
+				confirmService.showModal({}, modalOptions).then(function (result) {
+					if(result == "Yes"){
+						submitNegativeMainCertForApproval();
+					}
+				});
+
+			}else{
+				var modalOptions = {
+						bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+roundUtil.round($scope.postingAmount, 2)+"<br/>"
+						+ "Net GST Receivable Movement Amount: $" + roundUtil.round($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>"
+						+ "Net GST Payable Movement Amount: $" + roundUtil.round($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/>"
+						+ "Are you sure you want to post this Main Certificate?"
+				};
+
+				confirmService.showModal({}, modalOptions).then(function (result) {
+					if(result == "Yes"){
+						mainCertService.postIPC($scope.jobNo, $scope.cert.certificateNumber)
+						.then(
+								function( data ) {
+									if(data.length!=0){
+										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+									}else{
+										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been posted to JDE Finance.");
+										$state.reload();
+									}
+								});
+					}
+				});
+			}
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+	}
+
+	function submitNegativeMainCertForApproval(){
+		mainCertService.submitNegativeMainCertForApproval($scope.jobNo, $scope.mainCertNo, $scope.postingAmount)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Main Contract Certificate has been submitted for Approval.");
+						$location.path("/main-cert-select");
+					}
+				});
+	}
+
+
+
 	function getLatestMainCert() {
 		mainCertService.getLatestMainCert($scope.jobNo)
 		.then(
@@ -136,113 +274,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 				});
 	}
 
-	$scope.insertIPA = function() {
-		mainCertService.insertIPA($scope.cert)
-		.then(
-				function( data ) {
-					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPA has been sent out.");
-						$state.reload();
-					}
-				});
-	}
 
-
-	$scope.confirmIPC = function() {
-		mainCertService.getCumulativeRetentionReleaseByJob($scope.jobNo, $scope.cert.certificateNumber)
-		.then(
-				function (data) {
-					console.log(data);
-					if(data.status = 'FAIL'){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.message);
-						return;
-					}else{
-						mainCertService.confirmIPC($scope.cert)
-						.then(
-								function( data ) {
-									if(data.length!=0){
-										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-									}else{
-										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been confirmed.");
-										$state.reload();
-									}
-								});
-					}
-
-				});
-
-	}
-
-	$scope.resetIPC = function() {
-		mainCertService.resetIPC($scope.cert)
-		.then(
-				function( data ) {
-					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been reset.");
-						$state.reload();
-					}
-				});
-	}
-
-	$scope.postIPC = function() {
-		if($scope.postingAmount < 0){
-			var modalOptions = {
-					bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+$scope.postingAmount+"<br/>" 
-						+" Net GST Receivable Movement Amount: $" + roundUtil($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>" 
-						+ "Net GST Payable Movement Amount: $" + roundUtil($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/><br/>"
-						+ "Are you sure you want to post this Main Certificate?<br/>" 
-						+ "Approval with approval route(RM) is required."
-			};
-
-			confirmService.showModal({}, modalOptions).then(function (result) {
-				if(result == "Yes"){
-					submitNegativeMainCertForApproval();
-				}
-			});
-			
-		}else{
-			var modalOptions = {
-					bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+$scope.postingAmount+"<br/>"
-							+ "Net GST Receivable Movement Amount: $" + roundUtil($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>"
-							+ "Net GST Payable Movement Amount: $" + roundUtil($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/>"
-							+ "Are you sure you want to post this Main Certificate?"
-			};
-
-			confirmService.showModal({}, modalOptions).then(function (result) {
-				if(result == "Yes"){
-					mainCertService.postIPC($scope.jobNo, $scope.cert.certificateNumber)
-					.then(
-							function( data ) {
-								if(data.length!=0){
-									modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-								}else{
-									modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been posted to JDE Finance.");
-									$state.reload();
-								}
-							});
-				}
-			});
-			
-
-		}
-	}
-
-	function submitNegativeMainCertForApproval(){
-		mainCertService.submitNegativeMainCertForApproval($scope.jobNo, $scope.mainCertNo, $scope.postingAmount)
-		.then(
-				function( data ) {
-					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Main Contract Certificate has been submitted for Approval.");
-						$location.path("/main-cert-select");
-					}
-				});
-	}
 
 }]);
 

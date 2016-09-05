@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertRetentionReleaseHBDao;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
@@ -35,6 +36,8 @@ public class MainCertRetentionReleaseService {
 
 	@Autowired
 	private MainCertRetentionReleaseHBDao retentionReleaseHBDao;
+	@Autowired
+	private MainCertHBDao mainCertHBDao;
 
 	/**
 	 * @author koeyyeung modified on 18 Dec, 2013
@@ -80,7 +83,7 @@ public class MainCertRetentionReleaseService {
 	/**
 	 * @author koeyyeung modified on 18 Dec, 2013
 	 **/
-	public List<MainCertRetentionRelease> calculateRetentionRelease(String noJob, Integer noMainCert) {
+	public List<MainCertRetentionRelease> getCalculatedRetentionRelease(String noJob, Integer noMainCert) {
 		logger.info("STARTED - calculateRetentionReleaseScheduleByJob");
 		MainCert mainCert;
 		try {
@@ -95,7 +98,7 @@ public class MainCertRetentionReleaseService {
 			List<String> securityList = userAccessRightsService.getAccessRights(username, RoleSecurityFunctions.F010405_RETENTION_RELEASE_WINDOW);
 
 			if (securityList.contains("WRITE")) {
-				List<MainCert> mainCertList = mainCertService.getCertificateList(noJob);
+				List<MainCert> mainCertList = mainCertHBDao.getMainCertList(noJob);
 				ArrayList<MainCertRetentionRelease> newRRSList = new ArrayList<MainCertRetentionRelease>();
 				MainCert prevMainCert = null;
 

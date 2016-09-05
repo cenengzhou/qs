@@ -132,36 +132,45 @@ public class MainCertController {
 //		return null;
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "insertIPA", method = RequestMethod.POST)
 	public String insertIPA(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
 		return mainCertService.insertIPAAndUpdateMainContractCert(mainCert);
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "confirmIPC", method = RequestMethod.POST)
 	public String confirmIPC(@Valid @RequestBody MainCert mainCert){
 		return mainCertService.confirmMainContractCert(mainCert);
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "resetIPC", method = RequestMethod.POST)
 	public String resetIPC(@Valid @RequestBody MainCert mainCert) throws DatabaseOperationException{
 		return mainCertService.resetMainContractCert(mainCert);
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "postIPC", method = RequestMethod.POST)
 	public String postIPC(@RequestParam(required = true) String noJob, @RequestParam(required = true) Integer noMainCert) throws DatabaseOperationException{
 		return mainCertService.insertAndPostMainContractCert(noJob, noMainCert);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "submitNegativeMainCertForApproval", method = RequestMethod.POST)
 	public String submitNegativeMainCertForApproval(@RequestParam(required = true) String noJob, 
 													@RequestParam(required = true) Integer noMainCert,
 													@RequestParam(required = true) Double certAmount
 													) throws DatabaseOperationException{
 		return mainCertService.submitNegativeMainCertForApproval(noJob, noMainCert, certAmount);
+	}
+	
+	
+	@RequestMapping(value = "getCalculatedRetentionRelease", method = RequestMethod.POST)
+	public List<MainCertRetentionRelease> getCalculatedRetentionRelease(@RequestParam(required = true) String noJob, 
+																	@RequestParam(required = true) Integer noMainCert
+																	) throws DatabaseOperationException{
+		return mainCertRetentionReleaseService.getCalculatedRetentionRelease(noJob, noMainCert);
 	}
 	
 	

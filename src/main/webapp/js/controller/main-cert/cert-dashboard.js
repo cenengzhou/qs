@@ -26,8 +26,6 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
 
-			rowEditWaitInterval :-1,
-
 			columnDefs: [
 			             { field: 'mainCertNo', displayName: "Cert No."},
 			             { field: 'contractualDueDate'},
@@ -40,7 +38,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		            		 cellClass: 'text-right', cellFilter: 'number:2', 
 		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
 		            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-	            		 { field: 'status', cellFilter: 'convertString'}	
+	            		 { field: 'status', cellFilter: 'mapStatus'}	
 	            		 ]
 	};
 
@@ -103,7 +101,8 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			//$scope.retentionReleaseList = data;
 
 			angular.forEach(data, function(value, key){
-				if(value.status = 'F')
+				console.log()
+				if(value.status == 'F')
 					value.amount = value.forecastReleaseAmt;
 				else
 					value.amount = value.actualReleaseAmt;
@@ -114,10 +113,11 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 	}
 
 }])
-.filter('convertString', function() {
+.filter('mapStatus', function() {
 	var excludeHash = {
-			'F': 'Forecast',
-			'A': 'Actual'
+			'A': 'Actual',
+			'F': 'Forecast'
+			
 	};
 
 	return function(input) {

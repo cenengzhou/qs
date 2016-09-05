@@ -160,6 +160,28 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		return criteria.list();
 	}
 	
+	/**
+	 * To find all Main Contract Certificate in ascending order
+	 * for Rentention Release Schedule
+	 * @param noJob
+	 * @return
+	 * @throws DatabaseOperationException
+	 * @author	koeyyeung
+	 * @since	Jun 27, 2016 11:10:59 AM
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MainCert> getMainCertList(String noJob) throws DatabaseOperationException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Where
+		criteria.add(Restrictions.eq("jobNo", noJob));
+		
+		//Order By
+		criteria.addOrder(Order.asc("certificateNumber"));
+
+		return criteria.list();
+	}
+	
 	
 	/**
 	 * @author koeyyeung

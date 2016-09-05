@@ -102,16 +102,16 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 		return  yyyy+"-"+(mm.length===2?mm:"0"+mm) +"-"+ (dd.length===2?dd:"0"+dd); // padding
 	};
 
-	$scope.convertPaymentStatus = function(status){
+	$scope.convertCertStatus = function(status){
 		if(status!=null){
 			if (status.localeCompare('100') == 0) {
 				return "Certificate Created";
 			}else if (status.localeCompare('120') == 0) {
 				return "IPA Sent";
 			}else if (status.localeCompare('150') == 0) {
-				return { width: "Certificate(IPC) Confirmed" }
+				return "Certificate(IPC) Confirmed";
 			}else if (status.localeCompare('200') == 0) {
-				return { width: "Certificate(IPC) Waiting for special approval" }
+				return "Certificate(IPC) Waiting for special approval";
 			}else if (status.localeCompare('300') == 0) {
 				return "Certificate Posted to Finance's AR";
 			}else if (status.localeCompare('400') == 0) {
@@ -126,9 +126,9 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 		}else if (status.localeCompare('120') == 0) {
 			return "50%";
 		}else if (status.localeCompare('150') == 0) {
-			return { width: "50%" }
+			return "75%";
 		}else if (status.localeCompare('200') == 0) {
-			return { width: "75%" }
+			return "75%";
 		}else if (status.localeCompare('300') == 0 || status.localeCompare('400') == 0) {
 			return "100%";
 		}else{

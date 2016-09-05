@@ -22,7 +22,7 @@ import com.gammon.qs.application.BasePersistedObject;
 @DynamicUpdate
 @SelectBeforeUpdate
 @Table(name = "MAIN_CERT_RETENTION_RELEASE")
-@SequenceGenerator(name = "MAIN_CERT_RETENTION_RELEASE_GEN",  sequenceName = "MAIN_CERT_RETENTION_RELEASE_SEQ", allocationSize = 1)
+@SequenceGenerator(name = "MAIN_CERT_RR_GEN",  sequenceName = "MAIN_CERT_RR_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
 public class MainCertRetentionRelease extends BasePersistedObject {
 
@@ -82,7 +82,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 	
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAIN_CERT_RETENTION_RELEASE_GEN")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAIN_CERT_RR_GEN")
 	public Long getId(){return super.getId();}
 
 	@Column(name = "jobNo", nullable = false, length = 12)

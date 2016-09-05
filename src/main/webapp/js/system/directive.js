@@ -186,6 +186,7 @@ mainApp.directive('dropzone', function() {
 });
 
 
+
 //CurrencyFilter
 mainApp.directive('ngCurrency', function ($filter, $locale) {
     var decimalSep = $locale.NUMBER_FORMATS.DECIMAL_SEP;
@@ -255,47 +256,7 @@ mainApp.directive('ngCurrency', function ($filter, $locale) {
     };
 });
 
-mainApp.directive('numberformat', ['$filter', function ($filter) {
-    return {
-        require: '?ngModel',
-        link: function (scope, elem, attrs, ctrl) {
-            if (!ctrl) return;
 
-
-            ctrl.$formatters.unshift(function (a) {
-                return $filter(attrs.format)(ctrl.$modelValue)
-            });
-
-
-            ctrl.$parsers.unshift(function (viewValue) {
-                var plainNumber = viewValue.replace(/[^\d|\-+|\.+]/g, '');
-                elem.val($filter(attrs.format)(plainNumber));
-                return plainNumber;
-            });
-        }
-    };
-}]);
-
-
-
-/*app.directive('myDatepicker', function() {
-    return {
-        restrict: 'A',
-        require : 'ngModel',
-        link : function (scope, element, attrs, ngModelCtrl) {
-            $(function(){
-                element.datepicker({
-                    dateFormat:'dd/mm/yy',
-                    onSelect:function (date) {
-                        scope.$apply(function () {
-                            ngModelCtrl.$setViewValue(date);
-                        });
-                    }
-                });
-            });
-        }
-    }
-});*/
 
 mainApp.directive('underConstruction', function(){
 	return {
@@ -317,36 +278,6 @@ mainApp.directive('timestampToString', function($filter) {
 });
 
 
-//cannot use with input type='number' <= request number value
-mainApp.directive('numberFormat', function ($filter) {
-	  return {
-	    restrict: 'A',
-	    require: 'ngModel',
-	    link: function (scope, element, attrs, ngModel) {
-	    var decimals = scope.$eval(attrs.decimals);
-	    var zeros = '00000000';
-	      //format text going to user (model to view)
-	      ngModel.$formatters.push(function(value) {
-	       return $filter('number')(value, decimals);
-//	    	  if(value !== undefined) {
-//	    		  var tmp = (''+value).split('.');
-//	    		  if(tmp[1] === undefined) {
-//	    			  tmp[1] = zeros;
-//	    		  } 
-//	    		  else if(tmp[1].length < decimals){
-//	    			  tmp[1] = tmp[1] + zeros;
-//	    		  }
-//	    		  value = (tmp[0]+'.'+tmp[1]).substr(0, tmp[0].length + decimals + 1);
-//	    	  }
-//	    	  return parseFloat(value);
-	      });
-	      //format text from the user (view to model)
-	      ngModel.$parsers.push(function(value) {
-	        return value.replace(/,/g, '');
-	      });
-	    }
-	  }
-});
 
 mainApp.directive('resize', function ($window) {
     return function (scope, element, attr) {

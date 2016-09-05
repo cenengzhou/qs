@@ -113,7 +113,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 		
 		var ta = $scope.gridOptions.data;
 		var newTADetailList = [];
-		console.log(ta);
+		//console.log(ta);
 		
 		for (i in ta){
 			var newTADetail = {
