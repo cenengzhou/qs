@@ -82,7 +82,6 @@ mainApp.factory('roundUtil', function() {
     };
 });
 
-
 mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHelperFactory($http, $rootScope, $q){
 	var defer = $q.defer();
 	return{

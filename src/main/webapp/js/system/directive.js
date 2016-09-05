@@ -185,8 +185,6 @@ mainApp.directive('dropzone', function() {
     }
 });
 
-
-
 //CurrencyFilter
 mainApp.directive('ngCurrency', function ($filter, $locale) {
     var decimalSep = $locale.NUMBER_FORMATS.DECIMAL_SEP;
@@ -324,7 +322,6 @@ mainApp.directive('imageonload', function() {
 
             });
             element.bind('error', function(){
-                console.dir(element);
                 element[0].src = attrs.rollBackImage;
             });
         }

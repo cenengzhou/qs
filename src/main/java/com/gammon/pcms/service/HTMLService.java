@@ -155,19 +155,19 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("scPackage", scPackage);
-		data.put("paymentCertViewWrapper", paymentCertViewWrapper);
-		data.put("job", job);
-		data.put("clientCertAmount", clientCertAmount);
-		data.put("scPaymentCertList", scPaymentCertList);
-		data.put("ivCumAmt", ivCumAmt);
+		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
+		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
+		data.put("job", job != null ? job : new JobInfo());
+		data.put("clientCertAmount", clientCertAmount != null ? clientCertAmount : new Double(0));
+		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
+		data.put("ivCumAmt", ivCumAmt != null ? ivCumAmt : new Double(0));
 		data.put("mainCertNumber", mainCertNumber);
-		data.put("strPaymentDueDate", strPaymentDueDate);
-		data.put("strPaymentAsAtDate", strPaymentAsAtDate);
+		data.put("strPaymentDueDate", strPaymentDueDate != null ? strPaymentDueDate : "");
+		data.put("strPaymentAsAtDate", strPaymentAsAtDate != null ? strPaymentAsAtDate : "");
 		data.put("currentPaymentNo", currentPaymentNo);
 		
 		if (htmlVersion.equals("W"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_A.ftl.html", data);
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("payment"), data);
 
 		if (htmlVersion.equals("B"))
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_B.ftl", data);
@@ -181,15 +181,18 @@ public class HTMLService implements Serializable{
 		Tender budgetTender = tenderHBDao.obtainTender(noJob, noSubcontract, 0);
 		List<Tender> tenderList = tenderHBDao.obtainTenderList(noJob, noSubcontract);
 		Tender rcmTenderer = tenderHBDao.obtainRecommendedTender(noJob, noSubcontract);
-		List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(noJob, noSubcontract, String.valueOf(rcmTenderer.getVendorNo()));
+		List<TenderVariance> tenderVarianceList = null;
+		if(rcmTenderer != null){
+			tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(noJob, noSubcontract, String.valueOf(rcmTenderer.getVendorNo()));
+		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("job", job);
-		data.put("subcontract", subcontract);
-		data.put("budgetTender", budgetTender);
-		data.put("tenderList", tenderList);
-		data.put("rcmTenderer", rcmTenderer);
-		data.put("tenderVarianceList", tenderVarianceList);
+		data.put("job", job != null ? job : new JobInfo());
+		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
+		data.put("budgetTender", budgetTender != null ? budgetTender : new Tender());
+		data.put("tenderList", tenderList != null ? tenderList : new ArrayList<>());
+		data.put("rcmTenderer", rcmTenderer != null ? rcmTenderer : new Tender());
+		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
 		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("award"), data);
 	}
 //	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
@@ -385,8 +388,8 @@ public class HTMLService implements Serializable{
 	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion){
 		List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("addendumDetailList", addendumDetailList);
-		return FreeMarkerHelper.returnHtmlString("AddendumApproval_A.ftl.html", data);
+		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());
+		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("addendum"), data);
 	}
 	
 	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){

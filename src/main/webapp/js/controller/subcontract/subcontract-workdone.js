@@ -83,20 +83,78 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 		 gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			 if($scope.lastID != rowEntity.id){
-					$scope.lastID = rowEntity.id;
+				$scope.lastID = rowEntity.id;
 					
-					if(rowEntity.costRate != 0)
-		            	getResourceSummariesByLineType(rowEntity.objectCode, rowEntity.subsidiaryCode, rowEntity.lineType, rowEntity.resourceNo);
-		            else{
-		            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
-		            }
+				if(rowEntity.costRate != 0) {
+	            	getResourceSummariesByLineType(rowEntity.objectCode, rowEntity.subsidiaryCode, rowEntity.lineType, rowEntity.resourceNo);
+				} else {
+	            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
+	            }
+//				subcontract.paymentStatus === 'F' [modal] "SC Package was final paid."
+				if(rowEntity.subcontract.paymentStatus === 'F'){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Subcontract was final paid');
+					return;
 				}
-	        });
+//				SubcontractDetail.lineType === BQ && (&& SubcontractDetail.manualInputSCWD === Y || SubcontractDetail.LEGACYJOB === Y)
+//				[modal] "Workdone cannot be updated in BQ Line"
+				if(rowEntity.lineType === 'BQ' && (rowEntity.subcontract.jobInfo.manualInputSCWD === 'Y' || rowEntity.subcontract.jobInfo.legacyJob === 'Y')){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in BQ Line');
+					return;
+				}
+//				SubcontractDetail.sourceType === D && SubcontractDetail.lineType !== OA
+//				[modal] "Workdone cannot be updated in "+SubcontractDetail.lineType+" Line"
+				if(rowEntity.sourceType === 'D' && rowEntity.lineType !== 'OA') {
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in '+rowEntity.lineType+' Line');
+					return;
+				}
+				
+//				jobinfo.repackagingType = 3
+//				&& SubcontractDetail.lineType in (BQ, V3, V1)
+//				&& SubcontractDetail.costRate!=0
+//				[modal] "Please update the workdone of BQ/V1/V3 lines from 'IV Update by Resouce' Window or 'IV Update by BQItem' Window."
+				if(rowEntity.subcontract.jobInfo.repackaging === 3
+					&& ['BQ', 'V3', 'V1'].indexOf(rowEntity.lineType) >=0 
+					&& rowEntity.costRate != 0) {
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please update the workdone of BQ/V1/V3 lines from \'IV Update by Resouce\' Window or \'IV Update by BQItem\' Window');
+						return;
+				}
+//				SubcontractDetail.lineType in (C1, C2, RR, RA, AP)
+//				&& SubcontractDetail.amountCumulativeWD != 0
+//				[modal] "Invalid inputed value. Cum Work Done Qty must be zero."
+				if(['C1', 'C2', 'RR', 'RA', 'AP'].indexOf(rowEntity.lineType) >= 0
+					&& rowEntity.amountCumulativeWD !== 0){
+			 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty must be zero');
+			 			return;
+		 		}
+//				SubcontractDetail.amountCumulativeWD > SubcontractDetail.quantity
+//				&& (!SubcontractDetail.subsidiaryCode.startsWith("4") && SubcontractDetail.subsidiaryCode.substring(2, 4) !== 80)
+//				&& SubcontractDetail.approved === A
+//				&& SubcontractDetail.lineType in (BQ, V3, V1)
+//				&& SubcontractDetail.costRate != 0
+//				[modal] "Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty."
+				if(rowEntity.amountCumulativeWD > rowEntity.quantity
+					&& (!rowEntity.subsidiaryCode.startWith('4') && rowEntity.subsidiaryCode.substring(2, 4) !== 80)
+					&& rowEntity.approved === 'A'
+					&& ['BQ', 'V3', 'V1'].indexOf(rowEntity.lineType) >= 0
+					&& rowEntity.costRate != 0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty');
+						return;
+				}
+			}
+        });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(newValue !== oldValue){
 				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 				$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+				
+				rowEntity.currentWorkDoneAmt = rowEntity.totalAmount * rowEntity.cumWorkDoneQuantity / 100;
+				rowEntity.projectedProvision = rowEntity.totalAmount * (rowEntity.currentWorkDoneAmt - rowEntity.amountCumulativeCert) / 100;
+				rowEntity.provision = rowEntity.totalAmount * (rowEntity.cumWorkDoneQuantity - rowEntity.postedCertifiedQuantity) / 100;
+				$scope.gridOptionsIV.rows.forEach(function(row){
+					row.currIVAmount = rowEntity.costRate * rowEntity.cumWorkDoneQuantity;
+				})
+				
 			}
 		});
 
