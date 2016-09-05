@@ -1,7 +1,7 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h4 class="modal-title">Update Retention Release Schedule</h4>
+			<h4 class="modal-title">Edit Contra Charge</h4>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-default pull-right" type="button"
@@ -20,11 +20,8 @@
 					<i class="fa fa-dollar"></i>
 				</div>
 				<div class="widget-stat-info">
-					<div class="widget-stat-title">Project Contract Value</div>
-					<div class="widget-stat-number">{{ projectedContractValue |
-						currency}}</div>
-					<div class="widget-stat-text">Max Retention Percentage: {{
-						maxRetPercent | number: 2}}%</div>
+					<div class="widget-stat-title">Posted Certified Contra Charge Amount</div>
+					<div class="widget-stat-number">{{ totalPostedCCAmount |	currency}}</div>
 				</div>
 			</div>
 		</div>
@@ -35,10 +32,8 @@
 					<i class="fa fa-level-up"></i>
 				</div>
 				<div class="widget-stat-info">
-					<div class="widget-stat-title">Cumulative Retention Amount</div>
-					<div class="widget-stat-number">{{ cumRetentionAmount |
-						currency}}</div>
-					<div class="widget-stat-text">(Cumulative to date)</div>
+					<div class="widget-stat-title"> Total Cumulative Amount</div>
+					<div class="widget-stat-number">{{ totalCumCCAmount | currency}}</div>
 				</div>
 			</div>
 		</div>

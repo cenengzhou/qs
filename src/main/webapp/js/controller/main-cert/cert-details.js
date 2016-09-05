@@ -4,6 +4,8 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 	$scope.disableButtons = true;
 
 	$scope.previousCertNetAmount = 0;
+	$scope.previousGSTReceivable = 0;
+	$scope.previousGSTPayable = 0;
 
 	if($stateParams.mainCertNo){
 		if($stateParams.mainCertNo == '0'){
@@ -39,6 +41,20 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 			updateCertificate();
 	};
 
+	$scope.editContraCharge = function() {
+		if(!$scope.fieldChanged){
+			
+			if($scope.cert.id == null || $scope.cert.id.length == 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please save the current main contract certificate first.");
+				return;
+			}
+			
+			modalService.open('lg', 'view/main-cert/modal/contra-charge-modal.html', 'ContraChargeModalCtrl');
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+		}
+	}
+	
 	$scope.$watch('cert', function(newValue, oldValue) {
 		if(oldValue != null){
 			$scope.fieldChanged = true;
@@ -60,16 +76,17 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 		.then(
 				function( data ) {
 					$scope.cert = data;
-					if($scope.cert.length==0 || $scope.cert.certificateStatus < 300)
+					if($scope.cert.length==0 || $scope.cert.certificateStatus < 200)
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
 
-					if($scope.mainCertNo > 1){
+					if(mainCertNo > 1){
 						mainCertService.getCertificate($scope.jobNo, mainCertNo - 1)
 						.then(
 								function( data ) {
 									$scope.previousCertNetAmount = data.certNetAmount;
+									console.log("$scope.previousCertNetAmount: "+$scope.previousCertNetAmount);
 									$scope.previousGSTReceivable = data.gstReceivable;
 									$scope.previousGSTPayable = data.gstPayable;
 								});
@@ -95,8 +112,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 		mainCertService.createMainCert($scope.cert)
 		.then(
 				function( data ) {
-					//console.log(data);
-					if(data.length!=0){
+					if(data != null && data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "New Main Contract Certificate has been added.");
@@ -136,7 +152,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 							mainCertService.confirmIPC($scope.cert)
 							.then(
 									function( data ) {
-										if(data.length!=0){
+										if(data !=null && data.length!=0){
 											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 										}else{
 											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been confirmed.");
@@ -199,7 +215,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 						mainCertService.postIPC($scope.jobNo, $scope.cert.certificateNumber)
 						.then(
 								function( data ) {
-									if(data.length!=0){
+									if(data !=null && data.length!=0){
 										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 									}else{
 										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been posted to JDE Finance.");
@@ -236,6 +252,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 					$scope.disableButtons = false;
 					if(data.length !=0){
 						$scope.cert = {
+								id:											'',
 								jobNo:										data.jobNo,	
 								certificateNumber: 							data.certificateNumber + 1,
 								appliedMainContractorAmount: 				data.appliedMainContractorAmount,
@@ -249,7 +266,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 								appliedCPFAmount: 							data.appliedCPFAmount,
 								appliedMainContractorRetention: 			data.appliedMainContractorRetention,
 								appliedRetentionforNSCNDSC: 				data.appliedRetentionforNSCNDSC,
-								appliedMOSRetentionReleased: 				data.appliedMOSRetentionReleased,
+								appliedMOSRetention: 						data.appliedMOSRetention,
 								appliedContraChargeAmount:					data.appliedContraChargeAmount,
 
 								certifiedMainContractorAmount:				data.certifiedMainContractorAmount, 
@@ -263,12 +280,53 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 								certifiedCPFAmount:							data.certifiedCPFAmount,
 								certifiedMainContractorRetention:			data.certifiedMainContractorRetention,
 								certifiedRetentionforNSCNDSC:				data.certifiedRetentionforNSCNDSC,
-								certifiedMOSRetentionReleased:				data.certifiedMOSRetentionReleased,
+								certifiedMOSRetention:						data.certifiedMOSRetention,
 								certifiedContraChargeAmount:				data.certifiedContraChargeAmount,
 
 								gstReceivable: 								data.gstReceivable,
 								gstPayable: 								data.gstPayable
 						}
+						
+						$scope.previousCertNetAmount = data.certNetAmount;
+						$scope.previousGSTReceivable = data.gstReceivable;
+						$scope.previousGSTPayable = data.gstPayable;
+					}else{
+						$scope.cert = {
+								id:											'',
+								jobNo:										$scope.jobNo,	
+								certificateNumber: 							1,
+								appliedMainContractorAmount: 				0,
+								appliedNSCNDSCAmount: 						0,
+								appliedMOSAmount: 							0,
+								appliedMainContractorRetentionReleased: 	0,
+								appliedRetentionforNSCNDSCReleased: 		0,
+								appliedMOSRetentionReleased: 				0,
+								appliedAdvancePayment:						0,
+								appliedAdjustmentAmount: 					0,
+								appliedCPFAmount: 							0,
+								appliedMainContractorRetention: 			0,
+								appliedRetentionforNSCNDSC: 				0,
+								appliedMOSRetention:		 				0,
+								appliedContraChargeAmount:					0,
+
+								certifiedMainContractorAmount:				0, 
+								certifiedNSCNDSCAmount:						0,
+								certifiedMOSAmount:							0,
+								certifiedMainContractorRetentionReleased:	0,
+								certifiedRetentionforNSCNDSCReleased:		0,
+								certifiedMOSRetentionReleased:				0,
+								certifiedAdvancePayment: 					0,
+								certifiedAdjustmentAmount:					0,
+								certifiedCPFAmount:							0,
+								certifiedMainContractorRetention:			0,
+								certifiedRetentionforNSCNDSC:				0,
+								certifiedMOSRetention:						0,
+								certifiedContraChargeAmount:				0,
+
+								gstReceivable: 								0,
+								gstPayable: 								0
+						}
+						
 					}
 
 				});

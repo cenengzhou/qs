@@ -32,6 +32,7 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.JobCostWSDao;
+import com.gammon.qs.dao.MainCertContraChargeHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.MasterListWSDao;
@@ -89,6 +90,8 @@ public class MainCertService {
 	private MasterListWSDao masterListWSDao;
 	@Autowired
 	private AccountBalanceDao accountBalanceDao;
+	@Autowired
+	private MainCertContraChargeHBDao mainCertContraChargeHBDao;
 
 	/*****************************************
 	 * Web Services
@@ -117,29 +120,48 @@ public class MainCertService {
 	 * PCMS operations
 	 ******************************************/	
 	/**
-	 * @author tikywong
-	 * modified on 28 August, 2012
+	 * @author koeyyeung
+	 * modified on 28 August, 2016
 	 */
 	public String createMainCert(MainCert newMainContractCert) throws DatabaseOperationException{
 		String message = null;
-
+		
 		if (newMainContractCert==null){
 			message = "The new Main Contract Certificate is null.";
 			logger.info(message);
 			throw new DatabaseOperationException(message);
 		}
-		else if (mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(), newMainContractCert.getCertificateNumber())!=null){
-			message = "The Main Contract Certificate existed already. Job: "+newMainContractCert.getJobNo()+" Cert No.: "+newMainContractCert.getCertificateNumber();
+		
+		String jobNo = newMainContractCert.getJobNo();
+		Integer mainCertNo = newMainContractCert.getCertificateNumber();
+		
+		if (mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(), mainCertNo)!=null){
+			message = "The Main Contract Certificate existed already. Job: "+jobNo+" Cert No.: "+mainCertNo;
 			logger.info(message);
 			throw new DatabaseOperationException(message);
 		}
 		else {
-			if (newMainContractCert.getCertificateNumber()>1){
-				mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(),(newMainContractCert.getCertificateNumber()-1));
-				newMainContractCert.setCreatedDate(new Date());
-			}	
 			newMainContractCert.setCertificateStatus(MainCert.CERT_CREATED);
 			mainCertHBDao.insert(newMainContractCert);
+			
+			MainCert mainCert = this.getCertificate(jobNo, mainCertNo);
+			if (mainCertNo > 1){
+				MainCert previousMainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNo, mainCertNo - 1);
+				List<MainCertContraCharge> mainCertContraChargeList = mainCertContraChargeService.getMainCertContraChargeList(jobNo, mainCertNo - 1);
+				
+				for(MainCertContraCharge curContraCharge: mainCertContraChargeList) {
+					MainCertContraCharge newContraCharge = new MainCertContraCharge();
+					newContraCharge.setPostAmount(curContraCharge.getCurrentAmount());
+					newContraCharge.setObjectCode(curContraCharge.getObjectCode());
+					newContraCharge.setCurrentAmount(curContraCharge.getCurrentAmount());
+					newContraCharge.setSubsidiary(curContraCharge.getSubsidiary());
+					newContraCharge.setMainCertificate(mainCert);
+					
+					mainCertContraChargeHBDao.insert(newContraCharge);
+				}
+				mainCert.setCertifiedContraChargeAmount(previousMainCert.getCertifiedContraChargeAmount());
+				mainCertHBDao.update(mainCert);
+			}
 		}
 		
 		return message;
@@ -160,10 +182,10 @@ public class MainCertService {
 	 * modified on 22 August, 2012
 	 * Fixing: Main Certificate is posted to JDE but the status doesn't update at QS System
 	 */
-	public String insertAndPostMainContractCert(String jobNo, Integer mainCertNumber) throws DatabaseOperationException {
+	public String insertAndPostMainContractCert(String jobNo, Integer mainCertNo) throws DatabaseOperationException {
 		long numberOfRecordInserted = 0;
-		MainCert mainCert = getCertificate(jobNo, mainCertNumber);
-		List<MainCertContraCharge> mainCertContraChargeList = mainCertContraChargeService.getMainCertContraChargeList(mainCert);
+		MainCert mainCert = getCertificate(jobNo, mainCertNo);
+		List<MainCertContraCharge> mainCertContraChargeList = mainCertContraChargeService.getMainCertContraChargeList(jobNo, mainCertNo);
 		
 		//1. Populate Main Contract Certificate Wrapper
 		MainCertRequest mainCertRequest = populateMainCertRequest(mainCert);

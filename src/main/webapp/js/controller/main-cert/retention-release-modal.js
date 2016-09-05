@@ -159,8 +159,10 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 					$scope.gridOptions.data = data;
 
 					angular.forEach(data, function(value, key){
-						value.contractualDueDate = new Date(value.contractualDueDate);
-						value.dueDate = new Date(value.dueDate);
+						if(value.contractualDueDate != null)
+							value.contractualDueDate = new Date(value.contractualDueDate);
+						if(value.dueDate != null)
+							value.dueDate = new Date(value.dueDate);
 						
 						
 						if(value.status == 'F')

@@ -65,17 +65,19 @@ public class MainCertContraChargeService {
 		return mainCertContraChargeHBDao.obtainMainCertContraCharge(objectCode, subsidiaryCode, mainCert);
 	}
 
-	public List<MainCertContraCharge> getMainCertContraChargeList(MainCert mainCert) {
+	public List<MainCertContraCharge> getMainCertContraChargeList(String jobNo, Integer mainCertNo) {
 		List<MainCertContraCharge> contraChargeList = new ArrayList<MainCertContraCharge>();
+		MainCert mainCert = null;
 		try {
-			mainCert = mainCertService.getCertificate(mainCert.getJobNo(), mainCert.getCertificateNumber());
+			mainCert = mainCertService.getCertificate(jobNo, mainCertNo);
 		} catch (DataAccessException e) {
 			logger.error("Failed to get Main Contra Certificate: " + e);
 			return contraChargeList;
 		}
 
 		try {
-			contraChargeList = mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCert);
+			if(mainCert!=null)
+				contraChargeList = mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCert);
 		} catch (DatabaseOperationException e) {
 			logger.error("Failed to get Main Contract Certificate Contra Charge records: " + e);
 			return contraChargeList;
@@ -84,58 +86,77 @@ public class MainCertContraChargeService {
 		return contraChargeList;
 	}
 
-	public String createMainCertContraCharge(MainCertContraCharge mainCertContraCharge) {
-		// Validate account code
-		String returnMsg = masterListService.validateAndCreateAccountCode(mainCertContraCharge.getMainCertificate().getJobNo(), mainCertContraCharge.getObjectCode(), mainCertContraCharge.getSubsidiary());
-		if (returnMsg != null)
-			return returnMsg;
+	public String createMainCertContraCharge(MainCert mainCert, MainCertContraCharge mainCertContraCharge) {
+		
+		String returnMsg = "";
+		try {
+			MainCertContraCharge cc =  this.getMainCertContraCharge(mainCertContraCharge.getObjectCode(), mainCertContraCharge.getSubsidiary(), mainCert);
+			if(cc != null){
+				returnMsg = "Contra charge with object code: "+mainCertContraCharge.getObjectCode()+" , subsidiary code: "+mainCertContraCharge.getSubsidiary()+" existed already.";
+				return returnMsg;
+			}
+			
+			// Validate account code
+			returnMsg = masterListService.validateAndCreateAccountCode(mainCert.getJobNo(), mainCertContraCharge.getObjectCode(), mainCertContraCharge.getSubsidiary());
+			if (returnMsg != null)
+				return returnMsg;
 
-		MainCert mainCert = new MainCert();
-		try {
-			mainCert = mainCertService.getCertificate(mainCertContraCharge.getMainCertificate().getJobNo(), mainCertContraCharge.getMainCertificate().getCertificateNumber());
-		} catch (DataAccessException e) {
-			return "Failed to get Main Contract Certificate: " + e;
-		}
-		mainCertContraCharge.setMainCertificate(mainCert);
-		try {
-			updateTotalContraChargeAmt(mainCert, mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCert));
-		} catch (DatabaseOperationException e) {
-			return "Failed to update Total Contra Charge Amount: " + e;
-		}
-		return "";
+			mainCertContraCharge.setMainCertificate(mainCert);
+			mainCertContraChargeHBDao.insert(mainCertContraCharge);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return returnMsg;
 	}
 
-	public boolean deleteMainCertContraCharge(MainCertContraCharge mainCertContraCharge) {
+	public String deleteMainCertContraCharge(MainCertContraCharge mainCertContraCharge) {
+		String error = "";
 		MainCertContraCharge mainCertCC;
 		try {
 			mainCertCC = mainCertContraChargeHBDao.obtainMainCertContraCharge(mainCertContraCharge.getObjectCode(), mainCertContraCharge.getSubsidiary(), mainCertContraCharge.getMainCertificate());
 		} catch (DatabaseOperationException e) {
-			logger.error("Failed to get Main Contract Certificate Contra Charge: " + e);
-			return false;
+			error = "Failed to get Main Contract Certificate Contra Charge: " + e;
+			return error;
 		}
 		try {
 			mainCertContraChargeHBDao.delete(mainCertCC);
 		} catch (DataAccessException e) {
-			logger.error("Failed to delete Main Contract Certificate Contra Charge: " + e);
-			return false;
+			error = "Failed to delete Main Contract Certificate Contra Charge: " + e;
+			return error;
 		}
 		try {
 			updateTotalContraChargeAmt(mainCertCC.getMainCertificate(), mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCertCC.getMainCertificate()));
 		} catch (DatabaseOperationException e) {
-			logger.error("Failed to udpate Total Contra Charge Amount: " + e);
-			return false;
+			error = "Failed to udpate Total Contra Charge Amount: " + e;
+			return error;
 		}
-		return true;
+		return error;
 	}
 
-	public String updateMainCertContraChargeList(List<MainCertContraCharge> contraChargeList, MainCert mainCert) throws DatabaseOperationException {
-		for (MainCertContraCharge currContraCharge : contraChargeList)
-			mainCertContraChargeHBDao.saveMainCertContraCharge(currContraCharge);
+	public String updateMainCertContraChargeList(String jobNo , Integer mainCertNo, List<MainCertContraCharge> contraChargeList) {
+		String error = "";
+		try {
+			MainCert mainCert = mainCertService.getCertificate(jobNo, mainCertNo);
+			if(mainCert != null){
+				for (MainCertContraCharge currContraCharge : contraChargeList){
+					if(currContraCharge.getId() != null && currContraCharge.getId() != 0)
+						mainCertContraChargeHBDao.update(currContraCharge);
+					else{
+						error = createMainCertContraCharge(mainCert, currContraCharge);
+						if(error != null && error.length() != 0){
+							return error;
+						}
+					}
+				}
 
-		mainCert = mainCertService.getCertificate(mainCert.getJobNo(), mainCert.getCertificateNumber());
-		updateTotalContraChargeAmt(mainCert, mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCert));
+				updateTotalContraChargeAmt(mainCert, mainCertContraChargeHBDao.obtainMainCertContraChargeList(mainCert));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			error = "Error occured in updating contra charge list.";
+		} 
 
-		return "";
+		return error;
 	}
 
 	/**
@@ -152,9 +173,8 @@ public class MainCertContraChargeService {
 		for (MainCertContraCharge curCC : mainCertificateContraChargeList)
 			totalCCAmt = totalCCAmt + curCC.getCurrentAmount();
 
-		MainCert newMainCert = mainCert;
-		newMainCert.setCertifiedContraChargeAmount(totalCCAmt);
-		mainCertService.updateMainContractCert(newMainCert);
+		mainCert.setCertifiedContraChargeAmount(totalCCAmt);
+		mainCertService.updateMainContractCert(mainCert);
 	}
 	
 	/**

@@ -24,7 +24,9 @@ import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MainCert;
+import com.gammon.qs.domain.MainCertContraCharge;
 import com.gammon.qs.domain.MainCertRetentionRelease;
+import com.gammon.qs.service.MainCertContraChargeService;
 import com.gammon.qs.service.MainCertRetentionReleaseService;
 import com.gammon.qs.service.MainCertService;
 
@@ -37,6 +39,8 @@ public class MainCertController {
 	private MainCertService mainCertService;
 	@Autowired
 	private MainCertRetentionReleaseService mainCertRetentionReleaseService;
+	@Autowired
+	private MainCertContraChargeService mainCertContraChargeService;
 
 	// ---------------- get ----------------
 	@RequestMapping(value = "getCertificateList", method = RequestMethod.GET)
@@ -60,7 +64,13 @@ public class MainCertController {
 	public List<MainCertRetentionRelease> getRetentionReleaseList(@RequestParam(required = true) String noJob) {
 		return mainCertRetentionReleaseService.getRetentionReleaseList(noJob);
 	}
-
+	
+	
+	@RequestMapping(value = "getMainCertContraChargeList", method = RequestMethod.GET)
+	public List<MainCertContraCharge> getMainCertContraChargeList(@RequestParam(required = true) String noJob, @RequestParam(required = true) Integer noMainCert) {
+		return mainCertContraChargeService.getMainCertContraChargeList(noJob, noMainCert);
+	}
+	
 	@RequestMapping(value = "getCertificate", method = RequestMethod.GET)
 	public MainCert getCertificate(@RequestParam String jobNo, @RequestParam Integer certificateNumber){
 		return mainCertService.getCertificate(jobNo, certificateNumber);
@@ -174,5 +184,17 @@ public class MainCertController {
 	}
 	
 	
+	@RequestMapping(value = "updateMainCertContraChargeList", method = RequestMethod.POST)
+	public String updateMainCertContraChargeList(@RequestParam(required = true) String noJob, 
+																	@RequestParam(required = true) Integer noMainCert,
+																	@Valid @RequestBody List<MainCertContraCharge> contraChargeList
+																	) throws DatabaseOperationException{
+		return mainCertContraChargeService.updateMainCertContraChargeList(noJob, noMainCert, contraChargeList);
+	}
 	
+	
+	@RequestMapping(value = "deleteMainCertContraCharge", method = RequestMethod.POST)
+	public String deleteMainCertContraCharge(@Valid @RequestBody MainCertContraCharge mainCertContraCharge) throws DatabaseOperationException{
+		return mainCertContraChargeService.deleteMainCertContraCharge(mainCertContraCharge);
+	}
 }

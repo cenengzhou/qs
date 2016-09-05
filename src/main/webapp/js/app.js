@@ -809,6 +809,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/main-cert/cert-details.js',
                            'js/controller/main-cert/retention-release-modal.js',
+                           'js/controller/main-cert/contra-charge-modal.js',
                            'js/service/job-service.js'
                            
                     ] 

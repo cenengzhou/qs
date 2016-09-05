@@ -1,5 +1,5 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil ) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -30,7 +30,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			             { field: 'mainCertNo', displayName: "Cert No."},
 			             { field: 'contractualDueDate'},
 			             { field: 'dueDate', displayName: "Forecast/Actual Due Date"},
-			             { field: 'releasePercent', displayName: "Percent", 
+			             { field: 'percent', displayName: "Percent", 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
@@ -101,11 +101,16 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			//$scope.retentionReleaseList = data;
 
 			angular.forEach(data, function(value, key){
-				console.log()
-				if(value.status == 'F')
-					value.amount = value.forecastReleaseAmt;
-				else
-					value.amount = value.actualReleaseAmt;
+				angular.forEach(data, function(value, key){
+					
+					if(value.status == 'F')
+						value.amount = value.forecastReleaseAmt;
+					else
+						value.amount = value.actualReleaseAmt;
+					
+					value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
+
+				});
 				
 			});
 		});
