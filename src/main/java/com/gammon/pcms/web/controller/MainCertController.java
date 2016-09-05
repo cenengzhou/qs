@@ -183,7 +183,7 @@ public class MainCertController {
 		return mainCertRetentionReleaseService.getCalculatedRetentionRelease(noJob, noMainCert);
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateMainCertContraChargeList", method = RequestMethod.POST)
 	public String updateMainCertContraChargeList(@RequestParam(required = true) String noJob, 
 																	@RequestParam(required = true) Integer noMainCert,
@@ -192,7 +192,7 @@ public class MainCertController {
 		return mainCertContraChargeService.updateMainCertContraChargeList(noJob, noMainCert, contraChargeList);
 	}
 	
-	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteMainCertContraCharge", method = RequestMethod.POST)
 	public String deleteMainCertContraCharge(@Valid @RequestBody MainCertContraCharge mainCertContraCharge) throws DatabaseOperationException{
 		return mainCertContraChargeService.deleteMainCertContraCharge(mainCertContraCharge);
