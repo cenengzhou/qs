@@ -108,7 +108,7 @@
         bqFinalizedFlag varchar2(255 char),
         clientContractNo varchar2(20 char),
         company varchar2(12 char),
-        completionStatus varchar2(1 char),
+        completionStatus varchar2(3 char),
         contractType varchar2(10 char),
         conversionStatus varchar2(3 char),
         cpfApplicable varchar2(3 char),
