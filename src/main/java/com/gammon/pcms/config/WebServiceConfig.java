@@ -123,10 +123,6 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	private String gsfGetFunctionSecurityUrl;
 	@Value("${gsf.getJobSecurity.url}")
 	private String gsfGetJobSecurityUrl;
-	@Value("${ipeople.url}")
-	private String ipeopleUrl;
-	@Value("${ipeople.fallback.path}")
-	private String ipeopleFallbackPath;
 	@Value("${peopleDirectory.picture.url}")
 	private String peopDirectoryPictureUrl;
 		
@@ -917,20 +913,6 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	 */
 	public String getGsfGetJobSecurityUrl() {
 		return gsfGetJobSecurityUrl;
-	}
-
-	/**
-	 * @return the ipeopleUrl
-	 */
-	public String getIpeopleUrl() {
-		return ipeopleUrl;
-	}
-
-	/**
-	 * @return the ipeopleFallbackPath
-	 */
-	public String getIpeopleFallbackPath() {
-		return ipeopleFallbackPath;
 	}
 
 	/**

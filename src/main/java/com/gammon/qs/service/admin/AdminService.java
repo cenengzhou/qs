@@ -1,10 +1,12 @@
 package com.gammon.qs.service.admin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
+
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class AdminService {
@@ -101,10 +104,13 @@ public class AdminService {
 	
 	public Boolean canAccessJob(String noJob) {
 		User user = securityService.getCurrentUser();
-		if(user != null && !user.getUsername().equals(webServiceConfig.getQsWsUsername())){
+		if(user != null && !Arrays.asList(new String[]{
+				webServiceConfig.getQsWsUsername(), webServiceConfig.getPcmsApiUsername()
+				}).contains(user.getUsername())){
 			return canAccessJob(user, noJob);
 		} else {
 			//bypass checking for ws provider and quartz
+			logger.log(Level.INFO, "bypass canAccessJob checking for user:" + user.getUsername());
 			return true;
 		}
 	}
