@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.application.User;
-import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
@@ -124,8 +123,7 @@ public class JobInfoService {
 		return resultJobList;
 	}
 
-	public JobInfo obtainJob(@CanAccessJobChecking String jobNumber) throws DatabaseOperationException {
-//		adminService.canAccessJob(jobNumber);
+	public JobInfo obtainJob(String jobNumber) throws DatabaseOperationException {
 		return jobHBDao.obtainJobInfo(jobNumber);
 	}
 

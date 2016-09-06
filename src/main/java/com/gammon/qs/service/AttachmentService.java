@@ -42,6 +42,7 @@ import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.io.AttachmentFile;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.security.SecurityService;
 
@@ -58,6 +59,8 @@ public class AttachmentService {
 	private AttachmentConfig serviceConfig;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private AdminService adminService;
 	
 	//Repackaging Attachment
 	@Autowired
@@ -439,7 +442,7 @@ public class AttachmentService {
 		String vendorNumber = splittedTextKey[0].trim();
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = "";
-//		adminService.canAccessJob(jobNumber);
+		adminService.canAccessJob(jobNumber);
 		if (!AbstractAttachment.VendorNameObject.equalsIgnoreCase(nameObject.trim()))
 			packageNo = splittedTextKey[1].trim();
 
@@ -569,7 +572,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
-//		adminService.canAccessJob(jobNumber);
+		adminService.canAccessJob(jobNumber);
 		if (AttachSubcontract.SCPackageNameObject.equals(nameObject)){
 			AttachSubcontract dbObj = new AttachSubcontract();
 			dbObj.setTextAttachment(textContent);
@@ -615,7 +618,7 @@ public class AttachmentService {
 			splittedTextKey = textKey.split("\\|");
 			jobNumber= splittedTextKey[0].trim();
 			packageNo = splittedTextKey[1].trim();
-//			adminService.canAccessJob(jobNumber);
+			adminService.canAccessJob(jobNumber);
 		}
 		try{
 			if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 
@@ -727,7 +730,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
-//		adminService.canAccessJob(jobNumber);
+		adminService.canAccessJob(jobNumber);
 		try{
 			List<SubcontractDetail> scDetailsList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNo);
 			List<AttachSubcontractDetail> resultList = new ArrayList<AttachSubcontractDetail>();
@@ -762,7 +765,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
-//		adminService.canAccessJob(jobNumber);
+		adminService.canAccessJob(jobNumber);
 		int latestPaymentCertNo = getLatestPaymentCertNo(jobNumber,  packageNo);
 		List<AttachPayment> resultList = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo,latestPaymentCertNo));
 		
@@ -811,7 +814,7 @@ public class AttachmentService {
 			String splittedTextKey[] = textKey.split("\\|");
 			String jobNumber = splittedTextKey[0].trim();
 			String packageNo = splittedTextKey[1].trim();
-//			adminService.canAccessJob(jobNumber);
+			adminService.canAccessJob(jobNumber);
 			if (AttachSubcontract.SCPackageNameObject.equalsIgnoreCase(nameObject)){
 				AttachSubcontract scAttachment = scAttachmentDao.obtainSCFileAttachment(splittedTextKey[0], splittedTextKey[1], sequenceNumber);
 				directoryPath = serverPath + scAttachment.getFileLink();
@@ -855,7 +858,7 @@ public class AttachmentService {
 			String splittedTextKey[] = textKey.split("\\|");
 			String jobNumber = splittedTextKey[0].trim();
 			String packageNo = splittedTextKey[1].trim();
-//			adminService.canAccessJob(jobNumber);
+			adminService.canAccessJob(jobNumber);
 			if (AttachSubcontract.SCPackageNameObject.equalsIgnoreCase(nameObject)){
 				AttachSubcontract scAttachmentResult = null;
 				scAttachmentResult  = scAttachmentDao.obtainSCFileAttachment(jobNumber, packageNo, sequenceNumber);
@@ -933,7 +936,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = splittedTextKey[1].trim();
-//		adminService.canAccessJob(jobNumber);
+		adminService.canAccessJob(jobNumber);
 		try{
 			if (AttachSubcontract.SCPackageNameObject.equalsIgnoreCase(nameObject)){
 				AttachSubcontract result = null;
@@ -985,7 +988,7 @@ public class AttachmentService {
 			splittedTextKey = textKey.split("\\|");
 			jobNumber= splittedTextKey[0].trim();
 			packageNo = splittedTextKey[1].trim();
-//			adminService.canAccessJob(jobNumber);
+			adminService.canAccessJob(jobNumber);
 		}
 		try{
 			if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 

@@ -1,6 +1,7 @@
 package com.gammon.pcms.web.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
+import com.gammon.pcms.model.adl.AccountBalanceAAJI;
+import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
 import com.gammon.pcms.model.adl.AccountMaster;
 import com.gammon.pcms.model.adl.AddressBook;
@@ -55,12 +59,13 @@ public class ADLController {
 															defaultValue = "0") BigDecimal year,
 											@RequestParam(	required = false,
 															defaultValue = "0") BigDecimal month) {
-//		try {
+		try {
 			return adlService.getMonthlyJobCostList(year, month, noJob, noSubcontract);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<>();
+		}
 	}
 
 	/**
@@ -87,12 +92,13 @@ public class ADLController {
 														defaultValue = "0") BigDecimal yearEnd,
 										@RequestParam(required = false) String codeObject,
 										@RequestParam(required = false) String codeSubsidiary) {
-//		try {
+		try {
 			return adlService.getAAJILedgerList(yearStart, yearEnd, noJob, noSubcontract, codeObject, codeSubsidiary);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<AccountBalanceAAJI>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<AccountBalanceAAJI>();
+		}
 	}
 
 	/**
@@ -118,12 +124,13 @@ public class ADLController {
 												@RequestParam(	required = false,
 												defaultValue = "0") BigDecimal month 
 												) {
-//		try {
+		try {
 			return adlService.getJobDashboardData(year, month, noJob, type);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<BigDecimal>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<BigDecimal>();
+		}
 	}
 
 	@RequestMapping(value = "getAccountBalanceList",
@@ -137,12 +144,13 @@ public class ADLController {
 											@RequestParam(required = false) String typeLedger,
 											@RequestParam(required = false) String codeObject,
 											@RequestParam(required = false) String codeSubsidiary) {
-//		try {
+		try {
 			return adlService.getAccountBalanceList(year, month, typeLedger, noJob, noSubcontract, codeObject, codeSubsidiary);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<AccountBalanceSC>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<AccountBalanceSC>();
+		}
 	}
 
 	@RequestMapping(value = "getAccountLedgerList",
@@ -157,23 +165,25 @@ public class ADLController {
 													@RequestParam(required = false) String noSubcontract,
 													@RequestParam(required = false) String codeObject,
 													@RequestParam(required = false) String codeSubsidiary) {
-//		try {
+		try {
 			return adlService.getAccountLedgerList(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<AccountLedger>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<AccountLedger>();
+		}
 	}
 
 	@RequestMapping(value = "getAccountMasterList",
 					method = RequestMethod.GET)
 	public List<AccountMaster> getAccountMasterList(@RequestParam(required = true) String noJob) {
-//		try {
+		try {
 			return adlService.getAccountMasterList(noJob);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<AccountMaster>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<AccountMaster>();
+		}
 	}
 
 	@RequestMapping(value = "getAccountMaster",
@@ -182,12 +192,13 @@ public class ADLController {
 											@RequestParam(required = true) String codeObject,
 											@RequestParam(	required = false,
 															defaultValue = AccountMaster.CODE_SUBSIDIARY_EMPTY) String codeSubsidiary) {
-//		try {
+		try {
 			return adlService.getAccountMaster(noJob, codeObject, codeSubsidiary);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return null;
+		}
 	}
 
 	// TODO: migrate from web service to ADL
@@ -195,24 +206,26 @@ public class ADLController {
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
 					method = RequestMethod.GET)
 	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {
-//		try {
+		try {
 			return adlService.getAddressBookListOfSubcontractorAndClient();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<>();
+		}
 	}
 
 	// TODO: migrate from web service to ADL
 	@RequestMapping(value = "getAddressBook",
 					method = RequestMethod.GET)
 	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal addressBookNo) {
-//		try {
+		try {
 			return adlService.getAddressBook(addressBookNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return null;
+		}
 	}
 
 	// TODO: migrate from web service to ADL
@@ -242,12 +255,13 @@ public class ADLController {
 														@RequestParam(	required = false,
 																		defaultValue = "0") BigDecimal recordKeyInstance) {
 
-//		try {
+		try {
 			return adlService.getApprovalHeaderList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<ApprovalHeader>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<ApprovalHeader>();
+		}
 	}
 
 	// TODO: Pending for CNC team to add unique id (2016-07-15)
@@ -266,11 +280,12 @@ public class ADLController {
 														@RequestParam(required = false) String noAddendum,
 														@RequestParam(	required = false,
 																		defaultValue = "0") BigDecimal recordKeyInstance) {
-//		try {
+		try {
 			return adlService.getApprovalDetailList(statusApproval, noJob, typeApprovalCategory, typeApproval, noSubcontract, noPayment, noMainCert, noAddendum, recordKeyInstance);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<ApprovalDetail>();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<ApprovalDetail>();
+		}
 	}
 }

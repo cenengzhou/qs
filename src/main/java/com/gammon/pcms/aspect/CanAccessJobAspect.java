@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
-import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.qs.service.admin.AdminService;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
@@ -36,27 +35,10 @@ public class CanAccessJobAspect {
 			+ "args(.., str, *) || args(.., str, *, *) || args(.., str, *, *, *))")
 	public void strInServiceLayer(String str){}
 	
-	@Pointcut("@annotation(CanAccessJobChecking)")
-	public void canAcceJobChecking(){}
-	
 	@Autowired
 	private AdminService adminService;
 	
 	String[] jobNumberNames = {"noJob", "jobNo", "jobNumber"};
-	
-	/**
-	 * check canAccessJob if have @CanAccessJobChecking(check = CanAccessJobCheckingType.CHECK)
-	 * need have parameter named noJob, jobNo or jobNumber
-	 * @param joinPoint
-	 * @param canAccessJobChecking
-	 * @throws Throwable
-	 */
-	@Before("@annotation(canAccessJobChecking)")
-	public void canAccessJobChecking(JoinPoint joinPoint, CanAccessJobChecking canAccessJobChecking) throws Throwable{
-		if(canAccessJobChecking.checking().equals(CanAccessJobCheckingType.CHECK)){
-			canAccessJobChecking(joinPoint);
-		}
-	}
 	
 	/**
 	 * check if service method's first three or last three parameter is Sting and name like job number
@@ -77,9 +59,6 @@ public class CanAccessJobAspect {
 	private void canAccessJobChecking(JoinPoint joinPoint) {
 		Logger logger = Logger.getLogger(joinPoint.getSignature().getDeclaringTypeName());
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
-//		Method method = methodSignature.getMethod();
-//		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-//		String methodName = methodSignature.getName();
         String[] parameterNames = methodSignature.getParameterNames();
         Object[] args = joinPoint.getArgs();
         for(int i = 0; i< args.length; i++){
@@ -91,4 +70,5 @@ public class CanAccessJobAspect {
         	}
         }
 	}
+	
 }

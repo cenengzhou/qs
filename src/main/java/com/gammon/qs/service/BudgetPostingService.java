@@ -105,7 +105,6 @@ public class BudgetPostingService {
 
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public String postBudget(String jobNumber, String username) {
-//		adminService.canAccessJob(jobNumber);
 		if(username == null || username.equals("")){
 			username = securityService.getCurrentUser().getUsername();
 		}

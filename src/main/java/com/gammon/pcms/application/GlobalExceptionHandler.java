@@ -75,4 +75,9 @@ public class GlobalExceptionHandler {
 		return msg;
 	}
 
+	public static void checkAccessDeniedException(Exception e){
+		if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
+		throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+	}
+
 }

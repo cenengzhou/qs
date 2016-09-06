@@ -42,12 +42,7 @@ public class AuditHousekeepController {
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "housekeepAuditTable", method = RequestMethod.POST)
 	public int housekeepAuditTable(@RequestParam String tableName) throws DataAccessException, SQLException{
-//		try {
-			return auditHousekeepService.housekeekpByAuditTableName(tableName);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return -1;
+		return auditHousekeepService.housekeekpByAuditTableName(tableName);
 	}
 	
 	@RequestMapping(value = "findEntityByIdRevision", method = RequestMethod.POST)
@@ -56,24 +51,14 @@ public class AuditHousekeepController {
 			@RequestParam(defaultValue = "8243") long id, 
 			@RequestParam(defaultValue = "1") int rev,
 			@RequestParam(defaultValue = "Return specific entity instance of corresponding revision") String description) throws ClassNotFoundException{
-//		try {
 			return auditHousekeepService.findEntityByIdRevision(Class.forName(clazz) , id, rev);
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 	
 	@RequestMapping(value = "findRevisionsByEntity", method = RequestMethod.POST)
 	public @ResponseBody List<Object[]> findRevisionsByEntity(
 			@RequestParam(defaultValue = "com.gammon.qs.domain.Subcontract") String clazz,
 			@RequestParam(defaultValue = "Return all entity instance, revision entity, type of the revision corresponding to the revision at which the entity was modified.") String description) throws ClassNotFoundException{
-//		try {
 			return auditHousekeepService.findRevisionsByEntity(Class.forName(clazz));
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 
 	@RequestMapping(value = "findByRevision", method = RequestMethod.POST)
@@ -90,11 +75,7 @@ public class AuditHousekeepController {
 			@RequestParam(defaultValue = "1001") String subcontractNo,
 			@RequestParam(defaultValue = "Change Subcontract and details's description") String description) throws DatabaseOperationException{
 		Object[] results = null;
-//		try {
-			results = subcontractService.testModifySubcontractAndDetail(jobNo, subcontractNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		results = subcontractService.testModifySubcontractAndDetail(jobNo, subcontractNo);
 		return results;
 	}
 	
@@ -106,11 +87,7 @@ public class AuditHousekeepController {
 			@RequestParam(defaultValue = "1") Integer paymentCertNo,
 			@RequestParam(defaultValue = "Change Cert Amount and details's description") String description) throws Exception{
 		Object[] results = null;
-//		try {
-			results = paymentService.testModifyPaymentCertAndDetail(jobNo, subcontractNo, paymentCertNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		results = paymentService.testModifyPaymentCertAndDetail(jobNo, subcontractNo, paymentCertNo);
 		return results;
 	}
 

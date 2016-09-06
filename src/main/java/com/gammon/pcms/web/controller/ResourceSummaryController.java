@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ResourceSummary;
@@ -42,24 +43,14 @@ public class ResourceSummaryController {
 													@RequestParam(name="subcontractNo") String subcontractNo, 
 													@RequestParam(name="objectCode") String objectCode) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-//		try {
-			
-			resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, subcontractNo, objectCode);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		resourceSummaries = resourceSummaryService.getResourceSummaries(jobNo, subcontractNo, objectCode);
 		return resourceSummaries;
 	}
 	
 	@RequestMapping(value = "getResourceSummariesForAddendum", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesForAddendum(@RequestParam(required =true) String jobNo){
 		List<ResourceSummary> resourceSummaries = null;
-//		try {
-			
-			resourceSummaries = resourceSummaryService.getResourceSummariesForAddendum(jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		resourceSummaries = resourceSummaryService.getResourceSummariesForAddendum(jobNo);
 		return resourceSummaries;
 	}
 	
@@ -68,12 +59,7 @@ public class ResourceSummaryController {
 													@RequestParam(name="subcontractNo") String subcontractNo 
 													) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-//		try {
-			
-			resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, subcontractNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		resourceSummaries = resourceSummaryService.getResourceSummariesBySC(jobNo, subcontractNo);
 		return resourceSummaries;
 	}
 	
@@ -84,12 +70,7 @@ public class ResourceSummaryController {
 													@RequestParam(name="subsidiaryCode") String subsidiaryCode
 													) throws Exception{
 		List<ResourceSummary> resourceSummaries = null;
-//		try {
-			
-			resourceSummaries = resourceSummaryService.getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		resourceSummaries = resourceSummaryService.getResourceSummariesByAccountCode(jobNo, subcontractNo, objectCode, subsidiaryCode);
 		return resourceSummaries;
 	}
 	
@@ -102,12 +83,7 @@ public class ResourceSummaryController {
 													@RequestParam(name="resourceNo") Integer resourceNo
 													){
 		List<ResourceSummary> resourceSummaries = null;
-//		try {
-			
-			resourceSummaries = resourceSummaryService.getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		resourceSummaries = resourceSummaryService.getResourceSummariesByLineType(jobNo, subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo);
 		return resourceSummaries;
 	}
 	
@@ -115,23 +91,14 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "getResourceSummariesForIV", method = RequestMethod.GET)
 	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(required =true) String jobNo) throws DatabaseOperationException{
 		IVInputPaginationWrapper ivInputPaginationWrapper = null;
-//		try {
-			
-			ivInputPaginationWrapper = resourceSummaryService.obtainResourceSummariesForIV(jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		ivInputPaginationWrapper = resourceSummaryService.obtainResourceSummariesForIV(jobNo);
 		return ivInputPaginationWrapper;
 	}
 	
 	@RequestMapping(value = "getResourceSummariesGroupByObjectCode", method = RequestMethod.GET)
 	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
 		List<ResourceSummayDashboardDTO> rsList = null;
-//		try {
-			rsList = resourceSummaryService.getResourceSummariesGroupByObjectCode(jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		rsList = resourceSummaryService.getResourceSummariesGroupByObjectCode(jobNo);
 		return rsList;
 	}
 
@@ -141,11 +108,7 @@ public class ResourceSummaryController {
 									@RequestParam(required =true) String repackagingId,
 									 @RequestBody ResourceSummary resourceSummary) throws NumberFormatException, Exception{
 		String result = "";
-//		try {
-			result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingId), resourceSummary);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingId), resourceSummary);
 		return result;
 	}
 	
@@ -153,11 +116,7 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "deleteResources", method = RequestMethod.POST)
 	public String deleteResources( @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		String result = "";
-//		try {
-			result = resourceSummaryService.deleteResources(resourceSummaryList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = resourceSummaryService.deleteResources(resourceSummaryList);
 		return result;
 	}
 
@@ -166,11 +125,7 @@ public class ResourceSummaryController {
 	public String updateResourceSummaries(@RequestParam(required =true) String jobNo, 
 									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-//		try {
-			wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		wrapper = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
 		return wrapper.getError();
 	}
 	
@@ -179,11 +134,7 @@ public class ResourceSummaryController {
 	public String splitOrMergeResources(@RequestParam(required =true) String repackagingId, 
 										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper) throws NumberFormatException, Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-//		try {
-			wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingId));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingId));
 		return wrapper.getError();
 	}
 	
@@ -196,8 +147,7 @@ public class ResourceSummaryController {
 		} catch (Exception e) {
 			result = "IV cannot be updated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -211,8 +161,7 @@ public class ResourceSummaryController {
 		} catch (Exception e) {
 			result = "IV cannot be updated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}

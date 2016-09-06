@@ -104,12 +104,7 @@ public class APController {
 	public AwardSCPackageResponse awardSCPackage(@Valid @RequestBody AwardSCPackageRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		AwardSCPackageResponse responseObj = new AwardSCPackageResponse();
-//		try {
-			responseObj.setCompleted(subcontractService.toCompleteSCAwardApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected()));
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		responseObj.setCompleted(subcontractService.toCompleteSCAwardApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected()));
 		return responseObj;
 	}
 
@@ -150,16 +145,11 @@ public class APController {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CheckJobIsConvertedResponse responseObj = new CheckJobIsConvertedResponse();
 		JobInfo job = null;
-//		try {
-			job = jobInfoService.obtainJob(requestObj.getJobNumber());
-			if (job != null && job.getConversionStatus() != null)
-				responseObj.setConverted(true);
-			else
-				responseObj.setConverted(false);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		job = jobInfoService.obtainJob(requestObj.getJobNumber());
+		if (job != null && job.getConversionStatus() != null)
+			responseObj.setConverted(true);
+		else
+			responseObj.setConverted(false);
 		return responseObj;
 	}
 
@@ -191,12 +181,7 @@ public class APController {
 	public CompleteAddendumApprovalResponse completeAddendumApproval(@Valid @RequestBody CompleteAddendumApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteAddendumApprovalResponse responseObj = new CompleteAddendumApprovalResponse();
-//		try {
-			responseObj.setCompleted(addendumService.toCompleteAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getUser(), requestObj.getApprovalDecision()));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		responseObj.setCompleted(addendumService.toCompleteAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getUser(), requestObj.getApprovalDecision()));
 		return responseObj;
 	}
 
@@ -239,12 +224,7 @@ public class APController {
 	public CompleteMainCertApprovalResponse completeMainCertApproval(@Valid @RequestBody CompleteMainCertApprovalRequest requestObj, BindingResult result) throws DatabaseOperationException {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteMainCertApprovalResponse response = new CompleteMainCertApprovalResponse();
-//		try {
-			response.setCompleted(mainCertService.toCompleteMainCertApproval(requestObj.getJobNumber(), requestObj.getMainCertNo(), requestObj.getApprovalDecision()));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		response.setCompleted(mainCertService.toCompleteMainCertApproval(requestObj.getJobNumber(), requestObj.getMainCertNo(), requestObj.getApprovalDecision()));
 		return response;
 	}
 
@@ -283,12 +263,7 @@ public class APController {
 	public CompleteSCPaymentResponse completeSCPayment(@Valid @RequestBody CompleteSCPaymentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteSCPaymentResponse responseObj = new CompleteSCPaymentResponse();
-//		try {
-			responseObj.setCompleted(paymentService.toCompleteSCPayment(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovalDecision()));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		responseObj.setCompleted(paymentService.toCompleteSCPayment(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovalDecision()));
 		return responseObj;
 	}
 
@@ -324,15 +299,10 @@ public class APController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "completeSplitTerminate", method = { RequestMethod.GET, RequestMethod.POST })
-	public CompleteSplitTerminateResponse completeSplitTerminate(@Valid @RequestBody CompleteSplitTerminateRequest requestObj, BindingResult result) {
+	public CompleteSplitTerminateResponse completeSplitTerminate(@Valid @RequestBody CompleteSplitTerminateRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteSplitTerminateResponse responseObj = new CompleteSplitTerminateResponse();
-		try {
-			responseObj.setCompleted(subcontractService.toCompleteSplitTerminate(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected(), requestObj.getSplitOrTerminate()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		responseObj.setCompleted(subcontractService.toCompleteSplitTerminate(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected(), requestObj.getSplitOrTerminate()));
 		return responseObj;
 	}
 
@@ -374,7 +344,6 @@ public class APController {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetAttachmentListResponseList responseListObj = new GetAttachmentListResponseList();
 		List<? extends AbstractAttachment> attachmentList;
-//		try{
 			if (AttachSubcontract.SCDetailsNameObject.equals(requestObj.getNameObject())) {
 				logger.info("Web Service called by AP: SCDetail Attachments");
 				attachmentList = attachmentService.getAddendumAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
@@ -407,10 +376,6 @@ public class APController {
 					responseListObj.getAttachmentList().add(responseObj);
 				}
 			}
-//		} catch(Exception e){
-//			e.printStackTrace();
-//			return null;
-//		}
 		return responseListObj;
 	}
 
@@ -447,12 +412,7 @@ public class APController {
 	public GetTextAttachmentResponse getTextAttachment(@Valid @RequestBody GetTextAttachmentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetTextAttachmentResponse responseObj = new GetTextAttachmentResponse();
-//		try {
-			responseObj.setTextAttachment(attachmentService.obtainTextAttachmentContent(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo()));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+		responseObj.setTextAttachment(attachmentService.obtainTextAttachmentContent(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo()));
 		return responseObj;
 	}
 

@@ -3068,7 +3068,6 @@ public class PaymentService{
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
 	public Object[] testModifyPaymentCertAndDetail(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception{
-//		adminService.canAccessJob(jobNo);
 		PaymentCert paymentCert = obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 		List<PaymentCertDetail> paymentCertDetailList = obtainPaymentDetailList(jobNo, subcontractNo, paymentCertNo);
 		paymentCert.setCertAmount(paymentCert.getCertAmount() + 10);

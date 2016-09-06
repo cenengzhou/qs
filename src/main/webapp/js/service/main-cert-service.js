@@ -263,7 +263,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
     
     function updateMainCertFromF03B14Manually(){
     	var request = $http.post("service/mainCert/updateMainCertFromF03B14Manually");
-    	return( request.then( handleSuccess, handleError ) );
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     

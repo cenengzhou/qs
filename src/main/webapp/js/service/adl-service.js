@@ -66,19 +66,6 @@ mainApp.service('adlService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-//    function handleError( response) {
-//        if (
-//            ! angular.isObject( response.data ) ||
-//            ! response.data.message
-//            ) {
-//            return( $q.reject( "An unknown error occurred." ) );
-//        }
-//        modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.data.message ); 
-////        return( $q.reject( response.data.message ) );
-//    }
-//    function handleSuccess( response ) {
-//        return( response.data );
-//    }
 }]);
 
 

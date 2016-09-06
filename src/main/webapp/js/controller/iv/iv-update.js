@@ -52,7 +52,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     }
     
     $scope.showStatus = function(){
-    	modalService.open('md', 'view/iv/modal/iv-importmodal.html', 'IVImportModalCtrl', 'Warn', $scope.statusArray);
+    	modalService.open('md', 'view/excelupload-modal.html', 'ExcelUploadModalCtrl', 'Warn', $scope.statusArray);
     }
     
     function updateRow(row, importObj, statusObj){

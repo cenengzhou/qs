@@ -1,4 +1,4 @@
-mainApp.controller('IVImportModalCtrl', 
+mainApp.controller('ExcelUploadModalCtrl', 
 			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 
 	function($scope, modalStatus, modalParam, $uibModalInstance){
 	$scope.status = modalStatus;

@@ -31,9 +31,7 @@ import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrappe
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
-@RequestMapping(value = "service/payment/"/*,
-				consumes = MediaType.APPLICATION_JSON_VALUE,
-				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
+@RequestMapping(value = "service/payment/")
 public class PaymentController {
 	private Logger logger = Logger.getLogger(getClass());
 	
@@ -46,22 +44,14 @@ public class PaymentController {
 	@RequestMapping(value = "getLatestPaymentCert", method = RequestMethod.GET)
 	public PaymentCert getLatestPaymentCert(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo) throws DatabaseOperationException{
 		PaymentCert paymentCert = null;
-//		try{
-			paymentCert = paymentService.obtainPaymentLatestCert(jobNo, subcontractNo);
-//		}catch(DatabaseOperationException databaseOperationException){
-//			databaseOperationException.printStackTrace();
-//		}
+		paymentCert = paymentService.obtainPaymentLatestCert(jobNo, subcontractNo);
 		return paymentCert;
 	}
 	
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
 	public List<PaymentCert> getPaymentCertList(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo) throws DatabaseOperationException{
 		List<PaymentCert> paymentCertList = null;
-//		try{
-			paymentCertList = paymentService.getPaymentCertList(jobNo, subcontractNo);
-//		}catch(DatabaseOperationException databaseOperationException){
-//			databaseOperationException.printStackTrace();
-//		}
+		paymentCertList = paymentService.getPaymentCertList(jobNo, subcontractNo);
 		return paymentCertList;
 	}
 	
@@ -70,11 +60,7 @@ public class PaymentController {
 													@RequestParam(required = true) String subcontractNo,
 													@RequestParam(required = true) String paymentCertNo) throws NumberFormatException, DatabaseOperationException{
 		PaymentCert scPaymentCert = null;
-//		try{
-			scPaymentCert = paymentService.obtainPaymentCertificate(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
-//		}catch(DatabaseOperationException databaseOperationException){
-//			databaseOperationException.printStackTrace();
-//		}
+		scPaymentCert = paymentService.obtainPaymentCertificate(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
 		return scPaymentCert;
 	}
 	
@@ -83,11 +69,7 @@ public class PaymentController {
 													@RequestParam(required = true) String subcontractNo,
 													@RequestParam(required = true) String paymentCertNo) throws NumberFormatException, Exception{
 		List<PaymentCertDetail> paymentDetailList = null;
-//		try{
-			paymentDetailList = paymentService.obtainPaymentDetailList(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		paymentDetailList = paymentService.obtainPaymentDetailList(jobNo, subcontractNo, Integer.valueOf(paymentCertNo));
 		return paymentDetailList;
 	}
 	
@@ -95,11 +77,7 @@ public class PaymentController {
 	public Double getTotalPostedCertAmount(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo){
 		Double totalPostedCertAmount = null;
-//		try{
-			totalPostedCertAmount = paymentService.getTotalPostedCertAmount(jobNo, subcontractNo);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		totalPostedCertAmount = paymentService.getTotalPostedCertAmount(jobNo, subcontractNo);
 		return totalPostedCertAmount;
 	}
 	
@@ -108,11 +86,7 @@ public class PaymentController {
 																	@RequestParam(required = true) String subcontractNo,
 																	@RequestParam(required = true) String paymentCertNo) throws Exception{
 		PaymentCertViewWrapper paymentCertViewWrapper = null;
-//		try{
-			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo, true);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo, true);
 		return paymentCertViewWrapper;
 	}
 	
@@ -122,11 +96,7 @@ public class PaymentController {
 								@RequestParam(required = true) Integer paymentCertNo, 
 								@RequestParam(required = true) String lineType){
 		Double gstAmount = null;
-//		try{
-			gstAmount = paymentService.obtainPaymentGstAmount(jobNo, subcontractNo, paymentCertNo, lineType);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		gstAmount = paymentService.obtainPaymentGstAmount(jobNo, subcontractNo, paymentCertNo, lineType);
 		return gstAmount;
 	}
 	
@@ -138,11 +108,7 @@ public class PaymentController {
 															@RequestParam(required = false) Date ipaOrInvoiceDate,
 															@RequestParam(required = false) Date dueDate){
 		PaymentDueDateAndValidationResponseWrapper paymentCertViewWrapper = null;
-//		try{
-			paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
 		return paymentCertViewWrapper;
 	}
 	
@@ -151,11 +117,7 @@ public class PaymentController {
 	public String createPayment(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo){
 		String result = "";
-//		try{
-			result = paymentService.createPayment(jobNo, subcontractNo);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		result = paymentService.createPayment(jobNo, subcontractNo);
 		return result;
 	}
 	
@@ -169,11 +131,7 @@ public class PaymentController {
 												@RequestParam(required = true) Double gstReceivable,
 												@RequestBody PaymentCert paymentCert){
 		String result = "";
-//		try{
-			result = paymentService.updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms,  paymentCert, gstPayable, gstReceivable);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		result = paymentService.updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms,  paymentCert, gstPayable, gstReceivable);
 		return result;
 	}
 	
@@ -185,11 +143,7 @@ public class PaymentController {
 												@RequestParam(required = true) String paymentType,
 												@RequestBody(required = false) List<PaymentCertDetail> paymentDetails){
 		String result = "";
-//		try{
-			result = paymentService.updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		result = paymentService.updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails);
 		return result;
 	}
 	
@@ -199,11 +153,7 @@ public class PaymentController {
 												@RequestParam(required = true) String subcontractNo,
 												@RequestParam(required = true) Integer paymentCertNo) throws Exception{
 		String result = "";
-//		try{
-			result = paymentService.submitPayment(jobNo, subcontractNo, paymentCertNo);
-//		}catch(Exception exception){
-//			exception.printStackTrace();
-//		}
+		result = paymentService.submitPayment(jobNo, subcontractNo, paymentCertNo);
 		return result;
 	}
 	
@@ -230,11 +180,7 @@ public class PaymentController {
 	@RequestMapping(value = "obtainPaymentCertificateList", method = RequestMethod.POST)
 	public List<PaymentCertWrapper> obtainPaymentCertificateList(@RequestBody PaymentCertWrapper paymentCertWrapper, @RequestParam String dueDateType) throws DatabaseOperationException{
 		List<PaymentCertWrapper> wrapperList = new ArrayList<PaymentCertWrapper>();
-//		try {
-			wrapperList.addAll(paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		wrapperList.addAll(paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType));
 		return wrapperList;
 	}
 

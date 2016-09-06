@@ -30,22 +30,14 @@ public class SubcontractorController {
 		if(workScope.equals("") && subcontractor.equals("")) {
 			throw new IllegalArgumentException("Please input work scope or subcontractor to search");
 		}
-//		try {
-			wrapperList.addAll(subcontractorService.obtainSubcontractorWrappers(workScope, subcontractor));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		wrapperList.addAll(subcontractorService.obtainSubcontractorWrappers(workScope, subcontractor));
 		return wrapperList;
 	}
 
 	@RequestMapping(value = "obtainClientWrappers", method = RequestMethod.POST)
 	public List<SubcontractorWrapper> obtainClientWrappers(@RequestParam String client) throws DatabaseOperationException{
 		List<SubcontractorWrapper> wrapperList = new ArrayList<SubcontractorWrapper>();
-//		try {
-			wrapperList.addAll(subcontractorService.obtainClientWrappers(client));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		wrapperList.addAll(subcontractorService.obtainClientWrappers(client));
 		return wrapperList;
 	}
 

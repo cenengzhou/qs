@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.PCMSDTO;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -52,11 +53,7 @@ public class MainCertController {
 	@RequestMapping(value = "getPaidMainCertList", method = RequestMethod.GET)
 	public List<Integer> getPaidMainCertList(@RequestParam(required = true) String noJob) throws DatabaseOperationException {
 		List<Integer> mainCertList= null;
-//		try {
-			mainCertList= mainCertService.getPaidMainCertList(noJob);
-//		} catch (DatabaseOperationException e) {
-//			e.printStackTrace();
-//		}
+		mainCertList= mainCertService.getPaidMainCertList(noJob);
 		return mainCertList;
 	}
 	
@@ -108,6 +105,7 @@ public class MainCertController {
 		} catch (DatabaseOperationException e) {
 			result = "Main Cert caanot be created.";
 			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		}
 		return result;
 		
@@ -134,12 +132,7 @@ public class MainCertController {
 	
 	@RequestMapping(value = "getMainCertReceiveDateAndAmount", method = RequestMethod.POST)
 	public List<MainCertReceiveDateResponse> getMainCertReceiveDateAndAmount(@RequestParam String company, @RequestParam String refDocNo) throws DatabaseOperationException{
-//		try{
 			return mainCertService.getMainCertReceiveDateAndAmount(company, refDocNo);
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")

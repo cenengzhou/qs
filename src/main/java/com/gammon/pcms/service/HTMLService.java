@@ -86,7 +86,6 @@ public class HTMLService implements Serializable{
 	private FreemarkerConfig freemarkerConfig;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
-//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		JobInfo job = new JobInfo();
 		Subcontract scPackage = new Subcontract();
@@ -196,7 +195,6 @@ public class HTMLService implements Serializable{
 		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("award"), data);
 	}
 //	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
-////		adminService.canAccessJob(jobNumber);
 //		String strHTMLCodingContent = "";
 //		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
 //		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
@@ -393,7 +391,6 @@ public class HTMLService implements Serializable{
 	}
 	
 	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){
-//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
 		boolean boolChangedLine = false;
@@ -534,7 +531,6 @@ public class HTMLService implements Serializable{
 }
 
 	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){
-//		adminService.canAccessJob(jobNumber);
 		JobInfo jobHeaderInfo = new JobInfo();
 		double newSCSum = 0.00;
 		String strHTMLCodingContent = "";
@@ -604,7 +600,6 @@ public class HTMLService implements Serializable{
 	 * HTML String For Main Cert Information being called by Web Service
 	 * **/
 	public String makeHTMLStringForMainCert(String jobNumber, String mainCertNo, String htmlVersion) {
-//		adminService.canAccessJob(jobNumber);
 		String strHTMLCodingContent = "";
 		logger.info("makeHTMLStringForSCMainCert --> Input parameter: jobNo["+jobNumber+"] - Main Cert No["+mainCertNo+"]");
 		if(!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)){

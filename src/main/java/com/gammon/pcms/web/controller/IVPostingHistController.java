@@ -25,11 +25,7 @@ public class IVPostingHistController {
 	@RequestMapping(value = "obtainIVPostingHistoryList", method = RequestMethod.POST)
 	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestParam String jobNumber, Date fromDate, Date toDate) throws Exception{
 		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
-//		try {
-			resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, fromDate, toDate));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, fromDate, toDate));
 		return resultList;
 	}
 

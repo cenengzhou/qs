@@ -7,6 +7,217 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	getSubcontractDetailForWD();
 	getResourceSummariesBySC();
 	
+	$scope.WDgridDirtyRows = [];
+	$scope.WDresetData = [];
+	$scope.WDstatusArray = [];
+	
+	var STATUS_IGNORED = 'Ignored';
+	var STATUS_IMPORTED = 'Imported';
+	var STATUS_NOCHANGE = 'No Change';
+	
+	var MSG_IMPORT_OBJECT_NOT_FOUND = 'Import object not found';
+	
+    $scope.importWDData = function(grid, newObjects){
+    	var importArray = [];
+    	$scope.statusArray = [];
+    	newObjects.forEach(function(importObj){
+    		var newObj = {};
+    		var importKey = getWDImportKey(importObj);
+    		newObj.amountCumulativeWD = importObj.amountCumulativeWD;
+    		importArray[importKey] = newObj;
+		});
+    	for(var i = 0; i<grid.rows.length; i++){
+    		var entityKey = getWDImportKey(grid.rows[i].entity);
+    		var importObj = importArray[entityKey]; 
+    		var statusObj = {};
+    		statusObj.rowNum = i + 2;
+    		statusObj.rowDescription = grid.rows[i].entity.resourceDescription;
+    		if(importObj === undefined){
+    			statusObj.message = MSG_IMPORT_OBJECT_NOT_FOUND;
+    			statusObj.importStatus = STATUS_IGNORED;
+    		} else {
+    			updateWDRow(grid.rows[i], importObj, statusObj);
+    		}
+    		$scope.WDstatusArray.push(statusObj);
+    	}
+  	  $scope.gridApi.grid.refresh();
+  	  $scope.WDgridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+  	  $scope.showWDStatus();
+    }
+    
+    $scope.showWDStatus = function(){
+    	modalService.open('md', 'view/excelupload-modal.html', 'ExcelUploadModalCtrl', 'Warn', $scope.statusArray);
+    }
+    
+    function updateWDRow(row, importObj, statusObj){
+//    	if(row.entity.amountBudget === 0) {
+//    		statusObj.message = MSG_ZERO_AMOUNT;
+//    		statusObj.importStatus = STATUS_IGNORED;
+//    		return;
+//    	}
+//    	
+//    	if(row.entity.packageNo && row.entity.objectCode.indexOf('14') >= 0 && 
+//    			(awardedSubcontractNos.indexOf(row.entity.packageNo) >= 0 || uneditableUnawardedSubcontractNos.indexOf(row.entity.packageNo) >= 0)){
+//    		statusObj.message = MSG_UPDATE_SUBCONTRACT_DETAILS;
+//    		statusObj.importStatus = STATUS_IGNORED;
+//    		return;
+//    	}
+//    	
+//    	if(parseFloat(importObj.currIVAmount) === row.entity.currIVAmount && parseFloat(importObj.ivMovement) === row.entity.ivMovement){
+//    		statusObj.message = MSG_NOCHANGE;
+//    		statusObj.importStatus = STATUS_NOCHANGE;
+//    		return;
+//    	} else {
+//    		if(parseFloat(importObj.currIVAmount) > row.entity.amountBudget){
+//        		statusObj.message = MSG_GREATER_THEN_BUDGET;
+//        		statusObj.importStatus = STATUS_IGNORED;
+//        		return; 			
+//    		} 
+//
+//    		if(parseFloat(importObj.currIVAmount) !== parseFloat(importObj.ivMovement) + row.entity.postedIVAmount) {
+//        		statusObj.message = MSG_WRONG_CURRIVAMOUNT;
+//        		statusObj.importStatus = STATUS_IGNORED;
+//        		return
+//    		}
+//    		
+//    		if(parseFloat(importObj.ivMovement) !== parseFloat(importObj.currIVAmount) - row.entity.postedIVAmount){
+//    			statusObj.message = MSG_WRONG_IVMOVEMENT;
+//    			statusObj.importStatus = STATUS_IGNORED;
+//    			return
+//    		}
+//    	}
+//    	
+//    	row.entity.currIVAmount = importObj.currIVAmount;
+//    	row.entity.ivMovement = importObj.ivMovement;
+    	row.entity.amountCumulativeWD = importObj.amountCumulativeWD;
+    	statusObj.message = STATUS_IMPORTED;
+    	statusObj.importStatus = STATUS_IMPORTED;
+		$scope.gridApi.rowEdit.setRowsDirty( [row.entity]);
+//		return;
+    }
+    
+    function getWDImportKey(obj){
+    	return escape('@' + 
+    	parseType('String', obj.id) + '-' + 
+    	parseType('String', obj.lineType) + '-' + 
+		parseType('String', obj.description.replace(/[\r\n]/g, '')) + '-' + 
+		parseType('String', obj.unit) + '-' + 
+		parseType('String', obj.approved) + '-' + 
+		obj.rate + '@');
+    }
+    
+	$scope.readWDCsv = function(fileObject){
+		$scope.gridApi.importer.importFile( fileObject );
+	}
+	
+	$scope.readWDXls = function (workbook) {
+		var headerNames = XLSX.utils.sheet_to_json( workbook.Sheets[workbook.SheetNames[0]], { header: 1 })[0];
+		var sheetObjects = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+		var gridHeaders = uiGridImporterService.processHeaders($scope.gridApi.grid, headerNames);
+		var typeArray = ['String','String','String','Float','Float','Float','Float','Float','Float',
+		                 'Float','Float','Float','Float','Float','Float','String','String','String',
+		                 'Float','Float','String','String','String','String','String','String','String','String'];
+		var importArray  = sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects);
+        var newObjects = [];
+        var newObject;
+		importArray.forEach(  function( value, index ) {
+            newObject = uiGridImporterService.newObject( $scope.gridApi.grid );
+            angular.extend( newObject, value );
+            newObject = $scope.gridApi.grid.options.importerObjectCallback( $scope.gridApi.grid, newObject );
+            newObjects.push( newObject );
+          });
+
+		uiGridImporterService.addObjects( $scope.gridApi.grid, newObjects );
+      }
+
+  $scope.error = function (e) {
+    console.log(e);
+  }
+  
+  function sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects){
+	  var newObjects  = [];
+	  sheetObjects.forEach(function(so){
+			var obj = {};
+			for(var i = 0; i< headerNames.length; i++){
+				obj[gridHeaders[i]] = parseType(typeArray[i],so[headerNames[i]]);
+			}
+			newObjects.push(obj);
+	  })
+	  return newObjects;		
+  }
+  
+  function parseType(type, value){
+	switch(type){
+		case 'String':
+			return value ? String(value) : null;
+			break;
+		case 'Float':
+			return parseFloat(value);
+			break;
+		case 'Boolean':
+			return value.toLowerCase() === 'true' ? true : false;
+			break;
+		default:
+			return value;
+	}  
+  }
+  
+  
+	$scope.checkEditable = function($scope){
+//		subcontract.paymentStatus === 'F' [modal] "SC Package was final paid."
+		if($scope.row.entity.subcontract.paymentStatus === 'F'){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Subcontract was final paid');
+			return;
+		}
+//		SubcontractDetail.lineType === BQ && (&& SubcontractDetail.manualInputSCWD === Y || SubcontractDetail.LEGACYJOB === Y)
+//		[modal] "Workdone cannot be updated in BQ Line"
+		if($scope.row.entity.lineType === 'BQ' && ($scope.row.entity.subcontract.jobInfo.manualInputSCWD === 'Y' || $scope.row.entity.subcontract.jobInfo.legacyJob === 'Y')){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in BQ Line');
+			return;
+		}
+//		SubcontractDetail.sourceType === D && SubcontractDetail.lineType !== OA
+//		[modal] "Workdone cannot be updated in "+SubcontractDetail.lineType+" Line"
+		if($scope.row.entity.sourceType === 'D' && $scope.row.entity.lineType !== 'OA') {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in '+$scope.row.entity.lineType+' Line');
+			return;
+		}
+		
+//		jobinfo.repackagingType = 3
+//		&& SubcontractDetail.lineType in (BQ, V3, V1)
+//		&& SubcontractDetail.costRate!=0
+//		[modal] "Please update the workdone of BQ/V1/V3 lines from 'IV Update by Resouce' Window or 'IV Update by BQItem' Window."
+		if($scope.row.entity.subcontract.jobInfo.repackaging === 3
+			&& ['BQ', 'V3', 'V1'].indexOf(rowEntity.lineType) >=0 
+			&& $scope.row.entity.costRate != 0) {
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please update the workdone of BQ/V1/V3 lines from \'IV Update by Resouce\' Window or \'IV Update by BQItem\' Window');
+				return;
+		}
+//		SubcontractDetail.lineType in (C1, C2, RR, RA, AP)
+//		&& SubcontractDetail.amountCumulativeWD != 0
+//		[modal] "Invalid inputed value. Cum Work Done Qty must be zero."
+		if(['C1', 'C2', 'RR', 'RA', 'AP'].indexOf($scope.row.entity.lineType) >= 0
+			&& $scope.row.entity.amountCumulativeWD !== 0){
+	 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty must be zero');
+	 			return;
+ 		}
+//		SubcontractDetail.amountCumulativeWD > SubcontractDetail.quantity
+//		&& (!SubcontractDetail.subsidiaryCode.startsWith("4") && SubcontractDetail.subsidiaryCode.substring(2, 4) !== 80)
+//		&& SubcontractDetail.approved === A
+//		&& SubcontractDetail.lineType in (BQ, V3, V1)
+//		&& SubcontractDetail.costRate != 0
+//		[modal] "Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty."
+		var t = $scope.row.entity.subsidiaryCode.startsWith('4');
+		if($scope.row.entity.amountCumulativeWD > $scope.row.entity.quantity
+			&& (!$scope.row.entity.subsidiaryCode.toString().startsWith('4') && $scope.row.entity.subsidiaryCode.substring(2, 4) !== 80)
+			&& $scope.row.entity.approved === 'A'
+			&& ['BQ', 'V3', 'V1'].indexOf($scope.row.entity.lineType) >= 0
+			&& $scope.row.entity.costRate != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty');
+				return;
+		}
+		return true;
+	}
+	
 	$scope.gridOptions = {
 			enableSorting: true,
 			enableFiltering: true,
@@ -16,7 +227,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			//showGridFooter : true,
 			showColumnFooter : true,
 			//fastWatch : true,
-			
+			importerDataAddCallback: $scope.importWDData,
 			exporterMenuPdf: false,
 			
 			enableCellEditOnFocus : true,
@@ -35,7 +246,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		            	 {field: 'amountSubcontractTBA', displayName: "TBA Amount", width: 120, visible:false, enableCellEdit: false, enableFiltering: false ,
 		            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
 			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 120, cellClass: "grid-theme-blue", enableFiltering: false ,
-			            	aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	aggregationType: uiGridConstants.aggregationTypes.sum, cellEditableCondition: $scope.checkEditable,
 			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
 		            		cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD | number:2}}</div>'},
 			             { field: 'amountPostedWD', displayName: "Posted WD Amount", enableCellEdit: false, enableFiltering: false ,
@@ -90,56 +301,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				} else {
 	            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
 	            }
-//				subcontract.paymentStatus === 'F' [modal] "SC Package was final paid."
-				if(rowEntity.subcontract.paymentStatus === 'F'){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Subcontract was final paid');
-					return;
-				}
-//				SubcontractDetail.lineType === BQ && (&& SubcontractDetail.manualInputSCWD === Y || SubcontractDetail.LEGACYJOB === Y)
-//				[modal] "Workdone cannot be updated in BQ Line"
-				if(rowEntity.lineType === 'BQ' && (rowEntity.subcontract.jobInfo.manualInputSCWD === 'Y' || rowEntity.subcontract.jobInfo.legacyJob === 'Y')){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in BQ Line');
-					return;
-				}
-//				SubcontractDetail.sourceType === D && SubcontractDetail.lineType !== OA
-//				[modal] "Workdone cannot be updated in "+SubcontractDetail.lineType+" Line"
-				if(rowEntity.sourceType === 'D' && rowEntity.lineType !== 'OA') {
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in '+rowEntity.lineType+' Line');
-					return;
-				}
-				
-//				jobinfo.repackagingType = 3
-//				&& SubcontractDetail.lineType in (BQ, V3, V1)
-//				&& SubcontractDetail.costRate!=0
-//				[modal] "Please update the workdone of BQ/V1/V3 lines from 'IV Update by Resouce' Window or 'IV Update by BQItem' Window."
-				if(rowEntity.subcontract.jobInfo.repackaging === 3
-					&& ['BQ', 'V3', 'V1'].indexOf(rowEntity.lineType) >=0 
-					&& rowEntity.costRate != 0) {
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please update the workdone of BQ/V1/V3 lines from \'IV Update by Resouce\' Window or \'IV Update by BQItem\' Window');
-						return;
-				}
-//				SubcontractDetail.lineType in (C1, C2, RR, RA, AP)
-//				&& SubcontractDetail.amountCumulativeWD != 0
-//				[modal] "Invalid inputed value. Cum Work Done Qty must be zero."
-				if(['C1', 'C2', 'RR', 'RA', 'AP'].indexOf(rowEntity.lineType) >= 0
-					&& rowEntity.amountCumulativeWD !== 0){
-			 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty must be zero');
-			 			return;
-		 		}
-//				SubcontractDetail.amountCumulativeWD > SubcontractDetail.quantity
-//				&& (!SubcontractDetail.subsidiaryCode.startsWith("4") && SubcontractDetail.subsidiaryCode.substring(2, 4) !== 80)
-//				&& SubcontractDetail.approved === A
-//				&& SubcontractDetail.lineType in (BQ, V3, V1)
-//				&& SubcontractDetail.costRate != 0
-//				[modal] "Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty."
-				if(rowEntity.amountCumulativeWD > rowEntity.quantity
-					&& (!rowEntity.subsidiaryCode.startWith('4') && rowEntity.subsidiaryCode.substring(2, 4) !== 80)
-					&& rowEntity.approved === 'A'
-					&& ['BQ', 'V3', 'V1'].indexOf(rowEntity.lineType) >= 0
-					&& rowEntity.costRate != 0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Invalid inputed value. Cum Work Done Qty cannot be larger than BQ Qty');
-						return;
-				}
+				//checkEditable()
 			}
         });
 		
@@ -148,11 +310,16 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 				$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
 				
-				rowEntity.currentWorkDoneAmt = rowEntity.totalAmount * rowEntity.cumWorkDoneQuantity / 100;
-				rowEntity.projectedProvision = rowEntity.totalAmount * (rowEntity.currentWorkDoneAmt - rowEntity.amountCumulativeCert) / 100;
-				rowEntity.provision = rowEntity.totalAmount * (rowEntity.cumWorkDoneQuantity - rowEntity.postedCertifiedQuantity) / 100;
-				$scope.gridOptionsIV.rows.forEach(function(row){
-					row.currIVAmount = rowEntity.costRate * rowEntity.cumWorkDoneQuantity;
+//				record.set("currentWorkDoneAmt", String.valueOf(CalculationUtil.round(totalAmount*(currWDQty/100),2)));
+//				record.set("projProvisionAmt", String.valueOf(CalculationUtil.round(totalAmount*(currWDQty-currCertQty)/100,2)));
+//				record.set("provisionAmt", String.valueOf(CalculationUtil.round(totalAmount*(currWDQty-postedCertQty)/100,2)));
+//				record.set("ivAmount", String.valueOf(CalculationUtil.round(costRate*currWDQty,2)));
+				var cumWorkDoneQuantity = rowEntity.cumWorkDoneQuantity !== undefined ? rowEntity.cumWorkDoneQuantity : 0.0;
+				rowEntity.cumWorkDoneQuantity = rowEntity.amountSubcontract / rowEntity.amountCumulativeWD;
+				rowEntity.projectedProvision = rowEntity.amountSubcontract * (rowEntity.amountCumulativeWD - rowEntity.amountCumulativeCert) / 100;
+				rowEntity.provision = rowEntity.amountSubcontract * (rowEntity.amountCumulativeWD - rowEntity.postedCertifiedQuantity) / 100;
+				$scope.gridApiIV.grid.rows.forEach(function(row){
+					row.entity.currIVAmount = rowEntity.costRate * rowEntity.cumWorkDoneQuantity;
 				})
 				
 			}

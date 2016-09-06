@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ public class HttpSessionCreatedEventListener implements ApplicationListener<Http
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		session.setMaxInactiveInterval(Integer.valueOf(securityConfig.getDefaultMaxInactiveInterval()));
 		String username = authentication != null ? authentication.getName() : " {NULL}";
+		MDC.put("username", username);
 	    logger.info("Session create:" + username + " | " + session.getId());
 	}		
 }

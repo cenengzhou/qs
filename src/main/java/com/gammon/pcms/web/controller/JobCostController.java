@@ -31,12 +31,7 @@ public class JobCostController {
 			@RequestParam(required = false) String orderNumber, 
 			@RequestParam(required = false) String orderType, 
 			@RequestParam(required = false)  String supplierNumber) throws Exception{
-//		try {
 			return jobCostService.getPORecordList(jobNumber, orderNumber, orderType, supplierNumber);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 	
 	@RequestMapping(value = "getARRecordList", method = RequestMethod.POST)
@@ -46,12 +41,7 @@ public class JobCostController {
 			@RequestParam(required = false)  String customerNumber, 
 			@RequestParam(required = false)  String documentNumber, 
 			@RequestParam(required = false)  String documentType) throws Exception{
-//		try{
 			return jobCostService.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 
 	@RequestMapping(value = "obtainAPRecordList", method = RequestMethod.POST)
@@ -63,13 +53,7 @@ public class JobCostController {
 			@RequestParam(required = false) String documentType, 
 			@RequestParam(required = false) String subledger, 
 			@RequestParam(required = false) String subledgerType) {
-//		try{
 			return jobCostService.obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-//		} catch(Exception e){
-//			e.printStackTrace();
-//			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-//			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
-//		}
 	}
 	
 	@RequestMapping(value = "getAPPaymentHistories", method = RequestMethod.POST)
@@ -79,11 +63,6 @@ public class JobCostController {
 			@RequestParam Integer supplierNumber, 
 			@RequestParam Integer documentNumber,
 			HttpServletResponse response){
-//		try{
 			return jobCostService.getAPPaymentHistories(company, documentType, supplierNumber, documentNumber);
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		return null;
 	}
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.AddendumService;
@@ -41,33 +42,21 @@ public class AddendumController {
 	@RequestMapping(value = "getLatestAddendum", method = RequestMethod.GET)
 	public Addendum getLatestAddendum(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		Addendum addendum = null;
-		try{
-			addendum = addendumService.getLatestAddendum(jobNo, subcontractNo);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendum = addendumService.getLatestAddendum(jobNo, subcontractNo);
 		return addendum;
 	}
 
 	@RequestMapping(value = "getAddendum", method = RequestMethod.GET)
 	public Addendum getAddendum(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo, @RequestParam(required = true) String addendumNo){
 		Addendum addendum = null;
-		try{
-			addendum = addendumService.getAddendum(jobNo, subcontractNo, Long.valueOf(addendumNo));
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendum = addendumService.getAddendum(jobNo, subcontractNo, Long.valueOf(addendumNo));
 		return addendum;
 	}
 
 	@RequestMapping(value = "getAddendumList", method = RequestMethod.GET)
 	public List<Addendum> getAddendumList(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		List<Addendum> addendumList = null;
-		try{
-			addendumList = addendumService.getAddendumList(jobNo, subcontractNo);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumList = addendumService.getAddendumList(jobNo, subcontractNo);
 		return addendumList;
 	}
 	
@@ -75,33 +64,21 @@ public class AddendumController {
 	public Double getTotalApprovedAddendumAmount(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo){
 		Double totalApprovedAddendumAmount = null;
-		try{
-			totalApprovedAddendumAmount = addendumService.getTotalApprovedAddendumAmount(jobNo, subcontractNo);
-		}catch(Exception exception){
-			exception.printStackTrace();
-		}
+		totalApprovedAddendumAmount = addendumService.getTotalApprovedAddendumAmount(jobNo, subcontractNo);
 		return totalApprovedAddendumAmount;
 	}
 
 	@RequestMapping(value = "getAddendumDetailHeader", method = RequestMethod.GET)
 	public AddendumDetail getAddendumDetailHeader(BigDecimal addendumDetailHeaderRef){
 		AddendumDetail addendumDetail = null;
-		try{
-			addendumDetail = addendumService.getAddendumDetailHeader(addendumDetailHeaderRef);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumDetail = addendumService.getAddendumDetailHeader(addendumDetailHeaderRef);
 		return addendumDetail;
 	}
 	
 	@RequestMapping(value = "getAddendumDetailsByHeaderRef", method = RequestMethod.GET)
 	public List<AddendumDetail> getAddendumDetailsByHeaderRef(BigDecimal addendumDetailHeaderRef){
 		List<AddendumDetail> addendumDetailList = null;
-		try{
-			addendumDetailList = addendumService.getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumDetailList = addendumService.getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
 		return addendumDetailList;
 	}
 	
@@ -110,11 +87,7 @@ public class AddendumController {
 												@RequestParam(required = true) String subcontractNo,
 												@RequestParam(required = true) String addendumNo){
 		List<AddendumDetail> addendumDetailList = null;
-		try{
-			addendumDetailList = addendumService.getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, Long.valueOf(addendumNo));
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumDetailList = addendumService.getAddendumDetailsWithoutHeaderRef(jobNo, subcontractNo, Long.valueOf(addendumNo));
 		return addendumDetailList;
 	}
 	
@@ -123,11 +96,7 @@ public class AddendumController {
 												@RequestParam(required = true) String subcontractNo, 
 												@RequestParam(required = true) String addendumNo){
 		List<AddendumDetail> addendumDetailList = null;
-		try{
-			addendumDetailList = addendumService.getAllAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo));
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumDetailList = addendumService.getAllAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo));
 		return addendumDetailList;
 	}
 	
@@ -137,13 +106,9 @@ public class AddendumController {
 												@RequestParam(required = true) String addendumNo,
 												@RequestParam(required = true) String lineType,
 												@RequestParam(required = false) Integer nextSeqNo
-												){
+												) throws NumberFormatException, DatabaseOperationException{
 		AddendumDetail addendumDetail = null;
-		try{
-			addendumDetail = addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo), lineType, nextSeqNo);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+		addendumDetail = addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, Long.valueOf(addendumNo), lineType, nextSeqNo);
 		return addendumDetail;
 	}
 	

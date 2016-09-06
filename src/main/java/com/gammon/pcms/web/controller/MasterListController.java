@@ -37,12 +37,7 @@ public class MasterListController {
 	public MasterListVendor getSubcontractor(@RequestParam(name="subcontractorNo") String subcontractorNo) throws DatabaseOperationException{
 
 		MasterListVendor masterListVendor = null;
-//		try {
-			
-			masterListVendor = masterListService.obtainVendorByVendorNo(subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		masterListVendor = masterListService.obtainVendorByVendorNo(subcontractorNo);
 		return masterListVendor;
 	}
 	
@@ -51,12 +46,7 @@ public class MasterListController {
 	public List<MasterListVendor> getSubcontractorList(@RequestParam(name="searchStr") String searchStr) throws Exception{
 
 		List<MasterListVendor> masterListVendor = null;
-//		try {
-			
-			masterListVendor = masterListService.searchVendorList(searchStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		masterListVendor = masterListService.searchVendorList(searchStr);
 		return masterListVendor;
 	}
 	
@@ -64,12 +54,7 @@ public class MasterListController {
 	public List<MasterListObject> searchObjectList(@RequestParam String searchStr) throws Exception{
 
 		List<MasterListObject> masterListObject = null;
-//		try {
-			
-			masterListObject = masterListService.searchObjectList(searchStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		masterListObject = masterListService.searchObjectList(searchStr);
 		return masterListObject;
 	}
 	
@@ -77,11 +62,7 @@ public class MasterListController {
 	public List<MasterListSubsidiary> searchSubsidiaryList(@RequestParam String searchStr) throws Exception{
 
 		List<MasterListSubsidiary> masterListSubsidiary = null;
-//		try {
-			masterListSubsidiary = masterListService.searchSubsidiaryList(searchStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		masterListSubsidiary = masterListService.searchSubsidiaryList(searchStr);
 		return masterListSubsidiary;
 	}
 	

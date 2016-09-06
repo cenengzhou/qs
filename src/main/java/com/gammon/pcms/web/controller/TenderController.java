@@ -41,12 +41,7 @@ public class TenderController {
 													@RequestParam(name="subcontractorNo") Integer subcontractorNo) throws Exception{
 
 		List<TenderDetail> tenderDetailList = null;
-//		try {
-			
-			tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		tenderDetailList = tenderService.obtainTenderDetailList(jobNo, subcontractNo, subcontractorNo);
 		return tenderDetailList;
 	}
 	
@@ -56,26 +51,17 @@ public class TenderController {
 													@RequestParam(name="subcontractorNo") Integer subcontractorNo) throws Exception{
 
 		Tender tender = null;
-//		try {
-			
-			tender = tenderService.obtainTender(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		tender = tenderService.obtainTender(jobNo, subcontractNo, subcontractorNo);
 		return tender;
 	}
 	
 	@RequestMapping(value = "getRecommendedTender", method = RequestMethod.GET)
 	public Tender getRecommendedTender(@RequestParam(name="jobNo") String jobNo, 
-										@RequestParam(name="subcontractNo") String subcontractNo){
+										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
 
 		Tender tender = null;
-		try {
-			//VendorNo: 0 is excluded 
-			tender = tenderService.obtainRecommendedTender(jobNo, subcontractNo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		//VendorNo: 0 is excluded 
+		tender = tenderService.obtainRecommendedTender(jobNo, subcontractNo);
 		return tender;
 	}
 	
@@ -84,12 +70,8 @@ public class TenderController {
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
 
 		List<Tender> tenderList = null;
-//		try {
-			//VendorNo: 0 is excluded 
-			tenderList = tenderService.obtainTenderList(jobNo, subcontractNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		//VendorNo: 0 is excluded 
+		tenderList = tenderService.obtainTenderList(jobNo, subcontractNo);
 		return tenderList;
 	}
 	
@@ -98,11 +80,7 @@ public class TenderController {
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
 
 		TenderAnalysisComparisonWrapper wrapper = null;
-//		try {
-			wrapper = tenderService.obtainTenderComparisonList(jobNo, subcontractNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		wrapper = tenderService.obtainTenderComparisonList(jobNo, subcontractNo);
 		return wrapper;
 	}
 	
@@ -113,12 +91,7 @@ public class TenderController {
 								@RequestParam(name="subcontractorNo") Integer subcontractorNo) throws Exception{
 
 		String result = "";
-//		try {
-			
-			result = tenderService.createTender(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = tenderService.createTender(jobNo, subcontractNo, subcontractorNo);
 		return result;
 	}
 	
@@ -128,11 +101,7 @@ public class TenderController {
 										@RequestParam(name="subcontractNo") String subcontractNo,
 										@RequestParam(name="subcontractorNo") Integer subcontractorNo){
 		String result = "";
-//		try {
-			result = tenderService.updateRecommendedTender(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = tenderService.updateRecommendedTender(jobNo, subcontractNo, subcontractorNo);
 		return result;
 	}
 	
@@ -148,11 +117,7 @@ public class TenderController {
 										@RequestParam(name="validate") Boolean validate,
 										@Valid @RequestBody List<TenderDetail> taDetails) throws Exception{
 		String result = "";
-//		try {
-			result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = tenderService.updateTenderAnalysisDetails(jobNo, subcontractNo, subcontractorNo, currencyCode, exchangeRate, remarks, statusChangeExecutionOfSC, taDetails, validate);
 		return result;
 	}
 	
@@ -162,11 +127,7 @@ public class TenderController {
 										@RequestParam(name="subcontractNo") String subcontractNo,
 										@RequestParam(name="subcontractorNo") Integer subcontractorNo) throws Exception{
 		String result = "";
-//		try {
-			result = tenderService.deleteTender(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		result = tenderService.deleteTender(jobNo, subcontractNo, subcontractorNo);
 		return result;
 	}
 	

@@ -546,25 +546,19 @@ public class JobCostService implements Serializable {
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public List<PORecord> getPORecordList(String jobNumber, String orderNumber, String orderType, String supplierNumber) throws Exception {
 		List<PORecord> listOfpoRecord = new ArrayList<>();
-//		if(adminService.canAccessJob(jobNumber)){
-			listOfpoRecord.addAll(jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber));
-//		}
+		listOfpoRecord.addAll(jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber));
 		return listOfpoRecord;
 	}
 	
 	public List<ARRecord> getARRecordList(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType) throws Exception {
 		List<ARRecord> resultList = null;
-//		if(adminService.canAccessJob(jobNumber)){
-			resultList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-//		}
+		resultList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
 		return resultList;
 	}
 	
 	public List<APRecord> obtainAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws AccessDeniedException{
 		List<APRecord> resultList = null;
-//		if(adminService.canAccessJob(jobNumber)) {
-			resultList = jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-//		}
+		resultList = jobCostDao.getAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
 		return resultList;
 	}
 

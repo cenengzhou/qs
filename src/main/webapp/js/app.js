@@ -917,8 +917,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [	'js/controller/iv/iv-update.js',
-               	         	'js/controller/iv/modal/iv-importmodal.js'
+               	 files: [	'js/controller/iv/iv-update.js'
                     ] 
                 });
             }]

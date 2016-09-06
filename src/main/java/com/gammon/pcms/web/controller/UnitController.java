@@ -26,11 +26,7 @@ public class UnitController {
 	@RequestMapping(value = "getAllWorkScopes", method = RequestMethod.GET)
 	public List<UDC> getAllWorkScopes() throws DatabaseOperationException{
 		List<UDC> wrapperList = new ArrayList<UDC>();
-//		try {
-			wrapperList.addAll(unitService.getAllWorkScopes());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		wrapperList.addAll(unitService.getAllWorkScopes());
 		return wrapperList;
 	}
 	
@@ -38,32 +34,18 @@ public class UnitController {
 	@RequestMapping(value = "getUnitOfMeasurementList", method = RequestMethod.GET)
 	public List<UnitOfMeasurement> getUnitOfMeasurementList() throws Exception{
 		List<UnitOfMeasurement> unitList = new ArrayList<UnitOfMeasurement>();
-//		try {
-			unitList = unitService.getUnitOfMeasurementList();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		unitList = unitService.getUnitOfMeasurementList();
 		return unitList;
 	}
 	
 	@RequestMapping(value = "getAppraisalPerformanceGroupMap", method = RequestMethod.GET)
 	public Map<String, String> getAppraisalPerformanceGroupMap(){
-//		try{
-			return unitService.getAppraisalPerformanceGroupMap();
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		return null;
+		return unitService.getAppraisalPerformanceGroupMap();
 	}
 
 	@RequestMapping(value = "getSCStatusCodeMap", method = RequestMethod.GET)
 	public Map<String, String> getSCStatusCodeMap(){
-//		try{
-			return unitService.getSCStatusCodeMap();
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		}
-//		return null;
+		return unitService.getSCStatusCodeMap();
 	}
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.service.RepackagingDetailService;
 import com.gammon.qs.service.RepackagingService;
@@ -43,12 +44,7 @@ public class RepackagingController {
 	public List<Repackaging> getRepackagingListByJobNo(@RequestParam(required = true) String jobNo) throws Exception{
 		logger.info("jobNo: "+jobNo);
 		List<Repackaging> repackagingList = null;
-//		try {
-			
-			repackagingList = repackagingService.getRepackagingListByJobNo(jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		repackagingList = repackagingService.getRepackagingListByJobNo(jobNo);
 		return repackagingList;
 	}
 	
@@ -56,11 +52,7 @@ public class RepackagingController {
 	public Repackaging getLatestRepackaging(@RequestParam(required = true) String jobNo) throws Exception{
 		logger.info("jobNo: "+jobNo);
 		Repackaging repackaging = null;
-//		try {
-			repackaging = repackagingService.getLatestRepackaging(jobNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		repackaging = repackagingService.getLatestRepackaging(jobNo);
 		return repackaging;
 	}
 	
@@ -68,12 +60,7 @@ public class RepackagingController {
 	public RepackagingPaginationWrapper<RepackagingDetailComparisonWrapper> getRepackagingDetails(@RequestParam(required = true) String repackagingID, 
 																									@RequestParam(required = true) boolean changesOnly) throws NumberFormatException, Exception{
 		RepackagingPaginationWrapper<RepackagingDetailComparisonWrapper> wrapper = null;
-//		try {
-			wrapper = repackagingDetailService.getRepackagingDetails(Long.valueOf(repackagingID), changesOnly);
-			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
+		wrapper = repackagingDetailService.getRepackagingDetails(Long.valueOf(repackagingID), changesOnly);
 		return wrapper;
 	}
 	
@@ -86,8 +73,7 @@ public class RepackagingController {
 		} catch (Exception e) {
 			result = "Repackaging cannot be created.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -101,8 +87,7 @@ public class RepackagingController {
 		} catch (Exception e) {
 			result = "Repackaging cannot be updated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -116,8 +101,7 @@ public class RepackagingController {
 		} catch (Exception e) {
 			result = "Snapshot cannot be generated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -131,8 +115,7 @@ public class RepackagingController {
 		} catch (Exception e) {
 			result = "Repackaging cannot be generated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -147,8 +130,7 @@ public class RepackagingController {
 		} catch (Exception e) {
 			result = "Repackaging cannot be generated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}

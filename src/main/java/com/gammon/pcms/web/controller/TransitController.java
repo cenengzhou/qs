@@ -81,11 +81,7 @@ public class TransitController {
 	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList,
 																HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = null;
-//		try{
-			result = transitService.saveTransitResources(jobNumber, resourcesList);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
+		result = transitService.saveTransitResources(jobNumber, resourcesList);
 		if(result != null){
 			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
 		}
@@ -97,12 +93,7 @@ public class TransitController {
 	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources,
 													HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String result = null;
-//		try{
-			result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources), request, response);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-
+		result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources), request, response);
 		return result;
 	}
 
@@ -113,12 +104,7 @@ public class TransitController {
 												@RequestParam(required = true) String matchingCode, 
 												@RequestParam(required = true) boolean newJob) throws Exception{
 		String result = null;
-//		try{
-			result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-
+		result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
 		return result;
 	}
 	

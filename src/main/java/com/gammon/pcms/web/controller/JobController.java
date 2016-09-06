@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobDates;
@@ -42,44 +43,28 @@ public class JobController {
 	@RequestMapping(value = "getJobList", method = RequestMethod.GET)
 	public List<JobInfo> getJobList(){
 		List<JobInfo> jobList = null;
-//		try{
-			jobList = jobService.getAllJobNoAndDescription();
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		jobList = jobService.getAllJobNoAndDescription();
 		return jobList;
 	}
 	
 	@RequestMapping(value = "getJobDetailList", method = RequestMethod.POST)
 	public List<JobInfo> getJobDetailList(){
 		List<JobInfo> jobList = null;
-//		try{
-			jobList = jobService.getAllJobNoAndDescription();
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		jobList = jobService.getAllJobNoAndDescription();
 		return jobList;
 	}
 
 	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
 		JobInfo job = null;
-//		try{
-			job = jobService.obtainJob(jobNo);
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		job = jobService.obtainJob(jobNo);
 		return job;
 	}
 	
 	@RequestMapping(value = "getJobDates", method = RequestMethod.GET)
 	public JobDates getJobDates(@RequestParam(name="jobNo") String jobNo) throws Exception{
 		JobDates jobDates = null;
-//		try{
-			jobDates = jobService.getJobDates(jobNo);
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		jobDates = jobService.getJobDates(jobNo);
 		return jobDates;
 	}
 	
@@ -92,8 +77,7 @@ public class JobController {
 		} catch (Exception e) {
 			result = "Job cannot be updated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}
@@ -107,8 +91,7 @@ public class JobController {
 		} catch (Exception e) {
 			result = "Job Dates cannot be updated.";
 			e.printStackTrace();
-			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
-			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());
+			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
 		return result;
 	}

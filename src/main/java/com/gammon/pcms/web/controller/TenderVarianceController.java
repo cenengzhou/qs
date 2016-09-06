@@ -28,11 +28,7 @@ public class TenderVarianceController {
 														@RequestParam(name="subcontractNo") String subcontractNo,
 														@RequestParam(name="subcontractorNo") String subcontractorNo){
 		List<TenderVariance> tenderVarianceList = null;
-//		try {
-			tenderVarianceList = tenderVarianceService.obtainTenderVarianceList(jobNo, subcontractNo, subcontractorNo);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		tenderVarianceList = tenderVarianceService.obtainTenderVarianceList(jobNo, subcontractNo, subcontractorNo);
 		return tenderVarianceList;
 	}
 	
@@ -43,11 +39,7 @@ public class TenderVarianceController {
 									@RequestParam(name="subcontractorNo") String subcontractorNo,
 									@Valid @RequestBody List<TenderVariance> tenderVarianceList) throws Exception{
 		String result = "";
-//		try {
-			result = tenderVarianceService.createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		result = tenderVarianceService.createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList);
 		return result;
 	}
 	

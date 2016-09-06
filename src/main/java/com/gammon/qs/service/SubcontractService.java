@@ -1332,7 +1332,6 @@ public class SubcontractService {
 	 * SC Detail under Payment Requisition will be updated
 	 * **/
 	public Boolean toCompleteSCAwardApproval(String jobNumber, String packageNo, String approvedOrRejected) throws Exception {
-//		adminService.canAccessJob(jobNumber);
 		logger.info("toCompleteSCAwardApproval - START");
 		Tender budgetTA = null;
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
@@ -2019,7 +2018,6 @@ public class SubcontractService {
 	 * refactored on May 15, 2013 (Cannot release resources properly)
 	 */
 	public String toCompleteSplitTerminate(String jobNumber, String packageNo, String approvedOrRejected, String splitOrTerminate) throws Exception{
-//		adminService.canAccessJob(jobNumber);
 		logger.info("Job: "+jobNumber+" - PackageNo:" +packageNo+" - Approved: "+approvedOrRejected+" - Split/Terminate: "+splitOrTerminate);
 		String message = null;
 		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
@@ -3635,10 +3633,7 @@ public class SubcontractService {
 	 * @since Jul 28, 2016 6:09:18 PM
 	 */
 	public List<Subcontract> getSubcontractList(String jobNo, boolean awardedOnly) throws DataAccessException {
-//		if (adminService.canAccessJob(jobNo))
-			return subcontractHBDao.find(jobNo, awardedOnly);
-//		else
-//			return new ArrayList<Subcontract>();
+		return subcontractHBDao.find(jobNo, awardedOnly);
 	}
 	
 	/**
@@ -3658,17 +3653,12 @@ public class SubcontractService {
 	public List<?> getSubcontractSnapshotList(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly, boolean showJobInfo) throws Exception {
 		List<?> subcontractList = new ArrayList<Subcontract>();
 		
-		String username = securityService.getCurrentUser().getUsername();
 		if (StringUtils.isNotBlank(noJob)) {
-//			if (adminService.canAccessJob(noJob)){
 				// 1. check if there is any record from in subcontract snapshot table
 				subcontractList = subcontractSnapshotDao.findByPeriod(noJob, year, month, awardedOnly);
 				// 2. if no record is found, obtain from subcontract table
 				if (CollectionUtils.isEmpty(subcontractList))
 					subcontractList = subcontractHBDao.find(noJob, awardedOnly);
-//			}
-//			else
-//				logger.info("User: " + username + " is not authorized to access Job: " + (StringUtils.isNotBlank(noJob) ? noJob : "ALL Job"));
 		}
 			
 		return subcontractList;
@@ -4226,7 +4216,7 @@ public class SubcontractService {
 		 */
 		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
 			//Access by peer systems via web service or users
-			if(webServiceConfig.getQsWsUsername().equals(username) /* TODO: peer cannot pass canAccessJob || adminService.canAccessJob(searchWrapper.getJobNumber())*/)
+			if(webServiceConfig.getQsWsUsername().equals(username) || adminService.canAccessJob(searchWrapper.getJobNumber()))
 				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
@@ -4767,9 +4757,6 @@ public class SubcontractService {
 
 	/* retrieve a list of PerformanceAppraisalWrapper object filtered by search criteria without pagination or caching - matthewatc 3/2/12 */
 	public List<PerformanceAppraisalWrapper> getPerformanceAppraisalWrapperList(String jobNumber, Integer sequenceNumber, String appraisalType, String groupCode, Integer vendorNumber, Integer subcontractNumber, String status) {
-//		if(!adminService.canAccessJob(jobNumber)){
-//			throw new AccessDeniedException("Cannot access Job:" + jobNumber);
-//		}
 		List<GetPerformanceAppraisalsResponseObj> performanceAppraisalsList;
 		GetPerformanceAppraisalsResponseListObj responseListObj;
 
@@ -4875,7 +4862,6 @@ public class SubcontractService {
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
 	public Object[] testModifySubcontractAndDetail(String jobNo, String subcontractNo) throws DatabaseOperationException{
-//		adminService.canAccessJob(jobNo);
 		Subcontract subcontract = obtainSubcontract(jobNo, subcontractNo);
 		List<SubcontractDetail> subcontractDetailList = obtainSCDetails(jobNo, subcontractNo);
 		subcontract.setDescription(subcontract.getDescription() + " |test|");
