@@ -1,12 +1,5 @@
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb pull-right">
-		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
-				Project Cost Management System</a></li>
-	</ol>
-	<!-- end breadcrumb -->
-
 	<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1>
@@ -18,7 +11,7 @@
 
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<h3 class="box-title">Before Split</h3>
+					<h4 class="box-title">Before Split</h4>
 				</div>
 
 				<div class="box-body">
@@ -27,11 +20,11 @@
 							<div
 								class="widget widget-stat widget-stat-right bg-primary text-white">
 								<div class="widget-stat-icon">
-									<i class="fa fa-bookmark-o"></i>
+									<i class="fa fa-dollar"></i>
 								</div>
 								<div class="widget-stat-info">
 									<div class="widget-stat-title">Subcontract Sum</div>
-									<div class="widget-stat-number">41,410</div>
+									<div class="widget-stat-number">{{remeasuredSubcontractSum | currency}}</div>
 								</div>
 								<div class="widget-stat-progress">
 									<div class="progress">
@@ -48,11 +41,11 @@
 							<div
 								class="widget widget-stat widget-stat-right bg-primary text-white">
 								<div class="widget-stat-icon">
-									<i class="fa fa-thumbs-o-up"></i>
+									<i class="fa fa-dollar"></i>
 								</div>
 								<div class="widget-stat-info">
 									<div class="widget-stat-title">Approved Addendum Amount</div>
-									<div class="widget-stat-number">41,410</div>
+									<div class="widget-stat-number">{{approvedVOAmount | currency}}</div>
 								</div>
 								<div class="widget-stat-progress">
 									<div class="progress">
@@ -73,7 +66,7 @@
 		<div class="col-md-6">
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<h3 class="box-title">After Split</h3>
+					<h4 class="box-title">After Split</h4>
 				</div>
 
 				<div class="box-body">
@@ -81,13 +74,13 @@
 					<div class="row">
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<div
-								class="widget widget-stat widget-stat-right bg-green-gradient text-white">
+								class="widget widget-stat widget-stat-right bg-success text-white">
 								<div class="widget-stat-icon">
-									<i class="fa fa-bookmark-o"></i>
+									<i class="fa fa-dollar"></i>
 								</div>
 								<div class="widget-stat-info">
 									<div class="widget-stat-title">Subcontract Sum</div>
-									<div class="widget-stat-number">41,410</div>
+									<div class="widget-stat-number">{{remeasuredSubcontractSumAfterSplit | currency}}</div>
 								</div>
 								<div class="widget-stat-progress">
 									<div class="progress">
@@ -102,13 +95,13 @@
 
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<div
-								class="widget widget-stat widget-stat-right bg-green-gradient text-white">
+								class="widget widget-stat widget-stat-right bg-success text-white">
 								<div class="widget-stat-icon">
-									<i class="fa fa-thumbs-o-up"></i>
+									<i class="fa fa-dollar"></i>
 								</div>
 								<div class="widget-stat-info">
 									<div class="widget-stat-title">Approved Addendum Amount</div>
-									<div class="widget-stat-number">41,410</div>
+									<div class="widget-stat-number">{{approvedVOAmountAfterSplit | currency}}</div>
 								</div>
 								<div class="widget-stat-progress">
 									<div class="progress">
@@ -132,25 +125,20 @@
 
 	<div class="col-md-12">
 
-
 		<div class="box box-primary">
-			<!-- <div class="box-header with-border">
-				<h3 class="box-title"></h3>
-			</div> -->
-
 			<div class="box-body">
 				<div class="col-md-12">
-					<div id="" ui-grid="gridOptions" ui-grid-pagination
-						ui-grid-selection ui-grid-cellnav class="grid"
-						></div>
-				</div>
+						<div id="" ui-grid="gridOptions" ui-grid-selection
+							ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit
+							ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid"></div>
+					</div>
 
 				<div class="col-md-6">
-					<a class="btn btn-primary btn-block">Update <i
+					<a class="btn btn-primary btn-block" ng-click="save()" ng-hide = "disableButtons" ng-disabled = "disableButtons">Update <i
 						class="fa fa-floppy-o"></i></a>
 				</div>
 				<div class="col-md-6">
-					<a class="btn btn-primary btn-block">Submit for Split Approval
+					<a class="btn btn-primary btn-block" ng-click="submitApproval()" ng-hide = "disableButtons" ng-disabled = "disableButtons">Submit for Split Approval
 						<i class="fa fa-floppy-o"></i>
 					</a>
 				</div>

@@ -8,11 +8,13 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getSubcontractDetailForWD:							getSubcontractDetailForWD,
     	getSubcontractDetailByID:							getSubcontractDetailByID,
     	getOtherSubcontractDetails:							getOtherSubcontractDetails,
+    	getSubcontractDetailsWithBudget:					getSubcontractDetailsWithBudget,
     	getSubcontractDetailsDashboardData:					getSubcontractDetailsDashboardData,
     	getSubcontractDashboardData:						getSubcontractDashboardData,
     	getAwardedSubcontractNos:							getAwardedSubcontractNos,
     	getUnawardedSubcontractNosUnderPaymentRequisition: 	getUnawardedSubcontractNosUnderPaymentRequisition,
-    	
+    	getSubcontractDetailTotalNewAmount:					getSubcontractDetailTotalNewAmount,
+    		
     	upateSubcontract: 									upateSubcontract,
     	upateSubcontractDates: 								upateSubcontractDates,
     	updateWDandIV:										updateWDandIV,
@@ -22,7 +24,9 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	addAddendumToSubcontractDetail:						addAddendumToSubcontractDetail,
     	updateSubcontractDetailAddendum:					updateSubcontractDetailAddendum,
     	deleteSubcontractDetailAddendum:					deleteSubcontractDetailAddendum,
-    	
+    	updateSCDetailsNewQuantity:							updateSCDetailsNewQuantity,
+    	submitSplitTerminateSC:								submitSplitTerminateSC,
+    		
     	runProvisionPostingManually:						runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
     	updateF58001FromSCPackageManually: 					updateF58001FromSCPackageManually,
@@ -142,6 +146,20 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
+    
+    function getSubcontractDetailsWithBudget(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetailsWithBudget",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     function getSubcontractDashboardData(jobNo, subcontractNo, year) {
         var request = $http({
             method: "get",
@@ -177,6 +195,20 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+     
+    function getSubcontractDetailTotalNewAmount(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetailTotalNewAmount",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
@@ -332,6 +364,16 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     }
     
     
+    function updateSCDetailsNewQuantity(subcontractDetailList) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/updateSCDetailsNewQuantity",
+            dataType: "application/json;charset=UTF-8",
+            data: subcontractDetailList
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     function submitAwardApproval(jobNo, subcontractNo) {
         var request = $http({
             method: "post",
@@ -340,6 +382,21 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
             params: {
                 jobNo: jobNo,
                 subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function submitSplitTerminateSC(jobNo, subcontractNo, splitTerminate) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/submitSplitTerminateSC",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo, 
+                splitTerminate: splitTerminate
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

@@ -7,7 +7,6 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,6 +117,18 @@ public class SubcontractController {
 	}
 	
 	
+	@RequestMapping(value = "getSubcontractDetailsWithBudget", method = RequestMethod.GET)
+	public List<SubcontractDetail> getSubcontractDetailsWithBudget(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<SubcontractDetail> scDetails = null;
+		try {
+			scDetails = subcontractService.getSubcontractDetailsWithBudget(jobNo, subcontractNo);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return scDetails;
+	}
+	
+	
 	@RequestMapping(value = "getSCDetailForAddendumUpdate", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSCDetailForAddendumUpdate(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		List<SubcontractDetail> scDetails = null;
@@ -170,6 +180,14 @@ public class SubcontractController {
 		SubcontractDetail subcontractDetail = new SubcontractDetail();
 		subcontractDetail = subcontractService.getDefaultValuesForSubcontractDetails(jobNo, subcontractNo, lineType);
 		return subcontractDetail;
+	}
+	
+	
+	
+	@RequestMapping(value = "getSubcontractDetailTotalNewAmount", method = RequestMethod.GET)
+	public List<BigDecimal> getSubcontractDetailTotalNewAmount(@RequestParam(required =true) String jobNo, 
+																@RequestParam(required =true) String subcontractNo) throws Exception{
+		return subcontractService.getSubcontractDetailTotalNewAmount(jobNo, subcontractNo);
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
@@ -270,6 +288,21 @@ public class SubcontractController {
 		return result;
 	}
 	
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateSCDetailsNewQuantity", method = RequestMethod.POST)
+	public String updateSCDetailsNewQuantity(@RequestBody List<SubcontractDetail> subcontractDetailList){
+		String result = null;
+		try {
+			result = subcontractService.updateSCDetailsNewQuantity(subcontractDetailList);
+		} catch (Exception e) {
+			result = "Subcontract Details cannot be updated.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} 
+		return result;
+	}
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "submitAwardApproval", method = RequestMethod.POST)
 	public String submitAwardApproval(@RequestParam(required =true) String jobNo, 
@@ -277,6 +310,24 @@ public class SubcontractController {
 		String result = null;
 		try {
 			result = subcontractService.submitAwardApproval(jobNo, subcontractNo);
+		} catch (Exception e) {
+			result = "Subcontract cannot be submitted.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} 
+		return result;
+	}
+	
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "submitSplitTerminateSC", method = RequestMethod.POST)
+	public String submitSplitTerminateSC(@RequestParam(required =true) String jobNo, 
+										@RequestParam(required =true) String subcontractNo,
+										@RequestParam(required =true) String splitTerminate
+										){
+		String result = null;
+		try {
+			result = subcontractService.submitSplitTerminateSC(jobNo, subcontractNo, splitTerminate);
 		} catch (Exception e) {
 			result = "Subcontract cannot be submitted.";
 			e.printStackTrace();

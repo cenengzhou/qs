@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
-import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
@@ -21,6 +20,7 @@ import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.RoundingUtil;
 
 public class SCPackageLogic {
@@ -56,7 +56,7 @@ public class SCPackageLogic {
 	}
 
 	
-	public static Subcontract updateApprovedAddendum(Subcontract scPackage, List<SubcontractDetail> scDetailsList, String approvalResult){
+	/*public static Subcontract updateApprovedAddendum(Subcontract scPackage, List<SubcontractDetail> scDetailsList, String approvalResult){
 		Double cum = new Double(0);
 		BigDecimal remeasureSum = new BigDecimal(0);
 		scPackage.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
@@ -83,11 +83,11 @@ public class SCPackageLogic {
 					scDetails.setQuantity(scDetails.getToBeApprovedQuantity());
 				remeasureSum=remeasureSum.add(BigDecimal.valueOf(scDetails.getTotalAmount()));
 			}
-			/**
+			*//**
 			 * @author koeyyeung
 			 * newQuantity should be set as BQ Quantity as initial setup
 			 * 16th Apr, 2015
-			 * **/
+			 * **//*
 			scDetails.setNewQuantity(scDetails.getQuantity());
 			scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
 		}
@@ -103,7 +103,7 @@ public class SCPackageLogic {
 			scPackage.setRetentionAmount(RoundingUtil.round(scPackage.getMaxRetentionPercentage()*scPackage.getOriginalSubcontractSum()/100.00,2));
 		}
 		return scPackage;
-	}
+	}*/
 	public static Subcontract awardSCPackage(Subcontract scPackage, List<Tender> tenderAnalysisList){
 		SubcontractDetailBQ scDetails;
 		Double scSum = 0.00;
@@ -162,6 +162,7 @@ public class SCPackageLogic {
 						 * Convert to amount based**/
 						scDetails.setAmountBudget(new BigDecimal(TADetails.getAmountBudget()));
 						scDetails.setAmountSubcontract(new BigDecimal(TADetails.getAmountSubcontract()));
+						scDetails.setAmountSubcontractNew(new BigDecimal(TADetails.getAmountSubcontract()));
 					}
 				} catch (DataAccessException e) {
 					e.printStackTrace();
@@ -197,19 +198,19 @@ public class SCPackageLogic {
 				continue;
 			
 			if (scDetail instanceof SubcontractDetailBQ){
-				// if Qty <> newQty and either it is BQ/B1 or has budget(cost Rate >0)
 				if (scDetail.getCostRate()!=null && 
 					((!(scDetail instanceof SubcontractDetailVO)) || Math.abs(scDetail.getCostRate())>0) && 
 					!scDetail.getNewQuantity().equals(scDetail.getQuantity())){
 					((SubcontractDetailBQ)scDetail).setQuantity(scDetail.getNewQuantity());
+					((SubcontractDetailBQ)scDetail).setAmountSubcontract(scDetail.getAmountSubcontractNew());
 					((SubcontractDetailBQ)scDetail).setToBeApprovedQuantity(scDetail.getNewQuantity());
 				}
 				if (scDetail instanceof SubcontractDetailVO){
 					if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
-						approvedVO = approvedVO + (scDetail.getQuantity()*scDetail.getScRate());
+						approvedVO = approvedVO + CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue(), 2);
 				}
 				else
-					scSum = scSum + (scDetail.getQuantity()*scDetail.getScRate());
+					scSum = scSum + CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue(), 2);
 
 			}
 		}

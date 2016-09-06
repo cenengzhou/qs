@@ -534,7 +534,7 @@ public class TransitService implements Serializable {
 		warningList = new ArrayList<String>();
 		
 		transitResourceDao.deleteResourcesByHeader(header);
-		transitBqDao.deleteTransitBqBill80ByHeader(header);
+		transitBqDao.deleteTransitBqBill80ByHeader(header);//Reserved for Genuine Markup
 		List<TransitBpi> transitBQList = transitBqDao.obtainTransitBQByTransitHeader(header);
 		Map<String, TransitBpi> bqItemMap = new HashMap<String, TransitBpi>(transitBQList.size());
 		String matchingType = header.getMatchingCode();

@@ -310,6 +310,11 @@ public class SCDetailsLogic {
 	public void toTerminate(List<SubcontractDetail> scDetailsList){
 		for(SubcontractDetail scDetails: scDetailsList){
 			scDetails.setNewQuantity(scDetails.getCumWorkDoneQuantity());
+			/**
+			 * convert to amount based
+			 * @author koeyyeung
+			 * added on 2 Sep, 2016**/
+			scDetails.setAmountSubcontractNew(scDetails.getAmountCumulativeWD());
 		}
 	}
 }

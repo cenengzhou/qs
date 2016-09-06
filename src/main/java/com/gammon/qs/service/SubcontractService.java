@@ -101,7 +101,6 @@ import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrap
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
 import com.gammon.qs.wrapper.sclist.ScListView;
-import com.gammon.qs.wrapper.splitTerminateSC.UpdateSCDetailNewQuantityWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
 import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
@@ -1556,9 +1555,9 @@ public class SubcontractService {
 	 * @author tikywong
 	 * refactored on November 08, 2012
 	 */
-	public String submitSplitTerminateSC(String jobNumber, Integer packageNumber, String splitTerminate, String userID) throws Exception {		
+	public String submitSplitTerminateSC(String jobNumber, String packageNumber, String splitTerminate) throws Exception {
 		String message = null;
-		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNumber.toString());
+		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNumber);
 		if(scPackage==null)
 			return "Job: "+jobNumber+" SCPackage: "+packageNumber+" doesn't exist. Split/Terminate subcontract approval cannot be submitted.";
 
@@ -1588,8 +1587,9 @@ public class SubcontractService {
 
 			//Validation 3: make sure calculation goes with new quantity 
 			if(scDetail.getNewQuantity()==null){
-				if(splitTerminate.equalsIgnoreCase(Subcontract.SPLIT))
+				if(splitTerminate.equalsIgnoreCase(Subcontract.SPLIT)){
 					scDetail.setNewQuantity(scDetail.getQuantity());
+				}
 				else{
 					String lineType = scDetail.getLineType();
 					Integer resourceNo = scDetail.getResourceNo();
@@ -1644,7 +1644,7 @@ public class SubcontractService {
 			approvalType = "VB";
 		String approvalSubType = scPackage.getApprovalRoute();
 
-		message = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNumber.toString(), vendorNo, vendorName, approvalType, approvalSubType, 0.00, currencyCode, userID);
+		message = apWebServiceConnectionDao.createApprovalRoute(company, jobNumber, packageNumber, vendorNo, vendorName, approvalType, approvalSubType, 0.00, currencyCode, securityService.getCurrentUser().getUsername());
 
 		if (message==null || "".equals(message.trim())){
 			logger.info("Job: "+jobNumber+" SCPackage: "+packageNumber+" has submitted the Split/Terminate Subcontract Approval successfully.");
@@ -2022,8 +2022,8 @@ public class SubcontractService {
 		String message = null;
 		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
 
-		if("2".equals(job.getRepackagingType())||"3".equals(job.getRepackagingType()))
-			return toCompleteSplitTerminateMethodTwoOrMethodThree(job, packageNo, approvedOrRejected, splitOrTerminate);
+		/*if("2".equals(job.getRepackagingType())||"3".equals(job.getRepackagingType()))
+			return toCompleteSplitTerminateMethodTwoOrMethodThree(job, packageNo, approvedOrRejected, splitOrTerminate);*/
 
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		//Excluded Inactive (deleted) scDetails
@@ -2126,7 +2126,7 @@ public class SubcontractService {
 			for (SubcontractDetail scDetail: scDetailBQList){
 				if(scDetail.getCostRate()==0)
 					continue;
-				double scDetailNewCostAmount = scDetail.getCostRate()* scDetail.getNewQuantity();
+				double scDetailNewCostAmount = CalculationUtil.round(scDetail.getAmountSubcontractNew().doubleValue(), 2);
 
 				//Group the amounts with the same object and subsidiary code
 				logger.info("SCDetails Object Code: "+scDetail.getObjectCode()+" Subsidiary Code: "+scDetail.getSubsidiaryCode()+" Last Object Code: "+lastObjCode+" Last Subidiary Code: "+lastSubsidCode);
@@ -2687,28 +2687,24 @@ public class SubcontractService {
 	 * @author tikywong
 	 * created on November 06, 2012
 	 */
-	public String updateSCDetailsNewQuantity(List<UpdateSCDetailNewQuantityWrapper> updateSCDetailNewQuantityWrappers) throws DatabaseOperationException {
+	public String updateSCDetailsNewQuantity(List<SubcontractDetail> subcontractDetailList) throws DatabaseOperationException {
 		String message = null;
-
+		
 		List<SubcontractDetail> toBeUpdatedscDetails = new ArrayList<SubcontractDetail>();
-		for(UpdateSCDetailNewQuantityWrapper scDetailWrapper:updateSCDetailNewQuantityWrappers){
-			if(scDetailWrapper==null || scDetailWrapper.getId()==null){
-				message = 	"Failed to update SCDetail's New Quantity. Error:" +
-				" UpdateSCDetailNewQuantityWrapper is null? "+(scDetailWrapper==null)+
-				" SCDetail id is null? "+(scDetailWrapper.getId()==null);
-				logger.info(message);
-				break;
-			}
+		for(SubcontractDetail scDetail: subcontractDetailList){
+			if(scDetail.getId()!=null){
+				SubcontractDetail scDetailInDB = subcontractDetailHBDao.get(scDetail.getId());
+				if(scDetailInDB==null){
+					message = "SCDetail with id: "+scDetail.getId()+" doesn't exist.";
+					logger.info(message);
+					break;
+				}
 
-			SubcontractDetail scDetailInDB = subcontractDetailHBDao.get(scDetailWrapper.getId());
-			if(scDetailInDB==null){
-				message = "SCDetail with id: "+scDetailWrapper.getId()+" doesn't exist.";
-				logger.info(message);
-				break;
+				scDetailInDB.setNewQuantity(scDetail.getNewQuantity());
+				scDetailInDB.setAmountSubcontractNew(scDetail.getAmountSubcontractNew());
+				toBeUpdatedscDetails.add(scDetailInDB);
 			}
-
-			scDetailInDB.setNewQuantity(scDetailWrapper.getNewQuantity());
-			toBeUpdatedscDetails.add(scDetailInDB);
+			
 		}
 
 		subcontractDetailHBDao.updateSCDetails(toBeUpdatedscDetails);
@@ -3127,6 +3123,14 @@ public class SubcontractService {
 			scDetails.setRemark(taDetails.getRemark());
 			scDetails.setApproved(approvalStatus);
 			scDetails.setNewQuantity(taDetails.getQuantity());
+			/**
+			 * @author koeyyeung
+			 * created on 12 July, 2016
+			 * Convert to amount based**/
+			scDetails.setAmountBudget(new BigDecimal(taDetails.getAmountBudget()));
+			scDetails.setAmountSubcontract(new BigDecimal(taDetails.getAmountSubcontract()));
+			scDetails.setAmountSubcontractNew(new BigDecimal(taDetails.getAmountSubcontract()));
+			
 			scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
 			scDetails.setTenderAnalysisDetail_ID(taDetails.getId());
 			//scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
@@ -3249,7 +3253,6 @@ public class SubcontractService {
 	/**
 	 * @author koeyyeung
 	 * created on 8 Aug, 2016
-	 * @throws DatabaseOperationException 
 	 * **/
 	public List<SubcontractDetail> getSCDetailForAddendumUpdate(String jobNo, String subcontractNo) {
 		return subcontractDetailHBDao.getSCDetailForAddendumUpdate(jobNo, subcontractNo);
@@ -3258,7 +3261,7 @@ public class SubcontractService {
 	/**
 	 * @author koeyyeung
 	 * created on 21 Jul, 2016
-	 * @throws DatabaseOperationException 
+	 * @throws DataAccessException 
 	 * **/
 	public List<SubcontractDetail> getSubcontractDetailForWD(String jobNo, String subcontractNo) throws DataAccessException {
 		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSubcontractDetailsForWD(jobNo, subcontractNo);
@@ -3268,10 +3271,21 @@ public class SubcontractService {
 	/**
 	 * @author koeyyeung
 	 * created on 10 Aug, 2016
-	 * @throws DatabaseOperationException 
+	 * @throws DataAccessException 
 	 * **/
 	public List<SubcontractDetail> getOtherSubcontractDetails(String jobNo, String subcontractNo) throws DataAccessException {
 		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getOtherSubcontractDetails(jobNo, subcontractNo);
+		return scDetailList;
+	}
+	
+	
+	/**
+	 * @author koeyyeung
+	 * created on 01 Sep, 2016
+	 * @throws DataAccessException 
+	 * **/
+	public List<SubcontractDetail> getSubcontractDetailsWithBudget(String jobNo, String subcontractNo) throws DataAccessException {
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSubcontractDetailsWithBudget(jobNo, subcontractNo);
 		return scDetailList;
 	}
 	
@@ -3432,6 +3446,33 @@ public class SubcontractService {
 		}
 		return scDetailsDashboard;
 	}
+	
+	/**
+	 * get New Subcontract Amount for Split/Terminate
+	 * @author koeyyeung
+	 * created on 2 Sep, 2016**/
+	public List<BigDecimal>  getSubcontractDetailTotalNewAmount(String jobNo, String subcontractNo){
+		List<BigDecimal> newAmountSubcontractList = new ArrayList<BigDecimal>();
+		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSubcontractDetailsWithBudget(jobNo, subcontractNo);
+		
+		BigDecimal newSubcontractSum = new BigDecimal(0);
+		BigDecimal newApprovedVO = new BigDecimal(0);
+		
+		for(SubcontractDetail scDetail: scDetailList){
+			if (scDetail instanceof SubcontractDetailVO){
+				if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
+					newApprovedVO = newApprovedVO.add(scDetail.getAmountSubcontract());
+			}
+			else if (scDetail instanceof SubcontractDetailBQ)
+				newSubcontractSum = newSubcontractSum.add(scDetail.getAmountSubcontract());
+
+		}
+		newAmountSubcontractList.add(newSubcontractSum);
+		newAmountSubcontractList.add(newApprovedVO);
+		
+		return newAmountSubcontractList;
+	}
+	
 	
 	/**
 	 * @author tikywong
@@ -4448,6 +4489,11 @@ public class SubcontractService {
 	}
 
 
+	/**
+	 * Add addendum  (without approval) : Ap, C1, MS, OA, RA, RR (C2 is generated by D2, L2)
+	 * @author koeyyeung
+	 * created on 1 Aug, 2016
+	 * **/
 	public String addAddendumToSubcontractDetail(String jobNo, String subcontractNo, SubcontractDetail subcontractDetail) throws Exception {
 		String error = null;
 		try {
@@ -4519,13 +4565,17 @@ public class SubcontractService {
 		detail.setQuantity(subcontractDetail.getQuantity());
 
 		detail.setScRate(subcontractDetail.getScRate());
+		
+		detail.setAmountBudget(new BigDecimal(0));
 		detail.setAmountSubcontract(new BigDecimal(0));
+		detail.setAmountSubcontractNew(new BigDecimal(0));
 		detail.setRemark(subcontractDetail.getRemark());
 
 		detail.setSequenceNo(sequenceNo);
 		detail.setBillItem(SCDetailsLogic.generateBillItem(detail.getLineType(), sequenceNo));
 
 		detail.setNewQuantity(0.0);
+		
 		detail.setResourceNo(new Integer(0));
 		detail.setApproved(SubcontractDetail.APPROVED);
 

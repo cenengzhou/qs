@@ -897,4 +897,29 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<SubcontractDetail> getSubcontractDetailsWithBudget(String jobNo, String subcontractNo) throws DataAccessException{
+		List<String> lineTypeList = new ArrayList<String>();
+		lineTypeList.add("BQ");
+		lineTypeList.add("V1");
+		lineTypeList.add("V3");
+		List<SubcontractDetail> resultList;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
+
+		criteria.add(Restrictions.eq("jobNo",jobNo));
+
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
+		criteria.add(Restrictions.ne("costRate", 0.0));
+
+		criteria.add(Restrictions.in("lineType", lineTypeList));
+		
+		criteria.addOrder(Order.asc("lineType"));
+	    
+		resultList = criteria.list();
+		return resultList;
+
+	}
+	
 }

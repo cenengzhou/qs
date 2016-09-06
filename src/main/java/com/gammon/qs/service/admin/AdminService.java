@@ -110,7 +110,7 @@ public class AdminService {
 			return canAccessJob(user, noJob);
 		} else {
 			//bypass checking for ws provider and quartz
-			logger.log(Level.INFO, "bypass canAccessJob checking for user:" + user.getUsername());
+			logger.log(Level.INFO, "bypass canAccessJob checking: Called by web service / quartz scheduler / User is null.");
 			return true;
 		}
 	}
