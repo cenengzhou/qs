@@ -19,9 +19,12 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var MSG_NOCHANGE = 'Cumulative IV Amount and IV Movement are same as row record';
 	var MSG_WRONG_CURRIVAMOUNT = 'Cumulative IV Amount not equal to IV Movement + Posted IV Amount. ';
 	var MSG_WRONG_IVMOVEMENT = 'IV Movement not equal to Cumulative IV Amount - Posted IV Amount. ';
+	var MSG_IMPORTED = 'Record imported into the grid'
+	
 	var STATUS_IGNORED = 'Ignored';
 	var STATUS_IMPORTED = 'Imported';
 	var STATUS_NOCHANGE = 'No Change';
+	
     $scope.importData = function(grid, newObjects){
     	var importArray = [];
     	$scope.statusArray = [];
@@ -56,46 +59,45 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     }
     
     function updateRow(row, importObj, statusObj){
-    	if(row.entity.amountBudget === 0) {
+    	if(validateAmountBudgetEqZero(row.entity)) {
     		statusObj.message = MSG_ZERO_AMOUNT;
     		statusObj.importStatus = STATUS_IGNORED;
     		return;
     	}
     	
-    	if(row.entity.packageNo && row.entity.objectCode.indexOf('14') >= 0 && 
-    			(awardedSubcontractNos.indexOf(row.entity.packageNo) >= 0 || uneditableUnawardedSubcontractNos.indexOf(row.entity.packageNo) >= 0)){
+    	if(validateSubcontractNos(row.entity)){
     		statusObj.message = MSG_UPDATE_SUBCONTRACT_DETAILS;
     		statusObj.importStatus = STATUS_IGNORED;
     		return;
     	}
     	
-    	if(parseFloat(importObj.currIVAmount) === row.entity.currIVAmount && parseFloat(importObj.ivMovement) === row.entity.ivMovement){
+    	if(validateSameFloatValue(importObj.currIVAmount, row.entity.currIVAmount) && validateSameFloatValue(importObj.ivMovement, row.entity.ivMovement)){
     		statusObj.message = MSG_NOCHANGE;
     		statusObj.importStatus = STATUS_NOCHANGE;
     		return;
     	} else {
-    		if(parseFloat(importObj.currIVAmount) > row.entity.amountBudget){
+    		if(validateGreaterThenBudget(importObj, row.entity)){
         		statusObj.message = MSG_GREATER_THEN_BUDGET;
         		statusObj.importStatus = STATUS_IGNORED;
         		return; 			
     		} 
 
-    		if(parseFloat(importObj.currIVAmount) !== parseFloat(importObj.ivMovement) + row.entity.postedIVAmount) {
+    		if(validateWrongIVAmount(importObj, row.entity)) {
         		statusObj.message = MSG_WRONG_CURRIVAMOUNT;
         		statusObj.importStatus = STATUS_IGNORED;
         		return
     		}
     		
-    		if(parseFloat(importObj.ivMovement) !== parseFloat(importObj.currIVAmount) - row.entity.postedIVAmount){
+    		if(validateWrongIVMovement(importObj, row.entity)){
     			statusObj.message = MSG_WRONG_IVMOVEMENT;
     			statusObj.importStatus = STATUS_IGNORED;
     			return
     		}
     	}
     	
-    	row.entity.currIVAmount = importObj.currIVAmount;
-    	row.entity.ivMovement = importObj.ivMovement;
-    	statusObj.message = STATUS_IMPORTED;
+    	row.entity.currIVAmount = roundUtil.round(importObj.currIVAmount, 2);
+    	row.entity.ivMovement = roundUtil.round(importObj.ivMovement, 2);
+    	statusObj.message = MSG_IMPORTED;
     	statusObj.importStatus = STATUS_IMPORTED;
 		$scope.gridApi.rowEdit.setRowsDirty( [row.entity]);
 		return;
@@ -111,151 +113,74 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		obj.rate + '@');
     }
     
+    function parseType(type, value){
+    	switch(type){
+    		case 'String':
+    			return value ? String(value) : null;
+    			break;
+    		case 'Float':
+    			return parseFloat(value);
+    			break;
+    		case 'Boolean':
+    			return value.toLowerCase() === 'true' ? true : false;
+    			break;
+    		default:
+    			return value;
+    	}  
+      }
+      
 	$scope.readCsv = function(fileObject){
 		$scope.gridApi.importer.importFile( fileObject );
 	}
-	
-	$scope.readXls = function (workbook) {
-		var headerNames = XLSX.utils.sheet_to_json( workbook.Sheets[workbook.SheetNames[0]], { header: 1 })[0];
-		var sheetObjects = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-		var gridHeaders = uiGridImporterService.processHeaders($scope.gridApi.grid, headerNames);
-		var typeArray = ['String','String','String','String','String','Float','Float','Float','Float','Float','Float','Boolean','Boolean'];
-		var importArray  = sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects);
-        var newObjects = [];
-        var newObject;
-		importArray.forEach(  function( value, index ) {
-            newObject = uiGridImporterService.newObject( $scope.gridApi.grid );
-            angular.extend( newObject, value );
-            newObject = $scope.gridApi.grid.options.importerObjectCallback( $scope.gridApi.grid, newObject );
-            newObjects.push( newObject );
-          });
-
-		uiGridImporterService.addObjects( $scope.gridApi.grid, newObjects );
-      }
-
-  $scope.error = function (e) {
-    console.log(e);
-  }
-  
-  function sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects){
-	  var newObjects  = [];
-	  sheetObjects.forEach(function(so){
-			var obj = {};
-			for(var i = 0; i< headerNames.length; i++){
-				obj[gridHeaders[i]] = parseType(typeArray[i],so[headerNames[i]]);
-			}
-			newObjects.push(obj);
-	  })
-	  return newObjects;		
-  }
-  
-  function parseType(type, value){
-	switch(type){
-		case 'String':
-			return value ? String(value) : null;
-			break;
-		case 'Float':
-			return parseFloat(value);
-			break;
-		case 'Boolean':
-			return value.toLowerCase() === 'true' ? true : false;
-			break;
-		default:
-			return value;
-	}  
-  }
-  
-  function to_json(workbook) {
-		var result = {};
-		workbook.SheetNames.forEach(function(sheetName) {
-			var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-			if(roa.length > 0){
-				result[sheetName] = roa;
-			}
-		});
-		return result;
-	}
-
-	uiGridValidateService.setValidator('validatCurrIVAmount',
-		    function(argument) {
-		      return function(newValue, oldValue, rowEntity, colDef) {
-		        if (!newValue) {
-		          return true; 
-		        } else {
-		        	if(rowEntity.currIVAmount > rowEntity.amountBudget){
-						return false;
-					}else{
-						return true;
-					}
-		        }
-		      };
-		    },
-		    function(argument) {
-		      return MSG_GREATER_THEN_BUDGET;
-		    }
-	  );
-
-	$scope.saveRow = function( rowEntity ) {
-        var promise = $q.defer();
-        $scope.gridApi.rowEdit.setSavePromise( rowEntity, promise.promise );
-
-          if(rowEntity.amountBudget == 0){
-        	  promise.reject();
-			}
-			if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0 && rowEntity.objectCode.indexOf("14") >= 0){
-				if(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0){
-					promise.reject();
-					return;
-				}
-				else if(uneditableUnawardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0){
-					promise.reject();
-					return;
-				}
-			}
-			var cumIVAmount = roundUtil.round(rowEntity.ivMovement + rowEntity.postedIVAmount, 2); 
-			if(rowEntity.currIVAmount > rowEntity.amountBudget){
-				uiGridValidateService.setInvalid(rowEntity, $scope.gridApi.grid.columns[9].colDef);
-				uiGridValidateService.setError(rowEntity, $scope.gridApi.grid.columns[9].colDef, 'validatCurrIVAmount');
-					promise.resolve();
-					return;
-				}else{
-//					rowEntity.currIVAmount  = roundUtil.round(rowEntity.currIVAmount, 2);
-//					rowEntity.ivMovement = roundUtil.round(rowEntity.currIVAmount - rowEntity.postedIVAmount, 2);
-					uiGridValidateService.setValid(rowEntity, $scope.gridApi.grid.columns[9].colDef);
-
-			}
-			
-				
-//				if(cumIVAmount > rowEntity.amountBudget){
-//					promise.reject();
-//					return;
-//				}else{
-//					rowEntity.ivMovement = roundUtil.round(rowEntity.ivMovement, 2);
-//					rowEntity.currIVAmount = cumIVAmount;
-//				}
-				promise.resolve();
-				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
-      };
-	
-	$scope.gridOptions = {
+//	
+//	$scope.readXls = function (workbook) {
+//		var headerNames = XLSX.utils.sheet_to_json( workbook.Sheets[workbook.SheetNames[0]], { header: 1 })[0];
+//		var sheetObjects = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+//		var gridHeaders = uiGridImporterService.processHeaders($scope.gridApi.grid, headerNames);
+//		var typeArray = ['String','String','String','String','String','Float','Float','Float','Float','Float','Float','Boolean','Boolean'];
+//		var importArray  = sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects);
+//        var newObjects = [];
+//        var newObject;
+//		importArray.forEach(  function( value, index ) {
+//            newObject = uiGridImporterService.newObject( $scope.gridApi.grid );
+//            angular.extend( newObject, value );
+//            newObject = $scope.gridApi.grid.options.importerObjectCallback( $scope.gridApi.grid, newObject );
+//            newObjects.push( newObject );
+//          });
+//
+//		uiGridImporterService.addObjects( $scope.gridApi.grid, newObjects );
+//      }
+//
+//  $scope.error = function (e) {
+//    console.log(e);
+//  }
+//  
+//  function sheetToGridHeader(headerNames, gridHeaders, typeArray, sheetObjects){
+//	  var newObjects  = [];
+//	  sheetObjects.forEach(function(so){
+//			var obj = {};
+//			for(var i = 0; i< headerNames.length; i++){
+//				obj[gridHeaders[i]] = parseType(typeArray[i],so[headerNames[i]]);
+//			}
+//			newObjects.push(obj);
+//	  })
+//	  return newObjects;		
+//  }
+//  
+	$scope.importAction = null;
+    $scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableRowSelection: true,
 			enableSelectAll: true,
-			//enableFullRowSelection: true,
-			//multiSelect: true,
-			//showGridFooter : true,
 			showColumnFooter : true,
-			//fastWatch : true,
-			importerShowMenu: false,
+			importerShowMenu: true,
 			importerDataAddCallback: $scope.importData,
 			enableCellEdit : true,
 			enableCellEditOnFocus : true,
 			rowEditWaitInterval :-1,
-			/*paginationPageSizes: [50],
-			paginationPageSize: 50,
-*/
+			exporterMenuPdf: false,
 			columnDefs: [
 			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false, width:80},
 			             { field: 'objectCode', displayName: 'Object Code',  enableCellEdit: false , width:80},
@@ -269,7 +194,6 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	            		 {field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableFiltering: false,
 	            			cellClass: 'text-right', cellFilter: 'number:2'},
             			 {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
-	            				/* validators: {required: true, validatCurrIVAmount:'currIVAmount'}, cellTemplate: 'ui-grid/cellTitleValidator' , */
             				 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;" ng-class="{invalid:grid.validate.isInvalid(row.entity,col.colDef)}" \
             					 title={{grid.validate.getTitleFormattedErrors(row.entity,col.colDef)}}>{{COL_FIELD | number:2}}</div>',
             				 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
@@ -299,17 +223,47 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 						 ]
 	};
 
+    function validateAmountBudgetEqZero(rowEntity){
+    	return rowEntity.amountBudget === 0;
+    }
 
+    function validateSubcontractNos(rowEntity){
+    	return rowEntity.packageNo && rowEntity.objectCode.indexOf('14') >= 0 && 
+        			(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0 || uneditableUnawardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0);
+    }
+    
+    function validateSameFloatValue(value1, value2){
+    	return parseFloat(value1) === parseFloat(value2);
+    }
+    
+    function validateGreaterThenBudget(newObj, currentObj){
+    	if(parseFloat(currentObj.amountBudget) < parseFloat(newObj.currIVAmount)){
+    		return true;
+    	}
+    	if(parseFloat(currentObj.amountBudget) < (parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount))){
+    		return true;
+    	}
+    	return false;
+    }
+    
+    function validateWrongIVAmount(newObj, currentObj){
+    	return parseFloat(newObj.currIVAmount) !== parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount);
+    }
+
+    function validateWrongIVMovement(newObj, currentObj){
+    	return parseFloat(newObj.ivMovement) !== parseFloat(newObj.currIVAmount) - parseFloat(currentObj.postedIVAmount);
+    }
+    
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
-
+		$scope.importAction = $scope.gridApi.importer.importFile;
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(rowEntity.amountBudget == 0){
+			if(validateAmountBudgetEqZero(rowEntity)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_ZERO_AMOUNT);
 				return;
 			}
-			if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0 && rowEntity.objectCode.indexOf("14") >= 0){
+			if(validateSubcontractNos(rowEntity)){
 				if(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_UPDATE_SUBCONTRACT_DETAILS);
 					return;
@@ -322,28 +276,28 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		});
 	
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(colDef.name == "currIVAmount"){
-				if(rowEntity.currIVAmount > rowEntity.amountBudget){
-					rowEntity.currIVAmount = oldValue;
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
-					return;
-				}else{
-					rowEntity.currIVAmount  = roundUtil.round(newValue, 2);
-					rowEntity.ivMovement = roundUtil.round(rowEntity.currIVAmount - rowEntity.postedIVAmount, 2);
+			if(!validateSameFloatValue(newValue, oldValue)){
+				if(colDef.name == "currIVAmount"){
+					if(validateGreaterThenBudget(rowEntity, rowEntity)){
+						rowEntity.currIVAmount = oldValue;
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
+						return;
+					}else{
+						rowEntity.currIVAmount  = roundUtil.round(newValue, 2);
+						rowEntity.ivMovement = roundUtil.round(rowEntity.currIVAmount - rowEntity.postedIVAmount, 2);
+					}
 				}
-			}
-			else if(colDef.name == "ivMovement"){
-				var cumIVAmount = roundUtil.round(parseFloat(rowEntity.ivMovement) + parseFloat(rowEntity.postedIVAmount), 2); 
-				if(cumIVAmount > rowEntity.amountBudget){
-					rowEntity.ivMovement = oldValue;
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
-					return;
-				}else{
-					rowEntity.ivMovement = roundUtil.round(newValue, 2);
-					rowEntity.currIVAmount = cumIVAmount;
+				else if(colDef.name == "ivMovement"){
+					if(validateGreaterThenBudget(rowEntity, rowEntity)){
+						rowEntity.ivMovement = oldValue;
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
+						return;
+					}else{
+						var cumIVAmount = roundUtil.round(parseFloat(rowEntity.ivMovement) + parseFloat(rowEntity.postedIVAmount), 2); 
+						rowEntity.ivMovement = roundUtil.round(newValue, 2);
+						rowEntity.currIVAmount = cumIVAmount;
+					}
 				}
-			}
-			if(newValue !== oldValue){
 				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 				$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
 			}

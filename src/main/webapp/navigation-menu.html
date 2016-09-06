@@ -1,14 +1,21 @@
 <div ng-controller="NavMenuCtrl">
 		<!-- begin #header -->
-		<div id="header" class="header navbar navbar-primary navbar-fixed-top">
+		<div id="header" class="header navbar navbar-fixed-top" ng-class="{'navbar-primary': env !== 'DEV', 'navbar-inverse': env === 'DEV'}">
 			<!-- begin container-fluid -->
 			<div class="container-fluid">
 				<!-- begin mobile sidebar expand / collapse button -->
 				<div class="navbar-header">
 					<a ui-sref="job.dashboard" class="navbar-brand" ng-click="activeMenu = ''">
+						<div ng-if="env != 'PRO'" style="position:absolute; 
+						text-align:right; 
+						top:18px;bottom:15px;
+						left:18px;right:15px;
+						width:160px;height:35px;
+						border: 0px solid white;
+						font-size: 10px;"
+						class="text-white">{{env}}</div>
 						<img src="image/gammon.png" class="logo"  style="width: 128px"/>
 					</a>
-					
 					<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
