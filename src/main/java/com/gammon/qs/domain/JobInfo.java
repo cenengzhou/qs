@@ -551,7 +551,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("expectedPCCDate")
 	@Column(name = "expectedPCCDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getExpectedPCCDate() {
 		return expectedPCCDate;
 	}
@@ -562,7 +562,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("actualPCCDate")
 	@Column(name = "actualPCCDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getActualPCCDate() {
 		return actualPCCDate;
 	}
@@ -573,7 +573,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("expectedMakingGoodDate")
 	@Column(name = "expectedMakingGoodDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getExpectedMakingGoodDate() {
 		return expectedMakingGoodDate;
 	}
@@ -584,7 +584,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("actualMakingGoodDate")
 	@Column(name = "actualMakingGoodDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getActualMakingGoodDate() {
 		return actualMakingGoodDate;
 	}
@@ -605,7 +605,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("defectListIssuedDate")
 	@Column(name = "defectListIssuedDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getDefectListIssuedDate() {
 		return defectListIssuedDate;
 	}
@@ -616,7 +616,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("financialEndDate")
 	@Column(name = "financialEndDate")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getFinancialEndDate() {
 		return financialEndDate;
 	}
@@ -627,7 +627,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@JsonProperty("dateFinalACSettlement")
 	@Column(name = "dateFinalACSettlement")
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getDateFinalACSettlement() {
 		return dateFinalACSettlement;
 	}

@@ -58,7 +58,7 @@ public abstract class BasePersistedAuditObject implements Serializable {
 
 	@CreatedDate
 	@Column(name = "CREATED_DATE", updatable = false, nullable = false)
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -79,7 +79,7 @@ public abstract class BasePersistedAuditObject implements Serializable {
 
 	@LastModifiedDate
 	@Column(name = "LAST_MODIFIED_DATE", nullable = true)
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getLastModifiedDate() {
 		return lastModifiedDate;
 	}

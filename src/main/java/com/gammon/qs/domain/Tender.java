@@ -171,7 +171,7 @@ public class Tender extends BasePersistedObject{
 		this.usernamePrepared = usernamePrepared;
 	}
 
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "DATE_PREPARED")
 	public Date getDatePrepared() {
 		return datePrepared;

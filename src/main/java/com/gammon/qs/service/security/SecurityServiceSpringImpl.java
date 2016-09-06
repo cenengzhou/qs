@@ -1,5 +1,6 @@
 package com.gammon.qs.service.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,9 +8,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import com.gammon.pcms.application.User;
+import com.gammon.pcms.config.WebServiceConfig;
 @Component
 public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<String> {
 
+	@Autowired
+	private WebServiceConfig webServiceConfig;
+	
 	public String getCurrentRemoteAddress() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && !authentication.getPrincipal().equals("anonymousUser")) {
@@ -31,6 +36,10 @@ public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<
 
 	@Override
 	public String getCurrentAuditor() {
-		return getCurrentUser().getUsername();
+		User user = getCurrentUser();
+		if(user != null){
+			return getCurrentUser().getUsername();
+		}
+		return webServiceConfig.getApWsUsername();
 	}
 }

@@ -315,7 +315,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.amtSubcontractRevisedTba = amtSubcontractRevisedTba;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_SUBMISSION",
 			length = 7)
 	public Date getDateSubmission() {
@@ -326,7 +326,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 		this.dateSubmission = dateSubmission;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_APPROVAL",
 			length = 7)
 	public Date getDateApproval() {

@@ -31,7 +31,7 @@ public class PaymentDueDateAndValidationResponseWrapper implements Serializable 
 		this.isvalid = false;
 	}
 	
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	public Date getDueDate() {
 		return dueDate;
 	}

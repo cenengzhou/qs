@@ -109,7 +109,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 		this.mainCertNo = mainCertNo;
 	}
 	
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "dueDate")
 	public Date getDueDate() {
 		return dueDate;
@@ -154,7 +154,7 @@ public class MainCertRetentionRelease extends BasePersistedObject {
 		this.contractualDueDate = contractualDueDate;
 	}
 	
-	@Temporal(value = TemporalType.DATE)
+	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "contractualDueDate")
 	public Date getContractualDueDate() {
 		return contractualDueDate;

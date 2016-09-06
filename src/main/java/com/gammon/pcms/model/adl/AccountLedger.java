@@ -289,7 +289,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.typeDocumentDescription = typeDocumentDescription;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_GL",
 			length = 7)
 	public Date getDateGl() {
@@ -696,7 +696,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.numberInvoice = numberInvoice;
 	}
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_INVOICE",
 			length = 7)
 	public Date getDateInvoice() {
@@ -738,7 +738,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.entityGlPostedBy = entityGlPostedBy;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_POSTED",
 			length = 7)
 	public Date getDatePosted() {

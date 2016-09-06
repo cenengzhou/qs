@@ -39,7 +39,7 @@ public abstract class PcmsPersistedAuditObject implements Serializable {
 	}
 
 	@CreatedDate
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_CREATED", nullable = false, length = 7)
 	public Date getDateCreated() {
 		return this.dateCreated;
@@ -60,7 +60,7 @@ public abstract class PcmsPersistedAuditObject implements Serializable {
 	}
 
 	@LastModifiedDate
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_LAST_MODIFIED", length = 7)
 	public Date getDateLastModified() {
 		return this.dateLastModified;
