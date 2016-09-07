@@ -723,23 +723,40 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	
 	.state('subcontract.split', {
 		url: "/split",
-		templateUrl: "view/subcontract/subcontract-split.html",
-		controller: 'SubcontractSplitCtrl',
+		templateUrl: "view/subcontract/subcontract-split-terminate.html",
+		params: {
+			'action': 'Split'
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-split.js'
+                           'js/controller/subcontract/subcontract-split-terminate.js'
                     ] 
                 });
             }]
-        }
+        },
+        controller: 'SubcontractSplitTerminateCtrl'
 	})
+	
 	.state('subcontract.terminate', {
 		url: "/terminate",
-		templateUrl: "view/subcontract/subcontract-terminate.html",
-		controller: 'SubcontractSplitCtrl'
+		templateUrl: "view/subcontract/subcontract-split-terminate.html",
+		params: {
+			'action': 'Terminate'
+		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/subcontract-split-terminate.js'
+                    ] 
+                });
+            }]
+        },
+		controller: 'SubcontractSplitTerminateCtrl'
 	})
 	
 	
@@ -1444,7 +1461,7 @@ mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location',
 		env[key].forEach(function(e){
 			if($window.location.hostname.indexOf(e) >= 0){
 				$rootScope.env = key;
-				console.log('Env:'+e + ' ' + $rootScope.env);
+				//console.log('Env:'+e + ' ' + $rootScope.env);
 			}
 		})
 	}

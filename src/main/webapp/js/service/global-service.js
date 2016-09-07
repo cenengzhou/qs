@@ -60,8 +60,11 @@ mainApp.service('confirmService', ['$uibModal', function( $uibModal) {
 	        if (!tempModalDefaults.controller) {
 	            tempModalDefaults.controller = function ($scope, $uibModalInstance) {
 	                $scope.modalOptions = tempModalOptions;
-	                $scope.modalOptions.ok = function () {
+	                $scope.modalOptions.yes = function () {
 	                	$uibModalInstance.close("Yes");
+	                };
+	                $scope.modalOptions.no = function () {
+	                	$uibModalInstance.close("No");
 	                };
 	                $scope.modalOptions.close = function () {
 	                	$uibModalInstance.dismiss('cancel');

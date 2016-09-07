@@ -97,8 +97,8 @@ mainApp.constant('GlobalParameter', {
 		{id:500, value:'500 - SC Awarded'}
 	],
 	packageStatus: [
-		{id:100, value:'100 - SC Created'},
-		{id:990, value:'990'}
+		{id:'100', value:'100 - SC Created'},
+		{id:'990', value:'990'}
 	],
 	paymentInformation:[
 		{id:'Interim Payment Schedule (Subcontract)', value:'Interim Payment Schedule (Subcontract)'},
@@ -123,13 +123,13 @@ mainApp.constant('GlobalParameter', {
 		{id:'F', value:'F - Final Payment'}
 	],
 	splitTerminateStatus: [
-		{id:0, value:'0 - Not Submitted'},
-		{id:1, value:'1 - Split SC Submitted'},
-		{id:2, value:'2 - Terminate SC Submitted'},
-		{id:3, value:'3 - Split Approvaed'},
-		{id:4, value:'4 - Terminate Approved'},
-		{id:5, value:'5 - Split Rejected'},
-		{id:6, value:'6 - Terminate Rejected'},
+		{id:'0', value:'0 - Not Submitted'},
+		{id:'1', value:'1 - Split SC Submitted'},
+		{id:'2', value:'2 - Terminate SC Submitted'},
+		{id:'3', value:'3 - Split Approvaed'},
+		{id:'4', value:'4 - Terminate Approved'},
+		{id:'5', value:'5 - Split Rejected'},
+		{id:'6', value:'6 - Terminate Rejected'},
 	], 
 	paymentCurrency: [
 		{id:'AUD', value:'AUD - Austrialian Dollar'},
@@ -158,7 +158,7 @@ mainApp.constant('GlobalParameter', {
 	],
 	submittedAddendum: [
 		{id:' ', value:'Not submitted'},
-		{id:1, value: 'Submitted'}
+		{id:'1', value: 'Submitted'}
 	],
 	directPayment: [
 		{id:'N', value:'Normal Payment'},

@@ -1,7 +1,16 @@
-mainApp.controller('SubcontractSplitCtrl', ['$scope' , 'subcontractService', 'modalService', 'confirmService', 'roundUtil', '$state',
-                                            function($scope, subcontractService, modalService, confirmService, roundUtil, $state) {
+mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', 'confirmService', 'roundUtil', '$state', '$stateParams',
+                                            function($scope, subcontractService, modalService, confirmService, roundUtil, $state, $stateParams) {
 	$scope.remeasuredSubcontractSumAfterSplit = 0;
 	$scope.approvedVOAmountAfterSplit = 0;
+	
+	
+	$scope.action = $stateParams.action;
+	
+	if($scope.action == 'Split')
+		$scope.canEdit = true;
+	else
+		$scope.canEdit = false;
+	
 	
 	getSubcontract();
 	getSCDetails();
@@ -31,16 +40,28 @@ mainApp.controller('SubcontractSplitCtrl', ['$scope' , 'subcontractService', 'mo
 			             { field: 'billItem', width: 100, enableCellEdit: false},
 			             { field: 'description', width: 100, enableCellEdit: false},
 			             
-			             {field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableCellEdit: false, enableFiltering: false,
+			             { field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableCellEdit: false, enableFiltering: false,
          	 					cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             {field: 'scRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: 'newQuantity', width: 150, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:4'},
-			             
-			            
-			             { field: 'amountSubcontractNew', displayName: "New SC Amount", width: 150, enableFiltering: false, 
-			            		 	cellClass: 'text-right blue', cellFilter: 'number:2'},
-			            
+			             { field: 'scRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+			             { field: 'newQuantity', width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit, 
+			            	 cellClass: function(){
+			            		 if($scope.action == 'Split')
+			            			return 'text-right blue'
+			            		else
+			            			return 'text-right'
+			            	 }, 
+			            	cellFilter: 'number:4'
+			            },
+			             { field: 'amountSubcontractNew', displayName: "New SC Amount", width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit,
+		            			cellClass: function(){
+				            		 if($scope.action == 'Split')
+				            			return 'text-right blue'
+				            		else
+				            			return 'text-right'
+				            	 }, 
+			            		cellFilter: 'number:2'
+			            },
             		 	{ field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 150, enableCellEdit: false, enableFiltering: false, 
 		            		 		cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false,
@@ -132,15 +153,19 @@ mainApp.controller('SubcontractSplitCtrl', ['$scope' , 'subcontractService', 'mo
 		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
 		
 		var modalOptions = {
-				bodyText: "Are you sure you want to submit Split Subcontract Approval?"
+				bodyText: "Are you sure you want to submit "+$scope.action+" Subcontract Approval?"
 		};
 
 		confirmService.showModal({}, modalOptions).then(function (result) {
 			if(result == "Yes"){
 				if(dataRows.length!=0){
 					updateSCDetailsNewQuantity(dataRows, true);
-				}else
-					submitSplitTerminateSC();
+				}else{
+					if($scope.action == 'Split')
+						submitSplitTerminateSC('S');
+					else
+						submitSplitTerminateSC('T');
+				}
 			}else
 				$scope.disableButtons = false;
 			
@@ -163,7 +188,7 @@ mainApp.controller('SubcontractSplitCtrl', ['$scope' , 'subcontractService', 'mo
 				function( data ) {
 					$scope.remeasuredSubcontractSum = data.remeasuredSubcontractSum;
 					$scope.approvedVOAmount = data.approvedVOAmount;
-					
+					$scope.splitTerminateStatus = data.splitTerminateStatus;
 					
 					if(data.scStatus < 500 || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.submittedAddendum ==1)
 						$scope.disableButtons = true;
@@ -204,10 +229,10 @@ mainApp.controller('SubcontractSplitCtrl', ['$scope' , 'subcontractService', 'mo
 	}
 	
 	
-	function submitSplitTerminateSC(){
+	function submitSplitTerminateSC(splitTerminateAction){
 		//S: Split
 		//T: Terminate
-		subcontractService.submitSplitTerminateSC($scope.jobNo, $scope.subcontractNo, 'S')
+		subcontractService.submitSplitTerminateSC($scope.jobNo, $scope.subcontractNo, splitTerminateAction)
 		.then(
 				function( data ) {
 					if(data.length!=0){
