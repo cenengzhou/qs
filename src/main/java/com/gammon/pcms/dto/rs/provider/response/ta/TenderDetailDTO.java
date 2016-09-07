@@ -1,26 +1,20 @@
-package com.gammon.qs.wrapper.tenderAnalysis;
+package com.gammon.pcms.dto.rs.provider.response.ta;
 
 import java.io.Serializable;
 
-public class TenderAnalysisDetailWrapper implements Serializable {
+public class TenderDetailDTO implements Serializable {
 	
 	private static final long serialVersionUID = -7494562563137948405L;
-	private String lineType;
+	//private String lineType;
 	private String billItem;
 	private String objectCode;
 	private String subsidiaryCode;
 	private String description;
 	private String unit;
 	private Double quantity;
-	private Integer resourceNo;
+	//private Integer resourceNo;
 	private Integer sequenceNo;
 	
-	public void setLineType(String lineType) {
-		this.lineType = lineType;
-	}
-	public String getLineType() {
-		return lineType;
-	}
 	public void setBillItem(String billItem) {
 		this.billItem = billItem;
 	}
@@ -57,12 +51,6 @@ public class TenderAnalysisDetailWrapper implements Serializable {
 	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
-	public void setResourceNo(Integer resourceNo) {
-		this.resourceNo = resourceNo;
-	}
-	public Integer getResourceNo() {
-		return resourceNo;
-	}
 	public Integer getSequenceNo() {
 		return sequenceNo;
 	}
@@ -78,13 +66,9 @@ public class TenderAnalysisDetailWrapper implements Serializable {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result
-				+ ((lineType == null) ? 0 : lineType.hashCode());
-		result = prime * result
 				+ ((objectCode == null) ? 0 : objectCode.hashCode());
 		result = prime * result
 				+ ((quantity == null) ? 0 : quantity.hashCode());
-		result = prime * result
-				+ ((resourceNo == null) ? 0 : resourceNo.hashCode());
 		result = prime * result
 				+ ((subsidiaryCode == null) ? 0 : subsidiaryCode.hashCode());
 		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
@@ -98,7 +82,7 @@ public class TenderAnalysisDetailWrapper implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TenderAnalysisDetailWrapper other = (TenderAnalysisDetailWrapper) obj;
+		TenderDetailDTO other = (TenderDetailDTO) obj;
 		if (billItem == null) {
 			if (other.billItem != null)
 				return false;
@@ -109,11 +93,6 @@ public class TenderAnalysisDetailWrapper implements Serializable {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (lineType == null) {
-			if (other.lineType != null)
-				return false;
-		} else if (!lineType.equals(other.lineType))
-			return false;
 		if (objectCode == null) {
 			if (other.objectCode != null)
 				return false;
@@ -123,11 +102,6 @@ public class TenderAnalysisDetailWrapper implements Serializable {
 			if (other.quantity != null)
 				return false;
 		} else if (!quantity.equals(other.quantity))
-			return false;
-		if (resourceNo == null) {
-			if (other.resourceNo != null)
-				return false;
-		} else if (!resourceNo.equals(other.resourceNo))
 			return false;
 		if (subsidiaryCode == null) {
 			if (other.subsidiaryCode != null)

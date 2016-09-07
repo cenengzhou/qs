@@ -1,9 +1,6 @@
 mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', function($scope , subcontractService) {
-	$scope.bq = 53895000;
-	$scope.vo = 100256;
-	$scope.cc = 0;
-	$scope.retention = 0;
 
+	getSubcontract();
 	getSCDetails();
 
 	$scope.gridOptions = {
@@ -16,7 +13,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 			//enableFullRowSelection: true,
 			//multiSelect: false,
 			//showGridFooter : true,
-			showColumnFooter : true,
+			showColumnFooter : false,
 			//fastWatch : true,
 
 			enableCellEditOnFocus : true,
@@ -68,11 +65,19 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 			
 	};
 
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.subcontract = data;
+				});
+	}
+	
 	function getSCDetails() {
 		subcontractService.getSCDetails($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.gridOptions.data = data;
 				});
 	}

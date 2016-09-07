@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.dto.rs.provider.response.ta.TenderComparisonDTO;
+import com.gammon.pcms.dto.rs.provider.response.ta.TenderDetailDTO;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
@@ -44,7 +46,6 @@ import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -1009,79 +1010,54 @@ public class TenderService implements Serializable {
 	}	
 	
 	
-	public TenderAnalysisComparisonWrapper obtainTenderComparisonList(String jobNo, String packageNo) throws Exception{
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
-		List<Tender> tenderList = tenderDao.obtainTenderAnalysisList(jobNo, packageNo);
-		if(tenderList == null || tenderList.size() == 0){
-			if("1".equals(job.getRepackagingType()))
-					return null;
-			else{
-				tenderList = new ArrayList<Tender>(1);
-				tenderList.add(createTAFromResources(job, packageNo));
-			}
-		}
+	public TenderComparisonDTO obtainTenderComparisonList(String jobNo, String packageNo) throws Exception{
+		TenderComparisonDTO tenderComparisonDTO = new TenderComparisonDTO();
+		Map<Integer, List<Map<String, Double>>> vendorDetailMap = new HashMap<Integer, List<Map<String, Double>>>();
+		List<TenderDetailDTO> tenderDetailDTOList = new ArrayList<TenderDetailDTO>();
 		
-		for (Tender tender: tenderList){
-			if(tender.getVendorNo()==0){
+		List<Tender> tenderList = tenderDao.obtainTenderAnalysis(jobNo, packageNo);
+		
+		for(Tender tender: tenderList){
+			List<TenderDetail> tenderDetailList = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tender);
+			
+			for(TenderDetail taDetail: tenderDetailList){
+				if(tender.getVendorNo() == 0){
+					TenderDetailDTO taDetailWrapper = new TenderDetailDTO();
+					taDetailWrapper.setBillItem(taDetail.getBillItem());
+					taDetailWrapper.setObjectCode(taDetail.getObjectCode());
+					taDetailWrapper.setSubsidiaryCode(taDetail.getSubsidiaryCode());
+					taDetailWrapper.setDescription(taDetail.getDescription());
+					taDetailWrapper.setUnit(taDetail.getUnit());
+					taDetailWrapper.setQuantity(taDetail.getQuantity());
+					taDetailWrapper.setSequenceNo(taDetail.getSequenceNo());
+					
+					tenderDetailDTOList.add(taDetailWrapper);
+				}
 				
+				Map<String, Double> vendorAmount = new HashMap<String, Double>();
+				if(tender.getVendorNo() == 0){
+					vendorAmount.put("Buegdet Amount", taDetail.getAmountBudget());					
+				}else
+					vendorAmount.put(tender.getNameSubcontractor(), taDetail.getAmountSubcontract());
+
+				
+				 
+				 List<Map<String, Double>> vendorList = vendorDetailMap.get(taDetail.getSequenceNo());
+				 if(vendorList == null)
+					 vendorList = new ArrayList<Map<String, Double>>();
+				
+				 vendorList.add(vendorAmount);
+				
+				vendorDetailMap.put(taDetail.getSequenceNo(), vendorList);
 			}
 		}
-		
-		return null;
+
+
+		tenderComparisonDTO.setTenderDetailDTOList(tenderDetailDTOList);
+		tenderComparisonDTO.setVendorDetailMap(vendorDetailMap);
+		return tenderComparisonDTO;
 	}
 	
-	/*public TenderAnalysisComparisonWrapper obtainTenderAnalysisComparison(String jobNo, String packageNo) throws Exception{
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
-		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
-		if(scPackage == null)
-			return null;
-		List<Tender> tenderAnalyses = tenderDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-		if(tenderAnalyses == null || tenderAnalyses.size() == 0){
-			if("1".equals(job.getRepackagingType()))
-					return null;
-			else{
-				tenderAnalyses = new ArrayList<Tender>(1);
-				tenderAnalyses.add(createTAFromResources(job, packageNo));
-			}
-		}
-		TenderAnalysisComparisonWrapper tenderAnalysisComparison = new TenderAnalysisComparisonWrapper();
-		tenderAnalysisComparison.setPackageNo(packageNo);
-		tenderAnalysisComparison.setPackageStatus(scPackage.getSubcontractStatus());
-		Map<TenderAnalysisDetailWrapper, Map<Integer, Double>> detailWrapperMap = tenderAnalysisComparison.getDetailWrapperMap();
-		List<TenderAnalysisVendorWrapper> vendorWrappers = tenderAnalysisComparison.getVendorWrappers();
-		
-		for(Tender tenderAnalysis : tenderAnalyses){
-			Integer vendorNo = tenderAnalysis.getVendorNo();
-			if(!vendorNo.equals(Integer.valueOf(0))){
-				MasterListVendor vendor = masterListService.obtainVendorByVendorNo(vendorNo.toString());
-				TenderAnalysisVendorWrapper vendorWrapper = new TenderAnalysisVendorWrapper();
-				vendorWrapper.setVendorNo(vendorNo);
-				vendorWrapper.setVendorName(vendor == null ? null : vendor.getVendorName());
-				vendorWrapper.setCurrencyCode(tenderAnalysis.getCurrencyCode());
-				vendorWrapper.setExchangeRate(tenderAnalysis.getExchangeRate());
-				vendorWrapper.setStatus(tenderAnalysis.getStatus());
-				vendorWrappers.add(vendorWrapper);
-			}
-			for(TenderDetail taDetail : tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
-				TenderAnalysisDetailWrapper taDetailWrapper = new TenderAnalysisDetailWrapper();
-				taDetailWrapper.setLineType(taDetail.getLineType());
-				taDetailWrapper.setBillItem(taDetail.getBillItem());
-				taDetailWrapper.setObjectCode(taDetail.getObjectCode());
-				taDetailWrapper.setSubsidiaryCode(taDetail.getSubsidiaryCode());
-				taDetailWrapper.setDescription(taDetail.getDescription());
-				taDetailWrapper.setUnit(taDetail.getUnit());
-				taDetailWrapper.setQuantity(taDetail.getQuantity());
-				taDetailWrapper.setResourceNo(taDetail.getResourceNo());
-				taDetailWrapper.setSequenceNo(taDetail.getSequenceNo());
-				Map<Integer, Double> vendorRates = detailWrapperMap.get(taDetailWrapper);
-				if(vendorRates == null)
-					vendorRates = new HashMap<Integer, Double>();
-				vendorRates.put(vendorNo, taDetail.getRateBudget());
-				detailWrapperMap.put(taDetailWrapper, vendorRates);
-			}
-		}
-		return tenderAnalysisComparison;
-	}*/
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	

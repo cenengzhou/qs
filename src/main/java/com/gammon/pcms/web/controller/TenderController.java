@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.dto.rs.provider.response.ta.TenderComparisonDTO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.TenderService;
-import com.gammon.qs.wrapper.tenderAnalysis.TenderAnalysisComparisonWrapper;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -76,12 +76,10 @@ public class TenderController {
 	}
 	
 	@RequestMapping(value = "getTenderComparisonList", method = RequestMethod.GET)
-	public TenderAnalysisComparisonWrapper getTenderComparisonList(@RequestParam(name="jobNo") String jobNo, 
+	public TenderComparisonDTO getTenderComparisonList(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
+		return  tenderService.obtainTenderComparisonList(jobNo, subcontractNo);
 
-		TenderAnalysisComparisonWrapper wrapper = null;
-		wrapper = tenderService.obtainTenderComparisonList(jobNo, subcontractNo);
-		return wrapper;
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")

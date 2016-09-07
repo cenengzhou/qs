@@ -1,11 +1,11 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage',
-                                         function($scope, subcontractService, $http, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'uiGridConstants',
+                                         function($scope, subcontractService, $http, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage, uiGridConstants) {
 	
 	loadData();
 
 	$scope.gridOptions = {
-			enableSorting: true,
-			enableFiltering: true,
+			enableSorting: false,
+			enableFiltering: false,
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableColumnMoving: false,
@@ -13,28 +13,21 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http'
 			//enableFullRowSelection: true,
 			//multiSelect: false,
 			//showGridFooter : true,
-			showColumnFooter : true,
+			showColumnFooter : false,
 			//fastWatch : true,
 
-			enableCellEditOnFocus : true,
-
+			exporterMenuPdf: false,
 
 			//Single Filter
 			onRegisterApi: function(gridApi){
 				$scope.gridApi = gridApi;
-			}
-
+			},
+			
 	};
 
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-
-	$http.get("http://localhost:8080/pcms/data/vendor-compare.json")
-	.success(function(data) {
-		$scope.gridOptions.data = data;
-
-	});
 
 	$scope.addVendor = function(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
@@ -104,6 +97,7 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http'
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
 			getTenderList();
+			getTenderComparisonList();
 		}
 	}
 	
@@ -124,7 +118,6 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http'
 		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.tenders = data;
 				});
 	}
@@ -145,10 +138,23 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http'
 		tenderService.getTenderComparisonList($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log("getTenderComparisonList");
-					console.log(data);
-					//console.log(Object.keys(data.detailWrapperMap));
-					/*console.log(data.detailWrapperMap.);*/
+					Object.keys(data.vendorDetailMap)
+				      .sort();
+					
+					angular.forEach(data.tenderAnalysisDetailWrappers, function(value, key) {
+						var vendorList = data.vendorDetailMap[value.sequenceNo];
+						
+						angular.forEach(vendorList, function(vendor, key) {
+							angular.forEach(vendor, function(v, k) {
+								var vendorNameString = k.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,' ');
+								value[vendorNameString] = v;
+							});
+						});
+						
+					})
+					
+					$scope.gridOptions.data = data.tenderAnalysisDetailWrappers;
+					
 				});
 	}
 

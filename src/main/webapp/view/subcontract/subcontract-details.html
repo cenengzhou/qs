@@ -1,9 +1,9 @@
 <div id="content" class="content">
-	<ol class="breadcrumb pull-right">
+	<!-- <ol class="breadcrumb pull-right">
 		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 				Home</a></li>
 		<li class="active">Dashboard</li>
-	</ol>
+	</ol> -->
 
 	<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
@@ -12,58 +12,57 @@
 
 	<div class="row">
 		<div class="col-lg-3 col-xs-12">
-			<!-- small box -->
-			<div class="small-box bg-aqua">
-				<div class="inner">
-					<h3>{{bq | currency}}</h3>
-
-					<p>BQ</p>
+			<div class="widget widget-stat bg-primary text-white">
+				<div class="widget-stat-icon">
+					<i class="fa fa-dollar"></i>
 				</div>
-				<div class="icon">
-					<i class="ion ion-social-usd"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
-		<div class="col-lg-3 col-xs-12">
-			<!-- small box -->
-			<div class="small-box bg-green">
-				<div class="inner">
-					<h3>{{vo | currency}}</h3>
-					<p>VO</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-social-usd"></i>
+				<div class="widget-stat-info">
+					<div class="widget-stat-title">BQ</div>
+					<div class="widget-stat-number">{{subcontract.remeasuredSubcontractSum | currency}}</div>
+					<div class="widget-stat-text">(Cumulative to date)</div>
 				</div>
 			</div>
 		</div>
 		<!-- ./col -->
 		<div class="col-lg-3 col-xs-12">
-			<!-- small box -->
-			<div class="small-box bg-yellow">
-				<div class="inner">
-					<h3>{{cc | currency}}</h3>
-
-					<p>Contra Charge</p>
+			<div class="widget widget-stat bg-success text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Addendum</div>
+						<div class="widget-stat-number">{{subcontract.approvedVOAmount | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
-				<div class="icon">
-					<i class="ion ion-social-usd"></i>
+		</div>
+		<!-- ./col -->
+		<div class="col-lg-3 col-xs-12">
+			<div class="widget widget-stat bg-inverse text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Contra Charge</div>
+						<div class="widget-stat-number">{{subcontract.totalCCPostedCertAmount | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
-			</div>
+			
 		</div>
 		<!-- ./col -->
 		<div class="col-md-3 col-xs-12">
-			<!-- small box -->
-			<div class="small-box bg-red">
-				<div class="inner">
-					<h3>{{retention | currency}}</h3>
-
-					<p>Retention</p>
+			<div class="widget widget-stat bg-danger text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Retention Balance</div>
+						<div class="widget-stat-number">{{subcontract.retentionBalance | currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
 				</div>
-				<div class="icon">
-					<i class="ion ion-social-usd"></i>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 

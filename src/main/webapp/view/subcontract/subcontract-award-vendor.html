@@ -1,5 +1,4 @@
-<div class="animated fadeIn"
-	ng-style="{height: 500 + 'px', 'overflow': 'auto'}">
+<div class="animated fadeIn">
 
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
@@ -46,7 +45,7 @@
 					</div>
 					<div class="col-md-8 col-md-offset-2 m-t-10">
 					<button class="btn btn-danger btn-block" ng-click="addVendor()" ng-hide = "disableButtons" ng-disabled="disableButtons">
-						<span class="icofont icofont-plus-square"></span> Add
+						<span class="icofont icofont-plus-circle"></span> Add
 					</button>
 					</div>
 				</div>
@@ -54,11 +53,11 @@
 		</div>
 
 
-		<!-- <div class="col-md-12 m-t-10">
+		<div class="col-md-12 m-t-10">
 			<div id="" ui-grid="gridOptions" ui-grid-resize-columns
-				ui-grid-move-columns ui-grid-exporter ui-grid-auto-resize
+				ui-grid-move-columns ui-grid-exporter ui-grid-auto-resize  resize ng-style="resizeWithOffset(550)"
 				class="grid"></div>
-		</div> -->
+		</div>
 
 	</div>
 
