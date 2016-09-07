@@ -297,6 +297,18 @@ mainApp.directive('resize', function ($window) {
                     'overflow': 'auto'
                 };
             };
+            scope.resizeMenuBarWithWOffset = function (offsetW, minWidth) {
+                scope.$eval(attr.notifier);
+                var width = newValue.w - offsetW;
+                width = width > minWidth ? width : minWidth;
+                scope.menuBarWidth = width;
+                document.getElementById("menubar").scrollLeft = scope.menuScroll;
+//                scope.menuWidth = document.getElementById('innerMenu').clientWidth;
+                return { 
+                    'width': width + 'px',
+                    'overflow': 'hidden'
+                };
+            };
 
         }, true);
 

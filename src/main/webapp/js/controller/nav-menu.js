@@ -1,5 +1,5 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope',
-                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval',
+                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval) {
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -71,7 +71,42 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		});
 	}
 	$scope.getCurrentUser();
-
+	$scope.menuScroll = 0;
+	$scope.scrollStep = 20;
+	$scope.menuWidth = document.getElementById('innerMenu').clientWidth;
+	$scope.menuAutoScroll = null;
+	$scope.stopScrolLeft = function(){
+		if (angular.isDefined($scope.menuAutoScrollLeft)) {
+            $interval.cancel($scope.menuAutoScrollLeft);
+//            console.log("stop scrollLeft:" + $scope.menuScroll);
+        }
+	}
+	$scope.scrollLeft = function(){
+		$scope.menuAutoScrollLeft = $interval(function(){
+			if($scope.menuScroll > 0) {
+				var menubar = document.getElementById("menubar");
+				menubar.scrollLeft -= $scope.scrollStep;
+				$scope.menuScroll -= $scope.scrollStep;
+//				console.log("scrollLeft:" + $scope.menuScroll);
+			}
+		}, 100);
+	}
+	$scope.stopScrollRight = function(){
+		if (angular.isDefined($scope.menuAutoScrollRight)) {
+            $interval.cancel($scope.menuAutoScrollRight);
+//            console.log("stop scrollRight:" + $scope.menuScroll);
+        }
+	}
+	$scope.scrollRight = function(){
+		$scope.menuAutoScrollRight = $interval(function(){
+			if($scope.menuScroll < ($scope.menuWidth - $scope.menuBarWidth)) {
+				var menubar = document.getElementById("menubar");
+				menubar.scrollLeft += $scope.scrollStep;
+				$scope.menuScroll += $scope.scrollStep;
+	//			console.log("scrollRight:" + $scope.menuScroll);
+			}
+		}, 100);
+	}
 	
 	$scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
     	$scope.currentPath = $location.path();

@@ -201,6 +201,14 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		 return c;
 	}
 	
+	/**
+	 * 1. remove comment to show content only for PCMS
+	 * eg: <!-- PCMS start <table><tr><td>PCMS content</td></tr></table> PCMS end -->
+	 * 2. remove content only for AP
+	 * eg: <!-- AP start -->AP content<!-- AP end -->
+	 * 3. show only content within body tag
+	 * eg: <body>Some content</body>
+	 */
 	function formTemplate(data){
 		data = data.replace(/<!-- PCMS start /g, '').replace(/ PCMS end -->/g, '');
 		data = data.replace(/<!-- AP start -->.*<!-- AP end -->/g, '');
