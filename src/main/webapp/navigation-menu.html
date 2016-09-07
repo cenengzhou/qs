@@ -1,6 +1,6 @@
 <div ng-controller="NavMenuCtrl">
 		<!-- begin #header -->
-		<div id="header" class="header navbar navbar-fixed-top" ng-class="{'navbar-primary': env !== 'DEV', 'navbar-inverse': env === 'DEV'}">
+		<div id="header" class="header navbar navbar-fixed-top" ng-class="{'navbar-primary': (env !== 'DEV' && env !== 'UAT'), 'navbar-inverse': (env === 'DEV' || env === 'UAT') }">
 			<!-- begin container-fluid -->
 			<div class="container-fluid">
 				<table class="col-md-12">
@@ -28,8 +28,8 @@
 							<!-- end mobile sidebar expand / collapse button -->
 						</td>
 						<td>
-							<div ng-show="!hideNavMenu && menuScroll>0 && menuBarWidth < menuWidth" 
-							ng-class="{'btn btn-primary': env !== 'DEV', 'btn btn-inverse': env === 'DEV'}" 
+							<div class="animated fadeIn" ng-show="!hideNavMenu && menuScroll>0 && menuBarWidth < menuWidth" 
+							ng-class="{'btn btn-primary': (env !== 'DEV' && env !== 'UAT'), 'btn btn-inverse': (env === 'DEV' || env === 'UAT') }"
 							ng-mouseenter="scrollLeft()" ng-mouseleave="stopScrolLeft()">
 							<span class="fa fa-2x fa-angle-left text-white"> </span></div>
 						</td>
@@ -86,8 +86,8 @@
 							</div>
 						</td>
 						<td>
-							<div ng-show="!hideNavMenu && (menuBarWidth + menuScroll) < menuWidth && menuBarWidth < menuWidth" 
-							ng-class="{'btn btn-primary': env !== 'DEV', 'btn btn-inverse': env === 'DEV'}" 
+							<div class="animated fadeIn" ng-show="!hideNavMenu && (menuBarWidth + menuScroll) < menuWidth && menuBarWidth < menuWidth" 
+							ng-class="{'btn btn-primary': (env !== 'DEV' && env !== 'UAT'), 'btn btn-inverse': (env === 'DEV' || env === 'UAT') }"
 							ng-mouseenter="scrollRight()" ng-mouseleave="stopScrollRight()">
 							<span class="fa fa-2x fa-angle-right text-white"> </span></div>
 						</td>
