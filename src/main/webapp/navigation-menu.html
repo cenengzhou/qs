@@ -36,47 +36,55 @@
 						<td>
 							<div resize ng-style="resizeMenuBarWithWOffset(600, 150)" style="border: 0px solid red" id="menubar">
 								<ul class="nav navbar-nav" style="width:980px; border: 0px solid white" id="innerMenu">
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Repackaging' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a ui-sref="repackaging" ng-click="activeMenu = 'Repackaging'"> 
 											<i class="fa fa-cube"></i>
 											Repackaging
 										</a></li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Certificate' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a 	ui-sref="cert-dashboard" ng-click="activeMenu = 'Certificate'">
 											<i class="fa fa-bookmark"></i>
 											Main Contract Certificate
 										</a>
 									</li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Subcontract' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a	ui-sref="subcontract-select" ng-click="activeMenu = 'Subcontract'"> 	
 											<i class="fa fa-trophy"></i>
 											Subcontract
 										</a></li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'IV'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'IV' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'IV' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a ui-sref="iv.resource-summary.update" ng-click="activeMenu = 'IV'"> 
 											<i class="fa fa-line-chart"></i>
 											Internal Valuation
 										</a>
 									</li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Enquiry' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a ui-sref="enquiry.info" ng-click="activeMenu = 'Enquiry'"> 
 											<i class="fa fa-info-circle"></i>
 											Enquiry
 										</a>
 									</li>
-										<li ng-class="{'bg-primary-light' : activeMenu == 'Reports'}" ng-hide = "hideNavMenu">
+										<li ng-class="{'bg-primary-light' : activeMenu == 'Reports' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Reports' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a ui-sref="reports" ng-click="activeMenu = 'Reports'"> 
 											<i class="fa fa-book"></i>
 											Reports
 										</a>
 									</li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Transit'}" ng-hide = "hideNavMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Transit' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Transit' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu">
 										<a ui-sref="transit" ng-click="activeMenu = 'Transit'"> 
 											<i class="fa fa-file-text"></i>
 											Transit 
 										</a>
 									</li>
-									<li ng-class="{'bg-primary-light' : activeMenu == 'Admin'}" ng-hide = "hideNavMenu || !showAdminMenu">
+									<li ng-class="{'bg-primary-light' : activeMenu == 'Admin' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Admin' && env == 'DEV'}" 
+										ng-hide = "hideNavMenu || !showAdminMenu">
 										<a ui-sref="admin.session" ng-click="activeMenu = 'Admin'">
 											<i class="fa fa-user"></i>
 											Admin 
