@@ -90,12 +90,10 @@ import com.gammon.qs.webservice.serviceProvider.makeHTMLStrForSplitTerminateServ
 @PropertySource("file:${webservice.properties}")
 public class WebServiceConfig {//extends WsConfigurerAdapter {
 
-	@Value("${ws.server.url}")
-	private String wsServerUrl;
+	@Value("${ws.jde.server.url}")
+	private String wsJdeServerUrl;
 	@Value("${ws.ap.server.url}")
 	private String wsApServerUrl;
-	@Value("${ap.server.url}")
-	private String apServerUrl;
 	@Value("${jde.ws.username}")
 	private String jdeWsUsername;
 	@Value("${jde.ws.password}")
@@ -839,16 +837,12 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	}
 
 	//getter
-	public String getWsServerUrl() {
-		return wsServerUrl;
+	public String getWsJdeServerUrl() {
+		return wsJdeServerUrl;
 	}
 
 	public String getWsApServerUrl() {
 		return wsApServerUrl;
-	}
-
-	public String getApServerUrl() {
-		return apServerUrl;
 	}
 
 	public String getJdeWsUsername() {
@@ -887,37 +881,22 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 		return qsKeystore;
 	}
 
-	/**
-	 * @return the gsfGetRoleUrl
-	 */
 	public String getGsfGetRoleUrl() {
 		return gsfGetRoleUrl;
 	}
 
-	/**
-	 * @return the gsfGetFunctionSecurityUrl
-	 */
 	public String getGsfGetFunctionSecurityUrl() {
 		return gsfGetFunctionSecurityUrl;
 	}
 
-	/**
-	 * @return the gsfApplicationCode
-	 */
 	public String getGsfApplicationCode() {
 		return gsfApplicationCode;
 	}
 
-	/**
-	 * @return the gsfGetJobSecurityUrl
-	 */
 	public String getGsfGetJobSecurityUrl() {
 		return gsfGetJobSecurityUrl;
 	}
 
-	/**
-	 * @return the peopDirectoryPictureUrl
-	 */
 	public String getPeopDirectoryPictureUrl() {
 		return peopDirectoryPictureUrl;
 	}

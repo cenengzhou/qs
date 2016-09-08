@@ -28,7 +28,7 @@ public class BaseInformationFilter implements Filter {
 
 		if (environmentConfig != null) {
 			// JDE Environment
-			String jdeEnviroment = environmentConfig.getWebserviceEnvironment();
+			String jdeEnviroment = environmentConfig.getJdeWebserviceEnvironment();
 			int endIndex = jdeEnviroment.lastIndexOf("/");
 			int startIndex = jdeEnviroment.substring(0, jdeEnviroment.length() - 1).lastIndexOf("/") + 1;
 			request.setAttribute("jdeEnvironment", jdeEnviroment.substring(startIndex, endIndex));

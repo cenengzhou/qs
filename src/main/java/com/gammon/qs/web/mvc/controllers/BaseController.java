@@ -33,7 +33,7 @@ public class BaseController {
 		}
 		
 		if(environmentConfig!=null){
-			String jdeEnviroment= environmentConfig.getWebserviceEnvironment();
+			String jdeEnviroment= environmentConfig.getJdeWebserviceEnvironment();
 			
 			int endIndex = jdeEnviroment.lastIndexOf("/");
 			int startIndex = jdeEnviroment.substring(0,jdeEnviroment.length()-1 ).lastIndexOf("/")+1;

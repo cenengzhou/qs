@@ -38,12 +38,8 @@ public class EnvironmentConfig {
 		return nodeName;
 	}
 
-	public String getApprovalSystemPath() {
-		return webServiceConfig.getApServerUrl();
-	}
-
-	public String getWebserviceEnvironment() {
-		return webServiceConfig.getWsServerUrl();
+	public String getJdeWebserviceEnvironment() {
+		return webServiceConfig.getWsJdeServerUrl();
 	}
 	
 }
