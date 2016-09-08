@@ -856,11 +856,21 @@ public class ResourceSummaryService implements Serializable {
 	}
 	
 	
-	public Boolean groupResourcesIntoSummaries(JobInfo job) throws Exception{
-		List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
-		if(entries != null && entries.size() > 0)
-			return null;
-		return resourceSummaryDao.groupResourcesIntoSummaries(job);
+	public String generateResourceSummaries(String jobNo) throws Exception{
+		String error = "";
+		JobInfo job = jobDao.obtainJobInfo(jobNo);
+		if(job != null){
+			List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
+			if(entries != null && entries.size() > 0){
+				error = "Repackaging exists. Please refresh the page.";
+				return error;
+			}
+			boolean created = resourceSummaryDao.groupResourcesIntoSummaries(job);
+			if(!created)
+				error = "Resource Summaries cannot be generated.";
+				
+		}
+		return error;
 	}
 	
 	/**

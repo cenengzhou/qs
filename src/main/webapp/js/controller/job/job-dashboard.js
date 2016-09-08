@@ -90,8 +90,8 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 							"labels": ["Labour", "Plant", "Material", "Subcontract", "Others"],
 							"colours": [
 							{
-								"strokeColor": colorCode.red,
-								"pointHighlightStroke": colorCode.lightRed
+								"strokeColor": colorCode.yellow,
+								"pointHighlightStroke": colorCode.lightYellow
 							}, 
 							{
 								"strokeColor": colorCode.purple,

@@ -17,13 +17,13 @@
 				<div class="panel-heading">
 					<div>
 						<h4>
-							Version {{repackaging.repackagingVersion}}</
-							<h4>
-								<div class="pull-right">
-									<button class="btn btn-inverse">
-										<i class="fa fa-info-circle"></i> History
-									</button>
-								</div>
+							Version {{repackaging.repackagingVersion}}
+							<div class="pull-right">
+								<button class="btn btn-inverse" ng-click="getHistory()">
+									<i class="fa fa-info-circle"></i> History
+								</button>
+							</div>
+						</h4>
 					</div>
 				</div>
 				<div class="box-body">
@@ -35,8 +35,9 @@
 								<div class="process-step" ng-show="repackaging == ''">
 									<button type="button" class="btn btn-big-circle"
 										ng-class="{'btn-primary': repackaging == ''}"
-										ng-disabled="repackaging != ''" ng-click="click('unlock')">
-										<i class="fa fa-unlock-alt fa-3x"></i>
+										ng-disabled="repackaging != ''"
+										ng-click="click('generateResourceSummaries')">
+										<i class="fa fa-clipboard fa-3x"></i>
 									</button>
 									<p>
 										<label>Generate Resource Summaries</label>
@@ -44,8 +45,8 @@
 								</div>
 								<div class="process-step">
 									<button type="button" class="btn btn-big-circle"
-										ng-class="{'btn-primary': repackaging.status == '900'}"
-										ng-disabled="repackaging.status != '900'"
+										ng-class="{'btn-primary': repackaging != '' && repackaging.status == '900'}"
+										ng-disabled="repackaging == '' || repackaging.status != '900'"
 										ng-click="click('unlock')">
 										<i class="fa fa-unlock-alt fa-3x"></i>
 									</button>
@@ -66,8 +67,8 @@
 								</div>
 								<div class="process-step">
 									<button type="button" class="btn btn-big-circle"
-										ng-class="{'btn-primary': repackaging.status != '900'}"
-										ng-disabled="repackaging.status == '900'"
+										ng-class="{'btn-primary': repackaging != '' && repackaging.status != '900'}"
+										ng-disabled="repackaging == '' || repackaging.status == '900'"
 										ui-sref="repackaging-update">
 										<i class="fa fa-save fa-3x"></i>
 									</button>
@@ -95,7 +96,7 @@
 										<i class="fa fa-envelope fa-3x"></i>
 									</button>
 									<p>
-										<label>Email to MQS</label>
+										<label>Send Email to Approver</label>
 									</p>
 								</div>
 
@@ -139,7 +140,7 @@
 				<div class="widget-stat-footer text-left"></div>
 			</div>
 
-			<div class="panel panel-white">
+			<div class="panel panel-white" >
 				<div class="panel-heading">
 					Remarks
 					<div class="box-tools pull-right">
@@ -149,14 +150,14 @@
 						</button>
 					</div>
 				</div>
-				<div class="box-body">
+				<div class="panel-body">
 					<form role="form">
 						<!-- textarea -->
 						<div class="form-group">
 							<!-- <label>Remark</label> -->
 							<textarea class="form-control" rows="3"
 								placeholder="Please enter remarks in here..."
-								ng-style="{height: 150 + 'px'}" ng-model="repackaging.remarks"
+								ng-model="repackaging.remarks"
 								ng-disabled="repackaging.status == '900'"></textarea>
 						</div>
 					</form>
@@ -180,7 +181,7 @@
 				<div class="panel-heading">Attachment</div>
 				<div class="panel-body" style="padding: 0 !important">
 					<div class="table-responsive" resize
-						ng-style="resizeWithOffset(480)">
+						ng-style="resizeWithOffset(550)">
 						<form class="form" role="form" id="attachmentForm">
 							<table class="table table-hover ">
 								<thead>
@@ -197,12 +198,12 @@
 										<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
 											<input type="checkbox" ng-Icheck id="fileRadiobox-{{$index}}"
 											ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
-											ng-model="attach.selectedAttachement" ></td>
+											ng-model="attach.selectedAttachement"></td>
 										<td ng-click="attachmentClick()">{{attach.fileName}}</td>
 										<td ng-click="attachmentClick()"><span
 											class="{{attach.fileIconClass}}"></span></td>
-										<td ng-click="attachmentClick()"><img
-											imageonload roll-back-image="resources/images/profile.png"
+										<td ng-click="attachmentClick()"><img imageonload
+											roll-back-image="resources/images/profile.png"
 											class="rounded-corner" height="30" width="30"
 											data-ng-src="{{attach.user.userIcon}}">
 											{{attach.user.UserName}}</td>
@@ -229,11 +230,10 @@
 						</div>
 
 						<div class="col-md-4" ng-show="selectedAttachement">
-							<label
-								class="btn btn-block btn-success" ng-click="deleteAttachment()"
-								ng-disabled="!selectedAttachement"> 
-								<i class="glyphicon glyphicon-remove-circle"></i> 
-								Delete selected	Item
+							<label class="btn btn-block btn-success"
+								ng-click="deleteAttachment()" ng-disabled="!selectedAttachement">
+								<i class="glyphicon glyphicon-remove-circle"></i> Delete
+								selected Item
 							</label>
 						</div>
 						<div class="col-md-4">
@@ -245,7 +245,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>

@@ -66,6 +66,7 @@ public class MasterListController {
 		return masterListSubsidiary;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "validateAndCreateAccountCode", method = RequestMethod.POST)
 	public String validateAndCreateAccountCode(@RequestParam String jobNo, @RequestParam String objectCode, @RequestParam String subsidiaryCode) throws Exception{
 		return masterListService.validateAndCreateAccountCode(jobNo, objectCode, subsidiaryCode);

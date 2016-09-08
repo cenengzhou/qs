@@ -8,11 +8,9 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -163,6 +161,21 @@ public class ResourceSummaryController {
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
+		return result;
+	}
+	
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "generateResourceSummaries", method = RequestMethod.POST)
+	public String generateResourceSummaries(@RequestParam(required =true) String jobNo){
+		String result = "";
+		try {
+			result = resourceSummaryService.generateResourceSummaries(jobNo);
+		} catch (Exception e) {
+			result = "Resource Summaries cannot be generated.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		}
 		return result;
 	}
 

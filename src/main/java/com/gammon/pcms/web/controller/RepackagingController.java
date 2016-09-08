@@ -8,12 +8,10 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +37,13 @@ public class RepackagingController {
 	@Autowired
 	private RepackagingDetailService  repackagingDetailService;
 	
+	
+	@RequestMapping(value = "getRepackagingEntry", method = RequestMethod.GET)
+	public Repackaging getRepackagingEntry(@RequestParam(required = true) String repackagingID) throws Exception{
+		Repackaging repackaging = null;
+		repackaging = repackagingService.getRepackagingEntry(Long.valueOf(repackagingID));
+		return repackaging;
+	}
 	
 	@RequestMapping(value = "getRepackagingListByJobNo", method = RequestMethod.GET)
 	public List<Repackaging> getRepackagingListByJobNo(@RequestParam(required = true) String jobNo) throws Exception{

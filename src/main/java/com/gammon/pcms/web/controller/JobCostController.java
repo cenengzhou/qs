@@ -67,6 +67,7 @@ public class JobCostController {
 	}
 	
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createAccountMasterByGroup", method = RequestMethod.POST)
 	public String createAccountMasterByGroup(@RequestParam(required = true) String jobNo,
 										@RequestParam(required = false) Boolean resourceCheck, 

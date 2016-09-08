@@ -53,7 +53,7 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.createAlias("jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-			criteria.addOrder(Order.asc("repackagingVersion"));
+			criteria.addOrder(Order.desc("repackagingVersion"));
 			repackagingEntries = criteria.list();
 			return repackagingEntries;
 		}

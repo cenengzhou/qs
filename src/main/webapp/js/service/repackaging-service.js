@@ -1,18 +1,31 @@
 mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
     return({
-    	getLatestRepackaging:		getLatestRepackaging,
-    	getRepackagingListByJobNo: 	getRepackagingListByJobNo,
-    	getRepackagingDetails:		getRepackagingDetails, 
+    	getRepackagingEntry:				getRepackagingEntry,
+    	getLatestRepackaging:				getLatestRepackaging,
+    	getRepackagingListByJobNo: 			getRepackagingListByJobNo,
+    	getRepackagingDetails:				getRepackagingDetails, 
     	
-    	addRepackaging:				addRepackaging,
-    	updateRepackaging:			updateRepackaging,
-    	deleteRepackaging:			deleteRepackaging,
+    	addRepackaging:						addRepackaging,
+    	updateRepackaging:					updateRepackaging,
+    	deleteRepackaging:					deleteRepackaging,
     	
-    	generateSnapshot:			generateSnapshot,
-    	confirmAndPostRepackaingDetails: confirmAndPostRepackaingDetails,
+    	generateSnapshot:					generateSnapshot,
+    	confirmAndPostRepackaingDetails: 	confirmAndPostRepackaingDetails,
     });
 	
+    function getRepackagingEntry(repackagingID) {
+        var request = $http({
+            method: "get",
+            url: "service/repackaging/getRepackagingEntry",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	repackagingID: repackagingID
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     function getLatestRepackaging(jobNo) {
         var request = $http({
             method: "get",
@@ -110,6 +123,9 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-
+    
+    
+   
+    
 }]);
 

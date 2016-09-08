@@ -857,16 +857,22 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/repackaging",
 		parent: "navigation",
 		templateUrl: "view/repackaging/repackaging.html",
+		params: {
+			'version': null
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/repackaging/repackaging.js',
-                           'js/service/repackaging-service.js',
-                           'js/controller/repackaging/repackaging-confirm.js',
-                           'js/controller/repackaging/repackaging-textattachment.js',
-                           'js/service/attachment-service.js'
+               	         'js/service/repackaging-service.js',
+               	         'js/service/resource-summary-service.js',
+               	         'js/service/attachment-service.js',
+               	         'js/controller/repackaging/repackaging.js',
+               	         'js/controller/repackaging/repackaging-history.js',
+               	         'js/controller/repackaging/repackaging-confirm.js',
+               	         'js/controller/repackaging/repackaging-textattachment.js',
+
                     ] 
                 });
             }]
