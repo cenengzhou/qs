@@ -137,6 +137,22 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.accountMaster', {
+		url: "/accountMaster",
+		templateUrl: "view/job/job-account-master.html",
+		controller: 'JobAccountMasterCtrl',
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	           'js/service/jobcost-service.js',
+                           'js/controller/job/job-account-master.js'
+                    ] 
+                });
+            }]
+        }
+	})
 	
 	
 	//Subcontract

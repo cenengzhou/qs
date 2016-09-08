@@ -65,4 +65,17 @@ public class JobCostController {
 			HttpServletResponse response){
 			return jobCostService.getAPPaymentHistories(company, documentType, supplierNumber, documentNumber);
 	}
+	
+	
+	@RequestMapping(value = "createAccountMasterByGroup", method = RequestMethod.POST)
+	public String createAccountMasterByGroup(@RequestParam(required = true) String jobNo,
+										@RequestParam(required = false) Boolean resourceCheck, 
+										@RequestParam(required = false) Boolean resourceSummaryCheck, 
+										@RequestParam(required = false) Boolean scDetailCheck, 
+										@RequestParam(required = false) Boolean forecastCheck){
+			return jobCostService.createAccountMasterByGroup(resourceCheck, resourceSummaryCheck, scDetailCheck, forecastCheck, jobNo);
+	}
+	
+	
+	
 }

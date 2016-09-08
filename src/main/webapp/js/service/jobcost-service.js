@@ -1,10 +1,11 @@
 mainApp.service('jobcostService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
 	// Return public API.
     return({
-    	getPORecordList:		getPORecordList,
-    	getARRecordList:		getARRecordList,
-    	obtainAPRecordList:	obtainAPRecordList,
-    	getAPPaymentHistories:	getAPPaymentHistories
+    	getPORecordList:			getPORecordList,
+    	getARRecordList:			getARRecordList,
+    	obtainAPRecordList:			obtainAPRecordList,
+    	getAPPaymentHistories:		getAPPaymentHistories,
+    	createAccountMasterByGroup: createAccountMasterByGroup
     });
  
     function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
@@ -66,7 +67,23 @@ mainApp.service('jobcostService', ['$http', '$q', 'GlobalHelper',  function($htt
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-
+    
+    
+    function createAccountMasterByGroup(jobNo, resourceCheck, resourceSummaryCheck, scDetailCheck, forecastCheck){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/jobcost/createAccountMasterByGroup',
+    		params:{
+    			jobNo: jobNo,
+    			resourceCheck: resourceCheck,
+    			resourceSummaryCheck: resourceSummaryCheck,
+    			scDetailCheck: scDetailCheck,
+    			forecastCheck: forecastCheck
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
 }]);
 
 

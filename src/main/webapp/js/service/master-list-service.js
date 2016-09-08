@@ -1,10 +1,11 @@
 mainApp.service('masterListService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
 	return({
-		getSubcontractor:			getSubcontractor,
-		getSubcontractorList:		getSubcontractorList,
-		searchObjectList:			searchObjectList,
-		searchSubsidiaryList:		searchSubsidiaryList
+		getSubcontractor:				getSubcontractor,
+		getSubcontractorList:			getSubcontractorList,
+		searchObjectList:				searchObjectList,
+		searchSubsidiaryList:			searchSubsidiaryList,
+		validateAndCreateAccountCode:	validateAndCreateAccountCode
 
 	});
 
@@ -56,5 +57,21 @@ mainApp.service('masterListService', ['$http', '$q', 'GlobalHelper', function($h
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
+	
+	
+	function validateAndCreateAccountCode(jobNo, objectCode, subsidiaryCode) {
+		var request = $http({
+			method: "POST",
+			url: "service/masterList/validateAndCreateAccountCode",
+			params: {
+				jobNo: jobNo,
+				objectCode: objectCode,
+				subsidiaryCode: subsidiaryCode
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
+	
 }]);
 
