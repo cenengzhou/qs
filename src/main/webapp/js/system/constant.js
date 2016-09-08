@@ -122,18 +122,18 @@ mainApp.constant('GlobalParameter', {
 	],
 	subcontract_paymentStatus: [
 		{id:'N', value:'N - Not Submitted'},
-		{id:'D', value:'D - Payment Requistion'},
+		{id:'D', value:'D - Payment Requisition'},
 		{id:'I', value:'I - Interim Payment'},
 		{id:'F', value:'F - Final Payment'}
 	],
 	splitTerminateStatus: [
 		{id:'0', value:'0 - Not Submitted'},
-		{id:'1', value:'1 - Split SC Submitted'},
-		{id:'2', value:'2 - Terminate SC Submitted'},
-		{id:'3', value:'3 - Split Approvaed'},
-		{id:'4', value:'4 - Terminate Approved'},
-		{id:'5', value:'5 - Split Rejected'},
-		{id:'6', value:'6 - Terminate Rejected'},
+		{id:'1', value:'1 - Split Subcontract Submitted'},
+		{id:'2', value:'2 - Terminate Subcontract Submitted'},
+		{id:'3', value:'3 - Split Subcontract Approved'},
+		{id:'4', value:'4 - Terminate Subcontract Approved'},
+		{id:'5', value:'5 - Split Subcontract Rejected'},
+		{id:'6', value:'6 - Terminate Subcontract Rejected'},
 	], 
 	paymentCurrency: [
 		{id:'AUD', value:'AUD - Austrialian Dollar'},
