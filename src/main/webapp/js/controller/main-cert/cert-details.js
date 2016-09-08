@@ -1,6 +1,6 @@
-mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil',
-                                       function ($scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil) {
-
+mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter',
+                                       function ($scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil, GlobalParameter) {
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.disableButtons = true;
 
 	$scope.previousCertNetAmount = 0;

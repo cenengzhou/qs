@@ -12,6 +12,7 @@ public class MakeHTMLStrForAddendumServiceRequest  implements Serializable{
 	private String jobNumber;
 	@NotNull(message = "packageNo cannot be null")
 	private String packageNo;
+	private Long addendumNo;
 	@NotNull(message = "htmlVersion cannot be null")
 	private String htmlVersion;
 	
@@ -44,6 +45,22 @@ public class MakeHTMLStrForAddendumServiceRequest  implements Serializable{
 
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
+	}
+
+
+	/**
+	 * @return the addendumNo
+	 */
+	public Long getAddendumNo() {
+		return addendumNo;
+	}
+
+
+	/**
+	 * @param addendumNo the addendumNo to set
+	 */
+	public void setAddendumNo(Long addendumNo) {
+		this.addendumNo = addendumNo;
 	}
 	
 }

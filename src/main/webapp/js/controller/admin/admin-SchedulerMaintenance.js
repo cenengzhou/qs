@@ -1,7 +1,7 @@
 mainApp.controller('AdminSchedulerMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'SessionHelper', 'modalService', 'quartzService', '$sce', 'audithousekeepService',
-		function($scope, $rootScope, $http, SessionHelper, modalService, quartzService, $sce, audithousekeepService) {
-	
+		['$scope', '$rootScope', '$http', 'SessionHelper', 'modalService', 'quartzService', '$sce', 'audithousekeepService', 'GlobalParameter',
+		function($scope, $rootScope, $http, SessionHelper, modalService, quartzService, $sce, audithousekeepService, GlobalParameter) {
+			$scope.GlobalParameter = GlobalParameter;
 			$scope.onSubmit = function(){
 				$scope.datetimeToTimestamp();
 				quartzService.updateQrtzTriggerList($scope.triggers)

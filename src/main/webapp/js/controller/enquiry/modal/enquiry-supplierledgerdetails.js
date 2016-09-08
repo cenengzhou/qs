@@ -1,6 +1,6 @@
 mainApp.controller('EnquirySupplierLedgerDetailsCtrl', 
-			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'jobcostService', 'masterListService', 'uiGridConstants', 'GlobalHelper',
-    function($scope, modalStatus, modalParam, $uibModalInstance, jobcostService, masterListService, uiGridConstants, GlobalHelper){
+			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'jobcostService', 'masterListService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+    function($scope, modalStatus, modalParam, $uibModalInstance, jobcostService, masterListService, uiGridConstants, GlobalHelper, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -36,7 +36,7 @@ mainApp.controller('EnquirySupplierLedgerDetailsCtrl',
 	                        ];
 
 	$scope.columnDefs = [			             
-			             { field: 'paymentDate', displayName: "Payment Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'paymentDate', displayName: "Payment Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'paymntAmount', displayName: "Payment Amount", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.paymntAmount);

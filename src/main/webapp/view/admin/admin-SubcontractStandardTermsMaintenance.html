@@ -20,17 +20,17 @@
 			<tr>
 				<td ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
 					<button class="btn btn-block btn-warning glyphicon glyphicon-edit"
-						ng-click="onUpdate()">Update</button>
+						ng-click="onUpdate()"> Update Modified Standard Terms</button>
 				</td>
 				<td ng-show="selectedRows.length>0">
 					<button
-						class="btn btn-block btn-danger glyphicon glyphicon-remove-sign"
-						ng-click="onDelete()">Delete</button>
+						class="btn btn-block btn-success glyphicon glyphicon-remove-sign"
+						ng-click="onDelete()"> Delete Selected Standard Terms</button>
 				</td>
 				<td>
 					<button
-						class="btn btn-block btn-info"
-						ng-click="onAdd()"><i class="glyphicon glyphicon-plus-sign"></i> Add</button>
+						class="btn btn-block btn-danger"
+						ng-click="onAdd()"><i class="glyphicon glyphicon-plus-sign"></i> Create New Standard Terms</button>
 				</td>
 			</tr>
 		</table>

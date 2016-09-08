@@ -6,44 +6,30 @@ mainApp.service('htmlService', ['$http', '$q', 'GlobalHelper', function($http, $
     	makeHTMLStringForTenderAnalysis:	makeHTMLStringForTenderAnalysis
     });
    
-    function makeHTMLStringForSCPaymentCert(jobNumber, subcontractNumber, paymentNo, htmlVersion){
+    function makeHTMLStringForSCPaymentCert(requestObj){
     	var request = $http({
     		method: 'POST',
-    		url: 'service/html/makeHTMLStringForSCPaymentCert',
-    		params:{
-    			jobNumber: jobNumber,
-    			subcontractNumber: subcontractNumber,
-    			paymentNo: paymentNo,
-    			htmlVersion: htmlVersion
-    		}
+    		url: 'service/html/makeHTMLStrForPaymentCert',
+    		data: requestObj
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
-    function makeHTMLStringForAddendumApproval(jobNumber, subcontractNumber, addendumNo, htmlVersion){
+    function makeHTMLStringForAddendumApproval(requestObj){
     	var request = $http({
     		method: 'POST',
-    		url: 'service/html/makeHTMLStringForAddendumApproval',
-    		params:{
-    			jobNumber: jobNumber,
-    			subcontractNumber: subcontractNumber,
-    			addendumNo: addendumNo,
-    			htmlVersion: htmlVersion
-    		}
+    		url: 'service/html/makeHTMLStrForAddendum',
+    		data: requestObj
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function makeHTMLStringForTenderAnalysis(noJob, noSubcontract, htmlVersion){
+    function makeHTMLStringForTenderAnalysis(requestObj){
     	var request = $http({
     		method: 'POST',
-    		url: 'service/html/makeHTMLStringForTenderAnalysis',
-    		params:{
-    			noJob: noJob,
-    			noSubcontract: noSubcontract,
-    			htmlVersion: htmlVersion
-    		}
-    	});
+    		url: 'service/html/makeHTMLStrForAward',
+    		data: requestObj
+		});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     

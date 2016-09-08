@@ -1,5 +1,5 @@
-mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'mainCertService', 'uiGridConstants', 'GlobalHelper',
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, mainCertService, uiGridConstants, GlobalHelper){
+mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'mainCertService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+                                            function($scope, modalStatus, modalParam, $uibModalInstance, mainCertService, uiGridConstants, GlobalHelper, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -26,7 +26,7 @@ mainApp.controller('EnquiryCustomerLedgerDetailsCtrl', ['$scope', 'modalStatus',
 	                        ];
 
 	$scope.columnDefs = [			             
-			             { field: 'paymentDate', displayName: "Payment Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'paymentDate', displayName: "Payment Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'paymentAmount', displayName: "Payment Amount", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.paymentAmount);

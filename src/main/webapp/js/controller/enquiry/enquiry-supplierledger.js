@@ -1,7 +1,7 @@
 
 mainApp.controller('EnquirySupplierLedgerCtrl', 
-				['$scope' , '$rootScope', '$http', 'modalService', 'subcontractService', 'jobcostService', 'GlobalHelper', 'uiGridConstants',
-		 function($scope , $rootScope, $http, modalService, subcontractService, jobcostService, GlobalHelper, uiGridConstants ) {
+				['$scope' , '$rootScope', '$http', 'modalService', 'subcontractService', 'jobcostService', 'GlobalHelper', 'uiGridConstants', 'GlobalParameter',
+		 function($scope , $rootScope, $http, modalService, subcontractService, jobcostService, GlobalHelper, uiGridConstants, GlobalParameter ) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -66,12 +66,12 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			             { field: 'payStatus', displayName: "Pay Status", width: '100', enableCellEdit: false },
 			             { field: 'company', displayName: "Company", width: '100', enableCellEdit: false },
 			             { field: 'currency', displayName: "Currency Code",width: '120',  enableCellEdit: false },
-			             { field: 'invoiceDate', width: '100', displayName: "Invoice Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'glDate', width: '100', displayName: "G/L Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'dueDate', width: '100', displayName: "Due Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'invoiceDate', width: '100', displayName: "Invoice Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'glDate', width: '100', displayName: "G/L Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dueDate', width: '100', displayName: "Due Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'batchNumber', displayName: "Batch No", width: '100', enableCellEdit: false },
 			             { field: 'batchType', displayName: "Batch Type", width: '100', enableCellEdit: false },
-			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'subledgerType', displayName: "Subledge Type", width: '100', enableCellEdit: false },
 			             {name: 'Details', width: '180', displayName: 'Payment History', enableCellEdit: false, enableFiltering: false, pinnedRight:true,
 			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-default" ng-click="grid.appScope.showPaymentHistory(row.entity)"> <span class="fa fa-dollar" style="padding-left:10px;" ></span> Payment History</button></div>'

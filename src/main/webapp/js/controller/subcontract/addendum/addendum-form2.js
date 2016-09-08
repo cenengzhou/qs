@@ -27,7 +27,7 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	
 	function getAllAddendumDetails(){
 //		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
-		htmlService.makeHTMLStringForAddendumApproval($scope.jobNo, $scope.subcontractNo, $scope.addendumNo, 'W')
+		htmlService.makeHTMLStringForAddendumApproval({jobNumber:$scope.jobNo, packageNo: $scope.subcontractNo, addendumNo:$scope.addendumNo, htmlVersion:'W'})
 		.then(
 				function( data ) {
 					$scope.form2Html = GlobalHelper.formTemplate(data);

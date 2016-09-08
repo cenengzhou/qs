@@ -213,11 +213,12 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 	 * eg: <body>Some content</body>
 	 */
 	function formTemplate(data){
-		data = data.replace(/<!-- PCMS start /g, '').replace(/ PCMS end -->/g, '');
-		data = data.replace(/<!-- AP start -->.*<!-- AP end -->/g, '');
-		var bodyStart = data.indexOf('<body>');
-		var bodyEnd = data.indexOf('</body>');
-		var html = $sce.trustAsHtml(data.substring(bodyStart, bodyEnd)).toString();
+		var htmlStr = data.htmlStr
+		htmlStr = htmlStr.replace(/<!-- PCMS start /g, '').replace(/ PCMS end -->/g, '');
+		htmlStr = htmlStr.replace(/<!-- AP start -->.*<!-- AP end -->/g, '');
+		var bodyStart = htmlStr.indexOf('<body>');
+		var bodyEnd = htmlStr.indexOf('</body>');
+		var html = $sce.trustAsHtml(htmlStr.substring(bodyStart, bodyEnd)).toString();
 		return html;
 	}
 	

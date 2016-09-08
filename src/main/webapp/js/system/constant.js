@@ -46,6 +46,10 @@ mainApp.constant('GlobalParameter', {
 	        }
 	    }
 	},
+	DATE_FORMAT: 'dd/MM/yyyy',
+	DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',
+	MOMENT_DATE_FORMAT: 'YYYY-MM-DD',
+	MOMENT_DATETIME_FORMAT: 'YYYY-MM-DD hh:mm',
 	addendumTypes:[
 	      		{id:"V1", value: "V1 - External VO - No Budget" },
 	      		{id:"V2", value: "V2 - Internal VO - No Budget" },

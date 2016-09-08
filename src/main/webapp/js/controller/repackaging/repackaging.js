@@ -7,7 +7,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 	
 	$scope.repackaging = "";
 	$scope.sequenceNo = 0;
-	$scope.imageServerAddress = 'http://gammon/PeopleDirectory_Picture/';
+	$scope.imageServerAddress = 'http://gammon.gamska.com/PeopleDirectory_Picture/';
 	$scope.selectedAttachement = false;
 	$scope.isAddTextAttachment = false;
 	loadRepacakgingData();

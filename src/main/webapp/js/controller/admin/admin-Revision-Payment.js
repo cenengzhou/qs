@@ -3,10 +3,6 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 		function($scope, $http, modalService, GlobalParameter, blockUI, GlobalHelper, paymentService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.PaymentCertSearch = {};
-
-	$scope.blockPaymentCert = blockUI.instances.get('blockPaymentCert');
-	$scope.blockPaymentCert.start({hideMessage: true, hideAnimate:true});
-	
 	$scope.onSubmitPaymentCertSearch = function() {
 		var jobNo = $scope.PaymentCertSearch.jobNo;
 		var packageNo = $scope.PaymentCertSearch.packageNo;
@@ -19,7 +15,6 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 		.then(function(data) {
 				if(data instanceof Object){
 					$scope.PaymentCertRecord = data;
-					$scope.blockPaymentCert.stop();
 				} else {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment certificate not found!");
 				}
@@ -45,6 +40,7 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 			});
 		} else {
+			$scope.blockPaymentCert.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please search payment certificate first!");
 		}
 		cleanupPaymentCertRecord();
@@ -52,10 +48,7 @@ mainApp.controller('AdminRevisionPaymentCertCtrl',
 	
 	function cleanupPaymentCertRecord(){
 		$scope.RevisionsPaymentCertRecord.$setPristine();
-		$scope.PaymentCertRecord = {};
-		if(!$scope.blockPaymentCert.isBlocking()){
-			$scope.blockPaymentCert.start({hideMessage: true, hideAnimate:true});
-		}
+//		$scope.PaymentCertRecord = {};
 	}
 	
 }]);

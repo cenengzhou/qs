@@ -1,8 +1,8 @@
-mainApp.controller('JobDatesCtrl', ['$scope','jobService', 'modalService', '$state',
-                                   function($scope, jobService, modalService, $state) {
+mainApp.controller('JobDatesCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter',
+                                   function($scope, jobService, modalService, $state, GlobalParameter) {
 
 	loadJobDates();
-
+	$scope.GlobalParameter = GlobalParameter;
 	function loadJobDates() {
 		jobService.getJob($scope.jobNo)
 		.then(

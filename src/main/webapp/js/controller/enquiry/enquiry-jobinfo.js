@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'jobService', 
-                                  function($scope , $rootScope, $http, modalService, blockUI, jobService) {
+mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'jobService', 'GlobalParameter',
+                                  function($scope , $rootScope, $http, modalService, blockUI, jobService, GlobalParameter) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -54,14 +54,14 @@ mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'levyApplicable', width: '130', displayName: "Levy Applicable"},
 			             { field: 'levyCITAPercentage', width: '100', displayName: "Levy CITA %", cellFilter: 'number:2'},
 			             { field: 'levyPCFBPercentage', width: '120', displayName: "Levy PCFB %", cellFilter: 'number:2'},
-			             { field: 'expectedPCCDate', width: '150', displayName: "Expected PCC Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
-			             { field: 'actualPCCDate', width: '150', displayName: "Actual PCC Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
-			             { field: 'expectedMakingGoodDate', width: '200', displayName: "Expected making Good Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
-			             { field: 'actualMakingGoodDate', width: '180', displayName: "Actual Making Good Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'expectedPCCDate', width: '150', displayName: "Expected PCC Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
+			             { field: 'actualPCCDate', width: '150', displayName: "Actual PCC Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
+			             { field: 'expectedMakingGoodDate', width: '200', displayName: "Expected making Good Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
+			             { field: 'actualMakingGoodDate', width: '180', displayName: "Actual Making Good Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
 			             { field: 'defectLiabilityPeriod', width: '180', displayName: "Defect Liability Period"},
-			             { field: 'defectListIssuedDate', width: '150', displayName: "DefectList Issue Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
-			             { field: 'financialEndDate', width: '150', displayName: "Financial End Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
-			             { field: 'dateFinalACSettlement', width: '180', displayName: "Final AC Settlement Date", cellFilter: 'date:"yyyy/MM/dd"', cellClass: 'text-right'},
+			             { field: 'defectListIssuedDate', width: '150', displayName: "DefectList Issue Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
+			             { field: 'financialEndDate', width: '150', displayName: "Financial End Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
+			             { field: 'dateFinalACSettlement', width: '180', displayName: "Final AC Settlement Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', cellClass: 'text-right'},
 			             { field: 'yearOfCompletion', width: '150', displayName: "Year of Completion", cellClass: 'text-right'},
 //			             { field: 'bqFinalizedFlag', width: '100', displayName: "BQ Finalized Flag", visible: false},
 //			             { field: 'allowManualInputSCWorkDone', width: '100', displayName: "Allow Manual Input SC Work Done", visible: false},

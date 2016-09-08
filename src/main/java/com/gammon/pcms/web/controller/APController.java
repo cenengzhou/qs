@@ -68,7 +68,6 @@ import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
 
 @RestController
-@RequestMapping(path = "ws")
 public class APController {
 	private Logger logger = Logger.getLogger(getClass());
 	@Autowired
@@ -99,7 +98,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "awardSCPackage",
+	@RequestMapping(path = "/ws/awardSCPackage",
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public AwardSCPackageResponse awardSCPackage(@Valid @RequestBody AwardSCPackageRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
@@ -117,7 +116,7 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "awardSCPackage/{jobNumber}/{packageNo}/{approvedOrRejected}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/awardSCPackage/{jobNumber}/{packageNo}/{approvedOrRejected}", method = RequestMethod.GET)
 	public AwardSCPackageResponse awardSCPackage(	HttpServletRequest request,
 															@PathVariable String jobNumber,
 															@PathVariable String packageNo,
@@ -140,7 +139,7 @@ public class APController {
 	 * @throws DatabaseOperationException 
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "checkJobIsConverted", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/checkJobIsConverted", method = { RequestMethod.GET, RequestMethod.POST })
 	public CheckJobIsConvertedResponse checkJobIsConverted(@Valid @RequestBody CheckJobIsConvertedRequest requestObj, BindingResult result) throws DatabaseOperationException {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CheckJobIsConvertedResponse responseObj = new CheckJobIsConvertedResponse();
@@ -160,7 +159,7 @@ public class APController {
 	 * @param jobNumber
 	 * @return
 	 */
-	@RequestMapping(path = "checkJobIsConverted/{jobNumber}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/checkJobIsConverted/{jobNumber}", method = RequestMethod.GET)
 	public CheckJobIsConvertedResponse checkJobIsConverted(HttpServletRequest request, @PathVariable String jobNumber) {
 		CheckJobIsConvertedRequest requestObj = new CheckJobIsConvertedRequest();
 		requestObj.setJobNumber(jobNumber);
@@ -177,7 +176,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "completeAddendumApproval", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/completeAddendumApproval", method = { RequestMethod.GET, RequestMethod.POST })
 	public CompleteAddendumApprovalResponse completeAddendumApproval(@Valid @RequestBody CompleteAddendumApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteAddendumApprovalResponse responseObj = new CompleteAddendumApprovalResponse();
@@ -195,7 +194,7 @@ public class APController {
 	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = "completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}", method = RequestMethod.GET)
 	public CheckJobIsConvertedResponse completeAddendumApproval(HttpServletRequest request,
 																@PathVariable String jobNumber,
 																@PathVariable String packageNo,
@@ -220,7 +219,7 @@ public class APController {
 	 * @throws DatabaseOperationException 
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "completeMainCertApproval", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/completeMainCertApproval", method = { RequestMethod.GET, RequestMethod.POST })
 	public CompleteMainCertApprovalResponse completeMainCertApproval(@Valid @RequestBody CompleteMainCertApprovalRequest requestObj, BindingResult result) throws DatabaseOperationException {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteMainCertApprovalResponse response = new CompleteMainCertApprovalResponse();
@@ -237,7 +236,7 @@ public class APController {
 	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = "completeMainCertApproval/{jobNumber}/{mainCertNo}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/completeMainCertApproval/{jobNumber}/{mainCertNo}/{approvalDecision}", method = RequestMethod.GET)
 	public CompleteMainCertApprovalResponse completeMainCertApproval(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String mainCertNo,
@@ -259,7 +258,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "completeSCPayment", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/completeSCPayment", method = { RequestMethod.GET, RequestMethod.POST })
 	public CompleteSCPaymentResponse completeSCPayment(@Valid @RequestBody CompleteSCPaymentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteSCPaymentResponse responseObj = new CompleteSCPaymentResponse();
@@ -276,7 +275,7 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "completeSCPayment/{jobNumber}/{packageNo}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/completeSCPayment/{jobNumber}/{packageNo}/{approvalDecision}", method = RequestMethod.GET)
 	public CompleteSCPaymentResponse completeSCPayment(	HttpServletRequest request,
 														@PathVariable String jobNumber,
 														@PathVariable String packageNo,
@@ -298,7 +297,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "completeSplitTerminate", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/completeSplitTerminate", method = { RequestMethod.GET, RequestMethod.POST })
 	public CompleteSplitTerminateResponse completeSplitTerminate(@Valid @RequestBody CompleteSplitTerminateRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		CompleteSplitTerminateResponse responseObj = new CompleteSplitTerminateResponse();
@@ -315,7 +314,7 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "completeSplitTerminate/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/completeSplitTerminate/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}", method = RequestMethod.GET)
 	public CompleteSplitTerminateResponse completeSplitTerminate(	HttpServletRequest request,
 																	@PathVariable String jobNumber,
 																	@PathVariable String packageNo,
@@ -339,7 +338,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "getAttachmentList", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/ws/getAttachmentList", method = { RequestMethod.GET, RequestMethod.POST })
 	public GetAttachmentListResponseList getAttachmentList(@Valid @RequestBody GetAttachmentListRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetAttachmentListResponseList responseListObj = new GetAttachmentListResponseList();
@@ -387,7 +386,7 @@ public class APController {
 	 * @param textKey
 	 * @return
 	 */
-	@RequestMapping(path = "getAttachmentList/{nameObject}/{textKey}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/getAttachmentList/{nameObject}/{textKey}", method = RequestMethod.GET)
 	public GetAttachmentListResponseList getAttachmentList(	HttpServletRequest request,
 															@PathVariable String nameObject,
 															@PathVariable String textKey) {
@@ -407,7 +406,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "getTextAttachment",
+	@RequestMapping(path = "/ws/getTextAttachment",
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public GetTextAttachmentResponse getTextAttachment(@Valid @RequestBody GetTextAttachmentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
@@ -425,7 +424,7 @@ public class APController {
 	 * @param sequenceNo
 	 * @return
 	 */
-	@RequestMapping(path = "getTextAttachment/{nameObject}/{textKey}/{sequenceNo}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/getTextAttachment/{nameObject}/{textKey}/{sequenceNo}", method = RequestMethod.GET)
 	public GetTextAttachmentResponse getTextAttachmentRequest(	HttpServletRequest request,
 																@PathVariable String nameObject,
 																@PathVariable String textKey,
@@ -447,7 +446,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForAward",
+	@RequestMapping(path = {"/ws/makeHTMLStrForAward", "/service/html/makeHTMLStrForAward"},
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForAwardServiceResponse makeHTMLStrForAward(@Valid @RequestBody MakeHTMLStrForAwardServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
@@ -470,7 +469,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForAward/{jobNumber}/{packageNo}/{htmlVersion}",
+	@RequestMapping(path = "/ws/makeHTMLStrForAward/{jobNumber}/{packageNo}/{htmlVersion}",
 					method = RequestMethod.GET)
 	public MakeHTMLStrForAwardServiceResponse makeHTMLStrForAward(	HttpServletRequest request,
 																	@PathVariable String jobNumber,
@@ -493,13 +492,13 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForAddendum",
+	@RequestMapping(path = {"/ws/makeHTMLStrForAddendum", "/service/html/makeHTMLStrForAddendum"},
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForAddendumServiceResponse makeHTMLStrForAddendum(@Valid @RequestBody MakeHTMLStrForAddendumServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		MakeHTMLStrForAddendumServiceResponse responseObj = new MakeHTMLStrForAddendumServiceResponse();
 		try{
-			responseObj.setHtmlStr(htmlService.makeHTMLStringForAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getHtmlVersion()));
+			responseObj.setHtmlStr(htmlService.makeHTMLStringForAddendumApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getAddendumNo(), requestObj.getHtmlVersion()));
 		} catch (Exception e){
 			e.printStackTrace();
 			responseObj.setHtmlStr(e.getMessage());
@@ -516,7 +515,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForAddendum/{jobNumber}/{packageNo}/{htmlVersion}",
+	@RequestMapping(path = "/ws/makeHTMLStrForAddendum/{jobNumber}/{packageNo}/{htmlVersion}",
 					method = RequestMethod.GET)
 	public MakeHTMLStrForAddendumServiceResponse makeHTMLStrForAddendum(HttpServletRequest request,
 																		@PathVariable String jobNumber,
@@ -539,7 +538,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForPayment",
+	@RequestMapping(path = {"/ws/makeHTMLStrForPayment", "/service/html/makeHTMLStrForPayment"},
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForPaymentServiceResponse makeHTMLStrForPayment(@Valid @RequestBody MakeHTMLStrForPaymentServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
@@ -562,7 +561,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForPayment/{jobNumber}/{packageNo}/{htmlVersion}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/makeHTMLStrForPayment/{jobNumber}/{packageNo}/{htmlVersion}", method = RequestMethod.GET)
 	public MakeHTMLStrForPaymentServiceRequest makeHTMLStrForPayment(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String packageNo,
@@ -584,7 +583,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForPaymentCert", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = {"/ws/makeHTMLStrForPaymentCert", "/service/html/makeHTMLStrForPaymentCert"}, method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForPaymentCertServiceResponse makeHTMLStrForPaymentCert(@Valid @RequestBody MakeHTMLStrForPaymentCertServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		MakeHTMLStrForPaymentCertServiceResponse responseObj = new MakeHTMLStrForPaymentCertServiceResponse();
@@ -607,7 +606,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForPaymentCert/{jobNumber}/{packageNo}/{paymentNo}{htmlVersion}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/makeHTMLStrForPaymentCert/{jobNumber}/{packageNo}/{paymentNo}{htmlVersion}", method = RequestMethod.GET)
 	public MakeHTMLStrForPaymentCertServiceResponse makeHTMLStrForPaymentCert(	HttpServletRequest request,
 																				@PathVariable String jobNumber,
 																				@PathVariable String packageNo,
@@ -631,7 +630,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForSplitTerminate", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = {"/ws/makeHTMLStrForSplitTerminate", "/service/html/makeHTMLStrForSplitTerminate"}, method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForSplitTerminateServiceResponse makeHTMLStrForSplitTerminate(@Valid @RequestBody MakeHTMLStrForSplitTerminateServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		MakeHTMLStrForSplitTerminateServiceResponse responseObj = new MakeHTMLStrForSplitTerminateServiceResponse();
@@ -653,7 +652,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForSplitTerminate/{jobNumber}/{packageNo}/{htmlVersion}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/makeHTMLStrForSplitTerminate/{jobNumber}/{packageNo}/{htmlVersion}", method = RequestMethod.GET)
 	public MakeHTMLStrForSplitTerminateServiceResponse makeHTMLStrForSplitTerminate(HttpServletRequest request,
 																					@PathVariable String jobNumber,
 																					@PathVariable String packageNo,
@@ -675,7 +674,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "makeHTMLStrForMainCert", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = {"/ws/makeHTMLStrForMainCert", "/service/html/makeHTMLStrForMainCert"}, method = { RequestMethod.GET, RequestMethod.POST })
 	public MakeHTMLStrForMainCertServiceResponse makeHTMLStrForMainCert(@Valid @RequestBody MakeHTMLStrForMainCertServiceRequest requestObj, BindingResult result) {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		MakeHTMLStrForMainCertServiceResponse responseObj = new MakeHTMLStrForMainCertServiceResponse();
@@ -697,7 +696,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "makeHTMLStrForMainCert/{jobNumber}/{mainCertNo}/{htmlVersion}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/makeHTMLStrForMainCert/{jobNumber}/{mainCertNo}/{htmlVersion}", method = RequestMethod.GET)
 	public MakeHTMLStrForMainCertServiceResponse makeHTMLStrForMainCert(HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String mainCertNo,

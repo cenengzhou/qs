@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 
-                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper) {
+mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 'GlobalParameter',
+                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper, GlobalParameter) {
 	
 	$scope.blockEnquiryPurchaseOrderDetail = blockUI.instances.get('blockEnquiryPurchaseOrderDetail');
 	$scope.blockEnquiryPurchaseOrderDetail.start('Under Construction');
@@ -21,9 +21,9 @@ mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '
 //			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
 //			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
 //			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-//			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-//			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
+//			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+//			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+//			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 //			             { field: 'maxInactiveInterval', enableCellEdit: false},
             			 ]
 	};

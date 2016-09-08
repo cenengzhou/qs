@@ -63,7 +63,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 //					//console.log(data);
 //					$scope.paymentCertSummary = data;
 //				});
-		htmlService.makeHTMLStringForSCPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), 'W')
+		htmlService.makeHTMLStringForSCPaymentCert({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, paymentNo: $cookies.get('paymentCertNo'), htmlVersion: 'W'})
 		.then(function(data){
 			$scope.invoiceHtml = GlobalHelper.formTemplate(data);
 		});

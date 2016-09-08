@@ -501,7 +501,7 @@
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
 														</span> <input class="form-control"
-															ng-model="cert.ipaSubmissionDate"
+															ng-model="cert.ipaSubmissionDate" timestamp-to-string="yyyy-MM-dd"
 															ng-disabled="disableButtons || cert.certificateStatus >= 120"
 															data-parsley-required>
 
@@ -512,11 +512,11 @@
 												<div class="form-group">
 													<label>Certificate Issue Date:</label>
 													<div class="input-group" moment-picker="cert.certIssueDate"
-														start-view="day" format="YYYY-MM-DD"
+														start-view="day" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certIssueDate"
+														</span> <input class="form-control" ng-model="cert.certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -528,11 +528,11 @@
 												<div class="form-group">
 													<label> Certificate As At Date:</label>
 													<div class="input-group" moment-picker="cert.certAsAtDate"
-														start-view="day" format="YYYY-MM-DD"
+														start-view="day" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certAsAtDate"
+														</span> <input class="form-control" ng-model="cert.certAsAtDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -543,11 +543,11 @@
 												<div class="form-group">
 													<label>Certificate Due Date:</label>
 													<div class="input-group" moment-picker="cert.certDueDate"
-														start-view="day" format="YYYY-MM-DD"
+														start-view="day" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certDueDate"
+														</span> <input class="form-control" ng-model="cert.certDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -559,11 +559,11 @@
 													<label>Actual Receipt Date:</label>
 													<div class="input-group"
 														moment-picker="cert.actualReceiptDate"
-														start-view="day" format="YYYY-MM-DD"
+														start-view="day" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control"
+														</span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-model="cert.actualReceiptDate"
 															disabled>
 

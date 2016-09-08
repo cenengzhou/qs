@@ -1,5 +1,5 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil ) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter ) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -28,8 +28,8 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 			columnDefs: [
 			             { field: 'mainCertNo', displayName: "Cert No."},
-			             { field: 'contractualDueDate'},
-			             { field: 'dueDate', displayName: "Forecast/Actual Due Date"},
+			             { field: 'contractualDueDate', cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'percent', displayName: "Percent", 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,

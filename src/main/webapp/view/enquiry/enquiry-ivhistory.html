@@ -25,10 +25,10 @@
 								<div class="col-md-3">
 									<label for="searchFromDate">From Date:</label>
 									<div class="input-group" moment-picker="searchFromDate"
-										format="DD MMM YYYY" start-view="year" min-view="year" today="true">
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
-										</span> <input class="form-control" id="searchFromDate" name="searchFromDate" required
+										</span> <input class="form-control" id="searchFromDate" name="searchFromDate" required timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 											ng-model="searchFromDate">
 									</div>
 								</div>
@@ -36,10 +36,10 @@
 								<div class="col-md-3">
 									<label for="searchToDate">To Date:</label>
 									<div class="input-group" moment-picker="searchToDate"
-										format="DD MMM YYYY" start-view="year" min-view="year" today="true">
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
-										</span> <input class="form-control" id="searchToDate" name="searchToDate" required
+										</span> <input class="form-control" id="searchToDate" name="searchToDate" required timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 											ng-model="searchToDate">
 									</div>
 								</div>

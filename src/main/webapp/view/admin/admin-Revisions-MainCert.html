@@ -21,7 +21,7 @@
 
 	<form name="RevisionsMainCertRecord"
 		ng-submit="onSubmitMainCertRecord()">
-		<div class="row" style="padding: 20px" block-ui="blockMainCert"
+		<div class="row" style="padding: 20px" ng-show="MainCertRecord.jobNo"
 			ng-show="true || MainCertRecord.jobNo !== undefined">
 
 			<div class="row" resize ng-style="resizeWithOffset(330)">
@@ -545,10 +545,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.certIssueDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certIssueDate"
+										id="MainCertRecord_certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.certIssueDate">
 								</div>
 							</div>
@@ -562,10 +562,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.certStatusChangeDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certStatusChangeDate"
+										id="MainCertRecord_certStatusChangeDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.certStatusChangeDate">
 								</div>
 							</div>
@@ -578,11 +578,11 @@
 								As At Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="MainCertRecord.certAsAtDate" format="YYYY-MM-DD"
+									moment-picker="MainCertRecord.certAsAtDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certAsAtDate"
+										id="MainCertRecord_certAsAtDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.certAsAtDate">
 								</div>
 							</div>
@@ -595,11 +595,11 @@
 								Due Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="MainCertRecord.certDueDate" format="YYYY-MM-DD"
+									moment-picker="MainCertRecord.certDueDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certDueDate"
+										id="MainCertRecord_certDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.certDueDate">
 								</div>
 							</div>
@@ -613,10 +613,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.ipaSubmissionDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_ipaSubmissionDate"
+										id="MainCertRecord_ipaSubmissionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.ipaSubmissionDate">
 								</div>
 							</div>
@@ -630,10 +630,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.ipaSentoutDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_ipaSentoutDate"
+										id="MainCertRecord_ipaSentoutDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.ipaSentoutDate">
 								</div>
 							</div>
@@ -647,10 +647,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="MainCertRecord.actualReceiptDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_actualReceiptDate"
+										id="MainCertRecord_actualReceiptDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="MainCertRecord.actualReceiptDate">
 								</div>
 							</div>

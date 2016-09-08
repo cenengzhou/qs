@@ -26,7 +26,7 @@
 
 	<form name="RevisionsPaymentCertRecord"
 		ng-submit="onSubmitPaymentCertRecord()">
-		<div class="row" style="padding: 20px" block-ui="blockPaymentCert"
+		<div class="row" style="padding: 20px" ng-show="PaymentCertRecord.paymentCertNo"
 			ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
 			<div class="row" resize ng-style="resizeWithOffset(330)">
 
@@ -194,11 +194,11 @@
 								at Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.asAtDate" format="YYYY-MM-DD"
+									moment-picker="PaymentCertRecord.asAtDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="PaymentCertRecord_asAtDate"
+										id="PaymentCertRecord_asAtDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="PaymentCertRecord.asAtDate">
 								</div>
 							</div>
@@ -211,11 +211,11 @@
 								class="control-label">Certificate Issue Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.asAtDate" format="YYYY-MM-DD"
+									moment-picker="PaymentCertRecord.asAtDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="PaymentCertRecord_certIssueDate"
+										id="PaymentCertRecord_certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="PaymentCertRecord.certIssueDate">
 								</div>
 							</div>
@@ -228,11 +228,11 @@
 								class="control-label">Due Date</label>
 							<div>
 								<div class="input-group"
-									moment-picker="PaymentCertRecord.dueDate" format="YYYY-MM-DD"
+									moment-picker="PaymentCertRecord.dueDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="PaymentCertRecord_dueDate"
+										id="PaymentCertRecord_dueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="PaymentCertRecord.dueDate">
 								</div>
 							</div>
@@ -246,10 +246,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="PaymentCertRecord.ipaOrInvoiceReceivedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="PaymentCertRecord_ipaOrInvoiceReceivedDate"
+										id="PaymentCertRecord_ipaOrInvoiceReceivedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="PaymentCertRecord.ipaOrInvoiceReceivedDatee">
 								</div>
 							</div>

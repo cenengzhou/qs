@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 
-                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService) {
+mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 
+                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchDueDateType = 'onOrBefore';
 //	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
@@ -30,10 +30,10 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'getValueById("directPayment","directPayment")', displayName: 'Direct Payment', enableCellEdit: false},
 			             { field: 'getValueById("intermFinalPayment","intermFinalPayment")', displayName: 'Interim / Final Payment', enableCellEdit: false},
 			             { field: 'certAmount', displayName: 'Certificate Amount', cellFilter: 'number:2', cellClass: 'text-right', enableCellEdit: false},
-			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date', enableCellEdit: false},
-			             { field: 'asAtDate', cellFilter: 'date', displayName: 'As at Date', enableCellEdit: false},
-			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date', enableCellEdit: false},
-			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date', enableCellEdit: false}	
+			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},
+			             { field: 'asAtDate', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', displayName: 'As at Date', enableCellEdit: false},
+			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},
+			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false}	
             			 ]
 	};
 	

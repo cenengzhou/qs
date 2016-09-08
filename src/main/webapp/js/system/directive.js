@@ -269,7 +269,10 @@ mainApp.directive('timestampToString', function($filter) {
 		    require: 'ngModel',
 		    link: function (scope, element, attrs, ngModel) {
 		      ngModel.$formatters.push(function (value) {
-		        return $filter('date')(new Date(value),'dd MMM yyyy HH:mm');
+		    	  if(value != undefined) {
+		    		  return $filter('date')(new Date(value), attrs.timestampToString);
+		    	  }
+		    	  return value;
 		      });
 		    }
 		  };
@@ -334,7 +337,9 @@ mainApp.directive('imageonload', function() {
 
             });
             element.bind('error', function(){
+            	console.log('Cannot load image:' + element[0].src)
                 element[0].src = attrs.rollBackImage;
+            	console.log('Roll back to:' + element[0].src)
             });
         }
     };

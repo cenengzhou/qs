@@ -35,10 +35,10 @@
 									<div class="col-md-3">
 									<label>&nbsp;</label>
 										<div class="input-group block" moment-picker="searchDueDate"
-											format="DD MMM YYYY" start-view="year" min-view="year" today="true">
+											format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true">
 											<span class="input-group-addon"> <i
 												class="fa fa-calendar"></i>
-											</span> <input class="form-control" id="searchDueDate"
+											</span> <input class="form-control" id="searchDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 												ng-model="searchDueDate">
 										</div>
 									</div>

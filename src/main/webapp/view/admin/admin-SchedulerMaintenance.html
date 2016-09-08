@@ -54,10 +54,10 @@
 							<td>
 								<div class="input-group"
 									moment-picker="trigger.nextFireDatetime"
-									format="DD MMM YYYY HH:mm" start-view="hour" today="true"  ng-model-options="{ updateOn: 'blur' }"
+									format="{{GlobalParameter.MOMENT_DATETIME_FORMAT}}" start-view="hour" today="true"  ng-model-options="{ updateOn: 'blur' }"
 									>
 									<span class="input-group-addon"><i
-										class="fa fa-calendar"></i></span> <input class="form-control" 
+										class="fa fa-calendar"></i></span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATETIME_FORMAT}}"
 										name="{{trigger.triggerName}}_nextFireDatetime" id="{{trigger.triggerName}}_nextFireDatetime"
 										ng-model="trigger.nextFireDatetime">
 								</div>

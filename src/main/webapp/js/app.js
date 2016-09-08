@@ -1364,7 +1364,7 @@ mainApp.config(['ChartJsProvider', 'colorCode', function (ChartJsProvider, color
     });
   }]);
 
-mainApp.config(['momentPickerProvider', function(momentPickerProvider){
+mainApp.config(['momentPickerProvider', '$provide', function(momentPickerProvider, $provide){
 	  momentPickerProvider.options({
           /* Picker properties */
           locale:        'en',
@@ -1386,6 +1386,33 @@ mainApp.config(['momentPickerProvider', function(momentPickerProvider){
           minutesStep:   1,
           secondsStep:   1
       });
+	  
+	  $provide.decorator('uiGridExporterService', function($delegate, $filter){
+		    $delegate.formatFieldAsCsv = function (field) {
+		      if (field.value == null) {
+		        return '';
+		      }
+		      if (typeof(field.value) === 'number') {
+		    	  if(field.value.toString().length === 13){
+		    		  return $filter('date')(field.value, 'yyyy-MM-dd');
+		    	  }
+		        return field.value;
+		      }
+		      if (typeof(field.value) === 'boolean') {
+		        return (field.value ? 'TRUE' : 'FALSE') ;
+		      }
+		      if (typeof(field.value) === 'string') {
+		        return field.value;
+		      }
+		      if ( field.value instanceof Date){
+		        return $filter('date')(field.value, 'yyyy-MM-dd');
+		      }
+
+		      return JSON.stringify(field.value);
+		    };
+
+		    return $delegate
+		  });
 }]);
 
 mainApp.config(function(blockUIConfig, colorCode) {
@@ -1506,7 +1533,6 @@ mainApp.run(function($rootScope, $location, $cookies){
 	});*/
 
 });
-	
 	
 /**Compatibility 
 Angular Chart 0.8.8

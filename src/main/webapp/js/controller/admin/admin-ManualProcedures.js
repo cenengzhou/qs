@@ -1,10 +1,11 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService',
-		function($scope, $rootScope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService) {
+		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService', 'GlobalParameter',
+		function($scope, $rootScope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService, GlobalParameter) {
 	$scope.provisionGlDate = moment();
 	$scope.auditTables = [];
 	$scope.auditTableName = '';
+	$scope.GlobalParameter = GlobalParameter;
 //	$scope.blockProcedures = blockUI.instances.get('blockProcedures');
 	
 	$scope.loadAuditTableMap = function(){

@@ -3,10 +3,6 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, mainCertService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.MainCertSearch = {};
-
-	$scope.blockMainCert = blockUI.instances.get('blockMainCert');
-	$scope.blockMainCert.start({hideMessage: true, hideAnimate:true});
-	
 	$scope.onSubmitMainCertSearch = function() {
 		var jobNo = $scope.MainCertSearch.jobNo;
 		var certificateNumber = $scope.MainCertSearch.certificateNumber;
@@ -18,7 +14,6 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 		.then( function(data) {
 				if(data instanceof Object){
 					$scope.MainCertRecord = data;
-					$scope.blockMainCert.stop();
 				} else {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Main Cert not found!");
 				}
@@ -51,10 +46,7 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 	
 	function cleanupMainCertRecord(){
 		$scope.RevisionsMainCertRecord.$setPristine();
-		$scope.MainCertRecord = {};
-		if(!$scope.blockMainCert.isBlocking()){
-			$scope.blockMainCert.start({hideMessage: true, hideAnimate:true});
-		}
+//		$scope.MainCertRecord = {};
 	}
 	
 }]);

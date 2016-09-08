@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService',
-                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService) {
+mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter',
+                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
@@ -45,8 +45,8 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http'
 			            		 return c;
 			            	 },
 			             },
-			             { field: 'dateTransactionJulian', displayName: 'Order Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
-			             { field: 'dtForGLAndVouch1', displayName: 'G/L Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
+			             { field: 'dateTransactionJulian', displayName: 'Order Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dtForGLAndVouch1', displayName: 'G/L Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
             			 ]
 	};
 	

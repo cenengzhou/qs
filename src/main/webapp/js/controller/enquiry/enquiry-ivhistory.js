@@ -1,9 +1,9 @@
 
-mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants',
-                                  function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants ) {
+mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter',
+                                  function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter ) {
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
-	
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.searchToDate = moment().format('DD MMM YYYY');
 	$scope.searchFromDate =  moment().year(moment().year() -1 ).format('DD MMM YYYY');
@@ -24,7 +24,7 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 			enableCellSelection: false,
 			exporterMenuPdf: false,
 			columnDefs: [
-			             { field: 'createdDate', displayName: 'Posting Date', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy\''},
+			             { field: 'createdDate', displayName: 'Posting Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'packageNo', displayName: 'Package No.', enableCellEdit: false },
 			             { field: 'objectCode', displayName: 'Object', enableCellEdit: false},
 			             { field: 'subsidiaryCode', displayName: 'Subsidiary', enableCellEdit: false},

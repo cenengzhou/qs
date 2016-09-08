@@ -1,5 +1,5 @@
-mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil',
-                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil ) {
+mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', 'GlobalParameter',
+                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, GlobalParameter ) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.mainCertNo = $cookies.get("mainCertNo");
@@ -25,8 +25,8 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 			             { field: 'id', visible: false},
 			             { field: 'jobNo', visible: false},
 			             { field: 'mainCertNo', displayName: "Cert No.", enableCellEdit: false},
-			             { field: 'contractualDueDate', type: 'date', cellFilter: 'date:"yyyy-MM-dd"'},
-			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", type: 'date', cellFilter: 'date:"yyyy-MM-dd"'},
+			             { field: 'contractualDueDate', type: 'date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", type: 'date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'percent', displayName: "Release Percentage", 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,

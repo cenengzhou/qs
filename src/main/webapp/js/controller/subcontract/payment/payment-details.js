@@ -1,8 +1,8 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', 'paymentService', 'modalService', 'roundUtil', '$state',
-                                          function($scope, $stateParams, $cookies, paymentService, modalService, roundUtil, $state) {
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter',
+                                          function($scope, $stateParams, $cookies, paymentService, modalService, roundUtil, $state, GlobalParameter) {
 	loadData();
 	$scope.disableButtons = true;
-
+	$scope.GlobalParameter = GlobalParameter;
 	 $scope.edit = true;
 	 $scope.canEdit = function() { 
 		 return $scope.edit; 

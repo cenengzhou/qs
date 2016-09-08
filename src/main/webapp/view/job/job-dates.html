@@ -39,11 +39,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
-									moment-picker="jobDates.plannedStartDate" format="YYYY-MM-DD"
+									moment-picker="jobDates.plannedStartDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
 									start-view="day" ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control"
+									</span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="jobDates.plannedStartDate">
 								</div>
 							</div>
@@ -54,11 +54,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group" moment-picker="jobDates.plannedEndDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="jobDates.plannedEndDate">
+									</span> <input class="form-control" ng-model="jobDates.plannedEndDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -67,12 +67,12 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
-									moment-picker="jobDates.actualStartDate" format="YYYY-MM-DD"
+									moment-picker="jobDates.actualStartDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
 									start-view="day" ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control"
-										ng-model="jobDates.actualStartDate">
+										ng-model="jobDates.actualStartDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -81,11 +81,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group" moment-picker="jobDates.actualEndDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="jobDates.actualEndDate">
+									</span> <input class="form-control" ng-model="jobDates.actualEndDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -95,12 +95,12 @@
 							<div class="form-group col-md-4">
 								<div class="input-group"
 									moment-picker="jobDates.anticipatedCompletionDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control"
-										ng-model="jobDates.anticipatedCompletionDate">
+										ng-model="jobDates.anticipatedCompletionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -110,12 +110,12 @@
 							<div class="form-group col-md-4">
 								<div class="input-group"
 									moment-picker="jobDates.revisedCompletionDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control"
-										ng-model="jobDates.revisedCompletionDate">
+										ng-model="jobDates.revisedCompletionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -128,11 +128,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group" moment-picker="job.actualPCCDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="job.actualPCCDate">
+									</span> <input class="form-control" ng-model="job.actualPCCDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -143,12 +143,12 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
-									moment-picker="job.actualMakingGoodDate" format="YYYY-MM-DD"
+									moment-picker="job.actualMakingGoodDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="day" ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control"
-										ng-model="job.actualMakingGoodDate">
+										ng-model="job.actualMakingGoodDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -157,12 +157,12 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
-									moment-picker="job.defectListIssuedDate" format="YYYY-MM-DD"
+									moment-picker="job.defectListIssuedDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="day" ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control"
-										ng-model="job.defectListIssuedDate">
+										ng-model="job.defectListIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -171,11 +171,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group" moment-picker="job.financialEndDate"
-									format="YYYY-MM-DD" start-view="day"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
 									ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="job.financialEndDate">
+									</span> <input class="form-control" ng-model="job.financialEndDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}">
 								</div>
 							</div>
 
@@ -184,11 +184,11 @@
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
-									moment-picker="job.dateFinalACSettlement" format="YYYY-MM-DD"
+									moment-picker="job.dateFinalACSettlement" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 									start-view="day" ng-model-options="{ updateOn: 'blur' }">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control"
+									</span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="job.dateFinalACSettlement">
 								</div>
 							</div>

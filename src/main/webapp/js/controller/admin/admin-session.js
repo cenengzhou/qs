@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminSessionCtrl', 
-		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 
-		 function($scope , $http, colorCode, SessionHelper, $rootScope) {
+		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 'GlobalParameter',
+		 function($scope , $http, colorCode, SessionHelper, $rootScope, GlobalParameter) {
 			
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -25,9 +25,9 @@ mainApp.controller('AdminSessionCtrl',
 			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
 			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
 			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
-			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
-			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:\'MM/dd/yyyy h:mm:ss a Z\''},
+			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATETIME_FORMAT +'"'},
+			             { field: 'lastAccessedTime', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATETIME_FORMAT +'"'},
+			             { field: 'lastRequest', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATETIME_FORMAT +'"'},
 			             { field: 'maxInactiveInterval', enableCellEdit: false},
             			 ]
 	};

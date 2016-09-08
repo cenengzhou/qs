@@ -1,7 +1,7 @@
 
-mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 
-                                        function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService) {
-
+mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter',
+                                        function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter) {
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -20,7 +20,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			             { field: 'typeDocument', width:'100', displayName: "Document Type", enableCellEdit: false },
 			             { field: 'numberDocument', width:'100', displayName: "Document", enableCellEdit: false },
 			             { field: 'dateGl', width:'100', displayName: "G/L Date", 
-			            	 cellFilter: 'date:"MMM dd yyyy"', 
+			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
 			            	 filterCellFiltered:true, 
 //			                 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div class="input-group" moment-picker="colFilter.term" format="MM-DD-YYYY" start-view="year" today="true"><span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input class="form-control" id="colFilter.term" name="colFilter.term" ng-model="colFilter.term" ng-model-options="{ updateOn: \'blur\' }"></div></div>',
 //			                 filters:[
@@ -66,7 +66,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 			             { field: 'recordKeyMatchedPo', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },
 			             { field: 'numberBatch', width:'100', displayName: "Batch Number", enableCellEdit: false },
-			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date', enableCellEdit: false }
+			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false }
 			             
 //			             { field: 'numberJournalEntryLine', width:'100', displayName: "Journal Entry Line", enableCellEdit: false },
 //			             { field: 'numberJeLineExtension', width:'100', displayName: "Je Line Extension", enableCellEdit: false },

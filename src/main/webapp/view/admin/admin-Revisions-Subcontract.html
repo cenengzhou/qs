@@ -19,7 +19,7 @@
 	</div>
 	<form name="RevisionsSubcontractRecord"
 		ng-submit="onSubmitSubcontractRecord()">
-		<div class="row" style="padding: 20px" block-ui="blockSbucontract"
+		<div class="row" style="padding: 20px" ng-show="SubcontractRecord.jobInfo"
 			ng-show="true || SubcontractRecord.jobInfo !== undefined">
 
 			<div class="row" resize ng-style="resizeWithOffset(330)">
@@ -685,10 +685,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.finalPaymentIssuedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_finalPaymentIssuedDate"
+										id="SubcontractRecord_finalPaymentIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.finalPaymentIssuedDate">
 								</div>
 							</div>
@@ -702,10 +702,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.firstPaymentCertIssuedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_firstPaymentCertIssuedDate"
+										id="SubcontractRecord_firstPaymentCertIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.firstPaymentCertIssuedDate">
 								</div>
 							</div>
@@ -719,10 +719,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.latestAddendumValueUpdatedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_latestAddendumValueUpdatedDate"
+										id="SubcontractRecord_latestAddendumValueUpdatedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.latestAddendumValueUpdatedDate">
 								</div>
 							</div>
@@ -736,10 +736,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.lastPaymentCertIssuedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_lastPaymentCertIssuedDate"
+										id="SubcontractRecord_lastPaymentCertIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.lastPaymentCertIssuedDate">
 								</div>
 							</div>
@@ -753,10 +753,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.loaSignedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_loaSignedDate"
+										id="SubcontractRecord_loaSignedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.loaSignedDate">
 								</div>
 							</div>
@@ -770,10 +770,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.preAwardMeetingDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_preAwardMeetingDate"
+										id="SubcontractRecord_preAwardMeetingDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.preAwardMeetingDate">
 								</div>
 							</div>
@@ -787,10 +787,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.requisitionApprovedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_requisitionApprovedDate"
+										id="SubcontractRecord_requisitionApprovedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.requisitionApprovedDate">
 								</div>
 							</div>
@@ -804,10 +804,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.scApprovalDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scApprovalDate"
+										id="SubcontractRecord_scApprovalDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.scApprovalDate">
 								</div>
 							</div>
@@ -821,10 +821,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.scAwardApprovalRequestSentDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scAwardApprovalRequestSentDate"
+										id="SubcontractRecord_scAwardApprovalRequestSentDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.scAwardApprovalRequestSentDate">
 								</div>
 							</div>
@@ -838,10 +838,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.scCreatedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scCreatedDate"
+										id="SubcontractRecord_scCreatedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.scCreatedDate">
 								</div>
 							</div>
@@ -855,10 +855,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.scDocLegalDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scDocLegalDate"
+										id="SubcontractRecord_scDocLegalDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.scDocLegalDate">
 								</div>
 							</div>
@@ -872,10 +872,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.scDocScrDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scDocScrDate"
+										id="SubcontractRecord_scDocScrDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.scDocScrDate">
 								</div>
 							</div>
@@ -889,10 +889,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.tenderAnalysisApprovedDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_tenderAnalysisApprovedDate"
+										id="SubcontractRecord_tenderAnalysisApprovedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.tenderAnalysisApprovedDate">
 								</div>
 							</div>
@@ -906,10 +906,10 @@
 							<div>
 								<div class="input-group"
 									moment-picker="SubcontractRecord.workCommenceDate"
-									format="YYYY-MM-DD" start-view="hour" today="true">
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_workCommenceDate"
+										id="SubcontractRecord_workCommenceDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 										ng-model="SubcontractRecord.workCommenceDate">
 								</div>
 							</div>

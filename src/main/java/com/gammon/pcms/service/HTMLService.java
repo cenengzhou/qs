@@ -18,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.FreemarkerConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.helper.FreeMarkerHelper;
+import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AddendumDetailHBDao;
+import com.gammon.qs.dao.AddendumHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
@@ -80,6 +82,8 @@ public class HTMLService implements Serializable{
 	private MainCertWSDao mainCertWSDao;
 	@Autowired
 	private ResourceSummaryHBDao resourceSummaryHBDao;
+	@Autowired
+	private AddendumHBDao addendumHBDao;
 	@Autowired
 	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
@@ -383,9 +387,15 @@ public class HTMLService implements Serializable{
 //			return strHTMLCodingContent;
 //	}
 	
-	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion){
+	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws DatabaseOperationException{
+		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
+		Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
+		Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract);
 		List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("job", job != null ? job : new JobInfo());
+		data.put("addendum", addendum != null ? addendum : new Addendum());
+		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
 		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());
 		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("addendum"), data);
 	}

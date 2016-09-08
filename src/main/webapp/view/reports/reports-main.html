@@ -48,11 +48,11 @@
 							<td>
 								<label for="printPaymentCertDueDate">Due Date:</label><br>
 								<div class="input-group" moment-picker="printPaymentCertDueDate"
-										format="DD/MM/YYYY" start-view="month" today="true">
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="month" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="printPaymentCertDueDate" name="printPaymentCertDueDate"
-											ng-model="printPaymentCertDueDate"
+											ng-model="printPaymentCertDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 											pattern=".\d{1,2}\/\d{1,2}\/\d{4}" title="Please select date from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 									<p ng-show="printPaymentCertForm.printPaymentCertDueDate.$invalid && printPaymentCertForm.printPaymentCertDueDate.$touched" class="red">Please select the date from date picker</p>

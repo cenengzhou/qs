@@ -881,78 +881,6 @@
 			<artifactId>JDE-ValidateAccNumManager</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-
-		<!-- SOAP Web Service for PCMS to serve as service provider -->
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-awardSCPackage</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-checkJobIsConverted</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-completeAddendumApproval</artifactId>
-			<version>2016-08-23</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-completeMainCertApproval</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-completeSCPayment</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-completeSplitTerminate</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-getAttachmentList</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-getTextAttachment</artifactId>
-			<version>2016-06-14</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForAddendumService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForAwardService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForMainCertService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForPaymentCertService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForPaymentService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.ws</groupId>
-			<artifactId>ws-makeHTMLStrForSplitTerminateService</artifactId>
-			<version>2016-08-17</version>
-		</dependency>
 	</dependencies>
 	
 	<!-- ========================================== BUILD ================================================= -->
@@ -985,37 +913,10 @@
 					<fork>true</fork>
 					<executable>"${jdk1.8}\bin\javac.exe"</executable>
 					<compilerVersion>${java.version}</compilerVersion>
-					<excludes>
-						<exclude>com/gammon/qs/webservice/serviceProvider/</exclude>
-						<exclude>**/node_modules/*</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 			
-			<!-- ====== Step 3: Delete excluded source by ANT plug-in ====== -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven-antrun-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>file-copy</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<delete
-									dir="${project.build.outputDirectory}/com/gammon/qs/webservice/serviceProvider"
-									includeemptydirs="true" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> 
-			
-			<!-- ====== Step 4: Package the project as WAR file ====== -->
+			<!-- ====== Step 3: Package the project as WAR file ====== -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>

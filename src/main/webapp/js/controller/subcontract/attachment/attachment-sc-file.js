@@ -51,7 +51,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
    					att.fileIconClass = 'fa fa-2x fa-file-o';
        			}
        		}
-    		att.user = {};
+    		att.user = {UserName: att.createdUser};
     		att.user.userIcon = 'resources/images/profile.png';
     		$scope.getUserByUsername(att.createdUser)
     		.then(function(response){
@@ -62,6 +62,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     				} else {
     					att.user.userIcon = 'resources/images/profile.png';
     				}
+    				if(!att.user.UserName) att.user.UserName = att.createdUser;
     			}
     		});
     		index++;

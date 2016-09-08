@@ -1,6 +1,6 @@
-mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 
-                                       function($scope , $state, $stateParams, $cookies, paymentService, mainCertService, modalService) {
-
+mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 'GlobalParameter',
+                                       function($scope , $state, $stateParams, $cookies, paymentService, mainCertService, modalService, GlobalParameter) {
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.disableButtons = true;
 
 	$scope.mainCertNo = {

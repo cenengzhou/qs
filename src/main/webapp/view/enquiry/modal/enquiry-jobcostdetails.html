@@ -32,22 +32,22 @@
 								<div class="col-md-3">
 									<label for="fromDate">From Date:</label>
 									<div class="input-group" moment-picker="fromDate"
-										format="YYYY-MM-DD" start-view="year" today="true">
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="fromDate" name="fromDate"
-											ng-model="fromDate"
+											ng-model="fromDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 											 title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 								</div>
 								<div class="col-md-3">
 									<label for="thruDate">To Date:</label>
 									<div class="input-group" moment-picker="thruDate"
-										format="YYYY-MM-DD" start-view="year" today="true">
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true">
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="thruDate" name="thruDate"
-											ng-model="thruDate"
+											ng-model="thruDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 											title="Please select Year and Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 								</div>

@@ -1,11 +1,8 @@
 mainApp.controller('AdminRevisionSubcontractCtrl',
-		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'subcontractService',
+		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 
 		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, subcontractService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.SubcontractSearch = {};
-
-	$scope.blockSbucontract = blockUI.instances.get('blockSbucontract');
-	$scope.blockSbucontract.start({hideMessage: true, hideAnimate:true});
 	$scope.onSubmitSubcontractSearch = function() {
 		var jobNo = $scope.SubcontractSearch.jobNo;
 		var packageNo = $scope.SubcontractSearch.packageNo;
@@ -17,7 +14,6 @@ mainApp.controller('AdminRevisionSubcontractCtrl',
 			function(data) {
 				if(data instanceof Object){
 					$scope.SubcontractRecord = data;
-					$scope.blockSbucontract.stop();
 				} else {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract not found");
 				}
@@ -48,10 +44,7 @@ mainApp.controller('AdminRevisionSubcontractCtrl',
 	
 	function cleanupSubcontractRecord(){
 		$scope.RevisionsSubcontractRecord.$setPristine();
-		$scope.SubcontractRecord = {};
-		if(!$scope.blockSbucontract.isBlocking()){
-			$scope.blockSbucontract.start({hideMessage: true, hideAnimate:true});
-		}
+//		$scope.SubcontractRecord = {};
 	}
 	
 }]);

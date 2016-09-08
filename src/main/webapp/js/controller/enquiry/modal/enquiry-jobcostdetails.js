@@ -1,15 +1,15 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants){
+mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 
+                                            function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
 		$uibModalInstance.close();
 	};
-	
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.noJob = $scope.parentScope.searchAccountLedger.jobNo;
 	$scope.typeLedger = $scope.parentScope.searchAccountLedger.ledgerType;
-	$scope.fromDate = moment($scope.parentScope.searchAccountLedger.fromDate).format('YYYY-MM-DD');
-	$scope.thruDate = moment($scope.parentScope.searchAccountLedger.thruDate).format('YYYY-MM-DD');
+	$scope.fromDate = moment($scope.parentScope.searchAccountLedger.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.thruDate = moment($scope.parentScope.searchAccountLedger.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
 
 	$scope.typeDocument = null;
 	$scope.noSubcontract = $scope.parentScope.searchAccountLedger.subcontractNo;
@@ -65,7 +65,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            			 c +=' text-warning';
 			            		 }
 			            		 return c;
-			            	 }			            	 
+			            	 },
+			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'
 			             },
 			             { field: 'taxExplanationDescription', width: '200', displayName: 'Explanation', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -133,7 +134,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			             { field: 'recordKeyMatchedPo', width: '80', displayName: 'PO Record Key', enableCellEdit: false, visible:false},
 			             { field: 'typeBatch', width: '80', displayName: 'Batch Type', enableCellEdit: false, visible:false},
 			             { field: 'numberBatch', width: '80', displayName: 'Batch No', enableCellEdit: false, visible:false},
-			             { field: 'dateBatch', width: '120', displayName: 'Batch Date', cellFilter: 'date:\'MM/dd/yyyy\'', enableCellEdit: false, visible:false},
+			             { field: 'dateBatch', width: '120', displayName: 'Batch Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false, visible:false},
 			            ];
 
 	$scope.gridOptions = {

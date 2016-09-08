@@ -19,7 +19,7 @@ public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && !authentication.getPrincipal().equals("anonymousUser")) {
 			WebAuthenticationDetails details = (WebAuthenticationDetails)authentication.getDetails();
-			return details.getRemoteAddress();
+			return details != null ? details.getRemoteAddress() : null;
 		}
 		return null;
 	}

@@ -1,6 +1,6 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state',
-                                            function($scope, subcontractService, modalService, $state) {
-
+mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter',
+                                            function($scope, subcontractService, modalService, $state, GlobalParameter) {
+	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	
 

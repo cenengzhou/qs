@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, jobcostService, uiGridConstants, GlobalHelper) {
+mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+                                  function($scope , $rootScope, $http, modalService, jobcostService, uiGridConstants, GlobalHelper, GlobalParameter) {
 	
 	
 	$scope.searchJobNo = $scope.jobNo;
@@ -68,13 +68,13 @@ mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http
 			             { field: 'payStatus', displayName: "Pay Status", width: '100', enableCellEdit: false },
 			             { field: 'company', displayName: "Company", width: '100', enableCellEdit: false },
 			             { field: 'currency', displayName: "Currency Code",width: '120',  enableCellEdit: false },
-			             { field: 'glDate', width: '100', displayName: "G/L Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'invoiceDate', width: '100', displayName: "Invoice Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'dueDate', width: '100', displayName: "Due Date", cellFilter: 'date:"dd/MM/yyyy"'},
-			             { field: 'dateClosed', width: '100', displayName: "Date Closed", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'glDate', width: '100', displayName: "G/L Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'invoiceDate', width: '100', displayName: "Invoice Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dueDate', width: '100', displayName: "Due Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dateClosed', width: '100', displayName: "Date Closed", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'batchNumber', displayName: "Batch No", width: '100', enableCellEdit: false },
 			             { field: 'batchType', displayName: "Batch Type", width: '100', enableCellEdit: false },
-			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"dd/MM/yyyy"'},
+			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
 			             { field: 'remark', displayName: "Remark", width: '250', enableCellEdit: false },
 			             {name: 'Details', width: '180', displayName: 'Receipt History', enableCellEdit: false, enableFiltering: false, pinnedRight:true,
 			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-default" ng-click="grid.appScope.showReceiptHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px;" ></span> Receipt History</button></div>'
