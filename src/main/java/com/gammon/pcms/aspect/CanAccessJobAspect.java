@@ -1,8 +1,6 @@
 package com.gammon.pcms.aspect;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -63,8 +61,7 @@ public class CanAccessJobAspect {
         Object[] args = joinPoint.getArgs();
         for(int i = 0; i< args.length; i++){
         	if(Arrays.asList(jobNumberNames).contains(parameterNames[i])){
-        		logger.log(Level.INFO, joinPoint.getTarget().getClass().getName() + ": " 
-				+ joinPoint.getSignature().getName() + "=> canAccessJob(" +args[i]+")") ;
+        		logger.debug(joinPoint.getTarget().getClass().getName() + ": " + joinPoint.getSignature().getName() + "=> canAccessJob(" +args[i]+")") ;
         		adminService.canAccessJob((String) args[i]);
         		break;
         	}

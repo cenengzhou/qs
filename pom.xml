@@ -885,7 +885,7 @@
 	
 	<!-- ========================================== BUILD ================================================= -->
 	<build>
-		<finalName>pcms</finalName>	
+		<finalName>ROOT</finalName>	
 		<!-- ====== Step 1: Define directories to be included / excluded ====== -->
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
