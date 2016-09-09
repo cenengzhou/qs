@@ -495,13 +495,13 @@
 													
 													<div class="input-group"
 														moment-picker="cert.ipaSubmissionDate"
-														format="YYYY-MM-DD"
+														format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
 														start-view="day"
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
 														</span> <input class="form-control"
-															ng-model="cert.ipaSubmissionDate" timestamp-to-string="yyyy-MM-dd"
+															ng-model="cert.ipaSubmissionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-disabled="disableButtons || cert.certificateStatus >= 120"
 															data-parsley-required>
 
@@ -511,12 +511,15 @@
 											<div class="col-md-6">
 												<div class="form-group">
 													<label>Certificate Issue Date:</label>
-													<div class="input-group" moment-picker="cert.certIssueDate"
-														start-view="day" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+													<div class="input-group" 
+														moment-picker="cert.certIssueDate"
+														format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+														start-view="day" 
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+														</span> <input class="form-control" 
+															ng-model="cert.certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 

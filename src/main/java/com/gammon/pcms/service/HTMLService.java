@@ -88,6 +88,7 @@ public class HTMLService implements Serializable{
 	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
 	private FreemarkerConfig freemarkerConfig;
+
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
 		String strHTMLCodingContent = "";
@@ -96,7 +97,7 @@ public class HTMLService implements Serializable{
 		Double clientCertAmount = new Double(0);
 		PaymentCertViewWrapper paymentCertViewWrapper = new PaymentCertViewWrapper();
 		List<PaymentCert> scPaymentCertList = null;
-		
+		MasterListVendor masterList = new MasterListVendor();
 
 		String strPaymentDueDate = null;
 		String strPaymentAsAtDate = null;
@@ -108,7 +109,10 @@ public class HTMLService implements Serializable{
 		logger.info("Input parameter: jobNo["+jobNumber+"] - Package No["+subcontractNumber+"] - PaymentNo["+paymentNo+"]");
 		try {
 			job = jobInfoHBDao.obtainJobInfo(jobNumber);
-			  
+
+			if(job != null)
+				masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
+			
 			if(paymentNo==null || "".equals(paymentNo.trim()) || paymentNo.trim().length()==0){// check the paymentNo
 				logger.info("Payment number is null --> Max. Payment No. will be used.");
 				scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, subcontractNumber);
@@ -161,6 +165,7 @@ public class HTMLService implements Serializable{
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
 		data.put("job", job != null ? job : new JobInfo());
+		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("clientCertAmount", clientCertAmount != null ? clientCertAmount : new Double(0));
 		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
 		data.put("ivCumAmt", ivCumAmt != null ? ivCumAmt : new Double(0));
@@ -180,6 +185,9 @@ public class HTMLService implements Serializable{
 	
 	public String makeHTMLStringForTenderAnalysis(String noJob, String noSubcontract, String htmlVersion) throws Exception{
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
+		MasterListVendor masterList = new MasterListVendor();
+		if(job != null)
+			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
 		Subcontract subcontract = subcontractHBDao.obtainSubcontract(noJob, noSubcontract);
 		Tender budgetTender = tenderHBDao.obtainTender(noJob, noSubcontract, 0);
 		List<Tender> tenderList = tenderHBDao.obtainTenderList(noJob, noSubcontract);
@@ -190,7 +198,9 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		
 		data.put("job", job != null ? job : new JobInfo());
+		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
 		data.put("budgetTender", budgetTender != null ? budgetTender : new Tender());
 		data.put("tenderList", tenderList != null ? tenderList : new ArrayList<>());
@@ -387,13 +397,24 @@ public class HTMLService implements Serializable{
 //			return strHTMLCodingContent;
 //	}
 	
-	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws DatabaseOperationException{
+	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws Exception{
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
-		Addendum addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract);
-		List<AddendumDetail> addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
+		
+		MasterListVendor masterList = new MasterListVendor();
+		if(job != null)
+			masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
+
+		Addendum addendum = new Addendum();
+		List<AddendumDetail> addendumDetailList = new ArrayList<AddendumDetail>(); 
+		if(noAddendum !=null){
+			addendum = addendumHBDao.getAddendum(noJob, noSubcontract, noAddendum);
+			addendumDetailList = addendumDetailHBDao.getAllAddendumDetails(noJob, noSubcontract, noAddendum);
+		}
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("job", job != null ? job : new JobInfo());
+		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("addendum", addendum != null ? addendum : new Addendum());
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
 		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());

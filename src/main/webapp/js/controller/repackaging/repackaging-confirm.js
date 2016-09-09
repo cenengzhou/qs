@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookies',  'uiGridConstants', '$uibModalInstance', 'modalStatus', 'modalParam',
-                                             function($scope, modalService, repackagingService, $cookies, uiGridConstants, $uibModalInstance, modalStatus, modalParam) {
+mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookies',  'uiGridConstants', '$uibModalInstance', 'modalStatus', 'modalParam', '$state',
+                                             function($scope, modalService, repackagingService, $cookies, uiGridConstants, $uibModalInstance, modalStatus, modalParam, $state) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 

@@ -127,8 +127,8 @@ public class PaymentController {
 												@RequestParam(required = true) String subcontractNo,
 												@RequestParam(required = true) Integer paymentCertNo,
 												@RequestParam(required = true) String paymentTerms,
-												@RequestParam(required = true) Double gstPayable,
-												@RequestParam(required = true) Double gstReceivable,
+												@RequestParam(required = false) Double gstPayable,
+												@RequestParam(required = false) Double gstReceivable,
 												@RequestBody PaymentCert paymentCert){
 		String result = "";
 		result = paymentService.updatePaymentCertificate(jobNo, subcontractNo, paymentCertNo, paymentTerms,  paymentCert, gstPayable, gstReceivable);
