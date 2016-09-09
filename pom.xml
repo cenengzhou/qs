@@ -584,302 +584,302 @@
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AccountBalanceByDateRangeManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AccountIDListByJobManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AccountLedgerManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AddressBookQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AddUpdateAttachmentLinkManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AddUpdateTextManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-BUMasterUpdateManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-BusinessUnitMasterManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-CallBatchR04110ZAManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-CallCustomJEPostingManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-ChartTypeQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-CheckAwardValidationManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-createApprovalRoute</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-CurrencyValidationManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-CurrentRepackagingStatusQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-DeleteAttachmentLinkManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-DeleteRepackagingBudgetManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-DeleteTextMediaObjectManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetAAIAccountManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetAccountMasterManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetAPRecordsEnquiryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetAPRecordsManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetARRecordsEnquiryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetAttachmentLinkManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetCertReciDataAsAtDateManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetCurrencyCodeOfBUManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetInsurancePercentageByJobManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
-			<artifactId>JDE-GetJobAddtionalInformationmanager</artifactId>
-			<version>1.0.0</version>
+			<artifactId>JDE-GetJobAddtionalInformationManager</artifactId>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetMediaObjectListManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetNextNumberManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetPerformanceAppraisalsListManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetPeriodYearManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetPORecordsManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetSCWorkScopeManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetSubContractorWorkScopeQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetSupplierMasterManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetSupplierTaxAreaF0401Manager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-GetUpdateAccMasterUsingCodeTypeCodeManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-InsertJournalEntryTransactionsManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-InsertMainCertContraChargeManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
-			<artifactId>JDE-InsertRepackagingBudgetmanager</artifactId>
-			<version>1.0.0</version>
+			<artifactId>JDE-InsertRepackagingBudgetManager</artifactId>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-InsertSingleSignOnKeyF58100Manager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-InsertVoucherTransactionsManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-IPAInsertManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-JobAdditionalInfoUserManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-MainCertificateInsertManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-MainCertReceiveDateQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-PaymentHistoryEnquiryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-PlainTextManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-PostMainCertToARManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-SCHeaderInsertManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-SCPaymentHeaderInsertManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-UnitDescriptionListQueryManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-UpdateOrderStatusManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-UpdateSCWorkScopeManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-userAccessJobs</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-userAccessRights</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-userCompanySet</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-ValidateAAICompletelyManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-ValidateAccNumManager</artifactId>
-			<version>1.0.0</version>
+			<version>2016-09-09</version>
 		</dependency>
 	</dependencies>
 	

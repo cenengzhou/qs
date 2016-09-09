@@ -641,6 +641,8 @@ public class HTMLService implements Serializable{
 					else if (htmlVersion.equals("B")){
 						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("MainCert_B.ftl", data);
 					}
+				} else {
+					strHTMLCodingContent = "Main certificate:" + mainCertNo + " not found";
 				}
 			} catch (NumberFormatException e) {
 				e.printStackTrace();

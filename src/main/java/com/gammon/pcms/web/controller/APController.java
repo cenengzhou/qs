@@ -23,12 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.gammon.pcms.dto.rs.provider.request.ap.AwardSCPackageRequest;
-import com.gammon.pcms.dto.rs.provider.request.ap.CheckJobIsConvertedRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAddendumApprovalRequest;
+import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAwardApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteMainCertApprovalRequest;
-import com.gammon.pcms.dto.rs.provider.request.ap.CompleteSCPaymentRequest;
-import com.gammon.pcms.dto.rs.provider.request.ap.CompleteSplitTerminateRequest;
+import com.gammon.pcms.dto.rs.provider.request.ap.CompletePaymentApprovalRequest;
+import com.gammon.pcms.dto.rs.provider.request.ap.CompleteSplitTerminateApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.GetAttachmentListRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.GetTextAttachmentRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.MakeHTMLStrForAddendumServiceRequest;
@@ -37,12 +36,11 @@ import com.gammon.pcms.dto.rs.provider.request.ap.MakeHTMLStrForMainCertServiceR
 import com.gammon.pcms.dto.rs.provider.request.ap.MakeHTMLStrForPaymentCertServiceRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.MakeHTMLStrForPaymentServiceRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.MakeHTMLStrForSplitTerminateServiceRequest;
-import com.gammon.pcms.dto.rs.provider.response.ap.AwardSCPackageResponse;
-import com.gammon.pcms.dto.rs.provider.response.ap.CheckJobIsConvertedResponse;
 import com.gammon.pcms.dto.rs.provider.response.ap.CompleteAddendumApprovalResponse;
+import com.gammon.pcms.dto.rs.provider.response.ap.CompleteAwardApprovalResponse;
 import com.gammon.pcms.dto.rs.provider.response.ap.CompleteMainCertApprovalResponse;
-import com.gammon.pcms.dto.rs.provider.response.ap.CompleteSCPaymentResponse;
-import com.gammon.pcms.dto.rs.provider.response.ap.CompleteSplitTerminateResponse;
+import com.gammon.pcms.dto.rs.provider.response.ap.CompletePaymentApprovalResponse;
+import com.gammon.pcms.dto.rs.provider.response.ap.CompleteSplitTerminateApprovalResponse;
 import com.gammon.pcms.dto.rs.provider.response.ap.GetAttachmentListResponse;
 import com.gammon.pcms.dto.rs.provider.response.ap.GetAttachmentListResponseList;
 import com.gammon.pcms.dto.rs.provider.response.ap.GetTextAttachmentResponse;
@@ -59,10 +57,8 @@ import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachPayment;
 import com.gammon.qs.domain.AttachSubcontract;
 import com.gammon.qs.domain.AttachSubcontractDetail;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.AttachmentService;
-import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
@@ -70,8 +66,6 @@ import com.gammon.qs.service.SubcontractService;
 @RestController
 public class APController {
 	private Logger logger = Logger.getLogger(getClass());
-	@Autowired
-	private JobInfoService jobInfoService;
 	@Autowired
 	private SubcontractService subcontractService;
 	@Autowired
@@ -98,11 +92,11 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/ws/awardSCPackage",
+	@RequestMapping(path = "/ws/completeAwardApproval ",
 					method = { RequestMethod.GET, RequestMethod.POST })
-	public AwardSCPackageResponse awardSCPackage(@Valid @RequestBody AwardSCPackageRequest requestObj, BindingResult result) throws Exception {
+	public CompleteAwardApprovalResponse completeAwardApproval(@Valid @RequestBody CompleteAwardApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
-		AwardSCPackageResponse responseObj = new AwardSCPackageResponse();
+		CompleteAwardApprovalResponse responseObj = new CompleteAwardApprovalResponse();
 		responseObj.setCompleted(subcontractService.toCompleteSCAwardApproval(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected()));
 		return responseObj;
 	}
@@ -116,55 +110,17 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/awardSCPackage/{jobNumber}/{packageNo}/{approvedOrRejected}", method = RequestMethod.GET)
-	public AwardSCPackageResponse awardSCPackage(	HttpServletRequest request,
+	@RequestMapping(path = "/ws/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}", method = RequestMethod.GET)
+	public CompleteAwardApprovalResponse completeAwardApproval(	HttpServletRequest request,
 															@PathVariable String jobNumber,
 															@PathVariable String packageNo,
 															@PathVariable String approvedOrRejected) {
-		AwardSCPackageRequest requestObj = new AwardSCPackageRequest();
+		CompleteAwardApprovalRequest requestObj = new CompleteAwardApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvedOrRejected);
 		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
-		AwardSCPackageResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/awardSCPackage", requestObj, AwardSCPackageResponse.class);
-		return responseObj;
-	}
-
-	/**
-	 * REST mapping
-	 * 
-	 * @param requestObj
-	 * @param result
-	 * @return
-	 * @throws DatabaseOperationException 
-	 * @throws Exception
-	 */
-	@RequestMapping(path = "/ws/checkJobIsConverted", method = { RequestMethod.GET, RequestMethod.POST })
-	public CheckJobIsConvertedResponse checkJobIsConverted(@Valid @RequestBody CheckJobIsConvertedRequest requestObj, BindingResult result) throws DatabaseOperationException {
-		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
-		CheckJobIsConvertedResponse responseObj = new CheckJobIsConvertedResponse();
-		JobInfo job = null;
-		job = jobInfoService.obtainJob(requestObj.getJobNumber());
-		if (job != null && job.getConversionStatus() != null)
-			responseObj.setConverted(true);
-		else
-			responseObj.setConverted(false);
-		return responseObj;
-	}
-
-	/**
-	 * REST mapping accept @PathVariable as parameter and create request object then post via RestTemplate
-	 * 
-	 * @param request
-	 * @param jobNumber
-	 * @return
-	 */
-	@RequestMapping(path = "/ws/checkJobIsConverted/{jobNumber}", method = RequestMethod.GET)
-	public CheckJobIsConvertedResponse checkJobIsConverted(HttpServletRequest request, @PathVariable String jobNumber) {
-		CheckJobIsConvertedRequest requestObj = new CheckJobIsConvertedRequest();
-		requestObj.setJobNumber(jobNumber);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
-		CheckJobIsConvertedResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/checkJobIsConverted", requestObj, CheckJobIsConvertedResponse.class);
+		CompleteAwardApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAwardApproval", requestObj, CompleteAwardApprovalResponse.class);
 		return responseObj;
 	}
 
@@ -195,7 +151,7 @@ public class APController {
 	 * @return
 	 */
 	@RequestMapping(path = "/ws/completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}", method = RequestMethod.GET)
-	public CheckJobIsConvertedResponse completeAddendumApproval(HttpServletRequest request,
+	public CompleteAddendumApprovalResponse completeAddendumApproval(HttpServletRequest request,
 																@PathVariable String jobNumber,
 																@PathVariable String packageNo,
 																@PathVariable String user,
@@ -206,7 +162,7 @@ public class APController {
 		requestObj.setUser(user);
 		requestObj.setApprovalDecision(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
-		CheckJobIsConvertedResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAddendumApproval", requestObj, CheckJobIsConvertedResponse.class);
+		CompleteAddendumApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAddendumApproval", requestObj, CompleteAddendumApprovalResponse.class);
 		return responseObj;
 	}
 
@@ -258,10 +214,10 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/ws/completeSCPayment", method = { RequestMethod.GET, RequestMethod.POST })
-	public CompleteSCPaymentResponse completeSCPayment(@Valid @RequestBody CompleteSCPaymentRequest requestObj, BindingResult result) throws Exception {
+	@RequestMapping(path = "/ws/completePaymentApproval", method = { RequestMethod.GET, RequestMethod.POST })
+	public CompletePaymentApprovalResponse completePaymentApproval(@Valid @RequestBody CompletePaymentApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
-		CompleteSCPaymentResponse responseObj = new CompleteSCPaymentResponse();
+		CompletePaymentApprovalResponse responseObj = new CompletePaymentApprovalResponse();
 		responseObj.setCompleted(paymentService.toCompleteSCPayment(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovalDecision()));
 		return responseObj;
 	}
@@ -275,17 +231,17 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeSCPayment/{jobNumber}/{packageNo}/{approvalDecision}", method = RequestMethod.GET)
-	public CompleteSCPaymentResponse completeSCPayment(	HttpServletRequest request,
+	@RequestMapping(path = "/ws/completePaymentApproval/{jobNumber}/{packageNo}/{approvalDecision}", method = RequestMethod.GET)
+	public CompletePaymentApprovalResponse completePaymentApproval(	HttpServletRequest request,
 														@PathVariable String jobNumber,
 														@PathVariable String packageNo,
 														@PathVariable String approvedOrRejected) {
-		CompleteSCPaymentRequest requestObj = new CompleteSCPaymentRequest();
+		CompletePaymentApprovalRequest requestObj = new CompletePaymentApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovalDecision(approvedOrRejected);
 		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
-		CompleteSCPaymentResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeSCPayment", requestObj, CompleteSCPaymentResponse.class);
+		CompletePaymentApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completePaymentApproval", requestObj, CompletePaymentApprovalResponse.class);
 		return responseObj;
 	}
 
@@ -297,10 +253,10 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/ws/completeSplitTerminate", method = { RequestMethod.GET, RequestMethod.POST })
-	public CompleteSplitTerminateResponse completeSplitTerminate(@Valid @RequestBody CompleteSplitTerminateRequest requestObj, BindingResult result) throws Exception {
+	@RequestMapping(path = "/ws/completeSplitTerminateApproval", method = { RequestMethod.GET, RequestMethod.POST })
+	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApproval(@Valid @RequestBody CompleteSplitTerminateApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
-		CompleteSplitTerminateResponse responseObj = new CompleteSplitTerminateResponse();
+		CompleteSplitTerminateApprovalResponse responseObj = new CompleteSplitTerminateApprovalResponse();
 		responseObj.setCompleted(subcontractService.toCompleteSplitTerminate(requestObj.getJobNumber(), requestObj.getPackageNo(), requestObj.getApprovedOrRejected(), requestObj.getSplitOrTerminate()));
 		return responseObj;
 	}
@@ -314,19 +270,19 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeSplitTerminate/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}", method = RequestMethod.GET)
-	public CompleteSplitTerminateResponse completeSplitTerminate(	HttpServletRequest request,
+	@RequestMapping(path = "/ws/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}", method = RequestMethod.GET)
+	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApproval(	HttpServletRequest request,
 																	@PathVariable String jobNumber,
 																	@PathVariable String packageNo,
 																	@PathVariable String approvedOrRejected,
 																	@PathVariable String splitOrTerminate) {
-		CompleteSplitTerminateRequest requestObj = new CompleteSplitTerminateRequest();
+		CompleteSplitTerminateApprovalRequest requestObj = new CompleteSplitTerminateApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvedOrRejected);
 		requestObj.setSplitOrTerminate(splitOrTerminate);
 		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
-		CompleteSplitTerminateResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/awardSCPackage", requestObj, CompleteSplitTerminateResponse.class);
+		CompleteSplitTerminateApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/awardSCPackage", requestObj, CompleteSplitTerminateApprovalResponse.class);
 		return responseObj;
 	}
 
@@ -515,15 +471,17 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/makeHTMLStrForAddendum/{jobNumber}/{packageNo}/{htmlVersion}",
+	@RequestMapping(path = "/ws/makeHTMLStrForAddendum/{jobNumber}/{packageNo}{addendumNo}/{htmlVersion}",
 					method = RequestMethod.GET)
 	public MakeHTMLStrForAddendumServiceResponse makeHTMLStrForAddendum(HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String packageNo,
+																		@PathVariable Long addendumNo,
 																		@PathVariable String htmlVersion) {
 		MakeHTMLStrForAddendumServiceRequest requestObj = new MakeHTMLStrForAddendumServiceRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
+		requestObj.setAddendumNo(addendumNo);
 		requestObj.setHtmlVersion(htmlVersion);
 		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
 		MakeHTMLStrForAddendumServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForAddendum", requestObj, MakeHTMLStrForAddendumServiceResponse.class);
