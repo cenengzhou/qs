@@ -222,6 +222,7 @@ public class RepackagingService {
 
 
 	public String confirmAndPostRepackaingDetails(Long repackagingID) {
+		logger.info("confirmAndPostRepackaingDetails");;
 		String error = "";
 		boolean posted = false;
 		try {

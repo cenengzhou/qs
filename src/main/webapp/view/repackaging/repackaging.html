@@ -45,8 +45,8 @@
 								</div>
 								<div class="process-step">
 									<button type="button" class="btn btn-big-circle"
-										ng-class="{'btn-primary': repackaging != '' && repackaging.status == '900'}"
-										ng-disabled="repackaging == '' || repackaging.status != '900'"
+										ng-class="{'btn-primary': latestVersion && repackaging != '' && repackaging.status == '900'}"
+										ng-disabled="latestVersion == false || repackaging == '' || repackaging.status != '900'"
 										ng-click="click('unlock')">
 										<i class="fa fa-unlock-alt fa-3x"></i>
 									</button>
@@ -102,8 +102,8 @@
 
 								<div class="process-step">
 									<button type="button" class="btn btn-big-circle"
-										ng-class="{'btn-primary': repackaging.status == '300'}"
-										ng-disabled="repackaging.status != '300'"
+										ng-class="{'btn-primary': repackaging.status == '300' || repackaging.status == '900'}"
+										ng-disabled="latestVersion && repackaging.status != '300'"
 										ng-click="click('confirm')">
 										<i class="fa fa-check-square-o fa-3x"></i>
 									</button>

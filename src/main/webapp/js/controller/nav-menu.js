@@ -65,8 +65,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 				var iconPath = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
 				//As the config of http://gammon/ not allow CORS so cannot check if the image is available or 401
 				//check with the authType, if Kerberos change the image, if LDAP keep the default
-				console.log('User:' +$scope.user.username + ' Staff id:' + $scope.user.StaffID + ' authType:' + $scope.user.authType);
-				console.log('Default icon:' + $scope.userIcon);
+				//console.log('User:' +$scope.user.username + ' Staff id:' + $scope.user.StaffID + ' authType:' + $scope.user.authType);
+				//console.log('Default icon:' + $scope.userIcon);
 				if($scope.user.authType === 'Kerberos'){
 					console.log('Change user icon to:' + iconPath);
 					$scope.userIcon = iconPath;

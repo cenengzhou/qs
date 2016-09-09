@@ -10,6 +10,8 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 	$scope.imageServerAddress = 'http://gammon.gamska.com/PeopleDirectory_Picture/';
 	$scope.selectedAttachement = false;
 	$scope.isAddTextAttachment = false;
+	
+	$scope.latestVersion = false;
 	getLatestRepackaging();
 
 	$scope.click = function(view) {
@@ -23,7 +25,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 		}else if (view=="snapshot"){
 			generateSnapshot();
 		}else if (view=="confirm"){
-			modalService.open('lg', 'view/repackaging/modal/repackaging-confirm.html', 'RepackagingConfirmModalCtrl');
+			modalService.open('lg', 'view/repackaging/modal/repackaging-confirm.html', 'RepackagingConfirmModalCtrl',  $scope.latestVersion, $scope.repackaging.id);
 		}
 	};
 
@@ -35,14 +37,26 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 		updateRepackaging();
 	}
 
-
+	$rootScope.$on("GetSelectedRepackagingVersion", function(event, repackagingId){
+		repackagingService.getRepackagingEntry(repackagingId)
+		.then(
+				function( data ) {
+					$scope.latestVersion = false;
+					$scope.repackaging = data;
+					if($scope.repackaging.id != null && $scope.repackaging.id.length > 0){
+						$scope.loadAttachment($scope.repackaging.id);
+					}
+				});
+      });
+	
 	function getLatestRepackaging() {
 		repackagingService.getLatestRepackaging($scope.jobNo)
 		.then(
 				function( data ) {
-					$scope.repackaging = data;
-					if($scope.repackaging.id != null && $scope.repackaging.id.length > 0){
-						$cookies.put('repackagingId', data.id);
+					if(data != null){
+						$scope.repackaging = data;
+						$scope.latestVersion = true;
+						$cookies.put('repackagingId', $scope.repackaging.id);
 
 						$scope.loadAttachment($scope.repackaging.id);
 					}
@@ -229,16 +243,6 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 	}
 
 	
-	$rootScope.$on("GetSelectedRepackagingVersion", function(event, repackagingId){
-		repackagingService.getRepackagingEntry(repackagingId)
-		.then(
-				function( data ) {
-					$scope.repackaging = data;
-					if($scope.repackaging.id != null && $scope.repackaging.id.length > 0){
-						$scope.loadAttachment($scope.repackaging.id);
-					}
-				});
-      });
 
 	
 	//Attachment

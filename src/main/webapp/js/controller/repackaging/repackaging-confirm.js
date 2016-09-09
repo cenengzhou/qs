@@ -1,14 +1,21 @@
-mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookies',  'uiGridConstants', '$uibModalInstance',
-                                             function($scope, modalService, repackagingService, $cookies, uiGridConstants, $uibModalInstance) {
+mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 'repackagingService', '$cookies',  'uiGridConstants', '$uibModalInstance', 'modalStatus', 'modalParam',
+                                             function($scope, modalService, repackagingService, $cookies, uiGridConstants, $uibModalInstance, modalStatus, modalParam) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
 
-	$scope.repackagingId = $cookies.get("repackagingId");
+	$scope.latestVersion = modalStatus;
+	$scope.repackagingId = modalParam;
+	console.log($scope.repackagingId);
+	console.log($scope.latestVersion);
 	
 	$scope.showChangesOnly = true;
 	
-	getLatestRepackaging();
+	if($scope.latestVersion == true)
+		getLatestRepackaging();
+	else
+			$scope.disableButtons = true;
+
 	getRepackagingDetails(true);
 	
 	$scope.gridOptions = {
@@ -83,7 +90,6 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 	}
 	
 	function getRepackagingDetails(showChangesOnly) {
-		//console.log("$scope.repackagingId: "+$scope.repackagingId);
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {

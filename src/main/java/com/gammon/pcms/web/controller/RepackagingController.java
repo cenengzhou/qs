@@ -118,7 +118,7 @@ public class RepackagingController {
 		try {
 			result = repackagingService.deleteRepackaging(Long.valueOf(id));
 		} catch (Exception e) {
-			result = "Repackaging cannot be generated.";
+			result = "Repackaging cannot be deleted.";
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 
