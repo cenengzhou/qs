@@ -22,7 +22,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 					onSiteStartDate: $scope.subcontract.onSiteStartDate
 			}
 
-			console.log(subcontractToUpdate);
+			//console.log(subcontractToUpdate);
 
 			upateSubcontractDates(subcontractToUpdate);
 		}else{
@@ -35,7 +35,6 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 			subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 			.then(
 					function( data ) {
-						console.log(data);
 						$scope.subcontract = data;
 					});
 		}

@@ -54,9 +54,13 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
 			.then(
 					function( data ) {
-						console.log(data);
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment has been updated successfully.");
-						//$state.reload();
+						if(data != null){
+							if(data.length == 0){
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment has been updated successfully.");
+								$state.reload();
+							}else
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}
 					});
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment is not in Pending status.");

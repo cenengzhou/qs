@@ -1036,7 +1036,7 @@ public class TenderService implements Serializable {
 				
 				Map<String, Double> vendorAmount = new HashMap<String, Double>();
 				if(tender.getVendorNo() == 0){
-					vendorAmount.put("Buegdet Amount", taDetail.getAmountBudget());					
+					vendorAmount.put("Budget Amount", taDetail.getAmountBudget());					
 				}else
 					vendorAmount.put(tender.getNameSubcontractor(), taDetail.getAmountSubcontract());
 

@@ -529,9 +529,21 @@ public class PaymentService{
 
 	
 
-	private PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert) throws ValidateBusinessLogicException {
-		return paymentPostingService.calculateAndUpdatePaymentDueDate(paymentCert);
-	}
+	/*private PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert){
+		
+		PaymentDueDateAndValidationResponseWrapper wrapper = paymentPostingService.calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
+				paymentCert.getSubcontract().getPackageNo(),
+				paymentCert.getMainContractPaymentCertNo(),
+				paymentCert.getAsAtDate(),
+				paymentCert.getIpaOrInvoiceReceivedDate(),
+				paymentCert.getDueDate());
+		
+		if (wrapper.isvalid())
+			paymentCert.setDueDate(wrapper.getDueDate());
+		
+		return paymentCert;
+		//return paymentPostingService.calculateAndUpdatePaymentDueDate(paymentCert);
+	}*/
 
 	/**
 	 * @author tikywong
@@ -2582,15 +2594,24 @@ public class PaymentService{
 
 		// 3. Calculate Due Date
 		logger.info("3. Calculate Due Date");
-		try {
-			scPaymentCert = calculateAndUpdatePaymentDueDate(scPaymentCert);
 
-		} catch (ValidateBusinessLogicException e) {
-			error = e.getMessage();
+		//scPaymentCert = calculateAndUpdatePaymentDueDate(scPaymentCert);
+
+		PaymentDueDateAndValidationResponseWrapper wrapper = paymentPostingService.calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
+				paymentCert.getSubcontract().getPackageNo(),
+				paymentCert.getMainContractPaymentCertNo(),
+				paymentCert.getAsAtDate(),
+				paymentCert.getIpaOrInvoiceReceivedDate(),
+				paymentCert.getDueDate());
+
+		if (wrapper.isvalid())
+			paymentCert.setDueDate(wrapper.getDueDate());
+		else{
+			error = wrapper.getErrorMsg();
 			logger.info(error);
 			return error;
 		}
-
+	
 				
 		// 4. Insert & Update GST Payable & GST Receivable
 		JobInfo job;
@@ -2875,7 +2896,22 @@ public class PaymentService{
 				}
 
 				//Validate Main Cert No. for QS1 and QS2
-				paymentCert = calculateAndUpdatePaymentDueDate(paymentCert);
+				//paymentCert = calculateAndUpdatePaymentDueDate(paymentCert);
+				PaymentDueDateAndValidationResponseWrapper wrapper = paymentPostingService.calculatePaymentDueDate(paymentCert.getSubcontract().getJobInfo().getJobNumber(),
+						paymentCert.getSubcontract().getPackageNo(),
+						paymentCert.getMainContractPaymentCertNo(),
+						paymentCert.getAsAtDate(),
+						paymentCert.getIpaOrInvoiceReceivedDate(),
+						paymentCert.getDueDate());
+				
+				if (wrapper.isvalid())
+					paymentCert.setDueDate(wrapper.getDueDate());
+				else{
+					error = wrapper.getErrorMsg();
+					logger.info(error);
+					return error;
+				}
+				
 				if((paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS1") || paymentCert.getSubcontract().getPaymentTerms().equalsIgnoreCase("QS2"))
 						&&paymentCert.getMainContractPaymentCertNo()==null){
 					error = "Main Certificate No. cannot be empty.";

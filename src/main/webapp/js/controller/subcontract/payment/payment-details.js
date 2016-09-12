@@ -26,15 +26,15 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
 			             { field: 'billItem', enableCellEdit: false},
-			             { field: 'movementAmount', cellClass: "grid-theme-blue", cellEditableCondition : $scope.canEdit,
+			             { field: 'movementAmount', cellClass: "blue", cellEditableCondition : $scope.canEdit,
 		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>',
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
-						            return 'grid-theme-blue';
+						            return 'blue';
 						          }
 						        }*/
 			             },
-			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue", cellEditableCondition : $scope.canEdit,
+			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "blue", cellEditableCondition : $scope.canEdit,
 		            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>'},
 			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false,
 			             cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>'},

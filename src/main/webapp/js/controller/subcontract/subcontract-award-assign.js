@@ -20,7 +20,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			exporterMenuPdf: false,
 			
 			columnDefs: [
-			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "grid-theme-blue", enableCellEdit: false},
+			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "blue", enableCellEdit: false},
 			             { field: 'objectCode', enableCellEdit: false},
 			             { field: 'subsidiaryCode', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},

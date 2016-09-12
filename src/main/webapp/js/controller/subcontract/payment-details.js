@@ -87,8 +87,8 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$http', '$stateParams', '$
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
 			             { field: 'billItem', enableCellEdit: false},
-			             { field: 'movementAmount', cellClass: "grid-theme-blue"},
-			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "grid-theme-blue"},
+			             { field: 'movementAmount', cellClass: "blue"},
+			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", cellClass: "blue"},
 			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false},
 			             { field: 'description', enableCellEdit: false},
 			             { field: 'scSeqNo', displayName: "Sequence No", enableCellEdit: false},

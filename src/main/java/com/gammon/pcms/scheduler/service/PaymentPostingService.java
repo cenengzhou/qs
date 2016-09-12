@@ -368,7 +368,7 @@ public class PaymentPostingService {
 						SimpleDateFormat formattedDate = new SimpleDateFormat("dd/MM/yyyy");
 						String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
 
-						responseWrapper.setErrorMsg("Payment's As At Date must be before Main Contract Certificate's As At Date. <br>" +
+						responseWrapper.setErrorMsg("Payment's As At Date must be before Main Contract Certificate's As At Date." +
 													"Main Contract Certificater As At Date: " + parentMainCertAsAtDate);
 						responseWrapper.setIsvalid(false);
 						return responseWrapper;
