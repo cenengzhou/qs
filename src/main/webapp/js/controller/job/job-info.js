@@ -1,6 +1,6 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state',
-                                   function($scope, jobService, modalService, $state) {
-
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', '$rootScope',
+                                   function($scope, jobService, modalService, $state, $rootScope) {
+	$rootScope.selectedTips = '';
 	loadJobInfo();
 
 	function loadJobInfo() {

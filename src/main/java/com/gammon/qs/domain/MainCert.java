@@ -588,7 +588,7 @@ public class MainCert extends BasePersistedObject {
 		this.arDocNumber = arDocNumber;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "IPA_SUBMISSION_DATE")
 	public Date getIpaSubmissionDate() {
 		return ipaSubmissionDate;
@@ -597,7 +597,7 @@ public class MainCert extends BasePersistedObject {
 		this.ipaSubmissionDate = ipaSubmissionDate;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "IPASENTOUTDATE")
 	public Date getIpaSentoutDate() {
 		return ipaSentoutDate;
@@ -606,7 +606,7 @@ public class MainCert extends BasePersistedObject {
 		this.ipaSentoutDate = ipaSentoutDate;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "CERT_ISSUE_DATE")
 	public Date getCertIssueDate() {
 		return certIssueDate;
@@ -615,7 +615,7 @@ public class MainCert extends BasePersistedObject {
 		this.certIssueDate = certIssueDate;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "CERT_AS_AT_DATE")
 	public Date getCertAsAtDate() {
 		return certAsAtDate;
@@ -624,7 +624,7 @@ public class MainCert extends BasePersistedObject {
 		this.certAsAtDate = certAsAtDate;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "certStatuschangeDate")
 	public Date getCertStatusChangeDate() {
 		return certStatusChangeDate;
@@ -633,7 +633,7 @@ public class MainCert extends BasePersistedObject {
 		this.certStatusChangeDate = certStatusChangeDate;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "certDueDate")
 	public Date getCertDueDate() {
 		return certDueDate;
@@ -658,7 +658,7 @@ public class MainCert extends BasePersistedObject {
 		this.remark = remark;
 	}
 	
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "ACTUAL_RECEIPT_DATE")
 	public Date getActualReceiptDate() {
 		return actualReceiptDate;

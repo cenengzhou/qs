@@ -1,7 +1,7 @@
 
 mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter',
                                 function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter) {
-	
+	$rootScope.selectedTips = '';
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");

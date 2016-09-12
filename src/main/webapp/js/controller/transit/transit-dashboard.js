@@ -1,5 +1,6 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'blockUI',
-                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, blockUI) {
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'blockUI', '$rootScope',
+                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, blockUI, $rootScope) {
+	$rootScope.selectedTips = '';
 	$scope.loading = true;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");

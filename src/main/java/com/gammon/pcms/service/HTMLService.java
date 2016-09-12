@@ -174,11 +174,7 @@ public class HTMLService implements Serializable{
 		data.put("strPaymentAsAtDate", strPaymentAsAtDate != null ? strPaymentAsAtDate : "");
 		data.put("currentPaymentNo", currentPaymentNo);
 		
-		if (htmlVersion.equals("W"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("payment"), data);
-
-		if (htmlVersion.equals("B"))
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SCPaymentCert_B.ftl", data);
+		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("payment"), data);
 			
 		return strHTMLCodingContent;
 	}
@@ -208,195 +204,7 @@ public class HTMLService implements Serializable{
 		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
 		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("award"), data);
 	}
-//	public String makeHTMLStringForTenderAnalysis(String jobNumber, String subcontractNumber, String htmlVersion){
-//		String strHTMLCodingContent = "";
-//		List<Tender> listTenderAnalysis = new ArrayList<Tender>();
-//		logger.info("Tender Analysis List size: " + listTenderAnalysis.size());
-//			try {
-//				listTenderAnalysis = tenderHBDao.obtainTenderAnalysis(jobNumber, subcontractNumber);
-//			} catch (NumberFormatException e4) {
-//				e4.printStackTrace();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		
-//			@SuppressWarnings("unused")
-//			List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
-//			JobInfo jobHeaderInfo = new JobInfo();
-//			String vendorName = "";
-//			Double totalSubcontractSum = new Double(0);
-//			List<String> vendorNameList = null;
-//			List<Double> totalSubcontractSumList = null;
-//			List<Boolean> vendorNumZero = null;
-//			
-//			Subcontract scPackage = new Subcontract();
-//			
-//			try {
-//				jobHeaderInfo = jobInfoHBDao.obtainJobInfo(jobNumber);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			
-//			try {
-//				scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
-//			
-//			try {
-//				scDetailsList = subcontractDetailHBDao.getSCDetails(subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber));
-//			} catch (Exception e2) {
-//				e2.printStackTrace();
-//			}
-//			
-//			//Set it to be the budget amount of TA
-//			Double comparableBudgetAmount = new Double(0);
-//			String recommendVendor = "";
-//
-//			Map<String, Object> data = new HashMap<String, Object>();
-//			data.put("jobNumber", jobNumber);
-//			data.put("jobHeaderInfo", jobHeaderInfo);
-//			data.put("subcontractNumber", subcontractNumber);
-//			data.put("scPackage", scPackage);
-//			data.put("listTenderAnalysis", listTenderAnalysis);
-//			
-//			if (htmlVersion.equals("W")) {
-//				vendorNameList = new ArrayList<String>();
-//				totalSubcontractSumList = new ArrayList<Double>();
-//				vendorNumZero = new ArrayList<Boolean>();
-//				
-//				for(int i=0; i < listTenderAnalysis.size();  i++ )
-//				{
-//					Tender curTenderAnalysis = listTenderAnalysis.get(i);
-//					if (curTenderAnalysis.getVendorNo().equals(0)){
-//						try {
-//							for(TenderDetail curTenderAnalysisDetail: tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-//								comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget()*curTenderAnalysisDetail.getQuantity();
-//							}
-//						} catch (DataAccessException e) {
-//							e.printStackTrace();
-//						}
-//						vendorNameList.add(i, "");
-//						totalSubcontractSumList.add(i,0.0);
-//						vendorNumZero.add(i,true);
-//					}else{
-//					    logger.info("Vendor Number: "+curTenderAnalysis.getVendorNo());
-//						try {
-//							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
-//							vendorNameList.add(i, vendorName);
-//							logger.info("Vendor Name: " + vendorName);
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//						if ("RCM".equals(curTenderAnalysis.getStatus())){
-//							recommendVendor=vendorName;
-//						}
-//							logger.info("RecommendVendor: " + recommendVendor);
-//							
-//						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
-//						try {
-//							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);//tenderHBDao.getTenderAnalysisDetail(jobNumber, new Integer(curTenderAnalysis.getVendorNo().toString()), new Integer(subcontractNumber));
-//						} catch (NumberFormatException e) {
-//							e.printStackTrace();
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//						for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-//							TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
-//							if (curTenderAnalysisDetail.getRateBudget()!=null && curTenderAnalysisDetail.getQuantity()!=null)
-//								totalSubcontractSum += curTenderAnalysisDetail.getQuantity() * curTenderAnalysisDetail.getRateBudget();
-//						}
-//						totalSubcontractSumList.add(i,totalSubcontractSum);
-//						totalSubcontractSum = new Double(0);
-//						vendorNumZero.add(i,false);
-//					}
-//				}
-//				data.put("totalSubcontractSumList", totalSubcontractSumList);
-//				data.put("vendorNameList", vendorNameList);
-//				data.put("comparableBudgetAmount",comparableBudgetAmount);
-//				data.put("recommendVendor", recommendVendor);
-//				data.put("vendorNoZero", vendorNumZero);
-//				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W.ftl", data);
-////				strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_W_Test.html", data);
-//			}
-//			
-//			if (htmlVersion.equals("B")) {
-//				comparableBudgetAmount = new Double(0);
-//				recommendVendor = "";
-//				vendorNameList = new ArrayList<String>();
-//				vendorNumZero = new ArrayList<Boolean>();
-//				totalSubcontractSumList = new ArrayList<Double>();
-//				
-//				for(int i=0; i < listTenderAnalysis.size();  i++ )
-//				{
-//					Tender curTenderAnalysis = listTenderAnalysis.get(i);
-//					if (!curTenderAnalysis.getVendorNo().equals(0)){
-//						try {
-//							vendorName = receiveVendorName(curTenderAnalysis.getVendorNo().toString());
-//							vendorNameList.add(i, vendorName);
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//
-//						if ("RCM".equals(curTenderAnalysis.getStatus()) || "AWD".equals(curTenderAnalysis.getStatus()))
-//							recommendVendor=vendorName;
-//
-//						List<TenderDetail> listTenderAnalysisDetails = new ArrayList<TenderDetail>();
-//
-//						try {
-//							listTenderAnalysisDetails = tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis);				} catch (NumberFormatException e) {
-//								e.printStackTrace();
-//							} catch (Exception e) {
-//								e.printStackTrace();
-//							}
-//
-//							for (int j=0; j<listTenderAnalysisDetails.size(); j++) {
-//								TenderDetail curTenderAnalysisDetail = listTenderAnalysisDetails.get(j);
-//
-//								if (curTenderAnalysisDetail.getRateBudget()!=null)
-//									logger.info("curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate() curTenderAnalysisDetails.getFeedbackRate()" + curTenderAnalysisDetail.getRateBudget());
-//								if (curTenderAnalysisDetail.getQuantity()!=null)
-//									logger.info("curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty() curTenderAnalysisDetails.getBqQty()" + curTenderAnalysisDetail.getQuantity());
-//
-//								if (curTenderAnalysisDetail.getRateBudget()!=new Double(0))
-//									totalSubcontractSum +=((curTenderAnalysisDetail.getQuantity()!=null?curTenderAnalysisDetail.getQuantity():new Double(0))
-//											*(curTenderAnalysisDetail.getRateBudget()!=null?curTenderAnalysisDetail.getRateBudget():new Double(0)));
-//
-//							}
-//							totalSubcontractSumList.add(i,totalSubcontractSum);
-//							totalSubcontractSum = new Double(0);
-//							vendorNumZero.add(i,false);
-//						}
-//						/**
-//						 * modified by Tiky Wong on 22/05/2012
-//						 * 
-//						 * Fixing: Blackberry version's Tender Budget cannot be shown correctly which always shows 0
-//						 */
-//						else {
-//							try {
-//								for (TenderDetail curTenderAnalysisDetail : tenderDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(curTenderAnalysis)){
-//									comparableBudgetAmount += curTenderAnalysisDetail.getRateBudget() * curTenderAnalysisDetail.getQuantity();
-//								}
-//							} catch (DataAccessException e) {
-//								e.printStackTrace();
-//							}
-//							vendorNameList.add(i, "");
-//							totalSubcontractSumList.add(i, 0.0);
-//							vendorNumZero.add(i, true);
-//						}
-//					}
-//					
-//					data.put("totalSubcontractSumList", totalSubcontractSumList);
-//					data.put("vendorNameList", vendorNameList);
-//					data.put("comparableBudgetAmount",comparableBudgetAmount);
-//					data.put("recommendVendor", recommendVendor);
-//					data.put("vendorNoZero", vendorNumZero);
-//					strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("TenderAnalysis_B.ftl", data);			
-//		}
-//
-//			return strHTMLCodingContent;
-//	}
-	
+
 	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws Exception{
 		JobInfo job = jobInfoHBDao.obtainJobInfo(noJob);
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(noJob, noSubcontract);
@@ -468,7 +276,6 @@ public class HTMLService implements Serializable{
 		data.put("highlight", highlight);
 		data.put("jobHeaderInfo", jobHeaderInfo);
 		
-		if (htmlVersion.equals("W")) {
 			List<Boolean> boolChangedLineList = new ArrayList<Boolean>();
 			for(int i=0; i < scDetailsList.size();  i++ ){
 			SubcontractDetail curaddendumEnquiryList = scDetailsList.get(i);
@@ -503,7 +310,7 @@ public class HTMLService implements Serializable{
 				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount()-(SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved())?curaddendumEnquiryList.getTotalAmount():0.0));
 			}
 			boolChangedLineList.add(boolChangedLine);
-		}
+	
 			
 		data.put("totalToBeApprovedRemeasuredSCSumValue", totalToBeApprovedRemeasuredSCSumValue);
 		data.put("totalToBeApprovedVOValue", totalToBeApprovedVOValue);
@@ -513,51 +320,7 @@ public class HTMLService implements Serializable{
 		
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("AddendumApproval_W.ftl", data);
 	}
-	if (htmlVersion.equals("B")) {
-		List<Boolean> boolChangedLineList = new ArrayList<Boolean>();
-		totalToBeApprovedRemeasuredSCSumValue = 0.0;
-		totalToBeApprovedVOValue = 0.0;
-		for(int i=0; i < scDetailsList.size();  i++ ){
-			SubcontractDetail curaddendumEnquiryList = scDetailsList.get(i);		
-			//Equal to Yellow of AddendumEnquiryYellowAquaQuantityRenderer
-			if (SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getSourceType()) && !"OA".equals(curaddendumEnquiryList.getLineType())) {
-				if (SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SubcontractDetail.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {
-					totalToBeApprovedVOValue += curaddendumEnquiryList.getToBeApprovedAmount();
-					if (Math.abs(curaddendumEnquiryList.getTotalAmount() - curaddendumEnquiryList.getToBeApprovedAmount()) > 0 || !SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved()))
-						boolChangedLine = true;
-					else
-						boolChangedLine = false;
-				} else
-					boolChangedLine = false;
-			//Equal to Aqua of AddendumEnquiryYellowAquaQuantityRenderer
-			} else if ("B1".equals(curaddendumEnquiryList.getLineType()) || "BQ".equals(curaddendumEnquiryList.getLineType())) {
-				if(SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
-					totalToBeApprovedRemeasuredSCSumValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				//Bug fix - Approval Content - Addendum Approval Request
-				//By Peter Chan 2009-12-18
-				if (Math.abs(curaddendumEnquiryList.getQuantity()-curaddendumEnquiryList.getToBeApprovedQuantity())>0)
-					boolChangedLine = true; 
-				else 
-					boolChangedLine = false;
-			} else {
-				boolChangedLine = false;
-			}
-			if (boolChangedLine == true) {
-				totalToBeApprovedValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount() - (SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved()) ? curaddendumEnquiryList.getTotalAmount() : 0.0));
-			}
-			boolChangedLineList.add(boolChangedLine);
-		}
 		
-		data.put("totalToBeApprovedRemeasuredSCSumValue", totalToBeApprovedRemeasuredSCSumValue);
-		data.put("totalToBeApprovedVOValue", totalToBeApprovedVOValue);
-		data.put("totalToBeApprovedValue", totalToBeApprovedValue);
-		data.put("totalThisAddendumValue", totalThisAddendumValue);
-		data.put("boolChangedLineList", boolChangedLineList);
-		
-		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("AddendumApproval_B.ftl", data);
-	}
-	
 	return strHTMLCodingContent;
 }
 
@@ -615,13 +378,8 @@ public class HTMLService implements Serializable{
 		data.put("newSCSum", newSCSum);
 		data.put("vendorName", vendorName);
 
-		if (htmlVersion.equals("W")) {
 			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SplitTermSC_W.ftl", data);
-		}
 	
-		if (htmlVersion.equals("B")) {
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SplitTermSC_B.ftl", data);
-		}
 	return strHTMLCodingContent;
 	}
 	
@@ -655,13 +413,9 @@ public class HTMLService implements Serializable{
 					data.put("clientList", clientList);
 					data.put("mainCert", mainCert);
 					data.put("previousCert", previousCert);
-					
-					if (htmlVersion.equals("W")){						
+									
 						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("MainCert_W.ftl", data);
-					}
-					else if (htmlVersion.equals("B")){
-						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("MainCert_B.ftl", data);
-					}
+
 				} else {
 					strHTMLCodingContent = "Main certificate:" + mainCertNo + " not found";
 				}

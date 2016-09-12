@@ -67,7 +67,7 @@ public class Repackaging extends BasePersistedObject {
 	}
 	
 	@Column(name = "createDate")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getCreateDate() {
 		return createDate;
 	}

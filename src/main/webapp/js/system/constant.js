@@ -46,36 +46,107 @@ mainApp.constant('GlobalParameter', {
 	        }
 	    }
 	},
+	getIdPlusValue: function  (arr) {
+		var result = [];
+		arr.forEach(function(obj){
+			var newObj = {};
+			newObj['id'] = obj.id;
+			newObj['value'] = obj.id + ' - ' + obj.value;
+			result.push(newObj);
+		});
+		return result;
+	},
+	getAttributeArray: function (objArray, attribute){
+		var result = [];
+		objArray.forEach(function(obj){
+			result.push(obj[attribute]);
+		})
+		return result;
+	},
+
 	DATE_FORMAT: 'dd/MM/yyyy',
 	DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',
 	MOMENT_DATE_FORMAT: 'YYYY-MM-DD',
 	MOMENT_DATETIME_FORMAT: 'YYYY-MM-DD hh:mm',
+	// Info Tips content
+	//to show id - value => ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.paymentTerms"
 	addendumTypes:[
-	      		{id:"V1", value: "V1 - External VO - No Budget" },
-	      		{id:"V2", value: "V2 - Internal VO - No Budget" },
-	      		{id:"L1", value: "L1 - Claims vs GSL"},
-	      		{id:"L2", value: "L2 - Claims vs other Subcontract"},
-	      		{id:"D1", value: "D1 - Day Work for GCL"},
-	      		{id:"D2", value: "D2 - Day Work for other Subcontract"},
+	      		{id:"V1", value: "External VO - No Budget" },
+	      		{id:"V2", value: "Internal VO - No Budget" },
+	      		{id:"L1", value: "Claims vs GSL"},
+	      		{id:"L2", value: "Claims vs other Subcontract"},
+	      		{id:"D1", value: "Day Work for GCL"},
+	      		{id:"D2", value: "Day Work for other Subcontract"},
 	      		{id:"CP", value: "CPF"},
-	      		{id:"AP", value: "AP - Advanced Payment"},
-	      		{id:"C1", value: "C1 - Contra Charges by GSL"},
-	      		{id:"C2", value: "C2 - Contra Charges by other SC"},
-	      		{id:"MS", value: "MS - Material On Site"},
-	      		{id:"OA", value: "OA - Other Adjustment"},
-	      		{id:"RA", value: "RA - Retention Adjustment"},
-	      		{id:"RR", value: "RR - Release Retention"}
-	      	],
+	      		{id:"AP", value: "Advanced Payment"},
+	      		{id:"C1", value: "Contra Charges by GSL"},
+	      		{id:"C2", value: "Contra Charges by other SC"},
+	      		{id:"MS", value: "Material On Site"},
+	      		{id:"OA", value: "Other Adjustment"},
+	      		{id:"RA", value: "Retention Adjustment"},
+	      		{id:"RR", value: "Release Retention"}
+  	],
 	paymentTerms:[
-		{id:"QS0", value: "QS0 - Manual Input Due Date"},
-		{id:"QS1", value: "QS1 - Pay when Paid + 7 days"},
-		{id:"QS2", value: "QS2 - Pay when Paid + 14 days"},
-		{id:"QS3", value: "QS3 - Pay when IPA Received + 56 days"},
-		{id:"QS4", value: "QS4 - Pay when Invoice Received + 28 days"},
-		{id:"QS5", value: "QS5 - Pay when Invoice Received + 30 days"},
-		{id:"QS6", value: "QS6 - Pay when Invoice Received + 45 days"},
-		{id:"QS7", value: "QS7 - Pay when Invoice Received + 60 days"}
+				{id:"QS0", value: "Manual Input Due Date"},
+				{id:"QS1", value: "Pay when Paid + 7 days"},
+				{id:"QS2", value: "Pay when Paid + 14 days"},
+				{id:"QS3", value: "Pay when IPA Received + 56 days"},
+				{id:"QS4", value: "Pay when Invoice Received + 28 days"},
+				{id:"QS5", value: "Pay when Invoice Received + 30 days"},
+				{id:"QS6", value: "Pay when Invoice Received + 45 days"},
+				{id:"QS7", value: "Pay when Invoice Received + 60 days"}
 	],
+	paymentStatus: [
+        		{id:'PND', value:'Pending', color:'#007D00'},
+        		{id:'SBM', value:'Submitted', color:'#E68550'},
+        		{id:'UFR', value:'Under Finance Review', color:'#E68550'},
+        		{id:'PCS', value:'AP Not Created', color:'#E68550'},
+        		{id:'APR', value:'AP Created', color:'#707070'}
+	],
+	paymentStatusCode: [
+                {id:'A', value:'Approved for Payment'},
+                {id:'P', value:'Paid in Full'},
+                {id:'H', value:'Held/Pending Approval'},
+                {id:'#', value:'Check being Written'},
+                {id:'%', value:'Withholding Applies'}
+    ],
+    approvalType: [
+               {id:'SP', value:'Interim Payment', details:'For interim payment of awarded subcontract'},
+               {id:'SF', value:'Final Account', details:'For final account of awarded subcontract'},
+               {id:'NP', value:'Payment Requisition for subcontract not yet awarded', details:'For non-awarded subcontract'},
+               {id:'SM', value:'Variation to SC Award (Cumulative amount)', details:'For addendum'},
+               {id:'SL', value:'SC Addendum (> 25% of Original SC Sum or HKD$250,000)', details:'For addendum with amount >25% of Original SC Sum or >HKD$250,000'},
+               {id:'VA', value:'Split Subcontract', details:'For split subcontract'},
+               {id:'VB', value:'Terminate Subcontract', details:'For interim payment of awarded subcontract'},
+               {id:'FR', value:'Under Finance Review', details:'For finance review with Payment Term \'QS0\''},
+               {id:'AW', value:'SC Award', details:'For awarded subcontract'},
+               {id:'ST', value:'SC Award over budget (Over-budget amount)', details:'For awarded subcontract with over-budget amount'},
+               {id:'V5', value:'Varied SC Award', details:'For awarded subcontract with non-standard term payment'},
+               {id:'V6', value:'Varied SC Award and over-budget', details:'For awarded subcontract with non-standard term payment and over-budget amount'},
+               {id:'RM', value:'Negative Main Contract Certificate', details:'For Main Contract Certificate with negative net certificate amount'}
+    ],
+	mainContractCertificateStatus: [
+        		{id:'100', value:'Certificate Created'},
+        		{id:'120', value:'IPA sent'},
+        		{id:'150', value:'Certificate(IPC) Confirmed'},
+        		{id:'200', value:'Certificate(IPC) Waiting for special approval'},
+        		{id:'300', value:'Certificate(IPC) Posted to Finance\'s Account Receivable(AR) Ledger'},
+        		{id:'400', value:'Certified Amount Received Status \'400\' was used for historical Main Contract Certificates which were created in JDE QS System.'}
+	],
+	subcontractStatus: [
+        		{id:100, value:'Newly Created Subcontract'},
+        		{id:160, value:'Tender Analysis Ready'},
+        		{id:330, value:'Subcontract Award request Submitted'},
+        		{id:340, value:'Subcontract Award request Rejected'},
+        		{id:500, value:'Awarded Subcontract'}
+	],
+	repackagingStatus: [
+                {id:100, value:'Unlocked'},
+                {id:200, value:'Updated'},
+                {id:300, value:'Snapshot Generated'},
+                {id:900, value:'Locked'},
+    ],
+	// End Info Tips Content
 	subcontractTerm:[
 		{id:'Lump Sum', value:'Lump Sum'},
 		{id:'Re-measurement', value:'Re-measurement'}
@@ -94,15 +165,9 @@ mainApp.constant('GlobalParameter', {
 		{id: 'Major', value:'Major'},
 		{id:'Minor', value:'Minor'}
 	],
-	subcontractStatus: [
-		{id:100, value:'100 - SC Created'},
-		{id:160, value:'160 - TA Analysis Ready'},
-		{id:330, value:'330 - Award Request Submitted'},
-		{id:500, value:'500 - SC Awarded'}
-	],
 	packageStatus: [
-		{id:'100', value:'100 - SC Created'},
-		{id:'990', value:'990'}
+		{id:'100', value:'SC Created'},
+		{id:'990', value:''}
 	],
 	paymentInformation:[
 		{id:'Interim Payment Schedule (Subcontract)', value:'Interim Payment Schedule (Subcontract)'},
@@ -121,44 +186,44 @@ mainApp.constant('GlobalParameter', {
 		{id:'Lump Sum Amount Retention', value:'Lump Sum Amount Retention'}
 	],
 	subcontract_paymentStatus: [
-		{id:'N', value:'N - Not Submitted'},
-		{id:'D', value:'D - Payment Requisition'},
-		{id:'I', value:'I - Interim Payment'},
-		{id:'F', value:'F - Final Payment'}
+		{id:'N', value:'Not Submitted'},
+		{id:'D', value:'Payment Requisition'},
+		{id:'I', value:'Interim Payment'},
+		{id:'F', value:'Final Payment'}
 	],
 	splitTerminateStatus: [
-		{id:'0', value:'0 - Not Submitted'},
-		{id:'1', value:'1 - Split Subcontract Submitted'},
-		{id:'2', value:'2 - Terminate Subcontract Submitted'},
-		{id:'3', value:'3 - Split Subcontract Approved'},
-		{id:'4', value:'4 - Terminate Subcontract Approved'},
-		{id:'5', value:'5 - Split Subcontract Rejected'},
-		{id:'6', value:'6 - Terminate Subcontract Rejected'},
+		{id:'0', value:'Not Submitted'},
+		{id:'1', value:'Split Subcontract Submitted'},
+		{id:'2', value:'Terminate Subcontract Submitted'},
+		{id:'3', value:'Split Subcontract Approved'},
+		{id:'4', value:'Terminate Subcontract Approved'},
+		{id:'5', value:'Split Subcontract Rejected'},
+		{id:'6', value:'Terminate Subcontract Rejected'},
 	], 
 	paymentCurrency: [
-		{id:'AUD', value:'AUD - Austrialian Dollar'},
-		{id:'CAD', value:'CAD - Canadian Dollar'},
-		{id:'CHF', value:'CHF - Swiss Franc'},
-		{id:'CNY', value:'CNY - Chinese Renminbi'},
-		{id:'DEM', value:'DEM - Deutsche Marks'},
-		{id:'EUR', value:'EUR - Euro'},
-		{id:'GBP', value:'GBP - Pound Sterling'},
-		{id:'HKD', value:'HKD - Hong Kong Dollar'},
-		{id:'IDR', value:'IDR - Indonesia Rupiah'},
-		{id:'JPY', value:'JPY - Japanese Yen'},
-		{id:'KRW', value:'KRW - South Korean Won'},
-		{id:'MOP', value:'MOP - Macau Pataca'},
-		{id:'MYR', value:'MYR - Malaysian Ringgit'},
-		{id:'NOK', value:'NOK - Norwegian Kroner'},
-		{id:'NZD', value:'NZD - New Zealand Dollar'},
-		{id:'PHP', value:'PHP - Philippine Peso'},
-		{id:'SEK', value:'SEK - Swedish Kroner'},
-		{id:'SGD', value:'SGD - Singapore Dollar'},
-		{id:'THB', value:'THB - Thai Baht'},
-		{id:'TWD', value:'TWD - Taiwan Dollar'},
-		{id:'USD', value:'USD - U.S. Dollar'},
-		{id:'VND', value:'VND - Vietnam Dong'},
-		{id:'ZAR', value:'ZAR - South African Rand'}		
+		{id:'AUD', value:'Austrialian Dollar'},
+		{id:'CAD', value:'Canadian Dollar'},
+		{id:'CHF', value:'Swiss Franc'},
+		{id:'CNY', value:'Chinese Renminbi'},
+		{id:'DEM', value:'Deutsche Marks'},
+		{id:'EUR', value:'Euro'},
+		{id:'GBP', value:'Pound Sterling'},
+		{id:'HKD', value:'Hong Kong Dollar'},
+		{id:'IDR', value:'Indonesia Rupiah'},
+		{id:'JPY', value:'Japanese Yen'},
+		{id:'KRW', value:'South Korean Won'},
+		{id:'MOP', value:'Macau Pataca'},
+		{id:'MYR', value:'Malaysian Ringgit'},
+		{id:'NOK', value:'Norwegian Kroner'},
+		{id:'NZD', value:'New Zealand Dollar'},
+		{id:'PHP', value:'Philippine Peso'},
+		{id:'SEK', value:'Swedish Kroner'},
+		{id:'SGD', value:'Singapore Dollar'},
+		{id:'THB', value:'Thai Baht'},
+		{id:'TWD', value:'Taiwan Dollar'},
+		{id:'USD', value:'U.S. Dollar'},
+		{id:'VND', value:'Vietnam Dong'},
+		{id:'ZAR', value:'South African Rand'}		
 	],
 	submittedAddendum: [
 		{id:' ', value:'Not submitted'},
@@ -172,23 +237,9 @@ mainApp.constant('GlobalParameter', {
 	    {id:'N', value:'No'},
 	    {id:'Y', value:'Yes'}
 	],
-	paymentStatus: [
-		{id:'PND', value:'PND - Pending', color:'#007D00'},
-		{id:'SBM', value:'SBM - Submitted', color:'#E68550'},
-		{id:'UFR', value:'UFR - Under Review by Finance', color:'#E68550'},
-		{id:'PCS', value:'PCS - AP Not Created', color:'#E68550'},
-		{id:'APR', value:'APR - AP Created', color:'#707070'}
-	],
 	intermFinalPayment: [
 		{id:'I', value:'Interim'},
 		{id:'F', value:'Final'}
-	],
-	certificateStatus: [
-		{id:'100', value:'100 - Certificate Created'},
-		{id:'120', value:'120 - IPA sent'},
-		{id:'150', value:'150 - Certificate Confirmed'},
-		{id:'200', value:'200 - Certificate Waiting for Approval'},
-		{id:'300', value:'300 - Certificate Posted to Finance\'s AR'}
 	],
 	month: [
        {id:'01', value:'January'},
@@ -243,28 +294,28 @@ mainApp.constant('GlobalParameter', {
 	                    'MainCertNameObject' : 'GT59026'
 	},
 	PurchaseOrderType:[
-		{id:'GH', value:'GH - Plant Blanket Sundry Order'},
-		{id:'P3', value:'P3 - Payment Requisition'},
-		{id:'GB', value:'GB - Blanket Purchase Order'},
-		{id:'GE', value:'GE - Plant Sundry Release Order'},
-		{id:'GL', value:'GL - Release Purchase Order'},
-		{id:'GM', value:'GM - Purchase Order of Fixed Asset'},
-		{id:'GP', value:'GP - Purchase Order'},
-		{id:'GX', value:'GX - Order exceed or w/o budget'},
-		{id:'GY', value:'GY - BPO exceed or w/o budget'},
-		{id:'OB', value:'OB - Blanket Purchase Order'},
-		{id:'OF', value:'OF - PO of Fixed Asset'},
-		{id:'OH', value:'OH - Blanket Sundry Order'},
-		{id:'OL', value:'OL - Release Purchase Order'},
-		{id:'ON', value:'ON - Sundry Release Order'},
-		{id:'OP', value:'OP - Purchase Order'},
-		{id:'OS', value:'OS - Purchase Order of Fixed Asset'},
-		{id:'OX', value:'OX - Order exceed or w/o budget'},
-		{id:'OY', value:'OY - BPO exceed or w/o budget'},
-		{id:'O2', value:'O2 - Supplier Catalog Order'},
-		{id:'OR', value:'OR - Purchase Requisition'},
-		{id:'GR', value:'GR - Purchase Requisition - CSD'},
-		{id:'P4', value:'P4 - Reimbursement of Expense'}
+		{id:'GH', value:'Plant Blanket Sundry Order'},
+		{id:'P3', value:'Payment Requisition'},
+		{id:'GB', value:'Blanket Purchase Order'},
+		{id:'GE', value:'Plant Sundry Release Order'},
+		{id:'GL', value:'Release Purchase Order'},
+		{id:'GM', value:'Purchase Order of Fixed Asset'},
+		{id:'GP', value:'Purchase Order'},
+		{id:'GX', value:'Order exceed or w/o budget'},
+		{id:'GY', value:'BPO exceed or w/o budget'},
+		{id:'OB', value:'Blanket Purchase Order'},
+		{id:'OF', value:'PO of Fixed Asset'},
+		{id:'OH', value:'Blanket Sundry Order'},
+		{id:'OL', value:'Release Purchase Order'},
+		{id:'ON', value:'Sundry Release Order'},
+		{id:'OP', value:'Purchase Order'},
+		{id:'OS', value:'Purchase Order of Fixed Asset'},
+		{id:'OX', value:'Order exceed or w/o budget'},
+		{id:'OY', value:'BPO exceed or w/o budget'},
+		{id:'O2', value:'Supplier Catalog Order'},
+		{id:'OR', value:'Purchase Requisition'},
+		{id:'GR', value:'Purchase Requisition - CSD'},
+		{id:'P4', value:'Reimbursement of Expense'}
 	],
 	PerformanceAppraisalStatus: [
 		{id:'A', value:'Approved'},

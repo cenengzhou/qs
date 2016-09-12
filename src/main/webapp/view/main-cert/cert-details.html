@@ -501,7 +501,7 @@
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
 														</span> <input class="form-control"
-															ng-model="cert.ipaSubmissionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+															ng-model="cert.ipaSubmissionDate" 
 															ng-disabled="disableButtons || cert.certificateStatus >= 120"
 															data-parsley-required>
 
@@ -519,7 +519,7 @@
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
 														</span> <input class="form-control" 
-															ng-model="cert.certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+															ng-model="cert.certIssueDate" 
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -535,7 +535,7 @@
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certAsAtDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+														</span> <input class="form-control" ng-model="cert.certAsAtDate" 
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -550,7 +550,7 @@
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" ng-model="cert.certDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+														</span> <input class="form-control" ng-model="cert.certDueDate" 
 															ng-disabled="disableButtons || cert.certificateStatus >= 150"
 															data-parsley-required>
 
@@ -566,7 +566,7 @@
 														ng-model-options="{ updateOn: 'blur' }">
 														<span class="input-group-addon"> <i
 															class="fa fa-calendar"></i>
-														</span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+														</span> <input class="form-control" 
 															ng-model="cert.actualReceiptDate"
 															disabled>
 

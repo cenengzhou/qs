@@ -70,7 +70,7 @@
 								class="control-label">Certificate Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.certificateStatus"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.mainContractCertificateStatus"
 									id="MainCertRecord_cpfCalculation"
 									ng-model="MainCertRecord.certificateStatus">
 									<option></option>
@@ -548,7 +548,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certIssueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_certIssueDate" 
 										ng-model="MainCertRecord.certIssueDate">
 								</div>
 							</div>
@@ -565,7 +565,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certStatusChangeDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_certStatusChangeDate" 
 										ng-model="MainCertRecord.certStatusChangeDate">
 								</div>
 							</div>
@@ -582,7 +582,7 @@
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certAsAtDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_certAsAtDate" 
 										ng-model="MainCertRecord.certAsAtDate">
 								</div>
 							</div>
@@ -599,7 +599,7 @@
 									start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_certDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_certDueDate" 
 										ng-model="MainCertRecord.certDueDate">
 								</div>
 							</div>
@@ -616,7 +616,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_ipaSubmissionDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_ipaSubmissionDate" 
 										ng-model="MainCertRecord.ipaSubmissionDate">
 								</div>
 							</div>
@@ -633,7 +633,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_ipaSentoutDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_ipaSentoutDate" 
 										ng-model="MainCertRecord.ipaSentoutDate">
 								</div>
 							</div>
@@ -650,7 +650,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="MainCertRecord_actualReceiptDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="MainCertRecord_actualReceiptDate" 
 										ng-model="MainCertRecord.actualReceiptDate">
 								</div>
 							</div>

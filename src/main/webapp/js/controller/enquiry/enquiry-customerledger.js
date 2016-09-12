@@ -19,6 +19,9 @@ mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http
 			enableCellSelection: false,
 			exporterMenuPdf: false,
 			columnDefs: [
+			             {name: 'Details', width: '110', displayName: 'Receipt Dates', enableCellEdit: false, enableFiltering: false, pinnedLeft:true,
+			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-warning" ng-click="grid.appScope.showReceiptHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px;" ></span> View</button></div>'
+			             },
 			             { field: 'jobNumber', displayName: "Job No", width: '80', enableCellEdit: false },
 			             { field: 'reference', displayName: "Reference", width: '100', enableCellEdit: false },
 			             { field: 'customerNumber', displayName: "Customer No", width: '100', enableCellEdit: false },
@@ -75,10 +78,7 @@ mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http
 			             { field: 'batchNumber', displayName: "Batch No", width: '100', enableCellEdit: false },
 			             { field: 'batchType', displayName: "Batch Type", width: '100', enableCellEdit: false },
 			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
-			             { field: 'remark', displayName: "Remark", width: '250', enableCellEdit: false },
-			             {name: 'Details', width: '180', displayName: 'Receipt History', enableCellEdit: false, enableFiltering: false, pinnedRight:true,
-			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-default" ng-click="grid.appScope.showReceiptHistory(row.entity)"> <span class="fa fa-history" style="padding-left:10px;" ></span> Receipt History</button></div>'
-			             }
+			             { field: 'remark', displayName: "Remark", width: '250', enableCellEdit: false }
             			 ]
 	};
 	

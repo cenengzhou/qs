@@ -40,9 +40,9 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			field : 'scPaymentTerm',
 			displayName : 'SC Payment Term',
 			editableCellTemplate : 'ui-grid/dropdownEditor',
-			cellFilter: 'dropdownFilter:"paymentTerms"',
+			cellFilter: 'dropdownFilter:"paymentTerms":true',
 			cellClass : 'text-primary',
-			editDropdownOptionsArray : GlobalParameter.paymentTerms,
+			editDropdownOptionsArray : GlobalParameter.getIdPlusValue(GlobalParameter.paymentTerms),
 			editDropdownIdLabel : 'id',
 			editDropdownValueLabel : 'value',
 			enableCellEdit : true
@@ -88,9 +88,11 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		} ]
 	};
 	
-	$scope.afterCellEdit = function(rowEntity, colDef) {
-		$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
-		$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+	$scope.afterCellEdit = function(rowEntity, colDef, newValue, oldValue) {
+		if(newValue !== oldValue){
+			$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
+			$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+		}
 	};
 
 	$scope.rowSelectionChanged = function(row) {

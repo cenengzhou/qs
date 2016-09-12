@@ -165,7 +165,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 				function( data ) {
 					if(data.length != 0){
 						$scope.subcontract = data;
-						$scope.subcontractStatus = GlobalParameter.getValueById(GlobalParameter.subcontractStatus, data.scStatus);
+						$scope.subcontractStatus = data.scStatus + ' - ' + GlobalParameter.getValueById(GlobalParameter.subcontractStatus, data.scStatus);
 						
 						if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_LUMPSUM){
 							$scope.subcontract.retentionTerms = "Lump Sum";

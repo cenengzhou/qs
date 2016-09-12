@@ -1,8 +1,8 @@
 
 mainApp.controller('AdminSessionCtrl', 
-		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 'GlobalParameter',
-		 function($scope , $http, colorCode, SessionHelper, $rootScope, GlobalParameter) {
-			
+		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 'GlobalParameter', '$rootScope',
+		 function($scope , $http, colorCode, SessionHelper, $rootScope, GlobalParameter, $rootScope) {
+	$rootScope.selectedTips = '';
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,

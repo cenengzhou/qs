@@ -39,8 +39,20 @@
 		</table>
 	</div>
 	<div class="row">
-		<div ui-grid="gridOptions" external-scopes="clickHandler" style="height:200px"
-		ui-grid-resize-columns ui-grid-selection
-		ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
+		<table class="table table-striped">			
+			<thead>
+				<tr class="inverse">
+					<th style="border: 1px solid black !important;">Payment Date</th>
+					<th style="border: 1px solid black !important;">Payment Amount</th>
+				</tr>
+			</thead>
+			<tbody >
+				<tr ng-repeat="paymentDate in paymentDates" style="height:30px">
+					<td style="border: 1px solid black !important;">{{paymentDate.paymentDate | date: GlobalParameter.DATE_FORMAT}}</td>
+					<td style="border: 1px solid black !important;" ng-class="{'red': paymentDate.paymntAmount < 0}">{{paymentDate.paymntAmount | number}}</td>
+				</tr>
+				<tr ng-show="paymentDates.length < 4"><td style="border: 1px solid black !important;">&nbsp;</td><td style="border: 1px solid black !important;">&nbsp;</td></tr>
+			</tbody>
+		</table>
 	</div>
 </div>

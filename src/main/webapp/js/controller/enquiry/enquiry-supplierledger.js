@@ -17,6 +17,9 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			allowCellFocus: false,
 			enableCellSelection: false,
 			columnDefs: [
+			             {name: 'Details', width: '110', displayName: 'Payment Dates', enableCellEdit: false, enableFiltering: false, pinnedLeft:true,
+			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-warning" ng-click="grid.appScope.showPaymentHistory(row.entity)"> <span class="fa fa-dollar" style="padding-left:10px;" ></span> View</button></div>'
+			             },
 			             { field: 'jobNumber', displayName: "Job No", width: '80', enableCellEdit: false },
 			             { field: 'invoiceNumber', displayName: "Invoice No", width: '150', enableCellEdit: false },
 			             { field: 'subledger', displayName: "Subledger", width: '80', enableCellEdit: false },
@@ -72,10 +75,7 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			             { field: 'batchNumber', displayName: "Batch No", width: '100', enableCellEdit: false },
 			             { field: 'batchType', displayName: "Batch Type", width: '100', enableCellEdit: false },
 			             { field: 'batchDate', width: '100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
-			             { field: 'subledgerType', displayName: "Subledge Type", width: '100', enableCellEdit: false },
-			             {name: 'Details', width: '180', displayName: 'Payment History', enableCellEdit: false, enableFiltering: false, pinnedRight:true,
-			            	 cellTemplate: '<div class="col-md-12"><button class="btn btn-sm icon-btn btn-default" ng-click="grid.appScope.showPaymentHistory(row.entity)"> <span class="fa fa-dollar" style="padding-left:10px;" ></span> Payment History</button></div>'
-			             }
+			             { field: 'subledgerType', displayName: "Subledge Type", width: '100', enableCellEdit: false }
             			 ]
 	};
 	

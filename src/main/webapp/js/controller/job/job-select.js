@@ -1,5 +1,6 @@
-mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService',
-                               function($scope, colorCode, jobService, $animate, $cookies, modalService) {
+mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', '$rootScope',
+                               function($scope, colorCode, jobService, $animate, $cookies, modalService, $rootScope) {
+	$rootScope.selectedTips = '';
 	$scope.loading = true;
 	$scope.selectedDivision = '';
 	$scope.searchquery = '';

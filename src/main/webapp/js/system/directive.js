@@ -322,10 +322,12 @@ mainApp.directive('resize', function ($window) {
 });
 
 mainApp.filter('dropdownFilter', function (GlobalParameter) {
-    return function (input, arrName) {
+    return function (input, arrName, idPlusValue) {
     	arrName = arrName.replace(/"/g, '');
     	var arr = GlobalParameter[arrName];
-    	return GlobalParameter.getValueById(arr , input);
+    	var msg = '';
+    	if(idPlusValue) msg += input + ' - ' ;
+    	return msg + GlobalParameter.getValueById(arr , input);
       };
 });
 
@@ -337,9 +339,9 @@ mainApp.directive('imageonload', function() {
 
             });
             element.bind('error', function(){
-            	console.log('Cannot load image:' + element[0].src)
+//            	console.log('Cannot load image:' + element[0].src)
                 element[0].src = attrs.rollBackImage;
-            	console.log('Roll back to:' + element[0].src)
+//            	console.log('Roll back to:' + element[0].src)
             });
         }
     };

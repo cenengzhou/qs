@@ -1,6 +1,6 @@
-mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalService', '$sce',
-		function($scope, $rootScope, $http, modalService, $sce) {
-
+mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalService', '$sce', '$rootScope',
+		function($scope, $rootScope, $http, modalService, $sce, $rootScope) {
+		$rootScope.selectedTips = '';
 			$scope.jobBtn = {
 					'title': 'JOB',
 					'name': 'jobBtn',

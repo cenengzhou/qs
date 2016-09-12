@@ -611,7 +611,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "REQUISITION_APPROVED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getRequisitionApprovedDate() {
 		return requisitionApprovedDate;
 	}
@@ -621,7 +621,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "TA_APPROVED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getTenderAnalysisApprovedDate() {
 		return tenderAnalysisApprovedDate;
 	}
@@ -631,7 +631,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "PREAWARD_MEETING_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getPreAwardMeetingDate() {
 		return preAwardMeetingDate;
 	}
@@ -641,7 +641,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "LOA_SIGNED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getLoaSignedDate() {
 		return loaSignedDate;
 	}
@@ -651,7 +651,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "SC_DOC_SCR_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getScDocScrDate() {
 		return scDocScrDate;
 	}
@@ -661,7 +661,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "SC_DOC_LEGAL_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getScDocLegalDate() {
 		return scDocLegalDate;
 	}
@@ -671,7 +671,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "WORK_COMMENCE_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getWorkCommenceDate() {
 		return workCommenceDate;
 	}
@@ -681,7 +681,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "ONSITE_START_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getOnSiteStartDate() {
 		return onSiteStartDate;
 	}
@@ -691,7 +691,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	}
 
 	@Column(name = "SNAPSHOT_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getSnapshotDate() {
 		return snapshotDate;
 	}

@@ -169,7 +169,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "dueDate")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getDueDate() {
 		return dueDate;
 	}
@@ -178,7 +178,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "asAtDate")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getAsAtDate() {
 		return asAtDate;
 	}
@@ -187,7 +187,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "scIpaReceivedDate")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getIpaOrInvoiceReceivedDate() {
 		return ipaOrInvoiceReceivedDate;
 	}
@@ -196,7 +196,7 @@ public class PaymentCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "certIssueDate")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getCertIssueDate() {
 		return certIssueDate;
 	}

@@ -612,7 +612,7 @@ public class Subcontract extends BasePersistedObject {
 		this.paymentTermsDescription = paymentTermsDescription;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scCreatedDate")
 	public Date getScCreatedDate() {
 		return scCreatedDate;
@@ -622,7 +622,7 @@ public class Subcontract extends BasePersistedObject {
 		this.scCreatedDate = scCreatedDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "latestAddendumValueUpdatedDate")
 	public Date getLatestAddendumValueUpdatedDate() {
 		return latestAddendumValueUpdatedDate;
@@ -632,7 +632,7 @@ public class Subcontract extends BasePersistedObject {
 		this.latestAddendumValueUpdatedDate = latestAddendumValueUpdatedDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "firstPaymentCertIssuedDate")
 	public Date getFirstPaymentCertIssuedDate() {
 		return firstPaymentCertIssuedDate;
@@ -642,7 +642,7 @@ public class Subcontract extends BasePersistedObject {
 		this.firstPaymentCertIssuedDate = firstPaymentCertIssuedDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "lastPaymentCertIssuedDate")
 	public Date getLastPaymentCertIssuedDate() {
 		return lastPaymentCertIssuedDate;
@@ -652,7 +652,7 @@ public class Subcontract extends BasePersistedObject {
 		this.lastPaymentCertIssuedDate = lastPaymentCertIssuedDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "finalPaymentIssuedDate")
 	public Date getFinalPaymentIssuedDate() {
 		return finalPaymentIssuedDate;
@@ -662,7 +662,7 @@ public class Subcontract extends BasePersistedObject {
 		this.finalPaymentIssuedDate = finalPaymentIssuedDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scAwardApprovalRequestSentDate")
 	public Date getScAwardApprovalRequestSentDate() {
 		return scAwardApprovalRequestSentDate;
@@ -672,7 +672,7 @@ public class Subcontract extends BasePersistedObject {
 		this.scAwardApprovalRequestSentDate = scAwardApprovalRequestSentDate;
 	}
 
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	@Column(name = "scApprovalDate")
 	public Date getScApprovalDate() {
 		return scApprovalDate;
@@ -737,7 +737,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "REQUISITION_APPROVED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getRequisitionApprovedDate() {
 		return requisitionApprovedDate;
 	}
@@ -747,7 +747,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "TA_APPROVED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getTenderAnalysisApprovedDate() {
 		return tenderAnalysisApprovedDate;
 	}
@@ -757,7 +757,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "PREAWARD_MEETING_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getPreAwardMeetingDate() {
 		return preAwardMeetingDate;
 	}
@@ -767,7 +767,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "LOA_SIGNED_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getLoaSignedDate() {
 		return loaSignedDate;
 	}
@@ -777,7 +777,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "SC_DOC_SCR_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getScDocScrDate() {
 		return scDocScrDate;
 	}
@@ -787,7 +787,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "SC_DOC_LEGAL_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getScDocLegalDate() {
 		return scDocLegalDate;
 	}
@@ -797,7 +797,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "WORK_COMMENCE_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getWorkCommenceDate() {
 		return workCommenceDate;
 	}
@@ -807,7 +807,7 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "ONSITE_START_DATE")
-	@Temporal(value = TemporalType.TIMESTAMP)
+	@Temporal(value = TemporalType.DATE)
 	public Date getOnSiteStartDate() {
 		return onSiteStartDate;
 	}

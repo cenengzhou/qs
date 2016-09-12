@@ -52,7 +52,7 @@
 										<span class="input-group-addon"> <i
 											class="fa fa-calendar"></i>
 										</span> <input class="form-control" id="printPaymentCertDueDate" name="printPaymentCertDueDate"
-											ng-model="printPaymentCertDueDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+											ng-model="printPaymentCertDueDate" 
 											pattern=".\d{1,2}\/\d{1,2}\/\d{4}" title="Please select date from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
 									<p ng-show="printPaymentCertForm.printPaymentCertDueDate.$invalid && printPaymentCertForm.printPaymentCertDueDate.$touched" class="red">Please select the date from date picker</p>

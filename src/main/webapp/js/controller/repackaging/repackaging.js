@@ -1,6 +1,6 @@
 mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 
                                        function($scope, $location, $cookies, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope) {
-
+	$rootScope.selectedTips = 'repackagingStatus';
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.attachServerPath = '\\\\ERPATH11\\DEV\\QS\\JobAttachments\\';

@@ -1,6 +1,6 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService) {
-	
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', '$rootScope',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, $rootScope) {
+	$rootScope.selectedTips = '';
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
 	var optionList = [{ id: 'true', value: 'Excluded' },

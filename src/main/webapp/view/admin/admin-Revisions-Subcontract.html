@@ -168,7 +168,7 @@
 								class="control-label">Payment Currency</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.paymentCurrency"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.paymentCurrency"
 									id="SubcontractRecord_paymentCurrency"
 									ng-model="SubcontractRecord.paymentCurrency">
 									<option></option>
@@ -231,7 +231,7 @@
 								Terms</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.paymentTerms"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.paymentTerms"
 									id="SubcontractRecord_paymentTerms"
 									ng-model="SubcontractRecord.paymentTerms">
 									<option></option>
@@ -280,7 +280,7 @@
 								class="control-label">Package Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.packageStatus"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.packageStatus"
 									id="SubcontractRecord_packageStatus"
 									ng-model="SubcontractRecord.packageStatus">
 									<option></option>
@@ -295,7 +295,7 @@
 								class="control-label">Payment Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.subcontract_paymentStatus"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.subcontract_paymentStatus"
 									id="SubcontractRecord_paymentStatus"
 									ng-model="SubcontractRecord.paymentStatus">
 									<option></option>
@@ -310,7 +310,7 @@
 								class="control-label">Split Terminate Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.splitTerminateStatus"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.splitTerminateStatus"
 									id="SubcontractRecord_splitTerminateStatus"
 									ng-model="SubcontractRecord.splitTerminateStatus">
 								</select>
@@ -324,7 +324,7 @@
 								class="control-label">Subcontract Status</label>
 							<div>
 								<select class="form-control"
-									ng-options="v.id as v.value for v in GlobalParameter.subcontractStatus"
+									ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.subcontractStatus"
 									id="SubcontractRecord_subcontractStatus"
 									ng-model="SubcontractRecord.scStatus">
 									<option></option>
@@ -688,7 +688,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_finalPaymentIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_finalPaymentIssuedDate" 
 										ng-model="SubcontractRecord.finalPaymentIssuedDate">
 								</div>
 							</div>
@@ -705,7 +705,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_firstPaymentCertIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_firstPaymentCertIssuedDate" 
 										ng-model="SubcontractRecord.firstPaymentCertIssuedDate">
 								</div>
 							</div>
@@ -722,7 +722,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_latestAddendumValueUpdatedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_latestAddendumValueUpdatedDate" 
 										ng-model="SubcontractRecord.latestAddendumValueUpdatedDate">
 								</div>
 							</div>
@@ -739,7 +739,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_lastPaymentCertIssuedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_lastPaymentCertIssuedDate" 
 										ng-model="SubcontractRecord.lastPaymentCertIssuedDate">
 								</div>
 							</div>
@@ -756,7 +756,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_loaSignedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_loaSignedDate" 
 										ng-model="SubcontractRecord.loaSignedDate">
 								</div>
 							</div>
@@ -773,7 +773,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_preAwardMeetingDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_preAwardMeetingDate" 
 										ng-model="SubcontractRecord.preAwardMeetingDate">
 								</div>
 							</div>
@@ -790,7 +790,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_requisitionApprovedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_requisitionApprovedDate" 
 										ng-model="SubcontractRecord.requisitionApprovedDate">
 								</div>
 							</div>
@@ -807,7 +807,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scApprovalDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_scApprovalDate" 
 										ng-model="SubcontractRecord.scApprovalDate">
 								</div>
 							</div>
@@ -824,7 +824,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scAwardApprovalRequestSentDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_scAwardApprovalRequestSentDate" 
 										ng-model="SubcontractRecord.scAwardApprovalRequestSentDate">
 								</div>
 							</div>
@@ -841,7 +841,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scCreatedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_scCreatedDate" 
 										ng-model="SubcontractRecord.scCreatedDate">
 								</div>
 							</div>
@@ -858,7 +858,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scDocLegalDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_scDocLegalDate" 
 										ng-model="SubcontractRecord.scDocLegalDate">
 								</div>
 							</div>
@@ -875,7 +875,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_scDocScrDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_scDocScrDate" 
 										ng-model="SubcontractRecord.scDocScrDate">
 								</div>
 							</div>
@@ -892,7 +892,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_tenderAnalysisApprovedDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_tenderAnalysisApprovedDate" 
 										ng-model="SubcontractRecord.tenderAnalysisApprovedDate">
 								</div>
 							</div>
@@ -909,7 +909,7 @@
 									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="hour" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i></span> <input class="form-control"
-										id="SubcontractRecord_workCommenceDate" timestamp-to-string="{{GlobalParameter.DATE_FORMAT}}"
+										id="SubcontractRecord_workCommenceDate" 
 										ng-model="SubcontractRecord.workCommenceDate">
 								</div>
 							</div>

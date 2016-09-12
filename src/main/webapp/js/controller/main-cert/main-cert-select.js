@@ -1,6 +1,6 @@
-mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 
+mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies',
                                    function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies) {
-
+	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
 	$scope.latestCertStatus = '';

@@ -87,7 +87,7 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 	
 	$scope.getValueById = function(arr, id){
 		var obj = this;
-		return GlobalParameter.getValueById(GlobalParameter[arr], obj[id]);
+		return obj[id] + ' - ' + GlobalParameter.getValueById(GlobalParameter[arr], obj[id]);
 	}
 	
 }]);
