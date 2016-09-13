@@ -41,7 +41,7 @@ public class AttachMainCertHBDao extends BaseHibernateDao<AttachMainCert> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		
 		try{
-		criteria.add(Restrictions.eq("mainCertificate", mainContractCertificate));		
+		criteria.add(Restrictions.eq("mainCert", mainContractCertificate));		
 		criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
 		
 		return (AttachMainCert) criteria.uniqueResult();

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gammon.pcms.application.GlobalExceptionHandler;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachRepackaging;
 import com.gammon.qs.io.AttachmentFile;
@@ -229,6 +231,85 @@ public class AttachmentController {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@RequestMapping(value="getMainCertFileAttachment",method=RequestMethod.POST)
+	public void getMainCertFileAttachment(@RequestParam String noJob, @RequestParam Integer noMainCert, @RequestParam Integer noSequence,
+															HttpServletRequest request, HttpServletResponse response ){		
+				
+		logger.info("generateMainCgetMainCertFileAttachmentertificateAttachment");
+
+		try {
+			
+			AttachmentFile attachementFile = attachmentService.getMainCertFileAttachment(noJob, noMainCert, noSequence);
+
+			if (attachementFile != null) {
+				byte[] file = attachementFile.getBytes();
+				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+				response.setContentLength(file.length);
+				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachementFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				showAttachmentError(response);
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+			e.printStackTrace();
+			logger.info("Error: "+e.getLocalizedMessage());
+			showAttachmentError(response);
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} finally{
+			try {
+				response.getOutputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	} 
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "addMainCertFileAttachment", method = RequestMethod.POST)
+	public void addMainCertFileAttachment( 
+								@RequestParam String noJob,
+								@RequestParam Integer noMainCert,
+								@RequestParam Integer noSequence,
+								@RequestParam("files") List<MultipartFile> multipartFiles,
+								HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.info("addMainCertFileAttachment");
+
+		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+		
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+		int sn = Integer.valueOf(noSequence);
+		for (MultipartFile multipartFile : multipartFiles) {
+			byte[] file = multipartFile.getBytes();
+			if (file != null) {
+
+				Boolean result = attachmentService.addMainCertFileAttachment(noJob, noMainCert, sn, multipartFile.getOriginalFilename(), file);
+				sn++;
+				Map<String, Object> resultMap = new HashMap<String, Object>();
+				if (result) {
+					resultMap.put("success", true);
+					resultMap.put("fileName", multipartFile.getOriginalFilename());
+					logger.info("Upload Attachment: success.");
+				} else {
+					resultMap.put("success", false);
+					logger.info("error: ");
+				}
+//				response.setContentType("text/html");
+//				response.getWriter().print((new Gson()).toJson(result));
+				logger.info("addMainCertFileAttachment -END");
+			}
+		}
+	}
+
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "deleteMainCertAttachment", method = RequestMethod.POST)
+	public Boolean deleteMainCertAttachment(@RequestParam String noJob, Integer noMainCert, Integer noSequence) throws DatabaseOperationException {
+		return attachmentService.deleteMainCertAttachment(noJob, noMainCert,noSequence);
 	}
 	
 	/** 

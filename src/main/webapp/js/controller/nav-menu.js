@@ -1,12 +1,12 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval',
-                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval', 'GlobalParameter',
+                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, GlobalParameter) {
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 	$scope.subcontractDescription = $cookies.get("subcontractDescription");
 	$scope.userIcon = 'resources/images/profile.png';
-	$scope.imageServerAddress = 'http://gammon.gamska.com/PeopleDirectory_Picture/' //<= require login
+	$scope.imageServerAddress = GlobalParameter.imageServerAddress //<= require login
 //	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.GlobalHelper = GlobalHelper;
 	
@@ -61,7 +61,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 				} else {
 					$rootScope.showAdminMenu = GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $scope.user.UserRoles);
 				}
-				var iconPath = $scope.imageServerAddress+$scope.user.StaffID+'.jpg';
+				var iconPath = GlobalParameter.imageServerAddress+$scope.user.StaffID+'.jpg';
 				//As the config of http://gammon/ not allow CORS so cannot check if the image is available or 401
 				//check with the authType, if Kerberos change the image, if LDAP keep the default
 				//console.log('User:' +$scope.user.username + ' Staff id:' + $scope.user.StaffID + ' authType:' + $scope.user.authType);

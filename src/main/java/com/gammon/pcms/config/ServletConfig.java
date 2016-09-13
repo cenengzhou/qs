@@ -2,6 +2,8 @@ package com.gammon.pcms.config;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -89,6 +91,5 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 		bean.setCacheSeconds(5);
 		return bean;
 	}
-
 	
 }

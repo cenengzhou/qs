@@ -145,7 +145,8 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		checkNull: checkNull,
 		containRole: containRole,
 		numberClass: numberClass,
-		formTemplate: formTemplate
+		formTemplate: formTemplate,
+		attachmentIconClass: attachmentIconClass
 	}
 	
     // ---
@@ -222,6 +223,27 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		return html;
 	}
 	
+	function attachmentIconClass(fileType){
+		var iconClass = 'fa fa-2x fa-file-o';
+		switch(fileType){
+		case '.jpg':
+		case '.png':
+		case '.bmp':
+		case '.gif':
+			iconClass = 'fa fa-2x fa-file-image-o';
+			break;
+		case '.pdf':
+			iconClass = 'fa fa-2x fa-file-pdf-o';
+			break;
+		case '.xls':
+		case '.csv':
+			iconClass = 'fa fa-2x fa-file-excel-o';
+			break;
+		default:
+			iconClass = 'fa fa-2x fa-file-o';
+		}
+		return iconClass;
+	}
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

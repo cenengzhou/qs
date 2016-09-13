@@ -231,204 +231,6 @@ public class AttachmentService {
 	/***************************Repackaging Attachment --END***************************/
 	
 	
-	/***************************Main Contract Certificate Attachment***************************/
-	/**
-	 * @author tikywong
-	 * created on January 18, 2012
-	 */
-	public String getMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
-		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
-		return attachment.getTextAttachment();
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on January 20, 2012
-	 */
-	public AttachmentFile getMainCertFileAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws Exception {
-		logger.info("START - getMainCertFileAttachment");
-		//Timer
-		long start = System.currentTimeMillis();
-		
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
-		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
-		
-		//prepare file
-		File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
-		if(!file.canRead())
-			return null;
-		
-		FileInputStream fileInputStream = new FileInputStream(file);
-		byte[] bytes = new byte[(int)file.length()];
-		fileInputStream.read(bytes);
-		fileInputStream.close();
-		
-		AttachmentFile attachmentFile = new AttachmentFile();
-		attachmentFile.setBytes(bytes);
-		attachmentFile.setFileName(attachment.getFileName());
-
-		//Logging
-		long end = System.currentTimeMillis();
-		long timeInSeconds = (end-start)/1000;
-		logger.info("Execution Time - getMainCertFileAttachment:"+ timeInSeconds+" seconds");
-		return attachmentFile;
-	}
-		
-	/**
-	 * @author tikywong
-	 * created on January 26, 2012
-	 */
-	public Boolean addMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String fileName) throws DatabaseOperationException{
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		if(jobNumber==null || mainCertNumber==null || sequenceNo==null)
-			return false;
-		
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			return false;
-		
-		AttachMainCert attachment = new AttachMainCert();
-		attachment.setMainCert(mainCert);
-		attachment.setSequenceNo(sequenceNo);
-		attachment.setFileName(fileName);
-		attachment.setDocumentType(AttachMainCert.TEXT);
-		
-		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
-		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
-
-		logger.info("Text Attachment is created.");
-		return true;
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on January 26, 2012
-	 */
-	public Boolean addMainCertFileAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String fileName, byte[] bytes) throws Exception{
-		logger.info("START - addMainCertFileAttachment");
-		//Timer
-		long start = System.currentTimeMillis();
-
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber.toString()+", sequenceNo="+sequenceNo.toString()+", fileName="+fileName);
-		if(jobNumber==null || mainCertNumber==null || sequenceNo==null || fileName==null || fileName.length() == 0 || bytes == null || bytes.length == 0)
-			throw new Exception(jobNumber==null?"Job Number is null":
-								mainCertNumber==null?"Main Certificate Number is null":
-								sequenceNo==null?"Sequence No is null":
-								fileName==null||fileName.length()==0?"File name is null or without name":"File is null or empty");
-			
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			throw new Exception("Job: "+jobNumber+" Main Certificate: "+mainCertNumber+" does not exist.");
-
-		/**
-		 * @author koeyyeung
-		 * Remove attachment server path in db
-		 * modified on 27/03/2014**/
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
-		String fileDirectory = mainCert.getJobNo() + "\\" + "MainCert_" + mainCert.getCertificateNumber().toString()+"\\";
-		logger.info("fileDirectory: "+fileDirectory);
-		
-		File file = new File(serverPath + fileDirectory);
-		if(!file.exists()){
-			if(!file.mkdirs())
-				throw new Exception("Directory could not be created successfully. fileDirectory: "+fileDirectory);
-		}
-		
-		file = new File(serverPath+fileDirectory + fileName);
-		logger.info("Attachment Full Path: "+serverPath+fileDirectory + fileName);
-		int i=0;
-		String tmpFileName=fileName;
-		while(file.exists()){ // check if the file exists, append new file if necessary
-			i++;
-			int extensionPosition = fileName.lastIndexOf(".");
-			tmpFileName = fileName.substring(0,extensionPosition)+"("+i+")" +fileName.substring(extensionPosition , fileName.length());
-			file = new File(serverPath+ fileDirectory + tmpFileName );				
-		}
-		fileName = tmpFileName;
-		
-		FileOutputStream fileOout = new FileOutputStream(file);
-		fileOout.write(bytes);
-		fileOout.close();
-		
-		//String fileLink = fileDirectory + fileName;
-		AttachMainCert attachment = new AttachMainCert();
-		attachment.setMainCert(mainCert);
-		attachment.setSequenceNo(sequenceNo);
-		attachment.setFileName(fileName);
-		attachment.setDocumentType(AttachMainCert.FILE);
-		attachment.setFileLink(fileDirectory + fileName);
-
-		
-		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
-		
-		logger.info("File Attachment is saved at "+serverPath+fileDirectory + fileName);
-
-		//Logging
-		long end = System.currentTimeMillis();
-		long timeInSeconds = (end-start)/1000;
-		logger.info("Execution Time - addMainCertFileAttachment:"+ timeInSeconds+" seconds");
-		return true;
-	}
-
-	/**
-	 * @author tikywong
-	 * created on January 26, 2012
-	 */
-	public Boolean saveMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String text) throws DatabaseOperationException {
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo+"\ntext="+text);
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			return false;
-		
-		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
-		if(attachment==null)
-			return false;
-		
-		attachment.setTextAttachment(text);
-		
-		
-		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
-		logger.info("Text Attachment is saved.");
-		return true;
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on 27 January, 2012
-	 */
-	public Boolean deleteMainCertAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			return false;
-		
-		List<AttachMainCert> attachments = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainCert);
-		
-		for(AttachMainCert attachment:attachments){
-			if(attachment!=null && attachment.getSequenceNo().intValue()==sequenceNo.intValue()){
-				if(AttachMainCert.FILE.equals(attachment.getDocumentType())){
-					File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
-					if(!file.delete()){
-						logger.info("Could not delete file at: " + attachment.getFileLink());
-						return false;
-					}
-				}
-				
-				attachments.remove(attachment);
-				break;
-			}
-		}
-		
-		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
-		
-		logger.info("Attachment is deleted.");
-		return true;
-	}
-	/***************************Main Contract Certificate Attachment --END***************************/
 	
 	/***************************SC Pacakge Attachment (SC, SC Detail, SC Payment)***************************/
 	public UploadSCAttachmentResponseObj uploadAttachment(String nameObject, String textKey, Integer sequenceNo, String fileName, byte[] file, String createdUser) throws Exception {
@@ -605,7 +407,22 @@ public class AttachmentService {
 			dbObj.setSequenceNo(sequenceNo);
 			dbObj.setSubcontractDetail(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, splittedTextKey[2]));
 			return new Boolean(scDetailAttachmentDao.addUpdateSCTextAttachment(dbObj, user));
-		}else return false;
+		}else if(AttachMainCert.MainCertNameObject.equals(nameObject)){
+			Integer noMainCert = Integer.valueOf(splittedTextKey[1].trim());
+			MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, noMainCert);
+			AttachMainCert dbObj = new AttachMainCert();
+			dbObj.setTextAttachment(textContent);
+			dbObj.setFileName(filename);
+			dbObj.setFileLink(AttachMainCert.FileLinkForText);
+			dbObj.setDocumentType(AttachMainCert.TEXT);
+			dbObj.setSequenceNo(sequenceNo);
+			dbObj.setMainCert(mainCert);
+			dbObj.setLastModifiedUser(user);
+			mainCertificateAttachmentHBDaoImpl.saveOrUpdate(dbObj);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Transactional(readOnly = true, value = "transactionManager")
@@ -823,7 +640,13 @@ public class AttachmentService {
 				AttachPayment scPaymentAttachment = scPaymentAttachmentDao.getAttachPayment(scPaymentCertHBDao.obtainPaymentCertificate(jobNumber, packageNo, new Integer(splittedTextKey[2])), sequenceNumber);
 				directoryPath = serverPath + scPaymentAttachment.getFileLink();
 				scPaymentAttachmentDao.delete(scPaymentAttachment);
-			}else{
+			} else if(AttachMainCert.MainCertNameObject.equalsIgnoreCase(nameObject)){
+				Integer noMainCert = Integer.valueOf(splittedTextKey[1].trim());
+				MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, noMainCert);
+				AttachMainCert attachMainCert = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachment(mainCert, sequenceNumber);
+				directoryPath = serverPath + attachMainCert.getFileLink();
+				mainCertificateAttachmentHBDaoImpl.delete(attachMainCert);
+			} else{
 				AttachSubcontractDetail scDetailAttachment = scDetailAttachmentDao.getSCDetailsAttachment(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, splittedTextKey[2]), sequenceNumber);
 				directoryPath = serverPath + scDetailAttachment.getFileLink();
 				scDetailAttachmentDao.delete(scDetailAttachment);
@@ -871,7 +694,16 @@ public class AttachmentService {
 				if (scPaymentAttachmentResult==null)
 					throw new Exception("Attachment Type Error");
 				fileLink = serverPath + scPaymentAttachmentResult.getFileLink();
-			}else{
+			} else if (AttachMainCert.MainCertNameObject.equalsIgnoreCase(nameObject)){
+				AttachMainCert attachMainCert = null;
+				Integer noMainCert = Integer.valueOf(splittedTextKey[1].trim());
+				MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, noMainCert);
+				attachMainCert = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachment(mainCert, sequenceNumber);
+				if(attachMainCert == null){
+					throw new Exception("Attachment Type Error");
+				}
+				fileLink = serverPath + attachMainCert.getFileLink();
+			} else{
 				AttachSubcontractDetail scDetailAttachmentResult = null;
 				scDetailAttachmentResult  = scDetailAttachmentDao.getSCDetailsAttachment(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo, splittedTextKey[2]), sequenceNumber);
 				if (scDetailAttachmentResult==null)
@@ -1065,8 +897,9 @@ public class AttachmentService {
 
 				});
 				return resultList;
-			}else if (AttachSubcontract.MainCertNameObject.equals(nameObject.trim())){;
-			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(packageNo)));
+			}else if (AttachMainCert.MainCertNameObject.equals(nameObject.trim())){;
+			Integer noMainCert = Integer.valueOf(splittedTextKey[1].trim());
+			List<AttachMainCert> resultList = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, noMainCert));
 			if (resultList==null || resultList.size()<1)
 				return new ArrayList<AttachMainCert>();
 			Collections.sort(resultList, new Comparator<AttachMainCert>(){
@@ -1094,6 +927,205 @@ public class AttachmentService {
 			return new ArrayList<AttachSubcontract>();
 		}
 	}
+
+	/***************************Main Contract Certificate Attachment***************************/
+	/**
+	 * @author tikywong
+	 * created on January 18, 2012
+	 */
+	public String getMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
+		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
+		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
+		return attachment.getTextAttachment();
+	}
+	
+	/**
+	 * @author tikywong
+	 * created on January 26, 2012
+	 */
+	public Boolean addMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String fileName) throws DatabaseOperationException{
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
+		if(jobNumber==null || mainCertNumber==null || sequenceNo==null)
+			return false;
+		
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
+		if(mainCert==null)
+			return false;
+		
+		AttachMainCert attachment = new AttachMainCert();
+		attachment.setMainCert(mainCert);
+		attachment.setSequenceNo(sequenceNo);
+		attachment.setFileName(fileName);
+		attachment.setDocumentType(AttachMainCert.TEXT);
+		
+		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
+		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
+
+		logger.info("Text Attachment is created.");
+		return true;
+	}
+	
+	/**
+	 * @author tikywong
+	 * created on January 26, 2012
+	 */
+	public Boolean saveMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String text) throws DatabaseOperationException {
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo+"\ntext="+text);
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
+		if(mainCert==null)
+			return false;
+		
+		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
+		if(attachment==null)
+			return false;
+		
+		attachment.setTextAttachment(text);
+		
+		
+		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
+		logger.info("Text Attachment is saved.");
+		return true;
+	}
+	
+	/**
+	 * @author tikywong
+	 * created on January 20, 2012
+	 */
+	public AttachmentFile getMainCertFileAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws Exception {
+		logger.info("START - getMainCertFileAttachment");
+		//Timer
+		long start = System.currentTimeMillis();
+		
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
+		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
+		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
+		
+		//prepare file
+		File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+		if(!file.canRead())
+			return null;
+		
+		FileInputStream fileInputStream = new FileInputStream(file);
+		byte[] bytes = new byte[(int)file.length()];
+		fileInputStream.read(bytes);
+		fileInputStream.close();
+		
+		AttachmentFile attachmentFile = new AttachmentFile();
+		attachmentFile.setBytes(bytes);
+		attachmentFile.setFileName(attachment.getFileName());
+
+		//Logging
+		long end = System.currentTimeMillis();
+		long timeInSeconds = (end-start)/1000;
+		logger.info("Execution Time - getMainCertFileAttachment:"+ timeInSeconds+" seconds");
+		return attachmentFile;
+	}
+		
+	/**
+	 * @author tikywong
+	 * created on January 26, 2012
+	 */
+	public Boolean addMainCertFileAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String fileName, byte[] bytes) throws Exception{
+		logger.info("START - addMainCertFileAttachment");
+		//Timer
+		long start = System.currentTimeMillis();
+
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber.toString()+", sequenceNo="+sequenceNo.toString()+", fileName="+fileName);
+		if(jobNumber==null || mainCertNumber==null || sequenceNo==null || fileName==null || fileName.length() == 0 || bytes == null || bytes.length == 0)
+			throw new Exception(jobNumber==null?"Job Number is null":
+								mainCertNumber==null?"Main Certificate Number is null":
+								sequenceNo==null?"Sequence No is null":
+								fileName==null||fileName.length()==0?"File name is null or without name":"File is null or empty");
+			
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
+		if(mainCert==null)
+			throw new Exception("Job: "+jobNumber+" Main Certificate: "+mainCertNumber+" does not exist.");
+
+		/**
+		 * @author koeyyeung
+		 * Remove attachment server path in db
+		 * modified on 27/03/2014**/
+		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String fileDirectory = mainCert.getJobNo() + "\\" + "MainCert_" + mainCert.getCertificateNumber().toString()+"\\";
+		logger.info("fileDirectory: "+fileDirectory);
+		
+		File file = new File(serverPath + fileDirectory);
+		if(!file.exists()){
+			if(!file.mkdirs())
+				throw new Exception("Directory could not be created successfully. fileDirectory: "+fileDirectory);
+		}
+		
+		file = new File(serverPath+fileDirectory + fileName);
+		logger.info("Attachment Full Path: "+serverPath+fileDirectory + fileName);
+		int i=0;
+		String tmpFileName=fileName;
+		while(file.exists()){ // check if the file exists, append new file if necessary
+			i++;
+			int extensionPosition = fileName.lastIndexOf(".");
+			tmpFileName = fileName.substring(0,extensionPosition)+"("+i+")" +fileName.substring(extensionPosition , fileName.length());
+			file = new File(serverPath+ fileDirectory + tmpFileName );				
+		}
+		fileName = tmpFileName;
+		
+		FileOutputStream fileOout = new FileOutputStream(file);
+		fileOout.write(bytes);
+		fileOout.close();
+		
+		//String fileLink = fileDirectory + fileName;
+		AttachMainCert attachment = new AttachMainCert();
+		attachment.setMainCert(mainCert);
+		attachment.setSequenceNo(sequenceNo);
+		attachment.setFileName(fileName);
+		attachment.setDocumentType(AttachMainCert.FILE);
+		attachment.setFileLink(fileDirectory + fileName);
+
+		
+		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
+		
+		logger.info("File Attachment is saved at "+serverPath+fileDirectory + fileName);
+
+		//Logging
+		long end = System.currentTimeMillis();
+		long timeInSeconds = (end-start)/1000;
+		logger.info("Execution Time - addMainCertFileAttachment:"+ timeInSeconds+" seconds");
+		return true;
+	}
+
+	/**
+	 * @author tikywong
+	 * created on 27 January, 2012
+	 */
+	public Boolean deleteMainCertAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
+		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
+		
+		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
+		if(mainCert==null)
+			return false;
+		
+		List<AttachMainCert> attachments = mainCertificateAttachmentHBDaoImpl.obtainMainCertAttachmentList(mainCert);
+		
+		for(AttachMainCert attachment:attachments){
+			if(attachment!=null && attachment.getSequenceNo().intValue()==sequenceNo.intValue()){
+				if(AttachMainCert.FILE.equals(attachment.getDocumentType())){
+					File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+					if(!file.delete()){
+						logger.info("Could not delete file at: " + attachment.getFileLink());
+						return false;
+					}
+				}
+				
+				attachments.remove(attachment);
+				break;
+			}
+		}
+		
+		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
+		
+		logger.info("Attachment is deleted.");
+		return true;
+	}
+	/***************************Main Contract Certificate Attachment --END***************************/
 
 	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 }

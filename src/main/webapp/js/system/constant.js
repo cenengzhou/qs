@@ -324,6 +324,7 @@ mainApp.constant('GlobalParameter', {
 		{id:'P', value:'Pending for approval'},
 		{id:'V', value:'Verified for approval'}
 	],
+	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/'
 });
 
 mainApp.constant('GlobalMessage', {

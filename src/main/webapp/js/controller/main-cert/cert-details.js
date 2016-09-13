@@ -331,6 +331,10 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 
 				});
 	}
+	
+	$scope.openAttachment = function(){
+		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-file.html', 'AttachmentMainCertFileCtrl', 'Success', $scope);
+	}
 
 
 

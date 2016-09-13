@@ -843,7 +843,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/main-cert/cert-details.js',
                            'js/controller/main-cert/retention-release-modal.js',
                            'js/controller/main-cert/contra-charge-modal.js',
-                           'js/service/job-service.js'
+                           'js/controller/main-cert/main-cert-attachment-file.js',
+                           'js/controller/main-cert/main-cert-attachment-text.js',
+                           'js/service/job-service.js',
+                           'js/service/attachment-service.js'
                            
                     ] 
                 });

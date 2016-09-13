@@ -11,7 +11,10 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     	uploadSCAttachment:				uploadSCAttachment,
     	deleteAttachment:				deleteAttachment,
     	getAttachmentListForPCMS:		getAttachmentListForPCMS,
-    	uploadTextAttachment:			uploadTextAttachment
+    	uploadTextAttachment:			uploadTextAttachment,
+    	
+    	getMainCertFileAttachment:		getMainCertFileAttachment,
+    	addMainCertFileAttachment:		addMainCertFileAttachment,
     	
     });
    
@@ -126,6 +129,31 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
             	fileName: fileName,
             	textAttachment: textAttachment
             }
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+   
+    function getMainCertFileAttachment(noJob, noMainCert, noSequence){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/attachment/getMainCertFileAttachment',
+    		params:{
+    			noJob: noJob,
+    			noMainCert: noMainCert,
+    			noSequence: noSequence    			
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function addMainCertFileAttachment(formData){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/attachment/addMainCertFileAttachment',
+			data : formData,
+			headers : {
+				'Content-Type' : undefined
+			}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

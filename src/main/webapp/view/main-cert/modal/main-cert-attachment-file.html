@@ -1,11 +1,18 @@
-
 	<div class="row">
 		<div class="col-md-12 animated fadeIn">
 			<div class="panel panel-inverse">
-				<div class="panel-heading">Attachment</div>
-				<div class="panel-body" style="padding: 0 !important">
-					<div class="table-responsive" resize
-						ng-style="resizeWithOffset(offsetTop)">
+				<div class="panel-heading col-md-12">
+					<div class="col-md-11">Attachment</div>
+					<div class="col-md-1">
+						<button class="btn btn-white pull-right" type="button"
+							ng-click="cancel()">
+							<span class="fa fa-remove"></span>
+						</button>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="panel-body" style="padding: 0 !important;height:400px;overflow:auto">
+					<div class="table-responsive">
 						<form class="form" role="form" id="attachmentForm">
 							<table class="table table-hover ">
 								<thead>

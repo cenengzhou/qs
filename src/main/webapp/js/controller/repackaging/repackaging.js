@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 
-                                       function($scope, $location, $cookies, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope) {
+mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 
+                                       function($scope, $location, $cookies, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper) {
 	$rootScope.selectedTips = 'repackagingStatus';
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -7,7 +7,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 
 	$scope.repackaging = "";
 	$scope.sequenceNo = 0;
-	$scope.imageServerAddress = 'http://gammon.gamska.com/PeopleDirectory_Picture/';
+	$scope.imageServerAddress = GlobalParameter.imageServerAddress;
 	$scope.selectedAttachement = false;
 	$scope.isAddTextAttachment = false;
 	
@@ -84,19 +84,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 				att.fileIconClass = 'fa fa-2x fa-file-text-o'; 
 			} else {
 				var fileType = att.fileName.substring(att.fileName.length -4);
-				switch(fileType){
-				case '.pdf':
-					att.fileIconClass = 'fa fa-2x fa-file-pdf-o';
-					break;
-				case '.xls':
-					att.fileIconClass = 'fa fa-2x fa-file-excel-o';
-					break;
-				case '.csv':
-					att.fileIconClass = 'fa fa-2x fa-file-excel-o';
-					break;
-				default:
-					att.fileIconClass = 'fa fa-2x fa-file-o';
-				}
+				att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
 			}
 			att.user = {};
 			att.user.userIcon = 'resources/images/profile.png';
@@ -105,7 +93,7 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 				if(response.data instanceof Object){
 					att.user = response.data;
 					if(att.user.StaffID !== null){
-						att.user.userIcon = $scope.imageServerAddress+att.user.StaffID+'.jpg';
+						att.user.userIcon = GlobalParameter.imageServerAddress+att.user.StaffID+'.jpg';
 					} else {
 						att.user.userIcon = 'resources/images/profile.png';
 					}

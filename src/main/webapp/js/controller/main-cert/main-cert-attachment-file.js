@@ -1,15 +1,22 @@
-mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
-                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
+mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'modalStatus', 'modalParam', '$uibModalInstance', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
+                                         function($scope, $location, attachmentService, modalService, modalStatus, modalParam, $uibModalInstance, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
+	
+	$scope.status = modalStatus;
+	$scope.parentScope = modalParam;
+	
+	$scope.cancel = function () {
+		$uibModalInstance.close();
+	};
 	
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo = $cookies.get('addendumNo');
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
-	$scope.nameObject = $stateParams.nameObject;
-	$scope.offsetTop = $stateParams.offsetTop;
-	$scope.insideContent = false;
+	$scope.mainCertNo = $cookies.get('mainCertNo');
+	$scope.nameObject = GlobalParameter['AbstractAttachment'].MainCertNameObject;
+
 	$scope.sequenceNo = 0;
-	$scope.textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
+	$scope.textKey = $scope.jobNo + '|' + $scope.mainCertNo + '|';
 	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCDetailsNameObject){
 		$scope.textKey += $scope.addendumNo;
 		$scope.insideContent = true;
@@ -65,7 +72,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
-    		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+    		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-text.html', 'AttachmentMainCertTextCtrl', 'Success', $scope);
     	}
     }
     
@@ -74,7 +81,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     	$scope.textAttachment = {};
     	$scope.textAttachment.sequenceNo = $scope.sequenceNo + 1;
     	$scope.textAttachment.fileName = "New Text";
-		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-text.html', 'AttachmentMainCertTextCtrl', 'Success', $scope);
     }
     
 	$scope.getUserByUsername = function(username){
@@ -86,10 +93,10 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 		angular.forEach(f.files, function(file){
 			formData.append('files', file);
 		});
-		formData.append('nameObject', $scope.nameObject);
-		formData.append('textKey', $scope.textKey)
-		formData.append('sequenceNo', $scope.sequenceNo+1);
-		attachmentService.uploadSCAttachment(formData)
+		formData.append('noJob', $scope.jobNo);
+		formData.append('noMainCert', $scope.mainCertNo)
+		formData.append('noSequence', $scope.sequenceNo+1);
+		attachmentService.addMainCertFileAttachment(formData)
 		.then(function(data){
 			f.value = null;
 			$scope.loadAttachment($scope.nameObject, $scope.textKey);
