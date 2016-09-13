@@ -351,10 +351,10 @@ public class PaymentService{
 		result.setJobDescription(scPackage.getJobInfo().getDescription());
 		result.setMainCertNo(scPaymentCert.getMainContractPaymentCertNo()==null? new Integer(0) : scPaymentCert.getMainContractPaymentCertNo());
 		result.setPaymentCertNo(paymentCertNo);
-		result.setSubContractNo(new Integer(scPackage.getPackageNo()));
+		result.setSubContractNo(scPackage.getPackageNo());
 		result.setSubcontractorDescription(masterListWSDao.getOneVendor(scPackage.getVendorNo()).getVendorName());
 
-		result.setSubcontractorNo(new Integer(scPackage.getVendorNo()));
+		result.setSubcontractorNo(scPackage.getVendorNo());
 		result.setSubContractDescription(scPackage.getDescription());
 		
 		//Dates
@@ -3101,6 +3101,44 @@ public class PaymentService{
 		return paymentCertWrapperList;
 	}
 
+	public Double getPaymentResourceDistribution(String jobNo, String subcontractNo, Integer paymentCertNo, String lineType, String dataType){
+		Double result = 0.0;
+		PaymentCert paymentCert;
+		try {
+			if(paymentCertNo !=null)
+				paymentCert = paymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
+			else
+				paymentCert = paymentCertDao.obtainPaymentLatestPostedCert(jobNo, subcontractNo);
+			
+			if(paymentCert != null){
+				String[] lineTypes = new String[] {};
+				if("BQ".equals(lineType))
+					lineTypes = new String[] { "BQ", "B1" };
+				else if("VO".equals(lineType))
+					lineTypes = new String[] { "V1", "V2", "V3","L1", "L2", "D1", "D2"};
+				else if("CC".equals(lineType))
+					lineTypes = new String[] { "C1", "C2"};
+				else if("RT".equals(lineType))
+					lineTypes = new String[] { "RR", "RA", "RT" };
+				else if("Advanced".equals(lineType))
+					lineTypes = new String[] { "AP", "MS", "MR" };
+				else if("Others".equals(lineType))
+					lineTypes = new String[] { "CF", "OA" };
+
+				if("Cumulative".equals(dataType))
+					result = paymentDetailDao.getCumPaymentResourceDistribution(paymentCert, lineTypes);
+				else if("Movement".equals(dataType))
+					result = paymentDetailDao.getMovPaymentResourceDistribution(paymentCert, lineTypes);
+			}
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 	
 	public Object[] testModifyPaymentCertAndDetail(String jobNo, String subcontractNo, Integer paymentCertNo) throws Exception{

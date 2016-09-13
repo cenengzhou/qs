@@ -100,6 +100,18 @@ public class PaymentController {
 		return gstAmount;
 	}
 	
+	
+	@RequestMapping(value = "getPaymentResourceDistribution", method = RequestMethod.GET)
+	public Double getPaymentResourceDistribution(@RequestParam(required = true) String jobNo, 
+								@RequestParam(required = true) String subcontractNo,
+								@RequestParam(required = true) String lineType,
+								@RequestParam(required = true) String dataType,
+								@RequestParam(required = false) Integer paymentCertNo){
+		Double amount = null;
+		amount = paymentService.getPaymentResourceDistribution(jobNo, subcontractNo, paymentCertNo, lineType, dataType);
+		return amount;
+	}
+	
 	@RequestMapping(value = "calculatePaymentDueDate", method = RequestMethod.GET)
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
 															@RequestParam(required = true) String subcontractNo, 

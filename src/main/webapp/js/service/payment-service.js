@@ -1,22 +1,24 @@
-mainApp.service('paymentService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
+mainApp.service('paymentService', ['$http', '$q', '$log', 'GlobalHelper',  function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
-    	getPaymentCertList: 		getPaymentCertList,
-    	getLatestPaymentCert:		getLatestPaymentCert,
-    	getPaymentCert: 			getPaymentCert,
-    	getPaymentDetailList: 		getPaymentDetailList,
-    	getPaymentCertSummary: 		getPaymentCertSummary, 
-    	getGSTAmount:				getGSTAmount,
-    	getTotalPostedCertAmount: 	getTotalPostedCertAmount,
-    	createPayment:				createPayment,
-    	updatePaymentCertificate: 	updatePaymentCertificate,
-    	calculatePaymentDueDate:	calculatePaymentDueDate,
-    	updatePaymentDetails:		updatePaymentDetails,
-    	updatePaymentCert:			updatePaymentCert,
-    	submitPayment:				submitPayment,
-    	updateF58011FromSCPaymentCertManually: updateF58011FromSCPaymentCertManually,
-    	runPaymentPosting:			runPaymentPosting,
-    	obtainPaymentCertificateList:	obtainPaymentCertificateList
+    	getPaymentCertList: 					getPaymentCertList,
+    	getLatestPaymentCert:					getLatestPaymentCert,
+    	getPaymentCert: 						getPaymentCert,
+    	getPaymentDetailList: 					getPaymentDetailList,
+    	getPaymentCertSummary: 					getPaymentCertSummary, 
+    	getGSTAmount:							getGSTAmount,
+    	getTotalPostedCertAmount: 				getTotalPostedCertAmount,
+    	getPaymentResourceDistribution:			getPaymentResourceDistribution,
+    	
+    	createPayment:							createPayment,
+    	updatePaymentCertificate: 				updatePaymentCertificate,
+    	calculatePaymentDueDate:				calculatePaymentDueDate,
+    	updatePaymentDetails:					updatePaymentDetails,
+    	updatePaymentCert:						updatePaymentCert,
+    	submitPayment:							submitPayment,
+    	updateF58011FromSCPaymentCertManually: 	updateF58011FromSCPaymentCertManually,
+    	runPaymentPosting:						runPaymentPosting,
+    	obtainPaymentCertificateList:			obtainPaymentCertificateList
     	
     });
 	
@@ -130,6 +132,28 @@ mainApp.service('paymentService', ['$http', '$q', 'GlobalHelper',  function($htt
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function getPaymentResourceDistribution(jobNo, subcontractNo, lineType, dataType, paymentCertNo){
+    	var deferred = $q.defer();
+    	$http({
+    		method: 'get',
+    		url: 'service/payment/getPaymentResourceDistribution',
+    		params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	lineType: lineType,
+            	dataType: dataType,
+            	paymentCertNo: paymentCertNo
+            }
+    	}).success(function(data) { 
+    		deferred.resolve(data);
+    	}).error(function(msg, code) {
+    		deferred.reject(msg);
+    		$log.error(msg, code);
+    	});
+    	return deferred.promise;
     }
     
     

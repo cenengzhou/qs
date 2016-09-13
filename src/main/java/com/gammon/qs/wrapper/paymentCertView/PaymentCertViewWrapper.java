@@ -9,11 +9,11 @@ public class PaymentCertViewWrapper implements Serializable{
 	private String jobDescription;
 	private Integer paymentCertNo;
 	private Integer mainCertNo;
-	private Integer subContractNo;
+	private String subContractNo;
 	private String subContractDescription;
 	
 	private String paymentType;
-	private Integer subcontractorNo;
+	private String subcontractorNo;
 	private String subcontractorDescription;
 	private Double subcontractSum;
 	private String approvalStatus;
@@ -81,8 +81,6 @@ public class PaymentCertViewWrapper implements Serializable{
 	public PaymentCertViewWrapper(){
 		paymentCertNo = new Integer (0);
 		mainCertNo = new Integer (0);
-		subContractNo = new Integer (0);
-		subcontractorNo = new Integer (0);
 		subcontractSum = new Double (0);
 		addendum = new Double (0);
 		revisedValue = new Double (0);
@@ -150,11 +148,11 @@ public class PaymentCertViewWrapper implements Serializable{
 		this.paymentCertNo = paymentCertNo;
 	}
 
-	public Integer getSubContractNo() {
+	public String getSubContractNo() {
 		return subContractNo;
 	}
 
-	public void setSubContractNo(Integer subContractNo) {
+	public void setSubContractNo(String subContractNo) {
 		this.subContractNo = subContractNo;
 	}
 
@@ -174,11 +172,11 @@ public class PaymentCertViewWrapper implements Serializable{
 		this.paymentType = paymentType;
 	}
 
-	public Integer getSubcontractorNo() {
+	public String getSubcontractorNo() {
 		return subcontractorNo;
 	}
 
-	public void setSubcontractorNo(Integer subcontractorNo) {
+	public void setSubcontractorNo(String subcontractorNo) {
 		this.subcontractorNo = subcontractorNo;
 	}
 

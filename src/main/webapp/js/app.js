@@ -698,6 +698,21 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
         controller: 'PaymentDetailsCtrl',
 	})
+	.state('subcontract.payment.summary', {
+		url: "/summary",
+		templateUrl: "view/subcontract/payment/payment-summary.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               	      'js/controller/subcontract/payment/payment-summary.js',
+                         ] 
+                });
+            }]
+        },
+		controller: 'PaymentSummaryCtrl'
+	})
 	.state('subcontract.payment.attachment', {
 		url: "/attachment",
 		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",

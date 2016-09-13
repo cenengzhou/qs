@@ -17,6 +17,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
@@ -227,39 +228,6 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		}
 	}
 	
-	/**
-	 * 
-	 * To obtain a payment certificate with a specific payment status
-	 * @author tikywong
-	 * created on Feb 21, 2014 12:10:08 PM
-	 */
-	public PaymentCert obtainPaymentCert(String jobNumber, String packageNo, String paymentStatus) throws DatabaseOperationException{
-		if (jobNumber==null || jobNumber.trim().equals(""))
-			throw new DatabaseOperationException("jobnumber is null/empty");
-		else
-			jobNumber = jobNumber.trim();
-		if (packageNo==null || packageNo.trim().equals(""))
-			throw new DatabaseOperationException("packageNo is null/empty");
-		else
-			packageNo = packageNo.trim();
-		if (paymentStatus==null || paymentStatus.trim().equals(""))
-			throw new DatabaseOperationException("paymentStatus is null/empty");
-		else
-			paymentStatus = paymentStatus.trim();
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			
-			criteria.add(Restrictions.eq("jobNo", jobNumber));
-			criteria.createAlias("subcontract", "subcontract");
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-			criteria.add(Restrictions.eq("paymentStatus", paymentStatus));
-			
-			return (PaymentCert) criteria.uniqueResult();
-		}catch (HibernateException he){
-			logger.info("Fail: obtainPaymentCert(String jobNumber, String packageNo, String paymentStatus)");
-			throw new DatabaseOperationException(he);
-		}
-	}
 	
 	@SuppressWarnings("unchecked")
 	public List<PaymentCert> getSCPaymentCertsPCS() throws DatabaseOperationException{
@@ -421,6 +389,23 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		
 		return completed;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public PaymentCert obtainPaymentLatestPostedCert(String jobNumber, String subcontractNo) throws DataAccessException{
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("subcontract","subcontract" );
+		criteria.createAlias("subcontract.jobInfo","jobInfo" );
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
+		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo.toString()));
+		criteria.add(Restrictions.eq("paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
+		criteria.addOrder(Order.desc("paymentCertNo"));
+		List<PaymentCert> resultList = criteria.list();
+		if (resultList!=null && !resultList.isEmpty())
+			return resultList.get(0);
+		return null;
+	}
+	
 	
 	public Double getTotalPostedCertAmount(String jobNo, String subcontractNo) {
 		Criteria criteria = getSession().createCriteria(this.getType());

@@ -1,39 +1,69 @@
 <!-- begin #content -->
 <div id="content" class="content">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb pull-right">
+	<!-- <ol class="breadcrumb pull-right">
 		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 				Home</a></li>
 		<li class="active">Dashboard</li>
-	</ol>
-	<!-- end breadcrumb -->
+	</ol> -->
 
 	<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}
 	</h1>
 
-	<div class="col-xs-12 col-md-12 col-lg-6">
-
-		<div class="widget widget-stat text-white bg-primary">
-			<div class="widget-stat-btn">
-				<a href="javascript:;" data-click="widget-reload"><i
-					class="fa fa-repeat"></i></a>
+	<div class="col-xs-12 col-md-6 col-lg-6">
+		<div class="panel panel-primary ">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+						href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					Payment Resource Distribution <small></small>
+				</h4>
 			</div>
-			<div class="widget-stat-content">
-				<div class="widget-stat-title">
-					<h4><i class="fa fa-trophy fa-fw"></i> Total Posted Certificate Amount</h4>
-				</div>
-				<div class="widget-stat-text m-b-10">
-					Payment Terms: {{paymentTerms}}
-				</div>
-				<div class="widget-stat-number m-b-10">{{totalCertificateAmount | currency}}</div>
-				<div class="widget-stat-chart">
-					<div id="sparkline-line-chart"></div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<canvas id="doughnut" class="chart chart-doughnut"
+							chart-data="paymentResourceDistributionChart.data"
+							chart-labels="paymentResourceDistributionChart.labels"
+							chart-colours="paymentResourceDistributionChart.colours"
+							height="50">
+											</canvas>
+					</div>
+					<div class="col-md-12">
+						<ul class="chart-legend clearfix">
+							<li class="col-md-4"><i class="fa fa-circle text-primary"></i>
+								<label>{{paymentResourceDistributionChart.labels[0]}}:
+									{{paymentResourceDistributionChart.data[0] | currency}}</label></li>
+							<li class="col-md-4"><i class="fa fa-circle text-danger-light"></i>
+								<label>{{paymentResourceDistributionChart.labels[1]}}:
+									{{paymentResourceDistributionChart.data[1] | currency}}</label></li>
+							<li class="col-md-4"><i class="fa fa-circle text-warning-light"></i>
+								<label>{{paymentResourceDistributionChart.labels[2]}}:
+									{{paymentResourceDistributionChart.data[2] | currency}}</label></li>
+							<li class="col-md-4"><i class="fa fa-circle text-success-light"></i>
+								<label>{{paymentResourceDistributionChart.labels[3]}}:
+									{{paymentResourceDistributionChart.data[3] | currency}}</label></li>
+							<li class="col-md-4"><i
+								class="fa fa-circle text-purple-light"></i> <label>{{paymentResourceDistributionChart.labels[4]}}:
+									{{paymentResourceDistributionChart.data[4] | currency}}</label></li>
+							<li class="col-md-4"><i class="fa fa-circle text-muted"></i>
+								<label>{{paymentResourceDistributionChart.labels[5]}}:
+									{{paymentResourceDistributionChart.data[5] | currency}}</label></li>
+						</ul>
+					</div>
+
 				</div>
 			</div>
 		</div>
 
-		<div class="fullcalendar vertical-box ">
+
+		<div class="fullcalendar vertical-box">
 			<div class="fullcalendar-container vertical-box-column">
 				<div id='calendar'></div>
 			</div>
@@ -41,15 +71,42 @@
 	</div>
 
 
-	<div class="col-xs-12 col-md-12 col-lg-6">
-		<div class="fixed-container">
-			<div class="col-lg-12"
-				ng-show="(latestPaymentStatus=='APR' || latestPaymentStatus=='') && latestPaymentType!='F'">
-				<a ui-sref="subcontract.payment.certificate({paymentCertNo: '0', paymentTermsDesc: paymentTerms})"
-					class="btn btn-danger btn-block"> <i
-					class="fa fa-plus-circle fa-2x "></i> Create New Payment
-				</a> <br> <br>
+	<div class="col-xs-12 col-md-6 col-lg-6">
+		<div class="col-lg-12"
+			ng-show="(latestPaymentStatus=='APR' || latestPaymentStatus=='') && latestPaymentType!='F'">
+			<a
+				ui-sref="subcontract.payment.certificate({paymentCertNo: '0', paymentTermsDesc: paymentTerms})"
+				class="btn btn-danger btn-block"> <i
+				class="fa fa-plus-circle fa-2x "></i> Create New Payment
+			</a> <br> <br>
+		</div>
+
+		<div class="col-md-12">
+			<div class="widget widget-stat text-white bg-primary">
+				<div class="widget-stat-btn">
+					<a href="javascript:;" data-click="widget-reload"><i
+						class="fa fa-repeat"></i></a>
+				</div>
+				<div class="widget-stat-content">
+					<div class="widget-stat-title">
+						<h4>
+							<i class="fa fa-trophy fa-fw"></i> Total Posted Certificate
+							Amount
+						</h4>
+					</div>
+					<div class="widget-stat-text m-b-10">Payment Terms:
+						{{paymentTerms}}</div>
+					<div class="widget-stat-number m-b-10">{{totalCertificateAmount
+						| currency}}</div>
+					<div class="widget-stat-chart">
+						<div id="sparkline-line-chart"></div>
+					</div>
+				</div>
 			</div>
+		</div>
+		<div class="fixed-container" resize ng-style="resizeWithOffset(300)">
+			
+
 			<div class="col-lg-12 animated fadeInUp"
 				ng-repeat="payment in payments | orderBy:'paymentCertNo':true">
 

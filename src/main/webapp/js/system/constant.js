@@ -77,7 +77,7 @@ mainApp.constant('GlobalParameter', {
 	      		{id:"L2", value: "Claims vs other Subcontract"},
 	      		{id:"D1", value: "Day Work for GCL"},
 	      		{id:"D2", value: "Day Work for other Subcontract"},
-	      		{id:"CP", value: "CPF"},
+	      		{id:"CF", value: "CPF"},
 	      		{id:"AP", value: "Advanced Payment"},
 	      		{id:"C1", value: "Contra Charges by GSL"},
 	      		{id:"C2", value: "Contra Charges by other SC"},

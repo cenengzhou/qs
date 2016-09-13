@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
@@ -13,13 +12,13 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.PaymentCertDetail;
+import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 @Repository
 public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> {
@@ -97,7 +96,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			throw new DatabaseOperationException(he);
 		}
 	}
-	
+
 	public boolean updateSCPaymentDetail(PaymentCertDetail scPaymentDetail) throws DatabaseOperationException {
 		if (scPaymentDetail == null)
 			throw new NullPointerException("SCPayment Cert is Null");
@@ -220,24 +219,32 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PaymentCert> getSCPaymentDetail(String jobNumber, String packageNo) {
-		Criteria criteria = getSession().createCriteria(PaymentCert.class);
-		criteria.createAlias("subcontract", "subcontract");
-		criteria.createAlias("subcontract.jobInfo", "job");
-		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-		criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
-		return (List<PaymentCert>) criteria.list();
+	/**
+	 * Payment Dashboard
+	 * @author koeyyeung
+	 * created on 08 Sep, 2016
+	 */
+	public Double getCumPaymentResourceDistribution(PaymentCert paymentCert, String[] lineTypes) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("paymentCert", paymentCert));
+		criteria.add(Restrictions.in("lineType", lineTypes));
+		criteria.setProjection(Projections.sum("cumAmount"));
+		return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PaymentCert> getSCPaymentDetail(Subcontract subcontract) {
-		Criteria criteria = getSession().createCriteria(PaymentCert.class);
-		criteria.add(Restrictions.eq("subcontract", subcontract));
-		criteria.setFetchMode("scPaymentDetailList", FetchMode.JOIN);
-		return (List<PaymentCert>) criteria.list();
+	/**
+	 * Payment Summary Dashboard
+	 * @author koeyyeung
+	 * created on 08 Sep, 2016
+	 */
+	public Double getMovPaymentResourceDistribution(PaymentCert paymentCert, String[] lineTypes) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("paymentCert", paymentCert));
+		criteria.add(Restrictions.in("lineType", lineTypes));
+		criteria.setProjection(Projections.sum("movementAmount"));
+		return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
 	}
+
 
 	/**
 	 * 
@@ -247,24 +254,24 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public PaymentCertDetail obtainPaymentDetail(PaymentCert paymentCert, SubcontractDetail subcontractDetail){
 		if (paymentCert == null)
 			throw new NullPointerException("scPaymentCert is Null");
-		
+
 		PaymentCertDetail scPaymentDetail = null;
 		Criteria criteria = getSession().createCriteria(this.getType());
-		
+
 		criteria.createAlias("paymentCert", "paymentCert");
 		criteria.createAlias("subcontractDetail", "subcontractDetail");
-			
+
 		criteria.add(Restrictions.eq("paymentCert", paymentCert));
 		criteria.add(Restrictions.eq("subcontractDetail", subcontractDetail));
 		/*criteria.add(Restrictions.eq("this.objectCode", subcontractDetail.getObjectCode()));
 		criteria.add(Restrictions.eq("this.subsidiaryCode", subcontractDetail.getSubsidiaryCode()));
 		criteria.add(Restrictions.eq("this.billItem", subcontractDetail.getBillItem()));*/
-		
+
 		scPaymentDetail = (PaymentCertDetail) criteria.uniqueResult();
 
 		return scPaymentDetail;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<PaymentCertDetail> obtainSCPaymentDetailBySCPaymentCert(PaymentCert paymentCert){
 		Criteria criteria = getSession().createCriteria(PaymentCertDetail.class);
@@ -272,7 +279,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		criteria.addOrder(Order.asc("lineType"));
 		return criteria.list();
 	}
-	
+
 	public long deleteDetailByJobSCPaymentNo(String jobNumber, Integer packageNo, Integer paymentCertNo) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
@@ -298,8 +305,8 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 					|| !currCert.getSubcontract().getPackageNo().equals(scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo())
 					|| !currCert.getPaymentCertNo().equals(scPaymentDetail.getPaymentCert().getPaymentCertNo()))
 				currCert = paymentCertDao.obtainPaymentCertificate(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
-							scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo(),
-							scPaymentDetail.getPaymentCert().getPaymentCertNo());
+						scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo(),
+						scPaymentDetail.getPaymentCert().getPaymentCertNo());
 			scPaymentDetail.setPaymentCert(currCert);
 			scPaymentDetail.setCreatedUser(currCert.getCreatedUser());
 			scPaymentDetail.setLastModifiedUser(currCert.getLastModifiedUser());
@@ -325,7 +332,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			throw new DatabaseOperationException(he);
 		}
 	}
-	
+
 	public int deleteSCPaymentDetailBySCPaymentCert(PaymentCert scPaymentCert) throws DatabaseOperationException{
 		int count = 0;
 		for(PaymentCertDetail scPaymentDetail : obtainSCPaymentDetailBySCPaymentCert(scPaymentCert)){

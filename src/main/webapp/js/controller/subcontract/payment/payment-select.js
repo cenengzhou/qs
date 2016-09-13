@@ -1,11 +1,12 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter',
-                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter) {
+mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q',
+                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
 	
 	loadData();
-
+	
+	
 	$scope.removeDefaultAnimation = function (){
 		$animate.enabled(false);
 	};
@@ -13,6 +14,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 	function loadData(){
 		getPaymentCertList();
 		getTotalPostedCertAmount();
+		getPaymentResourceDistribution();
 	}
 	
 
@@ -47,10 +49,65 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					$scope.paymentTerms = GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
+					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
 				});
 	}
 
+	
+	function getPaymentResourceDistribution(){
+		var bqCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'BQ', 'Cumulative');
+    	var voCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'VO', 'Cumulative');
+    	var ccCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'CC', 'Cumulative');
+    	var retentionCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'RT', 'Cumulative');
+    	var advancedCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'Advanced', 'Cumulative');
+    	var othersCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'Others', 'Cumulative');
+    	
+		
+    	$q.all([bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum])
+    		.then(function (data){
+    			setDashboardData(data[0], data[1], data[2], data[3], data[4], data[5]);
+    	});
+	}
+
+	function setDashboardData(bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum){
+		var paymentResourceDistributionJson = {
+				"data": [bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum],
+				"labels": ["BQ", "Addendum", "CC", "Retention", "Advanced", "Others"],
+				"colours": [
+				{
+					"strokeColor": colorCode.blue,
+					"pointHighlightStroke": colorCode.lightBlue
+				},
+				{
+					"strokeColor": colorCode.red,
+					"pointHighlightStroke": colorCode.lightRed
+				},
+				{
+					"strokeColor": colorCode.yellow,
+					"pointHighlightStroke": colorCode.lightYellow
+				}, 
+				{
+					"strokeColor": colorCode.green,
+					"pointHighlightStroke": colorCode.lightGreen
+				}, 
+				{
+					"strokeColor": colorCode.purple,
+					"pointHighlightStroke": colorCode.lightPurple
+				},
+				{
+					"strokeColor": colorCode.grey,
+					"pointHighlightStroke": colorCode.lightGrey
+				}
+				],
+				'options' : {
+					showTooltips: true,
+				}
+		};
+
+		$scope.paymentResourceDistributionChart = paymentResourceDistributionJson;
+	}
+	
+	
 	function prepareCalendar(){
 		var myEvent = [];
 
