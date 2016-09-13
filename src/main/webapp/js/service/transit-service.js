@@ -1,6 +1,7 @@
 mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
 	// Return public API.
     return({
+    	getIncompleteTransitList:			getIncompleteTransitList,
     	obtainTransitCodeMatcheList:		obtainTransitCodeMatcheList,
     	obtainTransitUomMatcheList:			obtainTransitUomMatcheList,
     	transitUpload:						transitUpload,
@@ -14,19 +15,25 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http
     	createOrUpdateTransitHeader: 		createOrUpdateTransitHeader
     });
    
+    
+    function getIncompleteTransitList(){
+    	var request = $http.get("service/transit/getIncompleteTransitList");
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     function obtainTransitCodeMatcheList(){
-    	var request = $http.post("service/transit/obtainTransitCodeMatcheList");
+    	var request = $http.get("service/transit/obtainTransitCodeMatcheList");
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function obtainTransitUomMatcheList(){
-    	var request = $http.post("service/transit/obtainTransitUomMatcheList");
+    	var request = $http.get("service/transit/obtainTransitUomMatcheList");
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
     function transitUpload(formData){
     	var request = $http({
-			method : 'POST',
+			method : 'get',
 			url : 'gammonqs/transitUpload.smvc',
 			data : formData,
 			headers : {
@@ -38,7 +45,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http
 
     function getTransit(jobNo){
     	var request = $http({
-    			method: 'POST',
+    			method: 'get',
     			url:	'service/transit/getTransit',
     			params: {
     				jobNumber: jobNo
@@ -49,7 +56,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http
 
     function getTransitBQItems(jobNo){
     	var request = $http({
-    		method: 'POST',
+    		method: 'get',
     		url: 'service/transit/getTransitBQItems',
     		params:{
     			jobNumber: jobNo
@@ -60,7 +67,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http
 
     function getTransitResources(jobNo){
     	var request = $http({
-    		method: 'POST',
+    		method: 'get',
     		url: 'service/transit/getTransitResources',
     		params:{
     			jobNumber: jobNo

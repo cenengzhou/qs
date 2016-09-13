@@ -1358,12 +1358,9 @@ public class TransitService implements Serializable {
 		}
 	}
 
-	// added by brian on 20110228
-	// get all transits information according to status
-	// if status == "" or null, get all transits
-	public List<Transit> getAllTransitHeaders(String status) {
+	public List<Transit> getIncompleteTransitList() {
 		try {
-			return transitHeaderDao.getAllTransitHeaders(status);
+			return transitHeaderDao.getAllTransitHeaders(Transit.TRANSIT_COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

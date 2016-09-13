@@ -32,6 +32,10 @@ mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$anim
 		modalService.open('md', 'view/transit/modal/transit-header-modal.html', 'TransitHeaderModalCtrl');
 	}
 	
+	$scope.transitEnquiry = function(){
+		modalService.open('lg', 'view/transit/modal/transit-enquiry-modal.html', 'TransitEnquiryCtrl');
+	}
+	
 	$scope.removeDefaultAnimation = function (){
         $animate.enabled(false);
     };

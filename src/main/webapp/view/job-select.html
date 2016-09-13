@@ -32,7 +32,7 @@
 					class="fa fa-th"></i> All</label>
 			</div>
 		</div>
-		<div class="col-md-5">
+		<div class="col-md-4">
 			<div class="input-group">
 				<input ng-model="searchquery" placeholder="Search Job here.."
 					class="form-control" ng-click="removeDefaultAnimation()" /> <span
@@ -44,7 +44,11 @@
 			</div>
 		</div>
 
-		<div class="col-md-1"></div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-inverse btn-block pull-right" ng-click="transitEnquiry()">
+				<i class="fa fa-info-circle"></i><span> Transit Status Enquiry</span>
+			</button>
+		</div>
 		<div class="col-md-2">
 			<button type="button" class="btn btn-danger btn-block pull-right" ng-click="createJob()">
 				<i class="fa fa-plus-circle"></i><span> Create New Job</span>

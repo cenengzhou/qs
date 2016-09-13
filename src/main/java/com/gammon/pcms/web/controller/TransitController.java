@@ -35,7 +35,12 @@ public class TransitController {
 	@Autowired
 	private TransitService transitService;
 
-	@RequestMapping(value = "obtainTransitCodeMatcheList", method = RequestMethod.POST)
+	@RequestMapping(value = "getIncompleteTransitList", method = RequestMethod.GET)
+	public List<Transit> getIncompleteTransitList() throws Exception{
+		return transitService.getIncompleteTransitList();
+	}
+	
+	@RequestMapping(value = "obtainTransitCodeMatcheList", method = RequestMethod.GET)
 	public List<TransitCodeMatch> obtainTransitCodeMatcheList(@RequestParam(defaultValue = "") String matchingType, 
 			@RequestParam(defaultValue = "") String resourceCode,
 			@RequestParam(defaultValue = "") String objectCode, 
@@ -43,23 +48,23 @@ public class TransitController {
 		return transitService.obtainTransitCodeMatcheList(matchingType, resourceCode, objectCode, subsidiaryCode);
 	}
 
-	@RequestMapping(value = "obtainTransitUomMatcheList", method = RequestMethod.POST)
+	@RequestMapping(value = "obtainTransitUomMatcheList", method = RequestMethod.GET)
 	public List<AppTransitUom> obtainTransitUomMatcheList(@RequestParam(defaultValue = "") String causewayUom, 
 			@RequestParam(defaultValue = "") String jdeUom) {
 		return transitService.obtainTransitUomMatcheList(causewayUom, jdeUom);
 	}
 	
-	@RequestMapping(value = "getTransit", method = RequestMethod.POST)
+	@RequestMapping(value = "getTransit", method = RequestMethod.GET)
 	public Transit getTransit(@RequestParam String jobNumber){
 		return transitService.getTransitHeader(jobNumber);
 	}
 	
-	@RequestMapping(value = "getTransitBQItems", method = RequestMethod.POST)
+	@RequestMapping(value = "getTransitBQItems", method = RequestMethod.GET)
 	public List<TransitBpi> getTransitBQItems(@RequestParam String jobNumber){
 		return transitService.getTransitBQItems(jobNumber);
 	}
 
-	@RequestMapping(value = "getTransitResources", method = RequestMethod.POST)
+	@RequestMapping(value = "getTransitResources", method = RequestMethod.GET)
 	public List<TransitResource> getTransitResources(@RequestParam String jobNumber){
 		return transitService.searchTransitResources(jobNumber);
 	}
@@ -107,5 +112,7 @@ public class TransitController {
 		result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
 		return result;
 	}
+
+	
 	
 }

@@ -57,7 +57,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/job/job-select.js',
                            'js/service/job-service.js',
                            'js/service/transit-service.js',
-                           'js/controller/transit/transit-header.js'
+                           'js/controller/transit/transit-header.js',
+                           'js/controller/transit/transit-enquiry.js',
                     ] 
                 });
             }]
