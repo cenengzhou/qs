@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.FreemarkerConfig;
+import com.gammon.pcms.config.ServletConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.pcms.model.Addendum;
@@ -88,7 +89,8 @@ public class HTMLService implements Serializable{
 	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
 	private FreemarkerConfig freemarkerConfig;
-
+	@Autowired
+	private ServletConfig servletConfig;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
 		String strHTMLCodingContent = "";
@@ -162,6 +164,7 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
 		data.put("job", job != null ? job : new JobInfo());
@@ -194,7 +197,8 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-		
+
+		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
@@ -221,6 +225,7 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("addendum", addendum != null ? addendum : new Addendum());

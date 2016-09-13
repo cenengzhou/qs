@@ -29,6 +29,8 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 	private HandlerInterceptorAdapter sessionInterceptor;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
+	@Autowired
+	private HttpServletRequest servletRequest;
 	
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -92,4 +94,10 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 		return bean;
 	}
 	
+	public String getBaseUrl(){
+		String hostname = servletRequest.getServerName();
+		int port = servletRequest.getServerPort();
+		String contextPath = servletRequest.getContextPath();
+		return "http://" + hostname + ":" + port + "/" + (contextPath.isEmpty() ? "" : contextPath + "/");
+	}
 }
