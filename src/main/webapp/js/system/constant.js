@@ -147,6 +147,11 @@ mainApp.constant('GlobalParameter', {
                 {id:900, value:'Locked'},
     ],
 	// End Info Tips Content
+    awardStatus: [
+                  {id:' ', value:'Not Awarded'},
+                  {id:'AWD', value:'Awarded Subcontract'},
+                  {id:'RCM', value:'Approving or Rejected Subcontract'}
+    ],
 	subcontractTerm:[
 		{id:'Lump Sum', value:'Lump Sum'},
 		{id:'Re-measurement', value:'Re-measurement'}
@@ -324,6 +329,10 @@ mainApp.constant('GlobalParameter', {
 		{id:'P', value:'Pending for approval'},
 		{id:'V', value:'Verified for approval'}
 	],
+	ApprovalStatus:[
+	                {id:'A', value:'Approved'},
+	                {id:'N', value:'Not Apprvoved'}
+    ],
 	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/'
 });
 

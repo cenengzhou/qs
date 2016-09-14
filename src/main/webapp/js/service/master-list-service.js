@@ -5,8 +5,9 @@ mainApp.service('masterListService', ['$http', '$q', 'GlobalHelper', function($h
 		getSubcontractorList:			getSubcontractorList,
 		searchObjectList:				searchObjectList,
 		searchSubsidiaryList:			searchSubsidiaryList,
-		validateAndCreateAccountCode:	validateAndCreateAccountCode
-
+		validateAndCreateAccountCode:	validateAndCreateAccountCode,
+		getSubcontractorWorkScope:		getSubcontractorWorkScope,
+		searchVendorAddressDetails:		searchVendorAddressDetails
 	});
 
 	function getSubcontractor(subcontractorNo) {
@@ -56,8 +57,6 @@ mainApp.service('masterListService', ['$http', '$q', 'GlobalHelper', function($h
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-
-	
 	
 	function validateAndCreateAccountCode(jobNo, objectCode, subsidiaryCode) {
 		var request = $http({
@@ -72,6 +71,27 @@ mainApp.service('masterListService', ['$http', '$q', 'GlobalHelper', function($h
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 	
+	function getSubcontractorWorkScope(vendorNo) {
+		var request = $http({
+			method: "POST",
+			url: "service/masterList/getSubcontractorWorkScope",
+			params: {
+				vendorNo: vendorNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
 	
+	function searchVendorAddressDetails(vendorNo) {
+		var request = $http({
+			method: "POST",
+			url: "service/masterList/searchVendorAddressDetails",
+			params: {
+				vendorNo: vendorNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
 }]);
 

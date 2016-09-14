@@ -1,11 +1,11 @@
 
-mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractorService', 'unitService', 'GlobalParameter',
-                                      function($scope , $rootScope, $http, modalService, blockUI, subcontractorService, unitService, GlobalParameter) {
+mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'subcontractorService', 'unitService', 'GlobalParameter', 'GlobalHelper',
+                                      function($scope , $rootScope, $http, modalService, subcontractorService, unitService, GlobalParameter, GlobalHelper) {
 	
 	$scope.allWorkScopes = {};
 	$scope.searchWorkScopes = null;
 	$scope.searchSubcontractorNo = '';
-//	$scope.blockEnquirySubcontractor = blockUI.instances.get('blockEnquirySubcontractor');
+	$scope.GlobalHelper = GlobalHelper;
 	$scope.loadWorkScope = function(){
 		unitService.getAllWorkScopes()
 		.then(function(data){
@@ -14,6 +14,9 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 	}
 	$scope.loadWorkScope();
 	
+	$scope.testing = function(){
+		console.log('testing');
+	}
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -27,6 +30,7 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,
+			rowTemplate: GlobalHelper.addressBookRowTemplate('subcontractorName', 'subcontractorNo'),
 			columnDefs: [
 			             { field: 'subcontractorNo', displayName: "Subcontractor No", enableCellEdit: false },
 			             { field: 'subcontractorName', displayName: "Subcontractor Name", enableCellEdit: false },
@@ -62,16 +66,13 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http'
 		if($scope.searchWorkScopes === null && $scope.searchSubcontractorNo === '') {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
 		} else {
-//		$scope.blockEnquirySubcontractor.start('Loading...');
 		subcontractorService.obtainSubcontractorWrappers($scope.searchWorkScopes, $scope.searchSubcontractorNo !== '' ? '*' + $scope.searchSubcontractorNo + '*' : '')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.convertAbbr(data);
 					$scope.gridOptions.data = data;
-//					$scope.blockEnquirySubcontractor.stop();
 				} 
 			}, function(data){
-//				$scope.blockEnquirySubcontractor.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			});
 		}

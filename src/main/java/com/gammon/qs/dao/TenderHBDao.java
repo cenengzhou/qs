@@ -212,7 +212,21 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 		return criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Tender> obtainTenderAnalysisByVendorNo(Integer vendorNo) throws DatabaseOperationException{
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("subcontract", "subcontract");
+		criteria.createAlias("subcontract.jobInfo", "jobInfo");
+		
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.add(Restrictions.eq("vendorNo", vendorNo));
+
+		criteria.addOrder(Order.asc("jobNo")).addOrder(Order.asc("packageNo"));
+		
+		return criteria.list();
+	}
 	
+
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	@SuppressWarnings("unchecked")
 	public List<Tender> obtainTenderList(String jobNumber, String packageNo) throws Exception{

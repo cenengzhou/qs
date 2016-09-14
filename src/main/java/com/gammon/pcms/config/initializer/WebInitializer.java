@@ -53,9 +53,9 @@ public class WebInitializer extends
 
 		System.setProperty("UseSunHttpHandler", "true");
 		
-		loadProperty("/application.properties", false);
+		loadProperty("/application.properties");
 		servletContext.setInitParameter("log4jConfigLocation", "file:"+ System.getProperty("log4j.properties"));
-		servletContext.setInitParameter("log4jRefreshInterval", System.getProperty("log4j.RefreshInterval"));
+		servletContext.setInitParameter("log4jRefreshInterval", "300000");
 		servletContext.addListener(Log4jConfigListener.class);
 		PropertyConfigurator.configureAndWatch(System.getProperty("log4j.properties"));
 		
@@ -64,7 +64,7 @@ public class WebInitializer extends
 		SLF4JBridgeHandler.install();
 	}
 
-	private void loadProperty(String filename, boolean inputStream){
+	private void loadProperty(String filename){
 	      Properties propsFromFile = new Properties();
 	      try {
 	         propsFromFile.load(getClass().getResourceAsStream(filename));

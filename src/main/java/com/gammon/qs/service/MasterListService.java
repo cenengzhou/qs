@@ -75,38 +75,6 @@ public class MasterListService{
 		return resultList;
 	}
 	
-	public List<MasterListVendor> searchVendorList(String searchStr) throws Exception {
-		logger.info("searchVendorList --> START");
-		boolean isRefreshed = false;
-		List<String> addressBookTypeList = new ArrayList<String>();
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-		if(this.vendorList== null){
-			this.vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
-			isRefreshed = true;
-			logger.info("vendorList.size() : " + vendorList.size()); 
-		}
-		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr)){
-			return this.vendorList.subList(0, 101);
-		}
-		List<MasterListVendor> resultList = searchVendorInLocalCacheList(searchStr);
-		
-		if(resultList.size()==0 && !isRefreshed){
-			this.vendorList = this.masterListDao.obtainAddressBookList(addressBookTypeList);
-			resultList = searchVendorInLocalCacheList(searchStr);
-		}
-		
-		//trim size
-		if(resultList!=null &&  resultList.size()>101){
-			List<MasterListVendor> returnList = new ArrayList<MasterListVendor>();
-			returnList.addAll(resultList.subList(0, 101));
-			
-			return returnList;
-		}
-		
-		return resultList;
-	}
-	
 	public List<MasterListVendor> obtainAllClientList(String searchStr) throws Exception {
 		logger.info("obtainAllClientList --> START");
 		boolean isRefreshed = false;
@@ -195,44 +163,6 @@ public class MasterListService{
 		return userVendors;
 	}
 	
-	/**
-	 * @author tikywong
-	 * modified on April 22, 2013
-	 * Cached a global vendor list, call web service if the global vendor list is null
-	 */
-	public MasterListVendor obtainVendorByVendorNo(String vendorNo) throws DatabaseOperationException{
-//		logger.info("Vendor No.: "+vendorNo);
-		boolean refreshed = false; //refreshing cached vendor list
-		List<String> addressBookTypeList = new ArrayList<String>();
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-		
-		//1. call web service for the whole vendor list
-		if(vendorList == null){
-			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
-			refreshed = true;
-		}
-		
-		//2. loop the vendor list and find the requested vendor
-		for(MasterListVendor vendor : vendorList){
-			if(vendor.getVendorNo().equals(vendorNo))
-				return vendor;
-		}
-		
-		/*3. if the vendor couldn't be found the vendor list and the vendor list isn't just loading from the web service,
-		 	 call web service to refresh the vendor list to the most updated one */	 
-		if(!refreshed){
-			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
-			for(MasterListVendor vendor : vendorList){
-				if(vendor.getVendorNo().equals(vendorNo))
-					return vendor;
-			}
-		}
-		
-		//4. if still cannot find, return null
-		return null;
-	}
-	
 	public MasterListVendor searchVendorAddressDetails(String addressNumber) throws Exception{
 		List<MasterListVendor> resultList = masterListDao.getVendorDetailsList(addressNumber);
 		if (resultList!=null){
@@ -290,46 +220,6 @@ public class MasterListService{
 		return resultClientList;
 	}
 
-	public List<MasterListObject> searchObjectList(String searchStr) throws Exception {
-		
-		boolean isRefreshed = false;
-		
-		if(this.objectList == null)
-		{
-			this.objectList = this.masterListDao.obtainObjectCodeList();
-			isRefreshed = true;
-		}
-		
-		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr))
-		{
-			if(!isRefreshed)
-				this.objectList = masterListDao.obtainObjectCodeList();
-			
-			return this.objectList;
-		}
-		
-		List<MasterListObject> resultList = searchMasterListObjectInLocalCacheList(searchStr);
-		
-		if(resultList.size() ==0 && !isRefreshed)
-		{
-			this.objectList = this.masterListDao.obtainObjectCodeList();
-			return searchMasterListObjectInLocalCacheList(searchStr);
-		}
-		
-		
-		//trim size
-		if(resultList!=null &&  resultList.size()>101)
-		{
-			List<MasterListObject> returnList = new ArrayList<MasterListObject>();
-			returnList.addAll(resultList.subList(0, 101));
-			
-			return returnList;
-		}
-		
-		return resultList;
-		
-	}
-
 	private List<MasterListObject> searchMasterListObjectInLocalCacheList(String searchStr) 
 	{
 		List<MasterListObject> resultObjectList = new ArrayList<MasterListObject>();
@@ -352,43 +242,6 @@ public class MasterListService{
 	}
 	
 	
-	public List<MasterListSubsidiary> searchSubsidiaryList(String searchStr) throws Exception  {
-
-		boolean isRefreshed = false;
-		
-		if(this.subsidiaryList == null){
-			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
-			isRefreshed = true;
-		}
-		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr))
-		{
-			if(!isRefreshed)
-				this.subsidiaryList = masterListDao.getAllSubsidiaryList();
-			
-			return this.subsidiaryList;
-		}
-		
-		List<MasterListSubsidiary> resultList =  searchMasterListSubsidiaryInLocalCacheList(searchStr);
-		
-		if(resultList.size() ==0 && !isRefreshed)
-		{
-			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
-			return searchMasterListSubsidiaryInLocalCacheList(searchStr);
-		}
-		
-		
-		//trim size
-		if(resultList!=null &&  resultList.size()>101)
-		{
-			List<MasterListSubsidiary> returnList = new ArrayList<MasterListSubsidiary>();
-			returnList.addAll(resultList.subList(0, 101));
-			
-			return returnList;
-		}
-		
-		return resultList;
-	}
-	
 	
 	private List<MasterListSubsidiary> searchMasterListSubsidiaryInLocalCacheList(String searchStr)
 	{
@@ -410,10 +263,6 @@ public class MasterListService{
 		
 		return resultSubsidiaryList;
 	}
-	public List<WorkScopeWrapper> getSubcontractorWorkScope(String vendorNo)throws Exception{
-		return masterListDao.obtainSubcontractorWorkScope(vendorNo);
-	}
-
 	public List<MasterListVendor> getVendorNameListByJob(List<String> addressNumberList) throws Exception {
 		return masterListDao.getVendorNameListByBatch(addressNumberList);
 	}
@@ -424,44 +273,6 @@ public class MasterListService{
 	
 	public boolean createAccountCode(String jobNumber, String objectCode, String subsidiaryCode){
 		return masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode);
-	}
-	
-	/**
-	 * JDE web service to validate account code by object code, subsidiary code and object+subsidiary combination
-	 *
-	 * @param jobNumber
-	 * @param objectCode
-	 * @param subsidiaryCode
-	 * @return
-	 * @author	tikywong
-	 * @since	Apr 11, 2016 3:26:31 PM
-	 */
-	public String validateAndCreateAccountCode(String jobNumber, String objectCode, String subsidiaryCode) {
-		String errorMessage = null;
-		try {
-			// 1. Validate Account Code
-			// 1a. Object Code
-			errorMessage = checkObjectCodeInUCC(objectCode);
-			if (errorMessage != null)
-				return "Invalid object code: " + objectCode;
-			// 1b. Subsidiary Code
-			errorMessage = checkSubsidiaryCodeInUCC(subsidiaryCode);
-			if (errorMessage != null)
-				return "Invalid subsidiary code: " + subsidiaryCode;
-			// 1c. Object+Subsidiary Combination
-			/*if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
-				return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;*/
-
-			// 2. Create Account Code
-			if (!masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode))
-				return "Failed: Creating account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
-			else
-				logger.info("Account Code: " + jobNumber + "." + objectCode + "." + subsidiaryCode + " has created successfully.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Failed: Validating/Creating the account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
-		}
-		return errorMessage;
 	}
 	
 	public String validateObjectAndSubsidiaryCodes(String objectCode, String subsidiaryCode) throws Exception{
@@ -797,4 +608,196 @@ public class MasterListService{
 		return titleRow;
 	}
 	
+	/*************************************** FUNCTIONS FOR PCMS       **************************************************************/
+	/**
+	 * @author tikywong
+	 * modified on April 22, 2013
+	 * Cached a global vendor list, call web service if the global vendor list is null
+	 */
+	public MasterListVendor obtainVendorByVendorNo(String vendorNo) throws DatabaseOperationException{
+//		logger.info("Vendor No.: "+vendorNo);
+		boolean refreshed = false; //refreshing cached vendor list
+		List<String> addressBookTypeList = new ArrayList<String>();
+		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
+		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
+		
+		//1. call web service for the whole vendor list
+		if(vendorList == null){
+			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
+			refreshed = true;
+		}
+		
+		//2. loop the vendor list and find the requested vendor
+		for(MasterListVendor vendor : vendorList){
+			if(vendor.getVendorNo().equals(vendorNo))
+				return vendor;
+		}
+		
+		/*3. if the vendor couldn't be found the vendor list and the vendor list isn't just loading from the web service,
+		 	 call web service to refresh the vendor list to the most updated one */	 
+		if(!refreshed){
+			vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
+			for(MasterListVendor vendor : vendorList){
+				if(vendor.getVendorNo().equals(vendorNo))
+					return vendor;
+			}
+		}
+		
+		//4. if still cannot find, return null
+		return null;
+	}
+	
+	public List<MasterListVendor> searchVendorList(String searchStr) throws Exception {
+		logger.info("searchVendorList --> START");
+		boolean isRefreshed = false;
+		List<String> addressBookTypeList = new ArrayList<String>();
+		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
+		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
+		if(this.vendorList== null){
+			this.vendorList = masterListDao.obtainAddressBookList(addressBookTypeList);
+			isRefreshed = true;
+			logger.info("vendorList.size() : " + vendorList.size()); 
+		}
+		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr)){
+			return this.vendorList.subList(0, 101);
+		}
+		List<MasterListVendor> resultList = searchVendorInLocalCacheList(searchStr);
+		
+		if(resultList.size()==0 && !isRefreshed){
+			this.vendorList = this.masterListDao.obtainAddressBookList(addressBookTypeList);
+			resultList = searchVendorInLocalCacheList(searchStr);
+		}
+		
+		//trim size
+		if(resultList!=null &&  resultList.size()>101){
+			List<MasterListVendor> returnList = new ArrayList<MasterListVendor>();
+			returnList.addAll(resultList.subList(0, 101));
+			
+			return returnList;
+		}
+		
+		return resultList;
+	}
+	
+	public List<MasterListObject> searchObjectList(String searchStr) throws Exception {
+		
+		boolean isRefreshed = false;
+		
+		if(this.objectList == null)
+		{
+			this.objectList = this.masterListDao.obtainObjectCodeList();
+			isRefreshed = true;
+		}
+		
+		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr))
+		{
+			if(!isRefreshed)
+				this.objectList = masterListDao.obtainObjectCodeList();
+			
+			return this.objectList;
+		}
+		
+		List<MasterListObject> resultList = searchMasterListObjectInLocalCacheList(searchStr);
+		
+		if(resultList.size() ==0 && !isRefreshed)
+		{
+			this.objectList = this.masterListDao.obtainObjectCodeList();
+			return searchMasterListObjectInLocalCacheList(searchStr);
+		}
+		
+		
+		//trim size
+		if(resultList!=null &&  resultList.size()>101)
+		{
+			List<MasterListObject> returnList = new ArrayList<MasterListObject>();
+			returnList.addAll(resultList.subList(0, 101));
+			
+			return returnList;
+		}
+		
+		return resultList;
+		
+	}
+
+	public List<MasterListSubsidiary> searchSubsidiaryList(String searchStr) throws Exception  {
+
+		boolean isRefreshed = false;
+		
+		if(this.subsidiaryList == null){
+			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
+			isRefreshed = true;
+		}
+		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr))
+		{
+			if(!isRefreshed)
+				this.subsidiaryList = masterListDao.getAllSubsidiaryList();
+			
+			return this.subsidiaryList;
+		}
+		
+		List<MasterListSubsidiary> resultList =  searchMasterListSubsidiaryInLocalCacheList(searchStr);
+		
+		if(resultList.size() ==0 && !isRefreshed)
+		{
+			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
+			return searchMasterListSubsidiaryInLocalCacheList(searchStr);
+		}
+		
+		
+		//trim size
+		if(resultList!=null &&  resultList.size()>101)
+		{
+			List<MasterListSubsidiary> returnList = new ArrayList<MasterListSubsidiary>();
+			returnList.addAll(resultList.subList(0, 101));
+			
+			return returnList;
+		}
+		
+		return resultList;
+	}
+	
+	/**
+	 * JDE web service to validate account code by object code, subsidiary code and object+subsidiary combination
+	 *
+	 * @param jobNumber
+	 * @param objectCode
+	 * @param subsidiaryCode
+	 * @return
+	 * @author	tikywong
+	 * @since	Apr 11, 2016 3:26:31 PM
+	 */
+	public String validateAndCreateAccountCode(String jobNumber, String objectCode, String subsidiaryCode) {
+		String errorMessage = null;
+		try {
+			// 1. Validate Account Code
+			// 1a. Object Code
+			errorMessage = checkObjectCodeInUCC(objectCode);
+			if (errorMessage != null)
+				return "Invalid object code: " + objectCode;
+			// 1b. Subsidiary Code
+			errorMessage = checkSubsidiaryCodeInUCC(subsidiaryCode);
+			if (errorMessage != null)
+				return "Invalid subsidiary code: " + subsidiaryCode;
+			// 1c. Object+Subsidiary Combination
+			/*if (!validateObjectSubsidiaryRule(objectCode, subsidiaryCode))
+				return "Invalid Combination of object code and subsidiary code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;*/
+
+			// 2. Create Account Code
+			if (!masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode))
+				return "Failed: Creating account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+			else
+				logger.info("Account Code: " + jobNumber + "." + objectCode + "." + subsidiaryCode + " has created successfully.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Failed: Validating/Creating the account code: " + jobNumber + "." + objectCode + "." + subsidiaryCode;
+		}
+		return errorMessage;
+	}
+	
+	public List<WorkScopeWrapper> getSubcontractorWorkScope(String vendorNo)throws Exception{
+		return masterListDao.obtainSubcontractorWorkScope(vendorNo);
+	}
+
+
+	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 }

@@ -581,6 +581,18 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo) throws DatabaseOperationException {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.add(Restrictions.eq("vendorNo", vendorNo==null?null:vendorNo.trim()));		
+			
+		criteria.createAlias("jobInfo", "jobInfo");
+		criteria.addOrder(Order.asc("jobInfo.jobNumber")).addOrder(Order.asc("packageNo"));
+		
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Subcontract> obtainSubcontractFilteredList(String subcontractorNumber, String division, String jobNumber, String packageNumber, String paymentStatus, String paymentType) throws DatabaseOperationException{
 		List<Subcontract> result = null;
 		try{			

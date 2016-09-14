@@ -23,6 +23,7 @@ import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.MasterListService;
+import com.gammon.qs.wrapper.WorkScopeWrapper;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -72,5 +73,15 @@ public class MasterListController {
 		return masterListService.validateAndCreateAccountCode(jobNo, objectCode, subsidiaryCode);
 	}
 	
+	@RequestMapping(value = "getSubcontractorWorkScope", method = RequestMethod.POST)
+	public List<WorkScopeWrapper> getSubcontractorWorkScope(@RequestParam String vendorNo) throws Exception{
+		return masterListService.getSubcontractorWorkScope(vendorNo);
+	}
+
+	@RequestMapping(value = "searchVendorAddressDetails", method = RequestMethod.POST)
+	public MasterListVendor searchVendorAddressDetails(@RequestParam String vendorNo) throws Exception{
+		return masterListService.searchVendorAddressDetails(vendorNo);
+	}
+
 }
 

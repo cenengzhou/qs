@@ -146,7 +146,9 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		containRole: containRole,
 		numberClass: numberClass,
 		formTemplate: formTemplate,
-		attachmentIconClass: attachmentIconClass
+		addressBookRowTemplate: addressBookRowTemplate,
+		attachmentIconClass: attachmentIconClass,
+		getSubcontractorDetailsModal: getSubcontractorDetailsModal,
 	}
 	
     // ---
@@ -223,6 +225,13 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		return html;
 	}
 	
+	function addressBookRowTemplate(titleField, parameterField){
+		return '<div style="cursor:pointer" ng-click="grid.appScope.GlobalHelper.getSubcontractorDetailsModal(row.entity.' + parameterField + ')">' +
+        '  <div ng-if="row.entity.merge">{{row.entity.title}}</div>' +
+        '  <div title="Click to view more details of {{row.entity.' + titleField + '}}" ng-if="!row.entity.merge" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
+        '</div>';
+	}
+	
 	function attachmentIconClass(fileType){
 		var iconClass = 'fa fa-2x fa-file-o';
 		switch(fileType){
@@ -244,6 +253,11 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		}
 		return iconClass;
 	}
+	
+	function getSubcontractorDetailsModal(vendorNo){		
+		modalService.open('lg', 'view/subcontractor-details-modal.html', 'SubcontractorDetailsModalCtrl', 'Success', vendorNo ); 
+	}
+	
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

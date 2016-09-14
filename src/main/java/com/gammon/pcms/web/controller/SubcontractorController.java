@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractorService;
 import com.gammon.qs.wrapper.SubcontractorWrapper;
+import com.gammon.qs.wrapper.tenderAnalysis.SubcontractorTenderAnalysisWrapper;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -40,5 +42,21 @@ public class SubcontractorController {
 		wrapperList.addAll(subcontractorService.obtainClientWrappers(client));
 		return wrapperList;
 	}
+
+	@RequestMapping(value = "obtainSubconctractorStatistics", method = RequestMethod.POST)
+	public List<String> obtainSubconctractorStatistics(@RequestParam String vendorNo) throws DatabaseOperationException {
+		return subcontractorService.obtainSubconctractorStatistics(vendorNo);
+	}
+
+	@RequestMapping(value = "obtainPackagesByVendorNo", method = RequestMethod.POST)
+	public List<Subcontract> obtainPackagesByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException {
+		return subcontractorService.obtainPackagesByVendorNo(vendorNo);
+	}
+
+	@RequestMapping(value = "obtainTenderAnalysisWrapperByVendorNo", method = RequestMethod.POST)
+	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException  {
+		return subcontractorService.obtainTenderAnalysisWrapperByVendorNo(vendorNo);
+	}
+
 
 }

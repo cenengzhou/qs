@@ -257,6 +257,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
 			             { field: 'addressBookNumber', displayName: "No.", width: '50', enableCellEdit: false },
 			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },

@@ -1,0 +1,110 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+			<h4 class="modal-title text-white">{{vendorNo}} {{vendor.vendorName}}</h4>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+
+		<div class="row">
+			<section class="box box-primary">
+				<ul class="nav nav-tabs text-info">
+					<li role="presentation" ng-class="{active:isSelected(1)}">
+						<a href ng-click="selectTab(1)"><span class="fa fa-2x fa-user"></span> Subcontractor Information</a>
+					</li>
+					<li role="presentation" ng-class="{active:isSelected(2)}">
+						<a href ng-click="selectTab(2)"><span class="fa fa-2x fa fa-trophy"></span> Awarded Subcontracts</a>
+					</li>
+					<li role="presentation" ng-class="{active:isSelected(3)}">
+						<a href ng-click="selectTab(3)"><span class="fa fa-2x fa-history"></span> Tender Analysis History</a>
+					</li>
+					<li role="presentation" ng-class="{active:isSelected(4)}">
+						<a href ng-click="selectTab(4)"><span class="fa fa-2x fa-calculator"></span> Work Scope</a>
+					</li>
+				</ul>
+				
+				<div ng-show="isSelected(1)" style="height:350px;overflow:auto">
+					<div class="box col-md-12" style="padding-left:0px; padding-right:0px">
+					<div class="col-md-7" style="padding-left:0px">
+						<table class="table table-striped">
+							<thead class="thead-inverse"><tr><th colspan="2"><span class="fa fa-info-circle"></span>  Contact Information</th></tr></thead>
+							<tbody>
+							<tr>
+								<td>Contact Person</td>
+								<td><div ng-repeat="contactPerson in vendor.vendorContactPerson | filter:{nameAlpha: '!' + vendor.vendorName}">{{contactPerson.nameAlpha + ' (' + contactPerson.contactTitle + ')'}}</div></td>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td><div ng-repeat="phone in vendor.vendorPhoneNumber | filter: {phoneNumberType: 'OFF'}">{{phone.phoneNumber}}</div></td>
+							</tr>
+							<tr>
+								<td>Fax</td>
+								<td><div ng-repeat="phone in vendor.vendorPhoneNumber | filter: {phoneNumberType: 'FAX'}">{{phone.phoneNumber}}</div></td>
+							</tr>
+							<tr>
+								<td>Mobile</td>
+								<td><div ng-repeat="phone in vendor.vendorPhoneNumber | filter: {phoneNumberType: 'MOB'}">{{phone.phoneNumber}}</div></td>
+							</tr>
+							<tr>
+								<td>Address</td>
+								<td><div ng-repeat="address in vendor.vendorAddress "><div ng-repeat="(property, value) in addressLineField(address)">{{value}}</div></div></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-5" style="padding-right:0px">
+						<table class="table table-striped panel panel-inverse">
+							<thead><tr><th colspan="2"><span class="fa fa-pie-chart"></span> Statistics</th></tr></thead>
+							<tbody>
+							<tr>
+								<td>Total No. of Quotation Returned</td>
+								<td>{{statistics[0]}}</td>
+							</tr>
+							<tr>
+								<td>Total No. of Award</td>
+								<td>{{statistics[1]}}</td>
+							</tr>
+							<tr>
+								<td>Revised Subcontract Sum <br><i>({{startYear}} - today)</i></td>
+								<td>{{statistics[2]}}</td>
+							</tr>
+							<tr>
+								<td>Balance To Complete <br><i>({{startYear}} - today)</i></td>
+								<td>{{statistics[3]}}</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+
+				<div ng-show="isSelected(2)" style="height:350px;overflow:auto">
+					<div class="box col-md-12">
+						<div ng-if="isSelected(2)" id="awardedGrid" ui-grid="awardedGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
+					</div>
+				</div>
+				<div  ng-show="isSelected(3)" style="height:350px;overflow:auto">
+					<div class="box col-md-12">
+						<div ng-if="isSelected(3)" id="tenderAnalysisGrid" ui-grid="tenderAnalysisGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
+					</div>
+				</div>
+				<div ng-show="isSelected(4)" style="height:350px;overflow:auto">
+					<div class="box col-md-12">
+						<div ng-if="isSelected(4)" id="workscopeGrid" ui-grid="workscopeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+</div>
+

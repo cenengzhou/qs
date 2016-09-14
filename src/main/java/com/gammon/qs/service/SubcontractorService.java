@@ -65,117 +65,6 @@ public class SubcontractorService{
 	private List<SubcontractorTenderAnalysisWrapper> cachedTenderAnalysisList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
 	private static final int RECORDS_PER_PAGE = 50;
 	
-	public List<SubcontractorWrapper> obtainSubcontractorWrappers(String workScope, String subcontractor) throws DatabaseOperationException {
-		logger.info("workscope: "+workScope+" - subcontractor: "+subcontractor);
-		List<SubcontractorWrapper> subcontractorWrapperList = new ArrayList<SubcontractorWrapper>();
-		
-		/**
-		 * Flow of search: Subcontractor-->WorkScope
-		 **/
-		if(subcontractor!=null && !"".equals(subcontractor)){
-			logger.info("Method 1: Search by Subcontractor");
-			try {
-				List<MasterListVendor> masterListVendorList = masterListRepository.obtainAllVendorList(subcontractor);
-				for(MasterListVendor masterListVendor: masterListVendorList){
-					if(masterListVendor!=null){
-						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
-						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
-						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
-						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
-						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
-						subcontractorWrapper.setBusinessRegistrationNo(masterListVendor.getVendorRegistrationNo());
-						subcontractorWrapper.setScFinancialAlert(masterListVendor.getScFinancialAlert());
-						
-						if(masterListVendor.getVendorNo()!=null &&!"".equals(masterListVendor.getVendorNo())){
-							SupplierMasterResponseObj supplier = supplierMasterDao.obtainSupplierMaster(Integer.valueOf(masterListVendor.getVendorNo()));
-							if(supplier==null)
-								subcontractorWrapper.setHoldPayment("N/A");
-							else
-								subcontractorWrapper.setHoldPayment(supplier.getHoldPaymentCode());
-						}
-						
-						if(workScope!=null && !"".equals(workScope.trim())){
-							List<WorkScopeWrapper> workScopeWrapperList = masterListRepository.getSubcontractorWorkScope(masterListVendor.getVendorNo());
-							for(WorkScopeWrapper workScopeWrapper: workScopeWrapperList){
-								if(workScopeWrapper!=null && workScopeWrapper.getWorkScopeCode()!=null){
-									if(workScope.trim().equals(workScopeWrapper.getWorkScopeCode().trim())){
-										subcontractorWrapperList.add(subcontractorWrapper);
-										break;
-									}
-								}
-							}
-						}
-						else
-							subcontractorWrapperList.add(subcontractorWrapper);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if(workScope!=null && !"".equals(workScope)){
-			logger.info("Method 2: Search by WorkScope");
-			try {
-				List<MasterListVendor> masterListVendorList = masterListRepository.obtainVendorListByWorkScopeWithUser(workScope, securityServiceImpl.getCurrentUser().getUsername());
-				for(MasterListVendor masterListVendor :masterListVendorList){
-					if(masterListVendor!=null){
-						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
-						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
-						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
-						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
-						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
-						subcontractorWrapper.setScFinancialAlert(masterListVendor.getScFinancialAlert());
-						
-						MasterListVendor vendor = masterListDao.obtainVendor(masterListVendor.getVendorNo());
-						if(vendor!=null)
-							subcontractorWrapper.setBusinessRegistrationNo(vendor.getVendorRegistrationNo());
-						
-						if(masterListVendor.getVendorNo()!=null &&!"".equals(masterListVendor.getVendorNo())){
-							SupplierMasterResponseObj supplier = supplierMasterDao.obtainSupplierMaster(Integer.valueOf(masterListVendor.getVendorNo()));
-							subcontractorWrapper.setHoldPayment(supplier.getHoldPaymentCode());
-						}
-
-						if(subcontractor!=null && !"".equals(subcontractor)){
-							if((masterListVendor.getVendorNo().equals(subcontractor)) || masterListVendor.getVendorName().equals(subcontractor))
-								subcontractorWrapperList.add(subcontractorWrapper);
-						}
-						else
-							subcontractorWrapperList.add(subcontractorWrapper);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return subcontractorWrapperList;
-	}
-	
-	public List<SubcontractorWrapper> obtainClientWrappers(String client) throws DatabaseOperationException {
-		logger.info("Client: " + client);
-		List<SubcontractorWrapper> subcontractorWrapperList = new ArrayList<SubcontractorWrapper>();
-
-		if (client != null && !"".equals(client)) {
-			logger.info("Method 3: Search by Client");
-			try {
-				List<MasterListVendor> masterListVendorList = masterListRepository.obtainAllClientList(client);
-				for (MasterListVendor masterListVendor : masterListVendorList) {
-					if (masterListVendor != null) {
-						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
-						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
-						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
-						subcontractorWrapper.setBusinessRegistrationNo(masterListVendor.getVendorRegistrationNo());
-
-						subcontractorWrapperList.add(subcontractorWrapper);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return subcontractorWrapperList;
-	}
 	
 	public PaginationWrapper<SubcontractorWrapper> obtainSubcontractorPaginationWrapper(String workScope, String subcontractor) throws DatabaseOperationException {
 		logger.info("obtainSubcontractorWrappers - STARTED");
@@ -238,42 +127,6 @@ public class SubcontractorService{
 		return wrapper;
 	}
 	
-	public List<String> obtainSubconctractorStatistics(String subcontractorNo) throws DatabaseOperationException {
-		logger.info("obtainSubconctractorStatistics - STARTED");
-		List<String> resultList = new ArrayList<String>();
-		double revisedSCSum = 0.0;
-		double totalCumWorkDoneAmount = 0.0;
-		double balanceToComplete = 0.0;
-		
-		Integer noOfQuotReturned =0;
-		Integer noOfAward=0;
-		
-		String year = String.valueOf(Integer.valueOf(DateHelper.formatDate(new Date(), "yyyy")) - 1); 
-		Date startDate = DateHelper.parseDate("0101"+year, "ddMMyyyy");
-		
-		if(subcontractorNo!=null&&!"".equals(subcontractorNo)){
-			noOfQuotReturned = tenderAnalysisDao.obtainNoOfQuotReturned(Integer.valueOf(subcontractorNo));
-			noOfAward = tenderAnalysisDao.obtainNoOfAward(Integer.valueOf(subcontractorNo));
-		}
-		logger.info("date: "+startDate);
-		Subcontract scPackage = scPackageDao.obtainPackageStatistics(subcontractorNo, startDate);
-		revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null? 0.0:scPackage.getRemeasuredSubcontractSum())+ (scPackage.getApprovedVOAmount()==null? 0.0:scPackage.getApprovedVOAmount());
-		totalCumWorkDoneAmount = scPackage.getTotalCumWorkDoneAmount()==null? 0.0:scPackage.getTotalCumWorkDoneAmount();
-		balanceToComplete = revisedSCSum - totalCumWorkDoneAmount;
-		
-		resultList.add(noOfQuotReturned.toString());
-		resultList.add(noOfAward.toString());
-		resultList.add(String.valueOf(revisedSCSum));
-		resultList.add(String.valueOf(balanceToComplete));
-		logger.info("noOfQuotReturned: "+resultList.get(0)+" - noOfAward: "+resultList.get(1)+" - revisedSCSum: "+resultList.get(2)+" - balanceToComplete: "+resultList.get(3));
-		logger.info("obtainSubconctractorStatistics - END");
-		return resultList;
-	}
-
-
-	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
-		return scPackageDao.obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
-	}
 
 
 	public PaginationWrapper<Subcontract> obtainPackagesByVendorNoPaginationWrapper(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
@@ -333,30 +186,6 @@ public class SubcontractorService{
 		return wrapper;
 	}
 	
-	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String tenderStatus) throws DatabaseOperationException {
-		List<SubcontractorTenderAnalysisWrapper> tenderAnalysisWrapperList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
-		logger.info("vendorNo : " + vendorNo + " division : " + division + " jobNumber : " + jobNumber + " packageNo : " + packageNumber + " tenderStatus : " + tenderStatus );
-
-		if(vendorNo!=null && vendorNo.length()>1){
-			vendorNo = vendorNo.trim();
-			List<Tender> tenderAnalysisList = tenderAnalysisDao.obtainTenderAnalysisByVendorNo(Integer.valueOf(vendorNo), division, jobNumber, packageNumber, tenderStatus);
-			for (Tender tenderAnalysis: tenderAnalysisList){
-				SubcontractorTenderAnalysisWrapper tenderAnalysisWrapper = new SubcontractorTenderAnalysisWrapper();
-				tenderAnalysisWrapper.setJobNo(tenderAnalysis.getJobNo());
-				tenderAnalysisWrapper.setPackageNo(tenderAnalysis.getPackageNo());
-				tenderAnalysisWrapper.setQuotedAmount(tenderAnalysis.getBudgetAmount());
-				tenderAnalysisWrapper.setStatus(tenderAnalysis.getStatus());
-				tenderAnalysisWrapper.setDivision(tenderAnalysis.getSubcontract().getJobInfo().getDivision());
-
-				Tender tender = tenderAnalysisDao.obtainTender(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
-				tenderAnalysisWrapper.setBudgetAmount((tender==null || tender.getBudgetAmount()==null)?0.0:tender.getBudgetAmount());
-
-				tenderAnalysisWrapperList.add(tenderAnalysisWrapper);
-			}
-		}
-		return tenderAnalysisWrapperList;
-	}
-
 	//**********************Generate Subcontractor Report***************************//
 	public ExcelFile subcontractorExcelExport(String workScope, String subcontractor, String type) throws DatabaseOperationException {
 		logger.info("STARTED -> subcontractorExcelExport");
@@ -558,5 +387,200 @@ public class SubcontractorService{
 		}
 		return output;
 	}
+	
+	/*************************************** FUNCTIONS FOR PCMS       **************************************************************/
+	public List<SubcontractorWrapper> obtainSubcontractorWrappers(String workScope, String subcontractor) throws DatabaseOperationException {
+		logger.info("workscope: "+workScope+" - subcontractor: "+subcontractor);
+		List<SubcontractorWrapper> subcontractorWrapperList = new ArrayList<SubcontractorWrapper>();
+		
+		/**
+		 * Flow of search: Subcontractor-->WorkScope
+		 **/
+		if(subcontractor!=null && !"".equals(subcontractor)){
+			logger.info("Method 1: Search by Subcontractor");
+			try {
+				List<MasterListVendor> masterListVendorList = masterListRepository.obtainAllVendorList(subcontractor);
+				for(MasterListVendor masterListVendor: masterListVendorList){
+					if(masterListVendor!=null){
+						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
+						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
+						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
+						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
+						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
+						subcontractorWrapper.setBusinessRegistrationNo(masterListVendor.getVendorRegistrationNo());
+						subcontractorWrapper.setScFinancialAlert(masterListVendor.getScFinancialAlert());
+						
+						if(masterListVendor.getVendorNo()!=null &&!"".equals(masterListVendor.getVendorNo())){
+							SupplierMasterResponseObj supplier = supplierMasterDao.obtainSupplierMaster(Integer.valueOf(masterListVendor.getVendorNo()));
+							if(supplier==null)
+								subcontractorWrapper.setHoldPayment("N/A");
+							else
+								subcontractorWrapper.setHoldPayment(supplier.getHoldPaymentCode());
+						}
+						
+						if(workScope!=null && !"".equals(workScope.trim())){
+							List<WorkScopeWrapper> workScopeWrapperList = masterListRepository.getSubcontractorWorkScope(masterListVendor.getVendorNo());
+							for(WorkScopeWrapper workScopeWrapper: workScopeWrapperList){
+								if(workScopeWrapper!=null && workScopeWrapper.getWorkScopeCode()!=null){
+									if(workScope.trim().equals(workScopeWrapper.getWorkScopeCode().trim())){
+										subcontractorWrapperList.add(subcontractorWrapper);
+										break;
+									}
+								}
+							}
+						}
+						else
+							subcontractorWrapperList.add(subcontractorWrapper);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else if(workScope!=null && !"".equals(workScope)){
+			logger.info("Method 2: Search by WorkScope");
+			try {
+				List<MasterListVendor> masterListVendorList = masterListRepository.obtainVendorListByWorkScopeWithUser(workScope, securityServiceImpl.getCurrentUser().getUsername());
+				for(MasterListVendor masterListVendor :masterListVendorList){
+					if(masterListVendor!=null){
+						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
+						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
+						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setVendorType(masterListVendor.getVendorType());
+						subcontractorWrapper.setVendorStatus(masterListVendor.getVendorStatus());
+						subcontractorWrapper.setSubcontractorApproval(masterListVendor.getApprovalStatus());
+						subcontractorWrapper.setScFinancialAlert(masterListVendor.getScFinancialAlert());
+						
+						MasterListVendor vendor = masterListDao.obtainVendor(masterListVendor.getVendorNo());
+						if(vendor!=null)
+							subcontractorWrapper.setBusinessRegistrationNo(vendor.getVendorRegistrationNo());
+						
+						if(masterListVendor.getVendorNo()!=null &&!"".equals(masterListVendor.getVendorNo())){
+							SupplierMasterResponseObj supplier = supplierMasterDao.obtainSupplierMaster(Integer.valueOf(masterListVendor.getVendorNo()));
+							subcontractorWrapper.setHoldPayment(supplier.getHoldPaymentCode());
+						}
 
+						if(subcontractor!=null && !"".equals(subcontractor)){
+							if((masterListVendor.getVendorNo().equals(subcontractor)) || masterListVendor.getVendorName().equals(subcontractor))
+								subcontractorWrapperList.add(subcontractorWrapper);
+						}
+						else
+							subcontractorWrapperList.add(subcontractorWrapper);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return subcontractorWrapperList;
+	}
+	
+	public List<SubcontractorWrapper> obtainClientWrappers(String client) throws DatabaseOperationException {
+		logger.info("Client: " + client);
+		List<SubcontractorWrapper> subcontractorWrapperList = new ArrayList<SubcontractorWrapper>();
+
+		if (client != null && !"".equals(client)) {
+			logger.info("Method 3: Search by Client");
+			try {
+				List<MasterListVendor> masterListVendorList = masterListRepository.obtainAllClientList(client);
+				for (MasterListVendor masterListVendor : masterListVendorList) {
+					if (masterListVendor != null) {
+						SubcontractorWrapper subcontractorWrapper = new SubcontractorWrapper();
+						subcontractorWrapper.setSubcontractorNo(masterListVendor.getVendorNo());
+						subcontractorWrapper.setSubcontractorName(masterListVendor.getVendorName());
+						subcontractorWrapper.setBusinessRegistrationNo(masterListVendor.getVendorRegistrationNo());
+
+						subcontractorWrapperList.add(subcontractorWrapper);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return subcontractorWrapperList;
+	}
+
+	public List<String> obtainSubconctractorStatistics(String subcontractorNo) throws DatabaseOperationException {
+		logger.info("obtainSubconctractorStatistics - STARTED");
+		List<String> resultList = new ArrayList<String>();
+		double revisedSCSum = 0.0;
+		double totalCumWorkDoneAmount = 0.0;
+		double balanceToComplete = 0.0;
+		
+		Integer noOfQuotReturned =0;
+		Integer noOfAward=0;
+		
+		String year = String.valueOf(Integer.valueOf(DateHelper.formatDate(new Date(), "yyyy")) - 1); 
+		Date startDate = DateHelper.parseDate("0101"+year, "ddMMyyyy");
+		
+		if(subcontractorNo!=null&&!"".equals(subcontractorNo)){
+			noOfQuotReturned = tenderAnalysisDao.obtainNoOfQuotReturned(Integer.valueOf(subcontractorNo));
+			noOfAward = tenderAnalysisDao.obtainNoOfAward(Integer.valueOf(subcontractorNo));
+		}
+		logger.info("date: "+startDate);
+		Subcontract scPackage = scPackageDao.obtainPackageStatistics(subcontractorNo, startDate);
+		revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null? 0.0:scPackage.getRemeasuredSubcontractSum())+ (scPackage.getApprovedVOAmount()==null? 0.0:scPackage.getApprovedVOAmount());
+		totalCumWorkDoneAmount = scPackage.getTotalCumWorkDoneAmount()==null? 0.0:scPackage.getTotalCumWorkDoneAmount();
+		balanceToComplete = revisedSCSum - totalCumWorkDoneAmount;
+		
+		resultList.add(noOfQuotReturned.toString());
+		resultList.add(noOfAward.toString());
+		resultList.add(String.valueOf(revisedSCSum));
+		resultList.add(String.valueOf(balanceToComplete));
+		logger.info("noOfQuotReturned: "+resultList.get(0)+" - noOfAward: "+resultList.get(1)+" - revisedSCSum: "+resultList.get(2)+" - balanceToComplete: "+resultList.get(3));
+		logger.info("obtainSubconctractorStatistics - END");
+		return resultList;
+	}
+
+	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
+		return scPackageDao.obtainPackagesByVendorNo(vendorNo, division, jobNumber, packageNumber, paymentTerm, paymentType);
+	}
+
+	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo) throws DatabaseOperationException {
+		return scPackageDao.obtainPackagesByVendorNo(vendorNo);
+	}
+
+	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String tenderStatus) throws DatabaseOperationException {
+		List<SubcontractorTenderAnalysisWrapper> tenderAnalysisWrapperList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
+		logger.info("vendorNo : " + vendorNo + " division : " + division + " jobNumber : " + jobNumber + " packageNo : " + packageNumber + " tenderStatus : " + tenderStatus );
+
+		if(vendorNo!=null && vendorNo.length()>1){
+			vendorNo = vendorNo.trim();
+			List<Tender> tenderAnalysisList = tenderAnalysisDao.obtainTenderAnalysisByVendorNo(Integer.valueOf(vendorNo), division, jobNumber, packageNumber, tenderStatus);
+			tenderAnalysisWrapperList = obtainSubcontractorTenderAnalysisWrapper(tenderAnalysisList);
+		}
+		return tenderAnalysisWrapperList;
+	}
+
+	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(String vendorNo) throws DatabaseOperationException {
+		List<SubcontractorTenderAnalysisWrapper> tenderAnalysisWrapperList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
+		logger.info("vendorNo : " + vendorNo  );
+
+		if(vendorNo!=null && vendorNo.length()>1){
+			vendorNo = vendorNo.trim();
+			List<Tender> tenderAnalysisList = tenderAnalysisDao.obtainTenderAnalysisByVendorNo(Integer.valueOf(vendorNo));
+			tenderAnalysisWrapperList = obtainSubcontractorTenderAnalysisWrapper(tenderAnalysisList);
+		}
+		return tenderAnalysisWrapperList;
+	}
+	
+	private List<SubcontractorTenderAnalysisWrapper> obtainSubcontractorTenderAnalysisWrapper(List<Tender> tenderList) throws DatabaseOperationException{
+		List<SubcontractorTenderAnalysisWrapper> tenderAnalysisWrapperList = new ArrayList<SubcontractorTenderAnalysisWrapper>();
+		for (Tender tenderAnalysis: tenderList){
+			SubcontractorTenderAnalysisWrapper tenderAnalysisWrapper = new SubcontractorTenderAnalysisWrapper();
+			tenderAnalysisWrapper.setJobNo(tenderAnalysis.getJobNo());
+			tenderAnalysisWrapper.setPackageNo(tenderAnalysis.getPackageNo());
+			tenderAnalysisWrapper.setQuotedAmount(tenderAnalysis.getBudgetAmount());
+			tenderAnalysisWrapper.setStatus(tenderAnalysis.getStatus());
+			tenderAnalysisWrapper.setDivision(tenderAnalysis.getSubcontract().getJobInfo().getDivision());
+
+			Tender tender = tenderAnalysisDao.obtainTender(tenderAnalysis.getJobNo(), tenderAnalysis.getPackageNo(),0);
+			tenderAnalysisWrapper.setBudgetAmount((tender==null || tender.getBudgetAmount()==null)?0.0:tender.getBudgetAmount());
+
+			tenderAnalysisWrapperList.add(tenderAnalysisWrapper);
+		}
+		return tenderAnalysisWrapperList;
+	}
+	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 }

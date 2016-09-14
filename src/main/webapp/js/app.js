@@ -21,7 +21,12 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/service/master-list-service.js',
-                           'js/service/adl-service.js'
+                           'js/service/adl-service.js',
+                           'js/service/subcontractor-service.js',
+                           'js/controller/message-modal.js',
+                           'js/controller/excelupload-modal.js',
+                           'js/controller/infotips-modal.js',
+                           'js/controller/subcontractor-details-modal.js',
                     ] 
                 });
             }]
@@ -1418,16 +1423,13 @@ mainApp.config(['momentPickerProvider', '$provide', function(momentPickerProvide
 		        return '';
 		      }
 		      if (typeof(field.value) === 'number') {
-		    	  if(field.value.toString().length === 13){
-		    		  return $filter('date')(field.value, 'yyyy-MM-dd');
-		    	  }
 		        return field.value;
 		      }
 		      if (typeof(field.value) === 'boolean') {
 		        return (field.value ? 'TRUE' : 'FALSE') ;
 		      }
 		      if (typeof(field.value) === 'string') {
-		        return field.value;
+		        return '"' + field.value + '"';
 		      }
 		      if ( field.value instanceof Date){
 		        return $filter('date')(field.value, 'yyyy-MM-dd');
