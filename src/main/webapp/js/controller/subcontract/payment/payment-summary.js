@@ -32,7 +32,7 @@ mainApp.controller('PaymentSummaryCtrl', ['$scope', 'modalService', 'colorCode',
 	function setDashboardData(bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum, bqMovement, voMovement, ccMovement, retentionMovement, advancedMovement, othersMovement){
 		$scope.cumPaymentResourceDistributionChart = {
 				"data": [bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum],
-				"labels": ["BQ", "Addendum", "CC", "Retention", "Advanced", "Others"],
+				"labels": ["BQ", "Addendum", "Contra Charge", "Retention", "Advanced", "Others"],
 				"colours": [
 				{
 					"strokeColor": colorCode.blue,

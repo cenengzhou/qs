@@ -72,7 +72,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 	function setDashboardData(bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum){
 		var paymentResourceDistributionJson = {
 				"data": [bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum],
-				"labels": ["BQ", "Addendum", "CC", "Retention", "Advanced", "Others"],
+				"labels": ["BQ", "Addendum", "Contra Charge", "Retention", "Advanced", "Others"],
 				"colours": [
 				{
 					"strokeColor": colorCode.blue,
