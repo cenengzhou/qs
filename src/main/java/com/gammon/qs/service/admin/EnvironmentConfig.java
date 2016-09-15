@@ -39,7 +39,7 @@ public class EnvironmentConfig {
 	}
 
 	public String getJdeWebserviceEnvironment() {
-		return webServiceConfig.getWsJdeServerUrl();
+		return webServiceConfig.getWsJde("URL");
 	}
 	
 }

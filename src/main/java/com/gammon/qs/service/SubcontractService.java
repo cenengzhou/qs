@@ -4257,7 +4257,7 @@ public class SubcontractService {
 		 */
 		if(!GenericValidator.isBlankOrNull(searchWrapper.getJobNumber())){
 			//Access by peer systems via web service or users
-			if(webServiceConfig.getQsWsUsername().equals(username) || adminService.canAccessJob(searchWrapper.getJobNumber()))
+			if(webServiceConfig.getPcmsApi("USERNAME").equals(username) || adminService.canAccessJob(searchWrapper.getJobNumber()))
 				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 

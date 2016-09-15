@@ -7,13 +7,12 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -36,6 +36,8 @@ public class JobController {
 	
 	@Autowired
 	private JobInfoService jobService;
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@JsonView(JobInfoView.NameAndDescription.class)
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -95,4 +97,22 @@ public class JobController {
 		} 
 		return result;
 	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateJobInfoAndDates", method = RequestMethod.POST)
+	public String updateJobInfoAndDates(@RequestBody Map<String, Object> jobAndDates){
+		JobInfo job = objectMapper.convertValue(jobAndDates.get("job"), JobInfo.class);
+		JobDates jobDates = objectMapper.convertValue(jobAndDates.get("jobDates"), JobDates.class);
+		String result = null;
+		try {
+			result = updateJobInfo(job);
+			result += updateJobDates(jobDates);
+		} catch (Exception e) {
+			result = "Job and Job Dates cannot be updated.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} 
+		return result;
+	}
+
 }

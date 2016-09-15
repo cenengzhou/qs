@@ -19,13 +19,9 @@ public class RestTemplateHelper {
 	private List<HttpMessageConverter<?>> restMessageConverters;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
-		
-	public RestTemplate getRestTemplateForWS(String hostname) {
-		return getRestTemplate(hostname, webServiceConfig.getQsWsUsername(), webServiceConfig.getQsWsPassword());
-	}
 	
 	public RestTemplate getRestTemplateForAPI(String hostname) {
-		return getRestTemplate(hostname, webServiceConfig.getPcmsApiUsername(), webServiceConfig.getPcmsApiPassword());
+		return getRestTemplate(hostname, webServiceConfig.getPcmsApi("USERNAME"), webServiceConfig.getPcmsApi("PASSOWRD"));
 	}
 	
 	public RestTemplate getRestTemplate(String hostname, String username, String password) {

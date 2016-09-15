@@ -67,7 +67,6 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-//		registry.addInterceptor(displayTagParamInterceptor);
 		registry.addInterceptor(sessionInterceptor);
 	}
 

@@ -119,7 +119,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvedOrRejected);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteAwardApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAwardApproval", requestObj, CompleteAwardApprovalResponse.class);
 		return responseObj;
 	}
@@ -161,7 +161,7 @@ public class APController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setUser(user);
 		requestObj.setApprovalDecision(approvalDecision);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteAddendumApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAddendumApproval", requestObj, CompleteAddendumApprovalResponse.class);
 		return responseObj;
 	}
@@ -201,7 +201,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNo(mainCertNo);
 		requestObj.setApprovalDecision(approvalDecision);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteMainCertApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeMainCertApproval", requestObj, CompleteMainCertApprovalResponse.class);
 		return responseObj;
 	}
@@ -240,7 +240,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovalDecision(approvedOrRejected);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompletePaymentApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completePaymentApproval", requestObj, CompletePaymentApprovalResponse.class);
 		return responseObj;
 	}
@@ -281,7 +281,7 @@ public class APController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setApprovedOrRejected(approvedOrRejected);
 		requestObj.setSplitOrTerminate(splitOrTerminate);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteSplitTerminateApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/awardSCPackage", requestObj, CompleteSplitTerminateApprovalResponse.class);
 		return responseObj;
 	}
@@ -349,7 +349,7 @@ public class APController {
 		GetAttachmentListRequest requestObj = new GetAttachmentListRequest();
 		requestObj.setNameObject(nameObject);
 		requestObj.setTextKey(textKey);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		GetAttachmentListResponseList responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/getAttachmentList", requestObj, GetAttachmentListResponseList.class);
 		return responseObj;
 	}
@@ -389,7 +389,7 @@ public class APController {
 		requestObj.setNameObject(nameObject);
 		requestObj.setTextKey(textKey);
 		requestObj.setSequenceNo(sequenceNo);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		GetTextAttachmentResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/getTextAttachment", requestObj, GetTextAttachmentResponse.class);
 		return responseObj;
 	}
@@ -435,7 +435,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForAwardServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForAward", requestObj, MakeHTMLStrForAwardServiceResponse.class);
 		return responseObj;
 	}
@@ -483,7 +483,7 @@ public class APController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setAddendumNo(addendumNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForAddendumServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForAddendum", requestObj, MakeHTMLStrForAddendumServiceResponse.class);
 		return responseObj;
 	}
@@ -528,7 +528,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForPaymentServiceRequest responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForPayment", requestObj, MakeHTMLStrForPaymentServiceRequest.class);
 		return responseObj;
 	}
@@ -575,7 +575,7 @@ public class APController {
 		requestObj.setPackageNo(packageNo);
 		requestObj.setPaymentNo(paymentNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForPaymentCertServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForPaymentCert", requestObj, MakeHTMLStrForPaymentCertServiceResponse.class);
 		return responseObj;
 	}
@@ -619,7 +619,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForSplitTerminateServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForSplitTerminate", requestObj, MakeHTMLStrForSplitTerminateServiceResponse.class);
 		return responseObj;
 	}
@@ -663,7 +663,7 @@ public class APController {
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setMainCertNo(mainCertNo);
 		requestObj.setHtmlVersion(htmlVersion);
-		restTemplate = restTemplateHelper.getRestTemplateForWS(request.getServerName());
+		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		MakeHTMLStrForMainCertServiceResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/makeHTMLStrForMainCert", requestObj, MakeHTMLStrForMainCertServiceResponse.class);
 		return responseObj;
 	}

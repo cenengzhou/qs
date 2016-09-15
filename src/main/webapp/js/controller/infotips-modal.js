@@ -126,7 +126,7 @@ mainApp.controller('InfoTipsCtrl',
 				   },
 	               {
 					   name: 'approvalType',
-					   header: 'Approval Type Info Types',
+					   header: 'Approval Type Info Tips',
 					   columnNames: {id:'Code', value:'Description', details:'Details'},
 					   items:GlobalParameter.approvalType,
         			   visible: true,

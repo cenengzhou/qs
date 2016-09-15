@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth
 		.authenticationProvider(ldapAuthenticationProvider())
 		.authenticationProvider(kerberosServiceAuthenticationProvider())
-		.inMemoryAuthentication().withUser(webServiceConfig.getQsWsUsername()).password(webServiceConfig.getQsWsPassword()).authorities("ROLE_"+getRolePcmsWs());
+		.inMemoryAuthentication().withUser(webServiceConfig.getPcmsApi("USERNAME")).password(webServiceConfig.getPcmsApi("PASSWORD")).authorities("ROLE_"+getRolePcmsWs());
 	}
 
 	@Override
@@ -275,9 +275,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean(name = "authenticationLdapContextSource")
 	public DefaultSpringSecurityContextSource authenticationLdapContextSource() {
 		DefaultSpringSecurityContextSource bean = new DefaultSpringSecurityContextSource(
-				ldapConfig.getLdapServerUrl() + "/" + ldapConfig.getLdapServerBase());
-		bean.setUserDn(ldapConfig.getLdapServerUsername());
-		bean.setPassword(ldapConfig.getLdapServerPassword());
+				ldapConfig.getLdapServer("URL") + "/" + ldapConfig.getLdapServer("BASE"));
+		bean.setUserDn(ldapConfig.getLdapServer("USERNAME"));
+		bean.setPassword(ldapConfig.getLdapServer("PASSWORD"));
 		return bean;
 	}
 
@@ -336,10 +336,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean(name = "ldapContextSource")
 	public LdapContextSource ldapContextSource() {
 		LdapContextSource bean = new LdapContextSource();
-		bean.setUrl(ldapConfig.getLdapServerUrl());
-		bean.setBase(ldapConfig.getLdapServerBase());
-		bean.setUserDn(ldapConfig.getLdapServerUsername());
-		bean.setPassword(ldapConfig.getLdapServerPassword());
+		bean.setUrl(ldapConfig.getLdapServer("URL"));
+		bean.setBase(ldapConfig.getLdapServer("BASE"));
+		bean.setUserDn(ldapConfig.getLdapServer("USERNAME"));
+		bean.setPassword(ldapConfig.getLdapServer("PASSWORD"));
 		return bean;
 	}
 

@@ -128,21 +128,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
-	.state('job.dates', {
-		url: "/dates",
-		templateUrl: "view/job/job-dates.html",
-		controller: 'JobDatesCtrl',
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/controller/job/job-dates.js'
-                    ] 
-                });
-            }]
-        }
-	})
 	.state('job.accountMaster', {
 		url: "/accountMaster",
 		templateUrl: "view/job/job-account-master.html",
@@ -961,6 +946,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [	
                	         	'js/service/resource-summary-service.js',
                	         	'js/service/subcontract-service.js',
+               	         	'js/service/repackaging-service.js'
                     ] 
                 });
             }]

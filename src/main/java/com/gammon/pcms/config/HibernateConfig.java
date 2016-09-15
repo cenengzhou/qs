@@ -1,5 +1,6 @@
 package com.gammon.pcms.config;
 
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -36,13 +37,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		transactionManagerRef = "transactionManager",
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASPECTJ, pattern = "com.gammon.pcms.dao.adl.*"))
 public class HibernateConfig {
-
+	
 	@Value("${hibernate.hbm2ddl.auto}")
 	private String hibernateHbm2DdlAuto;
 	@Value("${hibernate.dialect}")
 	private String hibernateDialect;
-	@Value("${hibernate.default_schema}")
-	private String hibernateDefault_schema;
 	@Value("${hibernate.show_sql}")
 	private String hibernateShow_sql;
 	@Value("${hibernate.max_fetch_depth}")
@@ -55,19 +54,25 @@ public class HibernateConfig {
 	private String hibernateJdbcFetch_size;
 	@Value("${current_session_context_class}")
 	private String current_session_context_class;
+	@Value("#{${hibernate.schema}}")
+	private Map<String, Object> hibernateSchema;
+	
 	@Autowired
 	private AuditConfig auditConfig;
 	@Autowired
 	private JdbcConfig jdbcConfig;
+	@Autowired
+	private ApplicationConfig applicationConfig;
+
 
 	@Primary
 	@Bean(name = "dataSource", destroyMethod = "")
 	public DataSource jdbcDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(jdbcConfig.getDriverClassName());
-		dataSource.setUrl(jdbcConfig.getUrl());
-		dataSource.setUsername(jdbcConfig.getUsername());
-		dataSource.setPassword(jdbcConfig.getPassword());
+		dataSource.setDriverClassName(jdbcConfig.getPcmsJdbc("DRIVER"));
+		dataSource.setUrl(jdbcConfig.getPcmsJdbc("URL"));
+		dataSource.setUsername(jdbcConfig.getPcmsJdbc("UERNAME"));
+		dataSource.setPassword(jdbcConfig.getPcmsJdbc("PASSWORD"));
 		return dataSource;
 	}
 
@@ -123,16 +128,16 @@ public class HibernateConfig {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2DdlAuto);
 		properties.setProperty("hibernate.dialect", hibernateDialect);
-		properties.setProperty("hibernate.default_schema", hibernateDefault_schema);
+		properties.setProperty("hibernate.default_schema", getHibernateSchema("DEFAULT"));
 		properties.setProperty("hibernate.show_sql", hibernateShow_sql);
 		properties.setProperty("hibernate.max_fetch_depth", hibernateMax_fetch_depth);
 		properties.setProperty("hibernate.format_sql", hibernateFormat_sql);
 		properties.setProperty("hibernate.jdbc.batch_size", hibernateJdbcBatch_size);
 		properties.setProperty("hibernate.jdbc.fetch_size", hibernateJdbcFetch_size);
-		properties.setProperty("hibernate.connection.username", jdbcConfig.getUsername());
-		properties.setProperty("hibernate.connection.password", jdbcConfig.getPassword());
-		properties.setProperty("hibernate.connection.driver_class", jdbcConfig.getDriverClassName());
-		properties.setProperty("hibernate.connection.url", jdbcConfig.getUrl());
+		properties.setProperty("hibernate.connection.username", jdbcConfig.getPcmsJdbc("USERNAME"));
+		properties.setProperty("hibernate.connection.password", jdbcConfig.getPcmsJdbc("PASSWORD"));
+		properties.setProperty("hibernate.connection.driver_class", jdbcConfig.getPcmsJdbc("DRIVER"));
+		properties.setProperty("hibernate.connection.url", jdbcConfig.getPcmsJdbc("URL"));
 		properties.setProperty("current_session_context_class", current_session_context_class);
 		properties.setProperty("org.hibernate.envers.audit_table_suffix", auditConfig.getAudit_table_suffix());
 		properties.setProperty("org.hibernate.envers.audit_strategy", auditConfig.getAudit_strategy());
@@ -158,12 +163,6 @@ public class HibernateConfig {
 		return hibernateDialect;
 	}
 
-	/**
-	 * @return the hibernateDefault_schema
-	 */
-	public String getHibernateDefault_schema() {
-		return hibernateDefault_schema;
-	}
 
 	/**
 	 * @return the hibernateShow_sql
@@ -207,4 +206,15 @@ public class HibernateConfig {
 		return current_session_context_class;
 	}
 
+	/**
+	 * @return the hibernateSchema
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getHibernateSchema() {
+		return (Map<String, String>) hibernateSchema.get(applicationConfig.getDeployEnvironment());
+	}
+
+	public String getHibernateSchema(String key){
+		return getHibernateSchema().get(key);
+	}
 }

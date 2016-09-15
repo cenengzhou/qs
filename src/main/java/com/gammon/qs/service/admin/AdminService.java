@@ -105,7 +105,7 @@ public class AdminService {
 	public Boolean canAccessJob(String noJob) {
 		User user = securityService.getCurrentUser();
 		if(user != null && !Arrays.asList(new String[]{
-				webServiceConfig.getQsWsUsername(), webServiceConfig.getPcmsApiUsername()
+				webServiceConfig.getPcmsApi("USERNAME")
 				}).contains(user.getUsername())){
 			return canAccessJob(user, noJob);
 		} else {

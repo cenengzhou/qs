@@ -418,8 +418,203 @@
 						</div>
 					</div>
 
+<div class="box box-default">
+	<div class="box-body">
+	<div class="row">
+		<div class="panel panel-inverse ">
+			<div ng-if="false" class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+						href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					<b>Job Dates</b>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+
+					<div class="row">
+
+						<!-- JDE Dates  -->
+						<div class="col-md-6">
+							<div class="col-md-8">
+								<label>Planned Start Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="jobDates.plannedStartDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" 
+										ng-model="jobDates.plannedStartDate">
+								</div>
+							</div>
+
+
+							<div class="col-md-8">
+								<label>Planned End Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="jobDates.plannedEndDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="jobDates.plannedEndDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Actual Start Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="jobDates.actualStartDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="jobDates.actualStartDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Actual End Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="jobDates.actualEndDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="jobDates.actualEndDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Anticipated Completion Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="jobDates.anticipatedCompletionDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="jobDates.anticipatedCompletionDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Revised Completion Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="jobDates.revisedCompletionDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="jobDates.revisedCompletionDate" >
+								</div>
+							</div>
+
+						</div>
+
+						<!-- QS Dates  -->
+						<div class="col-md-6">
+							<div class="col-md-8">
+								<label>Actual PCC Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="job.actualPCCDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="job.actualPCCDate" >
+								</div>
+							</div>
+
+							<h5></h5>
+
+							<div class="col-md-8">
+								<label>Actual Making Good Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="job.actualMakingGoodDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="job.actualMakingGoodDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Defect List Issued Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="job.defectListIssuedDate" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="job.defectListIssuedDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Financial End Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="job.financialEndDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="job.financialEndDate" >
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<label>Final A/C Settlement Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="job.dateFinalACSettlement" format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+									start-view="day" ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" 
+										ng-model="job.dateFinalACSettlement">
+								</div>
+							</div>
+
+						</div>
+
+					</div>
 
 				</div>
+
+			</div>
+
+
+		</div>
+
+				</div>
+	</div>
+	</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
 					<a class="btn btn-primary btn-block" ng-click="saveJobInfo()">Save

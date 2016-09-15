@@ -89,8 +89,8 @@ public class MailContentGenerator {
 		EmailMessage emailMessage = new EmailMessage();
 		// 1a. Set recipients
 		List<String> recipients = new ArrayList<String>();
-		recipients.add(quartzConfig.getMailReceiverAddress());
-		recipients.add(mailConfig.getMailBccEmailAddress());
+		recipients.add(quartzConfig.getQuartzSetting("RECEIVER"));
+		recipients.add(mailConfig.getMailSmtp("BCC"));
 		
 		emailMessage.setRecipients(recipients);
 

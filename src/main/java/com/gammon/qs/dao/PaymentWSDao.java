@@ -129,7 +129,7 @@ public class PaymentWSDao{
 		headerRequestObj.setUserReservedNumber(paymentCert.getMainContractPaymentCertNo()); // URAB
 		headerRequestObj.setUserReservedDate(paymentCert.getDueDate()); 					// URDT
 		headerRequestObj.setDateApprovedj(paymentCert.getCertIssueDate()); 					// APDJ
-		headerRequestObj.setTransactionOriginator(webServiceConfig.getJdeWsUsername()); 	// TORG
+		headerRequestObj.setTransactionOriginator(webServiceConfig.getWsJde("USERNAME")); 	// TORG
 		headerRequestObj.setUserId(wsConfig.getUserName()); 								// USER
 		headerRequestObj.setProgramId(WSPrograms.JP58011I_SCPaymentHeaderInsertManager); 	// PID
 		headerRequestObj.setWorkStationId(environmentConfig.getNodeName()); 				// JOBN

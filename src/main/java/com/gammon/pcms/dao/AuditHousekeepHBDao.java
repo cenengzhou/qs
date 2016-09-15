@@ -46,9 +46,9 @@ public class AuditHousekeepHBDao {
 		AuditInfo auditInfo = auditConfig.getAuditInfoMap().get(tableName);
 		int deletedRecord = 0;
 		if(auditInfo != null) {
-			String sql = "{call " + hibernateConfig.getHibernateDefault_schema() + "." +  storedProcedureConfig.getStoredProcedureAuditHousekeep() + "(:tableName, :period, :rcount)}";
+			String sql = "{call " + hibernateConfig.getHibernateSchema("DEFAULT") + "." +  storedProcedureConfig.getStoredProcedureAuditHousekeep() + "(:tableName, :period, :rcount)}";
 			CallableStatement cs = ((SessionImpl)entityManager.getDelegate()).connection().prepareCall(sql);
-			cs.setString("tableName", hibernateConfig.getHibernateDefault_schema() + "." +  auditInfo.getTableName());
+			cs.setString("tableName", hibernateConfig.getHibernateSchema("DEFAULT") + "." +  auditInfo.getTableName());
 			String[] periods = auditInfo.getPeriod().split("-");
 			Calendar today = Calendar.getInstance();
 			Calendar housekeepDate = Calendar.getInstance();

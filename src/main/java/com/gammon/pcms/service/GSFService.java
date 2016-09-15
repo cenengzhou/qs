@@ -28,10 +28,10 @@ public class GSFService {
 	public User getRole(String username) {
 		User user = new User();
 		String[] login = username.split("@");
-		GetRole.Request roleRequest = new GetRole.Request(webServiceConfig.getGsfApplicationCode(),
+		GetRole.Request roleRequest = new GetRole.Request(WebServiceConfig.GSF_APPLICATION_CODE,
 				"gamska\\" + login[0]);
 		try {
-			ResponseEntity<GetRole.Response> roleResponse = getResponseEntity(webServiceConfig.getGsfGetRoleUrl(),
+			ResponseEntity<GetRole.Response> roleResponse = getResponseEntity(webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETROLE,
 					roleRequest, GetRole.Response.class);
 			user = roleResponse.getBody().getUser();
 		} catch (HttpMessageNotReadableException e) {
@@ -47,10 +47,10 @@ public class GSFService {
 
 	public List<JobSecurity> getJobSecurityList(String username) {
 		String[] login = username.split("@");
-		GetJobSecurity.Request jobSecurityRequest = new GetJobSecurity.Request(webServiceConfig.getGsfApplicationCode(),
+		GetJobSecurity.Request jobSecurityRequest = new GetJobSecurity.Request(WebServiceConfig.GSF_APPLICATION_CODE,
 				"gamska\\" + login[0]);
 		ResponseEntity<GetJobSecurity.Response> jobSecurityResponse = getResponseEntity(
-				webServiceConfig.getGsfGetJobSecurityUrl(), jobSecurityRequest, GetJobSecurity.Response.class);
+				webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETJOBSECURITY, jobSecurityRequest, GetJobSecurity.Response.class);
 		return jobSecurityResponse.getBody().getJobSecurityList();
 	}
 

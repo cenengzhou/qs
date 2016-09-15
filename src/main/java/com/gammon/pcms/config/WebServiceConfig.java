@@ -2,11 +2,14 @@ package com.gammon.pcms.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.security.auth.callback.CallbackHandler;
 
 import org.apache.ws.security.WSConstants;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,42 +34,33 @@ import com.gammon.qs.webservice.WSConfig;
 @Configuration
 @ComponentScan(basePackages = {"com.gammon.qs.webservice"})
 @PropertySource("file:${webservice.properties}")
-public class WebServiceConfig {//extends WsConfigurerAdapter {
+public class WebServiceConfig implements InitializingBean {//extends WsConfigurerAdapter {
 
-	@Value("${ws.jde.server.url}")
-	private String wsJdeServerUrl;
-	@Value("${ws.ap.server.url}")
-	private String wsApServerUrl;
-	@Value("${jde.ws.username}")
-	private String jdeWsUsername;
-	@Value("${jde.ws.password}")
-	private String jdeWsPassword;
-	@Value("${ap.ws.username}")
-	private String apWsUsername;
-	@Value("${ap.ws.password}")
-	private String apWsPassword;
-	@Value("${qs.ws.username}")
-	private String qsWsUsername;
-	@Value("${qs.ws.password}")
-	private String qsWsPassword;
-	@Value("${pcms.api.username}")
-	private String pcmsApiUsername;
-	@Value("${pcms.api.password}")
-	private String pcmsApiPassword;
+	@Autowired
+	private ApplicationConfig applicationConfig;
+	@Value("#{${ws.jde}}")
+	private Map<String, Object> wsJde;
+	@Value("#{${ws.ap}}")
+	private Map<String, Object> wsAp;
+	@Value("#{${ws.gsf}}")
+	private Map<String, Object> wsGsf;
+	@Value("#{${pcms.api}}")
+	private Map<String, Object> pcmsApi;
+	@Value("#{${pcms.link}}")
+	private Map<String, Object> pcmsLink;
+
 	@Value("${qs.keystore}")
 	private String qsKeystore;
 
-	@Value("${gsf.applicationCode}")
-	private String gsfApplicationCode;
-	@Value("${gsf.getRole.url}")
-	private String gsfGetRoleUrl;
-	@Value("${gsf.getFunctionSecurity.url}")
-	private String gsfGetFunctionSecurityUrl;
-	@Value("${gsf.getJobSecurity.url}")
-	private String gsfGetJobSecurityUrl;
+
 	@Value("${peopleDirectory.picture.url}")
 	private String peopDirectoryPictureUrl;
-		
+	
+	public static final String GSF_APPLICATION_CODE = "PCMS";
+	public static final String GSF_GETROLE = "GetRole";
+	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
+	public static final String GSF_GETJOBSECURITY = "GetJobSecurity";
+	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
 	    return new PropertySourcesPlaceholderConfigurer();
@@ -75,6 +69,8 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	@Bean(name = "webservicePasswordConfig")
 	public WSConfig webservicePasswordConfig() {
 		WSConfig bean = new WSConfig();
+		String jdeWsUsername = getWsJde("USERNAME");
+		String jdeWsPassword = getWsJde("PASSWORD");
 		bean.setUserName(jdeWsUsername);
 		bean.setPassword(jdeWsPassword);
 		return bean;
@@ -83,6 +79,8 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	@Bean(name = "apWebservicePasswordConfig")
 	public WSConfig apWebservicePasswordConfig() {
 		WSConfig bean = new WSConfig();
+		String apWsUsername = getWsAp("USERNAME");
+		String apWsPassword = getWsAp("PASSWORD");
 		bean.setUserName(apWsUsername);
 		bean.setPassword(apWsPassword);
 		return bean;
@@ -108,6 +106,8 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	@Bean
 	public ObjectMapper objectMapper() {
 		ObjectMapper bean = new ObjectMapper();
+		bean.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+//		bean.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
 		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		bean.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -125,6 +125,8 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	@Bean
 	public XmlMapper xmlMapper() {
 		XmlMapper bean = new XmlMapper();
+		bean.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+//		bean.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		bean.enable(SerializationFeature.INDENT_OUTPUT);
 		bean.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 		bean.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -154,75 +156,96 @@ public class WebServiceConfig {//extends WsConfigurerAdapter {
 	@Bean(name = "callbackHandler")
 	public SimplePasswordValidationCallbackHandler callbackHandler() throws Exception {
 		SimplePasswordValidationCallbackHandler bean = new SimplePasswordValidationCallbackHandler();
+		String pcmsApiUsername = getPcmsApi("USERNAME");
+		String pcmsApiPassword = getPcmsApi("PASSWORD");
 		Properties props = new Properties();
-		props.put(qsWsUsername, qsWsPassword);
+		props.put(pcmsApiUsername, pcmsApiPassword);
 		bean.setUsers(props);
 		return bean;
 	}
 
-	//getter
-	public String getWsJdeServerUrl() {
-		return wsJdeServerUrl;
+	/**
+	 * @return the wsJde
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getWsJde() {
+		return (Map<String, String>) wsJde.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getWsJde(String key){
+		return getWsJde().get(key);
+	}
+	
+	/**
+	 * @return the wsAp
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getWsAp() {
+		return (Map<String, String>) wsAp.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getWsAp(String key){
+		return getWsAp().get(key);
 	}
 
-	public String getWsApServerUrl() {
-		return wsApServerUrl;
+	/**
+	 * @return the wsGsf
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getWsGsf() {
+		return (Map<String, String>) wsGsf.get(applicationConfig.getDeployEnvironment());
 	}
 
-	public String getJdeWsUsername() {
-		return jdeWsUsername;
+	public String getWsGsf(String key){
+		return getWsGsf().get(key);
+	}
+	
+	/**
+	 * @return the pcmsApi
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPcmsApi() {
+		return (Map<String, String>) pcmsApi.get(applicationConfig.getDeployEnvironment());
 	}
 
-	public String getJdeWsPassword() {
-		return jdeWsPassword;
+	public String getPcmsApi(String key){
+		return getPcmsApi().get(key);
 	}
-
-	public String getApWsUsername() {
-		return apWsUsername;
+	
+	/**
+	 * @return the pcmsLink
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPcmsLink() {
+		return (Map<String, String>) pcmsLink.get(applicationConfig.getDeployEnvironment());
 	}
-
-	public String getApWsPassword() {
-		return apWsPassword;
+	
+	public String getPcmsLink(String key){
+		return getPcmsLink().get(key);
 	}
-
-	public String getQsWsUsername() {
-		return qsWsUsername;
-	}
-
-	public String getQsWsPassword() {
-		return qsWsPassword;
-	}
-
-	public String getPcmsApiUsername() {
-		return pcmsApiUsername;
-	}
-
-	public String getPcmsApiPassword() {
-		return pcmsApiPassword;
-	}
-
+	
+	/**
+	 * @return the qsKeystore
+	 */
 	public String getQsKeystore() {
 		return qsKeystore;
 	}
 
-	public String getGsfGetRoleUrl() {
-		return gsfGetRoleUrl;
-	}
-
-	public String getGsfGetFunctionSecurityUrl() {
-		return gsfGetFunctionSecurityUrl;
-	}
-
-	public String getGsfApplicationCode() {
-		return gsfApplicationCode;
-	}
-
-	public String getGsfGetJobSecurityUrl() {
-		return gsfGetJobSecurityUrl;
-	}
-
+	/**
+	 * @return the peopDirectoryPictureUrl
+	 */
 	public String getPeopDirectoryPictureUrl() {
 		return peopDirectoryPictureUrl;
 	}
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// change properties to Map for different environment 
+		// require compile all JDE/AP library or...below is quickfix
+		System.setProperty("ws.ap.server.url", getWsAp("URL"));
+		System.setProperty("ws.jde.server.url", getWsJde("URL"));
+	}
+
+
+	
 }

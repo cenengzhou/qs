@@ -3,6 +3,7 @@ package com.gammon.pcms.config;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -56,8 +57,6 @@ public class QuartzConfig {
 	@Value("${org.quartz.threadPool.threadPriority}")
 	private String orgQuartzThreadPoolThreadPriority;
 	
-	@Value("${org.quartz.jobStore.tablePrefix}")
-	private String orgQuartzJobStoreTablePrefix;
 	@Value("${org.quartz.jobStore.isClustered}")
 	private String orgQuartzJobStoreIsClustered;
 	@Value("${org.quartz.jobStore.useProperties}")
@@ -71,12 +70,8 @@ public class QuartzConfig {
 	@Value("${org.quartz.jobStore.driverDelegateClass}")
 	private String orgQuartzJobStoreDriverDelegateClass;
 	
-	@Value("${quartz.autoStartup}")
-	private String pcmsQuartzAutoStartup;
 	@Value("${pcms.quartz.timezone}")
 	private String pcmsQuartzTimezone;
-	@Value("${mail.receiver.address}")
-	private String mailReceiverAddress;
 	
 	//-----------------------Properties for Quartz Jobs-----------------------
 	//1. Payment Posting
@@ -115,6 +110,9 @@ public class QuartzConfig {
 	@Value("${pcms.scheduler.job.cronExpression.housekeepAuditTable}")
 	private String jobCronExpressionHousekeepAuditTable;
 	
+	@Value("#{${quartz.setting}}")
+	private Map<String, Object> quartzSetting;
+	
 	@Autowired
 	private ApplicationContext applicationContext;
 	@Autowired
@@ -131,7 +129,7 @@ public class QuartzConfig {
 	@PostConstruct  
 	private void postConstruct() throws NamingException, SchedulerException {
 		List<String> profileList = Arrays.asList(env.getActiveProfiles());
-		if(!profileList.contains("junit") && new Boolean(pcmsQuartzAutoStartup)) schedulerFactoryBean().start();
+		if(!profileList.contains("junit") && new Boolean(getQuartzSetting("AUTOSTARTUP"))) schedulerFactoryBean().start();
 	}
 
 	/**
@@ -374,7 +372,7 @@ public class QuartzConfig {
 
 		// load properties file and do all the configuration setups
 		scheduler.setQuartzProperties(quartzProperties());
-		scheduler.setAutoStartup(Boolean.valueOf(pcmsQuartzAutoStartup));
+		scheduler.setAutoStartup(Boolean.valueOf(getQuartzSetting("AUTOSTARTUP")));
 
 		// database and transaction configurations
 		scheduler.setDataSource(dataSource);
@@ -420,6 +418,7 @@ public class QuartzConfig {
 		try {
 			propertiesFactoryBean.afterPropertiesSet();
 			prop = propertiesFactoryBean.getObject();
+			prop.setProperty("org.quartz.jobStore.tablePrefix", getQuartzSetting("TABLE_PREFIX"));
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to load quartz.properties", e);
 		}
@@ -475,14 +474,6 @@ public class QuartzConfig {
 		this.orgQuartzThreadPoolThreadPriority = orgQuartzThreadPoolThreadPriority;
 	}
 
-	public String getOrgQuartzJobStoreTablePrefix() {
-		return orgQuartzJobStoreTablePrefix;
-	}
-
-	public void setOrgQuartzJobStoreTablePrefix(String orgQuartzJobStoreTablePrefix) {
-		this.orgQuartzJobStoreTablePrefix = orgQuartzJobStoreTablePrefix;
-	}
-
 	public String getOrgQuartzJobStoreIsClustered() {
 		return orgQuartzJobStoreIsClustered;
 	}
@@ -531,28 +522,12 @@ public class QuartzConfig {
 		this.orgQuartzJobStoreDriverDelegateClass = orgQuartzJobStoreDriverDelegateClass;
 	}
 
-	public String getPcmsQuartzAutoStartup() {
-		return pcmsQuartzAutoStartup;
-	}
-
-	public void setPcmsQuartzAutoStartup(String pcmsQuartzAutoStartup) {
-		this.pcmsQuartzAutoStartup = pcmsQuartzAutoStartup;
-	}
-
 	public String getPcmsQuartzTimezone() {
 		return pcmsQuartzTimezone;
 	}
 
 	public void setPcmsQuartzTimezone(String pcmsQuartzTimezone) {
 		this.pcmsQuartzTimezone = pcmsQuartzTimezone;
-	}
-
-	public String getMailReceiverAddress() {
-		return mailReceiverAddress;
-	}
-
-	public void setMailReceiverAddress(String mailReceiverAddress) {
-		this.mailReceiverAddress = mailReceiverAddress;
 	}
 
 	public DataSource getDataSource() {
@@ -676,7 +651,19 @@ public class QuartzConfig {
 	}
 	
 	public void prepareQuartzUser(){
-		Authentication quartzUser = new UsernamePasswordAuthenticationToken(webServiceConfig.getPcmsApiUsername(), null, null);
+		Authentication quartzUser = new UsernamePasswordAuthenticationToken(webServiceConfig.getPcmsApi("USERNAME"), null, null);
 		SecurityContextHolder.getContext().setAuthentication(quartzUser);
+	}
+
+	/**
+	 * @return the quartzSetting
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getQuartzSetting() {
+		return (Map<String, String>) quartzSetting.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getQuartzSetting(String key){
+		return getQuartzSetting().get(key);
 	}
 }

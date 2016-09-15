@@ -71,7 +71,7 @@ public class PaymentPostingService {
 	public void runPaymentPosting() {
 		logger.info("STARTED: runPaymentPosting");
 		try {
-			postPayments(webServiceConfig.getJdeWsUsername());
+			postPayments(webServiceConfig.getWsJde("USERNAME"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

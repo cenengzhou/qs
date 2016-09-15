@@ -6,7 +6,7 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	getJobDates:	getJobDates,
     	updateJobInfo: 	updateJobInfo,
     	updateJobDates:	updateJobDates,
-    	
+    	updateJobInfoAndDates: updateJobInfoAndDates,
     	getJobDetailList: 	getJobDetailList
     });
 	
@@ -59,6 +59,15 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
             url: "service/job/updateJobInfo",
             dataType: "application/json;charset=UTF-8",
             data: job
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function updateJobInfoAndDates(job, jobDates) {
+        var request = $http({
+            method: "post",
+            url: "service/job/updateJobInfoAndDates",
+            data: {job: job, jobDates: jobDates}
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

@@ -113,7 +113,7 @@ public class AttachmentService {
 		if(repackagingEntry == null || !repackagingEntry.getId().equals(repackagingEntryID))
 			repackagingEntry = repackagingEntryDao.getRepackagingEntryWithJob(repackagingEntryID);
 		
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String fileDirectory = repackagingEntry.getJobInfo().getJobNumber()+ "\\" + repackagingEntry.getRepackagingVersion()+"\\";
 		logger.info("fileDirecotry: "+fileDirectory);
 		
@@ -174,7 +174,7 @@ public class AttachmentService {
 		if(attachment == null)
 			return Boolean.FALSE;
 		if(AttachRepackaging.FILE.equals(attachment.getDocumentType())){
-			File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+			File file = new File(serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
 			if(!file.delete())
 				logger.severe("Could not delete file at: " + attachment.getFileLink());
 		}
@@ -188,7 +188,7 @@ public class AttachmentService {
 		long start = System.currentTimeMillis();
 		
 		AttachRepackaging attachment = repackagingAttachmentDao.getRepackagingAttachment(repackagingEntryID, sequenceNo);
-		File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+		File file = new File(serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
 		if(!file.canRead())
 			return null;
 		FileInputStream fin = new FileInputStream(file);
@@ -250,7 +250,7 @@ public class AttachmentService {
 
 		try{
 			//Job Directory Path 
-			String jobDirectoryPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+jobNumber+"\\"; 
+			String jobDirectoryPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+jobNumber+"\\"; 
 			File jobDirectory = new File(jobDirectoryPath);
 			boolean isJobDirectoryExists = (jobDirectory).exists();			
 			
@@ -260,7 +260,7 @@ public class AttachmentService {
 			}
 			
 			//Vendor Directory Path
-			String vendorDirectoryPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getVendorAttachmentsDirectory()+vendorNumber+"\\";
+			String vendorDirectoryPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getVendorAttachmentsDirectory()+vendorNumber+"\\";
 			File vendorDirectory = new File(vendorDirectoryPath);
 			boolean isVendorDirectoryExists = (vendorDirectory).exists();			
 			
@@ -427,7 +427,7 @@ public class AttachmentService {
 
 	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAttachmentList(String nameObject, String textKey) throws Exception{
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String splittedTextKey[]=null;
 		String jobNumber="";
 		String packageNo="";
@@ -564,7 +564,7 @@ public class AttachmentService {
 			});
 			
 			//Set the file link with server path 
-			String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+			String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 			for(AttachSubcontractDetail scDetailsAttachment: resultList){
 				if(scDetailsAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
 					scDetailsAttachment.setFileLink(serverPath + scDetailsAttachment.getFileLink());
@@ -595,7 +595,7 @@ public class AttachmentService {
 		});
 		
 		//Set the file link with server path
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		for(AttachPayment scPaymentAttachment: resultList){
 			if(scPaymentAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
 				scPaymentAttachment.setFileLink(serverPath + scPaymentAttachment.getFileLink());
@@ -615,7 +615,7 @@ public class AttachmentService {
 	}
 
 	public Boolean deleteAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String directoryPath="";
 		if (AttachSubcontract.VendorNameObject.equals(nameObject)){
 			directoryPath =packageWSDao.getSCAttachmentFileLink(nameObject, textKey, sequenceNumber);
@@ -672,7 +672,7 @@ public class AttachmentService {
 		long start = System.currentTimeMillis();
 		
 		AttachmentFile attachmentFile = new AttachmentFile();
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String fileLink;
 		if (AttachSubcontract.VendorNameObject.equals(nameObject)){
 			fileLink = packageWSDao.getSCAttachmentFileLink(nameObject, textKey, sequenceNumber);
@@ -812,7 +812,7 @@ public class AttachmentService {
 	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getAttachmentListForPCMS(String nameObject, String textKey) throws Exception{
 		@SuppressWarnings("unused")
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String splittedTextKey[]=null;
 		String jobNumber="";
 		String packageNo="";
@@ -1002,7 +1002,7 @@ public class AttachmentService {
 		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
 		
 		//prepare file
-		File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+		File file = new File(serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
 		if(!file.canRead())
 			return null;
 		
@@ -1046,7 +1046,7 @@ public class AttachmentService {
 		 * @author koeyyeung
 		 * Remove attachment server path in db
 		 * modified on 27/03/2014**/
-		String serverPath = serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String fileDirectory = mainCert.getJobNo() + "\\" + "MainCert_" + mainCert.getCertificateNumber().toString()+"\\";
 		logger.info("fileDirectory: "+fileDirectory);
 		
@@ -1108,7 +1108,7 @@ public class AttachmentService {
 		for(AttachMainCert attachment:attachments){
 			if(attachment!=null && attachment.getSequenceNo().intValue()==sequenceNo.intValue()){
 				if(AttachMainCert.FILE.equals(attachment.getDocumentType())){
-					File file = new File(serviceConfig.getAttachmentServerPath()+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
+					File file = new File(serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+attachment.getFileLink());
 					if(!file.delete()){
 						logger.info("Could not delete file at: " + attachment.getFileLink());
 						return false;

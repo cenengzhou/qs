@@ -1,8 +1,9 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', '$rootScope',
-                                   function($scope, jobService, modalService, $state, $rootScope) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', '$rootScope', 'GlobalParameter',
+                                   function($scope, jobService, modalService, $state, $rootScope, GlobalParameter) {
 	$rootScope.selectedTips = '';
+	$scope.GlobalParameter = GlobalParameter;
 	loadJobInfo();
-
+	
 	function loadJobInfo() {
 		jobService.getJob($scope.jobNo)
 		.then(
@@ -19,6 +20,12 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					else
 						$scope.job.levyApplicable = false;
 					
+				});
+		jobService.getJobDates($scope.jobNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.jobDates = data;
 				});
 	}
 
@@ -51,15 +58,13 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 			$scope.job.levyCITAPercent = 0;
 			$scope.job.levyPCFBPercent = 0;
 		}
-		console.log($scope.job);
 		
-		updateJobInfo($scope.job);
-		
+		updateJobInfoAndDates($scope.job, $scope.jobDates)
 		
 	};
 	
-	function updateJobInfo(job){
-		jobService.updateJobInfo(job)
+	function updateJobInfoAndDates(job, jobDates){
+		jobService.updateJobInfoAndDates(job, jobDates)
 		.then(
 				function( data ) {
 					if(data.length>0){
@@ -70,6 +75,7 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					}
 				});
 		}
+
 
 }]);
 

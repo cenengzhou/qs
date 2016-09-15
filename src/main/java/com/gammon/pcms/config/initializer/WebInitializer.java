@@ -1,7 +1,6 @@
 package com.gammon.pcms.config.initializer;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.EnumSet;
 import java.util.Properties;
 
@@ -29,13 +28,6 @@ public class WebInitializer extends
 		super.onStartup(servletContext);
 		
 		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR, DispatcherType.ASYNC);
-		
-		DelegatingFilterProxy baseInformationFilter = new DelegatingFilterProxy("baseInformationFilter");
-		baseInformationFilter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
-		baseInformationFilter.setServletContext(servletContext);
-		FilterRegistration.Dynamic baseInformationFilterRegistration = servletContext.addFilter("baseInformationFilter", baseInformationFilter);
-		baseInformationFilterRegistration.setAsyncSupported(true);
-		baseInformationFilterRegistration.addMappingForUrlPatterns(dispatcherTypes, false, "/*");
 
 		OpenSessionInViewFilter hibernateSessionFilter = new OpenSessionInViewFilter();
 		hibernateSessionFilter.setServletContext(servletContext);
@@ -57,7 +49,7 @@ public class WebInitializer extends
 		servletContext.setInitParameter("log4jConfigLocation", "file:"+ System.getProperty("log4j.properties"));
 		servletContext.setInitParameter("log4jRefreshInterval", "300000");
 		servletContext.addListener(Log4jConfigListener.class);
-		PropertyConfigurator.configureAndWatch(System.getProperty("log4j.properties"));
+//		PropertyConfigurator.configureAndWatch(System.getProperty("log4j.properties"));
 		
 		//forward JUL to SLF4J
 		SLF4JBridgeHandler.removeHandlersForRootLogger();

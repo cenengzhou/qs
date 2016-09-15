@@ -260,7 +260,7 @@ public class RepackagingDetailService implements Serializable {
 			if(insertRequest.getSubledger() != null && insertRequest.getSubledger().trim().length() != 0)
 				insertRequest.setSubledgerType("X");
 			insertRequest.setProgramId(WSPrograms.JP59140I_InsertRepackagingBudgetManager);
-			insertRequest.setTransactionOriginator(webServiceConfig.getJdeWsUsername());
+			insertRequest.setTransactionOriginator(webServiceConfig.getWsJde("USERNAME"));
 			insertRequest.setUserId(wsConfig.getUserName());
 			insertRequest.setWorkStationId(environmentConfig.getNodeName());
 			insertRequest.setDateUpdated(postingDate);

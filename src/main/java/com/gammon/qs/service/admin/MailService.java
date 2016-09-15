@@ -61,11 +61,11 @@ public class MailService {
 		try {
 			// Prepare email account
 			Properties properties = new Properties();
-			properties.put("mail.smtp.host", mailConfig.getMailSmtpHost());
+			properties.put("mail.smtp.host", mailConfig.getMailSmtp("HOST"));
 
 			Authenticator authenticator = new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(mailConfig.getMailUser(), mailConfig.getMailPassword());
+					return new PasswordAuthentication(mailConfig.getMailSmtp("USERNAME"), mailConfig.getMailSmtp("PASSWORD"));
 				}
 			};
 
@@ -74,7 +74,7 @@ public class MailService {
 			MimeMessage email = new MimeMessage(session);
 
 			// 2. Set From address
-			InternetAddress addressFrom = new InternetAddress(mailConfig.getMailSmtpSender());
+			InternetAddress addressFrom = new InternetAddress(mailConfig.getMailSmtp("SENDER"));
 			email.setFrom(addressFrom);
 
 			// 3. Set To addresses

@@ -152,7 +152,7 @@ public class ProvisionPostingService {
 		this.startTime = new Date();
 		sendEmailForStartingProvisionPosting();
 		
-		postProvision(null, false, webServiceConfig.getJdeWsUsername());
+		postProvision(null, false, webServiceConfig.getWsJde("USERNAME"));
 
 		this.endTime = new Date();
 		sendEmailForEndingProvisionPosting();

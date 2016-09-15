@@ -149,28 +149,28 @@
 		                         	<li>
 		                                <div class="media bg-grey-light"><i class="fa fa-question text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://helpdesk/helpdesk.aspx?System=QS">Helpdesk</a></div>
+		                                    <div class="title"><a href="{{properties.HELPDESK}}">Helpdesk</a></div>
 		                                    <div class="desc" uib-popover="The fastest way to get help from IMS! Tell us about your problem so we can help ASAP!" popover-trigger="mouseenter" popover-title="Helpdesk">The fastest way to get help from IMS! Tell us about your problem so we can help ASAP!</div>
 		                                </div>
 		                            </li>
 		                             <li>
 		                                <div class="media bg-success-light"><i class="fa fa-book text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://gammon/hk/ims/Pages/QSELearning.aspx">Guidelines</a></div>
+		                                    <div class="title"><a href="{{properties.GUIDE_LINES}}">Guidelines</a></div>
 		                                    <div class="desc" uib-popover="Step-by-Step video to guide you through the core workflows and comprehensive documentation of PCMS" popover-trigger="mouseenter" popover-title="Guidelines">Step-by-Step video to guide you through the core workflows and comprehensive documentation of PCMS</div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                                <div class="media bg-lime-light"><i class="fa fa-bullhorn text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="javascript::;">Announcement</a></div>
+		                                    <div class="title"><a href="{{properties.ANNOUNCEMENT}}">Announcement</a></div>
 		                                    <div class="desc">Description <div class="badge bg-lime-light text-white">Coming soon!</div></div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                                <div class="media bg-primary-light"><i class="fa fa-file-text text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="javascript::;">Forms</a></div>
+		                                    <div class="title"><a href="{{properties.FORMS}}">Forms</a></div>
 		                                    <div class="desc">Description <div class="badge bg-lime-light text-white">Coming soon!</div></div>
 		                                </div>
 		                            </li>
@@ -178,7 +178,7 @@
 		                                <div class="media bg-purple-light"><i class="fa fa-user-plus text-white"></i></div>
 		                                <div class="info">
 		                                    <div class="title">Tips</div>
-		                                    <div class="desc">Description <div class="badge bg-lime-light text-white">Coming soon!</div></div>
+		                                    <div class="desc">Information and tips </div>
 		                                </div>
 		                            </li>
 		                        </ul>
@@ -190,36 +190,70 @@
 		                         	<li>
 		                                <div class="media bg-danger-light"><i class="fa fa-check text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://approval">Approval System</a></div>
+		                                    <div class="title"><a href="{{properties.AP_HOME}}">Approval System</a></div>
 		                                    <div class="desc" uib-popover="To review and enquire Subcontract, Procurement, Subcontract Appraisal Approvals" popover-trigger="mouseenter" popover-title="BMS">To Review and Enquiry Subcontract, Procurement, Subcontract Appraisal Approvals</div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                             	<div class="media bg-warning-light"><i class="fa fa-cog text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://gep">Gammon ERP Portal</a></div>
+		                                    <div class="title"><a href="{{properties.ERP_HOME}}">Gammon ERP Portal</a></div>
 		                                    <div class="desc">Gammon ERP Portal</div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                                <div class="media bg-success-light"><i class="fa fa-leaf text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://jde">JDE</a></div>
+		                                    <div class="title"><a href="{{properties.JDE_HOME}}">JDE</a></div>
 		                                    <div class="desc">Oracle JD Edwards</div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                                <div class="media bg-info-light"><i class="fa fa-file text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://gammon/Pages/BMSHome.aspx">Business Management System</a></div>
+		                                    <div class="title"><a href="{{properties.BMS_HOME}}">Business Management System</a></div>
 		                                    <div class="desc" uib-popover="Documents for Pre-Contract, Project Delivery, Group Wide and Business Support" popover-trigger="mouseenter" popover-title="BMS">Documents for Pre-Contract, Project Delivery, Group Wide and Business Support</div>
 		                                </div>
 		                            </li>
 		                            <li>
 		                             	<div class="media bg-warning-light"><i class="fa fa-plus-square text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="http://gammon/Pages/GammonITSystems1440.aspx">Other Gammon Systems</a></div>
+		                                    <div class="title"><a href="{{properties.OTHER_HOME}}">Other Gammon Systems</a></div>
 		                                    <div class="desc">Full list of Gammon Systems</div>
+		                                </div>
+		                            </li>
+		                        </ul>
+		                    </li>
+		                    <li class="divider"></li>
+			                     <li class="nav-header">System Information</li>
+		                    <li>
+		                        <ul class="notification-list">
+		                         	<li>
+		                                <div class="media bg-lime-light"><i class="fa fa-calendar text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">Deployment Date</div>
+		                                    <div class="desc">{{properties.versionDate}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                             	<div class="media bg-success-light"><i class="fa fa-leaf text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">JDE</div>
+		                                    <div class="desc" uib-popover="{{properties.jdeUrl}}" popover-trigger="mouseenter" popover-title="JDE">{{properties.jdeUrl}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-danger-light"><i class="fa fa-check text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">AP</div>
+		                                    <div class="desc" uib-popover="{{properties.apUrl}}" popover-trigger="mouseenter" popover-title="AP">{{properties.apUrl}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-info-light"><i class="fa fa-unlock-alt text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">GSF</div>
+		                                    <div class="desc" uib-popover="{{properties.gsfUrl}}" popover-trigger="mouseenter" popover-title="GSF">{{properties.gsfUrl}}</div>
 		                                </div>
 		                            </li>
 		                        </ul>

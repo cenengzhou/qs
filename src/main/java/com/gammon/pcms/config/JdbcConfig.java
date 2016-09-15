@@ -1,5 +1,8 @@
 package com.gammon.pcms.config;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -7,65 +10,37 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("file:${jdbc.properties}")
 public class JdbcConfig {
-	@Value("${jdbc.driverClassName}")
-	private String driverClassName;
-	@Value("${jdbc.url}")
-	private String url;
-	@Value("${jdbc.username}")
-	private String username;
-	@Value("${jdbc.password}")
-	private String password;
 
-	@Value("${adl.jdbc.driverClassName}")
-	private String adlDriverClassName;
-	@Value("${adl.jdbc.url}")
-	private String adlUrl;
-	@Value("${adl.jdbc.username}")
-	private String adlUsername;
-	@Value("${adl.jdbc.password}")
-	private String adlPassword;
+	@Autowired
+	private ApplicationConfig applicationConfig;
 	
-	public String getDriverClassName() {
-		return driverClassName;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
+	@Value("#{${pcms.jdbc}}")
+	private Map<String, Object> pcmsJdbc;
+	@Value("#{${adl.jdbc}}")
+	private Map<String, Object> adlJdbc;
+	
 	/**
-	 * @return the adlDriverClassName
+	 * @return the pcmsJdbc
 	 */
-	public String getAdlDriverClassName() {
-		return adlDriverClassName;
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPcmsJdbc() {
+		return (Map<String, String>) pcmsJdbc.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getPcmsJdbc(String key){
+		return getPcmsJdbc().get(key);
+	}
+	
+	/**
+	 * @return the adlJdbc
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getAdlJdbc() {
+		return (Map<String, String>) adlJdbc.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getAdlJdbc(String key){
+		return getAdlJdbc().get(key);
 	}
 
-	/**
-	 * @return the adlUrl
-	 */
-	public String getAdlUrl() {
-		return adlUrl;
-	}
-
-	/**
-	 * @return the adlUsername
-	 */
-	public String getAdlUsername() {
-		return adlUsername;
-	}
-
-	/**
-	 * @return the adlPassword
-	 */
-	public String getAdlPassword() {
-		return adlPassword;
-	}
 }

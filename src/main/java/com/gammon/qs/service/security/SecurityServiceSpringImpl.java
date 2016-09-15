@@ -40,6 +40,6 @@ public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<
 		if(user != null){
 			return getCurrentUser().getUsername();
 		}
-		return webServiceConfig.getApWsUsername();
+		return webServiceConfig.getWsAp("USERNAME");
 	}
 }

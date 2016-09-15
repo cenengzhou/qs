@@ -1,5 +1,6 @@
 package com.gammon.pcms.config;
 
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -29,21 +30,23 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		transactionManagerRef = "adlTransactionManager")
 public class AdlHibernateConfig {
 
-	@Value("${adl.hibernate.default_schema}")
-	private String adl_hibernateDefault_schema;
-
 	@Autowired
 	private JdbcConfig jdbcConfig;
 	@Autowired
 	private HibernateConfig hibernateConfig;
+	@Autowired
+	private ApplicationConfig applicationConfig;
+	
+	@Value("#{${adl.hibernate.schema}}")
+	private Map<String, Object> adlHibernateSchema;
 	
 	@Bean(name = "adlDataSource", destroyMethod = "")
 	public DataSource jdbcDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(jdbcConfig.getAdlDriverClassName());
-		dataSource.setUrl(jdbcConfig.getAdlUrl());
-		dataSource.setUsername(jdbcConfig.getAdlUsername());
-		dataSource.setPassword(jdbcConfig.getAdlPassword());
+		dataSource.setDriverClassName(jdbcConfig.getAdlJdbc("DRIVER"));
+		dataSource.setUrl(jdbcConfig.getAdlJdbc("URL"));
+		dataSource.setUsername(jdbcConfig.getAdlJdbc("USERNAME"));
+		dataSource.setPassword(jdbcConfig.getAdlJdbc("PASSWORD"));
 		return dataSource;
 	}
 
@@ -83,7 +86,7 @@ public class AdlHibernateConfig {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", hibernateConfig.getHibernateHbm2DdlAuto());
 		properties.setProperty("hibernate.dialect", hibernateConfig.getHibernateDialect());
-		properties.setProperty("hibernate.default_schema", adl_hibernateDefault_schema);
+		properties.setProperty("hibernate.default_schema", getAdlHibernateSchema("DEFAULT"));
 		properties.setProperty("hibernate.show_sql", hibernateConfig.getHibernateShow_sql());
 		properties.setProperty("hibernate.max_fetch_depth", hibernateConfig.getHibernateMax_fetch_depth());
 		properties.setProperty("hibernate.format_sql", hibernateConfig.getHibernateFormat_sql());
@@ -94,4 +97,15 @@ public class AdlHibernateConfig {
 		return properties;
 	}
 
+	/**
+	 * @return the adlHibernateSchema
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getAdlHibernateSchema() {
+		return (Map<String, String>) adlHibernateSchema.get(applicationConfig.getDeployEnvironment());
+	}
+
+	public String getAdlHibernateSchema(String key){
+		return getAdlHibernateSchema().get(key);
+	}
 }

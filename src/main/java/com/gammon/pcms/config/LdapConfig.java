@@ -1,5 +1,8 @@
 package com.gammon.pcms.config;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -8,25 +11,21 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("file:${ldap.properties}")
 public class LdapConfig {
 
-	@Value("${ldap.server.url}")
-	private String ldapServerUrl;
-	@Value("${ldap.server.base}")
-	private String ldapServerBase;
-	@Value("${ldap.server.username}")
-	private String ldapServerUsername;
-	@Value("${ldap.server.password}")
-	private String ldapServerPassword;
+	@Autowired
+	private ApplicationConfig applicationConfig;
 	
-	public String getLdapServerUrl() {
-		return ldapServerUrl;
+	@Value("#{${ldap.server}}")
+	private Map<String, Object> ldapServer;
+
+	/**
+	 * @return the ldapServer
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getLdapServer() {
+		return (Map<String, String>) ldapServer.get(applicationConfig.getDeployEnvironment());
 	}
-	public String getLdapServerBase() {
-		return ldapServerBase;
+	
+	public String getLdapServer(String key){
+		return getLdapServer().get(key);
 	}
-	public String getLdapServerUsername() {
-		return ldapServerUsername;
-	}
-	public String getLdapServerPassword() {
-		return ldapServerPassword;
-	}	
 }

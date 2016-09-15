@@ -1,5 +1,5 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', '$rootScope',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, $rootScope) {
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', '$rootScope', 'repackagingService',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, $rootScope, repackagingService) {
 	$rootScope.selectedTips = '';
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
@@ -8,11 +8,31 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	];
 
 	loadData();
+	$scope.repackaging = {};
+	function getLatestRepackaging() {
+		repackagingService.getLatestRepackaging($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data != null){
+						$scope.repackaging = data;
+					}
+				});
 
+	}
+	
+	function isRepackagingLocked(){
+		if($scope.repackaging.status === '900') {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_LOCK_REPACKAGING);
+			return true;
+		}
+	}
+	
+	getLatestRepackaging();
 	$scope.gridDirtyRows = [];
 	$scope.resetData = [];
 	$scope.statusArray = [];
 	var MSG_ZERO_AMOUNT = 'Amount of this resource is zero';
+	var MSG_LOCK_REPACKAGING = 'Please lock the resources in Repackaging before updating Internal Valuation';
 	var MSG_UPDATE_SUBCONTRACT_DETAILS = 'Please update IV for this resource in the subcontract details section';
 	var MSG_GREATER_THEN_BUDGET = 'Cumulative IV Amount cannot be greater than budget amount';
 	var MSG_IMPORT_OBJECT_NOT_FOUND = 'Import object not found';
@@ -26,6 +46,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var STATUS_NOCHANGE = 'No Change';
 	
     $scope.importData = function(grid, newObjects){
+		if(isRepackagingLocked()){
+			return;
+		}
     	var importArray = [];
     	$scope.statusArray = [];
     	newObjects.forEach(function(importObj){
@@ -108,7 +131,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     	parseType('String', obj.packageNo) + '-' + 
     	parseType('String', obj.objectCode) + '-' + 
 		parseType('String', obj.subsidiaryCode) + '-' + 
-		parseType('String', obj.resourceDescription.replace(/[\r\n]/g, '')) + '-' + 
+		parseType('String', (obj.resourceDescription+'').replace(/[\r\n]/g, '')) + '-' + 
 		parseType('String', obj.unit) + '-' + 
 		obj.rate + '@');
     }
@@ -259,6 +282,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
 		$scope.importAction = $scope.gridApi.importer.importFile;
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(isRepackagingLocked()){
+				return;
+			}
 			if(validateAmountBudgetEqZero(rowEntity)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_ZERO_AMOUNT);
 				return;

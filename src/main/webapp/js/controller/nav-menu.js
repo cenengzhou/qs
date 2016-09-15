@@ -50,10 +50,12 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.currentPath = $location.path();
 
 	$scope.getCurrentUser = function(){
+		if($rootScope.user === undefined)
 		$http.get('service/security/getCurrentUser')
 		.then(function(response){
 			if(response.data instanceof Object){
 				$scope.user = response.data;
+				$rootScope.user = $scope.user;
 				$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $scope.user.UserRoles);
 				$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $scope.user.UserRoles);
 				if($rootScope.showQSAdmin || $rootScope.showIMSAdmin){
@@ -288,6 +290,17 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		modalService.open('lg', 'view/infotips-modal.html', 'InfoTipsCtrl', 'Success', $scope ); 
 	}
 
+	$scope.loadProperties = function(){
+		if($rootScope.properties === undefined)
+		$http.post('service/properties/getProperties')
+		.then(function(response){
+    		$scope.properties = response.data;
+    		$rootScope.properties = $scope.properties;
+    	}, function(error){
+    		console.dir(error);
+    	});
+	}
+	$scope.loadProperties();
 	//	$scope.filter = function() {
 //		$scope.ObjectCodeGridApi.grid.refresh();
 //		$scope.SubsidiaryCodeGridApi.grid.refresh();
