@@ -264,12 +264,9 @@ public class AddendumService{
 					//Delete Pending Payment
 					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
-						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+						paymentCertHBDao.delete(paymentCert);
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-						paymentCertHBDao.delete(paymentCert);
-
-						logger.info("Deleting pending payment");
-						paymentCertHBDao.delete(paymentCert);
+						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
 					}
 					
 					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
@@ -335,12 +332,9 @@ public class AddendumService{
 					//Delete Pending Payment
 					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+						paymentCertHBDao.delete(paymentCert);
 						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-						paymentCertHBDao.delete(paymentCert);
-
-						logger.info("Deleting pending payment");
-						paymentCertHBDao.delete(paymentCert);
 					}
 					
 					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
@@ -831,12 +825,10 @@ public class AddendumService{
 			//Delete Pending Payment
 			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				paymentCertHBDao.delete(paymentCert);
 				attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
 				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-				paymentCertHBDao.delete(paymentCert);
-
-				logger.info("Deleting pending payment");
-				paymentCertHBDao.delete(paymentCert);
+				
 			}
 
 			int sequenceNo = subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(jobNo, subcontractNo)+1;

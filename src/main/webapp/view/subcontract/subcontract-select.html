@@ -82,7 +82,7 @@
 					</a>
 					<div class="box-footer no-padding">
 						<ul class="nav nav-stacked">
-							<li><a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description)">{{sc.vendorName}}<span
+							<li><a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description)">{{sc.nameSubcontractor}}<span
 									class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
 						</ul>
 					</div>
@@ -107,6 +107,9 @@
 								<b>{{sc.packageNo}}</b>
 								<small><span class="pull-right badge">{{sc.originalSubcontractSum | currency}}</span></small>
 							</h3>
+							<h3 class="sc-panel-name">
+								<small><span class="pull-right badge">{{sc.paymentTerms}}</span></small>
+							</h3>
 							<h5 class="sc-panel-desc">
 								{{sc.description}}
 							</h5>
@@ -114,7 +117,7 @@
 					</a>
 					<div class="box-footer no-padding">
 						<ul class="nav nav-stacked">
-							<li><a ui-sref="subcontract-award.hearder" ng-click="updateSubcontract(sc.packageNo, sc.description)">{{sc.vendorName}}<span
+							<li><a ui-sref="subcontract-award.hearder" ng-click="updateSubcontract(sc.packageNo, sc.description)">{{sc.nameSubcontractor}}<span
 									class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
 						</ul>
 					</div>

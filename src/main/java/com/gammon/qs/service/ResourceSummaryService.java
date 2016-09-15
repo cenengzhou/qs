@@ -310,11 +310,13 @@ public class ResourceSummaryService implements Serializable {
 								//reset vendorNo in scPackage
 								scPackage.setVendorNo(null);
 							}
-							
-							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-							
-							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-							scPaymentCertHBDao.delete(latestPaymentCert);
+
+
+							scPaymentCertHBDao.delete(latestPaymentCert);							logger.info("delete payment cert");
+							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());							logger.info("delete payment cert detail");
+							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());							logger.info("delete payment attach");
+	
+
 							scPackageDao.update(scPackage);
 							
 							//Reset cumCertQuantity in ScDetail
@@ -1354,10 +1356,10 @@ public class ResourceSummaryService implements Serializable {
 								scPackage.setVendorNo(null);
 							}
 							
-							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-							
-							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 							scPaymentCertHBDao.delete(latestPaymentCert);
+							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+							
 							scPackageDao.update(scPackage);
 							
 							//Reset cumCertQuantity in ScDetail

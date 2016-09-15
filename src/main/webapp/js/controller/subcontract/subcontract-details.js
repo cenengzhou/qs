@@ -16,8 +16,8 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 			showColumnFooter : false,
 			//fastWatch : true,
 
-			enableCellEditOnFocus : true,
-
+			exporterMenuPdf: false,
+			
 			//Single Filter
 			onRegisterApi: function(gridApi){
 				$scope.gridApi = gridApi;
@@ -39,7 +39,6 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150},
 			             {field: 'amountSubcontract', displayName: "SC Amount", width: 150},
-			             {field: 'amountSubcontractTBA', displayName: "TBA Amount", width: 150},
 
 			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 150},
 			             { field: 'amountPostedWD', displayName: "Posted WD Amount", width: 150},

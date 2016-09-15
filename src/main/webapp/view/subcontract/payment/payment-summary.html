@@ -26,7 +26,7 @@
 											</canvas>
 					</div>
 					<div class="col-md-6">
-						<ul class="chart-legend clearfix">
+						<ul class="chart-legend clearfix text-left">
 							<li class="col-md-12">
 									<label>Total:
 										{{overallChart.data[0] + overallChart.data[1] | currency}}</label></li>
@@ -73,21 +73,21 @@
 											</canvas>
 					</div>
 					<div class="col-md-6">
-						<ul class="chart-legend clearfix">
-							<li class="col-md-12"><i class="fa fa-circle text-primary"></i>
+						<ul class="chart-legend text-left">
+							<li class="col-md-12"><i class="fa fa-circle text-primary-light"></i>
 								<label>{{cumPaymentResourceDistributionChart.labels[0]}}:
 									{{cumPaymentResourceDistributionChart.data[0] | currency}}</label></li>
-							<li class="col-md-12"><i class="fa fa-circle text-danger"></i>
+							<li class="col-md-12"><i class="fa fa-circle text-danger-light"></i>
 								<label>{{cumPaymentResourceDistributionChart.labels[1]}}:
 									{{cumPaymentResourceDistributionChart.data[1] | currency}}</label></li>
-							<li class="col-md-12"><i class="fa fa-circle text-warning"></i>
+							<li class="col-md-12"><i class="fa fa-circle text-warning-light"></i>
 								<label>{{cumPaymentResourceDistributionChart.labels[2]}}:
 									{{cumPaymentResourceDistributionChart.data[2] | currency}}</label></li>
-							<li class="col-md-12"><i class="fa fa-circle text-success"></i>
+							<li class="col-md-12"><i class="fa fa-circle text-success-light"></i>
 								<label>{{cumPaymentResourceDistributionChart.labels[3]}}:
 									{{cumPaymentResourceDistributionChart.data[3] | currency}}</label></li>
-							<li class="col-md-12"><i
-								class="fa fa-circle text-purple-light"></i> <label>{{cumPaymentResourceDistributionChart.labels[4]}}:
+							<li class="col-md-12"><i class="fa fa-circle text-purple-light"></i> 
+								<label>{{cumPaymentResourceDistributionChart.labels[4]}}:
 									{{cumPaymentResourceDistributionChart.data[4] | currency}}</label></li>
 							<li class="col-md-12"><i class="fa fa-circle text-muted"></i>
 								<label>{{cumPaymentResourceDistributionChart.labels[5]}}:
@@ -130,7 +130,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{bqChart.data[0] + bqChart.data[1] | currency}}</label></li>
@@ -175,7 +175,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{voChart.data[0] + voChart.data[1] | currency}}</label></li>
@@ -206,7 +206,7 @@
 							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 					</div>
 					<h4 class="panel-title">
-						Others (L1, L2, D1, D2, OA, CF)
+						Others (OA, CF)
 					</h4>
 				</div>
 				<div class="panel-body">
@@ -220,7 +220,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{othersChart.data[0] + othersChart.data[1] | currency}}</label></li>
@@ -265,7 +265,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{advancedChart.data[0] + advancedChart.data[1] | currency}}</label></li>
@@ -310,7 +310,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{retentionChart.data[0] + retentionChart.data[1] | currency}}</label></li>
@@ -355,7 +355,7 @@
 											</canvas>
 						</div>
 						<div class="col-md-6">
-							<ul class="chart-legend clearfix">
+							<ul class="chart-legend clearfix text-left">
 								<li class="col-md-12">
 									<label>Total:
 										{{ccChart.data[0] + ccChart.data[1] | currency}}</label></li>

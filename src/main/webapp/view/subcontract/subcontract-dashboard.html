@@ -23,8 +23,9 @@
 					<h3 class="panel-title">
 						<b>Subcontract {{subcontractNo}} - </b>{{subcontractDescription}}
 					</h3>
-					<h3 class="panel-title">Payment Terms:
-						{{subcontract.paymentTerms}}</h3>
+					<h3 class="panel-title">Payment Terms: {{subcontract.paymentTerms}}</h3>
+					<h3 class="panel-title" ng-show="subcontract.paymentStatus == 'F'"><b>Finalized</b></h3>
+						
 				</div>
 				<div class="panel-body">
 					<div class="panel-option bg-white">

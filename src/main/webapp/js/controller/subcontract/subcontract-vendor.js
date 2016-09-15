@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', '$http', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'uiGridConstants',
-                                         function($scope, subcontractService, $http, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage, uiGridConstants) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage',
+                                         function($scope, subcontractService, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage) {
 	
 	loadData();
 

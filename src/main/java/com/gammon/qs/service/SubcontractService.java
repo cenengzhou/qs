@@ -1418,13 +1418,11 @@ public class SubcontractService {
 				
 				if(latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 					//Delete Pending Payment
-					
+
+					paymentCertHBDao.delete(latestPaymentCert);
 					attachmentPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
 					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-					paymentCertHBDao.delete(latestPaymentCert);
 					
-					logger.info("Deleting pending payment");
-					paymentCertHBDao.delete(latestPaymentCert);
 					subcontractHBDao.update(scPackage);
 					
 					//Reset cumCertQuantity in ScDetail

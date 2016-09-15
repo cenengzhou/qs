@@ -284,7 +284,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		long noOfRecord = 0;
 		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
 		getSession().merge(obtainSCPaymentDetailBySCPaymentCert(paymentCert));
-		Query query = getSession().createQuery("delete from PaymentDetail paymentDetail where Payment_Cert_ID =" + paymentCert.getId());
+		Query query = getSession().createQuery("delete from PaymentCertDetail paymentCertDetail where Payment_Cert_ID =" + paymentCert.getId());
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}
@@ -292,7 +292,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	public long deleteDetailByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		getSession().clear();
-		Query query = getSession().createQuery("delete from PaymentDetail paymentDetail where Payment_Cert_ID =" + paymentCertID);
+		Query query = getSession().createQuery("delete from PaymentCertDetail paymentCertDetail where Payment_Cert_ID =" + paymentCertID);
 		noOfRecord = query.executeUpdate();
 		return noOfRecord;
 	}

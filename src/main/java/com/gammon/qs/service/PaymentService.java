@@ -1659,9 +1659,10 @@ public class PaymentService{
 		
 		try {
 
+			paymentCertDao.deleteById(scPaymentCert.getId());
 			paymentAttachmentDao.deleteAttachmentByByPaymentCertID(scPaymentCert.getId());
 			paymentDetailDao.deleteDetailByPaymentCertID(scPaymentCert.getId());
-			paymentCertDao.deleteById(scPaymentCert.getId());
+			
 			
 			//Reset cumCertQuantity in ScDetail
 			List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNo, packageNo);

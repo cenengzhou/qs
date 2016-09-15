@@ -420,6 +420,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		return criteria.uniqueResult() == null ? 0.0 : (Double) criteria.uniqueResult();
 	}
 	
+	
 	private Date obtainDateStart(Date date) {
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(date);

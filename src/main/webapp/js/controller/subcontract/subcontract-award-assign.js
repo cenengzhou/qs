@@ -46,21 +46,72 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 				row.entity.packageNo = '';
 			}
 		});
-		
-		/*gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-
-			if(newValue!= null && newValue.length !=0  &&  newValue!= parseInt($scope.subcontractNo)){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources can be assigned to the current subcontract only.");
-				return;
-			}
-		});*/
 
 	}
 
-     
-	$scope.filter = function() {
-		$scope.gridApi.grid.refresh();
+	//Open Window
+	$scope.open = function(view){
+
+		if(view=="split"){
+			var valid = validate(view);
+			if(valid){
+				var selectedRows = $scope.gridApi.selection.getSelectedRows();
+				modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl', 'Split', selectedRows);
+			}
+		}else if (view=="merge"){
+			var valid = validate(view);
+			if(valid){
+				var selectedRows = $scope.gridApi.selection.getSelectedRows();
+				modalService.open('lg', 'view/repackaging/modal/repackaging-split.html', 'RepackagingSplitModalCtrl' , 'Merge', selectedRows);
+			}
+		}else if (view=="add"){
+			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl');
+		}
 	};
+     
+	
+	var validate = function(action){
+		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+		if(action == 'split' && selectedRows.length != 1){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please only select 1 row to split.");
+			return false;
+		}
+		else if(action == 'merge' && selectedRows.length < 2){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select at least 2 rows to merge.");
+			return false;
+		}
+		
+		var resourceType = '-';
+		for (i in selectedRows){
+			if(resourceType == '-'){
+				resourceType = selectedRows[i]['resourceType'];
+			}
+			if(selectedRows[i]['resourceType'] != resourceType){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources cannot be merged - resources must have the same type.");
+				return false;
+			}
+			/*if (selectedRows[i]['packageNo'] != null && selectedRows[i]['packageNo'].length > 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
+				return false;
+			}*/
+			if (selectedRows[i]['postedIVAmount'] != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	$scope.deleteResources = function(){
+		var selectedRows = $scope.gridApi.selection.getSelectedRows();
+		console.log(selectedRows);
+		if(selectedRows.length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select resources to delete.");
+			return;
+		}
+		deleteResources(selectedRows);
+	}
 	
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
@@ -133,6 +184,19 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
+						$state.reload();
+					}
+				});
+	}
+	
+	function deleteResources(rowsToDelete) {
+		resourceSummaryService.deleteResources(rowsToDelete)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been deleted.");
 						$state.reload();
 					}
 				});

@@ -485,9 +485,10 @@ public class TenderService implements Serializable {
 				&& latestPaymentCert.getDirectPayment().equals("Y") 
 				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 
+			paymentCertDao.deleteById(latestPaymentCert.getId());
 			attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
 			paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-			paymentCertDao.deleteById(latestPaymentCert.getId());
+			
 
 			//Reset cumCertQuantity in ScDetail
 			List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(jobNumber, packageNo);
@@ -839,9 +840,10 @@ public class TenderService implements Serializable {
 					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 					if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 						//Delete Pending Payment
+						paymentCertDao.delete(latestPaymentCert);
 						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
 						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-						paymentCertDao.delete(latestPaymentCert);
+						
 						subcontractDao.update(scPackage);
 						
 						//Reset cumCertQuantity in ScDetail

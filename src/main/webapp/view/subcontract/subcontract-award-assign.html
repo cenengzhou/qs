@@ -1,4 +1,40 @@
 <div class="animated fadeIn">
+	<h6 class="text-red"><span class="icofont icofont-star"></span>Please "Tick" to assign resources to subcontract.</h6>
+
+	<div class="row m-b-10">
+
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<button type="button" class="btn btn-lg btn-block btn-primary"
+				ng-click="open('split')">
+				<i class="fa fa-unlink"></i> <small>Split</small>
+			</button>
+			<!-- <a class="btn btn-lg btn-block bg-aqua-gradient">
+				                    <i class="fa fa-unlink"></i> Split
+				                  </a> -->
+		</div>
+
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<button type="button" class="btn btn-lg btn-block btn-warning"
+				ng-click="open('merge')">
+				<i class="fa fa-link"></i> <small>Merge</small>
+			</button>
+		</div>
+
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<button type="button" class="btn btn-lg btn-block btn-danger"
+				ng-click="open('add')">
+				<i class="fa fa-plus-circle"></i> <small>Add</small>
+			</button>
+		</div>
+
+		<div class="col-md-3 col-sm-6 col-xs-12">
+			<button type="button" class="btn btn-lg btn-block btn-success"
+				ng-click="deleteResources()">
+				<i class="fa fa-remove"></i> <small>Delete</small>
+			</button>
+		</div>
+	</div>
+
 
 	<div class="row">
 		<div class="col-md-12">
