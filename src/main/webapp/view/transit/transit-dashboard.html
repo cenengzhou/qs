@@ -11,7 +11,7 @@
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1>
 
-	<div class="row" block-ui="blockStepBar">
+	<div class="row">
 		<div class="col-md-12">
 			<div class="box  box-default">
 				<div class="box-header with-border">
@@ -162,13 +162,12 @@
 		</div>
 	</div>
 
-	<div class="col-md-12" ng-if="showPanel === 'viewBq'"
-		block-ui="blockBqGrid">
+	<div class="col-md-12" ng-if="showPanel === 'viewBq'">
 
 		<div class="row">
 			<div id="bqGrid" name="bqGrid" ui-grid="bqGridOptions"
 				external-scopes="clickHandler" ui-grid-exporter ui-grid-selection
-				ui-grid-resize-columns="true" ui-grid-selection
+				ui-grid-resize-columns="true" ui-grid-selection ui-grid-grouping
 				ui-grid-cellnav ui-grid-edit class="grid col-md-12" resize
 				ng-style="resizeWithOffset(310)"></div>
 		</div>
@@ -193,8 +192,7 @@
 
 	</div>
 
-	<div class="col-md-12" ng-if="showPanel === 'viewResources'"
-		block-ui="blockResourceGrid">
+	<div class="col-md-12" ng-if="showPanel === 'viewResources'">
 <div class="row" ng-show="resourceEdit">
 		<form role="form" name="applyForm" ng-submit="applyForm.$valid && onResourceApplyChange(resourceApplyOptions[resourceApplyTo].value, resourceApplyToText)">
 		<fieldset>
@@ -229,7 +227,7 @@
 		<div class="row">
 			<div id="resourcesGrid" name="resourcesGrid"
 				ui-grid="resourcesGridOptions" external-scopes="clickHandler"
-				ui-grid-exporter ui-grid-selection
+				ui-grid-exporter ui-grid-selection ui-grid-grouping
 				ui-grid-resize-columns="true" ui-grid-selection ui-grid-cellnav
 				ui-grid-edit ui-grid-row-edit class="grid col-md-12" resize
 				ng-style="resizeWithOffset(335)"></div>

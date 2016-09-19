@@ -26,7 +26,7 @@ from
 	where 
 	u.SYSTEM_STATUS = 'ACTIVE' and
 	ua.name like 'JOB%' or
-	ua.name in('ROLE_QS_ENQUIRY', 'ROLE_QS_QS', 'ROLE_QS_APPROVER', 'ROLE_QS_IMS_ADM')
+	ua.name in('ROLE_QS_ENQUIRY', 'ROLE_QS_QS', 'ROLE_QS_APPROVER', 'ROLE_QS_IMS_ADM', 'ROLE_QS_ADMIN')
 	) QS
 	left join (
 		SELECT 'ROLE_QS_ENQUIRY' as QS_ROLE , 'ROLE_PCMS_ENQ' as PCMS_ROLE FROM DUAL UNION
