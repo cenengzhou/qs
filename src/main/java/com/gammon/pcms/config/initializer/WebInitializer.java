@@ -9,10 +9,8 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import org.springframework.web.util.Log4jConfigListener;

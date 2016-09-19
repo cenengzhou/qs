@@ -203,6 +203,7 @@
         paymentCertNo varchar2(5 char),
         subsidiaryCode varchar2(8 char),
         SUBCONTRACT_DETAIL_ID number(19,0),
+        DESCRIPTION varchar2(255 char),
         CONSTRAINT PAYMENT_CERT_DETAIL_AUDIT_PK primary key (Payment_Cert_ID, scSeqNo, REV)
     );
 

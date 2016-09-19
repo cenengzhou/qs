@@ -46,8 +46,6 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	private Map<String, Object> wsGsf;
 	@Value("#{${pcms.api}}")
 	private Map<String, Object> pcmsApi;
-	@Value("#{${pcms.link}}")
-	private Map<String, Object> pcmsLink;
 
 	@Value("${qs.keystore}")
 	private String qsKeystore;
@@ -210,18 +208,6 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 
 	public String getPcmsApi(String key){
 		return getPcmsApi().get(key);
-	}
-	
-	/**
-	 * @return the pcmsLink
-	 */
-	@SuppressWarnings("unchecked")
-	public Map<String, String> getPcmsLink() {
-		return (Map<String, String>) pcmsLink.get(applicationConfig.getDeployEnvironment());
-	}
-	
-	public String getPcmsLink(String key){
-		return getPcmsLink().get(key);
 	}
 	
 	/**
