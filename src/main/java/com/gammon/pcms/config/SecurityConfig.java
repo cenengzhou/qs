@@ -1,6 +1,7 @@
 package com.gammon.pcms.config;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -61,6 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private LdapConfig ldapConfig;
 	@Autowired
 	private WebServiceConfig webServiceConfig;
+	@Autowired
+	private ApplicationConfig applicationConfig;
 	
 	@Value("${spring.security.debug}")
 	private String springSecurityDebug;
@@ -68,30 +71,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String loginPath;
 
 	// Role
-	@Value("${role.pcms.ws}")
-	private String rolePcmsWs;
-	@Value("${role.pcms.api}")
-	private String rolePcmsApi;
-	@Value("${role.pcms.enq}")
-	private String rolePcmsEnq;
-	@Value("${role.pcms.ims.enq}")
-	private String rolePcmsImsEnq;
-	@Value("${role.pcms.ims.admin}")
-	private String rolePcmsImsAdmin;
-	@Value("${role.pcms.qs}")
-	private String rolePcmsQs;
-	@Value("${role.pcms.qs.admin}")
-	private String rolePcmsQsAdmin;
-	@Value("${role.pcms.qs.reviewer}")
-	private String rolePcmsQsReviewer;
-	@Value("${role.pcms.job.all}")
-	private String rolePcmsJobAll;
-	@Value("${role.pcms.job.hkg}")
-	private String rolePcmsJobHkg;
+	@Value("#{${pcms.role}}")
+	private Map<String, String> pcmsRole;
+	@Value("#{${pcms.job}}")
+	private Map<String, String> pcmsJob;
 		
 	// Kerberos
-	@Value("${kerberos.service-principal}")
-	private String kerberosServicePrincipal;
+	@Value("#{${kerberos.service-principal}}")
+	private Map<String, String> kerberosServicePrincipal;
 	@Value("${kerberos.keytab-location}")
 	private String kerberosKeytabLocation;
 	@Value("${kerberos.debug}")
@@ -357,15 +344,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	public String getRolePcmsWs() {
-		return rolePcmsWs;
+		return getPcmsRole("WS");
 	}
 
-	public String getRolePcmsApi() {
-		return rolePcmsApi;
-	}
 
 	public String getKerberosServicePrincipal() {
-		return kerberosServicePrincipal;
+		return kerberosServicePrincipal.get(applicationConfig.getDeployEnvironment());
 	}
 
 	public String getKerberosKeytabLocation() {
@@ -387,55 +371,71 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * @return the rolePcmsEnq
 	 */
 	public String getRolePcmsEnq() {
-		return rolePcmsEnq;
+		return getPcmsRole("ENQ");
 	}
 
 	/**
 	 * @return the rolePcmsImsEnq
 	 */
 	public String getRolePcmsImsEnq() {
-		return rolePcmsImsEnq;
+		return getPcmsRole("IMS_ENQ");
 	}
 
 	/**
 	 * @return the rolePcmsImsAdmin
 	 */
 	public String getRolePcmsImsAdmin() {
-		return rolePcmsImsAdmin;
+		return getPcmsRole("IMS_ADMIN");
 	}
 
 	/**
 	 * @return the rolePcmsQs
 	 */
 	public String getRolePcmsQs() {
-		return rolePcmsQs;
+		return getPcmsRole("QS");
 	}
 
 	/**
 	 * @return the rolePcmsQsAdmin
 	 */
 	public String getRolePcmsQsAdmin() {
-		return rolePcmsQsAdmin;
+		return getPcmsRole("QS_ADMIN");
 	}
 
 	/**
 	 * @return the rolePcmsQsReviewer
 	 */
 	public String getRolePcmsQsReviewer() {
-		return rolePcmsQsReviewer;
+		return getPcmsRole("QS_REVIEWER");
 	}
 
 	/**
 	 * @return the rolePcmsJobAll
 	 */
 	public String getRolePcmsJobAll() {
-		return rolePcmsJobAll;
+		return getPcmsJob("ALL");
 	}
 
 	/**
-	 * @return the rolePcmsJobHkg
+	 * @return the pcmsRole
 	 */
-	public String getRolePcmsJobHkg() {
-		return rolePcmsJobHkg;
+	public Map<String, String> getPcmsRole() {
+		return pcmsRole;
 	}
+
+	public String getPcmsRole(String key){
+		return getPcmsRole().get(key);
+	}
+	
+	/**
+	 * @return the pcmsJob
+	 */
+	public Map<String, String> getPcmsJob() {
+		return pcmsJob;
+	}
+	
+	public String getPcmsJob(String key){
+		return getPcmsJob().get(key);
+	}
+
 }

@@ -41,7 +41,11 @@ drop table "PCMSDATAUAT".QS_SC_DETAILS_CONTROL;
 drop table "PCMSDATAUAT".QS_SCPAYMENT_CERT_CONTROL;
 drop table "PCMSDATAUAT".QS_SCPAYMENT_DETAIL_CONTROL;
 --34 tables starting with 'QS_*' remaining
+select count(*) from SYS.ALL_TABLES where 
+OWNER = 'PCMSDATAUAT'TABLE_NAME like 'QS%';
 --11 tables starting with 'QRTZ_*' remaining
+select count(*) from SYS.ALL_TABLES where 
+OWNER = 'PCMSDATAUAT' and TABLE_NAME like 'QRTZ%';
 
 -- drop 12 unncessary sequences (originally have 38 sequences)
 drop sequence "PCMSDATAUAT".QS_TERM_VARIANCES_SEQ;
@@ -58,3 +62,5 @@ drop sequence "PCMSDATAUAT".QS_SC_DETAILS_CONTROL_SEQ;
 drop sequence "PCMSDATAUAT".QS_SC_PAYMENT_CERT_CONTROL_SEQ;
 drop sequence "PCMSDATAUAT".QS_SC_PAYMENT_DETAIL_CTL_SEQ;
 -- 26 sequences remaining
+select count(*) from SYS.ALL_SEQUENCES 
+where SEQUENCE_OWNER = 'PCMSDATAUAT' or SEQUENCE_NAME = 'MAIN_CONTRACT_CERTIFICATE_SEQ'

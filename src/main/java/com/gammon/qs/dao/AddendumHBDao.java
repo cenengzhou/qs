@@ -7,6 +7,7 @@
 package com.gammon.qs.dao;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -60,7 +61,7 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 		
 		criteria.setProjection(Projections.sum("amtAddendum"));
 		
-		return criteria.uniqueResult() == null ? 0.0 : (Double) criteria.uniqueResult();
+		return criteria.uniqueResult() == null ? 0.0 : ((BigDecimal)criteria.uniqueResult()).doubleValue();
 	}
 
 	

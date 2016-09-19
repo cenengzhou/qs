@@ -21,7 +21,7 @@ import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsEnq()) or (principal.user.username == @webServiceConfig.pcmsApiUsername())")
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsEnq()) or (principal.user.username == @webServiceConfig.getPcmsApi(\"USERNAME\"))")
 @RequestMapping(value = "service/audithousekeep/")
 public class AuditHousekeepController {
 

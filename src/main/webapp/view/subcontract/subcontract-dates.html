@@ -146,31 +146,31 @@
 	                <div class="box-body box-profile">
 	                  <ul class="list-group list-group-unbordered">
 	                    <li class="list-group-item">
-	                      <b>Subcontract Created Date</b> <b class="pull-right">{{subcontract.subcontractCreatedDate | date}}</b>
+	                      <b>Subcontract Created Date</b> <b class="pull-right">{{subcontract.createdDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Subcontract Award Approval Request Sent out Date</b> <b class="pull-right">{{subcontract.subcontractAwardApprovalRequestSentOutDate | date}}</b>
+	                      <b>Subcontract Award Approval Request Sent out Date</b> <b class="pull-right">{{subcontract.scAwardApprovalRequestSentDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Subcontract Award Approval Date</b> <b class="pull-right">{{subcontract.subcontractAwardApprovalDate | date}}</b>
+	                      <b>Subcontract Award Approval Date</b> <b class="pull-right">{{subcontract.scApprovalDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                     <li class="list-group-item">
-	                      <b>Latest Addendum Approval Date</b> <b class="pull-right">{{subcontract.latestAddendumApprovalDate | date}}</b>
+	                      <b>Latest Addendum Approval Date</b> <b class="pull-right">{{subcontract.latestAddendumValueUpdatedDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>1st Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.firstPaymentCertificateIssuedDate | date}}</b>
+	                      <b>1st Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.firstPaymentCertIssuedDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Latest Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.latestPaymentCertificateIssuedDate | date}}</b>
+	                      <b>Latest Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.lastPaymentCertIssuedDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                    <li class="list-group-item">
-	                      <b>Final Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.finalPaymentCertificateIssuedDate | date}}</b>
+	                      <b>Final Payment Certificate Issued Date</b> <b class="pull-right">{{subcontract.finalPaymentIssuedDate | date:GlobalParameter.DATE_FORMAT}}</b>
 	                    </li>
 	                    
 	                  </ul>

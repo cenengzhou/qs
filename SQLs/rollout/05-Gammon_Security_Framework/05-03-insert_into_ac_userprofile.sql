@@ -25,7 +25,7 @@ USERNAME)
 	case 
 		when FULLNAME is not null then FULLNAME 
 		else USERNAME END as USERNAME
-	from QSADMINUAT.QS_APP_USER
+	from QSADMIN.QS_APP_USER
 	where
 	SYSTEM_STATUS = 'ACTIVE'
 	and 'gamska\'||username not in (select useradaccount from ACDATAUAT.AC_USERPROFILE)
