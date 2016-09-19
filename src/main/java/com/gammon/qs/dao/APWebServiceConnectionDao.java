@@ -68,5 +68,20 @@ public class APWebServiceConnectionDao {
 			
 		}
 	}
-
+	
+	public String createApprovalRoute(ApprovalServiceRequest requestObj){
+		ApprovalServiceResponse responseObj = (ApprovalServiceResponse)	createApprovalRouteWebServiceTemplate.marshalSendAndReceive(requestObj,
+				new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
+		if (responseObj.isValid())
+			return "";
+		String errorMsg = "";
+		if(responseObj.getErrorList() != null){
+			for (int i=0;i<responseObj.getErrorList().size();i++) {
+				errorMsg+="Error Message (Index "+i+") in Error List "+responseObj.getErrorList().get(i);
+				if (i!=responseObj.getErrorList().size()-1)
+					errorMsg+=", ";
+			}
+		}
+		return errorMsg;
+	}
 }

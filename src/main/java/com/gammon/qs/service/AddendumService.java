@@ -19,6 +19,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.jde.webservice.serviceRequester.approvalRequest.ApprovalServiceRequest;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -793,8 +794,20 @@ public class AddendumService{
 				// added by brian on 20110401 - end
 
 				if(resultMsg == null || resultMsg.length()==0){
-					resultMsg = apWebServiceConnectionDao.createApprovalRoute(company, noJob, noSubcontract.toString(), vendorNo, vendorName,
-							approvalType, approvalSubType, addendum.getAmtAddendum().doubleValue(), currencyCode, securityService.getCurrentUser().getUsername());
+					ApprovalServiceRequest approvalRequest = new ApprovalServiceRequest();
+					approvalRequest.setOrderNumber(noSubcontract.toString());
+					approvalRequest.setOrderType(approvalType);
+					approvalRequest.setJobNumber(noJob);
+					approvalRequest.setSupplierNumber(vendorNo);
+					approvalRequest.setSupplierName(vendorName);
+					approvalRequest.setOrderAmount(addendum.getAmtAddendum().toString());
+					approvalRequest.setOriginator(securityService.getCurrentUser().getUsername().toLowerCase());
+					approvalRequest.setApprovalSubType(approvalSubType);
+					approvalRequest.setOrderDate(new Date());
+					approvalRequest.setCompany(company);
+					approvalRequest.setPoCurrency(currencyCode);
+					approvalRequest.setOrderSuffix(noAddendum.toString());
+					resultMsg = apWebServiceConnectionDao.createApprovalRoute(approvalRequest);
 				}else{
 					logger.info(resultMsg);
 					return resultMsg;

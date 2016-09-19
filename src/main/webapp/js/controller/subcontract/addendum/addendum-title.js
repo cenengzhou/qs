@@ -46,7 +46,7 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendum.no)
 		.then(
 				function( data ) {
-					$scope.addendum = data;
+					if(data) $scope.addendum = data;
 					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;
 					else
