@@ -145,7 +145,7 @@ on sd.SUBCONTRACT_ID = a.ID_SUBCONTRACT
 where sd.LINETYPE in ('V1', 'V2', 'V3', 'L1', 'L2', 'D1', 'D2', 'CF')
 );
 --3. Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
-insert into PCMSDATAUAT. ATTACHMENT (
+insert into PCMSDATAUAT.ATTACHMENT (
 ID,
 ID_TABLE,
 NAME_TABLE,
