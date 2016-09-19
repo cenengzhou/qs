@@ -36,6 +36,10 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 			.then(
 					function( data ) {
 						$scope.subcontract = data;
+						if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+							$scope.disableButtons = true;
+						else
+							$scope.disableButtons = false;
 					});
 		}
 	}

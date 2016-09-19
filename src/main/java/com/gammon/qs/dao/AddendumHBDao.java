@@ -50,6 +50,7 @@ public class AddendumHBDao extends BaseHibernateDao<Addendum> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("noJob", noJob));
 		criteria.add(Restrictions.eq("noSubcontract", noSubcontract));
+		criteria.addOrder(Order.desc("no"));
 		return criteria.list();
 	}
 

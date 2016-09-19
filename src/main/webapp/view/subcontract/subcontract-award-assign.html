@@ -5,7 +5,7 @@
 
 		<div class="col-md-3 col-sm-6 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-primary"
-				ng-click="open('split')">
+				ng-click="open('split')" ng-hide = "disableButtons" ng-disabled="disableButtons">
 				<i class="fa fa-unlink"></i> <small>Split</small>
 			</button>
 			<!-- <a class="btn btn-lg btn-block bg-aqua-gradient">
@@ -15,21 +15,21 @@
 
 		<div class="col-md-3 col-sm-6 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-warning"
-				ng-click="open('merge')">
+				ng-click="open('merge')" ng-hide = "disableButtons" ng-disabled="disableButtons">
 				<i class="fa fa-link"></i> <small>Merge</small>
 			</button>
 		</div>
 
 		<div class="col-md-3 col-sm-6 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-danger"
-				ng-click="open('add')">
+				ng-click="open('add')" ng-hide = "disableButtons" ng-disabled="disableButtons">
 				<i class="fa fa-plus-circle"></i> <small>Add</small>
 			</button>
 		</div>
 
 		<div class="col-md-3 col-sm-6 col-xs-12">
 			<button type="button" class="btn btn-lg btn-block btn-success"
-				ng-click="deleteResources()">
+				ng-click="deleteResources()" ng-hide = "disableButtons" ng-disabled="disableButtons">
 				<i class="fa fa-remove"></i> <small>Delete</small>
 			</button>
 		</div>

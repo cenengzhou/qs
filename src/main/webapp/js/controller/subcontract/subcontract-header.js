@@ -1,82 +1,60 @@
-mainApp.controller("SubcontractHeaderCtrl", ['$scope', function ($scope) {
-	/*	$http.get("json/questions.json").success(function (data) {
-    //all questions
-    $scope.questions = data;
-
-    //filter for getting answers / question
-    $scope.ids = function (question) {
-        return question.id == number;
-    }
-
-    $scope.buttonText = "Next question";
-
-    $scope.next = function () {
-        if (!(number == (data.length))) {
-            if(number+1==(data.length)){
-                $scope.buttonText = "Get results";
-            }
-            number++;
-        }
-    }*/
+mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter',
+                                                  function ($scope,  subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter) {
+	getSubcontract();
 	
-	
-	
-	//Subcontractor Nature
-	$scope.subcontractorNature = "DSC";
-	/*$scope.subcontractorNature = {
-		options: [
-	      "DSC",
-	      "NDSC",
-	      "NSC"
-	      ],
-	      selected: "DSC"
-	};*/
-		
-	//Subcontract Type
-	$scope.checkedLabour = false;
-    $scope.checkedPlant = false;
-    $scope.checkedMaterial = false;
-    
-    //Subcontract Term
-    $scope.subcontractTerm = "Re-measurement";
 
-    //Form of Subcontract
-    $scope.formOfSubcontract = "Major";
-	$scope.internalJobNo = "";
-    
 	//Rentention
-	 $scope.retentionOption = "Percentage";
-	
-	
-	//Payment Terms
-	 $scope.paymentTerms = "QS2";
-	/*$scope.paymentTerms = {
-			options: [
-	          "Qs0",
-	          "QS1",
-	          "QS2",
-	          "QS3",
-	          "QS4",
-	          "QS5",
-	          "QS6",
-	          "QS7",
-	          ],
-	          selected: "QS2"
-		};*/
-	
-	 
-	//CPF Calculation
-	$scope.selectedCPF = false;
-	$scope.cpfPeriod = "";
-	
-
 	$scope.percentageOption= "Revised";
 	
-	$scope.lumpSumRetention = 5000;
-	$scope.maxRetention = 5;
-	$scope.interimRetention = 10;
-	$scope.mosRetention = 10;
 	
 	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data.length != 0){
+						$scope.subcontract = data;
+						$scope.subcontractStatus = data.scStatus + ' - ' + GlobalParameter.getValueById(GlobalParameter.subcontractStatus, data.scStatus);
+						
+						if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_LUMPSUM){
+							$scope.subcontract.retentionTerms = "Lump Sum";
+						}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_ORIGINAL){
+							$scope.subcontract.retentionTerms = "Percentage";
+							$scope.percentageOption= "Original";
+						}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_REVISED){
+							$scope.subcontract.retentionTerms = "Percentage";
+							$scope.percentageOption= "Revised";
+						} 
+						
+						if($scope.subcontract.cpfCalculation == "1"){
+							$scope.subcontract.cpfCalculation = true;
+						}else
+							$scope.subcontract.cpfCalculation = false;
+						
+						if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+							$scope.disableButtons = true;
+						else
+							$scope.disableButtons = false;
+						
+						$scope.disableSubcontactNo = true;
+					}else
+						$scope.disableSubcontactNo = false;
+				});
+	}
+	
+	
+	
+	/*function getWorkScope(workScopeCode){
+		subcontractService.getWorkScope(workScopeCode)
+		.then(
+				function( data ) {
+					if(data.length==0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
+					}else{
+						upateSubcontract();
+					}
+				});
+	}*/
+
 }]);
 

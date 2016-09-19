@@ -14,24 +14,24 @@
 
 				<div class="col-md-2 m-t-20">
 					<button class="btn btn-primary btn-block"
-						ng-click="saveDetailHeader()">
+						ng-click="saveDetailHeader()" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<span class="fa fa-save"></span> Save Header
 					</button>
 				</div>
 				<div class="col-md-2 m-t-20">
 					<button class="btn btn-success btn-block"
-						ng-click="deleteDetailHeader()">
+						ng-click="deleteDetailHeader()" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<span class="fa fa-remove"></span> Delete Header
 					</button>
 				</div>
 			</div>
 
 
-			<div class="col-md-12 m-t-20">
+			<div class="col-md-12 m-t-10">
 
 				<div class="col-md-4 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-danger"
-						ng-click="open('noBudget')">
+						ng-click="open('noBudget')" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<i class="fa fa-plus-circle"></i> <small>Add V1/V2
 							(No Budget)</small>
 					</button>
@@ -39,7 +39,7 @@
 
 				<div class="col-md-4 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-danger"
-						ng-click="open('withBudget')">
+						ng-click="open('withBudget')" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<i class="fa fa-plus-circle"></i> <small>Add V1/V3 (With
 							Budget)</small>
 					</button>
@@ -47,24 +47,24 @@
 				
 				<div class="col-md-4 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-warning"
-						ng-click="open('update')">
+						ng-click="open('update')" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<i class="fa fa-edit"></i> <small>Update Approved Addendum</small>
 					</button>
 				</div>
 
-				<div class="col-md-12 m-b-10 m-t-20 ">
-					<div ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter class="grid "></div>
+				<div class="col-md-12 m-b-10 m-t-10">
+					<div ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns ui-grid-exporter class="grid " resize ng-style="resizeWithOffset(550)"></div>
 				</div>
 
 				<div class="col-md-6 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-primary"
-						ng-click="updateDetail()">
+						ng-click="updateDetail()" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<i class="fa fa-save"></i> <small>Update Detail</small>
 					</button>
 				</div>
 				<div class="col-md-6 col-xs-6">
 					<button type="button" class="btn btn-lg btn-block btn-success"
-						ng-click="deleteDetail()">
+						ng-click="deleteDetail()" ng-hide="disableButtons" ng-disabled = "disableButtons">
 						<i class="fa fa-remove"></i> <small>Delete Detail</small>
 					</button>
 				</div>

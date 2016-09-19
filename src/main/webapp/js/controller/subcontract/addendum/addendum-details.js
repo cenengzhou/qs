@@ -109,6 +109,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	
 	function loadData(){
+		getAddendum();
 		if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
 			if(addendumDetailHeaderRef!='Empty'){
 				getAddendumDetailHeader(addendumDetailHeaderRef);
@@ -118,23 +119,19 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		}
 	}
 	
-	function getSubcontract(){
-		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+	
+	function getAddendum(){
+		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
 		.then(
 				function( data ) {
-					console.log(data);
-					var subcontract = data;
-					if(subcontract.subcontractStatus < 500){
-						//Subcontract not awarded
+					$scope.addendum = data;
+					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
+						$scope.disableButtons = false;
+					else
 						$scope.disableButtons = true;
-					}
-					if(subcontract.submittedAddendum == '1' || subcontract.splitTerminateStatus =='1' || subcontract.splitTerminateStatus =='2'){
-						//Addendum/Split/Terminate submitted
-						$scope.disableButtons = true;
-					}
 				});
 	}
-
+	
 	function getAddendumDetailHeader(headerRef){
 		addendumService.getAddendumDetailHeader(headerRef)
 		.then(

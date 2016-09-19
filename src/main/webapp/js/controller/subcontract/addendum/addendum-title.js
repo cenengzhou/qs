@@ -1,7 +1,6 @@
 mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', '$location', 
                                            function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, $location) {
-
-	if($stateParams.addendumNo !== undefined){
+	if($stateParams.addendumNo != undefined){
 		$cookies.put('addendumNo', $stateParams.addendumNo);
 	}
 

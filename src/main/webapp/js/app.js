@@ -314,12 +314,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/subcontract-service.js'
+                           'js/service/subcontract-service.js',
+                           'js/controller/subcontract/subcontract-menu.js'
                     ] 
                 });
             }]
         },
-        controller: 'NavMenuCtrl'
+        controller: 'SubcontractMenuCtrl'
 	})
 	.state('subcontract.dashboard', {
 		url: "/dashboard",

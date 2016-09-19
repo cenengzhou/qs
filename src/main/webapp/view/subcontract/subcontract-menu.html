@@ -61,7 +61,7 @@
 				</a>
 			</li>
 			
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-hide="hideItem">
 				<a ui-sref="subcontract.addendum-select">
 					<i class="fa fa-dollar"></i>
 					<span>Addendum</span>
@@ -79,14 +79,14 @@
 					<span>Work Done</span>
 				</a>
 			</li>
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-hide="hideItem">
 				<a ui-sref="subcontract.split">
 					<i class="fa fa-unlink"></i>
 					<span>Split</span>
 				</a>
 			</li>
 			<li ui-sref-active="active">
-				<a ui-sref="subcontract.terminate">
+				<a ui-sref="subcontract.terminate" ng-hide="hideItem">
 					<i class="fa fa-ban"></i>
 					<span>Terminate</span>
 				</a>
