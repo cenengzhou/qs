@@ -67,7 +67,8 @@ sysdate as DATE_LAST_MODIFIED,
 null as NO_ADDENDUM_DETAIL_NEXT
 from PCMSDATAUAT.SUBCONTRACT s left join PCMSDATAUAT.JOB_INFO j 
 on s.JOB_INFO_ID = j.ID
-where j.JOBNO is not null);
+where j.JOBNO is not null
+and s.SCSTATUS = '500');
 --2. Copy a set of Addendum records from SUBCONTRACT_DETAIL to ADDENDUM_DETAIL and associate them to Addendum 0
 -- delete from PCMSDATAUAT.ADDENDUM_DETAIL;
 insert into PCMSDATAUAT.ADDENDUM_DETAIL (
@@ -143,6 +144,7 @@ from PCMSDATAUAT.SUBCONTRACT_DETAIL sd left join PCMSDATAUAT.SUBCONTRACT s
 on sd.SUBCONTRACT_ID = s.id left join PCMSDATAUAT.ADDENDUM a
 on sd.SUBCONTRACT_ID = a.ID_SUBCONTRACT 
 where sd.LINETYPE in ('V1', 'V2', 'V3', 'L1', 'L2', 'D1', 'D2', 'CF')
+and s.SCSTATUS = '500'
 );
 --3. Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
 insert into PCMSDATAUAT.ATTACHMENT (
