@@ -71,7 +71,7 @@ public class HibernateConfig {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(jdbcConfig.getPcmsJdbc("DRIVER"));
 		dataSource.setUrl(jdbcConfig.getPcmsJdbc("URL"));
-		dataSource.setUsername(jdbcConfig.getPcmsJdbc("UERNAME"));
+		dataSource.setUsername(jdbcConfig.getPcmsJdbc("USERNAME"));
 		dataSource.setPassword(jdbcConfig.getPcmsJdbc("PASSWORD"));
 		return dataSource;
 	}

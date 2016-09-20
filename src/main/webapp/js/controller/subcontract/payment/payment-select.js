@@ -164,9 +164,9 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 			}else if (status.localeCompare('SBM') == 0) {
 				return "Submitted";
 			}else if (status.localeCompare('UFR') == 0) {
-				return { width: "Under Finance Review" }
+				return "Under Finance Review";
 			}else if (status.localeCompare('PCS') == 0) {
-				return { width: "Waiting For Posting" }
+				return "Waiting For Posting";
 			}else if (status.localeCompare('APR') == 0) {
 				return "Posted To Finance";
 			}
