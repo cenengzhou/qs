@@ -72,7 +72,9 @@ public class SubcontractDetail extends BasePersistedObject {
 	private String approved = NOT_APPROVED;
 	private String unit;
 	private String remark;
+	@Deprecated
 	private Double postedCertifiedQuantity = 0.0;
+	@Deprecated
 	private Double cumCertifiedQuantity = 0.0;
 
 	private BigDecimal amountCumulativeCert = new BigDecimal(0);

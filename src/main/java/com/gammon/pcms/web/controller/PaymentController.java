@@ -115,7 +115,7 @@ public class PaymentController {
 	@RequestMapping(value = "calculatePaymentDueDate", method = RequestMethod.GET)
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
 															@RequestParam(required = true) String subcontractNo, 
-															@RequestParam(required = true) Integer mainCertNo, 
+															@RequestParam(required = false) Integer mainCertNo, 
 															@RequestParam(required = false) Date asAtDate,
 															@RequestParam(required = false) Date ipaOrInvoiceDate,
 															@RequestParam(required = false) Date dueDate){

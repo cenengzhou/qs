@@ -4,14 +4,21 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 
-	
-	getAddendum();
-	getAllAddendumDetails();
+	loadData();
 	
 	$scope.submit = function(){
 		$scope.disableButtons = true;
 		submitAddendumApproval();
 	}
+	
+	function loadData(){
+		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
+			getAddendum();
+			getAllAddendumDetails();
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
+	}
+	
 	
 	function getAddendum(){
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)

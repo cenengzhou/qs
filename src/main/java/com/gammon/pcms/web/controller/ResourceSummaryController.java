@@ -129,10 +129,10 @@ public class ResourceSummaryController {
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
-	public String splitOrMergeResources(@RequestParam(required =true) String repackagingId, 
+	public String splitOrMergeResources(@RequestParam(required =true) String jobNo, 
 										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper) throws NumberFormatException, Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-		wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), Long.valueOf(repackagingId));
+		wrapper = resourceSummaryService.splitOrMergeResources(resourceSummarySplitMergeWrapper.getOldResourceSummaryList(), resourceSummarySplitMergeWrapper.getNewResourceSummaryList(), jobNo);
 		return wrapper.getError();
 	}
 	

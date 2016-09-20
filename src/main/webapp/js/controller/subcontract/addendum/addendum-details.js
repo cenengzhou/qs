@@ -86,7 +86,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			return;
 		}
 
-		console.log(dataRows[0]);
+		//console.log(dataRows[0]);
 		if(dataRows[0]['typeAction'] == 'DELETE'){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
@@ -109,14 +109,17 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	
 	function loadData(){
-		getAddendum();
-		if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
-			if(addendumDetailHeaderRef!='Empty'){
-				getAddendumDetailHeader(addendumDetailHeaderRef);
-				getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
-			}else
-				getAddendumDetailsWithoutHeaderRef();
-		}
+		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
+			getAddendum();
+			if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
+				if(addendumDetailHeaderRef!='Empty'){
+					getAddendumDetailHeader(addendumDetailHeaderRef);
+					getAddendumDetailsByHeaderRef(addendumDetailHeaderRef);
+				}else
+					getAddendumDetailsWithoutHeaderRef();
+			}
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
 	}
 	
 	

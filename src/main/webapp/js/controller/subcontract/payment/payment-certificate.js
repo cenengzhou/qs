@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 'GlobalParameter',
-                                       function($scope , $state, $stateParams, $cookies, paymentService, mainCertService, modalService, GlobalParameter) {
+mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 'GlobalParameter',
+                                       function($scope, $stateParams, $cookies, paymentService, mainCertService, modalService, GlobalParameter) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.disableButtons = true;
 
@@ -8,6 +8,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 			selected: ""
 	};
 
+	
 	if($stateParams.paymentCertNo){
 		if($stateParams.paymentCertNo == '0'){
 			$cookies.put('paymentCertNo', '');
@@ -22,6 +23,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 	$scope.paymentTermsDesc = $cookies.get('paymentTermsDesc');
 	$scope.paymentTerms = $scope.paymentTermsDesc.substring(0, 3);
 
+	
 	//Initiation
 	loadData();
 
@@ -57,7 +59,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 						if(data != null){
 							if(data.length == 0){
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment has been updated successfully.");
-								$state.reload();
+								loadData();
 							}else
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 						}
@@ -93,7 +95,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 						}else{
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate has been updated.");
-							$state.reload();
+							loadData();
 						}
 					});
 	}
@@ -176,7 +178,8 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$state', '$stateParams', '$co
 
 					$cookies.put('paymentCertNo', $scope.payment.paymentCertNo);
 					$scope.paymentCertNo = $cookies.get('paymentCertNo');
-
+					
+					
 					getPaidMainCertList();
 
 					if($scope.payment.paymentStatus == "PND")

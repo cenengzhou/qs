@@ -1,7 +1,10 @@
 mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', '$location', 
                                            function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, $location) {
 	if($stateParams.addendumNo != undefined){
-		$cookies.put('addendumNo', $stateParams.addendumNo);
+		if($stateParams.addendumNo == 'New')
+			$cookies.put('addendumNo', '');
+		else
+			$cookies.put('addendumNo', $stateParams.addendumNo);
 	}
 
 	$scope.addendum = [];
@@ -11,7 +14,7 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 	
 	
 	function loadData(){
-		if($scope.addendum.no==null)
+		if($scope.addendum.no.length == 0)
 			getLatestAddendum();
 		else
 			getAddendum();
@@ -46,8 +49,8 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendum.no)
 		.then(
 				function( data ) {
-					if(data) $scope.addendum = data;
-					if($scope.addendum.length==0 || $scope.addendum.status == "PENDING")
+					$scope.addendum = data;
+					if($scope.addendum ==null || $scope.addendum.length==0 || $scope.addendum.status == "PENDING")
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
@@ -58,12 +61,15 @@ mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumSer
 		addendumService.getLatestAddendum($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.length ==0){
 						$scope.addendum.no = 1;
 					}else{
-						$location.path('/subcontract/addendum-select');
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "A pending addendum already exists.");
+						if(data.status == 'APPROVED'){
+							$scope.addendum.no = data.no + 1;
+						}else{
+							$location.path('/subcontract/addendum-select');
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "A pending addendum already exists.");
+						}
 					}
 				});
 	}

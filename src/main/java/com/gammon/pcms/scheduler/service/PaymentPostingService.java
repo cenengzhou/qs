@@ -1,5 +1,7 @@
 package com.gammon.pcms.scheduler.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -179,14 +181,15 @@ public class PaymentPostingService {
 												scDetails.getObjectCode(), scDetails.getSubsidiaryCode(), 
 												scDetails.getDescription(), scDetails.getUnit(), scDetails.getCostRate());
 										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!=null && resourceSummary.getCurrIVAmount()!= 0.0){
-											scDetails.setCumWorkDoneQuantity(resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4));
+											//scDetails.setCumWorkDoneQuantity(resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4));
+											scDetails.setAmountCumulativeWD(new BigDecimal(resourceSummary.getCurrIVAmount()/resourceSummary.getRate()*scDetails.getScRate()).setScale(2, RoundingMode.HALF_UP));
 											scDetailDao.update(scDetails);
 										}
 									} 
 								}catch (Exception e) {
 									e.printStackTrace();
 								}
-							}else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "2".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
+							}/*else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "2".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
 								try {
 									List<SubcontractDetail> accountCodeList = scDetailDao.obtainSCDetailsObjectCodeList(paymentCert.getJobNo(), paymentCert.getPackageNo());
 									for(SubcontractDetail accountCode: accountCodeList){
@@ -248,7 +251,7 @@ public class PaymentPostingService {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-							}
+							}*/
 						}
 						
 						//Fix: Should only set SCPackage "Payment Status"='F'  when payment cert status is APR

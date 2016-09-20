@@ -4,7 +4,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	var action = modalStatus;
 	
 	$scope.jobNo = $cookies.get("jobNo");
-	$scope.repackagingId = $cookies.get("repackagingId");
+	//$scope.repackagingId = $cookies.get("repackagingId");
 	
 	var resourceType = modalParam[0]['resourceType'];
 	var jobInfo = modalParam[0]['jobInfo'];
@@ -82,14 +82,12 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 			             { field: 'unit', 
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
-			            	 { field: 'quantity', cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            	 { field: 'quantity', cellClass: 'text-right', cellFilter: 'number:4',
 				            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 				            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			            	 { field: 'rate', cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
-				            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-				            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			            	 { field: 'rate', cellClass: 'text-right', cellFilter: 'number:4'},
 			            	 { field: 'amountBudget', displayName: "Amount",
-			            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>',
+			            		 cellClass: 'text-right', cellFilter: 'number:2',
 				            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 				            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			            	 { field: 'resourceType', displayName: "Type", enableCellEdit: false},
@@ -258,7 +256,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	}
 	
 	function splitOrMergeResources(resourceSummarySplitMergeWrapper) {
-		resourceSummaryService.splitOrMergeResources($scope.repackagingId, resourceSummarySplitMergeWrapper)
+		resourceSummaryService.splitOrMergeResources($scope.jobNo, resourceSummarySplitMergeWrapper)
 		.then(
 				function( data ) {
 					if(data.length!=0){

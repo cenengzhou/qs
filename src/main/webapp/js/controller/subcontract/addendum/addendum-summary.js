@@ -4,9 +4,8 @@ mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumS
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 
+	loadData();
 	
-	getAddendum();
-	getAllAddendumDetails();
 	
 	$scope.save = function(){
 		$scope.disableButtons = true;
@@ -49,6 +48,13 @@ mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumS
 				});
 	}*/
 	
+	function loadData(){
+		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
+			getAddendum();
+			getAllAddendumDetails();
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
+	}
 	
 	function getAddendum(){
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)

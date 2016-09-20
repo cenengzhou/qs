@@ -58,12 +58,12 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			             { field: "subsidiaryCode" , enableCellEdit: false, width:80 },
 			             { field: "description" , enableCellEdit: false,  width:150 },
 			             { field: "unit" , enableCellEdit: false, width:50 },
-			             { field: "quantity" , enableCellEdit: false, width:80},
-			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80},
+			             { field: "quantity" , enableCellEdit: false, width:80 , cellClass: 'text-right', cellFilter: 'number:4'},
+			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80, cellClass: 'text-right', cellFilter: 'number:4'},
 			             /*{ field: "amountBudget" ,displayName:"Budget", enableCellEdit: false, width:100 },*/
-			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, cellClass: "blue", width:80 },
-			             { field: "amountSubcontract" ,displayName:"SC Amount", cellClass: "blue", enableCellEdit: true, width:90 },
-			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 }
+			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, cellClass: "blue", width:80 , cellClass: 'text-right', cellFilter: 'number:4'},
+			             { field: "amountSubcontract" ,displayName:"SC Amount", cellClass: "blue", enableCellEdit: true, width:90 , cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2'}
 			             ]
 
 

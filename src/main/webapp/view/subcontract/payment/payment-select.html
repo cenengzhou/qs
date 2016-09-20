@@ -27,15 +27,15 @@
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-md-7">
 						<canvas id="doughnut" class="chart chart-doughnut"
 							chart-data="paymentResourceDistributionChart.data"
 							chart-labels="paymentResourceDistributionChart.labels"
 							chart-colours="paymentResourceDistributionChart.colours">
 						</canvas>
 					</div>
-					<div class="col-md-4">
-						<ul class="chart-legend clearfix">
+					<div class="col-md-5">
+						<ul class="chart-legend text-left">
 							<li class="col-md-12"><i class="fa fa-circle text-primary"></i>
 								<label>{{paymentResourceDistributionChart.labels[0]}}:
 									{{paymentResourceDistributionChart.data[0] | currency}}</label></li>

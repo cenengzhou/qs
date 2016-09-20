@@ -236,7 +236,7 @@ public class AddendumController {
 	public String addAddendumFromResourceSummaries(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
 										@RequestParam(required = true) String addendumNo, 
-										@RequestParam(required = true)BigDecimal addendumDetailHeaderRef,
+										@RequestParam(required = false)BigDecimal addendumDetailHeaderRef,
 										@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
 		try{

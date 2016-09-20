@@ -26,8 +26,8 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			//enableRowSelection: true,
 			//enableFullRowSelection: true,
 			//multiSelect: false,
-			//showGridFooter : true,
-			showColumnFooter : true,
+			showGridFooter : false,
+			showColumnFooter : false,
 			//fastWatch : true,
 
 			enableCellEditOnFocus : true,
@@ -40,11 +40,17 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			             { field: 'billItem', width: 100, enableCellEdit: false},
 			             { field: 'description', width: 100, enableCellEdit: false},
 			             
-			             { field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableCellEdit: false, enableFiltering: false,
+			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, enableCellEdit: false, enableFiltering: false,
+     	 					cellClass: 'text-right', cellFilter: 'number:2'}, 
+		             
+     	 				{field: 'costRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+		             
+			            { field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableCellEdit: false, enableFiltering: false,
          	 					cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: 'scRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: 'newQuantity', width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit, 
+         	 			{ field: 'scRate', displayName: "SC Rate", width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+ 	 					{ field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+			            
+			            { field: 'newQuantity', displayName: "Budget Quantity", width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit, 
 			            	 cellClass: function(){
 			            		 if($scope.action == 'Split')
 			            			return 'text-right blue'
@@ -53,7 +59,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			            	 }, 
 			            	cellFilter: 'number:4'
 			            },
-			             { field: 'amountSubcontractNew', displayName: "New SC Amount", width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit,
+			            { field: 'amountSubcontractNew', displayName: "New SC Amount", width: 150, enableFiltering: false, cellEditableCondition : $scope.canEdit,
 		            			cellClass: function(){
 				            		 if($scope.action == 'Split')
 				            			return 'text-right blue'
@@ -67,13 +73,6 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false,
 	            		 			cellClass: 'text-right', cellFilter: 'number:2'},
 	            			
-			             
-    	 				 {field: 'amountBudget', displayName: "Budget Amount", width: 150, enableCellEdit: false, enableFiltering: false,
-            	 					cellClass: 'text-right', cellFilter: 'number:2'}, 
-			             
-			             {field: 'costRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             
-			             
 			             {field: 'objectCode', width: 100, enableCellEdit: false},
 			             {field: 'subsidiaryCode', width: 100, enableCellEdit: false},
 			             
@@ -94,18 +93,29 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(colDef.name == 'newQuantity'){
-				var newQuantityOldValue = oldValue;
-				var amountSubcontractNewOldValue = rowEntity.amountSubcontractNew;
-				
-				rowEntity.newQuantity = roundUtil.round(newValue, 4);
-				rowEntity.amountSubcontractNew = roundUtil.round(rowEntity.newQuantity * rowEntity.scRate, 2);
-				
+				if(newValue.length ==0){
+					rowEntity.newQuantity = oldValue;
+					return;
+				}
+				else{
+					var newQuantityOldValue = oldValue;
+					var amountSubcontractNewOldValue = rowEntity.amountSubcontractNew;
+
+					rowEntity.newQuantity = roundUtil.round(newValue, 4);
+					rowEntity.amountSubcontractNew = roundUtil.round(rowEntity.newQuantity * rowEntity.scRate, 2);
+				}
 			}else if(colDef.name == 'amountSubcontractNew'){
-				var newQuantityOldValue = rowEntity.newQuantity;
-				var amountSubcontractNewOldValue = oldValue;
-				
-				rowEntity.amountSubcontractNew = roundUtil.round(newValue, 2);
-				rowEntity.newQuantity = roundUtil.round(rowEntity.amountSubcontractNew / rowEntity.scRate, 4);
+				if(newValue.length ==0){
+					rowEntity.newQuantity = oldValue;
+					return;
+				}
+				else{
+					var newQuantityOldValue = rowEntity.newQuantity;
+					var amountSubcontractNewOldValue = oldValue;
+
+					rowEntity.amountSubcontractNew = roundUtil.round(newValue, 2);
+					rowEntity.newQuantity = roundUtil.round(rowEntity.amountSubcontractNew / rowEntity.scRate, 4);
+				}
 			}
 			
 			
@@ -202,7 +212,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	function getSubcontractDetailTotalNewAmount(){
 		subcontractService.getSubcontractDetailTotalNewAmount($scope.jobNo, $scope.subcontractNo)
 		.then(
-				function( data ) {
+				function( data ) {console.log(data);
 					if(data.length > 0){
 						$scope.remeasuredSubcontractSumAfterSplit = data[0];
 						$scope.approvedVOAmountAfterSplit = data[1];

@@ -1,6 +1,7 @@
 package com.gammon.qs.service;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -236,7 +237,7 @@ public class ResourceSummaryService implements Serializable {
 	/**
 	 * @author koeyyeung
 	 * Payment Requisition Revamp
-	 * Resource Summaries with PostedCertifiedQuantity, PostedWorkDoneQuantity, CumWorkDoneQuantity cannot be edited
+	 * Resource Summaries with AmountPostedCert, AmountPostedWD, AmountCumulativeWD cannot be edited
 	 **/
 	public List<String> obtainUneditableResourceSummaries(JobInfo job) throws Exception {
 		List<String> uneditableResourceSummaryIDs = new ArrayList<String>(); 
@@ -250,7 +251,11 @@ public class ResourceSummaryService implements Serializable {
 				if(!uneditablePackageNos.contains(resourceSummary.getPackageNo()) && unawardedPackageNosUnderRequisition.contains(resourceSummary.getPackageNo())){
 
 					SubcontractDetail scDetail = scDetailsHBDaoImpl.obtainSCDetailsByResourceNo(job.getJobNumber(), resourceSummary.getPackageNo(), Integer.valueOf(resourceSummary.getId().toString()));
-					if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0)){
+					if(scDetail!=null && 
+							(scDetail.getAmountPostedCert().compareTo(new BigDecimal(0))!= 0 
+								|| scDetail.getAmountPostedWD().compareTo(new BigDecimal(0))!=0 
+								|| scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0))!=0)){
+						
 						uneditableResourceSummaryIDs.add(String.valueOf(resourceSummary.getId()));
 					}
 				}
@@ -260,131 +265,6 @@ public class ResourceSummaryService implements Serializable {
 		return uneditableResourceSummaryIDs;
 	}
 
-	
-	
-	public BQResourceSummaryWrapper saveResourceSummaries(List<ResourceSummary> resourceSummaries, Long repackagingEntryId) throws Exception{
-		logger.info("saveResourceSummaries - STARTED");
-		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
-		//Check status of repackaging entry
-		Repackaging repackagingEntry = repackagingEntryDao.get(repackagingEntryId);
-		if("900".equals(repackagingEntry.getStatus())){
-			logger.info("This repackaging entry has already been confirmed and locked[900].");
-			wrapper.setError("This repackaging entry has already been confirmed and locked.");
-			return wrapper;
-		}
-		
-		StringBuilder errors = new StringBuilder();
-		Set<Subcontract> packagesToReset = new HashSet<Subcontract>();
-		//Validate all
-		for(ResourceSummary resourceSummary : resourceSummaries){
-			errors.append(validateResourceSummary(resourceSummary, packagesToReset));
-		}
-		//Save all, if all are valid
-		if(errors.length() == 0){
-			if(packagesToReset.size() > 0){
-				for(Subcontract scPackage : packagesToReset){
-					//Set status to 100
-					scPackage.setSubcontractStatus(Integer.valueOf(100));
-					
-					/**
-					 * @author koeyyeung
-					 * created on 6th Jan, 2015
-					 * Payment Requisition Revamp
-					 * */
-					PaymentCert latestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-					
-					//if no payment yet & package status != 500 --> reset vendorNo in scPackage
-					if(latestPaymentCert==null){
-						if(!Integer.valueOf(500).equals(scPackage.getSubcontractStatus())){
-							//reset vendorNo in scPackage
-							scPackage.setVendorNo(null);
-						}
-						scPackageDao.resetPackageTA(scPackage);
-					}else{
-						//If 1st payment is pending (Direct Payment)--> delete payment cert 
-						if(latestPaymentCert!=null 
-								&& latestPaymentCert.getDirectPayment().equals("Y") 
-								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-							//Payment list = 1: reset vendorNo		
-							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==1){
-								//reset vendorNo in scPackage
-								scPackage.setVendorNo(null);
-							}
-
-
-							scPaymentCertHBDao.delete(latestPaymentCert);							logger.info("delete payment cert");
-							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());							logger.info("delete payment cert detail");
-							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());							logger.info("delete payment attach");
-	
-
-							scPackageDao.update(scPackage);
-							
-							//Reset cumCertQuantity in ScDetail
-							List<SubcontractDetail> scDetailsList = scDetailsHBDaoImpl.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-							for(SubcontractDetail scDetails: scDetailsList){
-								if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-									scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-									scDetailsHBDaoImpl.update(scDetails);
-								}
-							}
-						}
-						
-						//Determine to clear TA
-						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==0){
-							//Clear All TA
-							scPackageDao.resetPackageTA(scPackage);					
-						}else{
-							scPackageDao.update(scPackage);
-
-							List<Integer> resourceNoList = new ArrayList<Integer>();
-							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-							for(Tender ta: tenderAnalysisList){
-								if ((ta.getStatus()!=null && "RCM".equalsIgnoreCase(ta.getStatus().trim()))){
-									//Recommended Vendor
-									for(TenderDetail taDetail: tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
-										SubcontractDetailBQ scDetail = scDetailsHBDaoImpl.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
-										if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0)){
-											resourceNoList.add(taDetail.getResourceNo());
-										}
-									}
-									break;
-								}
-							}
-							
-
-							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-							Iterator<Tender> taIterator = taList.iterator();
-							while(taIterator.hasNext()){
-								Tender TA = taIterator.next();	
-								List<TenderDetail> taDetaiList = tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA);
-								Iterator<TenderDetail> taDetailIterator = taDetaiList.iterator();					
-								while(taDetailIterator.hasNext()){					
-									TenderDetail taDetail = taDetailIterator.next();
-									if(!resourceNoList.contains(taDetail.getResourceNo())){
-										taDetailIterator.remove();
-										//logger.info("REMOVED DAO TRANSACTION - remove tender detail");
-										//For DAO Transaction
-										//scPackage.getTenderAnalysisList().remove(taDetail);
-										//For DAO Transaction --END
-									}
-								}
-							}
-							scPackageDao.update(scPackage);
-						}
-					}
-				}
-			}
-			for(ResourceSummary resourceSummary : resourceSummaries){
-				saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
-			}
-			wrapper.setResourceSummaries(resourceSummaries);
-		}
-		else{
-			wrapper.setError(errors.toString());
-		}
-		logger.info("saveResourceSummaries - END");
-		return wrapper;
-	}
 	
 
 	public Boolean saveResourceSummariesScAddendum(List<ResourceSummary> resourceSummaries, Long repackagingEntryId) throws Exception{
@@ -777,7 +657,7 @@ public class ResourceSummaryService implements Serializable {
 		return bqResourceSummaryWrappers;
 	}
 	
-	public BQResourceSummaryWrapper splitOrMergeResources(List<ResourceSummary> oldResources, List<ResourceSummary> newResources, Long repackagingEntryId) throws Exception{
+	public BQResourceSummaryWrapper splitOrMergeResources(List<ResourceSummary> oldResources, List<ResourceSummary> newResources, String jobNo) throws Exception{
 		BQResourceSummaryWrapper wrapper = new BQResourceSummaryWrapper();
 		
 		//get old records ids before validating new records (so they are not mistaken as duplicates).
@@ -820,7 +700,7 @@ public class ResourceSummaryService implements Serializable {
 		
 		oldSummaryIds = ids;
 		//Validate and Save new records
-		wrapper = saveResourceSummaries(newResources, repackagingEntryId);
+		wrapper = updateResourceSummaries(newResources, jobNo);
 		//Clear the old ids
 		oldSummaryIds = null;
 		//If new records were valid, set splitFrom/mergeTo fields
@@ -1346,12 +1226,14 @@ public class ResourceSummaryService implements Serializable {
 						}
 						scPackageDao.resetPackageTA(scPackage);
 					}else{
-						//If 1st payment is pending (Direct Payment)--> delete payment cert 
+						int paymentCertListSize = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size();
+						
+						//1. If latest payment is pending (Direct Payment)--> delete payment cert 
 						if(latestPaymentCert!=null 
 								&& latestPaymentCert.getDirectPayment().equals("Y") 
 								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 							//Payment list = 1: reset vendorNo		
-							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==1){
+							if(paymentCertListSize == 1){
 								//reset vendorNo in scPackage
 								scPackage.setVendorNo(null);
 							}
@@ -1362,18 +1244,18 @@ public class ResourceSummaryService implements Serializable {
 							
 							scPackageDao.update(scPackage);
 							
-							//Reset cumCertQuantity in ScDetail
+							//2. Reset cumCertAmount in ScDetail
 							List<SubcontractDetail> scDetailsList = scDetailsHBDaoImpl.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							for(SubcontractDetail scDetails: scDetailsList){
 								if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-									scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+									scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
 									scDetailsHBDaoImpl.update(scDetails);
 								}
 							}
 						}
 						
-						//Determine to clear TA
-						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size()==0){
+						//3. Determine to clear TA
+						if(paymentCertListSize == 0){
 							//Clear All TA
 							scPackageDao.resetPackageTA(scPackage);					
 						}else{
@@ -1382,11 +1264,14 @@ public class ResourceSummaryService implements Serializable {
 							List<Integer> resourceNoList = new ArrayList<Integer>();
 							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							for(Tender ta: tenderAnalysisList){
-								if ((ta.getStatus()!=null && "RCM".equalsIgnoreCase(ta.getStatus().trim()))){
+								if ((ta.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(ta.getStatus().trim()))){
 									//Recommended Vendor
 									for(TenderDetail taDetail: tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
 										SubcontractDetailBQ scDetail = scDetailsHBDaoImpl.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
-										if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0)){
+										if(scDetail!=null && 
+												(scDetail.getAmountPostedCert().compareTo(new BigDecimal(0))!= 0 
+													|| scDetail.getAmountPostedWD().compareTo(new BigDecimal(0))!=0 
+													|| scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0))!=0)){
 											resourceNoList.add(taDetail.getResourceNo());
 										}
 									}

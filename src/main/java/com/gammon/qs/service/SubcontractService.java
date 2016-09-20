@@ -3451,22 +3451,26 @@ public class SubcontractService {
 	 * created on 2 Sep, 2016**/
 	public List<BigDecimal>  getSubcontractDetailTotalNewAmount(String jobNo, String subcontractNo){
 		List<BigDecimal> newAmountSubcontractList = new ArrayList<BigDecimal>();
-		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.getSubcontractDetailsWithBudget(jobNo, subcontractNo);
-		
-		BigDecimal newSubcontractSum = new BigDecimal(0);
-		BigDecimal newApprovedVO = new BigDecimal(0);
-		
-		for(SubcontractDetail scDetail: scDetailList){
-			if (scDetail instanceof SubcontractDetailVO){
-				if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
-					newApprovedVO = newApprovedVO.add(scDetail.getAmountSubcontract());
-			}
-			else if (scDetail instanceof SubcontractDetailBQ)
-				newSubcontractSum = newSubcontractSum.add(scDetail.getAmountSubcontract());
+		try {
+			List<SubcontractDetail> scDetailList = subcontractDetailHBDao.obtainSCDetails(jobNo, subcontractNo);
+			
+			BigDecimal newSubcontractSum = new BigDecimal(0);
+			BigDecimal newApprovedVO = new BigDecimal(0);
+			
+			for(SubcontractDetail scDetail: scDetailList){
+				if (scDetail instanceof SubcontractDetailVO){
+					if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
+						newApprovedVO = newApprovedVO.add(scDetail.getAmountSubcontractNew());
+				}
+				else if (scDetail instanceof SubcontractDetailBQ)
+					newSubcontractSum = newSubcontractSum.add(scDetail.getAmountSubcontractNew());
 
+			}
+			newAmountSubcontractList.add(newSubcontractSum);
+			newAmountSubcontractList.add(newApprovedVO);
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
 		}
-		newAmountSubcontractList.add(newSubcontractSum);
-		newAmountSubcontractList.add(newApprovedVO);
 		
 		return newAmountSubcontractList;
 	}
@@ -4752,6 +4756,7 @@ public class SubcontractService {
 		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 		if (subcontract==null ||"F".equals(subcontract.getPaymentStatus()))	
 			throw new ValidateBusinessLogicException("Invalid status of package:"+subcontractNo);
+		
 		if (Subcontract.CONSULTANCY_AGREEMENT.equals(subcontract.getFormOfSubcontract())){
 			defaultObj="140399";
 			defaultCCObj="140388";

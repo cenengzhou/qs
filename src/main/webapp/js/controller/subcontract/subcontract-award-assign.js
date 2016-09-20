@@ -25,8 +25,8 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			             { field: 'subsidiaryCode', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
 			             { field: 'unit',  enableCellEdit: false},
-			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: 'amountBudget', displayName: "Amount",  enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
@@ -179,7 +179,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		resourceSummaryService.updateResourceSummaries($scope.jobNo, resourceSummaryList)
 		.then(
 				function( data ) {
-					console.log(data);
+					//console.log(data);
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{

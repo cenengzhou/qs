@@ -116,7 +116,7 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 				});
 	}
 
-	function addAddendumFromResourceSummaries(resourceSummaryList) {console.log("addendumDetailHeaderRef: "+addendumDetailHeaderRef);
+	function addAddendumFromResourceSummaries(resourceSummaryList) {
 		addendumService.addAddendumFromResourceSummaries(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, resourceSummaryList)
 		.then(
 				function( data ) {

@@ -1,384 +1,184 @@
-<div class="animated fadeIn" resize ng-style="resizeWithOffset(320)">
-	<form name="form-validate" id="form-validate"
-		class="ng-valid">
-		<fieldset>
-			<div class="row">
-				<div class="col-md-9 col-md-offset-2">
-					<div class="form-group">
-						<div class="box box-solid">
-							<div class="box-body">
-								<div class="col-md-12">
-									<div class="box box-primary">
-										<div class="box-body">
-											<div class="row">
-												<div class="col-md-3">
-													<label>Subcontract Number</label>
+<form name="form-validate" id="form-validate" class="ng-valid">
+	<fieldset>
+		<div class="row">
+			<div class="col-md-9 col-md-offset-2">
+				<div class="form-group" resize ng-style="resizeWithOffset(380)">
+					<div class="box box-solid">
+						<div class="box-body">
+							<div class="col-md-12">
+								<div class="box box-primary">
+									<div class="box-body">
+										<div class="row">
+											<div class="col-md-3">
+												<label>Subcontract Number</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="input-group col-md-12">
+													<input type="text" class="form-control"
+														data-parsley-minlength="4" data-parsley-maxlength="4"
+														data-parsley-error-message="Must be in 4 digits"
+														ng-model="subcontract.packageNo"
+														ng-disabled="disableSubcontactNo" required>
 												</div>
-												<div class="form-group col-md-9">
-													<div class="input-group col-md-12">
-														<input type="text" class="form-control"
-															data-parsley-minlength="4"
-															data-parsley-maxlength="4"
-															data-parsley-error-message="Must be in 4 digits"
-															ng-model="subcontract.packageNo"
-															ng-disabled="disableSubcontactNo"
-															required>
-													</div>
+											</div>
+											<div class="col-md-3">
+												<label>Description</label>
+											</div>
+											<div class="form-group col-md-9">
+												<textarea class="form-control " rows="1"
+													placeholder="Subcontract Description ..."
+													ng-model="subcontract.description"
+													ng-disabled="disableButtons" required></textarea>
+											</div>
+											<div class="col-md-3">
+												<label>Work Scope</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="input-group col-md-12">
+													<input type="number" class="form-control"
+														ng-model="subcontract.workscope"
+														ng-disabled="disableButtons" required>
 												</div>
-												<div class="col-md-3">
-													<label>Description</label>
+											</div>
+											<div class="col-md-3">
+												<label>Approval Sub-type</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="input-group col-md-12">
+													<input type="text" class="form-control"
+														data-parsley-maxlength="5"
+														data-parsley-pattern="^[A-Za-z0-9]+$"
+														data-parsley-error-message="Max. length: 5 (A-Z, a-z or numbers)"
+														ng-model="subcontract.approvalRoute"
+														ng-disabled="disableButtons">
 												</div>
-												<div class="form-group col-md-9">
+											</div>
+
+											<div class="col-md-3">
+												<label>Notes</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="input-group col-md-12">
 													<textarea class="form-control " rows="1"
-														placeholder="Subcontract Description ..."
-														ng-model="subcontract.description" 
+														ng-model="subcontract.notes" ng-disabled="disableButtons"></textarea>
+												</div>
+											</div>
+
+											<!-- Subcontractor Nature -->
+											<div class="col-md-3">
+												<label>Subcontractor Nature</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="btn-group btn-group-justified">
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'DSC', 'btn-inverse' : subcontract.subcontractorNature != 'DSC'}"
+														ng-model="subcontract.subcontractorNature"
+														ng-disabled="disableButtons" uib-btn-radio="'DSC'">DSC</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NDSC', 'btn-inverse' : subcontract.subcontractorNature != 'NDSC'}"
+														ng-model="subcontract.subcontractorNature"
+														ng-disabled="disableButtons" uib-btn-radio="'NDSC'">NDSC</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NSC', 'btn-inverse' : subcontract.subcontractorNature != 'NSC'}"
+														ng-model="subcontract.subcontractorNature"
+														ng-disabled="disableButtons" uib-btn-radio="'NSC'">NSC</label>
+												</div>
+
+											</div>
+
+											<!-- Subcontract Type -->
+											<div class="col-md-3">
+												<label>Subcontract Type</label>
+											</div>
+
+											<div class="form-group col-md-9">
+												<div class="btn-group btn-group-justified">
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.labourIncludedContract == true, 'btn-inverse' : subcontract.labourIncludedContract != true}"
+														ng-model="subcontract.labourIncludedContract"
+														ng-disabled="disableButtons" ng-click="updateLabour()">Labour</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.plantIncludedContract == true, 'btn-inverse' : subcontract.plantIncludedContract != true}"
+														ng-model="subcontract.plantIncludedContract"
+														ng-disabled="disableButtons" ng-click="updatePlant()">Plant</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.materialIncludedContract == true, 'btn-inverse' : subcontract.materialIncludedContract != true}"
+														ng-model="subcontract.materialIncludedContract"
+														ng-disabled="disableButtons" ng-click="updateMaterial()">Material</label>
+												</div>
+
+											</div>
+
+											<!-- Subcontract Term -->
+											<div class="col-md-3">
+												<label>Subcontract Term</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="btn-group btn-group-justified">
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Lump Sum', 'btn-inverse' : subcontract.subcontractTerm != 'Lump Sum'}"
+														ng-model="subcontract.subcontractTerm"
+														ng-disabled="disableButtons" uib-btn-radio="'Lump Sum'">Lump
+														Sum</label> <label class="btn"
+														ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Re-measurement', 'btn-inverse' : subcontract.subcontractTerm != 'Re-measurement'}"
+														ng-model="subcontract.subcontractTerm"
 														ng-disabled="disableButtons"
-														required></textarea>
-												</div>
-												<div class="col-md-3">
-													<label>Work Scope</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="input-group col-md-12">
-														<input type="number" class="form-control"
-															ng-model="subcontract.workscope" 
-															ng-disabled="disableButtons"
-															required>
-													</div>
-												</div>
-												<div class="col-md-3">
-													<label>Approval Sub-type</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="input-group col-md-12">
-														<input type="text" class="form-control"
-															data-parsley-maxlength="5"
-															data-parsley-pattern="^[A-Za-z0-9]+$"
-															data-parsley-error-message="Max. length: 5 (A-Z, a-z or numbers)"
-															ng-model="subcontract.approvalRoute"
-															ng-disabled="disableButtons">
-													</div>
-												</div>
-												
-												<div class="col-md-3">
-													<label>Notes</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="input-group col-md-12">
-														<textarea class="form-control " rows="1"
-															ng-model="subcontract.notes"
-															ng-disabled="disableButtons"></textarea>
-													</div>
-												</div>
-
-												<!-- Subcontractor Nature -->
-												<div class="col-md-3">
-													<label>Subcontractor Nature</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="btn-group btn-group-justified">
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.subcontractorNature == 'DSC', 'btn-inverse' : subcontract.subcontractorNature != 'DSC'}"
-															ng-model="subcontract.subcontractorNature" ng-disabled="disableButtons"
-															uib-btn-radio="'DSC'">DSC</label> <label class="btn"
-															ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NDSC', 'btn-inverse' : subcontract.subcontractorNature != 'NDSC'}"
-															ng-model="subcontract.subcontractorNature" ng-disabled="disableButtons"
-															uib-btn-radio="'NDSC'">NDSC</label> <label class="btn"
-															ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NSC', 'btn-inverse' : subcontract.subcontractorNature != 'NSC'}"
-															ng-model="subcontract.subcontractorNature" ng-disabled="disableButtons"
-															uib-btn-radio="'NSC'">NSC</label>
-													</div>
+														uib-btn-radio="'Re-measurement'">Re-measurement</label>
 
 												</div>
-
-												<!-- Subcontract Type -->
-												<div class="col-md-3">
-													<label>Subcontract Type</label>
-												</div>
-
-												<div class="form-group col-md-9">
-													<div class="btn-group btn-group-justified">
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.labourIncludedContract == true, 'btn-inverse' : subcontract.labourIncludedContract != true}"
-															ng-model="subcontract.labourIncludedContract" ng-disabled="disableButtons"
-															ng-click="updateLabour()">Labour</label> <label
-															class="btn"
-															ng-class="{'btn-primary' : subcontract.plantIncludedContract == true, 'btn-inverse' : subcontract.plantIncludedContract != true}"
-															ng-model="subcontract.plantIncludedContract" ng-disabled="disableButtons"
-															ng-click="updatePlant()">Plant</label> <label class="btn"
-															ng-class="{'btn-primary' : subcontract.materialIncludedContract == true, 'btn-inverse' : subcontract.materialIncludedContract != true}"
-															ng-model="subcontract.materialIncludedContract" ng-disabled="disableButtons"
-															ng-click="updateMaterial()">Material</label>
-													</div>
-
-												</div>
-
-												<!-- Subcontract Term -->
-												<div class="col-md-3">
-													<label>Subcontract Term</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="btn-group btn-group-justified">
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Lump Sum', 'btn-inverse' : subcontract.subcontractTerm != 'Lump Sum'}"
-															ng-model="subcontract.subcontractTerm" ng-disabled="disableButtons"
-															uib-btn-radio="'Lump Sum'">Lump Sum</label> <label
-															class="btn"
-															ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Re-measurement', 'btn-inverse' : subcontract.subcontractTerm != 'Re-measurement'}"
-															ng-model="subcontract.subcontractTerm" ng-disabled="disableButtons"
-															uib-btn-radio="'Re-measurement'">Re-measurement</label>
-
-													</div>
-												</div>
-
-
-												<div class="col-md-3">
-													<label>Form of Subcontract</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="btn-group btn-group-justified">
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Major', 'btn-inverse' : subcontract.formOfSubcontract != 'Major'}"
-															ng-model="subcontract.formOfSubcontract" ng-disabled="disableButtons"
-															uib-btn-radio="'Major'" ng-click="resetInternalJob()">Major</label> 
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Minor', 'btn-inverse' : subcontract.formOfSubcontract != 'Minor'}"
-															ng-model="subcontract.formOfSubcontract" ng-disabled="disableButtons"
-															uib-btn-radio="'Minor'" ng-click="resetInternalJob()">Minor</label> 
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Consultancy Agreement', 'btn-inverse' : subcontract.formOfSubcontract != 'Consultancy Agreement'}"
-															ng-model="subcontract.formOfSubcontract" ng-disabled="disableButtons"
-															uib-btn-radio="'Consultancy Agreement'"
-															ng-click="resetInternalJob()">Consultancy
-															Agreement</label> 
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Internal Trading', 'btn-inverse' : subcontract.formOfSubcontract != 'Internal Trading'}"
-															ng-model="subcontract.formOfSubcontract" ng-disabled="disableButtons"
-															uib-btn-radio="'Internal Trading'">Internal
-															Trading</label>
-													</div>
-													<div class = "row" ng-show="subcontract.formOfSubcontract == 'Internal Trading'">
-														<div class="col-md-9"></div>
-														<div class="form-group col-md-3">
-															<div class="input-group">
-																<input type="text" class="form-control" placeholder="Internal Job No."
-																	ng-model="subcontract.internalJobNo" ng-disabled="disableButtons"
-																	data-ng-required="subcontract.formOfSubcontract == 'Internal Trading'">
-															</div>
-														</div>
-													</div>
-												</div>
-
-												<div class="col-md-3">
-													<label>Status</label>
-												</div>
-												<div class="form-group col-md-9">
-													<div class="col-md-12">
-														<h6 class="">{{subcontractStatus}}</h6>
-													</div>
-												</div>
-
 											</div>
-										</div>
-									</div>
-								</div>
 
-								<!-- Retention -->
-								<div class="col-md-12">
-									<div class="box box-primary">
-										<div class="box-body ">
-											<div class="row">
-												<label class="col-md-3">Retention</label>
 
-												<div class="col-md-9">
-													<div class="form-group">
-														<div class="btn-group btn-group-justified">
-															<label class="btn"
-																ng-class="{'btn-primary' : subcontract.retentionTerms == 'No Retention', 'btn-inverse' : subcontract.retentionTerms != 'No Retention'}"
-																ng-click="resetRetentionOptions()"
-																ng-model="subcontract.retentionTerms" ng-disabled="disableButtons"
-																uib-btn-radio="'No Retention'">No Retention</label> <label
-																class="btn"
-																ng-class="{'btn-primary' : subcontract.retentionTerms == 'Lump Sum', 'btn-inverse' : subcontract.retentionTerms != 'Lump Sum'}"
-																ng-click="resetRetentionOptions()"
-																ng-model="subcontract.retentionTerms" ng-disabled="disableButtons"
-																uib-btn-radio="'Lump Sum'">Lump Sum Retention</label> <label
-																class="btn"
-																ng-class="{'btn-primary' : subcontract.retentionTerms == 'Percentage', 'btn-inverse' : subcontract.retentionTerms != 'Percentage'}"
-																ng-click="resetRetentionOptions()"
-																ng-model="subcontract.retentionTerms" ng-disabled="disableButtons"
-																uib-btn-radio="'Percentage'">Percentage</label>
+											<div class="col-md-3">
+												<label>Form of Subcontract</label>
+											</div>
+											<div class="form-group col-md-9">
+												<div class="btn-group btn-group-justified">
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Major', 'btn-inverse' : subcontract.formOfSubcontract != 'Major'}"
+														ng-model="subcontract.formOfSubcontract"
+														ng-disabled="disableButtons" uib-btn-radio="'Major'"
+														ng-click="resetInternalJob()">Major</label> <label
+														class="btn"
+														ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Minor', 'btn-inverse' : subcontract.formOfSubcontract != 'Minor'}"
+														ng-model="subcontract.formOfSubcontract"
+														ng-disabled="disableButtons" uib-btn-radio="'Minor'"
+														ng-click="resetInternalJob()">Minor</label> <label
+														class="btn"
+														ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Consultancy Agreement', 'btn-inverse' : subcontract.formOfSubcontract != 'Consultancy Agreement'}"
+														ng-model="subcontract.formOfSubcontract"
+														ng-disabled="disableButtons"
+														uib-btn-radio="'Consultancy Agreement'"
+														ng-click="resetInternalJob()">Consultancy
+														Agreement</label> <label class="btn"
+														ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Internal Trading', 'btn-inverse' : subcontract.formOfSubcontract != 'Internal Trading'}"
+														ng-model="subcontract.formOfSubcontract"
+														ng-disabled="disableButtons"
+														uib-btn-radio="'Internal Trading'">Internal
+														Trading</label>
+												</div>
+												<div class="row"
+													ng-show="subcontract.formOfSubcontract == 'Internal Trading'">
+													<div class="col-md-9"></div>
+													<div class="form-group col-md-3">
+														<div class="input-group">
+															<input type="text" class="form-control"
+																placeholder="Internal Job No."
+																ng-model="subcontract.internalJobNo"
+																ng-disabled="disableButtons"
+																data-ng-required="subcontract.formOfSubcontract == 'Internal Trading'">
 														</div>
-
-
-														<br>
-
-														<div class="btn-group btn-group-justified"
-															ng-show="subcontract.retentionTerms == 'Percentage'">
-															<label class="btn"
-																ng-class="{'btn-primary' : percentageOption == 'Original', 'btn-inverse' : percentageOption != 'Original'}"
-																ng-model="percentageOption" ng-disabled="disableButtons"
-																uib-btn-radio="'Original'">Original</label>
-															<label class="btn"
-																ng-class="{'btn-primary' : percentageOption == 'Revised', 'btn-inverse' : percentageOption != 'Revised'}"
-																ng-model="percentageOption" ng-disabled="disableButtons"
-																uib-btn-radio="'Revised'">Revised</label>
-														</div>
-
-
-														<br>
-														<div class="col-md-4 col-xs-12 text-center"
-															ng-show="subcontract.retentionTerms == 'Lump Sum'">
-															<div class="col-md-12">
-																<div class="input-group">
-																	<span class="input-group-addon">$</span> <input
-																		type="number" class="form-control"
-																		ng-model="subcontract.retentionAmount" ng-disabled="disableButtons"
-																		data-ng-required="subcontract.retentionTerms == 'Lump Sum'">
-																</div>
-															</div>
-															<label>Lump Sum Amount</label>
-														</div>
-
-														<div class="col-md-4 col-xs-12 text-center"
-															ng-show="subcontract.retentionTerms == 'Percentage'">
-															<div class="col-md-12">
-																<input type="text" class="knob" value="30"
-																	data-width="60" data-height="60" data-fgColor="#f56954"
-																	ng-model="subcontract.maxRetentionPercentage" 
-																	ng-disabled="disableButtons"
-																	ng-knob>
-															</div>
-															<label>Maximum (%)</label>
-														</div>
-
-														<div class="col-md-4 col-xs-12 text-center"
-															ng-hide="subcontract.retentionTerms == 'No Retention'">
-															<div class="col-md-12">
-																<input type="text" class="knob" value="30"
-																	data-width="60" data-height="60" data-fgColor="#3c8dbc"
-																	ng-model="subcontract.interimRentionPercentage" 
-																	ng-disabled="disableButtons"
-																	ng-knob>
-															</div>
-															<label class="text-center">Interim (%)</label>
-														</div>
-
-
-
-														<div class="col-md-4 col-xs-12 text-center"
-															ng-hide="subcontract.retentionTerms == 'No Retention'">
-															<div class="col-md-12">
-																<input type="text" class="knob" value="30"
-																	data-width="60" data-height="60" data-fgColor="#3c8dbc"
-																	ng-model="subcontract.mosRetentionPercentage" 
-																	ng-disabled="disableButtons"
-																	ng-knob>
-															</div>
-															<label>MOS (%)</label>
-														</div>
-
 													</div>
 												</div>
 											</div>
-										</div>
-									</div>
-								</div>
 
-
-								<!-- Payment Terms  -->
-								<div class="col-md-12">
-									<div class="box box-primary">
-										<div class="box-body">
-											<div class="row">
-												<label class="col-md-3">Payment Terms</label>
-												<div class="col-md-9">
-													<div class="btn-group btn-group-justified">
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS0', 'btn-inverse' : subcontract.paymentTerms != 'QS0'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS0'">QS0</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS1', 'btn-inverse' : subcontract.paymentTerms != 'QS1'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS1'">QS1</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS2', 'btn-inverse' : subcontract.paymentTerms != 'QS2'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS2'">QS2</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS3', 'btn-inverse' : subcontract.paymentTerms != 'QS3'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS3'">QS3</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS4', 'btn-inverse' : subcontract.paymentTerms != 'QS4'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS4'">QS4</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS5', 'btn-inverse' : subcontract.paymentTerms != 'QS5'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS5'">QS5</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS6', 'btn-inverse' : subcontract.paymentTerms != 'QS6'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS6'">QS6</label>
-														<label class="btn"
-															ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS7', 'btn-inverse' : subcontract.paymentTerms != 'QS7'}"
-															ng-model="subcontract.paymentTerms" ng-disabled="disableButtons" uib-btn-radio="'QS7'">QS7</label>
-													</div>
-													<br>
-													<textarea class="col-md-12" rows="1"
-														placeholder="Payment Tersms Description ..."
-														ng-model="subcontract.paymentTermsDescription"
-														ng-style="{height : 35 + 'px'}"
-														data-ng-required="subcontract.paymentTerms == 'QS0'"
-														ng-disabled="disableButtons"></textarea>
-												</div>
+											<div class="col-md-3">
+												<label>Status</label>
 											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- CPF -->
-								<div class="col-md-12">
-									<div class="box box-warning">
-										<div class="box-body">
-											<div class="row">
-												<label class="col-md-3">CPF</label>
-
-												<div class="row col-md-9">
-													<div class="col-md-12">
-														<input type="checkbox" data-ios-toggle="toggle" name="cpfCalculation"
-															data-style="ios" data-onstyle="primary"
-															data-offstyle="warning" data-on="Subject to CPF"
-															data-off="No CPF" ng-model="subcontract.cpfCalculation"
-															ng-disabled="disableCPFButton || disableButtons">
-													</div>
-
-
-													<div class="col-md-6">
-														<div class="form-group"
-															ng-show="subcontract.cpfCalculation == true">
-															<label>CPF Base Period</label>
-															<div class="input-group col-md-12">
-																<input type="number" class="form-control" name="cpfBasePeriod"
-																	data-parsley-minlength="1" data-parsley-maxlength="2"
-																	ng-model="subcontract.cpfBasePeriod"
-																	data-ng-required="subcontract.cpfCalculation == true"
-																	ng-disabled="disableButtons">
-															</div>
-														</div>
-													</div>
-
-													<div class="col-md-6">
-														<div class="form-group"
-															ng-show="subcontract.cpfCalculation == true">
-															<label>CPF Base Year</label>
-															<div class="input-group col-md-12">
-																<input type="number" class="form-control" name="cpfBaseYear"
-																	data-parsley-minlength="4" data-parsley-maxlength="4"
-																	ng-model="subcontract.cpfBaseYear"
-																	data-ng-required="subcontract.cpfCalculation == true"
-																	ng-disabled="disableButtons">
-															</div>
-														</div>
-													</div>
-
+											<div class="form-group col-md-9">
+												<div class="col-md-12">
+													<h6 class="">{{subcontractStatus}}</h6>
 												</div>
-												
 											</div>
 
 										</div>
@@ -386,28 +186,237 @@
 								</div>
 							</div>
 
+							<!-- Retention -->
+							<div class="col-md-12">
+								<div class="box box-primary">
+									<div class="box-body ">
+										<div class="row">
+											<label class="col-md-3">Retention</label>
 
+											<div class="col-md-9">
+												<div class="form-group">
+													<div class="btn-group btn-group-justified">
+														<label class="btn"
+															ng-class="{'btn-primary' : subcontract.retentionTerms == 'No Retention', 'btn-inverse' : subcontract.retentionTerms != 'No Retention'}"
+															ng-click="resetRetentionOptions()"
+															ng-model="subcontract.retentionTerms"
+															ng-disabled="disableButtons"
+															uib-btn-radio="'No Retention'">No Retention</label> <label
+															class="btn"
+															ng-class="{'btn-primary' : subcontract.retentionTerms == 'Lump Sum', 'btn-inverse' : subcontract.retentionTerms != 'Lump Sum'}"
+															ng-click="resetRetentionOptions()"
+															ng-model="subcontract.retentionTerms"
+															ng-disabled="disableButtons" uib-btn-radio="'Lump Sum'">Lump
+															Sum Retention</label> <label class="btn"
+															ng-class="{'btn-primary' : subcontract.retentionTerms == 'Percentage', 'btn-inverse' : subcontract.retentionTerms != 'Percentage'}"
+															ng-click="resetRetentionOptions()"
+															ng-model="subcontract.retentionTerms"
+															ng-disabled="disableButtons" uib-btn-radio="'Percentage'">Percentage</label>
+													</div>
+
+
+													<br>
+
+													<div class="btn-group btn-group-justified"
+														ng-show="subcontract.retentionTerms == 'Percentage'">
+														<label class="btn"
+															ng-class="{'btn-primary' : percentageOption == 'Original', 'btn-inverse' : percentageOption != 'Original'}"
+															ng-model="percentageOption" ng-disabled="disableButtons"
+															uib-btn-radio="'Original'">Original</label> <label
+															class="btn"
+															ng-class="{'btn-primary' : percentageOption == 'Revised', 'btn-inverse' : percentageOption != 'Revised'}"
+															ng-model="percentageOption" ng-disabled="disableButtons"
+															uib-btn-radio="'Revised'">Revised</label>
+													</div>
+
+
+													<br>
+													<div class="col-md-4 col-xs-12 text-center"
+														ng-show="subcontract.retentionTerms == 'Lump Sum'">
+														<div class="col-md-12">
+															<div class="input-group">
+																<span class="input-group-addon">$</span> <input
+																	type="number" class="form-control"
+																	ng-model="subcontract.retentionAmount"
+																	ng-disabled="disableButtons"
+																	data-ng-required="subcontract.retentionTerms == 'Lump Sum'">
+															</div>
+														</div>
+														<label>Lump Sum Amount</label>
+													</div>
+
+													<div class="col-md-4 col-xs-12 text-center"
+														ng-show="subcontract.retentionTerms == 'Percentage'">
+														<div class="col-md-12">
+															<input type="text" class="knob" value="30"
+																data-width="60" data-height="60" data-fgColor="#f56954"
+																ng-model="subcontract.maxRetentionPercentage"
+																ng-disabled="disableButtons" ng-knob>
+														</div>
+														<label>Maximum (%)</label>
+													</div>
+
+													<div class="col-md-4 col-xs-12 text-center"
+														ng-hide="subcontract.retentionTerms == 'No Retention'">
+														<div class="col-md-12">
+															<input type="text" class="knob" value="30"
+																data-width="60" data-height="60" data-fgColor="#3c8dbc"
+																ng-model="subcontract.interimRentionPercentage"
+																ng-disabled="disableButtons" ng-knob>
+														</div>
+														<label class="text-center">Interim (%)</label>
+													</div>
+
+
+
+													<div class="col-md-4 col-xs-12 text-center"
+														ng-hide="subcontract.retentionTerms == 'No Retention'">
+														<div class="col-md-12">
+															<input type="text" class="knob" value="30"
+																data-width="60" data-height="60" data-fgColor="#3c8dbc"
+																ng-model="subcontract.mosRetentionPercentage"
+																ng-disabled="disableButtons" ng-knob>
+														</div>
+														<label>MOS (%)</label>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<!-- Payment Terms  -->
+							<div class="col-md-12">
+								<div class="box box-primary">
+									<div class="box-body">
+										<div class="row">
+											<label class="col-md-3">Payment Terms</label>
+											<div class="col-md-9">
+												<div class="btn-group btn-group-justified">
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS0', 'btn-inverse' : subcontract.paymentTerms != 'QS0'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS0'">QS0</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS1', 'btn-inverse' : subcontract.paymentTerms != 'QS1'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS1'">QS1</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS2', 'btn-inverse' : subcontract.paymentTerms != 'QS2'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS2'">QS2</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS3', 'btn-inverse' : subcontract.paymentTerms != 'QS3'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS3'">QS3</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS4', 'btn-inverse' : subcontract.paymentTerms != 'QS4'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS4'">QS4</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS5', 'btn-inverse' : subcontract.paymentTerms != 'QS5'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS5'">QS5</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS6', 'btn-inverse' : subcontract.paymentTerms != 'QS6'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS6'">QS6</label>
+													<label class="btn"
+														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS7', 'btn-inverse' : subcontract.paymentTerms != 'QS7'}"
+														ng-model="subcontract.paymentTerms"
+														ng-disabled="disableButtons" uib-btn-radio="'QS7'">QS7</label>
+												</div>
+												<br>
+												<textarea class="col-md-12" rows="1"
+													placeholder="Payment Tersms Description ..."
+													ng-model="subcontract.paymentTermsDescription"
+													ng-style="{height : 35 + 'px'}"
+													data-ng-required="subcontract.paymentTerms == 'QS0'"
+													ng-disabled="disableButtons"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- CPF -->
+							<div class="col-md-12">
+								<div class="box box-warning">
+									<div class="box-body">
+										<div class="row">
+											<label class="col-md-3">CPF</label>
+
+											<div class="row col-md-9">
+												<div class="col-md-12">
+													<input type="checkbox" data-ios-toggle="toggle"
+														name="cpfCalculation" data-style="ios"
+														data-onstyle="primary" data-offstyle="warning"
+														data-on="Subject to CPF" data-off="No CPF"
+														ng-model="subcontract.cpfCalculation"
+														ng-disabled="disableCPFButton || disableButtons">
+												</div>
+
+
+												<div class="col-md-6">
+													<div class="form-group"
+														ng-show="subcontract.cpfCalculation == true">
+														<label>CPF Base Period</label>
+														<div class="input-group col-md-12">
+															<input type="number" class="form-control"
+																name="cpfBasePeriod" data-parsley-minlength="1"
+																data-parsley-maxlength="2"
+																ng-model="subcontract.cpfBasePeriod"
+																data-ng-required="subcontract.cpfCalculation == true"
+																ng-disabled="disableButtons">
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-6">
+													<div class="form-group"
+														ng-show="subcontract.cpfCalculation == true">
+														<label>CPF Base Year</label>
+														<div class="input-group col-md-12">
+															<input type="number" class="form-control"
+																name="cpfBaseYear" data-parsley-minlength="4"
+																data-parsley-maxlength="4"
+																ng-model="subcontract.cpfBaseYear"
+																data-ng-required="subcontract.cpfCalculation == true"
+																ng-disabled="disableButtons">
+														</div>
+													</div>
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
 						</div>
+
+
 					</div>
-
-
-
 				</div>
+
+				<button class="m-t-5 btn btn-primary btn-block" ng-click="save()"
+					ng-hide="disableButtons" ng-disabled="disableButtons">
+					Save <span class="fa fa-save"></span>
+				</button>
+
+
 
 
 			</div>
 
 
-		</fieldset>
-	</form>
-</div>
-
-<!-- ui-sref="subcontract-award.assign" -->
-<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-hide = "disableButtons" ng-disabled="disableButtons">
-	Save <span class="fa fa-save"></span>
-</button>
+		</div>
 
 
-
-
+	</fieldset>
+</form>
 

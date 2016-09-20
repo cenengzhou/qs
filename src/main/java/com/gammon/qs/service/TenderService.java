@@ -850,7 +850,7 @@ public class TenderService implements Serializable {
 						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 						for(SubcontractDetail scDetails: scDetailsList){
 							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-								scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+								scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
 								subcontractDetailDao.update(scDetails);
 							}
 						}
@@ -885,7 +885,7 @@ public class TenderService implements Serializable {
 						if(ta.getVendorNo()==0){
 							ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
-							logger.info("---------------------seqNo: "+seqNo);
+							//logger.info("---------------------seqNo: "+seqNo);
 							for(TenderDetail taDetail: toBeUpdatedTaDetails){
 								//boolean newTaDetail = true;
 								List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());

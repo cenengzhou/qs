@@ -442,7 +442,7 @@ public class AddendumService{
 				addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
 				addendumDetailHBDao.update(addendumDetailHeader);
 			}
-			resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
+			resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
 		} catch (Exception e) {
 			error = "Addendum detail cannot be created from Resource Summary.";
 			e.printStackTrace();
@@ -506,7 +506,7 @@ public class AddendumService{
 				recalculateAddendumAmount(jobNo, subcontractNo, addendumNo);
 			}
 			if(repackaging!= null && resourceSummaryList.size()>0){
-				resourceSummaryService.saveResourceSummaries(resourceSummaryList, repackaging.getId());
+				resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
 			}
 		} catch (Exception e) {
 			error = "Addendum cannot be removed.";

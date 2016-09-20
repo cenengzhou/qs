@@ -21,6 +21,7 @@ import com.gammon.qs.shared.util.CalculationUtil;
 public class SubcontractDetailVO extends SubcontractDetailBQ {
 	
 	private static final long serialVersionUID = 5796764402452795699L;
+	@Deprecated
 	private Double toBeApprovedRate = 0.00;
 	private String contraChargeSCNo;
 	private Long corrSCLineSeqNo;
@@ -53,11 +54,12 @@ public class SubcontractDetailVO extends SubcontractDetailBQ {
 				+ super.toString() + "]";
 	}
 
+	@Deprecated
 	@Column(name = "toBeApprovedRate")
 	public Double getToBeApprovedRate() {
 		return (toBeApprovedRate!=null?CalculationUtil.round(toBeApprovedRate, 4):0.00);
 	}
-	
+	@Deprecated
 	public void setToBeApprovedRate(Double toBeApprovedRate) {
 		this.toBeApprovedRate = (toBeApprovedRate!=null?CalculationUtil.round(toBeApprovedRate, 4):0.00);
 	}

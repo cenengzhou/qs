@@ -172,12 +172,12 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 				var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
 
 				if(Object.keys(taBalance).indexOf(accountCode) >= 0)
-					taBalance[accountCode] =  taBalance[accountCode] - ta[i]['amountBudget'];
+					taBalance[accountCode] =  roundUtil.round(taBalance[accountCode] - ta[i]['amountBudget'], 2);
 
 			}
 
 			for (i in taBalance){
-				//console.log("taBalance[accountCode]: "+taBalance[accountCode]);
+				console.log("taBalance[accountCode]: "+taBalance[accountCode]);
 				if(taBalance[i] != 0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
 					return;
@@ -250,8 +250,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 							accountBalance[accountCode] =  data[i]['amountBudget'];
 
 					}
-					//console.log(accountBalance);
-
 				});
 	}
 	

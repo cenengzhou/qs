@@ -41,15 +41,15 @@
 		<div class="fixed-container">
 			<div class="col-lg-12"
 				ng-show="latestAddendumStatus=='APPROVED' || latestAddendumStatus==''">
-				<a ui-sref="subcontract.addendum.title"
+				<a ui-sref="subcontract.addendum.title({addendumNo: 'New'})"
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Addendum
 				</a> <br> <br>
 			</div>
 			<div class="col-lg-12 animated fadeInUp"
-				ng-repeat="addendum in addendums | orderBy:'addendumNo':true">
+				ng-repeat="addendum in addendums | orderBy:'addendumNo':false">
 
-				<div class="panel"	ng-class="{'panel-grey' : addendum.status=='Approved', 'panel-lime' : addendum.status!='Approved'}">
+				<div class="panel"	ng-class="{'panel-grey' : addendum.status=='APPROVED', 'panel-lime' : addendum.status!='APPROVED'}">
 					<div class="panel-heading">
 						<div class="panel-heading-btn">
 							<a href="javascript:;"
@@ -69,19 +69,19 @@
 							<div class="col-lg-12">
 								<div class="pull-right">
 									<a class="btn" ui-sref="subcontract.addendum.title({addendumNo: addendum.no})" 
-									ng-class="{'btn-grey' : addendum.status=='Approved', 'btn-lime' : addendum.status!='Approved'}">
+									ng-class="{'btn-grey' : addendum.status=='APPROVED', 'btn-lime' : addendum.status!='APPROVED'}">
 									View details</a>
 								</div>
 								<dl class="dl-horizontal">
 									<dt>Addendum Status:</dt>
 									<dd>
-										<div ng-class="{'text-danger' : addendum.status=='Approved', 'text-green' : addendum.status!='Approved'}">
+										<div ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
 											<b>{{addendum.status}}</b>
 										</div>
 									</dd>
 									<dt>Approval Status:</dt>
 									<dd>
-										<div ng-class="{'text-danger' : addendum.status=='Approved', 'text-green' : addendum.status!='Approved'}">
+										<div ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
 											<b>{{addendum.statusApproval}}</b>
 										</div>
 									</dd>
@@ -97,7 +97,7 @@
 									<dd>{{addendum.title}}</dd>
 									<dt>Submission Date:</dt>
 									<dd>{{addendum.dateSubmission | jsonDate : 'ddMMM,yyyy'}}</dd>
-									<dt>Approved Date:</dt>
+									<dt>APPROVED Date:</dt>
 									<dd>{{addendum.dateApproval | jsonDate : 'ddMMM,yyyy'}}</dd>
 								</dl>
 							</div>
@@ -114,10 +114,10 @@
 									<dt>Completed:</dt>
 									<dd>
 										<div class="progress progress-striped  m-b-sm"
-										ng-class="{'active' : addendum.status!='Approved'}">
+										ng-class="{'active' : addendum.status!='APPROVED'}">
 											<div class="progress-bar" 
 												ng-style="{width: progress_bar(addendum.status)}"
-												ng-class="{'progress-bar-grey' : addendum.status=='Approved', 'progress-bar-lime' : addendum.status!='Approved'}">
+												ng-class="{'progress-bar-grey' : addendum.status=='APPROVED', 'progress-bar-lime' : addendum.status!='APPROVED'}">
 											{{progress_bar(addendum.status)}}</div>
 										</div>
 									</dd>

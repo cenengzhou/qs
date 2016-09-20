@@ -139,13 +139,13 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-	function splitOrMergeResources(repackagingId, resourceSummarySplitMergeWrapper) {
+	function splitOrMergeResources(jobNo, resourceSummarySplitMergeWrapper) {
 		var request = $http({
 			method: "post",
 			url: "service/resourceSummary/splitOrMergeResources",
 			dataType: "application/json;charset=UTF-8",
 			params: {
-				repackagingId: repackagingId
+				jobNo: jobNo
 			},
 			data : resourceSummarySplitMergeWrapper
 		});

@@ -3,6 +3,8 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = "";
+
+
 	getAllAddendumDetails();
 
 
@@ -19,7 +21,7 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			//showColumnFooter : true,
 			//fastWatch : true,
 			exporterMenuPdf: false,
-			 
+
 			columnDefs: [
 			             { field: 'id', width:80, visible: false},
 			             { field: 'typeHd', width:80, visible: false},
@@ -37,9 +39,9 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			             {field: 'remarks' ,  width:100 },
 			             {field: 'idHeaderRef',width:80, visible: true},
 			             {field: 'typeAction',displayName:"Action", width:80, visible: true}
-			             
+
 			             ],
-			rowTemplate: '<div ng-class="{\'red\':row.entity.typeAction==\'DELETE\', \'blue\':row.entity.typeAction==\'UPDATE\' }"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>'
+			             rowTemplate: '<div ng-class="{\'red\':row.entity.typeAction==\'DELETE\', \'blue\':row.entity.typeAction==\'UPDATE\' }"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>'
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
@@ -83,13 +85,18 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 
 
 	function getAllAddendumDetails(){
-		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
-		.then(
-				function( data ) {
-					$scope.gridOptions.data = data;
-				});
+		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
+			addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+			.then(
+					function( data ) {
+						$scope.gridOptions.data = data;
+					});
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
+
+
 	}
-	
-	
+
+
 
 }]);

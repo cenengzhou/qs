@@ -18,6 +18,7 @@ public class SubcontractDetailBQ extends SubcontractDetailOA {
 
 	private static final long serialVersionUID = -6680445025465957878L;
 	private Double costRate;
+	@Deprecated
 	private Double toBeApprovedQuantity = 0.0;
 	//private Double newQuantity;
 
@@ -61,10 +62,12 @@ public class SubcontractDetailBQ extends SubcontractDetailOA {
 		this.costRate = (costRate!=null?CalculationUtil.round(costRate, 4):0.00);
 	}
 
+	@Deprecated
 	@Column(name = "toBeApprovedQty")
 	public Double getToBeApprovedQuantity() {
 		return (toBeApprovedQuantity!=null?CalculationUtil.round(toBeApprovedQuantity, 4):0.00);
 	}
+	@Deprecated
 	public void setToBeApprovedQuantity(Double toBeApprovedQuantity) {
 		this.toBeApprovedQuantity = (toBeApprovedQuantity!=null?CalculationUtil.round(toBeApprovedQuantity, 4):0.00);
 	}

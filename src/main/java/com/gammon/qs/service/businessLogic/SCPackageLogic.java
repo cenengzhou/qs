@@ -1,6 +1,7 @@
 package com.gammon.qs.service.businessLogic;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -202,8 +203,13 @@ public class SCPackageLogic {
 					((!(scDetail instanceof SubcontractDetailVO)) || Math.abs(scDetail.getCostRate())>0) && 
 					!scDetail.getNewQuantity().equals(scDetail.getQuantity())){
 					((SubcontractDetailBQ)scDetail).setQuantity(scDetail.getNewQuantity());
+					/**
+					 * convert to amount based
+					 * @author koeyyeung
+					 * modified on 6 Sep, 2016**/
 					((SubcontractDetailBQ)scDetail).setAmountSubcontract(scDetail.getAmountSubcontractNew());
-					((SubcontractDetailBQ)scDetail).setToBeApprovedQuantity(scDetail.getNewQuantity());
+					((SubcontractDetailBQ)scDetail).setAmountBudget(new BigDecimal(scDetail.getNewQuantity()*scDetail.getCostRate()).setScale(2, RoundingMode.HALF_UP));
+					//((SubcontractDetailBQ)scDetail).setToBeApprovedQuantity(scDetail.getNewQuantity());
 				}
 				if (scDetail instanceof SubcontractDetailVO){
 					if (SubcontractDetail.APPROVED.equalsIgnoreCase(scDetail.getApproved()))
