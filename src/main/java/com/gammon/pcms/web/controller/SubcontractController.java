@@ -336,6 +336,23 @@ public class SubcontractController {
 		return result;
 	}
 	
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "generateSCDetailsForPaymentRequisition", method = RequestMethod.POST)
+	public String generateSCDetailsForPaymentRequisition(@RequestParam(required =true) String jobNo, 
+										@RequestParam(required =true) String subcontractNo
+										){
+		String result = null;
+		try {
+			result = subcontractService.generateSCDetailsForPaymentRequisition(jobNo, subcontractNo);
+		} catch (Exception e) {
+			result = "Payment Requisition cannot be processed.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} 
+		return result;
+	}
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @RequestParam Date glDate){

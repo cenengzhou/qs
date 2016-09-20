@@ -26,6 +26,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	deleteSubcontractDetailAddendum:					deleteSubcontractDetailAddendum,
     	updateSCDetailsNewQuantity:							updateSCDetailsNewQuantity,
     	submitSplitTerminateSC:								submitSplitTerminateSC,
+    	generateSCDetailsForPaymentRequisition:				generateSCDetailsForPaymentRequisition,
     		
     	runProvisionPostingManually:						runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
@@ -397,6 +398,20 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
                 jobNo: jobNo,
                 subcontractNo: subcontractNo, 
                 splitTerminate: splitTerminate
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function generateSCDetailsForPaymentRequisition(jobNo, subcontractNo) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/generateSCDetailsForPaymentRequisition",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo 
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

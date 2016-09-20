@@ -103,7 +103,7 @@ public class TenderService implements Serializable {
 				for(TenderDetail taDetail: taDetailList){
 					if(taDetail!=null && taDetail.getId()!=null){
 						SubcontractDetail scDetails = subcontractDetailDao.obtainSCDetailsByTADetailID(jobNo, packageNo, taDetail.getId());
-						if(scDetails!=null && (scDetails.getPostedCertifiedQuantity()!=0.0 || scDetails.getPostedWorkDoneQuantity()!=0.0 || scDetails.getCumWorkDoneQuantity()!=0.0)){
+						if(scDetails!=null && (scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountPostedWD() .compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0)){
 							uneditableTADetailIDs.add(String.valueOf(taDetail.getId()));
 						}
 					}
@@ -802,7 +802,7 @@ public class TenderService implements Serializable {
 	 * **/
 	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract scPackage, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
 		if(tenderAnalysis.getId()!=null){
-			
+			//Update Vendor TA
 			if(tenderAnalysis.getVendorNo()!=0){
 				//Payment Requisition exists
 				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
@@ -844,9 +844,8 @@ public class TenderService implements Serializable {
 						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
 						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 						
-						subcontractDao.update(scPackage);
 						
-						//Reset cumCertQuantity in ScDetail
+						//Reset cumulative Cert Amount in ScDetail
 						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 						for(SubcontractDetail scDetails: scDetailsList){
 							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
@@ -860,6 +859,7 @@ public class TenderService implements Serializable {
 						//Recalculate SCPackage Subcon Sum
 						subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
 					}
+					subcontractDao.update(scPackage);
 					
 					tenderDao.update(tenderAnalysis);
 				}else{
@@ -993,6 +993,16 @@ public class TenderService implements Serializable {
 	public String updateRecommendedTender(String jobNo, String subcontractNo, Integer vendorNo) {
 		String error = "";
 		try {
+			PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+			
+			if(latestPaymentCert!=null 
+					&& latestPaymentCert.getDirectPayment().equals("Y") 
+					&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE)){
+				
+				error = "Payment Requisition exists. Tenderer should not be changed.";
+				return error;
+			}
+			
 			List<Tender> tenderList = this.obtainTenderList(jobNo, subcontractNo);
 			for (Tender tender: tenderList){
 				if(vendorNo.equals(tender.getVendorNo()))

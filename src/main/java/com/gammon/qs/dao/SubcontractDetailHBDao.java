@@ -193,15 +193,6 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		return (List<SubcontractDetail>)criteria.list();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<SubcontractDetail> getApprovedSCDetails(Subcontract subcontract) throws Exception{
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus",BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("subcontract", subcontract));
-		criteria.add(Restrictions.eq("approved", SubcontractDetail.APPROVED));
-		return (List<SubcontractDetail>)criteria.list();
-	}
-	
 	public Integer obtainSCDetailsMaxSeqNo(String jobNumber, String subcontractNo) throws DatabaseOperationException{
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("subcontract", "subcontract");

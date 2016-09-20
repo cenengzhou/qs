@@ -61,8 +61,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			             { field: "quantity" , enableCellEdit: false, width:80 , cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80, cellClass: 'text-right', cellFilter: 'number:4'},
 			             /*{ field: "amountBudget" ,displayName:"Budget", enableCellEdit: false, width:100 },*/
-			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, cellClass: "blue", width:80 , cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: "amountSubcontract" ,displayName:"SC Amount", cellClass: "blue", enableCellEdit: true, width:90 , cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, width:80 , cellClass: 'text-right blue', cellFilter: 'number:4'},
+			             { field: "amountSubcontract" ,displayName:"SC Amount", enableCellEdit: true, width:90 , cellClass: 'text-right blue', cellFilter: 'number:2'},
 			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2'}
 			             ]
 

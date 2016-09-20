@@ -123,8 +123,10 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.setApproved(scDetails.getApproved());
 		this.setUnit(scDetails.getUnit());
 		this.setRemark(scDetails.getRemark());
-		this.setPostedCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-		this.setCumCertifiedQuantity(scDetails.getCumCertifiedQuantity());
+		//this.setPostedCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+		//this.setCumCertifiedQuantity(scDetails.getCumCertifiedQuantity());
+		this.setAmountPostedCert(scDetails.getAmountPostedCert());
+		this.setAmountCumulativeCert(scDetails.getAmountCumulativeCert());
 		this.setOriginalQuantity(scDetails.getOriginalQuantity());
 		this.setAmountSubcontractNew(scDetails.getAmountSubcontractNew());
 	}
@@ -171,10 +173,12 @@ public class SubcontractDetail extends BasePersistedObject {
 	public String getContraChargeSCNo() {
 		return "";
 	}
+	@Deprecated
 	@Transient
 	public Double getPostedWorkDoneQuantity() {
 		return new Double(0);
 	}
+	@Deprecated
 	@Transient
 	public Double getCumWorkDoneQuantity() {
 		return new Double(0);
@@ -334,18 +338,22 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.remark = remark;
 	}
 
+	@Deprecated
 	@Column(name = "postedCertQty")
 	public Double getPostedCertifiedQuantity() {
 		return (postedCertifiedQuantity!=null?CalculationUtil.round(postedCertifiedQuantity, 4):0.00);
 	}
+	@Deprecated
 	public void setPostedCertifiedQuantity(Double postedCertifiedQuantity) {
 		this.postedCertifiedQuantity = (postedCertifiedQuantity!=null?CalculationUtil.round(postedCertifiedQuantity, 4):0.00);
 	}
 
+	@Deprecated
 	@Column(name = "cumCertQty")
 	public Double getCumCertifiedQuantity() {
 		return (cumCertifiedQuantity!=null?CalculationUtil.round(cumCertifiedQuantity, 4):0.00);
 	}
+	@Deprecated
 	public void setCumCertifiedQuantity(Double cumCertifiedQuantity) {
 		this.cumCertifiedQuantity = (cumCertifiedQuantity!=null?CalculationUtil.round(cumCertifiedQuantity, 4):0.00);
 	}

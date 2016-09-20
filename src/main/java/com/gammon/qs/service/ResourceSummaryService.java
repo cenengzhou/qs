@@ -358,7 +358,7 @@ public class ResourceSummaryService implements Serializable {
 						
 						errorMsg.append("Package No."+scPackage.getPackageNo()+" cannot be edited. It has Payment Requisition submitted.<br/>");
 					}
-					else if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0))
+					else if(scDetail!=null && (scDetail.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountPostedWD() .compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0))
 						errorMsg.append("Resource "+resourceInDB.getResourceDescription()+" cannot be edited. It is being used in Payment Requisition.<br/>");
 					else
 						packagesToReset.add(scPackage);
@@ -412,7 +412,7 @@ public class ResourceSummaryService implements Serializable {
 	}
 	
 	public void saveResourceSummaryHelper(ResourceSummary resourceSummary, Long repackagingEntryId) throws Exception{
-		logger.info("saveResourceSummaryHelper - STARTED");
+		//logger.info("saveResourceSummaryHelper - STARTED");
 		//If id != null, get record from db and update
 		//save a record for audit purpose
 		Long id = resourceSummary.getId();
@@ -539,7 +539,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setActionType(ResourceSummaryAuditCustom.ACTION_ADD);
 			resourceSummaryDao.saveAudit(audit);
 		}
-		logger.info("saveResourceSummaryHelper - END");
+		//logger.info("saveResourceSummaryHelper - END");
 	}
 	
 	/**
@@ -686,7 +686,7 @@ public class ResourceSummaryService implements Serializable {
 
 						errors.append("Package No."+resourceInDB.getPackageNo()+" cannot be 'Split' or 'Merge'. It has Payment Requisition submitted.<br/>");
 					}
-					else if(scDetail!=null && (scDetail.getPostedCertifiedQuantity()!=0.0 || scDetail.getPostedWorkDoneQuantity()!=0.0 || scDetail.getCumWorkDoneQuantity()!=0.0))
+					else if(scDetail!=null && (scDetail.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountPostedWD() .compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0))
 						errors.append("Resource "+resourceInDB.getResourceDescription()+" cannot be 'Split' or 'Merge'. It is being used in Payment Requisition.<br/>");
 				}
 			}
@@ -1226,14 +1226,12 @@ public class ResourceSummaryService implements Serializable {
 						}
 						scPackageDao.resetPackageTA(scPackage);
 					}else{
-						int paymentCertListSize = scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size();
-						
 						//1. If latest payment is pending (Direct Payment)--> delete payment cert 
 						if(latestPaymentCert!=null 
 								&& latestPaymentCert.getDirectPayment().equals("Y") 
 								&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 							//Payment list = 1: reset vendorNo		
-							if(paymentCertListSize == 1){
+							if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size() == 1){
 								//reset vendorNo in scPackage
 								scPackage.setVendorNo(null);
 							}
@@ -1255,7 +1253,7 @@ public class ResourceSummaryService implements Serializable {
 						}
 						
 						//3. Determine to clear TA
-						if(paymentCertListSize == 0){
+						if(scPaymentCertHBDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()).size() == 0){
 							//Clear All TA
 							scPackageDao.resetPackageTA(scPackage);					
 						}else{

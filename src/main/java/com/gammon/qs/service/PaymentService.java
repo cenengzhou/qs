@@ -1386,8 +1386,9 @@ public class PaymentService{
 		scPaymentCert.setSubcontract(scPackage);
 		
 		//Generate new Payment Detail
-		List<PaymentCertDetail> scPaymentDetailList = createPaymentFromSCDetail(previousPaymentCert, scPaymentCert,createdUser);
-		for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
+		List<PaymentCertDetail> paymentDetailList = createPaymentFromSCDetail(previousPaymentCert, scPaymentCert);
+		
+		for(PaymentCertDetail scPaymentDetail : paymentDetailList){
 			scPaymentDetail.setPaymentCert(scPaymentCert);
 		}
 		} catch (NumberFormatException | DatabaseOperationException e) {
@@ -1462,7 +1463,7 @@ public class PaymentService{
 	 * @author tikywong
 	 * created on Feb 21, 2014 3:06:00 PM
 	 */
-	public List<PaymentCertDetail> createPaymentFromSCDetail(PaymentCert previousPaymentCert, PaymentCert scPaymentCert, String lastModifiedUser){	
+	public List<PaymentCertDetail> createPaymentFromSCDetail(PaymentCert previousPaymentCert, PaymentCert scPaymentCert){	
 		List<SubcontractDetail> scDetailsList = null;
 		try {
 			scDetailsList = scDetailsHBDao.getSCDetails(scPaymentCert.getSubcontract());
@@ -1477,7 +1478,6 @@ public class PaymentService{
 			@SuppressWarnings("unused") double totalMOSMovement = 0;
 			String tempSubsidCode = "";
 			String tempObjCode = "";
-			Date createdDate = new Date();
 			
 			for (SubcontractDetail scDetails:scDetailsList){
 				if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
@@ -1497,8 +1497,8 @@ public class PaymentService{
 						scPaymentDetail.setCumAmount(0.0);
 
 					//Movement Certified Amount
-					if (scDetails.getPostedCertifiedQuantity()!=null){
-						double newPostedAmount = CalculationUtil.round(scDetails.getPostedCertifiedQuantity()*scDetails.getScRate(), 2);
+					if (scDetails.getAmountPostedCert()!=null){
+						double newPostedAmount = CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
 						scPaymentDetail.setMovementAmount(scPaymentDetail.getCumAmount()-newPostedAmount);
 
 						if(previousPaymentCert!=null){
@@ -1512,9 +1512,6 @@ public class PaymentService{
 
 					scPaymentDetail.setPaymentCert(scPaymentCert);
 					scPaymentDetail.setSubcontractDetail(scDetails);
-					scPaymentDetail.setCreatedUser(lastModifiedUser);
-					scPaymentDetail.setCreatedDate(createdDate);
-					scPaymentDetail.setLastModifiedUser(lastModifiedUser);
 
 					if (scDetails instanceof SubcontractDetailBQ){
 						totalPaidAmount += scPaymentDetail.getCumAmount();
@@ -1578,9 +1575,6 @@ public class PaymentService{
 				scPaymentDetailMR.setCumAmount(cumMOSRetention);
 				scPaymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
 				scPaymentDetailMR.setScSeqNo(100002);
-				scPaymentDetailMR.setLastModifiedUser(lastModifiedUser);
-				scPaymentDetailMR.setCreatedUser(lastModifiedUser);
-				scPaymentDetailMR.setCreatedDate(createdDate);
 				resultList.add(scPaymentDetailMR);
 			}
 			
@@ -1612,9 +1606,6 @@ public class PaymentService{
 			scPaymentDetailRT.setCumAmount(cumRetention);
 			scPaymentDetailRT.setMovementAmount(cumRetention - preRTAmount);
 			scPaymentDetailRT.setScSeqNo(100001);
-			scPaymentDetailRT.setLastModifiedUser(lastModifiedUser);
-			scPaymentDetailRT.setCreatedUser(lastModifiedUser);
-			scPaymentDetailRT.setCreatedDate(createdDate);
 			resultList.add(scPaymentDetailRT);
 
 			//create GP payment Detail
@@ -1627,9 +1618,6 @@ public class PaymentService{
 			scPaymentDetailGP.setCumAmount(preGPAmount);
 			scPaymentDetailGP.setMovementAmount(0.00);
 			scPaymentDetailGP.setScSeqNo(100003);
-			scPaymentDetailGP.setLastModifiedUser(lastModifiedUser);
-			scPaymentDetailGP.setCreatedUser(lastModifiedUser);
-			scPaymentDetailGP.setCreatedDate(createdDate);
 			resultList.add(scPaymentDetailGP);
 			
 			//create GP payment Detail
@@ -1642,9 +1630,6 @@ public class PaymentService{
 			scPaymentDetailGR.setCumAmount(preGRAmount);
 			scPaymentDetailGR.setMovementAmount(0.00);
 			scPaymentDetailGR.setScSeqNo(100004);
-			scPaymentDetailGR.setLastModifiedUser(lastModifiedUser);
-			scPaymentDetailGR.setCreatedUser(lastModifiedUser);
-			scPaymentDetailGR.setCreatedDate(createdDate);
 			resultList.add(scPaymentDetailGR);
 			
 			return resultList;
@@ -1668,7 +1653,8 @@ public class PaymentService{
 			List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNo, packageNo);
 			for(SubcontractDetail scDetails: scDetailsList){
 				if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-					scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+					//scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+					scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
 					scDetailDao.update(scDetails);
 				}
 			}
@@ -2192,7 +2178,7 @@ public class PaymentService{
 	private String createPaymentDetail(PaymentCert previousPaymentCert, PaymentCert scPaymentCert){	
 		String error = "";
 		try {
-			List<SubcontractDetail> scDetailList = scDetailsHBDao.getApprovedSCDetails(scPaymentCert.getSubcontract());
+			List<SubcontractDetail> scDetailList = scDetailsHBDao.getSCDetails(scPaymentCert.getSubcontract());
 
 			if (scDetailList!=null){
 				List<PaymentCertDetail> resultList = new ArrayList<PaymentCertDetail>();
@@ -2220,8 +2206,8 @@ public class PaymentService{
 					 *created on 13 Jul, 2016
 					 *Convert to Amount Based 
 					 **/
-					if (scDetails.getPostedCertifiedQuantity()!=null)
-						scPaymentDetail.setCumAmount(scDetails.getPostedCertifiedQuantity()*scDetails.getScRate());
+					if (scDetails.getAmountPostedCert()!=null)
+						scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
 					else 
 						scPaymentDetail.setCumAmount(0.0);
 					
@@ -2867,13 +2853,13 @@ public class PaymentService{
 								 * @author koeyyeung
 								 * modified on 07Mar, 2014
 								 * use direct comparison and display the figures to user when error occurred**/
-								if (scDetail.getCumCertifiedQuantity().doubleValue() != scDetail.getCumWorkDoneQuantity().doubleValue()) {
-									logger.info("CumCertifiedQuantity :"+scDetail.getCumCertifiedQuantity()+" ; CumWorkDoneQuantity :"+scDetail.getCumWorkDoneQuantity());
+								if (scDetail.getAmountCumulativeCert().compareTo(scDetail.getAmountCumulativeWD()) != 0) {
+									logger.info("Cumulative Cert Amount :"+scDetail.getAmountCumulativeCert()+" ; Cumulative WD Amount :"+scDetail.getAmountCumulativeWD());
 
 									error = "No provision is allowed when submitting for the Final Payment. <br>" +
 											"There is projected provision in SC Detail Sequence No.: " + scDetail.getSequenceNo()+"<br>"+
-											"Cum. Certified Quantity :"+scDetail.getCumCertifiedQuantity()+"<br>"+
-											"Cum. Work Done Quantity :"+scDetail.getCumWorkDoneQuantity();
+											"Cumulative Cert Amount :"+scDetail.getAmountCumulativeCert()+"<br>"+
+											"Cumulative WD Amount :"+scDetail.getAmountCumulativeWD();
 									logger.info(error);
 									return error;
 								}
@@ -3031,7 +3017,7 @@ public class PaymentService{
 				}
 				//No provision allowed
 				if (scDetail instanceof SubcontractDetailOA){ 
-					if (Math.abs(scDetail.getScRate()*(((SubcontractDetailOA)scDetail).getCumCertifiedQuantity()-((SubcontractDetailOA)scDetail).getCumWorkDoneQuantity()))>0)
+					if (scDetail.getAmountCumulativeCert().subtract(scDetail.getAmountCumulativeWD()) != new BigDecimal(0))
 						throw new ValidateBusinessLogicException("Provision existed in "+scDetail.getSequenceNo());
 				}
 			}

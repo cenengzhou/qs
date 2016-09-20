@@ -177,7 +177,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			}
 
 			for (i in taBalance){
-				console.log("taBalance[accountCode]: "+taBalance[accountCode]);
 				if(taBalance[i] != 0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
 					return;

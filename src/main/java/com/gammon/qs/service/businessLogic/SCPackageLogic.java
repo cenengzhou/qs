@@ -144,7 +144,7 @@ public class SCPackageLogic {
 						scDetails.setDescription(TADetails.getDescription());
 						scDetails.setOriginalQuantity(TADetails.getQuantity());
 						scDetails.setQuantity(TADetails.getQuantity());
-						scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
+						//scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
 						scDetails.setScRate(TADetails.getRateBudget());
 						scDetails.setSubsidiaryCode(TADetails.getSubsidiaryCode());
 						scDetails.setObjectCode(TADetails.getObjectCode());

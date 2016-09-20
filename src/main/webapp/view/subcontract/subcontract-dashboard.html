@@ -6,7 +6,8 @@
 	</ol> -->
 
 	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small>
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}} </small>
 	</h1>
 	<div class="row">
 		<div class="col-md-7">
@@ -21,9 +22,8 @@
 							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 					</div>
 					<h3 class="panel-title">
-						<b>Subcontract {{subcontractNo}} - </b>{{subcontractDescription}}
+						<b>{{subcontractStatus}}</b> - Payment Terms: {{subcontract.paymentTerms}}
 					</h3>
-					<h3 class="panel-title">Payment Terms: {{subcontract.paymentTerms}}</h3>
 					<h3 class="panel-title" ng-show="subcontract.paymentStatus == 'F'"><b>Finalized</b></h3>
 						
 				</div>

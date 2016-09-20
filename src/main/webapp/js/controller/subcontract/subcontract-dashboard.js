@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractService',
-                                       function($scope, colorCode, subcontractService) {
+mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractService', 'GlobalParameter',
+                                       function($scope, colorCode, subcontractService, GlobalParameter) {
 	$scope.paymentAmount = 100256;
 
 	//Config Line chart color
@@ -27,6 +27,8 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					$scope.subcontractStatus = GlobalParameter.getValueById(GlobalParameter.subcontractStatus, data.scStatus);
+					
 					$scope.revisedSCSum = data.remeasuredSubcontractSum + data.approvedVOAmount;
 
 					//Chart: Subcontract Distribution

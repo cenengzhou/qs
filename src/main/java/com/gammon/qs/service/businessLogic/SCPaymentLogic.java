@@ -11,6 +11,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.shared.util.CalculationUtil;
 
 public class SCPaymentLogic {
 	private static Logger logger = Logger.getLogger(SCPaymentLogic.class.getName());
@@ -206,7 +207,7 @@ public class SCPaymentLogic {
 		for(SubcontractDetail scDetails : scDetailsList){
 			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 				//1. update package detail
-				scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
+				//scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
 				/**
 				 * @author koeyyeung
 				 * created on 19 Jul, 2016
@@ -219,11 +220,11 @@ public class SCPaymentLogic {
 
 				//calculate total for package
 				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) &&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) && !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType()))
-					totalPostedCert = totalPostedCert + scDetails.getPostedCertifiedQuantity()*scDetails.getScRate();
+					totalPostedCert = totalPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
 				else if("C1".equals(scDetails.getLineType()) || "C2".equals(scDetails.getLineType()))
-					totalCCPostedCert = totalCCPostedCert + scDetails.getPostedCertifiedQuantity()*scDetails.getScRate();
+					totalCCPostedCert = totalCCPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
 				else if("MS".equals(scDetails.getLineType()))
-					totalMOSPostedCert = totalMOSPostedCert + scDetails.getPostedCertifiedQuantity()*scDetails.getScRate();
+					totalMOSPostedCert = totalMOSPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
 			}
 
 		}

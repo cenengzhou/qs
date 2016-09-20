@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +88,6 @@ import com.gammon.qs.service.finance.SubcontractLiabilityReportGenerator;
 import com.gammon.qs.service.finance.SubcontractorAnalysisReportGenerator;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.service.subcontractDetail.SubcontractDetailForJobReportGenerator;
-import com.gammon.qs.service.subcontractDetail.UploadSubcontractDetailByExcelResponse;
 import com.gammon.qs.shared.domainWS.HedgingNotificationWrapper;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.JasperReportHelper;
@@ -100,10 +98,8 @@ import com.gammon.qs.wrapper.finance.SubcontractListWrapper;
 import com.gammon.qs.wrapper.listNonAwardedSCPackage.ListNonAwardedSCPackageWrapper;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 import com.gammon.qs.wrapper.sclist.SCListWrapper;
-import com.gammon.qs.wrapper.sclist.ScListView;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
-import com.gammon.qs.wrapper.updateSCPackage.UpdateSCPackageSaveWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -143,9 +139,6 @@ public class SubcontractService {
 	private JobInfoHBDao jobHBDao;
 	@Autowired
 	private JobInfoWSDao jobWSDao;
-	// BQ and Resource
-	@Autowired
-	private BpiItemService bpiItemService;
 	@Autowired
 	private BpiItemResourceHBDao bpiItemResourceHBDao;
 	// Resource Summary
@@ -215,7 +208,7 @@ public class SubcontractService {
 		this.cachedWorkScopeList = cachedWorkScopeList;
 	}
 	
-	public ScListView getSCListView(String jobNumber, String packageNumber, String packageType) throws Exception{
+	/*public ScListView getSCListView(String jobNumber, String packageNumber, String packageType) throws Exception{
 		ScListView scListView = new ScListView();
 		List<SubcontractDetail> result = obtainSCDetails(jobNumber, packageNumber);
 
@@ -264,7 +257,7 @@ public class SubcontractService {
 
 		return scListView;
 
-	}
+	}*/
 
 
 	//Fixing: 20110331, 20131120
@@ -280,7 +273,7 @@ public class SubcontractService {
 	 * try-finally is preserved for catching alerts to user only but the actions can still be saved in DB 
 	 * e.g.Warning message will be shown when user tries to update the Non-approved SCDetail Work Done but it's still allowed to be saved
 	 * **/
-	public String updateWDandCertQuantity(List<UpdateSCPackageSaveWrapper> updateSCPackageSaveWrapperList){
+	/*public String updateWDandCertQuantity(List<UpdateSCPackageSaveWrapper> updateSCPackageSaveWrapperList){
 		String message = null;
 		boolean bypassWarnings = true;
 		try {
@@ -369,10 +362,10 @@ public class SubcontractService {
 						double newCumWorkDoneAmt = newCumWorkDoneQuantity * scRate;
 						newCumWorkDoneAmt = RoundingUtil.round(newCumWorkDoneAmt, 2);
 
-						/**@author koeyyeung
+						*//**@author koeyyeung
 						 * Bug Fix #57: Non-approved VO (e.g. V1) cannot be larger than BQ Quantity
 						 * created on 16th Mar, 2015
-						 * **/
+						 * **//*
 						// BQ, B1, V1, V2, V3 - cannot be larger than BQ Quantity
 						if ("BQ".equalsIgnoreCase(scDetails.getLineType()) ||
 								"B1".equalsIgnoreCase(scDetails.getLineType()) ||
@@ -607,7 +600,7 @@ public class SubcontractService {
 			dbException.printStackTrace();
 		}
 		return message;
-	}
+	}*/
 
 	public Boolean triggerUpdateSCPaymentDetail(String jobNumber, String packageNo, String ifPayment, String createUser, String directPaymentIndicator) throws DatabaseOperationException {
 		if (jobNumber!=null && packageNo!=null){
@@ -912,8 +905,9 @@ public class SubcontractService {
 		return subcontractDetailHBDao.obtainSCDetail(jobNumber, subcontractNumber.toString(), sequenceNumber.toString());
 	}
 
-	private boolean checkPostedQty(SubcontractDetail scDetail){
-		return scDetail.getPostedCertifiedQuantity()==0 && scDetail.getPostedWorkDoneQuantity()==0;
+	private boolean checkPostedAmount(SubcontractDetail scDetail){
+		//return scDetail.getPostedCertifiedQuantity()==0 && scDetail.getPostedWorkDoneQuantity()==0;
+		return scDetail.getAmountPostedCert().compareTo(new BigDecimal(0)) == 0 && scDetail.getAmountPostedWD().compareTo(new BigDecimal(0)) == 0;
 	}
 
 	
@@ -982,7 +976,7 @@ public class SubcontractService {
 	 * 4. Trigger recalculation of SC Payment Details & Header
 	 * 
 	 */
-	public UploadSubcontractDetailByExcelResponse uploadSCDetailByExcel(String jobNumber, Integer packageNo, String paymentStatus, String paymentRequestStatus, String legacyJobFlag, String allowManualInputSCWorkdone, String userID, byte[] file) {
+	/*public UploadSubcontractDetailByExcelResponse uploadSCDetailByExcel(String jobNumber, Integer packageNo, String paymentStatus, String paymentRequestStatus, String legacyJobFlag, String allowManualInputSCWorkdone, String userID, byte[] file) {
 		boolean successFlag = true;
 		String message = "";
 
@@ -1194,7 +1188,7 @@ public class SubcontractService {
 
 		logger.info("Upload SCDetail by Excel - DONE");
 		return uploadSCDetailByExcelResponse;
-	}
+	}*/
 
 	public String suspendAddendum(String jobNumber, String packageNo, String sequenceNo) throws Exception{
 		SubcontractDetail scDetails = subcontractDetailHBDao.obtainSCDetail(jobNumber, packageNo, sequenceNo);
@@ -1429,7 +1423,8 @@ public class SubcontractService {
 					List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 					for(SubcontractDetail scDetails: scDetailsList){
 						if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-							scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+							//scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
+							scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
 							subcontractDetailHBDao.update(scDetails);
 						}
 					}
@@ -1437,18 +1432,7 @@ public class SubcontractService {
 			}
 			else{//No Payment Requisition
 				//Delete existing scDetails
-				//For DAO Transaction
-				/*List<SCDetails> scDetailsList = scPackage.getScDetails();
-				Iterator<SCDetails> scDetailsIterator = scDetailsList.iterator();
-				while(scDetailsIterator.hasNext()){
-					SCDetails scDetails = scDetailsIterator.next();
-					scDetailsIterator.remove();
-					
-					scPackage.getScDetails().remove(scDetails);
-					subcontractDetailHBDao.delete(scDetails); 
-				}*/
-				//For DAO Transaction ----END
-				logger.info("REMOVED DAO TRANSACTION - remove ALL SC detail (SC Award)");
+				logger.info("Remove ALL SC detail (SC Award)");
 				//For SERVICE Transaction
 				for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(scPackage)){
 					subcontractDetailHBDao.delete(scDetails);
@@ -1593,12 +1577,17 @@ public class SubcontractService {
 					Integer resourceNo = scDetail.getResourceNo();
 					Double costRate = scDetail.getCostRate();
 
-					if(lineType!=null && (lineType.equals("BQ") || lineType.equals("V3")))
-						scDetail.setNewQuantity(scDetail.getCumWorkDoneQuantity());				
-					else if(lineType!=null && lineType.equals("V1") && resourceNo!=null && resourceNo!=0 && costRate!=null)
-						scDetail.setNewQuantity(scDetail.getCumWorkDoneQuantity());
-					else
-						scDetail.setNewQuantity(scDetail.getQuantity());
+					if(lineType!=null && (lineType.equals("BQ") || lineType.equals("V3"))){
+						//scDetail.setNewQuantity(scDetail.getCumWorkDoneQuantity());
+						scDetail.setNewQuantity(CalculationUtil.round(scDetail.getAmountCumulativeWD().doubleValue()/scDetail.getScRate(), 2));
+						scDetail.setAmountSubcontractNew(scDetail.getAmountCumulativeWD());
+					}				
+					else if(lineType!=null && lineType.equals("V1") && resourceNo!=null && resourceNo!=0 && costRate!=null){
+						//scDetail.setNewQuantity(scDetail.getCumWorkDoneQuantity());
+						scDetail.setNewQuantity(CalculationUtil.round(scDetail.getAmountCumulativeWD().doubleValue()/scDetail.getScRate(), 2));
+						scDetail.setAmountSubcontractNew(scDetail.getAmountCumulativeWD());
+					}
+					
 				}
 				logger.info("Special Handling - New Quantity: null --> "+scDetail.getNewQuantity()+"\n"+
 							"Job: "+jobNumber+" SCPackage: "+packageNumber+" LineType: "+scDetail.getLineType()+" BillItem: "+scDetail.getBillItem()+" ID: "+scDetail.getId());
@@ -1606,25 +1595,25 @@ public class SubcontractService {
 
 			//Validation 4: New Quantity has to be positive number while BQ quantity is positive, vice-versa when negative
 			if(	SubcontractDetail.APPROVED.equals(scDetail.getApproved()) && 
-				((scDetail.getNewQuantity()< 0 && scDetail.getQuantity() >=0 && scDetail.getCumWorkDoneQuantity() >=0) || 
-				(scDetail.getNewQuantity()> 0 && scDetail.getQuantity() <0 && scDetail.getCumWorkDoneQuantity() <0))){
+				((scDetail.getNewQuantity()< 0 && scDetail.getQuantity() >=0) || 
+				(scDetail.getNewQuantity()> 0 && scDetail.getQuantity() <0))){
 				
 				message = 	"Job: "+jobNumber+" SCPackage: "+packageNumber+" Split/Terminate subcontract approval cannot be submitted<br/>"+
 				"ID: "+scDetail.getId()+"<br/>"+
 				"New Quantity has to be positive number while BQ quantity is positive, vice-versa when negative<br/>"+
-				"New Quantity: "+scDetail.getNewQuantity()+" BQ Quantity: "+scDetail.getQuantity()+" Cumulative Work Done Quantity: "+scDetail.getCumWorkDoneQuantity();
+				"New Quantity: "+scDetail.getNewQuantity()+" BQ Quantity: "+scDetail.getQuantity();
 				logger.info(message);
 				return message;
 			}
 
-			//Validation 5: make sure the New Quantity <= BQ Quantity and >= Cumulative Work Done Quantity
+			//Validation 5: make sure the New Subcontract Amount <= Subcontract Amount and >= Cumulative Work Done Amount
 			if(SubcontractDetail.APPROVED.equals(scDetail.getApproved()) && 
-				(Math.abs(scDetail.getNewQuantity())>Math.abs(scDetail.getQuantity()) || 
-						Math.abs(scDetail.getNewQuantity())<Math.abs(scDetail.getCumWorkDoneQuantity()))){
+				(scDetail.getAmountSubcontractNew().abs().compareTo(scDetail.getAmountSubcontract().abs()) > 0) || 
+				(scDetail.getAmountSubcontractNew().abs().compareTo(scDetail.getAmountCumulativeWD().abs())< 0)){
 				message = 	"Job: "+jobNumber+" SCPackage: "+packageNumber+" Split/Terminate subcontract approval cannot be submitted<br/>"+
 				"SCDetail Sequence number: "+scDetail.getSequenceNo()+"<br/>"+
-				"New Quantity has to be less than or equal to BQ Quantity and larger than or equal to Cumulative Work Done Quantity, vice-versa when negative <br/>"+
-				"New Quantity: "+scDetail.getNewQuantity()+" BQ Quantity: "+scDetail.getQuantity()+" Cumulative Work Done Quantity: "+scDetail.getCumWorkDoneQuantity();
+				"New Subcontract Amount has to be less than or equal to Subcontract Amount and larger than or equal to Cumulative Work Done Amount, vice-versa when negative <br/>"+
+				"New Subcontract Amount: "+scDetail.getAmountSubcontractNew()+" Subcontract Amount: "+scDetail.getAmountSubcontract()+" Cumulative Work Done Amount: "+scDetail.getAmountCumulativeWD();
 				logger.info(message);
 				return message;
 			}
@@ -2225,7 +2214,7 @@ public class SubcontractService {
 	 * @author tikywong
 	 * refactored on November 9, 2012 3:28:49 PM
 	 */
-	private String toCompleteSplitTerminateMethodTwoOrMethodThree(JobInfo job, String packageNo, String approvedOrRejected, String splitOrTerminate) throws Exception{
+	/*private String toCompleteSplitTerminateMethodTwoOrMethodThree(JobInfo job, String packageNo, String approvedOrRejected, String splitOrTerminate) throws Exception{
 		String message = null;
 		Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
 		List<SubcontractDetail> scDetailsIncludingInactive = subcontractDetailHBDao.getSCDetails(scPackage);
@@ -2279,7 +2268,7 @@ public class SubcontractService {
 
 		subcontractHBDao.updateSubcontract(scPackage);
 		return message;
-	}
+	}*/
 
 	public AppSubcontractStandardTerms obtainSystemConstant(String systemCode, String company) throws DatabaseOperationException{
 		AppSubcontractStandardTerms result = appSubcontractStandardTermsHBDao.getSystemConstant(systemCode, company);
@@ -2447,7 +2436,7 @@ public class SubcontractService {
 			return;
 		}
 		// SCPackage total budget will stay the same - no need to update
-		scDetail.setToBeApprovedQuantity(resource.getQuantity()*resource.getRemeasuredFactor());
+		//scDetail.setToBeApprovedQuantity(resource.getQuantity()*resource.getRemeasuredFactor());
 		//		scDetail.setQuantity(resource.getQuantity()*resource.getRemeasuredFactor());
 		scDetail.setCostRate(resource.getCostRate());
 		subcontractDetailHBDao.saveOrUpdate(scDetail);
@@ -2874,27 +2863,30 @@ public class SubcontractService {
 	}
 
 	/**
-	 * @author koeyyeung
-	 * created on 20Dec, 2014
 	 * Payment Requisition Revamp
 	 * Insert or Update SCDetails For Payment Requisition
+	 * @author koeyyeung
+	 * created on 20Dec, 2014
+	 * modified on 20Sep,2016
+	 * 
 	 * **/
-	public String generateSCDetailsForPaymentRequisition(String jobNo, String subcontractNo, String vendorNo) throws Exception {
+	public String generateSCDetailsForPaymentRequisition(String jobNo, String subcontractNo) throws Exception {
 		Tender budgetTA = null;
 		JobInfo job = jobHBDao.obtainJobInfo(jobNo);
-		Subcontract scPackage = subcontractHBDao.obtainPackage(job, subcontractNo);
+		Subcontract subcontract = subcontractHBDao.obtainPackage(job, subcontractNo);
 		
-		if (scPackage == null){
-			return "SCPackage does not exist";
+		if (subcontract == null){
+			return "Subcontract does not exist";
 		}
 		
-		List<Tender> tenderAnalysisList = tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+		List<Tender> tenderAnalysisList = tenderHBDao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
 		
-		//Step 1 ----------------TA must be equal to Resource Summary for Payment Requisition---------------------------------------------//
+		//Step 1: Tender Analysis must be equal to Resource Summary under Payment Requisition//
 		if("1".equals(job.getRepackagingType())){
-			logger.info("Step 1: TA must be equal to Repackaging detail for Payment Requisition for Repackaging 1");
+			logger.info("Step 1: Check whether Tender Analysis is equal to Resource Summary under Payment Requisition for Repackaging 1");
 			for (Tender ta: tenderAnalysisList){
-				if (Integer.valueOf(0).equals(ta.getVendorNo())){//Budget TA
+				if (Integer.valueOf(0).equals(ta.getVendorNo())){
+					budgetTA = ta;//Budget TA
 					for(TenderDetail taDetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
 						ResourceSummary resourceSummary = resourceSummaryHBDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget());
 						//BQResourceSummary resourceSummary = resourceSummaryHBDao.get(Long.valueOf(taDetails.getResourceNo()));
@@ -2911,160 +2903,128 @@ public class SubcontractService {
 			}
 		}
 		
-		//Get Budget tender analysis
+		/*//Get Budget tender analysis
 		for (Tender ta: tenderAnalysisList){
 			if (Integer.valueOf(0).equals(ta.getVendorNo())){
 				budgetTA = ta;
 			}
-		}
+		}*/
 		
-//		List<SCPaymentCert> paymentCertList = scPackage.getScPaymentCertList();
 		PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
+		Tender rcmTender = tenderHBDao.obtainRecommendedTender(jobNo, subcontractNo);
 		//Step 2: 1st Payment & Pending OR No Payment yet
-		/*if(latestPaymentCert == null || (latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") 
-																 && latestPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_PND_PENDING))
-																 && paymentCertList.size()==1){*/
 		if(latestPaymentCert == null){
 			logger.info("Step 2: No Payment Cert - Regenerate All SC Details.");
 			
 			//Check if the status > 160
-			if (scPackage.getSubcontractStatus() >= 160){
-				for (Tender ta: tenderAnalysisList){
-					//Recommended tender analysis 
-					if(Integer.valueOf(vendorNo).equals(ta.getVendorNo())){
-						ta.setStatus(Tender.TA_STATUS_RCM);
-						//Step 2.1: Remove existing SC Details AND Pending Payment Cert & Details
-						if(subcontractDetailHBDao.getSCDetails(scPackage).size()>0){
+			if (subcontract.getSubcontractStatus() >= 160){
+				if (rcmTender != null){
+					//Step 2.1: Remove All SC Details
+						if(subcontractDetailHBDao.getSCDetails(subcontract).size()>0){
 							logger.info("Step 2.1: Remove All SC Details");
-							//--------------------------------Delete Pending Payment Cert & Details---------------------------//
-							/*if(latestPaymentCert!=null 
-							&& latestPaymentCert.getDirectPayment().equals("Y") 
-							&& latestPaymentCert.getPaymentStatus().equals(SCPaymentCert.PAYMENTSTATUS_PND_PENDING)){
-
-						
-							List<SCPaymentAttachment> attachments = attachmentPaymentDao.getSCPaymentAttachment(latestPaymentCert);
-							for(SCPaymentAttachment attachment: attachments){
-								attachmentPaymentDao.delete(attachment);
-							}
-							
-							paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-							scPackage.getScPaymentCertList().remove(latestPaymentCert);
-							packageHBDao.update(scPackage);
-							}*/
-							
-
-							//--------------------------------Delete all existing scDetails---------------------------//
 							//For SERVICE Transaction
-							for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(scPackage)){
+							for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(subcontract)){
 								subcontractDetailHBDao.delete(scDetails);
 							}
 							//For SERVICE Transaction ----END
 						}
 						logger.info("Step 2.2: Generate New ScDetails");
-						addSCDetails(scPackage, ta, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, true);
+						addSCDetails(subcontract, rcmTender, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender), SubcontractDetail.NOT_APPROVED, true);
 						//Calculate SCPackage Sum
-						recalculateSCPackageSubcontractSum(scPackage, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
+						recalculateSCPackageSubcontractSum(subcontract, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender));
 						
-					}else{
-						//Non-recommended tender analysis
-						ta.setStatus(null);
-					}
-					for(Tender tenderAnalysis : tenderAnalysisList){
-						tenderAnalysis.setSubcontract(scPackage);
-					}
-					logger.info("Step 2.3: Update Package");
-					subcontractHBDao.updateSubcontract(scPackage);
-				}
+					
+					/*for(Tender tenderAnalysis : tenderAnalysisList){
+						tenderAnalysis.setSubcontract(subcontract);
+					}*/
+					logger.info("Step 2.3: Update Subcontract");
+					subcontractHBDao.update(subcontract);
+				}else
+					return "Please select a recommended tenderer first.";
 				
 			}else{
-				return "Subcontract Status should be greater or equal to 160(Tender Analysis Ready).";
+				return "Tender Analysis is not ready yet.";
 			}
 		}
 		//Step 3: Lastest Payment = APR
 		else if(latestPaymentCert!=null 
 				&& latestPaymentCert.getDirectPayment().equals("Y") 
 				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE)){
-			logger.info("Step 3: Lastest Payment = APR");
-			for (Tender ta: tenderAnalysisList){
-				// Step 3.1: Vendor must be matched with the one in previous Payment Requisition.
-				if (Integer.valueOf(vendorNo).equals(ta.getVendorNo())){
-					logger.info("Step 3.1: Check if vendor is matched with the one in previous Payment Requisition.");
-					if(vendorNo.equals(scPackage.getVendorNo())){
-						ta.setStatus(Tender.TA_STATUS_RCM);
-						
-						//Step 3.2: Compare TA && SC Details --> Update SC Detail
-						if(subcontractDetailHBDao.getSCDetails(scPackage).size()>0){
-							logger.info("Step 3.2: Compare TA && SC Details --> Update SC Detail");
-							
-							//---------------------Delete SC Detail-------------------------------//
-							List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(scPackage);
-							Iterator<SubcontractDetail> scDetailsIterator = scDetailsList.iterator();
-							while(scDetailsIterator.hasNext()){
-								SubcontractDetail scDetails = scDetailsIterator.next();
-								if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && !"RR".equals(scDetails.getLineType())){
-									TenderDetail TADetailInDB = tenderDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
-									if(TADetailInDB==null){
-										boolean notUsedInPayment = true;
-										List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
-										for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
-											if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
-												notUsedInPayment=false;
-												//Inactive scDetail
-												scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
-												subcontractDetailHBDao.update(scDetails);
-												break;
-											}
-										}
+			logger.info("Step 3: Lastest Payment is APR");
+			logger.info("Step 3.1: Check if vendor is matched with the one in previous Payment Requisition.");
+			if(rcmTender.getVendorNo().toString().equals(subcontract.getVendorNo())){
+				//Step 3.2: Compare TA && SC Details --> Update SC Detail
+				if(subcontractDetailHBDao.getSCDetails(subcontract).size()>0){
+					logger.info("Step 3.2: Compare TA && SC Details --> Update SC Detail");
 
-										if(notUsedInPayment){
-											logger.info("scDetails id Remove: "+scDetails.getId());
-											scDetailsIterator.remove();
-											//logger.info("REMOVED DAO TRANSACTION - remove SC detail not in TA (Before Award)");
-											//For DAO Transaction
-											//scPackage.getScDetails().remove(scDetails);
-											//For DAO Transaction ----END
-											subcontractDetailHBDao.delete(scDetails); 
-										}	
+					//---------------------Delete SC Detail-------------------------------//
+					List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.getSCDetails(subcontract);
+					Iterator<SubcontractDetail> scDetailsIterator = scDetailsList.iterator();
+					while(scDetailsIterator.hasNext()){
+						SubcontractDetail scDetails = scDetailsIterator.next();
+						if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && !"RR".equals(scDetails.getLineType())){
+							TenderDetail TADetailInDB = tenderDetailDao.obtainTADetailByID(scDetails.getTenderAnalysisDetail_ID());
+							if(TADetailInDB==null){
+								boolean notUsedInPayment = true;
+								List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(latestPaymentCert);
+								for(PaymentCertDetail scPaymentDetails: scPaymentDetailList){
+									if("BQ".equals(scPaymentDetails.getLineType()) && scPaymentDetails.getSubcontractDetail().getId().equals(scDetails.getId())){
+										notUsedInPayment=false;
+										//Inactive scDetail if it exists in payment
+										scDetails.setSystemStatus(BasePersistedAuditObject.INACTIVE);
+										subcontractDetailHBDao.update(scDetails);
+										break;
 									}
 								}
+
+								if(notUsedInPayment){
+									logger.info("scDetails id Remove: "+scDetails.getId());
+									scDetailsIterator.remove();
+									//logger.info("REMOVED DAO TRANSACTION - remove SC detail not in TA (Before Award)");
+									//For DAO Transaction
+									//scPackage.getScDetails().remove(scDetails);
+									//For DAO Transaction ----END
+									subcontractDetailHBDao.delete(scDetails); 
+								}	
 							}
-							
-							//-------------------Add SC Detail------------------------------//
-							List<TenderDetail> taDetailList = new ArrayList<TenderDetail>();
-							taDetailList.addAll(tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
-							Iterator<TenderDetail> taIterator = taDetailList.iterator();
-							while(taIterator.hasNext()){
-								TenderDetail taDetail = taIterator.next();
-								
-								SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
-								if(scDetailsInDB!=null){
-									//Update SC Details
-									scDetailsInDB.setScRate(taDetail.getRateBudget());
-									subcontractDetailHBDao.update(scDetailsInDB);
-									
-									taIterator.remove();
-								}
-							}
-							if(taDetailList.size()>0)
-								addSCDetails(scPackage, ta, budgetTA, taDetailList, SubcontractDetail.NOT_APPROVED, false);
-							
-							//-------------------Update SC Detail--------------------------//
-							recalculateSCPackageSubcontractSum(scPackage, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta));
-							
 						}
-						//Step 3.3: Generate ALL SC Details if no existing SC details found
-						else{
-							logger.info("Step 3.3: Generate ALL SC Details since no existing SC details found");
-							addSCDetails(scPackage, ta, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta), SubcontractDetail.NOT_APPROVED, false);
-						}
-						//Step 3.4: Update Package
-						subcontractHBDao.updateSubcontract(scPackage);
-						logger.info("Step 3.4: Update Package");
-					}else{
-						return "Vendor must be matched with the one in previous Payment Requisition.";
 					}
-					break;
+
+					//-------------------Add SC Detail------------------------------//
+					List<TenderDetail> taDetailList = new ArrayList<TenderDetail>();
+					taDetailList.addAll(tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender));
+					Iterator<TenderDetail> taIterator = taDetailList.iterator();
+					while(taIterator.hasNext()){
+						TenderDetail taDetail = taIterator.next();
+
+						SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo(), taDetail.getId());
+						if(scDetailsInDB!=null){
+							//Update SC Details
+							scDetailsInDB.setScRate(taDetail.getRateBudget());
+							subcontractDetailHBDao.update(scDetailsInDB);
+
+							taIterator.remove();
+						}
+					}
+					if(taDetailList.size()>0)
+						addSCDetails(subcontract, rcmTender, budgetTA, taDetailList, SubcontractDetail.NOT_APPROVED, false);
+
+					//-------------------Update SC Detail--------------------------//
+					recalculateSCPackageSubcontractSum(subcontract, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender));
+
 				}
+				//Step 3.3: Generate ALL SC Details if no existing SC details found
+				else{
+					logger.info("Step 3.3: Generate ALL SC Details if no SC details found");
+					addSCDetails(subcontract, rcmTender, budgetTA, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender), SubcontractDetail.NOT_APPROVED, false);
+					//-------------------Update SC Detail--------------------------//
+					recalculateSCPackageSubcontractSum(subcontract, tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender));
+				}
+				//Step 3.4: Update Package
+				subcontractHBDao.updateSubcontract(subcontract);
+				logger.info("Step 3.4: Update Package");
+			}else{
+				return "Tenderer must be matched with the one in previous Payment Requisition.";
 			}
 		}
 		//Step 4: Lastest Payment = SBM/UFR/PCS --> No Update on SC Detail
@@ -3082,19 +3042,19 @@ public class SubcontractService {
 	 * Add SCDetails
 	 * Called by: generateSCDetailsForDirectPayment, toCompleteSCAwardApproval 
 	 * **/
-	private Subcontract addSCDetails(Subcontract scPackage, Tender tenderAnalysis, Tender budgetTA, List<TenderDetail> taDetailsList, String approvalStatus, boolean resetSCDetails) throws Exception{
+	private Subcontract addSCDetails(Subcontract subcontract, Tender tenderAnalysis, Tender budgetTA, List<TenderDetail> taDetailsList, String approvalStatus, boolean resetSCDetails) throws Exception{
 		logger.info("Add New SCDetails");
-		scPackage.setVendorNo(tenderAnalysis.getVendorNo().toString());
-		scPackage.setPaymentCurrency(tenderAnalysis.getCurrencyCode().trim());
-		scPackage.setExchangeRate(tenderAnalysis.getExchangeRate());
+		subcontract.setVendorNo(tenderAnalysis.getVendorNo().toString());
+		subcontract.setPaymentCurrency(tenderAnalysis.getCurrencyCode().trim());
+		subcontract.setExchangeRate(tenderAnalysis.getExchangeRate());
 
 		Integer nextSeqNo =	1;
 		if(!resetSCDetails)
-			nextSeqNo = subcontractDetailHBDao.getNextSequenceNo(scPackage);
+			nextSeqNo = subcontractDetailHBDao.getNextSequenceNo(subcontract);
 		
 		for(TenderDetail taDetails: taDetailsList){
 			SubcontractDetailBQ scDetails = new SubcontractDetailBQ();
-			scDetails.setSubcontract(scPackage);
+			scDetails.setSubcontract(subcontract);
 			scDetails.setSequenceNo(nextSeqNo);
 			scDetails.setResourceNo(taDetails.getResourceNo());
 			
@@ -3112,11 +3072,11 @@ public class SubcontractService {
 			scDetails.setDescription(taDetails.getDescription());
 			scDetails.setOriginalQuantity(taDetails.getQuantity());
 			scDetails.setQuantity(taDetails.getQuantity());
-			scDetails.setToBeApprovedQuantity(taDetails.getQuantity());
+			//scDetails.setToBeApprovedQuantity(taDetails.getQuantity());
 			scDetails.setScRate(taDetails.getRateBudget());
 			scDetails.setSubsidiaryCode(taDetails.getSubsidiaryCode());
 			scDetails.setObjectCode(taDetails.getObjectCode());
-			scDetails.setLineType(taDetails.getLineType());
+			scDetails.setLineType("BQ");
 			scDetails.setUnit(taDetails.getUnit());
 			scDetails.setRemark(taDetails.getRemark());
 			scDetails.setApproved(approvalStatus);
@@ -3129,15 +3089,17 @@ public class SubcontractService {
 			scDetails.setAmountSubcontract(new BigDecimal(taDetails.getAmountSubcontract()));
 			scDetails.setAmountSubcontractNew(new BigDecimal(taDetails.getAmountSubcontract()));
 			
-			scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
+			scDetails.setJobNo(subcontract.getJobInfo().getJobNumber());
 			scDetails.setTenderAnalysisDetail_ID(taDetails.getId());
 			//scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
 			
-			scDetails.setSubcontract(scPackage);
+			scDetails.setSubcontract(subcontract);
+			
+			subcontractDetailHBDao.insert(scDetails);
 			
 			nextSeqNo++;
 		}
-		return scPackage;
+		return subcontract;
 	}
 	
 	/**
@@ -3146,29 +3108,31 @@ public class SubcontractService {
 	 * Recalculate SC Package Subcontract Sum
 	 * Called by: generateSCDetailsForDirectPayment, toCompleteSCAwardApproval, updateTenderAnalysisAndTADetails 
 	 * **/
-	public Subcontract recalculateSCPackageSubcontractSum(Subcontract scPackage, List<TenderDetail> taDetailsList) throws DatabaseOperationException{
+	public Subcontract recalculateSCPackageSubcontractSum(Subcontract subcontract, List<TenderDetail> taDetailsList) throws DatabaseOperationException{
 		logger.info("Recalculate SCPackage Subcontract Sum");
 		Double scSum = 0.00;
 		//Update scPackage Subcontract Sum
 		for(TenderDetail TADetails: taDetailsList){
-			scSum = scSum + (TADetails.getQuantity()*TADetails.getRateBudget());
+			scSum = scSum + (TADetails.getAmountSubcontract());
 		}
 		
-		if (Subcontract.RETENTION_ORIGINAL.equals(scPackage.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(CalculationUtil.round(scSum*scPackage.getMaxRetentionPercentage()/100.00,2));
-		else if(Subcontract.RETENTION_LUMPSUM.equals(scPackage.getRetentionTerms()))
-			scPackage.setMaxRetentionPercentage(0.00);
+		if (Subcontract.RETENTION_ORIGINAL.equals(subcontract.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(subcontract.getRetentionTerms()))
+			subcontract.setRetentionAmount(CalculationUtil.round(scSum*subcontract.getMaxRetentionPercentage()/100.00,2));
+		else if(Subcontract.RETENTION_LUMPSUM.equals(subcontract.getRetentionTerms()))
+			subcontract.setMaxRetentionPercentage(0.00);
 		else{
-			scPackage.setMaxRetentionPercentage(0.00);
-			scPackage.setInterimRentionPercentage(0.00);
-			scPackage.setMosRetentionPercentage(0.00);
-			scPackage.setRetentionAmount(0.00);
+			subcontract.setMaxRetentionPercentage(0.00);
+			subcontract.setInterimRentionPercentage(0.00);
+			subcontract.setMosRetentionPercentage(0.00);
+			subcontract.setRetentionAmount(0.00);
 		}
 		
-		scPackage.setRemeasuredSubcontractSum(scSum);
-		scPackage.setOriginalSubcontractSum(scSum);
+		subcontract.setRemeasuredSubcontractSum(scSum);
+		subcontract.setOriginalSubcontractSum(scSum);
 	
-		return scPackage;
+		subcontractHBDao.update(subcontract);
+		
+		return subcontract;
 	}
 
 	/**
@@ -3188,7 +3152,7 @@ public class SubcontractService {
 				if("RR".equals(scDetails.getLineType()) || "C1".equals(scDetails.getLineType()))
 					accumulatedMovementAmount=accumulatedMovementAmount * (-1);
 				try {
-					scDetails.setPostedCertifiedQuantity(CalculationUtil.round(accumulatedMovementAmount/scDetails.getScRate(),4));
+					//scDetails.setPostedCertifiedQuantity(CalculationUtil.round(accumulatedMovementAmount/scDetails.getScRate(),4));
 					/**
 					 * @author koeyyeung
 					 * created on 19 Jul, 2016
@@ -3969,33 +3933,40 @@ public class SubcontractService {
 						if(BasePersistedAuditObject.ACTIVE.equals(systemStatus)){
 							//Total Posted Contra Charge Certified Amount
 							if("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType())){
-								totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								//totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								totalCCPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
 							}
 							//Total Retention Released Amount
 							if("RR".equals(scDetail.getLineType())){
-								totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								//totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
 							}
 							//Total Posted Material On Site Certified Amount
 							if("MS".equals(scDetail.getLineType())){
-								totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								//totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
 							}
 							//Total Cumulative Work Done Amount
 							if (!excludedFromProvisionCalculation){
-								totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
+								//totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
+								totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getAmountCumulativeWD().doubleValue(), 2);
 							}
 							//Total Cumulative Certified Amount
 							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Cumulative Certified Amount" 
 							if("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
+								//totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
+								totalCumCertAmount += CalculationUtil.round(scDetail.getAmountCumulativeCert().doubleValue(), 2);
 							}
 							//Total Posted Work Done Amount
 							if (!excludedFromProvisionCalculation){
-								totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
+								//totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
+								totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getAmountPostedWD().doubleValue(), 2);
 							}
 							//Total Posted Certified Amount
 							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Posted Certified Amount"
 							if ("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								//totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+								totalPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
 							}
 						}
 						}
@@ -4611,14 +4582,14 @@ public class SubcontractService {
 				return error;
 			}
 			
-			if (subcontractDetail.getSubsidiaryCode()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+			if (subcontractDetail.getSubsidiaryCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
 				if (masterListService.checkSubsidiaryCodeInUCC(subcontractDetail.getSubsidiaryCode())!=null){
 					error = "Subsidiary Code does not exist in UCC";
 					return error;
 				}
 			}
-			if (subcontractDetail.getObjectCode()!=null && checkPostedQty(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+			if (subcontractDetail.getObjectCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
 				if (masterListService.checkObjectCodeInUCC(subcontractDetail.getObjectCode())!=null){
 					error = "Object Code does not exist in UCC";

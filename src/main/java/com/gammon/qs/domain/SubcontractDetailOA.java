@@ -35,13 +35,13 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	@Override
 	@Transient
 	public Double getProvision() {
-		return (this.getCumWorkDoneQuantity() * this.getScRate()) - (this.getPostedCertifiedQuantity() * this.getScRate());
+		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountPostedCert()).doubleValue(), 2));
 	}
 	
 	@Transient
 	@Override
 	public Double getProjectedProvision() {
-		return (this.getCumWorkDoneQuantity() * this.getScRate()) - (this.getCumCertifiedQuantity() * this.getScRate());
+		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountCumulativeCert()).doubleValue(), 2));
 	}
 
 	@Override
