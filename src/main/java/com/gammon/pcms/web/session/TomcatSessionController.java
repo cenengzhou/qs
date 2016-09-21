@@ -14,8 +14,10 @@ import org.apache.catalina.Session;
 import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ApplicationContextFacade;
 import org.apache.catalina.core.StandardContext;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gammon.pcms.application.User;
 import com.gammon.pcms.dto.rs.provider.response.SessionDTO;
 import com.gammon.pcms.helper.JsonHelper;
 
@@ -33,11 +36,13 @@ import com.gammon.pcms.helper.JsonHelper;
 @RequestMapping(value = "service", method = RequestMethod.POST)
 public class TomcatSessionController {
 
+	Logger logger = Logger.getLogger(TomcatSessionController.class);
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "GetSessionList")
 	public List<SessionDTO> getSessionList(HttpServletRequest request, HttpServletResponse response){
 		
@@ -63,11 +68,13 @@ public class TomcatSessionController {
 		sessionIdList = JsonHelper.getRequestParam(sessionIdList, valueType, objectMapper, request);
 		GeneralSessionController.invalidateSessionList(sessionIdList, sessionRegistry);
 		Manager tomcatManager = getTomcatManager(request.getSession().getServletContext());
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(String sessionId : sessionIdList){
 			try {
 				if(sessionId.equalsIgnoreCase(request.getSession().getId())) continue;
 				Session session = tomcatManager.findSession(sessionId);
 				if(session != null){
+					logger.info("Session " + session.getId() + " expired by:" + user.getFullname() + "(" + user.getUsername() +")");
 					session.expire();
 				}
 			} catch (IOException e) {

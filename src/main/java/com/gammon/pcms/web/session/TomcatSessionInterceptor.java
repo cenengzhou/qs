@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Session;
 import org.apache.http.auth.BasicUserPrincipal;
+import org.apache.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
@@ -19,6 +20,7 @@ import com.gammon.pcms.config.SecurityConfig;
 @Component(value = "SessionInterceptor")
 public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 
+	Logger logger = Logger.getLogger(TomcatSessionInterceptor.class);
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	@Autowired
@@ -35,8 +37,9 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 		SessionInformation sessionInformation = sessionRegistry.getSessionInformation(session.getId());
 		if(sessionInformation != null) {
 			User user = ((User) sessionInformation.getPrincipal());
+			logger.debug("Session preHandle for:" + user.toString());
 			String username = (user.getFullname() != null ? user.getFullname() : user.getUsername());
-			MDC.put("username", user.getUsername() != null ? user.getUsername() : user.getUsername());
+			MDC.put("username", user.getUsername());
 			session.setPrincipal(new BasicUserPrincipal(username));
 			session.setAuthType(user.getAuthType());
 			request.setAttribute("username", user.getUsername());
