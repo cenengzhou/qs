@@ -16,6 +16,10 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     	getMainCertFileAttachment:		getMainCertFileAttachment,
     	addMainCertFileAttachment:		addMainCertFileAttachment,
     	
+    	obtainAttachmentList:			obtainAttachmentList,
+    	uploadAddendumAttachment:		uploadAddendumAttachment,
+    	deleteAddendumAttachment:		deleteAddendumAttachment,
+    	uploadAddendumTextAttachment:	uploadAddendumTextAttachment
     });
    
     function uploadRepackingAttachment(formData){
@@ -158,6 +162,58 @@ mainApp.service('attachmentService', ['$http', '$q', 'GlobalHelper',  function($
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
    
+    function obtainAttachmentList(nameObject, textKey){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/attachment/obtainAttachmentList',
+    		params:{
+    			nameObject: nameObject,
+    			textKey: textKey
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function uploadAddendumAttachment(formData){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/uploadAddendumAttachment',
+			data : formData,
+			headers : {
+				'Content-Type' : undefined
+			}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function deleteAddendumAttachment(nameObject, textKey, sequenceNumber){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/deleteAddendumAttachment',
+            params: {
+            	nameObject: nameObject,
+            	textKey: textKey,
+            	sequenceNumber: sequenceNumber
+            }
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function uploadAddendumTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment){
+    	var request = $http({
+			method : 'POST',
+			url : 'service/attachment/uploadAddendumTextAttachment',
+            params: {
+            	nameObject: nameObject,
+            	textKey: textKey,
+            	sequenceNo: sequenceNo,
+            	fileName: fileName,
+            	textAttachment: textAttachment
+            }
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
 }]);
 
 

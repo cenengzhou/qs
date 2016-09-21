@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.AttachmentConfig;
+import com.gammon.pcms.dao.AttachmentHBDao;
+import com.gammon.pcms.model.Addendum;
+import com.gammon.pcms.model.Attachment;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AttachMainCertHBDao;
 import com.gammon.qs.dao.AttachPaymentHBDao;
@@ -96,6 +100,10 @@ public class AttachmentService {
 	//Detail
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;	
+	@Autowired
+	private AttachmentHBDao attachmentHBDao;;
+	@Autowired
+	private AddendumService addendumService;
 	
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
 
@@ -364,6 +372,193 @@ public class AttachmentService {
 
 		return responseObj;
 
+	}
+
+	public boolean uploadAddendumAttachment(String nameObject, String textKey, BigDecimal sequenceNo, String fileName, byte[] file, String createdUser) throws Exception {
+		logger.info("START - uploadAttachment");
+		//Timer
+		long start = System.currentTimeMillis();
+		
+		String splittedTextKey[] = textKey.split("\\|");	
+		String noJob = splittedTextKey[0].trim();
+		String noSubcontract = splittedTextKey[1].trim();
+		adminService.canAccessJob(noJob);
+
+		try{
+			//Job Directory Path 
+			String jobDirectoryPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+noJob+"\\"; 
+			File jobDirectory = new File(jobDirectoryPath);
+			boolean isJobDirectoryExists = (jobDirectory).exists();			
+			
+			if(!isJobDirectoryExists){
+				logger.info("Job Directory - "+jobDirectoryPath+" does not exist. Job Directory will be created.");
+				jobDirectory.mkdir();
+			}
+			
+			//write to file
+			File attachment = new File(jobDirectoryPath+fileName);
+			logger.info("Attachment Full Path: "+attachment.getPath());
+			
+			int i=0;
+			String tmpFileName=fileName;
+			while(attachment.exists()){ // check if the file exists, append new file if necessary	
+				i++;
+				int extensionPosition = fileName.lastIndexOf(".");
+				tmpFileName = fileName.substring(0,extensionPosition)+"("+i+")" +fileName.substring(extensionPosition , fileName.length());
+				
+				//Set new name for duplicated filename
+				attachment = new File(jobDirectoryPath+tmpFileName);				
+			}
+			fileName = tmpFileName;
+
+			FileOutputStream attachmentOutputStream = new FileOutputStream(attachment);
+
+			attachmentOutputStream.write(file);
+			attachmentOutputStream.close();
+			logger.info("Vendor/Job: "+splittedTextKey[0].trim()+" TextKey: "+textKey);
+			String attachmentPathInDB = noJob+ "\\"+ fileName;
+
+			if (Attachment.AddendumNameObject.equals(nameObject.trim())){
+				Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
+				Attachment uploadAttachment = new Attachment();
+				uploadAttachment.setTypeDocument(Attachment.FILE);
+				uploadAttachment.setNoSequence(sequenceNo);
+				uploadAttachment.setPathFile(attachmentPathInDB);
+				uploadAttachment.setNameFile(fileName);
+				uploadAttachment.setUsernameCreated(createdUser);
+				uploadAttachment.setIdTable(addendum.getId());
+				uploadAttachment.setNameTable(Attachment.ADDENDUM_TABLE);
+				attachmentHBDao.saveOrUpdate(uploadAttachment);
+			}
+			
+			//Logging
+			long end = System.currentTimeMillis();
+			long timeInSeconds = (end-start)/1000;
+			logger.info("Execution Time - uploadAttachment:"+ timeInSeconds+" seconds");
+			return true;
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
+			throw new IOException("Fail to upload attachment "+ fileName+".");
+		}
+	}
+	
+	@SuppressWarnings("resource")
+	public AttachmentFile obtainAddendumFileAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
+		logger.info("START - obtainAddendumFileAttachment");
+		//Timer
+		long start = System.currentTimeMillis();
+		
+		AttachmentFile attachmentFile = new AttachmentFile();
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
+		String fileLink = null;
+		String splittedTextKey[] = textKey.split("\\|");
+		String noJob = splittedTextKey[0].trim();
+		String noSubcontract = splittedTextKey[1].trim();
+		adminService.canAccessJob(noJob);
+		Attachment attachment;
+		switch(nameObject){
+		case Attachment.AddendumNameObject:
+			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
+			attachment  = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNumber));
+			if (attachment==null)
+				throw new Exception("Attachment Type Error");
+			fileLink = serverPath + attachment.getPathFile();
+			break;
+		}
+		
+		try{
+			File file = new File(fileLink);
+			long length = file.length();
+
+			InputStream is = new FileInputStream(file);
+
+			byte[] bytes = new byte[(int)length];
+
+			int offset = 0;
+			int numRead = 0;
+			while (offset < bytes.length
+					&& (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+				offset += numRead;
+			}
+
+			// Ensure all the bytes have been read in
+			if (offset < bytes.length) {
+				throw new IOException("Could not completely read file "+file.getName());
+			}
+
+			// Close the input stream and return bytes
+			is.close();
+
+			int fileNameIndex = fileLink.lastIndexOf("\\");
+			String fileName = fileLink.substring(fileNameIndex+1);
+
+			attachmentFile.setBytes(bytes);
+			attachmentFile.setFileName(fileName);	        
+
+			//Logging
+			long end = System.currentTimeMillis();
+			long timeInSeconds = (end-start)/1000;
+			logger.info("Execution Time - obtainAddendumFileAttachment:"+ timeInSeconds+" seconds");
+			
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
+		}
+
+		return attachmentFile;
+	}
+
+	public Boolean uploadAddendumTextAttachment(String nameObject, String textKey, Integer sequenceNo, String filename, String textContent) throws Exception {
+		String splittedTextKey[] = textKey.split("\\|");
+		String noJob = splittedTextKey[0].trim();
+		String noSubcontract = splittedTextKey[1].trim();
+		adminService.canAccessJob(noJob);
+		Attachment attachment;
+		switch(nameObject){
+		case Attachment.AddendumNameObject:
+			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
+			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
+			if(attachment == null) attachment = new Attachment();
+			attachment.setText(textContent);
+			attachment.setNameFile(filename);
+			attachment.setPathFile(Attachment.FileLinkForText);
+			attachment.setTypeDocument(Attachment.TEXT);
+			attachment.setNoSequence(new BigDecimal(sequenceNo));
+			attachment.setIdTable(addendum.getId());
+			attachment.setNameTable(Attachment.ADDENDUM_TABLE);
+			attachmentHBDao.saveOrUpdate(attachment);
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean deleteAddendumAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
+		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
+		String directoryPath="";
+
+		String splittedTextKey[] = textKey.split("\\|");
+		String noJob = splittedTextKey[0].trim();
+		String noSubcontract = splittedTextKey[1].trim();
+		adminService.canAccessJob(noJob);
+		Attachment attachment;
+		switch(nameObject){
+		case Attachment.AddendumNameObject:
+			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
+			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNumber));
+			directoryPath = serverPath + attachment.getPathFile();
+			attachmentHBDao.delete(attachment);
+			break;
+		}
+		try{
+			if (!directoryPath.isEmpty()){
+				File deleteFile = new File(directoryPath);
+				if(deleteFile != null)
+					deleteFile.delete();
+			}
+			return true;
+		}catch (Exception e){
+			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
+			return false;
+		}
 	}
 
 	public Boolean uploadTextAttachment(String nameObject, String textKey, Integer sequenceNo, String filename, String textContent) throws Exception {
@@ -1127,5 +1322,21 @@ public class AttachmentService {
 	}
 	/***************************Main Contract Certificate Attachment --END***************************/
 
+	public List<Attachment> obtainAttachmentList(String nameObject, String textKey){
+		String splittedTextKey[] = textKey.split("\\|");
+		String noJob = splittedTextKey[0].trim();
+		String noSubcontract = splittedTextKey[1].trim();
+		String altParam = splittedTextKey[2].trim();
+		List<Attachment> attachmentList = null;
+		
+		if(Attachment.AddendumNameObject.equals(nameObject)){
+			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(altParam));
+			if(addendum == null) throw new IllegalArgumentException("Job " + noJob + " subcontract " + noSubcontract + " addendum " + altParam + " not found");
+			attachmentList = attachmentHBDao.obtainAttachmentList(Attachment.ADDENDUM_TABLE, addendum.getId());
+		}
+		
+		return attachmentList;
+	}
 	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 }
+

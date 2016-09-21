@@ -1328,6 +1328,7 @@ public class SubcontractService {
 		logger.info("toCompleteSCAwardApproval - START");
 		Tender budgetTA = null;
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
+		if(scPackage == null) throw new IllegalArgumentException("Job " + jobNumber + " subcontract " + packageNo + " not found");
 		if("A".equals(approvedOrRejected)){
 			scPackage.setSubcontractStatus(500);
 			

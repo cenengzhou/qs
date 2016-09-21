@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -55,7 +56,8 @@ public class AttachMainCertHBDao extends BaseHibernateDao<AttachMainCert> {
 		try{
 			List<AttachMainCert> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("mainCert", mainCert));		
+			criteria.add(Restrictions.eq("mainCert", mainCert));	
+			criteria.addOrder(Order.asc("sequenceNo"));
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){

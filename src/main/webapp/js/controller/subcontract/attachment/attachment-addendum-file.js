@@ -1,4 +1,4 @@
-mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
+mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
                                          function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
 	
 	$scope.jobNo = $cookies.get('jobNo');
@@ -13,16 +13,28 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	$scope.hideButton = false;
 	
 	$scope.loadAttachmentFacade = attachmentService.getAttachmentListForPCMS;
-	$scope.uploadAttachmentFacade =  attachmentService.uploadSCAttachment;
+	$scope.uploadAttachmentFacade = attachmentService.uploadSCAttachment;
 	$scope.deleteAttachmentFacade = attachmentService.deleteAttachment;
 	$scope.saveTextAttachmentFacade = attachmentService.uploadTextAttachment;
 	
-	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCPaymentNameObject){
+	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCDetailsNameObject){
+		$scope.textKey += $scope.addendumNo ? $scope.addendumNo : '-1';
+		$scope.insideContent = true;
+		$scope.loadAttachmentFacade = attachmentService.obtainAttachmentList;
+		$scope.uploadAttachmentFacade = attachmentService.uploadAddendumAttachment;
+		$scope.deleteAttachmentFacade = attachmentService.deleteAddendumAttachment;
+		$scope.saveTextAttachmentFacade = attachmentService.uploadAddendumTextAttachment;
+	} else if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCPaymentNameObject){
 		$scope.textKey += $scope.paymentCertNo;
 		$scope.insideContent = true;
 	}
 	
     $scope.loadAttachment = function(nameObject, textKey){
+    	if(textKey.split('|')[2] === '-1'){
+    		$scope.hideButton = true;
+    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Addendum does not exist. Please create addendum title first.');
+    		return;
+    	}
     	$scope.loadAttachmentFacade(nameObject, textKey)
     	.then(function(data){
     				if(angular.isArray(data)){
@@ -49,7 +61,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	$scope.deleteAttachment = function(){
 		angular.forEach($scope.attachments, function(att){
 			if(att.selectedAttachement === true){
-				$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
+				$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.noSequence))
 				.then(function(data){
 					$scope.loadAttachment($scope.nameObject, $scope.textKey);
 					$scope.selectedAttachement = false;
@@ -61,9 +73,9 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     $scope.addTextAttachment = function(){
     	$scope.isAddTextAttachment = true;
     	$scope.textAttachment = {};
-    	$scope.textAttachment.sequenceNo = $scope.sequenceNo + 1;
-    	$scope.textAttachment.fileName = "New Text";
-		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+    	$scope.textAttachment.noSequence = $scope.sequenceNo + 1;
+    	$scope.textAttachment.nameFile = "New Text";
+		modalService.open('lg', 'view/subcontract/attachment/attachment-addendum-text.html', 'AttachmentAddendumTextCtrl', 'Success', $scope);
     }
     
     $scope.loadAttachment($scope.nameObject, $scope.textKey);
@@ -80,13 +92,13 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	
     $scope.attachmentClick = function(){
     	$scope.isAddTextAttachment = false;
-    	if(this.attach.documentType === 5){
+    	if(this.attach.typeDocument === '5'){
 //	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
-	    	url = 'service/attachment/downloadScAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.sequenceNo;
+	    	url = 'service/attachment/obtainAddendumFileAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.noSequence;
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
-    		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+    		modalService.open('lg', 'view/subcontract/attachment/attachment-addendum-text.html', 'AttachmentAddendumTextCtrl', 'Success', $scope);
     	}
     }
     
@@ -103,16 +115,16 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     	var index = 0;
        	angular.forEach(d, function(att){
        		att.selected = index;
-       		$scope.sequenceNo = att.sequenceNo;
-       		if(att.fileLink === null || att.fileLink === ' '){
+       		$scope.sequenceNo = att.noSequence;
+       		if(att.pathFile === null || att.pathFile === ' '){
        			att.fileIconClass = 'fa fa-2x fa-file-text-o'; 
        		} else {
-       			var fileType = att.fileName.substring(att.fileName.length -4);
+       			var fileType = att.nameFile.substring(att.nameFile.length -4);
        			att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
        		}
-    		att.user = {UserName: att.createdUser};
+    		att.user = {UserName: att.usernameCreated};
     		att.user.userIcon = 'resources/images/profile.png';
-    		getUserByUsername(att.createdUser)
+    		getUserByUsername(att.usernameCreated)
     		.then(function(response){
     			if(response.data instanceof Object){
     				att.user = response.data;
@@ -121,7 +133,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     				} else {
     					att.user.userIcon = 'resources/images/profile.png';
     				}
-    				if(!att.user.UserName) att.user.UserName = att.createdUser;
+    				if(!att.user.UserName) att.user.UserName = att.usernameCreated;
     			}
     		});
     		index++;

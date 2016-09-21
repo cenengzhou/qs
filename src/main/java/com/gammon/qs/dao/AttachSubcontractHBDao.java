@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +32,7 @@ public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> 
 			criteria.createAlias("subcontract.jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));		
  			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
+ 			criteria.addOrder(Order.asc("sequenceNo"));
 			resultList = criteria.list();
 			if(resultList == null)
 				resultList = new ArrayList<AttachSubcontract>();

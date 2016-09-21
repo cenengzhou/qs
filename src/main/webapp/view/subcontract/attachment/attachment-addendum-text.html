@@ -1,0 +1,24 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12">
+		<tr>
+		<td class="col-md-2"><label for="fileNameBox" class="control-label">File Name:</label></td>
+		<td class="col-md-10"><input type="text" class="form-control" id="fileNameBox" name="fileNameBox" ng-model="parentScope.textAttachment.nameFile"></td>
+		</tr>
+		</table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<input type="textarea" ui-tinymce="tinymceOptions" ng-model="parentScope.textAttachment.text">
+	</div>
+
+</div>

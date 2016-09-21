@@ -1,4 +1,4 @@
-mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService',
+mainApp.controller('AttachmentAddendumTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService',
                                             function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
@@ -12,9 +12,9 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 			$scope.parentScope.saveTextAttachmentFacade(
 					$scope.parentScope.nameObject, 
 					$scope.parentScope.textKey, 
-					$scope.parentScope.textAttachment.sequenceNo, 
-					$scope.parentScope.textAttachment.fileName, 
-					$scope.parentScope.textAttachment.textAttachment)
+					$scope.parentScope.textAttachment.noSequence, 
+					$scope.parentScope.textAttachment.nameFile, 
+					$scope.parentScope.textAttachment.text)
 			.then(function(data){
 				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
 			});
@@ -22,9 +22,9 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 			$scope.parentScope.saveTextAttachmentFacade(
 					$scope.parentScope.nameObject, 
 					$scope.parentScope.textKey, 
-					$scope.parentScope.textAttachment.sequenceNo, 
-					$scope.parentScope.textAttachment.fileName, 
-					$scope.parentScope.textAttachment.textAttachment)
+					$scope.parentScope.textAttachment.noSequence, 
+					$scope.parentScope.textAttachment.nameFile, 
+					$scope.parentScope.textAttachment.text)
 			.then(function(data){
 				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
 			});

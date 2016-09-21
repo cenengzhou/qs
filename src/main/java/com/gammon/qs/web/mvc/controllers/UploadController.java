@@ -234,7 +234,7 @@ public class UploadController {
 		}
 	}
 	
-	@RequestMapping(value = "/gammonqs/scDetailExcelUpload.smvc", method = RequestMethod.POST)
+	/* @RequestMapping(value = "/gammonqs/scDetailExcelUpload.smvc", method = RequestMethod.POST)
 	public void uploadSCDetailExcel(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 										@RequestParam(required = true, value = "packageNumber") String packageNumberString, 
 										@RequestParam(required = true, value = "paymentStatus") String paymentStatus, 
@@ -274,7 +274,7 @@ public class UploadController {
 				logger.info("Upload SC Detail Excel -END");
 			}
 		}
-	}
+	} */
 	
 	@RequestMapping(value = "/gammonqs/tenderAnalysisExcelUpload.smvc", method = RequestMethod.POST)
 	public void uploadTenderAnalysisExcel( @RequestParam(required = true, value = "jobNumber") String jobNumber, 

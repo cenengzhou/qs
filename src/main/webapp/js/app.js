@@ -516,7 +516,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
        
 	.state('subcontract.addendum.attachment', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
+		templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
 		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].SCDetailsNameObject,
 			'offsetTop':440
@@ -526,14 +526,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                         'js/controller/subcontract/attachment/attachment-sc-file.js',
-                         'js/controller/subcontract/attachment/attachment-sc-text.js',
+                         'js/controller/subcontract/attachment/attachment-addendum-file.js',
+                         'js/controller/subcontract/attachment/attachment-addendum-text.js',
                          'js/service/attachment-service.js'
                     ] 
                 });
             }]
         },
-		controller: 'AttachmentSCFileCtrl'
+		controller: 'AttachmentAddendumFileCtrl'
 	})
 	.state('subcontract.addendum.summary', {
 		url: "/summary",

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 @XmlRootElement
 public class CompletePaymentApprovalRequest implements Serializable {
 
@@ -13,6 +15,7 @@ public class CompletePaymentApprovalRequest implements Serializable {
 	@NotNull(message = "packageNo cannot be null")
 	private String packageNo;
 	@NotNull(message = "approvalDecision cannot be null")
+	@JsonProperty("approvedOrRejected")
 	private String approvalDecision;
 	
 	public String getJobNumber() {

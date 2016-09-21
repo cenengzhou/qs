@@ -1,6 +1,7 @@
 package com.gammon.pcms.web.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gammon.pcms.application.GlobalExceptionHandler;
+import com.gammon.pcms.model.Attachment;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachRepackaging;
@@ -183,6 +185,94 @@ public class AttachmentController {
 	}
 
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "uploadAddendumAttachment", method = RequestMethod.POST)
+	public void uploadAddendumAttachment( 
+								@RequestParam(required = true, value = "nameObject") String nameObject,
+								@RequestParam(required = true, value = "textKey") String textKey,
+								@RequestParam(required = true, value = "sequenceNo") String sequenceNo,
+								@RequestParam("files") List<MultipartFile> multipartFiles,
+								HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.info("Upload uploadAddendumAttachment - START");
+
+		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+		int sn = Integer.valueOf(sequenceNo);
+		for (MultipartFile multipartFile : multipartFiles) {
+			byte[] file = multipartFile.getBytes();
+			if (file != null) {
+
+				boolean result = attachmentService.uploadAddendumAttachment(nameObject, textKey, new BigDecimal(sn), multipartFile.getOriginalFilename(), file, null);
+				sn++;
+				Map<String, Object> resultMap = new HashMap<String, Object>();
+				if (result) {
+					resultMap.put("success", true);
+					resultMap.put("fileName", multipartFile.getOriginalFilename());
+					logger.info("Upload Attachment: success.");
+				} else {
+					resultMap.put("success", false);
+					logger.info("error: ");
+				}
+//				response.setContentType("text/html");
+				response.getWriter().print((new Gson()).toJson(result));
+				logger.info("Upload uploadAddendumAttachment -END");
+			}
+		}
+	}
+	
+	@RequestMapping(value="obtainAddendumFileAttachment",method=RequestMethod.GET)
+	public void obtainAddendumFileAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
+															@RequestParam(required=true,value="textKey") String textKey,
+															@RequestParam(required=true,value="sequenceNo") String sequenceNoString,
+															HttpServletRequest request, HttpServletResponse response ) {		
+				
+		logger.info("generateSCAttachment");
+
+		try {
+			
+			Integer sequenceNo = Integer.parseInt(sequenceNoString);
+			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(nameObject.trim(), textKey, sequenceNo);
+
+			if (attachmentFile != null) {
+				byte[] file = attachmentFile.getBytes();
+				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+				response.setContentLength(file.length);
+				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachmentFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				showAttachmentError(response);
+			}			
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+			e.printStackTrace();
+			logger.info("Error: "+e.getLocalizedMessage());
+			showAttachmentError(response);
+		} finally{
+			try {
+				response.getOutputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "deleteAddendumAttachment", method = RequestMethod.POST)
+	public Boolean deleteAddendumAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception{
+		return attachmentService.deleteAddendumAttachment(nameObject, textKey,sequenceNumber);
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "uploadAddendumTextAttachment", method = RequestMethod.POST)
+	public Boolean uploadAddendumTextAttachment(@RequestParam String nameObject, @RequestParam String textKey, 
+				@RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment ) throws Exception{
+		return attachmentService.uploadAddendumTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment);
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteAttachment", method = RequestMethod.POST)
 	public Boolean deleteAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception{
 		return attachmentService.deleteAttachment(nameObject, textKey,sequenceNumber);
@@ -310,6 +400,11 @@ public class AttachmentController {
 	@RequestMapping(value = "deleteMainCertAttachment", method = RequestMethod.POST)
 	public Boolean deleteMainCertAttachment(@RequestParam String noJob, Integer noMainCert, Integer noSequence) throws DatabaseOperationException {
 		return attachmentService.deleteMainCertAttachment(noJob, noMainCert,noSequence);
+	}
+	
+	@RequestMapping(value = "obtainAttachmentList", method = RequestMethod.POST)
+	public List<Attachment> obtainAttachmentList(@RequestParam String nameObject, @RequestParam String textKey) throws Exception {
+		return attachmentService.obtainAttachmentList(nameObject, textKey);
 	}
 	
 	/** 

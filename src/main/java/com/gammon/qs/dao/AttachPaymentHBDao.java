@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -71,7 +72,8 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 		try{
 			List<AttachPayment> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("paymentCert", paymentCert));		
+			criteria.add(Restrictions.eq("paymentCert", paymentCert));	
+			criteria.addOrder(Order.asc("sequenceNo"));
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
