@@ -17,6 +17,7 @@ import com.gammon.jde.webservice.serviceRequester.BUMasterUpdateManager.UpdateBQ
 import com.gammon.jde.webservice.serviceRequester.BUMasterUpdateManager.UpdateBQMasterDatesByJobNumber.UpdateBQMasterDatesByJobNumberRequestObj;
 import com.gammon.jde.webservice.serviceRequester.BUMasterUpdateManager.UpdateBQMasterDatesByJobNumber.UpdateBQMasterDatesByJobNumberRequestWhereField;
 import com.gammon.jde.webservice.serviceRequester.BUMasterUpdateManager.UpdateBQMasterDatesByJobNumber.UpdateBQMasterDatesByJobNumberResponseObj;
+import com.gammon.jde.webservice.serviceRequester.BusinessUnitMasterManager.GetBQMasterDatesByJobNumber.GetBQMasterDatesByJobNumberReponseObj;
 import com.gammon.jde.webservice.serviceRequester.BusinessUnitMasterManager.GetBQMasterDatesByJobNumber.GetBQMasterDatesByJobNumberRequestObj;
 import com.gammon.jde.webservice.serviceRequester.BusinessUnitMasterManager.GetBQMasterDatesByJobNumber.GetBQMasterDatesByJobNumberResponseObjList;
 import com.gammon.jde.webservice.serviceRequester.BusinessUnitMasterManager.GetJobDetailsByJobNumber.GetJobDetailsByJobNumberRequestObj;
@@ -346,10 +347,10 @@ public class JobInfoWSDao{
 		GetBQMasterDatesByJobNumberRequestObj requestObj = new GetBQMasterDatesByJobNumberRequestObj();
 		requestObj.setJobNumber(jobNumber);
 		
-		GetBQMasterDatesByJobNumberResponseObjList responseObj = new GetBQMasterDatesByJobNumberResponseObjList();
+		GetBQMasterDatesByJobNumberResponseObjList responseObjList = new GetBQMasterDatesByJobNumberResponseObjList();
 		
 		//long start = System.currentTimeMillis();
-		responseObj = (GetBQMasterDatesByJobNumberResponseObjList) getJobDatesByJobNumberWebServiceTemplate.marshalSendAndReceive(requestObj, 
+		responseObjList = (GetBQMasterDatesByJobNumberResponseObjList) getJobDatesByJobNumberWebServiceTemplate.marshalSendAndReceive(requestObj, 
 				new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword())
 		);
 		//long end = System.currentTimeMillis();
@@ -357,14 +358,15 @@ public class JobInfoWSDao{
 		
 		JobDates jobDates = new JobDates();
 		
-		if(responseObj != null && responseObj.getGetBQMasterDatesByJobNumberReponseObjList() != null && responseObj.getGetBQMasterDatesByJobNumberReponseObjList().size() > 0){
-			jobDates.setJobNumber(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getJobNumber());
-			jobDates.setActualEndDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getActualEndDate());
-			jobDates.setActualStartDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getActualStartDate());
-			jobDates.setAnticipatedCompletionDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getAnticipatedCompletionDate());
-			jobDates.setPlannedEndDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getPlannedEndDate());
-			jobDates.setPlannedStartDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getPlannedStartDate());
-			jobDates.setRevisedCompletionDate(responseObj.getGetBQMasterDatesByJobNumberReponseObjList().get(0).getRevisedCompletionDate());
+		if(responseObjList != null && responseObjList.getGetBQMasterDatesByJobNumberReponseObjList() != null && responseObjList.getGetBQMasterDatesByJobNumberReponseObjList().size() > 0){
+			GetBQMasterDatesByJobNumberReponseObj reponseObj = responseObjList.getGetBQMasterDatesByJobNumberReponseObjList().get(0);
+			jobDates.setJobNumber(reponseObj.getJobNumber());
+			jobDates.setActualEndDate(DateHelper.formatAndParseGMTDate(reponseObj.getActualEndDate()));
+			jobDates.setActualStartDate(DateHelper.formatAndParseGMTDate(reponseObj.getActualStartDate()));
+			jobDates.setAnticipatedCompletionDate(DateHelper.formatAndParseGMTDate(reponseObj.getAnticipatedCompletionDate()));
+			jobDates.setPlannedEndDate(DateHelper.formatAndParseGMTDate(reponseObj.getPlannedEndDate()));
+			jobDates.setPlannedStartDate(DateHelper.formatAndParseGMTDate(reponseObj.getPlannedStartDate()));
+			jobDates.setRevisedCompletionDate(DateHelper.formatAndParseGMTDate(reponseObj.getRevisedCompletionDate()));
 		}
 		
 		return jobDates;
@@ -381,23 +383,28 @@ public class JobInfoWSDao{
 	public String updateJobDates(JobDates jobdates, String userId){
 			logger.info("call WS(updateJobDatesByJobNumberWebServiceTemplate): STARTED");
 			String error = "";
-			
-			// initialize request object
+			logger.info("Planned Start Date:" + jobdates.getPlannedStartDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedStartDate())));
+			logger.info("Planned End Date:" + jobdates.getPlannedEndDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedEndDate())));
+			logger.info("Start Date:" + jobdates.getActualStartDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualStartDate())));
+			logger.info("End Date:" + jobdates.getActualEndDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualEndDate())));
+			logger.info("Anticipated Completion Date:" + jobdates.getAnticipatedCompletionDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getAnticipatedCompletionDate())));
+			logger.info("Revised Completion Date:" + jobdates.getRevisedCompletionDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getRevisedCompletionDate())));
+				// initialize request object
 			UpdateBQMasterDatesByJobNumberRequestObj requestObj = new UpdateBQMasterDatesByJobNumberRequestObj();
 			requestObj.setUpdateField(new UpdateBQMasterDatesByJobNumberRequestField());
 			requestObj.setUpdateWhereField(new UpdateBQMasterDatesByJobNumberRequestWhereField());
 			// set details to request object
 			requestObj.getUpdateWhereField().setJobNumber(jobdates.getJobNumber());
-			requestObj.getUpdateField().setActualEndDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualEndDate())));
-			requestObj.getUpdateField().setActualStartDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualStartDate())));
-			requestObj.getUpdateField().setAnticipatedCompletionDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getAnticipatedCompletionDate())));
+			requestObj.getUpdateField().setActualEndDate(jobdates.getActualEndDate());
+			requestObj.getUpdateField().setActualStartDate(jobdates.getActualStartDate());
+			requestObj.getUpdateField().setAnticipatedCompletionDate(jobdates.getAnticipatedCompletionDate());
 			
-			requestObj.getUpdateField().setDateUpdate(DateHelper.parseDate(DateHelper.formatDate(new Date())));
+			requestObj.getUpdateField().setDateUpdate(new Date());
 			requestObj.getUpdateField().setJobNumber(jobdates.getJobNumber());
-			requestObj.getUpdateField().setPlannedEndDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedEndDate())));
-			requestObj.getUpdateField().setPlannedStartDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedStartDate())));
+			requestObj.getUpdateField().setPlannedEndDate(jobdates.getPlannedEndDate());
+			requestObj.getUpdateField().setPlannedStartDate(jobdates.getPlannedStartDate());
 			requestObj.getUpdateField().setProgramId(WSPrograms.JP59U006_BUMasterUpdateManager);
-			requestObj.getUpdateField().setRevisedCompletionDate(DateHelper.parseDate(DateHelper.formatDate(jobdates.getRevisedCompletionDate())));
+			requestObj.getUpdateField().setRevisedCompletionDate(jobdates.getRevisedCompletionDate());
 			int intTime = 0;
 			intTime += Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 10000;
 			intTime += Calendar.getInstance().get(Calendar.MINUTE) * 100;

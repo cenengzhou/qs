@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.gammon.qs.shared.GlobalParameter;
 
@@ -30,6 +31,23 @@ public class DateHelper {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+	
+	public static Date parseGMTDate(String dateString, String dateFormat) {
+		if (dateString == null || dateString.equals(""))
+			return null;
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		try {
+			return sdf.parse(dateString);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+	
+	public static Date formatAndParseGMTDate(Date date) {
+		return parseGMTDate(formatDate(date), GlobalParameter.DATE_FORMAT);
 	}
 
 	public static String formatDate(Date date) {
