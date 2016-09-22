@@ -455,7 +455,7 @@ public class AttachmentService {
 		String noJob = splittedTextKey[0].trim();
 		String noSubcontract = splittedTextKey[1].trim();
 		adminService.canAccessJob(noJob);
-		Attachment attachment;
+		Attachment attachment = null;
 		switch(nameObject){
 		case Attachment.AddendumNameObject:
 			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
@@ -465,45 +465,47 @@ public class AttachmentService {
 			fileLink = serverPath + attachment.getPathFile();
 			break;
 		}
-		
-		try{
-			File file = new File(fileLink);
-			long length = file.length();
-
-			InputStream is = new FileInputStream(file);
-
-			byte[] bytes = new byte[(int)length];
-
-			int offset = 0;
-			int numRead = 0;
-			while (offset < bytes.length
-					&& (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-				offset += numRead;
+		if(attachment.getTypeDocument().equals(Attachment.TEXT)){
+			attachmentFile.setBytes(attachment.getText().getBytes());
+		} else {
+			try{
+				File file = new File(fileLink);
+				long length = file.length();
+	
+				InputStream is = new FileInputStream(file);
+	
+				byte[] bytes = new byte[(int)length];
+	
+				int offset = 0;
+				int numRead = 0;
+				while (offset < bytes.length
+						&& (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+					offset += numRead;
+				}
+	
+				// Ensure all the bytes have been read in
+				if (offset < bytes.length) {
+					throw new IOException("Could not completely read file "+file.getName());
+				}
+	
+				// Close the input stream and return bytes
+				is.close();
+	
+				int fileNameIndex = fileLink.lastIndexOf("\\");
+				String fileName = fileLink.substring(fileNameIndex+1);
+	
+				attachmentFile.setBytes(bytes);
+				attachmentFile.setFileName(fileName);	        
+	
+				//Logging
+				long end = System.currentTimeMillis();
+				long timeInSeconds = (end-start)/1000;
+				logger.info("Execution Time - obtainAddendumFileAttachment:"+ timeInSeconds+" seconds");
+				
+			}catch(Exception e){
+				logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
 			}
-
-			// Ensure all the bytes have been read in
-			if (offset < bytes.length) {
-				throw new IOException("Could not completely read file "+file.getName());
-			}
-
-			// Close the input stream and return bytes
-			is.close();
-
-			int fileNameIndex = fileLink.lastIndexOf("\\");
-			String fileName = fileLink.substring(fileNameIndex+1);
-
-			attachmentFile.setBytes(bytes);
-			attachmentFile.setFileName(fileName);	        
-
-			//Logging
-			long end = System.currentTimeMillis();
-			long timeInSeconds = (end-start)/1000;
-			logger.info("Execution Time - obtainAddendumFileAttachment:"+ timeInSeconds+" seconds");
-			
-		}catch(Exception e){
-			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
 		}
-
 		return attachmentFile;
 	}
 
@@ -1326,7 +1328,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String noJob = splittedTextKey[0].trim();
 		String noSubcontract = splittedTextKey[1].trim();
-		String altParam = splittedTextKey[2].trim();
+		String altParam = !splittedTextKey[2].isEmpty() ? splittedTextKey[2] : "0";
 		List<Attachment> attachmentList = null;
 		
 		if(Attachment.AddendumNameObject.equals(nameObject)){

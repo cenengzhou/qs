@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAddendumApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteAwardApprovalRequest;
 import com.gammon.pcms.dto.rs.provider.request.ap.CompleteMainCertApprovalRequest;
@@ -51,12 +52,14 @@ import com.gammon.pcms.dto.rs.provider.response.ap.MakeHTMLStrForPaymentCertServ
 import com.gammon.pcms.dto.rs.provider.response.ap.MakeHTMLStrForPaymentServiceResponse;
 import com.gammon.pcms.dto.rs.provider.response.ap.MakeHTMLStrForSplitTerminateServiceResponse;
 import com.gammon.pcms.helper.RestTemplateHelper;
+import com.gammon.pcms.model.Attachment;
 import com.gammon.pcms.service.HTMLService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachPayment;
 import com.gammon.qs.domain.AttachSubcontract;
 import com.gammon.qs.domain.AttachSubcontractDetail;
+import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.AttachmentService;
 import com.gammon.qs.service.MainCertService;
@@ -78,7 +81,8 @@ public class APController {
 	private AttachmentService attachmentService;
 	@Autowired
 	private HTMLService htmlService;
-
+	@Autowired
+	private AttachmentConfig attachmentConfig;
 	@Autowired
 	RestTemplateHelper restTemplateHelper;
 
@@ -299,10 +303,29 @@ public class APController {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetAttachmentListResponseList responseListObj = new GetAttachmentListResponseList();
 		List<? extends AbstractAttachment> attachmentList;
-			if (AttachSubcontract.SCDetailsNameObject.equals(requestObj.getNameObject())) {
-				logger.info("Web Service called by AP: SCDetail Attachments");
-				attachmentList = attachmentService.getAddendumAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
-			} else if (AttachSubcontract.SCPaymentNameObject.equals(requestObj.getNameObject())) {
+		if (Attachment.AddendumNameObject.equals(requestObj.getNameObject())) {
+			logger.info("Web Service called by AP: SCDetail Attachments");
+			List<Attachment> addendumAttachmentList = attachmentService.obtainAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
+			if (addendumAttachmentList != null && addendumAttachmentList.size() > 0) {
+				List<GetAttachmentListResponse> responseAttachmentList = new ArrayList<GetAttachmentListResponse>();
+				String serverPath = attachmentConfig.getAttachmentServer("PATH")+attachmentConfig.getJobAttachmentsDirectory();
+				for (Attachment attachment : addendumAttachmentList) {
+					GetAttachmentListResponse responseObj = new GetAttachmentListResponse();
+					responseObj.setTextKey(requestObj.getTextKey() + "|" +  attachment.getNoSequence());
+
+					responseObj.setDocumentType(Integer.valueOf(attachment.getTypeDocument()));
+					responseObj.setFileLink(responseObj.getDocumentType() == Integer.valueOf(Attachment.FILE) ? serverPath + attachment.getPathFile() : attachment.getPathFile());
+					responseObj.setFileName(attachment.getNameFile());
+					responseObj.setSequenceNo(attachment.getNoSequence().intValue());
+					logger.info("Response - Text Key: " + responseObj.getTextKey() + " Document Type: " + responseObj.getDocumentType() + " File Link: " + responseObj.getFileLink());
+	
+					responseAttachmentList.add(responseObj);
+				}
+				responseListObj.setAttachmentList(responseAttachmentList);
+			}
+
+		} else {
+			if (AttachSubcontract.SCPaymentNameObject.equals(requestObj.getNameObject())) {
 				logger.info("Web Service called by AP: SCPayment Attachments");
 				attachmentList = attachmentService.getPaymentAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
 			} else {
@@ -331,6 +354,7 @@ public class APController {
 					responseListObj.getAttachmentList().add(responseObj);
 				}
 			}
+		}
 		return responseListObj;
 	}
 
@@ -367,7 +391,12 @@ public class APController {
 	public GetTextAttachmentResponse getTextAttachment(@Valid @RequestBody GetTextAttachmentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetTextAttachmentResponse responseObj = new GetTextAttachmentResponse();
-		responseObj.setTextAttachment(attachmentService.obtainTextAttachmentContent(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo()));
+		if(Attachment.AddendumNameObject.equals(requestObj.getNameObject())){
+			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo());
+			responseObj.setTextAttachment(new String(attachmentFile.getBytes()));
+		} else {
+			responseObj.setTextAttachment(attachmentService.obtainTextAttachmentContent(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo()));
+		}
 		return responseObj;
 	}
 

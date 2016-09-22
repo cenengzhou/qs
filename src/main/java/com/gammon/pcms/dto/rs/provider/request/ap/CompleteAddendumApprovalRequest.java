@@ -14,7 +14,7 @@ public class CompleteAddendumApprovalRequest implements Serializable {
 	private String jobNumber;
 	@NotNull(message = "packageNo cannot be null")
 	private String packageNo;
-	@NotNull(message = "user cannot be null")
+//	@NotNull(message = "user cannot be null")
 	private String user;
 	@NotNull(message = "approvalDecision cannot be null")
 	@JsonProperty("approvedOrRejected")
