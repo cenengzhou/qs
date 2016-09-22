@@ -49,7 +49,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 			});
 //			getTender();
 //			getTenderList();
-//			getRecommendedTender();
+			getRecommendedTender();
 		}
 	}
  
@@ -83,18 +83,18 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 //				});
 //	}
 
-//	function getRecommendedTender() {
-//		tenderService.getRecommendedTender($scope.jobNo, $scope.subcontractNo)
-//		.then(
-//				function( data ) {
-//					if(data.length==0){
-//						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
-//					}else{
-//						$scope.rcmTenderer = data;
-//						getTenderVarianceList($scope.rcmTenderer.vendorNo);
-//					}
-//				});
-//	}
+	function getRecommendedTender() {
+		tenderService.getRecommendedTender($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data.length==0){
+						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
+					}else{
+						$scope.rcmTenderer = data;
+						getTenderVarianceList($scope.rcmTenderer.vendorNo);
+					}
+				});
+	}
 
 //	function getTenderVarianceList(tenderNo) {
 //		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)

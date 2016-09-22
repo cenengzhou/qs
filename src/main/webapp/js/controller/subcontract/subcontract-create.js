@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter',
-                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService',
+                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService) {
 	getSubcontract();
 	getJob();
 	
@@ -152,7 +152,6 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			$scope.subcontractToUpdate.cpfBasePeriod = "";
 			$scope.subcontractToUpdate.cpfBaseYear = "";
 		}
-		//console.log($scope.subcontractToUpdate);
 
 
 		getWorkScope($scope.subcontract.workscope);
@@ -212,7 +211,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 					if(data.length==0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
 					}else{
-						upateSubcontract();
+						if($scope.subcontractToUpdate.id == null)
+							upateSubcontract();
+						else
+							getLatestPaymentCert();
 					}
 				});
 	}
@@ -237,5 +239,33 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			});
 	}
 
+	
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data){
+						if(data.paymentStatus == 'PND'){
+							var modalOptions = {
+									bodyText: "Payment Requisition with status 'Pending' will be deleted. Proceed?"
+							};
+
+
+							confirmService.showModal({}, modalOptions).then(function (result) {
+								if(result == "Yes"){
+									upateSubcontract();
+								}
+							});
+						}else if(data.paymentStatus == 'APR'){
+							upateSubcontract();
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+						}
+					}else{
+						upateSubcontract();
+					}
+				});
+	}
+	
 }]);
 

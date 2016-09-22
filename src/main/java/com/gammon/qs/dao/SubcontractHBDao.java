@@ -63,7 +63,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			criteria.createAlias("jobInfo", "jobInfo");
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
-			//criteria.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
+			criteria.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
 			result = (Subcontract) criteria.uniqueResult();
 		} catch (HibernateException he) {
 			logger.info("Fail: obtainSCPackage(String jobNumber, Integer packageNo)");

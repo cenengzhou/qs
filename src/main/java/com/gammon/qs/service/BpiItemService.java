@@ -2396,7 +2396,7 @@ public class BpiItemService implements Serializable {
 		for(IVBpiResourceSummaryGroupedBySCWrapper updatedWrapper : updatedNonSCWrappers){
 //			logger.info("Updating NonSCBQResourceSummary: packageNo: "+wrapper.getPackageNo()+" objectCode: "+wrapper.getObjectCode()+" subsidiaryCode: "+wrapper.getSubsidiaryCode()+" Description:"+wrapper.getResourceDescription()+" Unit:"+wrapper.getUnit()+" Rate:"+wrapper.getRate());
 			String packageNo = (updatedWrapper.getPackageNo()==null||updatedWrapper.getPackageNo().equals("")||updatedWrapper.getPackageNo().trim().equals("0"))?null:updatedWrapper.getPackageNo();
-			ResourceSummary bqResourceSummary = bqResourceSummaryDao.getResourceSummary(job, packageNo, updatedWrapper.getObjectCode(), updatedWrapper.getSubsidiaryCode(), updatedWrapper.getResourceDescription(), updatedWrapper.getUnit(), updatedWrapper.getSubsidiaryCode().startsWith("9")?new Double(1):updatedWrapper.getRate());
+			ResourceSummary bqResourceSummary = bqResourceSummaryDao.getResourceSummary(job, packageNo, updatedWrapper.getObjectCode(), updatedWrapper.getSubsidiaryCode(), updatedWrapper.getResourceDescription(), updatedWrapper.getUnit(), updatedWrapper.getSubsidiaryCode().startsWith("9")?new Double(1):updatedWrapper.getRate(), null);
 			
 			if(bqResourceSummary == null)
 				throw new ValidateBusinessLogicException("BQResourceSummary doesn't exist: packageNo: "+updatedWrapper.getPackageNo()+" objectCode: "+updatedWrapper.getObjectCode()+" subsidiaryCode: "+updatedWrapper.getSubsidiaryCode()+" Description:"+updatedWrapper.getResourceDescription()+" Unit:"+updatedWrapper.getUnit()+" Rate:"+updatedWrapper.getRate());

@@ -14,74 +14,74 @@
 	<div class="row">
 		<div class="col-md-7">
 			<div class="panel panel-purple ">
-					<div class="panel-heading">
-						<div class="panel-heading-btn">
-							<a href="javascript:;"
-								class="btn btn-xs btn-icon btn-circle btn-white"
-								data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
-								href="javascript:;"
-								class="btn btn-xs btn-icon btn-circle btn-white"
-								data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						</div>
-						<h4 class="panel-title">
-							<b>Main Contract Certificate Monthly Summary</b>
-						</h4>
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 					</div>
-					<div class="panel-body">
-						<div class="panel-option bg-purple-light">
-							<div class="dropdown pull-right">
-								<a href="javascript:;"
-									class="btn btn-white btn-rounded btn-sm"
-									data-toggle="dropdown">{{selectedYear}} <b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<li ng-repeat="year in yearList">
-										<a	ng-click="getMainCertDashboardData(year)">{{year}}</a>
-									</li>
-								</ul>
-							</div>
-							<div class="text-center text-white">Jan {{selectedYear}} -	Dec {{selectedYear}}</div>
+					<h4 class="panel-title">
+						<b>Main Contract Certificate Monthly Summary</b>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="panel-option bg-purple-light">
+						<div class="dropdown pull-right">
+							<a href="javascript:;" class="btn btn-white btn-rounded btn-sm"
+								data-toggle="dropdown">{{selectedYear}} <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="year in yearList"><a
+									ng-click="getMainCertDashboardData(year)">{{year}}</a></li>
+							</ul>
 						</div>
+						<div class="text-center text-white">Jan {{selectedYear}} -
+							Dec {{selectedYear}}</div>
+					</div>
 
-						<div>
-							<canvas id="line" class="chart chart-line"
-								chart-data="linChartParameters.data"
-								chart-labels="linChartParameters.labels"
-								chart-series="linChartParameters.series"
-								chart-options="linChartParameters.options" chart-legend="true"
-								height="120">
+					<div>
+						<canvas id="line" class="chart chart-line"
+							chart-data="linChartParameters.data"
+							chart-labels="linChartParameters.labels"
+							chart-series="linChartParameters.series"
+							chart-options="linChartParameters.options" chart-legend="true"
+							height="120">
 						           		</canvas>
-						</div>
-					</div>
-					<div class="panel-footer bg-white">
-						<a class="btn btn-primary btn-block" ui-sref="main-cert-select">More
-							Info <i class="fa fa-arrow-circle-right"></i>
-						</a>
 					</div>
 				</div>
-				
+				<div class="panel-footer bg-white">
+					<a class="btn btn-primary btn-block" ui-sref="main-cert-select">More
+						Info <i class="fa fa-arrow-circle-right"></i>
+					</a>
+				</div>
+			</div>
+
 		</div>
 
 		<div class="col-md-5">
 			<div class="panel panel-purple ">
-					<div class="panel-heading">
-						<div class="panel-heading-btn">
-							<a href="javascript:;"
-								class="btn btn-xs btn-icon btn-circle btn-white"
-								data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
-								href="javascript:;"
-								class="btn btn-xs btn-icon btn-circle btn-white"
-								data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-						</div>
-						<h4 class="panel-title">
-							<b>Retention Release Schedule</b>
-						</h4>
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 					</div>
-					<div class="panel-body">
-					<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns 
-								 ui-grid-exporter class="grid" style="height: 480px;"></div> 
-								
-						<!-- <div class="table-responsive" ng-style = "{height: 500 + 'px', 'overflow': 'auto'}">  ng-style = "{height: 400 + 'px', 'overflow': 'auto'}" 
+					<h4 class="panel-title">
+						<b>Retention Release Schedule</b>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div id="" ui-grid="gridOptions" ui-grid-selection
+						ui-grid-resize-columns ui-grid-exporter class="grid"
+						style="height: 480px;"></div>
+
+					<!-- <div class="table-responsive" ng-style = "{height: 500 + 'px', 'overflow': 'auto'}">  ng-style = "{height: 400 + 'px', 'overflow': 'auto'}" 
 							<table class="table">
 								<thead class="">
 									<tr>
@@ -106,18 +106,18 @@
 								</tbody>
 							</table>
 						</div> -->
-						</div>
-						<!-- <div class="panel-footer bg-white">
+				</div>
+				<!-- <div class="panel-footer bg-white">
 							<a class="btn btn-primary btn-block" ui-sref="cert-all-details">More
 								Info <i class="fa fa-arrow-circle-right"></i>
 							</a>
 						</div> -->
-					</div>
+			</div>
 
 
 
-		<!-- Info boxes -->
-		<!-- <div class="col-md-12">
+			<!-- Info boxes -->
+			<!-- <div class="col-md-12">
 			<div class="box box-primary box-solid">
 				<div class="box-header with-border">
 					<h3 class="box-title">Reports</h3>
@@ -178,6 +178,7 @@
 				</div>
 			</div>
 		</div> -->
-		
+
+		</div>
 	</div>
 </div>

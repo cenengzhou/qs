@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 'subcontractService', 'modalService',
-                                           function($scope, $location, $cookies, subcontractService, modalService) {
+mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 'subcontractService', 'modalService', 'paymentService', 'GlobalParameter',
+                                           function($scope, $location, $cookies, subcontractService, modalService, paymentService, GlobalParameter) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -8,18 +8,19 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 
 
 	getSubcontract();
-
 	
 	$scope.paymentRequisition = function (){
-		subcontractService.generateSCDetailsForPaymentRequisition($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					if(data.length != 0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						$location.path("/subcontract/dashboard");
-					}
-				});
+		if($scope.subcontract.scStatus !="500"){
+			subcontractService.generateSCDetailsForPaymentRequisition($scope.jobNo, $scope.subcontractNo)
+			.then(
+					function( data ) {
+						if(data.length != 0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						}else{
+							$location.path("/subcontract/payment-select");
+						}
+					});
+		}
 	}
 	
 	function getSubcontract(){
@@ -32,7 +33,19 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 						$scope.hideItem = false;
 					else
 						$scope.hideItem = true;
+					
+					if($scope.subcontract.scStatus < "500"){
+						paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+						.then(
+								function( data ) {
+									if(data){
+										if(data.paymentStatus.length >0)
+											$scope.status = "Payment Requisition Status: "+GlobalParameter.getValueById(GlobalParameter.paymentStatus, data.paymentStatus);
+									}
+								});
+					}
 				});
 	}
+	
 
 }]);

@@ -176,6 +176,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/service/subcontract-service.js',
+                           'js/service/payment-service.js',
                            'js/controller/subcontract/subcontract-menu.js'
                     ] 
                 });

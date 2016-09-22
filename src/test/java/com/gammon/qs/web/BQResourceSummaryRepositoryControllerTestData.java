@@ -226,7 +226,7 @@ public class BQResourceSummaryRepositoryControllerTestData extends ControllerTes
 		ResourceSummaryService bqResourceSummaryService = applicationContext.getBean(ResourceSummaryService.class);
 		
 		try{
-			bqResourceSummary = bqResourceSummaryService.getResourceSummary(testSaveResourceSummary_jobNumber, testSaveResourceSummary_packageNo, testSaveResourceSummary_objectCode, testSaveResourceSummary_subsidiaryCode, testSaveResourceSummary_resourceDescription, testSaveResourceSummary_unit, new Double(testSaveResourceSummary_rate));
+			bqResourceSummary = bqResourceSummaryService.getResourceSummary(testSaveResourceSummary_jobNumber, testSaveResourceSummary_packageNo, testSaveResourceSummary_objectCode, testSaveResourceSummary_subsidiaryCode, testSaveResourceSummary_resourceDescription, testSaveResourceSummary_unit, new Double(testSaveResourceSummary_rate), null);
 		} catch (Exception e){ e.printStackTrace();
 		}
 		data.put("serviceClass", serviceClass);

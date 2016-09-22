@@ -1,6 +1,5 @@
-
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 
-                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state) {
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 'paymentService',
+                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state, paymentService) {
 
 	loadData();
 	
@@ -117,32 +116,62 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 //			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 //			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-			var dataRows =	$scope.gridOptions.data;
 			
-			if(dataRows.length==0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
-				return;
-			}
+
+			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+			.then(
+					function( data ) {
+						if(data){
+							if(data.paymentStatus == 'PND'){
+								var modalOptions = {
+										bodyText: "Payment Requisition with status 'Pending' will be deleted. Proceed?"
+								};
+
+								confirmService.showModal({}, modalOptions).then(function (result) {
+									if(result == "Yes"){
+										proceedToSave();
+									}
+								});
+							}else if(data.paymentStatus == 'APR'){
+								proceedToSave();
+							}else{
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+							}
+						}else{
+							proceedToSave();
+						}
+					});
 			
-			if($scope.subcontract.scStatus == "160"){
-				var modalOptions = {
-						bodyText: 'All existing tenders and tender details will be deleted. Continue?'
-				};
-
-
-				confirmService.showModal({}, modalOptions).then(function (result) {
-					if(result == "Yes"){
-						updateResourceSummaries(dataRows);
-					}
-				});
-			}else{
-				updateResourceSummaries(dataRows);
-			}
+			
+			
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
 	};
 			
+	function proceedToSave(){
+		var dataRows =	$scope.gridOptions.data;
+		
+		if(dataRows.length==0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+			return;
+		}
+		
+		if($scope.subcontract.scStatus == "160"){
+			var modalOptions = {
+					bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					updateResourceSummaries(dataRows);
+				}
+			});
+		}else{
+			updateResourceSummaries(dataRows);
+		}
+	}
 	
 	function getResourceSummaries() {
    	 resourceSummaryService.getResourceSummaries($scope.jobNo, $scope.subcontractNo, "14*")

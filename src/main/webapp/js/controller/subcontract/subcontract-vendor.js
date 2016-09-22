@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage',
-                                         function($scope, subcontractService, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'paymentService',
+                                         function($scope, subcontractService, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage, paymentService) {
 	
 	loadData();
 
@@ -59,10 +59,12 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
 	};
+	
 
 	$scope.editSubcontractor = function(subcontractorToUpdate){
 		modalService.open('lg', 'view/subcontract/modal/subcontract-vendor-feedback.html', 'SubcontractVendorFeedbackModalCtrl', '', subcontractorToUpdate);
 	};
+	
 
 	$scope.deleteSubcontractor = function(subcontractorToDelete){
 		tenderService.deleteTender($scope.jobNo, $scope.subcontractNo, subcontractorToDelete)
@@ -80,19 +82,45 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 
 	$scope.updateRecommendedTender = function(recommendedSubcontractor){
 		if($scope.subcontract.scStatus !="330" && $scope.subcontract.scStatus !="500"){
-			tenderService.updateRecommendedTender($scope.jobNo, $scope.subcontractNo, recommendedSubcontractor)
+			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
 			.then(
 					function( data ) {
-						if(data.length!=0){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						if(data){
+							if(data.paymentStatus == 'PND'){
+								var modalOptions = {
+										bodyText: "Payment Requisition with status 'Pending' will be deleted. Proceed?"
+								};
+
+								confirmService.showModal({}, modalOptions).then(function (result) {
+									if(result == "Yes"){
+										proceedToUpdateRecommendedTender(recommendedSubcontractor);
+									}
+								});
+							}else if(data.paymentStatus == 'APR'){
+								proceedToUpdateRecommendedTender(recommendedSubcontractor);
+							}else{
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+							}
 						}else{
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Recommended Subcontractor has been updated.");
-							$state.reload();
+							proceedToUpdateRecommendedTender(recommendedSubcontractor);
 						}
 					});
 		}
 	}
 
+	function proceedToUpdateRecommendedTender(recommendedSubcontractor){
+		tenderService.updateRecommendedTender($scope.jobNo, $scope.subcontractNo, recommendedSubcontractor)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Recommended Subcontractor has been updated.");
+						$state.reload();
+					}
+				});
+	}
+		
 	function loadData(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();

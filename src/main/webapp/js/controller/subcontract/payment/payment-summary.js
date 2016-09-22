@@ -24,7 +24,6 @@ mainApp.controller('PaymentSummaryCtrl', ['$scope', 'modalService', 'colorCode',
 		
     	$q.all([bqCum, voCum, ccCum, retentionCum, advancedCum, othersCum, bqMovement, voMovement, ccMovement, retentionMovement, advancedMovement, othersMovement])
     		.then(function (data){
-    			console.log(data);
     			setDashboardData(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
     	});
 	}

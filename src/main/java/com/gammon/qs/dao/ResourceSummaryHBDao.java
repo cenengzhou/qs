@@ -110,7 +110,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummariesSearch(JobInfo jobInfo, 
 			String packageNo, String objectCode, String subsidiaryCode) throws DatabaseOperationException{
-		logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		//logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -151,7 +151,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	@SuppressWarnings("unchecked")
 	public RepackagingPaginationWrapper<ResourceSummary> obtainResourceSummariesSearchByPage(JobInfo jobInfo, 
 			String packageNo, String objectCode, String subsidiaryCode, String description, String type, String levyExcluded, String defectExcluded, int pageNum) throws DatabaseOperationException{
-		logger.info("ResourceSummary Dao: getResourceSummariesSearchByPage - " + jobInfo.getJobNumber());
+		//logger.info("ResourceSummary Dao: getResourceSummariesSearchByPage - " + jobInfo.getJobNumber());
 		
 		try{
 			RepackagingPaginationWrapper<ResourceSummary> paginationWrapper = new RepackagingPaginationWrapper<ResourceSummary>();
@@ -433,14 +433,14 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	 * Apr 29, 2011 10:58:20 AM
 	 */
 	public ResourceSummary getResourceSummary(JobInfo jobInfo, String packageNo, String objectCode, 
-			String subsidiaryCode, String resourceDescription, String unit, Double rate) throws DatabaseOperationException{
-		logger.info("SEARCH: BQRESOURCESUMMARY - Job#"+jobInfo.getJobNumber()+" "+
+			String subsidiaryCode, String resourceDescription, String unit, Double rate, Double quantity) throws DatabaseOperationException{
+		/*logger.info("SEARCH: BQRESOURCESUMMARY - Job#"+jobInfo.getJobNumber()+" "+
 					"Package#:"+packageNo+" "+
 					"Object Code:"+objectCode+" "+
 					"Subsidiary Code:"+subsidiaryCode+" "+
 					"Resource Description:"+resourceDescription+" "+
 					"Unit:"+unit+" "+
-					"Rate:"+rate);
+					"Rate:"+rate);*/
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -472,6 +472,10 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			criteria.add(Restrictions.or(Restrictions.eq("unit", unit), Restrictions.eq("unit", unit + " ")));
 			//rate
 			criteria.add(Restrictions.eq("rate", rate));
+			
+			//quantity
+			if(quantity!=null)
+				criteria.add(Restrictions.eq("quantity", quantity));
 			return (ResourceSummary) criteria.uniqueResult();
 		}
 		catch(HibernateException ex){

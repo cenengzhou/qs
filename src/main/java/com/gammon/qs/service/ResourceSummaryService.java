@@ -283,7 +283,7 @@ public class ResourceSummaryService implements Serializable {
 			String subsidiaryCode = resourceSummary.getSubsidiaryCode();
 			String unit = resourceSummary.getUnit();
 			String resourceDescription = resourceSummary.getResourceDescription();
-			ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
+			ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), resourceSummary.getQuantity());
 			if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId()))
 				errorMsg.append("Changing the package number will create a duplicate resource: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
 		}
@@ -302,7 +302,7 @@ public class ResourceSummaryService implements Serializable {
 		String unit = resourceSummary.getUnit();
 		String resourceDescription = resourceSummary.getResourceDescription();
 		//check for duplicates
-		ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate());
+		ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), resourceSummary.getQuantity());
 		if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId())){
 			boolean match = false;
 			if(oldSummaryIds != null && oldSummaryIds.length > 0){
@@ -602,7 +602,7 @@ public class ResourceSummaryService implements Serializable {
 					bqResourceSummaryInDB = getResourceSummary(	resource.getJobNumber(), packageNo,
 																		resource.getObjectCode(), resource.getSubsidiaryCode(),
 																		resource.getDescription(), resource.getUnit(),
-																		(isBill80?new Double(1):resource.getCostRate()));
+																		(isBill80?new Double(1):resource.getCostRate()), null);
 				}
 				else{ //Subcontract
 					List<ResourceSummary> scBQResourceSummaries = resourceSummaryDao.getResourceSummariesForAccount(	jobDao.obtainJobInfo(resource.getJobNumber()), 
@@ -1045,7 +1045,7 @@ public class ResourceSummaryService implements Serializable {
 				Double cumIV = Double.valueOf(line[8].trim());
 				logger.info("Line " + (i+1) + " - Obj: " + objectCode + ", Sub: " + subsidiaryCode + 
 						", Desc: " + resourceDescription + ", Unit: " + unit + ", Rate: " + rate.toString());
-				ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
+				ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate, null);
 				if(resourceInDB == null)
 					return "Could not find resource in DB. Row " + (i+1);
 				else
@@ -1111,8 +1111,8 @@ public class ResourceSummaryService implements Serializable {
 	
 
 	public ResourceSummary getResourceSummary(String jobNumber, String packageNo, String objectCode, String subsidiaryCode,
-												String resourceDescription, String unit, Double rate)throws Exception {
-		return resourceSummaryDao.getResourceSummary(jobDao.obtainJobInfo(jobNumber), packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate);
+												String resourceDescription, String unit, Double rate, Double quantity)throws Exception {
+		return resourceSummaryDao.getResourceSummary(jobDao.obtainJobInfo(jobNumber), packageNo, objectCode, subsidiaryCode, resourceDescription, unit, rate, quantity);
 	}
 	
 	

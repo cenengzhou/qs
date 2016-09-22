@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'unitService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil',
-                                         function ($scope, resourceSummaryService, tenderService, subcontractService, unitService, modalService, $state, uiGridConstants, confirmService, roundUtil) {
+mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'unitService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil', 'paymentService',
+                                         function ($scope, resourceSummaryService, tenderService, subcontractService, unitService, modalService, $state, uiGridConstants, confirmService, roundUtil, paymentService) {
 
 	$scope.units=[];
 	var accountBalance = {};
@@ -161,61 +161,32 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 	//Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-			var ta = $scope.gridOptionsTa.data;
+			
+			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+			.then(
+					function( data ) {
+						if(data){
+							if(data.paymentStatus == 'PND'){
+								var modalOptions = {
+										bodyText: "Payment Requisition with status 'Pending' will be deleted. Proceed?"
+								};
 
-			//Validate Account Balance
-			var taBalance = JSON.parse(JSON.stringify(accountBalance));
-
-			for (i in ta){
-				var objectCode = ta[i]['objectCode'];
-				var subsidiaryCode = ta[i]['subsidiaryCode'];
-				var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
-
-				if(Object.keys(taBalance).indexOf(accountCode) >= 0)
-					taBalance[accountCode] =  roundUtil.round(taBalance[accountCode] - ta[i]['amountBudget'], 2);
-
-			}
-
-			for (i in taBalance){
-				if(taBalance[i] != 0){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
-					return;
-				}
-			}
-
-
-			//Update
-			var newTADetailList = [];
-			for (i in ta){
-				var newTADetail = {
-						//billItem : ta[i]['billItem'],
-						objectCode: ta[i]['objectCode'],
-						subsidiaryCode: ta[i]['subsidiaryCode'],
-						description: ta[i]['description'],
-						unit: ta[i]['unit'],
-						quantity: ta[i]['quantity'],
-						rateBudget: ta[i]['rateBudget'],
-						amountBudget: ta[i]['amountBudget'],
-				}
-				newTADetailList.push(newTADetail);
-			}
-			//console.log(newTADetailList);
-
-
-			if($scope.subcontract.scStatus == "160"){
-				var modalOptions = {
-						bodyText: 'All existing tenders and tender details will be deleted. Continue?'
-				};
-
-
-				confirmService.showModal({}, modalOptions).then(function (result) {
-					if(result == "Yes"){
-						updateTenderDetails(newTADetailList);
-					}
-				});
-			}else{
-				updateTenderDetails(newTADetailList);
-			}
+								confirmService.showModal({}, modalOptions).then(function (result) {
+									if(result == "Yes"){
+										proceedToSave();
+									}
+								});
+							}else if(data.paymentStatus == 'APR'){
+								proceedToSave();
+							}else{
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+							}
+						}else{
+							proceedToSave();
+						}
+					});
+			
+		
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}
@@ -231,6 +202,61 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 		}
 	}
 	
+	function proceedToSave(){
+		var ta = $scope.gridOptionsTa.data;
+
+		//Validate Account Balance
+		var taBalance = JSON.parse(JSON.stringify(accountBalance));
+
+		for (i in ta){
+			var objectCode = ta[i]['objectCode'];
+			var subsidiaryCode = ta[i]['subsidiaryCode'];
+			var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
+
+			if(Object.keys(taBalance).indexOf(accountCode) >= 0)
+				taBalance[accountCode] =  roundUtil.round(taBalance[accountCode] - ta[i]['amountBudget'], 2);
+
+		}
+
+		for (i in taBalance){
+			if(taBalance[i] != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
+				return;
+			}
+		}
+
+
+		//Update
+		var newTADetailList = [];
+		for (i in ta){
+			var newTADetail = {
+					//billItem : ta[i]['billItem'],
+					objectCode: ta[i]['objectCode'],
+					subsidiaryCode: ta[i]['subsidiaryCode'],
+					description: ta[i]['description'],
+					unit: ta[i]['unit'],
+					quantity: ta[i]['quantity'],
+					rateBudget: ta[i]['rateBudget'],
+					amountBudget: ta[i]['amountBudget'],
+			}
+			newTADetailList.push(newTADetail);
+		}
+
+		if($scope.subcontract.scStatus >= "160"){
+			var modalOptions = {
+					bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					updateTenderDetails(newTADetailList);
+				}
+			});
+		}else{
+			updateTenderDetails(newTADetailList);
+		}
+	}
 
 	function getResourceSummariesBySC() {
 		resourceSummaryService.getResourceSummariesBySC($scope.jobNo, $scope.subcontractNo)
@@ -270,7 +296,6 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, 0)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.gridOptionsTa.data= data;
 
 				});

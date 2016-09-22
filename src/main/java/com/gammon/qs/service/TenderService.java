@@ -480,25 +480,7 @@ public class TenderService implements Serializable {
 		 * Payment Requisition
 		 * Remove Pending Payment Cert
 		 * **/
-		PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
-		if(latestPaymentCert!=null 
-				&& latestPaymentCert.getDirectPayment().equals("Y") 
-				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-
-			paymentCertDao.deleteById(latestPaymentCert.getId());
-			attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-			paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-			
-
-			//Reset cumCertQuantity in ScDetail
-			List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(jobNumber, packageNo);
-			for(SubcontractDetail scDetails: scDetailsList){
-				if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-					scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-					subcontractDetailDao.update(scDetails);
-				}
-			}
-		}
+		deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo), subcontractDetailDao.obtainSCDetails(jobNumber, packageNo));
 
 	}
 	
@@ -541,24 +523,7 @@ public class TenderService implements Serializable {
 		 * Payment Requisition
 		 * Remove Pending Payment Cert
 		 * **/
-		PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo);
-		if(latestPaymentCert!=null 
-				&& latestPaymentCert.getDirectPayment().equals("Y") 
-				&& latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-
-			attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-			paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-			paymentCertDao.deleteById(latestPaymentCert.getId());
-
-			//Reset cumCertQuantity in ScDetail
-			List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(jobNumber, packageNo);
-			for(SubcontractDetail scDetails: scDetailsList){
-				if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-					scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
-					subcontractDetailDao.update(scDetails);
-				}
-			}
-		}
+		deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo), subcontractDetailDao.obtainSCDetails(jobNumber, packageNo));
 	}
 	
 	private Tender createTAFromResources(JobInfo job, String packageNo) throws Exception{
@@ -750,7 +715,6 @@ public class TenderService implements Serializable {
 		}
 	
 		Tender tenderAnalysis = this.obtainTender(jobNo, packageNo, vendorNo);
-		logger.info("tenderAnalysis: "+tenderAnalysis);
 		if(currencyCode == null || vendorNo.equals(Integer.valueOf(0)))
 			currencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
 		
@@ -800,17 +764,18 @@ public class TenderService implements Serializable {
 	 * @author koeyyeung
 	 * Payment Requisition Revamp
 	 * **/
-	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract scPackage, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
+	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract subcontract, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
 		if(tenderAnalysis.getId()!=null){
 			//Update Vendor TA
 			if(tenderAnalysis.getVendorNo()!=0){
 				//Payment Requisition exists
-				if(subcontractDetailDao.getSCDetails(scPackage)!=null && subcontractDetailDao.getSCDetails(scPackage).size()>0){
+				List<SubcontractDetail> scDetailsList = subcontractDetailDao.getSCDetails(subcontract);
+				if(scDetailsList!=null && scDetailsList.size()>0){
 					logger.info("Update Vendor : Payment Requisition exists");
 					for(TenderDetail taDetail: toBeUpdatedTaDetails){
 						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
 							
-							if("1".equals(scPackage.getJobInfo().getRepackagingType())){
+							if("1".equals(subcontract.getJobInfo().getRepackagingType())){
 								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
 										&& taDetail.getResourceNo().equals(taDetailInDB.getResourceNo())){
 									//Update TA Details
@@ -834,56 +799,45 @@ public class TenderService implements Serializable {
 						}
 					}
 					//Update TA 
-					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
 					
-					//Delete Pending Payments
-					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-					if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
-						//Delete Pending Payment
-						paymentCertDao.delete(latestPaymentCert);
-						attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
-						paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-						
-						
-						//Reset cumulative Cert Amount in ScDetail
-						List<SubcontractDetail> scDetailsList = subcontractDetailDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-						for(SubcontractDetail scDetails: scDetailsList){
-							if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-								scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
-								subcontractDetailDao.update(scDetails);
-							}
-						}
-					}
 					
 					if(Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
 						//Recalculate SCPackage Subcon Sum
-						subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
+						subcontractService.recalculateSCPackageSubcontractSum(subcontract, toBeUpdatedTaDetails);
+						
+						//Delete Pending Payments
+						deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(job.getJobNumber(), subcontract.getPackageNo()), scDetailsList);
 					}
-					subcontractDao.update(scPackage);
+					subcontractDao.update(subcontract);
 					
 					tenderDao.update(tenderAnalysis);
+					
 				}else{
 					logger.info("Update Vendor");
-					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
+					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
 				}
 			}else{
 				logger.info("Update Budget Tender Analysis");
 				//Edit Budget Tender Analysis
-				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-				if(scPaymentCertList!=null && scPaymentCertList.size()>0){
-					//if direct payment exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
+				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
+				PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(job.getJobNumber(), subcontract.getPackageNo());
+	
+				if(scPaymentCertList!=null && scPaymentCertList.size() > 1 || (latestPaymentCert!=null && PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(latestPaymentCert.getPaymentStatus()))){
+	
+					//if direct payment (APR) exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
 					for (TenderDetail taDetail: toBeUpdatedTaDetails){
-						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget());
-						//BQResourceSummary resourceSummary = bqResourceSummaryDao.get(Long.valueOf(taDetail.getResourceNo()));
+						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(subcontract.getJobInfo(), subcontract.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget(), taDetail.getQuantity());
 						if(resourceSummary==null)
 							return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
 					}
 
+					
 					//Add new TA Details for budget TA (Input Tender Analysis)
-					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
 					for(Tender ta: tenderAnalysisList){
 						if(ta.getVendorNo()==0){
-							ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
+							ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
 							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
 							//logger.info("---------------------seqNo: "+seqNo);
 							for(TenderDetail taDetail: toBeUpdatedTaDetails){
@@ -899,20 +853,29 @@ public class TenderService implements Serializable {
 								}
 							}
 							//Recalculate SCPackage SC Sum
-							subcontractService.recalculateSCPackageSubcontractSum(scPackage, toBeUpdatedTaDetails);
+							subcontractService.recalculateSCPackageSubcontractSum(subcontract, toBeUpdatedTaDetails);
 							break;
 						}
 					}
+					
+					//Delete Pending Payments
+					deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
+					
 				}else{
-					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
-					scPackage.setVendorNo(null);
+					//Delete Pending Payments
+					if(latestPaymentCert !=null)
+						deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
+					
+					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
+					subcontract.setVendorNo(null);
+					subcontractDao.update(subcontract);
 				}
 			}
 		}
 		else{
 			if(vendorNo ==0){
 				logger.info("Create TA Budget");
-				this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, scPackage);
+				this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
 			}
 		}
 		
@@ -965,13 +928,15 @@ public class TenderService implements Serializable {
 			return error;
 		}
 		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
-		Subcontract scPackage = subcontractDao.obtainPackage(job, subcontractNo);
-		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
+		Subcontract subcontract = subcontractDao.obtainPackage(job, subcontractNo);
+		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
 		if(scPaymentCertList!=null && scPaymentCertList.size()>0 
 		&& (tenderAnalysis.getStatus()!=null && tenderAnalysis.getStatus().equals(Tender.TA_STATUS_RCM))){
 			error = "Recommended Tender under payment requistion cannot be deleted.";
 			return error;
 		}
+		
+		
 		List<TenderDetail> details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis);
 		for (TenderDetail detail: details){
 			tenderDetailDao.delete(detail);
@@ -987,7 +952,29 @@ public class TenderService implements Serializable {
 		return error;
 	}
 
+	private void deletePendingPaymentRequisition(PaymentCert latestPaymentCert, List<SubcontractDetail> scDetailsList){
+		try {
+			if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
+				//Delete Pending Payment
+				paymentCertDao.delete(latestPaymentCert);
+				attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+				paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 
+
+				//Reset cumulative Cert Amount in ScDetail
+				for(SubcontractDetail scDetails: scDetailsList){
+					if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
+						scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
+						subcontractDetailDao.update(scDetails);
+					}
+				}
+			}
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	public String updateRecommendedTender(String jobNo, String subcontractNo, Integer vendorNo) {
@@ -1003,6 +990,9 @@ public class TenderService implements Serializable {
 				return error;
 			}
 			
+			//Delete 1st Pending Payment Requisition when changing Subcontractor 
+			deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo), subcontractDetailDao.obtainSCDetails(jobNo, subcontractNo));
+			
 			List<Tender> tenderList = this.obtainTenderList(jobNo, subcontractNo);
 			for (Tender tender: tenderList){
 				if(vendorNo.equals(tender.getVendorNo()))
@@ -1011,6 +1001,11 @@ public class TenderService implements Serializable {
 					tender.setStatus(null);
 				tenderDao.update(tender);
 			}
+			
+			Subcontract subcontract = subcontractDao.obtainSCPackage(jobNo, subcontractNo);
+			subcontract.setVendorNo(vendorNo.toString());
+			
+			subcontractDao.update(subcontract);
 			
 
 

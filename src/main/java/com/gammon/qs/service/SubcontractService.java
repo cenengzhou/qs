@@ -2889,7 +2889,7 @@ public class SubcontractService {
 				if (Integer.valueOf(0).equals(ta.getVendorNo())){
 					budgetTA = ta;//Budget TA
 					for(TenderDetail taDetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta)){
-						ResourceSummary resourceSummary = resourceSummaryHBDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget());
+						ResourceSummary resourceSummary = resourceSummaryHBDao.getResourceSummary(job, subcontractNo, taDetails.getObjectCode(), taDetails.getSubsidiaryCode(), taDetails.getDescription(), taDetails.getUnit(), taDetails.getRateBudget(), taDetails.getQuantity());
 						//BQResourceSummary resourceSummary = resourceSummaryHBDao.get(Long.valueOf(taDetails.getResourceNo()));
 						if(resourceSummary==null)
 							return "Tender Analysis should be identical to Resource Summaries in Repackaging for making Payment Requisition.";
@@ -3522,6 +3522,7 @@ public class SubcontractService {
 				Subcontract newSubcontract = new Subcontract();
 				newSubcontract.setJobInfo(jobHBDao.obtainJobInfo(jobNo));
 				newSubcontract.setPackageNo(subcontract.getPackageNo());
+				newSubcontract.setPackageType(Subcontract.SUBCONTRACT_PACKAGE);
 				
 				newSubcontract.setDescription(subcontract.getDescription());
 				newSubcontract.setSubcontractorNature(subcontract.getSubcontractorNature());
@@ -3572,6 +3573,27 @@ public class SubcontractService {
 				subcontractInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
 				
 				subcontractHBDao.update(subcontractInDB);
+				
+				
+				//Delete Pending Payments
+				PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontract.getPackageNo());
+				if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
+					//Delete Pending Payment
+					paymentCertHBDao.delete(latestPaymentCert);
+					attachmentPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
+					
+					
+					//Reset cumulative Cert Amount in ScDetail
+					List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.obtainSCDetails(jobNo, subcontract.getPackageNo());
+					for(SubcontractDetail scDetails: scDetailsList){
+						if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
+							scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
+							subcontractDetailHBDao.update(scDetails);
+						}
+					}
+				}
+				
 			}
 
 		}

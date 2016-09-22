@@ -27,18 +27,18 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			exporterMenuPdf: false,
 
 			columnDefs: [
-			             { field: 'mainCertNo', displayName: "Cert No."},
-			             { field: 'contractualDueDate', cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"'},
-			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"'},
-			             { field: 'percent', displayName: "Percent", 
+			             { field: 'mainCertNo', displayName: "Cert No.", width: 80},
+			             { field: 'contractualDueDate', cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"', width: 100},
+			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"', width: 100},
+			             { field: 'percent', displayName: "Percent", width: 80, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-		            	 { field: 'amount',  displayName: "Amount",
+		            	 { field: 'amount',  displayName: "Amount", width: 120, 
 		            		 cellClass: 'text-right', cellFilter: 'number:2', 
 		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
 		            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-	            		 { field: 'status', cellFilter: 'mapStatus'}	
+	            		 { field: 'status', cellFilter: 'mapStatus', width: 80}	
 	            		 ]
 	};
 
@@ -54,7 +54,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 	function loadData(){
 		getMainCertData(year.toString().substring(2, 4));	
-		getRetentionReleaseList();
+		getLatestMainCert();
 	}
 
 	function getMainCertData(year) {
@@ -94,6 +94,22 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		};
 	}
 
+	
+	function getLatestMainCert(){
+		mainCertService.getLatestMainCert($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data){
+						$scope.cumRetentionAmount = 
+							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
+							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
+							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
+
+						getRetentionReleaseList();
+					}
+				});
+	}
+	
 	function getRetentionReleaseList(){
 		mainCertService.getRetentionReleaseList($scope.jobNo)
 		.then( function (data){

@@ -26,7 +26,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			columnDefs: [
 			             { field: 'lineType', enableCellEdit: false},
 			             { field: 'billItem', enableCellEdit: false},
-			             { field: 'movementAmount', cellClass: "blue", enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2', 
+			             { field: 'movementAmount',  enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
@@ -37,7 +37,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			             { field: 'cumAmount', displayName: "Cumulative Certified Amount", enableFiltering: false, 
 			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
 			            	 cellEditableCondition : $scope.canEdit},
-			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false,cellClass: 'blue text-right', cellFilter: 'number:2'},
+			             { field: 'postedAmount', displayName: "Posted Certified Amount", enableCellEdit: false,cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'description', enableCellEdit: false},
 			             { field: 'scSeqNo', displayName: "Sequence No", enableCellEdit: false},
 			             { field: 'objectCode', enableCellEdit: false},

@@ -2753,7 +2753,7 @@ public class PaymentService{
 				return error;
 			}
 			else if(supplierMasterWrapper.getHoldPaymentCode().equals(PaymentCert.HOLD_PAYMENT)){
-				error="No payment can be submitted due to ALL the payments of Subcontractor: "+supplierMasterWrapper.getAddressNumber()+" are being hold.  <br/>"+
+				error="No payment can be submitted due to ALL the payments of Subcontractor: "+supplierMasterWrapper.getAddressNumber()+" are being hold."+
 						this.obtainPaymentHoldMessage();
 				logger.info(error);
 				return error;

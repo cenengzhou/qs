@@ -16,23 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
+import com.gammon.qs.dao.PaymentCertDetailHBDao;
+import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.PaymentPostingWSDao;
 import com.gammon.qs.dao.PaymentWSDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
+import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
-import com.gammon.qs.dao.PaymentCertDetailHBDao;
+import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.ResourceSummary;
-import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.businessLogic.SCPaymentLogic;
-import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
@@ -179,7 +177,7 @@ public class PaymentPostingService {
 									for(SubcontractDetailBQ scDetails: scDetailList){
 										ResourceSummary resourceSummary = bqResourceSummaryDao.getResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), 
 												scDetails.getObjectCode(), scDetails.getSubsidiaryCode(), 
-												scDetails.getDescription(), scDetails.getUnit(), scDetails.getCostRate());
+												scDetails.getDescription(), scDetails.getUnit(), scDetails.getCostRate(), scDetails.getQuantity());
 										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!=null && resourceSummary.getCurrIVAmount()!= 0.0){
 											//scDetails.setCumWorkDoneQuantity(resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4));
 											scDetails.setAmountCumulativeWD(new BigDecimal(resourceSummary.getCurrIVAmount()/resourceSummary.getRate()*scDetails.getScRate()).setScale(2, RoundingMode.HALF_UP));

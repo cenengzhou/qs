@@ -17,7 +17,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6" ng-hide="overallChart.data[0] + overallChart.data[1] == 0">
 						<canvas id="doughnut" class="chart chart-doughnut"
 							chart-data="overallChart.data"
 							chart-labels="overallChart.labels"
@@ -25,8 +25,11 @@
 							height="250">
 											</canvas>
 					</div>
+					<div class="col-md-6" ng-show="overallChart.data[0] + overallChart.data[1] == 0">
+						<h4 class="text-center">No Data</h4>
+					</div>
 					<div class="col-md-6">
-						<ul class="chart-legend clearfix text-left">
+						<ul class="chart-legend clearfix text-left" >
 							<li class="col-md-12">
 									<label>Total:
 										{{overallChart.data[0] + overallChart.data[1] | currency}}</label></li>
@@ -64,13 +67,16 @@
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6" ng-hide="cumPaymentResourceDistributionChart.data[0] + cumPaymentResourceDistributionChart.data[1] == 0">
 						<canvas id="doughnut" class="chart chart-doughnut"
 							chart-data="cumPaymentResourceDistributionChart.data"
 							chart-labels="cumPaymentResourceDistributionChart.labels"
 							chart-colours="cumPaymentResourceDistributionChart.colours"
 							height="250">
 											</canvas>
+					</div>
+					<div class="col-md-6" ng-show="cumPaymentResourceDistributionChart.data[0] + cumPaymentResourceDistributionChart.data[1] == 0">
+						<h4 class="text-center">No Data</h4>
 					</div>
 					<div class="col-md-6">
 						<ul class="chart-legend text-left">
@@ -121,13 +127,16 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" ng-hide="bqChart.data[0] + bqChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="bqChart.data"
 								chart-labels="bqChart.labels"
 								chart-colours="bqChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="bqChart.data[0] + bqChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">
@@ -165,14 +174,17 @@
 					</h4>
 				</div>
 				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-6">
+					<div class="row" >
+						<div class="col-md-6" ng-hide="voChart.data[0] + voChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="voChart.data"
 								chart-labels="voChart.labels"
 								chart-colours="voChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="voChart.data[0] + voChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">
@@ -211,13 +223,16 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" ng-hide="othersChart.data[0] + othersChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="othersChart.data"
 								chart-labels="othersChart.labels"
 								chart-colours="othersChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="othersChart.data[0] + othersChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">
@@ -256,13 +271,16 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" ng-hide="advancedChart.data[0] + advancedChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="advancedChart.data"
 								chart-labels="advancedChart.labels"
 								chart-colours="advancedChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="advancedChart.data[0] + advancedChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">
@@ -301,13 +319,16 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" ng-hide="retentionChart.data[0] + retentionChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="retentionChart.data"
 								chart-labels="retentionChart.labels"
 								chart-colours="retentionChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="retentionChart.data[0] + retentionChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">
@@ -346,13 +367,16 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" ng-hide="ccChart.data[0] + ccChart.data[1] == 0">
 							<canvas id="pie" class="chart chart-pie"
 								chart-data="ccChart.data"
 								chart-labels="ccChart.labels"
 								chart-colours="ccChart.colours"
 								height="150">
 											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="ccChart.data[0] + ccChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
 						</div>
 						<div class="col-md-6">
 							<ul class="chart-legend clearfix text-left">

@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookies', 'tenderService', '$state', 'modalService', 'roundUtil',
-                                                          function ($scope, $location, $uibModalInstance, uiGridConstants, modalParam, $cookies, tenderService, $state, modalService, roundUtil) {
+mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookies', 'tenderService', '$state', 'modalService', 'roundUtil', 'paymentService', 'confirmService', 
+                                                          function ($scope, $uibModalInstance, uiGridConstants, modalParam, $cookies, tenderService, $state, modalService, roundUtil, paymentService, confirmService) {
 
 	$scope.vendorNo= modalParam;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -111,10 +111,35 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 			return;
 		}
 		
+		if($scope.tender.status == 'RCM'){
+			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+			.then(
+					function( data ) {
+						if(data){
+							if(data.paymentStatus == 'PND'){
+								var modalOptions = {
+										bodyText: "Payment Requisition with status 'Pending' will be deleted. Proceed?"
+								};
+
+								confirmService.showModal({}, modalOptions).then(function (result) {
+									if(result == "Yes")
+										proceedToUpdate();
+								});
+							}else if(data.paymentStatus == 'APR')
+								proceedToUpdate();
+							else
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+						}else
+							proceedToUpdate();
+					});
+		}else
+			proceedToUpdate();
+	};
+
+	function proceedToUpdate(){
 		var ta = $scope.gridOptions.data;
 		var newTADetailList = [];
-		//console.log(ta);
-		
+
 		for (i in ta){
 			var newTADetail = {
 					billItem : ta[i]['billItem'],
@@ -128,34 +153,14 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 					amountBudget: ta[i]['amountBudget'],
 					amountSubcontract: ta[i]['amountSubcontract'],
 					amountForeign: ta[i]['amountForeign']
-					
+
 			}
 			newTADetailList.push(newTADetail);
 		}
-		
-		//console.log(newTADetailList);
-		
-		updateTenderDetails(newTADetailList);
-	};
 
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-		$state.reload();
-	};
-
-	$scope.$on('$locationChangeStart', function(event, $uibModalStack){
-		console.log("Location changed");
-		var confirmed = window.confirm("Are you sure to exit this page?");
-		console.log("confirmed: "+confirmed);
-		if(confirmed){
-			$uibModalInstance.close();
-		}
-		else{
-			event.preventDefault();            
-		}
-	});
-
-
+	
+	updateTenderDetails(newTADetailList);
+}
 
 	function loadTenderDetail(){
 		getTender();
@@ -180,7 +185,6 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 		tenderService.getTenderDetailList($scope.jobNo, $scope.subcontractNo, $scope.vendorNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.gridOptions.data = data;
 					$scope.gridApi.grid.refresh();
 				});
@@ -201,6 +205,23 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$location',
 					}
 				});
 	}
+	
+
+	$scope.cancel = function () {
+		$uibModalInstance.dismiss("cancel");
+		$state.reload();
+	};
+
+	/*$scope.$on('$locationChangeStart', function(event, $uibModalStack){
+		var confirmed = window.confirm("Are you sure to exit this page?");
+		console.log("confirmed: "+confirmed);
+		if(confirmed){
+			$uibModalInstance.close();
+		}
+		else{
+			event.preventDefault();            
+		}
+	});*/
 	
 	
 }]);
