@@ -1,6 +1,6 @@
-grant select, insert On "CRPDTA"."F58011" to PCMSDATAUAT;
+grant select, insert On CRPDTA.F58011 to PCMSDATATST;
 
-create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58011  AS
+create or replace PROCEDURE PCMSDATATST.P_QS_UPDATE_F58011  AS
 	Type Qscurtype Is Ref Cursor;
 
 	v_mcu	CHAR(12);
@@ -32,7 +32,7 @@ create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58011  AS
               Decode(qsp.paymenttype, Null, '' '', Qsp.paymenttype) As paymenttype,
               Round(To_Number(Decode(qsp.remeasuredscsum, Null, 0, Qsp.remeasuredscsum*100)), 0) As remeasuredscsum,
               Round(To_Number(Decode(qsp.addendumamount, Null, 0, Qsp.addendumamount*100)), 0) As addendumamount
-      FROM PCMSDATAUAT.PAYMENT_CERT Qsp
+      FROM PCMSDATATST.PAYMENT_CERT Qsp
       Where Not Exists (Select 1
                         From CRPDTA.F58011 Jde
                         Where  jde.Pcmcu = Lpad(To_Char(Qsp.Jobno),12, '' '')
@@ -81,5 +81,7 @@ Begin
 	<<Exit_Here>>
   Null;
 END P_QS_UPDATE_F58011;
+/
 
-grant EXECUTE on "PCMSDATAUAT"."P_QS_UPDATE_F58011" to "PCMSUSER_ROLE";
+grant EXECUTE on PCMSDATATST.P_QS_UPDATE_F58011 to PCMSUSER_ROLE;
+/

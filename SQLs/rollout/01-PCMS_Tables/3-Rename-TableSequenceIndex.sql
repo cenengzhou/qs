@@ -2,25 +2,25 @@
 --  3. Rename Table, Sequence, Index & Constraint
 --------------------------------------------------------
 -- /* JOB */
-rename "PCMSDATAUAT"."QS_JOB" to "PCMSDATAUAT"."JOB_INFO";
-rename "PCMSDATAUAT"."QS_JOB_SEQ" to "PCMSDATAUAT"."JOB_INFO_SEQ";
-alter index "PCMSDATAUAT"."QS_JOB_PK" rename to "PCMSDATAUAT"."JOB_INFO_PK";
-alter table "PCMSDATAUAT"."JOB_INFO" rename constraint "QS_JOB_PK" to "JOB_INFO_PK";
+rename QS_JOB to JOB_INFO;
+rename QS_JOB_SEQ to JOB_INFO_SEQ;
+alter index QS_JOB_PK rename to JOB_INFO_PK;
+alter table JOB_INFO rename constraint QS_JOB_PK to JOB_INFO_PK;
 
-rename "PCMSDATAUAT"."QS_BILL" to "PCMSDATAUAT"."BPI_BILL";
-rename "PCMSDATAUAT"."QS_BILL_SEQ" to "PCMSDATAUAT"."BPI_BILL_SEQ";
-alter index "PCMSDATAUAT"."QS_Bill_PK" rename to "PCMSDATAUAT"."BPI_BILL_PK";
-alter table "PCMSDATAUAT"."BPI_BILL" rename constraint "QS_Bill_PK" to "BPI_BILL_PK";
+rename QS_BILL to BPI_BILL;
+rename QS_BILL_SEQ to BPI_BILL_SEQ;
+alter index QS_Bill_PK rename to BPI_BILL_PK;
+alter table BPI_BILL rename constraint QS_Bill_PK to BPI_BILL_PK;
 
-rename "PCMSDATAUAT".QS_PAGE to "PCMSDATAUAT".BPI_PAGE;
-rename "PCMSDATAUAT".QS_PAGE_SEQ to "PCMSDATAUAT".BPI_PAGE_SEQ;
-alter index "PCMSDATAUAT"."QS_Page_PK" rename to "PCMSDATAUAT".BPI_PAGE_PK;
-alter table "PCMSDATAUAT".BPI_PAGE rename constraint "QS_Page_PK" to BPI_PAGE_PK;
+rename QS_PAGE to BPI_PAGE;
+rename QS_PAGE_SEQ to BPI_PAGE_SEQ;
+alter index QS_Page_PK rename to BPI_PAGE_PK;
+alter table BPI_PAGE rename constraint QS_Page_PK to BPI_PAGE_PK;
 
 rename QS_BQITEM to BPI_ITEM;
 rename QS_BQITEM_SEQ to BPI_ITEM_SEQ;
-alter index "QS_BQItem_PK" rename to BPI_ITEM_PK;
-alter table BPI_ITEM rename constraint "QS_BQItem_PK" to BPI_ITEM_PK;
+alter index QS_BQItem_PK rename to BPI_ITEM_PK;
+alter table BPI_ITEM rename constraint QS_BQItem_PK to BPI_ITEM_PK;
 
 rename QS_RESOURCE to BPI_ITEM_RESOURCE;
 rename QS_RESOURCE_SEQ to BPI_ITEM_RESOURCE_SEQ;
@@ -35,24 +35,24 @@ alter table TRANSIT rename constraint QS_TRANSITHEADER_PK to TRANSIT_PK;
 
 rename QS_TRANSITBQ to TRANSIT_BPI;
 rename QS_TRANSITBQ_SEQ to TRANSIT_BPI_SEQ;
-alter index "QS_TransitBQ_PK" rename to TRANSIT_BPI_PK;
-alter table TRANSIT_BPI rename constraint "QS_TransitBQ_PK" to TRANSIT_BPI_PK;
+alter index QS_TransitBQ_PK rename to TRANSIT_BPI_PK;
+alter table TRANSIT_BPI rename constraint QS_TransitBQ_PK to TRANSIT_BPI_PK;
 
 rename QS_TRANSITRESOURCE to TRANSIT_RESOURCE;
 rename QS_TRANSITRESOURCE_SEQ to TRANSIT_RESOURCE_SEQ;
-alter index "QS_TransitResource_PK" rename to TRANSIT_RESOURCE_PK;
-alter table TRANSIT_RESOURCE rename constraint "QS_TransitResource_PK" to TRANSIT_RESOURCE_PK;
+alter index QS_TransitResource_PK rename to TRANSIT_RESOURCE_PK;
+alter table TRANSIT_RESOURCE rename constraint QS_TransitResource_PK to TRANSIT_RESOURCE_PK;
 
 /* TENDER ANALYSIS */
 rename QS_TENDERANALYSIS to TENDER;
 rename QS_TENDERANALYSIS_SEQ to TENDER_SEQ;
-alter index "QS_TenderAnalysis_PK" rename to TENDER_PK;
-alter table TENDER rename constraint "QS_TenderAnalysis_PK" to TENDER_PK;
+alter index QS_TenderAnalysis_PK rename to TENDER_PK;
+alter table TENDER rename constraint QS_TenderAnalysis_PK to TENDER_PK;
 
 rename QS_TENDERANALYSISDETAIL to TENDER_DETAIL;
 rename QS_TENDERANALYSISDETAIL_SEQ to TENDER_DETAIL_SEQ;
-alter index "QS_TenderAnalysisDetail_PK" rename to TENDER_DETAIL_PK;
-alter table TENDER_DETAIL rename constraint "QS_TenderAnalysisDetail_PK" to TENDER_DETAIL_PK;
+alter index QS_TenderAnalysisDetail_PK rename to TENDER_DETAIL_PK;
+alter table TENDER_DETAIL rename constraint QS_TenderAnalysisDetail_PK to TENDER_DETAIL_PK;
 
 -- /* SUBCONTRACT */
 rename QS_SC_PACKAGE to SUBCONTRACT;
@@ -72,8 +72,8 @@ alter table SUBCONTRACT_DETAIL rename constraint QS_SC_DETAILS_PK to SUBCONTRACT
 
 rename QS_SCWORKSCOPE to SUBCONTRACT_WORKSCOPE;
 rename QS_SC_WORKSCOPE_SEQ to SUBCONTRACT_WORKSCOPE_SEQ;
-alter index "QS_SCWorkScope_PK" rename to SUBCONTRACT_WORKSCOPE_PK;
-alter table SUBCONTRACT_WORKSCOPE rename constraint "QS_SCWorkScope_PK" to SUBCONTRACT_WORKSCOPE_PK;
+alter index QS_SCWorkScope_PK rename to SUBCONTRACT_WORKSCOPE_PK;
+alter table SUBCONTRACT_WORKSCOPE rename constraint QS_SCWorkScope_PK to SUBCONTRACT_WORKSCOPE_PK;
 
 -- /* REPACKAGING */
 rename QS_REPACKAGING_ENTRY to REPACKAGING;
@@ -161,18 +161,18 @@ alter table ATTACH_REPACKAGING rename constraint SYS_C0020485 to ATTACH_REPACKAG
 -- /* Application Tables */
 rename QS_TRANSITUOMMATCH to APP_TRANSIT_UOM;
 rename QS_TRANSITUOMMATCH_SEQ to APP_TRANSIT_UOM_SEQ;
-alter index "QS_TransitUomMatch_PK" rename to APP_TRANSIT_UOM_PK;
-alter table APP_TRANSIT_UOM rename constraint "QS_TransitUomMatch_PK" to APP_TRANSIT_UOM_PK;
+alter index QS_TransitUomMatch_PK rename to APP_TRANSIT_UOM_PK;
+alter table APP_TRANSIT_UOM rename constraint QS_TransitUomMatch_PK to APP_TRANSIT_UOM_PK;
 
 rename QS_TRANSITCODEMATCH to APP_TRANSIT_RESOURCE_CODE;
 rename QS_TRANSITCODEMATCH_SEQ to APP_TRANSIT_RESOURCE_CODE_SEQ;
-alter index "QS_TransitCodeMatch_PK" rename to APP_TRANSIT_RESOURCE_CODE_PK;
-alter table APP_TRANSIT_RESOURCE_CODE rename constraint "QS_TransitCodeMatch_PK" to APP_TRANSIT_RESOURCE_CODE_PK;
+alter index QS_TransitCodeMatch_PK rename to APP_TRANSIT_RESOURCE_CODE_PK;
+alter table APP_TRANSIT_RESOURCE_CODE rename constraint QS_TransitCodeMatch_PK to APP_TRANSIT_RESOURCE_CODE_PK;
 
 rename QS_SYSTEMCONSTANT to APP_SUBCONTRACT_STANDARD_TERMS;
 -- No sequence tables
-alter index "QS_SystemConstant_PK" rename to APP_SUBCONTRACT_STANDARD_T_PK;
-alter table APP_SUBCONTRACT_STANDARD_TERMS rename constraint "QS_SystemConstant_PK" to APP_SUBCONTRACT_STANDARD_T_PK;
+alter index QS_SystemConstant_PK rename to APP_SUBCONTRACT_STANDARD_T_PK;
+alter table APP_SUBCONTRACT_STANDARD_TERMS rename constraint QS_SystemConstant_PK to APP_SUBCONTRACT_STANDARD_T_PK;
 
 rename QS_ACCOUNT_LEDGER to JDE_ACCOUNT_LEDGER;
 rename QS_ACCOUNT_LEDGER_SEQ to JDE_ACCOUNT_LEDGER_SEQ; 

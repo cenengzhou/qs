@@ -1,5 +1,5 @@
 
-  CREATE OR REPLACE FORCE VIEW "PCMSDATAUAT"."V_CONTRACT_RECEIVABLE_RPT" ("DIVISION", "COMPANY", "JOBNO", "JOBDESCRIPTION", "CLIENTNO", "CERTNO", "CLIENTCERTNO", "CURRENCY", "RECEIVABLEAMOUNT", "CERTSTATUS", "CERTASATDATE", "IPADATE", "CERTISSUEDATE", "CERTDUEDATE", "ACTUALRECEIPTDATE", "TOTALRECEIPTAMOUNT", "BENCHMARK1", "BENCHMARK2") AS 
+  CREATE OR REPLACE FORCE VIEW "PCMSDATATST"."V_CONTRACT_RECEIVABLE_RPT" ("DIVISION", "COMPANY", "JOBNO", "JOBDESCRIPTION", "CLIENTNO", "CERTNO", "CLIENTCERTNO", "CURRENCY", "RECEIVABLEAMOUNT", "CERTSTATUS", "CERTASATDATE", "IPADATE", "CERTISSUEDATE", "CERTDUEDATE", "ACTUALRECEIPTDATE", "TOTALRECEIPTAMOUNT", "BENCHMARK1", "BENCHMARK2") AS 
   Select
       ar.Division As Division,
       ar.Company As Company,
@@ -26,7 +26,7 @@
   (Select
       mainCert.Jobno,
       mainCert.Maxcert,
-      (Select Max(Certno) From  PCMSDATAUAT.MAIN_CERT  Where Jobno = mainCert.Jobno and CertNo != mainCert.Maxcert) Prevcert,
+      (Select Max(Certno) From  PCMSDATATST.MAIN_CERT  Where Jobno = mainCert.Jobno and CertNo != mainCert.Maxcert) Prevcert,
       Avg(mainCert.Cert_Issue_Date - mainCert.Cert_As_At_Date) As Benchmark1,
       Avg(mainCert.Certduedate - mainCert.Cert_Issue_Date) As Benchmark2,
       jb.company,
@@ -36,17 +36,17 @@
       jb.Billingcurrency
      From
       (SELECT baseCert.*,
-              (Select Max(Certno) From PCMSDATAUAT.MAIN_CERT  Where Jobno = baseCert.Jobno) Maxcert,
+              (Select Max(Certno) From PCMSDATATST.MAIN_CERT  Where Jobno = baseCert.Jobno) Maxcert,
               Row_Number() Over(Partition By baseCert.Jobno Order By baseCert.Certno Desc) As rownumber
         From
             (Select cert.*
-                  From PCMSDATAUAT.MAIN_CERT cert Where cert.Certificatestatus >= 300) baseCert) mainCert,
-  PCMSDATAUAT.JOB_INFO jb
+                  From PCMSDATATST.MAIN_CERT cert Where cert.Certificatestatus >= 300) baseCert) mainCert,
+  PCMSDATATST.JOB_INFO jb
   Where mainCert.rownumber <= 6
   And mainCert.Jobno = jb.Jobno
 GROUP BY mainCert.Jobno, mainCert.Maxcert, jb.company, jb.Division, jb.Description, jb.Employer, jb.billingcurrency) ar
-inner join PCMSDATAUAT.MAIN_CERT mc on ar.Jobno = Mc.Jobno And ar.Maxcert = Mc.Certno
-Left Join PCMSDATAUAT.MAIN_CERT Pc On Ar.Jobno = Pc.Jobno And Ar.Prevcert = Pc.Certno
+inner join PCMSDATATST.MAIN_CERT mc on ar.Jobno = Mc.Jobno And ar.Maxcert = Mc.Certno
+Left Join PCMSDATATST.MAIN_CERT Pc On Ar.Jobno = Pc.Jobno And Ar.Prevcert = Pc.Certno
 order by ar.jobno;
 
-grant SELECT on "PCMSDATAUAT"."V_CONTRACT_RECEIVABLE_RPT" to "PCMSUSER_ROLE";
+grant SELECT on "PCMSDATATST"."V_CONTRACT_RECEIVABLE_RPT" to "PCMSUSER_ROLE";
