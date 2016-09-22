@@ -1,5 +1,7 @@
 package com.gammon.pcms.config;
 
+import org.apache.log4j.PropertyConfigurator;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +20,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan(scopedProxy = ScopedProxyMode.TARGET_CLASS, basePackages = {"com.gammon"})
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @PropertySources({@PropertySource("classpath:application.properties"), @PropertySource("file:${variable.properties}")})
-public class ApplicationConfig {
+public class ApplicationConfig implements InitializingBean{
 	
 	@Value("${configDirectory}")
 	private String configDirectory;
@@ -56,6 +58,8 @@ public class ApplicationConfig {
 	private String uatConfigDirectory;
 	@Value("${PROConfigDirectory}")
 	private String proConfigDirectory;
+	@Value("${log4j.properties}")
+	private String log4jProperties;
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -142,6 +146,18 @@ public class ApplicationConfig {
 
 	public String getProConfigDirectory() {
 		return proConfigDirectory;
+	}
+
+	/**
+	 * @return the log4jProperties
+	 */
+	public String getLog4jProperties() {
+		return log4jProperties;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		PropertyConfigurator.configureAndWatch(getLog4jProperties());
 	}
 
 }
