@@ -103,10 +103,15 @@ public class ResourceSummaryController {
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
-									@RequestParam(required =true) String repackagingId,
+									@RequestParam(required =false) String repackagingId,
 									 @RequestBody ResourceSummary resourceSummary) throws NumberFormatException, Exception{
 		String result = "";
-		result = resourceSummaryService.addResourceSummary(jobNo, Long.valueOf(repackagingId), resourceSummary);
+		try {
+			result = resourceSummaryService.addResourceSummary(jobNo, repackagingId, resourceSummary);
+		} catch (Exception e) {
+			result = "Failed to add resource summary.";
+			e.printStackTrace();
+		}
 		return result;
 	}
 	

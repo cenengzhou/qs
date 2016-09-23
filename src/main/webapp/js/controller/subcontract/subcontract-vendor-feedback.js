@@ -211,6 +211,11 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		$uibModalInstance.dismiss("cancel");
 		$state.reload();
 	};
+	
+	//Listen for location changes and call the callback
+	$scope.$on('$locationChangeStart', function(event){
+		$uibModalInstance.close();
+	});
 
 	/*$scope.$on('$locationChangeStart', function(event, $uibModalStack){
 		var confirmed = window.confirm("Are you sure to exit this page?");

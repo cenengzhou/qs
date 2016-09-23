@@ -179,9 +179,9 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		}else if (status.localeCompare('SBM') == 0) {
 			return "50%";
 		}else if (status.localeCompare('UFR') == 0) {
-			return { width: "50%" }
+			return "50%";
 		}else if (status.localeCompare('PCS') == 0) {
-			return { width: "75%" }
+			return "75%";
 		}else if (status.localeCompare('APR') == 0) {
 			return "100%";
 		}else{

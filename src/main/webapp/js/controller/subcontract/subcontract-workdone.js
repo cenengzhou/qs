@@ -15,10 +15,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		}
 //		SubcontractDetail.lineType === BQ && (&& SubcontractDetail.manualInputSCWD === Y || SubcontractDetail.LEGACYJOB === Y)
 //		[modal] "Workdone cannot be updated in BQ Line"
-		if($scope.row.entity.lineType === 'BQ' && ($scope.row.entity.subcontract.jobInfo.manualInputSCWD === 'Y' || $scope.row.entity.subcontract.jobInfo.legacyJob === 'Y')){
+		/*if($scope.row.entity.lineType === 'BQ' && ($scope.row.entity.subcontract.jobInfo.manualInputSCWD === 'Y' || $scope.row.entity.subcontract.jobInfo.legacyJob === 'Y')){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Workdone cannot be updated in BQ Line');
 			return;
-		}
+		}*/
 //		SubcontractDetail.sourceType === D && SubcontractDetail.lineType !== OA
 //		[modal] "Workdone cannot be updated in "+SubcontractDetail.lineType+" Line"
 		if($scope.row.entity.sourceType === 'D' && $scope.row.entity.lineType !== 'OA') {

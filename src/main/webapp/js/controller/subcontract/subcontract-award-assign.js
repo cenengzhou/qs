@@ -39,6 +39,11 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		$scope.gridApi = gridApi;
 		
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+			if(row.entity.postedIVAmount != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
+				return;
+			}
+			
 			if(row.isSelected) { 
 				row.entity.packageNo = $scope.subcontractNo;
 			}else{
@@ -150,6 +155,8 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	};
 			
 	function proceedToSave(){
+		/*var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });*/
 		var dataRows =	$scope.gridOptions.data;
 		
 		if(dataRows.length==0){

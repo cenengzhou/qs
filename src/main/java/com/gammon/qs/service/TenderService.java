@@ -148,7 +148,7 @@ public class TenderService implements Serializable {
 						taDetail.setResourceNo(budgetTADetail.getResourceNo());
 						
 						taDetail.setTender(ta);
-						tenderDetailDao.update(taDetail);
+						tenderDetailDao.insert(taDetail);
 						tenderDao.update(ta);
 					}
 				}
@@ -663,7 +663,8 @@ public class TenderService implements Serializable {
 				newDetail.setLineType(detail.getLineType());
 				newDetail.setUnit(detail.getUnit());
 				newDetail.setRemark(detail.getRemark());
-
+				newDetail.setResourceNo(detail.getResourceNo());
+				
 				tenderDetailDao.insert(newDetail);
 			}
 		} catch (Exception e) {
@@ -747,7 +748,7 @@ public class TenderService implements Serializable {
 			tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 		}
 
-		String error = updateTenderAnalysisAndTADetails(job, scPackage, vendorNo, tenderAnalysis, taDetails);
+		String error = updateTenderDetails(job, scPackage, vendorNo, tenderAnalysis, taDetails);
 		if(error!=null)
 			return error;
 
@@ -764,16 +765,16 @@ public class TenderService implements Serializable {
 	 * @author koeyyeung
 	 * Payment Requisition Revamp
 	 * **/
-	private String updateTenderAnalysisAndTADetails(JobInfo job, Subcontract subcontract, Integer vendorNo, Tender tenderAnalysis, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
-		if(tenderAnalysis.getId()!=null){
+	private String updateTenderDetails(JobInfo job, Subcontract subcontract, Integer vendorNo, Tender tender, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
+		if(tender.getId()!=null){
 			//Update Vendor TA
-			if(tenderAnalysis.getVendorNo()!=0){
+			if(tender.getVendorNo()!=0){
 				//Payment Requisition exists
 				List<SubcontractDetail> scDetailsList = subcontractDetailDao.getSCDetails(subcontract);
 				if(scDetailsList!=null && scDetailsList.size()>0){
 					logger.info("Update Vendor : Payment Requisition exists");
 					for(TenderDetail taDetail: toBeUpdatedTaDetails){
-						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tenderAnalysis)){
+						for(TenderDetail taDetailInDB: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tender)){
 							
 							if("1".equals(subcontract.getJobInfo().getRepackagingType())){
 								if(taDetail.getResourceNo()!=null && taDetailInDB.getResourceNo()!=null 
@@ -799,10 +800,10 @@ public class TenderService implements Serializable {
 						}
 					}
 					//Update TA 
-					tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
+					tender.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
+					tender.setAmtBuyingGainLoss(new BigDecimal(tender.getBudgetAmount()-recalculateTenderTotalBudget(toBeUpdatedTaDetails)));
 					
-					
-					if(Tender.TA_STATUS_RCM.equals(tenderAnalysis.getStatus())){
+					if(Tender.TA_STATUS_RCM.equals(tender.getStatus())){
 						//Recalculate SCPackage Subcon Sum
 						subcontractService.recalculateSCPackageSubcontractSum(subcontract, toBeUpdatedTaDetails);
 						
@@ -811,76 +812,85 @@ public class TenderService implements Serializable {
 					}
 					subcontractDao.update(subcontract);
 					
-					tenderDao.update(tenderAnalysis);
+					tenderDao.update(tender);
 					
 				}else{
 					logger.info("Update Vendor");
-					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
+					this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
 				}
 			}else{
-				logger.info("Update Budget Tender Analysis");
-				//Edit Budget Tender Analysis
-				List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
-				PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(job.getJobNumber(), subcontract.getPackageNo());
-	
-				if(scPaymentCertList!=null && scPaymentCertList.size() > 1 || (latestPaymentCert!=null && PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(latestPaymentCert.getPaymentStatus()))){
-	
-					//if direct payment (APR) exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
-					for (TenderDetail taDetail: toBeUpdatedTaDetails){
-						ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(subcontract.getJobInfo(), subcontract.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget(), taDetail.getQuantity());
-						if(resourceSummary==null)
-							return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
-					}
+				try {
+					logger.info("Update Budget Tender Analysis");
+					//Edit Budget Tender Analysis
+					List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
+					PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(job.getJobNumber(), subcontract.getPackageNo());
 
-					
-					//Add new TA Details for budget TA (Input Tender Analysis)
-					List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
-					for(Tender ta: tenderAnalysisList){
-						if(ta.getVendorNo()==0){
-							ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
-							Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
-							//logger.info("---------------------seqNo: "+seqNo);
-							for(TenderDetail taDetail: toBeUpdatedTaDetails){
-								//boolean newTaDetail = true;
-								List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
-								if(taDetailInDB == null || taDetailInDB.size()==0){
-									taDetail.setSequenceNo(seqNo);
-									taDetail.setResourceNo(taDetail.getResourceNo());
-									taDetail.setTender(ta);
-									tenderDetailDao.update(taDetail);
-									tenderDao.update(ta);
-									seqNo++;
-								}
-							}
-							//Recalculate SCPackage SC Sum
-							subcontractService.recalculateSCPackageSubcontractSum(subcontract, toBeUpdatedTaDetails);
-							break;
+					if(scPaymentCertList!=null && scPaymentCertList.size() > 1 || (latestPaymentCert!=null && PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(latestPaymentCert.getPaymentStatus()))){
+						//if direct payment (APR) exists --> TA Detail must be identical to BQ Resource Summary for Repackaging 1
+						for (TenderDetail taDetail: toBeUpdatedTaDetails){
+							ResourceSummary resourceSummary = resourceSummaryDao.getResourceSummary(subcontract.getJobInfo(), subcontract.getPackageNo(), taDetail.getObjectCode(), taDetail.getSubsidiaryCode(), taDetail.getDescription(), taDetail.getUnit(), taDetail.getRateBudget(), taDetail.getQuantity());
+							if(resourceSummary==null)
+								return "Tender Analysis should be identical to Resource Summaries in Repackaging for Payment Requisition.";
 						}
-					}
-					
-					//Delete Pending Payments
-					deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
-					
-				}else{
-					//Delete Pending Payments
-					if(latestPaymentCert !=null)
+
+						//Add new TA Details for budget TA (Input Tender Analysis)
+						List<Tender> tenderAnalysisList = tenderDao.obtainTenderAnalysisList(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
+						for(Tender ta: tenderAnalysisList){
+							//if(ta.getVendorNo()==0){
+								ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
+								Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
+								for(TenderDetail taDetail: toBeUpdatedTaDetails){
+									List<TenderDetail> taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
+									if(taDetailInDB == null || taDetailInDB.size()==0){
+										taDetail.setSequenceNo(seqNo);
+										taDetail.setResourceNo(taDetail.getResourceNo());
+										if(ta.getVendorNo()!=0){
+											taDetail.setRateSubcontract(taDetail.getRateBudget());
+											taDetail.setAmountSubcontract(taDetail.getAmountBudget());
+											taDetail.setAmountForeign(taDetail.getAmountBudget()!=null && ta.getExchangeRate()!=null? taDetail.getAmountBudget()*ta.getExchangeRate() : 0.0);
+										}
+										
+										taDetail.setTender(ta);
+										tenderDetailDao.insert(taDetail);
+										
+										seqNo++;
+									}
+									tenderDao.update(ta);
+								}
+								//Recalculate SCPackage SC Sum
+								subcontractService.recalculateSCPackageSubcontractSum(subcontract, toBeUpdatedTaDetails);
+								//break;
+							//}
+						}
+
+						//Delete Pending Payments
 						deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
-					
-					this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
-					subcontract.setVendorNo(null);
-					subcontractDao.update(subcontract);
+						
+					}else{
+						//Delete Pending Payments
+						if(latestPaymentCert !=null)
+							deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
+						
+						this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
+						subcontract.setVendorNo(null);
+						subcontractDao.update(subcontract);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
 		else{
 			if(vendorNo ==0){
 				logger.info("Create TA Budget");
-				this.updateTenderAndDetails(tenderAnalysis, toBeUpdatedTaDetails, subcontract);
+				this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
 			}
 		}
 		
 		return null;
 	}
+	
+	
 	
 	private void updateTenderAndDetails(Tender tender, List<TenderDetail> tenderDetails, Subcontract subcontract) throws DataAccessException{
 			Double totalBudget = 0.0;
@@ -918,6 +928,15 @@ public class TenderService implements Serializable {
 				tenderDao.saveOrUpdate(tender);
 			}
 			
+	}
+	
+	private Double recalculateTenderTotalBudget(List<TenderDetail> tenderDetails){
+		Double totalBudget = 0.0;
+		for(TenderDetail taDetail : tenderDetails){
+			totalBudget += taDetail.getAmountSubcontract();
+		}
+
+		return CalculationUtil.round(totalBudget, 2);
 	}
 	
 	public String deleteTender(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{

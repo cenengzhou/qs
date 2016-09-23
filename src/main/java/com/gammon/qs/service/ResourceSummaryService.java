@@ -283,7 +283,7 @@ public class ResourceSummaryService implements Serializable {
 			String subsidiaryCode = resourceSummary.getSubsidiaryCode();
 			String unit = resourceSummary.getUnit();
 			String resourceDescription = resourceSummary.getResourceDescription();
-			ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), resourceSummary.getQuantity());
+			ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), null);
 			if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId()))
 				errorMsg.append("Changing the package number will create a duplicate resource: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
 		}
@@ -302,7 +302,7 @@ public class ResourceSummaryService implements Serializable {
 		String unit = resourceSummary.getUnit();
 		String resourceDescription = resourceSummary.getResourceDescription();
 		//check for duplicates
-		ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), resourceSummary.getQuantity());
+		ResourceSummary resourceInDB = resourceSummaryDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), null);
 		if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId())){
 			boolean match = false;
 			if(oldSummaryIds != null && oldSummaryIds.length > 0){
@@ -314,7 +314,7 @@ public class ResourceSummaryService implements Serializable {
 				}
 			}
 			if(!match)
-				errorMsg.append("Resource already exists: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate()+"<br/>");
+				errorMsg.append("Resource already exists: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
 		}
 		//packageNo (can be blank)
 		if(!GenericValidator.isBlankOrNull(packageNo)){
@@ -356,10 +356,10 @@ public class ResourceSummaryService implements Serializable {
 							|| PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING.equals(latestPaymentCert.getPaymentStatus())
 							|| PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW.equals(latestPaymentCert.getPaymentStatus()))){
 						
-						errorMsg.append("Package No."+scPackage.getPackageNo()+" cannot be edited. It has Payment Requisition submitted.<br/>");
+						errorMsg.append("Package No."+scPackage.getPackageNo()+" cannot be edited. It has Payment Requisition submitted.");
 					}
 					else if(scDetail!=null && (scDetail.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountPostedWD() .compareTo(new BigDecimal(0)) > 0 || scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0))
-						errorMsg.append("Resource "+resourceInDB.getResourceDescription()+" cannot be edited. It is being used in Payment Requisition.<br/>");
+						errorMsg.append("Resource "+resourceInDB.getResourceDescription()+" cannot be edited. It is being used in Payment Requisition.");
 					else
 						packagesToReset.add(scPackage);
 				}
@@ -1148,10 +1148,15 @@ public class ResourceSummaryService implements Serializable {
 	}
 	
 	
-	public String addResourceSummary(String jobNo, Long repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
+	public String addResourceSummary(String jobNo, String repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
 		String result = "";
 		//Check status of repackaging entry
-		Repackaging repackaging = repackagingEntryDao.get(repackagingEntryId);
+		Repackaging repackaging = new Repackaging();
+		if(repackagingEntryId == null)
+			repackaging = repackagingEntryDao.getLatestRepackaging(jobNo);
+		else
+			repackaging = repackagingEntryDao.get(Long.valueOf(repackagingEntryId));
+		
 		if("900".equals(repackaging.getStatus())){
 			result = "This repackaging entry has already been confirmed and locked.";
 			return result;
@@ -1172,7 +1177,7 @@ public class ResourceSummaryService implements Serializable {
 		result = validateResourceSummary(resourceSummary, packagesToReset);
 		//Save if no error
 		if(result.length() == 0){
-			saveResourceSummaryHelper(resourceSummary, repackagingEntryId);
+			saveResourceSummaryHelper(resourceSummary, repackaging.getId());
 			List<ResourceSummary> list = new ArrayList<ResourceSummary>(1);
 			list.add(resourceSummary);
 		}
@@ -1257,7 +1262,6 @@ public class ResourceSummaryService implements Serializable {
 							//Clear All TA
 							scPackageDao.resetPackageTA(scPackage);					
 						}else{
-							scPackageDao.update(scPackage);
 
 							List<Integer> resourceNoList = new ArrayList<Integer>();
 							List<Tender> tenderAnalysisList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
@@ -1277,24 +1281,18 @@ public class ResourceSummaryService implements Serializable {
 								}
 							}
 							
-							
 
 							List<Tender> taList = tenderAnalysisHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 							Iterator<Tender> taIterator = taList.iterator();
 							while(taIterator.hasNext()){
 								Tender TA = taIterator.next();	
 								List<TenderDetail> taDetaiList = tenderAnalySisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA);
-								Iterator<TenderDetail> taDetailIterator = taDetaiList.iterator();					
-								while(taDetailIterator.hasNext()){					
-									TenderDetail taDetail = taDetailIterator.next();
+								for(TenderDetail taDetail: taDetaiList){
 									if(!resourceNoList.contains(taDetail.getResourceNo())){
-										taDetailIterator.remove();
-										//logger.info("REMOVED DAO TRANSACTION - remove tender detail");
-										//For DAO Transaction
-										//scPackage.getTenderAnalysisList().remove(taDetail);
-										//For DAO Transaction --END
+										tenderAnalySisDetailHBDao.delete(taDetail);
 									}
 								}
+								
 							}
 							scPackageDao.update(scPackage);
 						}
@@ -1315,8 +1313,20 @@ public class ResourceSummaryService implements Serializable {
 
 	
 	public String deleteResources(List<ResourceSummary> resourceSummaries) throws Exception{
+		String error = "";
 		if(resourceSummaries == null || resourceSummaries.size() == 0)
 			return null;
+
+		//Check status of repackaging entry
+		JobInfo job = resourceSummaries.get(0).getJobInfo();
+		Repackaging repackaging = repackagingEntryDao.getLatestRepackaging(job);
+
+		if("900".equals(repackaging.getStatus())){
+			error = "This repackaging entry has already been confirmed and locked[900].";
+			return error;
+		}
+
+		
 		for(ResourceSummary resourceSummary : resourceSummaries){
 			ResourceSummary summaryInDb = resourceSummaryDao.get(resourceSummary.getId());
 			if(!"VO".equals(summaryInDb.getResourceType()) && !"OI".equals(summaryInDb.getResourceType()))
@@ -1329,12 +1339,10 @@ public class ResourceSummaryService implements Serializable {
 			resourceSummaryDao.saveOrUpdate(summaryInDb);
 		}
 		
-		JobInfo job = resourceSummaries.get(0).getJobInfo();
-		Repackaging repackaging = repackagingEntryDao.getLatestRepackaging(job);
 		repackaging.setStatus("200");
 		repackagingEntryDao.update(repackaging);
 		
-		return null;
+		return error;
 	}
 
 	/**

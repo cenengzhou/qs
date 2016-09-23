@@ -100,8 +100,8 @@ mainApp.constant('GlobalParameter', {
         		{id:'PND', value:'Pending', color:'#007D00'},
         		{id:'SBM', value:'Submitted', color:'#E68550'},
         		{id:'UFR', value:'Under Finance Review', color:'#E68550'},
-        		{id:'PCS', value:'AP Not Created', color:'#E68550'},
-        		{id:'APR', value:'AP Created', color:'#707070'}
+        		{id:'PCS', value:'Waiting For Posting', color:'#E68550'},
+        		{id:'APR', value:'Posted To Finance', color:'#707070'}
 	],
 	paymentStatusCode: [
                 {id:'A', value:'Approved for Payment'},

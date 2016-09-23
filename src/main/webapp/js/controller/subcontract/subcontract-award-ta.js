@@ -29,7 +29,8 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             { field: 'id', visible: false}
 			             ]
 
 	};
@@ -62,7 +63,8 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'}
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			            { field: 'resourceNo', visible: false}	 
 
 			             ]
 
@@ -134,7 +136,8 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 				"unit": resources[i]['unit'],
 				"quantity": resources[i]['quantity'],
 				"rateBudget": resources[i]['rate'],
-				"amountBudget": resources[i]['amountBudget']
+				"amountBudget": resources[i]['amountBudget'],
+				"resourceNo": resources[i]['id']
 			});
 		}
 
@@ -238,6 +241,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 					quantity: ta[i]['quantity'],
 					rateBudget: ta[i]['rateBudget'],
 					amountBudget: ta[i]['amountBudget'],
+					resourceNo: ta[i]['resourceNo'],
 			}
 			newTADetailList.push(newTADetail);
 		}

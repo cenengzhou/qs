@@ -110,5 +110,9 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		$uibModalInstance.dismiss("cancel");
 	};
 
+	//Listen for location changes and call the callback
+	$scope.$on('$locationChangeStart', function(event){
+		$uibModalInstance.close();
+	});
 
 }]);

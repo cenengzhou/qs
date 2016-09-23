@@ -27,12 +27,15 @@
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-7">
+					<div class="col-md-7" ng-hide="paymentResourceDistributionChart.data[0] + paymentResourceDistributionChart[1] == 0">
 						<canvas id="doughnut" class="chart chart-doughnut"
 							chart-data="paymentResourceDistributionChart.data"
 							chart-labels="paymentResourceDistributionChart.labels"
 							chart-colours="paymentResourceDistributionChart.colours">
 						</canvas>
+					</div>
+					<div class="col-md-7" ng-show="paymentResourceDistributionChart.data[0] + paymentResourceDistributionChart[1] == 0">
+						<h4 class="text-center">No Data</h4>
 					</div>
 					<div class="col-md-5">
 						<ul class="chart-legend text-left">
