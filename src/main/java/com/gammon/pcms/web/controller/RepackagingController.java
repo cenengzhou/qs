@@ -8,7 +8,10 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.service.RepackagingDetailService;
 import com.gammon.qs.service.RepackagingService;
+import com.gammon.qs.service.admin.MailService;
+import com.gammon.qs.wrapper.EmailMessage;
 import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 
@@ -36,7 +42,10 @@ public class RepackagingController {
 	private RepackagingService repackagingService;
 	@Autowired
 	private RepackagingDetailService  repackagingDetailService;
-	
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private MailService mailService;
 	
 	@RequestMapping(value = "getRepackagingEntry", method = RequestMethod.GET)
 	public Repackaging getRepackagingEntry(@RequestParam(required = true) String repackagingID) throws Exception{
@@ -140,4 +149,24 @@ public class RepackagingController {
 		return result;
 	}
 
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "sendEmailToReviewer", method = RequestMethod.POST)
+	public boolean sendEmailToReviewer(@RequestBody Map<String, String> mailData){
+		boolean result;
+		String toAddress = mailData.get("contacts");
+		String ccAddress = mailData.get("contactsCc");
+		String emailSubject = mailData.get("emailSubject");
+		String emailContext = mailData.get("emailContext");
+		
+		EmailMessage emailMessage = new EmailMessage();
+		List<String> recipients = Arrays.asList(toAddress.split(";"));
+		List<String> ccRecipients = Arrays.asList(ccAddress.split(";"));
+		if(!toAddress.isEmpty() && recipients.size() > 0) emailMessage.setRecipients(recipients);
+		if(!ccAddress.isEmpty() && ccRecipients.size() > 0) emailMessage.setCcRecipients(ccRecipients);
+		emailMessage.setSubject(emailSubject);
+		emailMessage.setContent(emailContext);
+		result = mailService.sendEmail(emailMessage);
+		return result;
+	}
 }

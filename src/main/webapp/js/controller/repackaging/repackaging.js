@@ -1,9 +1,8 @@
-mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 
-                                       function($scope, $location, $cookies, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper) {
+mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookies', '$uibModal', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 
+                                       function($state, $scope, $location, $cookies, $uibModal, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper) {
 	$rootScope.selectedTips = 'repackagingStatus';
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	$scope.attachServerPath = '\\\\ERPATH11\\DEV\\QS\\JobAttachments\\';
 
 	$scope.repackaging = "";
 	$scope.sequenceNo = 0;
@@ -24,6 +23,8 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 			deleteRepackaging();
 		}else if (view=="snapshot"){
 			generateSnapshot();
+		}else if (view=="email"){
+			composeEmail();
 		}else if (view=="confirm"){
 			modalService.open('lg', 'view/repackaging/modal/repackaging-confirm.html', 'RepackagingConfirmModalCtrl',  $scope.latestVersion, $scope.repackaging.id);
 		}
@@ -106,7 +107,6 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 	$scope.attachmentClick = function(){
 		$scope.isAddTextAttachment = false;
 		if(this.attach.documentType === 5){
-//			console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 			url = 'service/attachment/downloadRepackagingAttachment?repackagingEntryID='+$scope.repackaging.id+'&sequenceNo='+this.attach.sequenceNo;
 			var wnd = $window.open(url, 'Download Attachment', '_blank');
 		} else {
@@ -217,6 +217,15 @@ mainApp.controller('RepackagingCtrl', ['$scope', '$location', '$cookies', 'repac
 				});
 	}
 
+	function composeEmail(){
+//		modalService.open('lg', 'view/repackaging/repackaging-email.html', 'RepackagingEmailCtrl', 'Success', $scope);
+//		$uibModal.open({
+//			  templateUrl: 'view/email-modal.html',
+//			  scope: $scope
+//			});
+		$state.go('repackaging-email');
+	}
+	
 	function generateResourceSummaries() {
 		resourceSummaryService.generateResourceSummaries($scope.jobNo)
 		.then(

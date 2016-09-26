@@ -55,7 +55,11 @@
   <link href="css/font.css" rel="stylesheet" id="fontFamilySrc" />
   <link href="css/style.css" rel="stylesheet" />
   <link href="css/invoice-print.css" rel="stylesheet" />
-
+  <!-- angular-material.css
+    line 1281 original | .md-contact-suggestion img {height: 40px; 
+    line 1281 modified | .md-contact-suggestion img {height: 40px; width: 40px; vertical-align: top !important;
+   -->
+ <link href="plugins/angular-material/v1.1.1/angular-material.css" rel="stylesheet" />
 <!-- JavaScript Library -->
 
 <!-- jQuery 2.1.4 -->
@@ -90,6 +94,15 @@
 <script src="plugins/angularjs/1.4.9/angular-touch.min.js"></script>
 <script src="plugins/angularjs/1.4.9/angular-sanitize.min.js"></script>
 <script src="plugins/ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js"></script>
+<script src="plugins/angular-aria/v1.5.9/angular-aria.min.js"></script>
+<!-- angular-material v1.1.1 
+ MD_CONTACT_CHIPS_TEMPLATE
+ 	line 26188 original | {{$chip[$mdContactChipsCtrl.contactName]}}
+ 	line 26188 modified | {{$chip[$mdContactChipsCtrl.contactName]!= null ? $chip[$mdContactChipsCtrl.contactName] : $chip}}
+ 	line 26185 original | ng-if="$chip[$mdContactChipsCtrl.contactImage]" />\
+ 	line 26185 modified | ng-if="$chip[$mdContactChipsCtrl.contactImage]" imageonload roll-back-image="resources/images/profile.png"/>\
+ -->
+<script src="plugins/angular-material/v1.1.1/angular-material.js"></script>
 
 <!-- remark line 142 to fix Cannot read property 'body' of undefined -->
 <script src="plugins/ui-tinymce/4.4.1/ui-tinymce.js"></script>
@@ -137,7 +150,6 @@
 <!-- Controller  -->
 <script src="js/controller/setting.js"></script>
 <script src="js/controller/nav-menu.js"></script>
-
 
 <!-- Service  -->
 <script src="js/service/global-service.js"></script>

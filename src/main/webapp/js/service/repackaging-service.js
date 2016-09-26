@@ -12,6 +12,7 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
     	
     	generateSnapshot:					generateSnapshot,
     	confirmAndPostRepackaingDetails: 	confirmAndPostRepackaingDetails,
+    	sendEmailToReviewer:				sendEmailToReviewer,
     });
 	
     function getRepackagingEntry(repackagingID) {
@@ -124,7 +125,16 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
+    function sendEmailToReviewer(mailData) {
+        var request = $http({
+            method: "post",
+            url: "service/repackaging/sendEmailToReviewer",
+            data: mailData
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
     
+
    
     
 }]);

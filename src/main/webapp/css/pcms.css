@@ -302,3 +302,60 @@ button.enquiryInfoBtn {
 	color:black;
 }
 
+.emailContactChips md-content.autocomplete {
+	min-height: 250px;
+}
+.emailContactChips md-content.autocomplete input {
+	min-width: 400px; 
+}
+.emailContactChips .md-item-text.compact {
+	padding-top: 8px; 
+	padding-bottom: 8px; 
+}
+.emailContactChips .contact-item {
+	box-sizing: border-box; 
+	margin-bottom: 20px !important;
+}
+.emailContactChips .contact-item.selected {
+	opacity: 0.5; 
+}
+.emailContactChips .contact-item.selected h3 {
+	opacity: 0.5; 
+	font-size:15px !important;
+	font-weight: 700;
+}
+.emailContactChips .contact-item .compact h3 {
+	font-size:15px !important;
+	font-weight: 700;
+}
+.emailContactChips .contact-item .md-list-item-text {
+	padding: 14px 0;
+	max-width: 190px; 
+}
+.emailContactChips .contact-item .md-list-item-text h3 {
+	margin: 0 !important; 
+	padding: 0;
+}
+.emailContactChips .contact-item .md-list-item-text h3, 
+.emailContactChips .contact-item .md-list-item-text p {
+	text-overflow: ellipsis; 
+	white-space: nowrap; 
+	overflow: hidden; 
+}
+@media (min-width: 960px) {
+	.emailContactChips .contact-item {
+		float: left;
+		width: 33%; 
+	}
+}
+.emailContactChips md-contact-chips {
+	margin-bottom: 10px; 
+}
+.emailContactChips .md-chips {
+	padding: 5px 0 8px; 
+}
+.emailContactChips .fixedRows {
+	height: 400px; 
+	overflow-y:auto; 
+	overflow-x: hidden;
+}

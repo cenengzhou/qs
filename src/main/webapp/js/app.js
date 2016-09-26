@@ -1,4 +1,4 @@
-var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngTouch', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize', 
+var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize', 'ngMaterial',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery', 'ui.tinymce',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping', 'ui.grid.validate', 'angular-js-xlsx']);  
 
@@ -901,7 +901,23 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'RepackagingUpdateCtrl'
 	})
-	
+	.state('repackaging-email', {
+		url: "/repackaging-email",
+		parent: "navigation",
+		templateUrl: "view/repackaging/repackaging-email.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/repackaging/repackaging-email.js',
+							'js/service/repackaging-service.js'
+                    ] 
+                });
+            }]
+        },
+		controller: 'RepackagingEmailCtrl'
+	})
 	//Transit
 	.state("transit", {
 		url: "/transit",

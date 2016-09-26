@@ -383,13 +383,7 @@ public class JobInfoWSDao{
 	public String updateJobDates(JobDates jobdates, String userId){
 			logger.info("call WS(updateJobDatesByJobNumberWebServiceTemplate): STARTED");
 			String error = "";
-			logger.info("Planned Start Date:" + jobdates.getPlannedStartDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedStartDate())));
-			logger.info("Planned End Date:" + jobdates.getPlannedEndDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getPlannedEndDate())));
-			logger.info("Start Date:" + jobdates.getActualStartDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualStartDate())));
-			logger.info("End Date:" + jobdates.getActualEndDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getActualEndDate())));
-			logger.info("Anticipated Completion Date:" + jobdates.getAnticipatedCompletionDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getAnticipatedCompletionDate())));
-			logger.info("Revised Completion Date:" + jobdates.getRevisedCompletionDate() + " => " + DateHelper.parseDate(DateHelper.formatDate(jobdates.getRevisedCompletionDate())));
-				// initialize request object
+			// initialize request object
 			UpdateBQMasterDatesByJobNumberRequestObj requestObj = new UpdateBQMasterDatesByJobNumberRequestObj();
 			requestObj.setUpdateField(new UpdateBQMasterDatesByJobNumberRequestField());
 			requestObj.setUpdateWhereField(new UpdateBQMasterDatesByJobNumberRequestWhereField());
