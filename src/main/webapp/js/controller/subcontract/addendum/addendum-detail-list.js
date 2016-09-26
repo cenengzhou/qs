@@ -1,5 +1,5 @@
-mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addendumService', '$cookies', '$location',
-                                              function($scope , modalService, addendumService, $cookies, $location) {
+mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addendumService', '$cookies', '$location', 'uiGridConstants',
+                                              function($scope , modalService, addendumService, $cookies, $location, uiGridConstants) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = "";
@@ -18,7 +18,7 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			//enableFullRowSelection: true,
 			multiSelect: false,
 			//showGridFooter : true,
-			//showColumnFooter : true,
+			showColumnFooter : true,
 			//fastWatch : true,
 			exporterMenuPdf: false,
 
@@ -30,9 +30,47 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			             {field: 'description' ,  width:100 },
 			             { field: 'quantity' ,  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amtAddendum' , displayName:"SC Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amtAddendum' , displayName:"SC Amount", width:100, enableFiltering: false, 
+		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.amtAddendum < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+			             },
 			             { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, 
+		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.amtBudget < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+			             },
 			             {field: 'codeObject' ,  width:100 },
 			             {field: 'codeSubsidiary' ,  width:100 },
 			             {field: 'unit' ,  width:100 },

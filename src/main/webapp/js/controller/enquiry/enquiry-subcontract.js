@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 
-                                      function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, subcontractService) {
+mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout',
+                                      function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout) {
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date(); // Default: Today
 	$scope.searchYear = $scope.currentDate.getFullYear();
@@ -16,6 +16,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 			enableFullRowSelection: false,
 			multiSelect: true,
 			showGridFooter : true,
+			showColumnFooter: true,
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
@@ -36,21 +37,323 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 
 			             { field: 'paymentTerms', width:'80', displayName: "Payment Terms", enableCellEdit: false},
 			             { field: 'subcontractTerm', width:'120', displayName: "Subcontract Terms", enableCellEdit: false},
 			             { field: 'subcontractorNature', width:'100', displayName: "Subcontractor Nature", enableCellEdit: false},
-			             { field: 'originalSubcontractSum', width:'120', displayName: "Original Subcontract Sum", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'remeasuredSubcontractSum', width:'160', displayName: "Remeasured Subcontract Sum", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false}, 
-			             { field: 'approvedVOAmount', width:'120', displayName: "Addendum", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'subcontractSum', width:'160', displayName: "Revised Subcontract Sum", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false}, //TODO: on screen
-			             { field: 'accumlatedRetention', width:'130', displayName: "Accumlated Retention (RT)", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'retentionReleased', width:'130', displayName: "Retention Released (RR+RA)", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'retentionBalance', width:'120', displayName: "Retention Balance", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},	// TODO: on screen
-			             { field: 'totalNetPostedCertifiedAmount', width:'120', displayName: "Net Certified (excl. RT, CC)", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},	//TODO: on screen
-			             { field: 'totalPostedCertifiedAmount', width:'120', displayName: "Posted Certified", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'totalCumCertifiedAmount', width:'120', displayName: "Cumulative Certified", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'totalCumWorkDoneAmount', width:'120', displayName: "Cumulative WorkDone", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'totalProvisionAmount', width:'120', displayName: "Provision", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},	//TODO: on screen
-			             { field: 'balanceToCompleteAmount', width:'120', displayName: "Balance to Complete", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false}, // TODO: on screen
-			             { field: 'totalCCPostedCertAmount', width:'120', displayName: "Contra Charge", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
-			             { field: 'totalMOSPostedCertAmount', width:'120', displayName: "Material On Site", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false},
+			             { field: 'originalSubcontractSum', width:'120', displayName: "Original Subcontract Sum", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.originalSubcontractSum < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			            	 enableCellEdit: false},
+			             { field: 'remeasuredSubcontractSum', width:'160', displayName: "Remeasured Subcontract Sum", 
+				            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.remeasuredSubcontractSum < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		aggregationHideLabel : true,
+				            		aggregationType : uiGridConstants.aggregationTypes.sum,
+				            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+				            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (col.getAggregationValue() < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		cellFilter : 'number:2',
+			            		 enableCellEdit: false
+			            }, 
+			             { field: 'approvedVOAmount', width:'120', displayName: "Addendum", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.approvedVOAmount < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',			             
+			            	enableCellEdit: false
+			            },
+			             { field: 'subcontractSum', width:'160', displayName: "Revised Subcontract Sum", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.subcontractSum < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+
+			            	enableCellEdit: false
+		            	}, //TODO: on screen
+			             { field: 'accumlatedRetention', width:'130', displayName: "Accumlated Retention (RT)", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.accumlatedRetention < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+		            		enableCellEdit: false
+		            	},
+			             { field: 'retentionReleased', width:'130', displayName: "Retention Released (RR+RA)", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.retentionReleased < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+		            		enableCellEdit: false
+		            	},
+			             { field: 'retentionBalance', width:'120', displayName: "Retention Balance", 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.retentionBalance < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+		            		enableCellEdit: false
+		            		},	// TODO: on screen
+			             { field: 'totalNetPostedCertifiedAmount', width:'120', displayName: "Net Certified (excl. RT, CC)", 
+				            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.totalNetPostedCertifiedAmount < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		aggregationHideLabel : true,
+				            		aggregationType : uiGridConstants.aggregationTypes.sum,
+				            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+				            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (col.getAggregationValue() < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		cellFilter : 'number:2',
+		            			enableCellEdit: false
+            			},	//TODO: on screen
+			             { field: 'totalPostedCertifiedAmount', width:'120', displayName: "Posted Certified", 
+   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.totalPostedCertifiedAmount < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+            				enableCellEdit: false
+            			},
+			             { field: 'totalCumCertifiedAmount', width:'120', displayName: "Cumulative Certified", 
+   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.totalCumCertifiedAmount < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+            				enableCellEdit: false
+            			},
+			             { field: 'totalCumWorkDoneAmount', width:'120', displayName: "Cumulative WorkDone", 
+   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.totalCumWorkDoneAmount < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+            				enableCellEdit: false
+        				},
+			             { field: 'totalProvisionAmount', width:'120', displayName: "Provision", 
+   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.totalProvisionAmount < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+        					enableCellEdit: false
+        				},	//TODO: on screen
+			             { field: 'balanceToCompleteAmount', width:'120', displayName: "Balance to Complete", 
+   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.balanceToCompleteAmount < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+
+        					enableCellEdit: false
+        					}, // TODO: on screen
+			             { field: 'totalCCPostedCertAmount', width:'120', displayName: "Contra Charge", 
+       		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (row.entity.totalCCPostedCertAmount < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		aggregationHideLabel : true,
+ 		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+ 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (col.getAggregationValue() < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		cellFilter : 'number:2',
+        						enableCellEdit: false
+        					},
+			             { field: 'totalMOSPostedCertAmount', width:'120', displayName: "Material On Site", 
+       		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (row.entity.totalMOSPostedCertAmount < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		aggregationHideLabel : true,
+ 		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+ 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (col.getAggregationValue() < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		cellFilter : 'number:2',
+
+        						enableCellEdit: false
+        						},
             			 ]
 	};
 	

@@ -215,20 +215,62 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		            	 { field: 'rate', enableCellEdit: false, enableFiltering: false, width:100,
 		            		cellClass: 'text-right', cellFilter: 'number:2'},
 	            		 {field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableFiltering: false,
-	            			cellClass: 'text-right', cellFilter: 'number:2'},
+				            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.amountBudget < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		aggregationHideLabel : true,
+				            		aggregationType : uiGridConstants.aggregationTypes.sum,
+				            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+				            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (col.getAggregationValue() < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		cellFilter : 'number:2',
+	            		 },
             			 {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, aggregationType: uiGridConstants.aggregationTypes.sum,
             				 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;" ng-class="{invalid:grid.validate.isInvalid(row.entity,col.colDef)}" \
             					 title={{grid.validate.getTitleFormattedErrors(row.entity,col.colDef)}}>{{COL_FIELD | number:2}}</div>',
-            				 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+            				 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+            			 },
         				 {field: 'ivMovement', displayName: "IV Movement", enableFiltering: false, 
             				 aggregationType: uiGridConstants.aggregationTypes.sum,
         					 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;" ng-class="{invalid:grid.validate.isInvalid(row.entity,col.colDef)}" \
             					 title={{grid.validate.getTitleFormattedErrors(row.entity,col.colDef)}}>{{COL_FIELD | number:2}}</div>',
-        					 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+        					 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+        				 },
     					 {field: 'postedIVAmount', displayName: "Posted IV Amount", enableCellEdit: false, enableFiltering: false, 
     						cellClass: 'text-right', cellFilter: 'number:2',
     						 aggregationType: uiGridConstants.aggregationTypes.sum, 
-    						 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+    						 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+    					 },
 						 {field: 'excludeLevy', displayName: "Levy", enableCellEdit: false, width:80, 
     							 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
     							 filter: { 
@@ -362,7 +404,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	}
 	
 	$scope.reset = function(){
-		$scope.gridOptions.data = $scope.resetData;
+		$scope.gridOptions.data = angular.copy($scope.resetData);
 		var dataRows = $scope.gridDirtyRows.map(function(gridRow) {
 			return gridRow.entity;
 		});
@@ -384,6 +426,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					$scope.gridOptions.data = data;
 					$scope.nonFinalizedMovementAmount = 0;
 					$scope.finalizedMovementAmount = 0;
+					$scope.resetData = [];
 					angular.forEach(data, function(value, key){
 						value.ivMovement = value.currIVAmount - value.postedIVAmount;
 						var newObj = angular.copy(value);

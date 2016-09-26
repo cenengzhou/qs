@@ -31,19 +31,85 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 		            	 { field: 'rate', enableCellEdit: false, enableFiltering: false, width:100,
 		            		cellClass: 'text-right', cellFilter: 'number:2'},
 	            		 {field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableFiltering: false,
-	            			cellClass: 'text-right', cellFilter: 'number:2'},
+				            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.amountBudget < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		aggregationHideLabel : true,
+				            		aggregationType : uiGridConstants.aggregationTypes.sum,
+				            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+				            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (col.getAggregationValue() < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		cellFilter : 'number:2',
+	            		 },
             			 {field: 'currIVAmount', displayName: "Cum. IV Amount", enableFiltering: false, 
-            				cellClass: 'text-right', cellFilter: 'number:2',
-            				aggregationType: uiGridConstants.aggregationTypes.sum,
-            				footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.currIVAmount < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			            	},
         				 {field: 'ivMovement', displayName: "IV Movement", enableFiltering: false, 
-        					 cellClass: 'text-right', cellFilter: 'number:2',
-        					 aggregationType: uiGridConstants.aggregationTypes.sum,
-        					 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+				            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.ivMovement < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		aggregationHideLabel : true,
+				            		aggregationType : uiGridConstants.aggregationTypes.sum,
+				            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+				            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (col.getAggregationValue() < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+				            		},
+				            		cellFilter : 'number:2',
+        				 },
     					 {field: 'postedIVAmount', displayName: "Posted IV Amount", enableCellEdit: false, enableFiltering: false, 
-    						cellClass: 'text-right', cellFilter: 'number:2',
-    						aggregationType: uiGridConstants.aggregationTypes.sum, 
-    						footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;" >{{col.getAggregationValue() | number:2 }}</div>'},
+    		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (row.entity.postedIVAmount < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		aggregationHideLabel : true,
+ 		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+ 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+ 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+ 		            			var c = 'text-right';
+ 		            			if (col.getAggregationValue() < 0) {
+ 		            				c += ' red';
+ 		            			}
+ 		            			return c;
+ 		            		},
+ 		            		cellFilter : 'number:2',
+    					 },
 						 {field: 'excludeLevy', displayName: "Levy", enableCellEdit: false, width:80, 
     							 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
     							 filter: { 

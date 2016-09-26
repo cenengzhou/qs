@@ -394,6 +394,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		enableFullRowSelection : false,
     		multiSelect : true,
     		showGridFooter : true,
+    		showColumnFooter: true,
     		enableCellEditOnFocus : false,
     		enablePaginationControls : true,
     		allowCellFocus : false,
@@ -476,10 +477,27 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		}, {
     			field : 'value',
     			displayName : 'Value',
-    			cellFilter : 'number:2',
-    			cellClass: 'text-right',
     			enableCellEdit : false,
-    			treeAggregationType: uiGridGroupingConstants.aggregation.AVG,
+    			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+    				var c = 'text-right';
+    				if (row.entity.value < 0) {
+    				c += ' red';
+    				}
+    				return c;
+    			},
+    			treeAggregation: {type: uiGridGroupingConstants.aggregation.COUNT},
+    			footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+    			footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+    				var c = 'text-right';
+    				if (col.getAggregationValue() < 0) {
+    				c += ' red';
+    				}
+    				return c;
+    			},
+    			treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+    			customTreeAggregationFinalizerFn: function(aggregation) {
+    				aggregation.rendered = aggregation.value;
+    			}
     		}
     		]
     	};
@@ -613,9 +631,27 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			field : 'value',
     			displayName : "Value",
     			enableCellEdit : false,
-    			cellFilter : 'number:2',
-    			cellClass: 'text-right',
-  			
+    			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+    				var c = 'text-right';
+    				if (row.entity.value < 0) {
+    				c += ' red';
+    				}
+    				return c;
+    			},
+    			treeAggregation: {type: uiGridGroupingConstants.aggregation.COUNT},
+    			footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+    			footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+    				var c = 'text-right';
+    				if (col.getAggregationValue() < 0) {
+    				c += ' red';
+    				}
+    				return c;
+    			},
+    			treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+    			customTreeAggregationFinalizerFn: function(aggregation) {
+    				aggregation.rendered = aggregation.value;
+    			}
+
     		}
     		]
     	};

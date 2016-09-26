@@ -1,5 +1,5 @@
-mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcontractService','$location', '$state', '$cookies',
-                                              function($scope , modalService, subcontractService, $location, $state, $cookies) {
+mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcontractService','$location', '$state', '$cookies', 'uiGridConstants',
+                                              function($scope , modalService, subcontractService, $location, $state, $cookies, uiGridConstants) {
 	$cookies.put('scDetailID', '');
 	getSubcontract();
 	getOtherSubcontractDetails();
@@ -26,13 +26,108 @@ mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcont
 			             {field: 'objectCode' ,  width:80 },
 			             {field: 'subsidiaryCode' ,  width:100 },
 			             {field: 'description' ,  width:100 },
-			             { field: 'amountPostedCert' , displayName:"Posted Cert. Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amountCumulativeCert' , displayName:"Cum. Cert. Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amountPostedWD' , displayName:"Posted WD Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amountCumulativeWD', displayName:"Cum. WD Amount", width:120, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amountPostedCert' , displayName:"Posted Cert. Amount", width:120, enableFiltering: false, 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.amountPostedCert < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			             },
+			             { field: 'amountCumulativeCert' , displayName:"Cum. Cert. Amount", width:120, enableFiltering: false, 
+						   	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+									var c = 'text-right';
+									if (row.entity.amountCumulativeCert < 0) {
+										c += ' red';
+									}
+									return c;
+								},
+								aggregationHideLabel : true,
+								aggregationType : uiGridConstants.aggregationTypes.sum,
+								footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+								footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+									var c = 'text-right';
+									if (col.getAggregationValue() < 0) {
+										c += ' red';
+									}
+									return c;
+								},
+								cellFilter : 'number:2',
+			             },
+			             { field: 'amountPostedWD' , displayName:"Posted WD Amount", width:120, enableFiltering: false, 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.amountPostedWD < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			             },
+			             { field: 'amountCumulativeWD', displayName:"Cum. WD Amount", width:120, enableFiltering: false, 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.amountCumulativeWD < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			             },
 			             { field: 'quantity' ,  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
 			             { field: 'scRate' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
-			             { field: 'amountSubcontract' , displayName:"SC Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
+			             { field: 'amountSubcontract' , displayName:"SC Amount", width:100, enableFiltering: false, 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.amountSubcontract < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			             },
 			             {field: 'unit' ,  width:50 },
 			             {field: 'remark' ,  width:150 }
 			             ]

@@ -324,7 +324,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 							col, rowRenderIndex,
 							colRenderIndex) {
 						var c = 'text-right';
-						if (row.entity.variance < 0) {
+						if (row.entity.amountBudget < 0) {
 							c += ' red';
 						}
 						return c;

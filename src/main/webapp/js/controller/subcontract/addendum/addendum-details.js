@@ -1,5 +1,5 @@
-mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', 
-                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state) {
+mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', 'uiGridConstants',
+                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state, uiGridConstants) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
@@ -15,7 +15,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			//enableFullRowSelection: true,
 			multiSelect: true,
 			//showGridFooter : true,
-			//showColumnFooter : true,
+			showColumnFooter : true,
 			//fastWatch : true,
 
 			exporterMenuPdf: false,
@@ -26,9 +26,49 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		            	 {field: 'description' ,  width:100 },
 		            	 { field: 'quantity' , displayName:"Quantity", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 		            	 { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
-			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.amtBudget < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			            		
+		            	},
+			             
 			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
-			             { field: 'amtAddendum' , displayName:"Amount",  width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'amtAddendum' , displayName:"Amount",  width:100, enableFiltering: false, 
+		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (row.entity.amtAddendum < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		aggregationHideLabel : true,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		            			var c = 'text-right';
+		            			if (col.getAggregationValue() < 0) {
+		            				c += ' red';
+		            			}
+		            			return c;
+		            		},
+		            		cellFilter : 'number:2',
+			             },
 		            	 {field: 'codeObject',  displayName:"Object Code",  width:80 },
 		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:80 },
 		            	 {field: 'unit' ,  width:50 },

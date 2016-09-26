@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 
-                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter) {
+mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants',
+                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchDueDateType = 'onOrBefore';
 //	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
@@ -14,6 +14,7 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			enableFullRowSelection: false,
 			multiSelect: true,
 			showGridFooter : true,
+			showColumnFooter: true,
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
@@ -29,7 +30,27 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'getValueById("paymentStatus","paymentStatus")', displayName: 'Status', enableCellEdit: false},
 			             { field: 'getValueById("directPayment","directPayment")', displayName: 'Direct Payment', enableCellEdit: false},
 			             { field: 'getValueById("intermFinalPayment","intermFinalPayment")', displayName: 'Interim / Final Payment', enableCellEdit: false},
-			             { field: 'certAmount', displayName: 'Certificate Amount', cellFilter: 'number:2', cellClass: 'text-right', enableCellEdit: false},
+			             { field: 'certAmount', displayName: 'Certificate Amount', 
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.certAmount < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+			            	 enableCellEdit: false
+			            },
 			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},
 			             { field: 'asAtDate', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', displayName: 'As at Date', enableCellEdit: false},
 			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},

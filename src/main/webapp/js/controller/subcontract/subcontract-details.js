@@ -1,30 +1,37 @@
-mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', function($scope , subcontractService) {
+mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants',
+                                              function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants) {
 
 	getSubcontract();
 	getSCDetails();
+	
+	
 
+	
 	$scope.gridOptions = {
 			enableSorting: true,
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableColumnMoving: true,
-			//enableRowSelection: true,
-			//enableFullRowSelection: true,
-			//multiSelect: false,
-			//showGridFooter : true,
-			showColumnFooter : false,
-			//fastWatch : true,
-
+			showGridFooter : false,
+			showColumnFooter : true,
+			treeRowHeaderAlwaysVisible:true,
 			exporterMenuPdf: false,
-			
+			groupingNullLabel: '',
 			//Single Filter
 			onRegisterApi: function(gridApi){
 				$scope.gridApi = gridApi;
 			},
-	
-	
+
 			columnDefs: [
+			             { field : 'catalog',
+			            	 width: 120,
+			            	 displayName : 'Group',
+			            	 enableCellEdit : false,
+			            	 grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' },
+			            	 treeAggregation: {type: uiGridGroupingConstants.aggregation.SUM},
+			            	 
+			             },
 			             { field: 'lineType', width: 50},
 			             { field: 'billItem', width: 100},
 			             { field: 'description', width: 100},
@@ -37,16 +44,188 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 			             {field: 'objectCode', width: 100},
 			             {field: 'subsidiaryCode', width: 100},
 
-			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
-			             {field: 'amountSubcontract', displayName: "SC Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
+			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			     				var c = 'text-right';
+			     				if (row.entity.amountBudget < 0) {
+			     					c += ' red';
+			     				}
+			     				return c;
+			     			},
+						     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+						     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+						     					var c = 'text-right';
+						     					if (col.getAggregationValue() < 0) {
+						     						c += ' red';
+						     					}
+						     					return c;
+						     				},
+		     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+		     		        customTreeAggregationFinalizerFn: function(aggregation) {
+		     		           aggregation.rendered = aggregation.value;
+		     		         }
+			             },
+			             {field: 'amountSubcontract', displayName: "SC Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.amountSubcontract < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }	 
+			             
+			             },
 
-			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'amountPostedWD', displayName: "Posted WD Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.amountCumulativeWD < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }	 
+			             
+			             },
+			             
+			             { field: 'amountPostedWD', displayName: "Posted WD Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.amountPostedWD < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }	 
+			             
+			             },
+			             
+			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.amountCumulativeCert < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }
+			             },
+			             
+			             
+			             { field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.amountPostedCert < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }
 
-			             {field: 'projectedProvision', width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
-			             {field: 'provision', width: 150, cellClass: 'text-right', cellFilter: 'number:2'},
+			             },
+			             
+			             
+
+			             {field: 'projectedProvision', width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.projectedProvision < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }
+			             
+			            },
+			             {field: 'provision', width: 150, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				     				var c = 'text-right';
+				     				if (row.entity.provision < 0) {
+				     					c += ' red';
+				     				}
+				     				return c;
+				     			},
+							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+							     					var c = 'text-right';
+							     					if (col.getAggregationValue() < 0) {
+							     						c += ' red';
+							     					}
+							     					return c;
+							     				},
+			     				treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+			     		        customTreeAggregationFinalizerFn: function(aggregation) {
+			     		           aggregation.rendered = aggregation.value;
+			     		         }
+			             },
+			             
 
 			             {field: 'altObjectCode', width: 100},
 
@@ -77,7 +256,38 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', f
 		.then(
 				function( data ) {
 					$scope.gridOptions.data = data;
+					addCatalog(data);
 				});
 	}
 
+	function addCatalog(data){
+		data.forEach(function(item){
+			switch(item.lineType){
+			case 'BQ':
+			case 'B1':
+				item.catalog = 'Subcontract';
+				break;
+			case 'V1':
+			case 'V2':
+			case 'V3':
+			case 'L1':
+			case 'L2':
+			case 'D1':
+			case 'D2':
+			case 'CF':
+				item.catalog = 'Addendum';
+				break;
+			case 'C1':
+			case 'C2':
+			case 'AP':
+			case 'MS':
+			case 'RR':
+			case 'RA':
+			case 'OA':
+			default:
+				item.catalog = 'Others';
+				break;
+			}
+		})
+	}
 }]);
