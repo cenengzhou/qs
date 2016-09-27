@@ -231,7 +231,8 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		$scope.gridApi = gridApi;
 
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(validateLineType(rowEntity, lineTypeGeneratedBySystem)){
+			console.log(validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem));
+			if(!validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', validateMessage(rowEntity, MSG_LINETYPE_GENERATED_BY_SYSTEM));
 			}
 		});
