@@ -1,11 +1,26 @@
-mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants',
-                                              function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants) {
+mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants', 'GlobalHelper', '$filter',
+                                              function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants, GlobalHelper, $filter) {
 
 	getSubcontract();
 	getSCDetails();
 	
-	
-
+	$scope.getExcludeRetentionMessage = function(){
+		var msg = '';
+		if($scope.subcontract && $scope.subcontract.retentionBalance > 0) {
+			msg = 'excluded retention balance : ' + $filter('number')($scope.subcontract.retentionBalance);
+		}
+		return msg;
+	}
+	$scope.getExcludeRetentionValue = function(aggregationValue){
+		var value = aggregationValue;
+		if($scope.subcontract && $scope.subcontract.retentionBalance > 0) {
+			value = aggregationValue - $scope.subcontract.retentionBalance;
+		}
+		return value;
+	}
+	$scope.totalAmountExcludeRetentionTemplate = '<div class="ui-grid-cell-contents" \
+		title="{{grid.appScope.getExcludeRetentionMessage()}}">{{grid.appScope.getExcludeRetentionValue(col.getAggregationValue()) | number:2 }}\
+		<span class="red small" ng-if="grid.appScope.getExcludeRetentionMessage().length > 0">*</span></div>';
 	
 	$scope.gridOptions = {
 			enableSorting: true,
@@ -21,6 +36,9 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			//Single Filter
 			onRegisterApi: function(gridApi){
 				$scope.gridApi = gridApi;
+				  $scope.gridApi.grid.registerDataChangeCallback(function() {
+			          $scope.gridApi.treeBase.expandAllRows();
+			        });
 			},
 
 			columnDefs: [
@@ -52,7 +70,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			     				}
 			     				return c;
 			     			},
-						     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+						     footerCellTemplate : $scope.totalAmountExcludeRetentionTemplate,
 						     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						     					var c = 'text-right';
 						     					if (col.getAggregationValue() < 0) {
@@ -256,38 +274,8 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		.then(
 				function( data ) {
 					$scope.gridOptions.data = data;
-					addCatalog(data);
+					GlobalHelper.addSubcontractCatalogGroup(data, 'lineType');
 				});
 	}
 
-	function addCatalog(data){
-		data.forEach(function(item){
-			switch(item.lineType){
-			case 'BQ':
-			case 'B1':
-				item.catalog = 'Subcontract';
-				break;
-			case 'V1':
-			case 'V2':
-			case 'V3':
-			case 'L1':
-			case 'L2':
-			case 'D1':
-			case 'D2':
-			case 'CF':
-				item.catalog = 'Addendum';
-				break;
-			case 'C1':
-			case 'C2':
-			case 'AP':
-			case 'MS':
-			case 'RR':
-			case 'RA':
-			case 'OA':
-			default:
-				item.catalog = 'Others';
-				break;
-			}
-		})
-	}
 }]);

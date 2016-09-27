@@ -33,7 +33,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http
 
     function transitUpload(formData){
     	var request = $http({
-			method : 'get',
+			method : 'post',
 			url : 'gammonqs/transitUpload.smvc',
 			data : formData,
 			headers : {

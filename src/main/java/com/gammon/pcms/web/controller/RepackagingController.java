@@ -8,13 +8,17 @@
  */
 package com.gammon.pcms.web.controller;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -169,4 +173,15 @@ public class RepackagingController {
 		result = mailService.sendEmail(emailMessage);
 		return result;
 	}
+	
+	@RequestMapping(value = "getReviewerList", method = RequestMethod.GET)
+	public String getReviewerList(@Value("#{'file:///' + linkConfig.getPcmsLink('REVIEWER_JSON')}") Resource reviewerJson) throws IOException{
+		BufferedReader  br = new BufferedReader (new InputStreamReader(reviewerJson.getInputStream()));
+		String result = "", line;
+		while((line = br.readLine()) != null){
+			result += line;
+		}
+		return result;
+	}
+
 }

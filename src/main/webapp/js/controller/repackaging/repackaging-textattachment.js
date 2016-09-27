@@ -41,7 +41,7 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'm
               save_enablewhendirty: false,
               statusbar: true,
               height: 350,
-              skin: 'tinymce_primary'
+              skin: 'tinymce_charcoal'
 };
 	
 }]);

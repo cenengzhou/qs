@@ -395,6 +395,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		multiSelect : true,
     		showGridFooter : true,
     		showColumnFooter: true,
+    		groupingNullLabel: '',
     		enableCellEditOnFocus : false,
     		enablePaginationControls : true,
     		allowCellFocus : false,
@@ -407,44 +408,6 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			enableCellEdit : false,
     			
     		}, 
-    		{
-    			field : 'billNo',
-    			displayName : 'Bill No.',
-    			enableCellEdit : false,
-    			grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' },
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
-    		},{
-    			field : 'subBillNo',
-    			displayName : 'Sub-Bill No.',
-    			enableCellEdit : false,
-    			grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' },
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
-    		},{
-    			field : 'pageNo',
-    			displayName : 'Page NO.',
-    			enableCellEdit : false,
-    			grouping: { groupPriority: 2 }, sort: { priority: 2, direction: 'asc' },    			
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
-    		},{
-    			field : 'itemNo',
-    			displayName : 'Item No.',
-    			enableCellEdit : false,
-    			grouping: { groupPriority: 3 }, sort: { priority: 3, direction: 'asc' },    
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
-
-    		},
     		{
     			field : 'description',
     			displayName : 'Description',
@@ -478,6 +441,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			field : 'value',
     			displayName : 'Value',
     			enableCellEdit : false,
+    			cellFilter : 'number:2',
     			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
     				var c = 'text-right';
     				if (row.entity.value < 0) {
@@ -485,7 +449,6 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     				}
     				return c;
     			},
-    			treeAggregation: {type: uiGridGroupingConstants.aggregation.COUNT},
     			footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
     			footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
     				var c = 'text-right';
@@ -498,12 +461,38 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			customTreeAggregationFinalizerFn: function(aggregation) {
     				aggregation.rendered = aggregation.value;
     			}
-    		}
+    		},
+    		{
+    			field : 'billNo',
+    			displayName : 'Bill No.',
+    			enableCellEdit : false,
+    			grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' },
+    		},{
+    			field : 'subBillNo',
+    			displayName : 'Sub-Bill No.',
+    			enableCellEdit : false,
+    			grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' }
+    		},{
+    			field : 'pageNo',
+    			displayName : 'Page NO.',
+    			enableCellEdit : false,
+    			grouping: { groupPriority: 2 }, sort: { priority: 2, direction: 'asc' },    			
+    		},{
+    			field : 'itemNo',
+    			displayName : 'Item No.',
+    			enableCellEdit : false,
+    			grouping: { groupPriority: 3 }, sort: { priority: 3, direction: 'asc' },
+
+    		},
     		]
     	};
     
 	$scope.bqGridOptions.onRegisterApi = function (gridApi) {
 		  $scope.bqGridApi = gridApi;
+		  $scope.bqGridApi.grid.registerDataChangeCallback(function() {
+	          $scope.bqGridApi.treeBase.expandAllRows();
+	        });
+
 //		  gridApi.grid.refresh();
 	};
         
@@ -516,6 +505,8 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		enableFullRowSelection : false,
     		multiSelect : true,
     		showGridFooter : true,
+    		showColumnFooter: true,
+    		groupingNullLabel: '',
     		enablePaginationControls : true,
     		allowCellFocus : false,
     		enableCellSelection : false,
@@ -537,37 +528,21 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			displayName : 'Bill No.',
     			enableCellEdit : false,
     			grouping: { groupPriority: 0 }, sort: { priority: 0, direction: 'asc' },
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
     		},{
     			field : 'transitBpi.subBillNo',
     			displayName : 'Sub-Bill No.',
     			enableCellEdit : false,
     			grouping: { groupPriority: 1 }, sort: { priority: 1, direction: 'asc' },
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
     		},{
     			field : 'transitBpi.pageNo',
     			displayName : 'Page NO.',
     			enableCellEdit : false,
-    			grouping: { groupPriority: 2 }, sort: { priority: 2, direction: 'asc' },    			
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
+    			grouping: { groupPriority: 2 }, sort: { priority: 2, direction: 'asc' },
     		},{
     			field : 'transitBpi.itemNo',
     			displayName : 'Item No.',
     			enableCellEdit : false,
-    			grouping: { groupPriority: 3 }, sort: { priority: 3, direction: 'asc' },    
-    			cellTemplate: '<div ng-if="!col.grouping || col.grouping.groupPriority === undefined || \
-    				col.grouping.groupPriority === null || \
-    				( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" \
-    				class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD.replace("Null", "\' \'") CUSTOM_FILTERS}}</div>'
+    			grouping: { groupPriority: 3 }, sort: { priority: 3, direction: 'asc' },
 
     		},
     		{
@@ -631,6 +606,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     			field : 'value',
     			displayName : "Value",
     			enableCellEdit : false,
+    			cellFilter : 'number:2',
     			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
     				var c = 'text-right';
     				if (row.entity.value < 0) {
@@ -638,7 +614,6 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     				}
     				return c;
     			},
-    			treeAggregation: {type: uiGridGroupingConstants.aggregation.COUNT},
     			footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
     			footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
     				var c = 'text-right';
@@ -659,6 +634,9 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 		$scope.resourcesGridOptions.onRegisterApi = function (gridApi) {
 			  $scope.resourcesGridApi = gridApi;
 			  gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
+			  $scope.resourcesGridApi.grid.registerDataChangeCallback(function() {
+		          $scope.resourcesGridApi.treeBase.expandAllRows();
+		        });
 //			  gridApi.grid.refresh();
 		};
 

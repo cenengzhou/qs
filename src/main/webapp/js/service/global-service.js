@@ -149,6 +149,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		addressBookRowTemplate: addressBookRowTemplate,
 		attachmentIconClass: attachmentIconClass,
 		getSubcontractorDetailsModal: getSubcontractorDetailsModal,
+		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
 	}
 	
     // ---
@@ -258,6 +259,36 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 		modalService.open('lg', 'view/subcontractor-details-modal.html', 'SubcontractorDetailsModalCtrl', 'Success', vendorNo ); 
 	}
 	
+	function addSubcontractCatalogGroup(data, groupBy){
+		data.forEach(function(item){
+			switch(item[groupBy]){
+			case 'BQ':
+			case 'B1':
+				item.catalog = 'Subcontract';
+				break;
+			case 'V1':
+			case 'V2':
+			case 'V3':
+			case 'L1':
+			case 'L2':
+			case 'D1':
+			case 'D2':
+			case 'CF':
+				item.catalog = 'Addendum';
+				break;
+			case 'C1':
+			case 'C2':
+			case 'AP':
+			case 'MS':
+			case 'RR':
+			case 'RA':
+			case 'OA':
+			default:
+				item.catalog = 'Others';
+				break;
+			}
+		})
+	}
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

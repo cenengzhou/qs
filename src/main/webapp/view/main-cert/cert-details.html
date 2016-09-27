@@ -2,13 +2,19 @@
 	<!-- <h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
 	</h1> -->
-
+	
 	<form name="form-validate" id="form-validate"
 		class="ng-pristine ng-valid">
 		<div class="row">
 			<div class="stepwizard">
 				<div class="stepwizard-row">
 					<div class="liner"></div>
+					<div class="stepwizard-step" ng-if="mainCertNo">
+						<button class="btn icon-btn btn-primary" ng-click="openAttachment()">
+							<span class="glyphicon btn-glyphicon glyphicon-paperclip img-circle text-primary"></span>
+							Attachment
+						</button>
+					</div>
 					<div class="stepwizard-step">
 						<button class="btn icon-btn btn-primary" ng-click="insertIPA()"
 							ng-disabled="disableButtons || cert.certificateStatus !=100">
@@ -606,12 +612,7 @@
 					</div>
 					<div class="panel-footer bg-white">
 						<div class="row">
-							<div class=" col-md-6">
-								<button class="btn btn-primary btn-block" ng-click="openAttachment()">
-									Attachment <i class="fa fa-file-text"></i>
-								</button>
-							</div>
-							<div class=" col-md-6">
+							<div class=" col-md-12">
 								<button class="btn btn-primary btn-block" ui-sref="cert.details"
 									ng-disabled="disableButtons" ng-hide="disableButtons"
 									ng-click="save()">

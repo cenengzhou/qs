@@ -90,9 +90,9 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
 
     function loadContacts() {
     	var contacts = []
-    	$http.get('js/controller/repackaging/repackaging-reviewer.json')
-    	.then(function(response){
-    		contacts = response.data['contactList'];
+    	repackagingService.getReviewerList()
+    	.then(function(data){
+    		contacts = JSON.parse(data)['contactList'];
     		contacts.forEach(function(contact){
     			contact.name = contact.username;
     			contact.email = contact.emailaddress;
@@ -115,7 +115,7 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
               statusbar: true,
               autoresize_min_height: 400,
               autoresize_max_height: 800,
-              skin: 'tinymce_primary'
+              skin: 'tinymce_charcoal'
 };
 	
 }]);
