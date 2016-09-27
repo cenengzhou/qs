@@ -58,8 +58,8 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			             { field: 'description'},
 			             { field: 'unit',  editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
-			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'rateBudget', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
+			             { field: 'rateBudget', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
@@ -91,7 +91,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 					rowEntity.amountBudget = roundUtil.round(rowEntity.quantity * rowEntity.rateBudget, 2);
 				}
 				else if(colDef.name == "rateBudget"){
-					rowEntity.rateBudget = roundUtil.round(newValue, 2);
+					rowEntity.rateBudget = roundUtil.round(newValue, 4);
 					rowEntity.amountBudget = roundUtil.round(rowEntity.quantity * rowEntity.rateBudget, 2);
 				}
 				else if(colDef.name == "amountBudget"){
@@ -242,6 +242,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 					rateBudget: ta[i]['rateBudget'],
 					amountBudget: ta[i]['amountBudget'],
 					resourceNo: ta[i]['resourceNo'],
+					lineType: 'BQ'
 			}
 			newTADetailList.push(newTADetail);
 		}

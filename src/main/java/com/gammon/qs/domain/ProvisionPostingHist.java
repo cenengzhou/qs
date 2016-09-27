@@ -45,9 +45,11 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 	private String subsidiaryCode;
 	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double scRate;
+	@Deprecated
 	private Double cumLiabilitiesQty;
 	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double cumLiabilitiesAmount;
+	@Deprecated
 	private Double postedCertQty;
 	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double postedCertAmount;
@@ -61,8 +63,8 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.postedYr = postedYr;
 		this.objectCode = subcontractDetail.getObjectCode();
 		this.subsidiaryCode = subcontractDetail.getSubsidiaryCode();
-		this.postedCertAmount = subcontractDetail.getPostedCertifiedQuantity() * subcontractDetail.getScRate();
-		this.cumLiabilitiesAmount = subcontractDetail.getCumWorkDoneQuantity() * subcontractDetail.getScRate();
+		this.postedCertAmount = CalculationUtil.round(subcontractDetail.getAmountPostedCert().doubleValue(), 2); //subcontractDetail.getPostedCertifiedQuantity() * subcontractDetail.getScRate();
+		this.cumLiabilitiesAmount = CalculationUtil.round(subcontractDetail.getAmountCumulativeWD().doubleValue(), 2); //subcontractDetail.getCumWorkDoneQuantity() * subcontractDetail.getScRate();
 		this.postedCertQty = subcontractDetail.getPostedCertifiedQuantity();
 		this.cumLiabilitiesQty = subcontractDetail.getCumWorkDoneQuantity();
 		this.scRate = subcontractDetail.getScRate();
@@ -71,6 +73,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.setCreatedDate(new Date());
 	}
 
+	@Deprecated
 	@Transient
 	public Double getCumulativeCertifiedQuantity() {
 		return subcontractDetail != null ? subcontractDetail.getCumCertifiedQuantity() : 0;
@@ -149,20 +152,24 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.cumLiabilitiesAmount = (cumLiabilitiesAmount != null ? CalculationUtil.round(cumLiabilitiesAmount, 2) : 0.00);
 	}
 
+	@Deprecated
 	@Column(name = "certPostedQty")
 	public Double getPostedCertQty() {
 		return (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4) : 0.00);
 	}
 
+	@Deprecated
 	public void setPostedCertQty(Double postedCertQty) {
 		this.postedCertQty = (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4) : 0.00);
 	}
 
+	@Deprecated
 	@Column(name = "liabilitiesCumQty")
 	public Double getCumLiabilitiesQty() {
 		return (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}
 
+	@Deprecated
 	public void setCumLiabilitiesQty(Double cumLiabilitiesQty) {
 		this.cumLiabilitiesQty = (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}

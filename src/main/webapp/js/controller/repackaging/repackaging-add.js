@@ -27,26 +27,30 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'r
 	
 	$scope.resourceSummary = {
 			unit : "AM",
-			quantity : 100,
+			quantity : 0,
 			rate : 1,
-			amountBudget : 100
+			amountBudget : 0
 	}
 
 	getUnitOfMeasurementList();
 
 	$scope.calculate = function(field){
 		if(field == "totalAmount" && $scope.resourceSummary.amountBudget != null){
-			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.amountBudget, 2);
-			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.rate, 4);
-			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.quantity, 2);
+			if($scope.resourceSummary.amountBudget.indexOf('.') != $scope.resourceSummary.amountBudget.length -1){
+				$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.amountBudget, 2);
+				$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.rate, 4);
+			}
 		}else if(field == "quantity" && $scope.resourceSummary.quantity != null){
-			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.quantity, 4);
-			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
-			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.quantity, 2);
+			if($scope.resourceSummary.quantity.indexOf('.') != $scope.resourceSummary.quantity.length -1){
+				$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.quantity, 4);
+				$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
+			}
+			
 		}else if (field == "rate" && $scope.resourceSummary.rate != null){
-			$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.rate, 2);
-			$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
-			$scope.resourceSummary.quantity = roundUtil.round($scope.resourceSummary.amountBudget/$scope.resourceSummary.rate, 4);
+			if($scope.resourceSummary.rate.indexOf('.') != $scope.resourceSummary.rate.length -1){
+				$scope.resourceSummary.rate = roundUtil.round($scope.resourceSummary.rate, 4);
+				$scope.resourceSummary.amountBudget = roundUtil.round($scope.resourceSummary.quantity*$scope.resourceSummary.rate, 2);
+			}
 		}
 	}
 	

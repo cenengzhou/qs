@@ -95,17 +95,15 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 		$scope.subcontract.internalJobNo = "";
 	}
 	
-	$scope.saveBoolean = false;
 
 	//Save Function
 	$scope.save = function () {
-		$scope.saveBoolean = true;
 		
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
 			event.preventDefault();  
 			return;
 		}
-		
+
 		$scope.subcontractToUpdate = {
 				id:  $scope.subcontract.id,
 				packageNo : $scope.subcontract.packageNo,
@@ -152,7 +150,6 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			$scope.subcontractToUpdate.cpfBasePeriod = "";
 			$scope.subcontractToUpdate.cpfBaseYear = "";
 		}
-
 
 		getWorkScope($scope.subcontract.workscope);
 	};

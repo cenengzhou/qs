@@ -24,7 +24,6 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 		jobService.getJobDates($scope.jobNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.jobDates = data;
 				});
 	}

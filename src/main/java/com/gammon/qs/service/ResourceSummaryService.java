@@ -1228,6 +1228,7 @@ public class ResourceSummaryService implements Serializable {
 						if(!Integer.valueOf(500).equals(scPackage.getSubcontractStatus())){
 							//reset vendorNo in scPackage
 							scPackage.setVendorNo(null);
+							scPackage.setNameSubcontractor(null);
 						}
 						scPackageDao.resetPackageTA(scPackage);
 					}else{

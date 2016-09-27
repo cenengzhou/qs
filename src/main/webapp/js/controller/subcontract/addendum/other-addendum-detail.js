@@ -49,7 +49,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 					unit:				$scope.units.selected,
 					remarks:			$scope.subcontractDetail.remarks,
 			}
-			//console.log(scDetailToAdd);
+
 			addAddendumToSubcontractDetail(scDetailToAdd);
 		}
 		else {
@@ -95,6 +95,11 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 						$scope.disableButton = true;
 					}else 
 						$scope.disableButton = false;
+					
+					if(data.scStatus < '500'){
+						$scope.lineType = "RR";
+						$scope.disableSelect = true;
+					}
 				});
 	}
 	
@@ -115,7 +120,6 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 			.then(
 					function( data ) {
 						if(data.length != 0){
-							console.log(data);
 							$scope.subcontractDetail = data;
 							$scope.units.selected = data.unit;
 							$scope.lineType = data.lineType;

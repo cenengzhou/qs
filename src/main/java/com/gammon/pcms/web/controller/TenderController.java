@@ -82,6 +82,17 @@ public class TenderController {
 
 	}
 	
+	
+	@RequestMapping(value = "getUneditableTADetailIDs", method = RequestMethod.GET)
+	public List<String> getUneditableTADetailIDs(@RequestParam(name="jobNo") String jobNo, 
+										@RequestParam(name="subcontractNo") String subcontractNo,
+										@RequestParam(name="tenderNo") Integer tenderNo
+										) throws Exception{
+		return  tenderService.getUneditableTADetailIDs(jobNo, subcontractNo, tenderNo);
+
+	}
+
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createTender", method = RequestMethod.POST)
 	public String createTender(@RequestParam(name="jobNo") String jobNo, 

@@ -44,7 +44,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			//enableFullRowSelection: true,
 			//multiSelect: false,
 			showGridFooter : false,
-			showColumnFooter : false,
+			showColumnFooter : true,
 			//fastWatch : true,
 
 			enableCellEditOnFocus : true,
@@ -62,8 +62,15 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80, cellClass: 'text-right', cellFilter: 'number:4'},
 			             /*{ field: "amountBudget" ,displayName:"Budget", enableCellEdit: false, width:100 },*/
 			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, width:80 , cellClass: 'text-right blue', cellFilter: 'number:4'},
-			             { field: "amountSubcontract" ,displayName:"SC Amount", enableCellEdit: true, width:90 , cellClass: 'text-right blue', cellFilter: 'number:2'},
-			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2'}
+			             { field: "amountSubcontract" ,displayName:"SC Amount", enableCellEdit: true, width:90 , cellClass: 'text-right blue', cellFilter: 'number:2',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2',
+			            	aggregationType: uiGridConstants.aggregationTypes.sum,
+				            footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			           	 { field: "resourceNo", enableCellEdit: false, visible:false},
+			             { field: "id", enableCellEdit: false, visible:false}
+				            
 			             ]
 
 
@@ -72,6 +79,12 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 
+		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if($scope.uneditableList.indexOf(rowEntity.id.toString()) >= 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "This resource has been paid in Payment Requisition. No more modification is allowed.");
+			}
+		});
+		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(colDef.name == "rateSubcontract"){
 				rowEntity.rateSubcontract  = roundUtil.round(newValue, 2);
@@ -152,7 +165,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 					rateBudget: ta[i]['rateBudget'],
 					amountBudget: ta[i]['amountBudget'],
 					amountSubcontract: ta[i]['amountSubcontract'],
-					amountForeign: ta[i]['amountForeign']
+					amountForeign: ta[i]['amountForeign'],
+					resourceNo: ta[i]['resourceNo']
 
 			}
 			newTADetailList.push(newTADetail);
@@ -165,6 +179,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 	function loadTenderDetail(){
 		getTender();
 		getTenderDetailList();
+		getUneditableTADetailIDs();
 
 	};
 
@@ -189,7 +204,17 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 					$scope.gridApi.grid.refresh();
 				});
 	}
-
+	
+	
+	function getUneditableTADetailIDs(){
+		tenderService.getUneditableTADetailIDs($scope.jobNo, $scope.subcontractNo, $scope.vendorNo)
+		.then(
+				function( data ) {
+					$scope.uneditableList = data;
+					console.log($scope.uneditableList);
+				});
+	}
+	
 	function updateTenderDetails(taData) {
 		tenderService.updateTenderDetails($scope.jobNo, $scope.subcontractNo, $scope.vendorNo, $scope.currencyCode.selected, $scope.tender.exchangeRate, $scope.tender.remarks, $scope.statusChangeExecutionOfSC.selected,
 				taData, true)

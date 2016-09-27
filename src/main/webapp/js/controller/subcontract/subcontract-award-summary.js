@@ -88,10 +88,10 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		.then(
 				function( data ) {
 					if(data.length==0){
-						//modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
 					}else{
 						$scope.rcmTenderer = data;
-						getTenderVarianceList($scope.rcmTenderer.vendorNo);
+						//getTenderVarianceList($scope.rcmTenderer.vendorNo);
 					}
 				});
 	}

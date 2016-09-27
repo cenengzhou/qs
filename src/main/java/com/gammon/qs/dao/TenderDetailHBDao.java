@@ -132,8 +132,7 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	 * Payment Requisition
 	 * For Repackaging 1
 	 * **/
-	@SuppressWarnings("unchecked")
-	public List<TenderDetail> obtainTADetailByResourceNo(Tender tender, Integer resourceNo) throws DataAccessException{
+	public TenderDetail obtainTADetailByResourceNo(Tender tender, Integer resourceNo) throws DataAccessException{
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
@@ -144,11 +143,11 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 
 			criteria.add(Restrictions.eq("resourceNo", resourceNo));
 
-			return criteria.list();
+			return (TenderDetail) criteria.uniqueResult();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		}
-		return new ArrayList<TenderDetail>();
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")

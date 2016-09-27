@@ -140,9 +140,9 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			rowEditWaitInterval :-1,
 
 			columnDefs: [
-			             { field: 'lineType', displayName: 'Line Type', enableCellEdit: false},
-			             { field: 'billItem', displayName: 'Bill Item', enableCellEdit: false},
-			             { field: 'movementAmount',  displayName: 'Movement Amount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			             { field: 'lineType', width: 80, enableCellEdit: false},
+			             { field: 'subcontractDetail.amountSubcontract', displayName: "SC Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
+			             { field: 'movementAmount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
@@ -194,11 +194,11 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            		},
 		            		cellFilter : 'number:2',
 		            		},
-			             { field: 'description', displayName: 'Description', enableCellEdit: false},
-			             { field: 'scSeqNo', displayName: 'Sequence No', enableCellEdit: false},
-			             { field: 'objectCode', displayName:'Object Code', enableCellEdit: false},
-			             {field: 'subsidiaryCode', displayName: 'Subsidiary Code', enableCellEdit: false},
-			             { field: 'subcontractDetail.id', displayName:'Subcontract Detail Id',  enableCellEdit: false, visible: false},
+			             { field: 'description', width: 100, enableCellEdit: false},
+			             { field: 'objectCode', width: 80, enableCellEdit: false},
+			             {field: 'subsidiaryCode', width: 80, enableCellEdit: false},
+			             { field: 'billItem', width: 100, enableCellEdit: false},
+			             { field: 'scSeqNo', width: 80, displayName: "Sequence No", enableCellEdit: false},
 			             ]
 	};
 	

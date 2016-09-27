@@ -209,8 +209,8 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	
 	//Save Function
 	$scope.save = function () {
-		var totalAmountBeforeSplit = $scope.gridApi.grid.columns[7].getAggregationValue();
-		var totalAmountAfterSplit = $scope.gridApiSplit.grid.columns[7].getAggregationValue();
+		var totalAmountBeforeSplit = roundUtil.round($scope.gridApi.grid.columns[7].getAggregationValue(), 2);
+		var totalAmountAfterSplit = roundUtil.round($scope.gridApiSplit.grid.columns[7].getAggregationValue(), 2);
 		
 		if(totalAmountAfterSplit != totalAmountBeforeSplit ){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total amount does not match.");

@@ -1441,7 +1441,7 @@ public class SubcontractService {
 				//For SERVICE Transaction ----END
 				
 				//Create SC Details from scratch
-				scPackage = SCPackageLogic.awardSCPackage(scPackage, tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
+				scPackage = this.awardSubcontract(scPackage, tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
 				
 			}
 			
@@ -1523,7 +1523,96 @@ public class SubcontractService {
 		return true;
 	}
 
-
+	private Subcontract awardSubcontract(Subcontract scPackage, List<Tender> tenderAnalysisList){
+		SubcontractDetailBQ scDetails;
+		Double scSum = 0.00;
+		Tender budgetTA = null;
+		for (Tender TA: tenderAnalysisList){
+			if (Integer.valueOf(0).equals(TA.getVendorNo())){
+				budgetTA = TA;
+			}
+		}
+		for(Tender tender: tenderAnalysisList){
+			if(tender.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(tender.getStatus().trim())){
+				tender.setStatus(Tender.TA_STATUS_AWD);
+				scPackage.setVendorNo(tender.getVendorNo().toString());
+				scPackage.setNameSubcontractor(tender.getNameSubcontractor());
+				scPackage.setPaymentCurrency(tender.getCurrencyCode().trim());
+				scPackage.setExchangeRate(tender.getExchangeRate());
+				try { //
+					for(TenderDetail tenderDetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tender)){
+						scSum += tenderDetails.getAmountSubcontract();
+						scDetails = new SubcontractDetailBQ();
+						scDetails.setSubcontract(scPackage);
+						scDetails.setSequenceNo(tenderDetails.getSequenceNo());
+						scDetails.setResourceNo(tenderDetails.getResourceNo());
+						//if("BQ".equalsIgnoreCase(TADetails.getLineType())){
+						if (budgetTA!=null)
+							try {
+								for (TenderDetail budgetTADetail:tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
+									if (tenderDetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
+										scDetails.setCostRate(budgetTADetail.getRateBudget());
+									}
+							} catch (DataAccessException e) {
+								e.printStackTrace();
+							}
+						/*}else{
+							scDetails.setCostRate(0.00);
+						}*/
+						scDetails.setBillItem(tenderDetails.getBillItem()==null?" ":tenderDetails.getBillItem());
+						scDetails.setDescription(tenderDetails.getDescription());
+						scDetails.setOriginalQuantity(tenderDetails.getQuantity());
+						scDetails.setQuantity(tenderDetails.getQuantity());
+						//scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
+						scDetails.setScRate(tenderDetails.getRateBudget());
+						scDetails.setSubsidiaryCode(tenderDetails.getSubsidiaryCode());
+						scDetails.setObjectCode(tenderDetails.getObjectCode());
+						scDetails.setLineType(tenderDetails.getLineType());
+						scDetails.setUnit(tenderDetails.getUnit());
+						scDetails.setRemark(tenderDetails.getRemark());
+						scDetails.setApproved(SubcontractDetail.APPROVED);
+						scDetails.setNewQuantity(tenderDetails.getQuantity());
+						scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
+						scDetails.setTenderAnalysisDetail_ID(tenderDetails.getId());
+						scDetails.populate(tenderDetails.getLastModifiedUser()!=null?tenderDetails.getLastModifiedUser():tenderDetails.getCreatedUser());
+						scDetails.setSubcontract(scPackage);
+						/**
+						 * @author koeyyeung
+						 * created on 12 July, 2016
+						 * Convert to amount based**/
+						scDetails.setAmountBudget(new BigDecimal(tenderDetails.getAmountBudget()));
+						scDetails.setAmountSubcontract(new BigDecimal(tenderDetails.getAmountSubcontract()));
+						scDetails.setAmountSubcontractNew(new BigDecimal(tenderDetails.getAmountSubcontract()));
+						
+						subcontractDetailHBDao.insert(scDetails);
+						
+					}
+				} catch (DataAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		scPackage.setScApprovalDate(new Date());
+		if (Subcontract.RETENTION_ORIGINAL.equals(scPackage.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(scPackage.getRetentionTerms()))
+			scPackage.setRetentionAmount(RoundingUtil.round(scSum*scPackage.getMaxRetentionPercentage()/100.00,2));
+		else if(Subcontract.RETENTION_LUMPSUM.equals(scPackage.getRetentionTerms()))
+			scPackage.setMaxRetentionPercentage(0.00);
+		else{
+			scPackage.setMaxRetentionPercentage(0.00);
+			scPackage.setInterimRentionPercentage(0.00);
+			scPackage.setMosRetentionPercentage(0.00);
+			scPackage.setRetentionAmount(0.00);
+		}
+		
+		scPackage.setApprovedVOAmount(0.00);
+		scPackage.setRemeasuredSubcontractSum(scSum);
+		scPackage.setOriginalSubcontractSum(scSum);
+//		scPackage.setAccumlatedRetention(0.00);			//commented by Tiky Wong on 10 January, 2014 - Retention that was hold with direct payment was missing out in the Accumulated Retention
+		scPackage.setSubcontractStatus(500);
+		return scPackage;
+	}
+	
+	
 	public Boolean updateNewQuantity(Long id, Double newQuantity) throws Exception{
 		if("ACTIVE".equalsIgnoreCase(subcontractDetailHBDao.get(id).getSystemStatus())){
 			subcontractDetailHBDao.get(id).setNewQuantity(newQuantity);
@@ -3046,6 +3135,7 @@ public class SubcontractService {
 	private Subcontract addSCDetails(Subcontract subcontract, Tender tenderAnalysis, Tender budgetTA, List<TenderDetail> taDetailsList, String approvalStatus, boolean resetSCDetails) throws Exception{
 		logger.info("Add New SCDetails");
 		subcontract.setVendorNo(tenderAnalysis.getVendorNo().toString());
+		subcontract.setNameSubcontractor(tenderAnalysis.getNameSubcontractor());
 		subcontract.setPaymentCurrency(tenderAnalysis.getCurrencyCode().trim());
 		subcontract.setExchangeRate(tenderAnalysis.getExchangeRate());
 
@@ -3059,16 +3149,16 @@ public class SubcontractService {
 			scDetails.setSequenceNo(nextSeqNo);
 			scDetails.setResourceNo(taDetails.getResourceNo());
 			
-			if("BQ".equalsIgnoreCase(taDetails.getLineType())){
-				if (budgetTA!=null){
-					for (TenderDetail budgetTADetail:tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
-						if (taDetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
-							scDetails.setCostRate(budgetTADetail.getRateBudget());
-						}
-				}
-			}else{
-				scDetails.setCostRate(0.00);
+			//if("BQ".equalsIgnoreCase(taDetails.getLineType())){
+			if (budgetTA!=null){
+				for (TenderDetail budgetTADetail:tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
+					if (taDetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
+						scDetails.setCostRate(budgetTADetail.getRateBudget());
+					}
 			}
+			/*}else{
+				scDetails.setCostRate(0.00);
+			}*/
 			scDetails.setBillItem(taDetails.getBillItem()==null?" ":taDetails.getBillItem());
 			scDetails.setDescription(taDetails.getDescription());
 			scDetails.setOriginalQuantity(taDetails.getQuantity());

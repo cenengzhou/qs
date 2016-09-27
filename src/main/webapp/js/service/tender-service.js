@@ -6,6 +6,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		getRecommendedTender:		getRecommendedTender,
 		getTenderList:				getTenderList,
 		getTenderComparisonList:	getTenderComparisonList,
+		getUneditableTADetailIDs:	getUneditableTADetailIDs,
 		createTender:				createTender,
 		updateTenderDetails: 		updateTenderDetails,
 		updateRecommendedTender:	updateRecommendedTender,
@@ -76,6 +77,21 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
+	
+	function getUneditableTADetailIDs(jobNo, subcontractNo, tenderNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getUneditableTADetailIDs",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				tenderNo: tenderNo
 			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

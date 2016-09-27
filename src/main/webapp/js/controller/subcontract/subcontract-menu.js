@@ -11,15 +11,24 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 	
 	$scope.paymentRequisition = function (){
 		if($scope.subcontract.scStatus !="500"){
-			subcontractService.generateSCDetailsForPaymentRequisition($scope.jobNo, $scope.subcontractNo)
-			.then(
-					function( data ) {
-						if(data.length != 0){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						}else{
-							$location.path("/subcontract/payment-select");
-						}
-					});
+			if($scope.subcontract.scStatus >="160"){
+				if($scope.subcontract.vendorNo != null && $scope.subcontract.vendorNo.length >0){
+					subcontractService.generateSCDetailsForPaymentRequisition($scope.jobNo, $scope.subcontractNo)
+					.then(
+							function( data ) {
+								if(data.length != 0){
+									modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+								}else{
+									$location.path("/subcontract/payment-select");
+								}
+							});
+					
+				}else
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn',  "Please select a recommended tenerer.");
+				
+			}else
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn',  "Please prepare Tender Analysis.");
+			
 		}
 	}
 	
@@ -38,11 +47,25 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 						paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
 						.then(
 								function( data ) {
-									if(data){
-										if(data.paymentStatus.length >0)
+									var latestPayment = data;
+									if(latestPayment){
+										paymentService.getPaymentCertList($scope.jobNo, $scope.subcontractNo)
+										.then(
+												function( data ) {
+													var paymentList = data;
+													console.log(paymentList);
+													if((paymentList != null && paymentList.length > 1) || latestPayment.paymentStatus == 'APR')
+														$scope.hideItemForPayReq = false;
+													else
+														$scope.hideItemForPayReq = true;
+												});
+										
+										if(latestPayment.paymentStatus.length >0)
 											$scope.status = "Payment Requisition Status: "+GlobalParameter.getValueById(GlobalParameter.paymentStatus, data.paymentStatus);
-									}
+									}else
+										$scope.hideItemForPayReq = true;
 								});
+						
 					}
 				});
 	}

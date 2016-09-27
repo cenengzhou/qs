@@ -2,15 +2,8 @@ package com.gammon.qs.service.businessLogic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-
-import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailAP;
@@ -19,21 +12,11 @@ import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.domain.Tender;
-import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.RoundingUtil;
 
 public class SCPackageLogic {
 
-	@Autowired
-	private static TenderDetailHBDao tenderAnalysisDetailHBDao;
-
-	@PostConstruct
-	public void init(){
-		SCPackageLogic.setTenderAnalysisDetailHBDao(tenderAnalysisDetailHBDao);
-	}
-	
 	public static final String OriginalSCSum = Subcontract.RETENTION_ORIGINAL;
 	public static final String RevisedSCSum = Subcontract.RETENTION_REVISED;
 	public static final String LumpSum= Subcontract.RETENTION_LUMPSUM;
@@ -105,90 +88,7 @@ public class SCPackageLogic {
 		}
 		return scPackage;
 	}*/
-	public static Subcontract awardSCPackage(Subcontract scPackage, List<Tender> tenderAnalysisList){
-		SubcontractDetailBQ scDetails;
-		Double scSum = 0.00;
-		Tender budgetTA = null;
-		for (Tender TA: tenderAnalysisList){
-			if (Integer.valueOf(0).equals(TA.getVendorNo())){
-				budgetTA = TA;
-			}
-		}
-		for(Tender TA: tenderAnalysisList){
-			if(TA.getStatus()!=null && Tender.TA_STATUS_RCM.equalsIgnoreCase(TA.getStatus().trim())){
-				TA.setStatus(Tender.TA_STATUS_AWD);
-				scPackage.setVendorNo(TA.getVendorNo().toString());
-				scPackage.setPaymentCurrency(TA.getCurrencyCode().trim());
-				scPackage.setExchangeRate(TA.getExchangeRate());
-				try { //
-					for(TenderDetail TADetails: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(TA)){
-						scSum = scSum + (TADetails.getQuantity()*TADetails.getRateBudget());
-						scDetails = new SubcontractDetailBQ();
-						scDetails.setSubcontract(scPackage);
-						scDetails.setSequenceNo(TADetails.getSequenceNo());
-						scDetails.setResourceNo(TADetails.getResourceNo());
-						if("BQ".equalsIgnoreCase(TADetails.getLineType())){
-							if (budgetTA!=null)
-								try {
-									for (TenderDetail budgetTADetail:tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(budgetTA))
-										if (TADetails.getSequenceNo().equals(budgetTADetail.getSequenceNo())){
-											scDetails.setCostRate(budgetTADetail.getRateBudget());
-										}
-								} catch (DataAccessException e) {
-									e.printStackTrace();
-								}
-						}else{
-							scDetails.setCostRate(0.00);
-						}
-						scDetails.setBillItem(TADetails.getBillItem()==null?" ":TADetails.getBillItem());
-						scDetails.setDescription(TADetails.getDescription());
-						scDetails.setOriginalQuantity(TADetails.getQuantity());
-						scDetails.setQuantity(TADetails.getQuantity());
-						//scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
-						scDetails.setScRate(TADetails.getRateBudget());
-						scDetails.setSubsidiaryCode(TADetails.getSubsidiaryCode());
-						scDetails.setObjectCode(TADetails.getObjectCode());
-						scDetails.setLineType(TADetails.getLineType());
-						scDetails.setUnit(TADetails.getUnit());
-						scDetails.setRemark(TADetails.getRemark());
-						scDetails.setApproved(SubcontractDetail.APPROVED);
-						scDetails.setNewQuantity(TADetails.getQuantity());
-						scDetails.setJobNo(scPackage.getJobInfo().getJobNumber());
-						scDetails.setTenderAnalysisDetail_ID(TADetails.getId());
-						scDetails.populate(TADetails.getLastModifiedUser()!=null?TADetails.getLastModifiedUser():TADetails.getCreatedUser());
-						scDetails.setSubcontract(scPackage);
-						/**
-						 * @author koeyyeung
-						 * created on 12 July, 2016
-						 * Convert to amount based**/
-						scDetails.setAmountBudget(new BigDecimal(TADetails.getAmountBudget()));
-						scDetails.setAmountSubcontract(new BigDecimal(TADetails.getAmountSubcontract()));
-						scDetails.setAmountSubcontractNew(new BigDecimal(TADetails.getAmountSubcontract()));
-					}
-				} catch (DataAccessException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		scPackage.setScApprovalDate(new Date());
-		if (OriginalSCSum.equals(scPackage.getRetentionTerms()) || RevisedSCSum.equals(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(RoundingUtil.round(scSum*scPackage.getMaxRetentionPercentage()/100.00,2));
-		else if(LumpSum.equals(scPackage.getRetentionTerms()))
-			scPackage.setMaxRetentionPercentage(0.00);
-		else{
-			scPackage.setMaxRetentionPercentage(0.00);
-			scPackage.setInterimRentionPercentage(0.00);
-			scPackage.setMosRetentionPercentage(0.00);
-			scPackage.setRetentionAmount(0.00);
-		}
-		
-		scPackage.setApprovedVOAmount(0.00);
-		scPackage.setRemeasuredSubcontractSum(scSum);
-		scPackage.setOriginalSubcontractSum(scSum);
-//		scPackage.setAccumlatedRetention(0.00);			//commented by Tiky Wong on 10 January, 2014 - Retention that was hold with direct payment was missing out in the Accumulated Retention
-		scPackage.setSubcontractStatus(500);
-		return scPackage;
-	}
+	
 	
 	public static Subcontract toCompleteSplitTerminate(Subcontract scPackage, List<SubcontractDetail> scDetailsIncludingInactive){
 		Double scSum = 0.00;
@@ -232,13 +132,4 @@ public class SCPackageLogic {
 		return scPackage;
 	}
 
-	public TenderDetailHBDao getTenderAnalysisDetailHBDao() {
-		return tenderAnalysisDetailHBDao;
-	}
-
-	public static void setTenderAnalysisDetailHBDao(TenderDetailHBDao tenderAnalysisDetailHBDao) {
-		SCPackageLogic.tenderAnalysisDetailHBDao = tenderAnalysisDetailHBDao;
-	}
-
-	
 }
