@@ -7,7 +7,7 @@
 				ng-repeat="tender in tenders">
 				<div class="select-trigger m-b-10" ng-class="{'selected': tender.status == 'RCM' || tender.status == 'AWD'}">
 					
-					<a ng-click="updateRecommendedTender({{tender.vendorNo}})" >
+					<a ng-click="updateRecommendedTender(tender.vendorNo)" >
 						<div class="check"></div> 
 						<span class="icofont icofont-worker icofont-5x"></span>
 						
