@@ -8,7 +8,7 @@
 */
 ----------------------------------------------------------------------------------------------------------------
 --1. Create Addendum 0 for all awarded subcontract at ADDENDUM
-delete from PCMSDATATST.ADDENDUM where no = 0;
+-- delete from PCMSDATATST.ADDENDUM where no = 0;
 insert into PCMSDATATST.ADDENDUM (
 ID,
 ID_SUBCONTRACT,
@@ -71,7 +71,7 @@ where j.JOBNO is not null
 and s.SCSTATUS = '500'
 and s.SYSTEM_STATUS = 'ACTIVE');
 --2. Copy a set of Addendum records from SUBCONTRACT_DETAIL to ADDENDUM_DETAIL and associate them to Addendum 0
-delete from PCMSDATATST.ADDENDUM_DETAIL where no = 0;
+-- delete from PCMSDATATST.ADDENDUM_DETAIL where no = 0;
 insert into PCMSDATATST.ADDENDUM_DETAIL (
 ID,
 ID_ADDENDUM,
@@ -150,7 +150,7 @@ and s.SCSTATUS = '500'
 and a.no = 0
 );
 --3. Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
-delete from PCMSDATATST.ATTACHMENT where NAME_TABLE = 'ADDENDUM';
+-- delete from PCMSDATATST.ATTACHMENT where NAME_TABLE = 'ADDENDUM';
 insert into PCMSDATATST.ATTACHMENT (
 ID,
 ID_TABLE,
