@@ -89,7 +89,7 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     }
 
     function loadContacts() {
-    	var contacts = []
+    	var contacts = [];
     	repackagingService.getReviewerList()
     	.then(function(data){
     		contacts = JSON.parse(data)['contactList'];

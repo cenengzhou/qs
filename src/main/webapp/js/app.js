@@ -306,7 +306,27 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
         controller: 'SubcontractAwardSummaryCtrl'
 	})
-
+	.state('subcontract-award.attachment', {
+		url: "/attachment",
+		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
+		controller: 'AttachmentSCFileCtrl',
+		params:{
+			'nameObject': GlobalParameter['AbstractAttachment'].SCPackageNameObject,
+			'offsetTop':450
+		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/subcontract/attachment/attachment-sc-file.js',
+                           'js/controller/subcontract/attachment/attachment-sc-text.js',
+                           'js/service/attachment-service.js'
+                    ] 
+                });
+            }]
+        }
+	})
 	.state('subcontract', {
 		url: "/subcontract",
 		parent: "navigation",
@@ -916,7 +936,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 });
             }]
         },
-		controller: 'RepackagingEmailCtrl'
+		controller: 'RepackagingEmailCtrl as ctrl',
 	})
 	//Transit
 	.state("transit", {

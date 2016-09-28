@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.service.RepackagingDetailService;
@@ -46,8 +45,6 @@ public class RepackagingController {
 	private RepackagingService repackagingService;
 	@Autowired
 	private RepackagingDetailService  repackagingDetailService;
-	@Autowired
-	private ObjectMapper objectMapper;
 	@Autowired
 	private MailService mailService;
 	
@@ -176,6 +173,7 @@ public class RepackagingController {
 	
 	@RequestMapping(value = "getReviewerList", method = RequestMethod.GET)
 	public String getReviewerList(@Value("#{'file:///' + linkConfig.getPcmsLink('REVIEWER_JSON')}") Resource reviewerJson) throws IOException{
+		logger.info("Get reviewer list:" + reviewerJson.getFile().getPath());
 		BufferedReader  br = new BufferedReader (new InputStreamReader(reviewerJson.getInputStream()));
 		String result = "", line;
 		while((line = br.readLine()) != null){

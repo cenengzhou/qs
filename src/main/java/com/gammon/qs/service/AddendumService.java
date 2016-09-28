@@ -834,6 +834,13 @@ public class AddendumService{
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
 		
 		if (!"A".equals(approvalResult)){
+			addendum.setStatus(Addendum.STATUS.PENDING.toString());
+			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.REJECTED.toString());
+			addendumHBDao.merge(addendum);
+			
+			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
+			subcontractHBDao.merge(subcontract);
+		}else{
 
 			//Delete Pending Payment
 			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
@@ -862,20 +869,13 @@ public class AddendumService{
 			//Update Subcontract Amount
 			subcontract = updateSubcontractAmount(subcontract, addendum);
 			
-			addendum.setStatus(Addendum.STATUS.PENDING.toString());
+			addendum.setStatus(Addendum.STATUS.APPROVED.toString());
 			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.APPROVED.toString());
-			addendumHBDao.update(addendum);
+			addendumHBDao.merge(addendum);
 			
 			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
-			subcontractHBDao.update(subcontract);
+			subcontractHBDao.merge(subcontract);
 			
-		}else{
-			addendum.setStatus(Addendum.STATUS.PENDING.toString());
-			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.REJECTED.toString());
-			addendumHBDao.update(addendum);
-			
-			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
-			subcontractHBDao.update(subcontract);
 		}
 		return true;
 	}
@@ -945,10 +945,10 @@ public class AddendumService{
 			scDetailVO.setCorrSCLineSeqNo(scDetailsCC.getSequenceNo().longValue());
 			scDetailsCC.setCorrSCLineSeqNo(scDetailVO.getSequenceNo().longValue());
 			
-			subcontractDetailHBDao.insert(scDetailsCC);
+			subcontractDetailHBDao.merge(scDetailsCC);
 		}
 
-		subcontractDetailHBDao.insert(scDetailVO);
+		subcontractDetailHBDao.merge(scDetailVO);
 		
 		return sequenceNo;
 	}

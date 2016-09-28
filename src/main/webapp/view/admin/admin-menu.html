@@ -70,12 +70,54 @@
 					<span>Scheduler Maintenance</span>
 				</a>
 			</li>		
-						
+			<li ui-sref-active="active">
+				<a ui-sref="admin.SystemInformation">
+					<i class="glyphicon glyphicon-info-sign"></i>
+					<span>System Information</span>
+				</a>
+			</li>			
+					
 			<li class="divider has-minify-btn">
                       <!-- begin sidebar minify button -->
                       <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-left"></i></a>
                       <!-- end sidebar minify button -->
 			</li>
+
+			                     <li class="nav-header" ng-if="showIMSAdmin"><br>System Information</li>
+		                    <li>
+		                        <ul class="notification-list" ng-if="showIMSAdmin">
+		                         	<li>
+		                                <div class="media bg-lime-light" title="Deployment Date: {{properties.versionDate}}"><i class="fa fa-calendar text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">Deployment Date</div>
+		                                    <div class="desc">{{properties.versionDate}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                             	<div class="media bg-success-light" title="JDE: {{properties.jdeUrl}}"><i class="fa fa-leaf text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">JDE</div>
+		                                    <div class="desc" uib-popover="{{properties.jdeUrl}}" popover-trigger="mouseenter" popover-title="JDE">{{properties.jdeUrl}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-danger-light" title="AP: {{properties.apUrl}}"><i class="fa fa-check text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">AP</div>
+		                                    <div class="desc" uib-popover="{{properties.apUrl}}" popover-trigger="mouseenter" popover-title="AP">{{properties.apUrl}}</div>
+		                                </div>
+		                            </li>
+		                            <li>
+		                                <div class="media bg-info-light" title="GSF: {{properties.gsfUrl}}"><i class="fa fa-unlock-alt text-white"></i></div>
+		                                <div class="info">
+		                                    <div class="title">GSF</div>
+		                                    <div class="desc" uib-popover="{{properties.gsfUrl}}" popover-trigger="mouseenter" popover-title="GSF">{{properties.gsfUrl}}</div>
+		                                </div>
+		                            </li>
+		                        </ul>
+		                    </li>
+		                    <li class="divider" ng-if="showIMSAdmin"></li>
+
 		</ul>
 		<!-- end sidebar nav -->
 	</div>
