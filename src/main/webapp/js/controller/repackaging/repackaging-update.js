@@ -187,6 +187,28 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		}
 		
 		
+		var tempNewList = dataRows;
+		var newList = [];
+		
+		for (i in tempNewList) {
+			for (j in newList) {
+				if(newList[j].objectCode === tempNewList[i].objectCode
+				   && newList[j].subsidiaryCode === tempNewList[i].subsidiaryCode
+				   && newList[j].resourceDescription === tempNewList[i].resourceDescription
+				   && newList[j].rate === tempNewList[i].rate
+				   && newList[j].unit === tempNewList[i].unit
+				   ){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 
+							"Duplicate resource: Object Code: " + tempNewList[i].objectCode + ", Subsidiary Code: " + tempNewList[i].subsidiaryCode +
+							 ", Description: " + tempNewList[i].resourceDescription + 
+							", Unit: " + tempNewList[i].unit + ", Rate: " + tempNewList[i].rate);
+					return;
+				}
+			};
+			newList.push(tempNewList[i]);
+			
+		};
+		
 		updateResourceSummaries(dataRows);
 	}
 	

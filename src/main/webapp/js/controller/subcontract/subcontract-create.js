@@ -47,24 +47,30 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	$scope.percentageOption= "Revised";
 	
 	$scope.updateLabour = function (){
-		if ($scope.subcontract.labourIncludedContract == true){
-			$scope.subcontract.labourIncludedContract = false;
-		}else
-			$scope.subcontract.labourIncludedContract = true;
+		if(!$scope.disableButtons){
+			if ($scope.subcontract.labourIncludedContract == true){
+				$scope.subcontract.labourIncludedContract = false;
+			}else
+				$scope.subcontract.labourIncludedContract = true;
+		}
 	}
 
 	$scope.updatePlant = function (){
-		if ($scope.subcontract.plantIncludedContract == true){
-			$scope.subcontract.plantIncludedContract = false;
-		}else
-			$scope.subcontract.plantIncludedContract = true;
+		if(!$scope.disableButtons){
+			if ($scope.subcontract.plantIncludedContract == true){
+				$scope.subcontract.plantIncludedContract = false;
+			}else
+				$scope.subcontract.plantIncludedContract = true;
+		}
 	}
 
 	$scope.updateMaterial = function (){
-		if ($scope.subcontract.materialIncludedContract == true){
-			$scope.subcontract.materialIncludedContract = false;
-		}else
-			$scope.subcontract.materialIncludedContract = true;
+		if(!$scope.disableButtons){
+			if ($scope.subcontract.materialIncludedContract == true){
+				$scope.subcontract.materialIncludedContract = false;
+			}else
+				$scope.subcontract.materialIncludedContract = true;
+		}
 	}
 
 	$scope.resetRetentionOptions = function (){

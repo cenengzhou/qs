@@ -154,16 +154,16 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	
 	$scope.addData = function() {
 		$scope.gridOptionsSplit.data.push({
-			"objectCode": "",
-			"subsidiaryCode": "",
-			"resourceDescription": "",
-			"unit": "",
-			"quantity": "",
-			"rate": "",
-			"amountBudget": "",
-			"resourceType": resourceType,
-			"excludeDefect": "false",
-			"excludeLevy": "false"
+			"objectCode": $scope.gridOptions.data[0]['objectCode'],
+			"subsidiaryCode": $scope.gridOptions.data[0]['subsidiaryCode'],
+			"resourceDescription": $scope.gridOptions.data[0]['resourceDescription'],
+			"unit": $scope.gridOptions.data[0]['unit'],
+			"quantity": $scope.gridOptions.data[0]['quantity'],
+			"rate": $scope.gridOptions.data[0]['rate'],
+			"amountBudget": $scope.gridOptions.data[0]['amountBudget'],
+			"resourceType": $scope.gridOptions.data[0]['resourceType'],
+			"excludeDefect": $scope.gridOptions.data[0]['excludeDefect'],
+			"excludeLevy": $scope.gridOptions.data[0]['excludeLevy'],
 		});
 	};
 	
@@ -237,7 +237,27 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 		resourceSummarySplitMergeWrapper.oldResourceSummaryList = $scope.gridOptions.data;
 		resourceSummarySplitMergeWrapper.newResourceSummaryList = $scope.gridOptionsSplit.data;
 		
-		//console.log(resourceSummarySplitMergeWrapper);
+		var tempNewList = $scope.gridOptionsSplit.data;
+		var newList = [];
+		
+		for (i in tempNewList) {
+			for (j in newList) {
+				if(newList[j].objectCode === tempNewList[i].objectCode
+				   && newList[j].subsidiaryCode === tempNewList[i].subsidiaryCode
+				   && newList[j].resourceDescription === tempNewList[i].resourceDescription
+				   && newList[j].rate === tempNewList[i].rate
+				   && newList[j].unit === tempNewList[i].unit
+				   ){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 
+							"Duplicate resource: Object Code: " + tempNewList[i].objectCode + ", Subsidiary Code: " + tempNewList[i].subsidiaryCode +
+							 ", Description: " + tempNewList[i].resourceDescription + 
+							", Unit: " + tempNewList[i].unit + ", Rate: " + tempNewList[i].rate);
+					return;
+				}
+			};
+			newList.push(tempNewList[i]);
+			
+		};
 		
 		splitOrMergeResources(resourceSummarySplitMergeWrapper);
 		
