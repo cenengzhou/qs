@@ -129,10 +129,12 @@
 
 			</div>
 			<div class="box-body">
-				<div id="grid" ui-grid="gridOptions" ui-grid-selection ui-grid-importer external-scopes="clickHandler" 
-					ui-grid-auto-resize ui-grid-resize-columns ui-grid-cellnav ui-grid-validate
-					ui-grid-row-edit ui-grid-edit ui-grid-exporter class="grid" style="height:250px"></div>
-
+				<div id="grid" ui-grid="gridOptions" ui-grid-selection
+					ui-grid-importer external-scopes="clickHandler"
+					ui-grid-resize-columns ui-grid-cellnav
+					ui-grid-validate ui-grid-row-edit ui-grid-edit ui-grid-exporter
+					class="grid"
+					resize ng-style="resizeWithOffset(450)"></div>
 				<div class="col-md-12">
 					<!-- <a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a> -->
 					<table class="col-md-12"><tr>
@@ -143,7 +145,7 @@
 					</button>
 					</td>
 					<td>
-					<button type="button" class="btn bg-warning btn-block" style="color:white" ng-show="repackaging.status !== '900'"
+					<button type="button" class="btn bg-warning btn-block text-white" ng-show="repackaging.status !== '900'"
 						ng-click="reset()">
 						<i class="fa fa-refresh"></i> Reset
 					</button>

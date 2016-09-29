@@ -16,8 +16,9 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	getUnitOfMeasurementList();
 	
 	$scope.lineTypes = {
-			"V1": "V1 - External VO - No Budget" , 
+			"V1": "V1 - External VO" , 
 			"V2": "V2 - Internal VO - No Budget" ,
+			"V3": "V3 - Internal VO - Budget" ,
 			"L1": "L1 - Claims vs GSL" ,
 			"L2": "L2 - Claims vs other Subcontract" ,
 			"D1": "D1 - Day Work for GCL",
@@ -30,19 +31,23 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 
 	$scope.calculate = function(field){
 		if(field == "totalAmount" && $scope.addendumDetail.amtAddendum != null){
-			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.amtAddendum, 2);
-			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
-			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 2);
+			if($scope.addendumDetail.amtAddendum.indexOf('.') != $scope.addendumDetail.amtAddendum.length -1){
+				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.amtAddendum, 2);
+				$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
+			}
 		}else if(field == "quantity" && $scope.addendumDetail.quantity != null){
-			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.quantity, 4);
-			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
-			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.quantity, 2);
+			if($scope.addendumDetail.quantity.indexOf('.') != $scope.addendumDetail.quantity.length -1){
+				$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.quantity, 4);
+				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+			}
 		}else if (field == "rate" && $scope.addendumDetail.rateAddendum != null){
-			$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 2);
-			$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
-			$scope.addendumDetail.quantity = roundUtil.round($scope.addendumDetail.amtAddendum/$scope.addendumDetail.rateAddendum, 4);
+			if($scope.addendumDetail.rateAddendum.indexOf('.') != $scope.addendumDetail.rateAddendum.length -1){
+				$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 2);
+				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
+			}
 		}
 	}
+	
 
 	//Save Function
 	$scope.save = function () {
@@ -80,6 +85,8 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					rateBudget: 		$scope.addendumDetail.rateBudget,
 					amtBudget: 			$scope.addendumDetail.amtBudget,
 					unit:				$scope.units.selected,
+					noSubcontractChargedRef: $scope.addendumDetail.noSubcontractChargedRef,
+					codeObjectForDaywork: $scope.addendumDetail.codeObjectForDaywork,
 					remarks:			$scope.addendumDetail.remarks,
 					idHeaderRef:		$scope.addendumDetail.idHeaderRef,
 					typeVo: 			$scope.addendumDetail.typeVo,
@@ -135,22 +142,36 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 
 	$scope.$watch('lineType', function(newValue, oldValue) {
 		if(modalStatus == 'ADD' && modalParam == null){
-			//1. Add new VO (no budget)
+			//1. Add V1/V2 (no budget)
 			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, newValue)
 			.then(
 					function( data ) {
-						if(data.length != 0){console.log(data);
+						if(data.length != 0){
 							$scope.addendumDetail = data;
 						}
 					});
+		}else if(modalStatus == 'ADD' && modalParam != null){
+			//Add from Approved Addendum
+			$scope.addendumDetail = modalParam;
+			$scope.lineType = modalParam.typeVo;
+			console.log("$scope.lineType: "+$scope.lineType);
+			$scope.disableSelect = true;
+			
+			$scope.disableFields = true;
 		}
-		else {
+		else if(modalStatus == 'UPDATE'){
 			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
 			$scope.addendumDetail = modalParam;
 			$scope.lineType = modalParam.typeVo;
 			$scope.disableSelect = true;
 			
-			if(modalParam.idResourceSummary != null){
+			//Update from APPROVED SC Details (V1, V2, V3)
+			if($scope.addendumDetail.idSubcontractDetail != null){
+				$scope.disableFields = true;
+			}
+			
+			//Update from V3 (Non-APPROVED)
+			if($scope.addendumDetail.idResourceSummary != null){
 				$scope.disableFields = true;
 			}
 		}

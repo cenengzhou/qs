@@ -837,6 +837,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		List<String> lineTypeList = new ArrayList<String>();
 		lineTypeList.add("V1");
 		lineTypeList.add("V2");
+		lineTypeList.add("V3");
 		lineTypeList.add("L1");
 		lineTypeList.add("L2");
 		lineTypeList.add("D1");
@@ -850,7 +851,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 
 		criteria.createAlias("subcontract", "subcontract");
 		criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-		criteria.add(Restrictions.eq("costRate", 0.0));
+		//criteria.add(Restrictions.eq("costRate", 0.0));
 
 		criteria.add(Restrictions.in("lineType", lineTypeList));
 		

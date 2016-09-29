@@ -187,7 +187,7 @@ public class AddendumController {
 		try{
 			result = addendumService.deleteAddendumDetail(jobNo, subcontractNo, Long.valueOf(addendumNo), addendumDetailList);
 		}catch(Exception e){
-			result  = "Addendum Detail Header cannot be deleted.";
+			result  = "Addendum Detail cannot be deleted.";
 			e.printStackTrace();
 			if(e instanceof UndeclaredThrowableException && ((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause() instanceof AccessDeniedException)
 			throw new AccessDeniedException(((UndeclaredThrowableException) e).getUndeclaredThrowable().getCause().getMessage());

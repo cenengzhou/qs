@@ -81,10 +81,11 @@ public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
 		return criteria.list();
 	}
 	
-	public AddendumDetail getAddendumDetailBySubcontractDetail(SubcontractDetail subcontractDetail) {
+	public AddendumDetail getAddendumDetailBySubcontractDetail(SubcontractDetail subcontractDetail, Long addendumNo) {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("idSubcontractDetail", "idSubcontractDetail");
 		criteria.add(Restrictions.eq("idSubcontractDetail.id", subcontractDetail.getId()));
+		criteria.add(Restrictions.eq("no", addendumNo));
 
 		return (AddendumDetail) criteria.uniqueResult();
 	}

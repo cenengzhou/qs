@@ -17,8 +17,8 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			//enableSelectAll: true,
 			//enableFullRowSelection: true,
 			multiSelect: false,
-			//showGridFooter : true,
-			showColumnFooter : true,
+			showGridFooter : false,
+			showColumnFooter : false,
 			//fastWatch : true,
 			exporterMenuPdf: false,
 
@@ -38,16 +38,6 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		            			}
 		            			return c;
 		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
 		            		cellFilter : 'number:2',
 			             },
 			             { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'  },
@@ -59,23 +49,13 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		            			}
 		            			return c;
 		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
 		            		cellFilter : 'number:2',
 			             },
-			             {field: 'codeObject' ,  width:100 },
-			             {field: 'codeSubsidiary' ,  width:100 },
-			             {field: 'unit' ,  width:100 },
+			             {field: 'codeObject' , displayName:"Object Code", width:90 },
+			             {field: 'codeSubsidiary' ,displayName:"Subsidiary Code",  width:100 },
+			             {field: 'unit' ,  width:60 },
 			             {field: 'remarks' ,  width:100 },
-			             {field: 'idHeaderRef',width:80, visible: true},
+			             {field: 'idHeaderRef',width:80, displayName:"Header Group", visible: true},
 			             {field: 'typeAction',displayName:"Action", width:80, visible: true}
 
 			             ],

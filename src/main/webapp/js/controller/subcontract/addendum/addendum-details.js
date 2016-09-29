@@ -14,8 +14,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			enableSelectAll: true,
 			//enableFullRowSelection: true,
 			multiSelect: true,
-			//showGridFooter : true,
-			showColumnFooter : true,
+			showGridFooter : false,
+			showColumnFooter : false,
 			//fastWatch : true,
 
 			exporterMenuPdf: false,
@@ -34,16 +34,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			            			}
 			            			return c;
 			            		},
-			            		aggregationHideLabel : true,
-			            		aggregationType : uiGridConstants.aggregationTypes.sum,
-			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (col.getAggregationValue() < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
 			            		cellFilter : 'number:2',
 			            		
 		            	},
@@ -53,16 +43,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (row.entity.amtAddendum < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
 		            				c += ' red';
 		            			}
 		            			return c;
@@ -87,27 +67,36 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 
 	$scope.saveDetailHeader = function(){
-		$scope.disableButtons = true;
 
-		if(addendumDetailHeaderRef!=null)
-			updateAddendumDetailHeader(addendumDetailHeaderRef);
-		else
+		if(addendumDetailHeaderRef!=null){
+			$scope.disableButtons = true;
+			if($scope.detailHeader!=null && $scope.detailHeader.description!=null && $scope.detailHeader.description.trim().length >0)
+				updateAddendumDetailHeader(addendumDetailHeaderRef);
+			else{
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input header.");
+				$scope.disableButtons = false;
+			}
+		}else
 			updateAddendumDetailHeader('');
+		
 	}
 
 	$scope.deleteDetailHeader = function(){
-		addendumService.deleteAddendumDetailHeader(addendumDetailHeaderRef)
-		.then(
-				function( data ) {
-					if(data.length != 0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						$scope.disableButtons = false;
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum Detail Header has been deleted.");
-						$cookies.put('addendumDetailHeaderRef', '');
-						$state.reload();
-					}
-				});
+		if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.trim().length >0){
+			addendumService.deleteAddendumDetailHeader(addendumDetailHeaderRef)
+			.then(
+					function( data ) {
+						if(data.length != 0){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+							$scope.disableButtons = false;
+						}else{
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum Detail Header has been deleted.");
+							$cookies.put('addendumDetailHeaderRef', '');
+							$state.reload();
+						}
+					});
+		}else
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a header to delete.");
 	}
 	
 	$scope.deleteDetail = function(addendumDetail){
@@ -126,7 +115,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			return;
 		}
 
-		//console.log(dataRows[0]);
 		if(dataRows[0]['typeAction'] == 'DELETE'){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
@@ -139,11 +127,11 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	$scope.open = function(view){
 		if(view == 'noBudget')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'ADD');
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'ADD'); // Add V1/V2 (No Budget)
 		else if(view == 'withBudget')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-v3-modal.html', 'AddendumDetailV3Ctrl');
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-v3-modal.html', 'AddendumDetailV3Ctrl'); //Add V1/V3 (With Budget)
 		else if(view == 'update')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-update-modal.html', 'AddendumDetailUpdateCtrl');
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-update-modal.html', 'AddendumDetailUpdateCtrl'); // Update Approved Addendum
 
 	}
 
@@ -209,7 +197,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been updated.");
-						$cookies.put('addendumDetailHeaderRef', headerRef);
 						$state.reload();
 					}
 				});

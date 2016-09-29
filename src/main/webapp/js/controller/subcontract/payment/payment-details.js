@@ -160,7 +160,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'cumAmount', displayName: 'Cumulative Certified Amount', enableFiltering: false, 
+			             { field: 'cumAmount', displayName: 'Cum. Cert. Amount', enableFiltering: false, 
 			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
@@ -174,7 +174,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'postedAmount', displayName: 'Posted Certified Amount', enableCellEdit: false,
+			             { field: 'postedAmount', displayName: 'Posted Cert. Amount', enableCellEdit: false,
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (row.entity.postedAmount < 0) {

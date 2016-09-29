@@ -36,6 +36,10 @@
 										ng-class="{'btn-primary' : lineType == 'V2', 'btn-inverse' : lineType != 'V2'}"
 										ng-model="lineType" uib-btn-radio="'V2'">V2</label>
 									<label class="btn" ng-disabled="disableSelect"
+										ng-class="{'btn-primary' : lineType == 'V3', 'btn-inverse' : lineType != 'V3'}"
+										ng-model="lineType" uib-btn-radio="'V3'"
+										ng-show="lineType == 'V3'">V3</label>
+									<label class="btn" ng-disabled="disableSelect"
 										ng-class="{'btn-primary' : lineType == 'L1', 'btn-inverse' : lineType != 'L1'}"
 										ng-model="lineType" uib-btn-radio="'L1'">L1</label>
 									<label class="btn" ng-disabled="disableSelect"
@@ -92,8 +96,6 @@
 											ng-paste="calculate('quantity')"
 											ng-disabled ="disableFields"
 											required />
-											<!-- data-parsley-pattern="^[0-9]*\.[0-9]{2}$"
-											data-parsley-error-message="Max. 4 decimal places only" -->
 									</div>
 								</div>
 
@@ -111,7 +113,7 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Total Amount</label> 
-										<input  data-parsley-type="number" class="form-control" parsley-type-step="0.01"
+										<input  data-parsley-type="number" class="form-control"
 											ng-model="addendumDetail.amtAddendum" 
 											ng-change="calculate('totalAmount')"
 											ng-paste="calculate('totalAmount')"
@@ -134,7 +136,7 @@
 										<label>Corresponding Subcontract No.</label> 
 										<input type="number"
 											 class="form-control "
-											ng-model="addendumDetail.corrSCNo"
+											ng-model="addendumDetail.noSubcontractChargedRef"
 											ng-disabled="lineType!='D2' && lineType!='L2'"
 											data-ng-required="lineType=='D2' || lineType=='L2'"/>
 									</div>
@@ -145,7 +147,7 @@
 										<label>Alternative Object Code</label> 
 										<input type="number"
 											 class="form-control "
-											ng-model="addendumDetail.altObjectCode"
+											ng-model="addendumDetail.codeObjectForDaywork"
 											ng-disabled="lineType!='D1' && lineType!='D2'"
 											data-ng-required="lineType=='D1' || lineType=='D2'" />
 									</div>

@@ -133,8 +133,8 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 	};
 
 
-	function deleteAddendumFromSCDetails(addendumDetailList){
-		addendumService.deleteAddendumFromSCDetails(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, addendumDetailList)
+	function deleteAddendumFromSCDetails(subcontractDetailList){
+		addendumService.deleteAddendumFromSCDetails(jobNo, subcontractNo, addendumNo, addendumDetailHeaderRef, subcontractDetailList)
 		.then(
 				function( data ) {
 					if(data.length != 0){

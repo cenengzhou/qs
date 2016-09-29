@@ -17,10 +17,18 @@
 
 	<style type="text/css">
 	body {
-		background-image: url("resources/images/background.png");
-		background-position: absolute;
+		padding: 0 0 5em 0 ;
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("resources/images/banner.jpg");
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("resources/images/banner.jpg");
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("resources/images/banner.jpg");
+		background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("resources/images/banner.jpg");
+		background-position: fixed;
 		background-repeat: no-repeat;
 		background-size: cover;
+		/* background-image: url("resources/images/banner.jpg");
+		background-position: absolute;
+		background-repeat: no-repeat;
+		background-size: cover; */
 	}
 	</style>
 <%
@@ -99,7 +107,7 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 	<img alt="Brand" ng-src="resources/images/gammon.png" style="width: 128px"/>
 	<div class="login-box">
 		<div class="login-logo">
-			<font color="white"><b>Project Cost Management System</b></font>
+			<font color="white"><b>PROJECT COST MANAGEMENT SYSTEM</b></font>
 		</div>
 		<!-- /.login-logo -->
 		<div class="login-box-body">

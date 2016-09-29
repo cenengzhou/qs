@@ -238,7 +238,7 @@ public class AddendumService{
 			//2. Set type
 			if(addendumDetail.getIdSubcontractDetail() != null){
 				//1. Check if it exists in Addendum detail or not
-				AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetailBySubcontractDetail(addendumDetail.getIdSubcontractDetail());
+				AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetailBySubcontractDetail(addendumDetail.getIdSubcontractDetail(), addendumNo);
 				if(addendumDetailInDB!=null){
 					error = "Addendum detail already exists. It has already been added from Subcontract Detail (Action: Update)";
 					logger.info(error);
@@ -520,7 +520,8 @@ public class AddendumService{
 		
 		try {
 			for(SubcontractDetail subcontractDetail: subcontractDetailList){
-				AddendumDetail addendumDetail = addendumDetailHBDao.getAddendumDetailBySubcontractDetail(subcontractDetail);//get idSubcontractDetail
+				subcontractDetail = subcontractDetailHBDao.get(subcontractDetail.getId());
+				AddendumDetail addendumDetail = addendumDetailHBDao.getAddendumDetailBySubcontractDetail(subcontractDetail, addendumNo);//get idSubcontractDetail
 				if(addendumDetail != null){
 					error = "Addendum detail already exists. It has already been added from Subcontract Detail (Action: Delete)";
 					logger.info(error);
@@ -816,6 +817,8 @@ public class AddendumService{
 
 				if(resultMsg == null || resultMsg.length()==0){
 					addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
+					addendum.setDateSubmission(new Date());
+					addendum.setUsernamePreparedBy(securityService.getCurrentUser().getUsername());
 					addendumHBDao.update(addendum);
 					
 					subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_SUBMITTED);
@@ -830,9 +833,7 @@ public class AddendumService{
 
 	public Boolean toCompleteAddendumApproval(String jobNo, String subcontractNo, String user, String approvalResult) throws Exception{
 		logger.info("Approval:"+jobNo+"/"+subcontractNo+"/"+approvalResult);
-		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 		Addendum addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
-		
 		if ("A".equals(approvalResult)){
 
 			//Delete Pending Payment
@@ -849,7 +850,7 @@ public class AddendumService{
 			
 			for (AddendumDetail addendumDetail: addendumDetails){
 				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
-					sequenceNo = addSCDetails(subcontract, addendumDetail, sequenceNo);
+					sequenceNo = addSCDetails(jobNo, subcontractNo, addendumDetail, sequenceNo);
 					
 				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction())){
 					updateSCDetails(jobNo, subcontractNo, addendumDetail);
@@ -860,10 +861,13 @@ public class AddendumService{
 			}
 			
 			//Update Subcontract Amount
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 			subcontract = updateSubcontractAmount(subcontract, addendum);
 			
+			addendum = addendumHBDao.getLatestAddendum(jobNo, subcontractNo);
 			addendum.setStatus(Addendum.STATUS.APPROVED.toString());
 			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.APPROVED.toString());
+			addendum.setDateApproval(new Date());
 			addendumHBDao.update(addendum);
 			
 			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
@@ -874,13 +878,15 @@ public class AddendumService{
 			addendum.setStatusApproval(Addendum.APPROVAL_STATUS.REJECTED.toString());
 			addendumHBDao.update(addendum);
 			
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 			subcontract.setSubmittedAddendum(Subcontract.ADDENDUM_NOT_SUBMITTED);
 			subcontractHBDao.update(subcontract);
 		}
 		return true;
 	}
 	
-	private int addSCDetails(Subcontract subcontract, AddendumDetail addendumDetail, int sequenceNo) throws Exception{
+	private int addSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail, int sequenceNo) throws Exception{
+		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 		SubcontractDetailVO scDetailVO = new SubcontractDetailVO();
 		scDetailVO.setJobNo(addendumDetail.getNoJob().trim());
 		scDetailVO.setSubcontract(subcontract);
@@ -892,6 +898,9 @@ public class AddendumService{
 
 		scDetailVO.setObjectCode(addendumDetail.getCodeObject());
 		scDetailVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
+		scDetailVO.setBillItem(addendumDetail.getBpi());
+		scDetailVO.setLineType(addendumDetail.getTypeVo());
+		
 		scDetailVO.setUnit(addendumDetail.getUnit());
 
 		scDetailVO.setScRate(addendumDetail.getRateAddendum().doubleValue());
@@ -915,9 +924,6 @@ public class AddendumService{
 		scDetailVO.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
 		scDetailVO.setRemark(addendumDetail.getRemarks());
 		scDetailVO.setSequenceNo(sequenceNo);
-
-		scDetailVO.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
-		scDetailVO.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
 
 		scDetailVO.setApproved(SubcontractDetail.APPROVED);
 

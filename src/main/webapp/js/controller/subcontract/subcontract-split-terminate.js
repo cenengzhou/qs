@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', 'confirmService', 'roundUtil', '$state', '$stateParams', 'uiGridConstants',
-                                            function($scope, subcontractService, modalService, confirmService, roundUtil, $state, $stateParams, uiGridConstants) {
+mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', 'confirmService', 'roundUtil', '$state', '$stateParams',
+                                            function($scope, subcontractService, modalService, confirmService, roundUtil, $state, $stateParams) {
 	$scope.remeasuredSubcontractSumAfterSplit = 0;
 	$scope.approvedVOAmountAfterSplit = 0;
 	
@@ -27,7 +27,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			//enableFullRowSelection: true,
 			//multiSelect: false,
 			showGridFooter : false,
-			showColumnFooter : true,
+			showColumnFooter : false,
 			//fastWatch : true,
 
 			enableCellEditOnFocus : true,
@@ -41,48 +41,12 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 			             { field: 'description', width: 100, enableCellEdit: false},
 			             
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, enableCellEdit: false, enableFiltering: false,
-			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (row.entity.amountBudget < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
-			            		aggregationHideLabel : true,
-			            		aggregationType : uiGridConstants.aggregationTypes.sum,
-			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (col.getAggregationValue() < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
-			            		cellFilter : 'number:2',
-			             }, 
+     	 					cellClass: 'text-right', cellFilter: 'number:2'}, 
 		             
      	 				{field: 'costRate', width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 		             
 			            { field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableCellEdit: false, enableFiltering: false,
-   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (row.entity.amountSubcontract < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		cellFilter : 'number:2',
-			            },
+         	 					cellClass: 'text-right', cellFilter: 'number:2'},
          	 			{ field: 'scRate', displayName: "SC Rate", width: 80, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
  	 					{ field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			            
@@ -102,58 +66,12 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 				            		else
 				            			return 'text-right'
 				            	 }, 
-			            		cellFilter: 'number:2',
-			            		aggregationHideLabel : true,
-			            		aggregationType : uiGridConstants.aggregationTypes.sum,
-			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (col.getAggregationValue() < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
+			            		cellFilter: 'number:2'
 			            },
             		 	{ field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 150, enableCellEdit: false, enableFiltering: false, 
-			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (row.entity.amountCumulativeWD < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
-			            		aggregationHideLabel : true,
-			            		aggregationType : uiGridConstants.aggregationTypes.sum,
-			            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            			var c = 'text-right';
-			            			if (col.getAggregationValue() < 0) {
-			            				c += ' red';
-			            			}
-			            			return c;
-			            		},
-			            		cellFilter : 'number:2',
-            		 	},
+		            		 		cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false,
-   		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (row.entity.amountCumulativeCert < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		cellFilter : 'number:2',
-			             },
+	            		 			cellClass: 'text-right', cellFilter: 'number:2'},
 	            			
 			             {field: 'objectCode', width: 100, enableCellEdit: false},
 			             {field: 'subsidiaryCode', width: 100, enableCellEdit: false},
@@ -269,7 +187,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	function getSCDetails() {
 		subcontractService.getSubcontractDetailsWithBudget($scope.jobNo, $scope.subcontractNo)
 		.then(
-				function( data ) {
+				function( data ) {console.log(data);
 					$scope.gridOptions.data = data;
 				});
 	}

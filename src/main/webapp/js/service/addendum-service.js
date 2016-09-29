@@ -19,7 +19,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	updateAddendumDetail:				updateAddendumDetail,
     	deleteAddendumDetail:				deleteAddendumDetail,
     	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails,
-    	submitAddendumApproval:						submitAddendumApproval
+    	submitAddendumApproval:				submitAddendumApproval
     });
 	
     function getLatestAddendum(jobNo, subcontractNo) {
