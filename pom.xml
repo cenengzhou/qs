@@ -7,6 +7,13 @@
 	<version>2016-09-20</version>
 	<packaging>war</packaging>
 	
+    <scm>
+        <connection>scm:svn:https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</connection>
+        <developerConnection>scm:svn:https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</url>
+    </scm>
+	
 	<!-- ========================================== REPOSITORIES ================================================ -->
 	<repositories>
 		<repository>
@@ -19,6 +26,20 @@
 			<url>http://repo.maven.apache.org/maven2/</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+	  <pluginRepository>
+	    <id>central</id>
+	    <name>Maven Plugin Repository</name>
+	    <url>http://repo1.maven.org/maven2</url>
+	    <layout>default</layout>
+	    <snapshots>
+	      <enabled>false</enabled>
+	    </snapshots>
+	    <releases>
+	      <updatePolicy>never</updatePolicy>
+	    </releases>
+	  </pluginRepository>
+	</pluginRepositories>
 	
 	<!-- ========================================== PROPERTIES ================================================= -->
 	<properties>
@@ -95,6 +116,7 @@
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 		<maven-plugin.version>3.3</maven-plugin.version>
 		<maven-war-plugin.version>2.6</maven-war-plugin.version>
+		<maven-buildnumber-plugin.version>1.4</maven-buildnumber-plugin.version>
 	</properties>
 
 	<!-- Bill of material for version management on framework dependency -->
@@ -925,9 +947,40 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<!-- <warSourceExcludes>**/web.xml</warSourceExcludes> -->
 					<!-- <attachClasses>true</attachClasses> -->
+					<archive>
+			            <manifest>
+			              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			            </manifest>
+			            <manifestEntries>
+			            <!-- add svn no to war\META-INF\MANIFEST.MF -->
+			              <Implementation-Build>svn#${buildNumber}</Implementation-Build>
+			            </manifestEntries>
+		          </archive>
 				</configuration>
 			</plugin>
-			
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>buildnumber-maven-plugin</artifactId>
+		        <version>${maven-buildnumber-plugin.version}</version>
+		        <executions>
+		          <execution>
+		            <phase>validate</phase>
+		            <goals>
+		              <goal>create</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		        <configuration>
+		        	<!-- doCheck=true will fail the build war process if any local change -->
+					<doCheck>false</doCheck>
+					<!-- doUpdate will update before build war -->
+					<doUpdate>false</doUpdate>
+					<providerImplementations>
+					<!-- use local svn number instead of login to scm -->
+		            	<svn>javasvn</svn>
+					</providerImplementations>
+		        </configuration>
+		      </plugin>
 			<!-- ====== Generate DDL ====== -->
 			<!-- mvn hibernate:create -Dhbm2ddl.skip=false 
 				 support only single schema -->

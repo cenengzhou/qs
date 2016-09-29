@@ -264,7 +264,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 			switch(item[groupBy]){
 			case 'BQ':
 			case 'B1':
-				item.catalog = 'Subcontract';
+				item.catalog = 'BQ Item';
 				break;
 			case 'V1':
 			case 'V2':
@@ -276,12 +276,14 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 			case 'CF':
 				item.catalog = 'Addendum';
 				break;
+			case 'RR':
+			case 'RA':
+				item.catalog = 'Retention'
+				break;
 			case 'C1':
 			case 'C2':
 			case 'AP':
 			case 'MS':
-			case 'RR':
-			case 'RA':
 			case 'OA':
 			default:
 				item.catalog = 'Others';
