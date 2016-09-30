@@ -1072,7 +1072,7 @@ public class PaymentService{
 					referenceNumber += "0";
 				}
 				referenceNumber += paymentCertNo;
-				List<ARRecord> arRecordList = jobCostRepository.getARRecordList(null, referenceNumber, null, null, null);
+				List<ARRecord> arRecordList = jobCostRepository.getARRecordList(jobNumber, referenceNumber, null, null, null);
 				ARRecord arRecord = null;
 				if(arRecordList==null||arRecordList.size()==0){
 					scAllPaymentCertReportWrapper.setMainCertReceivedDate("");

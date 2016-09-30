@@ -6,266 +6,118 @@
 		<li class="active">Reports</li>
 	</ol>
 	<!-- end breadcrumb -->
-	<div class="clearfix"></div>
-	
-			<div class="row" vertilize-container>
-			<div class="col-md-3" >
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Payment Certificate Report</h3></div>
-					<div class="box-body"><form id="printPaymentCertForm" name="printPaymentCertForm" ng-submit="false">
+	<div class="clearfix"></div>{{jobAll}}
+	<div class="row" vertilize-container ng-repeat="i in repeatRange(reports.length, reportPerRow)">
+		<div class="col-md-{{12/reportPerRow}}" ng-repeat="report in reports
+		.slice( $index * reportPerRow, $index * reportPerRow + reportPerRow)
+		| orderBy:'id'" block-ui="block{{report.name}}">
+			<div class="box box-primary" vertilize>
+				<div class="box-header"><h3 class="box-title">{{report.title}}</h3></div>
+				<div class="box-body">
+					<form id="{{report.name}}Form" name="{{report.name}}Form" ng-submit="false">
 						<table class="table">
 							<tr>
 								<td><i class="fa fa-4x fa-file-text" style="padding-right:0px"></i></td>
-							<td style="padding-left:0px">
-							<blockquote style="font-size: 13px !important">
-							<table >
-							<tr>
-							<td>
-								<label for="printPaymentCertCompany">Company:</label><br>
-								<input type="text" pattern=".{5,5}" title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }" class="form-control" id="printPaymentCertCompany" name="printPaymentCertCompany" ng-model="printPaymentCertCompany">
-								<p ng-show="printPaymentCertForm.printPaymentCertCompany.$invalid && printPaymentCertForm.printPaymentCertCompany.$touched" class="red">Company cannot be blank. Please enter 5 characters</p>
-							<br>
-							</td>
+								<td style="padding-left:0px">
+									<blockquote style="font-size: 13px !important">
+										<table >
+											<tr ng-repeat="searchField in report.searchFields">
+												<td style="padding-bottom:10px">
+													<label for="{{report.name}}{{searchField.field}}">{{searchField.label}}:</label><br>
+													
+													<input ng-if="searchField.inputType === 'text'" type="text" 
+													ng-init="searchField.value = searchField.defaultValue != null ? searchField.defaultValue : ''"
+													pattern="{{searchField.validatePattern != null ? searchField.validatePattern : '.{0,10}'}}" 
+													title="{{searchField.validateMessage != null ? searchField.validateMessage : ''}}" 
+													ng-model-options="{ updateOn: 'blur' }" class="form-control" 
+													id="{{report.name}}{{searchField.field}}" name="{{report.name}}{{searchField.field}}" 
+													ng-model="searchField.value">
+													
+													<input ng-if="searchField.inputType === 'dueDateType'" ng-init="searchField.value = true"
+													type="checkbox" data-ios-toggle="toggle" 
+													id="{{report.name}}{{searchField.field}}" data-style="ios" data-onstyle="primary"
+													data-offstyle="warning" data-on="On or Before"
+													data-off="Exact Date" ng-model="searchField.value">
+													
+													<div ng-if="searchField.inputType === 'dueDate'" ng-init="searchField.value = today" 
+													class="input-group" moment-picker="searchField.value"
+													format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="month" today="true">
+														<span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+														<input class="form-control" id="{{report.name}}{{searchField.field}}" 
+														name="{{report.name}}{{searchField.field}}" required
+														ng-model="searchField.value" 
+														pattern="{{GlobalParameter.MOMENT_DATE_REGEX}}" 
+														title="{{searchField.validateMessage}}" 
+														ng-model-options="{ updateOn: 'blur' }">
+													</div>
+													
+													<div ng-if="searchField.inputType === 'periods'" ng-init="searchField.value = true">
+													<input  
+													type="checkbox" data-ios-toggle="toggle" 
+													id="{{report.name}}{{searchField.field}}" data-style="ios" data-onstyle="primary"
+													data-offstyle="warning" data-on="As of Today"
+													data-off="Month End History" ng-model="searchField.value">
+													
+														<div ng-if="!searchField.value" ng-init="searchField.monthEndHistory = lastMonth"
+														class="input-group" moment-picker="searchField.monthEndHistory"
+														format="YYYY-MM" start-view="year" today="true"
+														style="padding-top:10px">
+															<span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+															<input class="form-control" id="{{report.name}}{{searchField.field}}" 
+															name="{{report.name}}{{searchField.field}}" required
+															ng-model="searchField.monthEndHistory" 
+															ng-model-options="{ updateOn: 'blur' }">
+														</div>
+														
+													</div>
+													
+													<div ng-if="searchField.inputType === 'autocomplete'">
+														<md-autocomplete
+														    md-selected-item="searchField.selectedItem"
+														    md-search-text-change="searchField.searchTextChange(searchField.value)"
+														    md-search-text="searchField.value"
+														    md-selected-item-change="searchField.selectedItemChange(item)"
+														    md-items="item in searchField.querySearch(searchField.value, searchField.autoCompleteList)"
+														    md-item-text="item.display"
+														    md-min-length="0"
+														    placeholder="">
+														  <md-item-template>
+														    <span md-highlight-text="searchField.value" md-highlight-flags="^i">{{item.display}}</span>
+														  </md-item-template>
+														  <md-not-found>
+														    No company code matching "{{searchField.value}}" were found.
+														  </md-not-found>
+														</md-autocomplete>
+													</div>
+													
+													<p ng-if="jobAll && searchField.field == 'jobNumber'" >
+													Enter <span class="red">*</span> to search all job</p>
+													
+													<p ng-show="{{report.name}}Form.{{report.name}}{{searchField.field}}.$invalid 
+													&& {{report.name}}Form.{{report.name}}{{searchField.field}}.$touched" class="red">
+													{{searchField.validateMessage}}</p>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<button ng-repeat="url in report.reportUrls" class="btn btn-lg" 
+													ng-class="{'btn-danger': url.type === 'pdf', 'btn-success': url.type === 'xls'}" 
+													ng-click="onDownloadReport(report, url)"
+													style="margin-right:10px">
+														<i class="fa fa-file-pdf-o" ng-if="url.type === 'pdf'"></i>
+														<i class="fa fa-file-excel-o" ng-if="url.type === 'xls'"></i>
+													</button>
+												</td>
+											</tr>
+										</table>
+									</blockquote>
+								</td>
 							</tr>
-							<tr>
-							<td>
-								<label for="printPaymentCertJobNumber">Job Number:</label><br>
-								<input type="text" name="printPaymentCertJobNumber"
-								class="form-control" id="printPaymentCertJobNumber" ng-model="printPaymentCertJobNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printPaymentCertDueDateType">Due Date Type:</label><br>
-								<input
-								type="checkbox" data-ios-toggle="toggle"
-								id="printPaymentCertDueDateType" data-style="ios" data-onstyle="primary"
-								data-offstyle="warning" data-on="On or Before"
-								data-off="Exact Date" ng-model="printPaymentCertDueDateType">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td><br>
-								<label for="printPaymentCertDueDate">Due Date:</label><br>
-								<div class="input-group" moment-picker="printPaymentCertDueDate"
-										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="month" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i>
-										</span> <input class="form-control" id="printPaymentCertDueDate" name="printPaymentCertDueDate"
-											ng-model="printPaymentCertDueDate" 
-											pattern=".\d{1,2}\/\d{1,2}\/\d{4}" title="Please select date from the date picker" ng-model-options="{ updateOn: 'blur' }">
-									</div>
-									<p ng-show="printPaymentCertForm.printPaymentCertDueDate.$invalid && printPaymentCertForm.printPaymentCertDueDate.$touched" class="red">Please select the date from date picker</p>
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<button class="btn btn-danger btn-lg" ng-click="onPrintPaymentCert('pdf')">
-									<i class="fa fa-file-pdf-o"></i>
-								</button>
-								<button class="btn btn-success btn-lg" ng-click="onPrintPaymentCert('xls')">
-									<i class="fa fa-file-excel-o"></i>
-								</button>
-							</td>
-							</tr>
-							</table>
-
-							</blockquote>
-							</td>
-							</tr>
-						</table></form>
-					</div>
+						</table>
+					</form>
 				</div>
-			</div>
-
-			<div class="col-md-3">
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Subcontract Report</h3></div>
-					<div class="box-body"><form id="printSubcontractForm" name="printSubcontractForm" ng-submit="false">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-4x fa-file-text"></i></td>
-							<td style="padding-left:0px">
-							<blockquote style="font-size: 13px !important">
-							<table>
-							<tr>
-							<td>
-								<label for="printSubcontractCompany">Company:</label>
-								<input type="text" required pattern=".{5,5}" ng-model-options="{ updateOn: 'blur' }" title="Please enter 5 characters" class="form-control" id="printSubcontractCompany" name="printSubcontractCompany" ng-model="printSubcontractCompany">
-								<p ng-show="printSubcontractForm.printSubcontractCompany.$invalid && printSubcontractForm.printSubcontractCompany.$touched" class="red">Company cannot be blank. Please enter 5 characters</p>
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractDivision">Division:</label>
-								<input type="text" name="printSubcontractDivision"
-									class="form-control" id="printSubcontractDivision" ng-model="printSubcontractDivision">
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractJobNumber">Job No.:</label>
-								<input type="text" name="printSubcontractJobNumber"
-									class="form-control" id="printSubcontractJobNumber" ng-model="printSubcontractJobNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractSubcontractorNumber">Subcontractor No.:</label>
-								<input type="text" name="printSubcontractSubcontractorNumber"
-									class="form-control" id="printSubcontractSubcontractorNumber" ng-model="printSubcontractSubcontractorNumber">				
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<button class="btn btn-danger btn-lg" ng-click="onPrintSubcontract('pdf')">
-									<i class="fa fa-file-pdf-o"></i>
-								</button>
-								<button class="btn btn-success btn-lg" ng-click="onPrintSubcontract('xls')">
-									<i class="fa fa-file-excel-o"></i>
-								</button>
-							</td>
-							</tr>
-							</table>
-
-							</blockquote>
-							</td>
-							</tr>
-						</table></form>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-md-3">
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Subcontract Liability Report</h3></div>
-					<div class="box-body"><form id="printSubcontractLiabilityForm" name="printSubcontractLiabilityForm" ng-submit="false">
-						<table  class="table">
-							<tr>
-								<td><i class="fa fa-4x fa-file-text"></i></td>
-							<td style="padding-left:0px">
-							<blockquote style="font-size: 13px !important">
-							<table>
-							<tr>
-							<td>
-								<label for="printSubcontractLiabilityCompany">Company:</label>
-								<input type="text" required pattern=".{5,5}" ng-model-options="{ updateOn: 'blur' }" title="Please enter 5 characters" class="form-control" id="printSubcontractLiabilityCompany" name="printSubcontractLiabilityCompany" ng-model="printSubcontractLiabilityCompany">
-								<p ng-show="printSubcontractLiabilityForm.printSubcontractLiabilityCompany.$invalid && printSubcontractLiabilityForm.printSubcontractLiabilityCompany.$touched" class="red">Company cannot be blank. Please enter 5 characters</p>
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractLiabilityDivision">Division:</label>
-								<input type="text" name="printSubcontractLiabilityDivision"
-									class="form-control" id="printSubcontractLiabilityDivision" ng-model="printSubcontractLiabilityDivision">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractLiabilityJobNumber">Job No.:</label>
-								<input type="text" name="printSubcontractLiabilityJobNumber"
-									class="form-control" id="printSubcontractLiabilityJobNumber" ng-model="printSubcontractLiabilityJobNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractLiabilitySubcontractorNumber">Subcontractor No.:</label>
-								<input type="text" name="printSubcontractLiabilitySubcontractorNumber"
-									class="form-control" id="printSubcontractLiabilitySubcontractorNumber" ng-model="printSubcontractLiabilitySubcontractorNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<button class="btn btn-danger btn-lg" ng-click="onPrintSubcontractLiability('pdf')">
-									<i class="fa fa-file-pdf-o"></i>
-								</button>
-								<button class="btn btn-success btn-lg" ng-click="onPrintSubcontractLiability('xls')">
-									<i class="fa fa-file-excel-o"></i>
-								</button>
-							</td>
-							</tr>
-							</table>
-
-							</blockquote>
-							</td>
-							</tr>
-						</table></form>
-					</div>
-				</div>
-			</div>
-			
-			
-			<div class="col-md-3">
-				<div class="box box-primary" vertilize>
-					<div class="box-header"><h3 class="box-title">Subcontract Analysis Report</h3></div>
-					<div class="box-body"><form id="printSubcontractAnalysisForm" name="printSubcontractAnalysisForm" ng-submit="false">
-						<table class="table">
-							<tr>
-								<td><i class="fa fa-4x fa-file-text"></i></td>
-							<td style="padding-left:0px">
-							<blockquote style="font-size: 13px !important">
-							<table>
-							<tr>
-							<td>
-								<label for="printSubcontractAnalysisCompany">Company:</label>
-								<input type="text" required pattern=".{5,5}" ng-model-options="{ updateOn: 'blur' }" title="Please enter 5 characters" class="form-control" id="printSubcontractAnalysisCompany" name="printSubcontractAnalysisCompany" ng-model="printSubcontractAnalysisCompany">
-								<p ng-show="printSubcontractAnalysisForm.printSubcontractAnalysisCompany.$invalid && printSubcontractAnalysisForm.printSubcontractAnalysisCompany.$touched" class="red">Company cannot be blank. Please enter 5 characters</p>
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractAnalysisDivision">Division:</label>
-								<input type="text" name="printSubcontractAnalysisDivision"
-									class="form-control" id="printSubcontractAnalysisDivision" ng-model="printSubcontractAnalysisDivision">
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractAnalysisJobNumber">Job No.:</label>
-								<input type="text" name="printSubcontractAnalysisJobNumber"
-									class="form-control" id="printSubcontractAnalysisJobNumber" ng-model="printSubcontractAnalysisJobNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<label for="printSubcontractAnalysisSubcontractorNumber">Subcontractor No.:</label>
-								<input type="text" name="printSubcontractAnalysisSubcontractorNumber"
-									class="form-control" id="printSubcontractAnalysisSubcontractorNumber" ng-model="printSubcontractAnalysisSubcontractorNumber">
-							<br>
-							</td>
-							</tr>
-							<tr>
-							<td>
-								<button class="btn btn-danger btn-lg" ng-click="onPrintSubcontractAnalysis('pdf')">
-									<i class="fa fa-file-pdf-o"></i>
-								</button>
-								<button class="btn btn-success btn-lg" ng-click="onPrintSubcontractAnalysis('xls')">
-									<i class="fa fa-file-excel-o"></i>
-								</button>
-							</td>
-							</tr>
-							</table>
-
-							</blockquote>
-							</td>
-							</tr>
-						</table></form>
-					</div>
-				</div>
-			</div>
-			
 			</div>
 		</div>
+	</div>
+</div>
 

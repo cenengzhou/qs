@@ -115,4 +115,14 @@ public class JobController {
 		return result;
 	}
 
+	@RequestMapping(value = "obtainAllJobCompany", method = RequestMethod.GET)
+	public List<String> obtainAllJobCompany() throws DatabaseOperationException{
+		return jobService.obtainAllJobCompany();
+	}
+	
+	@RequestMapping(value = "obtainAllJobDivision", method = RequestMethod.GET)
+	public List<String> obtainAllJobDivision() throws DatabaseOperationException{
+		return jobService.obtainAllJobDivision();
+	}
+
 }

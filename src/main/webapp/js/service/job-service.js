@@ -7,7 +7,9 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	updateJobInfo: 	updateJobInfo,
     	updateJobDates:	updateJobDates,
     	updateJobInfoAndDates: updateJobInfoAndDates,
-    	getJobDetailList: 	getJobDetailList
+    	getJobDetailList: 	getJobDetailList,
+    	obtainAllJobCompany: obtainAllJobCompany,
+    	obtainAllJobDivision: obtainAllJobDivision
     });
 	
     function getJob(jobNo) {
@@ -80,7 +82,17 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+ 
+    function obtainAllJobCompany() {
+        var request = $http.get("service/job/obtainAllJobCompany");
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function obtainAllJobDivision() {
+        var request = $http.get("service/job/obtainAllJobDivision");
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
 }]);
 
 

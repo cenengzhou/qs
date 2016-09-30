@@ -1233,7 +1233,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-							'js/controller/reports/reports-main.js'
+							'js/controller/reports/reports-main.js',
+							'js/service/job-service.js'
                     ] 
                 });
             }]

@@ -138,12 +138,13 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	}
 }]);
 
-mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHelperFactory($q, modalService, $sce){
+mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootScope', function GlobalHelperFactory($q, modalService, $sce, $http, $rootScope){
 	return{
 		handleError: handleError,
 		handleSuccess: handleSuccess,
 		checkNull: checkNull,
 		containRole: containRole,
+		getUserAndCheckRole: getUserAndCheckRole,
 		numberClass: numberClass,
 		formTemplate: formTemplate,
 		addressBookRowTemplate: addressBookRowTemplate,
@@ -198,6 +199,19 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', function GlobalHe
 			}
 		})
 		return result;
+	}
+	
+	function getUserAndCheckRole(role){
+		var result = false;
+		if(!$rootScope.user) {
+			$http.get('service/security/getCurrentUser')
+			.then(function(response){
+				$rootScope.user = response.data;
+				return containRole(role, response.data.authorities);
+			})
+		} else {
+			return containRole(role, $rootScope.user.authorities);
+		}
 	}
 	
 	function numberClass(n){

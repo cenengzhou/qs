@@ -180,6 +180,7 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection( Projections.distinct( Projections.property( "division" )));
+			criteria.addOrder(Order.asc("division"));
 			result =  criteria.list();
 		} catch (HibernateException e) {
 			throw new DatabaseOperationException(e);
@@ -196,6 +197,7 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection( Projections.distinct( Projections.property( "company" )));
+			criteria.addOrder(Order.asc("company"));
 			result =  criteria.list();
 		} catch (HibernateException e) {
 			throw new DatabaseOperationException(e);

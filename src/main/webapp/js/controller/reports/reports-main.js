@@ -1,202 +1,318 @@
 
-mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter',
-                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter) {
+mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter', 'GlobalHelper', 'modalService', '$sce', '$log', 'jobService',
+                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter, GlobalHelper, modalService, $sce, $log, jobService) {
 	$rootScope.selectedTips = '';
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	
-	$scope.paymentCertBody = {name:'paymentCert', show:true};
-	$scope.subcontractBody = {name:'subcontract', show:true};
-	$scope.subcontractLiabilityBody = {name:'subcontractLiability', show:true};
-	$scope.subcontractAnalysisBody = {name:'subcontractAnalysis', show:true};
-	
-	$scope.panelList = [$scope.paymentCertBody, $scope.subcontractBody, $scope.subcontractLiabilityBody, $scope.subcontractAnalysisBody];
-	$scope.showPanel = function(panel){
-		angular.forEach($scope.panelList, function(p){
-			if(p.name !== panel && p.show === true){
-				$scope.flipVisiblity(p);
-			} else if(p.name === panel && $scope.currentPanel !== undefined){
-				p.show = !p.show;
-			}
-		})
-		$scope.currentPanel = panel;
-	}
-	$scope.flipVisiblity = function(s){
-		s.show = false;
-		angular.element('#'+s.name+'Body').slideToggle();
-	}
-	$scope.showPanel('paymentCert');
-	
-	$scope.printUnpaidPaymentCertDueDateType = 'onOrBefore';
-	$scope.printUnpaidPaymentCertJobNumber = $scope.jobNo;
-	
-	$scope.onPrintUnPaidPaymentCert = function(type){
-		var baseUrl = $window.location.href.split('home.html')[0];
-		if($scope.printUnPaidPaymentCertForm.$valid){
-			var url = baseUrl + 'gammonqs/';
-			if(type === 'pdf'){
-				url += 'printUnpaidPaymentCertificateReportPdf.rpt';
-			} else {
-				return;
-			}
-			url += '?dueDateType=';
-			url += $scope.printUnpaidPaymentCertDueDateType !== undefined ? $scope.printUnpaidPaymentCertDueDateType : '';
-			url += '&dueDate=';
-			url += $scope.printUnpaidPaymentCertDueDate !== undefined ? $scope.printUnpaidPaymentCertDueDate : '';
-			url += '&company=';
-			url += $scope.printUnpaidPaymentCertCompany !== undefined ? $scope.printUnpaidPaymentCertCompany : '';
-			url += '&jobNumber=';
-			url += $scope.printUnpaidPaymentCertJobNumber !== undefined ? $scope.printUnpaidPaymentCertJobNumber : '';
-			url += '&supplierNumber=';
-			url += $scope.printUnpaidPaymentCertSupplierNumber !== undefined ? $scope.printUnpaidPaymentCertSupplierNumber : '';
-			var wnd = $window.open(url, 'Print Report', '_blank');
-		}
-	}
-
+	$scope.jobAll = GlobalHelper.getUserAndCheckRole('JOB_ALL');
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;
-		
-	$scope.onPrintPaymentCert = function(type){
-		var baseUrl = $window.location.href.split('home.html')[0];
-		if($scope.printPaymentCertForm.$valid){
-			var url = baseUrl + 'gammonqs/';
-			if(type === 'pdf'){
-				url += 'printPaymentCertificateReportPdf.rpt';
-			} else {
-				url += 'paymentCertificateEnquiryExcelExport.smvc';
+	$scope.reportPerRow = 4;
+	$scope.repeatRange = repeatRange;
+	$scope.onDownloadReport = onDownloadReport;
+	$scope.today = moment().format(GlobalParameter.MOMENT_DATE);
+	$scope.month = moment().format('MM');
+	$scope.year = moment().format('YYYY');
+	$scope.lastMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
+	$scope.companies = {};
+	$scope.divisions = {};
+	var RPT_STATUS_UC = 'Under Construction';
+	var commonParameters = ['company', 'division', 'jobNumber', 
+       	                'subcontractNumber', 'subcontractorNumber', 'subcontractorNature', 
+    	                'paymentType', 'workScope', 'clientNo', 'includeJobCompletionDate', 
+    	                'splitTerminateStatus', 'month', 'year'
+    	                ];
+	var paymentCertParameters = ['dueDateType', 'dueDate', 'company', 'jobNumber'];
+	var VALIDATE_COMPANY = '.{5,5}';
+	var VALIDATE_COMPANY_MESSAGE = 'Please leave blank or enter 5 characters';
+	var VALIDATE_DUEDATE = GlobalParameter.MOMENT_DATE_FORMAT;
+	var VALIDATE_DUEDATE_MESSAGE = 'Please select date from the date picker';
+	var reports = [
+					{
+						   id: 0,
+						   name: 'paymentCertReport',
+						   reportUrls: [
+						                	{
+					 	            	   type: 'xls',
+					 	            	   url:'paymentCertificateEnquiryExcelExport.smvc',
+					 	            	   parameters: paymentCertParameters
+						                	}, 
+						                	{
+					 	            	   type: 'pdf',
+					 	            	   url: 'printPaymentCertificateReportPdf.rpt',
+					 	            	   parameters: paymentCertParameters
+						                	}
+						               ],
+						   searchFields: [
+						                 {field: 'company', inputType: 'autocomplete', 
+						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'jobNumber', inputType: 'text', validatePattern: '', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'dueDateType', inputType: 'dueDateType'},
+						                 {field: 'dueDate', inputType: 'dueDate', validatePattern: VALIDATE_DUEDATE, validateMessage: VALIDATE_DUEDATE_MESSAGE}
+					    ],
+					    requiredFields:['dueDate'],
+					    selectiveFields:['company', 'jobNumber']
+					},
+					{
+						   id: 1,
+						   name: 'subcontractReport',
+						   reportUrls: [
+					 	               {
+					 	            	   type: 'xls',
+					 	            	   url: 'financeSubcontractListDownload.smvc',
+					 	            	   parameters: commonParameters
+					 	               }, 
+					 	               {
+					 	            	   type: 'pdf',
+					 	            	   url: 'subcontractReportExport.rpt',
+					 	            	   parameters: commonParameters
+						            	   }
+						   ],
+						   searchFields: [
+						                 {field: 'company', inputType: 'autocomplete', 
+						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'division', inputType: 'autocomplete', 
+					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'},
+					  ],
+					  selectiveFields:['company', 'jobNumber', 'division']
+					},
+					{
+						   id: 2,
+						   name: 'subcontractLiabilityReport',
+						   reportUrls: [
+					 	               {
+					 	            	   type: 'xls',
+					 	            	   url: 'subcontractLiabilityExcelExport.rpt',
+					 	            	   parameters: commonParameters
+					 	               }, 
+					 	               {
+					 	            	   type: 'pdf',
+					 	            	   url: 'subcontractLiabilityReportExport.rpt',
+					 	            	   parameters:commonParameters
+						            	   }
+					    ],
+						   searchFields: [
+						                 {field: 'company', inputType: 'autocomplete', 
+						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'division', inputType: 'autocomplete', 
+					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
+						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'},
+						                 {field: 'periods', inputType: 'periods'}
+					      ],
+					      selectiveFields:['company', 'jobNumber', 'division']
+					},
+					{
+						   id: 3,
+						   name: 'subcontractAnalysisReport',
+						   reportUrls: [
+					 	               {
+					 	            	   type: 'xls',
+					 	            	   url: 'subcontractorAnalysisExcelExport.rpt',
+					 	            	   parameters: commonParameters
+					 	               }, 
+					 	               {
+					 	            	   type: 'pdf',
+					 	            	   url: 'subcontractorAnalysisReportExport.rpt',
+					 	            	   parameters: commonParameters
+						            	   }
+					 	               ],
+						   searchFields: [
+						                 {field: 'company', inputType: 'autocomplete', 
+						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'division', inputType: 'autocomplete', 
+					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
+						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontractor No'}
+					  ],
+					  selectiveFields:['company', 'jobNumber', 'division']
+					},
+					{
+						   id: 4,
+						   name: 'monthlyContractExpenditureReport',
+						   reportStatus: RPT_STATUS_UC,
+						   searchFields: [
+					 	                 {field: 'company', inputType: 'text'},
+					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'jobNo', inputType: 'text'},
+					  ]
+					},
+					{
+						   id: 5,
+						   name: 'contractFinPerformanceReport',
+						   reportStatus: RPT_STATUS_UC,
+						   searchFields: [
+					 	                 {field: 'company', inputType: 'text'},
+					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
+					 	                 ]
+					},
+					{
+						   id: 6,
+						   name: 'jobCostReport',
+						   reportStatus: RPT_STATUS_UC,
+						   searchFields: [
+					 	                 {field: 'company', inputType: 'text'},
+					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
+					 	                 ]
+					},
+					{
+						   id: 7,
+						   name: 'cachFlowReport',
+						   reportStatus: RPT_STATUS_UC,
+						   searchFields: [
+					 	                 {field: 'company', inputType: 'text'},
+					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
+					 	                 ]
+					}
+	];
+	
+	function onDownloadReport(report, selectedReportUrl){
+		if(!validateFields(report, selectedReportUrl)) return;
+ 		var url = getUrlWithParameters(selectedReportUrl.url, selectedReportUrl.parameters, selectedReportUrl.searchValues)
+		var wnd = $window.open(url, 'Print Report', '_blank');
+// 		console.log(url);
+	}
+	
+	function validateFields(report, selectedReportUrl){
+		var result = true;
+		var msg = '';
+		selectedReportUrl.searchValues = [];
+		selectedReportUrl.parameters.forEach(function(parameter){
+			selectedReportUrl.searchValues[parameter] = '';
+ 		})
+ 		report.searchFields.forEach(function(searchField){
+ 			selectedReportUrl.searchValues[searchField.field] = searchField.value != null ? searchField.value : '';
+ 			if(searchField.field === 'periods') {
+ 				if(searchField.value){
+ 					selectedReportUrl.searchValues['month'] = '';
+ 					selectedReportUrl.searchValues['year'] = '';
+ 				} else {
+ 					var d = searchField.monthEndHistory.split('-');
+ 					selectedReportUrl.searchValues['year'] = d[0]
+ 					selectedReportUrl.searchValues['month'] = d[1];
+ 				}
+ 			}
+ 		})
+		if(report.requiredFields){
+			report.requiredFields.forEach(function(required){
+				if(!selectedReportUrl.searchValues[required]) {
+					msg += camelToNormalString(required) + ' is required<br>';
+					result = false;
+				}
+			})
+		}
+		if(report.selectiveFields){
+			var selectiveResult = false;
+			report.selectiveFields.forEach(function(selective){
+				if(selectedReportUrl.searchValues[selective]) selectiveResult = true;
+			})
+			if(!selectiveResult) {
+				var selectiveMessage = '';
+				report.selectiveFields.forEach(function(text){selectiveMessage += camelToNormalString(text) + ', ';});
+				msg += 'Please enter one of below field:<br>' + selectiveMessage.substring(0, selectiveMessage.length-1);
+				result = false;
 			}
-			url += '?dueDateType=';
-			url += $scope.printPaymentCertDueDateType? 'onOrBefore': 'exactDate';
-			url += '&dueDate=';
-			url += $scope.printPaymentCertDueDate !== undefined ? $scope.printPaymentCertDueDate : '';
-			url += '&company=';
-			url += $scope.printPaymentCertCompany !== undefined ? $scope.printPaymentCertCompany : '';
-			url += '&jobNumber=';
-			url += $scope.printPaymentCertJobNumber !== undefined ? $scope.printPaymentCertJobNumber : '';
-			var wnd = $window.open(url, 'Print Report', '_blank');
 		}
+		
+		if(msg) modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', msg);
+		return result;
 	}
-
-	$scope.printSubcontractJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontract = function(type){1
-		var baseUrl = $window.location.href.split('home.html')[0];
-		if($scope.printSubcontractForm.$valid){
-			var url = baseUrl + 'gammonqs/';
-				if(type === 'pdf'){
-					url += 'subcontractReportExport.rpt';
-				} else {
-					url += 'financeSubcontractListDownload.smvc';
-				}
-			url += '?company=';
-			url += $scope.printSubcontractCompany !== undefined ? $scope.printSubcontractCompany : '';
-			url += '&division=';
-			url += $scope.printSubcontractDivision !== undefined ? $scope.printSubcontractDivision : '';
-			url += '&jobNumber=';
-			url += $scope.printSubcontractJobNumber !== undefined ? $scope.printSubcontractJobNumber : '';
-			url += '&subcontractNumber=';
-			url += $scope.printSubcontractSubcontractNumber !== undefined ? $scope.printSubcontractSubcontractNumber : '';
-			url += '&subcontractorNumber=';
-			url += $scope.printSubcontractSubcontractorNumber !== undefined ? $scope.printSubcontractSubcontractorNumber : '';
-			url += '&subcontractorNature=';
-			url += $scope.printSubcontractSubcontractorNature !== undefined ? $scope.printSubcontractSubcontractorNature : '';
-			url += '&paymentType=';
-			url += $scope.printSubcontractPaymentType !== undefined ? $scope.printSubcontractPaymentType : '';
-			url += '&workScope=';
-			url += $scope.printSubcontractLiabilityWorkScope !== undefined ? $scope.printSubcontractLiabilityWorkScope : '';
-			url += '&clientNo=';
-			url += $scope.printSubcontractClientNumber !== undefined ? $scope.printSubcontractClientNumber : '';
-			url += '&includeJobCompletionDate=';
-			url += $scope.printSubcontractIncludeJobCompletionDate !== undefined ? $scope.printSubcontractncludeJobCompletionDate : '';
-			url += '&splitTerminateStatus=';
-			url += $scope.printSubcontractSplitTerminateStatus !== undefined ? $scope.printSubcontractSplitTerminateStatus : '';
-			url += '&month=';
-			url += $scope.printSubcontractMonth !== undefined ? $scope.printSubcontractMonth : '';
-			url += '&year=';
-			url += $scope.printSubcontractYear !== undefined ? $scope.printSubcontractYear : '';
-			var wnd = $window.open(url, 'Print Report', '_blank');
+	
+	function getUrlWithParameters(link, parameters, values){
+		var url = 'gammonqs/' + link + '?';
+		parameters.forEach(function(parameter){
+			if(parameter === 'dueDate' && values['dueDate']) values['dueDate'] = moment(values['dueDate']).format('DD/MM/YYYY');
+			if(parameter === 'jobNumber' && values['jobNumber'] === '*') values['jobNumber'] = '';
+			url += parameter + '=' + escape(values[parameter]) + '&';
+		});
+		return url.substring(0, url.length-1);
+	}
+	
+	function repeatRange(n,c){
+		var r = n%c;
+		var t = r > 0 ? n/c+1 : n/c;
+		var a = [];
+		for (var i = 0; i< t; i++){
+			a.push(i);
 		}
+		return a;
 	}
-
-	$scope.printSubcontractLiabilityJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontractLiability = function(type){
-		var baseUrl = $window.location.href.split('home.html')[0];
-		if($scope.printSubcontractLiabilityForm.$valid){
-			var url = baseUrl + 'gammonqs/';
-				if(type === 'pdf'){
-					url += 'subcontractLiabilityReportExport.rpt';
-				} else {
-					url += 'subcontractLiabilityExcelExport.rpt';
-				}
-			url += '?company=';
-			url += $scope.printSubcontractLiabilityCompany !== undefined ? $scope.printSubcontractLiabilityCompany : '';
-			url += '&division=';
-			url += $scope.printSubcontractLiabilityDivision !== undefined ? $scope.printSubcontractLiabilityDivision : '';
-			url += '&jobNumber=';
-			url += $scope.printSubcontractLiabilityJobNumber !== undefined ? $scope.printSubcontractLiabilityJobNumber : '';
-			url += '&subcontractNumber=';
-			url += $scope.printSubcontractLiabilitySubcontractNumber !== undefined ? $scope.printSubcontractLiabilitySubcontractNumber : '';
-			url += '&subcontractorNumber=';
-			url += $scope.printSubcontractLiabilitySubcontractorNumber !== undefined ? $scope.printSubcontractLiabilitySubcontractorNumber : '';
-			url += '&subcontractorNature=';
-			url += $scope.printSubcontractLiabilitySubcontractorNature !== undefined ? $scope.printSubcontractLiabilitySubcontractorNature : '';
-			url += '&paymentType=';
-			url += $scope.printSubcontractLiabilityPaymentType !== undefined ? $scope.printSubcontractLiabilityPaymentType : '';
-			url += '&workScope=';
-			url += $scope.printSubcontractLiabilityWorkScope !== undefined ? $scope.printSubcontractLiabilityWorkScope : '';
-			url += '&clientNo=';
-			url += $scope.printSubcontractLiabilityClientNumber !== undefined ? $scope.printSubcontractLiabilityClientNumber : '';
-			url += '&includeJobCompletionDate=';
-			url += $scope.printSubcontractLiabilityIncludeJobCompletionDate !== undefined ? $scope.printSubcontractLiabilityIncludeJobCompletionDate : '';
-			url += '&splitTerminateStatus=';
-			url += $scope.printSubcontractLiabilitySplitTerminateStatus !== undefined ? $scope.printSubcontractLiabilitySplitTerminateStatus : '';
-			url += '&month=';
-			url += $scope.printSubcontractLiabilityMonth !== undefined ? $scope.printSubcontractLiabilityMonth : '';
-			url += '&year=';
-			url += $scope.printSubcontractLiabilityYear !== undefined ? $scope.printSubcontractLiabilityYear : '';
-			var wnd = $window.open(url, 'Print Report', '_blank');
-		}
+	
+	function camelToNormalString (text){
+		return text.replace(/([A-Z])/g, ' $1')
+	    .replace(/^./, function(str){ return str.toUpperCase(); });
 	}
+	
+	function querySearch (query, items) {
+      var results = query ? items.filter( createFilterFor(query) ) : items;
+      return results;
+    }
 
-	$scope.printSubcontractAnalysisJobNumber = $scope.jobNo;
-	$scope.onPrintSubcontractAnalysis = function(type){
-		var baseUrl = $window.location.href.split('home.html')[0];
-		if($scope.printSubcontractAnalysisForm.$valid){
-			var url = baseUrl + 'gammonqs/';
-				if(type === 'pdf'){
-					url += 'subcontractorAnalysisReportExport.rpt';
-				} else {
-					url += 'subcontractorAnalysisExcelExport.rpt';
-				}				
+    function searchTextChange(text) {
+//      $log.info('Text changed to ' + text);
+    }
 
-			url += '?company=';
-			url += $scope.printSubcontractAnalysisCompany !== undefined ? $scope.printSubcontractAnalysisCompany : '';
-			url += '&division=';
-			url += $scope.printSubcontractAnalysisDivision !== undefined ? $scope.printSubcontractAnalysisDivision : '';
-			url += '&jobNumber=';
-			url += $scope.printSubcontractAnalysisJobNumber !== undefined ? $scope.printSubcontractAnalysisJobNumber : '';
-			url += '&subcontractNumber=';
-			url += $scope.printSubcontractAnalysisSubcontractNumber !== undefined ? $scope.printSubcontractAnalysisSubcontractNumber : '';
-			url += '&subcontractorNumber=';
-			url += $scope.printSubcontractAnalysisSubcontractorNumber !== undefined ? $scope.printSubcontractAnalysisSubcontractorNumber : '';
-			url += '&subcontractorNature=';
-			url += $scope.printSubcontractAnalysisSubcontractorNature !== undefined ? $scope.printSubcontractAnalysisSubcontractorNature : '';
-			url += '&paymentType=';
-			url += $scope.printSubcontractAnalysisPaymentType !== undefined ? $scope.printSubcontractAnalysisPaymentType : '';
-			url += '&workScope=';
-			url += $scope.printSubcontractAnalysisWorkScope !== undefined ? $scope.printSubcontractAnalysisWorkScope : '';
-			url += '&clientNo=';
-			url += $scope.printSubcontractAnalysisClientNumber !== undefined ? $scope.printSubcontractAnalysisClientNumber : '';
-			url += '&includeJobCompletionDate=';
-			url += $scope.printSubcontractAnalysisIncludeJobCompletionDate !== undefined ? $scope.printSubcontractAnalysisIncludeJobCompletionDate : '';
-			url += '&splitTerminateStatus=';
-			url += $scope.printSubcontractAnalysisSplitTerminateStatus !== undefined ? $scope.printSubcontractAnalysisSplitTerminateStatus : '';
-			url += '&month=';
-			url += $scope.printSubcontractAnalysisMonth !== undefined ? $scope.printSubcontractAnalysisMonth : '';
-			url += '&year=';
-			url += $scope.printSubcontractAnalysisYear !== undefined ? $scope.printSubcontractAnalysisYear : '';
-			var wnd = $window.open(url, 'Print Report', '_blank');
-		}
-	}
+    function selectedItemChange(item) {
+//      $log.info('Item changed to ' + JSON.stringify(item));
+    }
+	
+	function loadAllCompany() {
+		jobService.obtainAllJobCompany()
+		.then(function(data){
+			$scope.companies = data.map( function (company) {
+		        return {
+		          value: company.toLowerCase(),
+		          display: company
+		        };
+		      });
+			loadAllDivision()
+		})
+    }
 
+	function loadAllDivision() {
+	      jobService.obtainAllJobDivision()
+	      .then(function(data){
+	    	  $scope.divisions = data.map( function (division) {
+	  	        return {
+	  	          value: division.toLowerCase(),
+	  	          display: division
+	  	        };
+	  	      });
+	  		processReport();
+	      })
+	    }
+
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(item) {
+        return (item.value.indexOf(lowercaseQuery) === 0);
+      };
+
+    }
+    
+	function processReport(){
+		reports.forEach(function(report){
+			if(!report.title) report.title = camelToNormalString(report.name);
+			if(report.searchFields) report.searchFields.forEach(function(searchField){
+				if(!searchField.label) searchField.label = camelToNormalString(searchField.field)
+				if(searchField.field === 'company') searchField.autoCompleteList = $scope.companies;
+				if(searchField.field === 'division') searchField.autoCompleteList = $scope.divisions;
+			})
+			if(report.reportStatus === RPT_STATUS_UC) blockUI.instances.get('block' + report.name).start({message: RPT_STATUS_UC, hideAnimate: true});
+			
+		});
+		reports.sort(function(a,b){return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);});
+		$scope.reports = reports;
+	}	
+	
+	loadAllCompany();
+	
 }]);
