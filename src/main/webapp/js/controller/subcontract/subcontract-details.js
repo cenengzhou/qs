@@ -11,6 +11,23 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		}
 		return msg;
 	}
+
+	$scope.getExcludeCumCertRetentionMessage = function(){
+		var msg = '';
+		if($scope.cumCertAmountRetention > 0) {
+			msg = 'excluded retention : ' + $filter('number')($scope.cumCertAmountRetention);
+		}
+		return msg;
+	}
+
+	$scope.getExcludePostedCertRetentionMessage = function(){
+		var msg = '';
+		if($scope.postedCertAmountRetention > 0) {
+			msg = 'excluded retention : ' + $filter('number')($scope.postedCertAmountRetention);
+		}
+		return msg;
+	}
+
 	$scope.getExcludeRetentionValue = function(aggregationValue){
 		var value = aggregationValue;
 		if($scope.subcontract && $scope.subcontract.retentionBalance > 0) {
@@ -18,9 +35,32 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		}
 		return value;
 	}
+	
+	$scope.getExcludeCumCertRetentionValue = function(aggregationValue){
+		var value = aggregationValue;
+		if($scope.cumCertAmountRetention > 0) {
+			value = aggregationValue + $scope.cumCertAmountRetention;
+		}
+		return value;
+	}
+	
+	$scope.getExcludePostedCertRetentionValue = function(aggregationValue){
+		var value = aggregationValue;
+		if($scope.postedCertAmountRetention > 0) {
+			value = aggregationValue + $scope.postedCertAmountRetention;
+		}
+		return value;
+	}
+	
 	$scope.totalAmountExcludeRetentionTemplate = '<div class="ui-grid-cell-contents" \
 		title="{{grid.appScope.getExcludeRetentionMessage()}}">{{grid.appScope.getExcludeRetentionValue(col.getAggregationValue()) | number:2 }}\
 		<span class="red small" ng-if="grid.appScope.getExcludeRetentionMessage().length > 0">*</span></div>';
+	$scope.totalCumCertifiedAmountExcludeRetentionTemplate = '<div class="ui-grid-cell-contents" \
+		title="{{grid.appScope.getExcludeCumCertRetentionMessage()}}">{{grid.appScope.getExcludeCumCertRetentionValue(col.getAggregationValue()) | number:2 }}\
+		<span class="red small" ng-if="grid.appScope.getExcludeCumCertRetentionMessage().length > 0">*</span></div>';
+	$scope.totalPostedCertifiedAmountExcludeRetentionTemplate = '<div class="ui-grid-cell-contents" \
+		title="{{grid.appScope.getExcludePostedCertRetentionMessage()}}">{{grid.appScope.getExcludePostedCertRetentionValue(col.getAggregationValue()) | number:2 }}\
+		<span class="red small" ng-if="grid.appScope.getExcludePostedCertRetentionMessage().length > 0">*</span></div>';
 	
 	$scope.gridOptions = {
 			enableSorting: true,
@@ -70,7 +110,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			     				}
 			     				return c;
 			     			},
-						     footerCellTemplate : $scope.totalAmountExcludeRetentionTemplate,
+						     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 						     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						     					var c = 'text-right';
 						     					if (col.getAggregationValue() < 0) {
@@ -160,7 +200,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 				     				}
 				     				return c;
 				     			},
-							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellTemplate : $scope.totalCumCertifiedAmountExcludeRetentionTemplate,
 							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 							     					var c = 'text-right';
 							     					if (col.getAggregationValue() < 0) {
@@ -183,7 +223,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 				     				}
 				     				return c;
 				     			},
-							     footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+							     footerCellTemplate : $scope.totalPostedCertifiedAmountExcludeRetentionTemplate,
 							     footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 							     					var c = 'text-right';
 							     					if (col.getAggregationValue() < 0) {
@@ -272,10 +312,20 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 	function getSCDetails() {
 		subcontractService.getSCDetails($scope.jobNo, $scope.subcontractNo)
 		.then(
-				function( data ) {
-					$scope.gridOptions.data = data;
-					GlobalHelper.addSubcontractCatalogGroup(data, 'lineType');
-				});
+			function( data ) {
+				$scope.gridOptions.data = data;
+				GlobalHelper.addSubcontractCatalogGroup(data, 'lineType');
+				var retentions = $filter('filter')(data, function(value){
+					return value.catalog === 'Retention';
+				})
+				$scope.cumCertAmountRetention = 0;
+				$scope.postedCertAmountRetention = 0;
+				retentions.forEach(function(retention){
+					if(retention.amountCumulativeCert != 0) $scope.cumCertAmountRetention += retention.amountCumulativeCert * -1;
+					if(retention.amountPostedCert != 0) $scope.postedCertAmountRetention += retention.amountPostedCert * -1;
+				})
+				
+		});
 	}
 
 }]);

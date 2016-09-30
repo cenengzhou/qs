@@ -34,7 +34,7 @@
 							<span class="fa fa-2x fa-angle-left text-white"> </span></div>
 						</td>
 						<td>
-							<div resize ng-style="resizeMenuBarWithWOffset(600, 150)" style="border: 0px solid red" id="menubar">
+							<div resize ng-style="resizeMenuBarWithWOffset(490, 150)" style="border: 0px solid red" id="menubar">
 								<ul class="nav navbar-nav" style="width:1000px;border: 0px solid white" id="innerMenu">
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Repackaging' && env == 'DEV'}" 
 										ng-hide = "hideNavMenu">
@@ -97,27 +97,28 @@
 							<div class="animated fadeIn" ng-show="!hideNavMenu && (menuBarWidth + menuScroll) < menuWidth && menuBarWidth < menuWidth" 
 							ng-class="{'btn btn-primary': (env !== 'DEV' && env !== 'UAT'), 'btn btn-inverse': (env === 'DEV' || env === 'UAT') }"
 							ng-mouseenter="scrollRight()" ng-mouseleave="stopScrollRight()">
-							<span class="fa fa-2x fa-angle-right text-white"> </span></div>
+							<span class="fa fa-2x fa-angle-right text-white"></span></div>
 						</td>
 						<td>
 							<!-- begin navbar-right -->
-							<div style="width:260px;border: 0px solid yellow" class="pull-right">
+							<div style="border: 0px solid yellow" class="pull-right">
 								<ul class="nav navbar-nav navbar-right">
 									<li class="dropdown navbar-user">
 						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 						                    <span class="image" id="userImage"><img data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></span>
-						                    <b class="caret" ng-hide="user.authType === 'Kerberos'"></b>
+						                    <b class="caret"></b>
 						                </a>
-						                <ul class="dropdown-menu navbar-user pull-right" ng-hide="user.authType === 'Kerberos'">
-										
-										<li style="text-align:center;border:0px solid red" ng-class="{'bg-primary-light': (env !== 'DEV' && env !== 'UAT'), 'bg-inverse-light': (env === 'DEV' || env === 'UAT') }">
-						                 <div class="image" id="userImage"><img class="img-circle" style="border:3px solid white; margin:20px;padding:2px;width:180px;height:180px;" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
-						                 <div style="padding-bottom:10px;top:-10px;position:relative;font-weight:500" class="text-white">{{user.UserName}}</div>
-						                 </li>
-						                 <li ng-hide="true" class="divider"></li>
+						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none">
+											<li style="text-align:center;border:0px solid red" ng-class="{'bg-primary-light': (env !== 'DEV' && env !== 'UAT'), 'bg-inverse-light': (env === 'DEV' || env === 'UAT') }">
+												<div class="image" id="userImage"><img class="img-circle" style="border:3px solid white; margin:20px;padding:2px;width:180px;height:180px;" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
+												<div style="padding-bottom:20px;margin-top:-55px;position:relative">
+												<div style="white-space: nowrap;font-weight:500;border-radius:25px;padding:5px 10px 5px 10px;margin:0px 30px 0px 30px;border:3px solid white;" ng-class="{'text-white bg-primary': (env !== 'DEV' && env !== 'UAT'), 'text-white bg-inverse': (env === 'DEV' || env === 'UAT') }">{{user.UserName}}</div>
+												</div>
+											</li>
+						                 	<li class="divider" ng-hide="user.authType === 'Kerberos'"></li>
 						                    <li ng-hide="true"><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
 						                    <li ng-hide="true" class="divider"></li>
-						                    <li><a href="javascript:;" ng-click="logout()">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>
+						                    <li><a href="javascript:;" ng-click="logout()" ng-hide="user.authType === 'Kerberos'">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>
 						                </ul>
 						            </li>
 									<li>
