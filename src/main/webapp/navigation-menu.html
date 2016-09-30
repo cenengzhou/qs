@@ -106,9 +106,15 @@
 									<li class="dropdown navbar-user">
 						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 						                    <span class="image" id="userImage"><img data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></span>
-						                    <span class="hidden-xs">{{user.UserName}}</span> <b class="caret" ng-hide="user.authType === 'Kerberos'"></b>
+						                    <b class="caret" ng-hide="user.authType === 'Kerberos'"></b>
 						                </a>
-						                <ul class="dropdown-menu pull-right" ng-hide="user.authType === 'Kerberos'">
+						                <ul class="dropdown-menu navbar-user pull-right" ng-hide="user.authType === 'Kerberos'">
+										
+										<li style="text-align:center;border:0px solid red" ng-class="{'bg-primary-light': (env !== 'DEV' && env !== 'UAT'), 'bg-inverse-light': (env === 'DEV' || env === 'UAT') }">
+						                 <div class="image" id="userImage"><img class="img-circle" style="border:3px solid white; margin:20px;padding:2px;width:180px;height:180px;" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
+						                 <div style="padding-bottom:10px;top:-10px;position:relative;font-weight:500" class="text-white">{{user.UserName}}</div>
+						                 </li>
+						                 <li ng-hide="true" class="divider"></li>
 						                    <li ng-hide="true"><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
 						                    <li ng-hide="true" class="divider"></li>
 						                    <li><a href="javascript:;" ng-click="logout()">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>

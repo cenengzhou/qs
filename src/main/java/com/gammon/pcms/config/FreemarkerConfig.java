@@ -38,4 +38,7 @@ public class FreemarkerConfig {
 		return templates;
 	}
 
+	public String getTemplates(String key){
+		return getTemplates().get(key);
+	}
 }

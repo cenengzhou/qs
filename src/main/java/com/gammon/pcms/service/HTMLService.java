@@ -233,101 +233,6 @@ public class HTMLService implements Serializable{
 		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());
 		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("addendum"), data);
 	}
-	
-	public String makeHTMLStringForAddendumApproval(String jobNumber, String subcontractNumber, String htmlVersion){
-		String strHTMLCodingContent = "";
-		List<SubcontractDetail> scDetailsList = new ArrayList<SubcontractDetail>();
-		boolean boolChangedLine = false;
-		boolean highlight = true;
-		Double totalToBeApprovedValue = new Double(0.0);
-		Double totalThisAddendumValue = new Double(0.0);
-		Double totalToBeApprovedVOValue = new Double(0.0);
-		Double totalToBeApprovedRemeasuredSCSumValue = new Double(0.0);
-		JobInfo jobHeaderInfo = new JobInfo();
-		String vendorName = "";
-		Subcontract scPackage = new Subcontract();
-		
-		try {
-			jobHeaderInfo = jobInfoHBDao.obtainJobInfo(jobNumber);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			scPackage = subcontractHBDao.obtainSCPackage(jobNumber, subcontractNumber);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
-		try {
-			scDetailsList = subcontractDetailHBDao.getSCDetails(scPackage);
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-		
-		try {
-			vendorName = receiveVendorName(scPackage.getVendorNo());
-		} catch (Exception e3) {
-			e3.printStackTrace();
-		}
-		
-		
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("subcontractNumber", subcontractNumber);
-		data.put("jobNumber", jobNumber);
-		data.put("scPackage", scPackage);
-		data.put("vendorName", vendorName);
-		data.put("scDetailsList", scDetailsList);
-		data.put("highlight", highlight);
-		data.put("jobHeaderInfo", jobHeaderInfo);
-		
-			List<Boolean> boolChangedLineList = new ArrayList<Boolean>();
-			for(int i=0; i < scDetailsList.size();  i++ ){
-			SubcontractDetail curaddendumEnquiryList = scDetailsList.get(i);
-			//Equal to Yellow of AddendumEnquiryYellowAquaQuantityRenderer
-			if ("A".equals(curaddendumEnquiryList.getSourceType()) && !"OA".equals(curaddendumEnquiryList.getLineType())) {
-				if (SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()) && !SubcontractDetail.SUSPEND.equals(curaddendumEnquiryList.getApproved())) {	
-					
-					totalToBeApprovedVOValue += curaddendumEnquiryList.getToBeApprovedAmount();
-					if (Math.abs(curaddendumEnquiryList.getTotalAmount()-curaddendumEnquiryList.getToBeApprovedAmount())>0 || !SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved())) {
-							boolChangedLine = true;  
-					} else {
-						boolChangedLine = false;
-					}
-				} else {
-					boolChangedLine = false;
-				}
-			//Equal to Aqua of AddendumEnquiryYellowAquaQuantityRenderer
-			} else if ("B1".equals(curaddendumEnquiryList.getLineType()) || "BQ".equals(curaddendumEnquiryList.getLineType())) {
-				if(SubcontractDetail.ACTIVE.equals(curaddendumEnquiryList.getSystemStatus()))
-					totalToBeApprovedRemeasuredSCSumValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				//Bug fix - Approval Content - Addendum Approval Request
-				//By Peter Chan 2009-12-18
-					if (Math.abs(curaddendumEnquiryList.getQuantity()-curaddendumEnquiryList.getToBeApprovedQuantity())>0)
-						boolChangedLine = true; 
-					else 
-						boolChangedLine = false;
-			} else {
-				boolChangedLine = false;
-			}
-			if (boolChangedLine==true) {	
-				totalToBeApprovedValue += curaddendumEnquiryList.getToBeApprovedAmount();
-				totalThisAddendumValue += (curaddendumEnquiryList.getToBeApprovedAmount()-(SubcontractDetail.APPROVED.equals(curaddendumEnquiryList.getApproved())?curaddendumEnquiryList.getTotalAmount():0.0));
-			}
-			boolChangedLineList.add(boolChangedLine);
-	
-			
-		data.put("totalToBeApprovedRemeasuredSCSumValue", totalToBeApprovedRemeasuredSCSumValue);
-		data.put("totalToBeApprovedVOValue", totalToBeApprovedVOValue);
-		data.put("totalToBeApprovedValue", totalToBeApprovedValue);
-		data.put("totalThisAddendumValue", totalThisAddendumValue);
-		data.put("boolChangedLineList", boolChangedLineList);
-		
-		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("AddendumApproval_W.ftl", data);
-	}
-		
-	return strHTMLCodingContent;
-}
 
 	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){
 		JobInfo jobHeaderInfo = new JobInfo();
@@ -382,10 +287,15 @@ public class HTMLService implements Serializable{
 		data.put("scPackage", scPackage);
 		data.put("newSCSum", newSCSum);
 		data.put("vendorName", vendorName);
-
-			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("SplitTermSC_W.ftl", data);
+		
+		if (htmlVersion.equals("W")) {
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("splitTermW"), data);
+		}
 	
-	return strHTMLCodingContent;
+		if (htmlVersion.equals("B")) {
+			strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("splitTermB"), data);
+		}
+		return strHTMLCodingContent;
 	}
 	
 	/**
@@ -418,9 +328,13 @@ public class HTMLService implements Serializable{
 					data.put("clientList", clientList);
 					data.put("mainCert", mainCert);
 					data.put("previousCert", previousCert);
-									
-						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString("MainCert_W.ftl", data);
 
+					if (htmlVersion.equals("W")){						
+						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("mainCertW"), data);
+					}
+					else if (htmlVersion.equals("B")){
+						strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates("mainCertB"), data);
+					}
 				} else {
 					strHTMLCodingContent = "Main certificate:" + mainCertNo + " not found";
 				}
