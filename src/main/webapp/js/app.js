@@ -1267,6 +1267,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsAddModal.js',
                            'js/controller/admin/admin-SchedulerMaintenance.js',
+                           'js/controller/admin/admin-SystemInformation.js',
                            'view/admin/admin-Revisions-Subcontract.html',
                            'view/admin/admin-Revisions-Payment.html',
                            'view/admin/admin-Revisions-Addendum.html',
@@ -1347,6 +1348,15 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		},
 		controller: 'AdminSchedulerMaintenanceCtrl',
 		controllerAs: 'schedulerMaintenance'
+	})
+	.state('admin.SystemInformation',{
+		url: '/SystemInformation',
+		templateUrl: 'view/admin/admin-SystemInformation.html',
+		params: {
+			'jobNo': null,
+			'jobDescription': null
+		},
+		controller: 'AdminSchedulerMaintenanceCtrl'
 	});
 
 }])
