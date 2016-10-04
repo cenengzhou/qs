@@ -108,11 +108,11 @@
 						                    <span class="image" id="userImage"><img data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></span>
 						                    <b class="caret"></b>
 						                </a>
-						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none">
-											<li style="text-align:center;border:0px solid red" ng-class="{'bg-primary-light': (env !== 'DEV' && env !== 'UAT'), 'bg-inverse-light': (env === 'DEV' || env === 'UAT') }">
-												<div class="image" id="userImage"><img class="img-circle" style="border:3px solid white; margin:20px;padding:2px;width:180px;height:180px;" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
-												<div style="padding-bottom:20px;margin-top:-55px;position:relative">
-												<div style="white-space: nowrap;font-weight:500;border-radius:25px;padding:5px 10px 5px 10px;margin:0px 30px 0px 30px;border:3px solid white;" ng-class="{'text-white bg-primary': (env !== 'DEV' && env !== 'UAT'), 'text-white bg-inverse': (env === 'DEV' || env === 'UAT') }">{{user.UserName}}</div>
+						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none; padding-bottom:0px">
+											<li style="text-align:center;border:0px solid red;background-color:#3c8dbc" >
+												<div class="image" id="userImage"><img class="img-circle" style="border:3px solid; border-color:rgba(255,255,255,0.2); margin:10px;padding:0px;width:84px;height:84px" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
+												<div style="padding-bottom:20px;">
+												<div style="white-space: nowrap;padding:0px;margin:0px;color:white">{{user.UserName}}</div>
 												</div>
 											</li>
 						                 	<li class="divider" ng-hide="user.authType === 'Kerberos'"></li>
