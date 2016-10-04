@@ -139,13 +139,13 @@
 					<!-- <a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a> -->
 					<table class="col-md-12"><tr>
 					<td>
-					<button type="button" class="btn bg-primary btn-block" ng-show="repackaging.status !== '900'"
+					<button type="button" class="btn bg-primary btn-block" ng-show="repackaging.status === '900'"
 						ng-click="update()">
 						<i class="fa fa-floppy-o"></i> Update
 					</button>
 					</td>
 					<td>
-					<button type="button" class="btn bg-warning btn-block text-white" ng-show="repackaging.status !== '900'"
+					<button type="button" class="btn bg-warning btn-block text-white" ng-show="repackaging.status === '900'"
 						ng-click="reset()">
 						<i class="fa fa-refresh"></i> Reset
 					</button>

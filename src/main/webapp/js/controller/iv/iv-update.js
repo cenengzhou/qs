@@ -21,10 +21,11 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	}
 	
 	function isRepackagingLocked(){
-		if($scope.repackaging.status === '900') {
+		if($scope.repackaging.status !== '900') {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_LOCK_REPACKAGING);
-			return true;
+			return false;
 		}
+		return true;
 	}
 	
 	getLatestRepackaging();
@@ -46,7 +47,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var STATUS_NOCHANGE = 'No Change';
 	
     $scope.importData = function(grid, newObjects){
-		if(isRepackagingLocked()){
+		if(!isRepackagingLocked()){
 			return;
 		}
     	var importArray = [];
@@ -324,7 +325,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
 		$scope.importAction = $scope.gridApi.importer.importFile;
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(isRepackagingLocked()){
+			if(!isRepackagingLocked()){
 				return;
 			}
 			if(validateAmountBudgetEqZero(rowEntity)){
