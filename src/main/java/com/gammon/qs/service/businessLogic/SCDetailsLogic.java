@@ -298,7 +298,7 @@ public class SCDetailsLogic {
 	
 	public static final Boolean splitSCPackage(List<SubcontractDetail> scDetailsList) throws Exception{
 		for(SubcontractDetail scDetails: scDetailsList){
-			if("BQ".trim().equalsIgnoreCase(scDetails.getLineType().trim())){
+			if(scDetails.getLineType() != null && "BQ".trim().equalsIgnoreCase(scDetails.getLineType().trim())){
 				if(scDetails.getCumWorkDoneQuantity()>scDetails.getNewQuantity())
 					throw new Exception("New Quantity has to be larger than current Work Done");
 				else

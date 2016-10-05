@@ -33,7 +33,7 @@
 							ng-mouseenter="scrollLeft()" ng-mouseleave="stopScrolLeft()">
 							<span class="fa fa-2x fa-angle-left text-white"> </span></div>
 						</td>
-						<td>
+						<td id="menubarTd">
 							<div resize ng-style="resizeMenuBarWithWOffset(490, 150)" style="border: 0px solid red" id="menubar">
 								<ul class="nav navbar-nav" style="width:1000px;border: 0px solid white" id="innerMenu">
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Repackaging' && env == 'DEV'}" 
@@ -104,25 +104,45 @@
 							<div style="border: 0px solid yellow" class="pull-right">
 								<ul class="nav navbar-nav navbar-right">
 									<li class="dropdown navbar-user">
-						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"   id="userMenuCaret">
 						                    <span class="image" id="userImage"><img data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></span>
 						                    <b class="caret"></b>
 						                </a>
-						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none; padding-bottom:0px">
-											<li style="text-align:center;border:0px solid red;background-color:#3c8dbc" >
+						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none; padding-bottom:0px; width:300px" id="userDropPanel">
+											<li ng-show="isSelected(1)" style="text-align:center;border:0px solid red;height:150px" class="bg-primary" >
 												<div class="image" id="userImage"><img class="img-circle" style="border:3px solid; border-color:rgba(255,255,255,0.2); margin:10px;padding:0px;width:84px;height:84px" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
 												<div style="padding-bottom:20px;">
 												<div style="white-space: nowrap;padding:0px;margin:0px;color:white">{{user.UserName}}</div>
 												</div>
 											</li>
-						                 	<li class="divider" ng-hide="user.authType === 'Kerberos'"></li>
+											<li ng-show="isSelected(2)" style="text-align:center;border:0px solid red;" class="bg-primary" >
+												<div style="height:150px" class="bg-primary" ></div>
+											</li>
+											<li ng-show="isSelected(3)" style="text-align:center;border:0px solid red;" class="bg-primary" >
+												<div style="height:150px" class="bg-primary" ></div>
+											</li>
+							                <li class="user-body">
+							                <ul class="nav nav-tabs">
+							                  <div class="col-md-4 text-black" ng-click="selectTab(1)" ng-class="{active:isSelected(1)}">
+							                    Profile
+							                  </div>
+							                  <div class="col-md-4 text-black" ng-click="selectTab(2)" ng-class="{active:isSelected(2)}">
+							                    Preference
+							                  </div>
+							                  <div class="col-md-4 text-black" ng-click="selectTab(3)"ng-class="{active:isSelected(3)}">
+							                    Default&nbsp;Job
+							                  </div>
+							                </ul>
+							                <!-- /.row -->
+							              </li>
+						                 	<li ng-hide="true" class="divider" ng-hide="user.authType === 'Kerberos'"></li>
 						                    <li ng-hide="true"><a href="javascript:;">Setting <span class="fa fa-bell text-red pull-right"></span></a></li>
 						                    <li ng-hide="true" class="divider"></li>
 						                    <li><a href="javascript:;" ng-click="logout()" ng-hide="user.authType === 'Kerberos'">Sign out <span class="fa fa-sign-out text-blue pull-right"></span></a></li>
 						                </ul>
 						            </li>
 									<li>
-										<a href="javascript:;" data-click="right-sidebar-toggled">
+										<a href="javascript:;" data-click="right-sidebar-toggled" id="control-sidebar">
 											<i class="fa fa-align-left"></i>
 										</a>
 									</li>

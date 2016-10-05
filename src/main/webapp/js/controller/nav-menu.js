@@ -1,6 +1,15 @@
 mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval', 'GlobalParameter',
                                    function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, GlobalParameter) {
 	
+	
+	$scope.tab = 1;
+	$scope.selectTab = function(setTab){
+		$scope.tab = setTab;
+	};
+	$scope.isSelected = function(checkTab){
+		return $scope.tab === checkTab;
+	};
+
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.subcontractNo = $cookies.get("subcontractNo");
@@ -300,6 +309,11 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
     		console.dir(error);
     	});
 	}
+	
+	angular.element('#userDropPanel').click(function(event){
+	     event.stopPropagation();
+	 });
+	
 	$scope.loadProperties();
 	//	$scope.filter = function() {
 //		$scope.ObjectCodeGridApi.grid.refresh();

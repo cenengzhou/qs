@@ -28,10 +28,14 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	var VALIDATE_COMPANY_MESSAGE = 'Please leave blank or enter 5 characters';
 	var VALIDATE_DUEDATE = GlobalParameter.MOMENT_DATE_FORMAT;
 	var VALIDATE_DUEDATE_MESSAGE = 'Please select date from the date picker';
+	var VALIDATE_JOBNO = '.{5,5}';
+	var VALIDATE_JOBNO_MESSAGE = 'Please leave blank or enter 5 characters';
+	var VALIDATE_DIVISION = '.{3,3}';
+	var VALIDATE_DIVISION_MESSAGE = 'Please leave blank or enter 3 characters';
 	var reports = [
 					{
 						   id: 0,
-						   name: 'paymentCertReport',
+						   name: 'paymentCertificateReport',
 						   reportUrls: [
 						                	{
 					 	            	   type: 'xls',
@@ -45,9 +49,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						                	}
 						               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', 
+						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'jobNumber', inputType: 'text', validatePattern: '', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'dueDateType', inputType: 'dueDateType'},
 						                 {field: 'dueDate', inputType: 'dueDate', validatePattern: VALIDATE_DUEDATE, validateMessage: VALIDATE_DUEDATE_MESSAGE}
 					    ],
@@ -70,14 +74,15 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 						   ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', 
+						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
 						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'},
 					  ],
-					  selectiveFields:['company', 'jobNumber', 'division']
+					  selectiveFields:['company', 'jobNumber', 'division', 'subcontractorNumber']
 					},
 					{
 						   id: 2,
@@ -95,20 +100,20 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					    ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', 
+						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
 						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'},
 						                 {field: 'periods', inputType: 'periods'}
 					      ],
-					      selectiveFields:['company', 'jobNumber', 'division']
+					      selectiveFields:['company', 'jobNumber', 'division', 'subcontractorNumber']
 					},
 					{
 						   id: 3,
-						   name: 'subcontractAnalysisReport',
+						   name: 'subcontractorAnalysisReport',
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
@@ -122,14 +127,15 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					 	               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', 
+						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'jobNumber', inputType: 'text', label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontractor No'}
 					  ],
-					  selectiveFields:['company', 'jobNumber', 'division']
+					  selectiveFields:['company', 'jobNumber', 'division', 'subcontractorNumber']
 					},
 					{
 						   id: 4,
@@ -231,6 +237,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 			if(parameter === 'dueDate' && values['dueDate']) values['dueDate'] = moment(values['dueDate']).format('DD/MM/YYYY');
 			if(parameter === 'jobNumber' && values['jobNumber'] === '*') values['jobNumber'] = '';
 			url += parameter + '=' + escape(values[parameter]) + '&';
+			if(parameter === 'division' && values['division'] === 'E&M') values['division'] = 'EM';
 		});
 		return url.substring(0, url.length-1);
 	}

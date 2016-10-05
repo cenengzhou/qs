@@ -27,8 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseListObj;
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseObj;
+import com.gammon.pcms.application.User;
+import com.gammon.pcms.aspect.CanAccessJobChecking;
+import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
@@ -188,6 +192,8 @@ public class SubcontractService {
 	private UnitService unitService;
 	@Autowired
 	private AccountCodeWSDao accountCodeWSDao;
+	@Autowired
+	private SecurityConfig securityConfig;
 
 	// Approval System
 	@Autowired
@@ -629,7 +635,7 @@ public class SubcontractService {
 						largestAPRCertNo=delPndCert.getPaymentCertNo().intValue()-1;
 					if (scPaymentDetailList!=null){
 						for (PaymentCertDetail paymentDetail:scPaymentDetailList){
-							if ("GP".equals(paymentDetail.getLineType().trim())||"GR".equals(paymentDetail.getLineType().trim())){
+							if (paymentDetail.getLineType() != null && "GP".equals(paymentDetail.getLineType().trim())||"GR".equals(paymentDetail.getLineType().trim())){
 								PaymentCertDetail newPaymentDetail = new PaymentCertDetail();
 								newPaymentDetail.setBillItem(paymentDetail.getBillItem());
 								newPaymentDetail.setCumAmount(paymentDetail.getCumAmount());
@@ -691,7 +697,7 @@ public class SubcontractService {
 					scPaymentDetailGPGR.setPaymentCertNo(curSCPaymentDetailGPGR.getPaymentCertNo().toString());
 					scPaymentDetailGPGR.setPaymentCert(newPaymentCert);
 					scPaymentDetailGPGR.setBillItem("");
-					scPaymentDetailGPGR.setLineType(curSCPaymentDetailGPGR.getLineType().trim());
+					scPaymentDetailGPGR.setLineType(curSCPaymentDetailGPGR.getLineType() != null ? curSCPaymentDetailGPGR.getLineType().trim() : "");
 					scPaymentDetailGPGR.setObjectCode("");
 					scPaymentDetailGPGR.setSubsidiaryCode("");
 					scPaymentDetailGPGR.setCumAmount(curSCPaymentDetailGPGR.getCumAmount());
@@ -4239,6 +4245,7 @@ public class SubcontractService {
 		return provisionPostingHistHBDao.findByPeriod(jobNo, subcontractNo, year, month);
 	}
 	
+	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
 	public ExcelFile downloadSubcontractEnquiryReportExcelFile(String company, String division, String jobNumber, String subcontractNo, String subcontractorNumber, 
 			String subcontractorNature,String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, Boolean includeJobCompletionDate, 
 			String month, String year, String reportType) throws Exception {
@@ -4258,7 +4265,22 @@ public class SubcontractService {
 		searchWrapper.setYear(year);
 		searchWrapper.setReportType(reportType);
 		
-		List<SCListWrapper> scListWrapper = obtainSubcontractList(searchWrapper);
+		List<SCListWrapper> scListWrapper = new ArrayList<>();
+		User user = securityService.getCurrentUser();
+		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+			String canAccessJobString = "";
+			logger.info(user.getFullname() + " can access job list: ");	
+			for(String canAccessJobNo : canAccessJobList){
+				canAccessJobString += canAccessJobNo + ", ";
+				searchWrapper.setJobNumber(canAccessJobNo);
+				scListWrapper.addAll(obtainSubcontractList(searchWrapper));
+			}
+			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+		} else {
+			scListWrapper = obtainSubcontractList(searchWrapper);
+		}
+		
 		ExcelFile excelFile = null;
 		
 		if("subcontractLiabilityReport".equals(reportType)){
@@ -4274,6 +4296,7 @@ public class SubcontractService {
 		return excelFile;
 	}
 	
+	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
 	public ByteArrayOutputStream downloadSubcontractEnquiryReportPDFFile(String company, String division, String jobNumber, String subcontractNo,
 			String subcontractorNumber, String subcontractorNature,String paymentStatus, String workScope, String clientNo, Boolean includeJobCompletionDate,
 			String splitTerminateStatus, String month, String year, String jasperReportName)throws Exception {
@@ -4297,8 +4320,22 @@ public class SubcontractService {
 		searchWrapper.setMonth(month);
 		searchWrapper.setYear(year);
 		
+		List<SCListWrapper> scListWrappers = new ArrayList<>();
 		
-		List<SCListWrapper> scListWrappers = obtainSubcontractList(searchWrapper);
+		User user = securityService.getCurrentUser();
+		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+			String canAccessJobString = "";
+			logger.info(user.getFullname() + " can access job list: ");
+			for(String canAccessJobNo : canAccessJobList){
+				canAccessJobString += canAccessJobNo + ", ";
+				searchWrapper.setJobNumber(canAccessJobNo);
+				scListWrappers.addAll(obtainSubcontractList(searchWrapper));
+			}
+			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+		} else {		
+			scListWrappers = obtainSubcontractList(searchWrapper);
+		}
 
 		if(scListWrappers.size()==0){
 			SCListWrapper scListWrapper = new SCListWrapper();
@@ -4696,14 +4733,14 @@ public class SubcontractService {
 				return error;
 			}
 			
-			if (subcontractDetail.getSubsidiaryCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+			if (scDetail.getLineType() != null && subcontractDetail.getSubsidiaryCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()))  {
 				if (masterListService.checkSubsidiaryCodeInUCC(subcontractDetail.getSubsidiaryCode())!=null){
 					error = "Subsidiary Code does not exist in UCC";
 					return error;
 				}
 			}
-			if (subcontractDetail.getObjectCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
+			if (scDetail.getLineType() != null && subcontractDetail.getObjectCode()!=null && checkPostedAmount(scDetail) && !"MS".equals(scDetail.getLineType().trim())&&
 					!"RR".equals(scDetail.getLineType().trim()) && !"RA".equals(scDetail.getLineType().trim()) ) {
 				if (masterListService.checkObjectCodeInUCC(subcontractDetail.getObjectCode())!=null){
 					error = "Object Code does not exist in UCC";

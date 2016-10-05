@@ -6,19 +6,19 @@
 		<li class="active">Reports</li>
 	</ol>
 	<!-- end breadcrumb -->
-	<div class="clearfix"></div>{{jobAll}}
+	<div class="clearfix"></div>
 	<div class="row" vertilize-container ng-repeat="i in repeatRange(reports.length, reportPerRow)">
 		<div class="col-md-{{12/reportPerRow}}" ng-repeat="report in reports
 		.slice( $index * reportPerRow, $index * reportPerRow + reportPerRow)
 		| orderBy:'id'" block-ui="block{{report.name}}">
 			<div class="box box-primary" vertilize>
 				<div class="box-header"><h3 class="box-title">{{report.title}}</h3></div>
-				<div class="box-body">
+				<div class="box-body" style="overflow: hidden">
 					<form id="{{report.name}}Form" name="{{report.name}}Form" ng-submit="false">
 						<table class="table">
 							<tr>
-								<td><i class="fa fa-4x fa-file-text" style="padding-right:0px"></i></td>
-								<td style="padding-left:0px">
+								<td class="col-md-2"><i class="fa fa-4x fa-file-text" style="padding-right:0px"></i></td>
+								<td class="col-md-10" style="padding-left:0px">
 									<blockquote style="font-size: 13px !important">
 										<table >
 											<tr ng-repeat="searchField in report.searchFields">
@@ -27,7 +27,7 @@
 													
 													<input ng-if="searchField.inputType === 'text'" type="text" 
 													ng-init="searchField.value = searchField.defaultValue != null ? searchField.defaultValue : ''"
-													pattern="{{searchField.validatePattern != null ? searchField.validatePattern : '.{0,10}'}}" 
+													pattern="{{searchField.validatePattern}}" 
 													title="{{searchField.validateMessage != null ? searchField.validateMessage : ''}}" 
 													ng-model-options="{ updateOn: 'blur' }" class="form-control" 
 													id="{{report.name}}{{searchField.field}}" name="{{report.name}}{{searchField.field}}" 
@@ -36,7 +36,7 @@
 													<input ng-if="searchField.inputType === 'dueDateType'" ng-init="searchField.value = true"
 													type="checkbox" data-ios-toggle="toggle" 
 													id="{{report.name}}{{searchField.field}}" data-style="ios" data-onstyle="primary"
-													data-offstyle="warning" data-on="On or Before"
+													data-offstyle="warning" data-on="On or Before" data-width="100%"
 													data-off="Exact Date" ng-model="searchField.value">
 													
 													<div ng-if="searchField.inputType === 'dueDate'" ng-init="searchField.value = today" 
@@ -52,10 +52,10 @@
 													</div>
 													
 													<div ng-if="searchField.inputType === 'periods'" ng-init="searchField.value = true">
-													<input  
+													<input 
 													type="checkbox" data-ios-toggle="toggle" 
 													id="{{report.name}}{{searchField.field}}" data-style="ios" data-onstyle="primary"
-													data-offstyle="warning" data-on="As of Today"
+													data-offstyle="warning" data-on="As of Today" data-width="100%"
 													data-off="Month End History" ng-model="searchField.value">
 													
 														<div ng-if="!searchField.value" ng-init="searchField.monthEndHistory = lastMonth"
@@ -80,12 +80,13 @@
 														    md-items="item in searchField.querySearch(searchField.value, searchField.autoCompleteList)"
 														    md-item-text="item.display"
 														    md-min-length="0"
+														    md-select-on-match="true"
 														    placeholder="">
 														  <md-item-template>
 														    <span md-highlight-text="searchField.value" md-highlight-flags="^i">{{item.display}}</span>
 														  </md-item-template>
 														  <md-not-found>
-														    No company code matching "{{searchField.value}}" were found.
+														    No matching code "{{searchField.value}}" were found.
 														  </md-not-found>
 														</md-autocomplete>
 													</div>

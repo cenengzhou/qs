@@ -70,6 +70,11 @@ public class AdminService {
 		return companySet;
 	}
 
+	public List<String> obtainCanAccessJobNoList(){
+		User user = securityService.getCurrentUser();
+		return obtainCanAccessJobNoList(user.getUsername());
+	}
+	
 	public List<String> obtainCanAccessJobNoList(String username){
 		List<JobSecurity> jobSecurityList = obtainCompanyListByUsername(username);
 		List<String> jobNumberList = new ArrayList<String>();

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
+import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.qs.service.admin.AdminService;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
@@ -24,11 +25,17 @@ public class CanAccessJobAspect {
 	@Pointcut("within(com.gammon.*.service..*)")
 	public void inServiceLayer(){}
 	
+	@Pointcut("@annotation(CanAccessJobChecking)")
+	public void canAcceJobChecking(){}
+	
 	@Pointcut("!execution(* com.gammon.qs.service.admin.AdminService.*(..))")
 	public void excludeAdminService(){}
 	
+	@Pointcut("!execution(* *(..)) && @annotation(CanAccessJobChecking)")
+	public void excludeCanAccessJobChecking(){}
+	
 	@Pointcut("com.gammon.pcms.aspect.CanAccessJobAspect.inServiceLayer() && "
-			+ "excludeAdminService() && (args(str, ..) || args(.., str) || "
+			+ "excludeAdminService() && excludeCanAccessJobChecking() && (args(str, ..) || args(.., str) || "
 			+ "args(*, str, ..) || args(*, *, str, ..) || args(*, *, *, str, ..) || "
 			+ "args(.., str, *) || args(.., str, *, *) || args(.., str, *, *, *))")
 	public void strInServiceLayer(String str){}
@@ -49,6 +56,20 @@ public class CanAccessJobAspect {
 		canAccessJobChecking(joinPoint);
 	}
 
+	/**
+	 * check canAccessJob if have @CanAccessJobChecking(check = CanAccessJobCheckingType.CHECK)
+	 * need have parameter named noJob, jobNo or jobNumber
+	 * @param joinPoint
+	 * @param canAccessJobChecking
+	 * @throws Throwable
+	 */
+	@Before("@annotation(canAccessJobChecking)")
+	public void canAccessJobChecking(JoinPoint joinPoint, CanAccessJobChecking canAccessJobChecking) throws Throwable{
+		if(canAccessJobChecking.checking().equals(CanAccessJobCheckingType.CHECK)){
+			canAccessJobChecking(joinPoint);
+		}
+	}
+	
 	/**
 	 * call canAccessJob(jobNo) if find parameter like job number
 	 * @param joinPoint

@@ -31,8 +31,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriodYearByCompany.GetPeriodYearResponseObj;
+import com.gammon.pcms.application.User;
+import com.gammon.pcms.aspect.CanAccessJobChecking;
+import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
@@ -155,6 +159,12 @@ public class PaymentService{
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private SecurityService securityService;
+	@Autowired
+	private SecurityConfig securityConfig;
+	@Autowired
+	private AdminService adminService;
 	
 	private List<PaymentCertDetail> cachedResults;
 	private List<SCPaymentExceptionalWrapper> cachedSCPaymentReportResults;
@@ -277,7 +287,7 @@ public class PaymentService{
 		for (PaymentCertDetail detail : cachedResults) {
 			Double cumAmount = detail.getCumAmount() != null ? detail.getCumAmount() : Double.valueOf(0);
 			Double movementAmount = detail.getMovementAmount() != null ? detail.getMovementAmount() : Double.valueOf(0);
-			String lineType = detail.getLineType().trim();
+			String lineType = detail.getLineType() != null ? detail.getLineType().trim() : "";
 			// Deduction from Total Amount for retention (Line Type "RT", "RA", "RR" and "MR")
 			if (lineType.equals("MR") || lineType.equals("RA") || lineType.equals("RR") || lineType.equals("RT")) {
 				totalCumCertAmount -= cumAmount;
@@ -427,7 +437,7 @@ public class PaymentService{
 		ArrayList<AccountMovementWrapper> cert_CC = new ArrayList<AccountMovementWrapper>();
 		
 		for (PaymentCertDetail scPaymentDetail : scPaymentDetailList) {
-			scLineType = scPaymentDetail.getLineType().trim();
+			scLineType = scPaymentDetail.getLineType() != null ? scPaymentDetail.getLineType().trim() : "";
 			movement = scPaymentDetail.getMovementAmount();
 			cum = scPaymentDetail.getCumAmount();
 			if ("B1".equalsIgnoreCase(scLineType) || "BD".equalsIgnoreCase(scLineType) || "BQ".equalsIgnoreCase(scLineType)) {
@@ -995,6 +1005,7 @@ public class PaymentService{
 	 * Created by Henry Lai
 	 * 13-Nov-2014
 	 */
+	@CanAccessJobChecking( checking = CanAccessJobCheckingType.BYPASS)
 	public List<ByteArrayInputStream> obtainAllPaymentCertificatesReport(String company, Date dueDate, String jobNumber, String dueDateType) throws Exception {
 	
 		JobInfo job = new JobInfo();
@@ -1015,7 +1026,26 @@ public class PaymentService{
 		scPaymentCertWrapper.setDirectPayment("");
 		scPaymentCertWrapper.setDueDate(dueDate);
 
-		List<PaymentCertWrapper> scPaymentCertWrapperList = obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType);
+		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
+		User user = securityService.getCurrentUser();
+		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+			String canAccessJobString = "";
+			logger.info(user.getFullname() + " can access job list: ");	
+			for(String canAccessJobNo : canAccessJobList){
+				canAccessJobString += canAccessJobNo + ", ";
+				JobInfo canAccessJobInfo = new JobInfo();
+				job.setJobNumber(canAccessJobNo);
+				job.setCompany(company);
+				scPaymentCertWrapper.setJobNo(canAccessJobNo);
+				scPaymentCertWrapper.setJobInfo(canAccessJobInfo);
+				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType));
+			}
+			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+		} else {
+			scPaymentCertWrapperList = obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType);
+		}
+		
 		List<SCAllPaymentCertReportWrapper> scAllPaymentCertReportWrapperList = new ArrayList<SCAllPaymentCertReportWrapper>();
 		
 		for(int i=0; i<scPaymentCertWrapperList.size(); i++){
@@ -1403,15 +1433,15 @@ public class PaymentService{
 		double cumAmount_MR = 0.0;
 		List<PaymentCertDetail> scPaymentDetailList = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(scPaymentCert);
 		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
-			if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			if (scPaymentDetail.getLineType() != null && "RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_RT += scPaymentDetail.getMovementAmount();
-			else if ("CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_CF += scPaymentDetail.getMovementAmount();
-			else if ("MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_MR = cumAmount_MR + scPaymentDetail.getMovementAmount();
-			else if ("MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_MOS += scPaymentDetail.getMovementAmount();
-			else if (!("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
+			else if (scPaymentDetail.getLineType() != null && !("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
 				boolean accFound = false;
 				for (AccountMovementWrapper certMovement:accList)
 					if (((certMovement.getObjectCode() == null && scPaymentDetail.getObjectCode() == null) ||
@@ -1689,9 +1719,10 @@ public class PaymentService{
 	 * @author irischau
 	 * created on 19 Feb, 2014
 	 * **/
+	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
 	public ExcelFile generatePaymentCertificateEnquiryExcel(String jobNo, String company, String packageNo, String subcontractorNo, String paymentStatus, String paymentType, String directPayment, String paymentTerm, String dueDateType, Date dueDate, Date certIssueDate) throws DatabaseOperationException {
 		logger.info("STARTED -> generatePaymentCertificateEnquiryExcel");
-		if ((jobNo == null || "".equals(jobNo.trim())) && (company == null || "".equals(company.trim())) && (packageNo == null || "".equals(packageNo)) && (company == null || "".equals(company)) && (subcontractorNo == null || "".equals(subcontractorNo))) {
+		if ((jobNo.isEmpty() || "".equals(jobNo.trim())) && (company == null || "".equals(company.trim())) && (packageNo == null || "".equals(packageNo)) && (company == null || "".equals(company)) && (subcontractorNo == null || "".equals(subcontractorNo))) {
 			return null;
 		}
 		
@@ -1717,7 +1748,26 @@ public class PaymentService{
 		if(certIssueDate!=null)
 			tempscPaymentCertWrapper.setCertIssueDate(certIssueDate);
 		logger.info("dueDate : " + tempscPaymentCertWrapper.getDueDate() + " certIssueDate : " + tempscPaymentCertWrapper.getCertIssueDate());
-		List<PaymentCertWrapper> scPaymentCertWrapperList = obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType);
+		
+		User user = securityService.getCurrentUser();
+		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
+		if(jobNo == null && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+			String canAccessJobString = "";
+			logger.info(user.getFullname() + " can access job list: ");
+			for(String canAccessJobNo : canAccessJobList){
+				canAccessJobString += canAccessJobNo + ", ";
+				JobInfo canAccessJobInfo = new JobInfo();
+				job.setJobNumber(canAccessJobNo);
+				job.setCompany(company);
+				tempscPaymentCertWrapper.setJobNo(canAccessJobNo);
+				tempscPaymentCertWrapper.setJobInfo(canAccessJobInfo);
+				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType));
+			}
+			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+		} else {
+			scPaymentCertWrapperList = obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType);
+		}
 		
 		logger.info("scPaymentCertWrapperList.size() : " + scPaymentCertWrapperList.size());
 		ExcelFile excelFile = new ExcelFile();
@@ -2477,15 +2527,15 @@ public class PaymentService{
 		double cumAmount_MR = 0.0;
 		List<PaymentCertDetail> paymentDetailListInDB = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);
 		for (PaymentCertDetail scPaymentDetail: paymentDetailListInDB){
-			if ("RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			if (scPaymentDetail.getLineType() != null && "RA".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()) || "RT".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_RT += scPaymentDetail.getMovementAmount();
-			else if ("CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "CF".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_CF += scPaymentDetail.getMovementAmount();
-			else if ("MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "MR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_MR = cumAmount_MR + scPaymentDetail.getMovementAmount();
-			else if ("MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
+			else if (scPaymentDetail.getLineType() != null && "MS".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))
 				cumAmount_MOS += scPaymentDetail.getMovementAmount();
-			else if (!("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
+			else if (scPaymentDetail.getLineType() != null && !("GP".equalsIgnoreCase(scPaymentDetail.getLineType().trim())||"GR".equalsIgnoreCase(scPaymentDetail.getLineType().trim()))){
 				boolean accFound = false;
 				for (AccountMovementWrapper certMovement:accList)
 					if (((certMovement.getObjectCode() == null && scPaymentDetail.getObjectCode() == null) ||
@@ -2843,7 +2893,7 @@ public class PaymentService{
 						logger.info("Checking Provision for Final Account Job:" + paymentCert.getJobNo() + " Package:" + paymentCert.getPackageNo());
 						List<SubcontractDetail> scDetailsList = scDetailDao.obtainSCDetails(jobNo, subcontractNo.toString());
 						for (SubcontractDetail scDetail : scDetailsList)
-							if ((	"BQ".equals(scDetail.getLineType().trim()) || "B1".equals(scDetail.getLineType().trim()) ||
+							if ((	scDetail.getLineType() != null && "BQ".equals(scDetail.getLineType().trim()) || "B1".equals(scDetail.getLineType().trim()) ||
 									"V1".equals(scDetail.getLineType().trim()) || "V2".equals(scDetail.getLineType().trim()) || "V3".equals(scDetail.getLineType().trim()) ||
 									"L1".equals(scDetail.getLineType().trim()) || "L2".equals(scDetail.getLineType().trim()) ||
 									"D1".equals(scDetail.getLineType().trim()) || "D2".equals(scDetail.getLineType().trim()) ||
@@ -2972,7 +3022,7 @@ public class PaymentService{
 		//Validation 4 - Calculate Retention Amount
 		double retentionAmount=0.00;
 		for (PaymentCertDetail scPaymentDetail: scPaymentDetailList){
-			if ("RR".equals(scPaymentDetail.getLineType().trim()) || "RA".equals(scPaymentDetail.getLineType().trim()) || "RT".equals(scPaymentDetail.getLineType().trim()))
+			if (scPaymentDetail.getLineType() != null && "RR".equals(scPaymentDetail.getLineType().trim()) || "RA".equals(scPaymentDetail.getLineType().trim()) || "RT".equals(scPaymentDetail.getLineType().trim()))
 				retentionAmount+=scPaymentDetail.getCumAmount();
 		}
 		
