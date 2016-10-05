@@ -32,8 +32,8 @@
 				<div class="box-body">
 					<div ui-grid="gridOptions" ui-grid-resize-columns
 						ui-grid-move-columns ui-grid-pinning ui-grid-edit 
-						ui-grid-cellnav ui-grid-exporter class="grid"></div>
-					<!-- style="height: 250px;"  -->
+						ui-grid-cellnav ui-grid-exporter class="grid"
+						resize ng-style="resizeWithOffset(300)"></div>
 				</div>
 			</div>
 		</div>
@@ -48,9 +48,11 @@
 					</div>
 				</div>
 				<div class="box-body">
+				
 					<div ui-grid="gridOptionsIV" ui-grid-resize-columns
 						ui-grid-move-columns ui-grid-pinning ui-grid-edit
-						ui-grid-cellnav ui-grid-exporter class="grid"></div>
+						ui-grid-cellnav ui-grid-exporter class="grid"
+						resize ng-style="resizeWithOffset(300)"></div>
 				</div>
 			</div>
 		</div>

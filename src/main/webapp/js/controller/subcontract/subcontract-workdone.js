@@ -13,7 +13,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableColumnMoving: true,
-			//showGridFooter : true,
+			showGridFooter : false,
 			showColumnFooter : true,
 			//fastWatch : true,
 			
@@ -29,33 +29,25 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             { field: 'description', width: 100, enableCellEdit: false, pinnedLeft:true},
 
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 120, visible:false, enableCellEdit: false,enableFiltering: false ,
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+			            	 cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'amountSubcontract', displayName: "SC Amount", width: 120, enableCellEdit: false, enableFiltering: false ,
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
-		            	 {field: 'amountSubcontractTBA', displayName: "TBA Amount", width: 120, visible:false, enableCellEdit: false, enableFiltering: false ,
-		            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
-			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 120, cellClass: "grid-theme-blue", enableFiltering: false ,
+			            		 cellClass: 'text-right', cellFilter: 'number:2'},
+			             { field: 'amountCumulativeWD', displayName: "Cum WD Amount", width: 120, cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
 			            	aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
-		            		cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD | number:2}}</div>'},
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			             { field: 'amountPostedWD', displayName: "Posted WD Amount", enableCellEdit: false, enableFiltering: false ,
+		            		cellClass: 'text-right', cellFilter: 'number:2',
 	            			width: 120, aggregationType: uiGridConstants.aggregationTypes.sum,
-	            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
-	            		 	cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
+	            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", enableCellEdit: false,enableFiltering: false ,
+	            		 		cellClass: 'text-right', cellFilter: 'number:2',
 	            		 	width: 120, aggregationType: uiGridConstants.aggregationTypes.sum,
-        		 			footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
-		            		cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
-			             { field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 120, visible:false, enableCellEdit: false, enableFiltering: false ,
-			            	 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD| number:2}}</div>'},
-
-			            { field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false ,
-	            		 cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD}}</div>'},
-	            		 {field: 'toBeApprovedQuantity', width: 100, enableCellEdit: false,visible:false, enableFiltering: false},
+        		 			footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             { field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 120, visible:false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			            { field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false ,cellClass: 'text-right', cellFilter: 'number:4'},
 
 	            		 {field: 'costRate', width: 60, enableCellEdit: false, enableFiltering: false},
 	            		 {field: 'scRate', width: 60, enableCellEdit: false, enableFiltering: false},
-	            		 {field: 'toBeApprovedRate', width: 80, enableCellEdit: false, visible:false, enableFiltering: false},
 		            	 {field: 'billItem', width: 80, enableCellEdit: false},
 			             {field: 'objectCode', width: 70, enableCellEdit: false},
 			             {field: 'subsidiaryCode', width: 70, enableCellEdit: false},
@@ -94,7 +86,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
         });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			//console.log(rowEntity);
 			if(newValue != oldValue )
 				updateWDandIV(rowEntity);
 		});
@@ -106,6 +97,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
+			showGridFooter : false,
 			showColumnFooter : true,
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
@@ -118,18 +110,13 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             { field: 'objectCode', enableCellEdit: false , width:70, pinnedLeft:true},
 			             { field: 'subsidiaryCode',width:70, enableCellEdit: false, pinnedLeft:true},
 			             { field: 'resourceDescription', width:80, displayName: "Description", enableCellEdit: false },
-			             {field: 'currIVAmount', displayName: "Cum. IV Amount", width:130, enableFiltering: false, cellClass: "grid-theme-blue", 
+			             {field: 'currIVAmount', displayName: "Cum. IV Amount", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
-		            		cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD | number:2}}</div>'},
-		            	 /*{field: 'ivMovement', enableFiltering: false, width:100, aggregationType: uiGridConstants.aggregationTypes.sum,
-	            		 cellTemplate: '<div class="ui-grid-cell-contents" style="color:blue;text-align:right;">{{COL_FIELD}}</div>',
-	            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},*/
-	            		 {field: 'postedIVAmount', width:130,  enableCellEdit: false, enableFiltering: false,  
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+	            		 {field: 'postedIVAmount', width:130,  enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',  
 	            			aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>',
-		            		cellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;">{{COL_FIELD | number:2}}</div>'},
-            			 {field: 'amount',width:100,  enableCellEdit: false, enableFiltering: false },
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+            			 {field: 'amountBudget',width:100,  displayName:"Budget Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, enableFiltering: false },
             			 { field: 'unit', width:50, enableCellEdit: false, enableFiltering: false},
 			             { field: 'quantity', width:100, enableCellEdit: false ,enableFiltering: false},
 			             { field: 'rate', width:100, enableCellEdit: false, enableFiltering: false }
@@ -152,7 +139,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	}
 	
 
-	//Save Function
 	$scope.save = function () {
 
 	};
@@ -184,11 +170,11 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				});
 	}
 	
-	function getResourceSummariesByLineType(objectCode, subsidiaryCode ,lineType, resourceNo) {
+	function getResourceSummariesByLineType(objectCode, subsidiaryCode ,lineType, resourceNo) {console.log(objectCode, subsidiaryCode ,lineType, resourceNo);
 		resourceSummaryService.getResourceSummariesByLineType($scope.jobNo, $scope.subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo)
 	   	 .then(
 				 function( data ) {
-					 //console.log(data);
+					 console.log(data);
 					 $scope.IV  =data
 					 $scope.gridOptionsIV.data=  $scope.IV;
 				 });

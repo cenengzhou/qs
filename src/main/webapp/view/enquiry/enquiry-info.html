@@ -1,4 +1,268 @@
-<div class="content-wrapper">
+<div class="m-t-20 m-l-20 m-r-20">
+	<!-- begin breadcrumb -->
+	<!-- <ol class="breadcrumb pull-right">
+		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
+				Project Cost Management System</a></li>
+	</ol> -->
+	<!-- end breadcrumb -->
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small>
+	</h1>
+
+
+<div class="col-md-12">
+            <!-- begin panel -->
+            <div class="panel">
+                <ul class="nav nav-tabs nav-tabs-primary nav-justified">
+                    <li class=""><a href="#" data-target="#job-tab" data-toggle="tab" target="_self"><span class="icofont icofont-building icofont-4x"></span><h5> JOB</h5></a></li>
+                    <li class="active"><a href="#" data-target="#sc-tab" data-toggle="tab" target="_self"><span class="icofont icofont-trophy icofont-4x"></span><h5> SUBCONTRACT</h5></a></li>
+                    <li class=""><a href="#" data-target="#address-book-tab" data-toggle="tab" target="_self"><span class="icofont icofont-address-book icofont-4x"></span><h5> ADDRESS BOOK</h5></a></li>
+                    <li class=""><a href="#" data-target="#purchase-order-tab" data-toggle="tab" target="_self"><span class="icofont icofont-shopping-cart icofont-4x"></span><h5> PURCHASE ORDER</h5></a></li>
+                    <li class=""><a href="#" data-target="#jde-tab" data-toggle="tab" target="_self"><span class="icofont icofont-leaf icofont-4x"></span><h5> JDE</h5></a></li>
+                </ul>
+                <div class="tab-content m-b-0">
+                    <div class="tab-pane fade" id="job-tab">
+                        <p class="lead m-b-10">
+                           The reports contain all job related information for enquiry and export to csv.
+                        </p>
+                        <!-- <p class="m-b-20">
+                            Reports include: Job Information, Job Cost, Internal Valuation  History 
+                        </p> -->
+                        <div class="row offset-10 m-t-40">
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-inverse" style="width: 300px" ui-sref="enquiry.jobInfo">
+										<i class="icofont icofont-search-alt-1 fa-5x"></i><br> <b>Job Information</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains all job related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-inverse" style="width: 300px" ui-sref="enquiry.jobCost">
+										<i class="icofont icofont-money-bag fa-5x"></i><br> <b>Job Cost</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains job cost related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-inverse" style="width: 300px" ui-sref = "enquiry.ivHistory">
+										<i class="icofont icofont-history fa-5x"></i><br> <b>Internal Valuation History</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains internal valuation history related information for enquiry</p>
+								</div>
+							</div>
+
+
+							
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="tab-pane fade active in" id="sc-tab">
+						<p class="lead m-b-10">
+                          The reports contain all Subcontract related information for enquiry and export to csv.
+                        </p>
+                        <!-- <p class="m-b-20">
+							Report include: Subcontract, Subcontract Detail, Payment Information, Provision History and Work Scope 
+                        </p> -->
+                        <div class="row offset-10 m-t-40">
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref="enquiry.subcontract">
+										<i class="icofont icofont-certificate fa-5x"></i><br> <b>Subcontract</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains subcontract related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref="enquiry.subcontractDetail">
+										<i class="icofont icofont-list fa-5x"></i><br> <b>Subcontract Detail</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains subcontract detail information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref = "enquiry.payment">
+										<i class="icofont icofont-money fa-5x"></i><br> <b>Payment</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains payment information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref = "enquiry.workScope">
+										<i class="icofont icofont-search-alt-1 fa-5x"></i><br> <b>Work Scope</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains work scope for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref = "enquiry.provisionHistory">
+										<i class="icofont icofont-history fa-5x"></i><br> <b>Provision History</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains provision history for enquiry</p>
+								</div>
+							</div>
+							
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="tab-pane fade" id="address-book-tab">
+                        <p class="lead m-b-10">
+                          The reports contain all Address Book related information for enquiry and export to csv.
+                        </p>
+                        <!-- <p class="m-b-20">
+							Report include: Subcontractor, Client 
+                        </p> -->
+                        <div class="row offset-20 m-t-40">
+							<div class="col-md-5">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-warning" style="width: 300px" ui-sref="enquiry.subcontractor">
+										<i class="icofont icofont-worker fa-5x"></i><br> <b>Subcontractor</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains all sub-contractor related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-warning" style="width: 300px" ui-sref="enquiry.client">
+										<i class="icofont icofont-users-alt-2 fa-5x"></i><br> <b>Client</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains all client related information for enquiry</p>
+								</div>
+							</div>
+							
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="tab-pane fade" id="purchase-order-tab">
+                         <p class="lead m-b-10">
+                          The reports contain all purchase order related information for enquiry and export to csv.
+                        </p>
+                        <!-- <p class="m-b-20">
+							Report include: Purchase Order (Under Construction), Purchase Order Detail (Under Construction) 
+                        </p> -->
+                       <div class="row offset-20 m-t-40">
+							<div class="col-md-5">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-purple" style="width: 300px" ui-sref="enquiry.purchaseOrder">
+										<i class="icofont icofont-shopping-cart fa-5x"></i><br> 
+										<b class= "m-b-20">Purchase Order</b><br>
+										<small>.</small>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains all PO related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-purple" style="width: 300px">
+										<i class="icofont icofont-list fa-5x"></i><br> 
+										<b>Purchase Order Detail</b><br>
+										<div class="badge bg-lime-light text-white">Coming soon!</div>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains all PO details information for enquiry</p>
+								</div>
+							</div>
+							
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="jde-tab">
+                        <p class="lead m-b-10">
+                          The reports contain all JDE related information for enquiry and export to csv.
+                        </p>
+                       <!--  <p class="m-b-20">
+							Report include: Account Ledger, Customer Ledger (Under Construction), Supplier Ledger (Under Construction), Performance Appralisal (Under Construction) 
+                        </p> -->
+                        <div class="row m-t-40">
+							<div class="col-md-3">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref="enquiry.accountLedger">
+										<i class="icofont icofont-search-alt-1 fa-5x"></i><br> <b>Account Ledger</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains account ledger related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref="enquiry.customerLedger">
+										<i class="icofont icofont-money-bag fa-5x"></i><br> <b>Customer Ledger</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains customer ledger related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref = "enquiry.supplierLedger">
+										<i class="icofont icofont-history fa-5x"></i><br> <b>Supplier Ledger</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains supplier ledger related information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref = "enquiry.performanceAppraisal">
+										<i class="icofont icofont-history fa-5x"></i><br> <b>Performance Appraisal</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>The report contains internal valuation history for enquiry</p>
+								</div>
+							</div>
+
+							
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- end panel -->
+        </div>
+        
+</div>
+        
+<!-- <div ui-view></div> -->
+
+
+<!-- <div class="content-wrapper">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="job.dashboard" ng-click="activeMenu = ''"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -6,7 +270,7 @@
 		</ol>
 	</section>
 	<div class="clearfix"></div>
-	<!-- Main content -->
+	Main content
 	<section style="margin-left: 0px !important">
 		<div class="row col-md-8 col-md-push-2">
 			<div ng-repeat="btn in btns">
@@ -25,3 +289,4 @@
 	</section>
 
 </div>
+ -->

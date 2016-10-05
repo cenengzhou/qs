@@ -1355,7 +1355,7 @@ public class ResourceSummaryService implements Serializable {
 		List<ResourceSummary> resourceSummaryList = new ArrayList<ResourceSummary>();
 		try {
 			
-			if(lineType=="V1" || lineType =="V3"){
+			if("V1".equals(lineType) || "V3".equals(lineType)){
 				ResourceSummary resourceSummary =  resourceSummaryDao.get(Long.valueOf(resourceNo));
 				resourceSummaryList.add(resourceSummary);
 			}else{

@@ -3843,7 +3843,7 @@ public class SubcontractService {
 			e.printStackTrace();
 		} finally {
 			// Update the SCPackage in DB after updating all the SCDetails
-			subcontractHBDao.saveOrUpdate(subcontract);
+			subcontractHBDao.update(subcontract);
 
 			// ----------Recalculate SC Package Total Amounts - START ----------
 			calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
@@ -3889,12 +3889,12 @@ public class SubcontractService {
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
 					
-					double cumWorkDoneAmt = scDetail.getAmountCumulativeWD().doubleValue()*(percent/100);
+					double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
 					message = calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails
-				subcontractHBDao.saveOrUpdate(subcontract);
+				subcontractHBDao.update(subcontract);
 
 				// ---------- Recalculate SC Package Total Amounts - START ----------
 				calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
