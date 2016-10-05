@@ -23,7 +23,7 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 	private static final long serialVersionUID = 7089655179002194991L;
 	
 	private long id;
-	private BigDecimal idUser;
+	private BigDecimal noStaff;
 	private String keyPreference;
 	private String username;
 	private String valuePreference;
@@ -43,13 +43,13 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 		this.id = id;
 	}
 
-	@Column(name="ID_USER", nullable=false, precision=19)
-	public BigDecimal getIdUser() {
-		return this.idUser;
+	@Column(name="NO_STAFF", nullable=false, precision=19)
+	public BigDecimal getNoStaff() {
+		return this.noStaff;
 	}
 
-	public void setIdUser(BigDecimal idUser) {
-		this.idUser = idUser;
+	public void setNoStaff(BigDecimal noStaff) {
+		this.noStaff = noStaff;
 	}
 
 	@Column(name="KEY_PREFERENCE", nullable=false, length=100)
@@ -84,7 +84,7 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 	 */
 	@Override
 	public String toString() {
-		return "UserPreference [id=" + id + ", idUser=" + idUser + ", keyPreference=" + keyPreference + ", username="
+		return "UserPreference [id=" + id + ", noStaffr=" + noStaff + ", keyPreference=" + keyPreference + ", username="
 				+ username + ", valuePreference=" + valuePreference + "]";
 	}
 
@@ -96,7 +96,7 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((idUser == null) ? 0 : idUser.hashCode());
+		result = prime * result + ((noStaff == null) ? 0 : noStaff.hashCode());
 		result = prime * result + ((keyPreference == null) ? 0 : keyPreference.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		result = prime * result + ((valuePreference == null) ? 0 : valuePreference.hashCode());
@@ -117,10 +117,10 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 		UserPreference other = (UserPreference) obj;
 		if (id != other.id)
 			return false;
-		if (idUser == null) {
-			if (other.idUser != null)
+		if (noStaff == null) {
+			if (other.noStaff != null)
 				return false;
-		} else if (!idUser.equals(other.idUser))
+		} else if (!noStaff.equals(other.noStaff))
 			return false;
 		if (keyPreference == null) {
 			if (other.keyPreference != null)
