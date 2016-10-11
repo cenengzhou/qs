@@ -1,5 +1,6 @@
-mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'SessionHelper', function($http, $scope, $location, $window, SessionHelper) {
-	   
+mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'SessionHelper',
+                     function($http, $scope, $location, $window, SessionHelper) {
+
     $scope.$on('$includeContentLoaded', function(event) {
         App.initComponent();
     });

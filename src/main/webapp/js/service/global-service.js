@@ -144,7 +144,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		handleSuccess: handleSuccess,
 		checkNull: checkNull,
 		containRole: containRole,
-		getUserAndCheckRole: getUserAndCheckRole,
+		getUser: getUser,
 		numberClass: numberClass,
 		formTemplate: formTemplate,
 		addressBookRowTemplate: addressBookRowTemplate,
@@ -201,17 +201,8 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		return result;
 	}
 	
-	function getUserAndCheckRole(role){
-		var result = false;
-		if(!$rootScope.user) {
-			$http.get('service/security/getCurrentUser')
-			.then(function(response){
-				$rootScope.user = response.data;
-				return containRole(role, response.data.authorities);
-			})
-		} else {
-			return containRole(role, $rootScope.user.authorities);
-		}
+	function getUser(){
+		return $http.get('service/security/getCurrentUser')
 	}
 	
 	function numberClass(n){

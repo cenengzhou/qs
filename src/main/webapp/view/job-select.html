@@ -9,7 +9,7 @@
 			</ol>
 		</div>
 		<div class="col-md-4">
-			<div class="btn-group btn-group-justifie">
+			<div class="btn-group btn-group-justifie" id="divisionDiv">
 
 				<label class="btn"
 					ng-class="{'btn-primary' : selectedDivision == 'BDG', 'btn-white' : selectedDivision != 'BDG'}"
@@ -33,8 +33,8 @@
 			</div>
 		</div>
 		<div class="col-md-4">
-			<div class="input-group">
-				<input ng-model="searchquery" placeholder="Search Job here.."
+			<div class="input-group" id="searchJobHereDiv">
+				<input ng-model="searchquery" placeholder="Search Job here.." id="searchJobField"
 					class="form-control" ng-click="removeDefaultAnimation()" /> <span
 					class="input-group-btn">
 					<button class="btn btn-flat bg-primary" ng-click="searchJob()">
@@ -59,10 +59,10 @@
 	<br>
 
 	<div class="fixed-container">
-		<div class="row">
+		<div class="row" id="joblabelDiv">
 			<div class="col-md-4 col-lg-3 animated fadeIn"
 				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">
-				<div class="box box-widget sc-panel">
+				<div class="box box-widget sc-panel" id="joblabelDiv{{$index}}">
 					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
 						<div class="sc-panel-header text-white" 
 								ng-class="	job.division == 'BDG' ? 'bg-primary' : 

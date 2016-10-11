@@ -5,7 +5,11 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	$scope.jobAll = GlobalHelper.getUserAndCheckRole('JOB_ALL');
+	GlobalHelper.getUser()
+	.then(function(response){
+		$rootScope.user = response.data;
+		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', response.data.authorities);
+	});
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;
 	$scope.reportPerRow = 4;
