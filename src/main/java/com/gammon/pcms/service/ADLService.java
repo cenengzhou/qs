@@ -388,10 +388,9 @@ public class ADLService {
 	public List<Map<String, String>> obtainCompanyCodeAndName(){
 		Map<String, Map<String, String>> allCompanyMap = businessUnitDao.obtainCompanyCodeAndName();
 		List<Map<String, String>> resultList = new ArrayList<>();
-		List<JobSecurity> jobSecurityList = adminService.obtainJobSecurityListByCurrentUser();
-		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
-		for(JobSecurity jobSecurity : jobSecurityList){
-			Map<String, String> companyMap = allCompanyMap.get(jobSecurity.getCompany());
+		List<String> companyCodeList = adminService.obtainCompanyCodeListByCurrentUser();
+		for(String companyCode : companyCodeList){
+			Map<String, String> companyMap = allCompanyMap.get(companyCode);
 			if(companyMap != null){
 				resultList.add(companyMap);
 			}

@@ -150,16 +150,26 @@ public class AdminService {
 		return companyCodeList.contains("NA") || companyCodeList.contains(companyCode);
 	}
 	
-	public List<String> obtainCompanyCodeListByCurrentUser(){
+	public List<String> obtainCompanyCodeListByCurrentUser() {
 		List<String> companyCodeList = new ArrayList<>();
-		for(JobSecurity jobSecurity : obtainJobSecurityListByCurrentUser()){
-			companyCodeList.add(jobSecurity.getCompany());
+		if(securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll())){
+			try {
+				return jobInfoHBDao.obtainAllJobCompany();
+			} catch (DatabaseOperationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			for(JobSecurity jobSecurity : obtainJobSecurityListByCurrentUser()){
+				companyCodeList.add(jobSecurity.getCompany());
+			}
 		}
 		return companyCodeList;
 	}
 	
 	public List<JobSecurity> obtainJobSecurityListByCurrentUser() {
-		return gsfService.getJobSecurityList(securityService.getCurrentUser().getUsername());
+		List<JobSecurity> jobSecurityList = gsfService.getJobSecurityList(securityService.getCurrentUser().getUsername());
+		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
+		return jobSecurityList;
 	}
 
 	public List<JobSecurity> obtainJobSecurityListByUsername(String username) {
