@@ -137,7 +137,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
-						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontractor No'}
+						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'}
 					  ],
 					  selectiveFields:['company', 'jobNumber', 'division', 'subcontractorNumber']
 					},
@@ -232,8 +232,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 			})
 			if(!selectiveResult) {
 				var selectiveMessage = '';
-				report.selectiveFields.forEach(function(text){selectiveMessage += camelToNormalString(text) + ', ';});
-				msg += 'Please enter one of below field:<br>' + selectiveMessage.substring(0, selectiveMessage.length-1);
+				report.selectiveFields.forEach(function(text){selectiveMessage += camelToNormalString(text).replace('Number', 'No.') + ', ';});
+				msg += 'Please enter one of below field:<br>' + selectiveMessage.substring(0, selectiveMessage.length-2);
 				result = false;
 			}
 		}

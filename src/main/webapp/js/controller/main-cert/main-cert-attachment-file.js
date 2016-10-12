@@ -14,7 +14,7 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	$scope.mainCertNo = $cookies.get('mainCertNo');
 	$scope.nameObject = GlobalParameter['AbstractAttachment'].MainCertNameObject;
-
+	$scope.isUpdatable = !$scope.parentScope.disableButtons;
 	$scope.sequenceNo = 0;
 	$scope.textKey = $scope.jobNo + '|' + $scope.mainCertNo + '|';
 	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCDetailsNameObject){
