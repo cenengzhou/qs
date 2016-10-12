@@ -494,12 +494,7 @@ public class MainCertService {
 			updateMainCertFromF03B14Manually();
 
 			// Apply Job Security
-			String username = securityService.getCurrentUser().getUsername();
-			List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(username);
-
-			List<String> companyList = new ArrayList<String>();
-			for (JobSecurity jobSecurity : jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
+			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
 
 			// Step 2: Obtain Main Cert List
 			List<ContractReceivableWrapper> mainCertList = mainCertHBDao

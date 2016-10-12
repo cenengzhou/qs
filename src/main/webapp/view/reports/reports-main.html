@@ -23,15 +23,21 @@
 										<table >
 											<tr ng-repeat="searchField in report.searchFields">
 												<td style="padding-bottom:10px">
-													<label for="{{report.name}}{{searchField.field}}">{{searchField.label}}:</label><br>
+													<label class="col-form-label" for="{{report.name}}{{searchField.field}}">{{searchField.label}}:</label><br>
 													
-													<input ng-if="searchField.inputType === 'text'" type="text" 
-													ng-init="searchField.value = searchField.defaultValue != null ? searchField.defaultValue : ''"
-													pattern="{{searchField.validatePattern}}" 
-													title="{{searchField.validateMessage != null ? searchField.validateMessage : ''}}" 
-													ng-model-options="{ updateOn: 'blur' }" class="form-control" 
-													id="{{report.name}}{{searchField.field}}" name="{{report.name}}{{searchField.field}}" 
-													ng-model="searchField.value">
+													<div ng-if="searchField.inputType === 'text'" class="form-group has-feedback">
+														<input type="text" class="form-control form-control-success"
+														ng-init="searchField.value = searchField.defaultValue != null ? searchField.defaultValue : ''"
+														pattern="{{searchField.validatePattern}}" 
+														title="{{searchField.validateMessage != null ? searchField.validateMessage : ''}}" 
+														ng-model-options="{ updateOn: 'blur' }" class="form-control" 
+														id="{{report.name}}{{searchField.field}}" name="{{report.name}}{{searchField.field}}" 
+														ng-model="searchField.value">
+														<span class="fa fa-check has-success form-control-feedback text-success" ng-show="{{report.name}}Form.{{report.name}}{{searchField.field}}.$valid 
+													&& {{report.name}}Form.{{report.name}}{{searchField.field}}.$touched"></span>
+													<span class="fa fa-times has-danger form-control-feedback text-danger" ng-show="{{report.name}}Form.{{report.name}}{{searchField.field}}.$invalid 
+													&& {{report.name}}Form.{{report.name}}{{searchField.field}}.$touched"></span>
+													</div>
 													
 													<input ng-if="searchField.inputType === 'dueDateType'" ng-init="searchField.value = true"
 													type="checkbox" data-ios-toggle="toggle" 
@@ -81,6 +87,7 @@
 														    md-item-text="item.display"
 														    md-min-length="0"
 														    md-select-on-match="true"
+														    md-menu-class="{{searchField.mdMenuClass}}"
 														    placeholder="">
 														  <md-item-template>
 														    <span md-highlight-text="searchField.value" md-highlight-flags="^i">{{item.display}}</span>

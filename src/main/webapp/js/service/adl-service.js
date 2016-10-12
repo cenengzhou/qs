@@ -4,7 +4,8 @@ mainApp.service('adlService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	getJobDashboardData:						getJobDashboardData,
     	getMonthlyJobCostList:						getMonthlyJobCostList,
     	getAccountLedgerList:						getAccountLedgerList,
-    	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient
+    	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
+    	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
     });
     
   //Asyn Call
@@ -63,6 +64,11 @@ mainApp.service('adlService', ['$http', '$q', 'GlobalHelper',  function($http, $
     
     function getAddressBookListOfSubcontractorAndClient(){
     	var request = $http.get('service/adl/getAddressBookListOfSubcontractorAndClient');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function obtainCompanyCodeAndName(){
+    	var request = $http.post('service/adl/obtainCompanyCodeAndName');
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     

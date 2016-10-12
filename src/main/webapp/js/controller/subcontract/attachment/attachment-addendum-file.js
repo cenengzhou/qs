@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
-                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
+mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'addendumService',
+                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, addendumService) {
 	
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
@@ -11,7 +11,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 	$scope.sequenceNo = 0;
 	$scope.textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
 	$scope.hideButton = false;
-	
+	$scope.isUpdatable = false;
 	$scope.loadAttachmentFacade = attachmentService.getAttachmentListForPCMS;
 	$scope.uploadAttachmentFacade = attachmentService.uploadSCAttachment;
 	$scope.deleteAttachmentFacade = attachmentService.deleteAttachment;
@@ -102,6 +102,19 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     	}
     }
     
+	function getAddendum(){
+		if($scope.addendumNo)
+		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+		.then(
+				function( data ) {
+					$scope.addendum = data;
+					if($scope.addendum && $scope.addendum.status == "PENDING")
+						$scope.isUpdatable = true;
+					else
+						$scope.isUpdatable = false;
+				});
+	} getAddendum()
+	
 	function getUserByUsername (username){
 		return $http.get('service/security/getUserByUsername?username='+username);
 	}

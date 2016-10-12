@@ -1027,24 +1027,24 @@ public class PaymentService{
 		scPaymentCertWrapper.setDueDate(dueDate);
 
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
-		User user = securityService.getCurrentUser();
-		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
-			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
-			String canAccessJobString = "";
-			logger.info(user.getFullname() + " can access job list: ");	
-			for(String canAccessJobNo : canAccessJobList){
-				canAccessJobString += canAccessJobNo + ", ";
-				JobInfo canAccessJobInfo = new JobInfo();
-				job.setJobNumber(canAccessJobNo);
-				job.setCompany(company);
-				scPaymentCertWrapper.setJobNo(canAccessJobNo);
-				scPaymentCertWrapper.setJobInfo(canAccessJobInfo);
-				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType));
-			}
-			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
-		} else {
+//		User user = securityService.getCurrentUser();
+//		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+//			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+//			String canAccessJobString = "";
+//			logger.info(user.getFullname() + " can access job list: ");	
+//			for(String canAccessJobNo : canAccessJobList){
+//				canAccessJobString += canAccessJobNo + ", ";
+//				JobInfo canAccessJobInfo = new JobInfo();
+//				job.setJobNumber(canAccessJobNo);
+//				job.setCompany(company);
+//				scPaymentCertWrapper.setJobNo(canAccessJobNo);
+//				scPaymentCertWrapper.setJobInfo(canAccessJobInfo);
+//				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType));
+//			}
+//			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+//		} else {
 			scPaymentCertWrapperList = obtainPaymentCertificateList(scPaymentCertWrapper, dueDateType);
-		}
+//		}
 		
 		List<SCAllPaymentCertReportWrapper> scAllPaymentCertReportWrapperList = new ArrayList<SCAllPaymentCertReportWrapper>();
 		
@@ -1722,9 +1722,9 @@ public class PaymentService{
 	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
 	public ExcelFile generatePaymentCertificateEnquiryExcel(String jobNo, String company, String packageNo, String subcontractorNo, String paymentStatus, String paymentType, String directPayment, String paymentTerm, String dueDateType, Date dueDate, Date certIssueDate) throws DatabaseOperationException {
 		logger.info("STARTED -> generatePaymentCertificateEnquiryExcel");
-		if ((jobNo.isEmpty() || "".equals(jobNo.trim())) && (company == null || "".equals(company.trim())) && (packageNo == null || "".equals(packageNo)) && (company == null || "".equals(company)) && (subcontractorNo == null || "".equals(subcontractorNo))) {
-			return null;
-		}
+//		if ((jobNo.isEmpty() || "".equals(jobNo.trim())) && (company == null || "".equals(company.trim())) && (packageNo == null || "".equals(packageNo)) && (company == null || "".equals(company)) && (subcontractorNo == null || "".equals(subcontractorNo))) {
+//			return null;
+//		}
 		
 		//convert the information to a wrapper
 		JobInfo job = new JobInfo();
@@ -1751,23 +1751,23 @@ public class PaymentService{
 		
 		User user = securityService.getCurrentUser();
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
-		if(jobNo == null && !user.hasRole(securityConfig.getRolePcmsJobAll())){
-			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
-			String canAccessJobString = "";
-			logger.info(user.getFullname() + " can access job list: ");
-			for(String canAccessJobNo : canAccessJobList){
-				canAccessJobString += canAccessJobNo + ", ";
-				JobInfo canAccessJobInfo = new JobInfo();
-				job.setJobNumber(canAccessJobNo);
-				job.setCompany(company);
-				tempscPaymentCertWrapper.setJobNo(canAccessJobNo);
-				tempscPaymentCertWrapper.setJobInfo(canAccessJobInfo);
-				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType));
-			}
-			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
-		} else {
+//		if(jobNo == null && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+//			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+//			String canAccessJobString = "";
+//			logger.info(user.getFullname() + " can access job list: ");
+//			for(String canAccessJobNo : canAccessJobList){
+//				canAccessJobString += canAccessJobNo + ", ";
+//				JobInfo canAccessJobInfo = new JobInfo();
+//				job.setJobNumber(canAccessJobNo);
+//				job.setCompany(company);
+//				tempscPaymentCertWrapper.setJobNo(canAccessJobNo);
+//				tempscPaymentCertWrapper.setJobInfo(canAccessJobInfo);
+//				scPaymentCertWrapperList.addAll(obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType));
+//			}
+//			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+//		} else {
 			scPaymentCertWrapperList = obtainPaymentCertificateList(tempscPaymentCertWrapper, dueDateType);
-		}
+//		}
 		
 		logger.info("scPaymentCertWrapperList.size() : " + scPaymentCertWrapperList.size());
 		ExcelFile excelFile = new ExcelFile();
@@ -3114,17 +3114,14 @@ public class PaymentService{
 				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
-		}else {
-			List<JobSecurity> jobSecurityList = adminServiceImpl.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
+		}else {			
+			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
 
 			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
 				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
-			}else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
+			}
+//			else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
+//				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
 			else{
 				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
 			}

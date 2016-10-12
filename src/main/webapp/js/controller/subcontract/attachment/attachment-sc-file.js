@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
-                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
+mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'subcontractService', 'paymentService',
+                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, subcontractService, paymentService) {
 	
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
@@ -20,6 +20,9 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCPaymentNameObject){
 		$scope.textKey += $scope.paymentCertNo;
 		$scope.insideContent = true;
+		checkPaymentCertUpdatable();
+	} else {
+		checkSubcontractUpdatable();
 	}
 	
     $scope.loadAttachment = function(nameObject, textKey){
@@ -90,6 +93,28 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     	}
     }
     
+    function checkSubcontractUpdatable(){
+    	subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(function( data ) {
+			if(angular.isObject(data)){
+				$scope.subcontract = data;
+				if($scope.subcontract.scStatus !="330" && $scope.subcontract.scStatus !="500")
+					$scope.isUpdatable = true;
+			}
+		})
+    }
+    
+    function checkPaymentCertUpdatable(){
+    	paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		.then(function( data ) {
+			if(angular.isObject(data)){
+				$scope.payment = data;
+				if($scope.payment.paymentStatus == "PND")
+					$scope.isUpdatable = true;
+			}		
+		})
+    }
+
 	function getUserByUsername (username){
 		return $http.get('service/security/getUserByUsername?username='+username);
 	}

@@ -44,7 +44,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 				function( data ) {
 					$scope.latestVersion = false;
 					$scope.repackaging = data;
-					if($scope.repackaging.id != null && $scope.repackaging.id.length > 0){
+					if($scope.repackaging.id != null){
 						$scope.loadAttachment($scope.repackaging.id);
 					}
 				});
@@ -58,7 +58,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 						$scope.repackaging = data;
 						$scope.latestVersion = true;
 						$cookies.put('repackagingId', $scope.repackaging.id);
-
+						
 						$scope.loadAttachment($scope.repackaging.id);
 					}
 				});

@@ -218,27 +218,27 @@
 						<div class="col-md-4">
 							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
-								<label class="btn btn-block btn-primary"> <i
+								<label class="btn btn-block btn-primary" ng-disabled="repackaging.status == '900'"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
 									Attachment&hellip; <input style="display: none;"
 									class="form-control file-loading" type="file" name="files"
-									id="attachmentFiles" ng-model="attachmentFiles"
+									id="attachmentFiles" ng-model="attachmentFiles" ng-disabled="repackaging.status == '900'"
 									onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
 									multiple />
 								</label>
 							</form>
 						</div>
 
-						<div class="col-md-4" ng-show="selectedAttachement">
-							<label class="btn btn-block btn-success"
-								ng-click="deleteAttachment()" ng-disabled="!selectedAttachement">
+						<div class="col-md-4">
+							<label class="btn btn-block btn-success" ng-disabled="repackaging.status == '900'"
+								ng-click="repackaging.status != '900' &&deleteAttachment()">
 								<i class="glyphicon glyphicon-remove-circle"></i> Delete
 								selected Item
 							</label>
 						</div>
 						<div class="col-md-4">
-							<button class="btn btn-block btn-danger"
-								ng-click="addTextAttachment()">
+							<button class="btn btn-block btn-danger" ng-disabled="repackaging.status == '900'"
+								ng-click="repackaging.status != '900' && addTextAttachment()">
 								<i class="glyphicon glyphicon-plus-sign"></i> Add Text
 								Attachment
 							</button>

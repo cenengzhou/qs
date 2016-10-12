@@ -2,7 +2,9 @@ package com.gammon.pcms.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -21,6 +23,7 @@ import com.gammon.pcms.dao.adl.AddressBookDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
+import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -30,6 +33,7 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.qs.service.RepackagingService;
+import com.gammon.qs.service.admin.AdminService;
 
 @Service
 @Transactional(	readOnly = true, rollbackFor = Exception.class, value = "adlTransactionManager")
@@ -58,6 +62,9 @@ public class ADLService {
 	private BusinessUnitDao businessUnitDao;
 	@Autowired
 	private RepackagingService repackagingService;
+	@Autowired
+	private AdminService adminService;
+	
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
 	 */
@@ -372,5 +379,23 @@ public class ADLService {
 			}
 			return new ArrayList<ApprovalDetail>();
 		}
+	}
+	
+	/**
+	 * 
+	 * @return the company list which accessible to current user
+	 */
+	public List<Map<String, String>> obtainCompanyCodeAndName(){
+		Map<String, Map<String, String>> allCompanyMap = businessUnitDao.obtainCompanyCodeAndName();
+		List<Map<String, String>> resultList = new ArrayList<>();
+		List<JobSecurity> jobSecurityList = adminService.obtainJobSecurityListByCurrentUser();
+		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
+		for(JobSecurity jobSecurity : jobSecurityList){
+			Map<String, String> companyMap = allCompanyMap.get(jobSecurity.getCompany());
+			if(companyMap != null){
+				resultList.add(companyMap);
+			}
+		}
+		return resultList;
 	}
 }

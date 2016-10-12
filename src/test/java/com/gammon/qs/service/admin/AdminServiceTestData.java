@@ -369,7 +369,7 @@ public class AdminServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.admin.AdminService#obtainCompanyListByUsername(java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.admin.AdminService#obtainJobSecurityListByUsername(java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainCompanyListByUsername() {
 		return new TransactionTestCase.TestDataMethod() {

@@ -550,7 +550,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                          'js/controller/subcontract/attachment/attachment-addendum-file.js',
                          'js/controller/subcontract/attachment/attachment-addendum-text.js',
-                         'js/service/attachment-service.js'
+                         'js/service/attachment-service.js',
+                         'js/service/addendum-service.js',
                     ] 
                 });
             }]
@@ -1234,7 +1235,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [	
 							'js/controller/reports/reports-main.js',
-							'js/service/job-service.js'
+							'js/service/job-service.js',
+							'js/service/adl-service.js',
                     ] 
                 });
             }]

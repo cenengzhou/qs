@@ -29,6 +29,7 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
 			});
 		}
+		$scope.cancel();
 	}
 	
 	$scope.tinymceOptions = {

@@ -71,7 +71,7 @@ public class JobInfoService {
 
 	public List<JobInfo> getAllJobNoAndDescription() {
 		User user = (User) securityService.getCurrentUser();
-		List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(user.getUsername());
+		List<JobSecurity> jobSecurityList = adminService.obtainJobSecurityListByUsername(user.getUsername());
 		return adminService.obtainCanAccessJobInfoList(jobSecurityList);
 	}
 	

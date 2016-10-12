@@ -59,7 +59,6 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     
     $rootScope.triggerUserMenu = function(){
     	angular.element('[data-click=userMenuCaret]').dropdown('toggle');
-		$rootScope.moveHeaderUp();
     }
 
     $rootScope.moveHeaderUp = function(){
@@ -129,6 +128,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			<span class="main-text">This guide will show you the <strong>Menu</strong> location</span></div></div>',
 		},
 		{
+			type: 'function',
+			fn: $rootScope.moveHeaderUp
+		},
+		{
 			type: 'element',
 			selector: '#header',
 			heading: 'Step 1',
@@ -136,6 +139,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			placement: 'bottom',
 			attachToBody: true,
 			scroll: true
+		},
+		{
+			type: 'function',
+			fn: $rootScope.moveHeaderDown
 		},
 		{
 			type: 'element',
@@ -163,6 +170,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		   	type: 'function',
 		   	fn: $rootScope.triggerUserMenu
 	    },
+		{
+			type: 'function',
+			fn: $rootScope.moveHeaderUp
+		},
 		{
 			type: 'element',
 			selector: '#userDropPanel',

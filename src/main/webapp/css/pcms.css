@@ -364,3 +364,7 @@ button.enquiryInfoBtn {
 	overflow-y:auto; 
 	overflow-x: hidden;
 }
+
+.md-virtual-repeat-container.md-autocomplete-suggestions-container .company-code-and-name {
+     width:350px !important;
+}

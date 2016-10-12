@@ -76,7 +76,7 @@ public class AdminService {
 	}
 	
 	public List<String> obtainCanAccessJobNoList(String username){
-		List<JobSecurity> jobSecurityList = obtainCompanyListByUsername(username);
+		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
 		List<String> jobNumberList = new ArrayList<String>();
 		for(JobSecurity jobSecurity : jobSecurityList){
 			List<String> jobNumberByCompanyList = new ArrayList<String>();
@@ -144,8 +144,25 @@ public class AdminService {
 			throw new AccessDeniedException(user.getFullname() + " cannot access job " + noJob);
 		}
 	}
+	
+	public Boolean canAccessCompanyByCurrentUser(String companyCode){
+		List<String> companyCodeList = obtainCompanyCodeListByCurrentUser();
+		return companyCodeList.contains("NA") || companyCodeList.contains(companyCode);
+	}
+	
+	public List<String> obtainCompanyCodeListByCurrentUser(){
+		List<String> companyCodeList = new ArrayList<>();
+		for(JobSecurity jobSecurity : obtainJobSecurityListByCurrentUser()){
+			companyCodeList.add(jobSecurity.getCompany());
+		}
+		return companyCodeList;
+	}
+	
+	public List<JobSecurity> obtainJobSecurityListByCurrentUser() {
+		return gsfService.getJobSecurityList(securityService.getCurrentUser().getUsername());
+	}
 
-	public List<JobSecurity> obtainCompanyListByUsername(String username) {
+	public List<JobSecurity> obtainJobSecurityListByUsername(String username) {
 		return gsfService.getJobSecurityList(username);
 	}
 

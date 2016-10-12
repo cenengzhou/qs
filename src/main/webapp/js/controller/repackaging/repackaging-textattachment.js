@@ -27,6 +27,7 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'm
 				$scope.parentScope.loadAttachment($scope.parentScope.repackaging.id);
 			});
 		}
+		$scope.cancel();
 	}
 	
 	$scope.tinymceOptions = {

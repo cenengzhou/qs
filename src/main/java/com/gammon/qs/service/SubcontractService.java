@@ -4266,20 +4266,20 @@ public class SubcontractService {
 		searchWrapper.setReportType(reportType);
 		
 		List<SCListWrapper> scListWrapper = new ArrayList<>();
-		User user = securityService.getCurrentUser();
-		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
-			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
-			String canAccessJobString = "";
-			logger.info(user.getFullname() + " can access job list: ");	
-			for(String canAccessJobNo : canAccessJobList){
-				canAccessJobString += canAccessJobNo + ", ";
-				searchWrapper.setJobNumber(canAccessJobNo);
-				scListWrapper.addAll(obtainSubcontractList(searchWrapper));
-			}
-			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
-		} else {
+//		User user = securityService.getCurrentUser();
+//		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+//			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+//			String canAccessJobString = "";
+//			logger.info(user.getFullname() + " can access job list: ");	
+//			for(String canAccessJobNo : canAccessJobList){
+//				canAccessJobString += canAccessJobNo + ", ";
+//				searchWrapper.setJobNumber(canAccessJobNo);
+//				scListWrapper.addAll(obtainSubcontractList(searchWrapper));
+//			}
+//			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+//		} else {
 			scListWrapper = obtainSubcontractList(searchWrapper);
-		}
+//		}
 		
 		ExcelFile excelFile = null;
 		
@@ -4322,20 +4322,20 @@ public class SubcontractService {
 		
 		List<SCListWrapper> scListWrappers = new ArrayList<>();
 		
-		User user = securityService.getCurrentUser();
-		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
-			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
-			String canAccessJobString = "";
-			logger.info(user.getFullname() + " can access job list: ");
-			for(String canAccessJobNo : canAccessJobList){
-				canAccessJobString += canAccessJobNo + ", ";
-				searchWrapper.setJobNumber(canAccessJobNo);
-				scListWrappers.addAll(obtainSubcontractList(searchWrapper));
-			}
-			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
-		} else {		
+//		User user = securityService.getCurrentUser();
+//		if(jobNumber.isEmpty() && !user.hasRole(securityConfig.getRolePcmsJobAll())){
+//			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();
+//			String canAccessJobString = "";
+//			logger.info(user.getFullname() + " can access job list: ");
+//			for(String canAccessJobNo : canAccessJobList){
+//				canAccessJobString += canAccessJobNo + ", ";
+//				searchWrapper.setJobNumber(canAccessJobNo);
+//				scListWrappers.addAll(obtainSubcontractList(searchWrapper));
+//			}
+//			if(canAccessJobString.length() > 0) logger.info(canAccessJobString.substring(0, canAccessJobString.length() - 2));
+//		} else {		
 			scListWrappers = obtainSubcontractList(searchWrapper);
-		}
+//		}
 
 		if(scListWrappers.size()==0){
 			SCListWrapper scListWrapper = new SCListWrapper();
@@ -4388,12 +4388,8 @@ public class SubcontractService {
 																		searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null, searchWrapper.getReportType());
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
-		}else {
-			List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
+		}else {			
+			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
 
 			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
 				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
@@ -4401,8 +4397,9 @@ public class SubcontractService {
 																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																		searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
 																		searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null, searchWrapper.getReportType());
-			}else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
+			}
+//			else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
+//				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
 			else{
 				subcontractList = subcontractHBDao.obtainSubcontractList(searchWrapper.getCompany(), searchWrapper.getDivision(),
 																	searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
@@ -4509,11 +4506,8 @@ public class SubcontractService {
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
 		}else {
-			List<JobSecurity> jobSecurityList = adminService.obtainCompanyListByUsername(username);
-			
-			List<String> companyList = new ArrayList<String>();
-			for(JobSecurity jobSecurity:jobSecurityList)
-				companyList.add(jobSecurity.getCompany());
+
+			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
 
 			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
 				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
@@ -4522,8 +4516,9 @@ public class SubcontractService {
 																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
 																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), null, null,
 																				searchWrapper.getMonth(), searchWrapper.getYear(), searchWrapper.getReportType());
-			}else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
-				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
+			}
+//			else if(!GenericValidator.isBlankOrNull(searchWrapper.getCompany()))
+//				logger.info("User: "+username+" is not authorized to access Company: "+searchWrapper.getCompany());
 			else{
 				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 

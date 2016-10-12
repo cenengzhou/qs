@@ -1,6 +1,6 @@
 
-mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter', 'GlobalHelper', 'modalService', '$sce', '$log', 'jobService',
-                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter, GlobalHelper, modalService, $sce, $log, jobService) {
+mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter', 'GlobalHelper', 'modalService', '$sce', '$log', 'jobService', 'adlService',
+                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter, GlobalHelper, modalService, $sce, $log, jobService, adlService) {
 	$rootScope.selectedTips = '';
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -53,7 +53,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						                	}
 						               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'dueDateType', inputType: 'dueDateType'},
@@ -78,7 +78,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 						   ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
@@ -104,7 +104,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					    ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
@@ -131,7 +131,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					 	               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'division', inputType: 'autocomplete', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
@@ -209,6 +209,13 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
  					selectedReportUrl.searchValues['month'] = d[1];
  				}
  			}
+ 			if(searchField.selectedItem && searchField.field === 'company') {
+ 				selectedReportUrl.searchValues['company'] = searchField.selectedItem.value;
+ 			}
+ 			
+ 			if(searchField.selectedItem && searchField.field === 'division') {
+ 				selectedReportUrl.searchValues['division'] = searchField.selectedItem.value;
+ 			}
  		})
 		if(report.requiredFields){
 			report.requiredFields.forEach(function(required){
@@ -275,12 +282,12 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
     }
 	
 	function loadAllCompany() {
-		jobService.obtainAllJobCompany()
+		adlService.obtainCompanyCodeAndName()
 		.then(function(data){
 			$scope.companies = data.map( function (company) {
 		        return {
-		          value: company.toLowerCase(),
-		          display: company
+		          value: company.companyCode.toLowerCase(),
+		          display: company.companyCode + ' - ' + company.companyName
 		        };
 		      });
 			loadAllDivision()

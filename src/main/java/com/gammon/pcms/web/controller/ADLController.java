@@ -3,6 +3,7 @@ package com.gammon.pcms.web.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -287,5 +288,10 @@ public class ADLController {
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<ApprovalDetail>();
 		}
+	}
+	
+	@RequestMapping(value = "obtainCompanyCodeAndName", method = RequestMethod.POST)
+	public List<Map<String, String>> obtainCompanyCodeAndName(){
+		return adlService.obtainCompanyCodeAndName();
 	}
 }
