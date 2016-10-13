@@ -363,14 +363,14 @@ public class PaymentPostingService {
 					return responseWrapper;
 				}
 
-				// if user's As At Date == null, then bypass validation of "Payment's As At Date must be before Main Contract Cert's As At Date"
+				// if user's As At Date == null, then bypass validation of "Payment's As At Date must be earlier than Main Contract Cert's As At Date"
 				try {
 					if (asAtDate != null && asAtDate.after(mainCertAsAtRecDateWrapper.getValueDateOnCert())) {
 						SimpleDateFormat formattedDate = new SimpleDateFormat("dd/MM/yyyy");
 						String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
 
-						responseWrapper.setErrorMsg("Payment's As At Date must be before Main Contract Certificate's As At Date." +
-													"Main Contract Certificater As At Date: " + parentMainCertAsAtDate);
+						responseWrapper.setErrorMsg("Payment's As At Date must be earlier than Main Contract Certificate's As At Date.</br>" +
+													"Main Contract Certificate As At Date: " + parentMainCertAsAtDate);
 						responseWrapper.setIsvalid(false);
 						return responseWrapper;
 					}

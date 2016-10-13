@@ -21,7 +21,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 			            	 cellTooltip: function(row){ return row.entity.generalCondition; },
 			            	 cellTemplate: '<div class="ui-grid-cell-contents wrap" white-space: normal title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>'
 			            },
-			             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin", width: '30%',
+			             { field: 'proposedVariance', displayName: "Proposed Variance to the General Condition", width: '30%',
 			            	 cellTooltip: function(row){ return row.entity.proposedVariance; },
 			            	 cellTemplate: '<div class="ui-grid-cell-contents wrap" white-space: normal title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>'
 			            },
@@ -39,7 +39,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 								}, 
 				             { field: 'generalCondition', displayName: "General Condition of Sub-Contract",
 				            	 }, 
-				             { field: 'proposedVariance', displayName: "Proposed Variance to the General Conditioin",
+				             { field: 'proposedVariance', displayName: "Proposed Variance to the General Condition",
 				            	 }, 
 				             { field: 'reason', displayName: "Reason for the Variance",
 			            		 }, 
