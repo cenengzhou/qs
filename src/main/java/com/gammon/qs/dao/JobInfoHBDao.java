@@ -2,6 +2,7 @@ package com.gammon.qs.dao;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -253,6 +254,17 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		criteria.setProjection(projectionList);
 		List<String> jobNumberList = criteria.list();
 		return jobNumberList;
+	}
+	
+	public Date obtainJobInfoLastModifyDate(){
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.addOrder(Order.desc("lastModifiedDate"));
+		ProjectionList projectionList  = Projections.projectionList();
+		projectionList.add(Projections.property("lastModifiedDate"));
+		criteria.setProjection(projectionList);
+		criteria.setMaxResults(1);
+		Date lastModifiedDate = (Date) criteria.uniqueResult();
+		return lastModifiedDate;
 	}
 
 }

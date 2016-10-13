@@ -104,11 +104,11 @@
 							<div style="border: 0px solid yellow" class="pull-right">
 								<ul class="nav navbar-nav navbar-right">
 									<li class="dropdown navbar-user">
-						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-click="userMenuCaret">
+						                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-click="userMenuCaret" ng-click="selectTab(1)">
 						                    <span class="image" id="userImage"><img data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></span>
 						                    <b class="caret"></b>
 						                </a>
-						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none; padding-bottom:0px; width:300px" id="userDropPanel">
+						                <ul class="dropdown-menu navbar-user pull-right" style="max-width:none; padding-bottom:0px; width:350px" id="userDropPanel">
 											<li ng-show="isSelected(1)" style="text-align:center;border:0px solid red;height:150px" class="bg-primary" >
 												<div class="image" id="userImage"><img class="img-circle" style="border:3px solid; border-color:rgba(255,255,255,0.2); margin:10px;padding:0px;width:84px;height:84px" data-ng-src="{{userIcon}}" alt="" imageonload roll-back-image="resources/images/profile.png"/></div>
 												<div style="padding-bottom:20px;">
@@ -118,8 +118,14 @@
 											<li ng-show="isSelected(2)" style="text-align:center;border:0px solid red;" class="bg-primary" >
 												<div style="height:150px" class="bg-primary" ></div>
 											</li>
-											<li ng-show="isSelected(3)" style="text-align:center;border:0px solid red;" class="bg-primary" >
-												<div style="height:150px" class="bg-primary" ></div>
+											<li ng-show="isSelected(3)" style="text-align:center;border:0px solid red;padding:20px;" class="bg-primary" >
+												<div style="height:150px;" class="bg-primary" >
+													<select size="6" id="defaultJobList" class="form-control text-info" ng-model="defaultJobNo" ng-options="job.jobNo as (job.jobNo + ' - ' + job.description) for job in jobs"></select>
+													<label class="btn btn-block btn-inverse" ng-click="settingDefaultJobNo()">
+														<i class="fa fa-hand-o-right"></i> Set default job
+													</label>
+													<label ng-show="showDefaultJobStatus" ng-class="{'animated fadeIn':showDefaultJobStatus, 'animated fadeOut':!showDefaultJobStatus}">Default job updated</label>
+												</div>
 											</li>
 							                <li class="user-body">
 							                <ul class="nav nav-tabs">

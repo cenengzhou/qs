@@ -5,10 +5,10 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	GlobalHelper.getUser()
+	GlobalHelper.gettingUser()
 	.then(function(response){
-		$rootScope.user = response.data;
-		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', response.data.authorities);
+		$rootScope.user = response.user;
+		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', $rootScope.user.authorities);
 	});
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;

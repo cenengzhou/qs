@@ -1,10 +1,30 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval', 'GlobalParameter',
-                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, GlobalParameter) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'storageService',
+                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, $timeout, GlobalParameter, userpreferenceService, storageService) {
 	
 	
 	$scope.tab = 1;
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;
+		if(setTab === 3){
+			defaultJobListFocus();
+			if($scope.resetDefaultJobNo){
+				$timeout(function(){
+					$scope.defaultJobNo = $scope.resetDefaultJobNo;
+					var defaultOption = angular.element('#defaultJobList').find('[value="string:' + $scope.resetDefaultJobNo + '"]');
+					var optionTop = defaultOption ? defaultOption.offset().top : 0;
+					var selectTop = angular.element('#defaultJobList').offset().top;
+					var baseTop = angular.element('#defaultJobList').scrollTop();
+					var scrollTo = baseTop + optionTop - selectTop;
+					angular.element('#defaultJobList').scrollTop(scrollTo);
+				}, 100);			
+			}
+			if(!$scope.jobs){
+				storageService.gettingJobList()
+				.then(function(response){
+					$scope.jobs = response.jobs;
+				});
+			}
+		}
 	};
 	$scope.isSelected = function(checkTab){
 		return $scope.tab === checkTab;
@@ -60,10 +80,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 
 	$scope.getCurrentUser = function(){
 		if($rootScope.user === undefined)
-		$http.get('service/security/getCurrentUser')
+		GlobalHelper.gettingUser()
 		.then(function(response){
-			if(response.data instanceof Object){
-				$scope.user = response.data;
+			if(response.user instanceof Object){
+				$scope.user = response.user;
 				$rootScope.user = $scope.user;
 				$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $scope.user.UserRoles);
 				$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $scope.user.UserRoles);
@@ -82,7 +102,41 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 					$scope.userIcon = iconPath;
 				}
 			}
+			
+			userpreferenceService.gettingUserPreference()
+			.then(function(response){
+				updateDefaultJobNo(response.userPreference);
+			});			
 		});
+	}
+	
+	function defaultJobListFocus(){
+		$timeout(function(){
+			angular.element('#defaultJobList').focus();
+		}, 100);
+	}
+	
+	function updateDefaultJobNo(userPreference){
+		if(userPreference && userPreference.DEFAULT_JOB_NO){
+			$scope.defaultJobNo = userPreference.DEFAULT_JOB_NO;
+			$scope.resetDefaultJobNo = angular.copy($scope.defaultJobNo);
+		}
+	}
+	
+	$scope.settingDefaultJobNo = function(){
+		userpreferenceService.settingDefaultJobNo($scope.defaultJobNo)
+		.then(function(response){
+			showUpdateDefaultJobStatus();
+			updateDefaultJobNo(response.data);
+			defaultJobListFocus();
+		})
+	}
+	
+	function showUpdateDefaultJobStatus(){
+		$scope.showDefaultJobStatus = true;
+		$timeout(function(){
+			$scope.showDefaultJobStatus = false;
+		}, 3000);
 	}
 	$scope.getCurrentUser();
 	$scope.menuScroll = 0;
@@ -315,6 +369,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	 });
 	
 	$scope.loadProperties();
+
 	//	$scope.filter = function() {
 //		$scope.ObjectCodeGridApi.grid.refresh();
 //		$scope.SubsidiaryCodeGridApi.grid.refresh();

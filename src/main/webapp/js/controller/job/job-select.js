@@ -1,5 +1,5 @@
-mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', '$rootScope',
-                               function($scope, colorCode, jobService, $animate, $cookies, modalService, $rootScope) {
+mainApp.controller('JobSelectCtrl', ['$scope', '$state', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', '$rootScope', 'storageService', 'userpreferenceService',
+                               function($scope, $state, colorCode, jobService, $animate, $cookies, modalService, $rootScope, storageService, userpreferenceService) {
 	$rootScope.selectedTips = '';
 	$scope.loading = true;
 	$scope.selectedDivision = '';
@@ -15,13 +15,28 @@ mainApp.controller('JobSelectCtrl', ['$scope', 'colorCode', 'jobService', '$anim
 	
     
 	function loadJobList() {
-		jobService.getJobList()
-		.then(
-				function( data ) {
-					$scope.jobs= data;
-				});
+		if(!$rootScope.routedToDefaultJob){
+			userpreferenceService.gettingUserPreference()
+			.then(function(response){
+				if(response.userPreference && response.userPreference.DEFAULT_JOB_NO){
+					$scope.updateJobInfo(response.userPreference.DEFAULT_JOB_NO, response.userPreference.DEFAULT_JOB_DESCRIPTION);
+					$rootScope.routedToDefaultJob = true;
+					$state.go('job.dashboard');
+				} else {
+					getJobList();
+				}
+			})
+			return;
+		}
+		getJobList();
 	}
 	
+	function getJobList(){
+		storageService.gettingJobList()
+		.then(function( response ) {
+			$scope.jobs= response.jobs;
+		});
+	}
 	
 	$scope.updateJobInfo = function (jobNo, jobDescription) {
     	$cookies.put('jobNo', jobNo);

@@ -1,6 +1,7 @@
 package com.gammon.qs.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -338,6 +339,10 @@ public class JobInfoService {
 		}
 
 		return error;
+	}
+	
+	public Date obtainJobInfoLastModifyDate(){
+		return jobHBDao.obtainJobInfoLastModifyDate();
 	}
 		
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/

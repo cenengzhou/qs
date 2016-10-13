@@ -1,12 +1,17 @@
 package com.gammon.pcms.web.controller;
 
+import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,13 +20,18 @@ import com.gammon.pcms.config.ApplicationConfig;
 import com.gammon.pcms.config.DeploymentConfig;
 import com.gammon.pcms.config.HibernateConfig;
 import com.gammon.pcms.config.LinkConfig;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.security.SecurityServiceSpringImpl;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/properties/")
 public class PropertiesController {
 
+	Logger logger = Logger.getLogger(getClass());
+	
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 	@Autowired
@@ -34,6 +44,34 @@ public class PropertiesController {
 	private HibernateConfig hibernateConfig;
 	@Autowired
 	private Environment env;
+	@Autowired
+	private JobInfoService jobInfoService;
+	@Autowired
+	private SecurityServiceSpringImpl securityService;
+	@Autowired
+	private SecurityConfig securityConfig;
+	
+	@RequestMapping(value = "obtainCacheKey", method = RequestMethod.POST)
+	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
+		String cacheString = securityService.getCurrentUser().getFullname() + " | ";
+		switch(itemType){
+		case "JOB_LIST":
+			Date jobInfoLastModifyDate = jobInfoService.obtainJobInfoLastModifyDate();
+			cacheString += jobInfoLastModifyDate.toString() + " | ";
+			break;
+		default:
+			itemType = "COMMON";
+			cacheString += "PCMS " + " | ";
+			break;
+		}
+		String cacheKeyPrefix = securityConfig.getCacheKeyPrefix(itemType);
+		cacheString = cacheKeyPrefix + " | " + cacheString + itemType;
+		logger.debug(itemType + " cacheString:" + cacheString);
+		String cacheKey = SecurityServiceSpringImpl.MD5(cacheString);
+		logger.debug(itemType + " CacheKey:" + cacheKey);
+        return cacheKey;
+	}
+			
 	
 	@RequestMapping(value = "getProperties", method = RequestMethod.POST)
 	public Map<String, Object> getProperties(){

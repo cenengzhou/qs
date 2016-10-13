@@ -138,13 +138,14 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	}
 }]);
 
-mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootScope', function GlobalHelperFactory($q, modalService, $sce, $http, $rootScope){
+mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootScope',
+	function GlobalHelperFactory($q, modalService, $sce, $http, $rootScope){
 	return{
 		handleError: handleError,
 		handleSuccess: handleSuccess,
 		checkNull: checkNull,
 		containRole: containRole,
-		getUser: getUser,
+		gettingUser: gettingUser,
 		numberClass: numberClass,
 		formTemplate: formTemplate,
 		addressBookRowTemplate: addressBookRowTemplate,
@@ -201,8 +202,21 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		return result;
 	}
 	
-	function getUser(){
-		return $http.get('service/security/getCurrentUser')
+	function gettingUser(){
+		var deferral = $q.defer();
+		if(!$rootScope.user){
+			$http.get('service/security/getCurrentUser')
+			.then(function(response){
+				deferral.resolve({
+					user : response.data
+				})
+			})
+		} else {
+			deferral.resolve({
+				user: $rootScope.user
+			})
+		}
+		return deferral.promise;
 	}
 	
 	function numberClass(n){
@@ -296,6 +310,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 			}
 		})
 	}
+	
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

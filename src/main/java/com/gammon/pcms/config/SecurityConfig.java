@@ -86,6 +86,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${defaultMaxInactiveInterval}")
 	private String defaultMaxInactiveInterval;
 	
+	//cache
+	@Value("#{${cacheKey.prefix}}")
+	private Map<String, String> cacheKeyPrefix;
+	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -438,4 +442,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return getPcmsJob().get(key);
 	}
 
+	/**
+	 * @return the cacheKeyPrefix
+	 */
+	public Map<String, String> getCacheKeyPrefix() {
+		return cacheKeyPrefix;
+	}
+	
+	public String getCacheKeyPrefix(String key){
+		return getCacheKeyPrefix().get(key);
+	}
 }

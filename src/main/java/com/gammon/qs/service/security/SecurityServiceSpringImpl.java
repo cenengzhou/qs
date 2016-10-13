@@ -1,5 +1,8 @@
 package com.gammon.qs.service.security;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -41,5 +44,16 @@ public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<
 			return getCurrentUser().getUsername();
 		}
 		return webServiceConfig.getWsAp("USERNAME");
+	}
+	
+	public static String MD5(String value) throws NoSuchAlgorithmException{
+		MessageDigest md5 = MessageDigest.getInstance("MD5");
+		md5.update(value.getBytes());
+		byte mdBytArray[] = md5.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < mdBytArray.length; i++) {
+         sb.append(Integer.toString((mdBytArray[i] & 0xff) + 0x100, 16).substring(1));
+        }
+		return sb.toString();
 	}
 }

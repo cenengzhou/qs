@@ -1,16 +1,16 @@
 package com.gammon.pcms.web.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gammon.pcms.model.UserPreference;
 import com.gammon.pcms.service.UserPreferenceService;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -20,9 +20,13 @@ public class UserPreferenceController {
 	@Autowired
 	private UserPreferenceService userPreferenceService;
 	
-	@RequestMapping(value = "obtainUserPreferenceByUsername", method = RequestMethod.GET)
-	public List<UserPreference> obtainUserPreferenceByUsername(@RequestParam String username){
-		return userPreferenceService.obtainUserPreferenceByUsername(username);
+	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)
+	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{
+		return userPreferenceService.obtainUserPreferenceByCurrentUser();
 	}
 	
+	@RequestMapping(value = "setDefaultJobNo", method = RequestMethod.POST)
+	public Map<String, String> setDefaultJobNo(@RequestBody String defaultJobNo) throws DatabaseOperationException{
+		return userPreferenceService.setDefaultJobNo(defaultJobNo);
+	}
 }

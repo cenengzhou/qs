@@ -11,16 +11,23 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+
 
 /**
  * The persistent class for the USER_PREFERENCE database table.
  * 
  */
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name="USER_PREFERENCE")
 public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAuditObject implements Serializable {
 
 	private static final long serialVersionUID = 7089655179002194991L;
+	
+	public static final String DEFAULT_JOB_NO = "DEFAULT_JOB_NO";
 	
 	private long id;
 	private BigDecimal noStaff;
@@ -32,9 +39,9 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 	}
 
 	@Id
-	@SequenceGenerator(name="USER_PREFERENCE_ID_GENERATOR", sequenceName="USER_PREFERENCE_SEQ")
+	@SequenceGenerator(name="USER_PREFERENCE_ID_GENERATOR", sequenceName="USER_PREFERENCE_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_PREFERENCE_ID_GENERATOR")
-	@Column(unique=true, nullable=false, precision=19)
+	@Column(name = "ID", unique=true, nullable=false, precision=19)
 	public long getId() {
 		return this.id;
 	}

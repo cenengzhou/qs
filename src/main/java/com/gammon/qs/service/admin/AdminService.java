@@ -167,7 +167,7 @@ public class AdminService {
 	}
 	
 	public List<JobSecurity> obtainJobSecurityListByCurrentUser() {
-		List<JobSecurity> jobSecurityList = gsfService.getJobSecurityList(securityService.getCurrentUser().getUsername());
+		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(securityService.getCurrentUser().getUsername());
 		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
 		return jobSecurityList;
 	}
