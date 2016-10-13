@@ -6,6 +6,15 @@ mainApp.service('storageService', ['$http', '$q', 'GlobalHelper', '$rootScope', 
     });
     
     var cacheKeyArray = {};
+//  1. 		!$rootScope.jobs
+//  1.1			obtainCacheKey  
+//  1.2 		get jobs from localStorage
+//  1.2.1 			decrypt jobs with cacheKey from localStorage
+//  1.2.1.1				fail: go 1.3.1
+//  1.2.1.2				success: assign $rootScope.jobs
+//  1.3.1 		get jobs from server
+//  1.3.1.1			assign $rootScope.jobs
+//  1.3.1.2 			encrypt and save to localStorage
     function gettingJobList(){
     	var deferral = $q.defer();
     	if(!$rootScope.jobs){
@@ -90,24 +99,6 @@ mainApp.service('storageService', ['$http', '$q', 'GlobalHelper', '$rootScope', 
     function removeItem(key){
     	localStorage.removeItem(key);
     }
-//    1. 	!$rootScope.jobs
-//    1.1 		get jobs from localStorage
-//    1.1.1 		decrypt jobs from localStorage
-//    1.1.1.1			assign $rootScope.jobs
-//    1.2.1 		get jobs from server
-//    1.2.1.1			assign $rootScope.jobs
-//    1.2.1.2 			encrypt and save to localStorage
-//    
-//    
-    
-//    jobsJSON = JSON.stringify(data);
-//	localStorage.jobs = CryptoJS.AES.encrypt(jobsJSON, "a5ed1f63b63f8ff9f9d98c29d7457974");
-//	bytes = CryptoJS.AES.decrypt(localStorage.jobs, "a5ed1f63b63f8ff9f9d98c29d7457974");
-//	try{
-//		jobs = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-//	} catch(e){
-//		console.log(e);
-//	}
 
 }]);
 
