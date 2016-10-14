@@ -2,8 +2,16 @@
 	<div class="row">
 		<div class="col-md-12 animated fadeIn">
 			<div class="panel panel-inverse">
-				<div class="panel-heading">Attachment</div>
-				<div class="panel-body" style="padding: 0 !important">
+				<div class="panel-heading col-md-12">
+					<span class="col-md-11">Attachment</span>
+					<span ng-if="inBox" class="col-md-1">
+						<button class="btn btn-white pull-right" type="button"
+							ng-click="cancel()">
+							<span class="fa fa-remove"></span>
+						</button>
+					</span>
+				</div>
+				<div class="panel-body col-md-12" style="padding: 0 !important">
 					<div class="table-responsive" resize
 						ng-style="resizeWithOffset(offsetTop)">
 						<form class="form" role="form" id="attachmentForm">

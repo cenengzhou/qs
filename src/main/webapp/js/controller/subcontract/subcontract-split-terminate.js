@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', 'confirmService', 'roundUtil', '$state', '$stateParams',
-                                            function($scope, subcontractService, modalService, confirmService, roundUtil, $state, $stateParams) {
+mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', '$uibModal', 'confirmService', 'roundUtil', '$state', '$stateParams', 'GlobalParameter',
+                                            function($scope, subcontractService, modalService, $uibModal, confirmService, roundUtil, $state, $stateParams, GlobalParameter) {
 	$scope.remeasuredSubcontractSumAfterSplit = 0;
 	$scope.approvedVOAmountAfterSplit = 0;
 	
@@ -183,6 +183,18 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 		
 	}
 	
+	$scope.openAttachment = function(){
+//		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-file.html', 'AttachmentSCFileCtrl', 'Success', $scope);
+		$scope.nameObject = GlobalParameter['AbstractAttachment'].SCPackageNameObject;
+		$scope.uibModalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
+			controller: 'AttachmentSCFileCtrl',
+			size: 'lg',
+			backdrop: 'static',
+			scope: $scope
+		});
+	}
 	
 	function getSCDetails() {
 		subcontractService.getSubcontractDetailsWithBudget($scope.jobNo, $scope.subcontractNo)

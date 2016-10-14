@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'modalStatus', 'modalParam', '$uibModalInstance', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper',
-                                         function($scope, $location, attachmentService, modalService, modalStatus, modalParam, $uibModalInstance, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper) {
+mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'modalStatus', 'confirmService', 'modalParam', '$uibModalInstance', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
+                                         function($scope, $location, attachmentService, modalService, modalStatus, confirmService, modalParam, $uibModalInstance, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage) {
 	
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
@@ -46,7 +46,7 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
        			var fileType = att.fileName.substring(att.fileName.length -4);
        			att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
        		}
-    		att.user = {UserName: att.createdUser};
+    		att.user = {fullname: att.createdUser};
     		att.user.userIcon = 'resources/images/profile.png';
     		$scope.getUserByUsername(att.createdUser)
     		.then(function(response){
@@ -114,15 +114,19 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
 	}
 	
 	$scope.deleteAttachment = function(){
-		angular.forEach($scope.attachments, function(att){
-			if(att.selectedAttachement === true){
-				attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
-				.then(function(data){
-					$scope.loadAttachment($scope.nameObject, $scope.textKey);
-					$scope.selectedAttachement = false;
-				});
-			}
-		})
+		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+		.then(function(response){
+			if(response === 'Yes')
+			angular.forEach($scope.attachments, function(att){
+				if(att.selectedAttachement === true){
+					attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
+					.then(function(data){
+						$scope.loadAttachment($scope.nameObject, $scope.textKey);
+						$scope.selectedAttachement = false;
+					});
+				}
+			});
+		});
 	}
 	
 }]);

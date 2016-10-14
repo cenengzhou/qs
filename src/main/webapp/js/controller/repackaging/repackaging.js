@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookies', '$uibModal', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 
-                                       function($state, $scope, $location, $cookies, $uibModal, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper) {
+mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookies', '$uibModal', 'confirmService', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
+                                       function($state, $scope, $location, $cookies, $uibModal, confirmService, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper, GlobalMessage) {
 	$rootScope.selectedTips = 'repackagingStatus';
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -44,6 +44,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 				function( data ) {
 					$scope.latestVersion = false;
 					$scope.repackaging = data;
+					if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 					if($scope.repackaging.id != null){
 						$scope.loadAttachment($scope.repackaging.id);
 					}
@@ -58,7 +59,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 						$scope.repackaging = data;
 						$scope.latestVersion = true;
 						$cookies.put('repackagingId', $scope.repackaging.id);
-						
+						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.loadAttachment($scope.repackaging.id);
 					}
 				});
@@ -152,15 +153,19 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 	}
 
 	$scope.deleteAttachment = function(){
-		angular.forEach($scope.repackagingAttachments, function(att){
-			if(att.selectedAttachement === true){
-				attachmentService.deleteRepackagingAttachment(parseInt($scope.repackaging.id), parseInt(att.sequenceNo))
-				.then(function(data){
-					$scope.loadAttachment($scope.repackaging.id);
-					$scope.selectedAttachement = false;
-				});
-			}
-		})
+		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+		.then(function(response){
+			if(response === 'Yes')
+			angular.forEach($scope.repackagingAttachments, function(att){
+				if(att.selectedAttachement === true){
+					attachmentService.deleteRepackagingAttachment(parseInt($scope.repackaging.id), parseInt(att.sequenceNo))
+					.then(function(data){
+						$scope.loadAttachment($scope.repackaging.id);
+						$scope.selectedAttachement = false;
+					});
+				}
+			});
+		});
 	}
 
 	function addRepackaging() {

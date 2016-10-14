@@ -1,11 +1,20 @@
-mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'subcontractService', 'paymentService',
-                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, subcontractService, paymentService) {
+mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'subcontractService', 'paymentService',
+                                 function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, subcontractService, paymentService) {
+	if(!$scope.nameObject) {
+		$scope.inBox = false;
+		$scope.nameObject = $stateParams.nameObject;
+	} else {		
+		$scope.inBox = true;
+		$scope.cancel = function () {
+			$scope.uibModalInstance.close();
+		};
+	}
 	
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo = $cookies.get('addendumNo');
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
-	$scope.nameObject = $stateParams.nameObject;
+	
 	$scope.offsetTop = $stateParams.offsetTop;
 	$scope.insideContent = false;
 	$scope.sequenceNo = 0;
@@ -50,15 +59,19 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	}
 	
 	$scope.deleteAttachment = function(){
-		angular.forEach($scope.attachments, function(att){
-			if(att.selectedAttachement === true){
-				$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
-				.then(function(data){
-					$scope.loadAttachment($scope.nameObject, $scope.textKey);
-					$scope.selectedAttachement = false;
-				});
-			}
-		})
+		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+		.then(function(response){
+			if(response === 'Yes')
+			angular.forEach($scope.attachments, function(att){
+				if(att.selectedAttachement === true){
+					$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
+					.then(function(data){
+						$scope.loadAttachment($scope.nameObject, $scope.textKey);
+						$scope.selectedAttachement = false;
+					});
+				}
+			});
+		});
 	}
 	
     $scope.addTextAttachment = function(){
@@ -135,7 +148,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
        			var fileType = att.fileName.substring(att.fileName.length -4);
        			att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
        		}
-    		att.user = {UserName: att.createdUser};
+    		att.user = {fullname: att.createdUser};
     		att.user.userIcon = 'resources/images/profile.png';
     		getUserByUsername(att.createdUser)
     		.then(function(response){
@@ -146,7 +159,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     				} else {
     					att.user.userIcon = 'resources/images/profile.png';
     				}
-    				if(!att.user.UserName) att.user.UserName = att.createdUser;
+    				if(!att.user.fullname) att.user.fullname = att.createdUser;
     			}
     		});
     		index++;

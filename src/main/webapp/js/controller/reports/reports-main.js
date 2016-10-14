@@ -12,7 +12,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	});
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;
-	$scope.reportPerRow = 4;
+	$scope.reportPerRow = 3;
 	$scope.repeatRange = repeatRange;
 	$scope.onDownloadReport = onDownloadReport;
 	$scope.today = moment().format(GlobalParameter.MOMENT_DATE);

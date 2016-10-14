@@ -771,7 +771,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-split-terminate.js'
+                           'js/controller/subcontract/subcontract-split-terminate.js',
+	                     'js/controller/subcontract/attachment/attachment-sc-file.js',
+	                     'js/controller/subcontract/attachment/attachment-sc-text.js',
+	                     'js/service/attachment-service.js'
                     ] 
                 });
             }]
@@ -790,7 +793,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-split-terminate.js'
+                           'js/controller/subcontract/subcontract-split-terminate.js',
+                           'js/controller/subcontract/attachment/attachment-sc-file.js',
+                           'js/controller/subcontract/attachment/attachment-sc-text.js',
+                           'js/service/attachment-service.js'
                     ] 
                 });
             }]

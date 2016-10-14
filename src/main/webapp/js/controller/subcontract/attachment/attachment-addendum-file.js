@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'addendumService',
-                                         function($scope, $location, attachmentService, modalService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, addendumService) {
+mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService',
+                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService) {
 	
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
@@ -59,15 +59,20 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 	}
 	
 	$scope.deleteAttachment = function(){
-		angular.forEach($scope.attachments, function(att){
-			if(att.selectedAttachement === true){
-				$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.noSequence))
-				.then(function(data){
-					$scope.loadAttachment($scope.nameObject, $scope.textKey);
-					$scope.selectedAttachement = false;
-				});
-			}
-		})
+		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+		.then(function(response){
+			if(response === 'Yes')
+			angular.forEach($scope.attachments, function(att){
+				if(att.selectedAttachement === true){
+					$scope.deleteAttachmentFacade($scope.nameObject,$scope.textKey, parseInt(att.noSequence))
+					.then(function(data){
+						$scope.loadAttachment($scope.nameObject, $scope.textKey);
+						$scope.selectedAttachement = false;
+					});
+				}
+			});
+		});
+
 	}
 	
     $scope.addTextAttachment = function(){
@@ -135,7 +140,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
        			var fileType = att.nameFile.substring(att.nameFile.length -4);
        			att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
        		}
-    		att.user = {UserName: att.usernameCreated};
+    		att.user = {fullname: att.usernameCreated};
     		att.user.userIcon = 'resources/images/profile.png';
     		getUserByUsername(att.usernameCreated)
     		.then(function(response){
