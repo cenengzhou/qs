@@ -22,7 +22,7 @@ mainApp.controller('AdminSessionCtrl',
 				return true;
 			},
 			columnDefs: [
-			             { field: 'principal.UserName', displayName: "Name", enableCellEdit: false },
+			             { field: 'principal.fullname', displayName: "Name", enableCellEdit: false },
 			             { field: 'authType', displayName: "AuthType", enableCellEdit: false },
 			             { field: 'sessionId', displayName: "Session Id", enableCellEdit: false},
 			             { field: 'creationTime', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATETIME_FORMAT +'"'},

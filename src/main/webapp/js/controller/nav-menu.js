@@ -2,16 +2,16 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
                                    function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, $timeout, GlobalParameter, userpreferenceService, storageService) {
 	
 	
-	$scope.tab = 1;
+	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;
-		if(setTab === 3){
+		if(setTab === 'defaultJob'){
 			defaultJobListFocus();
 			if($scope.resetDefaultJobNo){
 				$timeout(function(){
 					$scope.defaultJobNo = $scope.resetDefaultJobNo;
 					var defaultOption = angular.element('#defaultJobList').find('[value="string:' + $scope.resetDefaultJobNo + '"]');
-					var optionTop = defaultOption ? defaultOption.offset().top : 0;
+					var optionTop = defaultOption.length > 0 ? defaultOption.offset().top : 0;
 					var selectTop = angular.element('#defaultJobList').offset().top;
 					var baseTop = angular.element('#defaultJobList').scrollTop();
 					var scrollTo = baseTop + optionTop - selectTop;
@@ -136,7 +136,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		$scope.showDefaultJobStatus = true;
 		$timeout(function(){
 			$scope.showDefaultJobStatus = false;
-		}, 3000);
+		}, 2000);
 	}
 	$scope.getCurrentUser();
 	$scope.menuScroll = 0;

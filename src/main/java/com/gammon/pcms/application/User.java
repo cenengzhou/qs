@@ -21,7 +21,7 @@ public class User implements UserDetails, Serializable {
 	@JsonProperty("StaffID")
 	private String staffId;
 	
-	@JsonProperty("UserName")
+//	@JsonProperty("UserName")
 	private String fullname;
 	
 	@JsonProperty("UserRoles")
@@ -30,6 +30,7 @@ public class User implements UserDetails, Serializable {
 	private String username;
 	private String authType;
 	private String domainName;
+	private String title;
 	
 	public User() {
 		this.userRoleList = new ArrayList<UserRole>();
@@ -184,6 +185,20 @@ public class User implements UserDetails, Serializable {
 		this.domainName = domainName;
 	}
 
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -191,7 +206,8 @@ public class User implements UserDetails, Serializable {
 	public String toString() {
 		return "User [emailAddress=" + emailAddress + ", staffId=" + staffId + ", fullname=" + fullname
 				+ ", userRoleList=" + userRoleList + ", username=" + username + ", authType=" + authType
-				+ ", domainName=" + domainName + "]";
+				+ ", domainName=" + domainName + ", title=" + title + "]";
 	}
+
 
 }

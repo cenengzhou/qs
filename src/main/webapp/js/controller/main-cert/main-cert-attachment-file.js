@@ -57,7 +57,7 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
     				} else {
     					att.user.userIcon = 'resources/images/profile.png';
     				}
-    				if(!att.user.UserName) att.user.UserName = att.createdUser;
+    				if(!att.user.fullname) att.user.fullname = att.createdUser;
     			}
     		});
     		index++;

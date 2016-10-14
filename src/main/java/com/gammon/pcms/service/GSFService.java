@@ -17,6 +17,7 @@ import com.gammon.pcms.dto.rs.consumer.gsf.GetJobSecurity;
 import com.gammon.pcms.dto.rs.consumer.gsf.GetRole;
 import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.helper.RestTemplateHelper;
+import com.gammon.qs.service.user.LdapService;
 
 @Service
 public class GSFService {
@@ -27,10 +28,14 @@ public class GSFService {
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
+	@Autowired
+	private LdapService ldapService;
 
 	public User getRole(String username) {
 		User user = new User();
 		String[] login = username.split("@");
+		String title = ldapService.getObjectAttribute(login[0], "Title");
+		String displayname = ldapService.getObjectAttribute(login[0], "displayName");
 		GetRole.Request roleRequest = new GetRole.Request(WebServiceConfig.GSF_APPLICATION_CODE,
 				"gamska\\" + login[0]);
 		String wsUrl = webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETROLE;
@@ -42,6 +47,8 @@ public class GSFService {
 			e.printStackTrace();
 		}
 		user.setUsername(login[0]);
+		user.setTitle(title);
+		user.setFullname(displayname);
 		if (login.length == 2) {
 			user.setAuthType("Kerberos");
 			user.setDomainName(login[1]);

@@ -20,7 +20,6 @@ public class LdapUserDetailsContextMapper extends LdapUserDetailsMapper {
 	public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
 		User user = (User) userDetailsService.loadUserByUsername(username);
 		user.setAuthType("LDAP");
-		user.setFullname(ctx.getStringAttribute("displayname"));
 		return user;
 	}
 }

@@ -146,7 +146,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     				} else {
     					att.user.userIcon = 'resources/images/profile.png';
     				}
-    				if(!att.user.UserName) att.user.UserName = att.usernameCreated;
+    				if(!att.user.fullname) att.user.fullname = att.usernameCreated;
     			}
     		});
     		index++;
