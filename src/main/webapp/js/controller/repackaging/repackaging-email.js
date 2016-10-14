@@ -105,7 +105,7 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
 	
 	$scope.tinymceOptions = {
 		    plugins: [
-		              'advlist autolink lists link textcolor colorpicker charmap autoresize',
+		              'advlist autolink lists link textcolor colorpicker charmap autoresize', // code
 		              'print preview hr searchreplace wordcount insertdatetime ',
 		              'nonbreaking save table contextmenu directionality paste textpattern '
 		              ],

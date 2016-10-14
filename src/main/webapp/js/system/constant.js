@@ -334,7 +334,8 @@ mainApp.constant('GlobalParameter', {
 	                {id:'A', value:'Approved'},
 	                {id:'N', value:'Not Apprvoved'}
     ],
-	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/'
+	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/',
+	tinyMceMaxCharLength: 2000,
 });
 
 mainApp.constant('GlobalMessage', {
@@ -344,4 +345,6 @@ mainApp.constant('GlobalMessage', {
 		"Please contact Finance Dept -Ms Cindy Deng at 2516-8911 ext 7789 or Ms Kathy Chen at 2516-8911 ext 7798.<br/> For SGP vendors, please contact Mr Nix Goh at 6722-3654.",
 	deleteAttachment:
 		"Are you sure to delete attachments",
+	maxCharLimitReached:
+		"Max limit reached!",
 });

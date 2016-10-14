@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService',
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService){
+mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService', 'modalService', 'GlobalMessage', 'GlobalParameter',
+                                            function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService, modalService, GlobalMessage, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	
@@ -8,6 +8,10 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 	};
 	
 	$scope.saveTextAttachment = function(){
+		if(tinyMceCharLimitReached){ 
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', GlobalMessage.maxCharLimitReached);
+			return;
+		}
 		if($scope.parentScope.isAddTextAttachment === false){
 			$scope.parentScope.saveTextAttachmentFacade(
 					$scope.parentScope.nameObject, 
@@ -34,8 +38,8 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 	
 	$scope.tinymceOptions = {
 		    plugins: [
-		              'advlist autolink lists link textcolor colorpicker charmap',
-		              'print preview hr searchreplace wordcount insertdatetime ',
+		              'advlist autolink lists link textcolor colorpicker charmap', // code
+		              'print preview hr searchreplace wordcount-maxlength insertdatetime ',
 		              'nonbreaking save table contextmenu directionality paste textpattern '
 		              ],
               removed_menuitems:'newdocument visualaid ',
@@ -46,5 +50,6 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
               height: 350,
               skin: 'tinymce_charcoal',
               readonly: !$scope.parentScope.isUpdatable,
+              maxLength : GlobalParameter.tinyMceMaxCharLength,
 	};
 }]);

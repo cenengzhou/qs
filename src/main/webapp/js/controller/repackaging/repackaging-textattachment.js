@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService',
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService){
+mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalService', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService', 'GlobalMessage', 'GlobalParameter',
+                                            function($scope, modalService, modalStatus, modalParam, $uibModalInstance, attachmentService, GlobalMessage, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	
@@ -8,6 +8,10 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'm
 	};
 	
 	$scope.saveRepackagingTextAttachment = function(){
+		if(tinyMceCharLimitReached){ 
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', GlobalMessage.maxCharLimitReached);
+			return;
+		}
 		if($scope.parentScope.isAddTextAttachment === false){
 			attachmentService.saveRepackagingTextAttachment(
 					$scope.parentScope.repackaging.id, 
@@ -32,8 +36,8 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'm
 	
 	$scope.tinymceOptions = {
 		    plugins: [
-		              'advlist autolink lists link textcolor colorpicker charmap',
-		              'print preview hr searchreplace wordcount insertdatetime ',
+		              'advlist autolink lists link textcolor colorpicker charmap wordcount-maxlength', //wordcount code
+		              'print preview hr searchreplace insertdatetime ', 
 		              'nonbreaking save table contextmenu directionality paste textpattern '
 		              ],
               removed_menuitems:'newdocument visualaid ',
@@ -44,6 +48,7 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalStatus', 'm
               height: 350,
               skin: 'tinymce_charcoal',
               readonly: !$scope.parentScope.isUpdatable,
-};
+              maxLength : GlobalParameter.tinyMceMaxCharLength,
+	};
 	
 }]);
