@@ -218,6 +218,10 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 			if(Object.keys(taBalance).indexOf(accountCode) >= 0)
 				taBalance[accountCode] =  roundUtil.round(taBalance[accountCode] - ta[i]['amountBudget'], 2);
+			else{
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Invalid account code: "+accountCode);
+				return;
+			}
 
 		}
 

@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseListObj;
 import com.gammon.jde.webservice.serviceRequester.GetPerformanceAppraisalsListManager.getPerformanceAppraisalsList.GetPerformanceAppraisalsResponseObj;
-import com.gammon.pcms.application.User;
 import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
@@ -35,7 +34,6 @@ import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
 import com.gammon.pcms.model.TenderVariance;
@@ -4635,7 +4633,7 @@ public class SubcontractService {
 				//Insert Subcontract Detail
 				createSubcontractDetail(jobNo, subcontractDetail, subcontract, sequenceNo);
 				//Insert Subcontract Detail into Pending payment Detail
-				if(PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				if(paymentCert!= null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
 					SubcontractDetail scDetails = subcontractDetailHBDao.obtainSCDetail(jobNo, subcontractNo, String.valueOf(sequenceNo));
 
 					PaymentCertDetail paymentDetail = new PaymentCertDetail();
@@ -4860,54 +4858,60 @@ public class SubcontractService {
 	 * @author koeyyeung
 	 * **/
 	public SubcontractDetail getDefaultValuesForSubcontractDetails(String jobNo, String subcontractNo, String lineType) throws Exception{
-		if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
+		SubcontractDetail resultDetails;
+		try {
+			if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
+				return null;
+			resultDetails = SCDetailsLogic.createSCDetailByLineType(lineType);
+			resultDetails.setQuantity(1.0);
+			resultDetails.setScRate(1.0);
+			resultDetails.setAmountSubcontract(new BigDecimal(0));
+
+			String defaultObj="140299";
+			String defaultCCObj="140288";
+			//Check labour/Plant/Material
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
+			if (subcontract==null ||"F".equals(subcontract.getPaymentStatus()))	
+				throw new ValidateBusinessLogicException("Invalid status of package:"+subcontractNo);
+			
+			if (Subcontract.CONSULTANCY_AGREEMENT.equals(subcontract.getFormOfSubcontract())){
+				defaultObj="140399";
+				defaultCCObj="140388";
+			}
+			else if (subcontract.getLabourIncludedContract()&&!subcontract.getPlantIncludedContract()&&!subcontract.getMaterialIncludedContract()){
+				defaultObj="140199";
+				defaultCCObj="140188";
+			}
+
+			if ("MS".equals(lineType.trim()))
+				//Get Obj from AAI-"SCMOS"
+				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCMOS", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
+			else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
+				if ("DSC".equals(subcontract.getSubcontractorNature()))
+					//Get Obj from AAI-"SCDRT"
+					resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCDRT", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
+				else
+					//SubcontractorNature is NSC/NDSC
+					//Get Obj from AAI-"SCNRT"
+					resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCNRT", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
+			}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim())){
+				resultDetails.setObjectCode(defaultCCObj);
+				resultDetails.setScRate(-1.0);
+			}
+			else 
+				resultDetails.setObjectCode(defaultObj);
+
+			if ("CF".equals(lineType.trim()))
+				//Get sub from AAI-"SCCPF"
+				resultDetails.setSubsidiaryCode(jobCostWSDao.obtainAccountCode("SCCPF", subcontract.getJobInfo().getCompany(),jobNo).getSubsidiary());
+
+			resultDetails.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(jobNo, subcontractNo)+1);
+			resultDetails.setBillItem(SCDetailsLogic.generateBillItem(lineType,resultDetails.getSequenceNo()));
+			resultDetails.setLineType(lineType.trim());
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
-		SubcontractDetail resultDetails = SCDetailsLogic.createSCDetailByLineType(lineType);
-		resultDetails.setQuantity(1.0);
-		resultDetails.setScRate(1.0);
-		resultDetails.setAmountSubcontract(new BigDecimal(0));
-
-		String defaultObj="140299";
-		String defaultCCObj="140288";
-		//Check labour/Plant/Material
-		Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
-		if (subcontract==null ||"F".equals(subcontract.getPaymentStatus()))	
-			throw new ValidateBusinessLogicException("Invalid status of package:"+subcontractNo);
-		
-		if (Subcontract.CONSULTANCY_AGREEMENT.equals(subcontract.getFormOfSubcontract())){
-			defaultObj="140399";
-			defaultCCObj="140388";
 		}
-		else if (subcontract.getLabourIncludedContract()&&!subcontract.getPlantIncludedContract()&&!subcontract.getMaterialIncludedContract()){
-			defaultObj="140199";
-			defaultCCObj="140188";
-		}
-
-		if ("MS".equals(lineType.trim()))
-			//Get Obj from AAI-"SCMOS"
-			resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCMOS", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
-		else if ("RA".equals(lineType.trim())||"RR".equals(lineType.trim())){
-			if ("DSC".equals(subcontract.getSubcontractorNature()))
-				//Get Obj from AAI-"SCDRT"
-				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCDRT", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
-			else
-				//SubcontractorNature is NSC/NDSC
-				//Get Obj from AAI-"SCNRT"
-				resultDetails.setObjectCode(jobCostWSDao.obtainAccountCode("SCNRT", subcontract.getJobInfo().getCompany(),jobNo).getObjectAccount());
-		}else if ("C1".equals(lineType.trim())||"C2".equals(lineType.trim())){
-			resultDetails.setObjectCode(defaultCCObj);
-			resultDetails.setScRate(-1.0);
-		}
-		else 
-			resultDetails.setObjectCode(defaultObj);
-
-		if ("CF".equals(lineType.trim()))
-			//Get sub from AAI-"SCCPF"
-			resultDetails.setSubsidiaryCode(jobCostWSDao.obtainAccountCode("SCCPF", subcontract.getJobInfo().getCompany(),jobNo).getSubsidiary());
-
-		resultDetails.setSequenceNo(subcontractDetailHBDao.obtainSCDetailsMaxSeqNo(jobNo, subcontractNo)+1);
-		resultDetails.setBillItem(SCDetailsLogic.generateBillItem(lineType,resultDetails.getSequenceNo()));
-		resultDetails.setLineType(lineType.trim());
 		return resultDetails;
 	}
 

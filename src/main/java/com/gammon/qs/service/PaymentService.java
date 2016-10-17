@@ -37,7 +37,6 @@ import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.config.SecurityConfig;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -1181,7 +1180,21 @@ public class PaymentService{
 		return result;
 	}
 
-	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, Date asAtDate, Date ipaOrInvoiceDate, Date dueDate) {
+	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(String jobNumber, String packageNo, Integer mainCertNo, String asAtDateString, String ipaOrInvoiceDateString, String dueDateString) {
+		Date asAtDate = null;
+		Date ipaOrInvoiceDate = null;
+		Date dueDate = null;
+		
+		if(asAtDateString !=null && asAtDateString.trim().length()>0)
+			asAtDate = DateHelper.parseDate("yyyy-MM-dd", asAtDateString);
+		
+		if(ipaOrInvoiceDateString !=null && ipaOrInvoiceDateString.trim().length()>0)
+			ipaOrInvoiceDate = DateHelper.parseDate("yyyy-MM-dd", ipaOrInvoiceDateString);
+		
+		if(dueDateString !=null && dueDateString.trim().length()>0)
+			dueDate = DateHelper.parseDate("yyyy-MM-dd", dueDateString);
+		
+		
 		return paymentPostingService.calculatePaymentDueDate(jobNumber, packageNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
 	}
 
@@ -2443,8 +2456,8 @@ public class PaymentService{
 									}
 								}
 								
-								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
-									error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be smaller than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
+								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() <0){
+									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should not be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
 								}
@@ -2589,6 +2602,7 @@ public class PaymentService{
 		String error = "";
 		// 1. Obtain payment certificate
 		logger.info("1. Obtain payment certificate");
+		
 		PaymentCert scPaymentCert = null;
 		try {
 			scPaymentCert = paymentCertDao.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
@@ -2609,25 +2623,22 @@ public class PaymentService{
 			logger.info(error);
 			return error;
 		}
+		
+
 
 		// 2. Obtain parent job's Main Contract Certificate for QS1 & QS2
 		logger.info("2. Obtain parent job's Main Contract Certificate for QS1 & QS2");
+		Integer mainCertNo = null;
 		if ((paymentTerms.equals("QS1") || paymentTerms.equals("QS2")) &&
 				paymentCert.getMainContractPaymentCertNo() != null) {
 			error = isValidMainContractCertificate(jobNo, paymentCert.getMainContractPaymentCertNo());
 			if (error != null) {
 				return error;
 			} else
-				scPaymentCert.setMainContractPaymentCertNo(paymentCert.getMainContractPaymentCertNo());
-		} else
-			scPaymentCert.setMainContractPaymentCertNo(null);
+				mainCertNo = paymentCert.getMainContractPaymentCertNo();
+		} /*else
+			scPaymentCert.setMainContractPaymentCertNo(null);*/
 
-		if (paymentCert.getAsAtDate() != null)
-			scPaymentCert.setAsAtDate(paymentCert.getAsAtDate());
-		if (paymentCert.getDueDate() != null)
-			scPaymentCert.setDueDate(paymentCert.getDueDate());
-		if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
-			scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
 
 		// 3. Calculate Due Date
 		logger.info("3. Calculate Due Date");
@@ -2641,139 +2652,146 @@ public class PaymentService{
 				paymentCert.getIpaOrInvoiceReceivedDate(),
 				paymentCert.getDueDate());
 
-		if (wrapper.isvalid())
+		
+		if (wrapper.isvalid()){
 			paymentCert.setDueDate(wrapper.getDueDate());
-		else{
+				
+			// 4. Insert & Update GST Payable & GST Receivable
+			JobInfo job;
+			try {
+				job = jobHBDaoImpl.obtainJobInfo(jobNo);
+			} catch (DatabaseOperationException e) {
+				error = ("Unable to obtain Payment Certificate \n" +
+						"Job: " + jobNo +
+						" Subcontract No.: " + subcontractNo +
+						" Payment Certificate No.: " + paymentCertNo);
+				logger.info(error);
+				return error;
+			}
+			if(	job!=null &&
+					(job.getDivision().equals("SGP") || job.getJobNumber().startsWith("14"))){
+				if(!Subcontract.INTERNAL_TRADING.equals(scPaymentCert.getSubcontract().getFormOfSubcontract())){
+					// 5a. Obtain GST from DB
+					logger.info("5. Insert & Update GST Payable & GST Receivable");
+					PaymentCertDetail gstPayableInDB = null;
+					PaymentCertDetail gstReceivableInDB = null;
+					try {
+						List<PaymentCertDetail> gstPayableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
+						if (gstPayableList == null || gstPayableList.size() > 1) {
+							error = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
+							return error;
+						}
+
+						if (gstPayableList.size() == 0 || gstPayableList.get(0) == null)
+							gstPayableInDB = null;
+						else
+							gstPayableInDB = gstPayableList.get(0);
+
+						List<PaymentCertDetail> gstReceivableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
+						if (gstReceivableList == null || gstReceivableList.size() > 1) {
+							error = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
+							return error;
+						}
+
+						if (gstReceivableList.size() == 0 || gstReceivableList.get(0) == null)
+							gstReceivableInDB = null;
+						else
+							gstReceivableInDB = gstReceivableList.get(0);
+					} catch (DatabaseOperationException e) {
+						e.printStackTrace();
+						error = ("Unable to update Payment Certificate GST.");
+						return error;
+					}
+
+					// 5b. Insert new GST Payable
+					if (gstPayableInDB == null) {
+						gstPayableInDB = new PaymentCertDetail();
+						gstPayableInDB.setBillItem("");
+						gstPayableInDB.setLineType("GP");
+						gstPayableInDB.setCumAmount(0.0);
+						gstPayableInDB.setMovementAmount(0.0);
+						gstPayableInDB.setScSeqNo(100003);
+						gstPayableInDB.setPaymentCert(scPaymentCert);
+						try {
+							paymentDetailDao.insert(gstPayableInDB);
+						} catch (DataAccessException e) {
+							e.printStackTrace();
+							error = ("Unable to insert Payment Certificate GST Payable");
+							return error;
+						}
+					}
+
+					// 5c. Insert new GST Receivable
+					if (gstReceivableInDB == null) {
+						gstReceivableInDB = new PaymentCertDetail();
+						gstReceivableInDB.setBillItem("");
+						gstReceivableInDB.setLineType("GR");
+						gstReceivableInDB.setCumAmount(0.0);
+						gstReceivableInDB.setMovementAmount(0.0);
+						gstReceivableInDB.setScSeqNo(100004);
+						gstReceivableInDB.setPaymentCert(scPaymentCert);
+						try {
+							paymentDetailDao.insert(gstReceivableInDB);
+						} catch (DataAccessException e) {
+							e.printStackTrace();
+							error = ("Unable to insert Payment Certificate GST Receviable");
+							return error;
+						}
+					}
+
+					// 5d. Calculate GST Cumulative Amount & GST Movement Amount
+					if(gstPayable!=null){
+						gstPayableInDB.setCumAmount(gstPayableInDB.getCumAmount().doubleValue() - 
+								gstPayableInDB.getMovementAmount().doubleValue() + gstPayable);
+						gstPayableInDB.setMovementAmount(gstPayable);
+					}
+					if(gstReceivable!=null){
+						gstReceivableInDB.setCumAmount(gstReceivableInDB.getCumAmount().doubleValue() - 
+								gstReceivableInDB.getMovementAmount().doubleValue() + gstReceivable);
+						gstReceivableInDB.setMovementAmount(gstReceivable);
+					}
+
+					// 5f. Update GST
+					try {
+						paymentDetailDao.update(gstPayableInDB);
+						paymentDetailDao.update(gstReceivableInDB);
+					} catch (DataAccessException e) {
+						e.printStackTrace();
+						error = ("Unable to insert Payment Certificate GST");
+						return error;
+					}
+
+					double certAmount = calculatePaymentCertAmount(scPaymentCert);
+					scPaymentCert.setCertAmount(certAmount);
+				}
+
+			}
+
+			//5. Update SC Payment Certificate
+			logger.info("4. Update SC Payment Certificate");
+			try {
+				scPaymentCert.setMainContractPaymentCertNo(mainCertNo);
+				if (paymentCert.getAsAtDate() != null)
+					scPaymentCert.setAsAtDate(paymentCert.getAsAtDate());
+				if (paymentCert.getDueDate() != null)
+					scPaymentCert.setDueDate(paymentCert.getDueDate());
+				if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
+					scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());
+				
+				paymentCertDao.update(scPaymentCert);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+				error = ("Unable to update Payment Certificate \n" +
+						"Job: " + jobNo +
+						" Subcontract No.: " + subcontractNo +
+						" Payment Certificate No.: " + paymentCertNo);
+				return error;
+			}
+		}else{
 			error = wrapper.getErrorMsg();
 			logger.info(error);
 			return error;
 		}
-	
-				
-		// 4. Insert & Update GST Payable & GST Receivable
-		JobInfo job;
-		try {
-			job = jobHBDaoImpl.obtainJobInfo(jobNo);
-		} catch (DatabaseOperationException e) {
-			error = ("Unable to obtain Payment Certificate \n" +
-					"Job: " + jobNo +
-					" Subcontract No.: " + subcontractNo +
-					" Payment Certificate No.: " + paymentCertNo);
-			logger.info(error);
-			return error;
-		}
-		if(	job!=null &&
-			(job.getDivision().equals("SGP") || job.getJobNumber().startsWith("14"))){
-			if(!Subcontract.INTERNAL_TRADING.equals(scPaymentCert.getSubcontract().getFormOfSubcontract())){
-				// 5a. Obtain GST from DB
-				logger.info("5. Insert & Update GST Payable & GST Receivable");
-				PaymentCertDetail gstPayableInDB = null;
-				PaymentCertDetail gstReceivableInDB = null;
-				try {
-					List<PaymentCertDetail> gstPayableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GP");
-					if (gstPayableList == null || gstPayableList.size() > 1) {
-						error = ("Unable to update Payment Certificate GST Payable. Non-unique GST Payable");
-						return error;
-					}
-
-					if (gstPayableList.size() == 0 || gstPayableList.get(0) == null)
-						gstPayableInDB = null;
-					else
-						gstPayableInDB = gstPayableList.get(0);
-
-					List<PaymentCertDetail> gstReceivableList = paymentDetailDao.getSCPaymentDetail(scPaymentCert, "GR");
-					if (gstReceivableList == null || gstReceivableList.size() > 1) {
-						error = ("Unable to update Payment Certificate GST Receivable. Non-unique GST Receivable");
-						return error;
-					}
-
-					if (gstReceivableList.size() == 0 || gstReceivableList.get(0) == null)
-						gstReceivableInDB = null;
-					else
-						gstReceivableInDB = gstReceivableList.get(0);
-				} catch (DatabaseOperationException e) {
-					e.printStackTrace();
-					error = ("Unable to update Payment Certificate GST.");
-					return error;
-				}
-
-				// 5b. Insert new GST Payable
-				if (gstPayableInDB == null) {
-					gstPayableInDB = new PaymentCertDetail();
-					gstPayableInDB.setBillItem("");
-					gstPayableInDB.setLineType("GP");
-					gstPayableInDB.setCumAmount(0.0);
-					gstPayableInDB.setMovementAmount(0.0);
-					gstPayableInDB.setScSeqNo(100003);
-					gstPayableInDB.setPaymentCert(scPaymentCert);
-					try {
-						paymentDetailDao.insert(gstPayableInDB);
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-						error = ("Unable to insert Payment Certificate GST Payable");
-						return error;
-					}
-				}
-
-				// 5c. Insert new GST Receivable
-				if (gstReceivableInDB == null) {
-					gstReceivableInDB = new PaymentCertDetail();
-					gstReceivableInDB.setBillItem("");
-					gstReceivableInDB.setLineType("GR");
-					gstReceivableInDB.setCumAmount(0.0);
-					gstReceivableInDB.setMovementAmount(0.0);
-					gstReceivableInDB.setScSeqNo(100004);
-					gstReceivableInDB.setPaymentCert(scPaymentCert);
-					try {
-						paymentDetailDao.insert(gstReceivableInDB);
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-						error = ("Unable to insert Payment Certificate GST Receviable");
-						return error;
-					}
-				}
-
-				// 5d. Calculate GST Cumulative Amount & GST Movement Amount
-				if(gstPayable!=null){
-					gstPayableInDB.setCumAmount(gstPayableInDB.getCumAmount().doubleValue() - 
-							gstPayableInDB.getMovementAmount().doubleValue() + gstPayable);
-					gstPayableInDB.setMovementAmount(gstPayable);
-				}
-				if(gstReceivable!=null){
-					gstReceivableInDB.setCumAmount(gstReceivableInDB.getCumAmount().doubleValue() - 
-							gstReceivableInDB.getMovementAmount().doubleValue() + gstReceivable);
-					gstReceivableInDB.setMovementAmount(gstReceivable);
-				}
-
-				// 5f. Update GST
-				try {
-					paymentDetailDao.update(gstPayableInDB);
-					paymentDetailDao.update(gstReceivableInDB);
-				} catch (DataAccessException e) {
-					e.printStackTrace();
-					error = ("Unable to insert Payment Certificate GST");
-					return error;
-				}
-				
-				double certAmount = calculatePaymentCertAmount(scPaymentCert);
-				scPaymentCert.setCertAmount(certAmount);
-			}
-			
-		}
-		
-		//5. Update SC Payment Certificate
-		logger.info("4. Update SC Payment Certificate");
-		try {
-			paymentCertDao.update(scPaymentCert);
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-			error = ("Unable to update Payment Certificate \n" +
-					"Job: " + jobNo +
-					" Subcontract No.: " + subcontractNo +
-					" Payment Certificate No.: " + paymentCertNo);
-			return error;
-		}
-		
 		return error;
 	}
 	

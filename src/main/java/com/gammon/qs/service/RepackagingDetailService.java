@@ -89,7 +89,7 @@ public class RepackagingDetailService implements Serializable {
 		repackagingEntryDao.saveOrUpdate(entry);
 		prepareRepackagingDetails(entry);
 		if(postRepackagingDetails(entry)){
-			entry.setStatus("900");
+			entry.setStatus(Repackaging.REPACKAGING_STATUS_LOCKED_900);
 			repackagingEntryDao.saveOrUpdate(entry);
 		}
 		return entry;
@@ -420,7 +420,7 @@ public class RepackagingDetailService implements Serializable {
 			repackagingDetailDao.insert(repackagingDetail);
 		}
 		entryInDB.setTotalResourceAllowance(totalAmount);
-		entryInDB.setStatus("300");
+		entryInDB.setStatus(Repackaging.REPACKAGING_STATUS_SNAPSHOT_GENERATED_300);
 		repackagingEntryDao.saveOrUpdate(entryInDB);
 		return totalAmount;
 	}

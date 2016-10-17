@@ -35,6 +35,13 @@ import com.gammon.qs.application.BasePersistedObject;
 public class Repackaging extends BasePersistedObject {
 	
 	private static final long serialVersionUID = -8877220897935638105L;
+
+	// Repackaging Status
+	public static final String REPACKAGING_STATUS_UNLOCKED_100 = "100";
+	public static final String REPACKAGING_STATUS_UPDATED_200 = "200";
+	public static final String REPACKAGING_STATUS_SNAPSHOT_GENERATED_300 = "300";
+	public static final String REPACKAGING_STATUS_LOCKED_900 = "900";
+	
 	private JobInfo jobInfo;
 	private Integer repackagingVersion;
 	private Date createDate;

@@ -137,7 +137,7 @@ public class RepackagingService {
 			newEntry.setRepackagingVersion(currentRepackaging.getRepackagingVersion()+1);
 			newEntry.setJobInfo(jobInfoDao.obtainJobInfo(jobNo));
 			newEntry.setCreateDate(new Date());
-			newEntry.setStatus("100");
+			newEntry.setStatus(Repackaging.REPACKAGING_STATUS_UNLOCKED_100);
 			repackagingDao.saveOrUpdate(newEntry);
 		}
 		else{
@@ -235,7 +235,7 @@ public class RepackagingService {
 				posted = repackagingDetailService.postRepackagingDetails(repackaging);
 				if(!posted)
 					error = "Repackaging cannot be confimred.";
-				repackaging.setStatus("900");
+				repackaging.setStatus(Repackaging.REPACKAGING_STATUS_LOCKED_900);
 				repackagingDao.update(repackaging);
 			}
 		} catch (Exception e) {

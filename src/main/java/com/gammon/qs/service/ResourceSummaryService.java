@@ -1183,7 +1183,7 @@ public class ResourceSummaryService implements Serializable {
 		}
 		
 		
-		repackaging.setStatus("200");
+		repackaging.setStatus(Repackaging.REPACKAGING_STATUS_UPDATED_200);
 		repackagingEntryDao.update(repackaging);
 		
 		
@@ -1303,6 +1303,8 @@ public class ResourceSummaryService implements Serializable {
 			for(ResourceSummary resourceSummary : resourceSummaries){
 				saveResourceSummaryHelper(resourceSummary, repackagingEntry.getId());
 			}
+			
+			repackagingEntry.setStatus(Repackaging.REPACKAGING_STATUS_UPDATED_200);
 			wrapper.setResourceSummaries(resourceSummaries);
 		}
 		else{
@@ -1340,7 +1342,7 @@ public class ResourceSummaryService implements Serializable {
 			resourceSummaryDao.saveOrUpdate(summaryInDb);
 		}
 		
-		repackaging.setStatus("200");
+		repackaging.setStatus(Repackaging.REPACKAGING_STATUS_UPDATED_200);
 		repackagingEntryDao.update(repackaging);
 		
 		return error;

@@ -150,9 +150,9 @@ public class Subcontract extends BasePersistedObject {
 	private Date scAwardApprovalRequestSentDate;
 	private Date scApprovalDate;
 
-	private Boolean labourIncludedContract;
-	private Boolean plantIncludedContract;
-	private Boolean materialIncludedContract;
+	private Boolean labourIncludedContract = false;
+	private Boolean plantIncludedContract  = false;
+	private Boolean materialIncludedContract  = false;
 
 	private Double totalPostedWorkDoneAmount;
 	private Double totalCumWorkDoneAmount;

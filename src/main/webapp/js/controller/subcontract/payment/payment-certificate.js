@@ -70,12 +70,11 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	}
 
-	$scope.calculatePaymentDueDate = function() {console.log('calculatePaymentDueDate');
+	$scope.calculatePaymentDueDate = function() {
 		if($scope.paymentTerms != "QS0"){
 			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
 			.then(
 					function( data ) {
-						console.log(data);
 						if(data!=null){
 							if(data.valid ==true)
 								$scope.payment.dueDate = data.dueDate;

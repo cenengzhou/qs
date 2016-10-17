@@ -63,8 +63,8 @@ mainApp.controller('PaymentSummaryCtrl', ['$scope', 'modalService', 'colorCode',
 				}
 		};
 
-		var totalMovement = bqMovement + voMovement + ccMovement - retentionMovement + advancedMovement + othersMovement;
-		var totalPosted = bqCum + voCum + ccCum + retentionCum + advancedCum + othersCum + bqMovement - totalMovement;
+		var totalMovement = bqMovement + voMovement + ccMovement + advancedMovement + othersMovement - retentionMovement;
+		var totalPosted = bqCum + voCum + ccCum + advancedCum + othersCum - retentionCum - totalMovement ;
 		$scope.overallChart = {
 				"data": [totalPosted, totalMovement],
 				"labels": ["Posted", "Movement"],

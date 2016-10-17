@@ -8,7 +8,6 @@
 package com.gammon.pcms.web.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -116,10 +115,11 @@ public class PaymentController {
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
 															@RequestParam(required = true) String subcontractNo, 
 															@RequestParam(required = false) Integer mainCertNo, 
-															@RequestParam(required = false) Date asAtDate,
-															@RequestParam(required = false) Date ipaOrInvoiceDate,
-															@RequestParam(required = false) Date dueDate){
+															@RequestParam(required = false) String asAtDate,
+															@RequestParam(required = false) String ipaOrInvoiceDate,
+															@RequestParam(required = false) String dueDate){
 		PaymentDueDateAndValidationResponseWrapper paymentCertViewWrapper = null;
+		
 		paymentCertViewWrapper = paymentService.calculatePaymentDueDate(jobNo, subcontractNo, mainCertNo, asAtDate, ipaOrInvoiceDate, dueDate);
 		return paymentCertViewWrapper;
 	}
