@@ -1451,7 +1451,7 @@ public class SubcontractService {
 			
 			
 			// Special handling to reassign the Cost Rate for Method 2 and Method 3
-			if (scPackage.getJobInfo().getRepackagingType()!=null &&
+			/*if (scPackage.getJobInfo().getRepackagingType()!=null &&
 				(JobInfo.REPACKAGING_TYPE_3.equals(scPackage.getJobInfo().getRepackagingType().trim()) ||
 				 JobInfo.REPACKAGING_TYPE_2.equals(scPackage.getJobInfo().getRepackagingType().trim()))) {
 				
@@ -1483,7 +1483,7 @@ public class SubcontractService {
 						resourceBQItem = null;
 					}
 				}
-			}
+			}*/
 
 			subcontractHBDao.updateSubcontract(scPackage);
 
@@ -1568,7 +1568,7 @@ public class SubcontractService {
 						scDetails.setOriginalQuantity(tenderDetails.getQuantity());
 						scDetails.setQuantity(tenderDetails.getQuantity());
 						//scDetails.setToBeApprovedQuantity(TADetails.getQuantity());
-						scDetails.setScRate(tenderDetails.getRateBudget());
+						scDetails.setScRate(tenderDetails.getRateSubcontract());
 						scDetails.setSubsidiaryCode(tenderDetails.getSubsidiaryCode());
 						scDetails.setObjectCode(tenderDetails.getObjectCode());
 						scDetails.setLineType(tenderDetails.getLineType());
