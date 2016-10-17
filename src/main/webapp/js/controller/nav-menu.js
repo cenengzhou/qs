@@ -177,6 +177,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+		$rootScope.previousStatus = fromState;
     	$scope.currentPath = $location.path();
 	    if($scope.currentPath.indexOf("/job")==0){	
 			$scope.activeMenu = '';

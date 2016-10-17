@@ -15,7 +15,7 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', 'colorCode', 'jobServic
 	
     
 	function loadJobList() {
-		if(!$rootScope.routedToDefaultJob){
+		if(!$rootScope.previousStatus && !$rootScope.routedToDefaultJob){
 			userpreferenceService.gettingUserPreference()
 			.then(function(response){
 				if(response.userPreference && response.userPreference.DEFAULT_JOB_NO){
