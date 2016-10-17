@@ -21,7 +21,6 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 	$scope.lastMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
 	$scope.companies = {};
 	$scope.divisions = {};
-	var RPT_STATUS_UC = 'Under Construction';
 	var commonParameters = ['company', 'division', 'jobNumber', 
        	                'subcontractNumber', 'subcontractorNumber', 'subcontractorNature', 
     	                'paymentType', 'workScope', 'clientNo', 'includeJobCompletionDate', 
@@ -40,6 +39,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 0,
 						   name: 'paymentCertificateReport',
+						   comingSoon: 'NO',
 						   reportUrls: [
 						                	{
 					 	            	   type: 'xls',
@@ -65,6 +65,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 1,
 						   name: 'subcontractReport',
+						   comingSoon: 'NO',
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
@@ -91,6 +92,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 2,
 						   name: 'subcontractLiabilityReport',
+						   comingSoon: 'NO',
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
@@ -118,6 +120,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 3,
 						   name: 'subcontractorAnalysisReport',
+						   comingSoon: 'NO',
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
@@ -144,7 +147,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 4,
 						   name: 'monthlyContractExpenditureReport',
-						   reportStatus: RPT_STATUS_UC,
+						   comingSoon: 'YES',
 						   searchFields: [
 					 	                 {field: 'company', inputType: 'text'},
 					 	                 {field: 'division', inputType: 'text'},
@@ -153,8 +156,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					},
 					{
 						   id: 5,
-						   name: 'contractFinPerformanceReport',
-						   reportStatus: RPT_STATUS_UC,
+						   name: 'contractFinancialPerformanceReport',
+						   comingSoon: 'YES',
 						   searchFields: [
 					 	                 {field: 'company', inputType: 'text'},
 					 	                 {field: 'division', inputType: 'text'},
@@ -164,7 +167,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					{
 						   id: 6,
 						   name: 'jobCostReport',
-						   reportStatus: RPT_STATUS_UC,
+						   comingSoon: 'YES',
 						   searchFields: [
 					 	                 {field: 'company', inputType: 'text'},
 					 	                 {field: 'division', inputType: 'text'},
@@ -173,8 +176,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 					},
 					{
 						   id: 7,
-						   name: 'cachFlowReport',
-						   reportStatus: RPT_STATUS_UC,
+						   name: 'cashFlowReport',
+						   comingSoon: 'YES',
 						   searchFields: [
 					 	                 {field: 'company', inputType: 'text'},
 					 	                 {field: 'division', inputType: 'text'},
@@ -324,7 +327,6 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 				if(searchField.field === 'company') searchField.autoCompleteList = $scope.companies;
 				if(searchField.field === 'division') searchField.autoCompleteList = $scope.divisions;
 			})
-			if(report.reportStatus === RPT_STATUS_UC) blockUI.instances.get('block' + report.name).start({message: RPT_STATUS_UC, hideAnimate: true});
 			
 		});
 		reports.sort(function(a,b){return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);});

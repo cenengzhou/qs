@@ -141,7 +141,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 
 			columnDefs: [
 			             { field: 'lineType', width: 80, enableCellEdit: false},
-			             { field: 'subcontractDetail.amountSubcontract', displayName: "SC Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
+			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
 			             { field: 'movementAmount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -160,7 +160,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'cumAmount', displayName: 'Cum. Cert. Amount', enableFiltering: false, 
+			             { field: 'cumAmount', displayName: 'Cumulative Amount', enableFiltering: false, 
 			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
@@ -174,7 +174,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'postedAmount', displayName: 'Posted Cert. Amount', enableCellEdit: false,
+			             { field: 'postedAmount', displayName: 'Cumulative Posted Amount', enableCellEdit: false,
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (row.entity.postedAmount < 0) {
@@ -194,7 +194,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            		},
 		            		cellFilter : 'number:2',
 		            		},
-			             { field: 'description', width: 100, enableCellEdit: false},
+			             { field: 'description', width: 150, enableCellEdit: false},
 			             { field: 'objectCode', width: 80, enableCellEdit: false},
 			             {field: 'subsidiaryCode', width: 80, enableCellEdit: false},
 			             { field: 'billItem', width: 100, enableCellEdit: false},
