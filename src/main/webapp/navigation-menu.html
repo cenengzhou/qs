@@ -108,7 +108,7 @@
             
           
           
-          <li class="dropdown user user-menu navbar-user" style="height:56px;width: 90px;margin-top: 0px;border-top-width: 0px;">
+          <li class="user user-menu navbar-user" style="height:56px;width: 90px;margin-top: 0px;border-top-width: 0px;">
             <a href="javascript:;" class="dropdown-toggle" data-click="userMenuCaret" data-toggle="dropdown" aria-expanded="true" style="padding-right: 0px;" ng-click="selectTab('profile')">
  <span class="image" id="userImage">
               <img data-ng-src="{{userIcon}}"  alt="" imageonload roll-back-image="resources/images/profile.png"/>
@@ -123,10 +123,20 @@
                <img data-ng-src="{{userIcon}}" style="border:3px solid; border-color:rgba(255,255,255,0.2);width:84px;height:84px;" class="img-circle" alt="" imageonload roll-back-image="resources/images/profile.png"/>
                </span>
 
-                <p>
-                  {{user.fullname}} - {{user.title}}
-                  <small>Staff ID: {{user.StaffID}}</small>
-                </p>
+               <div>
+                  {{user.fullname}} - {{user.title}}<br>
+                  <small>Staff ID: {{user.StaffID}} </small> 
+                  <span class="dropdown" id="roleMenuCaret">
+                  	<a href="javascript:;" style="background: transparent !important" data-click="roleMenuCaret" ng-mouseover="showRole(true)" data-toggle="dropdown">
+	                  <label class="btn btn-sm btn-secondary btn-success icon-btn dropdown-toggle" type="button" style="padding:1px 5px 1px 5px;"> Role <span class="badge">{{user.authorities.length}}</span></label>
+	               </a>
+	                  <ul class="dropdown-menu bg-success" style="cursor:pointer;padding:5px; top: 17px" id="roleDropPanel" aria-labelledby="roleMenuCaret">
+	                 	<li class="class="dropdown-item" ng-mouseover="showRole(true)" ng-mouseleave="showRole(false)" ng-repeat="role in user.authorities" style="border-bottom:rgba(255, 255, 255, .3) solid 1px" title="{{role.RoleDescription}}">{{role.RoleName}}</li>
+	                 </ul>
+	                 </span>
+	                 
+                 </div>
+               
               </li>
               <li ng-show="isSelected('preference')" class="user-header bg-primary" style="height:160px;font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif">
               </li>

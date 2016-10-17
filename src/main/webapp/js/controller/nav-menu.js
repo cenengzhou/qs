@@ -354,6 +354,14 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		modalService.open('lg', 'view/infotips-modal.html', 'InfoTipsCtrl', 'Success', $scope ); 
 	}
 
+	$scope.showRole = function(isShow){
+		if(isShow){
+			angular.element('#roleMenuCaret').addClass('open');
+		} else {
+			angular.element('#roleMenuCaret').removeClass('open');
+		}
+	}
+	
 	$scope.loadProperties = function(){
 		if($rootScope.properties === undefined)
 		$http.post('service/properties/getProperties')
@@ -366,6 +374,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	angular.element('#userDropPanel').click(function(event){
+	     event.stopPropagation();
+	 });
+	
+	angular.element('#roleDropPanel').click(function(event){
 	     event.stopPropagation();
 	 });
 	
