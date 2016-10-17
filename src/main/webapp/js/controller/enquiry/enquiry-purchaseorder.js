@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter',
-                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter) {
+mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
@@ -28,6 +28,7 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http'
 			             { field: 'subsidiary', displayName: 'Subsidiary Code', enableCellEdit: false },
 			             { field: 'currencyCodeFrom', displayName: 'Currency', enableCellEdit: false },
 			             { field: 'amountExtendedPrice', displayName: 'Original Ordered Amount', cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.amountExtendedPrice < 0){

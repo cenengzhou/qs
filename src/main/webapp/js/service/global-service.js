@@ -138,8 +138,8 @@ mainApp.factory('SessionHelper',['$http', '$rootScope', '$q', function SessionHe
 	}
 }]);
 
-mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootScope',
-	function GlobalHelperFactory($q, modalService, $sce, $http, $rootScope){
+mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootScope', 'uiGridConstants',
+	function GlobalHelperFactory($q, modalService, $sce, $http, $rootScope, uiGridConstants){
 	return{
 		handleError: handleError,
 		handleSuccess: handleSuccess,
@@ -152,6 +152,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		attachmentIconClass: attachmentIconClass,
 		getSubcontractorDetailsModal: getSubcontractorDetailsModal,
 		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
+		uiGridFilters : uiGridFilters,
 	}
 	
     // ---
@@ -311,6 +312,18 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		})
 	}
 	
+	function uiGridFilters(filterNameList){
+		var filters = [];
+		filters["GREATER_THAN"] = {condition: uiGridConstants.filter.GREATER_THAN, placeholder: 'greater than'};
+		filters["LESS_THAN"] = {condition: uiGridConstants.filter.LESS_THAN, placeholder: 'less than'};
+		var resultList = [];
+		filterNameList.forEach(function(filterName){
+			if(filters[filterName]){
+				resultList.push(filters[filterName]);
+			}
+		})
+		return resultList;
+	}
 }]);
 
 /*mainApp.factory('modalUtils', function ($uibModalStack) {

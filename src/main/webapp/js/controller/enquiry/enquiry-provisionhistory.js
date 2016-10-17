@@ -29,7 +29,8 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 			             { field: 'objectCode', displayName: "Object", enableCellEdit: false, width:'100'},
 			             { field: 'subsidiaryCode', displayName: "Subsidiary", enableCellEdit: false, width:'100'},
 			             { field: 'cumLiabilitiesAmount', displayName: "Workdone Amount (Cumulative)", cellFilter: 'number:2', enableCellEdit: false, width:'220',
-								cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),	
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 									 var c = 'text-right';
 									 if(row.entity.cumLiabilitiesAmount < 0){
 										 c +=' red';
@@ -47,7 +48,8 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 								 }
 			             },
 			             { field: 'postedCertAmount', displayName: "Certified Amount (Posted)", cellFilter: 'number:2', enableCellEdit: false, width:'200',
-				            	cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),	
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 				            		 var c = 'text-right';
 				            		 if(row.entity.postedCertAmount < 0){
 				            			 c +=' red';
@@ -65,7 +67,8 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 				            	 }			            	 
 			             },
 			             { field: 'provision', displayName: "Provision", cellFilter: 'number:2',  enableCellEdit: false, width:'150',
-				            	cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),	
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 				            		 var c = 'text-right';
 				            		 if(row.entity.provision < 0){
 				            			 c +=' red';
@@ -83,7 +86,8 @@ mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$ht
 				            	 }
 			             },
 			             { field: 'scRate', displayName: "SC Rate", cellFilter: 'number:2', enableCellEdit: false, width:'100',
-				            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),	 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 				            		 var c = 'text-right';
 				            		 if(row.entity.scRate < 0){
 				            			 c +=' red';

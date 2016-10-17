@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'unitService', 'GlobalParameter', 'subcontractService',
-                                  function($scope , $rootScope, $http, modalService, unitService, GlobalParameter, subcontractService) {
+mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'unitService', 'GlobalParameter', 'subcontractService', 'GlobalHelper',
+                                  function($scope , $rootScope, $http, modalService, unitService, GlobalParameter, subcontractService, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
@@ -60,12 +60,13 @@ mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope' , '$rootScope', 
 				$scope.searchGroup,
 				$scope.searchStatus)
 				.then(function(data){
-					if(angular.isObject(data)){
+//					if(angular.isObject(data)){
 						$scope.addDataString(data);
 						$scope.gridOptions.data = data;
-					} else {
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Cannot access Job:' + $scope.searchJobNo);
-					}
+//					} 
+//					else {
+//						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Cannot access Job:' + $scope.searchJobNo);
+//					}
 				});
 	}
 	

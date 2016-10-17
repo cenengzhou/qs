@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter',
-                                  function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter ) {
+mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	$scope.GlobalParameter = GlobalParameter;
@@ -30,8 +30,11 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'm
 			             { field: 'subsidiaryCode', displayName: 'Subsidiary', enableCellEdit: false},
 			             { field: 'resourceDescription', displayName: 'Resource Description', enableCellEdit: false},
 			             { field: 'unit', displayName: 'Unit', enableCellEdit: false},
-			             { field: 'rate', displayName: 'Rate', cellFilter: 'number:2', cellClass: 'text-right', enableCellEdit: false},
+			             { field: 'rate', displayName: 'Rate', cellFilter: 'number:2', cellClass: 'text-right', enableCellEdit: false, 
+			            	 		filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
+			             },
 			             { field: 'ivMovementAmount', cellFilter: 'number:2', displayName: 'IV Movement Amount', 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.ivMovementAmount < 0){

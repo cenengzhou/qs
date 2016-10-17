@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants',
-                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants) {
+mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants', 'GlobalHelper',
+                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchDueDateType = 'onOrBefore';
 //	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
@@ -31,6 +31,7 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'getValueById("directPayment","directPayment")', displayName: 'Direct Payment', enableCellEdit: false},
 			             { field: 'getValueById("intermFinalPayment","intermFinalPayment")', displayName: 'Interim / Final Payment', enableCellEdit: false},
 			             { field: 'certAmount', displayName: 'Certificate Amount', 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
 			            			if (row.entity.certAmount < 0) {

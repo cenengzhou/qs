@@ -1,5 +1,5 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter){
+mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 
+                                            function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -78,6 +78,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            	 }			            	 
 			             },
 			             { field: 'amount', width: '80', displayName: 'Amount', enableCellEdit: false, cellFilter: 'number:2',
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 				            	if(row.entity.typeDocument === 'JE' || row.entity.typeDocument === 'PX'){

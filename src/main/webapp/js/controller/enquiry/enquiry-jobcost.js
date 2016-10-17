@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'modalService', 
-                                  function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService, modalService) {
+mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'modalService', 'GlobalHelper',
+                                  function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService, modalService, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.currentDate = new Date();
 	$scope.showCumulative = true;
@@ -63,6 +63,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'accountSubsidiary', width: '100', displayName: 'Subsidiary', enableCellEdit: false},
 			             { field: 'accountDescription', width: '300', displayName: 'Description', enableCellEdit: false},
 			             { field: 'jiAmountPeriod', width: '230', displayName: "Internal Valuation (Movement)", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.jiAmountPeriod < 0){
@@ -81,6 +82,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            	 } 
 			             },
 			             { field: 'jiAmountAccum', width: '230', displayName: "Internal Valuation (Cumulative)", aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.jiAmountAccum < 0){
@@ -99,6 +101,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            	 }
 			             },
 			             { field: 'aaAmountPeriod', width: '200', displayName: 'Actual Value (Movement)', cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.aaAmountPeriod < 0){
@@ -117,6 +120,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            	 }
 			             },
 			             { field: 'aaAmountAccum', width: '200', displayName: 'Actual Value (Cumulative)', cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.aaAmountAccum < 0){
@@ -135,6 +139,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            	 }
 			             },
 			             { field: 'variancePeriod', width: '180', displayName: 'Variance (Movement)', cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.variancePeriod < 0){
@@ -153,6 +158,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			            	 }
 			             },
 			             { field: 'varianceAccum', width: '180', displayName: 'Variance (Cumulative)', cellFilter: 'number:2', enableCellEdit: false,
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.varianceAccum < 0){

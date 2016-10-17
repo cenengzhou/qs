@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 'GlobalParameter',
-                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper, GlobalParameter) {
+mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper, GlobalParameter, GlobalHelper) {
 	
 	$scope.blockEnquiryPurchaseOrderDetail = blockUI.instances.get('blockEnquiryPurchaseOrderDetail');
 	$scope.blockEnquiryPurchaseOrderDetail.start('Under Construction');

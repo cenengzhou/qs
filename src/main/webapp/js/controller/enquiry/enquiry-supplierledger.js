@@ -27,6 +27,7 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			             { field: 'documentType', displayName: "Document Type", width: '120', enableCellEdit: false },
 			             { field: 'documentNumber', displayName: "Document No", width: '120', enableCellEdit: false },
 			             { field: 'grossAmount', displayName: "Gross Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.grossAmount);
 			            	 }, 
@@ -37,6 +38,7 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			            	 } 
 			             },
 			             { field: 'openAmount', displayName: "Open Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.openAmount);
 			            	 }, 
@@ -47,6 +49,7 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			            	 } 
 			             },
 			             { field: 'foreignAmount', displayName: "Foreign Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.foreignAmount);
 			            	 }, 
@@ -57,6 +60,7 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 			            	 } 
 			             },
 			             { field: 'foreignAmountOpen', displayName: "Foreign Open Amount", width: '120', aggregationHideLabel: true, cellFilter: 'number:2', enableCellEdit: false, 
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.foreignAmountOpen);
 			            	 }, 

@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter',
-                                        function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter) {
+mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter', 'GlobalHelper',
+                                        function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -34,10 +34,12 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http'
 //				                 condition: uiGridConstants.filter.LESS_THAN,
 //				                 placeholder: 'less than'
 //			                 }],
+			            	 
 			            	 enableCellEdit: false
 			             },
 			             { field: 'taxExplCode', width:'100', displayName: "Explanation", enableCellEdit: false },
 			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
+			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.amount < 0){

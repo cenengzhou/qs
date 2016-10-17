@@ -1,5 +1,5 @@
 
-mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'subcontractorService', 'unitService', 'GlobalParameter', 'GlobalHelper',
+mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'subcontractorService', 'unitService', 'GlobalParameter', 'GlobalHelper', 
                                       function($scope , $rootScope, $http, modalService, subcontractorService, unitService, GlobalParameter, GlobalHelper) {
 	
 	$scope.allWorkScopes = {};

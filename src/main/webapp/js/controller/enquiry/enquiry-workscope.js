@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 
-                                   function($scope, $rootScope, $http, modalService, blockUI, unitService) {
+mainApp.controller('EnquiryWorkScopeCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'unitService', 'GlobalHelper',
+                                   function($scope, $rootScope, $http, modalService, blockUI, unitService, GlobalHelper) {
 	
 //	$scope.blockEnquiryWorkScope = blockUI.instances.get('blockEnquiryWorkScope');
 	

@@ -1,6 +1,6 @@
 mainApp.controller('EnquirySubcontractDetailCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants',
-function($scope, $rootScope, $http, modalService, blockUI, subcontractService, uiGridConstants) {
+		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants', 'GlobalHelper',
+function($scope, $rootScope, $http, modalService, blockUI, subcontractService, uiGridConstants, GlobalHelper) {
 
 //	$scope.blockEnquirySubcontractDetail = blockUI.instances.get('blockEnquirySubcontractDetail');
 
@@ -97,6 +97,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'postedCertifiedQuantity',
 					width : '100',
 					displayName : "Posted Certified Qty",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -125,6 +126,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'cumCertifiedQuantity',
 					width : '100',
 					displayName : "Cumulative Certified Qty",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -153,6 +155,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountCumulativeCert',
 					width : '100',
 					displayName : "Cumulative Certified Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -181,6 +184,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountPostedCert',
 					width : '100',
 					displayName : "Posted Certified Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -209,6 +213,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountCumulativeWD',
 					width : '100',
 					displayName : "Cumulative Work Done Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -237,6 +242,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountPostedWD',
 					width : '100',
 					displayName : "Posted Work Done Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -267,6 +273,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					displayName : "Quantity",
 					cellFilter: 'number:2',
 					cellClass: 'text-right',
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					enableCellEdit : false
 				},
 				{
@@ -275,6 +282,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					cellFilter : 'number:2',
 					cellClass: 'text-right',
 					displayName : "New Quantity",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					enableCellEdit : false
 				},
 				{
@@ -283,6 +291,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					cellFilter : 'number:2',
 					cellClass: 'text-right',
 					displayName : "Original Qty",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					enableCellEdit : false
 				},
 				// { field: 'tenderAnalysisDetail_ID',
@@ -292,6 +301,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountSubcontract',
 					width : '100',
 					displayName : "Subcontract Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -320,6 +330,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountBudget',
 					width : '100',
 					displayName : "Budget Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
@@ -348,6 +359,7 @@ function($scope, $rootScope, $http, modalService, blockUI, subcontractService, u
 					field : 'amountSubcontractTBA',
 					width : '100',
 					displayName : "Subcontract TBA Amt",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 					cellClass : function(grid, row,
 							col, rowRenderIndex,
 							colRenderIndex) {
