@@ -17,6 +17,16 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		tourArray[tourName].autoStartLink = autoStartLink;
 	}
 	
+	function closeOtherTour(currentTour){
+		var canInterval = $interval.cancel(showTourinterval);
+		showTourinterval = undefined;
+		for(var key in tourArray){
+			if(key !== currentTour){
+				$rootScope[key + 'TourShow'] = false;
+			}
+		};
+	}
+	
 	var tourRootDiv = angular.element('#tourRootDiv');
 	for(var key in tourArray){
 		tourRootDiv.append(tourArray[key]);
@@ -28,21 +38,29 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		});
 	};
 	
+	var showTourinterval;
 	$scope.$on('$stateChangeSuccess', function(){
 		for(var key in tourArray){
 			$rootScope[key + 'TourShow'] = false;
 			if(typeof(Storage) != undefined){
-				if($location.path() === tourArray[key].autoStartLink && localStorage[key + 'TourShow'] != -1){
+				if($location.path() === tourArray[key].autoStartLink && localStorage[key + 'TourShow'] != -1 && $rootScope.routedToDefaultJob){
 					var tourKey = key;
-					var showTourinterval = $interval(function(){
-						if(!blockUI.isBlocking()) {
-							$rootScope[tourKey + 'TourShow'] = true
-							$interval.cancel(showTourinterval);
+					if(angular.isDefined(showTourinterval)) return;
+					showTourinterval = $interval(function(){
+						if(!blockUI.isBlocking() && $rootScope.routedToDefaultJob) {
+							$rootScope[tourKey + 'TourShow'] = true;
+							closeOtherTour(tourKey);
 						}
 					},1000);
 				} 
 			}
 		}
+	});
+	
+	$scope.$on('$stateChangeStart', function(){
+		for(var key in tourArray){
+			$rootScope[key + 'TourShow'] = false;
+		};
 	});
 	
     $rootScope.onTourFinish = function(t){

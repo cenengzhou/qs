@@ -346,5 +346,5 @@ mainApp.constant('GlobalMessage', {
 	deleteAttachment:
 		"Are you sure to delete attachments",
 	maxCharLimitReached:
-		"Max limit reached!",
+		"You've reached the max. limit of text length!",
 });

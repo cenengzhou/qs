@@ -14,7 +14,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 					var optionTop = defaultOption.length > 0 ? defaultOption.offset().top : 0;
 					var selectTop = angular.element('#defaultJobList').offset().top;
 					var baseTop = angular.element('#defaultJobList').scrollTop();
-					var scrollTo = baseTop + optionTop - selectTop;
+					var scrollTo = optionTop > 0 ? baseTop + optionTop - selectTop : baseTop;
 					angular.element('#defaultJobList').scrollTop(scrollTo);
 				}, 100);			
 			}
@@ -105,7 +105,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			
 			userpreferenceService.gettingUserPreference()
 			.then(function(response){
-				updateDefaultJobNo(response.userPreference);
+				updateDefaultJobNo(response.userPreference.DEFAULT_JOB_NO);
 			});			
 		});
 	}
@@ -116,9 +116,9 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		}, 100);
 	}
 	
-	function updateDefaultJobNo(userPreference){
-		if(userPreference && userPreference.DEFAULT_JOB_NO){
-			$scope.defaultJobNo = userPreference.DEFAULT_JOB_NO;
+	function updateDefaultJobNo(defaultJobNo){
+		if(defaultJobNo){
+			$scope.defaultJobNo = defaultJobNo;
 			$scope.resetDefaultJobNo = angular.copy($scope.defaultJobNo);
 		}
 	}
@@ -127,7 +127,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		userpreferenceService.settingDefaultJobNo($scope.defaultJobNo)
 		.then(function(response){
 			showUpdateDefaultJobStatus();
-			updateDefaultJobNo(response.data);
+			updateDefaultJobNo(response.DEFAULT_JOB_NO);
 			defaultJobListFocus();
 		})
 	}
