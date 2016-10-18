@@ -140,9 +140,9 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			rowEditWaitInterval :-1,
 
 			columnDefs: [
-			             { field: 'lineType', width: 80, enableCellEdit: false},
+			             { field: 'lineType', displayName: 'Line Type', width: 80, enableCellEdit: false},
 			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
-			             { field: 'movementAmount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			             { field: 'movementAmount', displayName: 'Movement Amount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
@@ -194,10 +194,10 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            		},
 		            		cellFilter : 'number:2',
 		            		},
-			             { field: 'description', width: 150, enableCellEdit: false},
-			             { field: 'objectCode', width: 80, enableCellEdit: false},
-			             {field: 'subsidiaryCode', width: 80, enableCellEdit: false},
-			             { field: 'billItem', width: 100, enableCellEdit: false},
+			             { field: 'description', displayName: 'Description', width: 150, enableCellEdit: false},
+			             { field: 'objectCode', displayName: 'Object Code', width: 80, enableCellEdit: false},
+			             {field: 'subsidiaryCode', displayName: 'Subsidiary Code', width: 80, enableCellEdit: false},
+			             { field: 'billItem', displayName: 'Bill Item', width: 100, enableCellEdit: false},
 			             { field: 'scSeqNo', width: 80, displayName: "Sequence No", enableCellEdit: false},
 			             ]
 	};
