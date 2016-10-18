@@ -641,15 +641,15 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 		};
 
 		 $scope.saveRow = function( rowEntity ) {
-			 var msg = '';
-			 if(rowEntity.objectCode.length != 6) msg = 'Object Code length must equal to 6 ';
-			 if(rowEntity.subsidiaryCode.length != 8)  msg += 'Subsidiary Code length must equal to 8';
+//			 var msg = '';
+//			 if(rowEntity.objectCode.length != 6) msg = 'Object Code length must equal to 6 ';
+//			 if(rowEntity.subsidiaryCode.length != 8)  msg += 'Subsidiary Code length must equal to 8';
 			 var promise = {};
-			 if(msg !== ''){
-				 promise = $q.reject();
-			 } else {
+//			 if(msg !== ''){
+//				 promise = $q.reject();
+//			 } else {
 				 promise = transitService.saveTransitResources($scope.jobNo, rowEntity);
-			 }
+//			 }
 			 $scope.resourcesGridApi.rowEdit.setSavePromise(rowEntity, promise);
 		 };
 

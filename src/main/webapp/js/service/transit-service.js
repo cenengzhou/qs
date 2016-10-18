@@ -1,4 +1,5 @@
-mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', function($http, $q, GlobalHelper){
+mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService', 
+							function($http, $q, GlobalHelper, modalService){
 	// Return public API.
     return({
     	getIncompleteTransitList:			getIncompleteTransitList,
