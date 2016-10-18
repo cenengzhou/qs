@@ -18,7 +18,7 @@ mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'mod
 			             { field: 'jobNo', width: '100', displayName: "Job No."},
 			             { field: 'description', width: '250', displayName: "Description" },
 			             { field: 'company', width: '80', displayName: "Company"},
-			             { field: 'employer', width: '80', displayName: "Employer"},
+			             { field: 'employer', width: '80', displayName: "Client"},
 			             { field: 'contractType', width: '120', displayName: "Contract Type", visible: false},
 			             { field: 'division', width: '80', displayName: "Division"},
 			             { field: 'department', width: '100', displayName: "Department"},

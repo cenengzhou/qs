@@ -37,7 +37,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains all job related information for enquiry</p>
+									<p>contains job general information such as Company, Client, Divison, Solo/JV, Completion Status, etc. for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -47,7 +47,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains job cost related information for enquiry</p>
+									<p>contains job cost information such as Internal Valuation, Actual Value and Variance provided with Cumulative and Movement Amounts for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -57,7 +57,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains internal valuation history related information for enquiry</p>
+									<p>contains internal valuation posting histories such as Posting Date, Subcontract No., Object Code, Subsidiary Code, Posting Amount, Responsible Person, etc. for enquiry</p>
 								</div>
 							</div>
 
@@ -69,12 +69,12 @@
                     
                     <div class="tab-pane fade active in" id="sc-tab">
 						<p class="lead m-b-10">
-                          The reports contain all Subcontract related information for enquiry and export to csv.
+                          This section contains Subcontract related information for enquiry and export to csv.
                         </p>
                         <!-- <p class="m-b-20">
 							Report include: Subcontract, Subcontract Detail, Payment Information, Provision History and Work Scope 
                         </p> -->
-                        <div class="row offset-10 m-t-40">
+                        <div class="row offset-5 m-t-40">
 							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-primary" style="width: 300px" ui-sref="enquiry.subcontract">
@@ -82,7 +82,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains subcontract related information for enquiry</p>
+									<p>contains subcontract general information such as Division, Sub-contractor No., Subcontract Nature, Subcontract Sum, etc. for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -92,7 +92,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains subcontract detail information for enquiry</p>
+									<p>contains subcontract detail information such as Item Type, Object Code, Subsidiary Code, Status of item's approval, etc. for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -102,7 +102,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains payment information for enquiry</p>
+									<p>contains subcontract payment certificate information such as Certificate No., Payment Terms, Payment Amount, etc. for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -112,7 +112,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains work scope for enquiry</p>
+									<p>contains available sub-contractor work scopes to be used in a subcontract for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -122,7 +122,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains provision history for enquiry</p>
+									<p>contains monthly subcontract provision posting histories for enquiry</p>
 								</div>
 							</div>
 							
@@ -132,30 +132,37 @@
                     
                     <div class="tab-pane fade" id="address-book-tab">
                         <p class="lead m-b-10">
-                          The reports contain all Address Book related information for enquiry and export to csv.
+                          This section contains Address Book related information of Sub-contractors and Clients maintained by Procurement and Finance for enquiry and export to csv.
                         </p>
-                        <!-- <p class="m-b-20">
-							Report include: Subcontractor, Client 
-                        </p> -->
-                        <div class="row offset-20 m-t-40">
-							<div class="col-md-5">
+                        <div class="row offset-10 m-t-40">
+							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-warning" style="width: 300px" ui-sref="enquiry.subcontractor">
 										<i class="icofont icofont-worker fa-5x"></i><br> <b>Subcontractor</b>
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains all sub-contractor related information for enquiry</p>
+									<p>contains work scopes and sub-contractor status information maintained and provided by Procurement and Commercial for enquiry</p>
 								</div>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-warning" style="width: 300px" ui-sref="enquiry.client">
 										<i class="icofont icofont-users-alt-2 fa-5x"></i><br> <b>Client</b>
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains all client related information for enquiry</p>
+									<p>contains client no. and client name information for enquiry</p>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<a type="button" class="btn btn-lg btn-warning" style="width: 300px" ui-sref = "enquiry.performanceAppraisal">
+										<i class="icofont icofont-verification-check fa-5x"></i><br> <b>Performance Appraisal</b>
+									</a>
+								</div>
+								<div class="col-md-12 m-t-20">
+									<p>contains sub-contractor's performance appraisal evaluated by Project Managers provided by Procurement for enquiry</p>
 								</div>
 							</div>
 							
@@ -165,11 +172,8 @@
                     
                     <div class="tab-pane fade" id="purchase-order-tab">
                          <p class="lead m-b-10">
-                          The reports contain all purchase order related information for enquiry and export to csv.
+                          This section contains purchase order related information provided by Procurement from JDE for enquiry and export to csv.
                         </p>
-                        <!-- <p class="m-b-20">
-							Report include: Purchase Order (Under Construction), Purchase Order Detail (Under Construction) 
-                        </p> -->
                        <div class="row offset-20 m-t-40">
 							<div class="col-md-5">
 								<div class="col-md-12">
@@ -180,7 +184,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains all PO related information for enquiry</p>
+									<p>contains all order types of PO information such as GB, OX, ON, etc. for enquiry</p>
 								</div>
 							</div>
 							<div class="col-md-5">
@@ -192,7 +196,7 @@
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains all PO details information for enquiry</p>
+									<p>contains PO detail information on transaction level for enquiry</p>
 								</div>
 							</div>
 							
@@ -201,92 +205,44 @@
                     
                     <div class="tab-pane fade" id="jde-tab">
                         <p class="lead m-b-10">
-                          The reports contain all JDE related information for enquiry and export to csv.
+                          This section contains information provided by Finance from JDE for enquiry and export to csv.
                         </p>
-                       <!--  <p class="m-b-20">
-							Report include: Account Ledger, Customer Ledger (Under Construction), Supplier Ledger (Under Construction), Performance Appralisal (Under Construction) 
-                        </p> -->
-                        <div class="row m-t-40">
-							<div class="col-md-3">
+                        <div class="row offset-10 m-t-40">
+							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref="enquiry.accountLedger">
-										<i class="icofont icofont-search-alt-1 fa-5x"></i><br> <b>Account Ledger</b>
+										<i class="icofont icofont-files fa-5x"></i><br> <b>Account Ledger</b>
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains account ledger related information for enquiry</p>
+									<p>contains detail information of all transactions such as Payment Posting (PS), Provision Posting (JS), IV Posting (JI), etc. for enquiry</p>
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref="enquiry.customerLedger">
-										<i class="icofont icofont-money-bag fa-5x"></i><br> <b>Customer Ledger</b>
+										<i class="icofont icofont-users-alt-2 fa-5x"></i><br> <b>Customer Ledger</b>
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains customer ledger related information for enquiry</p>
+									<p>contains Gammon's payment information from client provided by Finance for enquiry</p>
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="col-md-12">
 									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref = "enquiry.supplierLedger">
-										<i class="icofont icofont-history fa-5x"></i><br> <b>Supplier Ledger</b>
+										<i class="icofont icofont-worker fa-5x"></i><br> <b>Supplier Ledger</b>
 									</a>
 								</div>
 								<div class="col-md-12 m-t-20">
-									<p>The report contains supplier ledger related information for enquiry</p>
+									<p>contains sub-contractor's payment information provided by Finance for enquiry</p>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="col-md-12">
-									<a type="button" class="btn btn-lg btn-success" style="width: 300px" ui-sref = "enquiry.performanceAppraisal">
-										<i class="icofont icofont-history fa-5x"></i><br> <b>Performance Appraisal</b>
-									</a>
-								</div>
-								<div class="col-md-12 m-t-20">
-									<p>The report contains internal valuation history for enquiry</p>
-								</div>
-							</div>
-
-							
                         </div>
                     </div>
                     
                 </div>
             </div>
             <!-- end panel -->
-        </div>
-        
+        </div>        
 </div>
-        
-<!-- <div ui-view></div> -->
-
-
-<!-- <div class="content-wrapper">
-	<section class="content-header">
-		<ol class="breadcrumb pull-right">
-			<li><a ui-sref="job.dashboard" ng-click="activeMenu = ''"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-			<li class="active">Enquiry</li>
-		</ol>
-	</section>
-	<div class="clearfix"></div>
-	Main content
-	<section style="margin-left: 0px !important">
-		<div class="row col-md-8 col-md-push-2">
-			<div ng-repeat="btn in btns">
-				<div class="col-md-4" style="text-align: right">
-					<button type="button" name="{{btn.name}}" id="{{btn.name}}" value="" 
-							class="btn btn-lg btn-inverse" style="width: 250px" uib-popover-html="btn.popoverHtml" popover-placement="right-top"
-							popover-trigger="outsideClick" ng-mouseover="showPopover(btn.name)" popover-is-open="{{btn.name}}.show">
-						<i class="fa fa-search fa-2x pull-left"></i> <b>{{btn.title}}</b><br> <small>version 1.2.3</small>
-					</button>
-				</div>
-				<div class="col-md-8" style="padding: 3px; height: 80px">
-					<div class="panel panel-primary" ng-bind-html="btn.description"></div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-</div>
- -->
