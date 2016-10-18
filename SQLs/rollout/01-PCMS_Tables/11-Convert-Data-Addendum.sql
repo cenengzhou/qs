@@ -146,6 +146,7 @@ on sd.SUBCONTRACT_ID = s.id left join PCMSDATATST.ADDENDUM a
 on sd.SUBCONTRACT_ID = a.ID_SUBCONTRACT 
 where sd.LINETYPE in ('V1', 'V2', 'V3', 'L1', 'L2', 'D1', 'D2', 'CF')
 and sd.SYSTEM_STATUS = 'ACTIVE'
+and sd.APPROVED = 'A'
 and s.SCSTATUS = '500'
 and a.no = 0
 );
