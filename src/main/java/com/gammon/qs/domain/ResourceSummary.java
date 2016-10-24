@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NotFound;
@@ -23,6 +24,7 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -353,6 +355,13 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
 	}
 	
+	@JsonProperty("cumQuantity")
+	@Transient
+	public Double cumQuantity() {
+		return CalculationUtil.round(currIVAmount/rate, 4) ;
+	}
+	
+	
 	@ManyToOne 
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "Job_Info_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_ResourceSummary_JobInfo_PK"))
@@ -382,5 +391,7 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 	public void setMergeTo(ResourceSummary mergeTo) {
 		this.mergeTo = mergeTo;
 	}
+
+	
 
 }

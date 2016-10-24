@@ -21,9 +21,9 @@ import com.gammon.qs.shared.util.CalculationUtil;
 public class SubcontractDetailOA extends SubcontractDetail {
 	
 	private static final long serialVersionUID = 5324898603779527190L;
-	@Deprecated
+
 	private Double postedWorkDoneQuantity = 0.0;
-	@Deprecated
+
 	private Double cumWorkDoneQuantity = 0.0;
 	
 	public void updateSCDetails(SubcontractDetailOA scDetails){
@@ -48,24 +48,24 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	public String toString() {
 		return "SubcontractDetailOA [postedWorkDoneQuantity=" + postedWorkDoneQuantity + ", cumWorkDoneQuantity="
 				+ cumWorkDoneQuantity + ", toString()=" + super.toString() + "]";
+		/*return "SubcontractDetailOA [postedWorkDoneQuantity=" + postedWorkDoneQuantity + ", cumWorkDoneQuantity="
+				+ cumWorkDoneQuantity + ", toString()=" + super.toString() + "]";*/
 	}
 	
-	@Deprecated
 	@Column(name = "postedWDQty")
 	public Double getPostedWorkDoneQuantity() {
 		return (postedWorkDoneQuantity!=null?CalculationUtil.round(postedWorkDoneQuantity, 4):0.00);
 	}
-	@Deprecated
+
 	public void setPostedWorkDoneQuantity(Double postedWorkDoneQuantity) {
 		this.postedWorkDoneQuantity = (postedWorkDoneQuantity!=null?CalculationUtil.round(postedWorkDoneQuantity, 4):0.00);
 	}
 	
-	@Deprecated
 	@Column(name = "cumWDQty")
 	public Double getCumWorkDoneQuantity() {
 		return (cumWorkDoneQuantity!=null?CalculationUtil.round(cumWorkDoneQuantity, 4):0.00);
 	}
-	@Deprecated
+	
 	public void setCumWorkDoneQuantity(Double cumWorkDoneQuantity) {
 		this.cumWorkDoneQuantity = cumWorkDoneQuantity;
 	}

@@ -5,6 +5,7 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
 	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	$scope.subcontractStatus = "";
+	$scope.finalPaymentStatus ="";
 	
     loadSubcontractList();
     
@@ -23,10 +24,19 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
         $animate.enabled(false);
     };
     
+    $scope.updateFinalOption = function (){
+    	console.log($scope.checkedFinal);
+    	if($scope.checkedFinal == true)
+        	$scope.finalPaymentStatus ="F";    		
+    	else
+        	$scope.finalPaymentStatus ="";	
 
-    $scope.updateSubcontract = function (subcontractNo, subcontractDescription) {
+    }
+
+    $scope.updateSubcontract = function (subcontractNo, subcontractDescription, paymentStatus) {
     	$cookies.put('subcontractNo', subcontractNo);
     	$cookies.put('subcontractDescription', subcontractDescription);
+    	$cookies.put('paymentStatus', paymentStatus);
     }
     
     $scope.openSubcontractCreateModal = function () {

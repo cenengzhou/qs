@@ -438,7 +438,13 @@ public class ProvisionPostingService {
 					scDetailProvisionHistoryList.add(scDetailProvisionHistory);
 				}
 				// Update Posted Work Done Quantity = Cumulative Work Done Quantity for all SCDetail with Work Done
+				/**
+				 * @author koeyyeung
+				 * Convert to Amount Based
+				 * **/
 				((SubcontractDetailOA) scDetails).setPostedWorkDoneQuantity(((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());
+				((SubcontractDetailOA) scDetails).setAmountPostedWD(((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
+
 				scDetailsHBDao.update(scDetails);
 			}
 		}

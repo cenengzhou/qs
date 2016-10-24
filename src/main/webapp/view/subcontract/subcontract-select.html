@@ -23,9 +23,11 @@
 				<label class="btn" 
 					ng-class="{'btn-primary' : subcontractStatus == '', 'btn-white' : subcontractStatus != ''}"
 					ng-model="subcontractStatus" uib-btn-radio="''"><i class="fa fa-th"></i> All</label>
+					
 			</div>
 		</div>
-		<div class="col-xs-6">
+				
+		<div class="col-xs-5">
 			<div class="input-group bg-purple-active">
 				<input ng-model="searchquery"
 					placeholder="Search Subcontract here.." class="form-control"
@@ -37,9 +39,12 @@
 				</span>
 			</div>
 		</div>
-		<div class="col-xs-1"></div>
+		<div class="col-xs-2   m-t-10">
+			<label><input type="checkbox" name="iCheck" ng-change="updateFinalOption()"
+				ng-model="checkedFinal"  ng-icheck /> Finalized Subcontract Only</label>
+		</div>
 		<div class="col-xs-2">
-			<button type="button" class="btn btn-danger btn-block pull-right" ui-sref="subcontract-award.hearder" ng-click="updateSubcontract('', '')">
+			<button type="button" class="btn btn-danger btn-block pull-right" ui-sref="subcontract-award.hearder" ng-click="updateSubcontract('', '', '')">
 				<i class="fa fa-plus-circle"></i><span> Create</span>
 			</button>
 
@@ -54,11 +59,11 @@
 				ng-repeat="sc in (filteredItems = (subcontracts  | filter:{scStatus:'500'} | filter:searchquery))"
 				ng-hide ="subcontractStatus=='nonAward'"> -->
 			<div class="col-md-4 col-lg-3 animated flipInX"
-				ng-repeat="sc in subcontracts | filter:{scStatus:'500'} | filter:searchquery"
-				ng-hide ="subcontractStatus=='nonAward'">
+				ng-repeat="sc in subcontracts | filter:{scStatus:'500'} | filter:searchquery | filter:{paymentStatus: finalPaymentStatus}"
+				ng-hide ="subcontractStatus=='nonAward'"> <!-- orderBy:['-paymentStatus', 'packageNo'] -->
 				
 				<div class="box box-widget sc-panel">
-					<a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description)">
+					<a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description, sc.paymentStatus)">
 						<div class="sc-panel-header bg-primary">
 							<div class="sc-panel-icon">
 								<span class="glyphicon glyphicon-ok-sign"></span>
@@ -70,9 +75,9 @@
 							<h3 class="sc-panel-name">
 								<small><span class="pull-right badge bg-inverse">{{sc.paymentTerms}}</span></small>
 							</h3>
-							<!-- <h3 class="sc-panel-name">
-								<small><span class="pull-right badge bg-white text-red">{{sc.paymentStatus}}</span></small>
-							</h3> -->
+							<h3 class="sc-panel-name" ng-show="sc.paymentStatus == 'F'">
+								<small><span class="pull-right badge bg-white text-red">Final</span></small>
+							</h3>
 							
 							<h5 class="sc-panel-desc">
 								{{sc.description}}
@@ -82,7 +87,7 @@
 					</a>
 					<div class="box-footer no-padding">
 						<ul class="nav nav-stacked">
-							<li><a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description)">{{sc.nameSubcontractor}}<span
+							<li><a ui-sref="subcontract.dashboard" ng-click="updateSubcontract(sc.packageNo, sc.description, sc.paymentStatus)">{{sc.nameSubcontractor}}<span
 									class="pull-right badge bg-green">{{sc.vendorNo}}</span></a></li>
 						</ul>
 					</div>
@@ -95,10 +100,10 @@
 		<div class="row">
 			<!-- animated flipInX -->
 			<div class="col-md-4 col-lg-3 animated flipInX"
-				ng-repeat="sc in subcontracts | filter:{scStatus:'!500'} | filter:searchquery"
+				ng-repeat="sc in subcontracts | filter:{scStatus:'!500'} | filter:searchquery | filter:{paymentStatus: finalPaymentStatus}"
 				ng-hide ="subcontractStatus=='Award'">
 				<div class="box box-widget sc-panel">
-					<a ui-sref="subcontract-award.hearder" ng-click="updateSubcontract(sc.packageNo, sc.description)">
+					<a ui-sref="subcontract-award.hearder" ng-click="updateSubcontract(sc.packageNo, sc.description, sc.paymentStatus)">
 						<div class="sc-panel-header bg-inverse text-white">
 							<div class="sc-panel-icon">
 								<span class="glyphicon glyphicon-remove-sign"></span>

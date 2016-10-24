@@ -1,5 +1,5 @@
-mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 
-                                 function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper) {
+mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 'confirmService',
+                                 function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper, confirmService) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
@@ -8,7 +8,30 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	
 	$scope.submit = function(){
 		$scope.disableButtons = true;
-		submitAddendumApproval();
+		
+		var zeroSCRateItemExist = false;
+		
+		for(var i in $scope.addendumDetails){
+			if($scope.addendumDetails[i].rateBudget >0 && $scope.addendumDetails[i].rateAddendum == 0){
+				zeroSCRateItemExist = true;
+				break;
+			}
+		}
+		
+		if(zeroSCRateItemExist){
+			var modalOptions = {
+					bodyText: 'No work done is allowed with ZERO subcontract rate for budgeted item. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					submitAddendumApproval();
+				}else
+					$scope.disableButtons = false;
+			});
+		}else
+			submitAddendumApproval();
 	}
 	
 	function loadData(){
@@ -33,7 +56,12 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	}
 	
 	function getAllAddendumDetails(){
-//		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+		addendumService.getAllAddendumDetails($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
+		.then(
+				function( data ) {
+					$scope.addendumDetails = data;
+				});
+
 		htmlService.makeHTMLStringForAddendumApproval({jobNumber:$scope.jobNo, packageNo: $scope.subcontractNo, addendumNo:$scope.addendumNo, htmlVersion:'W'})
 		.then(
 				function( data ) {

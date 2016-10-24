@@ -5,8 +5,8 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 	$scope.subcontractDescription = $cookies.get("subcontractDescription");
-
-
+	$scope.paymentStatus = $cookies.get("paymentStatus");
+	
 	getSubcontract();
 	
 	$scope.paymentRequisition = function (){

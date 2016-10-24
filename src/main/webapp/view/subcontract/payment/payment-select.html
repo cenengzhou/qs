@@ -7,7 +7,8 @@
 	</ol> -->
 
 	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract {{subcontractNo}}<small> {{subcontractDescription}}</small>
+		<small class="text-red m-l-30" ng-show="paymentStatus == 'F'"> <b>Final</b></small>
 	</h1>
 
 	<div class="col-xs-12 col-md-5 col-lg-5">
@@ -64,7 +65,7 @@
 		</div>
 
 
-		<div class="fullcalendar vertical-box">
+		<div class="fullcalendar vertical-box" resize ng-style="resizeWithOffset(300)">
 			<div class="fullcalendar-container vertical-box-column">
 				<div id='calendar'></div>
 			</div>

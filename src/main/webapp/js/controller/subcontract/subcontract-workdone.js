@@ -1,52 +1,61 @@
-mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state',
-                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state) {
+mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', 'roundUtil',
+                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, roundUtil) {
 
 	$scope.percent = "";
 	$scope.lastID ="";
 	
+	 $scope.edit = true;
+	 $scope.canEdit = function() { 
+		 return $scope.edit; 
+	};
+	
+	getSubcontract();
 	getSubcontractDetailForWD();
 	getResourceSummariesBySC();
 	
 	$scope.gridOptions = {
-			enableSorting: true,
+			enableSorting: false,
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
-			enableColumnMoving: true,
-			showGridFooter : false,
+			enableFullRowSelection: true,
+			multiSelect: false,
+			showGridFooter : true,
 			showColumnFooter : true,
-			//fastWatch : true,
-			
+			//enableCellEditOnFocus : true,
+
 			exporterMenuPdf: false,
 			
-			enableCellEditOnFocus : true,
-
-			//rowEditWaitInterval :-1,
 			
 			columnDefs: [
 		             	{ field: 'id', width: 20, enableCellEdit: false, visible:false},
 			             { field: 'lineType', width: 40, enableCellEdit: false, pinnedLeft:true},
-			             { field: 'description', width: 150, enableCellEdit: false, pinnedLeft:true},
+		             	 { field: 'description', width: 150, enableCellEdit: false, pinnedLeft:true},
 
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, visible:false, enableCellEdit: false,enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'amountSubcontract', displayName: "Subcontract Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             {field: 'amountCumulativeWD', displayName: "Cumulative Workdone Amount", width: 150, cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
+			             {field: 'cumWorkDoneQuantity', displayName: "Cumulative Workdone Quantity", width: 150, cellEditableCondition : $scope.canEdit, 
+			            	cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
+			            	aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             {field: 'amountCumulativeWD', displayName: "Cum. Workdone Amount", width: 150, cellEditableCondition : $scope.canEdit, 
+			            	cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
 			            	aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			             {field: 'amountPostedWD', displayName: "Posted Workdone Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
 	            			aggregationType: uiGridConstants.aggregationTypes.sum,
 	            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			             {field: 'amountCumulativeCert', displayName: "Cumulative Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+            		 	{field: 'amountCumulativeCert', displayName: "Cumulative Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
 	            		 	aggregationType: uiGridConstants.aggregationTypes.sum,
         		 			footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false ,cellClass: 'text-right', cellFilter: 'number:4'},
 
-	            		 {field: 'costRate', width: 60, enableCellEdit: false, enableFiltering: false},
+	            		 {field: 'costRate', width: 60, enableCellEdit: false},
 	            		 {field: 'scRate', width: 60, enableCellEdit: false, enableFiltering: false},
 		            	 {field: 'billItem', width: 80, enableCellEdit: false},
 			             {field: 'objectCode', width: 70, enableCellEdit: false},
-			             {field: 'subsidiaryCode', width: 70, enableCellEdit: false},
+			             {field: 'subsidiaryCode', width: 80, enableCellEdit: false},
 			             
 			             {field: 'projectedProvision', width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
 			             {field: 'provision', width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
@@ -59,9 +68,9 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             {field: 'remark', width: 80, visible:false, enableCellEdit: false},
 			             {field: 'contraChargeSCNo', width: 80, visible:false, enableCellEdit: false},
 			             {field: 'sequenceNo', width: 80, visible:false, enableCellEdit: false},
-			             {field: 'resourceNo', width: 80, visible:false, enableCellEdit: false},
+			             {field: 'resourceNo', width: 80, visible:false, enableCellEdit: true},
 			             {field: 'balanceType', width: 80, visible:false, enableCellEdit: false}
-			             ],
+			             ]
 
 	
 	};
@@ -70,43 +79,63 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		$scope.gridApi = gridApi;
 
 		 gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			 if($scope.lastID != rowEntity.id){
-				$scope.lastID = rowEntity.id;
-					
-				if(rowEntity.costRate != 0) {
-	            	getResourceSummariesByLineType(rowEntity.objectCode, rowEntity.subsidiaryCode, rowEntity.lineType, rowEntity.resourceNo);
-				} else {
-	            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
-	            }
+			 if(rowEntity.scRate == 0 && rowEntity.costRate>0){
+				 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No work done is allowed with ZERO subcontract rate for budgeted item.");
 			}
         });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(newValue != oldValue )
+			if(newValue != oldValue ){
+				if(colDef.name == "cumWorkDoneQuantity"){
+					rowEntity.cumWorkDoneQuantity = roundUtil.round(newValue, 4);
+					rowEntity.amountCumulativeWD = roundUtil.round(rowEntity.cumWorkDoneQuantity * rowEntity.scRate, 2);
+				}
+				if(colDef.name == "amountCumulativeWD"){
+					rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
+					rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
+				}
+				console.log(rowEntity);
 				updateWDandIV(rowEntity);
+			}
 		});
 
+		gridApi.selection.on.rowSelectionChanged($scope,function(row){
+			 if($scope.lastID != row.entity.id){
+					$scope.lastID = row.entity.id;
+						
+					if(row.entity.costRate != 0) {
+		            	getResourceSummariesByLineType(row.entity.objectCode, row.entity.subsidiaryCode, row.entity.lineType, row.entity.resourceNo);
+					} else {
+		            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
+		            }
+				}
+		});
 	}
 	
 
 	$scope.gridOptionsIV = {
+			enableSorting: false,
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
-			showGridFooter : false,
+			showGridFooter : true,
 			showColumnFooter : true,
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
-			//rowEditWaitInterval :-1,
 
 
 			columnDefs: [
 			             { field: 'id', width:50 , visible:false, enableCellEdit: false},
 			             { field: 'packageNo', width:70, displayName:"Subcontract No.", visible:false, enableCellEdit: false},
 			             { field: 'objectCode', enableCellEdit: false , width:70, pinnedLeft:true},
-			             { field: 'subsidiaryCode',width:70, enableCellEdit: false, pinnedLeft:true},
+			             { field: 'subsidiaryCode',width:80, enableCellEdit: false, pinnedLeft:true},
 			             { field: 'resourceDescription', width:80, displayName: "Description", enableCellEdit: false },
+			             {field: 'cumQuantity', displayName: "Cum. Quantity", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			            	 cellEditableCondition : $scope.canEdit, 
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 			             {field: 'currIVAmount', displayName: "Cum. IV Amount", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			            	 cellEditableCondition : $scope.canEdit, 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 	            		 {field: 'postedIVAmount', width:130,  enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',  
@@ -166,13 +195,14 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				});
 	}
 	
-	function getResourceSummariesByLineType(objectCode, subsidiaryCode ,lineType, resourceNo) {console.log(objectCode, subsidiaryCode ,lineType, resourceNo);
+	function getResourceSummariesByLineType(objectCode, subsidiaryCode ,lineType, resourceNo) {
 		resourceSummaryService.getResourceSummariesByLineType($scope.jobNo, $scope.subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo)
 	   	 .then(
 				 function( data ) {
 					 console.log(data);
-					 $scope.IV  =data
-					 $scope.gridOptionsIV.data=  $scope.IV;
+					 if(data != null && data.length > 0){
+						 $scope.gridOptionsIV.data=  data;
+					 }
 				 });
 	    }
 	
@@ -180,7 +210,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		resourceSummaryService.getResourceSummariesBySC($scope.jobNo, $scope.subcontractNo)
 	   	 .then(
 				 function( data ) {
-					 //console.log(data);
 					 $scope.gridOptionsIV.data= data;
 				 });
 	    }
@@ -207,6 +236,24 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 					 $state.reload();
 				 });
 	    }
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.subcontract = data;
+
+					if($scope.subcontract.paymentStatus == 'F'){
+						$scope.disableButton = true;
+						$scope.edit = false;
+					}
+					else{
+						$scope.disableButton = false;
+						$scope.edit = true;
+					}
+					
+				});
+	}
 	
 }]);
 

@@ -1,6 +1,5 @@
 mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants', 'GlobalHelper', '$filter',
                                               function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants, GlobalHelper, $filter) {
-
 	getSubcontract();
 	getSCDetails();
 	

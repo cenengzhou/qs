@@ -173,12 +173,12 @@ public class SubcontractDetail extends BasePersistedObject {
 	public String getContraChargeSCNo() {
 		return "";
 	}
-	@Deprecated
+	
 	@Transient
 	public Double getPostedWorkDoneQuantity() {
 		return new Double(0);
 	}
-	@Deprecated
+
 	@Transient
 	public Double getCumWorkDoneQuantity() {
 		return new Double(0);

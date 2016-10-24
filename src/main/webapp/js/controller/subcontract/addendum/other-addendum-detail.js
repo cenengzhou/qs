@@ -115,28 +115,30 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 	}
 
 	$scope.$watch('lineType', function(newValue, oldValue) {
-		if(scDetailID !=null && scDetailID.length !=0){
-			subcontractService.getSubcontractDetailByID(scDetailID)
-			.then(
-					function( data ) {
-						if(data.length != 0){
-							$scope.subcontractDetail = data;
-							$scope.units.selected = data.unit;
-							$scope.lineType = data.lineType;
-							
-							$scope.disableSelect = true;
-							$scope.disableFields = true;
-						}
-					});
-		}else {
-			subcontractService.getDefaultValuesForSubcontractDetails($scope.jobNo, $scope.subcontractNo, newValue)
-			.then(
-					function( data ) {
-						if(data.length != 0){
-							$scope.subcontractDetail = data;
-						}
-					});
-			
+		if($scope.paymentStatus == null || $scope.paymentStatus != 'F'){
+			if(scDetailID !=null && scDetailID.length !=0){
+				subcontractService.getSubcontractDetailByID(scDetailID)
+				.then(
+						function( data ) {
+							if(data.length != 0){
+								$scope.subcontractDetail = data;
+								$scope.units.selected = data.unit;
+								$scope.lineType = data.lineType;
+								
+								$scope.disableSelect = true;
+								$scope.disableFields = true;
+							}
+						});
+			}else {
+				subcontractService.getDefaultValuesForSubcontractDetails($scope.jobNo, $scope.subcontractNo, newValue)
+				.then(
+						function( data ) {
+							if(data.length != 0){
+								$scope.subcontractDetail = data;
+							}
+						});
+				
+			}		
 		}
 		
 	});

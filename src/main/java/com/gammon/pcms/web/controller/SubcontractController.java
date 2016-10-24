@@ -35,6 +35,7 @@ import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
@@ -239,7 +240,7 @@ public class SubcontractController {
 	@RequestMapping(value = "updateWDandIV", method = RequestMethod.POST)
 	public String updateWDandIV(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
-								@RequestBody SubcontractDetail scDetail){
+								@RequestBody SubcontractDetailOA scDetail){
 		String result = null;
 		try {
 			result = subcontractService.updateWDandIV(jobNo, subcontractNo, scDetail);

@@ -3168,7 +3168,7 @@ public class SubcontractService {
 			scDetails.setOriginalQuantity(taDetails.getQuantity());
 			scDetails.setQuantity(taDetails.getQuantity());
 			//scDetails.setToBeApprovedQuantity(taDetails.getQuantity());
-			scDetails.setScRate(taDetails.getRateBudget());
+			scDetails.setScRate(taDetails.getRateSubcontract());
 			scDetails.setSubsidiaryCode(taDetails.getSubsidiaryCode());
 			scDetails.setObjectCode(taDetails.getObjectCode());
 			scDetails.setLineType("BQ");
@@ -3798,7 +3798,7 @@ public class SubcontractService {
 	 * creatd on 21 Jul, 2016
 	 * update work done and IV
 	 * **/
-	public String updateWDandIV(String jobNo, String subcontractNo, SubcontractDetail subcontractDetail){
+	public String updateWDandIV(String jobNo, String subcontractNo, SubcontractDetailOA subcontractDetail){
 		String message = null;
 		if (subcontractDetail == null){
 			message = "No Subcontract Detail has to be updated.";
@@ -3834,8 +3834,9 @@ public class SubcontractService {
 				return message;
 			}
 
+			double cumWorkDoneQty = subcontractDetail.getCumWorkDoneQuantity()!=null ? subcontractDetail.getCumWorkDoneQuantity():0.0;
 			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? subcontractDetail.getAmountCumulativeWD().doubleValue():0.0;
-			message = calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneAmt);
+			message = calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
 
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
@@ -3886,9 +3887,10 @@ public class SubcontractService {
 
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
-					
-					double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
-					message = calculateWDandIV(scDetail, subcontract, cumWorkDoneAmt);
+					double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
+					double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
+					//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
+					message = calculateWDandIV(scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails
@@ -3901,9 +3903,11 @@ public class SubcontractService {
 	}
 	
 	
-	private String calculateWDandIV(SubcontractDetail scDetailInDB, Subcontract subcontract, double cumWorkDoneAmt){
+	private String calculateWDandIV(SubcontractDetail scDetailInDB, Subcontract subcontract, double cumWorkDoneQty, double cumWorkDoneAmt){
 		String message = "";
 		double cumWorkDoneAmtMovement = 0.0;
+		double cumWorkDoneQtyMovement = 0.0;
+		
 		// ----------1. Calculate work done amount - START ----------
 		/**@author koeyyeung
 		 * Bug Fix #57: Non-approved VO (e.g. V1) cannot be larger than BQ Quantity
@@ -3951,7 +3955,9 @@ public class SubcontractService {
 		}
 
 		if (scDetailInDB.getAmountCumulativeWD().doubleValue() != cumWorkDoneAmt){
-			cumWorkDoneAmtMovement = cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue();
+			cumWorkDoneAmtMovement = CalculationUtil.round(cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue(), 2);
+			cumWorkDoneQtyMovement = CalculationUtil.round(cumWorkDoneQty - scDetailInDB.getCumWorkDoneQuantity(), 4);
+			((SubcontractDetailOA) scDetailInDB).setCumWorkDoneQuantity(cumWorkDoneQty);
 			scDetailInDB.setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
 		}
 		// ----------1. Calculate work done amount - DONE ----------
@@ -3979,13 +3985,13 @@ public class SubcontractService {
 					if (checkResource != null && ("V1".equalsIgnoreCase(scDetailInDB.getLineType()) || "V3".equalsIgnoreCase(scDetailInDB.getLineType())))
 						updateResourceSummaryIVFromSCVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
 														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
-														CalculationUtil.round(cumWorkDoneAmtMovement/scDetailInDB.getScRate() * scDetailInDB.getCostRate(), 2), 
+														CalculationUtil.round(cumWorkDoneQtyMovement * scDetailInDB.getCostRate(), 2), 
 														scDetailInDB.getResourceNo().longValue());
 					// Update IV for BQ, V1 (no budget)
 					else
 						updateResourceSummaryIVFromSCNonVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
 														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
-														CalculationUtil.round(cumWorkDoneAmtMovement/scDetailInDB.getScRate()  * scDetailInDB.getCostRate(), 2));
+														CalculationUtil.round(cumWorkDoneQtyMovement  * scDetailInDB.getCostRate(), 2));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

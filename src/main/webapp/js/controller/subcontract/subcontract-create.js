@@ -232,6 +232,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
 					$cookies.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
 			    	$cookies.put('subcontractDescription', $scope.subcontractToUpdate.description);
+			    	$cookies.put('paymentStatus', '');
 			    	$state.reload();
 				}
 

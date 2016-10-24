@@ -153,7 +153,13 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		var ta = $scope.gridOptions.data;
 		var newTADetailList = [];
 
+		var zeroSCRateItemExist = false;
+		
 		for (i in ta){
+			if(ta[i].rateBudget >0 && ta[i].rateSubcontract == 0){
+				zeroSCRateItemExist = true;
+			}
+			
 			var newTADetail = {
 					billItem : ta[i]['billItem'],
 					objectCode: ta[i]['objectCode'],
@@ -172,9 +178,20 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			newTADetailList.push(newTADetail);
 		}
 
-	
-	updateTenderDetails(newTADetailList);
-}
+		if(zeroSCRateItemExist){
+			var modalOptions = {
+					bodyText: 'No work done is allowed with ZERO subcontract rate for budgeted item. Continue?'
+			};
+
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					updateTenderDetails(newTADetailList);
+				}
+			});
+		}else
+			updateTenderDetails(newTADetailList);
+	}
 
 	function loadTenderDetail(){
 		getTender();
