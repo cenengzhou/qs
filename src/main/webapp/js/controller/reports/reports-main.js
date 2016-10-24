@@ -53,9 +53,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						                	}
 						               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', value:'', inputType: 'company', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
+						                 {field: 'jobNumber', value:'', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'dueDateType', inputType: 'dueDateType'},
 						                 {field: 'dueDate', inputType: 'dueDate', validatePattern: VALIDATE_DUEDATE, validateMessage: VALIDATE_DUEDATE_MESSAGE}
 					    ],
@@ -79,9 +79,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 						   ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', value:'', inputType: 'company', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'division', inputType: 'autocomplete', 
+						                 {field: 'division', value:'', inputType: 'division', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
@@ -106,9 +106,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					    ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', value:'', inputType: 'company', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'division', inputType: 'autocomplete', 
+						                 {field: 'division', value:'', inputType: 'division', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
@@ -134,9 +134,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						            	   }
 					 	               ],
 						   searchFields: [
-						                 {field: 'company', inputType: 'autocomplete', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
+						                 {field: 'company', value:'', inputType: 'company', mdMenuClass: 'company-code-and-name', minLength:0, maxLength:5, validateMessage: VALIDATE_COMPANY_MESSAGE,
 						                  autoCompleteList: $scope.companies, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
-						                 {field: 'division', inputType: 'autocomplete', 
+						                 {field: 'division', value:'', inputType: 'division', 
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
@@ -149,8 +149,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						   name: 'monthlyContractExpenditureReport',
 						   comingSoon: 'YES',
 						   searchFields: [
-					 	                 {field: 'company', inputType: 'text'},
-					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'company', value:'', inputType: 'company'},
+					 	                 {field: 'division', value:'', inputType: 'division'},
 					 	                 {field: 'jobNo', inputType: 'text'},
 					  ]
 					},
@@ -159,8 +159,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						   name: 'contractFinancialPerformanceReport',
 						   comingSoon: 'YES',
 						   searchFields: [
-					 	                 {field: 'company', inputType: 'text'},
-					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'company', value:'', inputType: 'company'},
+					 	                 {field: 'division', value:'', inputType: 'division'},
 					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
 					 	                 ]
 					},
@@ -169,8 +169,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						   name: 'jobCostReport',
 						   comingSoon: 'YES',
 						   searchFields: [
-					 	                 {field: 'company', inputType: 'text'},
-					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'company', value:'', inputType: 'company'},
+					 	                 {field: 'division', value:'', inputType: 'division'},
 					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
 					 	                 ]
 					},
@@ -179,8 +179,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
 						   name: 'cashFlowReport',
 						   comingSoon: 'YES',
 						   searchFields: [
-					 	                 {field: 'company', inputType: 'text'},
-					 	                 {field: 'division', inputType: 'text'},
+					 	                 {field: 'company', value:'', inputType: 'company'},
+					 	                 {field: 'division', value:'', inputType: 'division'},
 					 	                 {field: 'jobNumber', inputType: 'text', label: 'Job No'},
 					 	                 ]
 					}

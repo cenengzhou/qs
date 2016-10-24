@@ -92,7 +92,7 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private ServletConfig servletConfig;
 	
-	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion){
+	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
 		JobInfo job = new JobInfo();
 		Subcontract scPackage = new Subcontract();
@@ -164,6 +164,9 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		String template = freemarkerConfig.getTemplates().get("payment");
+		data.put("template", template);
+		data.put("logo", freemarkerConfig.getPaths("logo"));
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
@@ -177,7 +180,7 @@ public class HTMLService implements Serializable{
 		data.put("strPaymentAsAtDate", strPaymentAsAtDate != null ? strPaymentAsAtDate : "");
 		data.put("currentPaymentNo", currentPaymentNo);
 		
-		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("payment"), data);
+		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
 			
 		return strHTMLCodingContent;
 	}
@@ -197,7 +200,9 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-
+		String template = freemarkerConfig.getTemplates().get("award");
+		data.put("template", template);
+		data.put("logo", freemarkerConfig.getPaths("logo"));
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
@@ -206,7 +211,7 @@ public class HTMLService implements Serializable{
 		data.put("tenderList", tenderList != null ? tenderList : new ArrayList<>());
 		data.put("rcmTenderer", rcmTenderer != null ? rcmTenderer : new Tender());
 		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
-		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("award"), data);
+		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 
 	public String makeHTMLStringForAddendumApproval(String noJob, String noSubcontract, Long noAddendum, String htmlVersion) throws Exception{
@@ -225,13 +230,16 @@ public class HTMLService implements Serializable{
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
+		String template = freemarkerConfig.getTemplates().get("addendum");
+		data.put("template", template);
+		data.put("logo", freemarkerConfig.getPaths("logo"));
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("addendum", addendum != null ? addendum : new Addendum());
 		data.put("subcontract", subcontract != null ? subcontract : new Subcontract());
 		data.put("addendumDetailList", addendumDetailList != null ? addendumDetailList : new ArrayList<>());
-		return FreeMarkerHelper.returnHtmlString(freemarkerConfig.getTemplates().get("addendum"), data);
+		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 
 	public String makeHTMLStringForSplitTermSC(String jobNumber, String subcontractNumber, String htmlVersion){

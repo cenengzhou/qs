@@ -18,7 +18,7 @@
 					<span class="panel-title">{{report.title}}</span>
 					<span ng-if="report.comingSoon === 'YES'" class="badge bg-lime-light text-white"> </br>Coming soon!</span>
 				</div>
-				<div class="panel-body" style="overflow: hidden">
+				<div class="panel-body" style="overflow: visible">
 					<form id="{{report.name}}Form" name="{{report.name}}Form" ng-submit="false">
 						<div>
 							<div ng-repeat="searchField in report.searchFields">
@@ -102,6 +102,18 @@
 										    No matching code "{{searchField.value}}" were found.
 										  </md-not-found>
 										</md-autocomplete>
+									</div>
+									
+									<div ng-if="searchField.inputType === 'company'">
+										<select  class="form-control" ng-options="company.value as company.display for company in companies" ng-model="searchField.value">
+											<option></option>
+										</select>
+									</div>
+									
+									<div ng-if="searchField.inputType === 'division'">
+										<select class="form-control" ng-options="divison.value as division.display for division in divisions" ng-model="searchField.value">
+											<option></option>
+										</select>
 									</div>
 									
 									<p ng-if="jobAll && searchField.field == 'jobNumber'" >

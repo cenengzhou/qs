@@ -25,7 +25,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/subcontractor-service.js',
                            'js/service/userpreference-service.js',
                            'js/service/job-service.js',
-                           'js/service/storage-service.js',
+                           'js/system/storage-service.js',
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
                            'js/controller/infotips-modal.js',
