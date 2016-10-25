@@ -13,7 +13,8 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		splitOrMergeResources:					splitOrMergeResources,
 		updateIVAmount:							updateIVAmount,
 		postIVAmounts:							postIVAmounts,
-		generateResourceSummaries:			generateResourceSummaries
+		generateResourceSummaries:				generateResourceSummaries,
+		updateIVForSubcontract:					updateIVForSubcontract
 	});
 
 	function getResourceSummaries(jobNo, subcontractNo, objectCode) {
@@ -186,6 +187,16 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 	        });
 	        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	    }
+	 
+	 function updateIVForSubcontract(resourceSummaryList) {
+			var request = $http({
+				method: "post",
+				url: "service/resourceSummary/updateIVForSubcontract",
+				dataType: "application/json;charset=UTF-8",
+				data: resourceSummaryList
+			});
+			return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+		}
 	 
 }]);
 

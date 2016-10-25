@@ -1,9 +1,11 @@
-mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', 'roundUtil',
-                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, roundUtil) {
+mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', 'roundUtil', '$timeout',
+                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, roundUtil, $timeout) {
 
 	$scope.percent = "";
 	$scope.lastID ="";
 	
+	$scope.disableButton = true;
+
 	 $scope.edit = true;
 	 $scope.canEdit = function() { 
 		 return $scope.edit; 
@@ -85,7 +87,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
         });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(newValue != oldValue ){
+			if(newValue != oldValue && newValue.trim().length >0){
 				if(colDef.name == "cumWorkDoneQuantity"){
 					rowEntity.cumWorkDoneQuantity = roundUtil.round(newValue, 4);
 					rowEntity.amountCumulativeWD = roundUtil.round(rowEntity.cumWorkDoneQuantity * rowEntity.scRate, 2);
@@ -94,9 +96,14 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 					rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
 					rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
 				}
-				console.log(rowEntity);
 				updateWDandIV(rowEntity);
+			}else{
+				if(colDef.name == "cumWorkDoneQuantity")
+					rowEntity.cumWorkDoneQuantity = oldValue;
+				else if(colDef.name == "amountCumulativeWD")
+					rowEntity.amountCumulativeWD = oldValue;
 			}
+				
 		});
 
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
@@ -107,6 +114,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		            	getResourceSummariesByLineType(row.entity.objectCode, row.entity.subsidiaryCode, row.entity.lineType, row.entity.resourceNo);
 					} else {
 		            	$scope.gridOptionsIV.data.splice (0, $scope.gridOptionsIV.data.length);
+						$scope.disableButton = true;
 		            }
 				}
 		});
@@ -123,7 +131,8 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
 
-
+			rowEditWaitInterval :-1,
+			
 			columnDefs: [
 			             { field: 'id', width:50 , visible:false, enableCellEdit: false},
 			             { field: 'packageNo', width:70, displayName:"Subcontract No.", visible:false, enableCellEdit: false},
@@ -157,15 +166,44 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	        });
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			
-			$scope.$apply();
+			if(newValue != oldValue && newValue.trim().length >0){
+				if(colDef.name == "cumQuantity"){
+					rowEntity.cumQuantity = roundUtil.round(newValue, 4);
+					rowEntity.currIVAmount = roundUtil.round(rowEntity.cumQuantity * rowEntity.rate, 2);
+				}
+				if(colDef.name == "currIVAmount"){
+					rowEntity.currIVAmount = roundUtil.round(newValue, 2);
+					rowEntity.cumQuantity = roundUtil.round(rowEntity.currIVAmount / rowEntity.rate, 4);
+				}
+			}else{
+				if(colDef.name == "cumQuantity")
+					rowEntity.cumQuantity = oldValue;
+				else if(colDef.name == "currIVAmount")
+					rowEntity.currIVAmount = oldValue;
+			}
 		});
 
 	}
 	
 
 	$scope.save = function () {
-
+		var currTotalCumIVQty = roundUtil.round($scope.gridApiIV.grid.columns[5].getAggregationValue(), 4);
+		var currTotalCumIVAmount = roundUtil.round($scope.gridApiIV.grid.columns[6].getAggregationValue(), 2);
+		
+		if(currTotalCumIVQty != $scope.totalCumIVQty || currTotalCumIVAmount != $scope.totalCumIVAmount){
+			 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total Cumulative Work Done Quantity/Amount is not balanced.");
+			 return;
+		}else{
+			var gridRows = $scope.gridApiIV.rowEdit.getDirtyRows();
+			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+			
+			if(dataRows.length==0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+			}else{
+				updateIVForSubcontract(dataRows);
+			}
+			
+		}
 	};
 
 	$scope.applyPercent = function (){
@@ -190,7 +228,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		subcontractService.getSubcontractDetailForWD($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.gridOptions.data = data;
 				});
 	}
@@ -199,9 +236,15 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		resourceSummaryService.getResourceSummariesByLineType($scope.jobNo, $scope.subcontractNo, objectCode, subsidiaryCode, lineType, resourceNo)
 	   	 .then(
 				 function( data ) {
-					 console.log(data);
 					 if(data != null && data.length > 0){
-						 $scope.gridOptionsIV.data=  data;
+						$scope.disableButton = false;
+						$scope.gridOptionsIV.data=  data;
+						
+						$timeout(function () {
+							$scope.totalCumIVQty = roundUtil.round($scope.gridApiIV.grid.columns[5].getAggregationValue(), 4);
+							$scope.totalCumIVAmount = roundUtil.round($scope.gridApiIV.grid.columns[6].getAggregationValue(), 2);
+						}, 100);
+						
 					 }
 				 });
 	    }
@@ -243,16 +286,21 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				function( data ) {
 					$scope.subcontract = data;
 
-					if($scope.subcontract.paymentStatus == 'F'){
-						$scope.disableButton = true;
+					if($scope.subcontract.paymentStatus == 'F')
 						$scope.edit = false;
-					}
-					else{
-						$scope.disableButton = false;
+					else
 						$scope.edit = true;
-					}
-					
 				});
+	}
+	
+	function updateIVForSubcontract(ivList){
+		resourceSummaryService.updateIVForSubcontract(ivList)
+	   	 .then(
+				 function( data ) {
+					 if(data.length!=0)
+						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+					 $state.reload();
+				 });
 	}
 	
 }]);

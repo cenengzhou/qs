@@ -1435,6 +1435,20 @@ public class ResourceSummaryService implements Serializable {
 			List<ResourceSummayDashboardDTO> rsList = resourceSummaryDao.getResourceSummariesGroupByObjectCode(jobNo);
 			return rsList;
 	}
+	
+	public String updateIVForSubcontract(List<ResourceSummary> resourceSummaryList){
+		String error = "";
+		try {
+			for (ResourceSummary rs: resourceSummaryList){
+				resourceSummaryDao.update(rs);
+			}
+			
+			return error;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			return error = "IV cannot be updated.";
+		}
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 	

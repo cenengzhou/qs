@@ -184,5 +184,19 @@ public class ResourceSummaryController {
 		return result;
 	}
 
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateIVForSubcontract", method = RequestMethod.POST)
+	public String updateIVForSubcontract(@RequestBody List<ResourceSummary> resourceSummaryList){
+		String result = "";
+		try {
+			result = resourceSummaryService.updateIVForSubcontract(resourceSummaryList);
+		} catch (Exception e) {
+			result = "IV cannot be updated.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		} 
+		return result;
+	}
 }
 
