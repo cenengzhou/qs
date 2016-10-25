@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class CalculationUtil {
 	
 	public static double round(Double doubleValue, int scale){
-		if(doubleValue!=null){
+		if(doubleValue!=null && !Double.isNaN(doubleValue)){
 			//modified by Tiky Wong on 2016-02-05
 			//To resolve double looses precision issue
 			return new BigDecimal(doubleValue.toString()).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();

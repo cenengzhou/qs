@@ -240,7 +240,6 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', '$rootSc
 		var htmlStr = data.htmlStr
 		htmlStr = htmlStr.replace(/<!-- PCMS start /g, '').replace(/ PCMS end -->/g, '').replace(/Arial/g, 'Nunito');
 		htmlStr = htmlStr.replace(/<!-- AP start -->([\s\S]*?)<!-- AP end -->/gmi, '');
-		console.log(htmlStr);
 		var bodyStart = htmlStr.indexOf('<body');
 		var bodyEnd = htmlStr.indexOf('</body>');
 		var html = $sce.trustAsHtml(htmlStr.substring(bodyStart, bodyEnd)).toString();

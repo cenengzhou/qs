@@ -900,7 +900,7 @@ public class AddendumService{
 		scDetailVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
 		scDetailVO.setBillItem(addendumDetail.getBpi());
 		scDetailVO.setLineType(addendumDetail.getTypeVo());
-		scDetailVO.setResourceNo(addendumDetail.getIdResourceSummary().intValue());
+		scDetailVO.setResourceNo(addendumDetail.getIdResourceSummary() != null ? addendumDetail.getIdResourceSummary().intValue() : null);
 		
 		scDetailVO.setUnit(addendumDetail.getUnit());
 
