@@ -1,8 +1,9 @@
-mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', 'uiGridConstants',
-                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state, uiGridConstants) {
+mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', 'uiGridConstants','$location',
+                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state, uiGridConstants, $location) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
+	console.log('addendumDetailHeaderRef: '+addendumDetailHeaderRef);
 	
 	loadData();
 
@@ -197,7 +198,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been updated.");
-						$state.reload();
+						$location.path("/subcontract/addendum/tab/detail-list");
+						//$state.reload();
 					}
 				});
 	}

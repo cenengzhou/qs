@@ -358,7 +358,7 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 	@JsonProperty("cumQuantity")
 	@Transient
 	public Double cumQuantity() {
-		return CalculationUtil.round(currIVAmount/rate, 4) ;
+		return (currIVAmount !=null && rate !=null && currIVAmount !=0 && rate !=0 ? round(currIVAmount/rate, 4): 0.0);
 	}
 	
 	

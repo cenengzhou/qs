@@ -1,5 +1,5 @@
-mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'unitService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', 
-                                              function($scope ,modalService, addendumService, subcontractService, unitService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam) {
+mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'unitService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', '$location', 
+                                              function($scope ,modalService, addendumService, subcontractService, unitService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam, $location) {
 
 	var jobNo = $cookies.get('jobNo');
 	var subcontractNo = $cookies.get('subcontractNo');
@@ -92,7 +92,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					typeVo: 			$scope.addendumDetail.typeVo,
 					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
 			}
-			console.log(addendumDetailToAdd);
+			//console.log(addendumDetailToAdd);
 			addAddendumDetail(addendumDetailToAdd);
 		}
 		else if(modalStatus == 'UPDATE'){
@@ -110,7 +110,11 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been created.");
 						$uibModalInstance.close();
-						$state.reload();
+						
+						if(addendumDetailHeaderRef == null || addendumDetailHeaderRef.trim().length ==0){
+							$location.path("/subcontract/addendum/tab/detail-list");
+						}else
+							$state.reload();
 					}
 				});
 	}
