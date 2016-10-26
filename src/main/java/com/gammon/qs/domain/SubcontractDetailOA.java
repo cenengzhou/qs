@@ -1,5 +1,7 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -22,8 +24,11 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	
 	private static final long serialVersionUID = 5324898603779527190L;
 
+	//Posted
+	private BigDecimal amountPostedWD = new BigDecimal(0);
 	private Double postedWorkDoneQuantity = 0.0;
-
+	//Cumulative
+	private BigDecimal amountCumulativeWD = new BigDecimal(0);
 	private Double cumWorkDoneQuantity = 0.0;
 	
 	public void updateSCDetails(SubcontractDetailOA scDetails){
@@ -32,14 +37,12 @@ public class SubcontractDetailOA extends SubcontractDetail {
 		this.setCumWorkDoneQuantity(scDetails.getCumWorkDoneQuantity());
 	}
 
-	@Override
 	@Transient
 	public Double getProvision() {
 		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountPostedCert()).doubleValue(), 2));
 	}
 	
 	@Transient
-	@Override
 	public Double getProjectedProvision() {
 		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountCumulativeCert()).doubleValue(), 2));
 	}
@@ -48,8 +51,6 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	public String toString() {
 		return "SubcontractDetailOA [postedWorkDoneQuantity=" + postedWorkDoneQuantity + ", cumWorkDoneQuantity="
 				+ cumWorkDoneQuantity + ", toString()=" + super.toString() + "]";
-		/*return "SubcontractDetailOA [postedWorkDoneQuantity=" + postedWorkDoneQuantity + ", cumWorkDoneQuantity="
-				+ cumWorkDoneQuantity + ", toString()=" + super.toString() + "]";*/
 	}
 	
 	@Column(name = "postedWDQty")
@@ -68,5 +69,21 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	
 	public void setCumWorkDoneQuantity(Double cumWorkDoneQuantity) {
 		this.cumWorkDoneQuantity = cumWorkDoneQuantity;
+	}
+	
+	@Column(name = "AMT_CUMULATIVE_WD")
+	public BigDecimal getAmountCumulativeWD() {
+		return amountCumulativeWD;
+	}
+	public void setAmountCumulativeWD(BigDecimal amountCumulativeWD) {
+		this.amountCumulativeWD = amountCumulativeWD;
+	}
+	
+	@Column(name = "AMT_POSTED_WD")
+	public BigDecimal getAmountPostedWD() {
+		return amountPostedWD;
+	}
+	public void setAmountPostedWD(BigDecimal amountPostedWD) {
+		this.amountPostedWD = amountPostedWD;
 	}
 }

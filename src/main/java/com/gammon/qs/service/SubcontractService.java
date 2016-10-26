@@ -3483,14 +3483,14 @@ public class SubcontractService {
 				} 
 			}
 			
-			SubcontractDetail scDetailBQ = new SubcontractDetail();
+			SubcontractDetailBQ scDetailBQ = new SubcontractDetailBQ();
 			scDetailBQ.setLineType("BQ");
 			scDetailBQ.setAmountSubcontract(new BigDecimal(totalBQSCAmount));
 			scDetailBQ.setAmountPostedCert(new BigDecimal(postedBQCertifiedAmount));
 			scDetailBQ.setAmountPostedWD(new BigDecimal(postedBQWDAmount));
 			scDetailsDashboard.add(scDetailBQ);
 			
-			SubcontractDetail scDetailVO = new SubcontractDetail();
+			SubcontractDetailVO scDetailVO = new SubcontractDetailVO();
 			scDetailVO.setLineType("VO");
 			scDetailVO.setAmountSubcontract(new BigDecimal(totalVOSCAmount));
 			scDetailVO.setAmountPostedCert(new BigDecimal(postedVOCertifiedAmount));
@@ -3958,7 +3958,7 @@ public class SubcontractService {
 			cumWorkDoneAmtMovement = CalculationUtil.round(cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue(), 2);
 			cumWorkDoneQtyMovement = CalculationUtil.round(cumWorkDoneQty - scDetailInDB.getCumWorkDoneQuantity(), 4);
 			((SubcontractDetailOA) scDetailInDB).setCumWorkDoneQuantity(cumWorkDoneQty);
-			scDetailInDB.setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
+			((SubcontractDetailOA) scDetailInDB).setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
 		}
 		// ----------1. Calculate work done amount - DONE ----------
 

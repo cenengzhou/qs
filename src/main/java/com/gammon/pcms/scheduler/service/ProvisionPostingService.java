@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
@@ -429,23 +429,31 @@ public class ProvisionPostingService {
 		for (SubcontractDetail scDetails : scDetailList) {
 			// BQ, B1, V1, V2, V3, L1, L2, D1, D2, CF, OA
 			if (scDetails instanceof SubcontractDetailOA) {
+				logger.debug("Provision: "+((SubcontractDetailOA) scDetails).getProvision());
+				
 				// Generate Provision History
-				if (scDetails.getProvision() != null && scDetails.getProvision() != 0) {
+				if (((SubcontractDetailOA) scDetails).getProvision() != null && ((SubcontractDetailOA) scDetails).getProvision() != 0) {
 					ProvisionPostingHist scDetailProvisionHistory = new ProvisionPostingHist(scDetails, postYear, postMonth);
 					if (scDetailProvisionHistory.getObjectCode() == null || "".equals(scDetailProvisionHistory.getObjectCode().trim()) || scDetailProvisionHistory.getSubsidiaryCode() == null || "".equals(scDetailProvisionHistory.getSubsidiaryCode().trim()))
 						throw new ValidateBusinessLogicException("Object/Subsidiary code is missing in " + scDetailProvisionHistory.getJobNo() + "/" + scDetailProvisionHistory.getPackageNo() + "-" + scDetailProvisionHistory.getObjectCode() + "." + scDetailProvisionHistory.getSubsidiaryCode());
 					scDetailProvisionHistoryDao.insert(scDetailProvisionHistory);
 					scDetailProvisionHistoryList.add(scDetailProvisionHistory);
-				}
-				// Update Posted Work Done Quantity = Cumulative Work Done Quantity for all SCDetail with Work Done
-				/**
-				 * @author koeyyeung
-				 * Convert to Amount Based
-				 * **/
-				((SubcontractDetailOA) scDetails).setPostedWorkDoneQuantity(((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());
-				((SubcontractDetailOA) scDetails).setAmountPostedWD(((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
+					
+					
+					/**
+					 * @author koeyyeung
+					 * Convert to Amount Based - Update Posted Work Done = Cumulative Work Done for all SCDetail with Work Done
+					 * Quantity - For carrying work done to iv as they are using different rates (SCRate VS CostRate) and therefore simply amount-based is not enough
+					 * Amount - For Provision
+					 **/
+					logger.debug("Cumulative Work Done Quantity: "+((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());
+					logger.debug("Cumulative Work Done Amount: "+((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
+					
+					((SubcontractDetailOA) scDetails).setPostedWorkDoneQuantity(((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());	
+					((SubcontractDetailOA) scDetails).setAmountPostedWD(((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
 
-				scDetailsHBDao.update(scDetails);
+					scDetailsHBDao.update(scDetails);
+				}
 			}
 		}
 
