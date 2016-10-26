@@ -1,8 +1,12 @@
 
 mainApp.controller('AdminSessionCtrl', 
-		['$scope' , '$http', 'colorCode', 'SessionHelper', '$rootScope', 'GlobalParameter', '$rootScope',
-		 function($scope , $http, colorCode, SessionHelper, $rootScope, GlobalParameter, $rootScope) {
-	$rootScope.selectedTips = '';
+		['$scope' , '$http', 'colorCode', 'SessionHelper', 'rootscopeService', 'GlobalParameter', '$q',
+		 function($scope , $http, colorCode, SessionHelper, rootscopeService, GlobalParameter, $q) {
+	rootscopeService.setSelectedTips('');
+	rootscopeService.gettingSessionId()
+	.then(function(response){
+		$scope.sessionId = response.sessionId;
+	});
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -16,10 +20,11 @@ mainApp.controller('AdminSessionCtrl',
 			allowCellFocus: false,
 			enableCellSelection: false,
 			isRowSelectable: function(row){
-				if(row.entity.sessionId === $rootScope.sessionId){
-					return false;
-				}
-				return true;
+				 if(row.entity.sessionId === $scope.sessionId){
+					 return false;
+				 } else {
+					 return true;
+				 }
 			},
 			columnDefs: [
 			             { field: 'principal.fullname', displayName: "Name", enableCellEdit: false },
@@ -31,6 +36,7 @@ mainApp.controller('AdminSessionCtrl',
 			             { field: 'maxInactiveInterval', enableCellEdit: false},
             			 ]
 	};
+
 	 
 	 $scope.expiredSelected = function(){
 //		  angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
@@ -54,15 +60,12 @@ mainApp.controller('AdminSessionCtrl',
 	}
 	
 	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
+		rootscopeService.gettingSessionId()
 		.then(function(data){
-			$rootScope.sessionId = data;
 			SessionHelper.getSessionList()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
 				}
 			});			
 		})

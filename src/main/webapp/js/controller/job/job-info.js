@@ -1,6 +1,6 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', '$rootScope', 'GlobalParameter',
-                                   function($scope, jobService, modalService, $state, $rootScope, GlobalParameter) {
-	$rootScope.selectedTips = '';
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter',
+                                   function($scope, jobService, modalService, $state, GlobalParameter) {
+	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
 	loadJobInfo();
 	

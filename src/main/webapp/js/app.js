@@ -25,7 +25,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/subcontractor-service.js',
                            'js/service/userpreference-service.js',
                            'js/service/job-service.js',
-                           'js/system/storage-service.js',
+                           'js/service/unit-service.js',
+                           'js/system/rootscope-service.js',
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
                            'js/controller/infotips-modal.js',
@@ -1379,7 +1380,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 }]);
 
 mainApp.config(['$httpProvider', function($httpProvider){
-		var httpIntercepter = ['$rootScope', '$q', '$log', '$window', function($rootScope, $q, $log, $window) {
+		var httpIntercepter = ['$q', '$log', '$window', function($q, $log, $window) {
 			return {
 				'request' : function(config) {
 					return config;
@@ -1543,7 +1544,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 /**
  * Check authentication and user role if location changed
  */
-mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location', function ($rootScope, SessionHelper, $window, $document, $location) {
+mainApp.run(['$window', '$document', '$location', function ($window, $document, $location) {
 //	window.onbeforeunload = function(authenticate)
 //	{
 //		$http({
@@ -1554,24 +1555,7 @@ mainApp.run(['$rootScope', 'SessionHelper', '$window', '$document', '$location',
 //				console.log("logout...");
 //			});
 //	};
-	SessionHelper.getCurrentSessionId()
-	.then(function(data){
-	    $rootScope.sessionId = data;
-	});
 
-	var env = [];
-	env['DEV'] = ['localhost', 'erpwls11'];
-	env['UAT'] = ['erpwls12'];
-	env['PRO'] = ['erpwls01', 'erpwls02'];
-	$rootScope.env = 'PRO';
-	for(var key in env){
-		env[key].forEach(function(e){
-			if($window.location.hostname.indexOf(e) >= 0){
-				$rootScope.env = key;
-				//console.log('Env:'+e + ' ' + $rootScope.env);
-			}
-		})
-	}
 }]);
 
 

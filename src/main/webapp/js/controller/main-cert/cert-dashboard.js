@@ -1,6 +1,6 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', '$rootScope',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, $rootScope) {
-	$rootScope.selectedTips = 'mainContractCertificateStatus';
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService) {
+	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 

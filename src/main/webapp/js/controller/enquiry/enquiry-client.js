@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryClientCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractorService', 
-                                function($scope , $rootScope, $http, modalService, blockUI, subcontractorService) {
+mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'subcontractorService', 
+                                function($scope , $http, modalService, blockUI, subcontractorService) {
 	
 //	$scope.blockEnquiryClient = blockUI.instances.get('blockEnquiryClient');
 	$scope.searchClient = '';

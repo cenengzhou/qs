@@ -1,6 +1,6 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', '$rootScope', 'uiGridGroupingConstants',
-                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, $rootScope, uiGridGroupingConstants) {
-	$rootScope.selectedTips = '';
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants',
+                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants) {
+	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");

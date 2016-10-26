@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquirySubcontractCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout', 'GlobalHelper',
-                                      function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout, GlobalHelper) {
+mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout', 'GlobalHelper',
+                                      function($scope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout, GlobalHelper) {
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date(); // Default: Today
 	$scope.searchYear = $scope.currentDate.getFullYear();

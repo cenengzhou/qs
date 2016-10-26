@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'unitService', 'GlobalParameter', 'subcontractService', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, unitService, GlobalParameter, subcontractService, GlobalHelper) {
+mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope', '$http', 'modalService', 'unitService', 'GlobalParameter', 'subcontractService', 'GlobalHelper',
+                                  function($scope, $http, modalService, unitService, GlobalParameter, subcontractService, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {

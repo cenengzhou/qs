@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminSystemInformationCtrl', 
-		['$scope', '$rootScope', 
-		 function($scope, $rootScope) {
+		['$scope',  
+		 function($scope) {
 	$scope.tab = 1;
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;

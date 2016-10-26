@@ -1,13 +1,13 @@
 mainApp.controller('InfoTipsCtrl', 
-			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'GlobalParameter', '$sce', '$rootScope',
-	function($scope, modalStatus, modalParam, $uibModalInstance, GlobalParameter, $sce, $rootScope){
+			['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'GlobalParameter', '$sce', 'rootscopeService',
+	function($scope, modalStatus, modalParam, $uibModalInstance, GlobalParameter, $sce, rootscopeService){
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
 		$uibModalInstance.close();
 	};
-	$scope.selectedTips = $rootScope.selectedTips;
+	$scope.selectedTips = rootscopeService.getSelectedTips();
 	$scope.trustAsHtml = $sce.trustAsHtml;
 	$scope.tips = [
 	               {

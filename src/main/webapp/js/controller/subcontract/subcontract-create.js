@@ -1,8 +1,11 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService',
-                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
+                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
 	getSubcontract();
 	getJob();
-	
+	rootscopeService.gettingWorkScopes()
+	.then(function(response){
+		$scope.allWorkScopes = response.workScopes;
+	});
 	$scope.subcontract = {
 			id:"",
 			packageNo : "",

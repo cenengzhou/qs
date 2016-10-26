@@ -1,6 +1,6 @@
 mainApp.controller('AdminSchedulerMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'SessionHelper', 'modalService', 'quartzService', '$sce', 'audithousekeepService', 'GlobalParameter',
-		function($scope, $rootScope, $http, SessionHelper, modalService, quartzService, $sce, audithousekeepService, GlobalParameter) {
+		['$scope', '$http', 'SessionHelper', 'modalService', 'quartzService', '$sce', 'audithousekeepService', 'GlobalParameter',
+		function($scope, $http, SessionHelper, modalService, quartzService, $sce, audithousekeepService, GlobalParameter) {
 			$scope.GlobalParameter = GlobalParameter;
 			$scope.onSubmit = function(){
 				$scope.datetimeToTimestamp();

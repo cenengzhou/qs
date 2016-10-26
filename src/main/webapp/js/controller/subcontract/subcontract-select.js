@@ -1,6 +1,6 @@
-mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookies', '$window', '$rootScope',
-                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookies, $window, $rootScope) {
-	$rootScope.selectedTips = 'subcontractStatus';
+mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookies', '$window', 'rootscopeService',
+                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookies, $window, rootscopeService) {
+	rootscopeService.setSelectedTips('subcontractStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	

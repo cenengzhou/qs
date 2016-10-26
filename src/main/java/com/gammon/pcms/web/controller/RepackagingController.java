@@ -135,7 +135,7 @@ public class RepackagingController {
 		return result;
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsReviewer)")
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "confirmAndPostRepackaingDetails", method = RequestMethod.POST)
 	public String confirmAndPostRepackaingDetails(@RequestParam(required = true) String repackagingID){
 		String result = null;

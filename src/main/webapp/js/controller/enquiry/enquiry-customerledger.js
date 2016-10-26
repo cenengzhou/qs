@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
-                                  function($scope , $rootScope, $http, modalService, jobcostService, uiGridConstants, GlobalHelper, GlobalParameter) {
+mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+                                  function($scope , $http, modalService, jobcostService, uiGridConstants, GlobalHelper, GlobalParameter) {
 	
 	
 	$scope.searchJobNo = $scope.jobNo;

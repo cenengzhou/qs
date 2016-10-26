@@ -1,6 +1,6 @@
-mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookies', '$uibModal', 'confirmService', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
-                                       function($state, $scope, $location, $cookies, $uibModal, confirmService, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, GlobalParameter, GlobalHelper, GlobalMessage) {
-	$rootScope.selectedTips = 'repackagingStatus';
+mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookies', '$uibModal', 'confirmService', 'repackagingService', 'resourceSummaryService', 'modalService', 'attachmentService', '$http', '$window', '$state', '$rootScope', 'rootscopeService', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
+                                       function($state, $scope, $location, $cookies, $uibModal, confirmService, repackagingService, resourceSummaryService, modalService, attachmentService, $http, $window, $state, $rootScope, rootscopeService, GlobalParameter, GlobalHelper, GlobalMessage) {
+	rootscopeService.setSelectedTips('repackagingStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 

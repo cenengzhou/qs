@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalHelper', 'uiGridConstants',
-                                  function($scope , $rootScope, $http, modalService, blockUI, subcontractService, GlobalHelper, uiGridConstants) {
+mainApp.controller('EnquiryProvisionHistoryCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalHelper', 'uiGridConstants',
+                                  function($scope, $http, modalService, blockUI, subcontractService, GlobalHelper, uiGridConstants) {
 	
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date();

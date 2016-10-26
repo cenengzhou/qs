@@ -1,6 +1,6 @@
 mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalParameter',
-		 function($scope, $rootScope, $http, modalService, blockUI, subcontractService, GlobalParameter ) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalParameter',
+		 function($scope, $http, modalService, blockUI, subcontractService, GlobalParameter ) {
 	$scope.blockStandardTerms = blockUI.instances.get('blockStandardTerms');
 	$scope.loadData = function(){
 //		$scope.blockStandardTerms.start('Loading...');

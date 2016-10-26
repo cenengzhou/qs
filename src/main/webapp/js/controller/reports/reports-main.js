@@ -1,14 +1,13 @@
 
-mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter', 'GlobalHelper', 'modalService', '$sce', '$log', 'jobService', 'adlService',
-                                function($scope , $rootScope, $http, modalService, blockUI, $window, $cookies, GlobalParameter, GlobalHelper, modalService, $sce, $log, jobService, adlService) {
-	$rootScope.selectedTips = '';
+mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'blockUI', '$window', '$cookies', 'GlobalParameter', 'GlobalHelper', 'modalService', '$sce', '$log', 'jobService', 'adlService', 'rootscopeService',
+                                function($scope , $http, modalService, blockUI, $window, $cookies, GlobalParameter, GlobalHelper, modalService, $sce, $log, jobService, adlService, rootscopeService) {
+	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	GlobalHelper.gettingUser()
+	rootscopeService.gettingUser()
 	.then(function(response){
-		$rootScope.user = response.user;
-		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', $rootScope.user.authorities);
+		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', response.user.authorities);
 	});
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;
@@ -285,29 +284,19 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$rootScope', '$http', 'modalSe
     }
 	
 	function loadAllCompany() {
-		adlService.obtainCompanyCodeAndName()
-		.then(function(data){
-			$scope.companies = data.map( function (company) {
-		        return {
-		          value: company.companyCode.toLowerCase(),
-		          display: company.companyCode + ' - ' + company.companyName
-		        };
-		      });
-			loadAllDivision()
-		})
+		rootscopeService.gettingCompanies()
+		.then(function(response){
+			$scope.companies = response.companies;
+		});
+		loadAllDivision()
     }
 
 	function loadAllDivision() {
-	      jobService.obtainAllJobDivision()
-	      .then(function(data){
-	    	  $scope.divisions = data.map( function (division) {
-	  	        return {
-	  	          value: division.toLowerCase(),
-	  	          display: division
-	  	        };
-	  	      });
-	  		processReport();
-	      })
+		rootscopeService.gettingDivisions()
+		.then(function(response){
+			$scope.divisions = response.divisions; 
+  			processReport();
+	      });
 	    }
 
     function createFilterFor(query) {

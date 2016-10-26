@@ -1,22 +1,16 @@
 
-mainApp.controller('EnquirySubcontractorCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'subcontractorService', 'unitService', 'GlobalParameter', 'GlobalHelper', 
-                                      function($scope , $rootScope, $http, modalService, subcontractorService, unitService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'rootscopeService', 
+                                      function($scope, $http, modalService, subcontractorService, GlobalParameter, GlobalHelper, rootscopeService) {
 	
 	$scope.allWorkScopes = {};
 	$scope.searchWorkScopes = null;
 	$scope.searchSubcontractorNo = '';
 	$scope.GlobalHelper = GlobalHelper;
-	$scope.loadWorkScope = function(){
-		unitService.getAllWorkScopes()
-		.then(function(data){
-			$scope.allWorkScopes = data;
-		})
-	}
-	$scope.loadWorkScope();
+	rootscopeService.gettingWorkScopes()
+	.then(function(response){
+		$scope.allWorkScopes = response.workScopes;
+	});
 	
-	$scope.testing = function(){
-		console.log('testing');
-	}
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,

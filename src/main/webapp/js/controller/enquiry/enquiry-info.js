@@ -1,6 +1,6 @@
-mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalService', '$sce', '$rootScope',
-		function($scope, $rootScope, $http, modalService, $sce, $rootScope) {
-		$rootScope.selectedTips = '';
+mainApp.controller('EnquiryInfoCtrl', [ '$scope', 'rootscopeService', '$http', 'modalService', '$sce',
+		function($scope, rootscopeService, $http, modalService, $sce) {
+	rootscopeService.setSelectedTips('');
 			$scope.jobBtn = {
 					'title': 'JOB',
 					'name': 'jobBtn',
@@ -135,7 +135,7 @@ mainApp.controller('EnquiryInfoCtrl', [ '$scope', '$rootScope', '$http', 'modalS
 				'jdeBtn' : $scope.jdeBtn
 			};
 
-			$scope.popoverMenuHeader = '<div class="box box-default" style="width:350px">';
+			$scope.popoverMenuHeader = '<div class="panel panel-default" style="width:350px">';
 			$scope.popoverMenuFooter = '</div>';
 			$scope.popoverItemHeader = '<table class="table table-hover" style="width:350px;cursor:pointer;margin-bottom:0px !important">\
 											<tr><td>\

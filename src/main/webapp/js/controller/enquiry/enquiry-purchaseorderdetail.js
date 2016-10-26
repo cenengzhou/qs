@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'SessionHelper', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, blockUI, SessionHelper, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope , $http, modalService, blockUI, GlobalParameter, GlobalHelper) {
 	
 	$scope.blockEnquiryPurchaseOrderDetail = blockUI.instances.get('blockEnquiryPurchaseOrderDetail');
 	$scope.blockEnquiryPurchaseOrderDetail.start('Under Construction');
@@ -31,26 +31,9 @@ mainApp.controller('EnquiryPurchaseOrderDetailCtrl', ['$scope' , '$rootScope', '
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
 	}
-	
-	$scope.loadGridData = function(){
-		SessionHelper.getCurrentSessionId()
-		.then(function(data){
-			$rootScope.sessionId = data;
-			SessionHelper.getSessionList()
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.gridOptions.data = data;
-				} else {
-					SessionHelper.getCurrentSessionId().then;
-				}
-			});			
-		})
 
-	}
-	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-//	$scope.loadGridData();
 	
 }]);

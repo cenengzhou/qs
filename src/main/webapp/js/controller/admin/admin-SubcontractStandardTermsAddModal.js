@@ -1,6 +1,6 @@
 mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl', 
-		['$scope', '$rootScope', '$uibModalInstance', '$http', 'modalStatus', 'modalParam', 'modalService', 'subcontractService',
-		function($scope, $rootScope, $uibModalInstance, $http, modalStatus, modalParam, modalService, subcontractService) {
+		['$scope', '$uibModalInstance', '$http', 'modalStatus', 'modalParam', 'modalService', 'subcontractService',
+		function($scope, $uibModalInstance, $http, modalStatus, modalParam, modalService, subcontractService) {
 	
 	$scope.dataList = modalParam;
 	$scope.newRecord = {};

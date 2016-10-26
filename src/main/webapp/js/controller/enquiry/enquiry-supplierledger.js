@@ -1,7 +1,7 @@
 
 mainApp.controller('EnquirySupplierLedgerCtrl', 
-				['$scope' , '$rootScope', '$http', 'modalService', 'subcontractService', 'jobcostService', 'GlobalHelper', 'uiGridConstants', 'GlobalParameter',
-		 function($scope , $rootScope, $http, modalService, subcontractService, jobcostService, GlobalHelper, uiGridConstants, GlobalParameter ) {
+				['$scope', '$http', 'modalService', 'subcontractService', 'jobcostService', 'GlobalHelper', 'uiGridConstants', 'GlobalParameter',
+		 function($scope, $http, modalService, subcontractService, jobcostService, GlobalHelper, uiGridConstants, GlobalParameter ) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,

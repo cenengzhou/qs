@@ -1,6 +1,6 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', '$rootScope', 'repackagingService',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, $rootScope, repackagingService) {
-	$rootScope.selectedTips = '';
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', 'rootscopeService', 'repackagingService', 'blockUI',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, rootscopeService, repackagingService, blockUI) {
+	rootscopeService.setSelectedTips('');
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
 	var optionList = [{ id: 'true', value: 'Excluded' },
@@ -45,8 +45,17 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var STATUS_IGNORED = 'Ignored';
 	var STATUS_IMPORTED = 'Imported';
 	var STATUS_NOCHANGE = 'No Change';
+
+	$scope.initBlockUI = function(grid, newObjects){
+		blockUI.start();
+		$timeout(function(){
+			$scope.importData(grid, newObjects);
+		}, 100);
+		
+	}
 	
     $scope.importData = function(grid, newObjects){
+    	
 		if(!isRepackagingLocked()){
 			return;
 		}
@@ -76,6 +85,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
   	  $scope.gridApi.grid.refresh();
   	  $scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
   	  $scope.showStatus();
+  	  $timeout(function(){
+  		  blockUI.stop();
+  	  },100);
     }
     
     $scope.showStatus = function(){
@@ -95,11 +107,12 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     		return;
     	}
     	
-    	if(validateSameFloatValue(importObj.currIVAmount, row.entity.currIVAmount) && validateSameFloatValue(importObj.ivMovement, row.entity.ivMovement)){
+    	if(validateSameFloatValue(importObj.currIVAmount, row.entity.currIVAmount)) {// && validateSameFloatValue(importObj.ivMovement, row.entity.ivMovement)){
     		statusObj.message = MSG_NOCHANGE;
     		statusObj.importStatus = STATUS_NOCHANGE;
     		return;
     	} else {
+    		importObj.ivMovement = parseFloat(importObj.currIVAmount) - parseFloat(row.entity.postedIVAmount);
     		if(validateGreaterThenBudget(importObj, row.entity)){
         		statusObj.message = MSG_GREATER_THEN_BUDGET;
         		statusObj.importStatus = STATUS_IGNORED;
@@ -200,7 +213,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			enableSelectAll: true,
 			showColumnFooter : true,
 			importerShowMenu: true,
-			importerDataAddCallback: $scope.importData,
+			importerDataAddCallback: $scope.initBlockUI,
 			enableCellEdit : true,
 			enableCellEditOnFocus : true,
 			rowEditWaitInterval :-1,
@@ -379,13 +392,18 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	$scope.applyPercentage = function(){
 		if($scope.percent != null){
 			angular.forEach($scope.gridOptions.data, function(value, key){
-				value.currIVAmount = value.amountBudget * ($scope.percent/100);
-				value.ivMovement = value.currIVAmount - value.postedIVAmount;
+				if(isRepackagingLocked() &&
+						!validateAmountBudgetEqZero(value) &&
+						!uneditableUnawardedSubcontractNos.indexOf(value.packageNo) >= 0){
+					value.currIVAmount = value.amountBudget * ($scope.percent/100);
+					value.ivMovement = value.currIVAmount - value.postedIVAmount;
+					$scope.gridApi.rowEdit.setRowsDirty([value]);
+				}
 			});
 			$scope.gridApi.grid.refresh();
 		}			
 		else
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input %");
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input % between 0 ~ 100");
 	}
 
 	
@@ -399,7 +417,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			return;
 		}
 		
-		console.log(dataRows);
+//		console.log(dataRows);
 		
 		updateIVAmount(dataRows);
 	}

@@ -1,7 +1,7 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$rootScope', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'storageService',
-                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $rootScope, $interval, $timeout, GlobalParameter, userpreferenceService, storageService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
+                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
 	
-	
+	rootscopeService.setEnv();
 	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;
@@ -19,7 +19,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 				}, 100);			
 			}
 			if(!$scope.jobs){
-				storageService.gettingJobList()
+				rootscopeService.gettingJobList()
 				.then(function(response){
 					$scope.jobs = response.jobs;
 				});
@@ -79,19 +79,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.currentPath = $location.path();
 
 	$scope.getCurrentUser = function(){
-		if($rootScope.user === undefined)
-		GlobalHelper.gettingUser()
+		rootscopeService.gettingUser()
 		.then(function(response){
 			if(response.user instanceof Object){
 				$scope.user = response.user;
-				$rootScope.user = $scope.user;
-				$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $scope.user.UserRoles);
-				$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $scope.user.UserRoles);
-				if($rootScope.showQSAdmin || $rootScope.showIMSAdmin){
-					$rootScope.showAdminMenu = true;
-				} else {
-					$rootScope.showAdminMenu = GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $scope.user.UserRoles);
-				}
 				var iconPath = GlobalParameter.imageServerAddress+$scope.user.StaffID+'.jpg';
 				//As the config of http://gammon/ not allow CORS so cannot check if the image is available or 401
 				//check with the authType, if Kerberos change the image, if LDAP keep the default
@@ -177,7 +168,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-		$rootScope.previousStatus = fromState;
+		rootscopeService.setPreviousStatus(fromState);
     	$scope.currentPath = $location.path();
 	    if($scope.currentPath.indexOf("/job")==0){	
 			$scope.activeMenu = '';
@@ -199,7 +190,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		}else if ($scope.currentPath.indexOf('/transit')==0){
 			$scope.activeMenu = 'Transit';
 		}else if ($scope.currentPath.indexOf('/admin')==0){
-			if(!$rootScope.showAdminMenu){
+			if(!rootscopeService.getShowAdminMenu()){
 				//$state.go('job.dashboard');
 			}
 			$scope.activeMenu = 'Admin';
@@ -363,11 +354,9 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	}
 	
 	$scope.loadProperties = function(){
-		if($rootScope.properties === undefined)
-		$http.post('service/properties/getProperties')
+		rootscopeService.gettingProperties()
 		.then(function(response){
-    		$scope.properties = response.data;
-    		$rootScope.properties = $scope.properties;
+    		$scope.properties = response.properties;
     	}, function(error){
     		console.dir(error);
     	});

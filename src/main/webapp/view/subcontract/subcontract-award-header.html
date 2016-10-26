@@ -35,9 +35,8 @@
 											</div>
 											<div class="form-group col-md-9">
 												<div class="input-group col-md-12">
-													<input type="number" class="form-control"
-														ng-model="subcontract.workscope"
-														ng-disabled="disableButtons" required>
+													<select class="form-control" ng-disabled="disableButtons" required ng-model="subcontract.workscope" ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
+													</select>
 												</div>
 											</div>
 											<div class="col-md-3">

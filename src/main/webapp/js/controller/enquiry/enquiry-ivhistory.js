@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryIvHistoryCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	$scope.GlobalParameter = GlobalParameter;

@@ -118,9 +118,9 @@
 						<button ng-show="statusArray.length>0" class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show import status</button>
 					</div>
 					<div class="col-md-4">
-						<input type="number" step="0.01"
+						<input type="number"
 							class="form-control input-group-sm input-sm"
-							placeholder="Input %" ng-model="percent">
+							placeholder="Input %" ng-model="percent" min="0.0000" max="100.0000" step="1.0000">
 					</div>
 					<div class="col-md-4" style="text-align:right">
 						<button class="btn btn-block btn-primary btn-sm" ng-click="applyPercentage()">Apply % for IV</button>
@@ -136,21 +136,18 @@
 					class="grid"
 					resize ng-style="resizeWithOffset(450)"></div>
 				<div class="col-md-12">
-					<!-- <a class="btn btn-twitter btn-block">Update <i class="fa fa-floppy-o"></i></a> -->
-					<table class="col-md-12"><tr>
-					<td>
+					<div class="col-md-6">
 					<button type="button" class="btn bg-primary btn-block" ng-show="repackaging.status === '900'"
 						ng-click="update()">
 						<i class="fa fa-floppy-o"></i> Update
 					</button>
-					</td>
-					<td>
+					</div>
+					<div class="col-md-6">
 					<button type="button" class="btn bg-warning btn-block text-white" ng-show="repackaging.status === '900'"
 						ng-click="reset()">
 						<i class="fa fa-refresh"></i> Reset
 					</button>
-					</td>
-					</tr></table>
+					</div>
 				</div>
 			</div>
 		</div>

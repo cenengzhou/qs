@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryJobCostCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'modalService', 'GlobalHelper',
-                                  function($scope , $rootScope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService, modalService, GlobalHelper) {
+mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'modalService', 'GlobalHelper',
+                                  function($scope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService, modalService, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.currentDate = new Date();
 	$scope.showCumulative = true;

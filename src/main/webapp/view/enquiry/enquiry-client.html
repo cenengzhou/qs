@@ -1,4 +1,4 @@
-<div class="content-wrapper" ng-controller="EnquiryClientCtrl">
+<div ng-controller="EnquiryClientCtrl">
 	<section class="content-header">
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
@@ -12,10 +12,9 @@
 	<section class="content" style="margin-left: 0px !important">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">Client</h3>
-						
+				<div class="panel panel-primary">
+					<div class="panel-heading bg-warning">Client</div>
+						<div class="panel-body">
 						<div class="col-md-12" ><br>
 								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns
 									ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"

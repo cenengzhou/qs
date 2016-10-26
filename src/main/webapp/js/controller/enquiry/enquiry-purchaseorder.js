@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;

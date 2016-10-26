@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryJobInfoCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'jobService', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope , $rootScope, $http, modalService, blockUI, jobService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryJobInfoCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'jobService', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, modalService, blockUI, jobService, GlobalParameter, GlobalHelper) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,

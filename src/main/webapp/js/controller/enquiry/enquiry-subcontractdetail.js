@@ -1,6 +1,6 @@
 mainApp.controller('EnquirySubcontractDetailCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants', 'GlobalHelper',
-function($scope, $rootScope, $http, modalService, blockUI, subcontractService, uiGridConstants, GlobalHelper) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants', 'GlobalHelper',
+function($scope, $http, modalService, blockUI, subcontractService, uiGridConstants, GlobalHelper) {
 
 //	$scope.blockEnquirySubcontractDetail = blockUI.instances.get('blockEnquirySubcontractDetail');
 

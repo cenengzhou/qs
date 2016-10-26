@@ -1,6 +1,6 @@
 mainApp.controller('AdminTransitUOMMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'transitService',
-		function($scope, $rootScope, $http, modalService, blockUI, transitService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
+		function($scope, $http, modalService, blockUI, transitService) {
 	
 //	$scope.blockUOM = blockUI.instances.get('blockUOM');
 	$scope.onSubmit = function(){

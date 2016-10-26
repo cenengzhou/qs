@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService', 'GlobalParameter',
-		function($scope, $rootScope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService, GlobalParameter) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService', 'GlobalParameter',
+		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService, GlobalParameter) {
 	$scope.provisionGlDate = moment();
 	$scope.auditTables = [];
 	$scope.auditTableName = '';

@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPaymentCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants', 'GlobalHelper',
-                                function($scope , $rootScope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants, GlobalHelper) {
+mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants', 'GlobalHelper',
+                                function($scope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchDueDateType = 'onOrBefore';
 //	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');

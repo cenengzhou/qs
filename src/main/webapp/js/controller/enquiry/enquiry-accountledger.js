@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$rootScope', '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter', 'GlobalHelper',
-                                        function($scope , $rootScope, $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter', 'GlobalHelper',
+                                        function($scope , $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
 			enableFiltering: true,

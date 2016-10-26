@@ -1,6 +1,6 @@
 mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', 
-		['$scope', '$rootScope', '$http', 'modalService', 'blockUI', 'transitService',
-		 function($scope, $rootScope, $http, modalService, blockUI, transitService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
+		 function($scope, $http, modalService, blockUI, transitService) {
 	
 		$scope.blockCodeMaintenance = blockUI.instances.get('blockCodeMaintenance');
 		$scope.loadData = function() {
