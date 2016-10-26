@@ -67,8 +67,8 @@
 								<label>Subsidiary Code</label> <input type="text"
 									class="form-control" ng-model="subcontractDetail.subsidiaryCode"
 									data-parsley-length="[8,8]"
-									ng-disabled="lineType == 'RR' || lineType == 'RA' || disableFields" 
-									ng-required="lineType != 'RR' && lineType != 'RA'" />
+									ng-disabled="lineType == 'RR' || lineType == 'RA' || lineType == 'MS' || disableFields" 
+									ng-required="lineType != 'RR' && lineType != 'RA' && lineType != 'MS'" />
 							</div>
 						</div>
 

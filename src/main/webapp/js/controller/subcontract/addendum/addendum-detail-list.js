@@ -53,6 +53,8 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			             },
 			             {field: 'codeObject' , displayName:"Object Code", width:90 },
 			             {field: 'codeSubsidiary' ,displayName:"Subsidiary Code",  width:100 },
+			             {field: 'noSubcontractChargedRef', displayName:"Corr. Subcontract No.", width:80 },
+		            	 {field: 'codeObjectForDaywork', displayName:"Alt. Object Code", width:80 },
 			             {field: 'unit' ,  width:60 },
 			             {field: 'remarks' ,  width:100 },
 			             {field: 'idHeaderRef',width:80, displayName:"Header Group", visible: true},

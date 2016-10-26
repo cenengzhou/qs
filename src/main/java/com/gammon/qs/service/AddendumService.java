@@ -628,29 +628,43 @@ public class AddendumService{
 				return "Unit must be provided";
 		}
 		if ("L2".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())||"C2".equals(addendumDetail.getTypeVo())){
-			if (addendumDetail.getNoSubcontractChargedRef()==null||addendumDetail.getNoSubcontractChargedRef().trim().length()<1||Integer.parseInt(addendumDetail.getNoSubcontractChargedRef())<1)
+			if (addendumDetail.getNoSubcontractChargedRef()==null||addendumDetail.getNoSubcontractChargedRef().trim().length()<1)
 				return "Corresponsing Subcontract must be provided";
 			else{
-				if (addendumDetail.getNoSubcontract().equals(addendumDetail.getNoSubcontractChargedRef()))
-					return "Invalid Contra Charging. Subcontract: "+addendumDetail.getNoSubcontract()+" To be contra charged Subcontract: "+addendumDetail.getNoSubcontractChargedRef();
-				Subcontract tmpsc = subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), addendumDetail.getNoSubcontractChargedRef().trim());
-				if (tmpsc==null)
+				//int noSubcontractChargedRef = 0;
+				//try {
+					//noSubcontractChargedRef = Integer.parseInt(addendumDetail.getNoSubcontractChargedRef());
+
+					if (addendumDetail.getNoSubcontract().equals(addendumDetail.getNoSubcontractChargedRef()))
+						return "Invalid Contra Charging. Subcontract: "+addendumDetail.getNoSubcontract()+" To be contra charged Subcontract: "+addendumDetail.getNoSubcontractChargedRef();
+					Subcontract tmpsc = subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), addendumDetail.getNoSubcontractChargedRef().trim());
+					if (tmpsc==null)
+						return "Subcontract does not exist";
+					if (!tmpsc.isAwarded())
+						return "Subcontract is not awarded";
+					if ("F".equals(tmpsc.getPaymentStatus()))
+						return "Subcontract was final paid";
+				/*} catch (Exception e) {
+					e.printStackTrace();
 					return "Subcontract does not existed";
-				if (!tmpsc.isAwarded())
-					return "Subcontract is not awarded";
-				if ("F".equals(tmpsc.getPaymentStatus()))
-					return "Subcontract was final paid";
+				}*/
 			}
 		}
-		else if (addendumDetail.getNoSubcontractChargedRef()!=null&&addendumDetail.getNoSubcontractChargedRef().trim().length()>0&&Integer.parseInt(addendumDetail.getNoSubcontractChargedRef())>0)
+		else if (addendumDetail.getNoSubcontractChargedRef()!=null&&addendumDetail.getNoSubcontractChargedRef().trim().length()>0)
 			return "No Corresponsing Subcontract allowed";
 		if ("D1".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())){
 			if (addendumDetail.getCodeObjectForDaywork()==null ||addendumDetail.getCodeObjectForDaywork().length()<1)
 				return "Must have Alternate Object Code";
 			else {
-				int altObj = Integer.parseInt(addendumDetail.getCodeObjectForDaywork());
-				if (altObj<100000 || altObj>199999)
+				int altObj = 0;
+				try {
+					altObj = Integer.parseInt(addendumDetail.getCodeObjectForDaywork());
+
+					if (altObj<100000 || altObj>199999)
+						return "Alternate Object Accout must be labour accounts";
+				} catch (Exception e) {
 					return "Alternate Object Accout must be labour accounts";
+				}
 			}
 		}
 		if ("D1".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())||"L1".equals(addendumDetail.getTypeVo())||"L2".equals(addendumDetail.getTypeVo())||"CF".equals(addendumDetail.getTypeVo())){

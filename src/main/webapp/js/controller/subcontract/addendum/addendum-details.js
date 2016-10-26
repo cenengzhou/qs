@@ -3,7 +3,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
-	console.log('addendumDetailHeaderRef: '+addendumDetailHeaderRef);
 	
 	loadData();
 
@@ -52,6 +51,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			             },
 		            	 {field: 'codeObject',  displayName:"Object Code",  width:80 },
 		            	 {field: 'codeSubsidiary', displayName:"Subsidiary Code", width:80 },
+		            	 {field: 'noSubcontractChargedRef', displayName:"Corr. Subcontract No.", width:80 },
+		            	 {field: 'codeObjectForDaywork', displayName:"Alt. Object Code", width:80 },
 		            	 {field: 'unit' ,  width:50 },
 		            	 {field: 'remarks' ,  width:100 },
 		            	 {field: 'typeAction', displayName:"Action", width:100, visible: true},
@@ -120,6 +121,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
 		}else{
+			console.log(dataRows[0]);
 			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'UPDATE', dataRows[0]);
 		}
 
@@ -147,8 +149,11 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 				}else
 					getAddendumDetailsWithoutHeaderRef();
 			}
-		}else
+		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
+			$scope.disableButtons = true;
+			return;
+		}
 	}
 	
 	

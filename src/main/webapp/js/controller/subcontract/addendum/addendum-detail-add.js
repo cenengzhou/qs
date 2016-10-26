@@ -12,6 +12,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	$scope.addendumDetail = [];
 	$scope.units=[];
 	$scope.units.selected = "AM";
+	$scope.regex = "[0-9]";
 	
 	getUnitOfMeasurementList();
 	
@@ -92,7 +93,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					typeVo: 			$scope.addendumDetail.typeVo,
 					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
 			}
-			//console.log(addendumDetailToAdd);
+			console.log(addendumDetailToAdd);
 			addAddendumDetail(addendumDetailToAdd);
 		}
 		else if(modalStatus == 'UPDATE'){
@@ -158,14 +159,16 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			//Add from Approved Addendum
 			$scope.addendumDetail = modalParam;
 			$scope.lineType = modalParam.typeVo;
-			console.log("$scope.lineType: "+$scope.lineType);
+
 			$scope.disableSelect = true;
 			
 			$scope.disableFields = true;
 		}
 		else if(modalStatus == 'UPDATE'){
 			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
+			console.log(modalParam);
 			$scope.addendumDetail = modalParam;
+			
 			$scope.lineType = modalParam.typeVo;
 			$scope.disableSelect = true;
 			
