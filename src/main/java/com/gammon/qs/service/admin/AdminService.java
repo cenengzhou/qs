@@ -107,6 +107,21 @@ public class AdminService {
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
+	public List<JobInfo> obtainCanAccessJobInfoList(boolean isCompletedJob){
+		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
+		User user = securityService.getCurrentUser();
+		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(user.getUsername());
+		for (JobSecurity jobSecurity : jobSecurityList) {
+			if (jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())) {
+				jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainAllJobInfoByCompanyAndCompletionStatus("NA", isCompletedJob));
+				break;
+			}else{
+				jobInfoSet.addAll(jobInfoHBDao.obtainAllJobInfoByCompanyAndCompletionStatus(jobSecurity.getCompany(), isCompletedJob));
+			}
+		}
+		return new ArrayList<JobInfo>(jobInfoSet);
+	}
+	
 	public Boolean canAccessJob(String noJob) {
 		User user = securityService.getCurrentUser();
 		if(user != null && !Arrays.asList(new String[]{

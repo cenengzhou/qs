@@ -10629,5 +10629,11 @@ body.font-helvetica-arial .mail-box-user-list > li a {
     font-weight: 300;
     font-size: 13px;
 }
+/* hide the native clear button for IE10+ */
+input[type=text]::-ms-clear {
+  display: none;
+  width:0; 
+  height:0;
+}
 
 

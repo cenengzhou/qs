@@ -34,11 +34,17 @@
 		</div>
 		<div class="col-md-4">
 			<div class="input-group" id="searchJobHereDiv">
-				<input ng-model="searchquery" placeholder="Search Job here.." id="searchJobField"
+				<input type="text" ng-model="searchquery" placeholder="Search Job here.." id="searchJobField"
 					class="form-control" ng-click="removeDefaultAnimation()" /> <span
 					class="input-group-btn">
+					
+					<input type="checkbox" class="form-control" data-ios-toggle="toggle" 
+							id="showCompleted" data-style="ios" data-onstyle="primary"
+							data-offstyle="warning" data-on="Include completed" data-width="150px"
+							data-off="Only on going" ng-model="showCompleted" ng-change="updateJobList()">
 					<button class="btn btn-flat bg-primary" ng-click="searchJob()">
 						<span class="fa fa-search"></span>
+						
 					</button>
 				</span>
 			</div>

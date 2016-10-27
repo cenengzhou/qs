@@ -76,6 +76,10 @@ public class JobInfoService {
 		return adminService.obtainCanAccessJobInfoList(jobSecurityList);
 	}
 	
+	public List<JobInfo> getAllJobNoAndDescription(boolean isCompletedJob) {
+		return adminService.obtainCanAccessJobInfoList(isCompletedJob);
+	}
+
 	public List<JobInfo> getJobListBySearchStr(String searchJobStr) throws Exception {
 		boolean isRefreshed = false;
 

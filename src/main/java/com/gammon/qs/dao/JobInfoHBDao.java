@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -68,6 +69,21 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("company", company));
 		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<JobInfo> obtainAllJobInfoByCompanyAndCompletionStatus(String company, boolean isCompletedJob){
+		Criteria criteria = getSession().createCriteria(this.getType());
+		if(!"NA".equals(company)){
+			criteria.add(Restrictions.eq("company", company));
+		}
+		Criterion completedStatus = Restrictions.ne("completionStatus", "1");
+		if(!isCompletedJob){
+			completedStatus = Restrictions.not(completedStatus);
+		}
+		criteria.add(completedStatus);
+		criteria.addOrder(Order.asc("jobNumber"));
+		return criteria.list();	
 	}
 	
 	/**

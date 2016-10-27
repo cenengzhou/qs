@@ -31,30 +31,30 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 //  1.3.1 		get jobs from server
 //  1.3.1.1			assign $rootScope.jobs
 //  1.3.1.2 			encrypt and save to localStorage
-    function gettingJobList(){
+    function gettingJobList(jobListType){
     	var deferral = $q.defer();
-    	if(!$rootScope.jobs){
-    		obtainCacheKey("JOB_LIST")
-    		.then(function(response){
-    			cacheKeyArray["JOB_LIST"] = response.cacheKey;
-				getItem("JOB_LIST")
-				.then(function(response){
-					$rootScope.jobs = response.value
-				}, function(error){
-					console.log("getting job list...")
-    				jobService.getJobList()
-            		.then(function(data){
-            			$rootScope.jobs = data;
-            			deferral.resolve({
-            				jobs : data
-            			});
-            			setItem("JOB_LIST", data);
-            		})
-				})
-    		})
+    	if(!$rootScope[jobListType]){
+    		var isCompletedJob = jobListType === 'COMPLETED_JOB_LIST' ? true : false;
+			getItem(jobListType)
+			.then(function(response){
+				$rootScope[jobListType] = response.value;
+				deferral.resolve({
+    				jobs : $rootScope[jobListType]
+    			});
+			}, function(error){
+				jobService.getJobList(isCompletedJob)
+        		.then(function(data){
+        			$rootScope[jobListType] = data;
+        			deferral.resolve({
+        				jobs : $rootScope[jobListType]
+        			});
+        			setItem(jobListType, data);
+        			console.log("job list type:" + jobListType + " length:" + data.length)
+        		});
+			});
     	} else {
     		deferral.resolve({
-    			jobs : $rootScope.jobs
+    			jobs : $rootScope[jobListType]
     		});
     	}
     	return deferral.promise;
@@ -227,6 +227,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 				}
 			})
 		}
+		cleanupLocalStore();
 	}
 	
 	function getShowAdminMenu(){
@@ -240,8 +241,9 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	if(!cacheKeyArray[itemType]){
     		$http.post('service/properties/obtainCacheKey', JSON.stringify(itemType))
     		.then(function(response){
+    			cacheKeyArray[itemType] = response.data;
     			deferral.resolve({
-    				cacheKey : response.data
+    				cacheKey : cacheKeyArray[itemType]
     			});
     		})
     	} else {
@@ -291,6 +293,15 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	localStorage.removeItem(key);
     }
 
+    function cleanupLocalStore(){
+    	var validCacheItem = ['ONGOING_JOB_LIST', 'COMPLETED_JOB_LIST'];
+    	for(var i = 0; i < localStorage.length; i++){
+    		var key = localStorage.key(i);
+    		if(validCacheItem.indexOf(key) < 0 && key.indexOf('TourShow') < 0){
+    			removeItem(key);
+    		}
+    	}
+    }    
 }]);
 
 

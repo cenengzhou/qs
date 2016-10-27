@@ -24,11 +24,12 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function getJobList() {
+    function getJobList(isCompletedJob) {
         var request = $http({
-            method: "get",
+            method: "post",
             url: "service/job/getJobList",
-            dataType: "application/json;charset=UTF-8"
+            dataType: "application/json;charset=UTF-8",
+            data:    	isCompletedJob
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

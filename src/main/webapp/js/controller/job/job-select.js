@@ -1,5 +1,5 @@
-mainApp.controller('JobSelectCtrl', ['$scope', '$state', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', 'rootscopeService', 'userpreferenceService',
-                               function($scope, $state, colorCode, jobService, $animate, $cookies, modalService, rootscopeService, userpreferenceService) {
+mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', 'rootscopeService', 'userpreferenceService', 'blockUI',
+                               function($scope, $state, $timeout, colorCode, jobService, $animate, $cookies, modalService, rootscopeService, userpreferenceService, blockUI) {
 	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.selectedDivision = '';
@@ -32,10 +32,25 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', 'colorCode', 'jobServic
 	}
 	
 	function getJobList(){
-		rootscopeService.gettingJobList()
+		blockUI.start('Loading...');
+		$timeout(function(){
+		rootscopeService.gettingJobList('ONGOING_JOB_LIST')
 		.then(function( response ) {
-			$scope.jobs= response.jobs;
+			$scope.jobs = response.jobs;
+			blockUI.stop();
+			if($scope.showCompleted){
+				blockUI.start('Loading...');
+				$timeout(function(){
+				rootscopeService.gettingJobList('COMPLETED_JOB_LIST')
+				.then(function( response ) {
+					$scope.jobs = $scope.jobs.concat(response.jobs);
+					$scope.jobs.sort(function(a,b){return a.jobNo - b.jobNo;});
+					blockUI.stop();
+				});
+				}, 150);
+			}
 		});
+		}, 150);
 	}
 	
 	$scope.updateJobInfo = function (jobNo, jobDescription) {
@@ -55,8 +70,7 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', 'colorCode', 'jobServic
         $animate.enabled(false);
     };
     
-    
-    
-    
-    
+    $scope.updateJobList = function(){
+    	getJobList();
+    }
 }]);

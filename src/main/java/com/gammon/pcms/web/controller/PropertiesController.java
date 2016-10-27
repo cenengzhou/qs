@@ -55,7 +55,8 @@ public class PropertiesController {
 	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
 		String cacheString = securityService.getCurrentUser().getFullname() + " | ";
 		switch(itemType){
-		case "JOB_LIST":
+		case "COMPLETED_JOB_LIST":
+		case "ONGOING_JOB_LIST":
 			Date jobInfoLastModifyDate = jobInfoService.obtainJobInfoLastModifyDate();
 			cacheString += jobInfoLastModifyDate.toString() + " | ";
 			break;

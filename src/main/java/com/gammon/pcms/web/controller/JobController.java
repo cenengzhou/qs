@@ -42,10 +42,10 @@ public class JobController {
 	@JsonView(JobInfoView.NameAndDescription.class)
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 //	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
-	@RequestMapping(value = "getJobList", method = RequestMethod.GET)
-	public List<JobInfo> getJobList(){
+	@RequestMapping(value = "getJobList", method = RequestMethod.POST)
+	public List<JobInfo> getJobList(@RequestBody boolean isCompletedJob){
 		List<JobInfo> jobList = null;
-		jobList = jobService.getAllJobNoAndDescription();
+		jobList = jobService.getAllJobNoAndDescription(isCompletedJob);
 		return jobList;
 	}
 	
