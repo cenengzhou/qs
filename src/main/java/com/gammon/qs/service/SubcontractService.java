@@ -3634,7 +3634,7 @@ public class SubcontractService {
 				newSubcontract.setPlantIncludedContract(subcontract.getPlantIncludedContract());
 				newSubcontract.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
 				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
-				
+				newSubcontract.setWorkscope(subcontract.getWorkscope());
 				subcontractHBDao.addSCPackage(newSubcontract);
 		}else{
 			//check if subcontract is submitted or awarded

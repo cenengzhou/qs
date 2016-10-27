@@ -35,7 +35,10 @@
 											</div>
 											<div class="form-group col-md-9">
 												<div class="input-group col-md-12">
-													<select class="form-control" ng-disabled="disableButtons" required ng-model="subcontract.workscope" ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
+													<select class="form-control" ng-disabled="disableButtons" 
+														data-parsley-minlength="3" data-parsley-error-message="Please select work scope"
+ 														required ng-model="subcontract.workscope" 
+ 														ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
 													</select>
 												</div>
 											</div>

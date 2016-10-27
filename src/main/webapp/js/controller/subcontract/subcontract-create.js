@@ -170,6 +170,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 				function( data ) {
 					if(data.length != 0){
 						$scope.subcontract = data;
+						$scope.subcontract.workscope = '' + $scope.subcontract.workscope;//convert to str for ng-options
 						$scope.subcontractStatus = data.scStatus + ' - ' + GlobalParameter.getValueById(GlobalParameter.subcontractStatus, data.scStatus);
 						
 						if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_LUMPSUM){
@@ -211,18 +212,32 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	
 	
 	function getWorkScope(workScopeCode){
-		subcontractService.getWorkScope(workScopeCode)
-		.then(
-				function( data ) {
-					if(data.length==0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
-					}else{
-						if($scope.subcontractToUpdate.id == null)
-							upateSubcontract();
-						else
-							getLatestPaymentCert();
-					}
-				});
+//		subcontractService.getWorkScope(workScopeCode)
+//		.then(
+//				function( data ) {
+//					if(data.length==0){
+//						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
+//					}else{
+//						if($scope.subcontractToUpdate.id == null){
+//							upateSubcontract();
+//						} else {
+//							getLatestPaymentCert();
+//						}
+//					}
+//				});
+		var wsFound = $scope.allWorkScopes.some(function(ws){
+			return ws.code === workScopeCode;
+		});
+		
+		if(wsFound){
+			if(!$scope.subcontractToUpdate.id){
+				upateSubcontract();
+			} else {
+				getLatestPaymentCert();
+			}
+		} else {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
+		}
 	}
 
 	function upateSubcontract(){
