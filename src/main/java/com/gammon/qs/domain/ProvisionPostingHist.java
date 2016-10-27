@@ -45,7 +45,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 	private String subsidiaryCode;
 	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double scRate;
-	@Deprecated
+
 	private Double cumLiabilitiesQty;
 	@JsonView(ProvisionPostingHistView.Detached.class)
 	private Double cumLiabilitiesAmount;
@@ -58,6 +58,8 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 
 	public ProvisionPostingHist(SubcontractDetail subcontractDetail, Integer postedMonth, Integer postedYr) {
 		super();
+		this.packageNo = subcontractDetail.getSubcontract().getPackageNo();
+		this.jobNo = subcontractDetail.getJobNo();
 		this.subcontractDetail = subcontractDetail;
 		this.postedMonth = postedMonth;
 		this.postedYr = postedYr;
@@ -163,13 +165,11 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.postedCertQty = (postedCertQty != null ? CalculationUtil.round(postedCertQty, 4) : 0.00);
 	}
 
-	@Deprecated
 	@Column(name = "liabilitiesCumQty")
 	public Double getCumLiabilitiesQty() {
 		return (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}
 
-	@Deprecated
 	public void setCumLiabilitiesQty(Double cumLiabilitiesQty) {
 		this.cumLiabilitiesQty = (cumLiabilitiesQty != null ? CalculationUtil.round(cumLiabilitiesQty, 4) : 0.00);
 	}
@@ -205,7 +205,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 
 	@Override
 	public String toString() {
-		return "ProvisionPostingHist [subcontractDetail=" + subcontractDetail + ", postedMonth=" + postedMonth + ", postedYr=" + postedYr + ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", scRate=" + scRate + ", cumLiabilitiesQty=" + cumLiabilitiesQty + ", cumLiabilitiesAmount=" + cumLiabilitiesAmount + ", postedCertAmount=" + postedCertAmount + ", postedCertQty=" + postedCertQty + "]";
+		return "ProvisionPostingHist [subcontractDetail=" + subcontractDetail.getId() + ", postedMonth=" + postedMonth + ", postedYr=" + postedYr + ", jobNo=" + jobNo + ", packageNo=" + packageNo + ", objectCode=" + objectCode + ", subsidiaryCode=" + subsidiaryCode + ", scRate=" + scRate + ", cumLiabilitiesQty=" + cumLiabilitiesQty + ", cumLiabilitiesAmount=" + cumLiabilitiesAmount + ", postedCertAmount=" + postedCertAmount + ", postedCertQty=" + postedCertQty + "]";
 	}
 
 }

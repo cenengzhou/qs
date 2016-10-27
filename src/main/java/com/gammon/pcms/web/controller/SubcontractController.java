@@ -358,7 +358,7 @@ public class SubcontractController {
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "runProvisionPostingManually", method = RequestMethod.POST)
 	public void runProvisionPostingManually(@RequestParam(defaultValue = "") String jobNumber, @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam Date glDate){
-		subcontractService.runProvisionPostingManually(jobNumber, glDate, false, null);
+		subcontractService.runProvisionPostingManually(jobNumber, glDate, false);
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")

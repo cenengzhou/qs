@@ -2447,17 +2447,17 @@ public class PaymentService{
 											logger.info(error);
 											return error;
 										}
-									}else{
+									}/*else{
 										if (paymentDetail.getCumAmount()< CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue(), 2) || paymentDetail.getCumAmount() >0) {
 											error = "Contrac charge should be in negative amount. New Certified Amount: " + paymentDetail.getCumAmount() + " Sequence No.: " + scDetail.getSequenceNo();
 											logger.info(error);
 											return error;
 										}
-									}
+									}*/
 								}
 								
-								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() <0){
-									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should not be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
+								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
+									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
 								}

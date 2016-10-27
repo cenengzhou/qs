@@ -433,12 +433,12 @@ public class ProvisionPostingService {
 				
 				// Generate Provision History
 				if (((SubcontractDetailOA) scDetails).getProvision() != null && ((SubcontractDetailOA) scDetails).getProvision() != 0) {
-					ProvisionPostingHist scDetailProvisionHistory = new ProvisionPostingHist(scDetails, postYear, postMonth);
+					ProvisionPostingHist scDetailProvisionHistory = new ProvisionPostingHist(scDetails, postMonth, postYear);
 					if (scDetailProvisionHistory.getObjectCode() == null || "".equals(scDetailProvisionHistory.getObjectCode().trim()) || scDetailProvisionHistory.getSubsidiaryCode() == null || "".equals(scDetailProvisionHistory.getSubsidiaryCode().trim()))
 						throw new ValidateBusinessLogicException("Object/Subsidiary code is missing in " + scDetailProvisionHistory.getJobNo() + "/" + scDetailProvisionHistory.getPackageNo() + "-" + scDetailProvisionHistory.getObjectCode() + "." + scDetailProvisionHistory.getSubsidiaryCode());
+					
 					scDetailProvisionHistoryDao.insert(scDetailProvisionHistory);
 					scDetailProvisionHistoryList.add(scDetailProvisionHistory);
-					
 					
 					/**
 					 * @author koeyyeung

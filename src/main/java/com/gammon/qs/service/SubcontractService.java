@@ -2475,7 +2475,15 @@ public class SubcontractService {
 	 * @author	tikywong
 	 * @since	Mar 24, 2016 3:04:29 PM
 	 */
-	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting, String username) {
+	public void runProvisionPostingManually(String jobNumber, Date glDate, Boolean overrideOldPosting) {
+		String username;
+		try {
+			username = securityService.getCurrentUser().getUsername();
+		} catch (Exception e1) {
+			logger.error("User is NULL.");
+			e1.printStackTrace();
+			return;
+		}
 		if (glDate == null)
 			throw new NullPointerException("GL Date cannot be null");
 
