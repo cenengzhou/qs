@@ -1,5 +1,5 @@
-mainApp.controller('TransitEnquiryCtrl', ['$scope', 'transitService', 'modalService', '$uibModalInstance', 'GlobalParameter',
-                                            function($scope, transitService, modalService, $uibModalInstance, GlobalParameter) {
+mainApp.controller('TransitEnquiryCtrl', ['$scope', '$state', '$cookies', 'transitService', 'modalService', '$uibModalInstance', 'GlobalParameter',
+                                            function($scope, $state, $cookies, transitService, modalService, $uibModalInstance, GlobalParameter) {
 
 	
 	getIncompleteTransitList();
@@ -10,11 +10,17 @@ mainApp.controller('TransitEnquiryCtrl', ['$scope', 'transitService', 'modalServ
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableRowSelection: true,
-			enableSelectAll: true,
-			multiSelect: true,
+			enableRowHeaderSelection : false,
+//			enableSelectAll: true,
+			multiSelect: false,
 			enableCellEditOnFocus : true,
 			exporterMenuPdf: false,
-
+			rowTemplate :
+			'<div ng-mouseover="rowClass=\'active\'" ng-click="grid.appScope.goToJob(row)" ng-mouseleave="rowClass=\'\'">\
+		    <div  ng-class="{\'bg-grey-light\': rowClass.length>0}" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'"\
+		        class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="{{col.isRowHeader ? \'rowheader\' : \'gridcell\'}}" ui-grid-cell>\
+		        </div>\
+		    </div>',
 
 			columnDefs: [
 			             { field: 'jobNumber'},
@@ -32,7 +38,11 @@ mainApp.controller('TransitEnquiryCtrl', ['$scope', 'transitService', 'modalServ
 		$scope.gridApi = gridApi;
 	}
 
-
+	$scope.goToJob = function(row){
+    	$cookies.put('jobNo', row.entity.jobNumber);
+    	$cookies.put('jobDescription', row.entity.jobDescription);
+    	$state.go('job.dashboard');
+	}
 
 	function getIncompleteTransitList() {
 		transitService.getIncompleteTransitList()
