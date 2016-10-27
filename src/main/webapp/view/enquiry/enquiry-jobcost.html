@@ -58,7 +58,7 @@
 										type="checkbox" data-ios-toggle="toggle"
 										id="showCumulative" data-style="ios" data-onstyle="primary"
 										data-offstyle="warning" data-on="Cumulative"
-										data-off="Movement" ng-model="showCumulative"
+										data-off="Movement" ng-model="showCumulative" data-width="100%"
 										ng-change="triggerShowCumulative()">
 								</div>
 
@@ -68,13 +68,14 @@
 								</div>
 							</div>
 						</form>
-					</div>
+						<div class="clearfix"></div>
+						<br>
 					<div class="col-md-12">
 						<div id="" ui-grid="gridOptions" external-scopes="clickHandler"
 							ui-grid-resize-columns ui-grid-selection ui-grid-move-columns
 							ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
 					</div>
-
+					</div>
 				</div>
 			</div>
 		</div>

@@ -82,6 +82,7 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 			completedStatus = Restrictions.not(completedStatus);
 		}
 		criteria.add(completedStatus);
+		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		criteria.addOrder(Order.asc("jobNumber"));
 		return criteria.list();	
 	}
