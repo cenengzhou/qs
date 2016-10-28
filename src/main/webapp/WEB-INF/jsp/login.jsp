@@ -4,7 +4,7 @@
 
 <html ng-app = "loginApp">
 <head>
-	<title>PCMS - Gammon Project Cost Management System</title>
+	<title>QS 2.0</title>
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 	<script>
 		window.onerror = function(errorMsg, url, lineNumber) {
@@ -107,7 +107,7 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 	<img alt="Brand" ng-src="resources/images/gammon.png" style="width: 128px"/>
 	<div class="login-box">
 		<div class="login-logo">
-			<font color="white"><b>PROJECT COST MANAGEMENT SYSTEM</b></font>
+			<font color="white"><b>QS 2.0</b></font>
 		</div>
 		<!-- /.login-logo -->
 		<div class="login-box-body">

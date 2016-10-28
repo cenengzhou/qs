@@ -88,16 +88,16 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     }
     
 	$rootScope.selectJobTourConfig = [
-//		{
-//			type: 'location_change',
-//			path: '/'
-//		},
+		{
+			type: 'location_change',
+			path: '/job-select'
+		},
 		{
 			type: 'title',
 			heading: 'Tour guide',
 			text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">\
-			Welcome to <strong>PCMS</strong></span><br>\
-			<span>This tour guide is design to help you easier adapt to the new PCMS.</span><br/><br/>\
+			Welcome to <strong>QS 2.0</strong></span><br>\
+			<span>This tour guide is design to help you easier adapt to the new QS 2.0.</span><br/><br/>\
 			</div></div>',
 		},
 		{
@@ -131,7 +131,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			selector: '#joblabelDiv',
 			heading: 'Step 3',
 			attachToBody: true,
-			text: 'Select job and start use PCMS',
+			text: 'Select job and start use QS 2.0',
 			placement: 'top',
 			scroll: true,
 			advanceOn: {element: '#joblabelDiv', event: 'click'}
@@ -139,6 +139,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 	];
 
 	$rootScope.menuBarTourConfig = [
+		{
+			type: 'location_change',
+			path: '/job/dashboard'
+		},
 		{
 			type: 'title',
 			heading: 'Menu Tour',
@@ -153,7 +157,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			type: 'element',
 			selector: '#header',
 			heading: 'Step 1',
-			text: 'This is main menu bar divided by different catalogue which contain most feature for PCMS',
+			text: 'This is main menu bar divided by different catalogue which contain most feature for QS 2.0',
 			placement: 'bottom',
 			attachToBody: true,
 			scroll: true
@@ -206,7 +210,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 //			type: 'title',
 //			heading: 'End of tour',
 //			text: '<div class="row"><div id="title-text" class="col-md-12'><span class="main-text">The tour is end' +
-//			' </span><br/><span class="small"><em>hope you enjoe PCMS</em></span></div></div>',
+//			' </span><br/><span class="small"><em>hope you enjoe QS 2.0</em></span></div></div>',
 //		}
 	]
 }]);
