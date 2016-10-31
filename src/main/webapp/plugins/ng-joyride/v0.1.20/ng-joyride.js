@@ -389,7 +389,7 @@
             link: function (scope, element, attrs) {
                 var steps = [];
                 var currentStepCount = 0;
-
+                var fallback = false;
 
                 var $fkEl;
                 function waitForAngular(callback) {
@@ -423,6 +423,11 @@
                         endJoyride();
                         scope.onFinish();
                     }
+
+                	if(fallback){
+                		fallback = false;
+                		$timeout(function(){goToPrev()},150);
+                	}
                 }
                 function endJoyride() {
                     steps[currentStepCount].cleanUp();
@@ -430,6 +435,9 @@
                     $timeout(function () {
                         scope.ngJoyRide = false;
                     });
+                }
+                function goToBackFn(interval){
+                	fallback = true;
                 }
                 function goToPrev(interval) {
                     steps[currentStepCount].cleanUp();
@@ -560,6 +568,7 @@
                     });
 
                     // Listen for events
+                    element.on('joyride:goToBackFn', goToBackFn);
                     element.on('joyride:prev', goToPrev);
                     element.on('joyride:next', goToNext);
                     element.on('joyride:exit', skipDemo);

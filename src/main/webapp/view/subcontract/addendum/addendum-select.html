@@ -40,8 +40,8 @@
 
 	<div class="col-lg-6">
 		<div class="fixed-container">
-			<div class="col-lg-12"
-				ng-show="latestAddendumStatus=='APPROVED' || latestAddendumStatus==''">
+			<div class="col-lg-12" id="createAddendumDiv"
+				ng-if="latestAddendumStatus=='APPROVED' || latestAddendumStatus==''">
 				<a ui-sref="subcontract.addendum.title({addendumNo: 'New'})"
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Addendum

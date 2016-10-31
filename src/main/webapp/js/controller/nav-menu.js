@@ -1,7 +1,8 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
-                                   function($http, $scope, $location, $cookies, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$rootScope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
+                                   function($http, $rootScope, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
 	
 	rootscopeService.setEnv();
+	$scope.parentScope = $rootScope;
 	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;
@@ -12,17 +13,28 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 					$scope.defaultJobNo = $scope.resetDefaultJobNo;
 					var defaultOption = angular.element('#defaultJobList').find('[value="string:' + $scope.resetDefaultJobNo + '"]');
 					var optionTop = defaultOption.length > 0 ? defaultOption.offset().top : 0;
-					var selectTop = angular.element('#defaultJobList').offset().top;
+					var selectTop = angular.element('#defaultJobList').offset().top || 0;
 					var baseTop = angular.element('#defaultJobList').scrollTop();
 					var scrollTo = optionTop > 0 ? baseTop + optionTop - selectTop : baseTop;
 					angular.element('#defaultJobList').scrollTop(scrollTo);
 				}, 100);			
 			}
 			if(!$scope.jobs){
-				rootscopeService.gettingJobList()
-				.then(function(response){
+				blockUI.start('Loading...');
+				$timeout(function(){
+				rootscopeService.gettingJobList('ONGOING_JOB_LIST')
+				.then(function( response ) {
 					$scope.jobs = response.jobs;
+						$timeout(function(){
+						rootscopeService.gettingJobList('COMPLETED_JOB_LIST')
+						.then(function( response ) {
+							$scope.jobs = $scope.jobs.concat(response.jobs);
+							$scope.jobs.sort(function(a,b){return a.jobNo - b.jobNo;});
+							blockUI.stop();
+						});
+						}, 150);
 				});
+				}, 150);
 			}
 		}
 	};
@@ -343,6 +355,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.openTips = function(section){
 		modalService.open('lg', 'view/infotips-modal.html', 'InfoTipsCtrl', 'Success', $scope ); 
+	}
+
+	$scope.openTour = function(){
+		modalService.open('lg', 'tourModalTemplate.html', 'TourModalCtrl', 'Success', $scope ); 
 	}
 
 	$scope.showRole = function(isShow){

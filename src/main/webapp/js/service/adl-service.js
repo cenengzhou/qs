@@ -1,4 +1,5 @@
-mainApp.service('adlService', ['$http', '$q', 'GlobalHelper',  function($http, $q, GlobalHelper){
+mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper', 
+						function($http, $q, $log, GlobalHelper){
 	// Return public API.
     return({
     	getJobDashboardData:						getJobDashboardData,
