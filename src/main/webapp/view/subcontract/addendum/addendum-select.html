@@ -47,7 +47,7 @@
 					class="fa fa-plus-circle fa-2x "></i> Create New Addendum
 				</a> <br> <br>
 			</div>
-			<div class="col-lg-12 animated fadeInUp"
+			<div class="col-lg-12 animated"
 				ng-repeat="addendum in addendums | orderBy:'addendumNo':false">
 
 				<div class="panel"	ng-class="{'panel-grey' : addendum.status=='APPROVED', 'panel-lime' : addendum.status!='APPROVED'}">
@@ -68,7 +68,7 @@
 
 						<div class="row">
 							<div class="col-lg-12">
-								<div class="pull-right">
+								<div class="pull-right" id="{{addendum.status!='APPROVED' ? 'pendingAddendumViewDetails' : 'AddendumViewDetails'+$index}}">
 									<a class="btn" ui-sref="subcontract.addendum.title({addendumNo: addendum.no})" 
 									ng-class="{'btn-grey' : addendum.status=='APPROVED', 'btn-lime' : addendum.status!='APPROVED'}">
 									View details</a>

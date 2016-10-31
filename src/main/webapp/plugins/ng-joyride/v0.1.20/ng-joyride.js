@@ -42,7 +42,7 @@
                     '</div>' +
                     '<hr>' +
                     '<div class=\"row\">' +
-                    '<div class=\"col-md-4 center\">' +
+                    '<div class=\"col-md-4 skip-class\">' +
                     '<a class=\"skipBtn pull-left\" type=\"button\">Skip</a>' +
                     '</div>' +
                     '<div class=\"col-md-8\">' +

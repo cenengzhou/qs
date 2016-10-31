@@ -1,5 +1,5 @@
 <!-- Addendum Title -->
-<div class="animated fadeIn">
+<div >
 	<form name="form-validate" id="form-validate"
 		class="ng-pristine ng-valid">
 		<fieldset>
@@ -13,7 +13,7 @@
 					<div class="form-group">
 						<label>Addendum Title</label>
 						<div class="controls">
-							<input type="text" class="form-control"
+							<input type="text" class="form-control" id="addendumTitleStep1"
 								ng-model="addendum.title"
 								required/>
 						</div>
@@ -21,11 +21,11 @@
 					<div class="form-group">
 						<label>Remarks</label>
 						<div class="controls">
-							<textarea class="form-control" ng-model="addendum.remarks"></textarea>
+							<textarea class="form-control" ng-model="addendum.remarks" id="addendumRemarkStep1"></textarea>
 						</div>
 					</div>
 
-					<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-disabled = "disableButtons" ng-hide="disableButtons">
+					<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-disabled = "disableButtons" ng-hide="disableButtons" id="addendumSaveStep1">
 						<span class="fa fa-save"></span> Save 
 					</button>
 				</div>

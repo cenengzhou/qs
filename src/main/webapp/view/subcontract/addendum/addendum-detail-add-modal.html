@@ -15,17 +15,17 @@
 	<div class="row">
 
 		<!-- Addendum -->
-		<div class="animated fadeIn">
+		<div >
 			<form name="form-validate" id="form-validate"
 				class="ng-pristine ng-valid">
 				<fieldset>
-					<div class="row">
+					<div class="row" >
 						<div class="col-md-10 col-md-offset-1">
 							<h3 class="form-header form-header-lg m-b-10">
 								<span class="icon text-primary"><i class="fa fa-star"></i></span>
 							</h3>
 							<p class="m-b-20">Please input the required fields below.</p>
-							<div class="form-group">
+							<div class="form-group" id="addAddendumStep2LineType">
 								<label>Line Type - <strong>{{lineTypes[lineType]}}</strong>
 								</label>
 								<div class="btn-group btn-group-justified">
@@ -57,12 +57,12 @@
 								</div>
 
 							</div>
-							<div class="form-group">
+							<div class="form-group" id="addAddendumStep2Description">
 								<label>Description</label> 
 								<input type="text" class="form-control " ng-model="addendumDetail.description" ng-disabled ="disableFields" required />
 							</div>
 
-							<div class="row">
+							<div class="row" id="addAddendumStep2Details">
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>BQ Item</label> 
@@ -185,8 +185,8 @@
 	</div>
 </div>
 
-<div class="modal-footer">
-	<button class="btn btn-primary btn-block" type="button"
+<div class="modal-footer" >
+	<button class="btn btn-primary btn-block" type="button" id="addAddendumStep2Save"
 		ng-click="save()" ng-disabled = "disableButtons">
 		<span class="fa fa-save"></span> Save
 	</button>

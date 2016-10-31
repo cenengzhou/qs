@@ -22,14 +22,41 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 	}
 	
 	$rootScope.toruAutoStartCheck = function(){
-		for(var key in $rootScope.tourArray){
-			if(
-				( (localStorage[key + 'TourShow'] != -1 && $rootScope.tourArray[key].autoStart) || $location.search().showTour) && $rootScope.routedToDefaultJob){
-				if( $location.path().indexOf($rootScope.tourArray[key].startLink) >= 0){
-					$rootScope.showTour(key);
+		switch($location.path()){
+		case '/subcontract/addendum/tab/title':
+			if($rootScope.createAddendumStepTourShow === 1){
+				$rootScope.showTour('createAddendumStep');
+			}
+			if($rootScope.createAddendumStepTourShow === 3){
+				$rootScope.showTour('createAddendumStepTabBar');
+			}
+			break;
+		case '/subcontract/addendum-select':
+			if($rootScope.createAddendumStepTourShow === 2){
+				$rootScope.showTour('createAddendumStepViewDetails');
+			}
+			break;
+		case '/subcontract/addendum/tab/details':
+			if($rootScope.createAddendumStepTourShow === 'addendumStep2'){
+				$rootScope.showTour('createAddendumStep2');
+			}
+			break;
+		case '/subcontract/payment/tab/certificate':
+			if($rootScope.createPaymentStepTourShow === 1){
+				$rootScope.showTour('createPaymentStep');
+			}
+			break;
+		default:
+			for(var key in $rootScope.tourArray){
+				if(
+					( (localStorage[key + 'TourShow'] != -1 && $rootScope.tourArray[key].autoStart) ) && $rootScope.routedToDefaultJob){
+					if( $location.path().indexOf($rootScope.tourArray[key].startLink) >= 0){
+						$rootScope.showTour(key);
+					}
 				}
 			}
-		}	
+		break;
+		}
 	}
 	
 	$scope.$on('$stateChangeSuccess', function(){
@@ -41,16 +68,18 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 	
 	$scope.$on('$stateChangeStart', function(){
 		for(var key in $rootScope.tourArray){
-			$rootScope.tourArray[key]['tourShow'] = false;
+			if($location.path().indexOf('addendum/tab') < 0){
+				$rootScope.tourArray[key]['tourShow'] = false;
+			}
 		};
 	});
 	
     $rootScope.onTourFinish = function(t){
     	if(typeof(Storage) != undefined){
-//    		localStorage[t] = -1;
+    		localStorage[t + 'TourShow'] = -1;
     	}
     	$rootScope.moveHeaderDown();
-    	$rootScope.triggerUserMenu();
+//    	$rootScope.triggerUserMenu();
     }
 	
     $rootScope.triggerSideBar = function(){
@@ -149,7 +178,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			$rootScope.tourArray = {};
 			new TourGuide(
 					'selectJob', //tourName
-					'image\\profile.png', //preview
+					'image\\tour\\selectJob_preview.png', //preview
 					false, //autoStart
 					null, //cookieDependences
 					'/job-select', //startLink
@@ -160,7 +189,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					);
 			new TourGuide(
 					'menuBar', 
-					'image\\profile.png', //preview
+					'image\\tour\\menuBar_preview.png', //preview
 					false, 
 					['jobNo'], 
 					'/job/dashboard', 
@@ -171,7 +200,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					);
 			new TourGuide(
 					'createPayment', 
-					'image\\profile.png', //preview
+					'image\\tour\\createPayment_preview.png', //preview
 					false, 
 					['jobNo', 'subcontractNo'], 
 					'/subcontract/payment-select', 
@@ -190,16 +219,39 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					);
 			new TourGuide(
 					'createAddendum', 
-					'image\\profile.png', //preview
+					'image\\tour\\createAddendum_preview.png', //preview
 					false, 
 					['jobNo', 'subcontractNo'], 
 					'/subcontract/addendum-select', 
 					'createAddendumDiv', 
 					'There have addendum in progress, please finish the progress and start this tour again',
-					'Create addendum',
-					'This tour show how to create addendum'
+					'Create addendum title',
+					'This tour show how to create addendum title'
 					);
-			
+			new TourGuide(
+					'createAddendumStep',
+					null,
+					false,
+					['jobNo', 'subcontractNo'], 
+					'/subcontract/addendum/tab/title',
+					'addendumStep1'
+					);
+			new TourGuide(
+					'createAddendumStepViewDetails',
+					null,
+					false,
+					['jobNo', 'subcontractNo'], 
+					'/subcontract/addendum-select',
+					'pendingAddendumViewDetails'
+					);
+			new TourGuide(
+					'createAddendumStepTabBar',
+					null,
+					false,
+					['jobNo', 'subcontractNo', 'addendumNo'], 
+					'/subcontract/addendum/tab/title',
+					'addendumStep1'
+					);
 			var tourRootDiv = angular.element('#tourRootDiv');
 			for(var key in $rootScope.tourArray){
 				tourRootDiv.append($rootScope.tourArray[key].div);
@@ -227,7 +279,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 				<div class="row" vertilize-container>\
 					<div vertilize class="col-md-4" ng-repeat="(key, value) in parentScope.listTourArray()">\
 			            <div class="thumbnail">\
-			                <img ng-src="{{value[\'preview\']}}" style="width:320px;height:180px">\
+			                <img ng-src="{{value[\'preview\']}}" style="width:320px;height:150px">\
 			                <div class="caption">\
 			                    <h3 class="m-t-10 m-b-5">{{value[\'heading\']}}</h3>\
 			                    <p ng-bind-html="value[\'description\']"></p>\
@@ -244,6 +296,18 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		}
 	} initAllTour();
 	
+    function elementTourNoNextButtonTemplate(content, isEnd){
+        return '<div class=\"row\"><div id=\"pop-over-text\" class=\"col-md-12\">' + content + '</div></div><hr><div class=\"row\"><div class=\"col-md-4 skip-class\"><a class=\"skipBtn pull-left\" type=\"button\">Skip</a></div><div class=\"col-md-8\"><div class=\"pull-right\"><button class=\"prevBtn btn\" type=\"button\"><i class=\"glyphicon glyphicon-chevron-left\"></i>&nbsp;Previous</button> </div></div></div>';
+      }
+	
+    function elementTourNoPrevButtonTemplate(content, isEnd){
+        return '<div class=\"row\"><div id=\"pop-over-text\" class=\"col-md-12\">' + content + '</div></div><hr><div class=\"row\"><div class=\"col-md-4 skip-class\"><a class=\"skipBtn pull-left\" type=\"button\">Skip</a></div><div class=\"col-md-8\"><div class=\"pull-right\"><button id=\"nextTitleBtn\" class=\"nextBtn btn btn-primary\" type=\"button\">Next&nbsp;<i class=\"glyphicon glyphicon-chevron-right\"></i></button> </div></div></div>';
+      }
+	
+    function elementTourNoPrevNextButtonTemplate(content, isEnd){
+        return '<div class=\"row\"><div id=\"pop-over-text\" class=\"col-md-12\">' + content + '</div></div><hr><div class=\"row\"><div class=\"col-md-4 skip-class\"><a class=\"skipBtn pull-left\" type=\"button\">Skip</a></div><div class=\"col-md-8\"><div class=\"pull-right\"></div></div></div>';
+      }
+	
     function pushArray (a,b) {
     	a.push.apply(a,b);
     };
@@ -257,7 +321,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     		tourBack('selectJob');
     	}
     }
-
+    
     $rootScope.listTourArray = function(){
     	var tourList = {};
     	for(key in $rootScope.tourArray){
@@ -379,20 +443,187 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			text: 'Click this button to create payment',
 			placement: 'bottom',
 			attachToBody: true,
-			scroll: true
+			scroll: true,
+			elementTemplate: elementTourNoNextButtonTemplate,
+			advanceOn: {element:'#createPaymentDiv', event:'click'}
+		},
+		{
+			type: 'function',
+			fn: function(next){if(next)$rootScope.createPaymentStepTourShow = 1;}
 		}
 	]);
+	
+	$rootScope.processToAddendumStep = function(next){
+		if(next){
+			$rootScope.createAddendumStepTourShow += 1;
+		}
+	}
 	pushArray($rootScope.tourArray['createAddendum'].tourConfig, [
-		{
+		{ // $rootScope.createAddendumStepTourShow = 0
 			type: 'element',
 			selector: '#createAddendumDiv',
 			heading: 'Create Addendum',
 			text: 'Click this button to create addendum',
 			placement: 'bottom',
 			attachToBody: true,
-			scroll: true
+			scroll: true,
+			elementTemplate: elementTourNoNextButtonTemplate,
+			advanceOn: {element:'#createAddendumDiv', event:'click'}
+		},
+		{
+			type: 'function',
+			fn: function(next){if(next)$rootScope.createAddendumStepTourShow = 1;}
 		}
 	]);
+
+	pushArray($rootScope.tourArray['createAddendumStep'].tourConfig, [
+		{//$rootScope.createAddendumStepTourShow = 1
+			type: 'element',
+			selector: '#addendumTitleStep1',
+			heading: 'Addendum Title',
+			text: 'Enter addendum title',
+			placement: 'top',
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'element',
+			selector: '#addendumRemarkStep1',
+			heading: 'Addendum Remark',
+			text: 'Enter addendum remark',
+			placement: 'top',
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'element',
+			selector: '#addendumSaveStep1',
+			heading: 'Save addendum',
+			text: 'Click Save',
+			placement: 'top',
+			attachToBody: true,
+			scroll: true,
+			elementTemplate: elementTourNoNextButtonTemplate,
+			advanceOn: {element:'#addendumSaveStep1', event:'click'}
+		},
+		{
+			type: 'function',
+			fn: $rootScope.processToAddendumStep
+		}
+	]);
+	pushArray($rootScope.tourArray['createAddendumStepViewDetails'].tourConfig, [
+		{//$rootScope.createAddendumStepTourShow = 2
+			type: 'element',
+			selector: '#pendingAddendumViewDetails',
+			heading: 'Update addendum',
+			text: 'Click view details to update addendum',
+			placement: 'left',
+			advanceOn: {element:'#pendingAddendumViewDetails', event:'click'},
+			elementTemplate: elementTourNoPrevNextButtonTemplate,
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'function',
+			fn: $rootScope.processToAddendumStep
+		}
+	]);
+	pushArray($rootScope.tourArray['createAddendumStepTabBar'].tourConfig, [
+		{//$rootScope.createAddendumStepTourShow = 3
+			type: 'element',
+			selector: '#addendumTabBar',
+			heading: 'Step bar',
+			text: 'Click on the step number to update information',
+			placement: 'bottom',
+			advanceOn: {element: '#addendumStep2', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/addendum/tab/details'
+		},
+		{
+			type: 'element',
+			selector: '#addendumStep2',
+			heading: 'Step two',
+			text: 'This step is for add addendum',
+			placement: 'left',
+			advanceOn: {element: '#addendumStep3', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/addendum/tab/detail-list'
+		},
+		{
+			type: 'element',
+			selector: '#addendumStep3',
+			heading: 'Step two',
+			text: 'This step is for addendum review',
+			placement: 'left',
+			advanceOn: {element: '#addendumStep4', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/addendum/tab/attachment'
+		},
+		{
+			type: 'element',
+			selector: '#addendumStep4',
+			heading: 'Step two',
+			text: 'This step is for add attachment',
+			placement: 'left',
+			advanceOn: {element: '#addendumStep5', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/addendum/tab/summary'
+		},
+		{
+			type: 'element',
+			selector: '#addendumStep5',
+			heading: 'Step two',
+			text: 'This step is the summary',
+			placement: 'left',
+			advanceOn: {element: '#addendumStep6', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/addendum/tab/form2'
+		},
+		{
+			type: 'element',
+			selector: '#printBtn',
+			heading: 'Print PDS/08/Form 2',
+			text: 'Click the print button to print the Form2',
+			placement: 'left',
+			attachToBody: true,
+			scroll: false
+		},
+		{
+			type: 'function',
+			fn: function(next){if(next)$rootScope.createAddendumStepTourShow = 0;}
+		},
+		{
+			type: 'element',
+			selector: '#submitBtn',
+			heading: "Submit for approvel",
+			text: 'Submit Form2 to Approval system',
+			placement: 'top',
+			attachToBody: true,
+			scroll: true,
+			advanceOn: {element: '#submitBtn', event: 'click'}
+		}
+	]);
+	
 
 }]);
 
