@@ -12,7 +12,6 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	$scope.addendumDetail = [];
 	$scope.units=[];
 	$scope.units.selected = "AM";
-	$scope.regex = "[0-9]";
 	
 	getUnitOfMeasurementList();
 	

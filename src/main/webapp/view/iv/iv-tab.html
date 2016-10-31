@@ -1,9 +1,11 @@
-<div id="content" class="content">
-	<!-- <ol class="breadcrumb pull-right">
+<div class="m-t-20 m-l-20 m-r-20">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
 		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
 				Home</a></li>
 		<li class="active">Dashboard</li>
-	</ol> -->
+	</ol>
+	<!-- end breadcrumb -->
 
 	<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
@@ -13,11 +15,11 @@
 		<div class="hidden-print">
 			<ul class="bwizard-steps clearfix setup-panel">
 				<li ui-sref-active="active">
-					<a ui-sref="iv.resource-summary.update"><span class="label badge-inverse">1</span> 
+					<a ui-sref="iv.update"><span class="label badge-inverse">1</span> 
 						Update Internal Valuation <small></small>
 					</a>
 				</li>
-				<li ui-sref-active="active"><a ui-sref="iv.resource-summary.post" > <span class="label">2</span>
+				<li ui-sref-active="active"><a ui-sref="iv.post" > <span class="label">2</span>
 						Post Internal Valuation  <small></small>
 				</a></li>
 			</ul>

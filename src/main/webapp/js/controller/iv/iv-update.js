@@ -211,6 +211,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			enableGridMenu : true,
 			enableRowSelection: true,
 			enableSelectAll: true,
+			showGridFooter : false,
 			showColumnFooter : true,
 			importerShowMenu: true,
 			importerDataAddCallback: $scope.initBlockUI,

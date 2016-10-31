@@ -44,7 +44,7 @@
 		<div class="fixed-container">
 			<div class="col-lg-12"
 				ng-show="latestCertStatus=='300' || latestCertStatus==''">
-				<a ui-sref="cert.details({mainCertNo: '0'})" 
+				<a ui-sref="cert-details({mainCertNo: '0'})" 
 					class="btn btn-danger btn-block"> <i
 					class="fa fa-plus-circle fa-2x "></i> Create New Payment
 				</a> <br> <br>
@@ -70,7 +70,7 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="m-b-md pull-right">
-									<a class="btn" ui-sref="cert.details({mainCertNo: cert.certificateNumber})" 
+									<a class="btn" ui-sref="cert-details({mainCertNo: cert.certificateNumber})" 
 									ng-class="{'btn-grey' : cert.certificateStatus=='300', 'btn-purple' : cert.certificateStatus!='300'}">
 									View details</a>
 								</div>

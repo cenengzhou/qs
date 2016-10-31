@@ -185,74 +185,95 @@ mainApp.directive('dropzone', function() {
     }
 });
 
-//CurrencyFilter
+
+/*
+ * ng-currency
+ * http://alaguirre.com/
+
+ * Version: 0.7.5 - 2014-07-15
+ * License: MIT
+ */
+
 mainApp.directive('ngCurrency', function ($filter, $locale) {
-    var decimalSep = $locale.NUMBER_FORMATS.DECIMAL_SEP;
-    var toNumberRegex = new RegExp('[^0-9\\' + decimalSep + ']', 'g');
-    var trailingZerosRegex = new RegExp('\\' + decimalSep + '0+$');
-    var filterFunc = function (value) {
-        return $filter('currency')(value);
-    };
+        return {
+            require: 'ngModel',
+            scope: {
+                min: '=min',
+                max: '=max',
+                ngRequired: '=ngRequired'
+            },
+            link: function (scope, element, attrs, ngModel) {
 
-    function getCaretPosition(input){
-        if (!input) return 0;
-        if (input.selectionStart !== undefined) {
-            return input.selectionStart;
-        } else if (document.selection) {
-            // Curse you IE
-            input.focus();
-            var selection = document.selection.createRange();
-            selection.moveStart('character', input.value ? -input.value.length : 0);
-            return selection.text.length;
-        }
-        return 0;
-    }
-
-    function setCaretPosition(input, pos){
-        if (!input) return 0;
-        if (input.offsetWidth === 0 || input.offsetHeight === 0) {
-            return; // Input's hidden
-        }
-        if (input.setSelectionRange) {
-            input.focus();
-            input.setSelectionRange(pos, pos);
-        }
-        else if (input.createTextRange) {
-            // Curse you IE
-            var range = input.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', pos);
-            range.moveStart('character', pos);
-            range.select();
-        }
-    }
-    
-    function toNumber(currencyStr) {
-        return parseFloat(currencyStr.replace(toNumberRegex, ''), 10);
-    }
-
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function postLink(scope, elem, attrs, modelCtrl) {    
-            modelCtrl.$formatters.push(filterFunc);
-            modelCtrl.$parsers.push(function (newViewValue) {
-                var oldModelValue = modelCtrl.$modelValue;
-                var newModelValue = toNumber(newViewValue);
-                modelCtrl.$viewValue = filterFunc(newModelValue);
-                var pos = getCaretPosition(elem[0]);
-                elem.val(modelCtrl.$viewValue);
-                var newPos = pos + modelCtrl.$viewValue.length -
-                                   newViewValue.length;
-                if ((oldModelValue === undefined) || isNaN(oldModelValue)) {
-                    newPos -= 3;
+                function decimalRex(dChar) {
+                    return RegExp("\\d|\\" + dChar, 'g')
                 }
-                setCaretPosition(elem[0], newPos);
-                return newModelValue;
-            });
+
+                function clearRex(dChar) {
+                    return RegExp("((\\" + dChar + ")|([0-9]{1,}\\" + dChar + "?))&?[0-9]{0,2}", 'g');
+                }
+
+                function decimalSepRex(dChar) {
+                    return RegExp("\\" + dChar, "g")
+                }
+
+                function clearValue(value) {
+                    value = String(value);
+                    var dSeparator = $locale.NUMBER_FORMATS.DECIMAL_SEP;
+                    var clear = null;
+
+                    if (value.match(decimalSepRex(dSeparator))) {
+                        clear = value.match(decimalRex(dSeparator))
+                            .join("").match(clearRex(dSeparator));
+                        clear = clear ? clear[0].replace(dSeparator, ".") : null;
+                    }
+                    else if (value.match(decimalSepRex("."))) {
+                        clear = value.match(decimalRex("."))
+                            .join("").match(clearRex("."));
+                        clear = clear ? clear[0] : null;
+                    }
+                    else {
+                        clear = value.match(/\d/g);
+                        clear = clear ? clear.join("") : null;
+                    }
+
+                    return clear;
+                }
+
+                ngModel.$parsers.push(function (viewValue) {
+                    cVal = clearValue(viewValue);
+                    return parseFloat(cVal);
+                });
+
+                element.on("blur", function () {
+                    element.val($filter('currency')(ngModel.$modelValue));
+                });
+
+                ngModel.$formatters.unshift(function (value) {
+                    return $filter('currency')(value);
+                });
+
+                scope.$watch(function () {
+                    return ngModel.$modelValue
+                }, function (newValue, oldValue) {
+                    runValidations(newValue)
+                })
+
+                function runValidations(cVal) {
+                    if (!scope.ngRequired && isNaN(cVal)) {
+                        return
+                    }
+                    if (scope.min) {
+                        var min = parseFloat(scope.min)
+                        ngModel.$setValidity('min', cVal >= min)
+                    }
+                    if (scope.max) {
+                        var max = parseFloat(scope.max)
+                        ngModel.$setValidity('max', cVal <= max)
+                    }
+                }
+            }
         }
-    };
-});
+    });
 
 
 

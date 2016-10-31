@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-3 col-sm-6 col-xs-12">
+	<!-- <div class="col-md-3 col-sm-6 col-xs-12">
 		<div
 			class="widget widget-stat widget-stat-right bg-primary text-white">
 			<div class="widget-stat-icon">
@@ -21,7 +21,6 @@
 
 
 	</div>
-	<!-- /.col -->
 
 	<div class="col-md-3 col-sm-6 col-xs-12">
 		<div
@@ -43,7 +42,6 @@
 			<div class="widget-stat-footer text-left"></div>
 		</div>
 	</div>
-	<!-- /.col -->
 
 	<div class="col-md-3 col-sm-6 col-xs-12">
 		<div
@@ -67,7 +65,6 @@
 		</div>
 
 	</div>
-	<!-- /.col -->
 
 	<div class="col-md-3 col-sm-6 col-xs-12">
 		<div
@@ -89,17 +86,14 @@
 			<div class="widget-stat-footer text-left">Finalized Subcontract</div>
 		</div>
 
+	</div> -->
+	
 
-	</div>
-	<!-- /.col -->
-</div>
-
-<div class = "row">
 	<div class="col-md-12">
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<div class="box-title pull-right col-md-6">
-				<!-- div class="col-md-4">
+					<!-- div class="col-md-4">
 					<div class="input-group-btn">
 						  <button ng-show="statusArray.length>0" type="button" class="pull-right btn btn-primary dropdown-toggle" style="line-height:18px !important;padding-top:5px !important;padding-bottom:5px !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					    <span class="caret"></span>
@@ -114,16 +108,19 @@
 								</label>
 					</div>
 				</div -->
-					<div class="col-md-4 animated fadeIn" style="text-align:right">
-						<button ng-show="statusArray.length>0" class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show import status</button>
+					<div class="col-md-4 animated fadeIn" style="text-align: right">
+						<button ng-show="statusArray.length>0"
+							class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show
+							import status</button>
 					</div>
 					<div class="col-md-4">
-						<input type="number"
-							class="form-control input-group-sm input-sm"
-							placeholder="Input %" ng-model="percent" min="0.0000" max="100.0000" step="1.0000">
+						<input type="number" class="form-control input-group-sm input-sm"
+							placeholder="Input %" ng-model="percent" min="0.0000"
+							max="100.0000" step="1.0000">
 					</div>
-					<div class="col-md-4" style="text-align:right">
-						<button class="btn btn-block btn-primary btn-sm" ng-click="applyPercentage()">Apply % for IV</button>
+					<div class="col-md-4" style="text-align: right">
+						<button class="btn btn-block btn-primary btn-sm"
+							ng-click="applyPercentage()">Apply % for IV</button>
 					</div>
 				</div>
 
@@ -131,22 +128,21 @@
 			<div class="box-body">
 				<div id="grid" ui-grid="gridOptions" ui-grid-selection
 					ui-grid-importer external-scopes="clickHandler"
-					ui-grid-resize-columns ui-grid-cellnav
-					ui-grid-validate ui-grid-row-edit ui-grid-edit ui-grid-exporter
-					class="grid"
-					resize ng-style="resizeWithOffset(450)"></div>
+					ui-grid-resize-columns ui-grid-cellnav ui-grid-validate
+					ui-grid-row-edit ui-grid-edit ui-grid-exporter class="grid" resize
+					ng-style="resizeWithOffset(360)"></div>
 				<div class="col-md-12">
 					<div class="col-md-6">
-					<button type="button" class="btn bg-primary btn-block" ng-show="repackaging.status === '900'"
-						ng-click="update()">
-						<i class="fa fa-floppy-o"></i> Update
-					</button>
+						<button type="button" class="btn bg-primary btn-block"
+							ng-show="repackaging.status === '900'" ng-click="update()">
+							<i class="fa fa-floppy-o"></i> Update
+						</button>
 					</div>
 					<div class="col-md-6">
-					<button type="button" class="btn bg-warning btn-block text-white" ng-show="repackaging.status === '900'"
-						ng-click="reset()">
-						<i class="fa fa-refresh"></i> Reset
-					</button>
+						<button type="button" class="btn bg-warning btn-block text-white"
+							ng-show="repackaging.status === '900'" ng-click="reset()">
+							<i class="fa fa-refresh"></i> Reset
+						</button>
 					</div>
 				</div>
 			</div>

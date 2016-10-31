@@ -4877,8 +4877,11 @@ public class SubcontractService {
 			if (lineType==null||"BQ".equals(lineType)||"B1".equals(lineType))
 				return null;
 			resultDetails = SCDetailsLogic.createSCDetailByLineType(lineType);
-			resultDetails.setQuantity(1.0);
-			resultDetails.setScRate(1.0);
+			resultDetails.setQuantity(0.0);
+			resultDetails.setScRate(0.0);
+			if("C1".equals(lineType) || "RR".equals(lineType))
+				resultDetails.setScRate(-1.0);
+
 			resultDetails.setAmountSubcontract(new BigDecimal(0));
 
 			String defaultObj="140299";

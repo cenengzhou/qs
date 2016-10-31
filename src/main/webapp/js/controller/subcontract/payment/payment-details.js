@@ -121,6 +121,19 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     			return value;
     	}  
       }
+ 
+    $scope.getTotalMovAmount = function(aggregationValue){
+		var value = aggregationValue - $scope.totalMovRRAmount - $scope.totalMovRTAmount - $scope.totalMovRAAmount
+			+ $scope.totalMovRRAmount*-1 + $scope.totalMovRTAmount*-1 + $scope.totalMovRAAmount*-1 ;
+
+		
+		
+		return value;
+	}
+    
+    $scope.totalMovAmountTemplate = '<div class="ui-grid-cell-contents" \
+    	title=>{{grid.appScope.getTotalMovAmount(col.getAggregationValue()) | number:2 }}\
+		</div>';
 	    
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -150,8 +163,9 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 						          }
 						        }*/
 			            	 aggregationHideLabel : true,
-			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 //aggregationType : uiGridConstants.aggregationTypes.sum,
+			            	 //footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellTemplate : $scope.totalMovAmountTemplate,
 			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            	 					var c = 'text-right';
 			            	 					if (col.getAggregationValue() < 0) {
@@ -164,7 +178,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
-			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
+			            	 //aggregationType : uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            	 					var c = 'text-right';
@@ -183,7 +197,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            			return c;
 		            		},
 		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		//aggregationType : uiGridConstants.aggregationTypes.sum,
 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
@@ -313,10 +327,26 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 						value.postedAmount = value.cumAmount - value.movementAmount;
 						var newObj = angular.copy(value);
 						$scope.resetData.push(newObj);
-						/*if(value.lineType == "GR")
-							$scope.edit = false;
-						else
-							$scope.edit = true;*/
+						
+
+						
+						
+						if(value.lineType == 'RR'){
+							$scope.totalMovRRAmount = value.movementAmount;
+							$scope.totalCumCertRRAmount = value.cumAmount;
+							$scope.totalPostedCertRRAmount = 0;
+						}
+						else if(value.lineType == 'RT'){
+							$scope.totalMovRTAmount = value.movementAmount;
+							$scope.totalCumCertRTAmount = value.cumAmount;
+							$scope.totalPostedCertRTAmount = 0;
+						}
+						else if(value.lineType == 'RA'){
+							$scope.totalMovRAAmount = value.movementAmount;
+							$scope.totalCumCertRAAmount = value.cumAmount;
+							$scope.totalPostedCertRAAmount = 0;
+						}
+						
 					});
 					
 					$scope.gridOptions.data = data;

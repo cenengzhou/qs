@@ -67,7 +67,7 @@ public class ProvisionPostingHist extends BasePersistedAuditObject {
 		this.subsidiaryCode = subcontractDetail.getSubsidiaryCode();
 		this.postedCertAmount = CalculationUtil.round(subcontractDetail.getAmountPostedCert().doubleValue(), 2); //subcontractDetail.getPostedCertifiedQuantity() * subcontractDetail.getScRate();
 		this.cumLiabilitiesAmount = CalculationUtil.round(subcontractDetail.getAmountCumulativeWD().doubleValue(), 2); //subcontractDetail.getCumWorkDoneQuantity() * subcontractDetail.getScRate();
-		this.postedCertQty = subcontractDetail.getPostedCertifiedQuantity();
+		//this.postedCertQty = subcontractDetail.getPostedCertifiedQuantity();
 		this.cumLiabilitiesQty = subcontractDetail.getCumWorkDoneQuantity();
 		this.scRate = subcontractDetail.getScRate();
 

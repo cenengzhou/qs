@@ -1,5 +1,7 @@
 mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter',
                                        function ($scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil, GlobalParameter) {
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.disableButtons = true;
 
@@ -86,7 +88,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 						.then(
 								function( data ) {
 									$scope.previousCertNetAmount = data.certNetAmount;
-									console.log("$scope.previousCertNetAmount: "+$scope.previousCertNetAmount);
+									//console.log("$scope.previousCertNetAmount: "+$scope.previousCertNetAmount);
 									$scope.previousGSTReceivable = data.gstReceivable;
 									$scope.previousGSTPayable = data.gstPayable;
 								});
@@ -96,6 +98,7 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 
 
 	function updateCertificate(){
+		console.log($scope.cert);
 		mainCertService.updateCertificate($scope.cert)
 		.then(
 				function( data ) {
@@ -336,7 +339,15 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-file.html', 'AttachmentMainCertFileCtrl', 'Success', $scope);
 	}
 
+	/*document.getElementById("number").onblur =function (){    
+		this.value = parseFloat(this.value.replace(/,/g, ""))
+		.toFixed(2)
+		.toString()
+		.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+		//document.getElementById("display").value = this.value.replace(/,/g, "")
+
+	}*/
 
 }]);
 

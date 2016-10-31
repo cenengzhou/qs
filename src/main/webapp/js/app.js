@@ -843,7 +843,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	
 	
-	.state('cert', {
+	/*.state('cert', {
 		url: "/cert",
 		parent: "navigation",
 		templateUrl: "view/main-cert/cert-details-menu.html",
@@ -858,9 +858,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         },
         controller: 'NavMenuCtrl'
-	})
-	.state('cert.details', {
-		url: "/details",
+	})*/
+	.state('cert-details', {
+		url: "/cert-details",
+		parent: "navigation",
 		templateUrl: "view/main-cert/cert-details.html",
 		params: {
 			'mainCertNo': null
@@ -869,7 +870,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [
+               	 files: [  'js/service/main-cert-service.js',
                            'js/controller/main-cert/cert-details.js',
                            'js/controller/main-cert/retention-release-modal.js',
                            'js/controller/main-cert/contra-charge-modal.js',
@@ -975,7 +976,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	
 	//IV
-	.state("iv", {
+	/*.state("iv", {
 		url: "/iv",
 		parent: "navigation",
 		templateUrl: "view/iv/iv-menu.html",
@@ -992,13 +993,26 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         },
         controller: 'NavMenuCtrl'
-	})
-	.state("iv.resource-summary", {
-		url: "/resource-summary",
+	})*/
+	.state("iv", {
+		url: "/iv",
+		parent: "navigation",
 		templateUrl: "view/iv/iv-tab.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [	
+               	         	'js/service/resource-summary-service.js',
+               	         	'js/service/subcontract-service.js',
+               	         	'js/service/repackaging-service.js'
+                    ] 
+                });
+            }]
+        },
 		controller: "NavMenuCtrl",
 	})
-	.state("iv.resource-summary.update", {
+	.state("iv.update", {
 		url: "/update",
 		templateUrl: "view/iv/iv-update.html",
 		controller: "IVUpdateCtrl",
@@ -1012,7 +1026,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
-	.state("iv.resource-summary.post", {
+	.state("iv.post", {
 		url: "/post",
 		templateUrl: "view/iv/iv-post.html",
 		controller: "IVPostCtrl",
