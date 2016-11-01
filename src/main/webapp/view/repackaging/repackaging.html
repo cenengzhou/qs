@@ -1,29 +1,30 @@
 <div class="m-t-20 m-l-20 m-r-20">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb pull-right">
-		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
-				Home</a></li>
-		<li class="active">Dashboard</li>
-	</ol>
-	<!-- end breadcrumb -->
+	<div class="col-md-9">
+		<h1 class="page-header">
+			{{jobNo}}<small> {{jobDescription}}</small>
+		</h1>
+	</div>
 
-	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}</small>
-	</h1>
+	<div class="col-md-3">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="job.dashboard"><i class="fa fa-home"></i>
+					Home</a></li>
+		</ol>
+	</div>
+	
 	<div class="row">
 
 		<div class="col-md-12">
 			<div class="panel panel-white">
 				<div class="panel-heading">
-					<div>
-						<h4>
-							Version {{repackaging.repackagingVersion}}
-							<div class="pull-right">
-								<button class="btn btn-inverse" ng-click="getHistory()">
-									<i class="fa fa-info-circle"></i> History
-								</button>
-							</div>
-						</h4>
+					<div class="col-md-1">
+						<h4>Version {{repackaging.repackagingVersion}}</h4>
+					</div>
+					<div class="col-md-10 text-red" ng-show="repackaging.status == '900'"><h4>Repackaging Locked</h4></div>
+					<div class="col-md-1 pull-right">
+						<button class="btn btn-inverse" ng-click="getHistory()">
+							<i class="fa fa-info-circle"></i> History
+						</button>
 					</div>
 				</div>
 				<div class="box-body">
@@ -103,12 +104,13 @@
 								<div class="process-step">
 									<button type="button" class="btn btn-big-circle"
 										ng-class="{'btn-primary': repackaging.status == '300' || repackaging.status == '900'}"
-										ng-disabled="latestVersion && repackaging.status != '300'"
+										ng-disabled="latestVersion && repackaging.status != '300' && repackaging.status != '900'"" 
 										ng-click="click('confirm')">
 										<i class="fa fa-check-square-o fa-3x"></i>
 									</button>
 									<p>
-										<label>Confirm/Review</label>
+										<label ng-show= "repackaging.status == '900'">View</label>
+										<label ng-show= "repackaging.status != '900'">View and Confirm</label>
 									</p>
 								</div>
 							</div>

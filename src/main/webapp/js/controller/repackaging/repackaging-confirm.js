@@ -6,8 +6,6 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 
 	$scope.latestVersion = modalStatus;
 	$scope.repackagingId = modalParam;
-	console.log($scope.repackagingId);
-	console.log($scope.latestVersion);
 	
 	$scope.showChangesOnly = true;
 	
@@ -93,7 +91,6 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.gridOptions.data= data.currentPageContentList;
 					$scope.totalBudget = data.totalBudget;
 					$scope.previousBudget = data.previousBudget; 

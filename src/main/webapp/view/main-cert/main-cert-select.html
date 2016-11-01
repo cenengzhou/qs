@@ -1,15 +1,18 @@
 <div class="m-t-20 m-l-20 m-r-20">
-	<!-- begin breadcrumb -->
-	<ol class="breadcrumb pull-right">
-		<li><a ui-sref="job.dashboard"><i class="fa fa-dashboard"></i>
-				Home</a></li>
-		<li class="active">Dashboard</li>
-	</ol>
-	<!-- end breadcrumb -->
+	<div class="col-md-9">
+		<h1 class="page-header">
+			{{jobNo}}<small> {{jobDescription}}</small>
+		</h1>
+	</div>
 
-	<h1 class="page-header">
-		{{jobNo}}<small> {{jobDescription}}
-	</h1>
+	<div class="col-md-3">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="job.dashboard"><i class="fa fa-home"></i>
+					Home</a></li>
+					<li><a ui-sref="cert-dashboard"><i class="fa fa-dashboard"></i>
+					Main Cert Dashboard </a></li>
+		</ol>
+	</div>
 
 	<div class="col-xs-12 col-md-12 col-lg-5">
 

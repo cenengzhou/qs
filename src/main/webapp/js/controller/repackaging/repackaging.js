@@ -42,11 +42,16 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 		repackagingService.getRepackagingEntry(repackagingId)
 		.then(
 				function( data ) {
-					$scope.latestVersion = false;
 					$scope.repackaging = data;
+					
 					if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 					if($scope.repackaging.id != null){
 						$scope.loadAttachment($scope.repackaging.id);
+						
+						if($scope.repackaging.id == $scope.latestID){
+							$scope.latestVersion = true;
+						}else 
+							$scope.latestVersion = false;
 					}
 				});
       });
@@ -58,9 +63,15 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 					if(data != null){
 						$scope.repackaging = data;
 						$scope.latestVersion = true;
+						$scope.latestID = $scope.repackaging.id;
 						$cookies.put('repackagingId', $scope.repackaging.id);
 						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.loadAttachment($scope.repackaging.id);
+						
+						console.log($scope.latestVersion);
+						console.log($scope.repackaging.status);
+						
+						
 					}
 				});
 
