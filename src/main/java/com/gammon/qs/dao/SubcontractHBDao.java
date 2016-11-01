@@ -186,10 +186,11 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getUneditablePackageNos(JobInfo jobInfo) throws Exception{
+	public List<String> getUneditableSubcontractNos(String jobNo) throws Exception{
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
+			criteria.createAlias("jobInfo", "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
 			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 			//Getting Packages with sub-contract status > 160 except 340
 			criteria.add(Restrictions.gt("subcontractStatus", 160));
@@ -197,7 +198,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			criteria.setProjection(Projections.property("packageNo"));
 			return criteria.list();
 		}catch (HibernateException he){
-			logger.info("Fail: getUneditablePackageNos(Job job)");
+			logger.info("Fail: getUneditableSubcontractNos(Job job)");
 			throw new DatabaseOperationException(he);
 		}
 	}

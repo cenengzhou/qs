@@ -243,7 +243,7 @@ public class ResourceSummaryService implements Serializable {
 		List<String> uneditableResourceSummaryIDs = new ArrayList<String>(); 
 
 		List<ResourceSummary> resourceSummaries = resourceSummaryDao.obtainSCResourceSummariesByJobNumber(job.getJobNumber());
-		List<String> uneditablePackageNos = scPackageDao.getUneditablePackageNos(job);
+		List<String> uneditablePackageNos = scPackageDao.getUneditableSubcontractNos(job.getJobNumber());
 		List<String> unawardedPackageNosUnderRequisition = scPackageDao.obtainSCPackageNosUnderPaymentRequisition(job.getJobNumber());
 		
 		for(ResourceSummary resourceSummary: resourceSummaries){

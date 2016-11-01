@@ -1301,8 +1301,8 @@ public class SubcontractService {
 		return null;
 	}
 
-	public List<String> getUneditablePackageNos(JobInfo job) throws Exception{
-		return subcontractHBDao.getUneditablePackageNos(job);
+	public List<String> getUneditableSubcontractNos(String jobNo) throws Exception{
+		return subcontractHBDao.getUneditableSubcontractNos(jobNo);
 	}
 
 	public List<String> obtainUneditableUnawardedPackageNos(JobInfo job) throws Exception{

@@ -926,7 +926,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/repackaging/repackaging-add.js',
                            'js/controller/repackaging/repackaging-split.js',
                            'js/service/resource-summary-service.js',
-                           'js/service/unit-service.js'
+                           'js/service/unit-service.js',
+                           'js/service/subcontract-service.js',
                     ] 
                 });
             }]

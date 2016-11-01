@@ -1,12 +1,15 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookies', '$stateParams', '$state', 'uiGridConstants',
-                                             function($scope, modalService, resourceSummaryService, unitService, $cookies, $stateParams, $state, uiGridConstants) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookies', '$stateParams', '$state', 'uiGridConstants', 'confirmService', 'subcontractService', '$location',
+                                             function($scope, modalService, resourceSummaryService, unitService, $cookies, $stateParams, $state, uiGridConstants, confirmService, subcontractService, $location) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
 	$scope.repackagingId = $cookies.get("repackagingId");
 	
+	
 	loadResourceSummaries();
+	getAwardedSubcontractNos();
 	getUnitOfMeasurementList();
+	
 	
 	$scope.units=[];
 
@@ -30,7 +33,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			rowEditWaitInterval :-1,
 			
 			columnDefs: [
-			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false},
+			             { field: 'packageNo', displayName: "Subcontract No."},
 			             { field: 'objectCode', cellClass: "blue"},
 			             { field: 'subsidiaryCode', cellClass: "blue"},
 			             { field: 'resourceDescription', displayName: "Description", cellClass: "blue"},
@@ -78,13 +81,57 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		$scope.gridApi = gridApi;
 		
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
-				return;
-			}
-			if(rowEntity.postedIVAmount != 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
-				return;
+			if(colDef.name != 'excludeDefect' && colDef.name != 'excludeLevy'){
+				if(rowEntity.postedIVAmount != 0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
+					return;
+				}
+				
+				if(rowEntity.objectCode.substring(0, 2) == "14"){
+					if($scope.AwardedSubcontractNos.indexOf(rowEntity.packageNo) >=0 ){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract "+rowEntity.packageNo+" has been awarded.");
+						return;
+					}else {
+						var modalOptions = {
+								bodyText: "You will be directed to the corresponding non-awarded subcontract to manage the resources. Proceed?"
+						};
+
+						confirmService.showModal({}, modalOptions).then(function (result) {
+							if(result == "Yes"){
+								$cookies.put('subcontractNo', rowEntity.packageNo);
+								$location.path('/subcontract-award/tab/assign');
+							}
+						});
+					}						
+				}
+				else if(colDef.name == 'packageNo'){
+					if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
+						if(rowEntity.objectCode.substring(0, 2) == "13"){
+							var modalOptions = {
+									bodyText: "Are you sure to remove subcontract from Material resource? It cannot be added back again."
+							};
+
+							confirmService.showModal({}, modalOptions).then(function (result) {
+								if(result == "Yes"){
+									rowEntity.packageNo = '';
+									$scope.gridApi.rowEdit.setRowsDirty([rowEntity]);
+								}
+							});
+
+						}
+					}else if((rowEntity.packageNo ==null || rowEntity.packageNo.length == 0)){
+						if(rowEntity.objectCode.substring(0, 2) == "13"){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Material resource with object code beginning with '13' can only be removed from the package(assign to a blank package).");
+							return;
+						}else if(rowEntity.objectCode.substring(0, 2) == "11" || rowEntity.objectCode.substring(0, 2) == "12" || rowEntity.objectCode.substring(0, 2) == "15" || rowEntity.objectCode.substring(0, 2) == "19"){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource with object code beginning with '11', '12', '15', '19' cannot be assigned to a subcontract.");
+							return;
+						}else if (rowEntity.objectCode.substring(0, 2) == "14"){
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please go to corresponding non-awarded subcontract to assign resources.");
+							return;
+						}
+					}
+				}
 			}
         });
 	
@@ -253,6 +300,15 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
 						$state.reload();
 					}
+				});
+	}
+	
+	function getAwardedSubcontractNos() {
+		subcontractService.getAwardedSubcontractNos($scope.jobNo)
+		.then(
+				function( data ) {
+					console.log(data);
+					$scope.AwardedSubcontractNos = data;
 				});
 	}
 	

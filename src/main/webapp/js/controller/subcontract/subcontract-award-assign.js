@@ -1,42 +1,79 @@
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 'paymentService',
-                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state, paymentService) {
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 'paymentService', 'unitService',
+                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state, paymentService, unitService ) {
 
 	loadData();
 	
 	$scope.editable = true;
 	$scope.mySelections=[];
+
 	
+	$scope.units=[];
+
+	var optionList = [{ id: 'true', value: 'Excluded' },
+                   { id: 'false', value: 'Included' }
+	];
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
 			enableRowSelection: true,
-			enableSelectAll: true,
+			enableSelectAll: false,
 			multiSelect: true,
 			showGridFooter : false,
+			enableCellEditOnFocus : true,
 			//showColumnFooter : true,
 			exporterMenuPdf: false,
 			
+			rowEditWaitInterval :-1,
+			
 			columnDefs: [
 			             { field: 'packageNo', displayName: "Subcontract No", cellClass: "blue", enableCellEdit: false},
-			             { field: 'objectCode', enableCellEdit: false},
-			             { field: 'subsidiaryCode', enableCellEdit: false},
-			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false},
-			             { field: 'unit',  enableCellEdit: false},
+			             { field: 'objectCode', cellClass: "blue"},
+			             { field: 'subsidiaryCode', cellClass: "blue"},
+			             { field: 'resourceDescription', displayName: "Description", cellClass: "blue"},
+			             { field: 'unit', cellClass: "blue", enableFiltering: false, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units
+			             },
 			             { field: 'quantity', enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: 'amountBudget', displayName: "Amount",  enableCellEdit: false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'postedIVAmount', displayName: "Posted Amount", enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'resourceType', displayName: "Type", enableCellEdit: false},
-			             { field: 'excludeDefect', displayName: "Defect", enableCellEdit: false, cellFilter: 'mapExclude'},
-			             { field: 'excludeLevy', displayName: "Levy", enableCellEdit: false, cellFilter: 'mapExclude'}
+			             { field: 'excludeDefect', displayName: "Defect", cellClass: "blue", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             },
+			             { field: 'excludeLevy', displayName: "Levy", cellClass: "blue", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             }
 			             ]
           /* rowTemplate: "<div ng-dblclick=\"grid.appScope.onDblClickRow(row)\" ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" ui-grid-cell></div>",*/
 	};
 
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
+		
+		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(colDef.name != 'excludeDefect' && colDef.name != 'excludeLevy'){
+				if(rowEntity.postedIVAmount != 0){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
+					return;
+				}
+			}
+        });
 		
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
 			if(row.entity.postedIVAmount != 0){
@@ -194,6 +231,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
 			getResourceSummaries();
+			getUnitOfMeasurementList();
 		}/*else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
 		}*/
@@ -238,6 +276,15 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 				});
 	}
 	
+	function getUnitOfMeasurementList() {
+		unitService.getUnitOfMeasurementList()
+		.then(
+				function( data ) {
+					angular.forEach(data, function(value, key){
+						$scope.units.push({'id': value.unitCode.trim(), 'value': value.unitCode.trim()});
+					});
+				});
+	}
 	
 }])
 .filter('mapExclude', function() {
