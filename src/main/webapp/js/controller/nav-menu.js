@@ -1,8 +1,7 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$rootScope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
-                                   function($http, $rootScope, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
+                                   function($http, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
 	
 	rootscopeService.setEnv();
-	$scope.parentScope = $rootScope;
 	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;

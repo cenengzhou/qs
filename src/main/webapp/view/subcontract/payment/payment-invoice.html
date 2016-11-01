@@ -1,7 +1,7 @@
 <div class="invoice">
 	<span class="pull-right hidden-print"> 
 		<a href="javascript:;"
-			onclick="window.print()"
+			onclick="window.print()" id="printBtn"
 			class="btn btn-sm width-100 btn-rounded btn-danger pull-right hidden-print">
 				<i class="fa fa-print m-r-3"></i> Print
 		</a>
@@ -223,7 +223,7 @@
 	</div>
 
 	<div class="col-md-12">
-		<button class="m-t-5 btn btn-primary btn-block"
+		<button class="m-t-5 btn btn-primary btn-block" id="submitBtn"
 			ng-hide="disableButtons" ng-click="submit()"
 			ng-disabled="disableButtons">
 			Submit <span class="fa fa-send-o"></span>

@@ -1,27 +1,8 @@
 mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval', '$templateCache', '$location', '$compile', '$cookies', 'blockUI', 'modalService',
 						function ($rootScope, $scope, $timeout, $interval, $templateCache, $location, $compile, $cookies, blockUI, modalService){
-	window.scope = $scope;
-	window.rootscope = $rootScope;
-
 	$scope.parentScope = $rootScope;
-	$rootScope.showTour = function (currentTour){
-		if(angular.isDefined(showTourinterval)) return;
-		closeOtherTour(currentTour);
-		showTourinterval = $interval(function(){
-			var key = currentTour;
-			if(!blockUI.isBlocking() && $rootScope.routedToDefaultJob) {
-				if(angular.element('#' + $rootScope.tourArray[key].startElement).length > 0) {
-					$rootScope.tourArray[key]['tourShow'] = true;
-				} else {
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', $rootScope.tourArray[key].startError);
-				}
-				var canInterval = $interval.cancel(showTourinterval);
-				showTourinterval = undefined;
-			}
-		},150);
-	}
-	
 	$rootScope.toruAutoStartCheck = function(){
+//		if($rootScope.createPaymentStepTourShow != -1) $rootScope.createPaymentStepTourShow = 1;
 		switch($location.path()){
 		case '/subcontract/addendum/tab/title':
 			if($rootScope.createAddendumStepTourShow === 1){
@@ -42,8 +23,27 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			}
 			break;
 		case '/subcontract/payment/tab/certificate':
+		case '/subcontract/payment/tab/details':
+		case '/subcontract/payment/tab/summary':
+		case '/subcontract/payment/tab/attachment':
+		case '/subcontract/payment/tab/invoice':
 			if($rootScope.createPaymentStepTourShow === 1){
+				$rootScope.createPaymentStepTourShow = -1;
 				$rootScope.showTour('createPaymentStep');
+			}
+			break;
+		case '/subcontract-award/tab/header':
+		case '/subcontract-award/tab/assign':
+		case '/subcontract-award/tab/ta':
+		case '/subcontract-award/tab/vendor':
+		case '/subcontract-award/tab/variance':
+		case '/subcontract-award/tab/dates':
+		case '/subcontract-award/tab/attachment':
+		case '/subcontract/payment-select':
+		case '/subcontract-award/tab/summary':
+			if($rootScope.createSubcontractStepTourShow === 1){
+				$rootScope.createSubcontractStepTourShow = -1;
+				$rootScope.showTourOfCurrentAddress();
 			}
 			break;
 		default:
@@ -59,7 +59,71 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		}
 	}
 	
-	$scope.$on('$stateChangeSuccess', function(){
+	$rootScope.processToPaymentStep = function(next){
+		if(next){
+			$rootScope.createPaymentStepTourShow += 1;
+		}
+	}
+
+	$rootScope.processToAddendumStep = function(next){
+		if(next){
+			$rootScope.createAddendumStepTourShow += 1;
+		}
+	}
+
+	$rootScope.showTour = function (currentTour){
+		if(angular.isDefined(showTourinterval)) return;
+		closeOtherTour(currentTour);
+		showTourinterval = $interval(function(){
+			var key = currentTour;
+			if(!blockUI.isBlocking() && $rootScope.routedToDefaultJob) {
+				if(angular.element('#' + $rootScope.tourArray[key].startElement).length > 0) {
+					$rootScope.tourArray[key]['tourShow'] = true;
+				} else {
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', $rootScope.tourArray[key].startError);
+				}
+				var canInterval = $interval.cancel(showTourinterval);
+				showTourinterval = undefined;
+			}
+		},150);
+	}
+	
+	$rootScope.showTourOfCurrentAddress = function(){
+		var linkFound = false;
+		for(var key in $rootScope.tourArray){
+			if(!linkFound && $rootScope.tourArray[key].startLink === $location.path()){
+				linkFound = true;
+				$rootScope.showTour(key);
+			}
+		};
+	}
+	
+    $rootScope.goToTour = function(tour){
+    	var msg = [];
+    	msg['jobNo'] = 'Please select job first';
+    	msg['subcontractNo'] = 'Please select subcontract first';
+    	var lnk = [];
+    	lnk['jobNo'] = '/job-select';
+    	lnk['subcontractNo'] = '/subcontract-select'
+    	var okToGo = true;
+		if($rootScope.tourArray[tour].cookieDependences){
+			angular.forEach($rootScope.tourArray[tour].cookieDependences, function(dependence){
+				if(!$cookies.get(dependence) && okToGo){
+					okToGo = false;
+					$timeout(function(){modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', msg[dependence])}, 1500);
+					$location.path(lnk[dependence]);
+				}
+			})
+		} 
+		if(okToGo) {
+			$location.path($rootScope.tourArray[tour].startLink);
+			$timeout(function(){
+				$rootScope.showTour(tour);
+			}, 500);
+		}
+    }
+ 
+    $scope.$on('$stateChangeSuccess', function(){
 		if($location.path().indexOf('job-select') < 0) $rootScope.routedToDefaultJob = true;
 		$timeout(function(){
 			$rootScope.toruAutoStartCheck();
@@ -100,28 +164,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     $rootScope.moveHeaderDown = function(){
     	angular.element('#header').css('z-index', '1040');
     }
-    
-    $rootScope.goToTour = function(tour){
-    	var msg = [];
-    	msg['jobNo'] = 'Please select job first';
-    	msg['subcontractNo'] = 'Please select subcontract first';
-    	var okToGo = true;
-		if($rootScope.tourArray[tour].cookieDependences){
-			angular.forEach($rootScope.tourArray[tour].cookieDependences, function(dependence){
-				if(!$cookies.get(dependence) && okToGo){
-					okToGo = false;
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', msg[dependence]);
-				}
-			})
-		} 
-		if(okToGo) {
-			$location.path($rootScope.tourArray[tour].startLink);
-			$timeout(function(){
-				$rootScope.showTour(tour);
-			}, 500);
-		}
-    }
-    
+       
 	var showTourinterval;
 	function closeOtherTour(currentTour){
 		for(var key in $rootScope.tourArray){
@@ -184,7 +227,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					'/job-select', //startLink
 					'searchJobHereDiv', //startElement
 					null, //startError
-					'Select Job Tour Guide', // heading 
+					'Select Job', // heading 
 					'Welcome to <strong>QS 2.0</strong><br>This tour guide is design to help you easier adapt to the new QS 2.0.' //description
 					);
 			new TourGuide(
@@ -195,7 +238,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					'/job/dashboard', 
 					'jobMenuDiv', 
 					'Please select job first', 
-					'Menu Bar Tour Guide', 
+					'Menu Bar', 
 					'This guide will show you the <strong>Menu</strong> location'
 					);
 			new TourGuide(
@@ -215,7 +258,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					false,
 					['jobNo', 'subcontractNo'], 
 					'/subcontract/payment/tab/certificate',
-					'Div'
+					'paymentTypeInterimFinal'
 					);
 			new TourGuide(
 					'createAddendum', 
@@ -252,6 +295,33 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					'/subcontract/addendum/tab/title',
 					'addendumStep1'
 					);
+			new TourGuide(
+					'createSubcontract',
+					null,//'image\\tour\\createSubcontract_preview.png', //preview
+					false, //autoStart
+					['jobNo'], //cookieDependences
+					'/subcontract-select', //startLink
+					'createSubcontractDiv', //startElement
+					'Cannot create subcontract', //startError
+					'Create subcontract', // heading 
+					'This tour will guide you through creating subcontract' //description					
+					);
+			new TourGuide(
+					'createSubcontractStep1',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/header',
+					'subcontractTab1'
+					);
+			new TourGuide(
+					'createSubcontractStep2',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/assign',
+					'subcontractTab2'
+					);
 			var tourRootDiv = angular.element('#tourRootDiv');
 			for(var key in $rootScope.tourArray){
 				tourRootDiv.append($rootScope.tourArray[key].div);
@@ -265,7 +335,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			$templateCache.put('tourModalTemplate.html','\
 			<div class="modal-header bg-primary">\
 				<div class="row">\
-					<div class="col-md-11">\
+					<div class="col-md-11">Tour Guide\
 					</div>\
 					<div class="col-md-1">\
 						<button class="btn btn-white pull-right" type="button"\
@@ -320,6 +390,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     	if(next && !angular.element('#searchJobField').val()){
     		tourBack('selectJob');
     	}
+    }
+    
+    $rootScope.hideCurtain = function(next){
+    	angular.element('#ng-curtain').css('display', 'none');
     }
     
     $rootScope.listTourArray = function(){
@@ -394,22 +468,6 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			heading: 'Step 2',
 			text: 'This is sub-menu bar of current selected catalogue'
 		},
-		{
-			type: 'function',
-			fn: $rootScope.triggerSideBar
-		},
-		{
-			type: 'element',
-			selector: '#sidebar-right',
-			heading: 'Step 3',
-			text: 'This is the sidebar contain some helpful link',
-			placement: 'left',
-			scroll:true
-		},
-		{
-			type: 'function',
-			fn: $rootScope.triggerSideBar
-		},
 	    {
 		   	type: 'function',
 		   	fn: $rootScope.triggerUserMenu
@@ -421,12 +479,42 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		{
 			type: 'element',
 			selector: '#userDropPanel',
-			heading: 'Step 4',
+			heading: 'Step 3',
 			text: 'This is the user preference panel',
 			placement: 'left',
 			attachToBody: true,
 			scroll:true
 		},
+		{
+			type: 'function',
+			fn: $rootScope.triggerSideBar
+		},
+		{
+			type: 'element',
+			selector: '#sidebar-right',
+			heading: 'Step 4',
+			text: 'This is the sidebar contain some helpful link',
+			placement: 'left',
+			scroll:true
+		},
+		{
+			type: 'function',
+			fn: $rootScope.hideCurtain
+		},
+		{
+			type: 'element',
+			selector:'#guideLinesDiv',
+			heading: 'Step 5',
+			text: 'Here has all remain Tour guide',
+			placement:'left',
+			attachToBody:true,
+			elementTemplate: elementTourNoNextButtonTemplate,
+			advanceOn:{element:'#guideLinesDiv', event:'click'}
+		},
+		{
+			type: 'function',
+			fn: $rootScope.triggerSideBar
+		}
 		
 //		{
 //			type: 'title',
@@ -434,6 +522,117 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 //			text: '<div class="row"><div id="title-text" class="col-md-12'><span class="main-text">The tour is end' +
 //			' </span><br/><span class="small"><em>hope you enjoe QS 2.0</em></span></div></div>',
 //		}
+	]);
+	pushArray($rootScope.tourArray['createSubcontract'].tourConfig, [
+		{
+			type:'element',
+			selector: '#createSubcontractDiv',
+			heading: 'Create Subcontract',
+			text: 'Click this button to create subcontract',
+			placement: 'bottom',
+			advanceOn:{element:'#createSubcontractDiv', event:'click'},
+			elementTemplate: elementTourNoNextButtonTemplate,
+		},
+		{
+			type:'function',
+			fn: function(next){if(next)$rootScope.createSubcontractStepTourShow = 1;}
+		}
+	]);
+	pushArray($rootScope.tourArray['createSubcontractStep1'].tourConfig, [
+//		{
+//			type:'function',
+//			fn:$rootScope.hideCurtain
+//		},
+		{
+			type:'element',
+			selector: '#subcontractStep1Box1',
+			heading:'Create Subcontract',
+			text:'Enter subcontract information',
+			placement:'top',
+			attachToBody:true
+		},
+		{
+			type:'function',
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) } else {angular.element('#subcontractStep1OuterBox').scrollTop(0)}}
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep1Retention',
+			heading:'Create Subcontract',
+			text:'Select retention',
+			placement:'top',
+			attachToBody:true
+		},
+		{
+			type:'function',
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep1Terms',
+			heading:'Create Subcontract',
+			text:'Select payment terms',
+			placement:'top',
+			attachToBody:true,
+			scroll:true
+		},
+		{
+			type:'function',
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep1CPF',
+			heading:'Create Subcontract',
+			text: 'Subject to CPF?',
+			placement:'top',
+			attachToBody:true,
+			shouldNotStopEvent: true
+		},
+		{
+			type:'function',
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep1Save',
+			heading:'Create Subcontract',
+			text:'Save subcontract header',
+			placement:'top',
+			attachToBody:true,
+			advanceOn:{element:'#subcontractStep1Save',event:'click'}
+		},
+		{
+			type:'location_change',
+			path:'/subcontract-award/tab/assign'
+		}
+	]);
+	pushArray($rootScope.tourArray['createSubcontractStep2'].tourConfig, [
+		{
+			type:'function',
+			fn:$rootScope.hideCurtain
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep2AssignResource',
+			heading:'Create Subcontract',
+			text:'Assign resource',
+			placement:'top',
+			attachToBody:true
+		},
+		{
+			type:'element',
+			selector:'#subcontractStep2Save',
+			heading:'Create Subcontract',
+			text:'Save resource',
+			placement:'top',
+			attachToBody:true,
+			advanceOn:{element:'#subcontractStep2Save',event:'click'}
+		},
+		{
+			type:'location_change',
+			path:'/subcontract-award/tab/ta'
+		}
 	]);
 	pushArray($rootScope.tourArray['createPayment'].tourConfig, [
 		{
@@ -452,12 +651,89 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			fn: function(next){if(next)$rootScope.createPaymentStepTourShow = 1;}
 		}
 	]);
-	
-	$rootScope.processToAddendumStep = function(next){
-		if(next){
-			$rootScope.createAddendumStepTourShow += 1;
+	pushArray($rootScope.tourArray['createPaymentStep'].tourConfig, [
+		{
+			type:'function',
+			fn:$rootScope.hideCurtain
+		},
+		{
+			type: 'element',
+			selector: '#paymentCertificateData',
+			heading: 'Create payment',
+			text: 'Update payment certificate',
+			placement:'left',
+			attachToBody: true,
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/payment/tab/details'
+		},
+		{
+			type: 'element',
+			selector: '#paymentTab2',
+			heading: 'Create payment',
+			text: 'Click the step number to view and update resources',
+			placement: 'left',
+			attachToBody: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/payment/tab/summary'
+		},
+		{
+			type: 'element',
+			selector: '#paymentTab3',
+			heading: 'Create payment',
+			text: 'Click the step number to view summary',
+			placement: 'left',
+			attachToBody: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/payment/tab/attachment'
+		},
+		{
+			type: 'element',
+			selector: '#paymentTab4',
+			heading: 'Create payment',
+			text: 'Click the step number to view and upload attachment',
+			placement: 'left',
+			attachToBody: true
+		},
+		{
+			type: 'location_change',
+			path: '/subcontract/payment/tab/invoice'
+		},
+		{
+			type: 'element',
+			selector: '#paymentTab5',
+			heading: 'Create payment',
+			text: 'Click the step number to review the invoice',
+			placement: 'left',
+			attachToBody: true
+		},
+		{
+			type:'element',
+			selector: '#printBtn',
+			heading: 'Create payment',
+			text: 'Click this to print invoice',
+			placement:'left',
+			shouldNotStopEvent: true
+		},
+		{
+			type:'function',
+			fn:function(next){if(next)$rootScope.createPaymentStepTourShow = 0;}
+		},
+		{
+			type:'element',
+			selector:'#submitBtn',
+			heading: 'Create payment',
+			text:'Click this to submit to Approval system',
+			placement:'top',
+			attachToBody:true,
+			scroll:true
 		}
-	}
+	]);
 	pushArray($rootScope.tourArray['createAddendum'].tourConfig, [
 		{ // $rootScope.createAddendumStepTourShow = 0
 			type: 'element',
@@ -540,6 +816,10 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			scroll: true
 		},
 		{
+			type: 'function',
+			fn: function(next){ if(next) $rootScope.hideCurtain()}
+		},
+		{
 			type: 'location_change',
 			path: '/subcontract/addendum/tab/details'
 		},
@@ -547,7 +827,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			type: 'element',
 			selector: '#addendumStep2',
 			heading: 'Step two',
-			text: 'This step is for add addendum',
+			text: 'Click the step number to add addendum',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep3', event:'click'},
 			attachToBody: true,
@@ -561,7 +841,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			type: 'element',
 			selector: '#addendumStep3',
 			heading: 'Step two',
-			text: 'This step is for addendum review',
+			text: 'Click the step number to review addendum ',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep4', event:'click'},
 			attachToBody: true,
@@ -575,7 +855,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			type: 'element',
 			selector: '#addendumStep4',
 			heading: 'Step two',
-			text: 'This step is for add attachment',
+			text: 'Click the step number to add attachment',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep5', event:'click'},
 			attachToBody: true,
@@ -589,7 +869,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			type: 'element',
 			selector: '#addendumStep5',
 			heading: 'Step two',
-			text: 'This step is the summary',
+			text: 'Click the step number to review summary',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep6', event:'click'},
 			attachToBody: true,

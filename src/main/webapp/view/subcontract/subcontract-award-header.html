@@ -2,11 +2,11 @@
 	<fieldset>
 		<div class="row">
 			<div class="col-md-9 col-md-offset-2">
-				<div class="form-group" resize ng-style="resizeWithOffset(380)">
+				<div class="form-group" resize ng-style="resizeWithOffset(380)" id="subcontractStep1OuterBox">
 					<div class="box box-solid">
 						<div class="box-body">
 							<div class="col-md-12">
-								<div class="box box-primary">
+								<div class="box box-primary"  id="subcontractStep1Box1">
 									<div class="box-body">
 										<div class="row">
 											<div class="col-md-3">
@@ -14,7 +14,7 @@
 											</div>
 											<div class="form-group col-md-9">
 												<div class="input-group col-md-12">
-													<input type="text" class="form-control"
+													<input type="text" class="form-control" 
 														data-parsley-minlength="4" data-parsley-maxlength="4"
 														data-parsley-error-message="Must be in 4 digits"
 														ng-model="subcontract.packageNo"
@@ -190,7 +190,7 @@
 
 							<!-- Retention -->
 							<div class="col-md-12">
-								<div class="box box-primary">
+								<div class="box box-primary" id="subcontractStep1Retention">
 									<div class="box-body ">
 										<div class="row">
 											<label class="col-md-3">Retention</label>
@@ -291,7 +291,7 @@
 
 
 							<!-- Payment Terms  -->
-							<div class="col-md-12">
+							<div class="col-md-12" id="subcontractStep1Terms">
 								<div class="box box-primary">
 									<div class="box-body">
 										<div class="row">
@@ -345,7 +345,7 @@
 							</div>
 
 							<!-- CPF -->
-							<div class="col-md-12">
+							<div class="col-md-12" id="subcontractStep1CPF">
 								<div class="box box-warning">
 									<div class="box-body">
 										<div class="row">
@@ -405,7 +405,7 @@
 					</div>
 				</div>
 
-				<button class="m-t-5 btn btn-primary btn-block" ng-click="save()"
+				<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" id="subcontractStep1Save"
 					ng-hide="disableButtons" ng-disabled="disableButtons">
 					Save <span class="fa fa-save"></span>
 				</button>

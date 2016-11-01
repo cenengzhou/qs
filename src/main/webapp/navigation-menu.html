@@ -212,7 +212,7 @@
 		                                    <div class="desc" uib-popover="The fastest way to get help from IMS! Tell us about your problem so we can help ASAP!" popover-trigger="mouseenter" popover-title="Helpdesk">The fastest way to get help from IMS! Tell us about your problem so we can help ASAP!</div>
 		                                </div>
 		                            </li>
-		                             <li ng-click="openTour()" style="cursor:pointer;">
+		                             <li ng-click="openTour()" style="cursor:pointer;" id="guideLinesDiv">
 		                                <div class="media bg-success-light"><i class="fa fa-book text-white"></i></div>
 		                                <div class="info">
 		                                    <div class="title">Guidelines</div>
@@ -223,7 +223,7 @@
 		                                <div class="media bg-lime-light"><i class="fa fa-bullhorn text-white"></i></div>
 		                                <div class="info">
 		                                    <div class="title"><a href="{{properties.ANNOUNCEMENT}}">Announcement</a></div>
-		                                    <div class="desc">Description <div class="badge bg-lime-light text-white">Coming soon!</div></div>
+		                                    <div class="desc">System recent news</div>
 		                                </div>
 		                            </li>
 		                            <li>
@@ -299,11 +299,11 @@
 									target="_self" ng-click="showCodePanel('Subsidiary')" ng-init="showObjectCode=false">Subsidiary Code</a></li>
 							</ul>
 							<div class="tab-pane active" id="AccountCodeObjectCode">
-								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
+								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 							<div class="tab-pane" id="AccountCodeSubsidiaryCode">
-							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
+							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 						</div>
@@ -312,7 +312,7 @@
 				<div class="tab-pane box box-primary" id="AddressBook">
 					<ul class="nav">
 						<div class="tab-content">
-								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns class="grid"
+								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize class="grid"
 									resize ng-style="resizeWithOffset(120)"></div>
 						</div>
 					</ul>

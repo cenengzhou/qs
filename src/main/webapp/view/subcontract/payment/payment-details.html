@@ -4,7 +4,7 @@
 		<button ng-show="statusArray.length>0" class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show import status</button>
 	</div>
 	<div class="row">
-		<div class="col-md-12 m-b-30 m-t-20 ">
+		<div class="col-md-12 m-b-30 m-t-20 " id="paymentDetailGrid">
 			<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-importer ui-grid-grouping
 				ui-grid-auto-resize ui-grid-cellnav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns
 				ui-grid-exporter class="grid "></div>
@@ -13,7 +13,7 @@
 		<div class="col-md-12">
 			<table class="col-md-12"><tr>
 			<td>
-			<button class="m-t-5 btn btn-primary btn-block"
+			<button class="m-t-5 btn btn-primary btn-block" id="paymentDetailUpdateBtn"
 				ng-hide="disableButtons" ng-click="update()" ng-disabled="disableButtons">
 				<span class="fa fa-save"></span> Update
 			</button>

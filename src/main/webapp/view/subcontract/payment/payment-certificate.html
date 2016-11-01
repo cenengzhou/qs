@@ -1,5 +1,5 @@
 <!-- Payment Certificate-->
-<div class="animated fadeIn">
+<div class="animated">
 	<form name="form-validate" id="form-validate"
 		class="ng-pristine ng-valid">
 		<fieldset>
@@ -14,9 +14,9 @@
 					<p class="m-b-20">Please input the required fields below.</p>
 
 
-					<div class="col-md-6">
+					<div class="col-md-6" id="paymentCertificateData">
 
-						<div class="form-group">
+						<div class="form-group" id="paymentTypeInterimFinal">
 							<label>Payment Type</label>
 							<div class="btn-group btn-group-justified">
 								<label class="btn" ng-disabled="disableButtons"
@@ -27,7 +27,7 @@
 									ng-model="payment.intermFinalPayment" uib-btn-radio="'F'" ng-click="updatePaymentType('F')">Final</label>
 							</div>
 						</div>
-
+					<div>
 						<div class="form-group" ng-show="paymentTerms== 'QS1' || paymentTerms =='QS2'">
 							<label>Main Certificate No.</label>
 							<div class="controls">
@@ -109,12 +109,12 @@
 							</div>
 
 						</div>
-
-						<button class="m-t-5 btn btn-primary btn-block" ng-hide="disableButtons"
+					</div>
+						<button class="m-t-5 btn btn-primary btn-block" ng-hide="disableButtons" id="paymentCertUpdateBtn"
 							ng-disabled="disableButtons" ng-click="update()">
 							Update <span class="fa fa-save"></span>
 						</button>
-
+					
 					</div>
 
 
