@@ -353,7 +353,7 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 					},
 					cellFilter : 'number:2',
 					enableCellEdit : false
-				},
+				}/*,
 				{
 					field : 'amountSubcontractTBA',
 					width : '100',
@@ -382,7 +382,7 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 					},
 					cellFilter : 'number:2',
 					enableCellEdit : false
-				} ]
+				}*/ ]
 	};
 
 	$scope.gridOptions.onRegisterApi = function(gridApi) {

@@ -3942,23 +3942,7 @@ public class SubcontractService {
 							return message;
 						}
 					}
-				}/*else{
-					//SUSPEND,NOT_APPROVED,NOT_APPROVED_BUT_PAID
-					if(scDetailInDB.getAmountSubcontractTBA().doubleValue() >= 0){
-						if (cumWorkDoneAmt > scDetailInDB.getAmountSubcontractTBA().doubleValue()) {
-							message = "New Work Done Amount: " + cumWorkDoneAmt+ " cannot be larger than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
-							logger.info(message);
-							return message;
-						}
-					}else{
-						if (cumWorkDoneAmt < scDetailInDB.getAmountSubcontractTBA().doubleValue() || cumWorkDoneAmt >0) {
-							message = "New Work Done Amount: " + cumWorkDoneAmt + " cannot be smaller than to be Approved Subcontract Amount: " + scDetailInDB.getAmountSubcontractTBA() ;
-							logger.info(message);
-							return message;
-						}
-					}
-				}*/
-
+				}
 			}
 		}
 

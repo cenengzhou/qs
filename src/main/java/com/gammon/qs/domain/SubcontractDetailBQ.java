@@ -8,6 +8,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
 @DynamicUpdate
@@ -46,6 +47,12 @@ public class SubcontractDetailBQ extends SubcontractDetailOA {
 		return CalculationUtil.round(this.getScRate() * this.getQuantity(),2);
 	}
 
+	@JsonProperty("amountBudgetNew")
+	@Transient
+	public Double getAmountBudgetNew(){
+		return  (this.getNewQuantity()!=null && costRate !=null)? CalculationUtil.round(this.getNewQuantity() * costRate, 2): 0.0;
+	}
+	
 	@Override
 	public String toString() {
 		return "SubcontractDetailBQ [costRate=" + costRate + ", toBeApprovedQuantity=" + toBeApprovedQuantity + ", toString()="
