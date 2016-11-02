@@ -5,8 +5,8 @@ SET SERVEROUTPUT ON
 DECLARE
     AC_SCHEMA 				        varchar(50):='ACDATAUAT';
     QA_SCHEMA                 varchar(50):='QSADMIN';
-    SQL_DELETE_ACUSERSECURITY varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where APPLICATIONCODE=''PCMS'' or APPLICATIONCODE=''QS''';
-    SQL_DELETE_ADM            varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where APPLICATIONCODE=''QS'' and USERADACCOUNT in (''gamska\tikywong'', ''gamska\koeyyeung'', ''gamska\paulnpyiu'', ''gamska\vincentmok'')';
+    SQL_DELETE_ACUSERSECURITY varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where APPLICATIONCODE=''QS''';
+    SQL_DELETE_ADM            varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where ROLENAME LIKE ''ROLE%'' and APPLICATIONCODE=''QS'' and USERADACCOUNT in (''gamska\tikywong'', ''gamska\koeyyeung'', ''gamska\paulnpyiu'', ''gamska\vincentmok'')';
     SQL_QUERY_ACUSERSECURITY  varchar(512):='select count(*) from ' || AC_SCHEMA || '.AC_USERSECURITY';
     SQL_INSERT_PREFIX         varchar(512):='Insert into ' || AC_SCHEMA || '.AC_USERSECURITY (USERADACCOUNT,APPLICATIONCODE,LASTMODIFYDATE,LASTMODIFYUSER,ROLENAME) ';
     SQL_QUERY_QAUSER          varchar(4000):='
