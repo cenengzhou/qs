@@ -4,7 +4,9 @@
 	1. Create Addendum 0 for all awarded subcontract at ADDENDUM
 	2. Copy a set of Addendum records from SUBCONTRACT_DETAIL to ADDENDUM_DETAIL and associate them to Addendum 0
 	3. Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
-	4. Calculate and Summarize figures and info at ADDENDUM
+	4. Generate Addendum No.1 for non-approved addendum with budget (V1, V3) 
+	5. Calculate and Summarize figures and info at ADDENDUM
+	6. Update non-approved addendum's "Line Type" from V1, V2, L1, L2, D1, D2, CF to OA
 */
 ----------------------------------------------------------------------------------------------------------------
 --1. Create Addendum 0 for all awarded subcontract at ADDENDUM

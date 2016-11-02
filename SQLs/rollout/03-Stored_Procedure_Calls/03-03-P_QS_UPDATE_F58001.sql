@@ -1,6 +1,6 @@
-grant select, insert,update On  CRPDTA.F58001 to PCMSDATAUAT;
+grant select, insert,update On  PRODDTA.F58001 to PCMSDATAPROD;
 
-create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58001  AS
+create or replace PROCEDURE PCMSDATAPROD.P_QS_UPDATE_F58001  AS
 	Type Qscurtype Is Ref Cursor;
 	v_mcu	CHAR(12);
 	v_dc07	NUMBER;
@@ -65,9 +65,9 @@ create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58001  AS
           Decode( Qsp.Paymentterms,Null,Lpad('' '',3,'' ''),Lpad(To_Char( Qsp.Paymentterms),3,'' '')) As  Paymentterms,
           To_Number(Decode(Qsp.Originalscsum, Null, 0, Qsp.Originalscsum*10000)) As Originalscsum,
           decode(upper(substr(qsp.retentionterms,0,2)),''LU'',''LS'',''PE'',decode(instr(qsp.retentionterms,''O''),14,''PO'',''PR''),Lpad('' '',2,'' '')) as retentionterms
-    FROM PCMSDATAUAT.subcontract qsp, PCMSDATAUAT.job_info qj
+    FROM PCMSDATAPROD.subcontract qsp, PCMSDATAPROD.job_info qj
       Where Not Exists (Select 1
-                        From CRPDTA.F58001 Jde
+                        From PRODDTA.F58001 Jde
                         Where  Jde.Chmcu = Lpad(To_Char(Qj.Jobno),12, '' '')
                         And Jde.Chdc07 = Qsp.Packageno)
       and qsp.job_id = qj.id and qsp.system_status = ''ACTIVE'' and qsp.scstatus = ''500''';
@@ -101,7 +101,7 @@ create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58001  AS
           Decode( Qsp.Paymentterms,Null,Lpad('' '',3,'' ''),Lpad(To_Char( Qsp.Paymentterms),3,'' '')) As  Paymentterms,
           To_Number(Decode(Qsp.Originalscsum, Null, 0, Qsp.Originalscsum*10000)) As Originalscsum,
           decode(upper(substr(qsp.retentionterms,0,2)),''LU'',''LS'',''PE'',decode(instr(qsp.retentionterms,''O''),14,''PO'',''PR''),Lpad('' '',2,'' '')) as retentionterms
-      From PCMSDATAUAT.subcontract Qsp, PCMSDATAUAT.job_info Qj
+      From PCMSDATAPROD.subcontract Qsp, PCMSDATAPROD.job_info Qj
       WHERE qsp.job_id = qj.id and qsp.system_status = ''ACTIVE''and qsp.scstatus = ''500''
       MINUS
       SELECT  CHMCU,
@@ -132,7 +132,7 @@ create or replace PROCEDURE PCMSDATAUAT.P_QS_UPDATE_F58001  AS
               Chptc,
               CHUROG,
               Churrc
-      From CRPDTA.F58001
+      From PRODDTA.F58001
 
       ';
 
@@ -151,7 +151,7 @@ Begin
 			EXIT WHEN C_Qs_Sc_Package_UPDATE%NOTFOUND;
       DBMS_OUTPUT.PUT_LINE('Update Job:' || V_Mcu || ' ' || V_Dc07);
 			Begin
-				Update CRPDTA.F58001
+				Update PRODDTA.F58001
 				Set
 					Chan8 = V_An8,
 					Chrilt = V_Rilt,
@@ -201,7 +201,7 @@ Begin
 			Exit When C_Qs_Sc_Package_Insert%Notfound;
       DBMS_OUTPUT.PUT_LINE('Insert Job:' || V_Mcu || ' ' || V_Dc07);
 			Begin
-				Insert Into CRPDTA.F58001 (
+				Insert Into PRODDTA.F58001 (
         CHMCU,	CHDC07,	CHAN8,	CHRILT,	CHMPLT,	CHTME,	CHCONTS, CHTPFM, CHLGL1, CHLGL2, 			CHREQR,	CHTIPP,	CHMPPR,	CHSMSF,	CHQSSCST,	CHCSCU,				CHSCN,	CHCT,	CHTYPT,	CHTOTS,	CHAAA,	CHARTG,				CHNOROWS,	CHALLA,	CHCUMA,	CHAREL,	CHCRCD,	CHCRR,	CHNKEYS,	CHCLO,	CHM001,	CHM002,	CHM003,	CHM004,	CHSG,	CHPMTS,	CHPNC,	CHBCTR,	CHFIYR,	CHEV01,	CHWARB,	CHAPPN,	CHEV02,	CHBDDT,	CHARPN,	CHEV03,	CHRCDJ,	CHPNF,	CHEV04,	CHEV05,	CHPTC,	CHEV06,	CHEV07,	CHGNUM4, CHURAB,	CHURAT,	CHURCD, CHURDT,	CHUROG,	CHURQT,	CHURRC,	CHURRF, CHTORG, CHUSER, CHPID, CHJOBN, CHUPMJ,	CHUPMT
         )
         Values (
@@ -221,5 +221,5 @@ Begin
   Null;
 END P_QS_UPDATE_F58001;
 /
-grant EXECUTE on PCMSDATAUAT.P_QS_UPDATE_F58001 to PCMSUSER_ROLE;
+grant EXECUTE on PCMSDATAPROD.P_QS_UPDATE_F58001 to PCMSUSER_ROLE;
 /

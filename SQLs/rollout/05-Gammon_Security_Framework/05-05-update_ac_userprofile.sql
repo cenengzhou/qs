@@ -3,7 +3,7 @@
 --------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
-  AC_SCHEMA                   varchar(50):='ACDATAUAT';
+  AC_SCHEMA                   varchar(50):='ACDATAPROD';
   SQL_UPDATE_PREFIX           varchar(50):='update ' || AC_SCHEMA || '.AC_USERPROFILE ';
   SQL_QUERY_USERPROFILE       varchar(512):='select count(*) from ' || AC_SCHEMA || '.AC_USERPROFILE where BUSINESSUNIT is null';
   SOURCE_BUSINESSUNIT         NUMBER:=1044;

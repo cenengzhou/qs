@@ -3,7 +3,7 @@
 --------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
-  AC_SCHEMA           varchar(50):='ACDATAUAT';
+  AC_SCHEMA           varchar(50):='ACDATAPROD';
   QA_SCHEMA           varchar(50):='QSADMIN';
   SQL_INSERT_PREFIX   varchar(512):=
       'insert into ' || AC_SCHEMA || '.AC_USERPROFILE(

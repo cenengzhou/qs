@@ -1,6 +1,6 @@
-grant select, update On CRPDTA.F0006 to PCMSDATAUAT;
+grant select, update On PRODDTA.F0006 to PCMSDATAPROD;
 
-create or replace PROCEDURE PCMSDATAUAT.P_QS_JOB IS
+create or replace PROCEDURE PCMSDATAPROD.P_QS_JOB IS
 /*==============================*/
 /*Objective: Update Job Information (QS_JOB) in QS System if there are changes on Job Information (F0006) in JDE*/
 /*Store Procedure ID: QSSPROC01 */
@@ -39,7 +39,7 @@ create or replace PROCEDURE PCMSDATAUAT.P_QS_JOB IS
 /*Cursor to retrieve data from QS_JOB*/
 CURSOR c_QS_JOB IS
 select ID, JOBNO, DESCRIPTION, COMPANY, EMPLOYER, CONTRACTTYPE, DIVISION, DEPARTMENT, INTERNALJOB, SOLOJV, COMPLETIONSTATUS, INSURANCECAR, INSURANCEECI, INSURANCETPL
-from PCMSDATAUAT.JOB_INFO;
+from PCMSDATAPROD.JOB_INFO;
 BEGIN
   v_commitcount := 0;
   v_description :=' ';
@@ -73,7 +73,7 @@ BEGIN
   INTO v_id, v_jobno, v_description, v_company, v_employer, v_contracttype, v_division, v_department, v_internaljob, v_solojv, v_complestatus, v_insurcar, v_insurecl, v_insurtpl;
   EXIT WHEN c_QS_JOB%NOTFOUND;
   /*Check count of Job Information from JDE*/
-  select count(1) into v_count1_JDE from CRPDTA.F0006 where trim(MCMCU)=v_jobno;
+  select count(1) into v_count1_JDE from PRODDTA.F0006 where trim(MCMCU)=v_jobno;
   IF v_count1_JDE > 0 THEN
     /*Retrieve Job Information from JDE*/
 	select trim(MCDL01), trim(MCCO), to_char(MCAN8O), 
@@ -88,7 +88,7 @@ BEGIN
 	decode(trim(MCRP15),null,' ',trim(MCRP15)) 
 	into v_description_MCDL01, v_company_MCCO, v_employer_AN8O, v_contracttype_MCCT, v_division_MCRP03, v_department_MCRP04, 
 	v_internaljob_MCRP06, v_solojv_MCRP10, v_complestatus_MCRP12, v_insurcar_MCRP13, v_insurecl_MCRP14, v_insurtpl_MCRP15
-	from CRPDTA.F0006 where trim(MCMCU)=v_jobno;
+	from PRODDTA.F0006 where trim(MCMCU)=v_jobno;
     /*Check if Job Information should be updated*/
 	IF (v_description_MCDL01<>v_description OR v_company_MCCO<>v_company OR v_employer_AN8O<>v_employer OR
 	v_contracttype_MCCT<>v_contracttype OR v_division_MCRP03<>v_division OR v_department_MCRP04<>v_department OR 
@@ -99,7 +99,7 @@ BEGIN
 	v_insurcar is null OR v_insurecl is null OR v_insurtpl is null) THEN
       v_commitcount := v_commitcount + 1;
       /*Update Job Information in QS System*/
-	  update PCMSDATAUAT.JOB_INFO 
+	  update PCMSDATAPROD.JOB_INFO 
 	  set DESCRIPTION=v_description_MCDL01, COMPANY=v_company_MCCO, EMPLOYER=v_employer_AN8O, CONTRACTTYPE=v_contracttype_MCCT, 
 	  DIVISION=v_division_MCRP03, DEPARTMENT=v_department_MCRP04, INTERNALJOB=v_internaljob_MCRP06, SOLOJV=v_solojv_MCRP10, 
 	  COMPLETIONSTATUS=v_complestatus_MCRP12, INSURANCECAR=v_insurcar_MCRP13, INSURANCEECI=v_insurecl_MCRP14, INSURANCETPL=v_insurtpl_MCRP15, 
@@ -117,5 +117,5 @@ BEGIN
 COMMIT;
 END;
 /
-grant EXECUTE on PCMSDATAUAT.P_QS_JOB to PCMSUSER_ROLE;
+grant EXECUTE on PCMSDATAPROD.P_QS_JOB to PCMSUSER_ROLE;
 /

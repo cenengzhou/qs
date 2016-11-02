@@ -1,7 +1,7 @@
-grant select On CRPDTA.F03b11 to PCMSDATAUAT;
-grant select On CRPDTA.F03b14 to PCMSDATAUAT;
+grant select On PRODDTA.F03b11 to PCMSDATAPROD;
+grant select On PRODDTA.F03b14 to PCMSDATAPROD;
 
-create or replace PROCEDURE PCMSDATAUAT.P_F03B14_UPDATE_QS_MAIN_CERT As
+create or replace PROCEDURE PCMSDATAPROD.P_F03B14_UPDATE_QS_MAIN_CERT As
   Type Qscurtype Is Ref Cursor;
   Counter Number;
   C_Qs_Main_Cert Qscurtype;
@@ -23,17 +23,17 @@ create or replace PROCEDURE PCMSDATAUAT.P_F03B14_UPDATE_QS_MAIN_CERT As
                         decode(Receiptdetail.Total_Receipt_Amount, NULL, 0.00, (Receiptdetail.Total_Receipt_Amount/100))
                From
                      (Select Detail.*,
-                            (Select Sum(Rzpaap) From CRPDTA.F03b14 Where Trim(Rzmcu)= JobNo and Rzdoc = Detail.Ardocumentno) As total_receipt_amount
+                            (Select Sum(Rzpaap) From PRODDTA.F03b14 Where Trim(Rzmcu)= JobNo and Rzdoc = Detail.Ardocumentno) As total_receipt_amount
                        From
                             (Select
                                    Trim(Rzmcu) As Jobno,
                                    Rzdoc As Ardocumentno,
                                    Max(To_Date(Decode(Sign(Length(Rzdmtj)-6), -1, Concat(''19'', Rzdmtj), Concat(''20'', Substr(Rzdmtj, 2))), ''yyyyddd''))As Actual_Receipt_Date
-                            From  CRPDTA.F03b14
+                            From  PRODDTA.F03b14
                             Group By Trim(Rzmcu), Rzdoc
                             ) Detail
                       )Receiptdetail
-                Inner Join CRPDTA.F03b11 header On Trim(header.Rpmcu) = Receiptdetail.Jobno and header.Rpdoc = Receiptdetail.Ardocumentno
+                Inner Join PRODDTA.F03b11 header On Trim(header.Rpmcu) = Receiptdetail.Jobno and header.Rpdoc = Receiptdetail.Ardocumentno
                 And  Length(Trim(header.Rpmcu))=5 And  Length(Trim(header.Rpvr01))>7 And  Regexp_Like(Trim(header.Rpvr01),''^[[:digit:]]+$'')
           Minus
                 Select
@@ -42,7 +42,7 @@ create or replace PROCEDURE PCMSDATAUAT.P_F03B14_UPDATE_QS_MAIN_CERT As
                       Ardocumentno,
                       Actual_Receipt_Date,
                       Total_Receipt_Amount
-                From PCMSDATAUAT.Qs_Main_Contract_Certificate) Datalist, PCMSDATAUAT.Qs_Main_Contract_Certificate Maincertificate
+                From PCMSDATAPROD.Qs_Main_Contract_Certificate) Datalist, PCMSDATAPROD.Qs_Main_Contract_Certificate Maincertificate
     Where Datalist.Jobno = Maincertificate.Jobno
     and Datalist.certno = Maincertificate.certno
   ';
@@ -66,7 +66,7 @@ BEGIN
             ;
 			Exit When C_Qs_Main_Cert%Notfound;
 			Begin
-            Update PCMSDATAUAT.Main_Cert
+            Update PCMSDATAPROD.Main_Cert
             Set
             Ardocumentno = V_Docno,
             Actual_Receipt_Date = V_Actualreceiptdate,
@@ -91,5 +91,5 @@ BEGIN
 END P_F03B14_UPDATE_QS_MAIN_CERT;
 /
 
-grant EXECUTE on PCMSDATAUAT.P_F03B14_UPDATE_QS_MAIN_CERT to PCMSUSER_ROLE;
+grant EXECUTE on PCMSDATAPROD.P_F03B14_UPDATE_QS_MAIN_CERT to PCMSUSER_ROLE;
 /

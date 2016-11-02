@@ -3,7 +3,7 @@
 --------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
-	AC_SCHEMA 				varchar(50):='ACDATAUAT';
+	AC_SCHEMA 				varchar(50):='ACDATAPROD';
 	QA_SCHEMA 				varchar(50):='QSADMIN';
 	SQL_QUERY_AC_ROLENAME 	varchar(512):='select (select count(rolename) as ACDATA_ROLE from ' || AC_SCHEMA || '.AC_ROLE where APPLICATIONCODE = ''QS'') FROM dual';
 	SQL_QUERY_QA_ROLENAME 	varchar(512):='select (select count(name) as QSADMIN_ROLE from ' || QA_SCHEMA || '.QS_APP_AUTHORITY where name like ''ROLE_QS%'' or name like ''JOB%'')  FROM dual';

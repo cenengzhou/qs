@@ -3,7 +3,7 @@
 --------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
-    AC_SCHEMA 				        varchar(50):='ACDATAUAT';
+    AC_SCHEMA 				        varchar(50):='ACDATAPROD';
     QA_SCHEMA                 varchar(50):='QSADMIN';
     SQL_DELETE_ACUSERSECURITY varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where APPLICATIONCODE=''QS''';
     SQL_DELETE_ADM            varchar(512):='DELETE from ' || AC_SCHEMA || '.AC_USERSECURITY where ROLENAME LIKE ''ROLE%'' and APPLICATIONCODE=''QS'' and USERADACCOUNT in (''gamska\tikywong'', ''gamska\koeyyeung'', ''gamska\paulnpyiu'', ''gamska\vincentmok'')';
