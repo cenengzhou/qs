@@ -1066,3 +1066,4 @@ BEGIN
     dbms_output.put_line('Expect:'||'No error');
     dbms_output.put_line('Result:'|| 'Pass');
 END;
+/

@@ -1,7 +1,7 @@
     -------------------------------------------------------------------------
 	-- Create 10 PCMS Audit Tables and 1 Sequence
 	-------------------------------------------------------------------------
-	create sequence PCMSDATATST.REVISION_SEQ
+	create sequence PCMSDATAUAT.REVISION_SEQ
 	  START WITH 1
 	  MAXVALUE 9999999999999999999999999999
 	  MINVALUE 1
@@ -9,19 +9,19 @@
 	  NOCACHE
 	  NOORDER;
 
-	create table PCMSDATATST.REVISION (
+	create table PCMSDATAUAT.REVISION (
         ID number(10,0) CONSTRAINT REVISION_ID_NN not null,
         timestamp number(19,0) CONSTRAINT REVISION_TIMESTAMP_NN not null,
         username varchar2(255 char),
         CONSTRAINT REVISION_PK primary key (ID)
     );
 
-	create table PCMSDATATST.REVCHANGES (
+	create table PCMSDATAUAT.REVCHANGES (
         REV number(10,0) CONSTRAINT REVCHANGES_REV_NN not null,
         ENTITYNAME varchar2(255 char)
     );
 
-	create table PCMSDATATST.ADDENDUM_AUDIT (
+	create table PCMSDATAUAT.ADDENDUM_AUDIT (
 		ID number(19,2) CONSTRAINT ADDENDUM_AUDIT_ID_NN not null,
 		REV number(10,0) CONSTRAINT ADDENDUM_AUDIT_REV_NN not null,
 		REVTYPE number(3,0),
@@ -53,7 +53,7 @@
 		CONSTRAINT ADDENDUM_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.ADDENDUM_DETAIL_AUDIT (
+    create table PCMSDATAUAT.ADDENDUM_DETAIL_AUDIT (
         ID number(19,2) CONSTRAINT ADDENDUM_DETAIL_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT ADDENDUM_DETAIL_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -92,7 +92,7 @@
         CONSTRAINT ADDENDUM_DETAIL_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.JOB_INFO_AUDIT (
+    create table PCMSDATAUAT.JOB_INFO_AUDIT (
         ID number(19,0) CONSTRAINT JOB_INFO_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT JOB_INFO_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -158,7 +158,7 @@
         CONSTRAINT JOB_INFO_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.PAYMENT_CERT_AUDIT (
+    create table PCMSDATAUAT.PAYMENT_CERT_AUDIT (
         ID number(19,0) CONSTRAINT PAYMENT_CERT_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT PAYMENT_CERT_AUDIT_REV_NN  not null,
         REVTYPE number(3,0),
@@ -185,7 +185,7 @@
         CONSTRAINT PAYMENT_CERT_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.PAYMENT_CERT_DETAIL_AUDIT (
+    create table PCMSDATAUAT.PAYMENT_CERT_DETAIL_AUDIT (
         Payment_Cert_ID number(19,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_ID_NN not null,
         scSeqNo number(10,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_SEQ_NN not null,
         REV number(10,0) CONSTRAINT PAYMENTCERTDETAIL_AUDIT_REV_NN not null,
@@ -207,7 +207,7 @@
         CONSTRAINT PAYMENT_CERT_DETAIL_AUDIT_PK primary key (Payment_Cert_ID, scSeqNo, REV)
     );
 
-    create table PCMSDATATST.RESOURCE_SUMMARY_AUDIT (
+    create table PCMSDATAUAT.RESOURCE_SUMMARY_AUDIT (
         ID number(19,0) CONSTRAINT RESOURCE_SUMMARY_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT RESOURCE_SUMMARY_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -237,7 +237,7 @@
         CONSTRAINT RESOURCE_SUMMARY_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.SUBCONTRACT_AUDIT (
+    create table PCMSDATAUAT.SUBCONTRACT_AUDIT (
         ID number(19,0) CONSTRAINT SUBCONTRACT_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT SUBCONTRACT_AUDIT_REV_NN not null,
         REVTYPE number(3,0),
@@ -309,7 +309,7 @@
         CONSTRAINT SUBCONTRACT_AUDIT_PK primary key (ID, REV)
     );
 
-    create table PCMSDATATST.SUBCONTRACT_DETAIL_AUDIT (
+    create table PCMSDATAUAT.SUBCONTRACT_DETAIL_AUDIT (
         ID number(19,0) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_ID_NN not null,
         REV number(10,0) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_REV_NN not null,
         TYPE varchar2(2 char) CONSTRAINT SUBCONTRACTDETAIL_AUDIT_TYP_NN not null,
@@ -349,47 +349,47 @@
         CONSTRAINT SUBCONTRACTDETAIL_AUDIT_PK primary key (ID, REV)
     );
 	
-    alter table PCMSDATATST.REVCHANGES 
+    alter table PCMSDATAUAT.REVCHANGES 
         add constraint REVCHANGES_FK 
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.ADDENDUM_AUDIT 
+    alter table PCMSDATAUAT.ADDENDUM_AUDIT 
         add constraint ADDENDUM_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.ADDENDUM_DETAIL_AUDIT 
+    alter table PCMSDATAUAT.ADDENDUM_DETAIL_AUDIT 
         add constraint ADDENDUMDETAIL_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-	alter table PCMSDATATST.JOB_INFO_AUDIT 
+	alter table PCMSDATAUAT.JOB_INFO_AUDIT 
         add constraint JOB_INFO_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.PAYMENT_CERT_AUDIT 
+    alter table PCMSDATAUAT.PAYMENT_CERT_AUDIT 
         add constraint PAYMENT_CERT_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.PAYMENT_CERT_DETAIL_AUDIT 
+    alter table PCMSDATAUAT.PAYMENT_CERT_DETAIL_AUDIT 
         add constraint PAYMENTCERTDETAIL_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-	alter table PCMSDATATST.RESOURCE_SUMMARY_AUDIT 
+	alter table PCMSDATAUAT.RESOURCE_SUMMARY_AUDIT 
         add constraint RESOURCE_SUMMARY_AUDIT_FK 
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.SUBCONTRACT_AUDIT 
+    alter table PCMSDATAUAT.SUBCONTRACT_AUDIT 
         add constraint SUBCONTRACT_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;
 
-    alter table PCMSDATATST.SUBCONTRACT_DETAIL_AUDIT 
+    alter table PCMSDATAUAT.SUBCONTRACT_DETAIL_AUDIT 
         add constraint SUBCONTRACT_DETAIL_AUDIT_FK
         foreign key (REV) 
-        references PCMSDATATST.REVISION;
+        references PCMSDATAUAT.REVISION;

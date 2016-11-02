@@ -52,3 +52,4 @@ BEGIN
 		dbms_output.put_line('Result:'|| 'Fail');
     END IF;
 END;
+/

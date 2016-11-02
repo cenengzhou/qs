@@ -1,6 +1,6 @@
-grant select, update On CRPDTA.F0006 to PCMSDATATST;
+grant select, update On CRPDTA.F0006 to PCMSDATAUAT;
 
-create or replace PROCEDURE PCMSDATATST.P_QS_JOB IS
+create or replace PROCEDURE PCMSDATAUAT.P_QS_JOB IS
 /*==============================*/
 /*Objective: Update Job Information (QS_JOB) in QS System if there are changes on Job Information (F0006) in JDE*/
 /*Store Procedure ID: QSSPROC01 */
@@ -39,7 +39,7 @@ create or replace PROCEDURE PCMSDATATST.P_QS_JOB IS
 /*Cursor to retrieve data from QS_JOB*/
 CURSOR c_QS_JOB IS
 select ID, JOBNO, DESCRIPTION, COMPANY, EMPLOYER, CONTRACTTYPE, DIVISION, DEPARTMENT, INTERNALJOB, SOLOJV, COMPLETIONSTATUS, INSURANCECAR, INSURANCEECI, INSURANCETPL
-from PCMSDATATST.JOB_INFO;
+from PCMSDATAUAT.JOB_INFO;
 BEGIN
   v_commitcount := 0;
   v_description :=' ';
@@ -99,7 +99,7 @@ BEGIN
 	v_insurcar is null OR v_insurecl is null OR v_insurtpl is null) THEN
       v_commitcount := v_commitcount + 1;
       /*Update Job Information in QS System*/
-	  update PCMSDATATST.JOB_INFO 
+	  update PCMSDATAUAT.JOB_INFO 
 	  set DESCRIPTION=v_description_MCDL01, COMPANY=v_company_MCCO, EMPLOYER=v_employer_AN8O, CONTRACTTYPE=v_contracttype_MCCT, 
 	  DIVISION=v_division_MCRP03, DEPARTMENT=v_department_MCRP04, INTERNALJOB=v_internaljob_MCRP06, SOLOJV=v_solojv_MCRP10, 
 	  COMPLETIONSTATUS=v_complestatus_MCRP12, INSURANCECAR=v_insurcar_MCRP13, INSURANCEECI=v_insurecl_MCRP14, INSURANCETPL=v_insurtpl_MCRP15, 
@@ -117,5 +117,5 @@ BEGIN
 COMMIT;
 END;
 /
-grant EXECUTE on PCMSDATATST.P_QS_JOB to PCMSUSER_ROLE;
+grant EXECUTE on PCMSDATAUAT.P_QS_JOB to PCMSUSER_ROLE;
 /
