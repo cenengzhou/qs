@@ -83,7 +83,6 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 				{
 					field : 'unit',
 					width : '100',
-					cellFilter : 'number:2',
 					displayName : "Unit",
 					enableCellEdit : false
 				},

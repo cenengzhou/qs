@@ -17,11 +17,6 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 				$rootScope.showTour('createAddendumStepViewDetails');
 			}
 			break;
-		case '/subcontract/addendum/tab/details':
-			if($rootScope.createAddendumStepTourShow === 'addendumStep2'){
-				$rootScope.showTour('createAddendumStep2');
-			}
-			break;
 		case '/subcontract/payment/tab/certificate':
 		case '/subcontract/payment/tab/details':
 		case '/subcontract/payment/tab/summary':
@@ -42,7 +37,6 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		case '/subcontract/payment-select':
 		case '/subcontract-award/tab/summary':
 			if($rootScope.createSubcontractStepTourShow === 1){
-				$rootScope.createSubcontractStepTourShow = -1;
 				$rootScope.showTourOfCurrentAddress();
 			}
 			break;
@@ -125,6 +119,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
  
     $scope.$on('$stateChangeSuccess', function(){
 		if($location.path().indexOf('job-select') < 0) $rootScope.routedToDefaultJob = true;
+		if($location.path().indexOf('subcontract-award') < 0) $rootScope.createSubcontractStepTourShow = 0;
 		$timeout(function(){
 			$rootScope.toruAutoStartCheck();
 		},500);
@@ -297,14 +292,14 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					);
 			new TourGuide(
 					'createSubcontract',
-					null,//'image\\tour\\createSubcontract_preview.png', //preview
-					false, //autoStart
-					['jobNo'], //cookieDependences
-					'/subcontract-select', //startLink
-					'createSubcontractDiv', //startElement
-					'Cannot create subcontract', //startError
-					'Create subcontract', // heading 
-					'This tour will guide you through creating subcontract' //description					
+					null,//'image\\tour\\createSubcontract_preview.png',
+					false,
+					['jobNo'],
+					'/subcontract-select',
+					'createSubcontractDiv',
+					'Cannot create subcontract',
+					'Create subcontract',  
+					'This tour will guide you through creating subcontract'					
 					);
 			new TourGuide(
 					'createSubcontractStep1',
@@ -321,6 +316,54 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					['jobNo'], 
 					'/subcontract-award/tab/assign',
 					'subcontractTab2'
+					);
+			new TourGuide(
+					'createSubcontractStep3',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/ta',
+					'subcontractTab3'
+					);
+			new TourGuide(
+					'createSubcontractStep4',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/vendor',
+					'subcontractTab4'
+					);
+			new TourGuide(
+					'createSubcontractStep5',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/variance',
+					'subcontractTab5'
+					);
+			new TourGuide(
+					'createSubcontractStep6',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/dates',
+					'subcontractTab6'
+					);
+			new TourGuide(
+					'createSubcontractStep7',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/attachment',
+					'subcontractTab7'
+					);
+			new TourGuide(
+					'createSubcontractStep9',
+					null,
+					false,
+					['jobNo'], 
+					'/subcontract-award/tab/summary',
+					'subcontractTab9'
 					);
 			var tourRootDiv = angular.element('#tourRootDiv');
 			for(var key in $rootScope.tourArray){
@@ -565,7 +608,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		},
 		{
 			type:'function',
-			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(600) } else {angular.element('#subcontractStep1OuterBox').scrollTop(500)}}
 		},
 		{
 			type:'element',
@@ -578,7 +621,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		},
 		{
 			type:'function',
-			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(800) }}
 		},
 		{
 			type:'element',
@@ -591,7 +634,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		},
 		{
 			type:'function',
-			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(500) }}
+			fn:function(next){if(next){angular.element('#subcontractStep1OuterBox').scrollTop(800) }}
 		},
 		{
 			type:'element',
@@ -634,6 +677,101 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			path:'/subcontract-award/tab/ta'
 		}
 	]);
+	pushArray($rootScope.tourArray['createSubcontractStep3'].tourConfig, [
+		{
+			type:'element',
+			selector: '#subcontractStep3ResourceSummaries',
+			heading:'Create Subcontract',
+			text:'Select resource',
+			placement:'top',
+			attachToBody:true
+		},
+		{
+			type:'element',
+			selector: '#subcontractStep3Copy',
+			heading:'Create Subcontract',
+			text:'Copy resource',
+			placement:'top',
+			attachToBody:true,
+			advanceOn:{element:'#subcontractStep3Copy', event:'click'}
+		},
+		{
+			type:'element',
+			selector: '#subcontractStep3TADetails',
+			heading:'Create Subcontract',
+			text:'Update resource',
+			placement:'top',
+			attachToBody:true
+		},
+		{
+			type:'element',
+			selector: '#subcontractStep3Save',
+			heading:'Create Subcontract',
+			text:'Save resource',
+			placement:'top',
+			attachToBody:true,
+			advanceOn:{element:'#subcontractStep3Save',event:'click'}
+		},
+		{
+			type:'location_change',
+			path:'/subcontract-award/tab/vendor'
+		}
+	]);
+	pushArray($rootScope.tourArray['createSubcontractStep4'].tourConfig, [
+			{
+				type:'function',
+				fn:$rootScope.triggerSideBar
+			},
+			{
+				type:'function',
+				fn:function(next){angular.element('[data-target="#AddressBook"]').click()}
+			},
+			{
+				type:'function',
+				fn:$rootScope.hideCurtain
+			},
+			{
+				type:'element',
+				selector: '#subcontractStep4VendorNo',
+				heading: 'Create Subcontract',
+				text:'Enter tenderer number',
+				placement:'right',
+				attachToBody:true
+			},
+			{
+				type:'element',
+				selector:'#subcontractStep4Add',
+				heading:'Create Subcontract',
+				text:'Add tenderer',
+				placement:'bottom',
+				attachToBody:true
+			},
+			{
+				type:'function',
+				fn:$rootScope.triggerSideBar
+			},
+			{
+				type:'title',
+				heading:'Create Subcontract',
+				text:'Select recommended tender',
+			},
+			{
+				type:'location_change',
+				path:'/subcontract-award/tab/variance'
+			}
+		]);
+	pushArray($rootScope.tourArray['createSubcontractStep5'].tourConfig, [
+		
+		]);
+	pushArray($rootScope.tourArray['createSubcontractStep6'].tourConfig, [
+		
+		]);
+	pushArray($rootScope.tourArray['createSubcontractStep7'].tourConfig, [
+		
+		]);
+	pushArray($rootScope.tourArray['createSubcontractStep9'].tourConfig, [
+		
+		]);
 	pushArray($rootScope.tourArray['createPayment'].tourConfig, [
 		{
 			type: 'element',
@@ -826,7 +964,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		{
 			type: 'element',
 			selector: '#addendumStep2',
-			heading: 'Step two',
+			heading: 'Step 2',
 			text: 'Click the step number to add addendum',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep3', event:'click'},
@@ -840,7 +978,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		{
 			type: 'element',
 			selector: '#addendumStep3',
-			heading: 'Step two',
+			heading: 'Step 3',
 			text: 'Click the step number to review addendum ',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep4', event:'click'},
@@ -854,7 +992,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		{
 			type: 'element',
 			selector: '#addendumStep4',
-			heading: 'Step two',
+			heading: 'Step 4',
 			text: 'Click the step number to add attachment',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep5', event:'click'},
@@ -868,7 +1006,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		{
 			type: 'element',
 			selector: '#addendumStep5',
-			heading: 'Step two',
+			heading: 'Step 5',
 			text: 'Click the step number to review summary',
 			placement: 'left',
 			advanceOn: {element: '#addendumStep6', event:'click'},
@@ -881,9 +1019,19 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		},
 		{
 			type: 'element',
+			selector: '#addendumStep6',
+			heading: 'Step 6',
+			text: 'Click the step number to review Form2',
+			placement: 'left',
+			advanceOn: {element: '#addendumStep6', event:'click'},
+			attachToBody: true,
+			scroll: true
+		},
+		{
+			type: 'element',
 			selector: '#printBtn',
 			heading: 'Print PDS/08/Form 2',
-			text: 'Click the print button to print the Form2',
+			text: 'Click the print button to print Form2',
 			placement: 'left',
 			attachToBody: true,
 			scroll: false

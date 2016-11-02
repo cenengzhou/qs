@@ -1,5 +1,5 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 
-                                   function($http, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 'uiGridConstants',  
+                                   function($http, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
 	
 	rootscopeService.setEnv();
 	$scope.tab = 'profile';
@@ -311,7 +311,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		});
 		}
 	}
-	
+	var approveOptions = [
+        {label: 'Approved', value:"Approved"},
+        {label: 'Not Approved', value:"Not Approved"}
+        ];
 	$scope.AddressBookGridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -325,11 +328,15 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
-			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
+//			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
-			             { field: 'addressBookNumber', displayName: "No.", width: '50', enableCellEdit: false },
+			             { field: 'addressBookNumber', displayName: "No.", width: '60', enableCellEdit: false,
+			            	filter:{condition: uiGridConstants.filter.EXACT} 
+			             },
 			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },
-			             { field: 'supplierApproval', displayName: "Approved", width: '100', enableCellEdit: false }
+			             { field: 'supplierApproval', displayName: "Approved", width: '80', enableCellEdit: false, headerCellClass:'gridHeaderText',
+			            	 filter: { selectOptions: approveOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}, 
+			             },
             			 ]
 	};
 	
@@ -354,6 +361,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.openTips = function(section){
 		modalService.open('lg', 'view/infotips-modal.html', 'InfoTipsCtrl', 'Success', $scope ); 
+	}
+
+	$scope.openForms = function(){
+		modalService.open('lg', 'view/forms-modal.html', 'FormsCtrl', 'Success', $scope ); 
 	}
 
 	$scope.openTour = function(){

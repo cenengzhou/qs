@@ -34,7 +34,7 @@
 							<span class="fa fa-2x fa-angle-left text-white"> </span></div>
 						</td>
 						<td id="menubarTd">
-							<div resize ng-style="resizeMenuBarWithWOffset(490, 150)" style="border: 0px solid red" id="menubar">
+							<div resize ng-style="resizeMenuBarWithWOffset(520, 150)" style="border: 0px solid red" id="menubar">
 								<ul class="nav navbar-nav" style="width:1000px;border: 0px solid white" id="innerMenu">
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Repackaging' && env == 'DEV'}" 
 										ng-hide = "hideNavMenu">
@@ -102,19 +102,23 @@
 						<td>
 							<!-- begin navbar-right -->
 <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav navbar-right">
           
-          
-            
-          
-          
-          <li class="user user-menu navbar-user" style="height:56px;width: 90px;margin-top: 0px;border-top-width: 0px;">
-            <a href="javascript:;" class="dropdown-toggle" data-click="userMenuCaret" data-toggle="dropdown" aria-expanded="true" style="padding-right: 0px;" ng-click="selectTab('profile')">
- <span class="image" id="userImage">
-              <img data-ng-src="{{userIcon}}"  alt="" imageonload roll-back-image="resources/images/profile.png"/>
-   </span>
-              <b class="caret"></b>
 
+          
+          
+          <li class="user user-menu navbar-user" style="height:56px;width: 150px;margin-top: 0px;border-top-width: 0px;">
+            <a href="javascript:;" class="dropdown-toggle" data-click="userMenuCaret" data-toggle="dropdown" aria-expanded="true" style="padding-right: 0px;" ng-click="selectTab('profile')">
+				<table align="right">
+					<tr>
+						<td><span class="image" id="userImage"><img data-ng-src="{{userIcon}}"  alt="" imageonload roll-back-image="resources/images/profile.png"/></span></td>
+						<td><span class="hidden-xs" style="overflow: hidden;max-width:80px;display:block;white-space: nowrap">{{user.username}}</span></td>
+						<td><b class="caret"></b></td>
+					</tr>
+				
+				</table>
+				
+			 	
             </a>
             <ul class="dropdown-menu" id="userDropPanel" style="top: 62px;">
               <!-- User image -->
@@ -124,7 +128,7 @@
                </span>
 
                <div>
-                  {{user.username}} - {{user.title}}<br>
+                  {{user.fullname}} - {{user.title}}<br>
                   <small>Staff ID: {{user.StaffID}} </small> 
                   <span class="dropdown" id="roleMenuCaret">
                   	<a href="javascript:;" style="background: transparent !important" data-click="roleMenuCaret" ng-mouseover="showRole(true)" data-toggle="dropdown">
@@ -226,11 +230,11 @@
 		                                    <div class="desc">System recent news</div>
 		                                </div>
 		                            </li>
-		                            <li>
+		                            <li ng-click="openForms()" style="cursor:pointer;" id="FormsDiv">
 		                                <div class="media bg-primary-light"><i class="fa fa-file-text text-white"></i></div>
 		                                <div class="info">
-		                                    <div class="title"><a href="{{properties.FORMS}}" target="forms">Forms</a></div>
-		                                    <div class="desc">Description <div class="badge bg-lime-light text-white">Coming soon!</div></div>
+		                                    <div class="title">Forms</div>
+		                                    <div class="desc">Common forms for download</div>
 		                                </div>
 		                            </li>
 		                            <li ng-click="openTips()" style="cursor:pointer;">

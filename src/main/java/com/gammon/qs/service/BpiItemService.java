@@ -186,7 +186,7 @@ public class BpiItemService implements Serializable {
 		List<BpiItemResource> resources = resourceHBDao.obtainSCResources(job.getJobNumber());
 		
 		List<String> uneditablePackageNos = new ArrayList<String>(); 
-		List<String> awardedPackageNos = packageRepository.getUneditablePackageNos(job);
+		List<String> awardedPackageNos = packageRepository.getUneditableSubcontractNos(job.getJobNumber());
 		if(awardedPackageNos!=null && awardedPackageNos.size()>0)
 			uneditablePackageNos.addAll(awardedPackageNos);
 		

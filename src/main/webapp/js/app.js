@@ -30,6 +30,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
                            'js/controller/infotips-modal.js',
+                           'js/controller/forms-modal.js',
                            'js/controller/subcontractor-details-modal.js',
                     ] 
                 });

@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter',
-                                            function($scope, subcontractService, modalService, $state, GlobalParameter) {
+mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'modalService', '$state', 'GlobalParameter', 
+                                            function($scope, subcontractService, modalService, $state, GlobalParameter ) {
 	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	
@@ -56,5 +56,17 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 					}
 				});
 		}
+	
+//	angular.element('input[name="requistionApproved.singleDate"').daterangepicker({
+//		singleDatePicker: true,
+//		showDropdowns: true,
+//		locale: {
+//		      format: GlobalParameter.MOMENT_DATE_FORMAT
+//		    },
+//
+//	})
+//	$scope.openDropdown = function( $event){
+//		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+//	}
 	
 }]);
