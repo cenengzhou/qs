@@ -8,7 +8,7 @@ mainApp.controller('FormsCtrl',
 	};
 	
 	function FormDoc (description){
-		this.initBaseAddress('/resources/');
+		this.initBaseAddress('/forms/');
 		this.description = description;
 		return this;
 	}

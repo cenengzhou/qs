@@ -1,10 +1,11 @@
-mainApp.controller('ProfileCtrl', ['$scope', '$timeout', 'rootscopeService', 'userpreferenceService', 'blockUI',
-							function($scope, $timeout, rootscopeService, userpreferenceService, blockUI) { 
+mainApp.controller('ProfileCtrl', ['$scope', '$timeout', 'rootscopeService', 'userpreferenceService', 'blockUI', 'GlobalParameter',
+							function($scope, $timeout, rootscopeService, userpreferenceService, blockUI, GlobalParameter) { 
 
 	$scope.userIcon = 'resources/images/profile.png';
 	rootscopeService.gettingUser()
 	.then(function(response){
 		$scope.user = response.user;
+		var iconPath = GlobalParameter.imageServerAddress+$scope.user.StaffID+'.jpg';
 		if($scope.user.authType === 'Kerberos'){
 			$scope.userIcon = iconPath;
 		}
