@@ -52,6 +52,7 @@ mainApp.controller('ProfileCtrl', ['$scope', '$timeout', 'rootscopeService', 'us
 	$scope.settingDefaultJobNo = function(){
 		userpreferenceService.settingDefaultJobNo($scope.defaultJobNo)
 		.then(function(response){
+			userpreferenceService.gettingUserPreference(true);
 			showUpdateDefaultJobStatus();
 		})
 	}

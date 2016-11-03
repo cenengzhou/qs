@@ -328,7 +328,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
-//			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
+			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
 			             { field: 'addressBookNumber', displayName: "No.", width: '60', enableCellEdit: false,
 			            	filter:{condition: uiGridConstants.filter.EXACT} 

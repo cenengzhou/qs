@@ -31,7 +31,7 @@ BEGIN
     execute immediate SQL_INSERT_PREFIX || '(''QS'',''ROLE_QS_QS_ADM'',''NA'',''QS Power User who can handle administrative tasks'',''F'',''N'', sysdate,''GAMSKA\tikywong'')';
     execute immediate SQL_INSERT_PREFIX || '(''QS'',''ROLE_QS_REVIEWER'',''NA'',''QS Reviewer who review daily operations that are done by QSs'',''F'',''N'', sysdate,''GAMSKA\tikywong'')';
     execute immediate SQL_INSERT_PREFIX || '(''QS'',''ROLE_QS_IMS_ENQ'',''NA'',''IMS who can view QS applications settings'',''F'',''N'', sysdate,''GAMSKA\tikywong'')';
-    execute immediate SQL_INSERT_PREFIX || '(''QS'',''ROLE_QS_IMS_ADMIN'',''NA'',''IMS who can handle QS application settings'',''F'',''N'', sysdate,''GAMSKA\tikywong'')';
+    execute immediate SQL_INSERT_PREFIX || '(''QS'',''ROLE_QS_IMS_ADM'',''NA'',''IMS who can handle QS application settings'',''F'',''N'', sysdate,''GAMSKA\tikywong'')';
     --------------------------------------------------------------------------------------------------------------------------
     execute immediate SQL_QUERY_AC_ROLENAME INTO AFTER_ACDATA_ROLE;
     dbms_output.put_line('05-02-insert_into_ac_role.sql:');

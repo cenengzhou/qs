@@ -204,9 +204,9 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	}
 
 	function configHiddenMenu(){
-		$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_QS_QS_ADMIN', $rootScope.user.UserRoles)
+		$rootScope.showQSAdmin = GlobalHelper.containRole('ROLE_QS_QS_ADM', $rootScope.user.UserRoles)
 								||GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $rootScope.user.UserRoles);
-		$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_QS_IMS_ADMIN', $rootScope.user.UserRoles)
+		$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_QS_IMS_ADM', $rootScope.user.UserRoles)
 								||GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $rootScope.user.UserRoles);
 		if($rootScope.showQSAdmin || $rootScope.showIMSAdmin){
 			$rootScope.showAdminMenu = true;
