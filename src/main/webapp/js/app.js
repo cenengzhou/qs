@@ -37,7 +37,22 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         },
 	  })
-	  
+	 .state('profile',{
+		 url: '/profile',
+		 parent: 'navigation',
+		 templateUrl: 'view/profile/profile.html',
+		 resolve: {
+			 service: ['$ocLazyLoad', function($ocLazyLoad){
+				 return $ocLazyLoad.load({
+					 name: 'app',
+					 files: [
+						 'js/controller/profile/profile-controller.js'
+					 ]
+				 })
+			 }]
+		 },
+		 controller: 'ProfileCtrl'
+	 })
 	
 	.state('logout', {
 		url: "/logout",
