@@ -17,16 +17,22 @@
 					</a>
 					
 					<div class="col-md-12">
-						<div class="col-md-6">
-						<button class="btn btn-primary btn-block"	ng-click="editSubcontractor(tender.vendorNo)" ng-hide = "disableButtons" ng-disabled="disableButtons">
-							<span class="icofont icofont-edit"></span> Edit
-						</button>
+						<div class="col-md-12" ng-show = "showViewButton">
+							<button class="btn btn-primary btn-block"	ng-click="editSubcontractor(tender.vendorNo)">
+								<span class="icofont icofont-search"></span> View
+							</button>
 						</div>
 						
 						<div class="col-md-6">
-						<button class="btn btn-success btn-block"	ng-click="deleteSubcontractor(tender.vendorNo)" ng-hide = "disableButtons" ng-disabled="disableButtons">
-							<span class="icofont icofont-delete-alt"></span> Delete
-						</button>
+							<button class="btn btn-primary btn-block"	ng-click="editSubcontractor(tender.vendorNo)" ng-hide = "disableButtons" ng-disabled="disableButtons">
+								<span class="icofont icofont-edit"></span> Edit 
+							</button>
+						</div>
+						
+						<div class="col-md-6">
+							<button class="btn btn-success btn-block"	ng-click="deleteSubcontractor(tender.vendorNo)" ng-hide = "disableButtons" ng-disabled="disableButtons">
+								<span class="icofont icofont-delete-alt"></span> Delete
+							</button>
 						</div>
 					</div>
 				</div>

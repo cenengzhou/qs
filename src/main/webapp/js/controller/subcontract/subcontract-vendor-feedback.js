@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookies', 'tenderService', '$state', 'modalService', 'roundUtil', 'paymentService', 'confirmService', 
-                                                          function ($scope, $uibModalInstance, uiGridConstants, modalParam, $cookies, tenderService, $state, modalService, roundUtil, paymentService, confirmService) {
+mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalInstance', 'uiGridConstants', 'modalParam', '$cookies', 'tenderService', '$state', 'modalService', 'roundUtil', 'paymentService', 'confirmService', 'subcontractService', 
+                                                          function ($scope, $uibModalInstance, uiGridConstants, modalParam, $cookies, tenderService, $state, modalService, roundUtil, paymentService, confirmService, subcontractService) {
 
 	$scope.vendorNo= modalParam;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -124,6 +124,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			return;
 		}
 		
+		$scope.disableButtons = true;
+		
 		if($scope.tender.status == 'RCM'){
 			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
 			.then(
@@ -137,11 +139,15 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 								confirmService.showModal({}, modalOptions).then(function (result) {
 									if(result == "Yes")
 										proceedToUpdate();
+									else
+										$scope.disableButtons = false;
 								});
 							}else if(data.paymentStatus == 'APR')
 								proceedToUpdate();
-							else
+							else{
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Payment Requisition is being submitted. No amendment is allowed.");
+								$scope.disableButtons = false;
+							}
 						}else
 							proceedToUpdate();
 					});
@@ -187,25 +193,39 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			confirmService.showModal({}, modalOptions).then(function (result) {
 				if(result == "Yes"){
 					updateTenderDetails(newTADetailList);
-				}
+				}else
+					$scope.disableButtons = false;
 			});
 		}else
 			updateTenderDetails(newTADetailList);
 	}
 
 	function loadTenderDetail(){
+		getSubcontract();
 		getTender();
 		getTenderDetailList();
 		getUneditableTADetailIDs();
 
 	};
 
-
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.subcontract = data;
+					
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500"){
+						$scope.disableButtons = true;
+					}
+					else
+						$scope.disableButtons = false;
+				});
+	}
+	
 	function getTender(){
 		tenderService.getTender($scope.jobNo, $scope.subcontractNo, $scope.vendorNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.tender = data;
 					$scope.currencyCode.selected = data.currencyCode;
 					$scope.statusChangeExecutionOfSC.selected = data.statusChangeExecutionOfSC;
@@ -239,6 +259,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 				function( data ) {
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 					}else{
 						$uibModalInstance.close();
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Tender feedback rate has been updated.");

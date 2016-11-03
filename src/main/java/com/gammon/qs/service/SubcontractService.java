@@ -3844,7 +3844,7 @@ public class SubcontractService {
 
 			double cumWorkDoneQty = subcontractDetail.getCumWorkDoneQuantity()!=null ? subcontractDetail.getCumWorkDoneQuantity():0.0;
 			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? subcontractDetail.getAmountCumulativeWD().doubleValue():0.0;
-			message = calculateWDandIV(scDetailInDB, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+			message = calculateWDandIV((SubcontractDetailOA)scDetailInDB, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
 
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
@@ -3898,7 +3898,7 @@ public class SubcontractService {
 					double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
 					double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
 					//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
-					message = calculateWDandIV(scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+					message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails
@@ -3911,7 +3911,7 @@ public class SubcontractService {
 	}
 	
 	
-	private String calculateWDandIV(SubcontractDetail scDetailInDB, Subcontract subcontract, double cumWorkDoneQty, double cumWorkDoneAmt){
+	private String calculateWDandIV(SubcontractDetailOA scDetailInDB, Subcontract subcontract, double cumWorkDoneQty, double cumWorkDoneAmt){
 		String message = "";
 		double cumWorkDoneAmtMovement = 0.0;
 		double cumWorkDoneQtyMovement = 0.0;
@@ -3946,11 +3946,11 @@ public class SubcontractService {
 			}
 		}
 
-		if (scDetailInDB.getAmountCumulativeWD().doubleValue() != cumWorkDoneAmt){
+		if (scDetailInDB.getAmountCumulativeWD().doubleValue() != cumWorkDoneAmt || cumWorkDoneQty !=scDetailInDB.getCumWorkDoneQuantity()){
 			cumWorkDoneAmtMovement = CalculationUtil.round(cumWorkDoneAmt - scDetailInDB.getAmountCumulativeWD().doubleValue(), 2);
 			cumWorkDoneQtyMovement = CalculationUtil.round(cumWorkDoneQty - scDetailInDB.getCumWorkDoneQuantity(), 4);
-			((SubcontractDetailOA) scDetailInDB).setCumWorkDoneQuantity(cumWorkDoneQty);
-			((SubcontractDetailOA) scDetailInDB).setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
+			scDetailInDB.setCumWorkDoneQuantity(cumWorkDoneQty);
+			scDetailInDB.setAmountCumulativeWD(new BigDecimal(cumWorkDoneAmt));
 		}
 		// ----------1. Calculate work done amount - DONE ----------
 
@@ -3997,7 +3997,7 @@ public class SubcontractService {
 		// ----------5. Update the SC Package - START ----------
 		// Update the cumulative total work done amount
 		logger.info("J" + subcontract.getJobInfo().getJobNumber() + " SC" + scDetailInDB.getSubcontract().getPackageNo() + "-" + scDetailInDB.getLineType() + "-" + scDetailInDB.getObjectCode() + "-" + scDetailInDB.getSubsidiaryCode() +
-				" WorkDoneAmtMovement = " + cumWorkDoneAmtMovement);
+				" WorkDoneAmtMovement = " + cumWorkDoneAmtMovement + " WorkDoneQtyMovement = " + cumWorkDoneQtyMovement) ;
 		return message;
 	}
 	
@@ -4171,17 +4171,17 @@ public class SubcontractService {
 					double costRate = scDetail.getCostRate() != null ? scDetail.getCostRate() : 0.0;
 					double scRate = scDetail.getScRate() != null ? scDetail.getScRate() : 0.0;
 					double bqQty = scDetail.getQuantity() != null ? scDetail.getQuantity() : 0.0;
-					double cumWDAmount = scDetail.getAmountCumulativeWD()!=null ? scDetail.getAmountCumulativeWD().doubleValue(): 0.0;
+					double cumWDQty = scDetail.getCumWorkDoneQuantity()!=null ? scDetail.getCumWorkDoneQuantity(): 0.0;
 
 					//No IV update if it is BQ and BQ Quantity = 0 (no budget)
 					if (bqQty == 0.0 && "BQ".equals(lineType))
 						continue;
 
 					//No IV Update if cost Rate or cumulative WD Quantity = 0
-					if (costRate==0.0 || cumWDAmount==0.0)
+					if (costRate==0.0 || cumWDQty==0.0)
 						continue;
 
-					double cumIVAmount = CalculationUtil.round(cumWDAmount/scRate*costRate, 2);
+					double cumIVAmount = CalculationUtil.round(cumWDQty*costRate, 2);
 					ResourceSummary resourceSummaryInDB = null;
 
 					//With Resource No. > 0 means it has a Resource Summary associated with

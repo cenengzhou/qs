@@ -82,7 +82,8 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 		 gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			 if(rowEntity.scRate == 0 && rowEntity.costRate>0){
-				 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No work done is allowed with ZERO subcontract rate for budgeted item.");
+				 if(oldValue == 0)
+					 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No work done is allowed with ZERO subcontract rate for budgeted item.");					 
 			}
         });
 		
@@ -96,6 +97,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 					rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
 					rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
 				}
+				console.log(rowEntity);
 				updateWDandIV(rowEntity);
 			}else{
 				if(colDef.name == "cumWorkDoneQuantity")
@@ -219,8 +221,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				 function( data ) {
 					 if(data == false)
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "IV cannot be recalculated.");
-					 else
+					 else{
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IV has been recalculated.");
+						 $state.reload();
+					 }
 				 });
     }
 

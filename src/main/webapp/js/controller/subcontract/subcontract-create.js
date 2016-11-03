@@ -112,6 +112,11 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			event.preventDefault();  
 			return;
 		}
+		
+		if(!$scope.subcontract.labourIncludedContract && !$scope.subcontract.plantIncludedContrac && !$scope.subcontract.materialIncludedContract){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select subcontract type.");
+			return;
+		}
 
 		$scope.subcontractToUpdate = {
 				id:  $scope.subcontract.id,

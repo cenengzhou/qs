@@ -135,8 +135,11 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 				function( data ) {
 					$scope.subcontract = data;
 					
-					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+					$scope.showViewButton = false;
+					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500"){
 						$scope.disableButtons = true;
+						$scope.showViewButton = true;
+					}
 					else
 						$scope.disableButtons = false;
 				});

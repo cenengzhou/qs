@@ -220,14 +220,17 @@ public class JobCostService implements Serializable {
 						i++;							
 					}
 				else
-					// add accountList2
-					if (Integer.parseInt("".equals(accountList.get(i).getSubsidiary().trim())?"0":accountList.get(i).getSubsidiary())>("".equals(accountList2.get(j).getSubsidiary().trim())?0:Integer.parseInt(accountList2.get(j).getSubsidiary()))){
-						newList.add(accountList2.get(j));
-						j++;
-						// add accountList
-					}else {
-						newList.add(accountList.get(i));
-						i++;							
+					try {
+						if (Integer.parseInt("".equals(accountList.get(i).getSubsidiary().trim())?"0":accountList.get(i).getSubsidiary())>("".equals(accountList2.get(j).getSubsidiary().trim())?0:Integer.parseInt(accountList2.get(j).getSubsidiary()))){
+							newList.add(accountList2.get(j));
+							j++;
+							// add accountList
+						}else {
+							newList.add(accountList.get(i));
+							i++;							
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				if (i>=accountList.size()){
 					newList.addAll(accountList2.subList(j, accountList2.size()));
