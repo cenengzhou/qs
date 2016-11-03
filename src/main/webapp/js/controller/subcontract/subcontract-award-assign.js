@@ -83,6 +83,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 			
 			if(row.isSelected) { 
 				row.entity.packageNo = $scope.subcontractNo;
+				$scope.gridApi.rowEdit.setRowsDirty([row.entity]);
 			}else{
 				row.entity.packageNo = '';
 			}
@@ -131,10 +132,6 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources cannot be merged - resources must have the same type.");
 				return false;
 			}
-			/*if (selectedRows[i]['packageNo'] != null && selectedRows[i]['packageNo'].length > 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
-				return false;
-			}*/
 			if (selectedRows[i]['postedIVAmount'] != 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");
 				return false;
@@ -156,9 +153,6 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-//			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-//			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-			
 
 			paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
 			.then(
@@ -192,14 +186,36 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	};
 			
 	function proceedToSave(){
-		/*var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });*/
-		var dataRows =	$scope.gridOptions.data;
+		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		//var dataRows =	$scope.gridOptions.data;
 		
 		if(dataRows.length==0){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
 			return;
 		}
+		
+		var tempNewList = dataRows;
+		var newList = [];
+		
+		for (i in tempNewList) {
+			for (j in newList) {
+				if(newList[j].objectCode === tempNewList[i].objectCode
+				   && newList[j].subsidiaryCode === tempNewList[i].subsidiaryCode
+				   && newList[j].resourceDescription === tempNewList[i].resourceDescription
+				   && newList[j].rate === tempNewList[i].rate
+				   && newList[j].unit === tempNewList[i].unit
+				   ){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 
+							"Duplicate resource: Object Code: " + tempNewList[i].objectCode + ", Subsidiary Code: " + tempNewList[i].subsidiaryCode +
+							 ", Description: " + tempNewList[i].resourceDescription + 
+							", Unit: " + tempNewList[i].unit + ", Rate: " + tempNewList[i].rate);
+					return;
+				}
+			};
+			newList.push(tempNewList[i]);
+			
+		};
 		
 		if($scope.subcontract.scStatus == "160"){
 			var modalOptions = {
@@ -253,7 +269,6 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		resourceSummaryService.updateResourceSummaries($scope.jobNo, resourceSummaryList)
 		.then(
 				function( data ) {
-					//console.log(data);
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{

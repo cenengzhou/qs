@@ -31,6 +31,7 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.service.businessLogic.SCPaymentLogic;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
@@ -179,7 +180,7 @@ public class PaymentPostingService {
 												scDetails.getObjectCode(), scDetails.getSubsidiaryCode(), 
 												scDetails.getDescription(), scDetails.getUnit(), scDetails.getCostRate(), scDetails.getQuantity());
 										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!=null && resourceSummary.getCurrIVAmount()!= 0.0){
-											//scDetails.setCumWorkDoneQuantity(resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4));
+											scDetails.setCumWorkDoneQuantity(resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4));
 											scDetails.setAmountCumulativeWD(new BigDecimal(resourceSummary.getCurrIVAmount()/resourceSummary.getRate()*scDetails.getScRate()).setScale(2, RoundingMode.HALF_UP));
 											scDetailDao.update(scDetails);
 										}
@@ -187,69 +188,7 @@ public class PaymentPostingService {
 								}catch (Exception e) {
 									e.printStackTrace();
 								}
-							}/*else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "2".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
-								try {
-									List<SubcontractDetail> accountCodeList = scDetailDao.obtainSCDetailsObjectCodeList(paymentCert.getJobNo(), paymentCert.getPackageNo());
-									for(SubcontractDetail accountCode: accountCodeList){
-										ResourceSummary resourceSummary = bqResourceSummaryDao.obtainResourceSummary(scPackage.getJobInfo(), scPackage.getPackageNo(), accountCode.getObjectCode(), 
-																														accountCode.getSubsidiaryCode(), null, null, null);
-										if(resourceSummary!=null && resourceSummary.getCurrIVAmount()!= null && resourceSummary.getCurrIVAmount()!= 0.0){
-											double cumIVQuantity = resourceSummary.getRate().equals(Double.valueOf(0)) ? resourceSummary.getRate() : CalculationUtil.round((resourceSummary.getCurrIVAmount()/resourceSummary.getRate()), 4);
-											double remainingQuantity = cumIVQuantity;
-											
-											if(cumIVQuantity!=0.0){
-												List<SubcontractDetailBQ> scDetailList = scDetailDao.obtainSCDetailsByObjectCode(paymentCert.getJobNo(), paymentCert.getPackageNo(), accountCode.getObjectCode(), accountCode.getSubsidiaryCode());
-
-												int counter = 0;
-												for(SubcontractDetailBQ scDetails: scDetailList){
-													double cumWorkDoneQuantity = 0.0;
-													if(scDetails.getQuantity()!=0.0 && resourceSummary.getQuantity() != 0.0)
-														cumWorkDoneQuantity = CalculationUtil.round((scDetails.getQuantity()/resourceSummary.getQuantity()*cumIVQuantity), 4);
-													
-													remainingQuantity = remainingQuantity - cumWorkDoneQuantity;
-													
-													if(counter == scDetailList.size()-1)
-														cumWorkDoneQuantity +=remainingQuantity;
-													scDetails.setCumWorkDoneQuantity(cumWorkDoneQuantity);
-													scDetailDao.update(scDetails);
-													
-													counter++;
-												}
-											}	
-										}
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}else if(PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "3".equals(paymentCert.getSubcontract().getJobInfo().getRepackagingType())){
-								try {
-									List<SubcontractDetailBQ> scDetailList = scDetailDao.obtainSCDetailsBQ(paymentCert.getJobNo(), paymentCert.getPackageNo());
-									for(SubcontractDetailBQ scDetails: scDetailList){
-										if(scDetails.getBillItem() != null || scDetails.getResourceNo() != null){
-											//Split bill item ref
-											String[] bpi = scDetails.getBillItem().trim().split("/");
-											if(bpi.length == 5){
-												String billNo = bpi[0];
-												String subBillNo = bpi[1].length() == 0 ? null : bpi[1];
-//												String sectionNo = bpi[2].length() == 0 ? null : bpi[2];
-												String pageNo = bpi[3].length() == 0 ? null : bpi[3];
-												String itemNo = bpi[4].length() == 0 ? null : bpi[4];
-												
-												BpiItemResource resource = resourceHBDao.obtainResource(	paymentCert.getJobNo(), billNo, subBillNo, pageNo, itemNo, 
-																									paymentCert.getPackageNo(), scDetails.getObjectCode(), 
-																									scDetails.getSubsidiaryCode(), null, scDetails.getCostRate(), 
-																									scDetails.getUnit(), scDetails.getResourceNo());
-												if(resource != null && resource.getIvCumQuantity()!=null && resource.getIvCumQuantity()!=0.0){
-													scDetails.setCumWorkDoneQuantity(resource.getIvCumQuantity());
-													scDetailDao.update(scDetails);
-												}
-											}	
-										}
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}*/
+							}
 						}
 						
 						//Fix: Should only set SCPackage "Payment Status"='F'  when payment cert status is APR
@@ -406,6 +345,20 @@ public class PaymentPostingService {
 					responseWrapper.setIsvalid(false);
 					return responseWrapper;
 				}
+				
+				if (asAtDate == null) {
+					responseWrapper.setErrorMsg("Payment As At Date does not exist");
+					responseWrapper.setIsvalid(false);
+					return responseWrapper;
+				}
+				
+				// invoice received date on or after payment as at date
+				if (ipaOrInvoiceDate.before(asAtDate)){
+					responseWrapper.setErrorMsg("IPA Received Date has to be ON or AFTER Payment As At Date");
+					responseWrapper.setIsvalid(false);
+					return responseWrapper;
+				}
+				
 				calculatedDueDate.setTime(ipaOrInvoiceDate);
 				calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS3);
 			}

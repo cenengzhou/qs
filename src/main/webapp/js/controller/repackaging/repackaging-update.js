@@ -92,16 +92,18 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract "+rowEntity.packageNo+" has been awarded.");
 						return;
 					}else {
-						var modalOptions = {
-								bodyText: "You will be directed to the corresponding non-awarded subcontract to manage the resources. Proceed?"
-						};
+						if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
+							var modalOptions = {
+									bodyText: "You will be directed to the corresponding non-awarded subcontract to manage the resources. Proceed?"
+							};
 
-						confirmService.showModal({}, modalOptions).then(function (result) {
-							if(result == "Yes"){
-								$cookies.put('subcontractNo', rowEntity.packageNo);
-								$location.path('/subcontract-award/tab/assign');
-							}
-						});
+							confirmService.showModal({}, modalOptions).then(function (result) {
+								if(result == "Yes"){
+									$cookies.put('subcontractNo', rowEntity.packageNo);
+									$location.path('/subcontract-award/tab/assign');
+								}
+							});
+						}
 					}						
 				}
 				else if(colDef.name == 'packageNo'){

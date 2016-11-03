@@ -2382,6 +2382,7 @@ public class PaymentService{
 	 * created on 12 Jul, 2016
 	 * New flow for Payment: input from payment details instead of scDetails**/
 	public String updatePaymentDetails(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentType, List<PaymentCertDetail> paymentDetails){
+		logger.info("updatePaymentDetails - jobNo: "+jobNo +" - subcontractNo: "+subcontractNo+" - paymentCertNo: "+paymentCertNo+" - paymentType: "+paymentType);
 		String error = "";
 		double totalCertAmount = 0.0;
 		double totalMOSAmount = 0.0;
@@ -2458,6 +2459,14 @@ public class PaymentService{
 								
 								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
 									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
+									logger.info(error);
+									return error;
+								}else if(("AP".equals(scDetail.getLineType()) ||  "MS".equals(scDetail.getLineType()) ||  "CF".equals(scDetail.getLineType())) && paymentDetail.getCumAmount() >0){
+									error = "AP/MS/CF: " + paymentDetail.getCumAmount() + " should be positive."+ " Sequence No.: " + scDetail.getSequenceNo();
+									logger.info(error);
+									return error;
+								}else if("RR".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
+									error = "RR: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
 								}

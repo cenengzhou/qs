@@ -24,16 +24,16 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 
 	//Save Function
 	$scope.save = function () {
-		$scope.disableButtons = true;
+		$scope.disableButton = true;
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
 			event.preventDefault();  
-			$scope.disableButtons = false;
+			$scope.disableButton = false;
 			return;
 		}
 
 		if($scope.lineType == 'C1' && $scope.subcontractDetail.objectCode.substring(4, 6) !='88'){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Object code should be ended with '88'.");
-			$scope.disableButtons = false;
+			$scope.disableButton = false;
 		}
 		
 		if(scDetailID == null || scDetailID.length==0){
@@ -63,7 +63,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 				function( data ) {
 					if(data.length != 0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						$scope.disableButtons = false;
+						$scope.disableButton = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been created.");
 						$cookies.put('scDetailID', '');
@@ -78,7 +78,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 				function( data ) {
 					if(data.length != 0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						$scope.disableButtons = false;
+						$scope.disableButton = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendum has been created.");
 						$cookies.put('scDetailID', '');
@@ -91,12 +91,12 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
+					if(data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.submittedAddendum ==1)
 						$scope.disableButton = true;
 					else 
 						$scope.disableButton = false;
 					
-					if(data.scStatus < '500'){
+					if(data.scStatus < '500' || data.splitTerminateStatus ==4){
 						$scope.lineType = "RR";
 						$scope.disableSelect = true;
 					}
@@ -111,7 +111,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 				function( data ) {
 					if(data !=null && data.length >0){
 						if(data.paymentStatus != "PND" && data.paymentStatus != "APR")
-							$scope.disableButtons = true;
+							$scope.disableButton = true;
 						
 					}
 				});
@@ -125,7 +125,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 						$scope.units.push(value.unitCode.trim());
 					});
 				});
-	}
+	} 
 
 	$scope.$watch('lineType', function(newValue, oldValue) {
 		if($scope.paymentStatus == null || $scope.paymentStatus != 'F'){

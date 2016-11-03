@@ -245,7 +245,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		$scope.gridApi = gridApi;
 
 		gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			console.log(validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem));
+			//console.log(validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem));
 			if(!validateLineTypeNotInArray(rowEntity, lineTypeGeneratedBySystem)){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', validateMessage(rowEntity, MSG_LINETYPE_GENERATED_BY_SYSTEM));
 			}
@@ -359,6 +359,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), "I", paymentDetails)
 		.then(
 				function( data ) {
+					console.log(data);
 					if(data.length != 0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
