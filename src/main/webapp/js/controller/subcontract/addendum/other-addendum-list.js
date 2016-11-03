@@ -188,9 +188,9 @@ mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcont
 		.then(
 				function( data ) {
 					console.log(data);
-					if(data.paymentStatus == 'F'){
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
 						$scope.disableButton = true;
-					}else 
+					else 
 						$scope.disableButton = false;
 				});
 	}

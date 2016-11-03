@@ -98,7 +98,7 @@
 		</div>
 		
 		<div class="col-lg-12" id="createPaymentDiv"
-			ng-if="(latestPaymentStatus=='APR' || latestPaymentStatus=='') && latestPaymentType!='F'">
+			ng-if="(latestPaymentStatus=='APR' || latestPaymentStatus=='') && latestPaymentType!='F' &&!disableButton">
 			<a
 				ui-sref="subcontract.payment.certificate({paymentCertNo: '0', paymentTermsDesc: paymentTerms})"
 				class="btn btn-danger btn-block"> <i

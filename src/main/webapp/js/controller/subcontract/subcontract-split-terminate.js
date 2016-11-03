@@ -161,9 +161,14 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	$scope.submitApproval = function (){
 		$scope.disableButtons = true;
 		
-		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-		
+		if($scope.action == 'Split'){
+			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		}
+		else{
+			var dataRows = $scope.gridOptions.data;
+		}
+
 		var modalOptions = {
 				bodyText: "Are you sure you want to submit "+$scope.action+" Subcontract Approval?"
 		};
@@ -228,7 +233,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 					$scope.approvedVOAmount = data.approvedVOAmount;
 					$scope.splitTerminateStatus = data.splitTerminateStatus;
 					
-					if(data.scStatus < 500 || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.submittedAddendum ==1)
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
 						$scope.disableButtons = true;
 					else
 						$scope.disableButtons = false;
@@ -259,7 +264,10 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 						$scope.disableButtons = false;
 					}else{
 						if(submitApproval){
-							submitSplitTerminateSC();
+							if($scope.action == 'Split')
+								submitSplitTerminateSC('S');
+							else
+								submitSplitTerminateSC('T');
 						}else{
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract details have been updated.");
 							$state.reload();

@@ -147,8 +147,11 @@
 							class="btn btn-xs btn-icon btn-circle btn-inverse"
 							data-click="panel-expand"><i class="fa fa-expand"></i></a>
 					</div>
-					<div class="panel-title text-red">
+					<div class="panel-title text-red" ng-show="action=='Split'">
 						<span class="icofont icofont-star"></span> Only subcontract details with <b>Budget Amount</b> greater than zero can be split here 
+					</div>
+					<div class="panel-title text-red" ng-show="action=='Terminate'">
+						<span class="icofont icofont-star"></span> <b>Subcontract Amount</b>will be equal to cum. Work Done Amount when Terminated
 					</div>
 				</div>
 				<div class="panel-body">
@@ -161,14 +164,14 @@
 
 					<div class="col-md-6">
 						<a class="btn btn-primary btn-block" ng-click="save()"
-							ng-hide="disableButtons || action == 'Terminate'"
+							ng-if="!disableButtons && action != 'Terminate'"
 							ng-disabled="disableButtons || action == 'Terminate'">Update
 							<i class="fa fa-floppy-o"></i>
 						</a>
 					</div>
 					<div class="col-md-6">
 						<a class="btn btn-primary btn-block" ng-click="submitApproval()"
-							ng-hide="disableButtons" ng-disabled="disableButtons">Submit
+							ng-if="!disableButtons" ng-disabled="disableButtons">Submit
 							for {{action}} Approval <i class="icofont icofont-upload"></i>
 						</a>
 					</div>

@@ -2207,7 +2207,7 @@ public class SubcontractService {
 			for (SubcontractDetail scDetail: scDetailBQList){
 				if(scDetail.getCostRate()==0)
 					continue;
-				double scDetailNewCostAmount = CalculationUtil.round(scDetail.getAmountSubcontractNew().doubleValue(), 2);
+				double scDetailNewCostAmount = CalculationUtil.round(scDetail.getNewQuantity()*scDetail.getCostRate(), 2);
 
 				//Group the amounts with the same object and subsidiary code
 				logger.info("SCDetails Object Code: "+scDetail.getObjectCode()+" Subsidiary Code: "+scDetail.getSubsidiaryCode()+" Last Object Code: "+lastObjCode+" Last Subidiary Code: "+lastSubsidCode);

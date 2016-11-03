@@ -774,7 +774,7 @@ public class ResourceSummaryService implements Serializable {
 		for (ResourceSummary resourceSummary : resourceSummaries) {
 			if(!voIDResourceSummaryList.contains(resourceSummary.getId())){
 				resourceSummariesOfBQs.add(resourceSummary);
-				totalAmountofSameAccountCode += resourceSummary.getQuantity() * resourceSummary.getRate();
+				totalAmountofSameAccountCode += resourceSummary.getAmountBudget();
 			}
 		}
 		logger.info("Total Amount of the Same Account Code: "+totalAmountofSameAccountCode+"; New Amount: "+newAmount);
@@ -818,6 +818,7 @@ public class ResourceSummaryService implements Serializable {
 			}
 			message += "Resource Summary id: " + resourceSummary.getId() + " New Quantity: " + newQuantity + " for BQ\n";
 			resourceSummary.setQuantity(newQuantity);
+			resourceSummary.setAmountBudget(CalculationUtil.round(newQuantity* resourceSummary.getRate(), 2));
 			resourceSummaryDao.saveOrUpdate(resourceSummary);
 			counter +=1;
 		}
@@ -833,6 +834,7 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setUnit("AM");
 		newResource.setRate(Double.valueOf(1));
 		newResource.setQuantity(totalAmountofSameAccountCode - newAmount);
+		newResource.setAmountBudget(CalculationUtil.round(newResource.getQuantity()*newResource.getRate(), 2));
 		if (newResource.getQuantity().doubleValue()!=0){
 			resourceSummaryDao.saveOrUpdate(newResource);
 			logger.info(job.getJobNumber()+"."+objectCode+"."+subsidiaryCode+" X "+packageNo+" new Resource summary saved.");
@@ -868,6 +870,7 @@ public class ResourceSummaryService implements Serializable {
 			return null;
 		}
 		resourceSummary.setQuantity(scDetail.getNewQuantity());
+		resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getQuantity()*resourceSummary.getRate(),2));
 		resourceSummaryDao.saveOrUpdate(resourceSummary);
 		logger.info("Update resource[VO]. Quantity: "+scDetail.getNewQuantity());
 		
@@ -880,6 +883,7 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setUnit(resourceSummary.getUnit());
 		newResource.setRate(Double.valueOf(1));
 		newResource.setQuantity(amount - newAmount);
+		newResource.setAmountBudget(CalculationUtil.round(newResource.getQuantity()*newResource.getRate(), 2));
 		resourceSummaryDao.saveOrUpdate(newResource);
 		logger.info("Add new resource[VO]. Quantity: "+(amount - newAmount));
 		

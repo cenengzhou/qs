@@ -36,7 +36,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, visible:false, enableCellEdit: false,enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'amountSubcontract', displayName: "Subcontract Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             {field: 'cumWorkDoneQuantity', displayName: "Cumulative Workdone Quantity", width: 150, cellEditableCondition : $scope.canEdit, 
+			             {field: 'cumWorkDoneQuantity', displayName: "Cum. Workdone Quantity", width: 150, cellEditableCondition : $scope.canEdit, 
 			            	cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
 			            	aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
@@ -286,7 +286,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				function( data ) {
 					$scope.subcontract = data;
 
-					if($scope.subcontract.paymentStatus == 'F')
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
 						$scope.edit = false;
 					else
 						$scope.edit = true;

@@ -17,6 +17,11 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
 				});
 	}
 
@@ -41,7 +46,6 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 						var obj = $scope.addendums.filter(function(item){ return item.no == $scope.maxAddendumNo; });
 						$scope.latestAddendumStatus = obj[0]['status'];
 
-						getSubcontract();
 					}
 					prepareCalendar();
 					

@@ -91,9 +91,9 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					if(data.paymentStatus == 'F'){
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
 						$scope.disableButton = true;
-					}else 
+					else 
 						$scope.disableButton = false;
 					
 					if(data.scStatus < '500'){
