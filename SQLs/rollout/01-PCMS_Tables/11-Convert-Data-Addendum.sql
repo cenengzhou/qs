@@ -314,13 +314,13 @@ and sd.type = 'VO' and sd.costrate >0 and (sd.approved = 'N' or sd.approved = 'S
 );
 --4.3 Convert exsiting non-approved budget V1, V3 to OA
 update PCMSDATAUAT.Subcontract_Detail
-set linetype = 'OA', approved = 'A'
+set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty
 where system_status = 'ACTIVE' 
 and subcontract_id in (select id from PCMSDATADEV.subcontract where paymentstatus != 'F' and scstatus = '500' and job_info_id in (select id from PCMSDATADEV.job_info where completionstatus = '1'))
 and type = 'VO' and costrate >0 and (approved = 'N' or approved = 'S');
 --4.4 Convert exsiting non-approved VO(no budget) to OA
 update PCMSDATAUAT.Subcontract_Detail
-set linetype = 'OA', approved = 'A'
+set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty
 where system_status = 'ACTIVE' 
 and subcontract_id in (select id from PCMSDATAUAT.subcontract where paymentstatus != 'F' and scstatus = '500' and job_info_id in (select id from PCMSDATAUAT.job_info where completionstatus = '1'))
 and type = 'VO' and linetype not in ('OA')

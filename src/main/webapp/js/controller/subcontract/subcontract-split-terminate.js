@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', '$uibModal', 'confirmService', 'roundUtil', '$state', '$stateParams', 'GlobalParameter',
-                                            function($scope, subcontractService, modalService, $uibModal, confirmService, roundUtil, $state, $stateParams, GlobalParameter) {
+mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractService', 'modalService', '$uibModal', 'confirmService', 'roundUtil', '$state', '$stateParams', 'GlobalParameter', 'paymentService',
+                                            function($scope, subcontractService, modalService, $uibModal, confirmService, roundUtil, $state, $stateParams, GlobalParameter, paymentService) {
 	$scope.remeasuredSubcontractSumAfterSplit = 0;
 	$scope.approvedVOAmountAfterSplit = 0;
 	
@@ -225,22 +225,6 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 				});
 	}
 	
-	function getSubcontract(){
-		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					$scope.remeasuredSubcontractSum = data.remeasuredSubcontractSum;
-					$scope.approvedVOAmount = data.approvedVOAmount;
-					$scope.splitTerminateStatus = data.splitTerminateStatus;
-					
-					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
-						$scope.disableButtons = true;
-					else
-						$scope.disableButtons = false;
-				});
-	}
-	
-	
 	
 	function getSubcontractDetailTotalNewAmount(){
 		subcontractService.getSubcontractDetailTotalNewAmount($scope.jobNo, $scope.subcontractNo)
@@ -289,6 +273,36 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract Split Approval has been submitted.");
 						$state.reload();
+					}
+				});
+	}
+	
+	function getSubcontract(){
+		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.remeasuredSubcontractSum = data.remeasuredSubcontractSum;
+					$scope.approvedVOAmount = data.approvedVOAmount;
+					$scope.splitTerminateStatus = data.splitTerminateStatus;
+					
+					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
+						$scope.disableButtons = true;
+					else
+						$scope.disableButtons = false;
+					
+					getLatestPaymentCert();
+				});
+	}
+	
+	
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data !=null && data.length >0){
+						if(data.paymentStatus != "PND" && data.paymentStatus != "APR")
+							$scope.disableButtons = true;
+						
 					}
 				});
 	}

@@ -1,5 +1,5 @@
-mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcontractService','$location', '$state', '$cookies', 'uiGridConstants',
-                                              function($scope , modalService, subcontractService, $location, $state, $cookies, uiGridConstants) {
+mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcontractService','$location', '$state', '$cookies', 'uiGridConstants', 'paymentService',
+                                              function($scope , modalService, subcontractService, $location, $state, $cookies, uiGridConstants, paymentService) {
 	$cookies.put('scDetailID', '');
 	getSubcontract();
 	getOtherSubcontractDetails();
@@ -192,8 +192,21 @@ mainApp.controller('OtherAddendumListCtrl', ['$scope' , 'modalService', 'subcont
 						$scope.disableButton = true;
 					else 
 						$scope.disableButton = false;
+					
+					getLatestPaymentCert();
 				});
 	}
 	
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data !=null && data.length >0){
+						if(data.paymentStatus != "PND" && data.paymentStatus != "APR")
+							$scope.disableButtons = true;
+						
+					}
+				});
+	}
 	
 }]);

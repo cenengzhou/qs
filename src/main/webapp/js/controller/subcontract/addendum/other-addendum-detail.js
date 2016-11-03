@@ -1,5 +1,5 @@
-mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subcontractService', 'unitService', '$cookies', 'roundUtil', '$location',
-                                              function($scope ,modalService, subcontractService, unitService, $cookies, roundUtil, $location) {
+mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subcontractService', 'unitService', '$cookies', 'roundUtil', '$location', 'paymentService',
+                                              function($scope ,modalService, subcontractService, unitService, $cookies, roundUtil, $location, paymentService) {
 
 	var scDetailID = $cookies.get('scDetailID');
 	
@@ -100,9 +100,22 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 						$scope.lineType = "RR";
 						$scope.disableSelect = true;
 					}
+					
+					getLatestPaymentCert();
 				});
 	}
 	
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data !=null && data.length >0){
+						if(data.paymentStatus != "PND" && data.paymentStatus != "APR")
+							$scope.disableButtons = true;
+						
+					}
+				});
+	}
 	
 	function getUnitOfMeasurementList() {
 		unitService.getUnitOfMeasurementList()

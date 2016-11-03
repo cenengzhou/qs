@@ -995,9 +995,6 @@ public class AddendumService{
 			scDetail.setAltObjectCode(addendumDetail.getCodeObjectForDaywork());
 			scDetail.setRemark(addendumDetail.getRemarks());
 			
-			scDetail.setToBeApprovedQuantity(addendumDetail.getQuantity().doubleValue());
-			scDetail.setToBeApprovedRate(addendumDetail.getRateAddendum().doubleValue());
-			
 
 			scDetail.setApproved(SubcontractDetail.APPROVED);
 			subcontractDetailHBDao.update(scDetail);
