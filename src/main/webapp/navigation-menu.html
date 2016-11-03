@@ -135,7 +135,7 @@
 	                  <label class="btn btn-sm btn-secondary btn-success icon-btn dropdown-toggle" type="button" style="padding:1px 5px 1px 5px;"> Role <span class="badge">{{user.authorities.length}}</span></label>
 	               </a>
 	                  <ul class="dropdown-menu bg-success" style="cursor:pointer;padding:5px; top: 17px" id="roleDropPanel" aria-labelledby="roleMenuCaret">
-	                 	<li class="class="dropdown-item" ng-mouseover="showRole(true)" ng-mouseleave="showRole(false)" ng-repeat="role in user.authorities" style="border-bottom:rgba(255, 255, 255, .3) solid 1px" title="{{role.RoleDescription}}">{{role.RoleName}}</li>
+	                 	<li class="class="dropdown-item" ng-mouseover="showRole(true)" ng-mouseleave="showRole(false)" ng-repeat="role in user.authorities | orderBy: 'RoleName'" style="border-bottom:rgba(255, 255, 255, .3) solid 1px" title="{{role.RoleDescription}}">{{role.RoleName}}</li>
 	                 </ul>
 	                 </span>
 	                 

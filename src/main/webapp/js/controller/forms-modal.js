@@ -54,11 +54,11 @@ mainApp.controller('FormsCtrl',
 										.initDoc(null, '.doc', 'fa fa-file-word-o', 'icon bg-warning-light')
 										.initLabel('New', 'label-danger')
 										.initDate('2016-11-07'),
-									new FormDoc('QS System Transit Template')
+									new FormDoc('QS 2.0 Transit Template')
 										.initDoc(null, '.xlsx', 'fa fa-file-excel-o', 'icon bg-danger-light')
 										.initLabel('New', 'label-danger')
 										.initDate('2016-11-07'),
-									new FormDoc('QS Systen Transit Sample')
+									new FormDoc('QS 2.0 Transit Sample')
 										.initDoc(null, '.xlsx', 'fa fa-file-excel-o', 'icon bg-grey-light')
 										.initLabel('New', 'label-danger')
 										.initDate('2016-11-07')

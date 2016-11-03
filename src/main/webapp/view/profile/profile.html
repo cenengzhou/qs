@@ -92,7 +92,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="role in user.authorities">
+                                        <tr ng-repeat="role in user.authorities | orderBy: 'RoleName'">
                                             <td class="pull-right"><i class="icofont icofont-2x {{icon.iconClass}} rounded-corner" title="{{icon.type}}" ng-repeat="icon in getRoleIcon(role.RoleName)"></td>
                                             <td>{{role.RoleName}}</td>
                                             <td >{{role.RoleDescription}}</td>

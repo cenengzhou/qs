@@ -42,7 +42,7 @@ public class TomcatSessionController {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsAdmin())")
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "GetSessionList")
 	public List<SessionDTO> getSessionList(HttpServletRequest request, HttpServletResponse response){
 		
