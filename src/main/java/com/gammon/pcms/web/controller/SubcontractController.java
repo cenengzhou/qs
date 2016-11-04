@@ -253,6 +253,21 @@ public class SubcontractController {
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateWDandIVList", method = RequestMethod.POST)
+	public String updateWDandIVList(@RequestParam(required =true) String jobNo,
+								@RequestParam(required =true) String subcontractNo,
+								@RequestBody List<SubcontractDetailOA> scDetailList){
+			String message = "";
+			for(SubcontractDetailOA scDetail : scDetailList){
+				String result = updateWDandIV(jobNo, subcontractNo, scDetail);
+				if(result != ""){
+					message += "Subcontract detail ID " + scDetail.getId() + ":" + result + "\n";
+				}
+			}
+			return message;
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateWDandIVByPercent", method = RequestMethod.POST)
 	public String updateWDandIVByPercent(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,

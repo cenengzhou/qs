@@ -37,7 +37,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	var MSG_UPDATE_SUBCONTRACT_DETAILS = 'Please update IV for this resource in the subcontract details section';
 	var MSG_GREATER_THEN_BUDGET = 'Cumulative IV Amount cannot be greater than budget amount';
 	var MSG_IMPORT_OBJECT_NOT_FOUND = 'Import object not found';
-	var MSG_NOCHANGE = 'Cumulative IV Amount and IV Movement are same as row record';
+	var MSG_NOCHANGE = 'Cumulative IV Amount is same as row record';
 	var MSG_WRONG_CURRIVAMOUNT = 'Cumulative IV Amount not equal to IV Movement + Posted IV Amount. ';
 	var MSG_WRONG_IVMOVEMENT = 'IV Movement not equal to Cumulative IV Amount - Posted IV Amount. ';
 	var MSG_IMPORTED = 'Record imported into the grid'
@@ -65,7 +65,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     		var newObj = {};
     		var importKey = getImportKey(importObj);
     		newObj.currIVAmount = importObj.currIVAmount;
-    		newObj.ivMovement = importObj.ivMovement;
+//    		newObj.ivMovement = importObj.ivMovement;
     		importArray[importKey] = newObj;
 		});
     	for(var i = 0; i<grid.rows.length; i++){
@@ -391,11 +391,11 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	}
 
 	$scope.applyPercentage = function(){
+		if(!isRepackagingLocked()) return;
 		if($scope.percent != null){
 			angular.forEach($scope.gridOptions.data, function(value, key){
-				if(isRepackagingLocked() &&
-						!validateAmountBudgetEqZero(value) &&
-						!uneditableUnawardedSubcontractNos.indexOf(value.packageNo) >= 0){
+				if(!validateAmountBudgetEqZero(value) &&
+					!uneditableUnawardedSubcontractNos.indexOf(value.packageNo) >= 0){
 					value.currIVAmount = value.amountBudget * ($scope.percent/100);
 					value.ivMovement = value.currIVAmount - value.postedIVAmount;
 					$scope.gridApi.rowEdit.setRowsDirty([value]);

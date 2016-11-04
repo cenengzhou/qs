@@ -15,7 +15,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	var STATUS_IMPORTED = 'Imported';
 	var STATUS_NOCHANGE = 'No Change';
 	var MSG_IMPORT_OBJECT_NOT_FOUND = 'Import object not found';
-	var MSG_NOCHANGE = 'Cumulative IV Amount and IV Movement are same as row record';
+	var MSG_NOCHANGE = 'Cumulative IV Amount is same as row record';
 	var MSG_WRONG_CURRIVAMOUNT = 'Cumulative IV Amount not equal to IV Movement + Posted IV Amount. ';
 	var MSG_WRONG_IVMOVEMENT = 'IV Movement not equal to Cumulative IV Amount - Posted IV Amount. ';
 	var MSG_IMPORTED = 'Record imported into the grid'
@@ -30,7 +30,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     		var newObj = {};
     		var importKey = getImportKey(importObj);
     		newObj.cumAmount = importObj.cumAmount;
-    		newObj.movementAmount = importObj.movementAmount;
+//    		newObj.movementAmount = importObj.movementAmount;
     		importArray[importKey] = newObj;
 		});
     	for(var i = 0; i<grid.rows.length; i++){
@@ -69,7 +69,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     		statusObj.importStatus = STATUS_NOCHANGE;
     		return;
     	} 
-//
+    	importObj.movementAmount = parseFloat(importObj.cumAmount) - row.entity.postedAmount;
 		if(!validateSameFloatValue(
 				parseFloat(importObj.movementAmount), 
 				parseFloat(importObj.cumAmount) - row.entity.postedAmount) ){

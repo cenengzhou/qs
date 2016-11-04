@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', 'roundUtil', '$timeout',
-                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, roundUtil, $timeout) {
+mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', 'resourceSummaryService', 'uiGridConstants', 'modalService', '$state', 'roundUtil', '$timeout', 'blockUI',
+                                               function ($scope, subcontractService, resourceSummaryService, uiGridConstants, modalService, $state, roundUtil, $timeout, blockUI) {
 
 	$scope.percent = "";
 	$scope.lastID ="";
@@ -15,6 +15,119 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	getSubcontractDetailForWD();
 	getResourceSummariesBySC();
 	
+	$scope.gridDirtyRowsWD = [];
+	$scope.resetData = [];
+	$scope.statusArray = [];
+	var MSG_ZERO_RATE = 'No work done is allowed with ZERO subcontract rate for budgeted item.';
+	var MSG_WRONG_QTY = 'Cumulative WD Qty not equal to Cumulative WD Amount / SC Rate';
+	var MSG_WRONG_AMT = 'Cumulative WD Amount not equal to Cumulative WD Qty * SC Rate';
+	var MSG_NOCHANGE = 'Cumulative WD Amount is same as row record';
+	var MSG_IMPORTED = 'Record imported into the grid';
+	var STATUS_IGNORED = 'Ignored';
+	var STATUS_IMPORTED = 'Imported';
+	var STATUS_NOCHANGE = 'No Change';
+
+	$scope.initBlockUI = function(grid, newObjects){
+		if(!$scope.canEdit()) return;
+		blockUI.start();
+		$timeout(function(){
+			$scope.importData(grid, newObjects);
+		}, 100);
+		
+	}
+	
+    $scope.importData = function(grid, newObjects){
+    	var importArray = [];
+    	$scope.statusArray = [];
+    	newObjects.forEach(function(importObj){
+    		var newObj = {};
+    		var importKey = getImportKey(importObj);
+    		newObj.cumWorkDoneQuantity = importObj.cumWorkDoneQuantity;
+    		newObj.amountCumulativeWD = importObj.amountCumulativeWD;
+    		importArray[importKey] = newObj;
+		});
+    	for(var i = 0; i<grid.rows.length; i++){
+    		var entityKey = getImportKey(grid.rows[i].entity);
+    		var importObj = importArray[entityKey]; 
+    		var statusObj = {};
+    		statusObj.rowNum = i + 2;
+    		statusObj.rowDescription = grid.rows[i].entity.resourceDescription;
+    		if(importObj === undefined){
+    			statusObj.message = MSG_IMPORT_OBJECT_NOT_FOUND;
+    			statusObj.importStatus = STATUS_IGNORED;
+    		} else {
+    			updateRow(grid.rows[i], importObj, statusObj);
+    		}
+    		$scope.statusArray.push(statusObj);
+    	}
+  	  $scope.gridApi.grid.refresh();
+  	  $scope.gridDirtyRowsWD = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
+  	  $scope.gridOptionsIV.data = [];
+  	  $scope.showStatus();
+  	  $timeout(function(){
+  		  blockUI.stop();
+  	  },100);
+    }
+    
+    $scope.showStatus = function(){
+    	modalService.open('md', 'view/excelupload-modal.html', 'ExcelUploadModalCtrl', 'Warn', $scope.statusArray);
+    }
+    
+    function updateRow(row, importObj, statusObj){
+    	if(validateZeroRate(row.entity)) {
+    		statusObj.message = MSG_ZERO_RATE;
+    		statusObj.importStatus = STATUS_IGNORED;
+    		return;
+    	}
+
+    	if(validateSameFloatValue(importObj.cumWorkDoneQuantity, row.entity.cumWorkDoneQuantity) 
+    			&& validateSameFloatValue(importObj.amountCumulativeWD, row.entity.amountCumulativeWD)){
+    		statusObj.message = MSG_NOCHANGE;
+    		statusObj.importStatus = STATUS_NOCHANGE;
+    		return;
+    	} else {
+    		importObj.cumWorkDoneQuantity = roundUtil.round(importObj.amountCumulativeWD / row.entity.scRate, 4);
+    		if(!validateCumWDQty(importObj, row.entity)){
+        		statusObj.message = MSG_WRONG_QTY;
+        		statusObj.importStatus = STATUS_IGNORED;
+        		return; 			
+    		} 
+
+    		if(!validateCumWDAmt(importObj, row.entity)) {
+        		statusObj.message = MSG_WRONG_AMT;
+        		statusObj.importStatus = STATUS_IGNORED;
+        		return
+    		}
+    	}
+    	
+    	row.entity.cumWorkDoneQuantity = roundUtil.round(importObj.cumWorkDoneQuantity, 4);
+    	row.entity.amountCumulativeWD = roundUtil.round(importObj.amountCumulativeWD, 2);
+    	statusObj.message = MSG_IMPORTED;
+    	statusObj.importStatus = STATUS_IMPORTED;
+		$scope.gridApi.rowEdit.setRowsDirty( [row.entity]);
+		return;
+    }
+    
+    function getImportKey(obj){
+    	return escape('@' + parseType('String', obj.id) + '-' + '@');
+    }
+    
+    function parseType(type, value){
+    	switch(type){
+    		case 'String':
+    			return value ? String(value) : null;
+    			break;
+    		case 'Float':
+    			return parseFloat(value);
+    			break;
+    		case 'Boolean':
+    			return value.toLowerCase() === 'true' ? true : false;
+    			break;
+    		default:
+    			return value;
+    	}  
+      }
+      
 	$scope.gridOptions = {
 			enableSorting: false,
 			enableFiltering: true,
@@ -24,13 +137,16 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			multiSelect: false,
 			showGridFooter : true,
 			showColumnFooter : true,
+			rowEditWaitInterval :-1,
+			importerShowMenu: true,
+			importerDataAddCallback: $scope.initBlockUI,
 			//enableCellEditOnFocus : true,
 
 			exporterMenuPdf: false,
 			
 			
 			columnDefs: [
-		             	{ field: 'id', width: 20, enableCellEdit: false, visible:false},
+		             	{ field: 'id', displayName: "ID", width: 20, enableCellEdit: false, visible:false},
 			             { field: 'lineType', width: 40, enableCellEdit: false, pinnedLeft:true},
 		             	 { field: 'description', width: 150, enableCellEdit: false, pinnedLeft:true},
 
@@ -53,14 +169,14 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false ,cellClass: 'text-right', cellFilter: 'number:4'},
 
-	            		 {field: 'costRate', width: 60, enableCellEdit: false},
-	            		 {field: 'scRate', width: 60, enableCellEdit: false, enableFiltering: false},
-		            	 {field: 'billItem', width: 80, enableCellEdit: false},
-			             {field: 'objectCode', width: 70, enableCellEdit: false},
-			             {field: 'subsidiaryCode', width: 80, enableCellEdit: false},
+	            		 {field: 'costRate', displayName:"Cost Rate", width: 60, enableCellEdit: false},
+	            		 {field: 'scRate', displayName: "Sc Rate", width: 60, enableCellEdit: false, enableFiltering: false},
+		            	 {field: 'billItem', displayName:"Bill Item", width: 80, enableCellEdit: false},
+			             {field: 'objectCode', displayName: "Object Code", width: 70, enableCellEdit: false},
+			             {field: 'subsidiaryCode', displayName: "Subsidiary Code", width: 80, enableCellEdit: false},
 			             
-			             {field: 'projectedProvision', width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
-			             {field: 'provision', width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
+			             {field: 'projectedProvision', displayName: "Projected Provision", width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
+			             {field: 'provision', displayName: "Provision", width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
 
 			             {field: 'altObjectCode', width: 100, visible:false, enableCellEdit: false},
 
@@ -76,14 +192,30 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 	
 	};
+	
+    function validateSameFloatValue(value1, value2){
+    	return parseFloat(value1) === parseFloat(value2);
+    }
+    
+	function validateZeroRate(rowEntity){
+		return rowEntity.scRate == 0 && rowEntity.costRate > 0;
+	}
 
+	function validateCumWDQty(newObj, currentObj){
+		return roundUtil.round(newObj.cumWorkDoneQuantity, 4) == roundUtil.round(newObj.amountCumulativeWD / currentObj.scRate, 4);
+	}
+	
+	function validateCumWDAmt(newObj, currentObj){
+		return roundUtil.round(newObj.amountCumulativeWD, 2) == roundUtil.round(newObj.cumWorkDoneQuantity * currentObj.scRate, 2);
+	}
+	
 	$scope.gridOptions.onRegisterApi= function(gridApi){
 		$scope.gridApi = gridApi;
 
 		 gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
-			 if(rowEntity.scRate == 0 && rowEntity.costRate>0){
+			 if(validateZeroRate(rowEntity)){
 				 if(oldValue == 0)
-					 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No work done is allowed with ZERO subcontract rate for budgeted item.");					 
+					 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_ZERO_RATE);					 
 			}
         });
 		
@@ -209,6 +341,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	};
 
 	$scope.applyPercent = function (){
+		if(!$scope.canEdit()) return;
 		if($scope.percent != null)
 			updateWDandIVByPercent($scope.percent);
 		else
@@ -296,7 +429,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 						$scope.edit = true;
 				});
 	}
-	
+
 	function updateIVForSubcontract(ivList){
 		resourceSummaryService.updateIVForSubcontract(ivList)
 	   	 .then(
@@ -307,5 +440,19 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				 });
 	}
 	
+	$scope.saveWDList = function (){
+		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+
+		subcontractService.updateWDandIVList($scope.jobNo, $scope.subcontractNo, dataRows)
+	   	 .then(
+				 function( data ) {
+					 if(data.length!=0){
+						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+					 } 
+					 $state.reload();
+				 });
+	}
+
 }]);
 
