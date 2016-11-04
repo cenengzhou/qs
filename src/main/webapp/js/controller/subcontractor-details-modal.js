@@ -308,7 +308,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 		attachmentService.uploadSCAttachment(formData)
 		.then(function(data){
 			f.value = null;
-			loadAttachment();
+			$scope.loadAttachment();
 		});
 	}
 		
@@ -330,7 +330,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 					if(att.selectedAttachement === true){
 						attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
 						.then(function(data){
-							loadAttachment();
+							$scope.loadAttachment();
 							$scope.selectedAttachement = false;
 						});
 					}

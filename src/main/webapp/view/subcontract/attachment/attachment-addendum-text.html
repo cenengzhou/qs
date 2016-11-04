@@ -4,7 +4,7 @@
 		<table class="col-md-12">
 		<tr>
 		<td class="col-md-2"><label for="fileNameBox" class="control-label text-white">File Name:</label></td>
-		<td class="col-md-10"><input type="text" class="form-control" id="fileNameBox" name="fileNameBox" ng-model="parentScope.textAttachment.nameFile"></td>
+		<td class="col-md-10"><input type="text" class="form-control" id="fileNameBox" name="fileNameBox" ng-model="parentScope.textAttachment.nameFile" ng-disabled="!parentScope.isTextUpdatable"></td>
 		</tr>
 		</table>
 		</div>
