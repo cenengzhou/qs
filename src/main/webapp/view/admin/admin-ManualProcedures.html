@@ -48,13 +48,10 @@
 						</div>
 						<div class="form-group">
 							<label for="glDate">GL Date:</label>
-							<div class="input-group" moment-picker="provisionGlDate"
-								format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="month" today="true">
-								<span class="input-group-addon"> <i
-									class="fa fa-calendar"></i>
-								</span> <input class="form-control" id="glDate" 
-									ng-model="provisionGlDate" required="required" ng-model-options="{ updateOn: 'blur' }">
-							</div>
+								<div class="input-group">
+									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+									<input class="form-control" type="text" name="provisionGlDate.singleDate" ng-model="provisionGlDate"/>
+								</div>
 						</div>
 						<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Post</button>
 					</div>

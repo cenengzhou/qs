@@ -22,7 +22,7 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 			
 			$scope.addNextFireDatetime = function(){
 				angular.forEach($scope.triggers, function(trigger){
-					trigger.nextFireDatetime = moment(trigger.nextFireTime).format('DD MMM YYYY HH:mm');
+					trigger.nextFireDatetime = moment(trigger.nextFireTime).format(GlobalParameter.MOMENT_DATETIME_FORMAT);
 				});
 			}
 			
@@ -85,6 +85,26 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 				result.msg = msg;
 				return result;
 			}
+			
+		$scope.loadDatePickerFn = function(){
+			angular.element('input[name$=".singleDate"').daterangepicker({
+			    singleDatePicker: true,
+			    showDropdowns: true,
+			    timePicker: true,
+			    timePicker24Hour: true,
+			    autoApply: true,
+				locale: {
+				      format: GlobalParameter.MOMENT_DATETIME_FORMAT
+				    },
 
-		}]);
+			});
+		}
+		
+		$scope.openDropdown = function( $event){
+			angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+		}
+
+
+
+}]);
 

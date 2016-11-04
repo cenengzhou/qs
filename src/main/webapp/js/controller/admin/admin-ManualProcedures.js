@@ -2,7 +2,7 @@
 mainApp.controller('AdminManualProceduresCtrl', 
 		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService', 'GlobalParameter',
 		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService, GlobalParameter) {
-	$scope.provisionGlDate = moment();
+	$scope.provisionGlDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.auditTables = [];
 	$scope.auditTableName = '';
 	$scope.GlobalParameter = GlobalParameter;
@@ -103,6 +103,19 @@ mainApp.controller('AdminManualProceduresCtrl',
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
 		});
 	};
+	
+	angular.element('input[name$=".singleDate"').daterangepicker({
+	    singleDatePicker: true,
+	    showDropdowns: true,
+	    autoApply: true,
+		locale: {
+		      format: GlobalParameter.MOMENT_DATE_FORMAT
+		    },
+
+	})
+	$scope.openDropdown = function( $event){
+		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
 
 	
 }]);

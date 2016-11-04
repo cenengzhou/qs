@@ -68,7 +68,7 @@ mainApp.constant('GlobalParameter', {
 	DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',
 	MOMENT_DATE_FORMAT: 'YYYY-MM-DD',
 	MOMENT_DATE_REGEX: '\\d{4}-\\d{1,2}-\\d{1,2}',
-	MOMENT_DATETIME_FORMAT: 'YYYY-MM-DD hh:mm',
+	MOMENT_DATETIME_FORMAT: 'YYYY-MM-DD HH:mm',
 	// Info Tips content
 	//to show id - value => ng-options="v.id as (v.id + ' - ' + v.value) for v in GlobalParameter.paymentTerms"
 	addendumTypes:[

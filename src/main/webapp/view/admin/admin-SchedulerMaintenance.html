@@ -13,7 +13,7 @@
 	<!-- Main content -->
 	<form name="triggerForm" ng-submit="onSubmit()">
 	<div class="row" vertilize-container resize ng-style="resizeWithOffset(180)">
-		<div class="col-sm-6 col-md-4" ng-repeat="trigger in triggers">
+		<div class="col-sm-6 col-md-4" ng-repeat="trigger in triggers" on-finish-ng-repeat call-fn="loadDatePickerFn()">
 			<div class="box"
 				ng-class="{'box-warning' : isHover($index) , 'box-default' : !isHover($index)}"
 				ng-mouseenter="setHover($index)" ng-mouseleave="setHover(-1)"
@@ -52,26 +52,24 @@
 							<td>
 								<label for="{{trigger.triggerName}}_nextFireDatetime">Next Fire Time:</label></td>
 							<td>
-								<div class="input-group"
-									moment-picker="trigger.nextFireDatetime"
-									format="{{GlobalParameter.MOMENT_DATETIME_FORMAT}}" start-view="hour" today="true"  ng-model-options="{ updateOn: 'blur' }"
-									>
-									<span class="input-group-addon"><i
-										class="fa fa-calendar"></i></span> <input class="form-control" timestamp-to-string="{{GlobalParameter.DATETIME_FORMAT}}"
-										name="{{trigger.triggerName}}_nextFireDatetime" id="{{trigger.triggerName}}_nextFireDatetime"
-										ng-model="trigger.nextFireDatetime">
+								<div class="input-group">
+									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+									<input class="form-control" type="text" name="{{trigger.triggerName}}.singleDate" ng-model="trigger.nextFireDatetime"/>
 								</div>
+								
 							</td>
 						</tr>
 						<tr>
 							<td><label for="{{trigger.triggerName}}_triggerState">Trigger
 									State:</label></td>
-							<td><select name="{{trigger.triggerName}}_triggerState" id="{{trigger.triggerName}}_triggerState"
-								class="form-control" ng-model="trigger.triggerState">
-									<option>ACQUIRED</option>
-									<option>PAUSED</option>
-									<option>WAITING</option>
-							</select></td>
+							<td>{{trigger.triggerState}}
+<!-- 							<select name="{{trigger.triggerName}}_triggerState" id="{{trigger.triggerName}}_triggerState" -->
+<!-- 								class="form-control" ng-model="trigger.triggerState"> -->
+<!-- 									<option>ACQUIRED</option> -->
+<!-- 									<option>PAUSED</option> -->
+<!-- 									<option>WAITING</option> -->
+<!-- 							</select> -->
+							</td>
 						</tr>
 					</table>
 				</div>

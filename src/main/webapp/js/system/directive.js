@@ -397,3 +397,21 @@ mainApp.directive('compile', function($compile) {
   };
 });
 
+mainApp.directive('onFinishNgRepeat', function($timeout) {
+	return {
+        restrict: 'A',
+        scope: {
+            callFn: '&'
+        },
+		link: function(scope, element, attrs) {
+			if (scope.$parent.$last){
+				if(typeof scope.callFn === 'function') {
+					$timeout(function(){
+						scope.callFn();
+					},100);
+				}
+			}
+		}
+	};
+});
+
