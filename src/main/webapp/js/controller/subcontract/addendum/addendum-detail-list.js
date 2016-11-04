@@ -95,12 +95,6 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		$cookies.put('addendumDetailHeaderRef', addendumDetailHeaderRef);
 
 		$location.path('/subcontract/addendum/tab/details');
-
-
-		/*var arrayLength = $scope.selectedRows.length;
-		for (var i = 0; i < arrayLength; i++) {
-			console.log($scope.selectedRows[i]['lineType']);
-		}*/
 	}
 
 

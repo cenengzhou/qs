@@ -1,7 +1,7 @@
-mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter',
-                                                  function ($scope,  subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter) {
+mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService',
+                                                  function ($scope,  subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService) {
 	getSubcontract();
-	
+	getLatestPaymentCert();	
 
 	//Rentention
 	$scope.percentageOption= "Revised";
@@ -42,19 +42,16 @@ mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$c
 				});
 	}
 	
-	
-	
-	/*function getWorkScope(workScopeCode){
-		subcontractService.getWorkScope(workScopeCode)
+	function getLatestPaymentCert() {
+		paymentService.getLatestPaymentCert($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					if(data.length==0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Work Scope "+workScopeCode+" does not exist.");
-					}else{
-						upateSubcontract();
-					}
+					$scope.payment = data;
+					console.log(data);
 				});
-	}*/
+
+	}
+	
 
 }]);
 

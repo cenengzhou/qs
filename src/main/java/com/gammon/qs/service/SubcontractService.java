@@ -4865,6 +4865,8 @@ public class SubcontractService {
 			resultDetails.setScRate(0.0);
 			if("C1".equals(lineType) || "RR".equals(lineType))
 				resultDetails.setScRate(-1.0);
+			else if ("OA".equals(lineType))
+				resultDetails.setScRate(1.0);
 
 			resultDetails.setAmountSubcontract(new BigDecimal(0));
 

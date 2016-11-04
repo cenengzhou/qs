@@ -359,7 +359,6 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), "I", paymentDetails)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.length != 0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
