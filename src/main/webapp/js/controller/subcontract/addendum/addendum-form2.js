@@ -36,7 +36,7 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	
 	function loadData(){
 		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
-			getAddendum();
+			getSubcontract();
 			getAllAddendumDetails();
 		}else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
@@ -52,8 +52,6 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
-					
-					getSubcontract();
 				});
 	}
 	
@@ -66,6 +64,8 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 						$scope.disableButtons = true;
 					else 
 						$scope.disableButtons = false;
+					
+					getAddendum();
 				});
 	}
 	

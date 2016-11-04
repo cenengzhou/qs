@@ -2822,6 +2822,9 @@ public class PaymentService{
 			if(Subcontract.ADDENDUM_SUBMITTED.equals(subcontract.getSubmittedAddendum())){
 				error = "Payment cannot be submitted. Addendum approval request was submitted.";
 				return error;
+			}else if (Subcontract.SPLIT_SUBMITTED.equals(subcontract.getSplitTerminateStatus()) || Subcontract.TERMINATE_SUBMITTED.equals(subcontract.getSplitTerminateStatus())){
+				error = "Payment cannot be submitted. Split/Terminate approval request was submitted.";
+				return error;
 			}
 
 			Integer addressNumber = new Integer(subcontract.getVendorNo());

@@ -141,7 +141,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 	
 	function loadData(){
 		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
-			getAddendum();
+			getSubcontract();
 			if(addendumDetailHeaderRef!=null && addendumDetailHeaderRef.length !=0){
 				if(addendumDetailHeaderRef!='Empty'){
 					getAddendumDetailHeader(addendumDetailHeaderRef);
@@ -166,8 +166,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
-					
-					getSubcontract();
+
 				});
 	}
 	
@@ -180,6 +179,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 						$scope.disableButtons = true;
 					else 
 						$scope.disableButtons = false;
+					
+					getAddendum();
 				});
 	}
 	
