@@ -909,7 +909,6 @@ public class AddendumService{
 			scDetailVO.setDescription(addendumDetail.getDescription().substring(0, 255));
 		}else 
 			scDetailVO.setDescription(addendumDetail.getDescription());
-
 		scDetailVO.setObjectCode(addendumDetail.getCodeObject());
 		scDetailVO.setSubsidiaryCode(addendumDetail.getCodeSubsidiary());
 		scDetailVO.setBillItem(addendumDetail.getBpi());
@@ -918,7 +917,6 @@ public class AddendumService{
 			scDetailVO.setResourceNo(addendumDetail.getIdResourceSummary().intValue());			
 		
 		scDetailVO.setUnit(addendumDetail.getUnit());
-
 		scDetailVO.setScRate(addendumDetail.getRateAddendum().doubleValue());
 		scDetailVO.setCostRate(addendumDetail.getRateBudget().doubleValue());
 		scDetailVO.setQuantity(addendumDetail.getQuantity().doubleValue());
@@ -946,7 +944,10 @@ public class AddendumService{
 		sequenceNo += 1;
 
 		//Add C2
-		if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+		if(("L2".equals(addendumDetail.getTypeVo()) || "D2".equals(addendumDetail.getTypeVo())) && 
+				addendumDetail.getNoSubcontractChargedRef() != null && 
+				addendumDetail.getNoSubcontractChargedRef().trim().length()>0 && 
+				"0".equals(addendumDetail.getNoSubcontractChargedRef())){
 			SubcontractDetailCC scDetailsCC = ((SubcontractDetailCC)subcontractService.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo(), "C2"));
 			scDetailsCC.setJobNo(addendumDetail.getNoJob());
 			scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo()));
