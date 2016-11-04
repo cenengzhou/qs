@@ -50,9 +50,9 @@
 						<div class="col-md-4">
 							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="isUpdatable && onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
-								<label class="btn btn-block btn-primary" ng-disabled="!isUpdatable"> <i
+								<label class="btn btn-block btn-primary"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
-									Attachment&hellip; <input style="display: none;" ng-disabled="!isUpdatable"
+									Attachment&hellip; <input style="display: none;"
 									class="form-control file-loading" type="file" name="files"
 									id="attachmentFiles" ng-model="attachmentFiles"
 									onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
@@ -70,8 +70,8 @@
 							</label>
 						</div>
 						<div class="col-md-4">
-							<button class="btn btn-block btn-danger" ng-disabled="!isUpdatable"
-								ng-click="isUpdatable && addTextAttachment()">
+							<button class="btn btn-block btn-danger"
+								ng-click="addTextAttachment()">
 								<i class="glyphicon glyphicon-plus-sign"></i> Add Text
 								Attachment
 							</button>

@@ -49,7 +49,7 @@ mainApp.controller('AttachmentAddendumTextCtrl', ['$scope', 'modalStatus', 'moda
               statusbar: true,
               height: 350,
               skin: 'tinymce_charcoal',
-              readonly: !$scope.parentScope.isUpdatable,
+              readonly: !$scope.parentScope.isTextUpdatable,
               maxLength : GlobalParameter.tinyMceMaxCharLength,
 };
 	

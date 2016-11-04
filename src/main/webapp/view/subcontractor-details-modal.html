@@ -16,21 +16,24 @@
 		<div class="row">
 			<section class="box box-primary">
 				<ul class="nav nav-tabs text-info">
-					<li role="presentation" ng-class="{active:isSelected(1)}">
-						<a href ng-click="selectTab(1)"><span class="fa fa-2x fa-user"></span> Subcontractor Information</a>
+					<li role="presentation" ng-class="{active:isSelected('info')}">
+						<a href ng-click="selectTab('info')"><span class="fa fa-2x fa-user"></span> Information</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected(2)}">
-						<a href ng-click="selectTab(2)"><span class="fa fa-2x fa fa-trophy"></span> Awarded Subcontracts</a>
+					<li role="presentation" ng-class="{active:isSelected('awarded')}">
+						<a href ng-click="selectTab('awarded')"><span class="fa fa-2x fa fa-trophy"></span> Awarded Subcontracts</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected(3)}">
-						<a href ng-click="selectTab(3)"><span class="fa fa-2x fa-history"></span> Tender Analysis History</a>
+					<li role="presentation" ng-class="{active:isSelected('history')}">
+						<a href ng-click="selectTab('history')"><span class="fa fa-2x fa-history"></span> Tender Analysis History</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected(4)}">
-						<a href ng-click="selectTab(4)"><span class="fa fa-2x fa-calculator"></span> Work Scope</a>
+					<li role="presentation" ng-class="{active:isSelected('workscope')}">
+						<a href ng-click="selectTab('workscope')"><span class="fa fa-2x fa-calculator"></span> Work Scope</a>
+					</li>
+					<li role="presentation" ng-class="{active:isSelected('attachment')}">
+						<a href ng-click="selectTab('attachment')"><span class="fa fa-2x fa-paperclip"></span> Attachment</a>
 					</li>
 				</ul>
 				
-				<div ng-show="isSelected(1)" style="height:350px;overflow:auto">
+				<div ng-show="isSelected('info')" style="height:350px;overflow:auto">
 					<div class="box col-md-12" style="padding-left:0px; padding-right:0px">
 					<div class="col-md-7" style="padding-left:0px">
 						<table class="table table-striped">
@@ -85,23 +88,94 @@
 					</div>
 				</div>
 
-				<div ng-show="isSelected(2)" style="height:350px;overflow:auto">
+				<div ng-show="isSelected('awarded')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected(2)" id="awardedGrid" ui-grid="awardedGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('awarded')" id="awardedGrid" ui-grid="awardedGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
 				</div>
-				<div  ng-show="isSelected(3)" style="height:350px;overflow:auto">
+				<div  ng-show="isSelected('history')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected(3)" id="tenderAnalysisGrid" ui-grid="tenderAnalysisGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('history')" id="tenderAnalysisGrid" ui-grid="tenderAnalysisGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
 				</div>
-				<div ng-show="isSelected(4)" style="height:350px;overflow:auto">
+				<div ng-show="isSelected('workscope')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected(4)" id="workscopeGrid" ui-grid="workscopeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('workscope')" id="workscopeGrid" ui-grid="workscopeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
+				</div>
+				<div ng-show="isSelected('attachment')" style="height:350px;overflow:auto">
+
+								<div class="panel-body">
+									<div class="table-responsive" style="height:250px">
+										<form class="form" role="form" id="attachmentForm">
+											<table class="table table-hover ">
+												<thead>
+													<tr class="inverse">
+														<th>No.</th>
+														<th>File name</th>
+														<th>Type</th>
+														<!-- <th>Created By</th>  -->
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="attach in subcontractorAttachments"
+														style="cursor: pointer">
+														<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
+															<input type="checkbox" ng-Icheck id="fileRadiobox-{{$index}}"
+															ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
+															ng-model="attach.selectedAttachement"></td>
+														<td ng-click="attachmentClick()">{{attach.fileName}}</td>
+														<td ng-click="attachmentClick()"><span
+															class="{{attach.fileIconClass}}"></span></td>
+														<!--  
+														<td ng-click="attachmentClick()"><img imageonload
+															roll-back-image="resources/images/profile.png"
+															class="rounded-corner" height="30" width="30"
+															data-ng-src="{{attach.user.userIcon}}">
+															{{attach.user.fullname}}</td>
+															-->
+													</tr>
+												</tbody>
+											</table>
+										</form>
+									</div>
+								</div>
+								<div class="box-footer">
+									<div class="col-md-12">
+										<div class="col-md-4">
+											<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
+												ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
+												<label class="btn btn-block btn-primary"> <i
+													class="glyphicon glyphicon-upload"></i> Upload File
+													Attachment&hellip; <input style="display: none;"
+													class="form-control file-loading" type="file" name="files"
+													id="attachmentFiles" ng-model="attachmentFiles"
+													onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
+													multiple />
+												</label>
+											</form>
+										</div>
+				
+										<div class="col-md-4">
+											<label class="btn btn-block btn-success" ng-disabled="!isUpdatable"
+												ng-click="isUpdatable &&deleteAttachment()">
+												<i class="glyphicon glyphicon-remove-circle"></i> Delete
+												selected Item
+											</label>
+										</div>
+										<div class="col-md-4">
+											<button class="btn btn-block btn-danger"
+												ng-click="addTextAttachment()">
+												<i class="glyphicon glyphicon-plus-sign"></i> Add Text
+												Attachment
+											</button>
+										</div>
+									</div>
+								</div>
+
 				</div>
 			</section>
 		</div>

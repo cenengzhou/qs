@@ -72,6 +72,7 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
+    		$scope.isTextUpdatable = $scope.isUpdatable; 
     		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-text.html', 'AttachmentMainCertTextCtrl', 'Success', $scope);
     	}
     }
@@ -81,6 +82,7 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
     	$scope.textAttachment = {};
     	$scope.textAttachment.sequenceNo = $scope.sequenceNo + 1;
     	$scope.textAttachment.fileName = "New Text";
+    	$scope.isTextUpdatable = true;
 		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-text.html', 'AttachmentMainCertTextCtrl', 'Success', $scope);
     }
     

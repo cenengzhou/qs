@@ -251,6 +251,9 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		case '.csv':
 			iconClass = 'fa fa-2x fa-file-excel-o';
 			break;
+		case '.txt':
+			iconClass = 'fa fa-2x fa-file-text-o';
+			break;
 		default:
 			iconClass = 'fa fa-2x fa-file-o';
 		}

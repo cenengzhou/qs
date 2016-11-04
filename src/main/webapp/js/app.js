@@ -31,6 +31,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/excelupload-modal.js',
                            'js/controller/infotips-modal.js',
                            'js/controller/forms-modal.js',
+                           'js/service/attachment-service.js',
+                           'js/controller/subcontract/attachment/attachment-sc-text.js',
                            'js/controller/subcontractor-details-modal.js',
                     ] 
                 });

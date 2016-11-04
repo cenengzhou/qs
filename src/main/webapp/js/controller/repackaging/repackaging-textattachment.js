@@ -47,7 +47,7 @@ mainApp.controller('RepackagingTextAttachmentCtrl', ['$scope', 'modalService', '
               statusbar: true,
               height: 350,
               skin: 'tinymce_charcoal',
-              readonly: !$scope.parentScope.isUpdatable,
+              readonly: !$scope.parentScope.isTextUpdatable,
               maxLength : GlobalParameter.tinyMceMaxCharLength,
 	};
 	

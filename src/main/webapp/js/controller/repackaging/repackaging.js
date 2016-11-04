@@ -123,6 +123,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 			var wnd = $window.open(url, 'Download Attachment', '_blank');
 		} else {
 			$scope.repackaging.attachment = this.attach;
+			$scope.isTextUpdatable = $scope.isUpdatable; 
 			modalService.open('lg', 'view/repackaging/modal/repackaging-textattachment.html', 'RepackagingTextAttachmentCtrl', 'Success', $scope);
 		}
 	}
@@ -132,6 +133,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 		$scope.repackaging.attachment = {};
 		$scope.repackaging.attachment.sequenceNo = $scope.sequenceNo + 1;
 		$scope.repackaging.attachment.fileName = "New Text";
+		$scope.isTextUpdatable = true; 
 		modalService.open('lg', 'view/repackaging/modal/repackaging-textattachment.html', 'RepackagingTextAttachmentCtrl', 'Success', $scope);
 	}
 

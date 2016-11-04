@@ -79,6 +79,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     	$scope.textAttachment = {};
     	$scope.textAttachment.sequenceNo = $scope.sequenceNo + 1;
     	$scope.textAttachment.fileName = "New Text";
+    	$scope.isTextUpdatable = true;
 		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
     }
     
@@ -102,6 +103,7 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
+    		$scope.isTextUpdatable = $scope.isUpdatable; 
     		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
     	}
     }

@@ -79,6 +79,7 @@ public class PropertiesController {
 		Map<String, Object> propertiesMap = new HashMap<>();
 		propertiesMap.put("versionDate",		deploymentConfig.getVersionDate());
 		propertiesMap.put("deployEnvironment",	applicationConfig.getDeployEnvironment());
+		propertiesMap.put("revision", 			applicationConfig.getRevision());
 		propertiesMap.put("apUrl",				webServiceConfig.getWsAp("URL"));
 		propertiesMap.put("jdeUrl",				webServiceConfig.getWsJde("URL"));
 		propertiesMap.put("gsfUrl",				webServiceConfig.getWsGsf("URL"));		

@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', 'modalService', 'modalStatus', 'modalParam', 'masterListService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil',
-                                            function ($scope, $uibModalInstance, $interval, modalService, modalStatus, modalParam, masterListService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil) {
+mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'masterListService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
+                                            function ($scope, $uibModalInstance, $interval, $http, $window, modalService, confirmService, modalStatus, modalParam, GlobalMessage, masterListService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil, attachmentService) {
 	$scope.status = modalStatus;
 
 	$scope.vendorNo = modalParam;
@@ -13,7 +13,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 		$uibModalInstance.close();
 	});	
 	
-	$scope.tab = 1;
+	$scope.tab = 'info';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;
 	};
@@ -219,5 +219,178 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 			}
 		})
 	}
+	
+	//attachment
+	$scope.imageServerAddress = GlobalParameter.imageServerAddress;
+	$scope.selectedAttachement = false;
+	$scope.isAddTextAttachment = false;
+	$scope.sequenceNo = 0;
+	$scope.isUpdatable = true;
+	$scope.nameObject = GlobalParameter.AbstractAttachment['VendorNameObject'];
+	$scope.textKey = $scope.vendorNo;
+	$scope.saveTextAttachmentFacade = attachmentService.uploadTextAttachment;
+	$scope.disableRichEditor = true;
+	$scope.loadAttachment = function (nameObject, textKey){
+		attachmentService.getAttachmentListForPCMS(nameObject, textKey)
+		.then(function(data){
+			if(angular.isArray(data)){
+				$scope.subcontractorAttachments = data;
+				$scope.addAttachmentsData($scope.subcontractorAttachments);
+			}
+		});
+	} 
+	$scope.loadAttachment($scope.nameObject, $scope.textKey);
+	
+	$scope.addAttachmentsData = function(d){
+		var index = 0;
+		angular.forEach(d, function(att){
+			att.selected = index;
+			$scope.sequenceNo = att.sequenceNo;
+			if(att.fileLink === null){
+				att.fileIconClass = 'fa fa-2x fa-file-text-o'; 
+			} else {
+				att.fileName = att.fileName.replace(/ /g,'');
+				var fileType = att.fileName.substring(att.fileName.length -4);
+				if(att.fileName == 'Text' && fileType == 'Text') fileType = '.txt';
+				att.fileIconClass = GlobalHelper.attachmentIconClass(fileType);
+			}
+			att.user = {};
+			att.user.userIcon = 'resources/images/profile.png';
+			att.user.fullname = 'JDE';
+//			$scope.getUserByUsername(att.createdUser)
+//			.then(function(response){
+//				if(response.data instanceof Object){
+//					att.user = response.data;
+//					if(att.user.StaffID !== null){
+//						att.user.userIcon = GlobalParameter.imageServerAddress+att.user.StaffID+'.jpg';
+//					} else {
+//						att.user.userIcon = 'resources/images/profile.png';
+//					}
+//				}
+//			});
+			index++;
+		});
+	}
+		
+	$scope.attachmentClick = function(){
+		$scope.isAddTextAttachment = false;
+		if(this.attach.documentType === 5){
+			url = 'service/attachment/downloadScAttachment?nameObject='+GlobalParameter.AbstractAttachment['VendorNameObject']+'&textKey='+$scope.vendorNo+'&sequenceNo='+this.attach.sequenceNo;
+			var wnd = $window.open(url, 'Download Attachment', '_blank');
+		} else {
+			$scope.textAttachment = this.attach;
+			$scope.isTextUpdatable = $scope.isUpdatable; 
+			modalService.open('lg',  'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+		}
+	}
+
+	$scope.addTextAttachment = function(){
+		$scope.isAddTextAttachment = true;
+		$scope.textAttachment = {};
+		$scope.textAttachment.sequenceNo = $scope.sequenceNo + 1;
+		$scope.textAttachment.fileName = "New Text";
+		$scope.isTextUpdatable = true; 
+		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-text.html', 'AttachmentSCTextCtrl', 'Success', $scope);
+	}
+		
+	$scope.getUserByUsername = function(username){
+		return $http.get('service/security/getUserByUsername?username='+username);
+	}
+		
+	$scope.onSubmitAttachmentUpload = function(f){
+		var formData = new FormData();
+		angular.forEach(f.files, function(file){
+			formData.append('files', file);
+		});
+		formData.append('nameObject', $scope.nameObject);
+		formData.append('textKey', $scope.textKey)
+		formData.append('sequenceNo', $scope.sequenceNo+1);
+		attachmentService.uploadSCAttachment(formData)
+		.then(function(data){
+			f.value = null;
+			loadAttachment();
+		});
+	}
+		
+	$scope.checkSelected = function(){
+		$scope.selectedAttachement = false;
+		angular.forEach($scope.repackagingAttachments, function(att){
+			if(att.selectedAttachement === true){
+				$scope.selectedAttachement = true;
+				return;
+			}
+		});
+	}
+		
+	$scope.deleteAttachment = function(){
+		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+		.then(function(response){
+			if(response === 'Yes')
+				angular.forEach($scope.subcontractorAttachments, function(att){
+					if(att.selectedAttachement === true){
+						attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
+						.then(function(data){
+							loadAttachment();
+							$scope.selectedAttachement = false;
+						});
+					}
+				});
+		});
+	}
 }]);
 
+mainApp.controller('SubcontractorTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService', 'modalService', 'GlobalMessage', 'GlobalParameter',
+    								function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService, modalService, GlobalMessage, GlobalParameter){
+		$scope.status = modalStatus;
+		$scope.parentScope = modalParam;
+		
+		$scope.cancel = function () {
+			$uibModalInstance.close();
+		};
+		
+		$scope.saveTextAttachment = function(){
+		if(tinyMceCharLimitReached){ 
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', GlobalMessage.maxCharLimitReached);
+			return;
+		}
+		if($scope.parentScope.isAddTextAttachment === false){
+			$scope.parentScope.saveTextAttachmentFacade(
+				$scope.parentScope.nameObject, 
+				$scope.parentScope.textKey, 
+				$scope.parentScope.textAttachment.sequenceNo, 
+				$scope.parentScope.textAttachment.fileName, 
+				$scope.parentScope.textAttachment.textAttachment)
+			.then(function(data){
+				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
+			});
+		} else {
+			$scope.parentScope.saveTextAttachmentFacade(
+				$scope.parentScope.nameObject, 
+				$scope.parentScope.textKey, 
+				$scope.parentScope.textAttachment.sequenceNo, 
+				$scope.parentScope.textAttachment.fileName, 
+				$scope.parentScope.textAttachment.textAttachment)
+			.then(function(data){
+				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
+			});
+		}
+			$scope.cancel();
+		}
+		
+		$scope.tinymceOptions = {
+			plugins: [
+				'advlist autolink lists link textcolor colorpicker charmap', // code
+				'print preview hr searchreplace wordcount-maxlength insertdatetime ',
+				'nonbreaking save table contextmenu directionality paste textpattern '
+			],
+			removed_menuitems:'newdocument visualaid ',
+			toolbar: 'save | print preview | undo redo | bold italic | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link ', 
+			save_onsavecallback: $scope.saveTextAttachment,
+			save_enablewhendirty: false,
+			statusbar: true,
+			height: 350,
+			skin: 'tinymce_charcoal',
+			readonly: !$scope.parentScope.isTextUpdatable,
+			maxLength : GlobalParameter.tinyMceMaxCharLength,
+		};
+}]);

@@ -80,6 +80,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     	$scope.textAttachment = {};
     	$scope.textAttachment.noSequence = $scope.sequenceNo + 1;
     	$scope.textAttachment.nameFile = "New Text";
+    	$scope.isTextUpdatable = true;
 		modalService.open('lg', 'view/subcontract/attachment/attachment-addendum-text.html', 'AttachmentAddendumTextCtrl', 'Success', $scope);
     }
     
@@ -103,6 +104,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
+    		$scope.isTextUpdatable = $scope.isUpdatable; 
     		modalService.open('lg', 'view/subcontract/attachment/attachment-addendum-text.html', 'AttachmentAddendumTextCtrl', 'Success', $scope);
     	}
     }

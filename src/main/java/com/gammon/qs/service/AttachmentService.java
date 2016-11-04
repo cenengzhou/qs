@@ -252,10 +252,10 @@ public class AttachmentService {
 		String vendorNumber = splittedTextKey[0].trim();
 		String jobNumber = splittedTextKey[0].trim();
 		String packageNo = "";
-		adminService.canAccessJob(jobNumber);
-		if (!AbstractAttachment.VendorNameObject.equalsIgnoreCase(nameObject.trim()))
+		if (!AbstractAttachment.VendorNameObject.equalsIgnoreCase(nameObject.trim())){
+			adminService.canAccessJob(jobNumber);
 			packageNo = splittedTextKey[1].trim();
-
+		}
 		try{
 			//Job Directory Path 
 			String jobDirectoryPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory()+jobNumber+"\\"; 

@@ -52,6 +52,8 @@ public class ApplicationConfig implements InitializingBean{
 	private String deploymnetProperties;
 	@Value("${deployEnvironment}")
 	private String deployEnvironment;
+	@Value("${revision}")
+	private String revision;
 	@Value("${DEVConfigDirectory}")
 	private String devConfigDirectory;
 	@Value("${UATConfigDirectory}")
@@ -153,6 +155,13 @@ public class ApplicationConfig implements InitializingBean{
 	 */
 	public String getLog4jProperties() {
 		return log4jProperties;
+	}
+
+	/**
+	 * @return the revision
+	 */
+	public String getRevision() {
+		return revision;
 	}
 
 	@Override
