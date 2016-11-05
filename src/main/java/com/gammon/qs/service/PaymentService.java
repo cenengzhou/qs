@@ -2250,8 +2250,13 @@ public class PaymentService{
 				String tempSubsidCode = "";
 				String tempObjCode = "";
 
+				
+				
 				for (SubcontractDetail scDetails:scDetailList){
-					if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && "A".equals(scDetails.getApproved())){
+					if(scPaymentCert.getSubcontract().getSubcontractStatus()==500 && !"A".equals(scDetails.getApproved()))
+						continue;
+					
+					if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 						PaymentCertDetail scPaymentDetail = new PaymentCertDetail();
 						scPaymentDetail.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
 						scPaymentDetail.setBillItem(scDetails.getBillItem());
@@ -3095,10 +3100,11 @@ public class PaymentService{
 					logger.info("SKIPPED - Line Type: "+scDetail.getLineType()+" ID: "+scDetail.getId()+"System Status: "+scDetail.getSystemStatus());
 					continue;
 				}
+
 				//No provision allowed
 				if (scDetail instanceof SubcontractDetailOA){ 
-					if (scDetail.getAmountCumulativeCert().subtract(scDetail.getAmountCumulativeWD()) != new BigDecimal(0))
-						throw new ValidateBusinessLogicException("Provision existed in "+scDetail.getSequenceNo());
+					if (scDetail.getAmountCumulativeCert().subtract(scDetail.getAmountCumulativeWD()).compareTo(new BigDecimal(0)) !=0)
+						throw new ValidateBusinessLogicException("Provision existed in Sequence No."+scDetail.getSequenceNo());
 				}
 			}
 

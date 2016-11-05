@@ -1396,7 +1396,7 @@ public class SubcontractService {
 							SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 							if(scDetailsInDB!=null){
 								//Update SC Details
-								scDetailsInDB.setScRate(taDetail.getRateBudget());
+								scDetailsInDB.setScRate(taDetail.getRateSubcontract());
 								scDetailsInDB.setApproved(SubcontractDetail.APPROVED);//Change status to "Approved"
 								subcontractDetailHBDao.update(scDetailsInDB);
 								
@@ -3110,7 +3110,7 @@ public class SubcontractService {
 						SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo(), taDetail.getId());
 						if(scDetailsInDB!=null){
 							//Update SC Details
-							scDetailsInDB.setScRate(taDetail.getRateBudget());
+							scDetailsInDB.setScRate(taDetail.getRateSubcontract());
 							subcontractDetailHBDao.update(scDetailsInDB);
 
 							taIterator.remove();
@@ -3648,7 +3648,7 @@ public class SubcontractService {
 				newSubcontract.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
 				newSubcontract.setLabourIncludedContract(subcontract.getLabourIncludedContract());
 				newSubcontract.setPlantIncludedContract(subcontract.getPlantIncludedContract());
-				newSubcontract.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				newSubcontract.setMaterialIncludedContract(subcontract.getMaterialIncludedContract());
 				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
 				newSubcontract.setWorkscope(subcontract.getWorkscope());
 				subcontractHBDao.addSCPackage(newSubcontract);
@@ -3675,7 +3675,7 @@ public class SubcontractService {
 				subcontractInDB.setMosRetentionPercentage(subcontract.getMosRetentionPercentage());
 				subcontractInDB.setLabourIncludedContract(subcontract.getLabourIncludedContract());
 				subcontractInDB.setPlantIncludedContract(subcontract.getPlantIncludedContract());
-				subcontractInDB.setMaterialIncludedContract(subcontract.getPlantIncludedContract());
+				subcontractInDB.setMaterialIncludedContract(subcontract.getMaterialIncludedContract());
 				subcontractInDB.setNotes(subcontract.getNotes());
 				subcontractInDB.setApprovalRoute(subcontract.getApprovalRoute());
 				subcontractInDB.setCpfCalculation(subcontract.getCpfCalculation());

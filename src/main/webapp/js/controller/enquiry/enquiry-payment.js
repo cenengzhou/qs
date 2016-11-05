@@ -66,7 +66,6 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'bl
 	$scope.loadGridData = function(){
 		var paymentCertWrapper = {};
 		paymentCertWrapper.jobInfo = {}
-		console.log($scope.searchJobNo);
 		paymentCertWrapper.jobInfo.jobNumber = $scope.searchJobNo;
 		paymentCertWrapper.jobNo = $scope.searchJobNo;
 		paymentCertWrapper.jobInfo.setCompany = $scope.searchCompany;

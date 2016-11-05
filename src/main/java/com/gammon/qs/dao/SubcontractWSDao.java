@@ -471,8 +471,9 @@ public class SubcontractWSDao {
 		headerRequestObj.setTransactionOriginator(scPackage.getCreatedUser());
 		if (scPackage.getCpfBaseYear()!=null)
 			headerRequestObj.setFiscalYear(scPackage.getCpfBaseYear().toString().substring(2,4));
-		String subContractTerm = scPackage.getSubcontractTerm();
-		String cpf= scPackage.getCpfCalculation();
+		String subContractTerm = scPackage.getSubcontractTerm()!=null? scPackage.getSubcontractTerm(): "";
+		String cpf= scPackage.getCpfCalculation()!=null? scPackage.getCpfCalculation(): "";
+		
 		if (subContractTerm.equals("Lump Sum") && cpf.equals("Not Subject to CPF") )		
 			headerRequestObj.setSourceOfContract("1");
 		else if (subContractTerm.equals("Re-measurement") && cpf.equals("Subject to CPF") )		

@@ -153,9 +153,9 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, visible:false, enableCellEdit: false,enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'amountSubcontract', displayName: "Subcontract Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
 			             {field: 'cumWorkDoneQuantity', displayName: "Cum. Workdone Quantity", width: 150, cellEditableCondition : $scope.canEdit, 
-			            	cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
+			            	cellClass: 'text-right blue', cellFilter: 'number:4', enableFiltering: false ,
 			            	aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:4 }}</div>'},
 			             {field: 'amountCumulativeWD', displayName: "Cum. Workdone Amount", width: 150, cellEditableCondition : $scope.canEdit, 
 			            	cellClass: 'text-right blue', cellFilter: 'number:2', enableFiltering: false ,
 			            	aggregationType: uiGridConstants.aggregationTypes.sum,
@@ -185,7 +185,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 			             {field: 'remark', width: 80, visible:false, enableCellEdit: false},
 			             {field: 'contraChargeSCNo', width: 80, visible:false, enableCellEdit: false},
-			             {field: 'sequenceNo', width: 80, visible:false, enableCellEdit: false},
+			             {field: 'sequenceNo', width: 80, visible:false, enableCellEdit: true},
 			             {field: 'resourceNo', width: 80, visible:false, enableCellEdit: true},
 			             {field: 'balanceType', width: 80, visible:false, enableCellEdit: false}
 			             ]
@@ -273,10 +273,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             { field: 'objectCode', enableCellEdit: false , width:70, pinnedLeft:true},
 			             { field: 'subsidiaryCode',width:80, enableCellEdit: false, pinnedLeft:true},
 			             { field: 'resourceDescription', width:80, displayName: "Description", enableCellEdit: false },
-			             {field: 'cumQuantity', displayName: "Cum. Quantity", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			             {field: 'cumQuantity', displayName: "Cum. Quantity", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:4', 
 			            	 cellEditableCondition : $scope.canEdit, 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
-			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:4 }}</div>'},
 			             {field: 'currIVAmount', displayName: "Cum. IV Amount", width:130, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit, 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
@@ -324,6 +324,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		var currTotalCumIVQty = roundUtil.round($scope.gridApiIV.grid.columns[5].getAggregationValue(), 4);
 		var currTotalCumIVAmount = roundUtil.round($scope.gridApiIV.grid.columns[6].getAggregationValue(), 2);
 		
+		console.log("currTotalCumIVQty: "+currTotalCumIVQty);
+		console.log("totalCumIVQty: "+$scope.totalCumIVQty);
+		console.log("currTotalCumIVAmount: "+currTotalCumIVAmount);
+		console.log("totalCumIVAmount: "+$scope.totalCumIVAmount);
 		if(currTotalCumIVQty != $scope.totalCumIVQty || currTotalCumIVAmount != $scope.totalCumIVAmount){
 			 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total Cumulative Work Done Quantity/Amount is not balanced.");
 			 return;

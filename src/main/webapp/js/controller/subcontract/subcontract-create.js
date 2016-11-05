@@ -113,11 +113,12 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			return;
 		}
 		
-		if(!$scope.subcontract.labourIncludedContract && !$scope.subcontract.plantIncludedContrac && !$scope.subcontract.materialIncludedContract){
+		if(!$scope.subcontract.labourIncludedContract && !$scope.subcontract.plantIncludedContract && !$scope.subcontract.materialIncludedContract){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select subcontract type.");
 			return;
 		}
 
+		
 		$scope.subcontractToUpdate = {
 				id:  $scope.subcontract.id,
 				packageNo : $scope.subcontract.packageNo,
@@ -183,10 +184,14 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 						}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_ORIGINAL){
 							$scope.subcontract.retentionTerms = "Percentage";
 							$scope.percentageOption= "Original";
+							$scope.retentionAmount = 0;
 						}else if($scope.subcontract.retentionTerms == subcontractRetentionTerms.RETENTION_REVISED){
 							$scope.subcontract.retentionTerms = "Percentage";
 							$scope.percentageOption= "Revised";
-						} 
+							$scope.retentionAmount = 0;
+						}else{
+							$scope.retentionAmount = 0;
+						}
 						
 						if($scope.subcontract.cpfCalculation == "1"){
 							$scope.subcontract.cpfCalculation = true;

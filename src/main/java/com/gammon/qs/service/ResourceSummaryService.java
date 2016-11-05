@@ -239,26 +239,25 @@ public class ResourceSummaryService implements Serializable {
 	 * Payment Requisition Revamp
 	 * Resource Summaries with AmountPostedCert, AmountPostedWD, AmountCumulativeWD cannot be edited
 	 **/
-	public List<String> obtainUneditableResourceSummaries(JobInfo job) throws Exception {
-		List<String> uneditableResourceSummaryIDs = new ArrayList<String>(); 
+	public List<Integer> getUneditableResourceSummaryID(String jobNo, String subcontractNo) throws Exception {
+		List<Integer> uneditableResourceSummaryIDs = new ArrayList<Integer>(); 
 
-		List<ResourceSummary> resourceSummaries = resourceSummaryDao.obtainSCResourceSummariesByJobNumber(job.getJobNumber());
-		List<String> uneditablePackageNos = scPackageDao.getUneditableSubcontractNos(job.getJobNumber());
-		List<String> unawardedPackageNosUnderRequisition = scPackageDao.obtainSCPackageNosUnderPaymentRequisition(job.getJobNumber());
+		List<ResourceSummary> resourceSummaries = this.getResourceSummariesBySC(jobNo, subcontractNo);
+		//List<String> uneditablePackageNos = scPackageDao.getUneditableSubcontractNos(job.getJobNumber());
+		//List<String> unawardedPackageNosUnderRequisition = scPackageDao.obtainSCPackageNosUnderPaymentRequisition(job.getJobNumber());
 		
 		for(ResourceSummary resourceSummary: resourceSummaries){
 			if(resourceSummary.getPackageNo()!=null && !"".equals(resourceSummary.getPackageNo())){
-				if(!uneditablePackageNos.contains(resourceSummary.getPackageNo()) && unawardedPackageNosUnderRequisition.contains(resourceSummary.getPackageNo())){
-
-					SubcontractDetail scDetail = scDetailsHBDaoImpl.obtainSCDetailsByResourceNo(job.getJobNumber(), resourceSummary.getPackageNo(), Integer.valueOf(resourceSummary.getId().toString()));
+				//if(!uneditablePackageNos.contains(resourceSummary.getPackageNo()) && unawardedPackageNosUnderRequisition.contains(resourceSummary.getPackageNo())){
+					SubcontractDetail scDetail = scDetailsHBDaoImpl.obtainSCDetailsByResourceNo(jobNo, subcontractNo, Integer.valueOf(resourceSummary.getId().toString()));
 					if(scDetail!=null && 
 							(scDetail.getAmountPostedCert().compareTo(new BigDecimal(0))!= 0 
 								|| scDetail.getAmountPostedWD().compareTo(new BigDecimal(0))!=0 
 								|| scDetail.getAmountCumulativeWD().compareTo(new BigDecimal(0))!=0)){
 						
-						uneditableResourceSummaryIDs.add(String.valueOf(resourceSummary.getId()));
+						uneditableResourceSummaryIDs.add(Integer.valueOf(resourceSummary.getId().toString()));
 					}
-				}
+				//}
 			}
 		}
 

@@ -73,6 +73,10 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 					return;
 				}
 			}
+			if($scope.uneditableResourceSummaryID.indexOf(rowEntity.id) >=0 ){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract "+rowEntity.packageNo+" has been paid in Payment Requisition.");
+				return;
+			}
         });
 		
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
@@ -219,7 +223,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		
 		if($scope.subcontract.scStatus == "160"){
 			var modalOptions = {
-					bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+					bodyText: 'Eexisting tenders and tender details will be changed or deleted. Continue?'
 			};
 
 
@@ -247,6 +251,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
 			getResourceSummaries();
+			getUneditableResourceSummaryID();
 			getUnitOfMeasurementList();
 		}/*else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
@@ -298,6 +303,14 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 					angular.forEach(data, function(value, key){
 						$scope.units.push({'id': value.unitCode.trim(), 'value': value.unitCode.trim()});
 					});
+				});
+	}
+	
+	function getUneditableResourceSummaryID() {
+		resourceSummaryService.getUneditableResourceSummaryID($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.uneditableResourceSummaryID = data;
 				});
 	}
 	

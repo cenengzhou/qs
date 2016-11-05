@@ -121,10 +121,12 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 	$scope.save = function() {
 		//var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 		//var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		$scope.disableButtons = true;
 		var dataRows = $scope.gridOptions.data;
 
 		if(dataRows.length==0){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+			$scope.disableButtons = false;
 			return;
 		}
 
@@ -156,7 +158,8 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 		.then(
 				function( data ) {
 					if(data != null && data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 						return;
 					}else{
 						$state.reload();

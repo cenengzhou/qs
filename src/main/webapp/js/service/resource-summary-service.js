@@ -7,6 +7,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		getResourceSummariesByLineType:			getResourceSummariesByLineType,
 		getResourceSummariesForAddendum:		getResourceSummariesForAddendum,
 		getResourceSummariesGroupByObjectCode: 	getResourceSummariesGroupByObjectCode,
+		getUneditableResourceSummaryID:			getUneditableResourceSummaryID,
 		addResourceSummary:						addResourceSummary,
 		updateResourceSummaries:				updateResourceSummaries,
 		deleteResources:						deleteResources,
@@ -101,7 +102,19 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
-
+	function getUneditableResourceSummaryID(jobNo, subcontractNo) {
+		var request = $http({
+			method: "get",
+			url: "service/resourceSummary/getUneditableResourceSummaryID",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo, 
+				subcontractNo: subcontractNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
 	function addResourceSummary(jobNo, repackagingId, resourceSummary) {
 		var request = $http({
 			method: "post",

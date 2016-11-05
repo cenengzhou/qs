@@ -100,6 +100,17 @@ public class ResourceSummaryController {
 		return rsList;
 	}
 
+	@RequestMapping(value = "getUneditableResourceSummaryID", method = RequestMethod.GET)
+	public List<Integer> getUneditableResourceSummaryID(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
+		List<Integer> rsList = null;
+		try {
+			rsList = resourceSummaryService.getUneditableResourceSummaryID(jobNo, subcontractNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rsList;
+	}
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
