@@ -10,8 +10,8 @@
 */
 ----------------------------------------------------------------------------------------------------------------
 --1. Create Addendum 0 for all awarded subcontract at ADDENDUM
--- delete from PCMSDATATST.ADDENDUM where no = 0;
-insert into PCMSDATATST.ADDENDUM (
+-- delete from PCMSDATAPROD.ADDENDUM where no = 0;
+insert into PCMSDATAPROD.ADDENDUM (
 ID,
 ID_SUBCONTRACT,
 NO_JOB,
@@ -39,7 +39,7 @@ USERNAME_LAST_MODIFIED,
 DATE_LAST_MODIFIED,
 NO_ADDENDUM_DETAIL_NEXT)
 (select
-PCMSDATATST.ADDENDUM_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_SEQ.nextval as ID,
 s.ID as ID_SUBCONTRACT,
 j.JOBNO as NO_JOB,
 s.PACKAGENO as NO_SUBCONTRACT,
@@ -67,14 +67,14 @@ sysdate as DATE_CREATED,
 'SYSTEM' as USERNAME_LAST_MODIFIED,
 sysdate as DATE_LAST_MODIFIED,
 null as NO_ADDENDUM_DETAIL_NEXT
-from PCMSDATATST.SUBCONTRACT s left join PCMSDATATST.JOB_INFO j 
+from PCMSDATAPROD.SUBCONTRACT s left join PCMSDATAPROD.JOB_INFO j 
 on s.JOB_INFO_ID = j.ID
 where j.JOBNO is not null
 and s.SCSTATUS = '500'
 and s.SYSTEM_STATUS = 'ACTIVE');
 --2. Copy a set of Addendum records from SUBCONTRACT_DETAIL to ADDENDUM_DETAIL and associate them to Addendum 0
--- delete from PCMSDATATST.ADDENDUM_DETAIL where no = 0;
-insert into PCMSDATATST.ADDENDUM_DETAIL (
+-- delete from PCMSDATAPROD.ADDENDUM_DETAIL where no = 0;
+insert into PCMSDATAPROD.ADDENDUM_DETAIL (
 ID,
 ID_ADDENDUM,
 DATE_LAST_MODIFIED,
@@ -104,7 +104,7 @@ AMT_ADDENDUM,
 AMT_BUDGET
 )
 (select 
-PCMSDATATST.ADDENDUM_DETAIL_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_DETAIL_SEQ.nextval as ID,
 a.ID as ID_ADDENDUM,
 sysdate as DATE_LAST_MODIFIED,
 'SYSTEM' as USERNAME_LAST_MODIFIED,
@@ -131,8 +131,8 @@ sd.CONTRACHARGESCNO as NO_SUBCONTRACT_CHARGED_REF,
 sd.ALTOBJECTCODE as CODE_OBJECT_FOR_DAYWORK,
 sd.AMT_SUBCONTRACT as AMT_ADDENDUM,
 sd.AMT_BUDGET as AMT_BUDGET
-from PCMSDATATST.SUBCONTRACT_DETAIL sd left join PCMSDATATST.SUBCONTRACT s
-on sd.SUBCONTRACT_ID = s.id left join PCMSDATATST.ADDENDUM a
+from PCMSDATAPROD.SUBCONTRACT_DETAIL sd left join PCMSDATAPROD.SUBCONTRACT s
+on sd.SUBCONTRACT_ID = s.id left join PCMSDATAPROD.ADDENDUM a
 on sd.SUBCONTRACT_ID = a.ID_SUBCONTRACT 
 where sd.LINETYPE in ('V1', 'V2', 'V3', 'L1', 'L2', 'D1', 'D2', 'CF')
 and sd.SYSTEM_STATUS = 'ACTIVE'
@@ -141,8 +141,8 @@ and s.SCSTATUS = '500'
 and a.no = 0
 );
 --3. Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
--- delete from PCMSDATATST.ATTACHMENT where NAME_TABLE = 'ADDENDUM';
-insert into PCMSDATATST.ATTACHMENT (
+-- delete from PCMSDATAPROD.ATTACHMENT where NAME_TABLE = 'ADDENDUM';
+insert into PCMSDATAPROD.ATTACHMENT (
 ID,
 ID_TABLE,
 NAME_TABLE,
@@ -157,7 +157,7 @@ USERNAME_LAST_MODIFIED,
 DATE_LAST_MODIFIED
 )
 (select
-PCMSDATATST.ATTACHMENT_SEQ.nextval as ID,
+PCMSDATAPROD.ATTACHMENT_SEQ.nextval as ID,
 ad.ID_ADDENDUM as ID_TABLE,
 'ADDENDUM' as NAME_TABLE,
 row_number() OVER (PARTITION BY ad.ID_ADDENDUM ORDER BY asd.CREATED_DATE) as NO_SEQUENCE,
@@ -169,8 +169,8 @@ asd.CREATED_USER as USERNAME_CREATED,
 asd.CREATED_DATE as DATE_CREATED,
 asd.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 asd.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
-from PCMSDATATST.ATTACH_SUBCONTRACT_DETAIL asd left join PCMSDATATST.ADDENDUM_DETAIL ad
-on asd.SUBCONTRACT_DETAIL_ID = ad.ID_SUBCONTRACT_DETAIL left join PCMSDATATST.SUBCONTRACT_DETAIL sd
+from PCMSDATAPROD.ATTACH_SUBCONTRACT_DETAIL asd left join PCMSDATAPROD.ADDENDUM_DETAIL ad
+on asd.SUBCONTRACT_DETAIL_ID = ad.ID_SUBCONTRACT_DETAIL left join PCMSDATAPROD.SUBCONTRACT_DETAIL sd
 on asd.SUBCONTRACT_DETAIL_ID = sd.ID
 where ad.ID_ADDENDUM is not null
 and ad.no = 0
@@ -180,7 +180,7 @@ and asd.SYSTEM_STATUS = 'ACTIVE'
 
 --4.1 Generate Addendum for Addendum 1 (Addendum Approval In Progress)
 -- delete from PCMSDATADEV.ADDENDUM where no = 1;
-insert into PCMSDATATST.ADDENDUM (
+insert into PCMSDATAPROD.ADDENDUM (
 ID,
 ID_SUBCONTRACT,
 NO_JOB,
@@ -208,7 +208,7 @@ USERNAME_LAST_MODIFIED,
 DATE_LAST_MODIFIED,
 NO_ADDENDUM_DETAIL_NEXT)
 (select
-PCMSDATATST.ADDENDUM_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_SEQ.nextval as ID,
 ID as ID_SUBCONTRACT,
 jobno as NO_JOB,
 PACKAGENO as NO_SUBCONTRACT,
@@ -238,15 +238,15 @@ sysdate as DATE_LAST_MODIFIED,
 1 as NO_ADDENDUM_DETAIL_NEXT
 from 
 (Select d.jobno, s.id, s.packageno, s.description, s.VENDORNO, s.NAME_SUBCONTRACTOR, s.REMEASUREDSCSUM, s.APPROVEDVOAMOUNT
-From PCMSDATATST.Subcontract_Detail d join PCMSDATATST.Subcontract s
+From PCMSDATAPROD.Subcontract_Detail d join PCMSDATAPROD.Subcontract s
 on d.subcontract_id = s.id
 where d.system_status = 'ACTIVE' 
-and d.subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500'  and submittedaddendum ='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and d.subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500'  and submittedaddendum ='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and approved = 'N'
 group by d.jobno, s.id, s.packageno, s.description, s.VENDORNO, s.NAME_SUBCONTRACTOR, s.REMEASUREDSCSUM, s.APPROVEDVOAMOUNT));
 
 --4.2 Generate Addendum Detail for Addendum 1 (Addendum Approval In Progress)
-insert into PCMSDATATST.ADDENDUM_DETAIL (
+insert into PCMSDATAPROD.ADDENDUM_DETAIL (
 ID,
 ID_ADDENDUM,
 DATE_LAST_MODIFIED,
@@ -276,7 +276,7 @@ AMT_ADDENDUM,
 AMT_BUDGET
 )
 (select 
-PCMSDATATST.ADDENDUM_DETAIL_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_DETAIL_SEQ.nextval as ID,
 a.ID as ID_ADDENDUM,
 sysdate as DATE_LAST_MODIFIED,
 'SYSTEM' as USERNAME_LAST_MODIFIED,
@@ -303,19 +303,19 @@ sd.COSTRATE as RATE_BUDGET,
 sd.SCRATE as RATE_ADDENDUM,
 sd.AMT_SUBCONTRACT as AMT_ADDENDUM,
 sd.AMT_BUDGET as AMT_BUDGET
-from PCMSDATATST.SUBCONTRACT_DETAIL sd left join PCMSDATATST.SUBCONTRACT s
-on sd.SUBCONTRACT_ID = s.id, PCMSDATATST.ADDENDUM a
+from PCMSDATAPROD.SUBCONTRACT_DETAIL sd left join PCMSDATAPROD.SUBCONTRACT s
+on sd.SUBCONTRACT_ID = s.id, PCMSDATAPROD.ADDENDUM a
 where sd.SUBCONTRACT_ID = a.id_subcontract
 and a.no = 1
 and sd.system_status = 'ACTIVE' 
-and sd.subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and sd.subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and sd.type = 'VO' and sd.approved = 'N'
 );
 
 --4.3 Copy a set of Attachment records from ATTACH_SUBCONTRACT_DETAIL to ATTACHMENT setting ID_TABLE = ADDENDUM
-select * from PCMSDATATST.ATTACHMENT where NAME_TABLE = 'ADDENDUM' and date_created > '05-NOV-2016';
-delete from PCMSDATATST.ATTACHMENT where NAME_TABLE = 'ADDENDUM' and date_created > '05-NOV-2016';
-insert into PCMSDATATST.ATTACHMENT (
+--select * from PCMSDATAPROD.ATTACHMENT where NAME_TABLE = 'ADDENDUM' and date_created > '05-NOV-2016';
+--delete from PCMSDATAPROD.ATTACHMENT where NAME_TABLE = 'ADDENDUM' and date_created > '05-NOV-2016';
+insert into PCMSDATAPROD.ATTACHMENT (
 ID,
 ID_TABLE,
 NAME_TABLE,
@@ -330,7 +330,7 @@ USERNAME_LAST_MODIFIED,
 DATE_LAST_MODIFIED
 )
 (select
-PCMSDATATST.ATTACHMENT_SEQ.nextval as ID,
+PCMSDATAPROD.ATTACHMENT_SEQ.nextval as ID,
 ad.ID_ADDENDUM as ID_TABLE,
 'ADDENDUM' as NAME_TABLE,
 row_number() OVER (PARTITION BY ad.ID_ADDENDUM ORDER BY asd.CREATED_DATE) as NO_SEQUENCE,
@@ -342,8 +342,8 @@ asd.CREATED_USER as USERNAME_CREATED,
 asd.CREATED_DATE as DATE_CREATED,
 asd.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 asd.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
-from PCMSDATATST.ATTACH_SUBCONTRACT_DETAIL asd left join PCMSDATATST.ADDENDUM_DETAIL ad
-on asd.SUBCONTRACT_DETAIL_ID = ad.ID_SUBCONTRACT_DETAIL left join PCMSDATATST.SUBCONTRACT_DETAIL sd
+from PCMSDATAPROD.ATTACH_SUBCONTRACT_DETAIL asd left join PCMSDATAPROD.ADDENDUM_DETAIL ad
+on asd.SUBCONTRACT_DETAIL_ID = ad.ID_SUBCONTRACT_DETAIL left join PCMSDATAPROD.SUBCONTRACT_DETAIL sd
 on asd.SUBCONTRACT_DETAIL_ID = sd.ID
 where ad.ID_ADDENDUM is not null
 and ad.no = 1
@@ -357,17 +357,17 @@ update QSADMINPROD.AP_APPROVAL_ROUTE set ORDER_SUFFIX = '1' where APPROVAL_TYPE_
 
 --4.5 SC DETAILS Budget V1/V3
 --Addendum Header (in Progress)
-update PCMSDATATST.Subcontract_Detail
+update PCMSDATAPROD.Subcontract_Detail
 set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty, resourceno = 0, last_modified_date = sysdate, last_modified_user = 'IMS'
 where system_status = 'ACTIVE' 
-and subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and approved = 'N';
 
 --4.6 SC DETAILS Non-budget VO (in Progress)
-update PCMSDATATST.Subcontract_Detail
+update PCMSDATAPROD.Subcontract_Detail
 set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty, last_modified_date = sysdate, last_modified_user = 'IMS'
 where system_status = 'ACTIVE' 
-and subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum ='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and linetype not in ('OA', 'V3')
 and costrate =0 and resourceNo <=1 and approved = 'S';
 
@@ -375,7 +375,7 @@ and costrate =0 and resourceNo <=1 and approved = 'S';
 --5. Generate Addendum No.1 for non-approved addendum with budget (V1, V3)
 --5.1 Generate Addendum for Addendum 1 (Addendum Approval Not In Progress)
 -- delete from PCMSDATADEV.ADDENDUM where no = 1;
-insert into PCMSDATATST.ADDENDUM (
+insert into PCMSDATAPROD.ADDENDUM (
 ID,
 ID_SUBCONTRACT,
 NO_JOB,
@@ -403,7 +403,7 @@ USERNAME_LAST_MODIFIED,
 DATE_LAST_MODIFIED,
 NO_ADDENDUM_DETAIL_NEXT)
 (select
-PCMSDATATST.ADDENDUM_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_SEQ.nextval as ID,
 ID as ID_SUBCONTRACT,
 jobno as NO_JOB,
 PACKAGENO as NO_SUBCONTRACT,
@@ -433,17 +433,17 @@ sysdate as DATE_LAST_MODIFIED,
 1 as NO_ADDENDUM_DETAIL_NEXT
 from 
 (Select d.jobno, s.id, s.packageno, s.description, s.VENDORNO, s.NAME_SUBCONTRACTOR, s.REMEASUREDSCSUM, s.APPROVEDVOAMOUNT
-From PCMSDATATST.Subcontract_Detail d join PCMSDATATST.Subcontract s
+From PCMSDATAPROD.Subcontract_Detail d join PCMSDATAPROD.Subcontract s
 on d.subcontract_id = s.id
 where d.system_status = 'ACTIVE' 
-and d.subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500'  and submittedaddendum !='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and d.subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500'  and submittedaddendum !='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and resourceNo >1 and (approved = 'N' or approved = 'S')
 group by d.jobno, s.id, s.packageno, s.description, s.VENDORNO, s.NAME_SUBCONTRACTOR, s.REMEASUREDSCSUM, s.APPROVEDVOAMOUNT));
 
 
 
 --5.2 Generate Addendum Detail for Addendum 1 (Addendum Approval Not In Progress)
-insert into PCMSDATATST.ADDENDUM_DETAIL (
+insert into PCMSDATAPROD.ADDENDUM_DETAIL (
 ID,
 ID_ADDENDUM,
 DATE_LAST_MODIFIED,
@@ -473,7 +473,7 @@ AMT_ADDENDUM,
 AMT_BUDGET
 )
 (select 
-PCMSDATATST.ADDENDUM_DETAIL_SEQ.nextval as ID,
+PCMSDATAPROD.ADDENDUM_DETAIL_SEQ.nextval as ID,
 a.ID as ID_ADDENDUM,
 sysdate as DATE_LAST_MODIFIED,
 'SYSTEM' as USERNAME_LAST_MODIFIED,
@@ -500,32 +500,32 @@ sd.COSTRATE as RATE_BUDGET,
 sd.SCRATE as RATE_ADDENDUM,
 sd.AMT_SUBCONTRACT as AMT_ADDENDUM,
 sd.AMT_BUDGET as AMT_BUDGET
-from PCMSDATATST.SUBCONTRACT_DETAIL sd left join PCMSDATATST.SUBCONTRACT s
-on sd.SUBCONTRACT_ID = s.id, PCMSDATATST.ADDENDUM a
+from PCMSDATAPROD.SUBCONTRACT_DETAIL sd left join PCMSDATAPROD.SUBCONTRACT s
+on sd.SUBCONTRACT_ID = s.id, PCMSDATAPROD.ADDENDUM a
 where sd.SUBCONTRACT_ID = a.id_subcontract
 and a.no = 1
 and sd.system_status = 'ACTIVE' 
-and sd.subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and sd.subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and sd.type = 'VO' and sd.resourceNo >1 and (sd.approved = 'N' or sd.approved = 'S')
 );
 --5.3 Convert exsiting non-approved budget V1, V3 to OA
-update PCMSDATATST.Subcontract_Detail
+update PCMSDATAPROD.Subcontract_Detail
 set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty, resourceno = 0, billitem = CONCAT(billitem, '/OA'), last_modified_date = sysdate, last_modified_user = 'IMS'
 where system_status = 'ACTIVE' 
-and subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and resourceNo >1 and (approved = 'N' or approved = 'S');
 --5.4 Convert exsiting non-approved VO(no budget) to OA
-update PCMSDATATST.Subcontract_Detail
+update PCMSDATAPROD.Subcontract_Detail
 set linetype = 'OA', approved = 'A', quantity = tobeapprovedqty, last_modified_date = sysdate, last_modified_user = 'IMS'
 where system_status = 'ACTIVE' 
-and subcontract_id in (select id from PCMSDATATST.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATATST.job_info where completionstatus = '1'))
+and subcontract_id in (select id from PCMSDATAPROD.subcontract where paymentstatus != 'F' and scstatus = '500' and submittedaddendum !='1' and job_info_id in (select id from PCMSDATAPROD.job_info where completionstatus = '1'))
 and type = 'VO' and linetype not in ('OA', 'V3')
 and costrate =0 and resourceNo <=1 and (approved = 'N' or approved = 'S');
 
 
 --6. Calculate and Summarize figures and info at ADDENDUM
-update PCMSDATATST.ADDENDUM a set AMT_ADDENDUM = (
-  select sum(ad.AMT_ADDENDUM) from PCMSDATATST.ADDENDUM_DETAIL ad 
+update PCMSDATAPROD.ADDENDUM a set AMT_ADDENDUM = (
+  select sum(ad.AMT_ADDENDUM) from PCMSDATAPROD.ADDENDUM_DETAIL ad 
   where ad.ID_ADDENDUM = a.id group by ad.ID_ADDENDUM
 );
 
