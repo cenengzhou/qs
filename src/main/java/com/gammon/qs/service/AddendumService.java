@@ -466,7 +466,7 @@ public class AddendumService{
 			for(AddendumDetail addendumDetail: addendumDetailList){
 				if(AddendumDetail.TYPE_ACTION.ADD.toString().equals(addendumDetail.getTypeAction())){
 					//V1/V3 with budget
-					if(addendumDetail.getIdResourceSummary() != null){
+					if(addendumDetail.getIdResourceSummary() != null && addendumDetail.getIdResourceSummary().compareTo(new BigDecimal(1))>0){
 						JobInfo job = jobInfoHBDao.obtainJobInfo(jobNo);
 
 						//Step 2 : Validation
@@ -477,10 +477,19 @@ public class AddendumService{
 							logger.info(error);
 							return error;
 						}
+						
+						
 
 						//Validation 2.2: No duplicate resources made
 						ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
 						resource.setPackageNo(null);
+						
+						//Validation 2.2: Resource with IV posted amount cannot be deleted
+						if(resource.getPostedIVAmount() != 0){
+							error = " Resource with IV posted amount cannot be deleted. Please contact with IMS.";
+							logger.info(error);
+							return error;
+						}
 
 						resourceSummaryList.add(resource);
 						error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
