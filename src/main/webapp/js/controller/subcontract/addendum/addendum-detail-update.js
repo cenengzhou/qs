@@ -78,10 +78,12 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 	}
 	
 	$scope.updateDetail = function () {
+		$scope.disableButtons = true;
 		if(subcontractNo!="" && subcontractNo!=null){
 			var dataRows = $scope.gridApi.selection.getSelectedRows();
 			if(dataRows.length == 0 || dataRows.length > 1){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select 1 row to update addendum.");
+				$scope.disableButtons = false;
 				return;
 			}
 			
@@ -118,10 +120,12 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 	};
 	
 	$scope.deleteDetail = function () {
+		$scope.disableButtons = true;
 		if(subcontractNo!="" && subcontractNo!=null){
 			var dataRows = $scope.gridApi.selection.getSelectedRows();
 			if(dataRows.length == 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select rows to insert addendum.");
+				$scope.disableButtons = false;
 				return;
 			}
 			

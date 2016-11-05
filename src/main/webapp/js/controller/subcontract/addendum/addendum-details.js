@@ -121,7 +121,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
 		}else{
-			console.log(dataRows[0]);
 			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'UPDATE', dataRows[0]);
 		}
 
@@ -174,7 +173,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					console.log(data.scStatus+ " - "+ data.paymentStatus + " - "+data.splitTerminateStatus+" - " +  data.submittedAddendum) ;
 					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4|| data.submittedAddendum ==1)
 						$scope.disableButtons = true;
 					else 

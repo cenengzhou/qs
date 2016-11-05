@@ -210,22 +210,26 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	
 	//Save Function
 	$scope.save = function () {
+		$scope.disableButtons = true;
 		var totalAmountBeforeSplit = roundUtil.round($scope.gridApi.grid.columns[7].getAggregationValue(), 2);
 		var totalAmountAfterSplit = roundUtil.round($scope.gridApiSplit.grid.columns[7].getAggregationValue(), 2);
 		
 		if(totalAmountAfterSplit != totalAmountBeforeSplit ){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total amount does not match.");
+			$scope.disableButtons = false;
 			return;
 		}
 		
 		if(action == "Split"){
 			if($scope.gridOptionsSplit.data.length < 2){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please split into at least 2 new resources.");
+				$scope.disableButtons = false;
 				return;
 			}
 		}else if (action == "Merge"){
 			if($scope.gridOptionsSplit.data.length != 1){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources should be merged into one resource only.");
+				$scope.disableButtons = false;
 				return;
 			}
 		}
@@ -253,6 +257,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 							"Duplicate resource: Object Code: " + tempNewList[i].objectCode + ", Subsidiary Code: " + tempNewList[i].subsidiaryCode +
 							 ", Description: " + tempNewList[i].resourceDescription + 
 							", Unit: " + tempNewList[i].unit + ", Rate: " + tempNewList[i].rate);
+					$scope.disableButtons = false;
 					return;
 				}
 			};
@@ -282,6 +287,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 				function( data ) {
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
 						$uibModalInstance.close();

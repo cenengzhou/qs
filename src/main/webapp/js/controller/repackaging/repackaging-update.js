@@ -227,11 +227,13 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	}
 
 	$scope.update = function() {
+		$scope.disableButtons = true;
 		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
 		
 		if(dataRows.length==0){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
+			$scope.disableButtons = false;
 			return;
 		}
 		
@@ -251,6 +253,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 							"Duplicate resource: Object Code: " + tempNewList[i].objectCode + ", Subsidiary Code: " + tempNewList[i].subsidiaryCode +
 							 ", Description: " + tempNewList[i].resourceDescription + 
 							", Unit: " + tempNewList[i].unit + ", Rate: " + tempNewList[i].rate);
+					$scope.disableButtons = false;
 					return;
 				}
 			};
@@ -298,6 +301,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 				function( data ) {
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
 						$state.reload();
@@ -309,7 +313,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		subcontractService.getAwardedSubcontractNos($scope.jobNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.AwardedSubcontractNos = data;
 				});
 	}

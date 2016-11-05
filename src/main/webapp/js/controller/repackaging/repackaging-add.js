@@ -56,9 +56,10 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'r
 	
 	//Save Function
 	$scope.save = function () {
-
+		$scope.disableButtons = true;
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
-			event.preventDefault();  
+			event.preventDefault(); 
+			$scope.disableButtons = false;
 			return;
 		}
 
@@ -80,6 +81,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'r
 				function( data ) {
 					if(data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "New Resource has been added.");
 						$uibModalInstance.close();

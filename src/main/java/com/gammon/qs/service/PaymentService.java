@@ -1523,7 +1523,7 @@ public class PaymentService{
 			String tempObjCode = "";
 			
 			for (SubcontractDetail scDetails:scDetailsList){
-				if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
+				if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && "A".equals(scDetails.getApproved())){
 					PaymentCertDetail scPaymentDetail = new PaymentCertDetail();
 					scPaymentDetail.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
 					scPaymentDetail.setBillItem(scDetails.getBillItem());
@@ -2251,38 +2251,40 @@ public class PaymentService{
 				String tempObjCode = "";
 
 				for (SubcontractDetail scDetails:scDetailList){
-					PaymentCertDetail scPaymentDetail = new PaymentCertDetail();
-					scPaymentDetail.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
-					scPaymentDetail.setBillItem(scDetails.getBillItem());
-					scPaymentDetail.setScSeqNo(scDetails.getSequenceNo());
-					scPaymentDetail.setObjectCode(scDetails.getObjectCode());
-					scPaymentDetail.setSubsidiaryCode(scDetails.getSubsidiaryCode());
-					scPaymentDetail.setDescription(scDetails.getDescription());
-					scPaymentDetail.setLineType(scDetails.getLineType());
+					if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus()) && "A".equals(scDetails.getApproved())){
+						PaymentCertDetail scPaymentDetail = new PaymentCertDetail();
+						scPaymentDetail.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());
+						scPaymentDetail.setBillItem(scDetails.getBillItem());
+						scPaymentDetail.setScSeqNo(scDetails.getSequenceNo());
+						scPaymentDetail.setObjectCode(scDetails.getObjectCode());
+						scPaymentDetail.setSubsidiaryCode(scDetails.getSubsidiaryCode());
+						scPaymentDetail.setDescription(scDetails.getDescription());
+						scPaymentDetail.setLineType(scDetails.getLineType());
 
-					scPaymentDetail.setPaymentCert(scPaymentCert);
-					scPaymentDetail.setSubcontractDetail(scDetails);
-					
-					
-					/**
-					 *@author koeyyeung
-					 *created on 13 Jul, 2016
-					 *Convert to Amount Based 
-					 **/
-					if (scDetails.getAmountPostedCert()!=null)
-						scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
-					else 
-						scPaymentDetail.setCumAmount(0.0);
-					
-					scPaymentDetail.setMovementAmount(0.0);
+						scPaymentDetail.setPaymentCert(scPaymentCert);
+						scPaymentDetail.setSubcontractDetail(scDetails);
 
-					
-					if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
-						totalMOSAmount += scPaymentDetail.getCumAmount();
-						tempSubsidCode = scDetails.getSubsidiaryCode();
-						tempObjCode = scDetails.getObjectCode();
+
+						/**
+						 *@author koeyyeung
+						 *created on 13 Jul, 2016
+						 *Convert to Amount Based 
+						 **/
+						if (scDetails.getAmountPostedCert()!=null)
+							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
+						else 
+							scPaymentDetail.setCumAmount(0.0);
+
+						scPaymentDetail.setMovementAmount(0.0);
+
+
+						if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
+							totalMOSAmount += scPaymentDetail.getCumAmount();
+							tempSubsidCode = scDetails.getSubsidiaryCode();
+							tempObjCode = scDetails.getObjectCode();
+						}
+						resultList.add(scPaymentDetail);
 					}
-					resultList.add(scPaymentDetail);
 				}
 
 				double preRTAmount = 0.0;
@@ -2448,20 +2450,14 @@ public class PaymentService{
 											logger.info(error);
 											return error;
 										}
-									}/*else{
-										if (paymentDetail.getCumAmount()< CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue(), 2) || paymentDetail.getCumAmount() >0) {
-											error = "Contrac charge should be in negative amount. New Certified Amount: " + paymentDetail.getCumAmount() + " Sequence No.: " + scDetail.getSequenceNo();
-											logger.info(error);
-											return error;
-										}
-									}*/
+									}
 								}
 								
 								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
 									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
-								}else if(("AP".equals(scDetail.getLineType()) ||  "MS".equals(scDetail.getLineType()) ||  "CF".equals(scDetail.getLineType())) && paymentDetail.getCumAmount() >0){
+								}else if(("AP".equals(scDetail.getLineType()) ||  "MS".equals(scDetail.getLineType()) ||  "CF".equals(scDetail.getLineType())) && paymentDetail.getCumAmount() <0){
 									error = "AP/MS/CF: " + paymentDetail.getCumAmount() + " should be positive."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;

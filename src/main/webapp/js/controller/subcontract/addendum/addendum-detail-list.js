@@ -58,6 +58,7 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 			             {field: 'unit' ,  width:60 },
 			             {field: 'remarks' ,  width:100 },
 			             {field: 'idHeaderRef',width:80, displayName:"Header Group", visible: true},
+			             {field: 'idResourceSummary',width:80, displayName:"Resource No.", visible: true},
 			             {field: 'typeAction',displayName:"Action", width:80, visible: true}
 
 			             ],

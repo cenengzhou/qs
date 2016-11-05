@@ -1,6 +1,6 @@
 
-mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'addendumService', 'repackagingService', 'modalService', '$state', '$cookies', '$uibModalInstance',
-                                            function($scope, resourceSummaryService, subcontractService, addendumService, repackagingService, modalService, $state, $cookies, $uibModalInstance) {
+mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'addendumService', 'repackagingService', 'modalService', '$state', '$cookies', '$uibModalInstance', '$location',
+                                            function($scope, resourceSummaryService, subcontractService, addendumService, repackagingService, modalService, $state, $cookies, $uibModalInstance, $location) {
 
 	var jobNo = $cookies.get('jobNo');
 	var subcontractNo = $cookies.get('subcontractNo');
@@ -126,7 +126,11 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Addendums have been created.");
 						$uibModalInstance.close();
-						$state.reload();
+						
+						if(addendumDetailHeaderRef == null || addendumDetailHeaderRef.trim().length ==0){
+							$location.path("/subcontract/addendum/tab/detail-list");
+						}else
+							$state.reload();
 					}
 				});
 	}

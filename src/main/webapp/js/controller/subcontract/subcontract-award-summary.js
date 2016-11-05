@@ -47,8 +47,8 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 			.then(function(data){
 				$scope.awardHtml = GlobalHelper.formTemplate(data);
 			});
-//			getTender();
-//			getTenderList();
+			getTender();
+			getTenderList();
 			getRecommendedTender();
 		}
 	}
@@ -67,21 +67,21 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 				});
 	}
 	
-//    function getTender() {
-//		tenderService.getTender($scope.jobNo, $scope.subcontractNo, 0)
-//		.then(
-//				function( data ) {
-//					$scope.budgetTender = data;
-//				});
-//	}
+    function getTender() {
+		tenderService.getTender($scope.jobNo, $scope.subcontractNo, 0)
+		.then(
+				function( data ) {
+					$scope.budgetTender = data;
+				});
+	}
     
-//    function getTenderList() {
-//		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
-//		.then(
-//				function( data ) {
-//					$scope.tenderList = data;
-//				});
-//	}
+    function getTenderList() {
+		tenderService.getTenderList($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					$scope.tenderList = data;
+				});
+	}
 
 	function getRecommendedTender() {
 		tenderService.getRecommendedTender($scope.jobNo, $scope.subcontractNo)
@@ -91,18 +91,18 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer before doing tender variance.");
 					}else{
 						$scope.rcmTenderer = data;
-						//getTenderVarianceList($scope.rcmTenderer.vendorNo);
+						getTenderVarianceList($scope.rcmTenderer.vendorNo);
 					}
 				});
 	}
 
-//	function getTenderVarianceList(tenderNo) {
-//		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
-//		.then(
-//				function( data ) {
-//					$scope.tenderVarianceList = data;
-//				});
-//	}
+	function getTenderVarianceList(tenderNo) {
+		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
+		.then(
+				function( data ) {
+					$scope.tenderVarianceList = data;
+				});
+	}
 	
 	function submitAwardApproval(){
 		subcontractService.submitAwardApproval($scope.jobNo, $scope.subcontractNo, $scope.rcmTenderer.vendorNo)

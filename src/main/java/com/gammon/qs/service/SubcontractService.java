@@ -1650,6 +1650,14 @@ public class SubcontractService {
 			logger.info(message);
 			return message;
 		}
+		
+		
+		PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNumber, packageNumber);
+		if (paymentCert!= null && !PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus()) && !PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+			message = "Payment Submitted";
+			logger.info(message);
+			return message;
+		}
 
 		logger.info("Job: "+jobNumber+" SCPackage: "+packageNumber+" Current Split/Terminate Status: "+splitTerminateStatus[status][1]);
 
@@ -1993,17 +2001,17 @@ public class SubcontractService {
 					
 					
 					//Tender Budget is greater than Original Budget
-					if(tenderBudget.compareTo(originalBudget) == 1){
+					if(tenderBudget.compareTo(originalBudget) >0 ){
 						if(variedSubcontract)
 							approvalType = "V6";
 						else
-							approvalType = "V5";
+							approvalType = "ST";
 							
 					}else{
 						if(variedSubcontract)
-							approvalType = "V6";
-						else
 							approvalType = "V5";
+						else
+							approvalType = "AW";
 					}
 					
 					Double approvalAmount = tenderBudget.doubleValue();

@@ -47,7 +47,6 @@ mainApp.controller("SubcontractHeaderCtrl", ['$scope', 'subcontractService', '$c
 		.then(
 				function( data ) {
 					$scope.payment = data;
-					console.log(data);
 				});
 
 	}

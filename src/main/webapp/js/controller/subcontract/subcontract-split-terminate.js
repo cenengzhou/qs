@@ -211,15 +211,16 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 					if($scope.action == 'Terminate'){
 						angular.forEach(data, function(value, key){
 							value.newQuantity = value.cumWorkDoneQuantity;
+							var oldAmountSubcontractNew = value.amountSubcontractNew;
 							value.amountBudgetNew = roundUtil.round(value.newQuantity * value.costRate, 2);
 							value.amountSubcontractNew = roundUtil.round(value.newQuantity * value.scRate, 2);
 
 							if(value.lineType == 'BQ'){
 								$scope.remeasuredSubcontractSumAfterSplit += value.amountSubcontractNew;
 							}else{
-								$scope.approvedVOAmountAfterSplit += value.amountSubcontractNew;
+								//Incorrect
+								$scope.approvedVOAmountAfterSplit = $scope.approvedVOAmountAfterSplit - oldAmountSubcontractNew + value.amountSubcontractNew;
 							}
-							
 						});
 					}
 				});
@@ -233,6 +234,8 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 					if(data.length > 0){
 						if($scope.action == 'Split'){
 							$scope.remeasuredSubcontractSumAfterSplit = data[0];
+							$scope.approvedVOAmountAfterSplit = data[1];
+						}else{
 							$scope.approvedVOAmountAfterSplit = data[1];
 						}
 					}

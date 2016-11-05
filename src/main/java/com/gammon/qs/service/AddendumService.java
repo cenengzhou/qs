@@ -482,7 +482,8 @@ public class AddendumService{
 
 						//Validation 2.2: No duplicate resources made
 						ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
-						resource.setPackageNo(null);
+						if(resource!=null)
+							resource.setPackageNo(null);
 						
 						//Validation 2.2: Resource with IV posted amount cannot be deleted
 						if(resource.getPostedIVAmount() != 0){
@@ -501,11 +502,14 @@ public class AddendumService{
 					}
 				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction()) 
 						|| AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
-					SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
-
-					scDetail.setApproved(SubcontractDetail.APPROVED);
-					subcontractDetailHBDao.update(scDetail);
-
+					
+					Integer resourceNo = addendumDetail.getIdResourceSummary() != null ? addendumDetail.getIdResourceSummary().intValue(): 0;
+					SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), resourceNo);
+					
+					if(scDetail != null){
+						scDetail.setApproved(SubcontractDetail.APPROVED);
+						subcontractDetailHBDao.update(scDetail);
+					}
 				}
 				//Delete Addendum Detail
 				AddendumDetail addendumDetailInDB = addendumDetailHBDao.getAddendumDetail(addendumDetail.getId());
@@ -579,6 +583,9 @@ public class AddendumService{
 					addendumDetail.setRemarks(subcontractDetail.getRemark());
 					addendumDetail.setTypeVo(subcontractDetail.getLineType());
 					addendumDetail.setIdSubcontractDetail(subcontractDetail);
+					addendumDetail.setIdResourceSummary(new BigDecimal(subcontractDetail.getResourceNo()));
+					addendumDetail.setNoSubcontractChargedRef(subcontractDetail.getContraChargeSCNo());
+					addendumDetail.setCodeObjectForDaywork(subcontractDetail.getAltObjectCode());
 					
 					addendumDetailHBDao.insert(addendumDetail);
 					
@@ -956,7 +963,7 @@ public class AddendumService{
 		if(("L2".equals(addendumDetail.getTypeVo()) || "D2".equals(addendumDetail.getTypeVo())) && 
 				addendumDetail.getNoSubcontractChargedRef() != null && 
 				addendumDetail.getNoSubcontractChargedRef().trim().length()>0 && 
-				"0".equals(addendumDetail.getNoSubcontractChargedRef())){
+				!"0".equals(addendumDetail.getNoSubcontractChargedRef())){
 			SubcontractDetailCC scDetailsCC = ((SubcontractDetailCC)subcontractService.getDefaultValuesForSubcontractDetails(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo(), "C2"));
 			scDetailsCC.setJobNo(addendumDetail.getNoJob());
 			scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetailVO.getContraChargeSCNo()));
@@ -1037,16 +1044,36 @@ public class AddendumService{
 	}
 	
 	private void deleteSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
-		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
+		Integer resourceNo = addendumDetail.getIdResourceSummary() != null ? addendumDetail.getIdResourceSummary().intValue(): 0;
+		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), resourceNo);
 		if(scDetail != null){
 			//Delete C2
-			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
-				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), scDetail.getLineType());
+			if(("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType())) &&
+					scDetail.getContraChargeSCNo() != null && 
+					scDetail.getContraChargeSCNo().trim().length()>0 && 
+					!"0".equals(scDetail.getContraChargeSCNo())){
+				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 				if(scDetailsCC != null){
 					subcontractDetailHBDao.inactivate(scDetailsCC);				
 				}
 			}
+			//V1/V3 with budget
+			else if (scDetail.getResourceNo() != null && scDetail.getResourceNo()>1){
+				//Validation 2.2: No duplicate resources made
+				ResourceSummary resource = resourceSummaryHBDao.get(Long.valueOf(addendumDetail.getIdResourceSummary().toString()));
+				if(resource!=null)
+					resource.setPackageNo(null);
+				
+				List<ResourceSummary> resourceSummaryList = new ArrayList<ResourceSummary>();
+				resourceSummaryList.add(resource);
+				
+				//String error  = resourceSummaryService.checkForDuplicates(resourceSummaryList, job);
+				
+				if(resourceSummaryList.size()>0){
+					resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
+				}
 
+			}
 			subcontractDetailHBDao.inactivate(scDetail);
 		}
 	}
