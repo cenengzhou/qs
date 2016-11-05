@@ -237,7 +237,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 	
 	function attachmentIconClass(fileType){
 		var iconClass = 'fa fa-2x fa-file-o';
-		switch(fileType){
+		switch(fileType.toLowerCase()){
 		case '.jpg':
 		case '.png':
 		case '.bmp':

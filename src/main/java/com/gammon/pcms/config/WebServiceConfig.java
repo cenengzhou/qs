@@ -54,7 +54,7 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	@Value("${peopleDirectory.picture.url}")
 	private String peopDirectoryPictureUrl;
 	
-	public static final String GSF_APPLICATION_CODE = "PCMS";
+	public static final String GSF_APPLICATION_CODE = "QS";
 	public static final String GSF_GETROLE = "GetRole";
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
 	public static final String GSF_GETJOBSECURITY = "GetJobSecurity";
