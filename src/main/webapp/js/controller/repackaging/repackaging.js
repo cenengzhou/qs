@@ -68,8 +68,8 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.loadAttachment($scope.repackaging.id);
 						
-						console.log($scope.latestVersion);
-						console.log($scope.repackaging.status);
+						//console.log($scope.latestVersion);
+						//console.log($scope.repackaging.status);
 						
 						
 					}

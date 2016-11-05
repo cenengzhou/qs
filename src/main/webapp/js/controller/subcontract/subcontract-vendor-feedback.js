@@ -248,7 +248,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		.then(
 				function( data ) {
 					$scope.uneditableList = data;
-					console.log($scope.uneditableList);
+					//console.log($scope.uneditableList);
 				});
 	}
 	

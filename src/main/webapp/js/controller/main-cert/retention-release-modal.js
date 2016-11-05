@@ -155,7 +155,6 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 		mainCertService.getCalculatedRetentionRelease($scope.jobNo, $scope.mainCertNo)
 		.then(
 				function( data ) {
-					console.log();
 					$scope.gridOptions.data = data;
 
 					angular.forEach(data, function(value, key){

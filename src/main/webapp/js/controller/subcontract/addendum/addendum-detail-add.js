@@ -92,7 +92,6 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 					typeVo: 			$scope.addendumDetail.typeVo,
 					idSubcontractDetail: $scope.addendumDetail.idSubcontractDetail
 			}
-			console.log(addendumDetailToAdd);
 			addAddendumDetail(addendumDetailToAdd);
 		}
 		else if(modalStatus == 'UPDATE'){
@@ -165,7 +164,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 		}
 		else if(modalStatus == 'UPDATE'){
 			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
-			console.log(modalParam);
+			//console.log(modalParam);
 			$scope.addendumDetail = modalParam;
 			
 			$scope.lineType = modalParam.typeVo;

@@ -147,7 +147,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	
 	$scope.deleteResources = function(){
 		var selectedRows = $scope.gridApi.selection.getSelectedRows();
-		console.log(selectedRows);
+		//console.log(selectedRows);
 		if(selectedRows.length == 0){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select resources to delete.");
 			return;

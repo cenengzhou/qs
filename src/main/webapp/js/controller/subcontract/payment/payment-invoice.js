@@ -6,7 +6,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 	loadData();
 	
 	$scope.submit =  function(){
-		console.log($scope.paymentCertSummary);
+		//console.log($scope.paymentCertSummary);
 		if($scope.payment.paymentStatus == "PND"){
 			
 			if(roundUtil.round($scope.paymentCertSummary.subMovement5, 2) !=  roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)){

@@ -25,7 +25,7 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
     };
     
     $scope.updateFinalOption = function (){
-    	console.log($scope.checkedFinal);
+    	//console.log($scope.checkedFinal);
     	if($scope.checkedFinal == true)
         	$scope.finalPaymentStatus ="F";    		
     	else

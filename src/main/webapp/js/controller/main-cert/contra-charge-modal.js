@@ -173,7 +173,6 @@ mainApp.controller('ContraChargeModalCtrl', ['$scope',  'modalService', 'jobServ
 		mainCertService.deleteMainCertContraCharge(contraChargeToDelete)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data != null && data.length!=0){
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
 						return;

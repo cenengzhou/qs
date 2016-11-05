@@ -98,7 +98,6 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 
 
 	function updateCertificate(){
-		console.log($scope.cert);
 		mainCertService.updateCertificate($scope.cert)
 		.then(
 				function( data ) {

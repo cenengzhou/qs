@@ -99,7 +99,6 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 		repackagingService.getLatestRepackaging(jobNo)
 		.then(
 				function( data ) {
-					console.log(data);
 					if(data.status =="900")
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Repackaging has been locked. Please unlock it first.");
 					else

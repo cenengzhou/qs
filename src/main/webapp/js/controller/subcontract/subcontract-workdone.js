@@ -229,7 +229,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 					rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
 					rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
 				}
-				console.log(rowEntity);
 				updateWDandIV(rowEntity);
 			}else{
 				if(colDef.name == "cumWorkDoneQuantity")
@@ -324,10 +323,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		var currTotalCumIVQty = roundUtil.round($scope.gridApiIV.grid.columns[5].getAggregationValue(), 4);
 		var currTotalCumIVAmount = roundUtil.round($scope.gridApiIV.grid.columns[6].getAggregationValue(), 2);
 		
-		console.log("currTotalCumIVQty: "+currTotalCumIVQty);
-		console.log("totalCumIVQty: "+$scope.totalCumIVQty);
-		console.log("currTotalCumIVAmount: "+currTotalCumIVAmount);
-		console.log("totalCumIVAmount: "+$scope.totalCumIVAmount);
 		if(currTotalCumIVQty != $scope.totalCumIVQty || currTotalCumIVAmount != $scope.totalCumIVAmount){
 			 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total Cumulative Work Done Quantity/Amount is not balanced.");
 			 return;

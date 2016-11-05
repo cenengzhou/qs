@@ -53,7 +53,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 										.then(
 												function( data ) {
 													var paymentList = data;
-													console.log(paymentList);
+												//	console.log(paymentList);
 													if((paymentList != null && paymentList.length > 1) || latestPayment.paymentStatus == 'APR')
 														$scope.hideItemForPayReq = false;
 													else

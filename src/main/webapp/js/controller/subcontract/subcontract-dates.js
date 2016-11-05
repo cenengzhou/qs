@@ -7,7 +7,7 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 //	Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-			console.log($scope.subcontract);
+			//console.log($scope.subcontract);
 
 			var subcontractToUpdate = {
 					id: $scope.subcontract.id,
