@@ -4539,9 +4539,10 @@ public class SubcontractService {
 		for(SubcontractSnapshot scPackageSnapshot: subcontractList){
 			SCListWrapper scListWrapper = new SCListWrapper();
 			scListWrapper.setClientNo(scPackageSnapshot.getJobInfo().getEmployer());
-			List<SubcontractWorkScope> scWorkScopeList = subcontractWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackageSnapshot.getSubcontract());
-			if(scWorkScopeList !=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
-				scListWrapper.setWorkScope(scWorkScopeList.get(0).getWorkScope());
+//			List<SubcontractWorkScope> scWorkScopeList = subcontractWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackageSnapshot.getSubcontract());
+//			if(scWorkScopeList !=null && scWorkScopeList.size()>0 && scWorkScopeList.get(0)!=null)
+			if(scPackageSnapshot.getSubcontract().getWorkscope()!= null)
+				scListWrapper.setWorkScope(scPackageSnapshot.getSubcontract().getWorkscope().toString());
 			scListWrapper.setPackageNo(scPackageSnapshot.getPackageNo());
 			scListWrapper.setVendorNo(scPackageSnapshot.getVendorNo());
 			

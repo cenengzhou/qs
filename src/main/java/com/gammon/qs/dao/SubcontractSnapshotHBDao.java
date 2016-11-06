@@ -194,7 +194,11 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			
 			if(!"".equals(month) && !"".equals(year)){
 				Date snapshotDate = obtainSnapshotDate(month, year);
-				criteria.add(Restrictions.eq("snapshotDate", snapshotDate));
+				Calendar snapshotDateNext = Calendar.getInstance();
+				snapshotDateNext.setTime(snapshotDate);
+				snapshotDateNext.add(Calendar.DATE, 1);
+				criteria.add(Restrictions.gt("snapshotDate", snapshotDate));
+				criteria.add(Restrictions.le("snapshotDate", snapshotDateNext.getTime()));
 			}
 			
 			
