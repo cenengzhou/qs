@@ -11,7 +11,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         getLatestMainCert:					getLatestMainCert,
         getCumulativeRetentionReleaseByJob:	getCumulativeRetentionReleaseByJob,
         getMainCertContraChargeList:		getMainCertContraChargeList,
-        
+        getMainCertNoList:					getMainCertNoList,
         createMainCert:						createMainCert,
         insertIPA:							insertIPA,
         confirmIPC:							confirmIPC,
@@ -94,6 +94,18 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
             params: {
             	noJob: noJob,
             	noMainCert: noMainCert
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function getMainCertNoList(noJob) {
+        var request = $http({
+            method: "get",
+            url: "service/mainCert/getMainCertNoList",
+            params: {
+            	noJob: noJob
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

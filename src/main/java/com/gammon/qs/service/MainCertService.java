@@ -407,6 +407,12 @@ public class MainCertService {
 		return paidMainCertList;
 	}
 	
+	
+	public List<Integer> getMainCertNoList(String jobNo) throws DatabaseOperationException {
+		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(jobNo);
+		return mainCertNoList;
+	}
+	
 	/**
 	 * @author koeyyeung
 	 * created on 30 Mar, 2015

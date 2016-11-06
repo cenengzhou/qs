@@ -256,15 +256,30 @@
 
 	</div>
 
-	<!-- Bar Chart  -->
+	
 	<div class="row" ng-if="showPanel === 'dashboard'">
+		<div class="col-md-12 m-t-40">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Transit Dashboard</h3>
+				</div>
+				<div class="box-body" resize ng-style="resizeWithOffset(380)">
+					<h1 class="text-center m-t-40"><span class="icofont icofont-engineer"></span> Coming Soon!</h1> 
+				</div>
+			</div>
+		</div>
+
+		
+	</div>
+
+
+	<!-- Bar Chart  -->
+	<!-- <div class="row" ng-if="showPanel === 'dashboard'">
 		<div class="col-md-4">
-			<!-- TABLE: LATEST ORDERS -->
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h3 class="box-title">Selling vs ECA</h3>
 				</div>
-				<!-- /.box-header -->
 				<div class="box-body">
 					<div class="row">
 						<div class="col-md-1"></div>
@@ -277,31 +292,24 @@
 								chart-options="barChartParameters.options" height="300">
 										</canvas>
 						</div>
-						<!-- 						<div class="col-md-2"></div> -->
 						<div class="row">
 							<div class="col-md-12">
 								<ul class="chart-legend clearfix">
 									<li><i class="fa fa-circle text-red"></i> <label>{{barChartParameters.series[0]}}:$3000,000,000</label></li>
-									<!-- <label>{{barChartParameters.series[0]}}:{{barChartParameters.data[0]}}</label></li> -->
 									<li><i class="fa fa-circle text-aqua"></i> <label>{{barChartParameters.series[1]}}:$2800,000,000</label></li>
-									<!-- <label>{{barChartParameters.series[1]}}:{{barChartParameters.data[1]}}</label></li> -->
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- /.box-body -->
 			</div>
-			<!-- /.box -->
 		</div>
 
 		<div class="col-md-4">
-			<!-- TABLE: LATEST ORDERS -->
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h3 class="box-title">Selling Distribution</h3>
 				</div>
-				<!-- /.box-header -->
 				<div class="box-body">
 					<div class="row">
 						<div class="col-md-12">
@@ -324,21 +332,16 @@
 										{{selling.data[4] | currency}}</label></li>
 							</ul>
 						</div>
-						<!-- /.col -->
 					</div>
 				</div>
-				<!-- /.box-body -->
 			</div>
-			<!-- /.box -->
 		</div>
 
 		<div class="col-md-4">
-			<!-- TABLE: LATEST ORDERS -->
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h3 class="box-title">ECA Distribution</h3>
 				</div>
-				<!-- /.box-header -->
 				<div class="box-body">
 					<div class="row">
 						<div class="col-md-12">
@@ -361,39 +364,12 @@
 										{{selling.data[4] | currency}}</label></li>
 							</ul>
 						</div>
-						<!-- /.col -->
 					</div>
 				</div>
-				<!-- /.box-body -->
 			</div>
-			<!-- /.box -->
 		</div>
-		<!-- /.col -->
-	</div>
-	<!-- /.row -->
-	<!-- Pie Chart  END-->
+	</div> -->
 
 
-
-	<!-- Small boxes (Stat box) -->
-	<!-- <div class="box">
-				<div class="box box-info">
-					<div class="box-header with-border">
-						<h3 class="box-title">Enquiry</h3>
 	
-						<div class="box-tools pull-right">
-							<button type="button" class="btn btn-box-tool"
-								data-widget="collapse">
-								<i class="fa fa-minus"></i>
-							</button>
-						</div>
-					</div>
-					<div class="box-body">
-						<div class="row">
-							
-						</div>
-					</div>
-				</div>
-			</div> -->
-
 </div>

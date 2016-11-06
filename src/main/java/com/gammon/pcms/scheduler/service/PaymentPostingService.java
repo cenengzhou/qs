@@ -76,7 +76,7 @@ public class PaymentPostingService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logger.info("STARTED: runPaymentPosting");
+		logger.info("ENDED: runPaymentPosting");
 	}
 	
 	/**

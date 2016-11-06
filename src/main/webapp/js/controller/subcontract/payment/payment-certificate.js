@@ -102,7 +102,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 	function loadData(){
 		if($scope.paymentCertNo != ""){
 			getPaymentCert();
-			getPaidMainCertList();
+			getMainCertNoList();
 		}
 	}
 
@@ -146,15 +146,22 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 	}
 
 
-	function getPaidMainCertList() {
+	/*function getPaidMainCertList() {
 		mainCertService.getPaidMainCertList($scope.jobNo)
 		.then(
 				function( data ) {
 					$scope.mainCertNo.options = data;
 				});
+	}*/
+
+	
+	function getMainCertNoList() {
+	mainCertService.getMainCertNoList($scope.jobNo)
+	.then(
+			function( data ) {
+				$scope.mainCertNo.options = data;
+			});
 	}
-
-
 
 	function createPayment() {
 		paymentService.createPayment($scope.jobNo, $scope.subcontractNo)
@@ -179,7 +186,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 					$scope.paymentCertNo = $cookies.get('paymentCertNo');
 					
 					
-					getPaidMainCertList();
+					getMainCertNoList();
 
 					if($scope.payment.paymentStatus == "PND")
 						$scope.disableButtons = false;

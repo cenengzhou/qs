@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -179,6 +180,22 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		//Order By
 		criteria.addOrder(Order.asc("certificateNumber"));
 
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getMainCertNoList(String noJob) throws DatabaseOperationException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Where
+		criteria.add(Restrictions.eq("jobNo", noJob));
+		
+		//Order By
+		criteria.addOrder(Order.desc("certificateNumber"));
+
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.property("certificateNumber")));
+		
 		return criteria.list();
 	}
 	

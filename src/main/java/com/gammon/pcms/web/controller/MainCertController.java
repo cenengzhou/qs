@@ -57,6 +57,14 @@ public class MainCertController {
 		return mainCertList;
 	}
 	
+	@RequestMapping(value = "getMainCertNoList", method = RequestMethod.GET)
+	public List<Integer> getMainCertNoList(@RequestParam(required = true) String noJob) throws DatabaseOperationException {
+		List<Integer> mainCertList= null;
+		mainCertList= mainCertService.getMainCertNoList(noJob);
+		return mainCertList;
+	}
+
+	
 	@RequestMapping(value = "getRetentionReleaseList", method = RequestMethod.GET)
 	public List<MainCertRetentionRelease> getRetentionReleaseList(@RequestParam(required = true) String noJob) {
 		return mainCertRetentionReleaseService.getRetentionReleaseList(noJob);
