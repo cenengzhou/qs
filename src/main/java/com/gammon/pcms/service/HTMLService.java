@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.FreemarkerConfig;
 import com.gammon.pcms.config.ServletConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
+import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
@@ -47,6 +48,7 @@ import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
+import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -103,11 +105,15 @@ public class HTMLService implements Serializable{
 
 		String strPaymentDueDate = null;
 		String strPaymentAsAtDate = null;
-		
+		String strIpaOrInvoiceReceivedDate = null;
+		String strCertIssueDate = null;
+		Double gstPayable = new Double(0);
+		Double gstReceivable = new Double(0);
 		Double ivCumAmt = new Double(0);
 		
 		int mainCertNumber = 0;
 		int currentPaymentNo = 0;
+		PaymentCert paymentCert = null;
 		logger.info("Input parameter: jobNo["+jobNumber+"] - Package No["+subcontractNumber+"] - PaymentNo["+paymentNo+"]");
 		try {
 			job = jobInfoHBDao.obtainJobInfo(jobNumber);
@@ -132,14 +138,17 @@ public class HTMLService implements Serializable{
 				currentPaymentNo = Integer.valueOf(paymentNo);
 				logger.info("PaymentNo: "+paymentNo);
 			}
-			
+			gstPayable = paymentService.obtainPaymentGstAmount(jobNumber, subcontractNumber, currentPaymentNo, "GP");
+			gstReceivable = paymentService.obtainPaymentGstAmount(jobNumber, subcontractNumber, currentPaymentNo, "GR");
+			paymentCert = paymentService.obtainPaymentCertificate(jobNumber, subcontractNumber, new Integer(currentPaymentNo));
 			logger.info("Job No.: "+jobNumber+"- Package No.: "+subcontractNumber+"- Payment No.: "+currentPaymentNo);
 			paymentCertViewWrapper = paymentService.calculatePaymentCertificateSummary(jobNumber, subcontractNumber, currentPaymentNo);
 			
 			mainCertNumber 		= paymentCertViewWrapper.getMainCertNo();
 			strPaymentDueDate 	= paymentCertViewWrapper.getDueDate();
 			strPaymentAsAtDate	= paymentCertViewWrapper.getAsAtDate();
-			
+			strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
+			strCertIssueDate = DateHelper.formatDate(paymentCert.getCertIssueDate(), GlobalParameter.DATE_FORMAT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -162,6 +171,24 @@ public class HTMLService implements Serializable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		String strPaymentStatus = "";
+		switch(paymentCert.getPaymentStatus()){
+		case "PND":
+			strPaymentStatus = "Pending";
+			break;
+		case "SBM":
+			strPaymentStatus = "Submitted";
+			break;
+		case "UFR":
+			strPaymentStatus = "Under Finance Review";
+			break;
+		case "PCS":
+			strPaymentStatus = "Waiting For Posting";
+			break;
+		case "APR":
+			strPaymentStatus = "Posted To Finance";
+			break;
+		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("payment");
@@ -169,15 +196,21 @@ public class HTMLService implements Serializable{
 		data.put("logo", freemarkerConfig.getPaths("logo"));
 		data.put("baseUrl", servletConfig.getBaseUrl());
 		data.put("scPackage", scPackage != null ? scPackage : new Subcontract());
+		data.put("paymentCert", paymentCert != null ? paymentCert : new PaymentCert());
 		data.put("paymentCertViewWrapper", paymentCertViewWrapper != null ? paymentCertViewWrapper : new PaymentCertViewWrapper());
 		data.put("job", job != null ? job : new JobInfo());
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("clientCertAmount", clientCertAmount != null ? clientCertAmount : new Double(0));
 		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
 		data.put("ivCumAmt", ivCumAmt != null ? ivCumAmt : new Double(0));
+		data.put("gstPayable", gstPayable != null ? gstPayable : new Double(0));
+		data.put("gstReceivable", gstReceivable != null ? gstReceivable : new Double(0));
 		data.put("mainCertNumber", mainCertNumber);
 		data.put("strPaymentDueDate", strPaymentDueDate != null ? strPaymentDueDate : "");
 		data.put("strPaymentAsAtDate", strPaymentAsAtDate != null ? strPaymentAsAtDate : "");
+		data.put("strIpaOrInvoiceReceivedDate", strIpaOrInvoiceReceivedDate != null ? strIpaOrInvoiceReceivedDate : "");
+		data.put("strCertIssueDate", strCertIssueDate != null ? strCertIssueDate : "");
+		data.put("strPaymentStatus", strPaymentStatus);
 		data.put("currentPaymentNo", currentPaymentNo);
 		
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
