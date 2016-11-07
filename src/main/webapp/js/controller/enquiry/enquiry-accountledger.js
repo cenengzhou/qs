@@ -37,7 +37,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 			            	 
 			            	 enableCellEdit: false
 			             },
-			             { field: 'taxExplCode', width:'100', displayName: "Explanation", enableCellEdit: false },
+			             { field: 'explanationAddressBook', width:'100', displayName: "Explanation", enableCellEdit: false },
 			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
 			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -65,7 +65,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 			             { field: 'currencyCode', width:'100', displayName: "Currency", enableCellEdit: false },
 			             { field: 'quantityUnitOfMeasurement', width:'100', displayName: "Units", enableCellEdit: false },
 			             { field: 'explanationRemark', width:'100', displayName: "Remark", enableCellEdit: false },
-			             { field: 'recordKeyMatchedPo', width:'100', displayName: "Purchase Order", enableCellEdit: false },
+			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },
 			             { field: 'numberBatch', width:'100', displayName: "Batch Number", enableCellEdit: false },
 			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false }
@@ -132,6 +132,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
 		    .then(function(data) {
 				if(angular.isArray(data)){
+					console.log(data);
 					$scope.gridOptions.data = data;
 				} 
 			}, function(data){
