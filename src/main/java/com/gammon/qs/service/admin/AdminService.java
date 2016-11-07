@@ -80,7 +80,7 @@ public class AdminService {
 		List<String> jobNumberList = new ArrayList<String>();
 
 		for(JobSecurity jobSecurity : jobSecurityList){
-			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
+			if(jobSecurity.getRoleName() != null && jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
 				jobNumberList.clear();
 				jobNumberList.add("JOB_ALL");
 				break;
