@@ -2,6 +2,7 @@ package com.gammon.pcms.scheduler.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -280,6 +281,7 @@ public class PaymentPostingService {
 
 		try {
 			Calendar calculatedDueDate = Calendar.getInstance(); // based on today
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");     
 			
 			// 1. QS1 or QS2
 			if ("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms())) {
@@ -302,16 +304,26 @@ public class PaymentPostingService {
 					return responseWrapper;
 				}
 
-				// if user's As At Date == null, then bypass validation of "Payment's As At Date must be earlier than Main Contract Cert's As At Date"
+				// if user's As At Date == null, then bypass validation of "Payment's As At Date must be ON or BEFORE than Main Contract Cert's As At Date"
 				try {
-					if (asAtDate != null && asAtDate.after(mainCertAsAtRecDateWrapper.getValueDateOnCert())) {
-						SimpleDateFormat formattedDate = new SimpleDateFormat("dd/MM/yyyy");
-						String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
+					
+					if (asAtDate != null){
+						try {
+							Date asAtDateWithoutTime = sdf.parse(sdf.format(asAtDate));
+							Date mainCertAsAtDateWithoutTime = mainCertAsAtRecDateWrapper.getValueDateOnCert() != null ?sdf.parse(sdf.format(mainCertAsAtRecDateWrapper.getValueDateOnCert())): null;
 
-						responseWrapper.setErrorMsg("Payment's As At Date must be earlier than Main Contract Certificate's As At Date.</br>" +
-													"Main Contract Certificate As At Date: " + parentMainCertAsAtDate);
-						responseWrapper.setIsvalid(false);
-						return responseWrapper;
+							if(asAtDateWithoutTime.after(mainCertAsAtDateWithoutTime)) {
+								SimpleDateFormat formattedDate = new SimpleDateFormat("dd/MM/yyyy");
+								String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
+
+								responseWrapper.setErrorMsg("Payment's As At Date must be ON or BEFORE than Main Contract Certificate's As At Date.</br>" +
+										"Main Contract Certificate As At Date: " + parentMainCertAsAtDate);
+								responseWrapper.setIsvalid(false);
+								return responseWrapper;
+							}
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
 					}
 				} catch (NullPointerException nException) {
 					responseWrapper.setErrorMsg("Parent's Main Contract Certificate's As At Date is null.");
@@ -352,15 +364,22 @@ public class PaymentPostingService {
 					return responseWrapper;
 				}
 				
-				// invoice received date on or after payment as at date
-				if (ipaOrInvoiceDate.before(asAtDate)){
-					responseWrapper.setErrorMsg("IPA Received Date has to be ON or AFTER Payment As At Date");
-					responseWrapper.setIsvalid(false);
-					return responseWrapper;
+				try {
+					Date asAtDateWithoutTime = sdf.parse(sdf.format(asAtDate));
+					Date ipaOrInvoiceDateWithoutTime = sdf.parse(sdf.format(ipaOrInvoiceDate));
+
+					// invoice received date on or after payment as at date
+					if (ipaOrInvoiceDateWithoutTime.before(asAtDateWithoutTime)){
+						responseWrapper.setErrorMsg("IPA Received Date has to be ON or AFTER Payment As At Date");
+						responseWrapper.setIsvalid(false);
+						return responseWrapper;
+					}
+
+					calculatedDueDate.setTime(ipaOrInvoiceDate);
+					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS3);
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
-				
-				calculatedDueDate.setTime(ipaOrInvoiceDate);
-				calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS3);
 			}
 			// 3. QS4-QS7
 			else if ("QS4".equals(scPackage.getPaymentTerms()) ||"QS5".equals(scPackage.getPaymentTerms()) ||"QS6".equals(scPackage.getPaymentTerms()) ||"QS7".equals(scPackage.getPaymentTerms())) {
@@ -376,34 +395,44 @@ public class PaymentPostingService {
 					return responseWrapper;
 				}
 				
-				// invoice received date on or after payment as at date
-				if (ipaOrInvoiceDate.before(asAtDate)){
-					responseWrapper.setErrorMsg("Invoice Received Date has to be ON or AFTER Payment As At Date");
-					responseWrapper.setIsvalid(false);
-					return responseWrapper;
+				try {
+					Date asAtDateWithoutTime = sdf.parse(sdf.format(asAtDate));
+					Date ipaOrInvoiceDateWithoutTime = sdf.parse(sdf.format(ipaOrInvoiceDate));
+					
+					// invoice received date on or after payment as at date
+					if (ipaOrInvoiceDateWithoutTime.before(asAtDateWithoutTime)){
+						responseWrapper.setErrorMsg("Invoice Received Date has to be ON or AFTER Payment As At Date");
+						responseWrapper.setIsvalid(false);
+						return responseWrapper;
+					}
+					
+					calculatedDueDate.setTime(ipaOrInvoiceDate);
+					if ("QS4".equals(scPackage.getPaymentTerms()))
+						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS4);
+					else if ("QS5".equals(scPackage.getPaymentTerms()))
+						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS5);
+					else if ("QS6".equals(scPackage.getPaymentTerms()))
+						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS6);
+					else if ("QS7".equals(scPackage.getPaymentTerms()))
+						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS7);
+					
+					// invoice received date  - payment as at date  < 30 days
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(asAtDate);
+					calendar.add(Calendar.DAY_OF_MONTH,+30);	
+					Date maxInvoiceReceivedDate =calendar.getTime();
+					if(ipaOrInvoiceDate.after(maxInvoiceReceivedDate)){
+						responseWrapper.setErrorMsg("Invoice Received Date cannot be later than Payment As At Date for more than 30 days");
+						responseWrapper.setIsvalid(true);//warning only, can proceed to save
+						responseWrapper.setDueDate(calculatedDueDate.getTime());
+						return responseWrapper;
+					}
+					
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
 				
-				calculatedDueDate.setTime(ipaOrInvoiceDate);
-				if ("QS4".equals(scPackage.getPaymentTerms()))
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS4);
-				else if ("QS5".equals(scPackage.getPaymentTerms()))
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS5);
-				else if ("QS6".equals(scPackage.getPaymentTerms()))
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS6);
-				else if ("QS7".equals(scPackage.getPaymentTerms()))
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS7);
-				
-				// invoice received date  - payment as at date  < 30 days
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(asAtDate);
-				calendar.add(Calendar.DAY_OF_MONTH,+30);	
-				Date maxInvoiceReceivedDate =calendar.getTime();
-				if(ipaOrInvoiceDate.after(maxInvoiceReceivedDate)){
-					responseWrapper.setErrorMsg("Invoice Received Date cannot be later than Payment As At Date for more than 30 days");
-					responseWrapper.setIsvalid(true);//warning only, can proceed to save
-					responseWrapper.setDueDate(calculatedDueDate.getTime());
-					return responseWrapper;
-				}
 				
 			}
 			// 4a. QS0 - User entered Due Date has to be before today
