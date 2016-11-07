@@ -70,10 +70,8 @@ public class JobInfoService {
 		this.packageHBDao = packageHBDao;
 	}
 
-	public List<JobInfo> getAllJobNoAndDescription() {
-		User user = (User) securityService.getCurrentUser();
-		List<JobSecurity> jobSecurityList = adminService.obtainJobSecurityListByUsername(user.getUsername());
-		return adminService.obtainCanAccessJobInfoList(jobSecurityList);
+	public List<JobInfo> getAllJobNoAndDescription() throws DatabaseOperationException {
+		return adminService.obtainCanAccessJobInfoList(null);
 	}
 	
 	public List<JobInfo> getAllJobNoAndDescription(boolean isCompletedJob) {

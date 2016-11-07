@@ -64,28 +64,46 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		return result;	
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<JobInfo> obtainAllJobInfoByCompany(String company) throws DatabaseOperationException{
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("company", company));
-		return criteria.list();
-	}
+//	@SuppressWarnings("unchecked")
+//	public List<JobInfo> obtainAllJobInfoByCompany(String company) throws DatabaseOperationException{
+//		Criteria criteria = getSession().createCriteria(this.getType());
+//		criteria.add(Restrictions.eq("company", company));
+//		return criteria.list();
+//	}
 	
 	@SuppressWarnings("unchecked")
-	public List<JobInfo> obtainAllJobInfoByCompanyAndCompletionStatus(String company, boolean isCompletedJob){
-		Criteria criteria = getSession().createCriteria(this.getType());
-		if(!"NA".equals(company)){
-			criteria.add(Restrictions.eq("company", company));
+	public List<JobInfo> obtainJobInfoByJobNumberList(List<String> jobNumberStringList, Boolean isCompletedJob){
+		Criteria criteria = getSession().createCriteria(getType());
+		if(!jobNumberStringList.get(0).equals("JOB_ALL")){
+			criteria.add(Restrictions.in("jobNumber", jobNumberStringList));
 		}
-		Criterion completedStatus = Restrictions.ne("completionStatus", "1");
-		if(!isCompletedJob){
-			completedStatus = Restrictions.not(completedStatus);
+		if(isCompletedJob != null){
+			Criterion completedStatus = Restrictions.ne("completionStatus", "1");
+			if(!isCompletedJob){
+				completedStatus = Restrictions.not(completedStatus);
+			}
+			criteria.add(completedStatus);
 		}
-		criteria.add(completedStatus);
 		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
 		criteria.addOrder(Order.asc("jobNumber"));
 		return criteria.list();	
 	}
+	
+//	@SuppressWarnings("unchecked")
+//	public List<JobInfo> obtainAllJobInfoByCompanyAndCompletionStatus(String company, boolean isCompletedJob){
+//		Criteria criteria = getSession().createCriteria(this.getType());
+//		if(!"NA".equals(company)){
+//			criteria.add(Restrictions.eq("company", company));
+//		}
+//		Criterion completedStatus = Restrictions.ne("completionStatus", "1");
+//		if(!isCompletedJob){
+//			completedStatus = Restrictions.not(completedStatus);
+//		}
+//		criteria.add(completedStatus);
+//		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+//		criteria.addOrder(Order.asc("jobNumber"));
+//		return criteria.list();	
+//	}
 	
 	/**
 	 * Obtain all jobs

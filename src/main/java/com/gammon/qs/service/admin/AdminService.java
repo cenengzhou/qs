@@ -70,55 +70,41 @@ public class AdminService {
 		return companySet;
 	}
 
-	public List<String> obtainCanAccessJobNoList(){
+	public List<String> obtainCanAccessJobNoStringList(){
 		User user = securityService.getCurrentUser();
-		return obtainCanAccessJobNoList(user.getUsername());
+		return obtainCanAccessJobNoStringList(user.getUsername());
 	}
 	
-	public List<String> obtainCanAccessJobNoList(String username){
+	public List<String> obtainCanAccessJobNoStringList(String username){
 		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
 		List<String> jobNumberList = new ArrayList<String>();
+
 		for(JobSecurity jobSecurity : jobSecurityList){
-			List<String> jobNumberByCompanyList = new ArrayList<String>();
-			try {
-				jobNumberByCompanyList = jobInfoHBDao.obtainJobNumberByCompany(jobSecurity.getCompany());
-				jobNumberList.addAll(jobNumberByCompanyList);
-			} catch (DatabaseOperationException e) {
-				e.printStackTrace();
+			if(jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
+				jobNumberList.clear();
+				jobNumberList.add("JOB_ALL");
+				break;
 			}
+			if(!jobSecurity.getJobNo().equals("NA"))
+			jobNumberList.add(jobSecurity.getJobNo());
 		}
+
 		return jobNumberList;
 	}
 	
-	public List<JobInfo> obtainCanAccessJobInfoList(List<JobSecurity> jobSecurityList){
+	public List<JobInfo> obtainCanAccessJobInfoList(Boolean isCompleted) throws DatabaseOperationException{
+		return obtainCanAccessJobInfoList(obtainCanAccessJobNoStringList(), isCompleted);
+	}
+	
+	public List<JobInfo> obtainCanAccessJobInfoList(List<String> jobNoStringList, Boolean isCompleted) throws DatabaseOperationException{
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
-		for (JobSecurity jobSecurity : jobSecurityList) {
-			try {
-				if (jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())) {
-					jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainAllJobs());
-					break;
-				}else{
-					jobInfoSet.addAll(jobInfoHBDao.obtainAllJobInfoByCompany(jobSecurity.getCompany()));
-				}
-			} catch (DatabaseOperationException e) {
-				e.printStackTrace();
-			}
-		}
+		jobInfoHBDao.obtainJobInfoByJobNumberList(jobNoStringList, isCompleted);
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
 	public List<JobInfo> obtainCanAccessJobInfoList(boolean isCompletedJob){
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
-		User user = securityService.getCurrentUser();
-		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(user.getUsername());
-		for (JobSecurity jobSecurity : jobSecurityList) {
-			if (jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())) {
-				jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainAllJobInfoByCompanyAndCompletionStatus("NA", isCompletedJob));
-				break;
-			}else{
-				jobInfoSet.addAll(jobInfoHBDao.obtainAllJobInfoByCompanyAndCompletionStatus(jobSecurity.getCompany(), isCompletedJob));
-			}
-		}
+		jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainJobInfoByJobNumberList(obtainCanAccessJobNoStringList(), isCompletedJob));
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	
@@ -153,7 +139,7 @@ public class AdminService {
 			return true;
 		} else {
 			if (StringUtils.isNotBlank(noJob)){
-				List<String> jobList = obtainCanAccessJobNoList(user.getUsername());
+				List<String> jobList = obtainCanAccessJobNoStringList(user.getUsername());
 				if(jobList.contains(noJob)) return true;
 			} 
 			throw new AccessDeniedException(user.getFullname() + " cannot access job " + noJob);

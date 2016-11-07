@@ -50,7 +50,7 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "getJobDetailList", method = RequestMethod.POST)
-	public List<JobInfo> getJobDetailList(){
+	public List<JobInfo> getJobDetailList() throws DatabaseOperationException{
 		List<JobInfo> jobList = null;
 		jobList = jobService.getAllJobNoAndDescription();
 		return jobList;
