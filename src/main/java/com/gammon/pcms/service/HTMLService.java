@@ -24,6 +24,7 @@ import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -90,6 +91,8 @@ public class HTMLService implements Serializable{
 	@Autowired
 	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
+	private AccountCodeWSDao accountCodeDao;
+	@Autowired
 	private FreemarkerConfig freemarkerConfig;
 	@Autowired
 	private ServletConfig servletConfig;
@@ -149,6 +152,18 @@ public class HTMLService implements Serializable{
 			strPaymentAsAtDate	= paymentCertViewWrapper.getAsAtDate();
 			strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
 			strCertIssueDate = DateHelper.formatDate(paymentCert.getCertIssueDate(), GlobalParameter.DATE_FORMAT);
+			
+			String currency = paymentCert.getSubcontract().getPaymentCurrency();
+			paymentCertViewWrapper.setCurrency(currency);
+			
+			String companyBaseCurrency = accountCodeDao.obtainCurrencyCode(jobNumber);
+			paymentCertViewWrapper.setCompanyBaseCurrency(companyBaseCurrency);
+			
+			
+			Double exchangeRate = paymentCert.getSubcontract().getExchangeRate();
+			paymentCertViewWrapper.setExchangeRate(exchangeRate);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

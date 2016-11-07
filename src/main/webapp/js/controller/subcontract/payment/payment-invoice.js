@@ -6,7 +6,6 @@ mainApp.controller('PaymentInvoiceCtrl',
 	loadData();
 	
 	$scope.submit =  function(){
-		//console.log($scope.paymentCertSummary);
 		if($scope.payment.paymentStatus == "PND"){
 			
 			if(roundUtil.round($scope.paymentCertSummary.subMovement5, 2) !=  roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)){
@@ -45,7 +44,6 @@ mainApp.controller('PaymentInvoiceCtrl',
 		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.payment = data;
 
 					if($scope.payment.paymentStatus == "PND")
@@ -61,10 +59,10 @@ mainApp.controller('PaymentInvoiceCtrl',
 					$scope.paymentCertSummary = data;
 				});
 		
-		htmlService.makeHTMLStringForSCPaymentCert({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, paymentNo: $cookies.get('paymentCertNo'), htmlVersion: 'W'})
+		/*htmlService.makeHTMLStringForSCPaymentCert({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, paymentNo: $cookies.get('paymentCertNo'), htmlVersion: 'W'})
 		.then(function(data){
 			$scope.invoiceHtml = GlobalHelper.formTemplate(data);
-		});
+		});*/
 	}
 	
 	function submitPayment() {

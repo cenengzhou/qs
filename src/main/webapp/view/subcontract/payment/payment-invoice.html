@@ -9,7 +9,12 @@
 
 	<div class="invoice-logo m-l-5">
 		<img src="image/gammon.bmp" class="logo" style="width: 128px" />
+		<div class="col-md-12">
+			<h5>{{paymentCertSummary.companyName}}</h5>
+		</div>
 	</div>
+	
+	
 
 	<h5 class="invoice-title" align="center">Subcontract Payment
 		Certificate</h5>
@@ -92,8 +97,8 @@
 			<tbody>
 				<tr>
 					<td></td>
-					<td class="text-right"><b>MOVEMENT (HKD)</b></td>
-					<td class="text-right"><b>TOTAL (HKD)</b></td>
+					<td class="text-right"><b>MOVEMENT ({{paymentCertSummary.companyBaseCurrency}})</b></td>
+					<td class="text-right"><b>TOTAL ({{paymentCertSummary.companyBaseCurrency}})</b></td>
 				</tr>
 				<tr>
 					<td>VALUE OF MEASURED WORKS/GOODS</td>
@@ -214,7 +219,7 @@
 				</tr>
 				<tr class="total">
 					<td></td>
-					<td class="text-right text"><b>AMOUNT DUE (HKD)</b></td>
+					<td class="text-right text"><b>AMOUNT DUE ({{paymentCertSummary.companyBaseCurrency}})</b></td>
 					<td class="text-right value"><b>{{paymentCertSummary.amountDueMovement
 							| currency}}</b></td>
 				</tr>
