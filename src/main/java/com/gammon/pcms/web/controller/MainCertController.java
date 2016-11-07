@@ -132,9 +132,15 @@ public class MainCertController {
 		mainCertService.updateMainCertFromF03B14Manually();
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateCertificate", method = RequestMethod.POST)
 	public String updateCertificate(@RequestBody MainCert mainCert){
+		return mainCertService.updateMainContractCert(mainCert);
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateCertificateByAdmin", method = RequestMethod.POST)
+	public String updateCertificateByAdmin(@RequestBody MainCert mainCert){
 		return mainCertService.updateMainContractCert(mainCert);
 	}
 	

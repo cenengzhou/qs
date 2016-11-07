@@ -28,7 +28,7 @@ mainApp.controller('AdminRevisionMainCertCtrl',
 			return
 		}
 		if ($scope.MainCertRecord.jobNo !== undefined) {
-			mainCertService.updateCertificate($scope.MainCertRecord)
+			mainCertService.updateCertificateByAdmin($scope.MainCertRecord)
 	        .then(function(data) {
 				if(data === '') {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "MainCert updated.");

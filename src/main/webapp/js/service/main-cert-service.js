@@ -23,6 +23,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         updateMainCertContraChargeList:		updateMainCertContraChargeList,
         deleteMainCertContraCharge:			deleteMainCertContraCharge,
         updateCertificate: 					updateCertificate,
+        updateCertificateByAdmin:			updateCertificateByAdmin,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
     });
 	
@@ -285,6 +286,10 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
     }
         
     
+    function updateCertificateByAdmin(mainCert){
+    	var request = $http.post("service/mainCert/updateCertificateByAdmin", mainCert);
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
 
 }]);
 
