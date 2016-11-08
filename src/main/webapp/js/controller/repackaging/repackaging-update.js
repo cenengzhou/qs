@@ -103,6 +103,9 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 									$location.path('/subcontract-award/tab/assign');
 								}
 							});
+						}else {
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please go to corresponding non-awarded subcontract to assign resources.");
+							return;
 						}
 					}						
 				}
@@ -127,9 +130,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 							return;
 						}else if(rowEntity.objectCode.substring(0, 2) == "11" || rowEntity.objectCode.substring(0, 2) == "12" || rowEntity.objectCode.substring(0, 2) == "15" || rowEntity.objectCode.substring(0, 2) == "19"){
 							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource with object code beginning with '11', '12', '15', '19' cannot be assigned to a subcontract.");
-							return;
-						}else if (rowEntity.objectCode.substring(0, 2) == "14"){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please go to corresponding non-awarded subcontract to assign resources.");
 							return;
 						}
 					}
