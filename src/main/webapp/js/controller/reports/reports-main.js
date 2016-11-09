@@ -188,7 +188,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 	function onDownloadReport(report, selectedReportUrl){
 		if(!validateFields(report, selectedReportUrl)) return;
  		var url = getUrlWithParameters(selectedReportUrl.url, selectedReportUrl.parameters, selectedReportUrl.searchValues)
-		var wnd = $window.open(url, 'Print Report', '_blank');
+ 		var wnd = window.open(url, '_blank', 'width=400,height=240,left=0,top=0,location=no,menubar=no,titlebar=no,toolbar=no',true);
 // 		console.log(url);
 	}
 	

@@ -68,7 +68,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			            	 },
 			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'
 			             },
-			             { field: 'taxExplanationDescription', width: '200', displayName: 'Explanation', enableCellEdit: false,
+			             { field: 'explanationAddressBook', width: '200', displayName: 'Explanation', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = '';
 			            		 if(row.entity.typeDocument === 'JE' || row.entity.typeDocument === 'PX'){
@@ -129,6 +129,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			             },
 			             { field: 'entityCompanyKey', width: '80', displayName: 'Company', enableCellEdit: false, visible:false},
 			             { field: 'currencyCode', width: '80', displayName: 'Currency', enableCellEdit: false, visible:false},
+			             { field: 'quantityUnitOfMeasurement', width:'100', displayName: "Units", enableCellEdit: false },
+			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
 			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},
 			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:false},

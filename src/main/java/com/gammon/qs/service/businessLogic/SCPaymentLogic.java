@@ -1,5 +1,6 @@
 package com.gammon.qs.service.businessLogic;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -230,8 +231,8 @@ public class SCPaymentLogic {
 		}
 		
 		//2. update package
-		scPackage.setTotalPostedCertifiedAmount(totalPostedCert);
-		scPackage.setTotalCCPostedCertAmount(totalCCPostedCert);
-		scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCert);
+		scPackage.setTotalPostedCertifiedAmount(new BigDecimal(totalPostedCert));
+		scPackage.setTotalCCPostedCertAmount(new BigDecimal(totalCCPostedCert));
+		scPackage.setTotalMOSPostedCertAmount(new BigDecimal(totalMOSPostedCert));
 	}
 }

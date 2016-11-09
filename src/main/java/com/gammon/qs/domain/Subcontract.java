@@ -1,5 +1,6 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.AttributeOverride;
@@ -113,17 +114,17 @@ public class Subcontract extends BasePersistedObject {
 	private Integer subcontractStatus; // <500 = not awarded , >= 500 = awarded
 	private String subcontractorNature;
 
-	private Double originalSubcontractSum;
-	private Double approvedVOAmount;
-	private Double remeasuredSubcontractSum;
+	private BigDecimal originalSubcontractSum;
+	private BigDecimal approvedVOAmount;
+	private BigDecimal remeasuredSubcontractSum;
 	private String approvalRoute;
 	private String retentionTerms;
 	private Double maxRetentionPercentage;
 	private Double interimRentionPercentage;
 	private Double mosRetentionPercentage;
-	private Double retentionAmount;
-	private Double accumlatedRetention;
-	private Double retentionReleased;
+	private BigDecimal retentionAmount;
+	private BigDecimal accumlatedRetention;
+	private BigDecimal retentionReleased;
 	private String paymentInformation;
 	private String paymentCurrency;
 	private Double exchangeRate;
@@ -154,13 +155,13 @@ public class Subcontract extends BasePersistedObject {
 	private Boolean plantIncludedContract  = false;
 	private Boolean materialIncludedContract  = false;
 
-	private Double totalPostedWorkDoneAmount;
-	private Double totalCumWorkDoneAmount;
-	private Double totalPostedCertifiedAmount;
-	private Double totalCumCertifiedAmount;
+	private BigDecimal totalPostedWorkDoneAmount;
+	private BigDecimal totalCumWorkDoneAmount;
+	private BigDecimal totalPostedCertifiedAmount;
+	private BigDecimal totalCumCertifiedAmount;
 
-	private Double totalCCPostedCertAmount;
-	private Double totalMOSPostedCertAmount;
+	private BigDecimal totalCCPostedCertAmount;
+	private BigDecimal totalMOSPostedCertAmount;
 
 	// Dates
 	private Date requisitionApprovedDate;
@@ -178,13 +179,13 @@ public class Subcontract extends BasePersistedObject {
 	}
 	
 	@Transient
-	public Double getSubcontractSum() {
-		return getRemeasuredSubcontractSum() + getApprovedVOAmount();
+	public BigDecimal getSubcontractSum() {
+		return getRemeasuredSubcontractSum().add(getApprovedVOAmount());
 	}
 	
 	@Transient
-	public Double getRetentionBalance() {
-		return getAccumlatedRetention() + getRetentionReleased();
+	public BigDecimal getRetentionBalance() {
+		return getAccumlatedRetention().add(getRetentionReleased());
 	}
 	
 	/**
@@ -195,18 +196,18 @@ public class Subcontract extends BasePersistedObject {
 	 * @since	Aug 1, 2016 5:16:58 PM
 	 */
 	@Transient
-	public Double getTotalNetPostedCertifiedAmount(){
-		return getTotalPostedCertifiedAmount() + getTotalCCPostedCertAmount() - getRetentionBalance();
+	public BigDecimal getTotalNetPostedCertifiedAmount(){
+		return getTotalPostedCertifiedAmount().add(getTotalCCPostedCertAmount()).subtract(getRetentionBalance());
 	}
 	
 	@Transient
-	public Double getTotalProvisionAmount(){
-		return getTotalCumWorkDoneAmount() - getTotalPostedCertifiedAmount();
+	public BigDecimal getTotalProvisionAmount(){
+		return getTotalCumWorkDoneAmount().subtract(getTotalPostedCertifiedAmount());
 	}
 	
 	@Transient
-	public Double getBalanceToCompleteAmount(){
-		return getSubcontractSum() - getTotalCumWorkDoneAmount();
+	public BigDecimal getBalanceToCompleteAmount(){
+		return getSubcontractSum().subtract(getTotalCumWorkDoneAmount());
 	}
 	
 	@Transient
@@ -348,30 +349,30 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "originalSCSum")
-	public Double getOriginalSubcontractSum() {
-		return (originalSubcontractSum != null ? CalculationUtil.round(originalSubcontractSum, 2) : 0.00);
+	public BigDecimal getOriginalSubcontractSum() {
+		return (originalSubcontractSum != null ? CalculationUtil.roundToBigDecimal(originalSubcontractSum, 2) : new BigDecimal(0.00));
 	}
 
-	public void setOriginalSubcontractSum(Double originalContractSum) {
-		this.originalSubcontractSum = (originalContractSum != null ? CalculationUtil.round(originalContractSum, 2) : 0.00);
+	public void setOriginalSubcontractSum(BigDecimal originalContractSum) {
+		this.originalSubcontractSum = (originalContractSum != null ? CalculationUtil.roundToBigDecimal(originalContractSum, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "approvedVOAmount")
-	public Double getApprovedVOAmount() {
-		return (approvedVOAmount != null ? CalculationUtil.round(approvedVOAmount, 2) : 0.00);
+	public BigDecimal getApprovedVOAmount() {
+		return (approvedVOAmount != null ? CalculationUtil.roundToBigDecimal(approvedVOAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setApprovedVOAmount(Double approvedVO) {
-		this.approvedVOAmount = (approvedVO != null ? CalculationUtil.round(approvedVO, 2) : 0.00);
+	public void setApprovedVOAmount(BigDecimal approvedVO) {
+		this.approvedVOAmount = (approvedVO != null ? CalculationUtil.roundToBigDecimal(approvedVO, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "remeasuredSCSum")
-	public Double getRemeasuredSubcontractSum() {
-		return (remeasuredSubcontractSum != null ? CalculationUtil.round(remeasuredSubcontractSum, 2) : 0.00);
+	public BigDecimal getRemeasuredSubcontractSum() {
+		return (remeasuredSubcontractSum != null ? CalculationUtil.roundToBigDecimal(remeasuredSubcontractSum, 2) : new BigDecimal(0.00));
 	}
 
-	public void setRemeasuredSubcontractSum(Double remeasuredContractSum) {
-		this.remeasuredSubcontractSum = (remeasuredContractSum != null ? CalculationUtil.round(remeasuredContractSum, 2) : 0.00);
+	public void setRemeasuredSubcontractSum(BigDecimal remeasuredContractSum) {
+		this.remeasuredSubcontractSum = (remeasuredContractSum != null ? CalculationUtil.roundToBigDecimal(remeasuredContractSum, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "approvalRoute",
@@ -422,30 +423,30 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "retAmount")
-	public Double getRetentionAmount() {
-		return (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
+	public BigDecimal getRetentionAmount() {
+		return (retentionAmount != null ? CalculationUtil.roundToBigDecimal(retentionAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setRetentionAmount(Double retentionAmount) {
-		this.retentionAmount = (retentionAmount != null ? CalculationUtil.round(retentionAmount, 2) : 0.00);
+	public void setRetentionAmount(BigDecimal retentionAmount) {
+		this.retentionAmount = (retentionAmount != null ? CalculationUtil.roundToBigDecimal(retentionAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "accumlatedRet")
-	public Double getAccumlatedRetention() {
-		return (accumlatedRetention != null ? CalculationUtil.round(accumlatedRetention, 2) : 0.00);
+	public BigDecimal getAccumlatedRetention() {
+		return (accumlatedRetention != null ? CalculationUtil.roundToBigDecimal(accumlatedRetention, 2) : new BigDecimal(0.00));
 	}
 
-	public void setAccumlatedRetention(Double accumlatedRetentionAmount) {
-		this.accumlatedRetention = (accumlatedRetentionAmount != null ? CalculationUtil.round(accumlatedRetentionAmount, 2) : 0.00);
+	public void setAccumlatedRetention(BigDecimal accumlatedRetentionAmount) {
+		this.accumlatedRetention = (accumlatedRetentionAmount != null ? CalculationUtil.roundToBigDecimal(accumlatedRetentionAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "retRelease")
-	public Double getRetentionReleased() {
-		return (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
+	public BigDecimal getRetentionReleased() {
+		return (retentionReleased != null ? CalculationUtil.roundToBigDecimal(retentionReleased, 2) : new BigDecimal(0.00));
 	}
 
-	public void setRetentionReleased(Double retentionReleased) {
-		this.retentionReleased = (retentionReleased != null ? CalculationUtil.round(retentionReleased, 2) : 0.00);
+	public void setRetentionReleased(BigDecimal retentionReleased) {
+		this.retentionReleased = (retentionReleased != null ? CalculationUtil.roundToBigDecimal(retentionReleased, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "paymentInfo",
@@ -683,57 +684,57 @@ public class Subcontract extends BasePersistedObject {
 	}
 
 	@Column(name = "totalPostedCertAmt")
-	public Double getTotalPostedCertifiedAmount() {
-		return (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
+	public BigDecimal getTotalPostedCertifiedAmount() {
+		return (totalPostedCertifiedAmount != null ? CalculationUtil.roundToBigDecimal(totalPostedCertifiedAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalPostedCertifiedAmount(Double totalPostedCertifiedAmount) {
-		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount != null ? CalculationUtil.round(totalPostedCertifiedAmount, 2) : 0.00);
+	public void setTotalPostedCertifiedAmount(BigDecimal totalPostedCertifiedAmount) {
+		this.totalPostedCertifiedAmount = (totalPostedCertifiedAmount != null ? CalculationUtil.roundToBigDecimal(totalPostedCertifiedAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "totalCumCertAmt")
-	public Double getTotalCumCertifiedAmount() {
-		return (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
+	public BigDecimal getTotalCumCertifiedAmount() {
+		return (totalCumCertifiedAmount != null ? CalculationUtil.roundToBigDecimal(totalCumCertifiedAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalCumCertifiedAmount(Double totalCumCertifiedAmount) {
-		this.totalCumCertifiedAmount = (totalCumCertifiedAmount != null ? CalculationUtil.round(totalCumCertifiedAmount, 2) : 0.00);
+	public void setTotalCumCertifiedAmount(BigDecimal totalCumCertifiedAmount) {
+		this.totalCumCertifiedAmount = (totalCumCertifiedAmount != null ? CalculationUtil.roundToBigDecimal(totalCumCertifiedAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "totalPostedWDAmt")
-	public Double getTotalPostedWorkDoneAmount() {
-		return (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
+	public BigDecimal getTotalPostedWorkDoneAmount() {
+		return (totalPostedWorkDoneAmount != null ? CalculationUtil.roundToBigDecimal(totalPostedWorkDoneAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalPostedWorkDoneAmount(Double totalPostedWorkDoneAmount) {
-		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount != null ? CalculationUtil.round(totalPostedWorkDoneAmount, 2) : 0.00);
+	public void setTotalPostedWorkDoneAmount(BigDecimal totalPostedWorkDoneAmount) {
+		this.totalPostedWorkDoneAmount = (totalPostedWorkDoneAmount != null ? CalculationUtil.roundToBigDecimal(totalPostedWorkDoneAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "totalCumWDAmt")
-	public Double getTotalCumWorkDoneAmount() {
-		return (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
+	public BigDecimal getTotalCumWorkDoneAmount() {
+		return (totalCumWorkDoneAmount != null ? CalculationUtil.roundToBigDecimal(totalCumWorkDoneAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalCumWorkDoneAmount(Double totalCumWorkDoneAmount) {
-		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount != null ? CalculationUtil.round(totalCumWorkDoneAmount, 2) : 0.00);
+	public void setTotalCumWorkDoneAmount(BigDecimal totalCumWorkDoneAmount) {
+		this.totalCumWorkDoneAmount = (totalCumWorkDoneAmount != null ? CalculationUtil.roundToBigDecimal(totalCumWorkDoneAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "totalCCPostedCertAmt")
-	public Double getTotalCCPostedCertAmount() {
-		return (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
+	public BigDecimal getTotalCCPostedCertAmount() {
+		return (totalCCPostedCertAmount != null ? CalculationUtil.roundToBigDecimal(totalCCPostedCertAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalCCPostedCertAmount(Double totalCCPostedCertAmount) {
-		this.totalCCPostedCertAmount = (totalCCPostedCertAmount != null ? CalculationUtil.round(totalCCPostedCertAmount, 2) : 0.00);
+	public void setTotalCCPostedCertAmount(BigDecimal totalCCPostedCertAmount) {
+		this.totalCCPostedCertAmount = (totalCCPostedCertAmount != null ? CalculationUtil.roundToBigDecimal(totalCCPostedCertAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "totalMOSPostedCertAmt")
-	public Double getTotalMOSPostedCertAmount() {
-		return (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
+	public BigDecimal getTotalMOSPostedCertAmount() {
+		return (totalMOSPostedCertAmount != null ? CalculationUtil.roundToBigDecimal(totalMOSPostedCertAmount, 2) : new BigDecimal(0.00));
 	}
 
-	public void setTotalMOSPostedCertAmount(Double totalMOSPostedCertAmount) {
-		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount != null ? CalculationUtil.round(totalMOSPostedCertAmount, 2) : 0.00);
+	public void setTotalMOSPostedCertAmount(BigDecimal totalMOSPostedCertAmount) {
+		this.totalMOSPostedCertAmount = (totalMOSPostedCertAmount != null ? CalculationUtil.roundToBigDecimal(totalMOSPostedCertAmount, 2) : new BigDecimal(0.00));
 	}
 
 	@Column(name = "REQUISITION_APPROVED_DATE")

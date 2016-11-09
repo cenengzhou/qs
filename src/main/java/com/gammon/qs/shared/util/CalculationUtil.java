@@ -18,6 +18,22 @@ public class CalculationUtil {
 			return 0.0;
 	}
 	
+	public static BigDecimal roundToBigDecimal(BigDecimal bigDecimalValue, int scale){
+		if(bigDecimalValue!=null){
+			return new BigDecimal(bigDecimalValue.toString()).setScale(scale, BigDecimal.ROUND_HALF_UP);
+		}
+		else
+			return new BigDecimal(0.0);
+	}
+
+	public static BigDecimal roundToBigDecimal(Double doubleValue, int scale){
+		if(doubleValue!=null && !Double.isNaN(doubleValue)){
+			return new BigDecimal(doubleValue).setScale(scale, BigDecimal.ROUND_HALF_UP);
+		}
+		else
+			return new BigDecimal(0.0);
+	}
+
 	public static Double stringToDouble(String string){
 		if (string==null)
 			return null;

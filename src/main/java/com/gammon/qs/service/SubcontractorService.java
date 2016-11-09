@@ -1,6 +1,7 @@
 package com.gammon.qs.service;
 
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -336,7 +337,7 @@ public class SubcontractorService{
 		int row = 1;
 		
 		for(Subcontract scPackage: packageList){
-			double revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null?0.0:scPackage.getRemeasuredSubcontractSum())+(scPackage.getApprovedVOAmount()==null?0.0:scPackage.getApprovedVOAmount());
+			BigDecimal revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null?new BigDecimal(0.0):scPackage.getRemeasuredSubcontractSum()).add((scPackage.getApprovedVOAmount()==null?new BigDecimal(0.0):scPackage.getApprovedVOAmount()));
 			doc.insertRow(new String[10]);
 			
 			doc.setCellValue(row, 0, scPackage.getJobInfo().getJobNumber(), true);
@@ -349,10 +350,10 @@ public class SubcontractorService{
 			doc.setCellValue(row, 5, "F".equals(scPackage.getPaymentStatus()==null?"":scPackage.getPaymentStatus().trim())?"Final":"Interim", true);
 			if("F".equals(scPackage.getPaymentStatus()==null?"":scPackage.getPaymentStatus().trim()))
 				doc.setCellFontColour(row, 5, new XSSFColor(Color.GRAY));
-			doc.setCellValue(row, 6, formatNumber(scPackage.getRemeasuredSubcontractSum(), 2), false);
-			doc.setCellValue(row, 7, formatNumber(scPackage.getApprovedVOAmount(), 2), false);
-			doc.setCellValue(row, 8, formatNumber(revisedSCSum, 2), false);
-			doc.setCellValue(row, 9, formatNumber((revisedSCSum - (scPackage.getTotalCumWorkDoneAmount()==null?0.0:scPackage.getTotalCumWorkDoneAmount())), 2), false);//balance to complete
+			doc.setCellValue(row, 6, formatNumber(scPackage.getRemeasuredSubcontractSum().doubleValue(), 2), false);
+			doc.setCellValue(row, 7, formatNumber(scPackage.getApprovedVOAmount().doubleValue(), 2), false);
+			doc.setCellValue(row, 8, formatNumber(revisedSCSum.doubleValue(), 2), false);
+			doc.setCellValue(row, 9, formatNumber((revisedSCSum.subtract((scPackage.getTotalCumWorkDoneAmount()==null?new BigDecimal(0.0):scPackage.getTotalCumWorkDoneAmount())).doubleValue()), 2), false);//balance to complete
 			doc.setCellAlignment(ExcelWorkbook.ALIGN_H_RIGHT, row, 6, row, 9);
 			
 			row++;
@@ -504,9 +505,9 @@ public class SubcontractorService{
 	public List<String> obtainSubconctractorStatistics(String subcontractorNo) throws DatabaseOperationException {
 		logger.info("obtainSubconctractorStatistics - STARTED");
 		List<String> resultList = new ArrayList<String>();
-		double revisedSCSum = 0.0;
-		double totalCumWorkDoneAmount = 0.0;
-		double balanceToComplete = 0.0;
+		BigDecimal revisedSCSum = new BigDecimal(0.0);
+		BigDecimal totalCumWorkDoneAmount = new BigDecimal(0.0);
+		BigDecimal balanceToComplete = new BigDecimal(0.0);
 		
 		Integer noOfQuotReturned =0;
 		Integer noOfAward=0;
@@ -520,9 +521,9 @@ public class SubcontractorService{
 		}
 		logger.info("date: "+startDate);
 		Subcontract scPackage = scPackageDao.obtainPackageStatistics(subcontractorNo, startDate);
-		revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null? 0.0:scPackage.getRemeasuredSubcontractSum())+ (scPackage.getApprovedVOAmount()==null? 0.0:scPackage.getApprovedVOAmount());
-		totalCumWorkDoneAmount = scPackage.getTotalCumWorkDoneAmount()==null? 0.0:scPackage.getTotalCumWorkDoneAmount();
-		balanceToComplete = revisedSCSum - totalCumWorkDoneAmount;
+		revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null? new BigDecimal(0.0) :scPackage.getRemeasuredSubcontractSum()).add((scPackage.getApprovedVOAmount()==null? new BigDecimal(0.0):scPackage.getApprovedVOAmount()));
+		totalCumWorkDoneAmount = scPackage.getTotalCumWorkDoneAmount()==null? new BigDecimal(0.0):scPackage.getTotalCumWorkDoneAmount();
+		balanceToComplete = revisedSCSum.subtract(totalCumWorkDoneAmount);
 		
 		resultList.add(noOfQuotReturned.toString());
 		resultList.add(noOfAward.toString());

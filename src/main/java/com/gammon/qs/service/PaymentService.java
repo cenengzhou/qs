@@ -371,7 +371,7 @@ public class PaymentService{
 		result.setDueDate(DateHelper.formatDate(scPaymentCert.getDueDate(), GlobalParameter.DATE_FORMAT));
 			
 		//Sub-contract Total Amount
-		Double SCTotalAmt = scPackage.getRemeasuredSubcontractSum();
+		Double SCTotalAmt = scPackage.getRemeasuredSubcontractSum().doubleValue();
 		result.setSubcontractSum(SCTotalAmt);
 
 		
@@ -1422,10 +1422,10 @@ public class PaymentService{
 			scPaymentCert.setCreatedUser(createdUser);
 			scPaymentCert.setCreatedDate(new Date());
 		}
-		scPaymentCert.setAddendumAmount(scPackage.getApprovedVOAmount());
+		scPaymentCert.setAddendumAmount(scPackage.getApprovedVOAmount().doubleValue());
 		scPaymentCert.setIntermFinalPayment(paymentType);
 		scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
-		scPaymentCert.setRemeasureContractSum(scPackage.getRemeasuredSubcontractSum());
+		scPaymentCert.setRemeasureContractSum(scPackage.getRemeasuredSubcontractSum().doubleValue());
 		scPaymentCert.setSubcontract(scPackage);
 		
 		//Generate new Payment Detail
@@ -1626,9 +1626,9 @@ public class PaymentService{
 			
 			//Fixing:
 			//Define upper limit of retention
-			double retentionUpperLimit = scPaymentCert.getSubcontract().getRetentionAmount();
-			if (scPaymentCert.getSubcontract().getRetentionAmount()<scPaymentCert.getSubcontract().getAccumlatedRetention())
-				retentionUpperLimit = scPaymentCert.getSubcontract().getAccumlatedRetention();
+			double retentionUpperLimit = scPaymentCert.getSubcontract().getRetentionAmount().doubleValue();
+			if (scPaymentCert.getSubcontract().getRetentionAmount().compareTo(scPaymentCert.getSubcontract().getAccumlatedRetention()) < 0)
+				retentionUpperLimit = scPaymentCert.getSubcontract().getAccumlatedRetention().doubleValue();
 			
 			//SCPayment's RT cannot be larger than "Retention Amount"/"Accumulated Retention Amount" in SC Header
 			if (cumRetention>retentionUpperLimit)
@@ -2220,8 +2220,8 @@ public class PaymentService{
 				newPayment.setDirectPayment(PaymentCert.NON_DIRECT_PAYMENT);
 			
 
-			newPayment.setAddendumAmount(subcontract.getApprovedVOAmount());
-			newPayment.setRemeasureContractSum(subcontract.getRemeasuredSubcontractSum());
+			newPayment.setAddendumAmount(subcontract.getApprovedVOAmount().doubleValue());
+			newPayment.setRemeasureContractSum(subcontract.getRemeasuredSubcontractSum().doubleValue());
 			newPayment.setIntermFinalPayment("I");
 			newPayment.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
 			newPayment.setCertAmount(0.0);
@@ -2498,9 +2498,9 @@ public class PaymentService{
 			double cumRetention = CalculationUtil.round(totalCertAmount*paymentCert.getSubcontract().getInterimRentionPercentage()/100.0, 2);
 			
 			//Define upper limit of retention
-			double retentionUpperLimit = paymentCert.getSubcontract().getRetentionAmount();
-			if (paymentCert.getSubcontract().getRetentionAmount()<paymentCert.getSubcontract().getAccumlatedRetention())
-				retentionUpperLimit = paymentCert.getSubcontract().getAccumlatedRetention();
+			double retentionUpperLimit = paymentCert.getSubcontract().getRetentionAmount().doubleValue();
+			if (paymentCert.getSubcontract().getRetentionAmount().compareTo(paymentCert.getSubcontract().getAccumlatedRetention()) < 0)
+				retentionUpperLimit = paymentCert.getSubcontract().getAccumlatedRetention().doubleValue();
 			
 			//SCPayment's RT cannot be larger than "Retention Amount"/"Accumulated Retention Amount" in SC Header
 			if (cumRetention>retentionUpperLimit)
@@ -2916,8 +2916,8 @@ public class PaymentService{
 					 * modified on 07Mar, 2014
 					 * Round the figure before making comparison
 					 * Any payment (Interim/Final) shouldn't exceed the Total Sub-contract Sum**/
-					if (totalCertAmount > CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)) {
-						logger.info("SC Sum: "+CalculationUtil.round((paymentCert.getSubcontract().getSubcontractSum()), 2)+" - totalCertAmount: "+totalCertAmount);
+					if (new BigDecimal(totalCertAmount).compareTo( CalculationUtil.roundToBigDecimal((paymentCert.getSubcontract().getSubcontractSum()), 2)) > 0) {
+						logger.info("SC Sum: "+CalculationUtil.roundToBigDecimal((paymentCert.getSubcontract().getSubcontractSum()), 2)+" - totalCertAmount: "+totalCertAmount);
 
 						error = "Total payment amount was larger than Subcontract Sum of the Package.";
 						logger.info(error);
@@ -2949,7 +2949,7 @@ public class PaymentService{
 									return error;
 								}
 							}
-						certAmount = paymentCert.getSubcontract().getSubcontractSum();
+						certAmount = paymentCert.getSubcontract().getSubcontractSum().doubleValue();
 					}
 				} else {
 					// For Direct Payment
@@ -3064,7 +3064,7 @@ public class PaymentService{
 		//RT + RA + RR must be less than or equal to maximum retention amount (round to 2 d.p. for comparison)
 		int roundingDP = 2;
 		if (!PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment()))
-			if (RoundingUtil.round(scPaymentCert.getSubcontract().getRetentionAmount(), roundingDP) < RoundingUtil.round(retentionAmount, roundingDP))
+			if (CalculationUtil.roundToBigDecimal(scPaymentCert.getSubcontract().getRetentionAmount(), roundingDP).compareTo(CalculationUtil.roundToBigDecimal(retentionAmount, roundingDP)) < 0)
 				throw new ValidateBusinessLogicException("Cum Retention exceed Retention Amount(limited)");
 		
 		Calendar currentPeriod = Calendar.getInstance();

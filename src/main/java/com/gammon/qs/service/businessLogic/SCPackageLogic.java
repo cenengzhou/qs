@@ -121,13 +121,13 @@ public class SCPackageLogic {
 			}
 		}
 		//scPackage.setOriginalSubcontractSum(scSum);	originalSubcontractSum cannot be updated after being awarded
-		scPackage.setRemeasuredSubcontractSum(scSum);
-		scPackage.setApprovedVOAmount(approvedVO);
+		scPackage.setRemeasuredSubcontractSum(new BigDecimal(scSum));
+		scPackage.setApprovedVOAmount(new BigDecimal(approvedVO));
 		
 		if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(RoundingUtil.round(scSum * scPackage.getMaxRetentionPercentage()/100.00,2));	
+			scPackage.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal(scSum * scPackage.getMaxRetentionPercentage()/100.00),2));	
 		if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(RoundingUtil.round((scSum+approvedVO) * scPackage.getMaxRetentionPercentage()/100.00,2));
+			scPackage.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal((scSum+approvedVO) * scPackage.getMaxRetentionPercentage()/100.00),2));
 		
 		return scPackage;
 	}

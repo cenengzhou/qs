@@ -77,7 +77,6 @@ import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.SubcontractSnapshot;
-import com.gammon.qs.domain.SubcontractWorkScope;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
@@ -1598,19 +1597,19 @@ public class SubcontractService {
 		}
 		scPackage.setScApprovalDate(new Date());
 		if (Subcontract.RETENTION_ORIGINAL.equals(scPackage.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(RoundingUtil.round(scSum*scPackage.getMaxRetentionPercentage()/100.00,2));
+			scPackage.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal(scSum).multiply(new BigDecimal(scPackage.getMaxRetentionPercentage())).divide(new BigDecimal(100.00)),2));
 		else if(Subcontract.RETENTION_LUMPSUM.equals(scPackage.getRetentionTerms()))
 			scPackage.setMaxRetentionPercentage(0.00);
 		else{
 			scPackage.setMaxRetentionPercentage(0.00);
 			scPackage.setInterimRentionPercentage(0.00);
 			scPackage.setMosRetentionPercentage(0.00);
-			scPackage.setRetentionAmount(0.00);
+			scPackage.setRetentionAmount(new BigDecimal(0.00));
 		}
 		
-		scPackage.setApprovedVOAmount(0.00);
-		scPackage.setRemeasuredSubcontractSum(scSum);
-		scPackage.setOriginalSubcontractSum(scSum);
+		scPackage.setApprovedVOAmount(new BigDecimal(0.00));
+		scPackage.setRemeasuredSubcontractSum(new BigDecimal(scSum));
+		scPackage.setOriginalSubcontractSum(new BigDecimal(scSum));
 //		scPackage.setAccumlatedRetention(0.00);			//commented by Tiky Wong on 10 January, 2014 - Retention that was hold with direct payment was missing out in the Accumulated Retention
 		scPackage.setSubcontractStatus(500);
 		return scPackage;
@@ -1886,7 +1885,7 @@ public class SubcontractService {
 					if("Lump Sum Amount Retention".equals(scPackage.getRetentionTerms())){ 
 						if (scPackage.getRetentionAmount()==null){
 							return "Retention Amount has to be provided when the Retiontion Terms is Lump Sum Amount Retention";
-						}else if (scPackage.getRetentionAmount()>0 && scPackage.getRetentionAmount()>tenderBudget.doubleValue()){
+						}else if (scPackage.getRetentionAmount().compareTo(BigDecimal.ZERO)>0 && scPackage.getRetentionAmount().compareTo(tenderBudget)>0){
 							return "Lum Sum Retention Amount is larger than Recommended Subcontract Sum";
 						}
 					}
@@ -3228,18 +3227,18 @@ public class SubcontractService {
 		}
 		
 		if (Subcontract.RETENTION_ORIGINAL.equals(subcontract.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(subcontract.getRetentionTerms()))
-			subcontract.setRetentionAmount(CalculationUtil.round(scSum*subcontract.getMaxRetentionPercentage()/100.00,2));
+			subcontract.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal(scSum).multiply(new BigDecimal(subcontract.getMaxRetentionPercentage())).divide(new BigDecimal(100.00)),2));
 		else if(Subcontract.RETENTION_LUMPSUM.equals(subcontract.getRetentionTerms()))
 			subcontract.setMaxRetentionPercentage(0.00);
 		else{
 			subcontract.setMaxRetentionPercentage(0.00);
 			subcontract.setInterimRentionPercentage(0.00);
 			subcontract.setMosRetentionPercentage(0.00);
-			subcontract.setRetentionAmount(0.00);
+			subcontract.setRetentionAmount(new BigDecimal(0.00));
 		}
 		
-		subcontract.setRemeasuredSubcontractSum(scSum);
-		subcontract.setOriginalSubcontractSum(scSum);
+		subcontract.setRemeasuredSubcontractSum(new BigDecimal(scSum));
+		subcontract.setOriginalSubcontractSum(new BigDecimal(scSum));
 	
 		subcontractHBDao.update(subcontract);
 		
@@ -4031,13 +4030,13 @@ public class SubcontractService {
 			for(Subcontract scPackage: packages){
 				//if (scPackage.isAwarded()){
 				List<SubcontractDetail> scDetails;
-				Double totalCumWorkDoneAmount = 0.00; 
-				Double totalCumCertAmount =0.00;
-				Double totalPostedWorkDoneAmount = 0.00; 
-				Double totalPostedCertAmount =0.00;
-				Double totalCCPostedCertAmount = 0.00;
-				Double totalMOSPostedCertAmount = 0.00;
-				Double totalRetentionReleasedAmount = 0.00;
+				BigDecimal totalCumWorkDoneAmount = new BigDecimal(0.00); 
+				BigDecimal totalCumCertAmount =new BigDecimal(0.00);
+				BigDecimal totalPostedWorkDoneAmount = new BigDecimal(0.00); 
+				BigDecimal totalPostedCertAmount = new BigDecimal(0.00);
+				BigDecimal totalCCPostedCertAmount = new BigDecimal(0.00);
+				BigDecimal totalMOSPostedCertAmount = new BigDecimal(0.00);
+				BigDecimal totalRetentionReleasedAmount = new BigDecimal(0.00);
 				try {
 					scDetails = subcontractDetailHBDao.getSCDetails(scPackage);
 
@@ -4057,39 +4056,39 @@ public class SubcontractService {
 							//Total Posted Contra Charge Certified Amount
 							if("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType())){
 								//totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalCCPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
+								totalCCPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Retention Released Amount
 							if("RR".equals(scDetail.getLineType())){
 								//totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
+								totalRetentionReleasedAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Posted Material On Site Certified Amount
 							if("MS".equals(scDetail.getLineType())){
 								//totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
+								totalMOSPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Cumulative Work Done Amount
 							if (!excludedFromProvisionCalculation){
 								//totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
-								totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getAmountCumulativeWD().doubleValue(), 2);
+								totalCumWorkDoneAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountCumulativeWD(), 2));
 							}
 							//Total Cumulative Certified Amount
 							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Cumulative Certified Amount" 
 							if("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
 								//totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalCumCertAmount += CalculationUtil.round(scDetail.getAmountCumulativeCert().doubleValue(), 2);
+								totalCumCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountCumulativeCert(), 2));
 							}
 							//Total Posted Work Done Amount
 							if (!excludedFromProvisionCalculation){
 								//totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
-								totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getAmountPostedWD().doubleValue(), 2);
+								totalPostedWorkDoneAmount.add( CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedWD(), 2));
 							}
 							//Total Posted Certified Amount
 							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Posted Certified Amount"
 							if ("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
 								//totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalPostedCertAmount += CalculationUtil.round(scDetail.getAmountPostedCert().doubleValue(), 2);
+								totalPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 						}
 						}
@@ -4111,7 +4110,7 @@ public class SubcontractService {
 										accumulatedRetentionAmount = accumulatedRetentionAmount + retentionAmount;
 								}
 							}
-							scPackage.setAccumlatedRetention(accumulatedRetentionAmount);
+							scPackage.setAccumlatedRetention(new BigDecimal(accumulatedRetentionAmount));
 						} catch (DatabaseOperationException e) {
 							e.printStackTrace();
 						}
@@ -4429,30 +4428,30 @@ public class SubcontractService {
 			MasterListVendor vendor = masterListService.obtainVendorByVendorNo(scPackage.getVendorNo());
 			scListWrapper.setVendorName(vendor != null ? vendor.getVendorName() : "");
 			scListWrapper.setDescription(scPackage.getDescription());
-			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum());
-			scListWrapper.setAddendum(scPackage.getApprovedVOAmount());
-			scListWrapper.setSubcontractSum(scPackage.getSubcontractSum());
+			scListWrapper.setRemeasuredSubcontractSum(scPackage.getRemeasuredSubcontractSum().doubleValue());
+			scListWrapper.setAddendum(scPackage.getApprovedVOAmount().doubleValue());
+			scListWrapper.setSubcontractSum(scPackage.getSubcontractSum().doubleValue());
 			scListWrapper.setPaymentStatus(Subcontract.convertPaymentStatus(scPackage.getPaymentStatus()));
 			scListWrapper.setPaymentTerms(scPackage.getPaymentTerms());
 			scListWrapper.setSubcontractTerm(scPackage.getSubcontractTerm());
 			scListWrapper.setSubcontractorNature(scPackage.getSubcontractorNature());
-			scListWrapper.setTotalLiabilities(scPackage.getTotalCumWorkDoneAmount());
-			scListWrapper.setTotalPostedCertAmt(scPackage.getTotalPostedCertifiedAmount());
-			scListWrapper.setTotalCumCertAmt(scPackage.getTotalCumCertifiedAmount());
+			scListWrapper.setTotalLiabilities(scPackage.getTotalCumWorkDoneAmount().doubleValue());
+			scListWrapper.setTotalPostedCertAmt(scPackage.getTotalPostedCertifiedAmount().doubleValue());
+			scListWrapper.setTotalCumCertAmt(scPackage.getTotalCumCertifiedAmount().doubleValue());
 			if (scPackage.getTotalCumWorkDoneAmount()!=null && scPackage.getTotalPostedCertifiedAmount()!=null)
-				scListWrapper.setTotalProvision(scPackage.getTotalCumWorkDoneAmount() - scPackage.getTotalPostedCertifiedAmount());			
+				scListWrapper.setTotalProvision(scPackage.getTotalCumWorkDoneAmount().subtract(scPackage.getTotalPostedCertifiedAmount()).doubleValue());			
 			Double balanceToComplete = null;
 			if (scPackage.getSubcontractSum() !=null && scPackage.getTotalCumWorkDoneAmount() !=null)
-				balanceToComplete = new Double (scPackage.getSubcontractSum()-scPackage.getTotalCumWorkDoneAmount());
+				balanceToComplete = new Double (scPackage.getSubcontractSum().subtract(scPackage.getTotalCumWorkDoneAmount()).doubleValue());
 			scListWrapper.setBalanceToComplete(balanceToComplete);
-			scListWrapper.setTotalCCPostedAmt(scPackage.getTotalCCPostedCertAmount());
-			scListWrapper.setTotalMOSPostedAmt(scPackage.getTotalMOSPostedCertAmount());
+			scListWrapper.setTotalCCPostedAmt(scPackage.getTotalCCPostedCertAmount().doubleValue());
+			scListWrapper.setTotalMOSPostedAmt(scPackage.getTotalMOSPostedCertAmount().doubleValue());
 			scListWrapper.setJobNumber(scPackage.getJobInfo().getJobNumber());
 			scListWrapper.setJobDescription(scPackage.getJobInfo().getDescription());
-			scListWrapper.setAccumlatedRetentionAmt(scPackage.getAccumlatedRetention());
-			scListWrapper.setRetentionReleasedAmt(scPackage.getRetentionReleased());
+			scListWrapper.setAccumlatedRetentionAmt(scPackage.getAccumlatedRetention().doubleValue());
+			scListWrapper.setRetentionReleasedAmt(scPackage.getRetentionReleased().doubleValue());
 			if(scPackage.getAccumlatedRetention()!=null && scPackage.getRetentionReleased()!=null)
-				scListWrapper.setRetentionBalanceAmt((scPackage.getAccumlatedRetention() + scPackage.getRetentionReleased()));
+				scListWrapper.setRetentionBalanceAmt((scPackage.getAccumlatedRetention().add( scPackage.getRetentionReleased())).doubleValue());
 
 			scListWrapper.setRequisitionApprovedDate(scPackage.getRequisitionApprovedDate());
 			scListWrapper.setTenderAnalysisApprovedDate(scPackage.getTenderAnalysisApprovedDate());
@@ -4479,10 +4478,10 @@ public class SubcontractService {
 			scListWrapper.setActualPCCDate(scPackage.getJobInfo().getActualPCCDate());
 			scListWrapper.setCompletionStatus(scPackage.getJobInfo().getCompletionStatus());
 			scListWrapper.setCurrency(scPackage.getPaymentCurrency());
-			scListWrapper.setOriginalSubcontractSum(scPackage.getOriginalSubcontractSum());
+			scListWrapper.setOriginalSubcontractSum(scPackage.getOriginalSubcontractSum().doubleValue());
 			
 			if(scPackage.getTotalPostedCertifiedAmount()!=null && scListWrapper.getRetentionBalanceAmt()!=null)
-				scListWrapper.setNetCertifiedAmount(scPackage.getTotalPostedCertifiedAmount()-scListWrapper.getRetentionBalanceAmt());
+				scListWrapper.setNetCertifiedAmount(scPackage.getTotalPostedCertifiedAmount().subtract(new BigDecimal(scListWrapper.getRetentionBalanceAmt())).doubleValue());
 			
 			scListWrapperList.add(scListWrapper);
 		}

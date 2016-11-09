@@ -44,7 +44,7 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.security.SecurityService;
-import com.gammon.qs.util.RoundingUtil;
+import com.gammon.qs.shared.util.CalculationUtil;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -142,12 +142,12 @@ public class AddendumService{
 			addendum.setUsernamePreparedBy(securityService.getCurrentUser().getFullname());
 			addendum.setStatus(Addendum.STATUS.PENDING.toString());
 			
-			addendum.setAmtSubcontractRemeasured(new BigDecimal(subcontract.getRemeasuredSubcontractSum()));
-			addendum.setAmtAddendumTotal(new BigDecimal(subcontract.getApprovedVOAmount()));
-			addendum.setAmtSubcontractRevised(new BigDecimal(subcontract.getRemeasuredSubcontractSum() + subcontract.getApprovedVOAmount()));
+			addendum.setAmtSubcontractRemeasured(subcontract.getRemeasuredSubcontractSum());
+			addendum.setAmtAddendumTotal(subcontract.getApprovedVOAmount());
+			addendum.setAmtSubcontractRevised(subcontract.getRemeasuredSubcontractSum().add(subcontract.getApprovedVOAmount()));
 			
-			addendum.setAmtAddendumTotalTba(new BigDecimal(subcontract.getApprovedVOAmount()));
-			addendum.setAmtSubcontractRevisedTba(new BigDecimal(subcontract.getRemeasuredSubcontractSum() + subcontract.getApprovedVOAmount()));
+			addendum.setAmtAddendumTotalTba(subcontract.getApprovedVOAmount());
+			addendum.setAmtSubcontractRevisedTba(subcontract.getRemeasuredSubcontractSum().add(subcontract.getApprovedVOAmount()));
 
 			addendumHBDao.insert(addendum);
 		} catch (Exception e) {
@@ -806,15 +806,18 @@ public class AddendumService{
 				return resultMsg;
 			}
 			String currency = accountCodeWSDao.obtainCurrencyCode(subcontract.getJobInfo().getJobNumber());
-			double exchangeRateToHKD = 1.0;
+			BigDecimal exchangeRateToHKD = new BigDecimal(1.0);
 			if ("SGP".equals(currency))
-				exchangeRateToHKD = 5.0;
+				exchangeRateToHKD = new BigDecimal(5.0);
 
 				String company = subcontract.getJobInfo().getCompany();
 				String vendorNo = subcontract.getVendorNo();
 				String vendorName = masterListService.searchVendorAddressDetails(subcontract.getVendorNo().trim()).getVendorName();
 				String approvalType="SM";
-				if (RoundingUtil.round(addendum.getAmtAddendum().doubleValue()*exchangeRateToHKD,2)>250000.0 || addendum.getAmtAddendum().doubleValue()>RoundingUtil.round(subcontract.getOriginalSubcontractSum()*0.25,2))
+				if (CalculationUtil.roundToBigDecimal(addendum.getAmtAddendum().multiply(exchangeRateToHKD),2).compareTo(new BigDecimal(250000.0)) > 0 
+						|| addendum.getAmtAddendum().compareTo(
+								CalculationUtil.roundToBigDecimal(subcontract.getOriginalSubcontractSum().multiply(new BigDecimal(0.25)), 2) 
+						) > 0)
 					approvalType = "SL";
 				String approvalSubType = subcontract.getApprovalRoute();
 
@@ -1080,15 +1083,22 @@ public class AddendumService{
 	
 	private Subcontract updateSubcontractAmount(Subcontract subcontract, Addendum addendum){
 		try {
-			subcontract.setApprovedVOAmount(addendum.getAmtAddendumTotalTba().doubleValue());
+			subcontract.setApprovedVOAmount(addendum.getAmtAddendumTotalTba());
 			subcontract.setLatestAddendumValueUpdatedDate(new Date());
 
 			if(subcontract.getRetentionTerms() == null){
-				subcontract.setRetentionAmount(0.00);
+				subcontract.setRetentionAmount(new BigDecimal(0.00));
 			}else if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(subcontract.getRetentionTerms().trim())){
-				subcontract.setRetentionAmount(RoundingUtil.round(subcontract.getMaxRetentionPercentage()*(subcontract.getApprovedVOAmount()+subcontract.getRemeasuredSubcontractSum())/100.00,2));
+				subcontract.setRetentionAmount(
+						CalculationUtil.roundToBigDecimal(
+								new BigDecimal(subcontract.getMaxRetentionPercentage()).multiply(
+										subcontract.getApprovedVOAmount().add(subcontract.getRemeasuredSubcontractSum()) ).divide(new BigDecimal(100.00)), 2));
 			}else if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(subcontract.getRetentionTerms().trim())){
-				subcontract.setRetentionAmount(RoundingUtil.round(subcontract.getMaxRetentionPercentage()*subcontract.getOriginalSubcontractSum()/100.00,2));
+				subcontract.setRetentionAmount(
+						CalculationUtil.roundToBigDecimal(
+								new BigDecimal(subcontract.getMaxRetentionPercentage()).multiply(subcontract.getOriginalSubcontractSum())
+								.divide(new BigDecimal(100.00)
+										),2));
 			}
 			return subcontract;
 		} catch (Exception e) {

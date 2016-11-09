@@ -70,7 +70,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 		closeOtherTour(currentTour);
 		showTourinterval = $interval(function(){
 			var key = currentTour;
-			if(!blockUI.isBlocking() && $rootScope.routedToDefaultJob) {
+			if(!blockUI.isBlocking()){ //&& $rootScope.routedToDefaultJob) {
 				if(angular.element('#' + $rootScope.tourArray[key].startElement).length > 0) {
 					$rootScope.tourArray[key]['tourShow'] = true;
 				} else {
