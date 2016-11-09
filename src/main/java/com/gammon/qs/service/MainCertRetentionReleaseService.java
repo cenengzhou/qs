@@ -223,14 +223,14 @@ public class MainCertRetentionReleaseService {
 					rrToInsertList.remove(modifiedList.get(i));
 					break;
 				}
-				if (i == modifiedList.size() - 1) {
+				/*if (i == modifiedList.size() - 1) {
 					logger.info("INACTIVE-retention release id:" + dbRR.getId());
 					retentionReleaseHBDao.inactivate(dbRR);
 					updated = true;
-				}
+				}*/
 			}
 			if (modifiedList.size() == 0) {
-				logger.info("INACTIVE-retention release id:" + dbRR.getId());
+				logger.info("INACTIVE-retention release id (size:0):" + dbRR.getId());
 				retentionReleaseHBDao.inactivate(dbRR);
 				updated = true;
 			}

@@ -835,7 +835,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/main-cert/cert-dashboard.js',
-                           'js/service/main-cert-service.js'
+                           'js/service/main-cert-service.js',
+                           'js/controller/main-cert/retention-release-modal.js'
                     ] 
                 });
             }]
@@ -861,22 +862,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	
 	
-	/*.state('cert', {
-		url: "/cert",
-		parent: "navigation",
-		templateUrl: "view/main-cert/cert-details-menu.html",
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-                           'js/service/main-cert-service.js'
-                    ] 
-                });
-            }]
-        },
-        controller: 'NavMenuCtrl'
-	})*/
 	.state('cert-details', {
 		url: "/cert-details",
 		parent: "navigation",

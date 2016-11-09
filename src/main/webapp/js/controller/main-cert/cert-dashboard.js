@@ -1,5 +1,5 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'modalService',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, modalService) {
 	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -49,6 +49,10 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 	$scope.getMainCertDashboardData = function (year){
 		$scope.selectedYear = year;
 		getMainCertData(year.toString().substring(2, 4));
+	}
+	
+	$scope.openRetentionReleaseSchedule = function() {
+		modalService.open('lg', 'view/main-cert/modal/retention-release-modal.html', 'RetentionReleaseModalCtrl');
 	}
 
 
@@ -113,8 +117,8 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 	function getRetentionReleaseList(){
 		mainCertService.getRetentionReleaseList($scope.jobNo)
 		.then( function (data){
+			console.log(data);
 			$scope.gridOptions.data= data;
-			//$scope.retentionReleaseList = data;
 
 			angular.forEach(data, function(value, key){
 				angular.forEach(data, function(value, key){

@@ -1,5 +1,5 @@
-mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', 'GlobalParameter',
-                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, GlobalParameter ) {
+mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', 'GlobalParameter', '$state',
+                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, GlobalParameter, $state) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.mainCertNo = $cookies.get("mainCertNo");
@@ -147,12 +147,15 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 	
 	function loadData(){
 		getJob();
-		getCertificate();
+		if($scope.mainCertNo == null || $scope.mainCertNo == undefined || $scope.mainCertNo.length==0){
+			getLatestMainCert();
+		}else
+			getCertificate();
 		
 	}
 
-	function getCalculatedRetentionRelease(){
-		mainCertService.getCalculatedRetentionRelease($scope.jobNo, $scope.mainCertNo)
+	function getCalculatedRetentionRelease(certNo){
+		mainCertService.getCalculatedRetentionRelease($scope.jobNo, certNo)
 		.then(
 				function( data ) {
 					$scope.gridOptions.data = data;
@@ -193,10 +196,25 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 						+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
 						+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
 					
-					getCalculatedRetentionRelease();
+					getCalculatedRetentionRelease($scope.mainCertNo);
 				});
 	}
 
+	function getLatestMainCert() {
+		mainCertService.getLatestMainCert($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data){
+						$scope.cumRetentionAmount = 
+							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
+							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
+							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
+						
+						getCalculatedRetentionRelease(data.certificateNumber);
+					}
+
+				});
+	}
 	
 	function updateRetentionRelease(rrList){
 		mainCertService.updateRetentionRelease($scope.jobNo, rrList)
@@ -208,6 +226,7 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 					}else{
 						$uibModalInstance.close();
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Retention Release Schedule has been updated.');
+						$state.reload();
 					}
 				});
 	}

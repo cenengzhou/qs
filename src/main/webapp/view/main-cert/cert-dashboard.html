@@ -49,7 +49,8 @@
 							chart-labels="linChartParameters.labels"
 							chart-series="linChartParameters.series"
 							chart-options="linChartParameters.options" chart-legend="true"
-							height="120">
+							resize ng-style="resizeWithOffset(400)"
+							>
 						           		</canvas>
 					</div>
 				</div>
@@ -77,108 +78,19 @@
 						<b>Retention Release Schedule</b>
 					</h4>
 				</div>
-				<div class="panel-body">
+				<div class="panel-body" >
 					<div id="" ui-grid="gridOptions" ui-grid-selection
 						ui-grid-resize-columns ui-grid-exporter class="grid"
-						style="height: 480px;"></div>
+						resize ng-style="resizeWithOffset(310)"></div>
 
-					<!-- <div class="table-responsive" ng-style = "{height: 500 + 'px', 'overflow': 'auto'}">  ng-style = "{height: 400 + 'px', 'overflow': 'auto'}" 
-							<table class="table">
-								<thead class="">
-									<tr>
-										<th class = "bg-inverse text-white">Cert No.</th>
-										<th class = "bg-inverse text-white">Contractual Due Date</th>
-										<th class = "bg-inverse text-white">Forecast/Actual Due Date</th>
-										<th class = "bg-inverse text-white">Release %</th>
-										<th class = "bg-inverse text-white">Release Amount</th>
-										<th class = "bg-inverse text-white">Status</th>
-									</tr>
-								</thead>
-								<tbody class="">
-									<tr ng-repeat="rr in retentionReleaseList" >
-										<td>{{rr.mainCertNo}}</td>
-										<td>{{rr.contractualDueDate}}</td>
-										<td>{{rr.dueDate}}</td>
-										<td class= "text-right">{{rr.releasePercent | number: 2 }}</td>
-										<td class= "text-right">{{rr.actualReleaseAmt | currency}}</td>
-										<td>{{rr.forecastReleaseAmt}}</td>
-										<td><span class="label" ng-class="rr.status=='F' ? 'label-success' :'label-danger'">{{rr.status==='F' ? 'Forecast':'Actual'}}</span></td>
-									</tr>
-								</tbody>
-							</table>
-						</div> -->
+					
 				</div>
-				<!-- <div class="panel-footer bg-white">
-							<a class="btn btn-primary btn-block" ui-sref="cert-all-details">More
-								Info <i class="fa fa-arrow-circle-right"></i>
-							</a>
-						</div> -->
-			</div>
-
-
-
-			<!-- Info boxes -->
-			<!-- <div class="col-md-12">
-			<div class="box box-primary box-solid">
-				<div class="box-header with-border">
-					<h3 class="box-title">Reports</h3>
-				</div>
-				<div class="box-body">
-					<div class="col-md-3 col-sm-6 col-xs-12">
-						<h5 class="m-t-0">Main Contract Certificate Report</h5>
-						<div class="clearfix m-b-25">
-							<button class="btn btn-danger btn-icon btn-lg">
-								<i class="fa fa-file-pdf-o"></i>
-							</button>
-							<button class="btn btn-success btn-icon btn-lg">
-								<i class="fa fa-file-excel-o"></i>
-							</button>
-						</div>
-					</div>
-					/.col
-					<div class="col-md-3 col-sm-6 col-xs-12">
-						<h5 class="m-t-0">Retention Release Report</h5>
-						<div class="clearfix m-b-25">
-							<button class="btn btn-danger btn-lg"> 
-								<i class="fa fa-file-pdf-o"></i>
-							</button>
-							<button class="btn btn-success btn-icon btn-lg">
-								<i class="fa fa-file-excel-o"></i>
-							</button>
-						</div>
-					</div>
-					/.col
-
-					fix for small devices only
-					<div class="clearfix visible-sm-block"></div>
-
-					<div class="col-md-3 col-sm-6 col-xs-12">
-						<h5 class="m-t-0">Contra Charge Report</h5>
-						<div class="clearfix m-b-25">
-							<button class="btn btn-danger btn-lg">
-								<i class="fa fa-file-pdf-o"></i>
-							</button>
-							<button class="btn btn-success btn-icon btn-lg">
-								<i class="fa fa-file-excel-o"></i>
-							</button>
-						</div>
-					</div>
-					/.col
-					<div class="col-md-3 col-sm-6 col-xs-12">
-						<h5 class="m-t-0">All in One</h5>
-						<div class="clearfix m-b-25">
-							<button class="btn btn-danger btn-lg">
-								<i class="fa fa-file-pdf-o"></i>
-							</button>
-							<button class="btn btn-success btn-icon btn-lg">
-								<i class="fa fa-file-excel-o"></i>
-							</button>
-						</div>
-					</div>
-					/.row
+				<div class="panel-footer bg-white">
+					<a class="btn btn-primary btn-block" ng-click="openRetentionReleaseSchedule()">Edit Schedule 
+						<i class="fa fa-calendar"></i>
+					</a>
 				</div>
 			</div>
-		</div> -->
 
 		</div>
 	</div>

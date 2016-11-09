@@ -223,6 +223,17 @@
 					<td class="text-right value"><b>{{paymentCertSummary.amountDueMovement
 							| currency}}</b></td>
 				</tr>
+				<tr ng-show = "paymentCertSummary.companyBaseCurrency != paymentCertSummary.currency">
+					<td></td>
+					<td class="text-right text"><b>EXCHANGE RATE</b></td>
+					<td class="text-right value"><b>{{paymentCertSummary.exchangeRate}}</b></td>
+				</tr>
+				<tr class="total" ng-show = "paymentCertSummary.companyBaseCurrency != paymentCertSummary.currency">
+					<td></td>
+					<td class="text-right text"><b>PAYABLE ({{paymentCertSummary.currency}})</b></td>
+					<td class="text-right value"><b>{{paymentCertSummary.amountDueMovement / paymentCertSummary.exchangeRate
+							| currency}}</b></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
