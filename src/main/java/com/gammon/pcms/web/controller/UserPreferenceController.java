@@ -22,7 +22,13 @@ public class UserPreferenceController {
 	
 	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)
 	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{
-		return userPreferenceService.obtainUserPreferenceByCurrentUser();
+		Map<String, String> preferenceMap = null;
+		try{
+			preferenceMap = userPreferenceService.obtainUserPreferenceByCurrentUser();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return preferenceMap;
 	}
 	
 	@RequestMapping(value = "setDefaultJobNo", method = RequestMethod.POST)

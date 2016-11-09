@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +32,7 @@ public class UserPreferenceService {
 	@Autowired
 	private SecurityService securityService;
 	
-	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{
+	public Map<String, String> obtainUserPreferenceByCurrentUser() {
 		String username = securityService.getCurrentUser().getUsername();
 		Map<String, String> preferenceMap = userPreferenceHBDao.obtainUserPreferenceByUsername(username);
 		String defaultJobNo = preferenceMap.get(UserPreference.DEFAULT_JOB_NO);
@@ -43,10 +42,11 @@ public class UserPreferenceService {
 
 	public Map<String, String> setDefaultJobNo(String defaultJobNo) throws DatabaseOperationException{
 		User user = securityService.getCurrentUser();
-		boolean isAccessable = adminService.canAccessJob(defaultJobNo);
-		if(isAccessable) {
+		try{
+			adminService.canAccessJob(defaultJobNo);
 			userPreferenceHBDao.setDefaultJobNo(defaultJobNo, user);
-		} else {
+		} catch (Exception e){
+			e.printStackTrace();
 			throw new IllegalArgumentException(user.getUsername() + " cannot access job:" + defaultJobNo);
 		}
 		return obtainUserPreferenceByCurrentUser();
@@ -57,15 +57,15 @@ public class UserPreferenceService {
 	 * @param defaultJobNo
 	 * @throws DatabaseOperationException
 	 */
-	private Map<String, String> addDefaultJobNoToPreference(Map<String, String> preferenceMap, String defaultJobNo)
-			throws DatabaseOperationException {
+	private Map<String, String> addDefaultJobNoToPreference(Map<String, String> preferenceMap, String defaultJobNo) {
 		if(defaultJobNo != null){
-			boolean isAccessable = adminService.canAccessJob(defaultJobNo);
-			if(!isAccessable){
-				preferenceMap.remove(UserPreference.DEFAULT_JOB_NO);
-			} else {
+			try{
+				adminService.canAccessJob(defaultJobNo);
 				JobInfo job = jobInfoService.obtainJob(defaultJobNo);
 				preferenceMap.put("DEFAULT_JOB_DESCRIPTION", job.getDescription());
+			} catch(Exception e){
+				e.printStackTrace();
+				preferenceMap.remove(UserPreference.DEFAULT_JOB_NO);
 			}
 		}
 		return preferenceMap;
