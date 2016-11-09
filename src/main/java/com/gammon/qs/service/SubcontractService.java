@@ -3434,15 +3434,15 @@ public class SubcontractService {
 
 				
 				monthList.add(monthHashMap.get(month));
-				certList.add(result.getTotalPostedCertifiedAmount());
-				wdList.add(result.getTotalPostedWorkDoneAmount());
+				certList.add(result.getTotalPostedCertifiedAmount().doubleValue());
+				wdList.add(result.getTotalPostedWorkDoneAmount().doubleValue());
 			}
 			
 			if(monthList.size()<12){
 				SubcontractSnapshotDTO currentSCWrapper = subcontractHBDao.obtainSubcontractCurrentStat(jobNo, subcontractNo);
 				monthList.add(monthHashMap.get(cal.get(Calendar.MONTH)+1));
-				certList.add(currentSCWrapper.getTotalPostedCertifiedAmount());
-				wdList.add(currentSCWrapper.getTotalPostedWorkDoneAmount());
+				certList.add(currentSCWrapper.getTotalPostedCertifiedAmount().doubleValue());
+				wdList.add(currentSCWrapper.getTotalPostedWorkDoneAmount().doubleValue());
 			
 			}
 			SubcontractDashboardDTO subcontractDashboardCertWrapper = new SubcontractDashboardDTO();

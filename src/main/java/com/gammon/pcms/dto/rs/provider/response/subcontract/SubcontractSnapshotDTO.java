@@ -1,5 +1,6 @@
 package com.gammon.pcms.dto.rs.provider.response.subcontract;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -8,21 +9,21 @@ import java.util.Date;
  */
 public class SubcontractSnapshotDTO implements Comparable<SubcontractSnapshotDTO>{
 	
-	private Double totalPostedCertifiedAmount;
-	private Double totalPostedWorkDoneAmount;
+	private BigDecimal totalPostedCertifiedAmount;
+	private BigDecimal totalPostedWorkDoneAmount;
 	private Date snapshotDate;
 	
 	
-	public Double getTotalPostedCertifiedAmount() {
+	public BigDecimal getTotalPostedCertifiedAmount() {
 		return totalPostedCertifiedAmount;
 	}
-	public void setTotalPostedCertifiedAmount(Double totalPostedCertifiedAmount) {
+	public void setTotalPostedCertifiedAmount(BigDecimal totalPostedCertifiedAmount) {
 		this.totalPostedCertifiedAmount = totalPostedCertifiedAmount;
 	}
-	public Double getTotalPostedWorkDoneAmount() {
+	public BigDecimal getTotalPostedWorkDoneAmount() {
 		return totalPostedWorkDoneAmount;
 	}
-	public void setTotalPostedWorkDoneAmount(Double totalPostedWorkDoneAmount) {
+	public void setTotalPostedWorkDoneAmount(BigDecimal totalPostedWorkDoneAmount) {
 		this.totalPostedWorkDoneAmount = totalPostedWorkDoneAmount;
 	}
 	public Date getSnapshotDate() {
