@@ -460,7 +460,9 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.amountBudget = amountBudget;
 	}
 
-	@Column(name = "AMT_CUMULATIVE_CERT")
+	@Column(name = "AMT_CUMULATIVE_CERT",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmountCumulativeCert() {
 		return amountCumulativeCert;
 	}
@@ -469,7 +471,9 @@ public class SubcontractDetail extends BasePersistedObject {
 		this.amountCumulativeCert = amountCumulativeCert;
 	}
 
-	@Column(name = "AMT_POSTED_CERT")
+	@Column(name = "AMT_POSTED_CERT",
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmountPostedCert() {
 		return amountPostedCert;
 	}

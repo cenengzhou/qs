@@ -7,7 +7,6 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 //	Save Function
 	$scope.save = function () {
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-			//console.log($scope.subcontract);
 
 			var subcontractToUpdate = {
 					id: $scope.subcontract.id,
@@ -22,8 +21,6 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 					onSiteStartDate: $scope.subcontract.onSiteStartDate
 			}
 
-			//console.log(subcontractToUpdate);
-
 			upateSubcontractDates(subcontractToUpdate);
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
@@ -36,10 +33,6 @@ mainApp.controller('SubcontractDatesCtrl', ['$scope', 'subcontractService', 'mod
 			.then(
 					function( data ) {
 						$scope.subcontract = data;
-						if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
-							$scope.disableButtons = true;
-						else
-							$scope.disableButtons = false;
 					});
 		}
 	}

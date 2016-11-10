@@ -106,7 +106,7 @@ public class TenderService implements Serializable {
 					for(TenderDetail taDetail: taDetailList){
 						if(taDetail!=null && taDetail.getId()!=null){
 							SubcontractDetail scDetails = subcontractDetailDao.obtainSCDetailsByTADetailID(jobNo, subcontractNo, taDetail.getId());
-							if(scDetails!=null && (scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountPostedWD() .compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0)){
+							if(scDetails!=null && (scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountPostedWD().compareTo(new BigDecimal(0)) > 0 || scDetails.getAmountCumulativeWD().compareTo(new BigDecimal(0)) > 0)){
 								uneditableTADetailIDs.add(String.valueOf(taDetail.getId()));
 							}
 						}
@@ -874,7 +874,7 @@ public class TenderService implements Serializable {
 				}
 
 				//Set Buying Loss/Gain for Tender
-				tender.setAmtBuyingGainLoss(new BigDecimal(tender.getBudgetAmount()-totalBudget));
+				tender.setAmtBuyingGainLoss(CalculationUtil.roundToBigDecimal(tender.getBudgetAmount()-totalBudget, 2));
 
 				tenderDao.saveOrUpdate(tender);
 			}

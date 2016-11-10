@@ -26,6 +26,7 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.security.SecurityService;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.SubcontractorWrapper;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
@@ -337,7 +338,7 @@ public class SubcontractorService{
 		int row = 1;
 		
 		for(Subcontract scPackage: packageList){
-			BigDecimal revisedSCSum = (scPackage.getRemeasuredSubcontractSum()==null?new BigDecimal(0.0):scPackage.getRemeasuredSubcontractSum()).add((scPackage.getApprovedVOAmount()==null?new BigDecimal(0.0):scPackage.getApprovedVOAmount()));
+			BigDecimal revisedSCSum = CalculationUtil.roundToBigDecimal((scPackage.getRemeasuredSubcontractSum()==null?new BigDecimal(0.0):scPackage.getRemeasuredSubcontractSum()).add((scPackage.getApprovedVOAmount()==null?new BigDecimal(0.0):scPackage.getApprovedVOAmount())), 2);
 			doc.insertRow(new String[10]);
 			
 			doc.setCellValue(row, 0, scPackage.getJobInfo().getJobNumber(), true);

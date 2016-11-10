@@ -117,7 +117,6 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 	function getRetentionReleaseList(){
 		mainCertService.getRetentionReleaseList($scope.jobNo)
 		.then( function (data){
-			console.log(data);
 			$scope.gridOptions.data= data;
 
 			angular.forEach(data, function(value, key){

@@ -160,7 +160,7 @@ public class PaymentPostingService {
 						if (scPackage == null)
 							scPackage = scPackageHBDao.obtainSCPackage(paymentCert.getJobNo(), paymentCert.getPackageNo());
 						scPackage.setLastPaymentCertIssuedDate(new Date());
-						scPackage.setAccumlatedRetention(scPackage.getAccumlatedRetention().add(new BigDecimal(retentionAmount)));
+						scPackage.setAccumlatedRetention(scPackage.getAccumlatedRetention() == null ? new BigDecimal(0.0) : scPackage.getAccumlatedRetention().add(new BigDecimal(retentionAmount)));
 						scPackage.setRetentionReleased(scPackage.getRetentionReleased() == null ? new BigDecimal(0.0) : scPackage.getRetentionReleased().add(new BigDecimal(retentionReleasedAmount)));
 						
 						

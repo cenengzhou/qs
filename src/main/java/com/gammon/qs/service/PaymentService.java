@@ -2916,7 +2916,7 @@ public class PaymentService{
 					 * modified on 07Mar, 2014
 					 * Round the figure before making comparison
 					 * Any payment (Interim/Final) shouldn't exceed the Total Sub-contract Sum**/
-					if (new BigDecimal(totalCertAmount).compareTo( CalculationUtil.roundToBigDecimal((paymentCert.getSubcontract().getSubcontractSum()), 2)) > 0) {
+					if (CalculationUtil.roundToBigDecimal(totalCertAmount, 2).compareTo(CalculationUtil.roundToBigDecimal((paymentCert.getSubcontract().getSubcontractSum()), 2)) > 0) {
 						logger.info("SC Sum: "+CalculationUtil.roundToBigDecimal((paymentCert.getSubcontract().getSubcontractSum()), 2)+" - totalCertAmount: "+totalCertAmount);
 
 						error = "Total payment amount was larger than Subcontract Sum of the Package.";

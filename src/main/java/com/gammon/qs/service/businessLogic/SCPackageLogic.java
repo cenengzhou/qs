@@ -13,7 +13,6 @@ import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.SubcontractDetailRT;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.RoundingUtil;
 
 public class SCPackageLogic {
 
@@ -125,9 +124,9 @@ public class SCPackageLogic {
 		scPackage.setApprovedVOAmount(new BigDecimal(approvedVO));
 		
 		if(Subcontract.RETENTION_ORIGINAL.equalsIgnoreCase(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal(scSum * scPackage.getMaxRetentionPercentage()/100.00),2));	
+			scPackage.setRetentionAmount(new BigDecimal(scSum * scPackage.getMaxRetentionPercentage()/100.00));	
 		if(Subcontract.RETENTION_REVISED.equalsIgnoreCase(scPackage.getRetentionTerms()))
-			scPackage.setRetentionAmount(CalculationUtil.roundToBigDecimal(new BigDecimal((scSum+approvedVO) * scPackage.getMaxRetentionPercentage()/100.00),2));
+			scPackage.setRetentionAmount(new BigDecimal((scSum+approvedVO) * scPackage.getMaxRetentionPercentage()/100.00));
 		
 		return scPackage;
 	}

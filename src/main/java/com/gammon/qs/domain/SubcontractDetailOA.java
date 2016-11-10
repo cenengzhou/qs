@@ -71,7 +71,9 @@ public class SubcontractDetailOA extends SubcontractDetail {
 		this.cumWorkDoneQuantity = cumWorkDoneQuantity;
 	}
 	
-	@Column(name = "AMT_CUMULATIVE_WD")
+	@Column(name = "AMT_CUMULATIVE_WD", 
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmountCumulativeWD() {
 		return amountCumulativeWD;
 	}
@@ -79,7 +81,9 @@ public class SubcontractDetailOA extends SubcontractDetail {
 		this.amountCumulativeWD = amountCumulativeWD;
 	}
 	
-	@Column(name = "AMT_POSTED_WD")
+	@Column(name = "AMT_POSTED_WD", 
+			precision = 19,
+			scale = 2)
 	public BigDecimal getAmountPostedWD() {
 		return amountPostedWD;
 	}
