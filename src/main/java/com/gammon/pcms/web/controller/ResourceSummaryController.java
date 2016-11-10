@@ -52,6 +52,12 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "obtainResourceSummariesByJobNumberForAdmin", method = RequestMethod.GET)
+	public List<ResourceSummary> obtainResourceSummariesByJobNumberForAdmin(@RequestParam String jobNumber){
+		return resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(jobNumber);
+	}
+	
 	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo 

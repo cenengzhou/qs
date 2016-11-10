@@ -44,8 +44,8 @@
 					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-MainCert.html'">
 					</div>
 				</div>
-				<div ng-show="isSelected('Repackaging')" ng-controller="AdminRevisionRepackagingCtrl">
-					<div class="box col-md-12" compile="repackagingHtml">
+				<div ng-if="isSelected('Repackaging')" ng-controller="AdminRevisionRepackagingCtrl">
+					<div class="box col-md-12" compile="repackagingGridHTML">
 					</div>
 				</div>
 			</section>

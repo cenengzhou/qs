@@ -6,6 +6,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		getResourceSummariesByAccountCode: 		getResourceSummariesByAccountCode,
 		getResourceSummariesByLineType:			getResourceSummariesByLineType,
 		getResourceSummariesForAddendum:		getResourceSummariesForAddendum,
+		obtainResourceSummariesByJobNumberForAdmin: obtainResourceSummariesByJobNumberForAdmin,
 		getResourceSummariesGroupByObjectCode: 	getResourceSummariesGroupByObjectCode,
 		getUneditableResourceSummaryID:			getUneditableResourceSummaryID,
 		addResourceSummary:						addResourceSummary,
@@ -44,6 +45,17 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
+	function obtainResourceSummariesByJobNumberForAdmin(jobNumber){
+		var request = $http({
+			method: 'get',
+			url: 'service/resourceSummary/obtainResourceSummariesByJobNumberForAdmin',
+			params:{
+				jobNumber: jobNumber
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
 	function getResourceSummariesBySC(jobNo, subcontractNo, objectCode) {
 		var request = $http({
 			method: "get",

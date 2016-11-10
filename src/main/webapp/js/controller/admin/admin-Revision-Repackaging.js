@@ -1,7 +1,118 @@
-mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService',
-										function($scope, resourceSummaryService, modalService){
+mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService', 'GlobalHelper', 'GlobalParameter',
+										function($scope, resourceSummaryService, modalService, GlobalHelper, GlobalParameter){
 	$scope.onSubmitResourceSummarySearch = onSubmitResourceSummarySearch;
 	$scope.onUpdateResourceSummaryRecord = onUpdateResourceSummaryRecord;
+
+	$scope.gridOptions = {
+			enableFiltering: true,
+			enableColumnResizing : true,
+			enableGridMenu : true,
+			enableRowSelection: true,
+			enableSelectAll: true,
+			enableFullRowSelection: false,
+			multiSelect: true,
+			showGridFooter : true,
+			showColumnFooter: true,
+			enableCellEditOnFocus : true,
+			allowCellFocus: false,
+			exporterMenuPdf: false,
+			enableCellSelection: false,
+			rowEditWaitInterval :-1,
+			columnDefs: [
+			             { field: 'packageNo', width: '100', displayName: "Subcontract No.", enableCellEdit: true },
+			             { field: 'resourceDescription', width: '200', displayName: "Description", enableCellEdit: true },
+			             { field: 'objectCode', width: '100', displayName: "Object Code", enableCellEdit: true },
+			             { field: 'subsidiaryCode', width: '100', displayName: "Subsidiary Code", enableCellEdit: true },
+			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true },
+			             { field: 'resourceType', width: '100', displayName: "Resource Type", enableCellEdit: true },
+			             { field: 'amountBudget', width: '100', displayName: "Budget", enableCellEdit: true,
+			            	 cellFilter: 'number:2',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.quantity);
+			            	 },  	            	 
+			             },
+			             { field: 'quantity', width: '100', displayName: "Quantity", enableCellEdit: true,
+			            	 cellFilter: 'number:4',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.quantity);
+			            	 },  
+			             },
+			             { field: 'currIVAmount', width: '100', displayName: "Current Amount", enableCellEdit: true,
+			            	 cellFilter: 'number:2',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.currIVAmount);
+			            	 },  
+			             },
+			             { field: 'cumQuantity', width: '100', displayName: "Cumulative Quantity", enableCellEdit: true,
+			            	 cellFilter: 'number:4',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.cumQuantity);
+			            	 },  
+			             },
+			             { field: 'postedIVAmount', width: '100', displayName: "Posted Amount", enableCellEdit: true,
+			            	 cellFilter: 'number:2',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.postedIVAmount);
+			            	 },  
+			             },
+			             { field: 'rate', width: '100', displayName: "Rate", enableCellEdit: true,
+			            	 cellFilter: 'number:2',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 return GlobalHelper.numberClass(row.entity.rate);
+			            	 },  
+			             },
+			             { field: 'unit', width: '100', displayName: "Unit", enableCellEdit: true },
+			             { field: 'excludeDefect', width: '100', displayName: "Exclude Defect", enableCellEdit: true,
+			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
+			            	 editDropdownOptionsArray : GlobalParameter.booleanOptions,
+			     			cellFilter : 'dropdownFilter:"booleanOptions"',
+			     			editDropdownIdLabel : 'id',
+			     			editDropdownValueLabel : 'value',
+			             },
+			             { field: 'excludeLevy', width: '100', displayName: "Exclude Levy", enableCellEdit: true,
+			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
+			            	 editDropdownOptionsArray : GlobalParameter.booleanOptions,
+				     			cellFilter : 'dropdownFilter:"booleanOptions"',
+				     			editDropdownIdLabel : 'id',
+				     			editDropdownValueLabel : 'value',
+			             },
+			             { field: 'forIvRollbackOnly', width: '100', displayName: "IV Rollback Only", enableCellEdit: true,
+			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
+			            	 editDropdownOptionsArray : GlobalParameter.zeroOneOptions,
+				     			cellFilter : 'dropdownFilter:"zeroOneOptions"',
+				     			editDropdownIdLabel : 'id',
+				     			editDropdownValueLabel : 'value',
+			             },
+			             ]
+	}
+	
+	$scope.updateGrid = function(){
+		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		if(dataRows.length > 0){
+			resourceSummaryService.updateResourceSummaries($scope.searchJobNo, dataRows)
+			.then(function(data){
+				$scope.gridApi.rowEdit.setRowsClean(dataRows);
+				if(data == ''){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Resource summary updated');
+				} else{
+					onSubmitResourceSummarySearch();
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+				}
+			})
+		} else {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'No resource modified');
+		}
+	}
+	
+	$scope.gridOptions.onRegisterApi= function(gridApi){
+		$scope.gridApi = gridApi;
+		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(newValue != oldValue){
+				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
+			}
+		});
+	}
 
 	$scope.booleanOptions = {
 			true: 'True',
@@ -148,28 +259,40 @@ mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummarySe
 	];
 	
 	checkFieldList();
-
-	$scope.repackagingHtml = '\
+	$scope.repackagingSearch = '\
 		<div>\
-			<div class="row well">\
-				<form name="RevisionsResourceSummarySearch"\
-					ng-submit="onSubmitResourceSummarySearch()" class="form">\
-					<div class="col-md-4">\
-						<input type="number" class="form-control" placeholder="Job Number:"\
-							id="ResourceSummarySearch_jobNo" ng-model="resourceSummarySearch.jobNo">\
-					</div>\
-					<div class="col-md-4">\
-						<input type="number" class="form-control"\
-							placeholder="Subcontract Number:"\
-							id="MainCertSearch_certificateNumber"\
-							ng-model="resourceSummarySearch.subcontractNo">\
-					</div>\
-					<div class="col-md-4">\
-						<button type="submit" class="btn btn-block btn-primary"\
-							id="resourceSummarySearch_submit">Search</button>\
-					</div>\
-				</form>\
+		<div class="row well">\
+			<form name="RevisionsResourceSummarySearch"\
+				ng-submit="onSubmitResourceSummarySearch()" class="form">\
+				<div class="col-md-8">\
+					<input type="number" class="form-control" placeholder="Job Number:"\
+						id="ResourceSummarySearch_jobNo" ng-model="resourceSummarySearch.jobNo">\
+				</div>\
+				<div ng-if="false" class="col-md-4">\
+					<input type="number" class="form-control"\
+						placeholder="Subcontract Number:"\
+						id="MainCertSearch_certificateNumber"\
+						ng-model="resourceSummarySearch.subcontractNo">\
+				</div>\
+				<div class="col-md-4">\
+					<button type="submit" class="btn btn-block btn-primary"\
+						id="resourceSummarySearch_submit">Search</button>\
+				</div>\
+			</form>\
+		</div>\
+		';
+	$scope.repackagingGridHTML = $scope.repackagingSearch + '\
+		<div class="col-md-12"><br>\
+			<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns\
+				ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"\
+				resize ng-style="resizeWithOffset(365)">\
 			</div>\
+			<div class="row">\
+				<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary">Update Resource Summary</button>\
+			</div>\
+		</div>\
+		';
+	$scope.repackagingHtml = $scope.repackagingSearch + '\
 			<form name="RevisionsResourceSummaryRecord"\
 				ng-submit="onUpdateResourceSummaryRecord(resourceSummary)" ng-repeat="resourceSummary in resourceSummaryList">\
 				<div class="row">\
@@ -202,10 +325,11 @@ mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummarySe
 		';
 	
 	function onSubmitResourceSummarySearch(){
-		resourceSummaryService.getResourceSummariesBySC(
-				$scope.resourceSummarySearch.jobNo, 
-				$scope.resourceSummarySearch.subcontractNo)
+		resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(
+				$scope.resourceSummarySearch.jobNo)
 		.then(function(data){
+			$scope.gridOptions.data = data;
+			if(data.length > 0) $scope.searchJobNo = data[0].jobInfo.jobNo;
 			$scope.resourceSummaryList = data;
 			$scope.resourceSummaryList.forEach(function(resourceSummary){
 				$scope.fieldList.forEach(function(field){

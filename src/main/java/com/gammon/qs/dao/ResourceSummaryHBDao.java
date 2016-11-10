@@ -75,6 +75,21 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ResourceSummary> obtainResourceSummariesByJobNumberForAdmin(String jobNumber){
+		List<ResourceSummary> resourceSummaries = null;
+		try{
+			Criteria criteria = getSession().createCriteria(getType());
+			criteria.createAlias("jobInfo",  "jobInfo");
+			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
+			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
+			resourceSummaries = criteria.list();
+		} catch(HibernateException e){
+			e.printStackTrace();
+		}
+		return resourceSummaries;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummariesByJobNumber(String jobNumber) throws DatabaseOperationException{
 		List<ResourceSummary> resourceSummaries;
 		try{

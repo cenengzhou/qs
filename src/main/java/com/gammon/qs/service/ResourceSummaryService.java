@@ -1150,7 +1150,10 @@ public class ResourceSummaryService implements Serializable {
 		return resourceSummaryDao.getResourceSummariesForAddendum(jobNo);
 	}
 	
-	
+	public List<ResourceSummary> obtainResourceSummariesByJobNumberForAdmin(String jobNumber) {
+		return resourceSummaryDao.obtainResourceSummariesByJobNumberForAdmin(jobNumber);
+	}
+		
 	public String addResourceSummary(String jobNo, String repackagingEntryId, ResourceSummary resourceSummary) throws Exception{
 		String result = "";
 		//Check status of repackaging entry

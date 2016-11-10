@@ -247,6 +247,14 @@ mainApp.constant('GlobalParameter', {
 		{id:'I', value:'Interim'},
 		{id:'F', value:'Final'}
 	],
+	booleanOptions:[
+		{id: 'true', value: 'True'},
+		{id: 'false', value: 'False'}
+	],
+	zeroOneOptions:[
+		{id: true, value: 'True'},
+		{id: false, value: 'False'}
+	],
 	month: [
        {id:'01', value:'January'},
        {id:'02', value:'February'},
