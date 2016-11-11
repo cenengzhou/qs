@@ -1,5 +1,6 @@
-mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
-                                                  function ($scope, jobService, subcontractService, $cookies, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', '$timeout', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
+                                                  function ($scope, jobService, subcontractService, $cookies, $timeout, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
+	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	getJob();
 	rootscopeService.gettingWorkScopes()
@@ -104,6 +105,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 		$scope.subcontract.internalJobNo = "";
 	}
 	
+	$scope.setPaymentTermsDescription = function(terms){
+		var paymentTerms = GlobalParameter.getObjectById(GlobalParameter.paymentTerms, terms);
+		if(paymentTerms) angular.element('#paymentTermsDescriptionTextarea').val(paymentTerms.id + ' - ' + paymentTerms.value);
+	}
 
 	//Save Function
 	$scope.save = function () {
@@ -206,6 +211,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 						$scope.disableSubcontactNo = true;
 					}else
 						$scope.disableSubcontactNo = false;
+					
+					if(!$scope.subcontract.paymentTermsDescription){
+						$timeout(function(){$scope.setPaymentTermsDescription($scope.subcontract.paymentTerms);}, 500);
+					}
 				});
 	}
 	

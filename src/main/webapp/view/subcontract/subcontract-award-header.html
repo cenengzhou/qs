@@ -298,42 +298,42 @@
 											<label class="col-md-3">Payment Terms</label>
 											<div class="col-md-9">
 												<div class="btn-group btn-group-justified">
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS0')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS0', 'btn-inverse' : subcontract.paymentTerms != 'QS0'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS0'">QS0</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS1')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS1', 'btn-inverse' : subcontract.paymentTerms != 'QS1'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS1'">QS1</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS2')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS2', 'btn-inverse' : subcontract.paymentTerms != 'QS2'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS2'">QS2</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS3')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS3', 'btn-inverse' : subcontract.paymentTerms != 'QS3'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS3'">QS3</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS4')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS4', 'btn-inverse' : subcontract.paymentTerms != 'QS4'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS4'">QS4</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS5')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS5', 'btn-inverse' : subcontract.paymentTerms != 'QS5'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS5'">QS5</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS6')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS6', 'btn-inverse' : subcontract.paymentTerms != 'QS6'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS6'">QS6</label>
-													<label class="btn"
+													<label class="btn" ng-click="!disableButtons && setPaymentTermsDescription('QS7')"
 														ng-class="{'btn-primary' : subcontract.paymentTerms == 'QS7', 'btn-inverse' : subcontract.paymentTerms != 'QS7'}"
 														ng-model="subcontract.paymentTerms"
 														ng-disabled="disableButtons" uib-btn-radio="'QS7'">QS7</label>
 												</div>
 												<br>
-												<textarea class="col-md-12" rows="1"
-													placeholder="Payment Tersms Description ..."
+												<textarea class="col-md-12" rows="1" id="paymentTermsDescriptionTextarea"
+													placeholder="Payment Terms Description ..."
 													ng-model="subcontract.paymentTermsDescription"
 													ng-style="{height : 35 + 'px'}"
 													data-ng-required="subcontract.paymentTerms == 'QS0'"
