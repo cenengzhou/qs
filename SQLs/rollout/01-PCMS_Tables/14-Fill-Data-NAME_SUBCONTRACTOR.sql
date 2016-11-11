@@ -6,6 +6,7 @@
 	2. To fill TENDER.NAME_SUBCONTRACTOR column with DIM_ADDRESS_BOOK.ADDRESS_BOOK_NAME, 
 		join with TENDER.VENDORNO and DIM_ADDRESS_BOOK._ADDRESS_BOOK_NUMBER
 */
+SET DEFINE OFF
 SET SERVEROUTPUT ON
 DECLARE
   TYPE company IS TABLE OF VARCHAR2(50) INDEX BY VARCHAR2(6);
@@ -15,6 +16,7 @@ DECLARE
   SQL_STRING            VARCHAR2(512);
   UPDATE_SUBCONTRACT    NUMBER:=0;
   UPDATE_TENDER         NUMBER:=0;
+  DEBUGON				NUMBER:=1;
 BEGIN
 	vendor_list('1')	    :='Gammon Construction Limited';
 	vendor_list('2')	    :='Gammon Building Construction Limited';
@@ -3728,16 +3730,21 @@ BEGIN
   WHILE i IS NOT NULL LOOP
     --DBMS_Output.PUT_LINE ('vendor ' || i || ' is ' || vendor_list(i));
     SQL_STRING:='update ' || PCMS_SCHEMA || '.SUBCONTRACT set NAME_SUBCONTRACTOR = ''' || REPLACE( vendor_list(i),'''','''''') || ''' where VENDORNO = ''' || i || '''';
+    IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_STRING); END IF;
     execute immediate SQL_STRING;
+    
     IF(SQL%ROWCOUNT>0) THEN
       UPDATE_SUBCONTRACT:=UPDATE_SUBCONTRACT + SQL%ROWCOUNT;
-      DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on subcontract');
+      --DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on subcontract');
     END IF;
+    
     SQL_STRING:='update ' || PCMS_SCHEMA || '.TENDER set NAME_SUBCONTRACTOR = ''' || REPLACE( vendor_list(i),'''','''''') || ''' where VENDORNO = ''' || i || '''';
+    IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_STRING); END IF;
     execute immediate SQL_STRING;
+    
     IF(SQL%ROWCOUNT>0) THEN
       UPDATE_TENDER:=UPDATE_TENDER + SQL%ROWCOUNT;
-      DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on tender');
+      --DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on tender');
     END IF;
     i := vendor_list.NEXT(i); 
   END LOOP;
