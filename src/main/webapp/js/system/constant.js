@@ -256,12 +256,12 @@ mainApp.constant('GlobalParameter', {
 		{id: false, value: 'False'}
 	],
 	approvedOrRejectedOptions:[
-		{id: 'Approved', value: 'A'},
-		{id: 'Rejected', value: 'R'}
+		{id: 'A', value: 'Approved'},
+		{id: 'R', value: 'Rejected'}
 	],
 	splitOrTerminateOptions:[
-		{id: 'Split', value: 'S'},
-		{id: 'Terminate', value: 'T'}
+		{id: 'S', value: 'Split'},
+		{id: 'T', value: 'Terminate'}
 	],
 	month: [
        {id:'01', value:'January'},
