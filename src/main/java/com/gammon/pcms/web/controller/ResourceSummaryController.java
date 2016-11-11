@@ -149,6 +149,13 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateResourceSummariesForAdmin", method = RequestMethod.POST)
+	public void updateResourceSummariesForAdmin(@RequestParam(required =true) String jobNo, 
+									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
+		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
+	}
+		
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
 	public String splitOrMergeResources(@RequestParam(required =true) String jobNo, 

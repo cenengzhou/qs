@@ -90,7 +90,7 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
 		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
 		if(dataRows.length > 0){
-			resourceSummaryService.updateResourceSummaries($scope.searchJobNo, dataRows)
+			resourceSummaryService.updateResourceSummariesForAdmin($scope.searchJobNo, dataRows)
 			.then(function(data){
 				$scope.gridApi.rowEdit.setRowsClean(dataRows);
 				if(data == ''){
@@ -114,21 +114,6 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 		});
 	}
 
-	$scope.booleanOptions = {
-			true: 'True',
-			false: 'False'
-	}
-	
-	$scope.zeroOneOptions = {
-			1: 'True',
-			0: 'False'
-	}
-	
-	$scope.systemStatuOptions = {
-			'ACTIVE': 'ACTIVE',
-			'INACTIVE': 'INACTIVE'
-	}
-	
 	$scope.fieldList = [
 			{
 				name: 'id',
@@ -278,12 +263,11 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 	}
 	
 	function onUpdateResourceSummaryRecord(resourceSummary){
-		resourceSummaryService.updateResourceSummaries(resourceSummary.jobInfo.jobNo, [resourceSummary])
+		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummary.jobInfo.jobNo, [resourceSummary])
 		.then(function(data){
 			if(data == ''){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Resource summary updated');
 			}
-			
 		})
 	}
 	

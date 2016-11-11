@@ -1,5 +1,5 @@
 <div class="panel-group" id="accordion">
-	<div class="panel panel-default" ng-repeat="list in completeApprovalItemList">
+	<div class="panel {{list.panelCss}}" ng-repeat="list in completeApprovalItemList">
 		<div class="panel-heading" style="cursor:pointer" ng-click="showPanel($index)" data-target="{{list.name}}Panel" data-parent="#accordion" data-toggle="collapse">
 			<h4 class="panel-title">
 				{{list.title}}

@@ -192,6 +192,7 @@
 										<th>File name</th>
 										<th>Type</th>
 										<th>Created By</th>
+										<th>Create Date</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -209,6 +210,7 @@
 											class="rounded-corner" height="30" width="30"
 											data-ng-src="{{attach.user.userIcon}}">
 											{{attach.user.fullname}}</td>
+										<td>{{attach.createdDate | date : GlobalParameter.DATE_FORMAT}}</td>
 									</tr>
 								</tbody>
 							</table>

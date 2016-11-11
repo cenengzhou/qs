@@ -22,6 +22,7 @@
 										<th>File name</th>
 										<th>Type</th>
 										<th>Created By</th>
+										<th>Create Date</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -38,6 +39,7 @@
 											imageonload roll-back-image="resources/images/profile.png"
 											data-ng-src="{{attach.user.userIcon}}">
 											{{attach.user.fullname}}</td>
+										<td>{{attach.createdDate | date : GlobalParameter.DATE_FORMAT}}</td>
 									</tr>
 								</tbody>
 							</table>

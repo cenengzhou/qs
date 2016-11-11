@@ -11,6 +11,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		getUneditableResourceSummaryID:			getUneditableResourceSummaryID,
 		addResourceSummary:						addResourceSummary,
 		updateResourceSummaries:				updateResourceSummaries,
+		updateResourceSummariesForAdmin:		updateResourceSummariesForAdmin,
 		deleteResources:						deleteResources,
 		splitOrMergeResources:					splitOrMergeResources,
 		updateIVAmount:							updateIVAmount,
@@ -140,7 +141,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-
+	
 	function updateResourceSummaries(jobNo, resourceSummaryList) {
 		var request = $http({
 			method: "post",
@@ -154,6 +155,18 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 
+	function updateResourceSummariesForAdmin(jobNo, resourceSummaryList) {
+		var request = $http({
+			method: "post",
+			url: "service/resourceSummary/updateResourceSummariesForAdmin",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo
+			},
+			data: resourceSummaryList
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
 
 	function deleteResources(resourceSummaryList) {
 		var request = $http({

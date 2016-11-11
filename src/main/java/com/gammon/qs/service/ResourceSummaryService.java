@@ -1196,6 +1196,11 @@ public class ResourceSummaryService implements Serializable {
 		return result;
 	}
 	
+	public void updateResourceSummariesForAdmin(List<ResourceSummary> resourceSummaries, String jobNo){
+		for(ResourceSummary resourceSummary : resourceSummaries){
+			resourceSummaryDao.saveOrUpdate(resourceSummary);
+		}
+	}
 	
 	public BQResourceSummaryWrapper updateResourceSummaries(List<ResourceSummary> resourceSummaries, String jobNo) throws Exception{
 		logger.info("saveResourceSummaries - STARTED");

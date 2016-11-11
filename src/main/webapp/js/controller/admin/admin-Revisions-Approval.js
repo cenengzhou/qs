@@ -2,7 +2,6 @@ mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'Glo
 									function($scope, GlobalHelper, GlobalParameter, apService){
 	$scope.GlobalHelper = GlobalHelper;
 	ApiParam.prototype.setOptions = setApiOptions;
-	window.scope = $scope;
 	$scope.toCompleteSubcontractAwardParams = [
 			new ApiParam('jobNumber', 'text'),
 			new ApiParam('packageNo', 'text'),
@@ -52,8 +51,10 @@ mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'Glo
 	$scope.showPanel = function(i){
 		$scope.completeApprovalItemList.forEach(function(item){
 			item.collapse = '';
+			item.panelCss = 'panel-default';
 		})
 		$scope.completeApprovalItemList[i].collapse = 'in';
+		$scope.completeApprovalItemList[i].panelCss = 'panel-primary'
 	}
 	
 	$scope.showPanel(0);
@@ -76,6 +77,7 @@ mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'Glo
 		this.params = params;
 		this.title = GlobalHelper.camelToNormalString(name);
 		this.collapse = '';
+		this.panelCss = 'panel-default';
 		return this;
 	}
 	

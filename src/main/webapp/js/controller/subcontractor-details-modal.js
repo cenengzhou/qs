@@ -1,9 +1,8 @@
 mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'masterListService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
                                             function ($scope, $uibModalInstance, $interval, $http, $window, modalService, confirmService, modalStatus, modalParam, GlobalMessage, masterListService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil, attachmentService) {
+	$scope.GlobalParameter = Globalparameter;
 	$scope.status = modalStatus;
-
 	$scope.vendorNo = modalParam;
-
 	$scope.cancel = function () {
 		$uibModalInstance.close();
 	};

@@ -1,6 +1,6 @@
 mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService',
                                          function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService) {
-	
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo = $cookies.get('addendumNo');

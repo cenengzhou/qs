@@ -3,7 +3,7 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 	rootscopeService.setSelectedTips('repackagingStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.repackaging = "";
 	$scope.sequenceNo = 0;
 	$scope.imageServerAddress = GlobalParameter.imageServerAddress;

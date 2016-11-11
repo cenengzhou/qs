@@ -1,6 +1,6 @@
 mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'modalStatus', 'confirmService', 'modalParam', '$uibModalInstance', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
                                          function($scope, $location, attachmentService, modalService, modalStatus, confirmService, modalParam, $uibModalInstance, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage) {
-	
+	$scope.GlobalParameter = GlobalParameter;
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	

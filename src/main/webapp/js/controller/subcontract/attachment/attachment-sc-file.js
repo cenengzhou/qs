@@ -1,5 +1,6 @@
 mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'subcontractService', 'paymentService',
                                  function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, subcontractService, paymentService) {
+	$scope.GlobalParameter = GlobalParameter;
 	if(!$scope.nameObject) {
 		$scope.inBox = false;
 		$scope.nameObject = $stateParams.nameObject;
