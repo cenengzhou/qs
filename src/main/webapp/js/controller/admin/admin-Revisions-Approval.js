@@ -1,5 +1,5 @@
-mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'GlobalParameter', 'apService',
-									function($scope, GlobalHelper, GlobalParameter, apService){
+mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'GlobalParameter', 'apService', 'modalService',
+									function($scope, GlobalHelper, GlobalParameter, apService, modalService){
 	$scope.GlobalHelper = GlobalHelper;
 	ApiParam.prototype.setOptions = setApiOptions;
 	$scope.toCompleteSubcontractAwardParams = [
@@ -66,9 +66,11 @@ mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'Glo
 		});
 		
 		fn(paramsMap)
-		.then(function(response){
-			console.log(response);
-		})
+		.then(function(data){
+			if(angular.isObject(data)){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Record updated");
+			}
+		});
 	}
 
 	function ApiFn(name, fn, params){
