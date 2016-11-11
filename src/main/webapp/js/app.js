@@ -27,6 +27,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/userpreference-service.js',
                            'js/service/job-service.js',
                            'js/service/unit-service.js',
+                           'js/service/ap-service.js',
                            'js/system/rootscope-service.js',
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
@@ -1291,10 +1292,12 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',
-                           'js/controller/admin/admin-Revision-Subcontract.js',
-                           'js/controller/admin/admin-Revision-Payment.js',
-                           'js/controller/admin/admin-Revision-MainCert.js',
-                           'js/controller/admin/admin-Revision-Repackaging.js',
+                           'js/controller/admin/admin-Revisions-Subcontract.js',
+                           'js/controller/admin/admin-Revisions-Payment.js',
+                           'js/controller/admin/admin-Revisions-Addendum.js',
+                           'js/controller/admin/admin-Revisions-MainCert.js',
+                           'js/controller/admin/admin-Revisions-Repackaging.js',
+                           'js/controller/admin/admin-Revisions-Approval.js',
                            'js/controller/admin/admin-TransitUOMMaintenance.js',
                            'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
@@ -1341,6 +1344,36 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		},
 		controller: 'AdminRevisionsCtrl',
 		controllerAs: 'revisionsCtrl'
+	})
+	.state('admin.Revisions.Subcontract',{
+		url: '/Subcontract',
+		templateUrl: 'view/admin/admin-Revisions-Subcontract.html',
+		controller: 'AdminRevisionsSubcontractCtrl'
+	})
+	.state('admin.Revisions.Payment',{
+		url: '/Payment',
+		templateUrl: 'view/admin/admin-Revisions-Payment.html',
+		controller: 'AdminRevisionsPaymentCtrl'
+	})
+	.state('admin.Revisions.Addendum',{
+		url: '/Addendum',
+		templateUrl: 'view/admin/admin-Revisions-Addendum.html',
+		controller: 'AdminRevisionsAddendumCtrl'
+	})
+	.state('admin.Revisions.MainCert',{
+		url: '/MainCert',
+		templateUrl: 'view/admin/admin-Revisions-MainCert.html',
+		controller: 'AdminRevisionsMainCertCtrl'
+	})
+	.state('admin.Revisions.Repackaging',{
+		url: '/Repackaging',
+		templateUrl: 'view/admin/admin-Revisions-Repackaging.html',
+		controller: 'AdminRevisionsRepackagingCtrl'
+	})
+	.state('admin.Revisions.Approval',{
+		url: '/Approval',
+		templateUrl: 'view/admin/admin-Revisions-Approval.html',
+		controller: 'AdminRevisionsApprovalCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',

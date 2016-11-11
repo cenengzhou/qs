@@ -152,6 +152,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		getSubcontractorDetailsModal: getSubcontractorDetailsModal,
 		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
 		uiGridFilters : uiGridFilters,
+		camelToNormalString: camelToNormalString,
 	}
 	
     // ---
@@ -308,6 +309,11 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 			}
 		})
 		return resultList;
+	}
+	
+	function camelToNormalString (text){
+		return text.replace(/([A-Z])/g, ' $1')
+	    .replace(/^./, function(str){ return str.toUpperCase(); });
 	}
 }]);
 

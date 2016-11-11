@@ -21,7 +21,7 @@ public class RestTemplateHelper {
 	private WebServiceConfig webServiceConfig;
 	
 	public RestTemplate getRestTemplateForAPI(String hostname) {
-		return getRestTemplate(hostname, webServiceConfig.getPcmsApi("USERNAME"), webServiceConfig.getPcmsApi("PASSOWRD"));
+		return getRestTemplate(hostname, webServiceConfig.getPcmsApi("USERNAME"), webServiceConfig.getPcmsApi("PASSWORD"));
 	}
 	
 	public RestTemplate getRestTemplate(String hostname, String username, String password) {

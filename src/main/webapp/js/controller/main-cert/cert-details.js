@@ -1,5 +1,5 @@
-mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter',
-                                       function ($scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil, GlobalParameter) {
+mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter', 'attachmentService',
+                                       function ($q, $scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil, GlobalParameter, attachmentService) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.GlobalParameter = GlobalParameter;
@@ -187,7 +187,40 @@ mainApp.controller('CertDetailsCtrl', ['$scope', 'mainCertService', '$cookies', 
 		}
 	}
 
+	function checkAttachment(){
+		var deferral = $q.defer();
+		var nameObject = GlobalParameter['AbstractAttachment'].MainCertNameObject;
+		var textKey = $scope.jobNo + '|' + $scope.mainCertNo + '|';
+    	attachmentService.getAttachmentListForPCMS(nameObject, textKey)
+    	.then(function(data){
+    		deferral.resolve({
+    			attachmentSize: data.length
+    		});
+		});
+    	return deferral.promise;
+	}
+
 	$scope.postIPC = function() {
+		checkAttachment()
+		.then(function(response){
+			if(response.attachmentSize > 0) {
+				confirmPostIPC();
+			} else {
+				var modalOptions = {
+						bodyText: "There have no attachment, do you want to continue?"
+				};
+				confirmService.showModal({}, modalOptions)
+				.then(function (result) {
+					if(result == "Yes"){
+						confirmPostIPC();
+					}
+				});
+			}
+			
+		})
+
+	}
+	function confirmPostIPC(){
 		if(!$scope.fieldChanged){
 			if($scope.postingAmount < 0){
 				var modalOptions = {

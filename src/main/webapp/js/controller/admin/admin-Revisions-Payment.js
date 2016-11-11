@@ -1,4 +1,4 @@
-mainApp.controller('AdminRevisionPaymentCertCtrl',
+mainApp.controller('AdminRevisionsPaymentCtrl',
 		['$scope', '$http', 'modalService', 'GlobalParameter', 'blockUI', 'GlobalHelper', 'paymentService',
 		function($scope, $http, modalService, GlobalParameter, blockUI, GlobalHelper, paymentService) {
 	$scope.GlobalParameter = GlobalParameter;

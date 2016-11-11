@@ -1,0 +1,28 @@
+<div class="row well">
+	<form name="RevisionsResourceSummarySearch"
+		ng-submit="onSubmitResourceSummarySearch()" class="form">
+		<div class="col-md-8">
+			<input type="number" class="form-control" placeholder="Job Number:"
+				id="ResourceSummarySearch_jobNo" ng-model="resourceSummarySearch.jobNo">
+		</div>
+		<div ng-if="false" class="col-md-4">
+			<input type="number" class="form-control"
+				placeholder="Subcontract Number:"
+				id="MainCertSearch_certificateNumber"
+				ng-model="resourceSummarySearch.subcontractNo">
+		</div>
+		<div class="col-md-4">
+			<button type="submit" class="btn btn-block btn-primary"
+				id="resourceSummarySearch_submit">Search</button>
+		</div>
+	</form>
+</div>
+<div class="col-md-12"><br>
+	<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns ui-grid-auto-resize
+		ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+		resize ng-style="resizeWithOffset(365)">
+	</div>
+	<div class="row">
+		<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary">Update Resource Summary</button>
+	</div>
+</div>

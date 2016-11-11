@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.ApplicationConfig;
 import com.gammon.pcms.config.DeploymentConfig;
 import com.gammon.pcms.config.HibernateConfig;
 import com.gammon.pcms.config.LinkConfig;
 import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.security.SecurityServiceSpringImpl;
 
@@ -53,7 +55,11 @@ public class PropertiesController {
 	
 	@RequestMapping(value = "obtainCacheKey", method = RequestMethod.POST)
 	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
-		String cacheString = securityService.getCurrentUser().getFullname() + " | ";
+		User user = securityService.getCurrentUser();
+		String cacheString = user.getFullname() + " | ";
+		for(UserRole role : user.getUserRoleList()){
+			cacheString += role.getRoleName() + " | ";
+		}
 		switch(itemType){
 		case "COMPLETED_JOB_LIST":
 		case "ONGOING_JOB_LIST":

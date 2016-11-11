@@ -114,7 +114,9 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/ws/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}",
+							"service/ap/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}"}, 
+							method = RequestMethod.GET)
 	public CompleteAwardApprovalResponse completeAwardApproval(	HttpServletRequest request,
 															@PathVariable String jobNumber,
 															@PathVariable String packageNo,
@@ -154,7 +156,9 @@ public class APController {
 	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/ws/completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}",
+							"service/ap/completeAddendumApproval/{jobNumber}/{packageNo}/{user}/{approvalDecision}"},
+							method = RequestMethod.GET)
 	public CompleteAddendumApprovalResponse completeAddendumApproval(HttpServletRequest request,
 																@PathVariable String jobNumber,
 																@PathVariable String packageNo,
@@ -196,7 +200,9 @@ public class APController {
 	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeMainCertApproval/{jobNumber}/{mainCertNo}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/ws/completeMainCertApproval/{jobNumber}/{mainCertNo}/{approvalDecision}",
+							"service/ap/completeMainCertApproval/{jobNumber}/{mainCertNo}/{approvalDecision}"},
+							method = RequestMethod.GET)
 	public CompleteMainCertApprovalResponse completeMainCertApproval(	HttpServletRequest request,
 																		@PathVariable String jobNumber,
 																		@PathVariable String mainCertNo,
@@ -235,7 +241,9 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completePaymentApproval/{jobNumber}/{packageNo}/{approvalDecision}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/ws/completePaymentApproval/{jobNumber}/{packageNo}/{approvalDecision}",
+							"service/ap/completePaymentApproval/{jobNumber}/{packageNo}/{approvalDecision}"}, 
+							method = RequestMethod.GET)
 	public CompletePaymentApprovalResponse completePaymentApproval(	HttpServletRequest request,
 														@PathVariable String jobNumber,
 														@PathVariable String packageNo,
@@ -274,7 +282,9 @@ public class APController {
 	 * @param approvedOrRejected
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}", method = RequestMethod.GET)
+	@RequestMapping(path = {"/ws/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}",
+							"service/ap/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}"},
+							method = RequestMethod.GET)
 	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApproval(	HttpServletRequest request,
 																	@PathVariable String jobNumber,
 																	@PathVariable String packageNo,

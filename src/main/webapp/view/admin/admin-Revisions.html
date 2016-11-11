@@ -15,39 +15,20 @@
 			<section class="box box-primary">
 				<ul class="nav nav-tabs">
 					<li role="presentation" ng-class="{active:isSelected('Subcontract')}"><a
-						href ng-click="selectTab('Subcontract')">Subcontract</a></li>
+						href ui-sref="admin.Revisions.Subcontract" ng-click="selectTab('Subcontract')">Subcontract</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Payment')}"><a
-						href ng-click="selectTab('Payment')">Payment</a></li>
+						href ui-sref="admin.Revisions.Payment" ng-click="selectTab('Payment')">Payment</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Addendum'), disabled:true} "><a
-						href ng-click="false && selectTab('Addendum')">Addendum</a></li>
+						href ui-sref="admin.Revisions.Addendum" ng-click="selectTab('Addendum')">Addendum</a></li>
 					<li role="presentation" ng-class="{active:isSelected('MainCert')}"><a
-						href ng-click="selectTab('MainCert')">Main Certificate</a></li>
+						href ui-sref="admin.Revisions.MainCert" ng-click="selectTab('MainCert')">Main Certificate</a></li>
 					<li role="presentation" ng-class="{active:isSelected('Repackaging')}"><a
-						href ng-click="selectTab('Repackaging')">Repackaging</a></li>
+						href ui-sref="admin.Revisions.Repackaging" ng-click="selectTab('Repackaging')">Repackaging</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Approval')}"><a
+						href ui-sref="admin.Revisions.Approval" ng-click="selectTab('Approval')">Approval</a></li>
 				</ul>
 				
-				<div ng-show="isSelected('Subcontract')">
-					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Subcontract.html'">
-					</div>
-				</div>
-
-				<div ng-show="isSelected('Payment')">
-					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Payment.html'">
-					</div>
-				</div>
-
-				<div  ng-show="isSelected('Addendum')">
-					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-Addendum.html'">
-					</div>
-				</div>
-				<div ng-show="isSelected('MainCert')">
-					<div class="box col-md-12" ng-include="'view/admin/admin-Revisions-MainCert.html'">
-					</div>
-				</div>
-				<div ng-if="isSelected('Repackaging')" ng-controller="AdminRevisionRepackagingCtrl">
-					<div class="box col-md-12" compile="repackagingGridHTML">
-					</div>
-				</div>
+				<div class="box col-md-12" ui-view></div>
 			</section>
 		</div>
 

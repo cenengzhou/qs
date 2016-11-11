@@ -1,4 +1,4 @@
-mainApp.controller('AdminRevisionMainCertCtrl',
+mainApp.controller('AdminRevisionsMainCertCtrl',
 		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'mainCertService',
 		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, mainCertService) {
 	$scope.GlobalParameter = GlobalParameter;

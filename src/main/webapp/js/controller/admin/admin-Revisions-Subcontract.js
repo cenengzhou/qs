@@ -1,4 +1,4 @@
-mainApp.controller('AdminRevisionSubcontractCtrl',
+mainApp.controller('AdminRevisionsSubcontractCtrl',
 		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 
 		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, subcontractService) {
 	$scope.GlobalParameter = GlobalParameter;

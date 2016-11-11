@@ -1,4 +1,4 @@
-mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService', 'GlobalHelper', 'GlobalParameter',
+mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService', 'GlobalHelper', 'GlobalParameter',
 										function($scope, resourceSummaryService, modalService, GlobalHelper, GlobalParameter){
 	$scope.onSubmitResourceSummarySearch = onSubmitResourceSummarySearch;
 	$scope.onUpdateResourceSummaryRecord = onUpdateResourceSummaryRecord;
@@ -259,70 +259,6 @@ mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummarySe
 	];
 	
 	checkFieldList();
-	$scope.repackagingSearch = '\
-		<div>\
-		<div class="row well">\
-			<form name="RevisionsResourceSummarySearch"\
-				ng-submit="onSubmitResourceSummarySearch()" class="form">\
-				<div class="col-md-8">\
-					<input type="number" class="form-control" placeholder="Job Number:"\
-						id="ResourceSummarySearch_jobNo" ng-model="resourceSummarySearch.jobNo">\
-				</div>\
-				<div ng-if="false" class="col-md-4">\
-					<input type="number" class="form-control"\
-						placeholder="Subcontract Number:"\
-						id="MainCertSearch_certificateNumber"\
-						ng-model="resourceSummarySearch.subcontractNo">\
-				</div>\
-				<div class="col-md-4">\
-					<button type="submit" class="btn btn-block btn-primary"\
-						id="resourceSummarySearch_submit">Search</button>\
-				</div>\
-			</form>\
-		</div>\
-		';
-	$scope.repackagingGridHTML = $scope.repackagingSearch + '\
-		<div class="col-md-12"><br>\
-			<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns\
-				ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"\
-				resize ng-style="resizeWithOffset(365)">\
-			</div>\
-			<div class="row">\
-				<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary">Update Resource Summary</button>\
-			</div>\
-		</div>\
-		';
-	$scope.repackagingHtml = $scope.repackagingSearch + '\
-			<form name="RevisionsResourceSummaryRecord"\
-				ng-submit="onUpdateResourceSummaryRecord(resourceSummary)" ng-repeat="resourceSummary in resourceSummaryList">\
-				<div class="row">\
-					<fieldset>\
-						<div ng-repeat="field in fieldList" class="col-md-6" style="padding: 5px">\
-							<div class="form-group">\
-								<label for="ResourceSummary_{{field.name}}"\
-									class="control-label">{{field.display}}</label>\
-								<div ng-if="!field.isObject" >\
-									<input ng-if="field.type==\'text\'" type="text" class="form-control"\
-										id="ResourceSummary_{{field.name}}" ng-model="resourceSummary[field.name]" ng-disabled={{field.readOnly}}>\
-									<input ng-if="field.type==\'number\'" type="number" step="1.000" class="form-control"\
-									id="ResourceSummary_{{field.name}}" ng-model="resourceSummary[field.name]" ng-disabled={{field.readOnly}}>\
-									<select ng-if="field.type==\'boolean\'" ng-model="resourceSummary[field.name]" ng-options="key as value for (key, value) in field.options" class="form-control"></select>\
-								</div>\
-								<div ng-if="field.isObject">\
-									<input ng-if="field.isObject" type="text" class="form-control"\
-									id="ResourceSummary_{{field.name}}" ng-model="resourceSummary[field.name][\'id\']" ng-disabled={{field.readOnly}}>\
-								</div>\
-							</div>\
-						</div>\
-					</fieldset>\
-				</div>\
-				<div class="row">\
-					<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Update Resource Summary ({{resourceSummary[\'id\']}})</button>\
-				</div>\
-			<hr/>\
-			<div class="clearfix"></div>\
-		</form>\
-		';
 	
 	function onSubmitResourceSummarySearch(){
 		resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(
@@ -353,14 +289,9 @@ mainApp.controller('AdminRevisionRepackagingCtrl', ['$scope', 'resourceSummarySe
 	
 	function checkFieldList(){
 		$scope.fieldList.forEach(function(field){
-			if(!field.display) field.display = camelToNormalString(field.name);
+			if(!field.display) field.display = GlobalHelper.camelToNormalString(field.name);
 			field.readOnly = field.readOnly ? true : false; 
 		});
 	}
 	
-	function camelToNormalString (text){
-		return text.replace(/([A-Z])/g, ' $1')
-	    .replace(/^./, function(str){ return str.toUpperCase(); });
-	}
-
 }]);

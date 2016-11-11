@@ -139,7 +139,8 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 					             	  autoCompleteList: $scope.divisions, querySearch: querySearch, selectedItemChange: selectedItemChange, searchTextChange: searchTextChange},
 						                 {field: 'jobNumber', inputType: 'text', validatePattern: VALIDATE_JOBNO, validateMessage:VALIDATE_JOBNO_MESSAGE, label: 'Job No', defaultValue: $scope.jobNo},
 						                 {field: 'subcontractNumber', inputType: 'text', label: 'Subcontract No'},
-						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'}
+						                 {field: 'subcontractorNumber', inputType: 'text', label: 'Subcontractor No'},
+						                 {field: 'periods', inputType: 'periods'}
 					  ],
 					  selectiveFields:['company', 'jobNumber', 'division', 'subcontractorNumber']
 					},
@@ -222,7 +223,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 		if(report.requiredFields){
 			report.requiredFields.forEach(function(required){
 				if(!selectedReportUrl.searchValues[required]) {
-					msg += camelToNormalString(required) + ' is required<br>';
+					msg += GlobalHelper.camelToNormalString(required) + ' is required<br>';
 					result = false;
 				}
 			})
@@ -234,7 +235,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 			})
 			if(!selectiveResult) {
 				var selectiveMessage = '';
-				report.selectiveFields.forEach(function(text){selectiveMessage += camelToNormalString(text).replace('Number', 'No.') + ', ';});
+				report.selectiveFields.forEach(function(text){selectiveMessage += GlobalHelper.camelToNormalString(text).replace('Number', 'No.') + ', ';});
 				msg += 'Please enter one of below field:<br>' + selectiveMessage.substring(0, selectiveMessage.length-2);
 				result = false;
 			}
@@ -263,11 +264,6 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 			a.push(i);
 		}
 		return a;
-	}
-	
-	function camelToNormalString (text){
-		return text.replace(/([A-Z])/g, ' $1')
-	    .replace(/^./, function(str){ return str.toUpperCase(); });
 	}
 	
 	function querySearch (query, items) {
@@ -310,9 +306,9 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
     
 	function processReport(){
 		reports.forEach(function(report){
-			if(!report.title) report.title = camelToNormalString(report.name);
+			if(!report.title) report.title = GlobalHelper.camelToNormalString(report.name);
 			if(report.searchFields) report.searchFields.forEach(function(searchField){
-				if(!searchField.label) searchField.label = camelToNormalString(searchField.field)
+				if(!searchField.label) searchField.label = GlobalHelper.camelToNormalString(searchField.field)
 				if(searchField.field === 'company') searchField.autoCompleteList = $scope.companies;
 				if(searchField.field === 'division') searchField.autoCompleteList = $scope.divisions;
 			})
