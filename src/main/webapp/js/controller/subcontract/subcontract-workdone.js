@@ -185,8 +185,8 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 
 			             {field: 'remark', width: 80, visible:false, enableCellEdit: false},
 			             {field: 'contraChargeSCNo', width: 80, visible:false, enableCellEdit: false},
-			             {field: 'sequenceNo', width: 80, visible:false, enableCellEdit: true},
-			             {field: 'resourceNo', width: 80, visible:false, enableCellEdit: true},
+			             {field: 'sequenceNo', width: 80, visible:true, enableCellEdit: true},
+			             {field: 'resourceNo', width: 80, visible:true, enableCellEdit: true},
 			             {field: 'balanceType', width: 80, visible:false, enableCellEdit: false}
 			             ]
 
@@ -322,8 +322,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	$scope.save = function () {
 		var currTotalCumIVQty = roundUtil.round($scope.gridApiIV.grid.columns[5].getAggregationValue(), 4);
 		var currTotalCumIVAmount = roundUtil.round($scope.gridApiIV.grid.columns[6].getAggregationValue(), 2);
-		
-		if(currTotalCumIVQty != $scope.totalCumIVQty || currTotalCumIVAmount != $scope.totalCumIVAmount){
+		if(currTotalCumIVAmount != $scope.totalCumIVAmount){ //currTotalCumIVQty != $scope.totalCumIVQty
 			 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total Cumulative Work Done Quantity/Amount is not balanced.");
 			 return;
 		}else{

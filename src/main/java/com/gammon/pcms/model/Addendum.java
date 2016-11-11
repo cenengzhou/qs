@@ -358,7 +358,7 @@ public class Addendum extends PcmsPersistedAuditObject {
 	}
 
 	@Column(name = "USERNAME_PREPARED_BY",
-			length = 40)
+			length = 60)
 	public String getUsernamePreparedBy() {
 		return this.usernamePreparedBy;
 	}
