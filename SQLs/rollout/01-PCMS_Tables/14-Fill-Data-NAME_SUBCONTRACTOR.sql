@@ -16,7 +16,8 @@ DECLARE
   SQL_STRING            VARCHAR2(512);
   UPDATE_SUBCONTRACT    NUMBER:=0;
   UPDATE_TENDER         NUMBER:=0;
-  DEBUGON				NUMBER:=1;
+  UPDATE_ADDENDUM		NUMBER:=0;
+  DEBUGON				NUMBER:=0;
 BEGIN
 	vendor_list('1')	    :='Gammon Construction Limited';
 	vendor_list('2')	    :='Gammon Building Construction Limited';
@@ -3728,28 +3729,33 @@ BEGIN
  
   i := vendor_list.FIRST;
   WHILE i IS NOT NULL LOOP
-    --DBMS_Output.PUT_LINE ('vendor ' || i || ' is ' || vendor_list(i));
     SQL_STRING:='update ' || PCMS_SCHEMA || '.SUBCONTRACT set NAME_SUBCONTRACTOR = ''' || REPLACE( vendor_list(i),'''','''''') || ''' where VENDORNO = ''' || i || '''';
     IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_STRING); END IF;
     execute immediate SQL_STRING;
-    
     IF(SQL%ROWCOUNT>0) THEN
       UPDATE_SUBCONTRACT:=UPDATE_SUBCONTRACT + SQL%ROWCOUNT;
-      --DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on subcontract');
     END IF;
     
     SQL_STRING:='update ' || PCMS_SCHEMA || '.TENDER set NAME_SUBCONTRACTOR = ''' || REPLACE( vendor_list(i),'''','''''') || ''' where VENDORNO = ''' || i || '''';
     IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_STRING); END IF;
     execute immediate SQL_STRING;
-    
     IF(SQL%ROWCOUNT>0) THEN
       UPDATE_TENDER:=UPDATE_TENDER + SQL%ROWCOUNT;
-      --DBMS_Output.PUT_LINE ('Updated vender:' || i || ' ''' || vendor_list(i) || ''' on tender');
     END IF;
+    
+    SQL_STRING:='update ' || PCMS_SCHEMA || '.ADDENDUM set NAME_SUBCONTRACTOR = ''' || REPLACE( vendor_list(i),'''','''''') || ''' where NO_SUBCONTRACTOR = ''' || i || '''';
+    IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_STRING); END IF;
+    execute immediate SQL_STRING;
+    IF(SQL%ROWCOUNT>0) THEN
+      UPDATE_ADDENDUM:=UPDATE_ADDENDUM + SQL%ROWCOUNT;
+    END IF;
+
     i := vendor_list.NEXT(i); 
   END LOOP;
+  
   DBMS_Output.PUT_LINE ('Total update on subcontract:' || UPDATE_SUBCONTRACT);
   DBMS_Output.PUT_LINE ('Total update on tender     :' || UPDATE_TENDER);
+  DBMS_Output.PUT_LINE ('Total update on addendum:' || UPDATE_ADDENDUM);
 END;
 /
 
