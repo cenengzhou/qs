@@ -207,7 +207,7 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 				confirmPostIPC();
 			} else {
 				var modalOptions = {
-						bodyText: "There have no attachment, do you want to continue?"
+						bodyText: "There is no attachment, do you want to continue?"
 				};
 				confirmService.showModal({}, modalOptions)
 				.then(function (result) {
