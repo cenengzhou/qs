@@ -334,7 +334,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			            	filter:{condition: uiGridConstants.filter.EXACT} 
 			             },
 			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },
-			             { field: 'supplierApproval', displayName: "Approved", width: '80', enableCellEdit: false, headerCellClass:'gridHeaderText',
+			             { field: 'subcontractorApproval', displayName: "Approved", width: '80', enableCellEdit: false, headerCellClass:'gridHeaderText',
 			            	 filter: { selectOptions: approveOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}, 
 			             },
             			 ]

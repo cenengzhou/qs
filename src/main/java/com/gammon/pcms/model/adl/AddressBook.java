@@ -34,9 +34,9 @@ public class AddressBook implements java.io.Serializable {
 	private String addressBookTypeCode;
 	private String addrBookType;
 	private String supplierApprovalCode;
-	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
 	private String supplierApproval;
 	private String subcontractorApprovalCode;
+	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
 	private String subcontractorApproval;
 	private String vendorTypeCode;
 	private String vendorType;

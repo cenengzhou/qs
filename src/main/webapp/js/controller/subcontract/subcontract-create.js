@@ -104,10 +104,11 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	$scope.resetInternalJob = function (){
 		$scope.subcontract.internalJobNo = "";
 	}
-	
+	$scope.paymentTermsHints;
 	$scope.setPaymentTermsDescription = function(terms){
 		var paymentTerms = GlobalParameter.getObjectById(GlobalParameter.paymentTerms, terms);
-		if(paymentTerms) angular.element('#paymentTermsDescriptionTextarea').val(paymentTerms.id + ' - ' + paymentTerms.value);
+		$scope.paymentTermsHints = paymentTerms;
+//		if(paymentTerms) angular.element('#paymentTermsDescriptionTextarea').val(paymentTerms.id + ' - ' + paymentTerms.value);
 	}
 
 	//Save Function
