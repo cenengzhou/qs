@@ -321,7 +321,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 				return;
 			}
 
-			updatePaymentDetails(dataRows);
+			updatePaymentDetails($scope.gridOptions.data);
 		}
 	}
 	

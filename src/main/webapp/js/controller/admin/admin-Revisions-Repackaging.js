@@ -19,6 +19,7 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 			enableCellSelection: false,
 			rowEditWaitInterval :-1,
 			columnDefs: [
+			             { field: 'id', width: '60', displayName: "ID", enableCellEdit: false },
 			             { field: 'packageNo', width: '100', displayName: "Subcontract No.", enableCellEdit: true },
 			             { field: 'resourceDescription', width: '200', displayName: "Description", enableCellEdit: true },
 			             { field: 'objectCode', width: '100', displayName: "Object Code", enableCellEdit: true },

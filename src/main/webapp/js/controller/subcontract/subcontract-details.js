@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants', 'GlobalHelper', '$filter',
-                                              function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants, GlobalHelper, $filter) {
+mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', 'uiGridConstants', 'uiGridGroupingConstants', 'GlobalHelper', '$filter', 'modalService',
+                                              function($scope , subcontractService, uiGridConstants, uiGridGroupingConstants, GlobalHelper, $filter, modalService) {
 	getSubcontract();
 	getSCDetails();
 	
@@ -327,4 +327,10 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		});
 	}
 
+	
+	$scope.showRetentionDetails = function(){
+		modalService.open('md', 'view/subcontract/modal/subcontract-retention-details-modal.html', 'RetentionDetailsModalCtrl');
+	}
+	
+	
 }]);

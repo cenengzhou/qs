@@ -120,7 +120,7 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 	};
 
 	$scope.save = function() {
-		var totalRR = $scope.gridApi.grid.columns[7].getAggregationValue();
+		var totalRR = roundUtil.round($scope.gridApi.grid.columns[7].getAggregationValue(), 2);
 		if(totalRR != $scope.cumRetentionAmount){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 
 					"Total Release Amount must be equal to Cumulative Retention Amount. \r\n"

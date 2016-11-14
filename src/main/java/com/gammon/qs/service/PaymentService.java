@@ -2498,9 +2498,9 @@ public class PaymentService{
 			double cumRetention = CalculationUtil.round(totalCertAmount*paymentCert.getSubcontract().getInterimRentionPercentage()/100.0, 2);
 			
 			//Define upper limit of retention
-			double retentionUpperLimit = paymentCert.getSubcontract().getRetentionAmount().doubleValue();
+			double retentionUpperLimit = CalculationUtil.round(paymentCert.getSubcontract().getRetentionAmount().doubleValue(), 2);
 			if (paymentCert.getSubcontract().getRetentionAmount().compareTo(paymentCert.getSubcontract().getAccumlatedRetention()) < 0)
-				retentionUpperLimit = paymentCert.getSubcontract().getAccumlatedRetention().doubleValue();
+				retentionUpperLimit = CalculationUtil.round(paymentCert.getSubcontract().getAccumlatedRetention().doubleValue(), 2);
 			
 			//SCPayment's RT cannot be larger than "Retention Amount"/"Accumulated Retention Amount" in SC Header
 			if (cumRetention>retentionUpperLimit)
@@ -2519,7 +2519,9 @@ public class PaymentService{
 				paymentDetailRT.setCumAmount(cumRetention);
 				paymentDetailRT.setMovementAmount(cumRetention - preRTAmount);
 				paymentDetailDao.update(paymentDetailRT);
+				
 			}
+			
 			
 			List<PaymentCertDetail> paymentDetailMRList = paymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
 			if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){

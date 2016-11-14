@@ -3655,7 +3655,7 @@ public class SubcontractService {
 			//check if subcontract is submitted or awarded
 			Subcontract subcontractInDB = subcontractHBDao.obtainSubcontract(jobNo, subcontract.getPackageNo());
 			if(subcontractInDB != null){
-				if(subcontractInDB.getSubcontractStatus() != null && subcontractInDB.getSubcontractStatus() >= 300){
+				if(subcontractInDB.getSubcontractStatus() != null && subcontractInDB.getSubcontractStatus() == 330 || subcontractInDB.getSubcontractStatus() == 500){
 					return "Subcontract has been awarded or submitted.";
 				}
 				

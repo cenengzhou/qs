@@ -128,8 +128,8 @@ public class MainCertController {
 
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateMainCertFromF03B14Manually", method = RequestMethod.POST)
-	public void updateMainCertFromF03B14Manually(){
-		mainCertService.updateMainCertFromF03B14Manually();
+	public Boolean updateMainCertFromF03B14Manually(){
+		return mainCertService.updateMainCertFromF03B14Manually();
 	}
 	
 	

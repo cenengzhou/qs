@@ -21,7 +21,6 @@ import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAdd
 import com.gammon.jde.webservice.serviceRequester.MainCertReceiveDateQueryManager.getMainCertReceiveDate.GetMainCertReceiveDateResponseObj;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
 import com.gammon.pcms.dto.rs.provider.response.jde.MainCertReceiveDateResponse;
@@ -409,7 +408,17 @@ public class MainCertService {
 	
 	
 	public List<Integer> getMainCertNoList(String jobNo) throws DatabaseOperationException {
-		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(jobNo);
+		List<String> parentJobList = new ArrayList<String>();
+		String parentJobNo = jobNo;
+		parentJobList = jobInfoService.obtainParentJobList(jobNo);
+		while(parentJobList.size()==1){//loop until it gets the actual parent job
+			parentJobNo = parentJobList.get(0);
+			parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
+		}
+		
+		logger.info("Job: "+jobNo+" - Parent Job: "+parentJobNo);
+		
+		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(parentJobNo);
 		return mainCertNoList;
 	}
 	

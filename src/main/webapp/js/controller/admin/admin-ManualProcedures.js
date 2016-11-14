@@ -97,7 +97,10 @@ mainApp.controller('AdminManualProceduresCtrl',
 		mainCertService.updateMainCertFromF03B14Manually()
 		.then(function(data){
 //			$scope.blockProcedures.stop();
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Synchronize Main Contract Certificate From F03B14 completed.");;
+			if(data)
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Synchronize Main Contract Certificate From F03B14 completed.");
+			else 
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Synchronize Main Contract Certificate From F03B14 failed.");
 		},function(data){
 //			$scope.blockProcedures.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
