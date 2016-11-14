@@ -1287,6 +1287,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	           'js/service/payment-service.js',
                	           'js/service/transit-service.js',
                	           'js/service/quartz-service.js',
+               	           'js/service/addendum-service.js',
                	           'js/service/resource-summary-service.js',
                	           'js/service/audithousekeep-service.js',
                            'js/controller/admin/admin-session.js',
