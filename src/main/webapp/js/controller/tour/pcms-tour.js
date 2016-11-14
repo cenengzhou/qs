@@ -118,8 +118,9 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
     }
  
     $scope.$on('$stateChangeSuccess', function(){
-		if($location.path().indexOf('job-select') < 0) $rootScope.routedToDefaultJob = true;
-		if($location.path().indexOf('subcontract-award') < 0) $rootScope.createSubcontractStepTourShow = 0;
+		var currentPath = $location.path();
+    	if(currentPath.indexOf('job-select') < 0) $rootScope.routedToDefaultJob = true;
+		if(currentPath.indexOf('subcontract-award') < 0 && currentPath.indexOf('payment') < 0) $rootScope.createSubcontractStepTourShow = 0;
 		$timeout(function(){
 			$rootScope.toruAutoStartCheck();
 		},500);
@@ -292,7 +293,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 					);
 			new TourGuide(
 					'createSubcontract',
-					null,//'image\\tour\\createSubcontract_preview.png',
+					'image\\tour\\createSubcontract_preview.png',
 					false,
 					['jobNo'],
 					'/subcontract-select',
@@ -724,7 +725,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			},
 			{
 				type:'function',
-				fn:function(next){angular.element('[data-target="#AddressBook"]').click()}
+				fn:function(next){if(next)angular.element('[data-target="#AddressBook"]').click()}
 			},
 			{
 				type:'function',
@@ -744,7 +745,8 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 				heading:'Create Subcontract',
 				text:'Add tenderer',
 				placement:'bottom',
-				attachToBody:true
+				attachToBody:true,
+				advanceOn:{element:'#subcontractStep4Add', event:'click'}
 			},
 			{
 				type:'function',
@@ -761,16 +763,112 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			}
 		]);
 	pushArray($rootScope.tourArray['createSubcontractStep5'].tourConfig, [
-		
+		{
+				type:'function',
+				fn:$rootScope.hideCurtain
+		},
+		{
+				type: 'element',
+				selector: '#createSubcontractStep5AddBtn',
+				heading: 'Add variance',
+				text: 'Click to add variance',
+				placement: 'top',
+				attachToBody: true,
+				advanceOn:{element:'#createSubcontractStep5AddBtn', event:'click'}
+			},
+			{
+				type: 'element',
+				selector: '#createSubcontractStep5Grid',
+				heading: 'Add variance',
+				text: 'Enter variance information',
+				placement: 'top',
+				attachToBody: true
+			},
+			{
+				type: 'element',
+				selector: '#createSubcontractStep5SaveBtn',
+				heading: 'Add variance',
+				text: 'Save variance information',
+				placement: 'top',
+				attachToBody: true,
+				advanceOn:{element:'#createSubcontractStep5SaveBtn', event:'click'}
+			},
+			{
+				type:'location_change',
+				path:'/subcontract-award/tab/dates'
+			}
 		]);
 	pushArray($rootScope.tourArray['createSubcontractStep6'].tourConfig, [
-		
+			{
+				type:'function',
+				fn:$rootScope.hideCurtain
+			},
+			{
+				type:'element',
+				selector: '#createSubcontractStep6Dates',
+				heading: 'Contractual Date',
+				text: 'Enter dates information',
+				placement: 'top',
+				attachToBody: true
+			},
+			{
+				type: 'element',
+				selector: '#createSubcontractStep6SaveBtn',
+				heading: 'Contractual Date',
+				text: 'Save date',
+				placement: 'top',
+				attachToBody: true,
+				scroll: true,
+				advanceOn:{element:'#createSubcontractStep6SaveBtn', event:'click'}
+			},
+			{
+				type:'location_change',
+				path:'/subcontract-award/tab/attachment'
+			}
 		]);
 	pushArray($rootScope.tourArray['createSubcontractStep7'].tourConfig, [
-		
+			{
+				type:'function',
+				fn:$rootScope.hideCurtain
+			},
+			{
+				type:'element',
+				selector: '#attachmentPanelBody',
+				heading: 'Add attachment',
+				text: 'Add attachment',
+				placement: 'top',
+				attachToBody: true
+			},
+			{
+				type:'location_change',
+				path:'/subcontract-award/tab/summary'
+			}
 		]);
 	pushArray($rootScope.tourArray['createSubcontractStep9'].tourConfig, [
-		
+			{
+				type:'element',
+				selector: '#createSubcontractStep9PrintBtn',
+				heading: 'Award Subcontract',
+				text: 'Print PDS/07/Form4',
+				placement: 'left',
+				scroll: false,
+				attachToBody: true
+			},
+			{
+				type:'element',
+				selector: '#createSubcontractStep9SubmitBtn',
+				heading: 'Award Subcontract',
+				text: 'Submit to Approval System',
+				placement: 'top',
+				scroll: true,
+				attachToBody: true,
+				advanceOn:{element:'#createSubcontractStep9SubmitBtn', event:'click'}
+			},
+			{
+				type: 'function',
+				fn: function(next){if(next)$rootScope.createSubcontractStepTourShow = 0;}
+			},
+
 		]);
 	pushArray($rootScope.tourArray['createPayment'].tourConfig, [
 		{
@@ -1049,7 +1147,7 @@ mainApp.controller('TourCtrl', ['$rootScope', '$scope', '$timeout', '$interval',
 			attachToBody: true,
 			scroll: true,
 			advanceOn: {element: '#submitBtn', event: 'click'}
-		}
+		},
 	]);
 	
 

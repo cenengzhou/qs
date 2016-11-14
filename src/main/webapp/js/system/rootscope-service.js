@@ -208,7 +208,9 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 								||GlobalHelper.containRole('ROLE_PCMS_QS_ADMIN', $rootScope.user.UserRoles);
 		$rootScope.showIMSAdmin = GlobalHelper.containRole('ROLE_QS_IMS_ADM', $rootScope.user.UserRoles)
 								||GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $rootScope.user.UserRoles);
-		if($rootScope.showQSAdmin || $rootScope.showIMSAdmin){
+		$rootScope.showIMSEnquiry = GlobalHelper.containRole('ROLE_QS_IMS_ENQ', $rootScope.user.UserRoles)
+								||GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $rootScope.user.UserRoles);
+		if($rootScope.showQSAdmin || $rootScope.showIMSAdmin || $rootScope.showIMSEnquiry){
 			$rootScope.showAdminMenu = true;
 		} else {
 			$rootScope.showAdminMenu = GlobalHelper.containRole('ROLE_QS_IMS_ENQ', $rootScope.user.UserRoles)

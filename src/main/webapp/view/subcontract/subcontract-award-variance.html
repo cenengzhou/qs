@@ -9,7 +9,7 @@
 				<div class="box-body">
 					<div class="row">
 						<div class="col-md-3 col-sm-6 col-xs-12">
-							<button type="button"
+							<button type="button" id="createSubcontractStep5AddBtn"
 								class="btn btn-lg btn-block btn-danger"	ng-click="addData()" ng-hide = "disableButtons" ng-disabled="disableButtons">
 								<i class="fa fa-plus-circle"></i> <small>Add</small>
 							</button>
@@ -17,12 +17,12 @@
 					</div>
 
 					<div class="row m-t-20">
-						<div class="col-md-12">
+						<div class="col-md-12" id="createSubcontractStep5Grid">
 							<div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-resize-columns
 								ui-grid-cellnav ui-grid-edit ui-grid-row-edit ui-grid-exporter  ng-style="{height: 300+'px'}"class="grid"></div>
 						</div>
 						<div class="col-md-12">
-							<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-hide = "disableButtons" ng-disabled="disableButtons">
+							<button id="createSubcontractStep5SaveBtn" class="m-t-5 btn btn-primary btn-block" ng-click="save()" ng-hide = "disableButtons" ng-disabled="disableButtons">
 								Save <span class="fa fa-save"></span>
 							</button>
 						</div>
