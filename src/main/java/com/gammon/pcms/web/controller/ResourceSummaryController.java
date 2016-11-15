@@ -186,7 +186,7 @@ public class ResourceSummaryController {
 		try {
 			result = resourceSummaryService.postIVAmounts(jobNo, finalized);
 		} catch (Exception e) {
-			result = "IV cannot be updated.";
+			result = "IV cannot be posted.";
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 		} 

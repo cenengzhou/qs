@@ -418,7 +418,7 @@ public class MainCertService {
 		
 		logger.info("Job: "+jobNo+" - Parent Job: "+parentJobNo);
 		
-		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(parentJobNo);
+		List<Integer> mainCertNoList = mainCertHBDao.getMainCertNoList(parentJobNo, "300");
 		return mainCertNoList;
 	}
 	

@@ -184,12 +184,15 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> getMainCertNoList(String noJob) throws DatabaseOperationException {
+	public List<Integer> getMainCertNoList(String noJob, String status) throws DatabaseOperationException {
 		Criteria criteria = getSession().createCriteria(getType());
 
 		// Where
 		criteria.add(Restrictions.eq("jobNo", noJob));
-		
+		if(!GenericValidator.isBlankOrNull(status)){
+			criteria.add(Restrictions.eq("certificateStatus", status));
+		}
+				
 		//Order By
 		criteria.addOrder(Order.desc("certificateNumber"));
 

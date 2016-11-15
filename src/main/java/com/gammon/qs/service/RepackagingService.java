@@ -159,7 +159,7 @@ public class RepackagingService {
 
 		entryInDB.setStatus(repackaging.getStatus());
 		entryInDB.setRemarks(repackaging.getRemarks());
-		if(repackaging.getRemarks().length()>255)
+		if(repackaging.getRemarks() != null && repackaging.getRemarks().length()>255)
 			entryInDB.setRemarks(repackaging.getRemarks().substring(0, 255));
 
 		repackagingDao.saveOrUpdate(entryInDB);
