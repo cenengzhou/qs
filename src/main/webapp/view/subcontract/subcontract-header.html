@@ -104,8 +104,10 @@
 														</div>
 														<div class="form-group col-md-6">
 															<div class="input-group col-md-12">
-																<label> {{subcontract.paymentStatus ==='I' ?
-																	'Interim':'Final'}}</label>
+																<label> {{subcontract.paymentStatus ==='I' ? 'Interim':
+																subcontract.paymentStatus ==='F'?'Final':
+																subcontract.paymentStatus ==='D'?'Payment Requisition':
+																'No Payment'}}</label>
 															</div>
 														</div>
 														<div class="col-md-6">
