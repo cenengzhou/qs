@@ -1,6 +1,6 @@
-grant select, insert On PRODDTA.F58011 to PCMSDATAPROD;
+Grant select, Insert On PRODDTA.F58011 To PCMSDATAPROD;
 
-create or replace PROCEDURE PCMSDATAPROD.P_QS_UPDATE_F58011  AS
+create or replace PROCEDURE            PCMSDATAPROD.P_QS_UPDATE_F58011  AS
 	Type Qscurtype Is Ref Cursor;
 
 	v_mcu	CHAR(12);
@@ -81,7 +81,6 @@ Begin
 	<<Exit_Here>>
   Null;
 END P_QS_UPDATE_F58011;
-/
 
-grant EXECUTE on PCMSDATAPROD.P_QS_UPDATE_F58011 to PCMSUSER_ROLE;
-/
+
+--grant EXECUTE on PCMSDATAPROD.P_QS_UPDATE_F58011 to PCMSUSER_ROLE;

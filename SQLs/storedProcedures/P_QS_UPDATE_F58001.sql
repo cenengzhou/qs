@@ -1,3 +1,6 @@
+Grant Select, Insert, Update On PRODDTA.F58001 To PCMSDATAPROD;
+Grant Select, Insert, Update On PRODDTA.F58001 To PCMSUSER_ROLE;
+
 create or replace PROCEDURE            PCMSDATAPROD.P_QS_UPDATE_F58001  AS
 	Type Qscurtype Is Ref Cursor;
 	v_mcu	CHAR(12);
@@ -222,5 +225,3 @@ END P_QS_UPDATE_F58001;
 
 Grant Execute On PCMSDATAPROD.P_QS_UPDATE_F58001 To PCMSDATAPROD;
 grant EXECUTE on PCMSDATAPROD.P_QS_UPDATE_F58001 to PCMSUSER_ROLE;
-Grant Select, Insert, Update On PRODDTA.F58001 To PCMSDATAPROD;
-Grant Select, Insert, Update On PRODDTA.F58001 To PCMSUSER_ROLE;
