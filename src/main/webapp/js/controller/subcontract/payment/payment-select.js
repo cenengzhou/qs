@@ -1,11 +1,12 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q',
-                                   function($scope, $uibModal, modalService, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q) {
+mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService',
+                                   function($scope, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	loadData();
-	
 	
 	$scope.removeDefaultAnimation = function (){
 		$animate.enabled(false);
@@ -16,8 +17,19 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$ani
 		getPaymentCertList();
 		getTotalPostedCertAmount();
 		getPaymentResourceDistribution();
+		rootscopeService.gettingJob($scope.jobNo)
+		.then(function(response){
+			$scope.job = response.job;
+		});
 	}
 	
+	$scope.showPaymentHistory = function(payment){
+		$scope.searchEntity = {};
+		$scope.searchEntity.company = $scope.job.company;
+		$scope.searchEntity.supplierNumber = payment.subcontract.vendorNo;
+		modalService.open('md', 'view/enquiry/modal/enquiry-supplierledgerdetails.html', 'EnquirySupplierLedgerDetailsCtrl', 'Success', $scope);
+	};
+
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(

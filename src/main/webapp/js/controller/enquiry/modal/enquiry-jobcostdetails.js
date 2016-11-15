@@ -129,7 +129,15 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			             },
 			             { field: 'entityCompanyKey', width: '80', displayName: 'Company', enableCellEdit: false, visible:false},
 			             { field: 'currencyCode', width: '80', displayName: 'Currency', enableCellEdit: false, visible:false},
-			             { field: 'quantityUnitOfMeasurement', width:'100', displayName: "Units", enableCellEdit: false },
+			             { field: 'quantity', width:'100', displayName: "Units", enableCellEdit: false, cellFilter: 'number:3',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.quantity < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 
+			             },
 			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
 			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},

@@ -2,6 +2,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function($http, $q, $window, GlobalHelper, $rootScope, jobService, unitService, adlService, SessionHelper){
 	// Return public API.
     return({
+    	gettingJob:			gettingJob,
     	gettingJobList:		gettingJobList,
     	gettingCompanies:	gettingCompanies,
     	gettingDivisions:	gettingDivisions,
@@ -20,6 +21,25 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	setEnv:				setEnv,
     	getShowAdminMenu:	getShowAdminMenu,
     });
+    
+    function gettingJob(jobNo){
+    	var deferral = $q.defer();
+    	if(!$rootScope.jobs) $rootScope.jobs = {};
+    	if($rootScope.jobs[jobNo] && $rootScope.jobs[jobNo].jobNumber == jobNo){
+    		deferral.resolve({
+    			job: $rootScope.jobs[jobNo]
+    		});
+    	} else{
+    		jobService.getJob(jobNo)
+    		.then(function(data){
+    			$rootScope.jobs[jobNo] = data;
+    			deferral.resolve({
+        			job: $rootScope.jobs[jobNo]
+        		})
+    		})
+    	}
+    	return deferral.promise;
+    }
     
     var cacheKeyArray = {};
 //  1. 		!$rootScope.jobs

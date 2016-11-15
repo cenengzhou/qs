@@ -63,7 +63,15 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 			             { field: 'accountSubLedger', width:'100', displayName: "Sub Ledger", enableCellEdit: false },
 			             { field: 'entityCompanyKey', width:'100', displayName: "Entity Company Key", enableCellEdit: false },
 			             { field: 'currencyCode', width:'100', displayName: "Currency", enableCellEdit: false },
-			             { field: 'quantityUnitOfMeasurement', width:'100', displayName: "Units", enableCellEdit: false },
+			             { field: 'quantity', width:'100', displayName: "Units", enableCellEdit: false, cellFilter: 'number:3',
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 var c = 'text-right';
+			            		 if(row.entity.quantity < 0){
+			            			 c +=' red';
+			            		 }
+			            		 return c;
+			            	 }, 			            	 
+			             },
 			             { field: 'explanationRemark', width:'100', displayName: "Remark", enableCellEdit: false },
 			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },

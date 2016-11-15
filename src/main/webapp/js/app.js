@@ -673,6 +673,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/subcontract/payment/payment-select.js',
                            'js/service/payment-service.js',
+                           'js/controller/enquiry/modal/enquiry-supplierledgerdetails.js',
+                           'js/service/jobcost-service.js',
                     ] 
                 });
             }]
@@ -839,7 +841,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/main-cert/cert-dashboard.js',
                            'js/service/main-cert-service.js',
-                           'js/controller/main-cert/retention-release-modal.js'
+                           'js/controller/main-cert/retention-release-modal.js',
                     ] 
                 });
             }]
@@ -856,7 +858,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/main-cert/main-cert-select.js',
-                           'js/service/main-cert-service.js'
+                           'js/service/main-cert-service.js',
+                           'js/controller/enquiry/modal/enquiry-customerledgerdetails.js',
+                           'js/service/jobcost-service.js',
                     ] 
                 });
             }]

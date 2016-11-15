@@ -136,6 +136,8 @@
 									<a class="btn" ui-sref="subcontract.payment.certificate({paymentCertNo: payment.paymentCertNo, paymentTermsDesc: paymentTerms})" 
 									ng-class="{'btn-grey' : payment.paymentStatus=='APR', 'btn-primary' : payment.paymentStatus!='APR'}">
 									View details</a>
+									<label class="btn btn-grey" ng-if="false" ng-click="showPaymentHistory(payment)">
+									Payment Status</label>
 								</div>
 								<dl class="dl-horizontal">
 									<dt>Payment Status:</dt>

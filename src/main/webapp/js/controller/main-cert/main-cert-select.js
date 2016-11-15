@@ -1,5 +1,5 @@
-mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies',
-                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies) {
+mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jobcostService',
+                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jobcostService) {
 	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
@@ -13,8 +13,22 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 	function loadData(){
 		getCertificateList();
 		getLatestMainCert();
+		rootscopeService.gettingJob($scope.jobNo)
+		.then(function(response){
+			$scope.job = response.job;
+		});
 	}
 	
+	$scope.showReceiptHistory = function(arDocNo){
+		$scope.searchEntity = {};
+		$scope.searchEntity.company = $scope.job.company;
+		jobcostService.getARRecordList($scope.jobNo, '', '', arDocNo, '')
+		.then(function(data){
+			angular.extend($scope.searchEntity, data[0]);
+		})
+		$scope.searchEntity.documentNumber = arDocNo;
+		modalService.open('md', 'view/enquiry/modal/enquiry-customerledgerdetails.html', 'EnquiryCustomerLedgerDetailsCtrl', 'Success', $scope);
+	};
 
 	function getCertificateList() {
 		mainCertService.getCertificateList($scope.jobNo)

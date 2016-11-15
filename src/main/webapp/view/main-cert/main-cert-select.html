@@ -76,6 +76,8 @@
 									<a class="btn" ui-sref="cert-details({mainCertNo: cert.certificateNumber})" 
 									ng-class="{'btn-grey' : cert.certificateStatus=='300', 'btn-purple' : cert.certificateStatus!='300'}">
 									View details</a>
+									<label class="btn btn-grey" ng-if="cert.arDocNumber != 0" ng-click="showReceiptHistory(cert.arDocNumber)">
+									Receivable Status</label>
 								</div>
 								<dl class="dl-horizontal md-4">
 									<dt>Certificate Status:</dt>
