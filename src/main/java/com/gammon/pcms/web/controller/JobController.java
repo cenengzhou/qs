@@ -56,6 +56,13 @@ public class JobController {
 		return jobList;
 	}
 
+	@RequestMapping(value = "getCompanyName", method = RequestMethod.GET)
+	public String getCompanyName(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
+		String companyName = "";
+		companyName = jobService.getCompanyName(jobNo);
+		return companyName;
+	}
+	
 	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
 		JobInfo job = null;

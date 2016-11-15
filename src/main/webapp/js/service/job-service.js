@@ -2,6 +2,7 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
 	// Return public API.
     return({
     	getJob: 		getJob,
+    	getCompanyName: getCompanyName,
     	getJobList: 	getJobList,
     	getJobDates:	getJobDates,
     	updateJobInfo: 	updateJobInfo,
@@ -16,6 +17,18 @@ mainApp.service('jobService', ['$http', '$q', 'GlobalHelper',  function($http, $
         var request = $http({
             method: "get",
             url: "service/job/getJob",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getCompanyName(jobNo) {
+        var request = $http({
+            method: "get",
+            url: "service/job/getCompanyName",
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo

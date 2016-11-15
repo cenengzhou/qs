@@ -497,7 +497,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           /*'js/controller/subcontract/addendum/addendum-details.js',*/
                            'js/service/addendum-service.js' 
                     ] 
                 });

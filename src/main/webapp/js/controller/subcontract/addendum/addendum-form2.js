@@ -1,5 +1,5 @@
-mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 'confirmService',
-                                 function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper, confirmService) {
+mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 'confirmService', 'jobService',
+                                 function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper, confirmService, jobService) {
 
 	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
@@ -35,6 +35,7 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 	}
 	
 	function loadData(){
+		getCompanyName();
 		if($scope.addendumNo != null && $scope.addendumNo.length != 0){
 			getSubcontract();
 			getAllAddendumDetails();
@@ -42,6 +43,14 @@ mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumSer
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Addendum does not exist. Please create addendum title first.");
 	}
 	
+	function getCompanyName() {
+		jobService.getCompanyName($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.companyName = data;
+				});
+	}
+
 	
 	function getAddendum(){
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)

@@ -11,15 +11,15 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.pcms.application.User;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.JobInfoWSDao;
+import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.domain.JobDates;
 import com.gammon.qs.domain.JobInfo;
+import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
@@ -38,6 +38,8 @@ public class JobInfoService {
 	private JobInfoWSDao jobWSDao;
 	@Autowired
 	private SubcontractHBDao packageHBDao;
+	@Autowired
+	private MasterListWSDao masterListWSDao;
 	@Autowired
 	private AdminService adminService;
 	@Autowired
@@ -345,6 +347,19 @@ public class JobInfoService {
 	
 	public Date obtainJobInfoLastModifyDate(){
 		return jobHBDao.obtainJobInfoLastModifyDate();
+	}
+
+	public String getCompanyName(String jobNo) {
+		String companyName = "";
+		try {
+			JobInfo job = this.obtainJob(jobNo);
+			MasterListVendor company = masterListWSDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ? new MasterListVendor() : masterListWSDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
+			companyName = company.getVendorName();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return companyName;
 	}
 		
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
