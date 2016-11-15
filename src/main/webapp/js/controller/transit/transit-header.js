@@ -17,9 +17,11 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 	
 	//Save Function
 	$scope.save = function () {
-
+		$scope.disableButton = true;
+		
 		if (false === $('form[name="form-validate"]').parsley().validate()) {
-			event.preventDefault();  
+			event.preventDefault();
+			$scope.disableButton = false;
 			return;
 		}
 
@@ -38,6 +40,7 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 		.then(
 				function( data ) {
 					if(data.length!=0){
+						$scope.disableButton = false;
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Transit header has been added.");

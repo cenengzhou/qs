@@ -91,7 +91,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     function completeTransit(jobNo){
     	var request = $http({
     		method: 'POST',
-    		url: 'service/transit/confirmResourcesAndCreatePackages',
+    		url: 'service/transit/completeTransit',
     		params:{
     			jobNumber: jobNo
     		}
