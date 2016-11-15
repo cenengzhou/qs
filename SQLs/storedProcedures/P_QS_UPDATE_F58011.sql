@@ -1,4 +1,4 @@
-create or replace PROCEDURE            P_QS_UPDATE_F58011  AS
+create or replace PROCEDURE            PCMSDATAPROD.P_QS_UPDATE_F58011  AS
 	Type Qscurtype Is Ref Cursor;
 
 	v_mcu	CHAR(12);
@@ -30,9 +30,9 @@ create or replace PROCEDURE            P_QS_UPDATE_F58011  AS
               Decode(qsp.paymenttype, Null, '' '', Qsp.paymenttype) As paymenttype,
               Round(To_Number(Decode(qsp.remeasuredscsum, Null, 0, Qsp.remeasuredscsum*100)), 0) As remeasuredscsum,
               Round(To_Number(Decode(qsp.addendumamount, Null, 0, Qsp.addendumamount*100)), 0) As addendumamount
-      FROM PCMSDATADEV.PAYMENT_CERT Qsp
+      FROM PCMSDATAPROD.payment_Cert Qsp
       Where Not Exists (Select 1
-                        From TESTDTA.F58011 Jde
+                        From PRODDTA.F58011 Jde
                         Where  jde.Pcmcu = Lpad(To_Char(Qsp.Jobno),12, '' '')
                         And Jde.Pcdc07 = Qsp.Packageno
                         And Jde.Pcalgn = Qsp.Paymentcertno)
@@ -63,7 +63,7 @@ Begin
 			Exit When C_Qs_Scpayment_Cert%Notfound;
 			DBMS_OUTPUT.PUT_LINE('Insert Job:' || V_Mcu || ' ' || V_Dc07  || ' ' || V_Algn);
 			Begin
-            Insert Into Crystalusr_DEV.F58011(Pcmcu, Pcdc07, Pcalgn, Pcprst, Pcpipf, Pcdoc, Pcdctv, Pcapd, Pccuma, Pcaaa, Pciicu, Pcxicu, Pcldoc, Pcxdct,             Pcadtj, Pcapdj, Pcev01, Pcev02, Pcev03, Pcurab, Pcurat,   Pcurcd, Pcurdt, Pcurog, Pcurrc, 			      Pcurrf, 		        Pctorg,		  Pcuser,	 	   Pcpid,		    Pcjobn,	    Pcupmj, Pcupmt)
+            Insert Into PRODDTA.F58011(Pcmcu, Pcdc07, Pcalgn, Pcprst, Pcpipf, Pcdoc, Pcdctv, Pcapd, Pccuma, Pcaaa, Pciicu, Pcxicu, Pcldoc, Pcxdct,             Pcadtj, Pcapdj, Pcev01, Pcev02, Pcev03, Pcurab, Pcurat,   Pcurcd, Pcurdt, Pcurog, Pcurrc, 			      Pcurrf, 		        Pctorg,		  Pcuser,	 	   Pcpid,		    Pcjobn,	    Pcupmj, Pcupmt)
                                        Values(V_Mcu, V_Dc07, V_Algn, V_Prst, V_Pipf, 0, 	  'PS',   V_Apd, V_Cuma, V_Aaa, 0,		  0,		  0,	    Lpad(' ', 2, ' '),  0,		  V_Apdj, ' ', 	  ' ', 	  ' ', 	  V_Urab, 0, 		    0,      V_Urdt, 0,		  Lpad(' ', 2, ' '),	Lpad(' ', 4, ' '),  'QSSPROC03',  'QSSPROC03',	'QS58011', 'ERPWLS02', v_upmj, V_Upmt);
 
 			EXCEPTION
@@ -80,4 +80,8 @@ Begin
   Null;
 END P_QS_UPDATE_F58011;
 
-grant EXECUTE on "PCMSDATADEV"."P_QS_UPDATE_F58011" to "PCMSUSER_ROLE";
+
+Grant Execute On PCMSDATAPROD.P_QS_UPDATE_F58011 To PCMSDATAPROD;
+grant EXECUTE on PCMSDATAPROD.P_QS_UPDATE_F58011 to PCMSUSER_ROLE;
+Grant select, Insert On PRODDTA.F58011 To PCMSDATAPROD;
+Grant select, Insert On PRODDTA.F58011 To PCMSUSER_ROLE;

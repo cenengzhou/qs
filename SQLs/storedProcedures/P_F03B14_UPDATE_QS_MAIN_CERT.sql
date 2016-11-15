@@ -1,4 +1,4 @@
-create or replace PROCEDURE                      P_F03B14_UPDATE_QS_MAIN_CERT As
+create or replace PROCEDURE                      PCMSDATAPROD.P_F03B14_UPDATE_QS_MAIN_CERT As
   Type Qscurtype Is Ref Cursor;
   Counter Number;
   C_Qs_Main_Cert Qscurtype;
@@ -39,7 +39,7 @@ create or replace PROCEDURE                      P_F03B14_UPDATE_QS_MAIN_CERT As
                       Ardocumentno,
                       Actual_Receipt_Date,
                       Total_Receipt_Amount
-                From QSDATAPROD.Qs_Main_Contract_Certificate) Datalist, QSDATAPROD.Qs_Main_Contract_Certificate Maincertificate
+                From PCMSDATAPROD.Main_Cert) Datalist, PCMSDATAPROD.Main_Cert Maincertificate
     Where Datalist.Jobno = Maincertificate.Jobno
     and Datalist.certno = Maincertificate.certno
   ';
@@ -63,7 +63,7 @@ BEGIN
             ;
 			Exit When C_Qs_Main_Cert%Notfound;
 			Begin
-            Update PCMSDATADEV.Main_Cert
+            Update PCMSDATAPROD.Main_Cert
             Set
             Ardocumentno = V_Docno,
             Actual_Receipt_Date = V_Actualreceiptdate,
@@ -87,4 +87,7 @@ BEGIN
   Null;
 END P_F03B14_UPDATE_QS_MAIN_CERT;
 
-grant EXECUTE on "PCMSDATADEV"."P_F03B14_UPDATE_QS_MAIN_CERT" to "PCMSUSER_ROLE";
+Grant Execute On PCMSDATAPROD.P_F03B14_UPDATE_QS_MAIN_CERT To PCMSDATAPROD;
+grant EXECUTE on PCMSDATAPROD.P_F03B14_UPDATE_QS_MAIN_CERT to PCMSUSER_ROLE;
+Grant Select On PRODDTA.F03b11 To PCMSDATAPROD;
+Grant Select On PRODDTA.F03b14 To PCMSDATAPROD;
