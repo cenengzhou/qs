@@ -307,6 +307,14 @@ public class SubcontractController {
 	
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "calculateTotalWDandCertAmount", method = RequestMethod.POST)
+	public boolean calculateTotalWDandCertAmount(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateRententionAmount){
+		boolean result = false;
+		result = subcontractService.calculateTotalWDandCertAmount(jobNo, subcontractNo, recalculateRententionAmount);
+		return result;
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateSCDetailsNewQuantity", method = RequestMethod.POST)
 	public String updateSCDetailsNewQuantity(@RequestBody List<SubcontractDetail> subcontractDetailList){
 		String result = null;

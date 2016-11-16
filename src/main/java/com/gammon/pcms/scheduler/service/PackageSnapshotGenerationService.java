@@ -1,6 +1,5 @@
 package com.gammon.pcms.scheduler.service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -126,8 +125,8 @@ public class PackageSnapshotGenerationService {
 							}
 						}
 					}
-					scPackage.setTotalCumWorkDoneAmount(new BigDecimal(totalCumWorkDoneAmount));
-					scPackage.setTotalPostedWorkDoneAmount(new BigDecimal(totalPostedWorkDoneAmount));
+					scPackage.setTotalCumWorkDoneAmount(CalculationUtil.roundToBigDecimal(totalCumWorkDoneAmount, 2));
+					scPackage.setTotalPostedWorkDoneAmount(CalculationUtil.roundToBigDecimal(totalPostedWorkDoneAmount, 2));
 
 					scPackageHBDao.update(scPackage);
 				}

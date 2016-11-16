@@ -332,5 +332,16 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		modalService.open('md', 'view/subcontract/modal/subcontract-retention-details-modal.html', 'RetentionDetailsModalCtrl');
 	}
 	
+	$scope.recalculateSCSummary = function (){
+		subcontractService.calculateTotalWDandCertAmount($scope.jobNo, $scope.subcontractNo)
+		.then(
+				function( data ) {
+					if(data)
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract Summary has been recalculated.");
+					else
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Subcontract Summary cannot be recalculated.");
+					
+				});
+	}
 	
 }]);

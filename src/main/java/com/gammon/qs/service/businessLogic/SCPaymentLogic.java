@@ -12,7 +12,6 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.shared.util.CalculationUtil;
 
 public class SCPaymentLogic {
 	private static Logger logger = Logger.getLogger(SCPaymentLogic.class.getName());
@@ -201,9 +200,9 @@ public class SCPaymentLogic {
 	public static final void updateSCDetailandPackageAfterPostingToFinance(Subcontract scPackage, List<SubcontractDetail> scDetailsList){
 		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
 		
-		Double totalPostedCert = 0.0;
-		Double totalCCPostedCert =0.0;
-		Double totalMOSPostedCert = 0.0;
+		BigDecimal totalPostedCert = new BigDecimal(0.0);
+		BigDecimal totalCCPostedCert = new BigDecimal(0.0);
+		BigDecimal totalMOSPostedCert = new BigDecimal(0.0);
 		
 		for(SubcontractDetail scDetails : scDetailsList){
 			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
@@ -221,18 +220,18 @@ public class SCPaymentLogic {
 
 				//calculate total for package
 				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) &&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) && !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType()))
-					totalPostedCert = totalPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
+					totalPostedCert = totalPostedCert.add(scDetails.getAmountPostedCert());
 				else if("C1".equals(scDetails.getLineType()) || "C2".equals(scDetails.getLineType()))
-					totalCCPostedCert = totalCCPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
+					totalCCPostedCert = totalCCPostedCert.add(scDetails.getAmountPostedCert());
 				else if("MS".equals(scDetails.getLineType()))
-					totalMOSPostedCert = totalMOSPostedCert + CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
+					totalMOSPostedCert = totalMOSPostedCert.add(scDetails.getAmountPostedCert());
 			}
 
 		}
 		
 		//2. update package
-		scPackage.setTotalPostedCertifiedAmount(new BigDecimal(totalPostedCert));
-		scPackage.setTotalCCPostedCertAmount(new BigDecimal(totalCCPostedCert));
-		scPackage.setTotalMOSPostedCertAmount(new BigDecimal(totalMOSPostedCert));
+		scPackage.setTotalPostedCertifiedAmount(totalPostedCert);
+		scPackage.setTotalCCPostedCertAmount(totalCCPostedCert);
+		scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCert);
 	}
 }

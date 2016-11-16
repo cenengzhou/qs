@@ -76,15 +76,24 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     			function( data ) {
     				$scope.resourceSummary = data;
     				var objectCodeList = [];
-    				var amountBudgetList = [];
+    				var amountBudgetList = [0,0,0,0,0];
     				
     				angular.forEach(data, function(value, key){
-    					if(value.objectCode != '19')
-    						amountBudgetList.push(value.amountBudget);
+    					if(value.objectCode != '19'){
+    						if(value.objectCode == '11')
+    							amountBudgetList[0] = value.amountBudget;
+    						else if(value.objectCode == '12')
+    							amountBudgetList[1] =value.amountBudget;
+    						else if(value.objectCode == '13')
+    							amountBudgetList[2] = value.amountBudget;
+    						else if(value.objectCode == '14')
+    							amountBudgetList[3]=value.amountBudget;
+    						else if(value.objectCode == '15')
+    							amountBudgetList[4]=value.amountBudget;
+    					}
     					else
     						$scope.genuineMarkup = value.amountBudget;
 					});
-    				
 					var resourceSummaryJson = {
 							"data": amountBudgetList,
 							"labels": ["Labour", "Plant", "Material", "Subcontract", "Others"],

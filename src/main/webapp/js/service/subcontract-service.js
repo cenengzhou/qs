@@ -22,6 +22,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	updateWDandIVByPercent:								updateWDandIVByPercent,
     	submitAwardApproval:								submitAwardApproval,
     	recalculateResourceSummaryIV:						recalculateResourceSummaryIV,
+    	calculateTotalWDandCertAmount:						calculateTotalWDandCertAmount,
     	addAddendumToSubcontractDetail:						addAddendumToSubcontractDetail,
     	updateSubcontractDetailAddendum:					updateSubcontractDetailAddendum,
     	deleteSubcontractDetailAddendum:					deleteSubcontractDetailAddendum,
@@ -337,6 +338,19 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
+    function calculateTotalWDandCertAmount(jobNo, subcontractNo, recalculateRententionAmount) {
+        var request = $http({
+            method: "post",
+            url: "service/subcontract/calculateTotalWDandCertAmount",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+                jobNo: jobNo,
+                subcontractNo: subcontractNo,
+                recalculateRententionAmount: recalculateRententionAmount
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
     
     function addAddendumToSubcontractDetail(jobNo, subcontractNo, subcontractDetail) {
         var request = $http({

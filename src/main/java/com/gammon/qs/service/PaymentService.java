@@ -2470,8 +2470,8 @@ public class PaymentService{
 									error = "RR: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
-								}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() !=0){
-									error = "C2:" + paymentDetail.getCumAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
+								}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getMovementAmount() !=0){
+									error = "C2:" + paymentDetail.getMovementAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
 									logger.info(error);
 									return error;
 								}
