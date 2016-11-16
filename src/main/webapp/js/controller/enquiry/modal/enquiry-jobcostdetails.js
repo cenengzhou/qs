@@ -141,7 +141,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
 			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
 			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},
-			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:false},
+			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:true},
 			             { field: 'recordKeyMatchedPo', width: '80', displayName: 'PO Record Key', enableCellEdit: false, visible:false},
 			             { field: 'typeBatch', width: '80', displayName: 'Batch Type', enableCellEdit: false, visible:false},
 			             { field: 'numberBatch', width: '80', displayName: 'Batch No', enableCellEdit: false, visible:false},

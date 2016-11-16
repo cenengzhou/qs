@@ -146,16 +146,21 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			//enableFullRowSelection: true,
 			multiSelect: true,
 			enableCellEditOnFocus : true,
-			showGridFooter : false,
+			showGridFooter : true,
 			showColumnFooter : true,
 			exporterMenuPdf: false,
 			
 			rowEditWaitInterval :-1,
 
 			columnDefs: [
-			             { field: 'lineType', displayName: 'Line Type', width: 80, enableCellEdit: false},
-			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
-			             { field: 'movementAmount', displayName: 'Movement Amount', enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
+			             { field: 'lineType', displayName: 'Line Type', width: 80, enableCellEdit: false,
+			                 sort: {
+			                     direction: uiGridConstants.ASC,
+			                     priority: 0,
+			                   } 
+			             },
+			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", width: 100, cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
+			             { field: 'movementAmount', displayName: 'Movement Amount', width: 120, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						          if (grid.getCellValue(row,col) != 'GR') {
@@ -174,11 +179,11 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'cumAmount', displayName: 'Cumulative Amount', enableFiltering: false, 
+			             { field: 'cumAmount', displayName: 'Cumulative Amount', width: 120, enableFiltering: false, 
 			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
-			            	 //aggregationType : uiGridConstants.aggregationTypes.sum,
+			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            	 					var c = 'text-right';
@@ -188,7 +193,9 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'postedAmount', displayName: 'Cumulative Posted Amount', enableCellEdit: false,
+			             { field: 'postedAmount', displayName: 'Cumulative Posted Amount', width: 120, enableCellEdit: false,
+			            	 aggregationHideLabel : true,
+			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (row.entity.postedAmount < 0) {
@@ -197,7 +204,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            			return c;
 	            		},
 	            		aggregationHideLabel : true,
-	            		//aggregationType : uiGridConstants.aggregationTypes.sum,
+	            		aggregationType : uiGridConstants.aggregationTypes.sum,
 	            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 	            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 	            			var c = 'text-right';
@@ -208,8 +215,8 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	            		},
 	            		cellFilter : 'number:2',
 	            		},
-			             { field: 'subcontractDetail.amountCumulativeWD', displayName: 'Cumulative Work Done Amount', enableCellEdit: false,
-	            			visible: false,
+			             { field: 'subcontractDetail.amountCumulativeWD', displayName: 'Cumulative Work Done Amount', width: 120, enableCellEdit: false,
+	            			visible: true,
 	            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
 			            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountCumulativeWD < 0) {
@@ -218,7 +225,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            			return c;
 		            		},
 		            		aggregationHideLabel : true,
-		            		//aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
@@ -229,8 +236,8 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            		},
 		            		cellFilter : 'number:2',
 		            		},
-		            		{ field: 'subcontractDetail.amountPostedWD', displayName: 'Posted Work Done Amount', enableCellEdit: false,
-	            			visible: false,
+		            		{ field: 'subcontractDetail.amountPostedWD', displayName: 'Posted Work Done Amount', width: 120, enableCellEdit: false,
+	            			visible: true,
 	            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
 			            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountPostedWD < 0) {
@@ -239,7 +246,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            			return c;
 		            		},
 		            		aggregationHideLabel : true,
-		            		//aggregationType : uiGridConstants.aggregationTypes.sum,
+		            		aggregationType : uiGridConstants.aggregationTypes.sum,
 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
@@ -251,8 +258,18 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            		cellFilter : 'number:2',
 		            		},
 			             { field: 'subcontractDetail.description', displayName: 'Description', width: 150, enableCellEdit: false},
-			             { field: 'objectCode', displayName: 'Object Code', width: 80, enableCellEdit: false},
-			             {field: 'subsidiaryCode', displayName: 'Subsidiary Code', width: 80, enableCellEdit: false},
+			             { field: 'objectCode', displayName: 'Object Code', width: 80, enableCellEdit: false,
+			                 sort: {
+			                     direction: uiGridConstants.ASC,
+			                     priority: 1,
+			                   } 
+			             },
+			             {field: 'subsidiaryCode', displayName: 'Subsidiary Code', width: 80, enableCellEdit: false,
+			                 sort: {
+			                     direction: uiGridConstants.ASC,
+			                     priority: 1,
+			                   }
+			             },
 			             { field: 'billItem', displayName: 'Bill Item', width: 100, enableCellEdit: false},
 			             { field: 'scSeqNo', width: 80, displayName: "Sequence No", enableCellEdit: false},
 			             ]

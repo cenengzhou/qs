@@ -146,26 +146,6 @@ public class AdminService {
 		}
 	}
 	
-	public Boolean canAccessCompanyByCurrentUser(String companyCode) throws DatabaseOperationException{
-		List<String> companyCodeList = obtainCompanyCodeListByCurrentUser();
-		return companyCodeList.contains("NA") || companyCodeList.contains(companyCode);
-	}
-	
-//	public List<String> obtainCompanyCodeListByCurrentUser() {
-//		List<String> companyCodeList = new ArrayList<>();
-//		if(securityService.getCurrentUser().hasRole(securityConfig.getRolePcmsJobAll())){
-//			try {
-//				return jobInfoHBDao.obtainAllJobCompany();
-//			} catch (DatabaseOperationException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			for(JobSecurity jobSecurity : obtainJobSecurityListByCurrentUser()){
-//				companyCodeList.add(jobSecurity.getCompany());
-//			}
-//		}
-//		return companyCodeList;
-//	}
 	public List<String> obtainCompanyCodeListByCurrentUser() throws DatabaseOperationException{
 		return jobInfoHBDao.obtainCompanyCodeByJobNoList(obtainCanAccessJobNoStringList());
 	}
