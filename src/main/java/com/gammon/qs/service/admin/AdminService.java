@@ -78,7 +78,7 @@ public class AdminService {
 	public List<String> obtainCanAccessJobNoStringList(String username){
 		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
 		List<String> jobNumberList = new ArrayList<String>();
-
+		if(jobSecurityList != null)
 		for(JobSecurity jobSecurity : jobSecurityList){
 			if(jobSecurity.getRoleName() != null && jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
 				jobNumberList.clear();

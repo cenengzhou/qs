@@ -5,6 +5,7 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	getJobDashboardData:						getJobDashboardData,
     	getMonthlyJobCostList:						getMonthlyJobCostList,
     	getAccountLedgerList:						getAccountLedgerList,
+    	getAccountLedgerListByGlDate:				getAccountLedgerListByGlDate,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
     	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
     });
@@ -59,6 +60,15 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     			codeObject: codeObject,
     			codeSubsidiary: codeSubsidiary
     		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getAccountLedgerListByGlDate(searchObjectMap){
+    	var request = $http({
+    		method: 'POST',
+    		url: 'service/adl/getAccountLedgerListByGlDate',
+    		data: searchObjectMap
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

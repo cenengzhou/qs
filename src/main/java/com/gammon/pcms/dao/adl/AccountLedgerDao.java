@@ -2,6 +2,7 @@ package com.gammon.pcms.dao.adl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +39,8 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 		
 		Criterion sameYear = Restrictions.and(
 				Restrictions.eq("accountFiscalYear", yearStart),
-				Restrictions.eq("accountFiscalYear", yearEnd),
-				Restrictions.ge("accountPeriod", monthStart)
+				Restrictions.ge("accountPeriod", monthStart),
+				Restrictions.le("accountPeriod", monthEnd)
 				);
 		Criterion middlePeriod = Restrictions.and(
 				Restrictions.gt("accountFiscalYear", yearStart),
@@ -90,4 +91,47 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 				
 		return new ArrayList<AccountLedger>(criteria.list());
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AccountLedger> find(Date fromDate, Date thruDate, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(getType());
+
+		// Data Formatting
+		typeLedger = typeLedger.toUpperCase();
+		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
+		noSubcontract = StringUtils.isNotBlank(noSubcontract) ?StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8) : "";
+		
+		// Where
+		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob))
+				.add(Restrictions.eq("accountTypeLedger", typeLedger));
+		
+		//date range
+		criteria.add(Restrictions.between("dateGl", fromDate, thruDate));
+		
+		// Where (optional)
+		if(StringUtils.isNotBlank(typeDocument)){
+			typeDocument = typeDocument.toUpperCase();
+			criteria.add(Restrictions.eq("typeDocument", typeDocument));
+		}
+		if (StringUtils.isNotBlank(noSubcontract)) {
+			criteria.add(Restrictions.eq("accountSubLedger", noSubcontract));
+			criteria.add(Restrictions.eq("accountTypeSubLedger", AccountBalanceAAJISC.TYPE_SUBLEDGER_X));
+		}
+		if (StringUtils.isNotBlank(codeObject))
+			criteria.add(Restrictions.ilike("accountObject", codeObject, MatchMode.START));
+		if (StringUtils.isNotEmpty(codeSubsidiary))
+			criteria.add(Restrictions.ilike("accountSubsidiary", codeSubsidiary, MatchMode.START));
+
+		// Order by
+		criteria.addOrder(Order.asc("accountFiscalYear"))
+				.addOrder(Order.asc("accountPeriod"))
+				.addOrder(Order.asc("typeDocument"))
+				.addOrder(Order.asc("accountObject"))
+				.addOrder(Order.asc("accountSubsidiary"))
+				.addOrder(Order.asc("accountSubLedger"));
+				
+				
+		return new ArrayList<AccountLedger>(criteria.list());
+	}
+
 }

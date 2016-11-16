@@ -29,30 +29,36 @@
 									<input type="text" class="form-control" id="typeLedger" name="typeLedger" ng-model="typeLedger">
 								</div>
 
-								<div class="col-md-3">
-									<label for="fromDate">From Date:</label>
-									<div class="input-group" moment-picker="fromDate"
-										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i>
-										</span> <input class="form-control" id="fromDate" name="fromDate"
-											ng-model="fromDate" 
-											 title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+<!-- 								<div class="col-md-3"> -->
+<!-- 									<label for="fromDate">From Date:</label> -->
+<!-- 									<div class="input-group" moment-picker="fromDate" -->
+<!-- 										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true"> -->
+<!-- 										<span class="input-group-addon"> <i -->
+<!-- 											class="fa fa-calendar"></i> -->
+<!-- 										</span> <input class="form-control" id="fromDate" name="fromDate" -->
+<!-- 											ng-model="fromDate"  -->
+<!-- 											 title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }"> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="col-md-3"> -->
+<!-- 									<label for="thruDate">To Date:</label> -->
+<!-- 									<div class="input-group" moment-picker="thruDate" -->
+<!-- 										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true"> -->
+<!-- 										<span class="input-group-addon"> <i -->
+<!-- 											class="fa fa-calendar"></i> -->
+<!-- 										</span> <input class="form-control" id="thruDate" name="thruDate" -->
+<!-- 											ng-model="thruDate"  -->
+<!-- 											title="Please select Year and Month from the date picker" ng-model-options="{ updateOn: 'blur' }"> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+								<div class="col-md-4">
+									<label for="search.dateRange">Date range:</label>
+									<div class="input-group">
+										<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+										<input class="form-control" type="text" name="search.dateRange" ng-model="searchDate"/>
 									</div>
 								</div>
-								<div class="col-md-3">
-									<label for="thruDate">To Date:</label>
-									<div class="input-group" moment-picker="thruDate"
-										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" today="true">
-										<span class="input-group-addon"> <i
-											class="fa fa-calendar"></i>
-										</span> <input class="form-control" id="thruDate" name="thruDate"
-											ng-model="thruDate" 
-											title="Please select Year and Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
-									</div>
-								</div>
-
-								<div class="col-md-2">
+								<div class="col-md-4">
 										<label>&nbsp;</label>
 										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 									</div>

@@ -456,7 +456,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 				return;
 			
 			Session session = getSession();
-			Transaction tx = session.beginTransaction();
+//			Transaction tx = session.beginTransaction();
 			
 			for(int i=0; i<scDetails.size(); i++){
 				session.update(scDetails.get(i));
@@ -466,7 +466,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 					session.clear();
 				}
 			}
-			tx.commit();
+//			tx.commit();
 		} catch (Exception e) {
 			/* 05 April, 2014
 			The EJB cannot know when the encompassing transaction is truly done. 
@@ -475,7 +475,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 			For whatever reason, coding for WebLogic 7.0  has changed to throw an exception when
 			you call commit().*/
 			
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	

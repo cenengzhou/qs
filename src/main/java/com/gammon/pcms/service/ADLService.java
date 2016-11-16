@@ -3,6 +3,7 @@ package com.gammon.pcms.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -225,6 +226,9 @@ public class ADLService {
 		return accountLedgerDao.find(yearStart, yearEnd, monthStart, monthEnd, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 	
+	public List<AccountLedger> getAccountLedgerListByGlDate(Date fromDate, Date thruDate, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
+		return accountLedgerDao.find(fromDate, thruDate, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
+	}
 	/**
 	 * Account Master general searching
 	 *

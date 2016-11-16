@@ -2,18 +2,21 @@ package com.gammon.pcms.web.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.view.AddressBookView;
 import com.gammon.pcms.model.adl.AccountBalanceAAJI;
@@ -37,7 +40,8 @@ public class ADLController {
 
 	@Autowired
 	private ADLService adlService;
-
+	@Autowired
+	private ObjectMapper objectMapper;
 	/**
 	 * * To get Job Cost records (limited to AA & JI Ledgers) based on year, month, ledger type, job and sub-contract <br/>
 	 * AA Ledger - Actual Spending with SCRate for Sub-contract & CostRate for L, P, M, O (including Document Type: PS, JS, RI, RM, JE, etc...) <br/>
@@ -174,6 +178,19 @@ public class ADLController {
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 			return new ArrayList<AccountLedger>();
 		}
+	}
+	
+	@RequestMapping(value = "getAccountLedgerListByGlDate", method = RequestMethod.POST)
+	public List<AccountLedger> getAccountLedgerListByGlDate(@RequestBody Map<String, Object> searchObjectMap){
+		String noJob = objectMapper.convertValue(searchObjectMap.get("noJob"), String.class);
+		String typeLedger = objectMapper.convertValue(searchObjectMap.get("typeLedger"), String.class);
+		Date fromDate = objectMapper.convertValue(searchObjectMap.get("fromDate"), Date.class);
+		Date thruDate = objectMapper.convertValue(searchObjectMap.get("thruDate"), Date.class);
+		String typeDocument = objectMapper.convertValue(searchObjectMap.get("typeDocument"), String.class);
+		String noSubcontract = objectMapper.convertValue(searchObjectMap.get("noSubcontract"), String.class);
+		String codeObject = objectMapper.convertValue(searchObjectMap.get("codeObject"), String.class);
+		String codeSubsidiary = objectMapper.convertValue(searchObjectMap.get("codeSubsidiary"), String.class);
+		return adlService.getAccountLedgerListByGlDate(fromDate, thruDate, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 
 	@RequestMapping(value = "getAccountMasterList",

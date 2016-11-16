@@ -1,5 +1,5 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 
-                                            function($scope, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper){
+mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 
+                                            function($scope, $timeout, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -32,7 +32,27 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 		});
 	}
 	
-	$scope.loadAccountLedgerList();
+//	$scope.loadAccountLedgerList();
+	
+	$scope.loadAccountLedgerListByGlDate = function(){
+		var searchObjectMap = {};
+		searchObjectMap.noJob = $scope.noJob;
+		searchObjectMap.typeLedger = $scope.typeLedger;
+		searchObjectMap.fromDate = $scope.fromDate;
+		searchObjectMap.thruDate = $scope.thruDate;
+		searchObjectMap.typeDocument = $scope.typeDocument;
+		searchObjectMap.noSubcontract = $scope.noSubcontract;
+		searchObjectMap.codeObject = $scope.codeObject;
+		searchObjectMap.codeSubsidiary = $scope.codeSubsidiary;
+		adlService.getAccountLedgerListByGlDate(searchObjectMap)
+		.then(function(data){
+			if(angular.isArray(data)){
+				$scope.gridOptions.data = data;
+			}
+		});
+	}
+	
+	$scope.loadAccountLedgerListByGlDate();
 	
 	var postedOptions = [
 	                        {label: 'Posted', value:'Posted'},
@@ -165,6 +185,28 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', 'modalStatus', 'modal
 			exporterMenuPdf: false,
 			columnDefs: $scope.columnDefs
 	};
-		
+
+	$timeout(function(){
+		angular.element('input[name$=".dateRange"').daterangepicker({
+		    showDropdowns: true,
+		    startDate: $scope.fromDate,
+		    endDate: $scope.thruDate,
+		    autoApply: true,
+		    viewMode: 'months',
+			locale: {
+			      format: 'YYYY-MM'//GlobalParameter.MOMENT_DATE_FORMAT
+			    },
+
+		}, function(start, end) {
+			$scope.fromDate = start;
+			$scope.thruDate = end;
+	       }
+		)
+	}, 500);
+	
+	$scope.openDropdown = function( $event){
+		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
+
 	
 }]);

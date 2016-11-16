@@ -1255,7 +1255,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			return;
 		
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
+//		Transaction tx = session.beginTransaction();
 		
 		for(int i=0; i<bqResourceSummaries.size(); i++){
 			session.update(bqResourceSummaries.get(i));
@@ -1266,7 +1266,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			}
 		}
 		
-		tx.commit();
+//		tx.commit();
 	}
 	
 	/**

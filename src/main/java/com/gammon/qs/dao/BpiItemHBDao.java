@@ -536,7 +536,8 @@ public class BpiItemHBDao extends BaseHibernateDao<BpiItem> {
 			return;
 		
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
+//transaction moved to service level
+//		Transaction tx = session.beginTransaction();
 		
 		for(int i = 0; i < bpiItems.size(); i++){
 			session.save(bpiItems.get(i));
@@ -546,7 +547,7 @@ public class BpiItemHBDao extends BaseHibernateDao<BpiItem> {
 			}
 		}
 		
-		tx.commit();
+//		tx.commit();
 	}
 
 	/**
