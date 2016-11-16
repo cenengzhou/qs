@@ -25,6 +25,7 @@ import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
 import com.gammon.pcms.service.ADLService;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
 @PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
@@ -291,7 +292,7 @@ public class ADLController {
 	}
 	
 	@RequestMapping(value = "obtainCompanyCodeAndName", method = RequestMethod.POST)
-	public List<Map<String, String>> obtainCompanyCodeAndName(){
+	public List<Map<String, String>> obtainCompanyCodeAndName() throws DatabaseOperationException{
 		return adlService.obtainCompanyCodeAndName();
 	}
 }

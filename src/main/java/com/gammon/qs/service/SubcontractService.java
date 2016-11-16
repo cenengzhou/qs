@@ -4392,9 +4392,9 @@ public class SubcontractService {
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
 		}else {			
-			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
-
-			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
+//			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
+			List<String> jobNumberList = adminService.obtainCanAccessJobNoStringList();
+			if(jobNumberList.get(0).equals("JOB_ALL")){
 				subcontractList = subcontractHBDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																		searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																		searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
@@ -4408,7 +4408,7 @@ public class SubcontractService {
 																	searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																	searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																	searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																	searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), companyList, null, searchWrapper.getReportType());
+																	searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), jobNumberList, null, searchWrapper.getReportType());
 			}
 		}
 		logger.info("NUMBER OF RECORDS(SCPACKAGE): " + (subcontractList==null? "0" : subcontractList.size()));
@@ -4510,9 +4510,9 @@ public class SubcontractService {
 				logger.info("User: "+username+" is not authorized to access Job: "+searchWrapper.getJobNumber());
 		}else {
 
-			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
-
-			if(companyList.contains(searchWrapper.getCompany()) || companyList.contains("NA")){
+//			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
+			List<String> jobNumberList = adminService.obtainCanAccessJobNoStringList();
+			if(jobNumberList.get(0).equals("JOB_ALL")){
 				subcontractList = subcontractSnapshotDao.obtainSubcontractList(	searchWrapper.getCompany(), searchWrapper.getDivision(),
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
@@ -4527,7 +4527,7 @@ public class SubcontractService {
 																				searchWrapper.getJobNumber(), searchWrapper.getSubcontractNo(), 
 																				searchWrapper.getSubcontractorNo(), searchWrapper.getSubcontractorNature(), 
 																				searchWrapper.getPaymentStatus(),searchWrapper.getWorkscope(), 
-																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), companyList, null,
+																				searchWrapper.getClientNo(), searchWrapper.getSplitTerminateStatus(), jobNumberList, null,
 																				searchWrapper.getMonth(), searchWrapper.getYear(), searchWrapper.getReportType());
 			}
 		}

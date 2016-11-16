@@ -509,11 +509,11 @@ public class MainCertService {
 			updateMainCertFromF03B14Manually();
 
 			// Apply Job Security
-			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
-
+//			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
+			List<String> jobNumberList = adminService.obtainCanAccessJobNoStringList();
 			// Step 2: Obtain Main Cert List
 			List<ContractReceivableWrapper> mainCertList = mainCertHBDao
-					.obtainContractReceivableList(wrapper, companyList);
+					.obtainContractReceivableList(wrapper, jobNumberList);
 
 			// Step 3: Retrieve Client Name from web service
 			List<MasterListVendor> clientList = masterListService.getClientList();

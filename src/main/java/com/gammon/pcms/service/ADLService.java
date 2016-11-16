@@ -32,6 +32,7 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.service.RepackagingService;
 import com.gammon.qs.service.admin.AdminService;
 
@@ -384,8 +385,9 @@ public class ADLService {
 	/**
 	 * 
 	 * @return the company list which accessible to current user
+	 * @throws DatabaseOperationException 
 	 */
-	public List<Map<String, String>> obtainCompanyCodeAndName(){
+	public List<Map<String, String>> obtainCompanyCodeAndName() throws DatabaseOperationException{
 		Map<String, Map<String, String>> allCompanyMap = businessUnitDao.obtainCompanyCodeAndName();
 		List<Map<String, String>> resultList = new ArrayList<>();
 		List<String> companyCodeList = adminService.obtainCompanyCodeListByCurrentUser();

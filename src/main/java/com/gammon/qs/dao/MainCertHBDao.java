@@ -63,7 +63,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 	 * Contract Receivable Settlement Report
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ContractReceivableWrapper> obtainContractReceivableList(ContractReceivableWrapper wrapper, List<String> companyList) throws DatabaseOperationException {
+	public List<ContractReceivableWrapper> obtainContractReceivableList(ContractReceivableWrapper wrapper, List<String> jobNoList) throws DatabaseOperationException {
 		
 		DetachedCriteria subquery = DetachedCriteria.forClass(JobInfo.class);
 		if (StringUtils.isNotBlank(wrapper.getJobNo()))
@@ -71,8 +71,8 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		if (StringUtils.isNotBlank(wrapper.getCompany()))
 			subquery.add(Restrictions.ilike("company", wrapper.getCompany(), MatchMode.START));
 		
-		if(companyList!= null && companyList.size()>0 && !companyList.contains("NA")){
-			subquery.add(Restrictions.in("company", companyList));
+		if(jobNoList!= null && jobNoList.size()>0 && !jobNoList.get(0).equals("JOB_ALL")){
+			subquery.add(Restrictions.in("jobNumber", jobNoList));
 		}
 		if (StringUtils.isNotBlank(wrapper.getDivision()))
 			subquery.add(Restrictions.ilike("division", wrapper.getDivision(), MatchMode.START));

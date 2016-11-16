@@ -320,7 +320,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PaymentCert> obtainSCPaymentCertList(PaymentCertWrapper scPaymentCertWrapper, List<String> companyList, String dueDateType){
+	public List<PaymentCert> obtainSCPaymentCertList(PaymentCertWrapper scPaymentCertWrapper, List<String> jobNoList, String dueDateType){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		
@@ -331,8 +331,8 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", scPaymentCertWrapper.getJobNo().trim()));
 		if(scPaymentCertWrapper.getJobInfo()!=null && scPaymentCertWrapper.getJobInfo().getCompany()!=null && !"".equals(scPaymentCertWrapper.getJobInfo().getCompany().trim()))
 			criteria.add(Restrictions.eq("jobInfo.company", scPaymentCertWrapper.getJobInfo().getCompany().trim()));
-		else if(companyList!=null)
-			criteria.add(Restrictions.in("jobInfo.company", companyList));
+		if(jobNoList!=null)
+			criteria.add(Restrictions.in("jobInfo.jobNumber", jobNoList));
 		if(scPaymentCertWrapper.getSubcontract().getVendorNo()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getVendorNo().trim()))
 			criteria.add(Restrictions.eq("subcontract.vendorNo", scPaymentCertWrapper.getSubcontract().getVendorNo().trim()));
 		if(scPaymentCertWrapper.getSubcontract().getPaymentTerms()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getPaymentTerms().trim()))

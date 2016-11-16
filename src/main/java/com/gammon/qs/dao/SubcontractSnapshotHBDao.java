@@ -144,7 +144,7 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshot> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber, String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> companyList, Integer status, String month, String year, String reportType) throws DatabaseOperationException {
+	public List<SubcontractSnapshot> obtainSubcontractList(String company, String division, String jobNumber, String subcontractNumber, String subcontractorNumber, String subcontractorNature, String paymentStatus, String workScope, String clientNo, String splitTerminateStatus, List<String> jobNoList, Integer status, String month, String year, String reportType) throws DatabaseOperationException {
 		List<SubcontractSnapshot> result = null;
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -152,8 +152,8 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 			criteria.createAlias("jobInfo", "jobInfo");
 			if (company!=null && !"".equals(company))
 				criteria.add(Restrictions.eq("jobInfo.company", company));
-			else if (companyList!=null)
-				criteria.add(Restrictions.in("jobInfo.company", companyList));
+			if (jobNoList!=null)
+				criteria.add(Restrictions.in("jobInfo.jobNumber", jobNoList));
 			if (division!=null && !"".equals(division))
 				criteria.add(Restrictions.eq("jobInfo.division", division));
 			if (jobNumber!=null && !"".equals(jobNumber))

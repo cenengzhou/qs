@@ -110,7 +110,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
   	      	.then(function(data){
   	    	  $rootScope.divisions = data.map( function (division) {
   	  	        return {
-  	  	          value: division.toLowerCase(),
+  	  	          value: division,
   	  	          display: division
   	  	        };
   	    	  });

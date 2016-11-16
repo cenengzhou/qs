@@ -240,6 +240,21 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		}
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> obtainCompanyCodeByJobNoList(List<String> jobNoList) throws DatabaseOperationException{
+		List<String> result = new ArrayList<String>();
+		try {
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.setProjection( Projections.distinct( Projections.property( "company" )));
+			criteria.add(Restrictions.in("jobNumber", jobNoList));
+			criteria.addOrder(Order.asc("company"));
+			result =  criteria.list();
+		} catch (HibernateException e) {
+			throw new DatabaseOperationException(e);
+		}
+		return result;
+	}
 	/**
 	 * For Web Service
 	 */

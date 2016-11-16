@@ -3153,15 +3153,15 @@ public class PaymentService{
 			else
 				logger.info("User: "+username+" is not authorized to access Job: "+paymentCertWrapper.getJobNo());
 		}else {			
-			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
-
-			if(companyList.contains(paymentCertWrapper.getJobInfo().getCompany()) || companyList.contains("NA")){
+//			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
+			List<String> jobNumberList = adminService.obtainCanAccessJobNoStringList();
+			if(jobNumberList.get(0).equals("JOB_ALL")){
 				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, null, dueDateType);
 			}
 //			else if(!GenericValidator.isBlankOrNull(paymentCertWrapper.getJobInfo().getCompany()))
 //				logger.info("User: "+username+" is not authorized to access Company: "+paymentCertWrapper.getJobInfo().getCompany());
 			else{
-				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, companyList, dueDateType);
+				paymentCerts = paymentCertDao.obtainSCPaymentCertList(paymentCertWrapper, jobNumberList, dueDateType);
 			}
 		}
 		
