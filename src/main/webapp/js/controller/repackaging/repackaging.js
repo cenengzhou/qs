@@ -68,24 +68,22 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.loadAttachment($scope.repackaging.id);
 						
-						//console.log($scope.latestVersion);
-						//console.log($scope.repackaging.status);
-						
-						
 					}
 				});
 
 	}
 
 	$scope.loadAttachment = function(repackagingEntryID){
-		attachmentService.getRepackagingAttachments(repackagingEntryID)
-		.then(
-				function(data){
-					if(angular.isArray(data)){
-						$scope.repackagingAttachments = data;
-						$scope.addAttachmentsData($scope.repackagingAttachments);
-					}
-				})
+		if(repackagingEntryID != null && repackagingEntryID != undefined){
+			attachmentService.getRepackagingAttachments(repackagingEntryID)
+			.then(
+					function(data){
+						if(angular.isArray(data)){
+							$scope.repackagingAttachments = data;
+							$scope.addAttachmentsData($scope.repackagingAttachments);
+						}
+					})
+		}
 	}
 
 	$scope.addAttachmentsData = function(d){

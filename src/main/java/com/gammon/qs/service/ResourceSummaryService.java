@@ -94,6 +94,9 @@ public class ResourceSummaryService implements Serializable {
 	private transient TenderDetailHBDao tenderAnalySisDetailHBDao;
 	@Autowired
 	private SecurityService securityService;
+	@Autowired
+	private RepackagingDetailService repackagingDetailService;
+	
 	
 	private static final int RECORDS_PER_PAGE = 50;
 
@@ -739,17 +742,24 @@ public class ResourceSummaryService implements Serializable {
 	
 	public String generateResourceSummaries(String jobNo) throws Exception{
 		String error = "";
-		JobInfo job = jobDao.obtainJobInfo(jobNo);
-		if(job != null){
-			List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
-			if(entries != null && entries.size() > 0){
-				error = "Repackaging exists. Please refresh the page.";
-				return error;
+		try {
+			JobInfo job = jobDao.obtainJobInfo(jobNo);
+			if(job != null){
+				List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);
+				if(entries != null && entries.size() > 0){
+					error = "Repackaging exists. Please refresh the page.";
+					return error;
+				}
+				boolean created = resourceSummaryDao.groupResourcesIntoSummaries(job);
+				if(!created){
+					error = "Resource Summaries cannot be generated.";
+					return error;
+				}
+				repackagingDetailService.generateResourceSummaries(job);
 			}
-			boolean created = resourceSummaryDao.groupResourcesIntoSummaries(job);
-			if(!created)
-				error = "Resource Summaries cannot be generated.";
-				
+		} catch (Exception e) {
+			error = "Resource Summaries cannot be generated.";
+			e.printStackTrace();
 		}
 		return error;
 	}
