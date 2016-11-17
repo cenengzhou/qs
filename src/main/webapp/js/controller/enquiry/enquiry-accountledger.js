@@ -191,4 +191,9 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 	       }
 		)
 	}, 500);
+	
+	$scope.openDropdown = function( $event){
+		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
+
 }]);
