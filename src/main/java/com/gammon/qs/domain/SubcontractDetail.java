@@ -178,6 +178,11 @@ public class SubcontractDetail extends BasePersistedObject {
 	public String getContraChargeSCNo() {
 		return "";
 	}
+	
+	@Transient
+	public Long getCorrSCLineSeqNo() {
+		return new Long(0);
+	}
 
 	@Transient
 	public Double getPostedWorkDoneQuantity() {
@@ -783,5 +788,6 @@ public class SubcontractDetail extends BasePersistedObject {
 			return false;
 		return true;
 	}
+
 
 }

@@ -988,6 +988,14 @@ public class AddendumService{
 			scDetailsCC.setCorrSCLineSeqNo(scDetailVO.getSequenceNo().longValue());
 			
 			subcontractDetailHBDao.insert(scDetailsCC);
+			
+			//Delete Pending Payment
+			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(scDetailsCC.getJobNo(), scDetailsCC.getSubcontract().getPackageNo());
+			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				paymentCertHBDao.delete(paymentCert);
+				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
+				attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+			}
 		}
 
 		subcontractDetailHBDao.insert(scDetailVO);
@@ -1021,7 +1029,7 @@ public class AddendumService{
 			
 			//Update C2
 			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
-				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), scDetail.getLineType());
+				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 				if(scDetailsCC != null){
 					scDetailsCC.setJobNo(addendumDetail.getNoJob());
 					scDetailsCC.setSubcontract(subcontractHBDao.obtainSCPackage(addendumDetail.getNoJob(), scDetail.getContraChargeSCNo()));

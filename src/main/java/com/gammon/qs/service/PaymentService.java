@@ -66,6 +66,7 @@ import com.gammon.qs.domain.PaymentCertDetail;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
+import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailOA;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
@@ -2275,13 +2276,14 @@ public class PaymentService{
 						 *created on 13 Jul, 2016
 						 *Convert to Amount Based 
 						 **/
-						if (scDetails.getAmountPostedCert()!=null)
+						if (scDetails.getAmountPostedCert()!=null && scDetails.getAmountPostedCert().compareTo(new BigDecimal(0))>0){
 							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
-						else 
-							scPaymentDetail.setCumAmount(0.0);
-
-						scPaymentDetail.setMovementAmount(0.0);
-
+							scPaymentDetail.setMovementAmount(0.0);
+						}
+						else {
+							scPaymentDetail.setCumAmount(scDetails.getAmountCumulativeCert().doubleValue());
+							scPaymentDetail.setMovementAmount(scDetails.getAmountCumulativeCert().doubleValue());
+						}
 
 						if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
 							totalMOSAmount += scPaymentDetail.getCumAmount();
@@ -2416,8 +2418,6 @@ public class PaymentService{
 				return error;
 			}
 			
-			//update payment type
-			paymentCert.setIntermFinalPayment(paymentType);
 			
 			//3. Get previous cert details: RT/MR
 			double preRTAmount = 0.0;
@@ -2488,6 +2488,33 @@ public class PaymentService{
 								paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
 								paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
 								paymentDetailDao.update(paymentDetailInDB);	
+								
+								
+								//Update C2 of corresponding subcontract
+								try {
+									if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType()))){
+										SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) scDetailDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
+										if(scDetailsCC != null){
+											BigDecimal amountCumCertCC = scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1));
+											if(scDetailsCC.getAmountCumulativeCert().compareTo(amountCumCertCC)!=0){
+												scDetailsCC.setAmountCumulativeCert(scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1)));
+												scDetailDao.update(scDetailsCC);
+												
+												PaymentCert ccLatestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(jobNo, scDetailsCC.getSubcontract().getPackageNo());
+												if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus()))){
+													paymentCertDao.delete(ccLatestPaymentCert);
+													paymentAttachmentDao.deleteAttachmentByByPaymentCertID(ccLatestPaymentCert.getId());
+													paymentDetailDao.deleteDetailByPaymentCertID(ccLatestPaymentCert.getId());
+												}
+											}
+											
+										}
+										
+									}
+								} catch (DataAccessException e) {
+									e.printStackTrace();
+								}
+								
 							}
 						}
 					}		
@@ -2511,7 +2538,6 @@ public class PaymentService{
 				cumRetention = preRTAmount;
 				cumMOSRetention = preMRAmount;
 			}
-			
 			List<PaymentCertDetail> paymentDetailRTList = paymentDetailDao.getSCPaymentDetail(paymentCert, "RT");
 			
 			if(paymentDetailRTList != null && paymentDetailRTList.size()==1){
@@ -2522,7 +2548,6 @@ public class PaymentService{
 				
 			}
 			
-			
 			List<PaymentCertDetail> paymentDetailMRList = paymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
 			if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){
 				PaymentCertDetail paymentDetailMR = paymentDetailMRList.get(0);
@@ -2532,11 +2557,13 @@ public class PaymentService{
 			}
 			
 			//6. Update Payment Cert Amount
+			PaymentCert paymentCertInDB = this.obtainPaymentCertificate(jobNo, subcontractNo, paymentCertNo);
 			double cumAmount = calculatePaymentCertAmount(paymentCert);
-			
-			paymentCert.setCertAmount(cumAmount);
-			paymentCertDao.update(paymentCert);
 
+			paymentCertInDB.setCertAmount(cumAmount);
+			//update payment type
+			paymentCertInDB.setIntermFinalPayment(paymentType);
+			paymentCertDao.update(paymentCertInDB);
 			//4. Recalculate Subcintract Total Amounts
 			subcontractService.calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
 		} catch (DatabaseOperationException e) {

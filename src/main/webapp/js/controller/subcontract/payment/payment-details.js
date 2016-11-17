@@ -147,7 +147,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			multiSelect: true,
 			enableCellEditOnFocus : true,
 			showGridFooter : true,
-			showColumnFooter : true,
+			showColumnFooter : false,
 			exporterMenuPdf: false,
 			
 			rowEditWaitInterval :-1,
