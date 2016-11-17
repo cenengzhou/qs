@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService',
-                                   function($scope, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService) {
+mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jobcostService',
+                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jobcostService) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
@@ -24,11 +24,34 @@ mainApp.controller('PaymentCtrl', ['$scope', '$uibModal',  'modalService', '$coo
 	}
 	
 	$scope.showPaymentHistory = function(payment){
-		$scope.searchEntity = {};
-		$scope.searchEntity.company = $scope.job.company;
-		$scope.searchEntity.supplierNumber = payment.subcontract.vendorNo;
+		$scope.searchPaymentCert = payment;
 		modalService.open('md', 'view/enquiry/modal/enquiry-supplierledgerdetails.html', 'EnquirySupplierLedgerDetailsCtrl', 'Success', $scope);
 	};
+	
+	$scope.searchPaymentStatus = function(){
+		var deferral = $q.defer();
+		var paymentNo = '0000' + payment.paymentCertNo;
+		$scope.searchJobNo = $scope.jobNo;
+		$scope.searchSubcontractNo = $scope.subcontractNo;
+		$scope.searchInvoiceNo = $scope.jobNo + '/' + $scope.subcontractNo + '/' + paymentNo.substring(paymentNo.length - 4);
+		jobcostService.obtainAPRecordList(
+				$scope.searchJobNo, 
+				$scope.searchInvoiceNo, 
+				$scope.searchSupplierNo, 
+				$scope.searchDocumentNo, 
+				$scope.searchDocumentType, 
+				$scope.searchSubcontractNo, 
+				null)
+				.then(function(data){
+					if(angular.isObject(data)){
+
+						deferral.resolve({
+							paymentStatus : data[0]
+						});
+					}
+				});
+		return deferral.promise;
+	}
 
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
