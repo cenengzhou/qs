@@ -39,6 +39,11 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;
+				$scope.gridOptions.data.forEach(function(d){
+					if(d.recordKeyMatchedPo){
+						d.recordKeyMatchedPoSplit = d.recordKeyMatchedPo.split('-')[1];
+					}
+				});
 			}
 		});
 	}
@@ -177,7 +182,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 			            		 return c;
 			            	 }, 
 			             },
-			             { field: 'accountKey', width:'100', displayName: "PO No.", enableCellEdit: false },
+			             { field: 'recordKeyMatchedPoSplit', width:'100', displayName: "PO No.", enableCellEdit: false },
 			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
 			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},
 			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:true},

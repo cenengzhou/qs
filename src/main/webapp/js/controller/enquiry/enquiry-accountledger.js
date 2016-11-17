@@ -73,7 +73,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			            	 }, 			            	 
 			             },
 			             { field: 'explanationRemark', width:'100', displayName: "Remark", enableCellEdit: false },
-			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
+			             { field: 'recordKeyMatchedPoSplit', width:'100', displayName: "PO No.", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },
 			             { field: 'numberBatch', width:'100', displayName: "Batch Number", enableCellEdit: false },
 			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false }
@@ -147,8 +147,12 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 		adlService.getAccountLedgerListByGlDate(getSearchObject())
 		    .then(function(data) {
 				if(angular.isArray(data)){
-					console.log(data);
 					$scope.gridOptions.data = data;
+					$scope.gridOptions.data.forEach(function(d){
+						if(d.recordKeyMatchedPo){
+							d.recordKeyMatchedPoSplit = d.recordKeyMatchedPo.split('-')[1];
+						}
+					});
 				} 
 			}, function(data){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
