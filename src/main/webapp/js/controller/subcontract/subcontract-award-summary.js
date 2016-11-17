@@ -57,7 +57,8 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
     function getCompanyName() {
 		jobService.getCompanyName($scope.jobNo)
 		.then(
-				function( data ) {console.log(data);
+				function( data ) {
+					//console.log(data);
 					$scope.companyName = data;
 				});
 	}

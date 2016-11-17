@@ -38,7 +38,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 			}
 			
 		}, function(error){
-			console.log(error);
+//			console.log(error);
 		});
 	}
 	$scope.loadVendor();
@@ -46,7 +46,8 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	$scope.addressLineField = function(address){
 		var result = {};
 		angular.forEach(address, function(value, key) {
-	        if (key.startsWith('addressLine')) {
+//	        if (key.startsWith('addressLine')) {
+			if (key.substring(0, key.length - 1) === 'addressLine') {
 	        	result[key] = value;
 	        }
 	    });

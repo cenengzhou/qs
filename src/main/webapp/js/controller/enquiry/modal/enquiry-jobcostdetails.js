@@ -1,5 +1,5 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 
-                                            function($scope, $timeout, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper){
+mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'confirmService', 
+                                            function($scope, $timeout, $state, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper, GlobalMessage, confirmService){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -32,19 +32,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', 'modalSta
 		});
 	}
 	
-//	$scope.loadAccountLedgerList();
+	$scope.loadAccountLedgerList();
 	
 	$scope.loadAccountLedgerListByGlDate = function(){
-		var searchObjectMap = {};
-		searchObjectMap.noJob = $scope.noJob;
-		searchObjectMap.typeLedger = $scope.typeLedger;
-		searchObjectMap.fromDate = $scope.fromDate;
-		searchObjectMap.thruDate = $scope.thruDate;
-		searchObjectMap.typeDocument = $scope.typeDocument;
-		searchObjectMap.noSubcontract = $scope.noSubcontract;
-		searchObjectMap.codeObject = $scope.codeObject;
-		searchObjectMap.codeSubsidiary = $scope.codeSubsidiary;
-		adlService.getAccountLedgerListByGlDate(searchObjectMap)
+		adlService.getAccountLedgerListByGlDate(getSearchObject())
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;
@@ -52,7 +43,35 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', 'modalSta
 		});
 	}
 	
-	$scope.loadAccountLedgerListByGlDate();
+//	$scope.loadAccountLedgerListByGlDate();
+	
+	$scope.goAccountLedger = function(){
+		confirmService.show({}, {bodyText:GlobalMessage.navigateToAccountLedgerEnquiry})
+		.then(function(response){
+			if(response === 'Yes') {
+				$scope.cancel();
+				$state.go('enquiry.accountLedger', {searchObject: getSearchObject()});
+			}
+		});
+	}
+	
+	function getSearchObject(){
+		var searchObjectMap = {};
+		$scope.yearStart = new Date($scope.fromDate).getFullYear().toString();
+		$scope.yearEnd = new Date($scope.thruDate).getFullYear().toString();
+		$scope.monthStart = new Date($scope.fromDate).getMonth();
+		$scope.monthEnd = new Date($scope.thruDate).getMonth()+1;
+		var nextDate = $scope.parentScope.getNextDate($scope.yearStart, $scope.monthStart, $scope.yearEnd, $scope.monthEnd);
+		searchObjectMap.noJob = $scope.noJob;
+		searchObjectMap.typeLedger = $scope.typeLedger;
+		searchObjectMap.fromDate = nextDate.fromDate;
+		searchObjectMap.thruDate = nextDate.thruDate;
+		searchObjectMap.typeDocument = $scope.typeDocument;
+		searchObjectMap.noSubcontract = $scope.noSubcontract;
+		searchObjectMap.codeObject = $scope.codeObject;
+		searchObjectMap.codeSubsidiary = $scope.codeSubsidiary;
+		return searchObjectMap;
+	}
 	
 	var postedOptions = [
 	                        {label: 'Posted', value:'Posted'},
@@ -158,7 +177,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', 'modalSta
 			            		 return c;
 			            	 }, 
 			             },
-			             { field: 'accountKey', width:'100', displayName: "Purchase Order", enableCellEdit: false },
+			             { field: 'accountKey', width:'100', displayName: "PO No.", enableCellEdit: false },
 			             { field: 'entityInputBy', width: '200', displayName: 'Transaction Input By', enableCellEdit: false, visible:false},
 			             { field: 'entityGlPostedBy', width: '200', displayName: 'Transaction Posted By', enableCellEdit: false, visible:false},
 			             { field: 'explanationRemark', width: '250', displayName: 'Remark', enableCellEdit: false, visible:true},

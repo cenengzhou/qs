@@ -11,7 +11,7 @@ mainApp.controller('LoginCtrl', ['$rootScope', '$scope', '$http', '$location',
      }*/
 
 	var authenticate = function(credentials, callback) {
-		console.log("Login - authenticate");
+//		console.log("Login - authenticate");
 		var headers = credentials ? {authorization : "Basic "
 			+ btoa(credentials.username + ":" + credentials.password)
 		} : {};
@@ -36,11 +36,11 @@ mainApp.controller('LoginCtrl', ['$rootScope', '$scope', '$http', '$location',
 		authenticate($scope.credentials, function() {console.log("Login function");
 			if ($rootScope.authenticated) {
 				//authenticationService.setCredentials($scope.credentials.username, $scope.credentials.password);
-				console.log("Authenticated and go to Index page");
+//				console.log("Authenticated and go to Index page");
 				$location.path("/job-select");
 				$scope.error = false;
 			} else {
-				console.log(" Not authenticated and go to Login page");
+//				console.log(" Not authenticated and go to Login page");
 				$location.path("/login");
 				$scope.error = true;
 			}

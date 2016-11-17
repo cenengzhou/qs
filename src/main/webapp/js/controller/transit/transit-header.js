@@ -28,7 +28,7 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 		
 		$scope.transit.matchingCodes = $scope.matchingCodes.selected;
 
-		console.log($scope.transit.jobNumber +" - "+ $scope.transit.estimateNo+"  - "+$scope.matchingCodes.selected);
+		//console.log($scope.transit.jobNumber +" - "+ $scope.transit.estimateNo+"  - "+$scope.matchingCodes.selected);
 		
 		createOrUpdateTransitHeader();
 	};

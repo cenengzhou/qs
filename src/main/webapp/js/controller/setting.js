@@ -39,7 +39,7 @@ mainApp.controller('AppCtrl', ['$http', '$scope', '$location', '$window', 'Sessi
     
     //Logout
     $scope.logout = function() {
-    	console.log("Call logout function");
+//    	console.log("Call logout function");
     	$location.path("/logout");
     	
     }

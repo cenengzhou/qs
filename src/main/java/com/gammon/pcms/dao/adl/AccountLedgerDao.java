@@ -42,6 +42,10 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 				Restrictions.ge("accountPeriod", monthStart),
 				Restrictions.le("accountPeriod", monthEnd)
 				);
+		Criterion firstYear = Restrictions.and(
+				Restrictions.eq("accountFiscalYear", yearStart),
+				Restrictions.ge("accountPeriod", monthStart)
+				);
 		Criterion middlePeriod = Restrictions.and(
 				Restrictions.gt("accountFiscalYear", yearStart),
 				Restrictions.lt("accountFiscalYear", yearEnd)
@@ -62,7 +66,7 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 				criteria.add(sameYear);
 			} else if(yearEnd.intValue() > yearStart.intValue()){
 			// yearEnd > yearStart
-				criteria.add(Restrictions.or(sameYear, middlePeriod, lastYear));
+				criteria.add(Restrictions.or(firstYear, middlePeriod, lastYear));
 			}
 		}
 		
@@ -89,7 +93,8 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 				.addOrder(Order.asc("accountSubLedger"));
 				
 				
-		return new ArrayList<AccountLedger>(criteria.list());
+		List<AccountLedger> resultList = new ArrayList<AccountLedger>(criteria.list());
+		return resultList;
 	}
 	
 	@SuppressWarnings("unchecked")

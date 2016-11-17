@@ -1228,6 +1228,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		params: {
 			'jobNo': null,
 			'jobDescription' : null,
+			'searchObject' : null,
 		},
 		controller: 'EnquiryAccountLedgerCtrl'
 		})

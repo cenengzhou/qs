@@ -8,7 +8,7 @@ mainApp.service('ivpostinghistService', ['$http', '$q', 'GlobalHelper', function
     	var request = $http({
     		method: 'POST',
     		url: 'service/ivpostinghist/obtainIVPostingHistoryList',
-    		params:{
+    		data:{
     			jobNumber: jobNumber,
     			fromDate: fromDate,
     			toDate: toDate

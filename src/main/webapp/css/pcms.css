@@ -368,3 +368,7 @@ button.enquiryInfoBtn {
 .md-virtual-repeat-container.md-autocomplete-suggestions-container .company-code-and-name {
      width:350px !important;
 }
+
+.modal-1000px {
+  width: 1000px;
+}

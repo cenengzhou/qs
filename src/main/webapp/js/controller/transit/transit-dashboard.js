@@ -176,7 +176,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 	    		}else if($scope.transit.status === 'Transit Completed') {
 	    			$scope.step = 7;
 	    		}
-	    		console.log('Current step:' + $scope.step + ' status:' + $scope.transit.status);
+	    		//console.log('Current step:' + $scope.step + ' status:' + $scope.transit.status);
 	    	}
     		
     		if($scope.step >= 0) {

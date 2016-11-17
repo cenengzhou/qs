@@ -363,4 +363,6 @@ mainApp.constant('GlobalMessage', {
 		"Are you sure to delete attachments",
 	maxCharLimitReached:
 		"You've reached the max. limit of text length!",
+	navigateToAccountLedgerEnquiry:
+		"You are going to navigate to Account Ledger Enquiry, are you usre you want to proceed?",
 });

@@ -1,12 +1,12 @@
 
-mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope, $http, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, $timeout, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
-	$scope.searchToDate = moment().format('DD MMM YYYY');
-	$scope.searchFromDate =  moment().year(moment().year() -1 ).format('DD MMM YYYY');
+	$scope.searchToDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchFromDate =  moment().year(moment().year() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
 //	$scope.searchFromDate.setFullYear($scope.searchToDate.getFullYear()-1);
 	
 	$scope.gridOptions = {
@@ -79,4 +79,25 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', 'modalService', '
 	};
 	$scope.loadGridData();
 	
+	$timeout(function(){
+	angular.element('input[name$=".dateRange"').daterangepicker({
+	    showDropdowns: true,
+	    startDate: $scope.searchFromDate,
+	    endDate: $scope.searchToDate,
+	    autoApply: true,
+	    viewMode: 'months',
+		locale: {
+		      format: GlobalParameter.MOMENT_DATE_FORMAT
+		    },
+
+	}, function(start, end) {
+		$scope.searchFromDate = start;
+		$scope.searchToDate = end;
+       }
+	)
+	}, 500);
+	$scope.openDropdown = function( $event){
+		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+	}
+
 }]);

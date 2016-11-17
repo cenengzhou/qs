@@ -4,12 +4,13 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.currentDate = new Date();
 	$scope.showCumulative = true;
-	$scope.searchYear = $scope.currentDate.getFullYear().toString().substring(2,4);
+	$scope.searchYear = $scope.currentDate.getFullYear().toString();
 	$scope.searchMonth = $scope.currentDate.getMonth() + 1;
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.searchAccountLedger = {};
 	
 	$scope.showJobCostDetails = function(entity){
+		var nextDate = $scope.getNextDate($scope.searchYear, $scope.searchMonth - 1, $scope.searchYear, $scope.searchMonth);
 		$scope.searchAccountLedger.jobNo = $scope.searchJobNo;
 		$scope.searchAccountLedger.accountObject = entity.accountObject;
 		$scope.searchAccountLedger.accountSubsidiary = entity.accountSubsidiary;
@@ -19,45 +20,57 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 		$scope.searchAccountLedger.subLedger = $scope.searchSubcontractNo;
 		$scope.searchAccountLedger.subLedgerType = $scope.searchSubcontractNo != null?"X":null;
 		$scope.searchAccountLedger.postFlag = "";
-		$scope.searchAccountLedger.fromDate = new Date();
-		$scope.searchAccountLedger.thruDate = new Date();
-		//from year - yearComboBox=110-->1900+110=2010
-		//movement --> current year
-		//cumulative --> current year-2
-		if($scope.showCumulative){
-			$scope.searchAccountLedger.fromDate.setFullYear($scope.searchAccountLedger.fromDate.getYear()-1 + 1900);
-		}
-		//from month - periodComboBox=3-->March, setMonth=2
-		//January --> January
-		//Other months --> current month-1
-		//from date
-		//January --> 1st
-		//Other months --> 26th
-		$scope.searchAccountLedger.fromDate.setDate(1);
-		if($scope.searchMonth === 1){
-			$scope.searchAccountLedger.fromDate.setMonth(0);
-			$scope.searchAccountLedger.fromDate.setDate(1);
-		} else {
-			$scope.searchAccountLedger.fromDate.setMonth($scope.searchMonth - 2);
-			$scope.searchAccountLedger.fromDate.setDate(26);
-		}
+		$scope.searchAccountLedger.fromDate = nextDate.fromDate;
+		$scope.searchAccountLedger.thruDate = nextDate.thruDate;
 		
-		if($scope.searchAccountLedger.thruDate.getMonth() === 11){
-			$scope.searchAccountLedger.thruDate.setDate(29);
-		} else {
-			$scope.searchAccountLedger.thruDate.setDate(25);
-		}
-		
-		//thru year
-		//thru month
-		//thru date
-		//December --> 29th
-		//Other months --> 25th
 		
 		//showAccountLedgerEnquiryDetailPanel(accountCode, ledgerType, subLedger, subLedgerType, fromDate, thruDate, postFlag);
-		modalService.open('lg', 'view/enquiry/modal/enquiry-jobcostdetails.html', 'EnquiryJobCostDetailsCtrl', 'Success', $scope);
+		modalService.open('1000px', 'view/enquiry/modal/enquiry-jobcostdetails.html', 'EnquiryJobCostDetailsCtrl', 'Success', $scope);
 		};
 	
+		$scope.getNextDate = function(searchYearFrom,searchMonthFrom, searchYearTo,searchMonthTo, showCumulative){
+			var nextDate = {};
+			nextDate.fromDate = new Date();
+			nextDate.thruDate = new Date();
+			//from year - yearComboBox=110-->1900+110=2010
+			//movement --> current year
+			//cumulative --> current year-2
+//			if(showCumulative){
+//				nextDate.fromDate.setFullYear(nextDate.fromDate.getYear()-1 + 1900);
+//			}
+			//from month - periodComboBox=3-->March, setMonth=2
+			//January --> January
+			//Other months --> current month-1
+			//from date
+			//January --> 1st
+			//Other months --> 26th
+			nextDate.fromDate.setFullYear(searchYearFrom);
+			nextDate.thruDate.setFullYear(searchYearTo);
+			nextDate.fromDate.setDate(1);
+			if(searchMonthFrom === 1){
+				nextDate.fromDate.setMonth(0);
+				nextDate.fromDate.setDate(1);
+			} else {
+				nextDate.fromDate.setMonth(searchMonthFrom - 1);
+				nextDate.fromDate.setDate(26);
+			}
+			
+			nextDate.thruDate.setMonth(searchMonthTo - 1);
+			
+			if(searchMonthTo === 11){
+				nextDate.thruDate.setDate(29);
+			} else {
+				nextDate.thruDate.setDate(25);
+			}
+			
+			//thru year
+			//thru month
+			//thru date
+			//December --> 29th
+			//Other months --> 25th
+			return nextDate;
+		}
+		
 	$scope.columnDefs = [
 			             { field: 'accountObject', width: '100', displayName: 'Object', enableCellEdit: false},
 			             { field: 'accountSubsidiary', width: '100', displayName: 'Subsidiary', enableCellEdit: false},
@@ -227,7 +240,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	}
 	
 	$scope.loadGridData = function(){
-		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear, $scope.searchMonth)
+		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear.substring(2,4), $scope.searchMonth)
 		    .then(function(data) {
 		    	$scope.gridOptions.data = data;
 		    	$scope.triggerShowCumulative();

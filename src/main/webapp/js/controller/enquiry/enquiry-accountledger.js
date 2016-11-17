@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter', 'GlobalHelper',
-                                        function($scope , $http, modalService, blockUI, uiGridConstants, adlService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParams', '$timeout', 'modalService', 'blockUI', 'uiGridConstants', 'adlService', 'GlobalParameter', 'GlobalHelper',
+                                        function($scope , $http, $stateParams, $timeout, modalService, blockUI, uiGridConstants, adlService, GlobalParameter, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -123,21 +123,28 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 		  $scope.gridApi = gridApi;
 	}
 	
-	$scope.searchJobNo = $scope.jobNo;
-	$scope.searchTypeLedger = 'AA';
-	$scope.searchFromYearMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
-	$scope.searchToYearMonth = moment().format('YYYY-MM');
-	$scope.searchTypeDocument = 'PS';
-	$scope.searchCodeObject = ''
+	var searchObject = $stateParams.searchObject || {};
+	
+	$scope.searchJobNo = searchObject.noJob || $scope.jobNo;
+	$scope.searchSubcontractNo = searchObject.noSubcontract || '';
+//	$scope.searchFromYearMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
+//	$scope.searchToYearMonth = moment().format('YYYY-MM');
+	$scope.fromDate = searchObject.fromDate || moment().month(moment().month() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.thruDate = searchObject.thruDate || moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchTypeDocument = searchObject.typeDocument || '';
+	$scope.searchTypeLedger = searchObject.typeLedger || 'AA';
+	$scope.searchCodeObject = searchObject.codeObject || '';
+	$scope.searchCodeSubsidiary = searchObject.codeSubsidiary || '';
+	
 	$scope.loadGridData = function(){
-		$scope.searchFrom = $scope.searchFromYearMonth.split('-');
-		$scope.searchYearStart = $scope.searchFrom[0].substring(2);
-		$scope.searchMonthStart = $scope.searchFrom[1];
-		$scope.searchTo = $scope.searchToYearMonth.split('-');
-		$scope.searchYearEnd = $scope.searchTo[0].substring(2);
-		$scope.searchMonthEnd = $scope.searchTo[1];
-		adlService.getAccountLedgerList($scope.searchJobNo, $scope.searchTypeLedger, $scope.searchYearStart, $scope.searchYearEnd, $scope.searchMonthStart, 
-				$scope.searchMonthEnd, $scope.searchTypeDocument, $scope.searchSubcontractNo, $scope.searchCodeObject, $scope.searchCodeSubsidiary)
+//		$scope.searchFrom = $scope.searchFromYearMonth.split('-');
+//		$scope.searchYearStart = $scope.searchFrom[0].substring(2);
+//		$scope.searchMonthStart = $scope.searchFrom[1];
+//		$scope.searchTo = $scope.searchToYearMonth.split('-');
+//		$scope.searchYearEnd = $scope.searchTo[0].substring(2);
+//		$scope.searchMonthEnd = $scope.searchTo[1];
+		
+		adlService.getAccountLedgerListByGlDate(getSearchObject())
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					console.log(data);
@@ -148,9 +155,40 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', 'modalServic
 			});	
 	}
 	
+	function getSearchObject(){
+		var searchObjectMap = {};
+		searchObjectMap.noJob = $scope.searchJobNo;
+		searchObjectMap.typeLedger = $scope.searchTypeLedger;
+		searchObjectMap.fromDate = $scope.fromDate;
+		searchObjectMap.thruDate = $scope.thruDate;
+		searchObjectMap.typeDocument = $scope.searchTypeDocument;
+		searchObjectMap.noSubcontract = $scope.searchSubcontractNo;
+		searchObjectMap.codeObject = $scope.searchCodeObject;
+		searchObjectMap.codeSubsidiary = $scope.searchCodeSubsidiary;
+		return searchObjectMap;
+	}
+	
+	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
 	$scope.loadGridData();
 	
+	$timeout(function(){
+		angular.element('input[name$=".dateRange"').daterangepicker({
+		    showDropdowns: true,
+		    startDate: $scope.fromDate,
+		    endDate: $scope.thruDate,
+		    autoApply: true,
+		    viewMode: 'months',
+			locale: {
+			      format: GlobalParameter.MOMENT_DATE_FORMAT
+			    },
+
+		}, function(start, end) {
+			$scope.fromDate = start;
+			$scope.thruDate = end;
+	       }
+		)
+	}, 500);
 }]);
