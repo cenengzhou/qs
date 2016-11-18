@@ -2276,7 +2276,7 @@ public class PaymentService{
 						 *created on 13 Jul, 2016
 						 *Convert to Amount Based 
 						 **/
-						if (scDetails.getAmountPostedCert()!=null && scDetails.getAmountPostedCert().compareTo(new BigDecimal(0))>0){
+						if (scDetails.getAmountPostedCert()!=null && scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) != 0){
 							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
 							scPaymentDetail.setMovementAmount(0.0);
 						}
