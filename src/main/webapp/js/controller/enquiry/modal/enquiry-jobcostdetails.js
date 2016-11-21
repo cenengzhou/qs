@@ -64,8 +64,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 		var searchObjectMap = {};
 		$scope.yearStart = new Date($scope.fromDate).getFullYear().toString();
 		$scope.yearEnd = new Date($scope.thruDate).getFullYear().toString();
-		$scope.monthStart = new Date($scope.fromDate).getMonth();
-		$scope.monthEnd = new Date($scope.thruDate).getMonth()+1;
+		$scope.monthStart = new Date($scope.fromDate).getMonth() - 1;
+		$scope.monthEnd = new Date($scope.thruDate).getMonth();
 		var nextDate = $scope.parentScope.getNextDate($scope.yearStart, $scope.monthStart, $scope.yearEnd, $scope.monthEnd);
 		searchObjectMap.noJob = $scope.noJob;
 		searchObjectMap.typeLedger = $scope.typeLedger;

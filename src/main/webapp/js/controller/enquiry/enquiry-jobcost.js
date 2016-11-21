@@ -10,7 +10,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	$scope.searchAccountLedger = {};
 	
 	$scope.showJobCostDetails = function(entity){
-		var nextDate = $scope.getNextDate($scope.searchYear, $scope.searchMonth - 1, $scope.searchYear, $scope.searchMonth);
+		var nextDate = $scope.getNextDate($scope.searchYear, $scope.searchMonth - 1, $scope.searchYear, $scope.searchMonth - 1);
 		$scope.searchAccountLedger.jobNo = $scope.searchJobNo;
 		$scope.searchAccountLedger.accountObject = entity.accountObject;
 		$scope.searchAccountLedger.accountSubsidiary = entity.accountSubsidiary;
@@ -46,22 +46,22 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 			//Other months --> 26th
 			nextDate.fromDate.setFullYear(searchYearFrom);
 			nextDate.thruDate.setFullYear(searchYearTo);
-			nextDate.fromDate.setDate(1);
-			if(searchMonthFrom === 1){
-				nextDate.fromDate.setMonth(0);
-				nextDate.fromDate.setDate(1);
-			} else {
-				nextDate.fromDate.setMonth(searchMonthFrom - 1);
-				nextDate.fromDate.setDate(26);
-			}
 			
-			nextDate.thruDate.setMonth(searchMonthTo - 1);
+			nextDate.fromDate.setMonth(searchMonthFrom);
+			nextDate.fromDate.setDate(26);
+//			if(searchMonthFrom === 0){
+//				nextDate.fromDate.setDate(1);
+//			} else {
+//				nextDate.fromDate.setDate(26);
+//			}
 			
-			if(searchMonthTo === 11){
-				nextDate.thruDate.setDate(29);
-			} else {
-				nextDate.thruDate.setDate(25);
-			}
+			nextDate.thruDate.setMonth(searchMonthTo);
+			nextDate.thruDate.setDate(25);
+//			if(searchMonthTo === 11){
+//				nextDate.thruDate.setDate(29);
+//			} else {
+//				nextDate.thruDate.setDate(25);
+//			}
 			
 			//thru year
 			//thru month
