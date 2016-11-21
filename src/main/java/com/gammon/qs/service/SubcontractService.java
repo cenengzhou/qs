@@ -60,7 +60,6 @@ import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.SubcontractSnapshotHBDao;
 import com.gammon.qs.dao.SubcontractWSDao;
-import com.gammon.qs.dao.SubcontractWorkScopeHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.domain.AppSubcontractStandardTerms;
@@ -152,8 +151,6 @@ public class SubcontractService {
 	private SubcontractHBDao subcontractHBDao;
 	@Autowired
 	private SubcontractWSDao subcontractWSDao;
-	@Autowired
-	private SubcontractWorkScopeHBDao subcontractWorkScopeHBDao;
 	// Subcontract Snapshot
 	@Autowired
 	private PackageSnapshotGenerationService packageSnapshotGenerationService;

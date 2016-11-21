@@ -74,7 +74,7 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 	@SuppressWarnings("unchecked")
 	public List<JobInfo> obtainJobInfoByJobNumberList(List<String> jobNumberStringList, Boolean isCompletedJob){
 		Criteria criteria = getSession().createCriteria(getType());
-		if(!jobNumberStringList.get(0).equals("JOB_ALL")){
+		if(jobNumberStringList!= null && jobNumberStringList.size() >= 0 && !jobNumberStringList.get(0).equals("JOB_ALL")){
 			criteria.add(Restrictions.in("jobNumber", jobNumberStringList));
 		}
 		if(isCompletedJob != null){

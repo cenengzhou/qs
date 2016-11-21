@@ -791,7 +791,7 @@ public class MainCertService {
 				List<BigDecimal> contractReceivableList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 				List<BigDecimal> contractReceivableOutstandingList = accountBalanceDao.findFiguresOnly(year, month, AccountBalanceSC.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_CONTRACT_RECEIVABLE_OUTSTANDING, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 				for(int i=0 ; i < contractReceivableList.size(); i++){
-					if(i<12){
+					if(i<12 && contractReceivableList.size()>=i && contractReceivableOutstandingList.size() >= i){
 						dataList.add(contractReceivableList.get(i).subtract(contractReceivableOutstandingList.get(i)).negate());
 					}
 				}

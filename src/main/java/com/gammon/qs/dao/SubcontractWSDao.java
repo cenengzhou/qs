@@ -42,16 +42,16 @@ import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWor
 import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AbstractAttachment;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.AttachSubcontract;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.SubcontractWorkScope;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.currencyCode.CurrencyCodeWrapper;
+
 @Repository
 public class SubcontractWSDao {
 
@@ -100,8 +100,6 @@ public class SubcontractWSDao {
 	private WSConfig wsConfig;
 	@Autowired
 	private EnvironmentConfig environmentConfig;
-	@Autowired
-	private SubcontractWorkScopeHBDao scWorkScopeHBDao;
 
 	public boolean addUpdateSCAttachmentLink(String nameObject, String textKey, AttachSubcontract attachment) throws Exception {
 		AddUpdateAttachmentLinkRequestObj requestObj = new AddUpdateAttachmentLinkRequestObj();
@@ -118,24 +116,24 @@ public class SubcontractWSDao {
 			start = System.currentTimeMillis();
 			AddUpdateAttachmentLinkResponseObj responseObj = (AddUpdateAttachmentLinkResponseObj) addUpdateAttachmentWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 			end = System.currentTimeMillis();
-			logger.info("Time for calling ws (addUpdateAttachmentWebServiceTemplate):"+ ((end-start)/1000.00));
-			logger.info("Response Msg: "+ responseObj.getDescription());
-		} catch (SoapFaultClientException e1){
+			logger.info("Time for calling ws (addUpdateAttachmentWebServiceTemplate):" + ((end - start) / 1000.00));
+			logger.info("Response Msg: " + responseObj.getDescription());
+		} catch (SoapFaultClientException e1) {
 			logger.info("FAIL to call WS (addUpdateAttachmentWebServiceTemplate), pending for RETRY");
 			start = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);				
+			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end-start)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end - start) / 1000.00));
 			try {
 				logger.info("RETRY calling WS (addUpdateAttachmentWebServiceTemplate)");
 				start = System.currentTimeMillis();
 				AddUpdateAttachmentLinkResponseObj responseObj = (AddUpdateAttachmentLinkResponseObj) addUpdateAttachmentWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 				end = System.currentTimeMillis();
 				logger.info("Time for calling ws (addUpdateAttachmentWebServiceTemplate)(Retry):"+ ((end-start)/1000.00));
-				logger.info("Response Msg: "+ responseObj.getDescription());
-			} catch (SoapFaultClientException e2){
+				logger.info("Response Msg: " + responseObj.getDescription());
+			} catch (SoapFaultClientException e2) {
 				logger.info("FAIL to call WS (addUpdateAttachmentWebServiceTemplate), FAIL operation ");
-				//throw new JDEErrorException(e2,"1001");				
+				// throw new JDEErrorException(e2,"1001");
 			}
 		}
 
@@ -149,34 +147,34 @@ public class SubcontractWSDao {
 		requestObj.setTextKey(textKey);
 		requestObj.setSequenceNo(sequenceNo);
 		requestObj.setTextContent(text);
-		try{
+		try {
 
 			long start = System.currentTimeMillis();
 			AddUpdateTextResponseObj responseObj = (AddUpdateTextResponseObj) addUpdateTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 			long end = System.currentTimeMillis();
-			logger.info("Time for calling ws(addUpdateTextWebServiceTemplate):"+ ((end-start)/1000.00));
-			logger.info("Get Data Item: "+responseObj.getDataItem());
+			logger.info("Time for calling ws(addUpdateTextWebServiceTemplate):" + ((end - start) / 1000.00));
+			logger.info("Get Data Item: " + responseObj.getDataItem());
 
 
 		}catch(SoapFaultClientException e)
 		{
 			logger.info("FAIL to call WS (addUpdateTextWebServiceTemplate), pending for RETRY");
 			long start1 = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);				
+			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
 			long end2 = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end2-start1)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end2 - start1) / 1000.00));
 
-			try{
+			try {
 				logger.info("RETRY calling WS (addUpdateTextWebServiceTemplate)");
 				long start = System.currentTimeMillis();
 				AddUpdateTextResponseObj responseObj = (AddUpdateTextResponseObj) addUpdateTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 				long end = System.currentTimeMillis();
-				logger.info("Time for calling ws(addUpdateTextWebServiceTemplate)(Retry):"+ ((end-start)/1000.00));
-				logger.info("Get Data Item: "+responseObj.getDataItem());
+				logger.info("Time for calling ws(addUpdateTextWebServiceTemplate)(Retry):" + ((end - start) / 1000.00));
+				logger.info("Get Data Item: " + responseObj.getDataItem());
 			}catch(SoapFaultClientException e2)
 			{
 				logger.info("FAIL to call WS (addUpdateTextWebServiceTemplate), FAIL operation ");
-				//throw new JDEErrorException(e2,"1001");
+				// throw new JDEErrorException(e2,"1001");
 			}
 
 		}
@@ -194,12 +192,12 @@ public class SubcontractWSDao {
 		long start = System.currentTimeMillis();
 		DeleteAttachmentLinkResponseObj responseObj = (DeleteAttachmentLinkResponseObj) deleteAttachmentLinkWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("time for calling ws(deleteAttachmentLinkWebServiceTemplate):"+ ((end-start)/1000.00));
+		logger.info("time for calling ws(deleteAttachmentLinkWebServiceTemplate):" + ((end - start) / 1000.00));
 
-		logger.info("row number= "+responseObj.getRowNumber());
-		logger.info("description = "+responseObj.getDescription());
+		logger.info("row number= " + responseObj.getRowNumber());
+		logger.info("description = " + responseObj.getDescription());
 
-		if(responseObj.getDescription()!=null && !"".equals(responseObj.getDescription()))
+		if (responseObj.getDescription() != null && !"".equals(responseObj.getDescription()))
 			return false;
 
 		return true;
@@ -213,31 +211,31 @@ public class SubcontractWSDao {
 
 		long start;
 		long end;
-		DeleteTextMediaObjectResponseObj responseObj = null ;
+		DeleteTextMediaObjectResponseObj responseObj = null;
 		try {
 			start = System.currentTimeMillis();
 			responseObj = (DeleteTextMediaObjectResponseObj) deleteTextMediaObjectWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 			end = System.currentTimeMillis();
-			logger.info("Time for calling ws(deleteTextMediaObjectWebServiceTemplate):"+ ((end-start)/1000.00));
-		}catch (SoapFaultClientException e1){
+			logger.info("Time for calling ws(deleteTextMediaObjectWebServiceTemplate):" + ((end - start) / 1000.00));
+		} catch (SoapFaultClientException e1) {
 			logger.info("FAIL to call WS (deleteTextMediaObjectWebServiceTemplate), pending for RETRY");
 			start = System.currentTimeMillis();
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);				
+			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
 			end = System.currentTimeMillis();
-			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :"+ ((end-start)/1000.00));
+			logger.info("Thread.sleep(GlobalParameter.RETRY_INTERVERAL) :" + ((end - start) / 1000.00));
 			try {
 				logger.info("RETRY calling ws (deleteTextMediaObjectWebServiceTemplate)");
 				start = System.currentTimeMillis();
 				responseObj = (DeleteTextMediaObjectResponseObj) deleteTextMediaObjectWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 				end = System.currentTimeMillis();
 				logger.info("Time for calling ws(deleteTextMediaObjectWebServiceTemplate)(Retry):"+ ((end-start)/1000.00));
-			}catch (SoapFaultClientException e2){
+			} catch (SoapFaultClientException e2) {
 				logger.info("FAIL to call WS (deleteTextMediaObjectWebServiceTemplate), FAIL operation ");
-				//throw new JDEErrorException(e2,"1001");
+				// throw new JDEErrorException(e2,"1001");
 			}
 		}
 
-		if(responseObj.getDataItem()!=null && !"".equals(responseObj.getDataItem()))
+		if (responseObj.getDataItem() != null && !"".equals(responseObj.getDataItem()))
 			return false;
 
 		return true;
@@ -249,7 +247,6 @@ public class SubcontractWSDao {
 
 		List<AttachSubcontract> resultList = new LinkedList<AttachSubcontract>();
 
-
 		GetAllMediaObjectListsRequestObj requestObj = new GetAllMediaObjectListsRequestObj();
 		requestObj.setNameObject(nameObject);
 		requestObj.setTextKey(textKey);
@@ -258,7 +255,7 @@ public class SubcontractWSDao {
 		long start = System.currentTimeMillis();
 		GetAllMediaObjectListsResponseListObj responseListObj = (GetAllMediaObjectListsResponseListObj) getMediaObjectListsWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("time for calling ws(getMediaObjectListsWebServiceTemplate):"+ ((end-start)/1000.00));
+		logger.info("time for calling ws(getMediaObjectListsWebServiceTemplate):" + ((end - start) / 1000.00));
 
 
 		for(GetAllMediaObjectListsResponseObj responseObj : responseListObj.getGetAllMediaObjectListsResponseObjList())
@@ -268,7 +265,7 @@ public class SubcontractWSDao {
 			JobInfo dummyJob = new JobInfo();
 			dummyJob.setJobNumber(splittedTextKey[0].trim());
 			Subcontract dummySCPackage = new Subcontract();
-			if (splittedTextKey.length>1){
+			if (splittedTextKey.length > 1) {
 				dummySCPackage.setPackageNo(splittedTextKey[1]);
 			}
 			dummySCPackage.setJobInfo(dummyJob);
@@ -279,13 +276,13 @@ public class SubcontractWSDao {
 			scAttachment.setFileName(responseObj.getFileName());
 			scAttachment.setSequenceNo(responseObj.getSequenceNo());
 
-			if (scAttachment.getDocumentType().equals(AbstractAttachment.TEXT)){
+			if (scAttachment.getDocumentType().equals(AbstractAttachment.TEXT)) {
 				scAttachment.setTextAttachment(obtainSCTextAttachmentfromJDE(nameObject, textKey, responseObj.getSequenceNo()));
-				if (scAttachment.getTextAttachment()!=null){
+				if (scAttachment.getTextAttachment() != null) {
 					scAttachment.setTextAttachment(scAttachment.getTextAttachment().replace("\n", "<br>"));
 					scAttachment.setTextAttachment(scAttachment.getTextAttachment().replace("\t", " "));
-					//					scAttachment.setTextAttachment((scAttachment.getTextAttachment()));
-					if (scAttachment.getTextAttachment().length()>1999){
+					// scAttachment.setTextAttachment((scAttachment.getTextAttachment()));
+					if (scAttachment.getTextAttachment().length() > 1999) {
 						//scAttachment.setTextAttachment(scAttachment.getTextAttachment().substring(0, 1999));
 						logger.log(Level.SEVERE,"Attach of "+textKey+" did not do the conversion. \nData:"+scAttachment.getTextAttachment());
 						scAttachment.setTextAttachment("<b><I>Text Data is too larger</I></b><BR>No Conversion has done");
@@ -295,33 +292,32 @@ public class SubcontractWSDao {
 			resultList.add(scAttachment);
 		}
 
-
 		return resultList;
-	}		
+	}
 
 	public String obtainSCTextAttachmentfromJDE(String nameObject, String textKey, Integer attachmentSequenceNo) throws Exception{
 		GetPlainTextRequestObj requestObj = new GetPlainTextRequestObj();
 		requestObj.setObjectName(nameObject);
 		requestObj.setTextKey(textKey);
 		requestObj.setSequenceNo(attachmentSequenceNo);
-		GetPlainTextResponseObj responseObj =null;
-		try{
+		GetPlainTextResponseObj responseObj = null;
+		try {
 			logger.info("Calling Web Service(PlainTextManager-getPlainText()): Request Object - ObjectName: "+requestObj.getObjectName()+" TextKey: "+requestObj.getTextKey()+" SequenceNo:"+requestObj.getSequenceNo());
 			responseObj = (GetPlainTextResponseObj) getPlainTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 
-		}catch(SoapFaultClientException soapEx){
-			logger.info("FAIL to Web Service(PlainTextManager-getPlainText()), PENDING FOR RETRY");				
-			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);	
-			try{
+		} catch (SoapFaultClientException soapEx) {
+			logger.info("FAIL to Web Service(PlainTextManager-getPlainText()), PENDING FOR RETRY");
+			Thread.sleep(GlobalParameter.RETRY_INTERVERAL);
+			try {
 				logger.info("RETRY calling Web Service(PlainTextManager-getPlainText())");
 				responseObj = (GetPlainTextResponseObj) getPlainTextWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-			}catch(SoapFaultClientException soapEx2){
+			} catch (SoapFaultClientException soapEx2) {
 				logger.info("FAIL to Web Service(PlainTextManager-getPlainText())");
-				//throw new JDEErrorException(soapEx2, "1001");
+				// throw new JDEErrorException(soapEx2, "1001");
 			}
 		}
-		
-		if(responseObj.getDataItem()==null || "".equals(responseObj.getDataItem().trim()))
+
+		if (responseObj.getDataItem() == null || "".equals(responseObj.getDataItem().trim()))
 			return responseObj.getTextContent();
 		return "";
 	}
@@ -329,7 +325,7 @@ public class SubcontractWSDao {
 	public String getSCAttachmentFileLink(String nameObject, String textKey, Integer sequenceNo) throws Exception {
 		String fileLink = "";
 
-		GetAttachmentLinkRequestObj requestObj = new GetAttachmentLinkRequestObj ();
+		GetAttachmentLinkRequestObj requestObj = new GetAttachmentLinkRequestObj();
 		requestObj.setObjectName(nameObject);
 		requestObj.setTextKey(textKey);
 		requestObj.setSequenceNo(sequenceNo);
@@ -337,13 +333,13 @@ public class SubcontractWSDao {
 		long start = System.currentTimeMillis();
 		GetAttachmentLinkResponseObj responseObj = (GetAttachmentLinkResponseObj) getAttachmentLinkWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("time for calling ws(getAttachmentLinkWebServiceTemplate):"+ ((end-start)/1000.00));
+		logger.info("time for calling ws(getAttachmentLinkWebServiceTemplate):" + ((end - start) / 1000.00));
 
 		fileLink = responseObj.getFileLink();
 		return fileLink;
 	}
 
-	public List<String> getSCWorkscope(String jobNumber, Integer packageNo){
+	public List<String> getSCWorkscope(String jobNumber, Integer packageNo) {
 		GetSCWorkScopeRequestObj requestObj = new GetSCWorkScopeRequestObj();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNumber(packageNo);
@@ -353,15 +349,15 @@ public class SubcontractWSDao {
 			responseObj = (GetSCWorkScopeResponseObj)getSCWorkScopeManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		} catch (UnmarshallingFailureException e) {
 			long end = System.currentTimeMillis();
-			logger.info("Time for calliong web service (getSCWorkscope)="+(end -start)/1000.0);
-			logger.info("No Work Scope in Job "+jobNumber.trim()+" SC "+packageNo);
+			logger.info("Time for calliong web service (getSCWorkscope)=" + (end - start) / 1000.0);
+			logger.info("No Work Scope in Job " + jobNumber.trim() + " SC " + packageNo);
 			return new ArrayList<String>();
 		}
 		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCWorkscope)="+(end -start)/1000.0);
-		if (responseObj!=null && responseObj.getFieldsObj()!=null){
+		logger.info("Time for calliong web service (getSCWorkscope)=" + (end - start) / 1000.0);
+		if (responseObj != null && responseObj.getFieldsObj() != null) {
 			List<String> scWorkScopeList = new ArrayList<String>();
-			for (GetSCWorkScopeResponseFieldsObj fieldsObj: responseObj.getFieldsObj())
+			for (GetSCWorkScopeResponseFieldsObj fieldsObj : responseObj.getFieldsObj())
 				scWorkScopeList.add(fieldsObj.getScWorkScope().trim());
 			return scWorkScopeList;
 		}
@@ -374,11 +370,11 @@ public class SubcontractWSDao {
 	 * @author tikywong
 	 * created on Jun 7, 2013 4:53:22 PM
 	 */
-	public void insertSCPackage(Subcontract scPackage) throws Exception{
+	public void insertSCPackage(Subcontract scPackage) throws Exception {
 		logger.info("Inserting SCPackage to JDE...");
-		//insert header
+		// insert header
 		InsertSCHeaderRequestListObj headerRequestListObj = new InsertSCHeaderRequestListObj();
-		ArrayList<InsertSCHeaderRequestObj>  headerRequestList = new ArrayList<InsertSCHeaderRequestObj>();
+		ArrayList<InsertSCHeaderRequestObj> headerRequestList = new ArrayList<InsertSCHeaderRequestObj>();
 
 		InsertSCHeaderRequestObj headerRequestObj = new InsertSCHeaderRequestObj();
 		Boolean material = scPackage.getMaterialIncludedContract();
@@ -386,22 +382,24 @@ public class SubcontractWSDao {
 			headerRequestObj.setTimeAndMaterialsFlag("1");
 		else
 			headerRequestObj.setTimeAndMaterialsFlag("0");
-		headerRequestObj.setWorkStationId(environmentConfig.getNodeName());
-		if (scPackage.getSplitTerminateStatus()!=null)
+		String nodeName = "NodeName";
+		if(environmentConfig != null) nodeName = environmentConfig.getNodeName();
+		headerRequestObj.setWorkStationId(nodeName);
+		if (scPackage.getSplitTerminateStatus() != null)
 			headerRequestObj.setPeriodNoAp(Integer.parseInt(scPackage.getSplitTerminateStatus()));
-		if (scPackage.getInternalJobNo()!=null && scPackage.getInternalJobNo().length()>12)
+		if (scPackage.getInternalJobNo() != null && scPackage.getInternalJobNo().length() > 12)
 			headerRequestObj.setControlGroup(scPackage.getInternalJobNo().substring(0, 50));
 		else
 			headerRequestObj.setControlGroup(scPackage.getInternalJobNo());
 		headerRequestObj.setUserId(wsConfig.getUserName());
 
-		headerRequestObj.setQSSubcontractStatus(scPackage.getSubcontractStatus()+"");
-		if (scPackage.getPaymentTerms()!=null && scPackage.getPaymentTerms().trim().length()>3)
+		headerRequestObj.setQSSubcontractStatus(scPackage.getSubcontractStatus() + "");
+		if (scPackage.getPaymentTerms() != null && scPackage.getPaymentTerms().trim().length() > 3)
 			headerRequestObj.setPaymentTermsCode01(scPackage.getPaymentTerms().trim().substring(0, 3));
 		else
 			headerRequestObj.setPaymentTermsCode01(scPackage.getPaymentTerms().trim());
 		headerRequestObj.setUnitRateOriginal(Double.valueOf(0.0));
-		if (scPackage.getFormOfSubcontract()!=null){
+		if (scPackage.getFormOfSubcontract() != null) {
 			if (scPackage.getFormOfSubcontract().equals(Subcontract.MAJOR))
 				headerRequestObj.setTypeOfForm("1");
 			else if (scPackage.getFormOfSubcontract().equals(Subcontract.MINOR))
@@ -423,11 +421,11 @@ public class SubcontractWSDao {
 		headerRequestObj.setCummulativeAmount(Double.valueOf(0.0));
 		headerRequestObj.setPAYMENT_STATUS_CODE(scPackage.getPaymentStatus());
 		String retentionTerms = scPackage.getRetentionTerms();
-		if (retentionTerms==null){
+		if (retentionTerms == null) {
 			headerRequestObj.setUnreadReasonCode("  ");
 		}
 		else{
-			if (Subcontract.RETENTION_LUMPSUM.equals(retentionTerms)){
+			if (Subcontract.RETENTION_LUMPSUM.equals(retentionTerms)) {
 				headerRequestObj.setUnreadReasonCode("LS");
 			}
 			else if (retentionTerms.equals(Subcontract.RETENTION_ORIGINAL)){
@@ -440,7 +438,7 @@ public class SubcontractWSDao {
 
 		headerRequestObj.setSubcontractTotalAmount(Double.valueOf(0.0));
 		headerRequestObj.setCurrencyConverRateOv(scPackage.getExchangeRate());
-		if (scPackage.getPackageNo()!=null)
+		if (scPackage.getPackageNo() != null)
 			headerRequestObj.setOrderNumber07(Integer.parseInt(scPackage.getPackageNo()));
 		Boolean plant = scPackage.getPlantIncludedContract();
 		if (plant)
@@ -452,33 +450,33 @@ public class SubcontractWSDao {
 		headerRequestObj.setIrsTipAllocaPercentge(scPackage.getMaxRetentionPercentage());
 		headerRequestObj.setMatchPercentPrice(scPackage.getInterimRentionPercentage());
 		headerRequestObj.setAMOUNT_ALLOCATED(Double.valueOf(0.0));
-		if (scPackage.getVendorNo()!=null)
+		if (scPackage.getVendorNo() != null)
 			headerRequestObj.setAddressNumber(Integer.parseInt(scPackage.getVendorNo()));
 		headerRequestObj.setProgramId(WSPrograms.JP58001I_SCHeaderInsertManager);
 
 		headerRequestObj.setPeriodNumberCurrent(scPackage.getCpfBasePeriod());
 		headerRequestObj.setAmountReleased(Double.valueOf(0.0));
-		if (scPackage.getDescription()!=null && scPackage.getDescription().trim().length()>50)
+		if (scPackage.getDescription() != null && scPackage.getDescription().trim().length() > 50)
 			headerRequestObj.setDescriptn01(scPackage.getDescription().trim().substring(0, 50));
 		else
 			headerRequestObj.setDescriptn01(scPackage.getDescription()!=null?scPackage.getDescription().trim():" ");
 		headerRequestObj.setSubcontractorNature(scPackage.getSubcontractorNature());
-		if (scPackage.getJobInfo()!=null)
+		if (scPackage.getJobInfo() != null)
 			headerRequestObj.setCostCenter(scPackage.getJobInfo().getJobNumber());
 
 		headerRequestObj.setUserReservedAmount(Double.valueOf(0.0));
 		headerRequestObj.setGenericNumeric4(scPackage.getMosRetentionPercentage());
 		headerRequestObj.setTransactionOriginator(scPackage.getCreatedUser());
-		if (scPackage.getCpfBaseYear()!=null)
-			headerRequestObj.setFiscalYear(scPackage.getCpfBaseYear().toString().substring(2,4));
-		String subContractTerm = scPackage.getSubcontractTerm()!=null? scPackage.getSubcontractTerm(): "";
-		String cpf= scPackage.getCpfCalculation()!=null? scPackage.getCpfCalculation(): "";
-		
-		if (subContractTerm.equals("Lump Sum") && cpf.equals("Not Subject to CPF") )		
+		if (scPackage.getCpfBaseYear() != null)
+			headerRequestObj.setFiscalYear(scPackage.getCpfBaseYear().toString().substring(2, 4));
+		String subContractTerm = scPackage.getSubcontractTerm() != null ? scPackage.getSubcontractTerm() : "";
+		String cpf = scPackage.getCpfCalculation() != null ? scPackage.getCpfCalculation() : "";
+
+		if (subContractTerm.equals("Lump Sum") && cpf.equals("Not Subject to CPF"))
 			headerRequestObj.setSourceOfContract("1");
-		else if (subContractTerm.equals("Re-measurement") && cpf.equals("Subject to CPF") )		
+		else if (subContractTerm.equals("Re-measurement") && cpf.equals("Subject to CPF"))
 			headerRequestObj.setSourceOfContract("2");
-		else if (subContractTerm.equals("Re-measurement") && cpf.equals("Not Subject to CPF") )		
+		else if (subContractTerm.equals("Re-measurement") && cpf.equals("Not Subject to CPF"))
 			headerRequestObj.setSourceOfContract("3");
 		else
 			headerRequestObj.setSourceOfContract("4");
@@ -488,9 +486,9 @@ public class SubcontractWSDao {
 		long start = System.currentTimeMillis();
 		InsertSCHeaderResponseObj headerResponseObj = (InsertSCHeaderResponseObj) insertSCHeaderWebServiceTemplate.marshalSendAndReceive(headerRequestListObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("time for calling ws(insertSCHeaderWebServiceTemplate):"+ ((end-start)/1000.00));
+		logger.info("time for calling ws(insertSCHeaderWebServiceTemplate):" + ((end - start) / 1000.00));
 
-		logger.info("responseObj size="+ headerResponseObj.getNumberOfRowsInserted());
+		logger.info("responseObj size=" + headerResponseObj.getNumberOfRowsInserted());
 	}
 
 	public String currencyCodeValidation(String currencyCode) throws Exception {
@@ -501,31 +499,31 @@ public class SubcontractWSDao {
 		long start = System.currentTimeMillis();
 		responseObjList = (GetCurrencyValidationResponseListObj)getCurrencyValidationManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCDate)="+(end -start)/1000.0);
-		if(responseObjList.getGetCurrencyValidationResponseObjList().size()>0)
-			if(responseObjList.getGetCurrencyValidationResponseObjList().get(0)!=null){
+		logger.info("Time for calliong web service (getSCDate)=" + (end - start) / 1000.0);
+		if (responseObjList.getGetCurrencyValidationResponseObjList().size() > 0)
+			if (responseObjList.getGetCurrencyValidationResponseObjList().get(0) != null) {
 				logger.info("Currency Code Description: "+responseObjList.getGetCurrencyValidationResponseObjList().get(0).getDescription());
 				return responseObjList.getGetCurrencyValidationResponseObjList().get(0).getDescription();}
 		return null;
 	}
-	
+
 	// added by brian on 20110322
 	// Get the currency code list from JDE web services
 	// return full list if pass empty string to web service
 	// return empty list if cannot get
 	public List<CurrencyCodeWrapper> getCurrencyCodeList(String currencyCode) throws Exception {
-		logger.info("PackageWSDaoImpl - getCurrencyCodeList"); 
+		logger.info("PackageWSDaoImpl - getCurrencyCodeList");
 		List<CurrencyCodeWrapper> currencyCodeList = new ArrayList<CurrencyCodeWrapper>();
 		GetCurrencyValidationRequestObj requestObj = new GetCurrencyValidationRequestObj();
 		requestObj.setCurrencyCodeFrom(currencyCode.trim());
-		
+
 		GetCurrencyValidationResponseListObj responseObjList = new GetCurrencyValidationResponseListObj();
 		long start = System.currentTimeMillis();
 		responseObjList = (GetCurrencyValidationResponseListObj)getCurrencyValidationManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCDate)="+(end -start)/1000.0);
+		logger.info("Time for calliong web service (getSCDate)=" + (end - start) / 1000.0);
 		if(responseObjList.getGetCurrencyValidationResponseObjList() != null && responseObjList.getGetCurrencyValidationResponseObjList().size()>0){
-			for(int i = 0; i < responseObjList.getGetCurrencyValidationResponseObjList().size(); i++){
+			for (int i = 0; i < responseObjList.getGetCurrencyValidationResponseObjList().size(); i++) {
 				CurrencyCodeWrapper temp = new CurrencyCodeWrapper();
 				temp.setCurrencyCode(responseObjList.getGetCurrencyValidationResponseObjList().get(i).getCurrencyCodeFrom());
 				temp.setCurrencyDescription(responseObjList.getGetCurrencyValidationResponseObjList().get(i).getDescription());
@@ -534,7 +532,7 @@ public class SubcontractWSDao {
 		}
 		return currencyCodeList;
 	}
-	
+
 	public WebServiceTemplate getGetSCWorkScopeManagerWebServiceTemplate() {
 		return getSCWorkScopeManagerWebServiceTemplate;
 	}
@@ -571,45 +569,45 @@ public class SubcontractWSDao {
 	public WebServiceTemplate getUpdateSCWorkScopeWebServiceTemplate() {
 		return updateSCWorkScopeWebServiceTemplate;
 	}
-	
+
 	public GetPerformanceAppraisalsResponseListObj GetPerformanceAppraisalsList(
 			String jobNumber, Integer sequenceNumber, String appraisalType,
 			String groupCode, Integer vendorNumber, Integer subcontractNumber,
 			String status) throws Exception {
-		
+
 		// input WHERE FIELD
 		GetPerformanceAppraisalsRequestObj requestObj = new GetPerformanceAppraisalsRequestObj();
-		if(jobNumber != null && jobNumber.length() > 0)
+		if (jobNumber != null && jobNumber.length() > 0)
 			requestObj.setJobNumber(jobNumber);
-		if(sequenceNumber != null)
+		if (sequenceNumber != null)
 			requestObj.setSequenceNumber(sequenceNumber);
-		if(appraisalType != null && appraisalType.length() > 0)
+		if (appraisalType != null && appraisalType.length() > 0)
 			requestObj.setAppraisalType(appraisalType);
-		if(groupCode != null && groupCode.length() > 0)
+		if (groupCode != null && groupCode.length() > 0)
 			requestObj.setGroupCode(groupCode);
-		if(vendorNumber != null)
+		if (vendorNumber != null)
 			requestObj.setVendorNumber(vendorNumber);
-		if(subcontractNumber != null)
+		if (subcontractNumber != null)
 			requestObj.setSubcontractNumber(subcontractNumber);
-		if(status != null)
+		if (status != null)
 			requestObj.setStatus(status);
-		
+
 		// Timer
 		long start = System.currentTimeMillis();
-		
+
 		GetPerformanceAppraisalsResponseListObj responseListObj = (GetPerformanceAppraisalsResponseListObj) getPerformanceAppraisalWSTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		
+
 		long end = System.currentTimeMillis();
-		
-		logger.info("Time for calling WS(GetPerformanceAppraisalsList):"+ ((end- start)/1000));
-		
-		if(responseListObj != null)
-			if(responseListObj.getPerformanceAppraisalsList() != null)
+
+		logger.info("Time for calling WS(GetPerformanceAppraisalsList):" + ((end - start) / 1000));
+
+		if (responseListObj != null)
+			if (responseListObj.getPerformanceAppraisalsList() != null)
 				logger.info("RETURNED PERFORMANCE APPRAISALS TOTAL SIZE: " + responseListObj.getPerformanceAppraisalsList().size());
-		
+
 		return responseListObj;
 	}
-	
+
 	/**
 	 * 
 	 * @author peterchan 
@@ -618,25 +616,22 @@ public class SubcontractWSDao {
 	 * @return
 	 * @throws DatabaseOperationException
 	 */
-	public Boolean updateSCWorkScopeInJDE(Subcontract scPackage) throws DatabaseOperationException{
+	public Boolean updateSCWorkScopeInJDE(Subcontract scPackage) throws DatabaseOperationException {
 		UpdateSCWorkScopeRequestObj requestObj = new UpdateSCWorkScopeRequestObj();
-		if (scPackage==null)
+		if (scPackage == null)
 			throw new DatabaseOperationException("SC Package is null");
-		List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
-		if (scWorkScopeList==null)
-			throw new DatabaseOperationException("No workscope in SC Package");
 		requestObj.setJobNumber(scPackage.getJobInfo().getJobNumber().trim());
 		requestObj.setPackageNo(Integer.valueOf(scPackage.getPackageNo()));
-		requestObj.setWorkScope(scWorkScopeList.get(0).getWorkScope());
+		requestObj.setWorkScope("" + scPackage.getWorkscope());
 		requestObj.setUserID(scPackage.getLastModifiedUser());
 
 		long start = System.currentTimeMillis();
 		UpdateSCWorkScopeResponseObj responseListObj = (UpdateSCWorkScopeResponseObj) updateSCWorkScopeWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 		long end = System.currentTimeMillis();
-		
-		logger.info("Time for calling WS(updateSCWorkScopeInJDE):"+ ((end- start)/1000));
-		
-		if (responseListObj!=null && responseListObj.getAddedRecord().longValue()>0)
+
+		logger.info("Time for calling WS(updateSCWorkScopeInJDE):" + ((end - start) / 1000));
+
+		if (responseListObj != null && responseListObj.getAddedRecord().longValue() > 0)
 			return Boolean.TRUE;
 		return Boolean.FALSE;
 	}

@@ -1173,7 +1173,7 @@ public class ResourceSummaryService implements Serializable {
 		else
 			repackaging = repackagingEntryDao.get(Long.valueOf(repackagingEntryId));
 		
-		if("900".equals(repackaging.getStatus())){
+		if(repackaging != null && "900".equals(repackaging.getStatus())){
 			result = "This repackaging entry has already been confirmed and locked.";
 			return result;
 		}
