@@ -237,8 +237,8 @@
 														ng-show="subcontract.retentionTerms == 'Lump Sum'">
 														<div class="col-md-12">
 															<div class="input-group">
-																<span class="input-group-addon">$</span> <input
-																	type="number" class="form-control"
+																<span class="input-group-addon">$</span> <input step="0.1"
+																	data-parsley-type="number" class="form-control"
 																	ng-model="subcontract.retentionAmount"
 																	ng-disabled="disableButtons"
 																	data-ng-required="subcontract.retentionTerms == 'Lump Sum'">
@@ -368,7 +368,7 @@
 														ng-show="subcontract.cpfCalculation == true">
 														<label>CPF Base Period</label>
 														<div class="input-group col-md-12">
-															<input type="number" class="form-control"
+															<input data-parsley-type="number" class="form-control"
 																name="cpfBasePeriod" data-parsley-minlength="1"
 																data-parsley-maxlength="2"
 																ng-model="subcontract.cpfBasePeriod"
@@ -383,7 +383,7 @@
 														ng-show="subcontract.cpfCalculation == true">
 														<label>CPF Base Year</label>
 														<div class="input-group col-md-12">
-															<input type="number" class="form-control"
+															<input data-parsley-type="number" class="form-control"
 																name="cpfBaseYear" data-parsley-minlength="4"
 																data-parsley-maxlength="4"
 																ng-model="subcontract.cpfBaseYear"
