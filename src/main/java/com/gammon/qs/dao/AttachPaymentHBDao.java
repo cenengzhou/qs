@@ -110,7 +110,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	public boolean saveAttachPayment(AttachPayment attachPayment) throws Exception{
 		AttachPayment dbObj = this.getSCPaymentAttachment(attachPayment);
 		if (dbObj==null)
-			throw new DatabaseOperationException("Update Fail.");
+			throw new DatabaseOperationException("[Update Fail] PaymentCertNo:" + attachPayment.getPaymentCert() + " SequenceNo:" + attachPayment.getSequenceNo());
 		dbObj.setFileLink(attachPayment.getFileLink());
 		dbObj.setFileName(attachPayment.getFileName());
 		dbObj.setDocumentType(attachPayment.getDocumentType());
@@ -123,7 +123,7 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	public boolean addSCAttachment(AttachPayment attachPayment) throws DatabaseOperationException{
 		AttachPayment dbObj = this.getSCPaymentAttachment(attachPayment);
 		if (dbObj!=null)
-			throw new DatabaseOperationException("Upload Fail."); 
+			throw new DatabaseOperationException("[Update Fail] PaymentCertNo:" + attachPayment.getPaymentCert() + " SequenceNo:" + attachPayment.getSequenceNo()); 
 		attachPayment.setCreatedDate(new Date());
 		saveOrUpdate(attachPayment);
 		return true;

@@ -114,7 +114,7 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 	public boolean saveSCDetailsAttachment(AttachSubcontractDetail scDetailsAttachment) throws Exception{
 		AttachSubcontractDetail dbObj = this.getSCDetailsAttachment(scDetailsAttachment);
 		if (dbObj==null)
-			throw new DatabaseOperationException("Update Fail."); 
+			throw new DatabaseOperationException("[Update Fail] getSubcontractDetail:" + scDetailsAttachment.getSubcontractDetail() + " SequenceNo:" + scDetailsAttachment.getSequenceNo()); 
 		dbObj.setFileLink(scDetailsAttachment.getFileLink());
 		dbObj.setFileName(scDetailsAttachment.getFileName());
 		dbObj.setTextAttachment(scDetailsAttachment.getTextAttachment());
@@ -127,7 +127,7 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 	public boolean addSCAttachment(AttachSubcontractDetail scDetailsAttachment) throws DatabaseOperationException{
 		AttachSubcontractDetail dbObj = this.getSCDetailsAttachment(scDetailsAttachment);
 		if (dbObj!=null)
-			throw new DatabaseOperationException("Upload Fail.");
+			throw new DatabaseOperationException("[Update Fail] getSubcontractDetail:" + scDetailsAttachment.getSubcontractDetail() + " SequenceNo:" + scDetailsAttachment.getSequenceNo());
 		
 		scDetailsAttachment.setCreatedDate(new Date());
 		saveOrUpdate(scDetailsAttachment);

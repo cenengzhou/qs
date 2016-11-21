@@ -4653,7 +4653,7 @@ public class SubcontractService {
 					paymentDetail.setPaymentCert(paymentCert);
 					paymentDetail.setSubcontractDetail(scDetails);
 					
-					
+					logger.info("Inserting Payment detail" + paymentDetail.toString());
 					paymentCertDetailHBDao.insert(paymentDetail);
 				}
 				
