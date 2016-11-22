@@ -50,6 +50,7 @@ import com.gammon.qs.domain.Tender;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -112,7 +113,8 @@ public class HTMLService implements Serializable{
 		String strCertIssueDate = null;
 		Double gstPayable = new Double(0);
 		Double gstReceivable = new Double(0);
-		Double ivCumAmt = new Double(0);
+		Double postedIVAmt = new Double(0);
+		Double maxRetentionAmount = new Double(0);
 		
 		int mainCertNumber = 0;
 		int currentPaymentNo = 0;
@@ -170,6 +172,7 @@ public class HTMLService implements Serializable{
 		
 		try {
 			scPackage = subcontractHBDao.obtainSCPackage(paymentCertViewWrapper.getJobNumber(), paymentCertViewWrapper.getSubContractNo().toString());
+			maxRetentionAmount = CalculationUtil.round(scPackage.getRetentionAmount().doubleValue(), 2);
 			if(mainCertNumber != 0)
 				clientCertAmount = mainCertWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNumber).getAmount();
 		} catch (Exception e) {
@@ -181,7 +184,7 @@ public class HTMLService implements Serializable{
 			resourceList = resourceSummaryHBDao.getResourceSummariesSearch(job, subcontractNumber, "14*", null);
 			
 			for (int i=0; i<resourceList.size(); i++) {
-					ivCumAmt += resourceList.get(i).getCurrIVAmount();
+					postedIVAmt += resourceList.get(i).getPostedIVAmount();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,7 +220,7 @@ public class HTMLService implements Serializable{
 		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
 		data.put("clientCertAmount", clientCertAmount != null ? clientCertAmount : new Double(0));
 		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
-		data.put("ivCumAmt", ivCumAmt != null ? ivCumAmt : new Double(0));
+		data.put("postedIVAmt", postedIVAmt != null ? postedIVAmt : new Double(0));
 		data.put("gstPayable", gstPayable != null ? gstPayable : new Double(0));
 		data.put("gstReceivable", gstReceivable != null ? gstReceivable : new Double(0));
 		data.put("mainCertNumber", mainCertNumber);
@@ -227,6 +230,8 @@ public class HTMLService implements Serializable{
 		data.put("strCertIssueDate", strCertIssueDate != null ? strCertIssueDate : "");
 		data.put("strPaymentStatus", strPaymentStatus);
 		data.put("currentPaymentNo", currentPaymentNo);
+		data.put("maxRetentionAmount", maxRetentionAmount);
+		
 		
 		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
 			
