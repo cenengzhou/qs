@@ -59,7 +59,10 @@ public class RepackagingDetailHBDao extends BaseHibernateDao<RepackagingDetail> 
 				.add(Projections.property("unit"), "unit")
 				.add(Projections.property("rate"), "rate")
 				.add(Projections.property("amount"), "amount")
-				.add(Projections.property("resourceType"), "resourceType"));
+				.add(Projections.property("resourceType"), "resourceType")
+				.add(Projections.property("excludeLevy"), "excludeLevy")
+				.add(Projections.property("excludeDefect"), "excludeDefect"));
+
 		criteria.setResultTransformer(new AliasToBeanResultTransformer(RepackagingDetailComparisonWrapper.class));
 		return (List<RepackagingDetailComparisonWrapper>)criteria.list();
 	}

@@ -1593,7 +1593,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 	/**************************************************** FUNCTIONS FOR PCMS **************************************************************/
 	@SuppressWarnings("unchecked")
 	public List<ResourceSummary> getResourceSummaries(JobInfo jobInfo, String packageNo, String objectCode) throws DatabaseOperationException{
-		logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
+		//logger.info("ResourceSummary Dao: getResourceSummariesSearch - " + jobInfo.getJobNumber());
 		List<ResourceSummary> resourceSummaries;
 		try{
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -1655,6 +1655,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			if(!GenericValidator.isBlankOrNull(packageNo)){
 				criteria.add(Restrictions.or(Restrictions.eq("packageNo", packageNo)));
 			}
+			criteria.add(Restrictions.like("objectCode", "14%"));
 			
 			criteria.addOrder(Order.asc("objectCode"));
 			criteria.addOrder(Order.asc("packageNo"));

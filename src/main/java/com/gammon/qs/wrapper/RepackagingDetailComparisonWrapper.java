@@ -14,6 +14,8 @@ public class RepackagingDetailComparisonWrapper implements Serializable, Compara
 	private Double amount;
 	private Double previousAmount;
 	private String resourceType;
+	private Boolean excludeLevy;
+	private Boolean excludeDefect;
 	
 	public String getPackageNo() {
 		return packageNo;
@@ -71,6 +73,18 @@ public class RepackagingDetailComparisonWrapper implements Serializable, Compara
 		return resourceType;
 	}
 	
+	public Boolean getExcludeLevy() {
+		return excludeLevy;
+	}
+	public void setExcludeLevy(Boolean excludeLevy) {
+		this.excludeLevy = excludeLevy;
+	}
+	public Boolean getExcludeDefect() {
+		return excludeDefect;
+	}
+	public void setExcludeDefect(Boolean excludeDefect) {
+		this.excludeDefect = excludeDefect;
+	}
 	public String keyCode(){
 		return objectCode+subsidiaryCode+(packageNo==null?"0":packageNo.trim().length()==0?"0":packageNo)+description+rate+unit;
 	}

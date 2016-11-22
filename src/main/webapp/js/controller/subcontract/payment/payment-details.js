@@ -193,7 +193,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'postedAmount', displayName: 'Cumulative Posted Amount', width: 120, enableCellEdit: false,
+			             { field: 'postedAmount', displayName: 'Posted Amount', width: 120, enableCellEdit: false,
 			            	 aggregationHideLabel : true,
 			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {

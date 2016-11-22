@@ -497,6 +497,7 @@ public class ResourceSummaryService implements Serializable {
 				audit.setValueTo(resourceSummary.getQuantity().toString());
 				resourceSummaryDao.saveAudit(audit);
 				resourceInDB.setQuantity(resourceSummary.getQuantity());
+				resourceInDB.setAmountBudget(resourceSummary.getAmountBudget());
 			}
 			if(!resourceSummary.getExcludeLevy().equals(resourceInDB.getExcludeLevy())){
 				ResourceSummaryAuditCustom audit = new ResourceSummaryAuditCustom();

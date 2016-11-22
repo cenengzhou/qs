@@ -4,7 +4,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
-    		if($scope.subcontract.preAwardMeetingDate!=null){
+    		if($scope.subcontract.preAwardMeetingDate!=null || $scope.subcontract.formOfSubcontract == 'Consultancy Agreement'){
 		    	masterListService.getSubcontractor($scope.rcmTenderer.vendorNo)
 		    	.then(
 		    			function( data ) {

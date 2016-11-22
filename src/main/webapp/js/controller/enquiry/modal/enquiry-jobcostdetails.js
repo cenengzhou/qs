@@ -122,7 +122,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 			            		 return c;
 			            	 }			            	 
 			             },
-			             { field: 'amount', width: '80', displayName: 'Amount', enableCellEdit: false, cellFilter: 'number:2',
+			             { field: 'amount', width: '120', displayName: 'Amount', enableCellEdit: false, cellFilter: 'number:2',
 			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';

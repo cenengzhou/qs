@@ -1,7 +1,6 @@
 package com.gammon.qs.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.shared.util.CalculationUtil;
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class RepackagingService {
@@ -71,54 +71,52 @@ public class RepackagingService {
 
 		if (repackagingList != null && repackagingList.size()>0){
 			while(dataList.size()<12){
-				dataList.add(new BigDecimal(repackagingList.get(repackagingList.size()-1).getTotalResourceAllowance()));
+				dataList.add( CalculationUtil.roundToBigDecimal(repackagingList.get(repackagingList.size()-1).getTotalResourceAllowance(), 2));
 			}
 		}else{
 			while(dataList.size()<12){
 				dataList.add(new BigDecimal(0));
 			}
 		}
-
 		for(Repackaging repackaging: repackagingList){
+			BigDecimal budgetAmount = CalculationUtil.roundToBigDecimal(repackaging.getTotalResourceAllowance(), 2);
 			if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==1){
-				dataList.set(0, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(0, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==2){
-				dataList.set(1, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(1, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==3){
-				dataList.set(2, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(2, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==4){
-				dataList.set(3, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(3, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==5){
-				dataList.set(4, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(4, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==6){
-				dataList.set(5, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(5, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==7){
-				dataList.set(6, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(6, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==8){
-				dataList.set(7, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(7, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==9){
-				dataList.set(8, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(8, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==10){
-				dataList.set(9, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(9, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==11){
-				dataList.set(10, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(10, budgetAmount);
 			}
 			else if(Integer.valueOf(DateHelper.formatDate(repackaging.getCreateDate(), "MM"))==12){
-				dataList.set(11, new BigDecimal(repackaging.getTotalResourceAllowance()).setScale(2, RoundingMode.HALF_UP));
+				dataList.set(11, budgetAmount);
 			}
-
 		}
-		
 		return dataList;
 	}
 	
@@ -126,10 +124,6 @@ public class RepackagingService {
 	public String addRepackaging(String jobNo) throws Exception{
 		String result = "";
 		Repackaging currentRepackaging = this.getLatestRepackaging(jobNo);
-		
-		logger.info("currentRepackaging: "+currentRepackaging);
-		logger.info("version: "+currentRepackaging.getRepackagingVersion());
-		logger.info("currentRepackaging: "+currentRepackaging.getStatus());
 		
 		if(currentRepackaging != null && currentRepackaging.getRepackagingVersion() != null &&  "900".equals(currentRepackaging.getStatus())){
 			logger.info("Create new repackage");

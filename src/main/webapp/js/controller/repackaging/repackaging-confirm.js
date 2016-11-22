@@ -3,6 +3,9 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
+	var optionList = [{ id: 'true', value: 'Excluded' },
+	                   { id: 'false', value: 'Included' }
+		];
 
 	$scope.latestVersion = modalStatus;
 	$scope.repackagingId = modalParam;
@@ -49,7 +52,25 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
-			             { field: 'resourceType', displayName: "Type", width: 60}
+			             { field: 'resourceType', displayName: "Type", width: 60},
+			             { field: 'excludeDefect', displayName: "Defect", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             },
+			             { field: 'excludeLevy', displayName: "Levy", 
+			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
+			                 filter: { 
+			                   term: '',
+			                   options: optionList
+			                 }, 
+			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
+			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
+			             }
 			           ]
 	};
 
@@ -91,6 +112,7 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {
+					console.log(data);
 					$scope.gridOptions.data= data.currentPageContentList;
 					$scope.totalBudget = data.totalBudget;
 					$scope.previousBudget = data.previousBudget; 
@@ -112,4 +134,19 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		$uibModalInstance.close();
 	});
 
-}]);
+}])
+.filter('mapExclude', function() {
+  var excludeHash = {
+    'true': 'Excluded',
+    'false': 'Included'
+  };
+
+  return function(input) {
+      return excludeHash[input];
+  };
+})
+.directive('myCustomDropdown', function() {
+  return {
+    template: '<select class="form-control input-sm" ng-model="colFilter.term" ng-options="option.id as option.value for option in colFilter.options"></select>'
+  };
+});
