@@ -1,11 +1,14 @@
-mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', 'roundUtil', 'modalService', '$state',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, roundUtil, modalService, $state) {
+mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', 'roundUtil', 'modalService', '$state', '$cookies',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, roundUtil, modalService, $state, $cookies) {
 	
 	var optionList = [{ id: 'true', value: 'Excluded' },
 	                  { id: 'false', value: 'Included' }
 	];
 
 	loadData();
+	
+	$scope.postedIVAmount = $cookies.get('postedIVAmount');
+	$scope.cumulativeIVAmount = $cookies.get('cumulativeIVAmount');	
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -16,6 +19,7 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 			//enableFullRowSelection: true,
 			//multiSelect: true,
 			//showGridFooter : true,
+			exporterMenuPdf: false,
 			showColumnFooter : true,
 			//fastWatch : true,
 
@@ -156,14 +160,12 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 						
 					});
 
-					$timeout(function () {
+					/*$timeout(function () {
 						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
 						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[9].getAggregationValue();
 						//$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
-					}, 100);
-
-					
-					
+					}, 100);*/
+						
 					var filteredData = data.filter(function(obj) {
 					    return (obj.ivMovement != 0);
 					});

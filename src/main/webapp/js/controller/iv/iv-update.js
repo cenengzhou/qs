@@ -1,5 +1,5 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', 'rootscopeService', 'repackagingService', 'blockUI',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, rootscopeService, repackagingService, blockUI) {
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', 'rootscopeService', 'repackagingService', 'blockUI', '$cookies',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, rootscopeService, repackagingService, blockUI, $cookies) {
 	rootscopeService.setSelectedTips('');
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
@@ -460,7 +460,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					
 					$timeout(function () {
 						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
+						$cookies.put('postedIVAmount', $scope.postedIVAmount);
 						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[9].getAggregationValue();
+						$cookies.put('cumulativeIVAmount', $scope.cumulativeIVAmount);
 						$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
 					}, 100);
 
