@@ -28,28 +28,29 @@
 									<label for="typeLedger">Ledger Type:</label> 
 									<input type="text" class="form-control" id="typeLedger" name="typeLedger" ng-model="typeLedger">
 								</div>
-								<div class="col-md-4">
-									<div class="col-md-6"  style="padding:0px">
-										<label for="fromDate">From:</label>
-										<div class="input-group" moment-picker="fromDate"
-											format="YYYY-MM" start-view="year" today="true">
-											<span class="input-group-addon"> <i class="fa fa-calendar"></i></span> 
-											<input class="form-control" id="fromDate" name="fromDate"
-												ng-model="fromDate" 
-												 title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
-										</div>
+								<div class="col-md-2">
+									<label for="searchYear">Year:</label>
+									<div class="input-group" moment-picker="searchYear"
+										format="YYYY" start-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchYear" name="searchYear"
+											ng-model="searchYear"
+											pattern=".{4,4}" required title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
-									<div class="col-md-6"  style="padding:0px">
-										<label for="thruDate">To:</label>
-										<div class="input-group" moment-picker="thruDate"
-											format="YYYY-MM" start-view="year" today="true">
-											<span class="input-group-addon"> <i
-												class="fa fa-calendar"></i>
-											</span> <input class="form-control" id="thruDate" name="thruDate"
-												ng-model="thruDate" 
-												title="Please select Year and Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
-										</div>
+									<p ng-show="searchJobCostForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchMonth">Month:</label>
+									<div class="input-group" moment-picker="searchMonth"
+										format="M" start-view="month" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchMonth" name="searchMonth"
+											ng-model="searchMonth"
+											pattern=".{1,2}" required title="Please select Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
 									</div>
+									<p ng-show="searchJobCostForm.searchMonth.$error.pattern" class="red">Please select Month from the date picker</p>
 								</div>
 								<div class="col-md-2">
 										<label>&nbsp;</label>
@@ -57,7 +58,7 @@
 								</div>
 								<div class="col-md-2">
 										<label>&nbsp;</label>
-										<button type="button" ng-click="goAccountLedger()" class="btn btn-block btn-primary"><span class="fa fa-search"></span> By Date</button>
+										<button type="button" ng-click="goAccountLedger()" class="btn btn-block btn-warning"><span class="fa fa-search"></span> By Date</button>
 								</div>
 								</div>
 							</form>

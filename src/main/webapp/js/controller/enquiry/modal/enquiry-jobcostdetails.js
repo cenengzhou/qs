@@ -10,7 +10,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	$scope.typeLedger = $scope.parentScope.searchAccountLedger.ledgerType;
 	$scope.fromDate = moment($scope.parentScope.searchAccountLedger.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.thruDate = moment($scope.parentScope.searchAccountLedger.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
-
+	$scope.searchYear = $scope.parentScope.searchYear;
+	$scope.searchMonth = $scope.parentScope.searchMonth;
 	$scope.typeDocument = null;
 	$scope.noSubcontract = $scope.parentScope.searchAccountLedger.subcontractNo;
 	$scope.codeObject = $scope.parentScope.searchAccountLedger.accountObject;
@@ -18,10 +19,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	$scope.postFlag = $scope.parentScope.searchAccountLedger.postFlag;
 	
 	$scope.loadAccountLedgerList = function(){
-		$scope.yearStart = new Date($scope.fromDate).getFullYear().toString().substr(2,2);
-		$scope.yearEnd = new Date($scope.thruDate).getFullYear().toString().substr(2,2);
-		$scope.monthStart = new Date($scope.fromDate).getMonth()+1;
-		$scope.monthEnd = new Date($scope.thruDate).getMonth()+1;
+		$scope.yearStart = $scope.searchYear.substring(2,4);
+		$scope.yearEnd = $scope.yearStart;
+		$scope.monthStart = $scope.searchMonth;
+		$scope.monthEnd = $scope.monthStart;
 		
 		adlService.getAccountLedgerList($scope.noJob, $scope.typeLedger, $scope.yearStart, $scope.yearEnd, 
 		$scope.monthStart, $scope.monthEnd, $scope.typeDocument, $scope.noSubcontract, $scope.codeObject, $scope.codeSubsidiary)
@@ -62,10 +63,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	
 	function getSearchObject(){
 		var searchObjectMap = {};
-		$scope.yearStart = new Date($scope.fromDate).getFullYear().toString();
-		$scope.yearEnd = new Date($scope.thruDate).getFullYear().toString();
-		$scope.monthStart = new Date($scope.fromDate).getMonth() - 1;
-		$scope.monthEnd = new Date($scope.thruDate).getMonth();
+		$scope.yearStart = $scope.searchYear.substring(0,4);
+		$scope.yearEnd = $scope.yearStart;
+		$scope.monthStart = $scope.searchMonth - 2;
+		$scope.monthEnd = $scope.searchMonth - 1;
 		var nextDate = $scope.parentScope.getNextDate($scope.yearStart, $scope.monthStart, $scope.yearEnd, $scope.monthEnd);
 		searchObjectMap.noJob = $scope.noJob;
 		searchObjectMap.typeLedger = $scope.typeLedger;
