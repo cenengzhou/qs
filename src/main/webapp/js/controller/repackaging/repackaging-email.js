@@ -1,5 +1,5 @@
-mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '$timeout', '$mdConstant', 'GlobalParameter', 'repackagingService', 'modalService',
-                                      function ($scope, $q, $state, $http, $timeout, $mdConstant, GlobalParameter, repackagingService, modalService) {
+mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '$timeout', '$mdConstant', '$cookies', 'rootscopeService', 'GlobalParameter', 'GlobalMessage', 'repackagingService', 'modalService',
+                                      function ($scope, $q, $state, $http, $timeout, $mdConstant, $cookies, rootscopeService, GlobalParameter, GlobalMessage, repackagingService, modalService) {
 
 
 	//Listen for location changes and call the callback
@@ -17,7 +17,12 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     self.contactsCc = [];
     self.filterSelected = true;
     self.mailData = {};
-    
+    self.emailContext = GlobalMessage.repackagingConfirmEmailContent.replace('%JOBNO%', $cookies.get('jobNo'));
+    rootscopeService.gettingUser()
+    .then(function(response){
+    	self.emailSubject = GlobalMessage.repackagingConfirmEmailSubject
+    	.replace('%JOBNO%', $cookies.get('jobNo')).replace('%USERNAME%', response.user.fullname);
+    });
     self.querySearch = querySearch;
     self.querySearchCc = querySearchCc;
     self.filterToCc = filterToCc;
@@ -33,10 +38,10 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     		if(data){
     			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Email sent to reviewer');
     			self.contacts = [];
-    			self.contactCc = [];
+    			self.contactsCc = [];
     			self.mailData = {};
-    			self.emailSubject = null;
-    			self.emailContext = null;
+//    			self.emailSubject = null;
+//    			self.emailContext = null;
     		} else{
     			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Fail to send mail');
     		}
