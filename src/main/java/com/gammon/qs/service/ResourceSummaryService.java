@@ -180,7 +180,7 @@ public class ResourceSummaryService implements Serializable {
 	
 	
 	public IVInputPaginationWrapper obtainResourceSummariesSearchByPageForIVInput(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, String description, int pageNum, boolean finalizedPackage) throws Exception{
-		List<String> finalizedPackageNos = scPackageDao.obtainFinalizedPackageNos(job, packageNo);
+		List<String> finalizedPackageNos = scPackageDao.getFinalizedSubcontractNos(job, packageNo);
 		List<ResourceSummary> bqResourceSummaryList =obtainBQResourceSummaries(job.getJobNumber(), packageNo, objectCode, subsidiaryCode, description, finalizedPackage);
 		return obtainBQResourceSummaryListByPage(bqResourceSummaryList, job, packageNo, objectCode, subsidiaryCode, description, pageNum, finalizedPackageNos);
 	}

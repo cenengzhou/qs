@@ -2418,6 +2418,9 @@ public class PaymentService{
 				return error;
 			}
 			
+			if(paymentType!=null && paymentType.trim().length()==0){
+				paymentType = paymentCert.getIntermFinalPayment();
+			}
 			
 			//3. Get previous cert details: RT/MR
 			double preRTAmount = 0.0;
@@ -2432,93 +2435,96 @@ public class PaymentService{
 				}
 			}
 			
-			if(paymentDetails != null)
-				for(PaymentCertDetail paymentDetail: paymentDetails){
-					if(paymentDetail.getLineType() != "RT" && paymentDetail.getLineType() != "MR" && paymentDetail.getLineType() != "GP" && paymentDetail.getLineType() != "GR"){
-						PaymentCertDetail paymentDetailInDB = 	paymentDetailDao.obtainPaymentDetail(paymentCert, paymentDetail.getSubcontractDetail());
-						
-						if(paymentDetailInDB != null){
-							SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
-	
-							if(scDetail != null){
-								scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
+			if(paymentDetails == null)
+				paymentDetails = paymentDetailDao.getPaymentDetail(jobNo, subcontractNo, paymentCertNo);
+			
+			for(PaymentCertDetail paymentDetail: paymentDetails){
+				if(paymentDetail.getLineType() != "RT" && paymentDetail.getLineType() != "MR" && paymentDetail.getLineType() != "GP" && paymentDetail.getLineType() != "GR"){
+					PaymentCertDetail paymentDetailInDB = 	paymentDetailDao.obtainPaymentDetail(paymentCert, paymentDetail.getSubcontractDetail());
+
+					if(paymentDetailInDB != null){
+						SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
+
+						if(scDetail != null){
+							scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
 
 
-								//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
-								if(!"C1".equals(scDetail.getLineType())  && !"OA".equals(scDetail.getLineType()) && 	
-										!"RR".equals(scDetail.getLineType()) && !"RA".equals(scDetail.getLineType()) &&
-										!"AP".equals(scDetail.getLineType()) && !"MS".equals(scDetail.getLineType())){
+							//4.Validation: New Certified Quantity cannot be larger than BQ Quantity
+							if(!"C1".equals(scDetail.getLineType())  && !"OA".equals(scDetail.getLineType()) && 	
+									!"RR".equals(scDetail.getLineType()) && !"RA".equals(scDetail.getLineType()) &&
+									!"AP".equals(scDetail.getLineType()) && !"MS".equals(scDetail.getLineType())){
 
-									if(scDetail.getAmountSubcontract().doubleValue() >= 0){
-										if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract().doubleValue()) {
-											error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
-											logger.info(error);
-											return error;
-										}
+								if(scDetail.getAmountSubcontract().doubleValue() >= 0){
+									if (paymentDetail.getCumAmount() > scDetail.getAmountSubcontract().doubleValue()) {
+										error = "New Certified Amount: " + paymentDetail.getCumAmount() + " cannot be larger than Subcontract Amount: " + scDetail.getAmountSubcontract() ;
+										logger.info(error);
+										return error;
 									}
 								}
-								
-								if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
-									error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
-									logger.info(error);
-									return error;
-								}else if(("AP".equals(scDetail.getLineType()) ||  "MS".equals(scDetail.getLineType()) ||  "CF".equals(scDetail.getLineType())) && paymentDetail.getCumAmount() <0){
-									error = "AP/MS/CF: " + paymentDetail.getCumAmount() + " should be positive."+ " Sequence No.: " + scDetail.getSequenceNo();
-									logger.info(error);
-									return error;
-								}else if("RR".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
-									error = "RR: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
-									logger.info(error);
-									return error;
-								}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getMovementAmount() !=0){
-									error = "C2:" + paymentDetail.getMovementAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
-									logger.info(error);
-									return error;
-								}
-								
-								if (scDetail instanceof SubcontractDetailBQ)
-									totalCertAmount += paymentDetail.getCumAmount();
-
-
-								if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
-									totalMOSAmount += paymentDetail.getCumAmount();
-								}
-								scDetailDao.update(scDetail);
-								
-								paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
-								paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
-								paymentDetailDao.update(paymentDetailInDB);	
-								
-								
-								//Update C2 of corresponding subcontract
-								try {
-									if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType()))){
-										SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) scDetailDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
-										if(scDetailsCC != null){
-											BigDecimal amountCumCertCC = scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1));
-											if(scDetailsCC.getAmountCumulativeCert().compareTo(amountCumCertCC)!=0){
-												scDetailsCC.setAmountCumulativeCert(scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1)));
-												scDetailDao.update(scDetailsCC);
-												
-												PaymentCert ccLatestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(jobNo, scDetailsCC.getSubcontract().getPackageNo());
-												if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus()))){
-													paymentCertDao.delete(ccLatestPaymentCert);
-													paymentAttachmentDao.deleteAttachmentByByPaymentCertID(ccLatestPaymentCert.getId());
-													paymentDetailDao.deleteDetailByPaymentCertID(ccLatestPaymentCert.getId());
-												}
-											}
-											
-										}
-										
-									}
-								} catch (DataAccessException e) {
-									e.printStackTrace();
-								}
-								
 							}
+
+							if("C1".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
+								error = "Contra Charge Amount: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
+								logger.info(error);
+								return error;
+							}else if(("AP".equals(scDetail.getLineType()) ||  "MS".equals(scDetail.getLineType()) ||  "CF".equals(scDetail.getLineType())) && paymentDetail.getCumAmount() <0){
+								error = "AP/MS/CF: " + paymentDetail.getCumAmount() + " should be positive."+ " Sequence No.: " + scDetail.getSequenceNo();
+								logger.info(error);
+								return error;
+							}else if("RR".equals(scDetail.getLineType()) && paymentDetail.getCumAmount() >0){
+								error = "RR: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
+								logger.info(error);
+								return error;
+							}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getMovementAmount() !=0){
+								error = "C2:" + paymentDetail.getMovementAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
+								logger.info(error);
+								return error;
+							}
+
+							if (scDetail instanceof SubcontractDetailBQ)
+								totalCertAmount += paymentDetail.getCumAmount();
+
+
+							if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
+								totalMOSAmount += paymentDetail.getCumAmount();
+							}
+							scDetailDao.update(scDetail);
+
+							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
+							paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
+							paymentDetailDao.update(paymentDetailInDB);	
+
+
+							//Update C2 of corresponding subcontract
+							try {
+								if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType()))){
+									SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) scDetailDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
+									if(scDetailsCC != null){
+										BigDecimal amountCumCertCC = scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1));
+										if(scDetailsCC.getAmountCumulativeCert().compareTo(amountCumCertCC)!=0){
+											scDetailsCC.setAmountCumulativeCert(scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1)));
+											scDetailDao.update(scDetailsCC);
+
+											PaymentCert ccLatestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(jobNo, scDetailsCC.getSubcontract().getPackageNo());
+											if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus()))){
+												paymentCertDao.delete(ccLatestPaymentCert);
+												paymentAttachmentDao.deleteAttachmentByByPaymentCertID(ccLatestPaymentCert.getId());
+												paymentDetailDao.deleteDetailByPaymentCertID(ccLatestPaymentCert.getId());
+											}
+										}
+
+									}
+
+								}
+							} catch (DataAccessException e) {
+								e.printStackTrace();
+							}
+
 						}
-					}		
-				}
+					}
+				}		
+			}
+
 			
 			//5. Update RT, MR
 			double cumMOSRetention = CalculationUtil.round(totalMOSAmount*paymentCert.getSubcontract().getMosRetentionPercentage()/100.0, 2);
@@ -2529,12 +2535,13 @@ public class PaymentService{
 			if (paymentCert.getSubcontract().getRetentionAmount().compareTo(paymentCert.getSubcontract().getAccumlatedRetention()) < 0)
 				retentionUpperLimit = CalculationUtil.round(paymentCert.getSubcontract().getAccumlatedRetention().doubleValue(), 2);
 			
+			
 			//SCPayment's RT cannot be larger than "Retention Amount"/"Accumulated Retention Amount" in SC Header
 			if (cumRetention>retentionUpperLimit)
 				cumRetention = retentionUpperLimit;
 			
 			//No retention should be hold for Final Payment
-			if(paymentCert.getPaymentStatus()!=null && "F".equalsIgnoreCase(paymentCert.getIntermFinalPayment().trim())){
+			if(paymentCert.getPaymentStatus()!=null && "F".equalsIgnoreCase(paymentType)){
 				cumRetention = preRTAmount;
 				cumMOSRetention = preMRAmount;
 			}

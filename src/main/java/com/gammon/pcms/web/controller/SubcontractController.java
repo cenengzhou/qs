@@ -192,6 +192,12 @@ public class SubcontractController {
 		return subcontractService.getSubcontractDetailTotalNewAmount(jobNo, subcontractNo);
 	}
 	
+	@RequestMapping(value = "getFinalizedSubcontractNos", method = RequestMethod.GET)
+	public List<String> getFinalizedSubcontractNos(@RequestParam(required =true) String jobNo, 
+												@RequestParam(required =false) String subcontractNo) throws Exception{
+		return subcontractService.getFinalizedSubcontractNos(jobNo, subcontractNo);
+	}
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumToSubcontractDetail", method = RequestMethod.POST)
 	public String addAddendumToSubcontractDetail(@RequestParam(required =true) String jobNo, 

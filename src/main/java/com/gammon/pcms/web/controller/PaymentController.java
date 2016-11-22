@@ -152,7 +152,7 @@ public class PaymentController {
 	public String updatePaymentDetails(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo,
 												@RequestParam(required = true) Integer paymentCertNo,
-												@RequestParam(required = true) String paymentType,
+												@RequestParam(required = false) String paymentType,
 												@RequestBody(required = false) List<PaymentCertDetail> paymentDetails){
 		String result = "";
 		result = paymentService.updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails);

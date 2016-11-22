@@ -12,7 +12,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -37,6 +36,7 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.ResourceSummaryAuditCustom;
 import com.gammon.qs.domain.Subcontract;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
@@ -546,6 +546,9 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					resourceSummary.setCurrIVAmount(Double.valueOf(0));
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
+				if(resourceSummary.getRate()!=null && resourceSummary.getQuantity()!=null){
+					resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getRate()*resourceSummary.getQuantity(), 2));
+				}
 //				logger.info("Created Non-SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}

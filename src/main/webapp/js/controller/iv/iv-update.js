@@ -320,9 +320,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     	if(parseFloat(currentObj.amountBudget) < parseFloat(newObj.currIVAmount)){
     		return true;
     	}
-    	if(parseFloat(currentObj.amountBudget) < (parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount))){
+    	/*if(parseFloat(currentObj.amountBudget) < (parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount))){
     		return true;
-    	}
+    	}*/
     	return false;
     }
     

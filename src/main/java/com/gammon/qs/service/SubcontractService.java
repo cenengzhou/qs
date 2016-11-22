@@ -1317,6 +1317,10 @@ public class SubcontractService {
 		return uneditableUnawardedPackageNos;
 	}
 	
+	public List<String> getFinalizedSubcontractNos(String jobNo, String packageNo) throws DatabaseOperationException{
+		return subcontractHBDao.getFinalizedSubcontractNos(jobHBDao.obtainJobInfo(jobNo), packageNo);
+	}
+	
 	
 	/**
 	 * @author koeyyeung

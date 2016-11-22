@@ -219,7 +219,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> obtainFinalizedPackageNos(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
+	public List<String> getFinalizedSubcontractNos(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
 		try{
 			DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Subcontract.class);
 			detachedCriteria.add(Restrictions.eq("systemStatus", "ACTIVE"))

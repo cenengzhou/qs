@@ -138,6 +138,7 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 
 	function loadData() {
 		getResourceSummaries();
+		getFinalizedSubcontractNos();
 	}
 	
 	function getResourceSummaries() {
@@ -148,13 +149,17 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 					$scope.finalizedMovementAmount = 0;
 					angular.forEach(data, function(value, key){
 						value.ivMovement = value.currIVAmount - value.postedIVAmount;
-
+						if($scope.finalizedSubcontractNos.indexOf(value.packageNo) >= 0)
+							$scope.finalizedMovementAmount += value.ivMovement;
+						else
+							$scope.nonFinalizedMovementAmount  += value.ivMovement;
+						
 					});
 
 					$timeout(function () {
 						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
 						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[9].getAggregationValue();
-						$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
+						//$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
 					}, 100);
 
 					
@@ -164,6 +169,15 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 					});
 					$scope.gridOptions.data = filteredData;
 					
+				});
+	}
+
+	function getFinalizedSubcontractNos() {
+		subcontractService.getFinalizedSubcontractNos($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data)
+						$scope.finalizedSubcontractNos = data;
 				});
 	}
 

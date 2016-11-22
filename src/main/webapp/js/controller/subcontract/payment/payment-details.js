@@ -415,7 +415,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	}
 	
 	function updatePaymentDetails(paymentDetails) {
-		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), "I", paymentDetails)
+		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), '', paymentDetails)
 		.then(
 				function( data ) {
 					if(data.length != 0){

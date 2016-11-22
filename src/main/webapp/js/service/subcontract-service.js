@@ -14,7 +14,8 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getAwardedSubcontractNos:							getAwardedSubcontractNos,
     	getUnawardedSubcontractNosUnderPaymentRequisition: 	getUnawardedSubcontractNosUnderPaymentRequisition,
     	getSubcontractDetailTotalNewAmount:					getSubcontractDetailTotalNewAmount,
-    		
+    	getFinalizedSubcontractNos:							getFinalizedSubcontractNos,
+    	
     	upateSubcontract: 									upateSubcontract,
     	upateSubcontractDates: 								upateSubcontractDates,
     	updateWDandIV:										updateWDandIV,
@@ -224,6 +225,20 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
             dataType: "application/json;charset=UTF-8",
             params: {
             	jobNo: jobNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    
+    function getFinalizedSubcontractNos(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getFinalizedSubcontractNos",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo, 
+            	subcontractNo: subcontractNo
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
