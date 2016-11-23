@@ -285,7 +285,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			            	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
             			 {field: 'amountBudget',width:100,  displayName:"Budget Amount", cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, enableFiltering: false },
             			 { field: 'unit', width:50, enableCellEdit: false, enableFiltering: false},
-			             { field: 'quantity', width:100, enableCellEdit: false ,enableFiltering: false},
+			             { field: 'quantity', width:100, enableCellEdit: false ,enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: 'rate', width:100, enableCellEdit: false, enableFiltering: false }
             			 ]
 
