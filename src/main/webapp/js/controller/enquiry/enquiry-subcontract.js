@@ -29,7 +29,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 			             { field: 'jobInfo.jvPercentage', width:'60', displayName: "JV%", enableCellEdit: false},
 			             { field: 'jobInfo.employer', width:'60', displayName: "Client No", enableCellEdit: false},
 			             { field: 'packageNo', width:'60', displayName: "Subcontract", enableCellEdit: false},
-			             { field: 'vendorName', width:'180', displayName: "Subcontractor Name", enableCellEdit: false}, // TODO:ADL
+			             { field: 'nameSubcontractor', width:'180', displayName: "Subcontractor Name", enableCellEdit: false}, // TODO:ADL
 			             { field: 'description', width:'180', displayName: "Description", enableCellEdit: false},
 			             { field: 'paymentCurrency', width:'60', displayName: "Currency", enableCellEdit: false},
 			             { field: 'splitTerminateStatusText', width:'110', displayName: "Split Terminate Status", enableCellEdit: false},
