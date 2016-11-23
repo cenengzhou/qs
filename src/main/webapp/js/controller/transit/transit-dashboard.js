@@ -1,5 +1,5 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants',
-                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants) {
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants', 'jobcostService',
+                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants, jobcostService) {
 	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -316,25 +316,31 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		$scope.completeTransitMsg = '';
     		$scope.completeTransitErr = false;
     		
-    		if(data === ''){
-    			$scope.completeTransitMsg += 'Complete Transit: Success\n';
-    			budgetpostingService.postBudget($scope.jobNo)
-    			.then(function(data){
-    				if(data === ''){
-    					$scope.completeTransitMsg += 'Budget posting: Success\n';
-    				} else {
-    					$scope.completeTransitMsg += 'Budget posting:' + data + '\n';
-    					$scope.completeTransitErr = true;
-    				}
-    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', msg.replace('<br/>', '\n') );
-    			}, function(data){
-    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-    			});
-    		} else {
-    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '\n';
-    			$scope.completeTransitErr = true;
-    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-    		}
+    		jobcostService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
+    		.then(
+    				function( result ) {
+    					if(data === ''){
+    		    			$scope.completeTransitMsg += 'Complete Transit: Success\n';
+    		    			budgetpostingService.postBudget($scope.jobNo)
+    		    			.then(function(data){
+    		    				if(data === ''){
+    		    					$scope.completeTransitMsg += 'Budget posting: Success\n';
+    		    				} else {
+    		    					$scope.completeTransitMsg += 'Budget posting:' + data + '\n';
+    		    					$scope.completeTransitErr = true;
+    		    				}
+    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', msg.replace('<br/>', '\n') );
+    		    			}, function(data){
+    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
+    		    			});
+    		    		} else {
+    		    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '\n';
+    		    			$scope.completeTransitErr = true;
+    		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
+    		    		}
+
+    				});
+    		
     	}, function(data){
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
     	});

@@ -50,6 +50,7 @@ import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
+import com.gammon.qs.service.JobCostService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.shared.GlobalParameter;
@@ -99,6 +100,9 @@ public class TransitService implements Serializable {
 	private transient SubcontractHBDao scPackageDao;
 	@Autowired
 	private transient JasperConfig jasperConfig;
+	@Autowired
+	private transient JobCostService jobCostService;
+	
 	
 	private List<TransitBpi> bqCache;
 	private List<TransitCodeMatch> codeMatchCache;
@@ -1648,6 +1652,7 @@ public class TransitService implements Serializable {
 		}
 		header.setStatus(Transit.TRANSIT_COMPLETED);
 		transitHeaderDao.saveOrUpdate(header);
+		
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		} catch (ValidateBusinessLogicException e) {

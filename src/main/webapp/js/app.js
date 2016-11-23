@@ -977,7 +977,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/transit/transit-dashboard.js',
                            'js/service/subcontract-service.js',
                            'js/service/transit-service.js',
-                           'js/service/budgetposting-service.js'
+                           'js/service/budgetposting-service.js',
+                           'js/service/jobcost-service.js'
                     ] 
                 });
             }]
