@@ -25,6 +25,7 @@ import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 import com.gammon.qs.service.JobInfoService;
+import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityServiceSpringImpl;
 
 @RestController
@@ -52,6 +53,8 @@ public class PropertiesController {
 	private SecurityServiceSpringImpl securityService;
 	@Autowired
 	private SecurityConfig securityConfig;
+	@Autowired
+	private AdminService adminService;
 	
 	@RequestMapping(value = "obtainCacheKey", method = RequestMethod.POST)
 	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
@@ -59,6 +62,9 @@ public class PropertiesController {
 		String cacheString = user.getFullname() + " | ";
 		for(UserRole role : user.getUserRoleList()){
 			cacheString += role.getRoleName() + " | ";
+		}
+		for(String jobNo : adminService.obtainCanAccessJobNoStringList()){
+			cacheString += jobNo + " | ";
 		}
 		switch(itemType){
 		case "COMPLETED_JOB_LIST":

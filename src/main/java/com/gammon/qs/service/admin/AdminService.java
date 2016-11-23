@@ -77,18 +77,30 @@ public class AdminService {
 	
 	public List<String> obtainCanAccessJobNoStringList(String username){
 		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
-		List<String> jobNumberList = new ArrayList<String>();
+		List<String> jobNumberList = new ArrayList<>();
+		List<String> jobNumberExcludeList = new ArrayList<>();
+		boolean jobAll = false;
 		if(jobSecurityList != null)
 		for(JobSecurity jobSecurity : jobSecurityList){
+			if(jobSecurity.getAccessRight().equals(JobSecurity.EXCLUDE)) {
+				jobNumberExcludeList.add(jobSecurity.getJobNo());
+				jobAll = false;
+				continue;
+			}
 			if(jobSecurity.getRoleName() != null && jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
-				jobNumberList.clear();
-				jobNumberList.add("JOB_ALL");
-				break;
+				jobAll = true;
+				continue;
 			}
 			if(!jobSecurity.getJobNo().equals("NA"))
-			jobNumberList.add(jobSecurity.getJobNo());
+				if(jobSecurity.getAccessRight().equals(JobSecurity.INCLUDE) || jobSecurity.getRoleName() != null)
+					jobNumberList.add(jobSecurity.getJobNo());
 		}
-
+		if(jobAll){
+			jobNumberList.clear();
+			jobNumberList.add("JOB_ALL");
+		} else if(!jobNumberExcludeList.isEmpty() && !jobNumberList.isEmpty()){
+			jobNumberList.removeAll(jobNumberExcludeList);
+		}
 		return jobNumberList;
 	}
 	

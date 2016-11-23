@@ -61,6 +61,11 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		title="{{grid.appScope.getExcludePostedCertRetentionMessage()}}">{{grid.appScope.getExcludePostedCertRetentionValue(col.getAggregationValue()) | number:2 }}\
 		<span class="red small" ng-if="grid.appScope.getExcludePostedCertRetentionMessage().length > 0">*</span></div>';
 	
+	/* Custom aggregation calculation:
+	 * 		sum() all row (include RA, RR) => totalValue
+	 * 		sum() RA, RR => totalRetention
+	 * 		footer value => totalValue - totalRetention
+	 */
 	$scope.gridOptions = {
 			enableSorting: true,
 			enableFiltering: true,

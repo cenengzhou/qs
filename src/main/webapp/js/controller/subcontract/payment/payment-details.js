@@ -1,5 +1,5 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter', 'uiGridConstants',
-                                          function($scope, $stateParams, $cookies, paymentService, modalService, roundUtil, $state, GlobalParameter, uiGridConstants) {
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', '$filter', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter', 'uiGridConstants',
+                                          function($scope, $stateParams, $cookies, $filter, paymentService, modalService, roundUtil, $state, GlobalParameter, uiGridConstants) {
 	loadData();
 	$scope.disableButtons = true;
 	$scope.GlobalParameter = GlobalParameter;
@@ -18,8 +18,14 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	var MSG_NOCHANGE = 'Cumulative IV Amount is same as row record';
 	var MSG_WRONG_CURRIVAMOUNT = 'Cumulative IV Amount not equal to IV Movement + Posted IV Amount. ';
 	var MSG_WRONG_IVMOVEMENT = 'IV Movement not equal to Cumulative IV Amount - Posted IV Amount. ';
-	var MSG_IMPORTED = 'Record imported into the grid'
-
+	var MSG_IMPORTED = 'Record imported into the grid';
+	$scope.totalRetentionAmount = {};
+	$scope.totalRetentionAmount['subcontractDetail.amountSubcontract'] = 0;
+	$scope.totalRetentionAmount['movementAmount'] = 0;
+	$scope.totalRetentionAmount['cumAmount'] = 0;
+	$scope.totalRetentionAmount['postedAmount'] = 0;
+	$scope.totalRetentionAmount['subcontractDetail.amountCumulativeWD'] = 0;
+	$scope.totalRetentionAmount['subcontractDetail.amountPostedWD'] = 0;
 	 $scope.importData = function(grid, newObjects){
 		if(!$scope.canEdit()){
 			return;
@@ -122,19 +128,28 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     	}  
       }
  
-    $scope.getTotalMovAmount = function(aggregationValue){
-		var value = aggregationValue - $scope.totalMovRRAmount - $scope.totalMovRTAmount - $scope.totalMovRAAmount
-			+ $scope.totalMovRRAmount*-1 + $scope.totalMovRTAmount*-1 + $scope.totalMovRAAmount*-1 ;
-
-		
-		
+    $scope.getTotalMovAmount = function(aggregationValue, col){
+//		var value = aggregationValue - $scope.totalMovRRAmount - $scope.totalMovRTAmount - $scope.totalMovRAAmount
+//			+ $scope.totalMovRRAmount*-1 + $scope.totalMovRTAmount*-1 + $scope.totalMovRAAmount*-1 ;
+    	var value = aggregationValue - $scope.totalRetentionAmount[col.field];
 		return value;
 	}
     
-    $scope.totalMovAmountTemplate = '<div class="ui-grid-cell-contents" \
-    	title=>{{grid.appScope.getTotalMovAmount(col.getAggregationValue()) | number:2 }}\
-		</div>';
-	    
+    $scope.getExcludedRetentionMessage = function(col){
+    	var msg = '';
+    	if($scope.totalRetentionAmount[col.field] != 0)
+    		msg = 'excluded retention balance : ' + $filter('number')($scope.totalRetentionAmount[col.field]);
+    	return msg;
+    }
+    $scope.totalMovAmountTemplate = '<div class="ui-grid-cell-contents" style="cursor:pointer"\
+    	title="{{grid.appScope.getExcludedRetentionMessage(col)}}">{{grid.appScope.getTotalMovAmount(col.getAggregationValue(), col) | number:2 }}\
+    	<span ng-if="grid.appScope.getExcludedRetentionMessage(col)" class="red small">*</span></div>';
+	
+	/* Custom aggregation calculation:
+	 * 		sum() all row (include MR, RA, RR and RT) => totalValue
+	 * 		sum() MR, RA, RR and RT => totalRetention
+	 * 		footer value => totalValue - totalRetention 
+	 */
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -147,7 +162,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			multiSelect: true,
 			enableCellEditOnFocus : true,
 			showGridFooter : true,
-			showColumnFooter : false,
+			showColumnFooter : true,
 			exporterMenuPdf: false,
 			
 			rowEditWaitInterval :-1,
@@ -159,17 +174,18 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			                     priority: 0,
 			                   } 
 			             },
-			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", width: 100, cellClass: 'text-right', cellFilter: 'number:2', enableCellEdit: false, visible: true},
-			             { field: 'movementAmount', displayName: 'Movement Amount', width: 120, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
-			            	 cellEditableCondition : $scope.canEdit,
-			            	 /* cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						          if (grid.getCellValue(row,col) != 'GR') {
-						            return 'blue';
-						          }
-						        }*/
-			            	 aggregationHideLabel : true,
-			            	 //aggregationType : uiGridConstants.aggregationTypes.sum,
-			            	 //footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			             { field: 'subcontractDetail.amountSubcontract', displayName: "Subcontract Amount", width: 150, cellClass: 'text-right', cellFilter: 'number:2', 
+			            	 enableCellEdit: false, visible: true,
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountSubcontract < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+		            		},
+		            		 aggregationHideLabel : true,
+			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
+			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
 			            	 footerCellTemplate : $scope.totalMovAmountTemplate,
 			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            	 					var c = 'text-right';
@@ -179,12 +195,11 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'cumAmount', displayName: 'Cumulative Amount', width: 120, enableFiltering: false, 
-			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
+			             { field: 'movementAmount', displayName: 'Movement Amount', width: 150, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
 			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+			            	 footerCellTemplate : $scope.totalMovAmountTemplate,
 			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            	 					var c = 'text-right';
 			            	 					if (col.getAggregationValue() < 0) {
@@ -193,40 +208,33 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            	 					return c;
 			            	 				},
 			             },
-			             { field: 'postedAmount', displayName: 'Posted Amount', width: 120, enableCellEdit: false,
+			             { field: 'cumAmount', displayName: 'Cumulative Amount', width: 150, enableFiltering: false, 
+			            	 cellClass: 'blue text-right', cellFilter: 'number:2',
+			            	 cellEditableCondition : $scope.canEdit,
 			            	 aggregationHideLabel : true,
 			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
-		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (row.entity.postedAmount < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-	            		},
-	            		aggregationHideLabel : true,
-	            		aggregationType : uiGridConstants.aggregationTypes.sum,
-	            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-	            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-	            			var c = 'text-right';
-	            			if (col.getAggregationValue() < 0) {
-	            				c += ' red';
-	            			}
-	            			return c;
-	            		},
-	            		cellFilter : 'number:2',
-	            		},
-			             { field: 'subcontractDetail.amountCumulativeWD', displayName: 'Cumulative Work Done Amount', width: 120, enableCellEdit: false,
-	            			visible: true,
-	            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 footerCellTemplate : $scope.totalMovAmountTemplate,
+			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            	 					var c = 'text-right';
+			            	 					if (col.getAggregationValue() < 0) {
+			            	 						c += ' red';
+			            	 					}
+			            	 					return c;
+			            	 				},
+			             },
+			             { field: 'postedAmount', displayName: 'Posted Amount', width: 150, enableCellEdit: false,
+			            	 aggregationHideLabel : true,
+			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
+			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
-			            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountCumulativeWD < 0) {
+			            			if (row.entity.postedAmount < 0) {
 			            				c += ' red';
 			            			}
 			            			return c;
 		            		},
 		            		aggregationHideLabel : true,
 		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+		            		footerCellTemplate : $scope.totalMovAmountTemplate,
 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';
 		            			if (col.getAggregationValue() < 0) {
@@ -235,29 +243,50 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 		            			return c;
 		            		},
 		            		cellFilter : 'number:2',
-		            		},
-		            		{ field: 'subcontractDetail.amountPostedWD', displayName: 'Posted Work Done Amount', width: 120, enableCellEdit: false,
-	            			visible: true,
-	            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		},
+			             { field: 'subcontractDetail.amountCumulativeWD', displayName: 'Cumulative Work Done Amount', width: 150, enableCellEdit: false,
+		            			visible: true,
+		            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountCumulativeWD < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : $scope.totalMovAmountTemplate,
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
-			            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountPostedWD < 0) {
+			            			if (col.getAggregationValue() < 0) {
 			            				c += ' red';
 			            			}
 			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
 		            		},
-		            		aggregationHideLabel : true,
-		            		aggregationType : uiGridConstants.aggregationTypes.sum,
-		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-		            			var c = 'text-right';
-		            			if (col.getAggregationValue() < 0) {
-		            				c += ' red';
-		            			}
-		            			return c;
-		            		},
-		            		cellFilter : 'number:2',
-		            		},
-			             { field: 'subcontractDetail.description', displayName: 'Description', width: 150, enableCellEdit: false},
+		            		{ field: 'subcontractDetail.amountPostedWD', displayName: 'Posted Work Done Amount', width: 150, enableCellEdit: false,
+		            			visible: true,
+		            			cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+				            			var c = 'text-right';
+				            			if (row.entity.subcontractDetail && row.entity.subcontractDetail.amountPostedWD < 0) {
+				            				c += ' red';
+				            			}
+				            			return c;
+			            		},
+			            		aggregationHideLabel : true,
+			            		aggregationType : uiGridConstants.aggregationTypes.sum,
+			            		footerCellTemplate : $scope.totalMovAmountTemplate,
+			            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            			var c = 'text-right';
+			            			if (col.getAggregationValue() < 0) {
+			            				c += ' red';
+			            			}
+			            			return c;
+			            		},
+			            		cellFilter : 'number:2',
+	            		},
+			             { field: 'subcontractDetail.description', displayName: 'Description', width: 200, enableCellEdit: false},
 			             { field: 'objectCode', displayName: 'Object Code', width: 80, enableCellEdit: false,
 			                 sort: {
 			                     direction: uiGridConstants.ASC,
@@ -389,22 +418,40 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 						
 
 						
+						switch(value.lineType){
+						case 'MR':
+						case 'RA':
+						case 'RR':
+						case 'RT':
+							$scope.totalRetentionAmount['movementAmount'] += value.movementAmount;
+							$scope.totalRetentionAmount['cumAmount'] += value.cumAmount;
+							$scope.totalRetentionAmount['postedAmount'] += value.postedAmount;
+							if(value.subcontractDetail){
+								$scope.totalRetentionAmount['subcontractDetail.amountSubcontract'] += value.subcontractDetail.amountSubcontract;
+								$scope.totalRetentionAmount['subcontractDetail.amountCumulativeWD'] += value.subcontractDetail.amountCumulativeWD;
+								$scope.totalRetentionAmount['subcontractDetail.amountPostedWD'] += value.subcontractDetail.amountPostedWD;
+							}
+							break;
+						default:
+							break;
+						}
+							
 						
-						if(value.lineType == 'RR'){
-							$scope.totalMovRRAmount = value.movementAmount;
-							$scope.totalCumCertRRAmount = value.cumAmount;
-							$scope.totalPostedCertRRAmount = 0;
-						}
-						else if(value.lineType == 'RT'){
-							$scope.totalMovRTAmount = value.movementAmount;
-							$scope.totalCumCertRTAmount = value.cumAmount;
-							$scope.totalPostedCertRTAmount = 0;
-						}
-						else if(value.lineType == 'RA'){
-							$scope.totalMovRAAmount = value.movementAmount;
-							$scope.totalCumCertRAAmount = value.cumAmount;
-							$scope.totalPostedCertRAAmount = 0;
-						}
+//						if(value.lineType == 'RR'){
+//							$scope.totalMovRRAmount = value.movementAmount;
+//							$scope.totalCumCertRRAmount = value.cumAmount;
+//							$scope.totalPostedCertRRAmount = 0;
+//						}
+//						else if(value.lineType == 'RT'){
+//							$scope.totalMovRTAmount = value.movementAmount;
+//							$scope.totalCumCertRTAmount = value.cumAmount;
+//							$scope.totalPostedCertRTAmount = 0;
+//						}
+//						else if(value.lineType == 'RA'){
+//							$scope.totalMovRAAmount = value.movementAmount;
+//							$scope.totalCumCertRAAmount = value.cumAmount;
+//							$scope.totalPostedCertRAAmount = 0;
+//						}
 						
 					});
 					

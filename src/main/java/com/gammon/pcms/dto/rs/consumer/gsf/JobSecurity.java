@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JobSecurity implements Serializable {
 
 	private static final long serialVersionUID = -1587056220414916800L;
-
+	public static final String INCLUDE = "INCLUDE";
+	public static final String EXCLUDE = "EXCLUDE";
+	
 	@JsonProperty("AccessRight")
 	private String accessRight;
 	@JsonProperty("Company")
