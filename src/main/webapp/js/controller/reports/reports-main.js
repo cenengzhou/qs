@@ -5,10 +5,6 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-	rootscopeService.gettingUser()
-	.then(function(response){
-		$scope.jobAll = GlobalHelper.containRole('JOB_ALL', response.user.authorities);
-	});
 	$scope.printPaymentCertDueDateType = true;
 	$scope.printPaymentCertJobNumber = $scope.jobNo;
 	$scope.reportPerRow = 3;
@@ -30,7 +26,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 	var VALIDATE_COMPANY_MESSAGE = 'Please leave blank or enter 5 characters';
 	var VALIDATE_DUEDATE = GlobalParameter.MOMENT_DATE_FORMAT;
 	var VALIDATE_DUEDATE_MESSAGE = 'Please select date from the date picker';
-	var VALIDATE_JOBNO = '.{5,5}';
+	var VALIDATE_JOBNO = '.{1,5}';
 	var VALIDATE_JOBNO_MESSAGE = 'Please leave blank or enter 5 characters';
 	var VALIDATE_DIVISION = '.{3,3}';
 	var VALIDATE_DIVISION_MESSAGE = 'Please leave blank or enter 3 characters';
@@ -305,14 +301,24 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
     }
     
 	function processReport(){
-		reports.forEach(function(report){
-			if(!report.title) report.title = GlobalHelper.camelToNormalString(report.name);
-			if(report.searchFields) report.searchFields.forEach(function(searchField){
-				if(!searchField.label) searchField.label = GlobalHelper.camelToNormalString(searchField.field)
-				if(searchField.field === 'company') searchField.autoCompleteList = $scope.companies;
-				if(searchField.field === 'division') searchField.autoCompleteList = $scope.divisions;
-			})
-			
+		rootscopeService.gettingUser()
+		.then(function(response){
+			$scope.jobAll = GlobalHelper.containRole('JOB_ALL', response.user.authorities);
+			if(!$scope.jobAll){
+				VALIDATE_JOBNO = '.{5,5}';
+			} else {
+				VALIDATE_JOBNO = '.{1,5}';
+			}
+			reports.forEach(function(report){
+				if(!report.title) report.title = GlobalHelper.camelToNormalString(report.name);
+				if(report.searchFields) report.searchFields.forEach(function(searchField){
+					if(!searchField.label) searchField.label = GlobalHelper.camelToNormalString(searchField.field)
+					if(searchField.field === 'company') searchField.autoCompleteList = $scope.companies;
+					if(searchField.field === 'division') searchField.autoCompleteList = $scope.divisions;
+					if(searchField.field === 'jobNumber') searchField.validatePattern = VALIDATE_JOBNO;
+				})
+				
+			});
 		});
 		reports.sort(function(a,b){return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);});
 		$scope.reports = reports;

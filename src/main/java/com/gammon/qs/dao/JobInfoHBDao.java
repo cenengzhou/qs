@@ -247,7 +247,7 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.setProjection( Projections.distinct( Projections.property( "company" )));
-			criteria.add(Restrictions.in("jobNumber", jobNoList));
+			if(jobNoList != null && !jobNoList.get(0).equals("JOB_ALL")) criteria.add(Restrictions.in("jobNumber", jobNoList));
 			criteria.addOrder(Order.asc("company"));
 			result =  criteria.list();
 		} catch (HibernateException e) {

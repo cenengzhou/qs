@@ -514,11 +514,11 @@ public class AttachmentService {
 		String noJob = splittedTextKey[0].trim();
 		String noSubcontract = splittedTextKey[1].trim();
 		adminService.canAccessJob(noJob);
-		Attachment attachment;
+		Attachment attachment = null;
 		switch(nameObject){
 		case Attachment.AddendumNameObject:
 			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
+			if(addendum != null) attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
 			if(attachment == null) attachment = new Attachment();
 			attachment.setText(textContent);
 			attachment.setNameFile(filename);
