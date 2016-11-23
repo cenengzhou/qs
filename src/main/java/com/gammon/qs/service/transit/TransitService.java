@@ -29,6 +29,7 @@ import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
 import com.gammon.qs.dao.BpiBillHBDao;
 import com.gammon.qs.dao.BpiItemHBDao;
+import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.BpiPageHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TransitBpiHBDao;
@@ -92,6 +93,8 @@ public class TransitService implements Serializable {
 	private transient BpiPageHBDao pageDao;
 	@Autowired
 	private transient BpiItemHBDao bqItemDao;
+	@Autowired
+	private transient BpiItemResourceHBDao bqItemResourceDao;
 	@Autowired
 	private transient SubcontractHBDao scPackageDao;
 	@Autowired
@@ -1571,6 +1574,7 @@ public class TransitService implements Serializable {
 		BpiPage page = null;
 		Set<String> packageNos = new HashSet<String>();
 		List<BpiItem> bqItems = new ArrayList<BpiItem>();
+		List<BpiItemResource> resourceList = new ArrayList<BpiItemResource>();
 		for(TransitBpi transitBq : transitBqItems){
 			//Create bill, page if necessary
 			if(!billNo.equals(transitBq.getBillNo()) || 
@@ -1598,6 +1602,7 @@ public class TransitService implements Serializable {
 			bqItem.setRefJobNumber(jobNumber);
 			bqItem.setBpiPage(page);
 			bqItems.add(bqItem);
+			
 			for(TransitResource transitResource : transitResourceDao.obtainTransitResourceListByTransitBQ(transitBq)){
 				BpiItemResource resource = resourceFromTransit(transitResource);
 				resource.setBpiItem(bqItem);
@@ -1609,10 +1614,15 @@ public class TransitService implements Serializable {
 				resource.setBpiItem(bqItem);
 				if(resource.getPackageNo() != null && !resource.getPackageNo().equals("0"))
 					packageNos.add(resource.getPackageNo());
+				
+				resourceList.add(resource);
 			}
 		}
 		logger.info("saving bqItems");
 		bqItemDao.saveBpiItems(bqItems);
+		logger.info("saving bqItemResource");
+		bqItemResourceDao.saveBpiItemResources(resourceList);
+		
 		for(String packageNo : packageNos){
 			Subcontract scPackage = new Subcontract();
 			scPackage.setJobInfo(job);

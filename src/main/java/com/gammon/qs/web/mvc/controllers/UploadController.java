@@ -348,7 +348,7 @@ public class UploadController {
 		}
 	}
     
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "/gammonqs/transitUpload.smvc", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "type") String type, 

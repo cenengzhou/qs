@@ -11,6 +11,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -1055,5 +1056,21 @@ public class BpiItemResourceHBDao extends BaseHibernateDao<BpiItemResource> {
 		criteria.addOrder(Order.asc("subsidiaryCode")).addOrder(Order.asc("objectCode"));
 		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountCodeWrapper.class));
 		return criteria.list();
+	}
+
+
+	public void saveBpiItemResources(List<BpiItemResource> bqItemResources) {
+		if(bqItemResources == null)
+			return;
+		
+		Session session = getSession();
+		
+		for(int i = 0; i < bqItemResources.size(); i++){
+			session.save(bqItemResources.get(i));
+			if(i % 20 == 0){
+				session.flush();
+				session.clear();
+			}
+		}
 	}
 }

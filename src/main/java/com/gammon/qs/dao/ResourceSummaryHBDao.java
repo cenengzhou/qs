@@ -595,6 +595,10 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				}
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
+				
+				if(resourceSummary.getRate()!=null && resourceSummary.getQuantity()!=null){
+					resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getRate()*resourceSummary.getQuantity(), 2));
+				}
 //				logger.info("Created SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
