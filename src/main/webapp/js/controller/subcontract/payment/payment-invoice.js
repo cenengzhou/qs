@@ -7,11 +7,11 @@ mainApp.controller('PaymentInvoiceCtrl',
 	
 	$scope.submit =  function(){
 		if($scope.payment.paymentStatus == "PND"){
-			
+		
 			if(roundUtil.round($scope.paymentCertSummary.subMovement5, 2) !=  roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)){
-				var message = "Total Movement Amount: "+roundUtil.round($scope.paymentCertSummary.subMovement5, 2)+"</br>"+
-								"Total Amount Due: "+roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)+"</br>"+
-								"Total Movement Amount and Total Amount Due do not match in the payment certificate.</br>" +
+				var message = "Total Movement Amount: "+roundUtil.round($scope.paymentCertSummary.subMovement5, 2)+"\n"+
+								"Total Amount Due: "+roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)+"\n"+
+								"Total Movement Amount and Total Amount Due do not match in the payment certificate.\n" +
 								"Please verify the figures before submitting the payment.";
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', message);
 			}

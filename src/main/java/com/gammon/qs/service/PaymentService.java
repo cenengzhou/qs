@@ -372,7 +372,7 @@ public class PaymentService{
 		result.setDueDate(DateHelper.formatDate(scPaymentCert.getDueDate(), GlobalParameter.DATE_FORMAT));
 			
 		//Sub-contract Total Amount
-		Double SCTotalAmt = scPackage.getRemeasuredSubcontractSum().doubleValue();
+		Double SCTotalAmt = CalculationUtil.round(scPackage.getRemeasuredSubcontractSum().doubleValue(), 2);
 		result.setSubcontractSum(SCTotalAmt);
 
 		
@@ -416,12 +416,12 @@ public class PaymentService{
 			result.setLessPreviousCertificationsMovement(preResult.getSubTotal5());
 		}
 
-		result.setAmountDueMovement(result.getSubTotal5() - result.getLessPreviousCertificationsMovement());
-		result.setSubMovement1(result.getMeasuredWorksMovement() + result.getDayWorkSheetMovement() + result.getVariationMovement() + result.getOtherMovement());
-		result.setSubMovement2(result.getSubMovement1() - result.getLessRetentionMovement1());
-		result.setSubMovement3(result.getSubMovement2() + result.getMaterialOnSiteMovement() - result.getLessRetentionMovement2());
-		result.setSubMovement4(result.getSubMovement3() + result.getAdjustmentMovement() + result.getGstPayableMovement());
-		result.setSubMovement5(result.getSubMovement4() - result.getLessContraChargesMovement() - result.getLessGSTReceivableMovement());
+		result.setAmountDueMovement(CalculationUtil.round(result.getSubTotal5() - result.getLessPreviousCertificationsMovement(), 2));
+		result.setSubMovement1(CalculationUtil.round(result.getMeasuredWorksMovement() + result.getDayWorkSheetMovement() + result.getVariationMovement() + result.getOtherMovement(), 2));
+		result.setSubMovement2(CalculationUtil.round(result.getSubMovement1() - result.getLessRetentionMovement1(),2));
+		result.setSubMovement3(CalculationUtil.round(result.getSubMovement2() + result.getMaterialOnSiteMovement() - result.getLessRetentionMovement2(), 2));
+		result.setSubMovement4(CalculationUtil.round(result.getSubMovement3() + result.getAdjustmentMovement() + result.getGstPayableMovement(), 2));
+		result.setSubMovement5(CalculationUtil.round(result.getSubMovement4() - result.getLessContraChargesMovement() - result.getLessGSTReceivableMovement(), 2));
 
 		return result;
 	}
