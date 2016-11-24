@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Transient;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,6 +34,9 @@ public class User implements UserDetails, Serializable {
 	private String domainName;
 	private String title;
 	
+	@Transient
+	private List<String> jobNoExcludeList;
+	
 	public User() {
 		this.userRoleList = new ArrayList<UserRole>();
 	}
@@ -45,6 +50,15 @@ public class User implements UserDetails, Serializable {
 		return false;
 	}
 	
+	public List<String> getJobNoExcludeList() {
+		if(jobNoExcludeList == null) jobNoExcludeList = new ArrayList<>();
+		return jobNoExcludeList;
+	}
+	public void setJobNoExcludeList(List<String> jobNoExcludeList) {
+		if(jobNoExcludeList == null) jobNoExcludeList = new ArrayList<>();
+		this.jobNoExcludeList = jobNoExcludeList;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return userRoleList;

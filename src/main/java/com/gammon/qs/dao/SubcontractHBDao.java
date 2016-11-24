@@ -14,6 +14,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -343,8 +344,16 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 			criteria.createAlias("jobInfo", "jobInfo");
 			if (company!=null && !"".equals(company))
 				criteria.add(Restrictions.eq("jobInfo.company", company));
-			if (jobNoList!=null)
-				criteria.add(Restrictions.in("jobInfo.jobNumber", jobNoList));
+			if (jobNoList!=null){
+				Disjunction or = Restrictions.disjunction();
+				for(int i=0; i < jobNoList.size(); i+=500){
+					int from = i;
+					int to = i+499 < jobNoList.size() ? i+499 : jobNoList.size(); 
+					logger.info("SubcontractHBDao.obtainSubcontractList from:" + from + " to:" + to);
+					or.add(Restrictions.in("jobInfo.jobNumber", jobNoList.subList(from, to)));
+				}
+				criteria.add(or);
+			}
 			if (division!=null && !"".equals(division))
 				criteria.add(Restrictions.eq("jobInfo.division", division));
 			if (jobNumber!=null && !"".equals(jobNumber))

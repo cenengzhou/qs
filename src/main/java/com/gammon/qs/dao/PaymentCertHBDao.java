@@ -12,6 +12,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -331,8 +332,16 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", scPaymentCertWrapper.getJobNo().trim()));
 		if(scPaymentCertWrapper.getJobInfo()!=null && scPaymentCertWrapper.getJobInfo().getCompany()!=null && !"".equals(scPaymentCertWrapper.getJobInfo().getCompany().trim()))
 			criteria.add(Restrictions.eq("jobInfo.company", scPaymentCertWrapper.getJobInfo().getCompany().trim()));
-		if(jobNoList!=null)
-			criteria.add(Restrictions.in("jobInfo.jobNumber", jobNoList));
+		if(jobNoList!=null){
+			Disjunction or = Restrictions.disjunction();
+			for(int i=0; i < jobNoList.size(); i+=500){
+				int from = i;
+				int to = i+499 < jobNoList.size() ? i+499 : jobNoList.size(); 
+				logger.info("SubcontractHBDao.obtainSubcontractList from:" + from + " to:" + to);
+				or.add(Restrictions.in("jobInfo.jobNumber", jobNoList.subList(from, to)));
+			}
+			criteria.add(or);
+		}
 		if(scPaymentCertWrapper.getSubcontract().getVendorNo()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getVendorNo().trim()))
 			criteria.add(Restrictions.eq("subcontract.vendorNo", scPaymentCertWrapper.getSubcontract().getVendorNo().trim()));
 		if(scPaymentCertWrapper.getSubcontract().getPaymentTerms()!=null && !"".equals(scPaymentCertWrapper.getSubcontract().getPaymentTerms().trim()))

@@ -101,6 +101,7 @@ public class AdminService {
 			} else {
 				try {
 					jobNumberList.addAll(jobInfoHBDao.obtainAllJobNoWithExcludeList(jobNumberExcludeList));
+					securityService.getCurrentUser().setJobNoExcludeList(jobNumberExcludeList);;
 				} catch (DatabaseOperationException e) {
 					e.printStackTrace();
 				}
@@ -159,7 +160,7 @@ public class AdminService {
 	 * @throws AccessDeniedException
 	 */
 	public Boolean canAccessJob(User user, String noJob) {
-		if (user.hasRole(securityConfig.getRolePcmsJobAll())) {
+		if (user.hasRole(securityConfig.getRolePcmsJobAll()) && user.getJobNoExcludeList().isEmpty()) {
 			return true;
 		} else {
 			if (StringUtils.isNotBlank(noJob)){

@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.GenericValidator;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -36,6 +38,8 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 @Repository
 public class MainCertHBDao extends BaseHibernateDao<MainCert> {
+	
+	Logger logger = Logger.getLogger(getClass());
 	@Autowired
 	private StoredProcedureConfig storedProcedureConfig;
 
@@ -71,8 +75,16 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		if (StringUtils.isNotBlank(wrapper.getCompany()))
 			subquery.add(Restrictions.ilike("company", wrapper.getCompany(), MatchMode.START));
 		
-		if(jobNoList!= null && jobNoList.size()>0 && !jobNoList.get(0).equals("JOB_ALL")){
-			subquery.add(Restrictions.in("jobNumber", jobNoList));
+		if(jobNoList!= null && jobNoList.size()>0 && !jobNoList.get(0).equals("JOB_ALL")){	
+			Disjunction or = Restrictions.disjunction();
+			for(int i=0; i < jobNoList.size(); i+=500){
+				int from = i;
+				int to = i+499 < jobNoList.size() ? i+499 : jobNoList.size(); 
+				logger.info("SubcontractHBDao.obtainSubcontractList from:" + from + " to:" + to);
+				or.add(Restrictions.in("jobInfo.jobNumber", jobNoList.subList(from, to)));
+			}
+			subquery.add(or);
+			
 		}
 		if (StringUtils.isNotBlank(wrapper.getDivision()))
 			subquery.add(Restrictions.ilike("division", wrapper.getDivision(), MatchMode.START));
