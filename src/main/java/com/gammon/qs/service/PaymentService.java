@@ -2277,8 +2277,8 @@ public class PaymentService{
 						 *Convert to Amount Based 
 						 **/
 						if (scDetails.getAmountPostedCert()!=null && scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) != 0){
-							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2));
-							scPaymentDetail.setMovementAmount(0.0);
+							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountCumulativeCert().doubleValue(), 2));
+							scPaymentDetail.setMovementAmount(CalculationUtil.round(scDetails.getAmountCumulativeCert().doubleValue() - scDetails.getAmountPostedCert().doubleValue(), 2));
 						}
 						else {
 							scPaymentDetail.setCumAmount(scDetails.getAmountCumulativeCert().doubleValue());

@@ -182,18 +182,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 			            				c += ' red';
 			            			}
 			            			return c;
-		            		},
-		            		 aggregationHideLabel : true,
-			            	 aggregationType : uiGridConstants.aggregationTypes.sum,
-			            	 footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
-			            	 footerCellTemplate : $scope.totalMovAmountTemplate,
-			            	 footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            	 					var c = 'text-right';
-			            	 					if (col.getAggregationValue() < 0) {
-			            	 						c += ' red';
-			            	 					}
-			            	 					return c;
-			            	 				},
+		            		}
 			             },
 			             { field: 'movementAmount', displayName: 'Movement Amount', width: 150, enableFiltering: false, cellClass: 'text-right blue', cellFilter: 'number:2', 
 			            	 cellEditableCondition : $scope.canEdit,
