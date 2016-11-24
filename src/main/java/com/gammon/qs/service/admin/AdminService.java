@@ -171,7 +171,15 @@ public class AdminService {
 	}
 	
 	public List<String> obtainCompanyCodeListByCurrentUser() throws DatabaseOperationException{
-		return jobInfoHBDao.obtainCompanyCodeByJobNoList(obtainCanAccessJobNoStringList());
+		List<String> canAccessJobList = obtainCanAccessJobNoStringList();
+		List<String> companyCodeList = new ArrayList<>();
+		for(int i=0; i < canAccessJobList.size(); i+=500){
+			int from = i;
+			int to = i+499 < canAccessJobList.size() ? i+499 : canAccessJobList.size(); 
+			logger.info("obtainCompanyCodeListByCurrentUser from:" + from + " to:" + to);
+			companyCodeList.addAll(jobInfoHBDao.obtainCompanyCodeByJobNoList(canAccessJobList.subList(from, to)));
+		}
+		return companyCodeList;
 	}
 	
 	public List<JobSecurity> obtainJobSecurityListByCurrentUser() {
