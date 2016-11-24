@@ -29,22 +29,25 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;
+				addRecordKeyMatchedPoSplit();
 			};
 		});
 	}
 	
 	$scope.loadAccountLedgerList();
-	
+	function addRecordKeyMatchedPoSplit() {
+		$scope.gridOptions.data.forEach(function(d){
+			if(d.recordKeyMatchedPo){
+				d.recordKeyMatchedPoSplit = d.recordKeyMatchedPo.split('-')[1];
+			}
+		});
+	}
 	$scope.loadAccountLedgerListByGlDate = function(){
 		adlService.getAccountLedgerListByGlDate(getSearchObject())
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;
-				$scope.gridOptions.data.forEach(function(d){
-					if(d.recordKeyMatchedPo){
-						d.recordKeyMatchedPoSplit = d.recordKeyMatchedPo.split('-')[1];
-					}
-				});
+				addRecordKeyMatchedPoSplit();
 			}
 		});
 	}
