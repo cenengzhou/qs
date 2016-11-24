@@ -75,7 +75,7 @@ public class AdminService {
 		return obtainCanAccessJobNoStringList(user.getUsername());
 	}
 	
-	public List<String> obtainCanAccessJobNoStringList(String username){
+	public List<String> obtainCanAccessJobNoStringList(String username) {
 		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
 		List<String> jobNumberList = new ArrayList<>();
 		List<String> jobNumberExcludeList = new ArrayList<>();
@@ -84,7 +84,6 @@ public class AdminService {
 		for(JobSecurity jobSecurity : jobSecurityList){
 			if(jobSecurity.getAccessRight().equals(JobSecurity.EXCLUDE)) {
 				jobNumberExcludeList.add(jobSecurity.getJobNo());
-				jobAll = false;
 				continue;
 			}
 			if(jobSecurity.getRoleName() != null && jobSecurity.getRoleName().equals(securityConfig.getRolePcmsJobAll())){
@@ -97,10 +96,17 @@ public class AdminService {
 		}
 		if(jobAll){
 			jobNumberList.clear();
-			jobNumberList.add("JOB_ALL");
-		} else if(!jobNumberExcludeList.isEmpty() && !jobNumberList.isEmpty()){
-			jobNumberList.removeAll(jobNumberExcludeList);
-		}
+			if(jobNumberExcludeList.isEmpty()){
+				jobNumberList.add("JOB_ALL");
+			} else {
+				try {
+					jobNumberList.addAll(jobInfoHBDao.obtainAllJobNoWithExcludeList(jobNumberExcludeList));
+				} catch (DatabaseOperationException e) {
+					e.printStackTrace();
+				}
+			}
+		} 
+		jobNumberList.removeAll(jobNumberExcludeList);
 		return jobNumberList;
 	}
 	
@@ -116,7 +122,13 @@ public class AdminService {
 	
 	public List<JobInfo> obtainCanAccessJobInfoList(boolean isCompletedJob){
 		Set<JobInfo> jobInfoSet = new TreeSet<JobInfo>();
-		jobInfoSet = new TreeSet<JobInfo>(jobInfoHBDao.obtainJobInfoByJobNumberList(obtainCanAccessJobNoStringList(), isCompletedJob));
+		List<String> canAccessJobList = obtainCanAccessJobNoStringList();
+		for(int i=0; i < canAccessJobList.size(); i+=500){
+			int from = i;
+			int to = i+499 < canAccessJobList.size() ? i+499 : canAccessJobList.size(); 
+			logger.info("obtainCanAccessJobInfoList from:" + from + " to:" + to);
+			jobInfoSet.addAll(jobInfoHBDao.obtainJobInfoByJobNumberList(canAccessJobList.subList(from, to), isCompletedJob));
+		}
 		return new ArrayList<JobInfo>(jobInfoSet);
 	}
 	

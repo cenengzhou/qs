@@ -255,7 +255,22 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		}
 		return result;
 	}
-	/**
+
+	@SuppressWarnings("unchecked")
+	public List<String> obtainAllJobNoWithExcludeList(List<String> excludeJobNoList) throws DatabaseOperationException{
+		List<String> result = new ArrayList<String>();
+		try {
+			Criteria criteria = getSession().createCriteria(this.getType());
+			criteria.setProjection( Projections.distinct( Projections.property( "jobNumber" )));
+			if(excludeJobNoList != null) criteria.add(Restrictions.not(Restrictions.in("jobNumber", excludeJobNoList)));
+			criteria.addOrder(Order.asc("jobNumber"));
+			result =  criteria.list();
+		} catch (HibernateException e) {
+			throw new DatabaseOperationException(e);
+		}
+		return result;
+	}
+/**
 	 * For Web Service
 	 */
 
