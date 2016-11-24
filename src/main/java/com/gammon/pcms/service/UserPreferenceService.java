@@ -47,7 +47,7 @@ public class UserPreferenceService {
 			userPreferenceHBDao.setDefaultJobNo(defaultJobNo, user);
 		} catch (Exception e){
 			e.printStackTrace();
-			throw new IllegalArgumentException(user.getUsername() + " cannot access job:" + defaultJobNo);
+			throw new IllegalArgumentException(user.getUsername() + " cannot set default job:" + defaultJobNo);
 		}
 		return obtainUserPreferenceByCurrentUser();
 	}
@@ -65,6 +65,8 @@ public class UserPreferenceService {
 				preferenceMap.put("DEFAULT_JOB_DESCRIPTION", job.getDescription());
 			} catch(Exception e){
 				e.printStackTrace();
+				User user = securityService.getCurrentUser();
+				userPreferenceHBDao.deleteDefaultJobNo(user);
 				preferenceMap.remove(UserPreference.DEFAULT_JOB_NO);
 			}
 		}

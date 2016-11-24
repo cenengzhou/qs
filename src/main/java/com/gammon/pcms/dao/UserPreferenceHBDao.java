@@ -9,6 +9,8 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.application.User;
 import com.gammon.pcms.model.UserPreference;
@@ -37,6 +39,18 @@ public class UserPreferenceHBDao extends BaseHibernateDao<UserPreference> {
 		return preferenceMap;
 	}
 
+	@Transactional(value = "transactionManager", propagation = Propagation.REQUIRES_NEW)
+	public void deleteDefaultJobNo(User user){
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("username", user.getUsername()));
+		criteria.add(Restrictions.eq("keyPreference", UserPreference.DEFAULT_JOB_NO));
+		criteria.setMaxResults(1);
+		UserPreference defaultJobNoPref = (UserPreference) criteria.uniqueResult();
+		if(defaultJobNoPref != null){
+			delete(defaultJobNoPref);
+		}
+	}
+	
 	public void setDefaultJobNo(String defaultJobNo, User user){
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("username", user.getUsername()));
