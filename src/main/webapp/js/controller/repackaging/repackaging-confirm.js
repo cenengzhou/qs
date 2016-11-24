@@ -3,7 +3,8 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
-	var optionList = [{ id: 'true', value: 'Excluded' },
+	var optionList = [{ id: '', value: '' },
+	                  { id: 'true', value: 'Excluded' },
 	                   { id: 'false', value: 'Included' }
 		];
 

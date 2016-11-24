@@ -234,11 +234,6 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 	}
 
 	function composeEmail(){
-//		modalService.open('lg', 'view/repackaging/repackaging-email.html', 'RepackagingEmailCtrl', 'Success', $scope);
-//		$uibModal.open({
-//			  templateUrl: 'view/email-modal.html',
-//			  scope: $scope
-//			});
 		$state.go('repackaging-email');
 	}
 	

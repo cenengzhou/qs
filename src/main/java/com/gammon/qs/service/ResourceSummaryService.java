@@ -34,6 +34,7 @@ import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
+import com.gammon.qs.dao.TransitHBDao;
 import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
@@ -45,6 +46,7 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
@@ -92,6 +94,8 @@ public class ResourceSummaryService implements Serializable {
 	private transient TenderHBDao tenderAnalysisHBDao;
 	@Autowired
 	private transient TenderDetailHBDao tenderAnalySisDetailHBDao;
+	@Autowired
+	private transient TransitHBDao transitHBDao;
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
@@ -744,6 +748,13 @@ public class ResourceSummaryService implements Serializable {
 	public String generateResourceSummaries(String jobNo) throws Exception{
 		String error = "";
 		try {
+			Transit transit = transitHBDao.getTransitHeader(jobNo);
+			if(!Transit.TRANSIT_COMPLETED.equals(transit.getStatus())){
+				error = "Transit has not been completed yet.";
+				return error;
+			}
+				
+			
 			JobInfo job = jobDao.obtainJobInfo(jobNo);
 			if(job != null){
 				List<Repackaging> entries = repackagingEntryDao.getRepackagingEntriesByJob(job);

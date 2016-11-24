@@ -9,8 +9,9 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	
 	$scope.units=[];
 
-	var optionList = [{ id: 'true', value: 'Excluded' },
-                   { id: 'false', value: 'Included' }
+	var optionList = [{ id: '', value: '' },
+	                  { id: 'true', value: 'Excluded' },
+	                  { id: 'false', value: 'Included' }
 	];
 	
 	$scope.gridOptions = {

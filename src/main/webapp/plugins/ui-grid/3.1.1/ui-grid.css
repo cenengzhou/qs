@@ -142,14 +142,14 @@
   box-sizing: border-box;
   background-color: inherit;
   border-right: 1px solid;
-  border-color: #1e77c4;
+  border-color: #ffffff;
   display: table-cell;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   width: 0;
-  font-size: 13px; 
+  font-size: 12px; 
 }
 .ui-grid-header-cell:last-child {
   border-right: 0;

@@ -13,8 +13,9 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	
 	$scope.units=[];
 
-	var optionList = [{ id: 'true', value: 'Excluded' },
-                   { id: 'false', value: 'Included' }
+	var optionList = [{ id: '', value: '' },
+	                  { id: 'true', value: 'Excluded' },
+	                  { id: 'false', value: 'Included' }
 	];
 
 	$scope.gridOptions = {
@@ -225,8 +226,11 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 				return false;
 			}
 			if (selectedRows[i]['packageNo'] != null && selectedRows[i]['packageNo'].length > 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
-				return false;
+				if(action != 'split' || selectedRows[i]['objectCode'].substring(0, 2) != "13"){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
+					return false;
+					
+				}
 			}
 			if (selectedRows[i]['postedIVAmount'] != 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");

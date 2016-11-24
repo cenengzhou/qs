@@ -3,7 +3,8 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	rootscopeService.setSelectedTips('');
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
-	var optionList = [{ id: 'true', value: 'Excluded' },
+	var optionList = [{ id: '', value: '' },
+	                  { id: 'true', value: 'Excluded' },
 	                  { id: 'false', value: 'Included' }
 	];
 

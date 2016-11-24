@@ -329,7 +329,7 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		    					$scope.completeTransitMsg += 'Budget posting:' + data + '\n';
     		    					$scope.completeTransitErr = true;
     		    				}
-    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', msg.replace('<br/>', '\n') );
+    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', data.replace('<br/>', '\n') );
     		    			}, function(data){
     		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
     		    			});

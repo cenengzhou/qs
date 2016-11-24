@@ -29,26 +29,26 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 
 
 			columnDefs: [
-			             /*{ field: 'packageNo', displayName: "Subcontract No."},*/
-			             { field: 'objectCode'},
-			             { field: 'subsidiaryCode'},
-			             { field: 'resourceDescription', displayName: "Description"},
-			             { field: 'unit', 
+			             { field: 'packageNo', displayName: "Subcontract No.", width: 60},
+			             { field: 'objectCode', width: 80},
+			             { field: 'subsidiaryCode', width: 80},
+			             { field: 'resourceDescription', displayName: "Description", width: 100},
+			             { field: 'unit', width: 60,  
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
-		            	 { field: 'quantity', cellClass: 'text-right', cellFilter: 'number:4',
+		            	 { field: 'quantity', cellClass: 'text-right', cellFilter: 'number:4', width: 110, 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-		            	 { field: 'rate', cellClass: 'text-right', cellFilter: 'number:4'},
-		            	 { field: 'amountBudget', displayName: "Amount", cellClass: 'text-right', cellFilter: 'number:2',
+		            	 { field: 'rate', cellClass: 'text-right', cellFilter: 'number:4', width: 110},
+		            	 { field: 'amountBudget', displayName: "Amount", cellClass: 'text-right', cellFilter: 'number:2', width: 110,
 		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-		            	 { field: 'resourceType', displayName: "Type"},
-		            	 { field: 'excludeDefect', displayName: "Defect", 
+		            	 { field: 'resourceType', displayName: "Type", width: 60},
+		            	 { field: 'excludeDefect', displayName: "Defect", width: 70, 
 		            		 editableCellTemplate: 'ui-grid/dropdownEditor',
 		            		 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 		            	 },
-		            	 { field: 'excludeLevy', displayName: "Levy", 
+		            	 { field: 'excludeLevy', displayName: "Levy", width: 70, 
 		            		 editableCellTemplate: 'ui-grid/dropdownEditor',
 		            		 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 		            	 }
@@ -76,27 +76,27 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 			rowEditWaitInterval :-1,
 			
 			columnDefs: [
-			             /*{ field: 'packageNo', displayName: "Subcontract No."},*/
-			             { field: 'objectCode'},
-			             { field: 'subsidiaryCode'},
-			             { field: 'resourceDescription', displayName: "Description"},
-			             { field: 'unit', 
+			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false, width: 60},
+			             { field: 'objectCode', cellClass: 'blue', width: 80},
+			             { field: 'subsidiaryCode', cellClass: 'blue', width: 80},
+			             { field: 'resourceDescription', displayName: "Description", cellClass: 'blue', width: 100},
+			             { field: 'unit', cellClass: 'blue', width: 60, 
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
-			            	 { field: 'quantity', cellClass: 'text-right', cellFilter: 'number:4',
+			            	 { field: 'quantity', cellClass: 'text-right blue', cellFilter: 'number:4', width: 110,
 				            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 				            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			            	 { field: 'rate', cellClass: 'text-right', cellFilter: 'number:4'},
-			            	 { field: 'amountBudget', displayName: "Amount",
-			            		 cellClass: 'text-right', cellFilter: 'number:2',
+			            	 { field: 'rate', cellClass: 'text-right blue', cellFilter: 'number:4', width: 110},
+			            	 { field: 'amountBudget', displayName: "Amount", width: 110,
+			            		 cellClass: 'text-right blue', cellFilter: 'number:2',
 				            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 				            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			            	 { field: 'resourceType', displayName: "Type", enableCellEdit: false},
-			            	 { field: 'excludeDefect', displayName: "Defect", 
+			            	 { field: 'resourceType', displayName: "Type", enableCellEdit: false, width: 60},
+			            	 { field: 'excludeDefect', displayName: "Defect", cellClass: 'blue', width: 70,
 			            		 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            		 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 			            	 },
-			            	 { field: 'excludeLevy', displayName: "Levy", 
+			            	 { field: 'excludeLevy', displayName: "Levy", cellClass: 'blue', width: 70,
 			            		 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            		 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 			            	 }
@@ -109,10 +109,16 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			
-			if(colDef.name == "objectCode" && rowEntity.objectCode != null && rowEntity.objectCode.length < 6){
-				rowEntity.objectCode = oldValue;
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Object code should be in 6 digits.");
-				return;
+			if(colDef.name == "objectCode" ){
+				if(rowEntity.objectCode != null && rowEntity.objectCode.length < 6){
+					rowEntity.objectCode = oldValue;
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Object code should be in 6 digits.");
+					return;
+				}else if(rowEntity.objectCode.substring(0, 2) != "14" && rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
+					rowEntity.objectCode = oldValue;
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract can only be assigned to resources with an object code beginning with '14'.");
+					return;
+				}
 			}
 			if(colDef.name == "subsidiaryCode"){
 				if(rowEntity.subsidiaryCode != null && rowEntity.subsidiaryCode.length < 6){
@@ -144,6 +150,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 					rowEntity.quantity = roundUtil.round(rowEntity.amountBudget/rowEntity.rate, 4);
 				}
 			}
+			
 		});
 		
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
@@ -177,6 +184,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 
 		for (i in resources){
 			$scope.gridOptionsSplit.data.push({
+				"packageNo": resources[i]['packageNo'],
 				"objectCode": resources[i]['objectCode'],
 				"subsidiaryCode": resources[i]['subsidiaryCode'],
 				"resourceDescription": resources[i]['resourceDescription'],
@@ -211,8 +219,8 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	//Save Function
 	$scope.save = function () {
 		$scope.disableButtons = true;
-		var totalAmountBeforeSplit = roundUtil.round($scope.gridApi.grid.columns[7].getAggregationValue(), 2);
-		var totalAmountAfterSplit = roundUtil.round($scope.gridApiSplit.grid.columns[7].getAggregationValue(), 2);
+		var totalAmountBeforeSplit = roundUtil.round($scope.gridApi.grid.columns[8].getAggregationValue(), 2);
+		var totalAmountAfterSplit = roundUtil.round($scope.gridApiSplit.grid.columns[8].getAggregationValue(), 2);
 		
 		if(totalAmountAfterSplit != totalAmountBeforeSplit ){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Total amount does not match.");
