@@ -29,6 +29,7 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 			$scope.datetimeToTimestamp = function(){
 				angular.forEach($scope.triggers, function(trigger){
 					trigger.nextFireTime = Date.parse(trigger.nextFireDatetime);
+					if(isNaN(trigger.nextFireTime)) trigger.nextFireTime = Date.parse(trigger.nextFireDatetime.replace(' ','T'));
 				});
 			}
 			$scope.auditTables = [];
