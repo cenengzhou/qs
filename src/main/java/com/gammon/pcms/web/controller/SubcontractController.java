@@ -432,9 +432,9 @@ public class SubcontractController {
 
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractAdmin", method = RequestMethod.POST)
-	public void updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
+	public String updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
-		subcontractService.updateSubcontractAdmin(subcontract);
+		return subcontractService.updateSubcontractAdmin(subcontract);
 	}
 
 	@RequestMapping(value = "getPerforamceAppraisalsList", method = RequestMethod.POST)
