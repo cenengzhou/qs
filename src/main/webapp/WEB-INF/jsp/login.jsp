@@ -8,7 +8,8 @@
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 	<script>
 		window.onerror = function(errorMsg, url, lineNumber) {
-			window.location = 'login.htm';
+			console.log('Line:' + lineNumber + ' message:' + errorMsg);
+// 			window.location = 'login.htm';
 		}
 	</script>
 	<script src="plugins/jquery/jquery-1.9.1.min.js"></script>
@@ -90,9 +91,9 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 	
 	
 	document.execCommand("ClearAuthenticationCache"); 
-	if(new String(window.location).indexOf("/login.htm")<0){
-		window.location = "login.htm";
-	};
+// 	if(new String(window.location).indexOf("/login.htm")<0){
+// 		window.location = "login.htm";
+// 	};
 	</script>
 	<link rel="icon" type="image/gif" href="resources/images/gammon.gif" sizes="128x128"/>
 	<!-- Bootstrap 3.3.5 -->

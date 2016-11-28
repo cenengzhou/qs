@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,10 +19,22 @@ public class HttpSessionDestoryedEventListener implements ApplicationListener<Ht
 	
 	@Override
 	public void onApplicationEvent(HttpSessionDestroyedEvent event) {
-    	HttpSession session = event.getSession();
+    	HttpSession httpSession = event.getSession();
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	String username = authentication != null ? authentication.getName() : " {NULL}";
-        logger.log(Level.SEVERE, "Session destoyed:" + username + " | " + session.getId());
+        logger.info("Session destoyed:" + username + " | " + httpSession.getId());
+        
+		Manager tomcatManager = TomcatSessionController.getTomcatManager(httpSession.getServletContext());
+		Session sessions[] = tomcatManager.findSessions();
+		for(Session session: sessions){
+			if(session.getPrincipal() == null) {
+				session.setMaxInactiveInterval(60);
+				if(!session.isValid()) {
+					session.expire();
+					logger.info("HttpSessionDestroyedEvent expire invalid session:" + session.getPrincipal() + " sessionid:" + session.getId());
+				}
+			}
+		}
 	}
 
 }

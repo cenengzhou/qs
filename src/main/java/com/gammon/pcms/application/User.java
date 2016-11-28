@@ -223,5 +223,65 @@ public class User implements UserDetails, Serializable {
 				+ ", domainName=" + domainName + ", title=" + title + "]";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
+		result = prime * result + ((staffId == null) ? 0 : staffId.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof User)) {
+			return false;
+		}
+		User other = (User) obj;
+		if (emailAddress == null) {
+			if (other.emailAddress != null) {
+				return false;
+			}
+		} else if (!emailAddress.equals(other.emailAddress)) {
+			return false;
+		}
+		if (fullname == null) {
+			if (other.fullname != null) {
+				return false;
+			}
+		} else if (!fullname.equals(other.fullname)) {
+			return false;
+		}
+		if (staffId == null) {
+			if (other.staffId != null) {
+				return false;
+			}
+		} else if (!staffId.equals(other.staffId)) {
+			return false;
+		}
+		if (username == null) {
+			if (other.username != null) {
+				return false;
+			}
+		} else if (!username.equals(other.username)) {
+			return false;
+		}
+		return true;
+	}
+
 
 }

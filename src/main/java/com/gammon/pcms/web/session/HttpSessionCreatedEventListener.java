@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.Manager;
+import org.apache.catalina.Session;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -22,11 +24,22 @@ public class HttpSessionCreatedEventListener implements ApplicationListener<Http
 	
 	@Override
 	public void onApplicationEvent(HttpSessionCreatedEvent event) {
-		HttpSession session = event.getSession();
+		HttpSession currentSession = event.getSession();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		session.setMaxInactiveInterval(Integer.valueOf(securityConfig.getDefaultMaxInactiveInterval()));
 		String username = authentication != null ? authentication.getName() : " {NULL}";
 		MDC.put("username", username);
-	    logger.info("Session create:" + username + " | " + session.getId());
+	    logger.info("Session create:" + username + " | " + currentSession.getId());
+	    
+		Manager tomcatManager = TomcatSessionController.getTomcatManager(currentSession.getServletContext());
+		Session sessions[] = tomcatManager.findSessions();
+		for(Session session: sessions){
+			if(session.getPrincipal() == null) {
+				session.setMaxInactiveInterval(60);
+				if(!session.isValid()) {
+					session.expire();
+					logger.info("HttpSessionCreatedEvent expire invalid session:" + session.getPrincipal() + " sessionid:" + session.getId());
+				}
+			}
+		}
 	}		
 }
