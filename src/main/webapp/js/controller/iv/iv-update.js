@@ -327,8 +327,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     	return false;
     }
     
-    function validateAssocitedToAwardedSubcontract(objectCode){
-    	if(objectCode && objectCode.substring(0,2) === '14'){
+    function isUneditableOrAwardedSubcontract(packageNo){
+    	if(awardedSubcontractNos.indexOf(packageNo) >= 0 ||
+			uneditableUnawardedSubcontractNos.indexOf(packageNo) >= 0){
     		return true;
     	} else {
     		return false;
@@ -406,8 +407,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			var rows = $scope.gridApi.core.getVisibleRows();
 			angular.forEach(rows, function(value, key){
 				if(!validateAmountBudgetEqZero(value.entity) &&
-					!validateAssocitedToAwardedSubcontract(value.entity.objectCode) &&
-					!uneditableUnawardedSubcontractNos.indexOf(value.entity.packageNo) >= 0){
+					!isUneditableOrAwardedSubcontract(value.entity.packageNo)){
 					value.entity.currIVAmount = value.entity.amountBudget * ($scope.percent/100);
 					value.entity.ivMovement = value.entity.currIVAmount - value.entity.postedIVAmount;
 					$scope.gridApi.rowEdit.setRowsDirty([value.entity]);
