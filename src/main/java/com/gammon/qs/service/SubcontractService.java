@@ -2589,7 +2589,7 @@ public class SubcontractService {
 		logger.info("Job number: " + jobNumber);
 		try {
 			String currency = this.accountCodeWSDao.obtainCurrencyCode(jobNumber);
-			logger.info("Compnay Base Currency for webservice: " + currency);
+			logger.info("Company Base Currency for webservice: " + currency);
 			return currency;
 		} catch (Exception e) {
 			e.printStackTrace();

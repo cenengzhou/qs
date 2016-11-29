@@ -680,8 +680,9 @@ public class TenderService implements Serializable {
 		}
 	
 		Tender tenderAnalysis = this.obtainTender(jobNo, packageNo, vendorNo);
+		String companyCurrencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
 		if(currencyCode == null || vendorNo.equals(Integer.valueOf(0)))
-			currencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
+			currencyCode = companyCurrencyCode;
 		
 
 		if(tenderAnalysis!=null){
@@ -712,7 +713,7 @@ public class TenderService implements Serializable {
 			tenderAnalysis.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, scPackage.getPackageNo()));
 		}
 
-		String error = updateTenderDetails(job, scPackage, vendorNo, tenderAnalysis, taDetails);
+		String error = updateTenderDetails(job, scPackage, vendorNo, tenderAnalysis, taDetails, companyCurrencyCode);
 		if(error!=null)
 			return error;
 
@@ -729,7 +730,7 @@ public class TenderService implements Serializable {
 	 * @author koeyyeung
 	 * Payment Requisition Revamp
 	 * **/
-	private String updateTenderDetails(JobInfo job, Subcontract subcontract, Integer vendorNo, Tender tender, List<TenderDetail> toBeUpdatedTaDetails) throws Exception{
+	private String updateTenderDetails(JobInfo job, Subcontract subcontract, Integer vendorNo, Tender tender, List<TenderDetail> toBeUpdatedTaDetails, String companyCurrencyCode) throws Exception{
 		if(tender.getId()!=null){
 			//Update Vendor TA
 			if(tender.getVendorNo()!=0){
@@ -752,7 +753,7 @@ public class TenderService implements Serializable {
 					}
 					//Update TA 
 					tender.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
-					tender.setAmtBuyingGainLoss(recalculateBuyingGainLoss(tender.getBudgetAmount(), toBeUpdatedTaDetails));
+					tender.setAmtBuyingGainLoss(recalculateBuyingGainLoss(tender, toBeUpdatedTaDetails, companyCurrencyCode));
 					
 					if(Tender.TA_STATUS_RCM.equals(tender.getStatus())){
 						//Recalculate SCPackage Subcon Sum
@@ -767,7 +768,7 @@ public class TenderService implements Serializable {
 					
 				}else{
 					logger.info("Update Vendor");
-					this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
+					this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract, companyCurrencyCode);
 				}
 			}else{
 				try {
@@ -812,14 +813,14 @@ public class TenderService implements Serializable {
 						deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
 						
 						//Insert Tender Details for other Tenders
-						insertTenderDetailForVendor(job, subcontract.getPackageNo());
+						insertTenderDetailForVendor(job, subcontract.getPackageNo(), companyCurrencyCode);
 						
 					}else{
 						//Delete Pending Payments
 						if(latestPaymentCert !=null)
 							deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
 						
-						this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
+						this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract, companyCurrencyCode);
 						subcontract.setVendorNo(null);
 						subcontract.setNameSubcontractor(null);
 						subcontractDao.update(subcontract);
@@ -832,7 +833,7 @@ public class TenderService implements Serializable {
 		else{
 			if(vendorNo ==0){
 				logger.info("Create TA Budget");
-				this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract);
+				this.updateTenderAndDetails(tender, toBeUpdatedTaDetails, subcontract, companyCurrencyCode);
 			}
 		}
 		
@@ -841,7 +842,7 @@ public class TenderService implements Serializable {
 	
 	
 	
-	private void updateTenderAndDetails(Tender tender, List<TenderDetail> tenderDetails, Subcontract subcontract) throws DataAccessException{
+	private void updateTenderAndDetails(Tender tender, List<TenderDetail> tenderDetails, Subcontract subcontract, String companyCurrencyCode) throws DataAccessException{
 			Double totalBudget = 0.0;
 			int sequence = 1;
 			
@@ -869,7 +870,11 @@ public class TenderService implements Serializable {
 					taDetail.setTender(tender); //Should save taDetail through cascades
 					taDetail.setLineType("BQ");
 					
-					totalBudget += taDetail.getAmountSubcontract();
+					if(tender.getCurrencyCode().equals(companyCurrencyCode))
+						totalBudget += taDetail.getAmountSubcontract();
+					else 
+						totalBudget += taDetail.getAmountForeign();
+					
 					tenderDetailDao.insert(taDetail);
 				}
 
@@ -881,20 +886,25 @@ public class TenderService implements Serializable {
 			
 	}
 	
-	private BigDecimal recalculateBuyingGainLoss(Double tenderBudget, List<TenderDetail> tenderDetails){
+	private BigDecimal recalculateBuyingGainLoss(Tender tender, List<TenderDetail> tenderDetails, String companyCurrencyCode){
 		BigDecimal amountBuyingGainLoss = new BigDecimal(0);
 		Double totalBudget = 0.0;
-		for(TenderDetail taDetail : tenderDetails){
-			totalBudget += taDetail.getAmountSubcontract();
+
+		if(tender.getCurrencyCode().equals(companyCurrencyCode)){
+			for(TenderDetail taDetail : tenderDetails)
+				totalBudget += taDetail.getAmountSubcontract();
+		}else{
+			for(TenderDetail taDetail : tenderDetails)
+				totalBudget += taDetail.getAmountForeign();
 		}
 
-		if(tenderBudget != null)
-			amountBuyingGainLoss = new BigDecimal(tenderBudget - totalBudget).setScale(2, RoundingMode.HALF_UP);
+		if(tender != null)
+			amountBuyingGainLoss = new BigDecimal(tender.getBudgetAmount() - totalBudget).setScale(2, RoundingMode.HALF_UP);
 		return amountBuyingGainLoss;
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
-	public Boolean insertTenderDetailForVendor(JobInfo job, String packageNo) throws Exception{
+	public Boolean insertTenderDetailForVendor(JobInfo job, String packageNo, String companyCurrencyCode) throws Exception{
 		logger.info("insertTenderDetailForVendor");
 		List<Tender> taList = obtainTenderAnalysisList(job, packageNo);
 		List<TenderDetail> budgetTADetailList =  obtainTenderDetailList(job.getJobNumber(), packageNo, 0);
@@ -939,7 +949,7 @@ public class TenderService implements Serializable {
 		//Recalculate Tender Budget
 		for(Tender ta: taList){
 			List<TenderDetail> tenderDetailsInDB = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(ta);
-			ta.setAmtBuyingGainLoss(recalculateBuyingGainLoss(ta.getBudgetAmount(), tenderDetailsInDB));
+			ta.setAmtBuyingGainLoss(recalculateBuyingGainLoss(ta, tenderDetailsInDB, companyCurrencyCode));
 			tenderDao.update(ta);
 			
 			if(Tender.TA_STATUS_RCM.equals(ta.getStatus())){

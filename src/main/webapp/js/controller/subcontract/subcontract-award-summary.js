@@ -48,6 +48,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 			.then(function(data){
 				$scope.awardHtml = GlobalHelper.formTemplate(data);
 			});
+			getCompanyBaseCurrency();
 			getTender();
 			getTenderList();
 			getRecommendedTender();
@@ -58,8 +59,15 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		jobService.getCompanyName($scope.jobNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.companyName = data;
+				});
+	}
+    
+    function getCompanyBaseCurrency(){
+		subcontractService.getCompanyBaseCurrency($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.companyCurrency = data;
 				});
 	}
     

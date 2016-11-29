@@ -15,7 +15,8 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getUnawardedSubcontractNosUnderPaymentRequisition: 	getUnawardedSubcontractNosUnderPaymentRequisition,
     	getSubcontractDetailTotalNewAmount:					getSubcontractDetailTotalNewAmount,
     	getFinalizedSubcontractNos:							getFinalizedSubcontractNos,
-    	
+    	getCompanyBaseCurrency:								getCompanyBaseCurrency,
+    		
     	upateSubcontract: 									upateSubcontract,
     	upateSubcontractDates: 								upateSubcontractDates,
     	updateWDandIV:										updateWDandIV,
@@ -239,6 +240,18 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
             params: {
             	jobNo: jobNo, 
             	subcontractNo: subcontractNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getCompanyBaseCurrency(jobNo, subcontractNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getCompanyBaseCurrency",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo 
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

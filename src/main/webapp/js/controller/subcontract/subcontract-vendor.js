@@ -123,10 +123,19 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 		
 	function loadData(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			getCompanyBaseCurrency();
 			getSubcontract();
 			getTenderList();
 			getTenderComparisonList();
 		}
+	}
+	
+	function getCompanyBaseCurrency(){
+		subcontractService.getCompanyBaseCurrency($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.companyCurrency = data;
+				});
 	}
 	
 	function getSubcontract(){

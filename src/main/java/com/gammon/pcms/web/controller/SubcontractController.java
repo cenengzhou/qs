@@ -198,6 +198,12 @@ public class SubcontractController {
 		return subcontractService.getFinalizedSubcontractNos(jobNo, subcontractNo);
 	}
 	
+	@RequestMapping(value = "getCompanyBaseCurrency", method = RequestMethod.GET)
+	public String getCompanyBaseCurrency(@RequestParam(required =true) String jobNo) throws Exception{
+		return subcontractService.getCompanyBaseCurrency(jobNo);
+	}
+
+	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumToSubcontractDetail", method = RequestMethod.POST)
 	public String addAddendumToSubcontractDetail(@RequestParam(required =true) String jobNo, 

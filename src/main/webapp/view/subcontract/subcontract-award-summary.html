@@ -43,12 +43,16 @@
 			
 				<tr class="row1" ng-repeat="tenderer in tenderList">
 					<td class="column1">{{tenderer.nameSubcontractor}}</td>
-					<td class="column1">{{tenderer.currencyCode}} {{tenderer.budgetAmount-tenderer.amtBuyingGainLoss | currency}}</td>
+					<td class="column1">{{companyCurrency}} {{tenderer.budgetAmount-tenderer.amtBuyingGainLoss | currency}}
+						<label ng-if="companyCurrency!=tenderer.currencyCode">({{tenderer.currencyCode}} {{(tenderer.budgetAmount-tenderer.amtBuyingGainLoss)/tenderer.exchangeRate | currency}})</label> 
+					</td>
 					<td class="column1">{{tenderer.remarks}}</td>
 				</tr>
 				<tr class="row2">
 					<td class="column2">RECOMMENDATION FOR AWARD: </td>
-					<td class="column2">{{rcmTenderer.currencyCode}} {{rcmTenderer.budgetAmount-rcmTenderer.amtBuyingGainLoss | currency}}</td>
+					<td class="column2">{{companyCurrency}} {{rcmTenderer.budgetAmount-rcmTenderer.amtBuyingGainLoss | currency}}
+						<label ng-if="companyCurrency!=rcmTenderer.currencyCode">({{rcmTenderer.currencyCode}} {{(rcmTenderer.budgetAmount-rcmTenderer.amtBuyingGainLoss)/rcmTenderer.exchangeRate | currency}})</label>
+					</td>
 					<td class="column2"></td>
 				</tr>
 				<tr class="row2">
@@ -58,7 +62,7 @@
 				</tr>
 				<tr class="row2">
 					<td class="column2">BUYING GAIN/(LOSS): </td>
-					<td class="column2">{{rcmTenderer.currencyCode}} <span class="invoice-underline">{{rcmTenderer.amtBuyingGainLoss | currency}}</span></td>
+					<td class="column2">{{companyCurrency}} <span class="invoice-underline">{{rcmTenderer.amtBuyingGainLoss | currency}}</span></td>
 					<td class="column2"></td>
 				</tr>
 			</tbody>

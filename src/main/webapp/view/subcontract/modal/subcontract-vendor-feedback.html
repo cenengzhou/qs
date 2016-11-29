@@ -40,7 +40,6 @@
 							<label class="col-sm-6 control-label">Exchange Rate.</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<!-- <input type="number" class="form-control input-sm" ng-model = "tender.exchangeRate"> -->
 									<input class="form-control input-sm" data-parsley-type="number"
 										step="0.01" class="form-control"
 										data-parsley-pattern="/^[0-9]+(\.[0-9]{1,4})?$/"
@@ -54,7 +53,7 @@
 						</div>
 
 						<div class="col-md-5">
-							<p>Feedback Rate(HKD) = Feedback Rate * Exchange Rate</p>
+							<p>Amount({{companyCurrency}}) = SC Amount * Exchange Rate</p>
 						</div>
 						
 						<div class="col-md-12">
@@ -81,7 +80,8 @@
 		</div>
 
 		<div class="col-md-12">
-			<div ui-grid="gridOptions" ui-grid-cellnav ui-grid-edit
+			<div ui-grid="gridOptions" ui-grid-selection
+				ui-grid-auto-resize ui-grid-cellnav ui-grid-edit
 				ui-grid-resize-columns ui-grid-move-columns ui-grid-exporter
 				class="grid"></div>
 		</div>

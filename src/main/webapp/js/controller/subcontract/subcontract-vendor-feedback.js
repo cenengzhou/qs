@@ -32,7 +32,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			          selected: "N/A"
 	};
 
-	loadTenderDetail();
+	loadData();
 
 
 	$scope.gridOptions = {
@@ -40,10 +40,11 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			enableFiltering: true,
 			enableColumnResizing : true,
 			enableGridMenu : true,
+			enableColumnMoving: true,
 			//enableRowSelection: true,
 			//enableFullRowSelection: true,
 			//multiSelect: false,
-			showGridFooter : false,
+			//showGridFooter : true,
 			showColumnFooter : true,
 			//fastWatch : true,
 
@@ -53,23 +54,23 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 
 
 			columnDefs: [
-			             { field: "billItem", displayName:"B/P/I", enableCellEdit: false, width:50},
-			             { field: "objectCode", enableCellEdit: false, width:60 },
-			             { field: "subsidiaryCode" , enableCellEdit: false, width:80 },
-			             { field: "description" , enableCellEdit: false,  width:150 },
-			             { field: "unit" , enableCellEdit: false, width:50 },
+			             { field: "description" , enableCellEdit: false,  width:100 },
 			             { field: "quantity" , enableCellEdit: false, width:80 , cellClass: 'text-right', cellFilter: 'number:4'},
 			             { field: "rateBudget" , displayName:"Budget Rate", enableCellEdit: false, width:80, cellClass: 'text-right', cellFilter: 'number:4'},
-			             /*{ field: "amountBudget" ,displayName:"Budget", enableCellEdit: false, width:100 },*/
+			             { field: "amountBudget" ,displayName:"Budget Amount", enableCellEdit: false, width:90 },
 			             { field: "rateSubcontract" , displayName:"SC Rate", enableCellEdit: true, width:80 , cellClass: 'text-right blue', cellFilter: 'number:4'},
 			             { field: "amountSubcontract" ,displayName:"SC Amount", enableCellEdit: true, width:90 , cellClass: 'text-right blue', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			             { field: "amountForeign" ,displayName:"Amount (HKD)", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2',
-			            	aggregationType: uiGridConstants.aggregationTypes.sum,
-				            footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			           	 { field: "resourceNo", enableCellEdit: false, visible:false},
-			             { field: "id", enableCellEdit: false, visible:false}
+		            	 { field: "amountForeign", enableCellEdit: false, width:100 , cellClass: 'text-right', cellFilter: 'number:2',
+		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
+		            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+	            		 { field: "objectCode", enableCellEdit: false, width:60 },
+	            		 { field: "subsidiaryCode" , enableCellEdit: false, width:80 },
+	            		 { field: "unit" , enableCellEdit: false, width:50 },
+	            		 { field: "billItem", displayName:"B/P/I", enableCellEdit: false, width:50},
+	            		 { field: "resourceNo", enableCellEdit: false, visible:false},
+	            		 { field: "id", enableCellEdit: false, visible:false}
 				            
 			             ]
 
@@ -200,7 +201,8 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 			updateTenderDetails(newTADetailList);
 	}
 
-	function loadTenderDetail(){
+	function loadData(){
+		getCompanyBaseCurrency();
 		getSubcontract();
 		getTender();
 		getTenderDetailList();
@@ -208,6 +210,20 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 
 	};
 
+	
+	function getCompanyBaseCurrency(){
+		subcontractService.getCompanyBaseCurrency($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.companyCurrency = data;
+					$scope.gridOptions.columnDefs[3].displayName = "Budget ("+data+")";
+					$scope.gridOptions.columnDefs[6].displayName = "Amount ("+data+")";
+					$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+					
+				});
+	}
+	
+	
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
