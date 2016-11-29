@@ -39,7 +39,7 @@ mainApp.controller('ProfileCtrl', ['$scope', '$timeout', 'rootscopeService', 'us
 					rootscopeService.gettingJobList('COMPLETED_JOB_LIST')
 					.then(function( response ) {
 						$scope.jobs = $scope.jobs.concat(response.jobs);
-						$scope.jobs.sort(function(a,b){return a.jobNo - b.jobNo;});
+						$scope.jobs.sort(function(a,b){return a.jobNo.localeCompare(b.jobNo)});
 						blockUI.stop();
 					});
 					}, 150);
