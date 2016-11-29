@@ -4,7 +4,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
-    		if($scope.subcontract.preAwardMeetingDate!=null || $scope.subcontract.formOfSubcontract == 'Consultancy Agreement'){
+    		//if($scope.subcontract.preAwardMeetingDate!=null || $scope.subcontract.formOfSubcontract == 'Consultancy Agreement'){
 		    	masterListService.getSubcontractor($scope.rcmTenderer.vendorNo)
 		    	.then(
 		    			function( data ) {
@@ -33,8 +33,8 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		    						submitAwardApproval();
 		    				}
 		    			});
-	    	}else
-	    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input Pre-Award Finalization Meeting Date.");
+	    	/*}else
+	    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input Pre-Award Finalization Meeting Date.");*/
     	}else
     		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select a tenderer.");
     };

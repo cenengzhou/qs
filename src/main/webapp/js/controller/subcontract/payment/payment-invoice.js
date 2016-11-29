@@ -15,6 +15,13 @@ mainApp.controller('PaymentInvoiceCtrl',
 								"Please verify the figures before submitting the payment.";
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', message);
 			}
+			else if ($scope.payment.certAmount != roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)){
+				var message = "Certificate Amount: "+roundUtil.round($scope.payment.certAmount, 2)+"\n"+
+								"Total Amount Due: "+roundUtil.round($scope.paymentCertSummary.amountDueMovement, 2)+"\n"+
+								"Certificate Amount and Total Amount Due do not match.\n" +
+								"Please verify the figures before submitting the payment.";
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', message);
+			}
 			else{
 				if($scope.payment.certAmount < 0 || $scope.payment.certAmount == 0){
 					var modalOptions = {

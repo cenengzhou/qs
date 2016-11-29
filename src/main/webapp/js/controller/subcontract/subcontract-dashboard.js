@@ -82,7 +82,7 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 						
 						$scope.lineChartParameters = {
 								labels : certData.monthList,
-								series : ['Work Done', 'Payment'],
+								series : ['Posted Work Done', 'Posted Payment'],
 								data : [
 								        wdData.detailList,
 								        certData.detailList,
