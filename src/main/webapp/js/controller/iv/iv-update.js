@@ -327,6 +327,14 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     	return false;
     }
     
+    function validateAssocitedToAwardedSubcontract(objectCode){
+    	if(objectCode && objectCode.substring(0,2) === '14'){
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
     function validateWrongIVAmount(newObj, currentObj){
     	return parseFloat(newObj.currIVAmount) !== parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount);
     }
@@ -394,12 +402,15 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	$scope.applyPercentage = function(){
 		if(!isRepackagingLocked()) return;
 		if($scope.percent != null){
-			angular.forEach($scope.gridOptions.data, function(value, key){
-				if(!validateAmountBudgetEqZero(value) &&
-					!uneditableUnawardedSubcontractNos.indexOf(value.packageNo) >= 0){
-					value.currIVAmount = value.amountBudget * ($scope.percent/100);
-					value.ivMovement = value.currIVAmount - value.postedIVAmount;
-					$scope.gridApi.rowEdit.setRowsDirty([value]);
+//			var rows = $scope.gridApi.selection.getSelectedRows();
+			var rows = $scope.gridApi.core.getVisibleRows();
+			angular.forEach(rows, function(value, key){
+				if(!validateAmountBudgetEqZero(value.entity) &&
+					!validateAssocitedToAwardedSubcontract(value.entity.objectCode) &&
+					!uneditableUnawardedSubcontractNos.indexOf(value.entity.packageNo) >= 0){
+					value.entity.currIVAmount = value.entity.amountBudget * ($scope.percent/100);
+					value.entity.ivMovement = value.entity.currIVAmount - value.entity.postedIVAmount;
+					$scope.gridApi.rowEdit.setRowsDirty([value.entity]);
 				}
 			});
 			$scope.gridApi.grid.refresh();
