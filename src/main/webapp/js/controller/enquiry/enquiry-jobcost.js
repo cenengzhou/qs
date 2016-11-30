@@ -46,28 +46,39 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 			//Other months --> 26th
 			nextDate.fromDate.setFullYear(searchYearFrom);
 			nextDate.thruDate.setFullYear(searchYearTo);
-			
-			nextDate.fromDate.setMonth(searchMonthFrom);
+
 			nextDate.fromDate.setDate(26);
+			nextDate.fromDate.setMonth(searchMonthFrom);
 //			if(searchMonthFrom === 0){
 //				nextDate.fromDate.setDate(1);
 //			} else {
 //				nextDate.fromDate.setDate(26);
 //			}
-			
-			nextDate.thruDate.setMonth(searchMonthTo);
+
 			nextDate.thruDate.setDate(25);
-//			if(searchMonthTo === 11){
-//				nextDate.thruDate.setDate(29);
-//			} else {
-//				nextDate.thruDate.setDate(25);
-//			}
-			
+			nextDate.thruDate.setMonth(searchMonthTo);
 			//thru year
 			//thru month
 			//thru date
-			//December --> 29th
+			//December --> 31th
 			//Other months --> 25th
+			
+			switch(searchMonthFrom){
+			case -1:
+				nextDate.fromDate.setFullYear(searchYearFrom);
+				nextDate.fromDate.setMonth(0);
+				nextDate.fromDate.setDate(1);
+				break;
+			default:
+				break;
+			}
+			switch(searchMonthTo){
+			case 11:
+				nextDate.thruDate.setDate(31);
+				break;
+			default:
+				break;
+			}
 			return nextDate;
 		}
 		
