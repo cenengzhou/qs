@@ -318,7 +318,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     }
     
     function validateGreaterThenBudget(newObj, currentObj){
-    	if(parseFloat(currentObj.amountBudget) < parseFloat(newObj.currIVAmount)){
+    	if(Math.abs(parseFloat(currentObj.amountBudget)) < Math.abs(parseFloat(newObj.currIVAmount))){
     		return true;
     	}
     	/*if(parseFloat(currentObj.amountBudget) < (parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount))){
