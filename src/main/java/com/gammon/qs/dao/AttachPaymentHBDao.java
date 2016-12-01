@@ -123,7 +123,14 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	public boolean addSCAttachment(AttachPayment attachPayment) throws DatabaseOperationException{
 		AttachPayment dbObj = this.getSCPaymentAttachment(attachPayment);
 		if (dbObj!=null)
-			throw new DatabaseOperationException("[Update Fail] PaymentCertNo:" + attachPayment.getPaymentCert() + " SequenceNo:" + attachPayment.getSequenceNo()); 
+			throw new DatabaseOperationException(
+					"Attachment: " + attachPayment.getFileName() 
+					+ " SequenceNo: " + attachPayment.getSequenceNo() + " already exist in database\n" 
+					+ "JobNo: " + attachPayment.getPaymentCert().getJobNo()
+					+ " Subcontract: " + attachPayment.getPaymentCert().getPackageNo()
+					+ " PaymentCertNo: " + attachPayment.getPaymentCert().getPaymentCertNo()
+					+ " PaymentCertID: " + attachPayment.getPaymentCert().getId()
+					); 
 		attachPayment.setCreatedDate(new Date());
 		saveOrUpdate(attachPayment);
 		return true;

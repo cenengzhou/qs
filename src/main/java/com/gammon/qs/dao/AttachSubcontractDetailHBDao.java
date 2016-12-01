@@ -127,7 +127,14 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 	public boolean addSCAttachment(AttachSubcontractDetail scDetailsAttachment) throws DatabaseOperationException{
 		AttachSubcontractDetail dbObj = this.getSCDetailsAttachment(scDetailsAttachment);
 		if (dbObj!=null)
-			throw new DatabaseOperationException("[Update Fail] getSubcontractDetail:" + scDetailsAttachment.getSubcontractDetail() + " SequenceNo:" + scDetailsAttachment.getSequenceNo());
+			throw new DatabaseOperationException(
+					"Attachment: " + scDetailsAttachment.getFileName() 
+					+ " SequenceNo: " + scDetailsAttachment.getSequenceNo() + " already exist in database\n" 
+							+ "JobNo: " + scDetailsAttachment.getSubcontractDetail().getJobNo()
+							+ " Subcontract: " + scDetailsAttachment.getSubcontractDetail().getSubcontract().getPackageNo()
+							+ " SD SequenceNo: " + scDetailsAttachment.getSubcontractDetail().getSequenceNo()
+							+ " SD SequenceID: " + scDetailsAttachment.getSubcontractDetail().getId()
+							);
 		
 		scDetailsAttachment.setCreatedDate(new Date());
 		saveOrUpdate(scDetailsAttachment);
