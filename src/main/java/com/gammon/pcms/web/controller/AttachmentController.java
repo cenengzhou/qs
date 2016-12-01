@@ -301,7 +301,7 @@ public class AttachmentController {
 			if (attachmentFile != null) {
 				byte[] file = attachmentFile.getBytes();
 				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-				response.setContentLength(file.length>0?file.length:0);
+				response.setContentLength(file != null ? file.length : 0);
 				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + (attachmentFile.getFileName()!=null?attachmentFile.getFileName().trim():"") + "\"");
 
 				response.getOutputStream().write(file);

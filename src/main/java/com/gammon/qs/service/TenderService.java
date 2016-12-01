@@ -879,7 +879,8 @@ public class TenderService implements Serializable {
 				}
 
 				//Set Buying Loss/Gain for Tender
-				tender.setAmtBuyingGainLoss(CalculationUtil.roundToBigDecimal(tender.getBudgetAmount()-totalBudget, 2));
+				double budgetAmount = tender.getBudgetAmount() != null ? tender.getBudgetAmount() : 0;
+				tender.setAmtBuyingGainLoss(CalculationUtil.roundToBigDecimal(budgetAmount-totalBudget, 2));
 
 				tenderDao.saveOrUpdate(tender);
 			}

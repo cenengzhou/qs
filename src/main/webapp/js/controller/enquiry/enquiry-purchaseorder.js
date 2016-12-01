@@ -56,7 +56,7 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService
 	}
 	
 	$scope.loadGridData = function(){
-		if($scope.searchOrderNo === undefined && $scope.searchOrderType === undefined && $scope.searchSupplierNo === undefined) {
+		if(!$scope.searchOrderNo && !$scope.searchOrderType && !$scope.searchSupplierNo) {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please search with at least one of the following searching criteria: Supplier Number, Order No or Order Type' ); 
 		} else {
 		jobcostService.getPORecordList($scope.jobNo, $scope.searchOrderNo, $scope.searchOrderType, $scope.searchSupplierNo)
