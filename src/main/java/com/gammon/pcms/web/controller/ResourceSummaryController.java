@@ -165,7 +165,8 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs()) ")
+			//+ "&& @GSFService.allowFunctionWrite(@webServiceConfig.GSF_ACCESSRIGHT_FN, @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
 	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";

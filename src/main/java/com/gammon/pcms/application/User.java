@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 
 public class User implements UserDetails, Serializable {
 	
@@ -27,7 +26,7 @@ public class User implements UserDetails, Serializable {
 	private String fullname;
 	
 	@JsonProperty("UserRoles")
-	private List<UserRole> userRoleList;
+	private List<Role> userRoleList;
 	
 	private String username;
 	private String authType;
@@ -38,11 +37,11 @@ public class User implements UserDetails, Serializable {
 	private List<String> jobNoExcludeList;
 	
 	public User() {
-		this.userRoleList = new ArrayList<UserRole>();
+		this.userRoleList = new ArrayList<Role>();
 	}
 		
 	public boolean hasRole(String rolename) {
-		for (UserRole role : userRoleList) {
+		for (Role role : userRoleList) {
 			if (role.getRoleName().equalsIgnoreCase(rolename)) {
 				return true;
 			}
@@ -94,7 +93,7 @@ public class User implements UserDetails, Serializable {
 		return true;
 	}
 	
-	public void addRole(UserRole role) {
+	public void addRole(Role role) {
 		this.userRoleList.add(role);
 	}
 
@@ -150,14 +149,14 @@ public class User implements UserDetails, Serializable {
 	/**
 	 * @return the userRoles
 	 */
-	public List<UserRole> getUserRoleList() {
+	public List<Role> getUserRoleList() {
 		return userRoleList;
 	}
 
 	/**
 	 * @param userRoleList the userRoles to set
 	 */
-	public void setUserRoles(List<UserRole> userRoleList) {
+	public void setUserRoles(List<Role> userRoleList) {
 		this.userRoleList.clear();
 		if(userRoleList != null){
 			this.userRoleList.addAll(userRoleList);
@@ -283,5 +282,108 @@ public class User implements UserDetails, Serializable {
 		return true;
 	}
 
+	public static class Role implements GrantedAuthority, Serializable {
+		private static final long serialVersionUID = -1405347637673078440L;
+		
+		@JsonProperty("RoleDescription")
+		private String roleDescription;
+		@JsonProperty("RoleName")
+		private String roleName;
+
+		public Role(){};
+		
+		public Role(String roleDescription, String roleName) {
+			this.roleDescription = roleDescription;
+			this.roleName = roleName;
+		}
+
+		@Override
+		public String getAuthority() {
+			return roleName;
+		}
+
+		/**
+		 * @return the roleDescription
+		 */
+		public String getRoleDescription() {
+			return roleDescription;
+		}
+
+		/**
+		 * @param roleDescription
+		 *            the roleDescription to set
+		 */
+		public void setRoleDescription(String roleDescription) {
+			this.roleDescription = roleDescription;
+		}
+
+		/**
+		 * @return the roleName
+		 */
+		public String getRoleName() {
+			return roleName;
+		}
+
+		/**
+		 * @param roleName
+		 *            the roleName to set
+		 */
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "Role [roleDescription=" + roleDescription + ", roleName=" + roleName + "]";
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((roleDescription == null) ? 0 : roleDescription.hashCode());
+			result = prime * result + ((roleName == null) ? 0 : roleName.hashCode());
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof Role)) {
+				return false;
+			}
+			Role other = (Role) obj;
+			if (roleDescription == null) {
+				if (other.roleDescription != null) {
+					return false;
+				}
+			} else if (!roleDescription.equals(other.roleDescription)) {
+				return false;
+			}
+			if (roleName == null) {
+				if (other.roleName != null) {
+					return false;
+				}
+			} else if (!roleName.equals(other.roleName)) {
+				return false;
+			}
+			return true;
+		}
+
+	}
 
 }

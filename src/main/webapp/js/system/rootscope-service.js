@@ -69,7 +69,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
         				jobs : $rootScope[jobListType]
         			});
         			setItem(jobListType, data);
-        			console.log("job list type:" + jobListType + " length:" + data.length)
+        			console.log("obtain job list from server | type:" + jobListType + " length:" + data.length)
         		});
 			});
     	} else {
@@ -286,12 +286,12 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     		var item = localStorage.getItem(key);
     		if(item){
     			try{
-	    			var jsonString = CryptoJS.AES.decrypt(item, response.cacheKey).toString(CryptoJS.enc.Utf8);
+	    			var jsonString = CryptoJS.AES.decrypt(item, response.cacheKey+2).toString(CryptoJS.enc.Utf8);
 		    		deferral.resolve({
 		    			value : JSON.parse(jsonString)
 		    		});
     			} catch(e) {
-    				console.error(e);
+    				console.warn('Fail to decrypt ' + key + ' with ' + response.cacheKey + ' | ' + e);
     				removeItem(key);
     				deferral.reject(key + ' item decrypt error:' + e);
     			}
@@ -309,7 +309,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     		try{
     			localStorage.setItem(key, CryptoJS.AES.encrypt(JSON.stringify(value), response.cacheKey));
     		} catch(e) {
-    			console.error(key + ' item encrypt error:' + e);
+    			console.warn(key + ' item encrypt fail:' + e);
     		}
     	})
     }
@@ -326,7 +326,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     			removeItem(key);
     		}
     	}
-    }    
+    }
+
 }]);
 
 

@@ -317,6 +317,22 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 	}
 }]);
 
+mainApp.factory('$exceptionHandler', ['$log', '$injector', function($log, $injector) {
+  return function myExceptionHandler(exception, cause) {
+	  var http = $injector.get('$http');
+	  http({
+          method: "post",
+          url: "service/logging/logToBackend",
+          dataType: "application/json;charset=UTF-8",
+          data:    	{exception: exception.stack, cause: cause}
+      }).then(function(response){
+    	  $log.warn('logToBackend  status:' + response.status);
+		  $log.warn(exception, cause);
+	  });
+    
+  };
+}]);
+
 /*mainApp.factory('modalUtils', function ($uibModalStack) {
      return {
        modalsExist: function () {

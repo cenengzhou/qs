@@ -14,6 +14,7 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
     	confirmAndPostRepackaingDetails: 	confirmAndPostRepackaingDetails,
     	sendEmailToReviewer:				sendEmailToReviewer,
     	getReviewerList:					getReviewerList,
+    	getReviewerListFromGSF:				getReviewerListFromGSF,
     });
 	
     function getRepackagingEntry(repackagingID) {
@@ -142,6 +143,18 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+  
+    function getReviewerListFromGSF(jobNo) {
+        var request = $http({
+            method: "post",
+            params: {
+            	jobNo:jobNo
+        	},
+            url: "service/repackaging/getReviewerListFromGSF",
+            dataType: "application/json;charset=UTF-8"
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
 }]);
 

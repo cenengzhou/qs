@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,7 @@ import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class HTMLService implements Serializable{
 

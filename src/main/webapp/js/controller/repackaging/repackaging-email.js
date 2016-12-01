@@ -11,6 +11,7 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     var pendingSearch, cancelSearch = angular.noop;
     var cachedQuery, lastSearch;
     this.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, 186 /*semicolon*/];
+    self.jobNo = $cookies.get('jobNo');
     self.allContacts = loadContacts();
 //    self.contacts = [self.allContacts[0]];
     self.contacts = [];
@@ -106,6 +107,17 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     		});
     		self.allContacts = contacts; 
     	});
+//		Get reveiewer email list from GSF
+//    	repackagingService.getReviewerListFromGSF(self.jobNo)
+//    	.then(function(data){
+//    		data.forEach(function(contact){
+//    			contact.name = contact.UserName;
+//    			contact.email = contact.UserMail;
+//    			contact.image = GlobalParameter.imageServerAddress + contact.StaffID + '.jpg'
+//    			contact._lowername = contact.name.toLowerCase();
+//    		});
+//    		self.allContacts = data; 
+//    	})
     }
 	
 	$scope.tinymceOptions = {

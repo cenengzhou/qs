@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminSessionCtrl', 
-		['$scope' , '$http', 'colorCode', 'SessionHelper', 'rootscopeService', 'GlobalParameter', '$q',
-		 function($scope , $http, colorCode, SessionHelper, rootscopeService, GlobalParameter, $q) {
+		['$scope' , '$http', '$timeout', 'colorCode', 'SessionHelper', 'rootscopeService', 'GlobalParameter', '$q',
+		 function($scope , $http, $timeout, colorCode, SessionHelper, rootscopeService, GlobalParameter, $q) {
 	rootscopeService.setSelectedTips('');
 	rootscopeService.gettingSessionId()
 	.then(function(response){
@@ -50,7 +50,9 @@ mainApp.controller('AdminSessionCtrl',
 			SessionHelper.invalidateSessionList(sessionIds)
 			.then(function(data){
 				if(data){
-					$scope.loadGridData();
+					$timeout(function(){
+						$scope.loadGridData();
+					}, 500);
 				}
 			});
 		}

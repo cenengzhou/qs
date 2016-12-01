@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.application.GlobalExceptionHandler;
+import com.gammon.pcms.dto.rs.consumer.gsf.GetUserListWithStaffId;
+import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.service.RepackagingDetailService;
 import com.gammon.qs.service.RepackagingService;
@@ -47,6 +49,8 @@ public class RepackagingController {
 	private RepackagingDetailService  repackagingDetailService;
 	@Autowired
 	private MailService mailService;
+	@Autowired
+	private GSFService gsfService;
 	
 	@RequestMapping(value = "getRepackagingEntry", method = RequestMethod.GET)
 	public Repackaging getRepackagingEntry(@RequestParam(required = true) String repackagingID) throws Exception{
@@ -182,4 +186,8 @@ public class RepackagingController {
 		return result;
 	}
 
+	@RequestMapping(value = "getReviewerListFromGSF", method = RequestMethod.POST)
+	public List<GetUserListWithStaffId.Result> getReviewerListFromGSF(@RequestParam String jobNo){
+		return gsfService.getApproverListByJob(jobNo, false);
+	}
 }

@@ -23,7 +23,6 @@ import com.gammon.pcms.config.HibernateConfig;
 import com.gammon.pcms.config.LinkConfig;
 import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
-import com.gammon.pcms.dto.rs.consumer.gsf.UserRole;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityServiceSpringImpl;
@@ -60,7 +59,7 @@ public class PropertiesController {
 	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
 		User user = securityService.getCurrentUser();
 		String cacheString = user.getFullname() + " | ";
-		for(UserRole role : user.getUserRoleList()){
+		for(User.Role role : user.getUserRoleList()){
 			cacheString += role.getRoleName() + " | ";
 		}
 		for(String jobNo : adminService.obtainCanAccessJobNoStringList()){

@@ -31,10 +31,15 @@ public class KerberosLoginFailureHandler implements AuthenticationFailureHandler
 																	throws IOException, ServletException {
 		logger.debug("login failed: " + ex);
 		logger.debug("forward to : " + loginPath);
-		if(request.getRequestURI().indexOf("plugins/") <0
-		&& request.getRequestURI().indexOf("css/") <0
-		&& request.getRequestURI().indexOf("resources/") <0){
-			request.getRequestDispatcher(loginPath).forward(request, response);
+		if(request.getRequestURI().indexOf(".js") >0){
+			response.setContentType("text/javascript");
+			response.getWriter().write("window.location = '" + request.getContextPath() + loginPath + "';");
+		} else if(
+			request.getRequestURI().indexOf("plugins/") <0
+			&& request.getRequestURI().indexOf("css/") <0
+			&& request.getRequestURI().indexOf("resources/") <0
+		){
+			request.getRequestDispatcher(loginPath).forward(request, response);	
 		} else {
 			request.getRequestDispatcher(request.getServletPath()).forward(request, response);
 		}

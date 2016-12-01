@@ -58,6 +58,9 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	public static final String GSF_GETROLE = "GetRole";
 	public static final String GSF_GETFUNCTIONSECURITY = "GetFunctionSecurity";
 	public static final String GSF_GETJOBSECURITY = "GetJobSecurity";
+	public static final String GSF_GETUSERLISTWITHSTAFFID = "GetUserListWithStaffID";
+	public static final String GSF_REVIEWER_FN = "REVIEWER";
+	public static final String GSF_ACCESSRIGHT_FN = "ACCESSRIGHT";
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {

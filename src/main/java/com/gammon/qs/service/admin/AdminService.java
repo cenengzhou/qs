@@ -21,7 +21,7 @@ import com.gammon.jde.webservice.serviceRequester.userCompanySet.UserCompanySetR
 import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
+import com.gammon.pcms.dto.rs.consumer.gsf.GetJobSecurity;
 import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -76,13 +76,13 @@ public class AdminService {
 	}
 	
 	public List<String> obtainCanAccessJobNoStringList(String username) {
-		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(username);
+		List<GetJobSecurity.Result> jobSecurityList = obtainJobSecurityListByUsername(username);
 		List<String> jobNumberList = new ArrayList<>();
 		List<String> jobNumberExcludeList = new ArrayList<>();
 		boolean jobAll = false;
 		if(jobSecurityList != null)
-		for(JobSecurity jobSecurity : jobSecurityList){
-			if(jobSecurity.getAccessRight().equals(JobSecurity.EXCLUDE)) {
+		for(GetJobSecurity.Result jobSecurity : jobSecurityList){
+			if(jobSecurity.getAccessRight().equals(GetJobSecurity.Result.AccessRight.EXCLUDE)) {
 				jobNumberExcludeList.add(jobSecurity.getJobNo());
 				continue;
 			}
@@ -91,7 +91,7 @@ public class AdminService {
 				continue;
 			}
 			if(!jobSecurity.getJobNo().equals("NA"))
-				if(jobSecurity.getAccessRight().equals(JobSecurity.INCLUDE) || jobSecurity.getRoleName() != null)
+				if(jobSecurity.getAccessRight().equals(GetJobSecurity.Result.AccessRight.INCLUDE) || jobSecurity.getRoleName() != null)
 					jobNumberList.add(jobSecurity.getJobNo());
 		}
 		if(jobAll){
@@ -183,13 +183,13 @@ public class AdminService {
 		return companyCodeList;
 	}
 	
-	public List<JobSecurity> obtainJobSecurityListByCurrentUser() {
-		List<JobSecurity> jobSecurityList = obtainJobSecurityListByUsername(securityService.getCurrentUser().getUsername());
+	public List<GetJobSecurity.Result> obtainJobSecurityListByCurrentUser() {
+		List<GetJobSecurity.Result> jobSecurityList = obtainJobSecurityListByUsername(securityService.getCurrentUser().getUsername());
 		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
 		return jobSecurityList;
 	}
 
-	public List<JobSecurity> obtainJobSecurityListByUsername(String username) {
+	public List<GetJobSecurity.Result> obtainJobSecurityListByUsername(String username) {
 		return gsfService.getJobSecurityList(username);
 	}
 

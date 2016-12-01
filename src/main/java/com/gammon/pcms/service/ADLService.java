@@ -2,7 +2,6 @@ package com.gammon.pcms.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,6 @@ import com.gammon.pcms.dao.adl.AddressBookDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
-import com.gammon.pcms.dto.rs.consumer.gsf.JobSecurity;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -38,6 +38,7 @@ import com.gammon.qs.service.RepackagingService;
 import com.gammon.qs.service.admin.AdminService;
 
 @Service
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(	readOnly = true, rollbackFor = Exception.class, value = "adlTransactionManager")
 public class ADLService {
 	private Logger logger = Logger.getLogger(getClass());
