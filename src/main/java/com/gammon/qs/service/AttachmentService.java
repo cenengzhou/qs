@@ -299,7 +299,9 @@ public class AttachmentService {
 					attachment = new File(jobDirectoryPath+tmpFileName);				
 			}
 			fileName = tmpFileName;
-
+			if (AbstractAttachment.VendorNameObject.equalsIgnoreCase(nameObject.trim())){
+				if(fileName.length() > 50) throw new Exception("File name too long");
+			}
 			FileOutputStream attachmentOutputStream = new FileOutputStream(attachment);
 
 			attachmentOutputStream.write(file);
@@ -367,7 +369,7 @@ public class AttachmentService {
 
 		}catch(Exception e){
 			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
-			responseObj.setMessage("Fail to upload attachment "+ fileName+".");
+			responseObj.setMessage("Fail to upload attachment "+ fileName+": <br>" + e.getMessage());
 		}
 
 		return responseObj;

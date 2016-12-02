@@ -307,6 +307,10 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 		formData.append('sequenceNo', $scope.sequenceNo+1);
 		attachmentService.uploadSCAttachment(formData)
 		.then(function(data){
+			var status = data.success ? "Success" : "Fail";
+			if(data.message){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, data.message);
+			}
 			f.value = null;
 			$scope.loadAttachment($scope.nameObject, $scope.textKey);
 		});

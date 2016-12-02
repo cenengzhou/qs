@@ -165,7 +165,7 @@ public class MasterListService{
 	
 	public MasterListVendor searchVendorAddressDetails(String addressNumber) throws Exception{
 		List<MasterListVendor> resultList = masterListDao.getVendorDetailsList(addressNumber);
-		if (resultList!=null){
+		if (resultList!=null && resultList.size() > 0){
 			return resultList.get(0);
 		}else{
 			return new MasterListVendor();
