@@ -10,8 +10,8 @@ UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_BUDGET = round(round(QUANTITY, 4)
 UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_BUDGET = round(round(TOBEAPPROVEDQTY, 4) * round(COSTRATE, 4), 2) where COSTRATE is not null and APPROVED != 'A';
 UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_CUMULATIVE_CERT = round(round(CUMCERTQTY, 4) * round(SCRATE, 4), 2) where SCRATE is not null;
 UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_POSTED_CERT = round(round(POSTEDCERTQTY, 4) * round(SCRATE, 4), 2) where SCRATE is not null;
-UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_CUMULATIVE_WD = round(round(CUMWDQTY, 4) * round(SCRATE, 4), 2) where COSTRATE is not null;
-UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_POSTED_WD = round(round(POSTEDWDQTY, 4) * round(SCRATE, 4), 2) where COSTRATE is not null;
+UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_CUMULATIVE_WD = round(round(CUMWDQTY, 4) * round(SCRATE, 4), 2) where SCRATE is not null;
+UPDATE PCMSDATAPROD.SUBCONTRACT_DETAIL set AMT_POSTED_WD = round(round(POSTEDWDQTY, 4) * round(SCRATE, 4), 2) where SCRATE is not null;
 
 --------------------------------------------------------
 --  Calculate Resource Summary new columns
@@ -37,4 +37,5 @@ UPDATE PCMSDATAPROD.BPI_ITEM set AMT_SELLING = round(round(REMEASUREDQTY, 4) * r
 --------------------------------------------------------
 -- select * from PCMSDATAPROD.TENDER_DETAIL;
 UPDATE PCMSDATAPROD.TENDER_DETAIL set AMT_BUDGET = round(round(QUANTITY, 4) * round(RATE_BUDGET, 4), 2) where RATE_BUDGET is not null;
+UPDATE PCMSDATAPROD.TENDER_DETAIL set AMT_FOREIGN = round(round(QUANTITY, 4) * round(RATE_BUDGET, 4) * round(Exchange_RATE, 4), 2) where RATE_BUDGET is not null;
 UPDATE PCMSDATAPROD.TENDER_DETAIL set AMT_SUBCONTRACT = round(round(QUANTITY, 4) * round(RATE_SUBCONTRACT, 4), 2) where RATE_SUBCONTRACT is not null;
