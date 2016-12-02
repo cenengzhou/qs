@@ -2252,7 +2252,6 @@ public class PaymentService{
 				String tempObjCode = "";
 
 				
-				
 				for (SubcontractDetail scDetails:scDetailList){
 					if(scPaymentCert.getSubcontract().getSubcontractStatus()==500 && !"A".equals(scDetails.getApproved()))
 						continue;
@@ -2276,15 +2275,16 @@ public class PaymentService{
 						 *created on 13 Jul, 2016
 						 *Convert to Amount Based 
 						 **/
-						if (scDetails.getAmountPostedCert()!=null && scDetails.getAmountPostedCert().compareTo(new BigDecimal(0)) != 0){
-							scPaymentDetail.setCumAmount(CalculationUtil.round(scDetails.getAmountCumulativeCert().doubleValue(), 2));
-							scPaymentDetail.setMovementAmount(CalculationUtil.round(scDetails.getAmountCumulativeCert().doubleValue() - scDetails.getAmountPostedCert().doubleValue(), 2));
-						}
-						else {
-							scPaymentDetail.setCumAmount(scDetails.getAmountCumulativeCert().doubleValue());
-							scPaymentDetail.setMovementAmount(scDetails.getAmountCumulativeCert().doubleValue());
-						}
 
+						scPaymentDetail.setCumAmount(0.0);
+						scPaymentDetail.setMovementAmount(0.0);
+
+						if (scPaymentCert.getPaymentCertNo()>1 && previousPaymentCert != null){
+							PaymentCertDetail paymentDetail = paymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
+							if(paymentDetail!=null)
+								scPaymentDetail.setCumAmount(paymentDetail.getCumAmount());
+						}
+						
 						if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
 							totalMOSAmount += scPaymentDetail.getCumAmount();
 							tempSubsidCode = scDetails.getSubsidiaryCode();
