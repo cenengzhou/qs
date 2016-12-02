@@ -215,7 +215,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		subcontractService.getCompanyBaseCurrency($scope.jobNo)
 		.then(
 				function( data ) {
-					$scope.companyCurrency = data;
+					$scope.companyCurrencyCode = data;
 					$scope.gridOptions.columnDefs[3].displayName = "Budget ("+data+")";
 					$scope.gridOptions.columnDefs[6].displayName = "Amount ("+data+")";
 					$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);

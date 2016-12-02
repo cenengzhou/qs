@@ -4105,7 +4105,7 @@ public class SubcontractService {
 					if(recalculateRententionAmount){
 						try {
 							Double accumulatedRetentionAmount=0.0;
-							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo)){
+							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, scPackage.getPackageNo())){
 								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
 									//RT+RA
 									Double retentionAmount = paymentCertDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
@@ -4113,6 +4113,7 @@ public class SubcontractService {
 										accumulatedRetentionAmount = accumulatedRetentionAmount + retentionAmount;
 								}
 							}
+							
 							scPackage.setAccumlatedRetention(CalculationUtil.roundToBigDecimal(accumulatedRetentionAmount, 2));
 						} catch (DatabaseOperationException e) {
 							e.printStackTrace();

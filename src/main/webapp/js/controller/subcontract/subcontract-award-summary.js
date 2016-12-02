@@ -67,7 +67,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 		subcontractService.getCompanyBaseCurrency($scope.jobNo)
 		.then(
 				function( data ) {
-					$scope.companyCurrency = data;
+					$scope.companyCurrencyCode = data;
 				});
 	}
     

@@ -254,6 +254,7 @@ public class HTMLService implements Serializable{
 		if(rcmTenderer != null){
 			tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(noJob, noSubcontract, String.valueOf(rcmTenderer.getVendorNo()));
 		}
+		String companyCurrencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("award");
@@ -267,6 +268,7 @@ public class HTMLService implements Serializable{
 		data.put("tenderList", tenderList != null ? tenderList : new ArrayList<>());
 		data.put("rcmTenderer", rcmTenderer != null ? rcmTenderer : new Tender());
 		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
+		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode: "");
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 

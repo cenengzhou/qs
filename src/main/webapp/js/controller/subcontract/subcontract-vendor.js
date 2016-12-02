@@ -8,11 +8,11 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 			enableFiltering: false,
 			enableColumnResizing : true,
 			enableGridMenu : true,
-			enableColumnMoving: false,
+			enableColumnMoving: true,
 			//enableRowSelection: true,
 			//enableFullRowSelection: true,
 			//multiSelect: false,
-			//showGridFooter : true,
+			showGridFooter : false,
 			showColumnFooter : false,
 			//fastWatch : true,
 
@@ -134,7 +134,7 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 		subcontractService.getCompanyBaseCurrency($scope.jobNo)
 		.then(
 				function( data ) {
-					$scope.companyCurrency = data;
+					$scope.companyCurrencyCode = data;
 				});
 	}
 	

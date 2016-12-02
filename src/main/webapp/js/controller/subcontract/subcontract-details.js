@@ -338,7 +338,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 	}
 	
 	$scope.recalculateSCSummary = function (){
-		subcontractService.calculateTotalWDandCertAmount($scope.jobNo, $scope.subcontractNo)
+		subcontractService.calculateTotalWDandCertAmount($scope.jobNo, $scope.subcontractNo, true)
 		.then(
 				function( data ) {
 					if(data)

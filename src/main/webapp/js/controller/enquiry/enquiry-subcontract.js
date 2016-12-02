@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout', 'GlobalHelper',
-                                      function($scope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout, GlobalHelper) {
+mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout', 'GlobalHelper', '$state',
+                                      function($scope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout, GlobalHelper, $state) {
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date(); // Default: Today
 	$scope.searchYear = $scope.currentDate.getFullYear();
@@ -392,5 +392,19 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 		$scope.gridApi.grid.refresh();
 	};
 	$scope.loadGridData();
+	
+	$scope.recalculateSCSummary = function (){
+		subcontractService.calculateTotalWDandCertAmount($scope.searchJobNo, '', true)
+		.then(
+				function( data ) {
+					if(data){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract Summary has been recalculated.");
+						$state.reload();
+					}
+					else
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', "Subcontract Summary cannot be recalculated.");
+					
+				});
+	}
 	
 }]);
