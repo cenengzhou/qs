@@ -318,12 +318,21 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     }
     
     function validateGreaterThenBudget(newObj, currentObj){
-    	if(Math.abs(parseFloat(currentObj.amountBudget)) < Math.abs(parseFloat(newObj.currIVAmount))){
-    		return true;
+    	if(parseFloat(currentObj.amountBudget)>0){
+        	if((parseFloat(currentObj.amountBudget) < parseFloat(newObj.currIVAmount)) || parseFloat(newObj.currIVAmount) < 0){
+        		return true;
+        	}
+        	if((parseFloat(currentObj.amountBudget) < parseFloat(newObj.ivMovement)+parseFloat(currentObj.postedIVAmount)) || (parseFloat(newObj.ivMovement)+parseFloat(currentObj.postedIVAmount)) < 0){
+        		return true;
+        	}
+    	}else{
+        	if((parseFloat(currentObj.amountBudget) > parseFloat(newObj.currIVAmount)) || parseFloat(newObj.currIVAmount) > 0){
+        		return true;
+        	}
+        	if((parseFloat(currentObj.amountBudget) > parseFloat(newObj.ivMovement)+parseFloat(currentObj.postedIVAmount)) || (parseFloat(newObj.ivMovement)+parseFloat(currentObj.postedIVAmount)) > 0){
+        		return true;
+        	}
     	}
-    	/*if(parseFloat(currentObj.amountBudget) < (parseFloat(newObj.ivMovement) + parseFloat(currentObj.postedIVAmount))){
-    		return true;
-    	}*/
     	return false;
     }
     
@@ -409,7 +418,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				if(!validateAmountBudgetEqZero(value.entity) &&
 					!isUneditableOrAwardedSubcontract(value.entity.packageNo)){
 					value.entity.currIVAmount = value.entity.amountBudget * ($scope.percent/100);
-					value.entity.ivMovement = value.entity.currIVAmount - value.entity.postedIVAmount;
+					value.entity.ivMovement = roundUtil.round(value.entity.currIVAmount - value.entity.postedIVAmount, 2);
 					$scope.gridApi.rowEdit.setRowsDirty([value.entity]);
 				}
 			});
@@ -460,7 +469,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					$scope.finalizedMovementAmount = 0;
 					$scope.resetData = [];
 					angular.forEach(data, function(value, key){
-						value.ivMovement = value.currIVAmount - value.postedIVAmount;
+						value.ivMovement = roundUtil.round(value.currIVAmount - value.postedIVAmount, 2);
 						var newObj = angular.copy(value);
 						$scope.resetData.push(newObj);
 						/*if(){
