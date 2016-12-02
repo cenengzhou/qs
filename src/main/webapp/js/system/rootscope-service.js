@@ -286,7 +286,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     		var item = localStorage.getItem(key);
     		if(item){
     			try{
-	    			var jsonString = CryptoJS.AES.decrypt(item, response.cacheKey+2).toString(CryptoJS.enc.Utf8);
+	    			var jsonString = CryptoJS.AES.decrypt(item, response.cacheKey).toString(CryptoJS.enc.Utf8);
 		    		deferral.resolve({
 		    			value : JSON.parse(jsonString)
 		    		});
