@@ -166,7 +166,15 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
             		 	{field: 'amountCumulativeCert', displayName: "Cumulative Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
 	            		 	aggregationType: uiGridConstants.aggregationTypes.sum,
         		 			footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:false, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+
+			             {field: 'projectedProvision', displayName: "Projected Provision", width: 120, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+		            			aggregationType: uiGridConstants.aggregationTypes.sum,
+		            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             {field: 'provision', displayName: "Provision", width: 120, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+			            			aggregationType: uiGridConstants.aggregationTypes.sum,
+			            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			             
 			             {field: 'quantity', width: 100, enableCellEdit: false, enableFiltering: false ,cellClass: 'text-right', cellFilter: 'number:4'},
 
 	            		 {field: 'costRate', displayName:"Cost Rate", width: 60, enableCellEdit: false},
@@ -175,9 +183,6 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 			             {field: 'objectCode', displayName: "Object Code", width: 70, enableCellEdit: false},
 			             {field: 'subsidiaryCode', displayName: "Subsidiary Code", width: 80, enableCellEdit: false},
 			             
-			             {field: 'projectedProvision', displayName: "Projected Provision", width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
-			             {field: 'provision', displayName: "Provision", width: 120, visible:false, enableCellEdit: false, enableFiltering: false},
-
 			             {field: 'altObjectCode', width: 100, visible:false, enableCellEdit: false},
 
 			             {field: 'approved', width: 80, enableCellEdit: false},
@@ -396,12 +401,12 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		subcontractService.updateWDandIV($scope.jobNo, $scope.subcontractNo, scDetail)
 	   	 .then(
 				 function( data ) {
-					 if(data.length!=0){
+					 if(data.length!=0)
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
+					 else{
 						 $state.reload();
-						}
-					 else
-						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
+//						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
+						 }
 				 });
 	    }
 	
