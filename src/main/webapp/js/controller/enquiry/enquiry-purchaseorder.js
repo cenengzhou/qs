@@ -46,8 +46,10 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService
 			            		 return c;
 			            	 },
 			             },
-			             { field: 'dateTransactionJulian', displayName: 'Order Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
-			             { field: 'dtForGLAndVouch1', displayName: 'G/L Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'dateTransactionJulian', displayName: 'Order Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true, },
+			             { field: 'dtForGLAndVouch1', displayName: 'G/L Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true, },
             			 ]
 	};
 	

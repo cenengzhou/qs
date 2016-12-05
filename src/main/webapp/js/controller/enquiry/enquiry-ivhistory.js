@@ -24,7 +24,8 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'moda
 			enableCellSelection: false,
 			exporterMenuPdf: false,
 			columnDefs: [
-			             { field: 'createdDate', displayName: 'Posting Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'},
+			             { field: 'createdDate', displayName: 'Posting Date', enableCellEdit: false, cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true, },
 			             { field: 'packageNo', displayName: 'Package No.', enableCellEdit: false },
 			             { field: 'objectCode', displayName: 'Object', enableCellEdit: false},
 			             { field: 'subsidiaryCode', displayName: 'Subsidiary', enableCellEdit: false},

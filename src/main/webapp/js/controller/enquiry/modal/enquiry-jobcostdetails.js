@@ -114,7 +114,8 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 			            		 }
 			            		 return c;
 			            	 },
-			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"'
+			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true, 
 			             },
 			             { field: 'explanationAddressBook', width: '200', displayName: 'Explanation', enableCellEdit: false,
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {

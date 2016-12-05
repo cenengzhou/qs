@@ -52,10 +52,14 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'bl
 			            		cellFilter : 'number:2',
 			            	 enableCellEdit: false
 			            },
-			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},
-			             { field: 'asAtDate', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', displayName: 'As at Date', enableCellEdit: false},
-			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false},
-			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false}	
+			             { field: 'dueDate', displayName: 'Due Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true, enableCellEdit: false},
+			             { field: 'asAtDate', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+				            	 filterCellFiltered:true, displayName: 'As at Date', enableCellEdit: false},
+			             { field: 'scIpaReceivedDate', displayName: 'SC IPA Received Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+					            	 filterCellFiltered:true, enableCellEdit: false},
+			             { field: 'certIssueDate', displayName: 'Certificate Issue Date', cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+						            	 filterCellFiltered:true,  enableCellEdit: false}	
             			 ]
 	};
 	

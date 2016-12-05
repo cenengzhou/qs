@@ -76,7 +76,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			             { field: 'recordKeyMatchedPoSplit', width:'100', displayName: "PO No.", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },
 			             { field: 'numberBatch', width:'100', displayName: "Batch Number", enableCellEdit: false },
-			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', enableCellEdit: false }
+			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
+			            	 filterCellFiltered:true,  enableCellEdit: false }
 			             
 //			             { field: 'numberJournalEntryLine', width:'100', displayName: "Journal Entry Line", enableCellEdit: false },
 //			             { field: 'numberJeLineExtension', width:'100', displayName: "Je Line Extension", enableCellEdit: false },
