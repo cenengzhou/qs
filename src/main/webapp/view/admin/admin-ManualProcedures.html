@@ -183,6 +183,29 @@
 			</div>
 			</form>
 		</div>
+		
+		<div class="col-md-4 col-sm-12">
+		<form name="recalculateJobSummaryForm" ng-submit="recalculateJobSummary()">
+			<div class="panel panel-primary  panel" vertilize  >
+				<div class="panel-heading">
+					<h3 class="panel-title">Recalculate Job Summary</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<td>All Job Summaries will be recalculated.</td>
+						</tr>
+						<tr>
+							<td>
+								<button ng-show="showQSAdmin" class="btn btn-block btn-primary">Recalculate</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</form>
+		</div>
+		
 	</div>
 	<!-- end #content -->
 </div>
