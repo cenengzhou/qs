@@ -167,7 +167,7 @@ mainApp.constant('GlobalParameter', {
 	],
 	formOfSubcontract: [
 		{id:'Consultancy Agreement', value:'Consultancy Agreement'},
-		{id:'Internal trading', value:'Internal trading'},
+		{id:'Internal Trading', value:'Internal Trading'},
 		{id: 'Major', value:'Major'},
 		{id:'Minor', value:'Minor'}
 	],
