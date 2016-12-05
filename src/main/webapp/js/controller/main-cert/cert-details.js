@@ -88,7 +88,6 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 						.then(
 								function( data ) {
 									$scope.previousCertNetAmount = data.certNetAmount;
-									//console.log("$scope.previousCertNetAmount: "+$scope.previousCertNetAmount);
 									$scope.previousGSTReceivable = data.gstReceivable;
 									$scope.previousGSTPayable = data.gstPayable;
 								});
