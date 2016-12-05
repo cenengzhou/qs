@@ -166,7 +166,9 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
             		 	{field: 'amountCumulativeCert', displayName: "Cumulative Certified Amount", width: 150, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
 	            		 	aggregationType: uiGridConstants.aggregationTypes.sum,
         		 			footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
+			             {field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
+	            		 	footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
 
 			             {field: 'projectedProvision', displayName: "Projected Provision", width: 120, visible:true, enableCellEdit: false, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
 		            			aggregationType: uiGridConstants.aggregationTypes.sum,
