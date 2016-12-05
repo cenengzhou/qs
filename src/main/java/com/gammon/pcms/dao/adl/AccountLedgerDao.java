@@ -128,7 +128,8 @@ public class AccountLedgerDao extends BaseAdlHibernateDao<AccountLedger> {
 			criteria.add(Restrictions.ilike("accountSubsidiary", codeSubsidiary, MatchMode.START));
 
 		// Order by
-		criteria.addOrder(Order.asc("accountFiscalYear"))
+		criteria.addOrder(Order.asc("dateGl"))
+				.addOrder(Order.asc("accountFiscalYear"))
 				.addOrder(Order.asc("accountPeriod"))
 				.addOrder(Order.asc("typeDocument"))
 				.addOrder(Order.asc("accountObject"))

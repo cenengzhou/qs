@@ -153,14 +153,14 @@
 														uib-btn-radio="'Consultancy Agreement'"
 														ng-click="resetInternalJob()">Consultancy
 														Agreement</label> <label class="btn"
-														ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Internal Trading', 'btn-inverse' : subcontract.formOfSubcontract != 'Internal Trading'}"
+														ng-class="{'btn-primary' : subcontract.formOfSubcontract.toLowerCase() == 'internal trading', 'btn-inverse' : subcontract.formOfSubcontract.toLowerCase() != 'internal trading'}"
 														ng-model="subcontract.formOfSubcontract"
 														ng-disabled="disableButtons"
 														uib-btn-radio="'Internal Trading'">Internal
 														Trading</label>
 												</div>
 												<div class="row"
-													ng-show="subcontract.formOfSubcontract == 'Internal Trading'">
+													ng-show="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'">
 													<div class="col-md-9"></div>
 													<div class="form-group col-md-3">
 														<div class="input-group">
@@ -168,7 +168,7 @@
 																placeholder="Internal Job No."
 																ng-model="subcontract.internalJobNo"
 																ng-disabled="disableButtons"
-																data-ng-required="subcontract.formOfSubcontract == 'Internal Trading'">
+																data-ng-required="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'">
 														</div>
 													</div>
 												</div>
