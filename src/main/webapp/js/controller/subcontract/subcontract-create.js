@@ -123,6 +123,11 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select subcontract type.");
 			return;
 		}
+			
+		if($scope.subcontract.retentionTerms == null || $scope.subcontract.retentionTerms.trim().length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select Retention.");
+			return;
+		}
 
 		
 		$scope.subcontractToUpdate = {

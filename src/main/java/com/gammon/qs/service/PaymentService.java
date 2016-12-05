@@ -2276,14 +2276,36 @@ public class PaymentService{
 						 *Convert to Amount Based 
 						 **/
 
-						scPaymentDetail.setCumAmount(0.0);
-						scPaymentDetail.setMovementAmount(0.0);
+						//Cumulative Certified Amount
+						if (scDetails.getAmountCumulativeCert()!=null)
+							scPaymentDetail.setCumAmount(scDetails.getAmountCumulativeCert().doubleValue());
+						else 
+							scPaymentDetail.setCumAmount(0.0);
+						
+						//Movement Certified Amount
+						if (scDetails.getAmountPostedCert()!=null){
+							double newPostedAmount = CalculationUtil.round(scDetails.getAmountPostedCert().doubleValue(), 2);
+							scPaymentDetail.setMovementAmount(scPaymentDetail.getCumAmount()-newPostedAmount);
 
+							if(previousPaymentCert!=null){
+								PaymentCertDetail previousSCPaymentDetail = paymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
+								if(previousSCPaymentDetail!=null && newPostedAmount!=previousSCPaymentDetail.getCumAmount()){
+									logger.info("J"+scPaymentCert.getJobNo()+" SC"+scPaymentCert.getSubcontract().getPackageNo()+"-"+scPaymentDetail.getLineType()+"-"+scPaymentDetail.getObjectCode()+"-"+scPaymentDetail.getSubsidiaryCode()+" New Posted: "+newPostedAmount+" VS Previous Posted: "+previousSCPaymentDetail.getCumAmount());	
+									scPaymentDetail.setMovementAmount(scPaymentDetail.getCumAmount()-previousSCPaymentDetail.getCumAmount());
+								}
+							}
+						}
+						
+						/*scPaymentDetail.setCumAmount(0.0);
+						scPaymentDetail.setMovementAmount(0.0);
 						if (scPaymentCert.getPaymentCertNo()>1 && previousPaymentCert != null){
+							logger.info(scDetails.getLineType()+" - "+scDetails.getId());
 							PaymentCertDetail paymentDetail = paymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
+							logger.info("paymentDetail:"+paymentDetail);
 							if(paymentDetail!=null)
 								scPaymentDetail.setCumAmount(paymentDetail.getCumAmount());
-						}
+						}*/
+						
 						
 						if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
 							totalMOSAmount += scPaymentDetail.getCumAmount();
