@@ -1536,19 +1536,21 @@ mainApp.config(['momentPickerProvider', '$provide', function(momentPickerProvide
 	  $provide.decorator('uiGridExporterService', function($delegate, $filter){
 		    $delegate.formatFieldAsCsv = function (field) {
 		      if (field.value == null) {
-		        return '';
+		    	  return '';
 		      }
 		      if (typeof(field.value) === 'number') {
-		        return field.value;
+		    	  return field.value;
 		      }
 		      if (typeof(field.value) === 'boolean') {
-		        return (field.value ? 'TRUE' : 'FALSE') ;
+		    	  return (field.value ? 'TRUE' : 'FALSE') ;
 		      }
 		      if (typeof(field.value) === 'string') {
-		        return '"' + field.value + '"';
+		    	  if(field.value === 'text-warning fa-thumbs-up') field.value = 'Yes';
+		    	  if(field.value === 'text-danger fa-thumbs-down') field.value = 'No';
+		    	  return '"' + field.value + '"';
 		      }
 		      if ( field.value instanceof Date){
-		        return $filter('date')(field.value, 'yyyy-MM-dd');
+		    	  return $filter('date')(field.value, 'yyyy-MM-dd');
 		      }
 
 		      return JSON.stringify(field.value);
