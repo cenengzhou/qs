@@ -378,7 +378,7 @@ public class SubcontractWSDao {
 
 		InsertSCHeaderRequestObj headerRequestObj = new InsertSCHeaderRequestObj();
 		Boolean material = scPackage.getMaterialIncludedContract();
-		if (material)
+		if (material != null && material)
 			headerRequestObj.setTimeAndMaterialsFlag("1");
 		else
 			headerRequestObj.setTimeAndMaterialsFlag("0");
