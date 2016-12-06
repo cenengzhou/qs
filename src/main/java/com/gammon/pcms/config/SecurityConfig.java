@@ -159,6 +159,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionFixation().migrateSession().and()
 			.authorizeRequests()
 			.antMatchers(
+					"/admintest/**",
 					"/spring-ws/*", 
 					"/resources/**",
 					"/plugins/**",

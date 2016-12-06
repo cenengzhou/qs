@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html ng-app="testApp">
+<head>
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-store" />
+<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="expires" content="0" />
+<meta charset="utf-8">
+<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
+<title>Index</title>
+<link rel="stylesheet" href="../plugins/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="../plugins/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../plugins/iconfont/1.0.0/css/icofont.css">
+<link rel="stylesheet" href="../css/adminLTE.css">
+<link rel="stylesheet" href="../plugins/angular-block-ui/v0.2/css/angular-block-ui.min.css"/>
+<link href="../css/font.css" rel="stylesheet" id="fontFamilySrc" />
+<link href="../css/style.css" rel="stylesheet" />
+
+<script src="../plugins/jquery/jquery-1.9.1.min.js"></script>
+<script src="../plugins/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../plugins/bootstrap-toggle/2.2.1/bootstrap-toggle.min.js"></script>
+<script src="../plugins/angularjs/1.4.9/angular.js"></script>	
+<script src="../plugins/angular-filter/v0.5.12/angular-filter.js"></script>
+<script src="../plugins/angular-block-ui/v0.2/js/angular-block-ui.js"></script>
+<script src="../plugins/fullcalendar/lib/moment.min.js"></script>
+<script>
+var testApp = angular.module('testApp',  ['blockUI', 'angular.filter']);
+testApp.config(function(blockUIConfig) {		
+	blockUIConfig.autoBlock = false;
+	blockUIConfig.delay = 100;
+	blockUIConfig.autoInjectBodyBlock = true;
+});
+testApp.controller("ctrl", ['$http', '$scope', '$interval', function($http, $scope, $interval){
+	$http.post('getTestAllTestCase')
+	.then(function(response){
+		$scope.allTestCase = response.data;
+		$scope.allTestCase.forEach(function(testCase){
+			if(testCase.testResult.message == 'Not implement yet'){
+				testCase.isRunning = true;
+			}
+		});
+	})
+
+	$scope.runGroupTest = function(testCaseGroup){
+		testCaseGroup.forEach(function(testCase){
+			if(!testCase.isRunning) $scope.runTest(testCase);
+		});
+	}
+	
+	$scope.runTest = function(testCase){
+		$scope.allTestCase[testCase.id].startTime = new Date();
+		$scope.allTestCase[testCase.id].runTimeDisplay = "00:00:01";
+		$scope.allTestCase[testCase.id].testResult = {};
+		$scope.allTestCase[testCase.id].runTime = runTime(testCase.id);
+		$scope.allTestCase[testCase.id].isRunning = true;
+		$http({
+			url: 'runTest',
+			method: 'post',
+			params: {id: testCase.id, category: testCase.category, method: testCase.method, item: testCase.item}
+		})
+		.then(function(response){
+			$scope.allTestCase[testCase.id].testResult = response.data;
+			$scope.allTestCase[testCase.id].isRunning = false;
+			if(angular.isDefined($scope.allTestCase[testCase.id].runTime)){
+				$interval.cancel($scope.allTestCase[testCase.id].runTime);
+			}
+		});
+
+	}
+
+	$scope.checkLastRun = function(testCase){
+		if(!testCase.lastRun) return false;
+		return (new Date() - testCase.lastRun) < 60000;
+	}
+	
+	function runTime (testCaseId){
+		return $interval(function(){
+			$scope.allTestCase[testCaseId].runTimeDisplay = moment().startOf('day')
+	        .seconds((new Date() - $scope.allTestCase[testCaseId].startTime) / 1000)
+	        .format('H:mm:ss');
+		}, 1000)
+	}
+}]); 
+
+</script>
+ 
+</head>
+<body ng-controller="ctrl">
+
+<div class="row">
+ <label class="form-control btn btn-primary" style="color:white" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
+		<div ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'">
+		<div class="panel panel-inverse">
+            <div class="panel-heading">
+                 <div class="panel-heading-btn">
+                     <label class="btn btn-primary" type="button" ng-click="runGroupTest(categoryValue)">Run Group</label>
+                 </div>
+                <h4 class="panel-title">{{categoryKey}}</h4>
+            </div>
+            <div class="panel-body p-b-15" style="overflow: auto; width: auto; height: auto;">
+                <div ng-repeat="(methodKey, methodValue) in categoryValue | groupBy: 'method'">
+                    <ul class="feeds">{{methodKey}}
+                        <li ng-repeat="(itemKey, itemValue) in methodValue">
+                                <div class="col-md-3">{{itemValue.item}}</div>
+                                <div class="col-md-3">Message:<br>{{itemValue.testResult.message}}</div>
+                                <div class="col-md-3">Status: <i ng-class="{'fa fa-link text-success' : itemValue.testResult.status === true, 'fa fa-chain-broken text-danger' : itemValue.testResult.status === false}"></i></div>
+                                <div class="col-md-3">Last run: {{itemValue.runTimeDisplay}} <i ng-show="itemValue.isRunning" class="fa fa-spinner fa-pulse"></i></div>
+                                <div class="pull-right"><label class="btn btn-primary" type="button" ng-disabled="itemValue.isRunning" ng-click="!itemValue.isRunning && runTest(itemValue)">Run</label></div>
+                        </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+		</div>
+		
+</body>
+</html>

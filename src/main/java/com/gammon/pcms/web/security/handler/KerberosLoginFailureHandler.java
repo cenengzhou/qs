@@ -38,6 +38,7 @@ public class KerberosLoginFailureHandler implements AuthenticationFailureHandler
 			request.getRequestURI().indexOf("plugins/") <0
 			&& request.getRequestURI().indexOf("css/") <0
 			&& request.getRequestURI().indexOf("resources/") <0
+			&& request.getRequestURI().indexOf("admintest/") <0
 		){
 			request.getRequestDispatcher(loginPath).forward(request, response);	
 		} else {

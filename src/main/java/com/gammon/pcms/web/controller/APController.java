@@ -510,7 +510,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/makeHTMLStrForAddendum/{jobNumber}/{packageNo}{addendumNo}/{htmlVersion}",
+	@RequestMapping(path = "/ws/makeHTMLStrForAddendum/{jobNumber}/{packageNo}/{addendumNo}/{htmlVersion}",
 					method = RequestMethod.GET)
 	public MakeHTMLStrForAddendumServiceResponse makeHTMLStrForAddendum(HttpServletRequest request,
 																		@PathVariable String jobNumber,

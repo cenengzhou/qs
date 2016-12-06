@@ -1429,7 +1429,24 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 			'jobNo': null,
 			'jobDescription': null
 		},
-		controller: 'AdminSchedulerMaintenanceCtrl'
+		controller: 'AdminSystemInformationCtrl'
+	})
+	.state('admin.SystemInformation.info',{
+		url: '/info',
+		templateUrl: 'view/admin/admin-SystemInformation-info.html',
+		params: {
+			'jobNo': null,
+			'jobDescription': null
+		},
+		controller: 'AdminSystemInformationCtrl'
+	})
+	.state('admin.SystemInformation.test',{
+		url: '/test',
+		templateUrl: 'view/admin/admin-SystemInformation-test.html',
+		params: {
+			'jobNo': null,
+			'jobDescription': null
+		}
 	});
 
 }])
