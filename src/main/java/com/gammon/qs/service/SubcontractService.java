@@ -3873,8 +3873,8 @@ public class SubcontractService {
 	 * @author koeyyeung
 	 * creatd on 21 Jul, 2016
 	 * update work done and IV By Percent
-	 * **/
-	public String updateWDandIVByPercent(String jobNo, String subcontractNo, Double percent){
+	 * **/	
+	public String updateFilteredWDandIVByPercent(String jobNo, String subcontractNo, List<Long> filteredIds, Double percent){
 		String message = "";
 			// No SCDetail to be updated
 			if (percent == null){
@@ -3905,6 +3905,7 @@ public class SubcontractService {
 
 			try {
 				for (SubcontractDetail scDetail: subcontractDetailList) {
+					if(!filteredIds.contains(scDetail.getId())) continue;
 					double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
 					double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
 					//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
@@ -3919,7 +3920,6 @@ public class SubcontractService {
 			}
 		return message;
 	}
-	
 	
 	private String calculateWDandIV(SubcontractDetailOA scDetailInDB, Subcontract subcontract, double cumWorkDoneQty, double cumWorkDoneAmt){
 		String message = "";

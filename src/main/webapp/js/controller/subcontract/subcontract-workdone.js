@@ -348,7 +348,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	$scope.applyPercent = function (){
 		if(!$scope.canEdit()) return;
 		if($scope.percent != null)
-			updateWDandIVByPercent($scope.percent);
+			updateFilteredWDandIVByPercent($scope.percent);
 		else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input %");
 	}
@@ -412,8 +412,10 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				 });
 	    }
 	
-	function updateWDandIVByPercent(percent) {
-		subcontractService.updateWDandIVByPercent($scope.jobNo, $scope.subcontractNo, percent)
+	function updateFilteredWDandIVByPercent(percent) {
+		var filteredIds = [];
+		$scope.gridApi.core.getVisibleRows().forEach(row =>	filteredIds.push(row.entity.id));
+		subcontractService.updateFilteredWDandIVByPercent($scope.jobNo, $scope.subcontractNo, filteredIds, percent)
 	   	 .then(
 				 function( data ) {
 					 if(data.length!=0)
@@ -421,7 +423,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 					 $state.reload();
 				 });
 	    }
-	
+
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(

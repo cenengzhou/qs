@@ -280,13 +280,14 @@ public class SubcontractController {
 	}
 	
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
-	@RequestMapping(value = "updateWDandIVByPercent", method = RequestMethod.POST)
-	public String updateWDandIVByPercent(@RequestParam(required =true) String jobNo,
+	@RequestMapping(value = "updateFilteredWDandIVByPercent", method = RequestMethod.POST)
+	public String updateFilteredWDandIVByPercent(@RequestParam(required =true) String jobNo,
 								@RequestParam(required =true) String subcontractNo,
+								@RequestBody(required =true) List<Long> filteredIds,
 								@RequestParam(required =true) Double percent){
 		String result = null;
 		try {
-			result = subcontractService.updateWDandIVByPercent(jobNo, subcontractNo, percent);
+			result = subcontractService.updateFilteredWDandIVByPercent(jobNo, subcontractNo, filteredIds, percent);
 		} catch (Exception e) {
 			result = "Subcontract Details cannot be updated.";
 			e.printStackTrace();
@@ -294,7 +295,7 @@ public class SubcontractController {
 		} 
 		return result;
 	}
-	
+
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "upateSubcontractDates", method = RequestMethod.POST)
 	public String upateSubcontractDates(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){

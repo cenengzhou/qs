@@ -21,7 +21,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	upateSubcontractDates: 								upateSubcontractDates,
     	updateWDandIV:										updateWDandIV,
     	updateWDandIVList:									updateWDandIVList,
-    	updateWDandIVByPercent:								updateWDandIVByPercent,
+    	updateFilteredWDandIVByPercent:						updateFilteredWDandIVByPercent,
     	submitAwardApproval:								submitAwardApproval,
     	recalculateResourceSummaryIV:						recalculateResourceSummaryIV,
     	calculateTotalWDandCertAmount:						calculateTotalWDandCertAmount,
@@ -337,17 +337,18 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-
-    function updateWDandIVByPercent(jobNo, subcontractNo, percent) {
+    
+    function updateFilteredWDandIVByPercent(jobNo, subcontractNo, filteredIds, percent) {
         var request = $http({
             method: "post",
-            url: "service/subcontract/updateWDandIVByPercent",
+            url: "service/subcontract/updateFilteredWDandIVByPercent",
             dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo,
                 subcontractNo: subcontractNo,
                 percent: percent
-            }
+            },
+            data:filteredIds
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
