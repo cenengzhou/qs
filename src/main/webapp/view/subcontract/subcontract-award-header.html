@@ -203,13 +203,15 @@
 															ng-click="resetRetentionOptions()"
 															ng-model="subcontract.retentionTerms"
 															ng-disabled="disableButtons"
-															uib-btn-radio="'No Retention'">No Retention</label> <label
+															uib-btn-radio="'No Retention'">No Retention</label> 
+														<label
 															class="btn"
 															ng-class="{'btn-primary' : subcontract.retentionTerms == 'Lump Sum', 'btn-inverse' : subcontract.retentionTerms != 'Lump Sum'}"
 															ng-click="resetRetentionOptions()"
 															ng-model="subcontract.retentionTerms"
 															ng-disabled="disableButtons" uib-btn-radio="'Lump Sum'">Lump
-															Sum Retention</label> <label class="btn"
+															Sum Retention</label> 
+														<label class="btn"
 															ng-class="{'btn-primary' : subcontract.retentionTerms == 'Percentage', 'btn-inverse' : subcontract.retentionTerms != 'Percentage'}"
 															ng-click="resetRetentionOptions()"
 															ng-model="subcontract.retentionTerms"

@@ -99,10 +99,10 @@
 		
 		<div class="col-lg-12" id="createPaymentDiv"
 			ng-if="(latestPaymentStatus=='APR' || latestPaymentStatus=='') && latestPaymentType!='F' &&!disableButton">
-			<a
+			<a  class="btn btn-danger btn-block"
 				ui-sref="subcontract.payment.certificate({paymentCertNo: '0', paymentTermsDesc: paymentTerms})"
-				class="btn btn-danger btn-block"> <i
-				class="fa fa-plus-circle fa-2x "></i> Create New Payment
+				ng-click="disableAllButtons()">
+				<i class="fa fa-plus-circle fa-2x "></i> Create New Payment
 			</a> <br> <br>
 		</div>
 		

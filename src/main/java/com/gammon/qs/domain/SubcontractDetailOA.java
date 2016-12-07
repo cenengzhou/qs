@@ -46,6 +46,11 @@ public class SubcontractDetailOA extends SubcontractDetail {
 	public Double getProjectedProvision() {
 		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountCumulativeCert()).doubleValue(), 2));
 	}
+	
+	@Transient
+	public Double getWorkDoneMovement() {
+		return (CalculationUtil.round(this.getAmountCumulativeWD().subtract(this.getAmountPostedWD()).doubleValue(), 2));
+	}
 
 	@Override
 	public String toString() {

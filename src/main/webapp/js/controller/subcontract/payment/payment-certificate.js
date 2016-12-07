@@ -110,7 +110,6 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
-					//console.log(data);
 					$scope.payment = data;
 					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
 					

@@ -23,6 +23,10 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService',
 		});
 	}
 	
+	$scope.disableAllButtons = function(){
+		$scope.disableButton = true;
+	}
+	
 	$scope.showPaymentHistory = function(payment){
 		$scope.searchPaymentCert = payment;
 		modalService.open('md', 'view/enquiry/modal/enquiry-supplierledgerdetails.html', 'EnquirySupplierLedgerDetailsCtrl', 'Success', $scope);

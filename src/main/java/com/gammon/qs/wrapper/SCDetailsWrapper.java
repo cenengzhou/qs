@@ -375,12 +375,12 @@ public class SCDetailsWrapper extends BasePersistedObject implements Serializabl
 		this.setApproved(scDetail.getApproved());
 		this.setUnit(scDetail.getUnit());
 		this.setRemark(scDetail.getRemark());
-		this.setPostedCertifiedQuantity(scDetail.getPostedCertifiedQuantity());
-		this.setCumCertifiedQuantity(scDetail.getCumCertifiedQuantity());
+		//this.setPostedCertifiedQuantity(scDetail.getPostedCertifiedQuantity());
+		//this.setCumCertifiedQuantity(scDetail.getCumCertifiedQuantity());
 		this.setTotalAmount(scDetail.getTotalAmount());
-		this.setToBeApprovedAmount(scDetail.getToBeApprovedAmount());
-		this.setToBeApprovedQuantity(scDetail.getToBeApprovedQuantity());
-		this.setToBeApprovedRate(scDetail.getToBeApprovedRate());
+		//this.setToBeApprovedAmount(scDetail.getToBeApprovedAmount());
+		//this.setToBeApprovedQuantity(scDetail.getToBeApprovedQuantity());
+		//this.setToBeApprovedRate(scDetail.getToBeApprovedRate());
 		this.setCumWorkDoneQuantity(scDetail.getCumWorkDoneQuantity());
 		this.setPostedWorkDoneQuantity(scDetail.getPostedWorkDoneQuantity());
 		this.setCostRate(scDetail.getCostRate());

@@ -244,6 +244,11 @@ public class SubcontractDetail extends BasePersistedObject {
 	public Double getProjectedProvision() {
 		return 0.00;
 	}
+	
+	@Transient
+	public Double getIVAmount() {
+		return 0.00;
+	}
 
 	@Override
 	@Id

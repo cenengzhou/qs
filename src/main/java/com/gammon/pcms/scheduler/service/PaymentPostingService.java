@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.WebServiceConfig;
+import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.BpiItemResourceHBDao;
@@ -216,7 +217,7 @@ public class PaymentPostingService {
 							for(SubcontractDetail scDetail : scDetails){
 								scDetail.setSubcontract(scPackage);;	//Handle Active Detail lines only
 							}
-							SCPaymentLogic.updateSCDetailandPackageAfterPostingToFinance(scPackage, scDetailsHBDao.getSCDetails(scPackage));
+							updateSCDetailandPackageAfterPostingToFinance(scPackage, scDetailsHBDao.getSCDetails(scPackage));
 						}
 
 						scPackageHBDao.updateSubcontract(scPackage);
@@ -234,6 +235,50 @@ public class PaymentPostingService {
 		return Boolean.TRUE;
 	}
 
+	
+	/**
+	 * 
+	 * @author tikywong
+	 * refactored on Nov 28, 2013 12:11:11 PM
+	 */
+	public void updateSCDetailandPackageAfterPostingToFinance(Subcontract scPackage, List<SubcontractDetail> scDetailsList){
+		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
+		
+		BigDecimal totalPostedCert = new BigDecimal(0.0);
+		BigDecimal totalCCPostedCert = new BigDecimal(0.0);
+		BigDecimal totalMOSPostedCert = new BigDecimal(0.0);
+		
+		for(SubcontractDetail scDetails : scDetailsList){
+			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
+				//1. update package detail
+				//scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
+				/**
+				 * @author koeyyeung
+				 * created on 19 Jul, 2016
+				 * convert to amount based**/
+				scDetails.setAmountPostedCert(scDetails.getAmountCumulativeCert());
+				
+				// Payment Requisition: Not approved but paid
+				if("BQ".equals(scDetails.getLineType()) && SubcontractDetail.NOT_APPROVED.equals(scDetails.getApproved()))
+					scDetails.setApproved(SubcontractDetail.NOT_APPROVED_BUT_PAID);
+
+				//calculate total for package
+				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) &&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) && !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType()))
+					totalPostedCert = totalPostedCert.add(scDetails.getAmountPostedCert());
+				else if("C1".equals(scDetails.getLineType()) || "C2".equals(scDetails.getLineType()))
+					totalCCPostedCert = totalCCPostedCert.add(scDetails.getAmountPostedCert());
+				else if("MS".equals(scDetails.getLineType()))
+					totalMOSPostedCert = totalMOSPostedCert.add(scDetails.getAmountPostedCert());
+			}
+
+		}
+		
+		//2. update package
+		scPackage.setTotalPostedCertifiedAmount(totalPostedCert);
+		scPackage.setTotalCCPostedCertAmount(totalCCPostedCert);
+		scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCert);
+	}
+	
 	public PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert) throws ValidateBusinessLogicException {
 		if (paymentCert == null || paymentCert.getSubcontract() == null || paymentCert.getSubcontract().getJobInfo() == null)
 			throw new ValidateBusinessLogicException(paymentCert == null ? ("Payment Certificate is null") : (paymentCert.getSubcontract() == null ? ("Package is null") : ("Job is null")));

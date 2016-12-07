@@ -77,7 +77,6 @@ import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.Payment.PaymentExceptionalExcelGenerator;
 import com.gammon.qs.service.Payment.PaymentReportGenerator;
 import com.gammon.qs.service.admin.AdminService;
-import com.gammon.qs.service.businessLogic.SCPaymentLogic;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -607,7 +606,7 @@ public class PaymentService{
 		// current Payment status = SBM / UFR
 		if ("SBM".equals(scPaymentCert.getPaymentStatus()) || "UFR".equals(scPaymentCert.getPaymentStatus())) {
 			logger.info("Call toCompleteApprovalProcess (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
-			Subcontract scPackage = SCPaymentLogic.toCompleteApprovalProcess(scPaymentCert, systemConstant, approvalDecision);
+			Subcontract scPackage = toCompleteApprovalProcess(scPaymentCert, systemConstant, approvalDecision);
 			subcontractHBDao.updateSubcontract(scPackage);
 
 			if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
@@ -627,6 +626,72 @@ public class PaymentService{
 		return Boolean.TRUE;
 	}
 
+	/**
+	 * To set Payment Status (PND, SBM, UFR, PCS, APR) of SCPayment Certificate and Payment Status (I, F) of SCPackage
+	 * @author tikywong
+	 * modified on May 18, 2012 9:20:47 AM
+	 * Enhancement for SCPayment Review by Finance
+	 */
+	public Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, AppSubcontractStandardTerms systemConstant, String approvalDecision)throws Exception{		
+		if(scPaymentCert==null || systemConstant==null || approvalDecision==null)
+			throw new DatabaseOperationException(scPaymentCert==null?"SCPayment Certificate = null":(systemConstant==null?"System Constant = null":"Approval Decision = null"));
+		
+		Subcontract scPackage = scPaymentCert.getSubcontract();
+		if(scPackage==null)
+			throw new DatabaseOperationException("SC:"+scPaymentCert.getPackageNo()+" does not exist.");
+		
+		JobInfo job = scPaymentCert.getSubcontract().getJobInfo();
+		if(job==null)
+			throw new DatabaseOperationException("Job:"+scPaymentCert.getJobNo()+" does not exist.");
+		
+		//Approved
+		if("A".equals(approvalDecision.trim())){
+			logger.info("SCPayment Certificate Approval - APPROVED");		
+			logger.info("Payment Term: "+scPackage.getPaymentTerms()+
+						" FinQS0Review: "+job.getFinQS0Review()+
+						" SystemConstant: "+systemConstant.getFinQS0Review());
+			
+			//SBM --> UFR / PCS
+			if(scPaymentCert.getPaymentStatus().equals("SBM")){
+				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") && 
+					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
+					(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))	
+					scPaymentCert.setPaymentStatus("UFR");
+				else	
+					scPaymentCert.setPaymentStatus("PCS");
+				
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
+			}
+			//UFR --> PCS
+			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)){
+				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
+				
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW+"-->"+scPaymentCert.getPaymentStatus());
+			}
+			
+			return scPaymentCert.getSubcontract(); 
+		}
+		//Rejected
+		else{
+			logger.info("SCPayment Certificate Approval - REJECTED");
+			//SBM --> PND
+			if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED)){
+				scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PND_PENDING);
+				
+				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
+			}
+			//UFR --> remain UFR and send error message back to Approval System
+			else if(scPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW))
+				throw new ValidateBusinessLogicException("Payment cannot be rejected as it is going through the [Under Review by Finance] UFR process.");
+			
+			if(scPackage.getSubcontractStatus()==500 && PaymentCert.DIRECT_PAYMENT.equals(scPaymentCert.getDirectPayment())){
+				scPaymentCert.setDirectPayment(PaymentCert.NON_DIRECT_PAYMENT);
+			}
+			
+			return scPaymentCert.getSubcontract();
+		}
+	}
+	
 	/**
 	 * @author tikywong
 	 * created on 12 June, 2012
@@ -2439,7 +2504,12 @@ public class PaymentService{
 				logger.info(error);
 				return error;
 			}
-			
+			else if (paymentCert != null && paymentType!=null && (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment()) && "F".equals(paymentType))) {
+				error = "Payment Requisition cannot be set as Final Payment.";
+				logger.info(error);
+				return error;
+			}
+
 			if(paymentType!=null && paymentType.trim().length()==0){
 				paymentType = paymentCert.getIntermFinalPayment();
 			}

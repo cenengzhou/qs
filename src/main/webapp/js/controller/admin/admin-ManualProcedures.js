@@ -108,7 +108,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 	};
 	
 	//Temporary function to recalculate Job Summary affected by OA items.
-	$scope.recalculateJobSummary = function(){
+	/*$scope.recalculateJobSummary = function(){
 		var jobList = [14175, 13262, 14213, 13333, 13178, 13483, 13601, 13545,13351, 13231, 14180, 13216, 12903, 13127, 13388, 13465, 14250, 13518, 13509, 13588, 14268, 
 		               13613, 14183, 13230, 14189, 14178, 13177, 13238, 13506, 13496, 13599, 13533, 13590, 12729, 14235, 13495, 13563, 13534, 14193, 13305, 15205, 13183, 
 		               13215, 13439, 13485, 13318, 14182, 13154, 13385, 13416, 13452, 13462, 13470, 13472, 13513, 13543, 13282, 13115, 12930, 13390, 13451, 13505, 13530, 
@@ -122,7 +122,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 					});
 		}
 			
-	}
+	}*/
 	
 	angular.element('input[name$=".singleDate"').daterangepicker({
 	    singleDatePicker: true,
