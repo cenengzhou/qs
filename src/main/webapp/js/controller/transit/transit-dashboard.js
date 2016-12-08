@@ -248,27 +248,30 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 		transitService.transitUpload(formData)
 		.then(function(data){
 			item.value = null;
-			$scope.getTransit();
-			if(type === 'BQ'){
-				$scope.showBqItems();
-			} else if(type === 'Resource'){
-				$scope.showResourcesItems();
-			}
-			
 			var msg = data;
 			var message = '';
 			var status = '';
+			var typeStr = '';
+			$scope.getTransit();
+			if(type === 'BQ'){
+				$scope.showBqItems();
+				typeStr = 'BQ Items';
+			} else if(type === 'Resource'){
+				$scope.showResourcesItems();
+				typeStr = 'Resources';
+			}
+			
 			if(msg.success){
 				if(msg.haveWarning){
-					message = msg.numRecordImported + 'records imported successfully with warning'
-					message += '<br>Import successful with warning!<br/><a href="gammonqs/transitDownload.smvc?type=SUCCESS_WITH_WARNING" target="_blank">Download warning reprot?</a>';
+					message = msg.numRecordImported + ' ' + typeStr + ' have been imported with warning. '
+					message += 'Would you like to download the warning report?<br>If yes, please click <a href="gammonqs/transitDownload.smvc?type=SUCCESS_WITH_WARNING" target="_blank">here</a>.';
 					status = 'Warn'
 				} else {
-					message = msg.numRecordImported + 'records imported successfully'
+					message = msg.numRecordImported + ' ' + typeStr + ' imported successfully.'
 					status = 'Success';
 				}
 			} else {
-				message = '<br>Import failed!<br/><a href="gammonqs/transitDownload.smvc?type=TERROR" target="_blank">Download error report?</a>';
+				message = 'Failed to import ' + typeStr + '. Would you like to download the error report?<br>If yes, please click <a href="gammonqs/transitDownload.smvc?type=TERROR" target="_blank">here</a>.';
 				status = "Fail";
 			}
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, message);
