@@ -37,6 +37,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			            	 
 			            	 enableCellEdit: false
 			             },
+			             { field: 'accountObject', width:'60', displayName: "Object", enableCellEdit: false },
+			             { field: 'accountSubsidiary', width:'80', displayName: "Subsidiary", enableCellEdit: false },
 			             { field: 'explanationAddressBook', width:'100', displayName: "Explanation", enableCellEdit: false },
 			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
 			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
@@ -89,8 +91,6 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 //			             { field: 'accountGl', width:'100', displayName: "Account GL", cellClass: 'text-right', cellFilter: 'number:4', enableCellEdit: false },
 //			             { field: 'accountKey', width:'100', displayName: "Account Key", enableCellEdit: false },
 //			             { field: 'entityBusinessUnitKey', width:'100', displayName: "Entity Business Unit Key", enableCellEdit: false },
-//			             { field: 'accountObject', width:'100', displayName: "Object Code", enableCellEdit: false },
-//			             { field: 'accountSubsidiary', width:'100', displayName: "Subsidiary Code", enableCellEdit: false },
 //			             { field: 'accountTypeLedgerDescr', width:'100', displayName: "Ledger Type Description", enableCellEdit: false },
 //			             { field: 'accountFiscalYear', width:'100', displayName: "Fiscal Year", enableCellEdit: false },
 //			             { field: 'itemKey', width:'100', displayName: "Item Key", enableCellEdit: false },

@@ -67,8 +67,8 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Component
-//SpringSession workaround: change "session" to "request"
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request") 
+//change to session scope for download import transit error report
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session") 
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class TransitService implements Serializable {
 	private static final long serialVersionUID = -1930185573387732835L;

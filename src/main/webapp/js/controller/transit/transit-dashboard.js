@@ -256,10 +256,22 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 			}
 			
 			var msg = data;
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', msg.success? 'Success' : 'Fail', 
-					"Success:" + msg.success + 
-					"\r\nNumber Record Imported:" + msg.numRecordImported + 
-					"\r\nHave warning:" + msg.haveWarning);
+			var message = '';
+			var status = '';
+			if(msg.success){
+				if(msg.haveWarning){
+					message = msg.numRecordImported + 'records imported successfully with warning'
+					message += '<br>Import successful with warning!<br/><a href="gammonqs/transitDownload.smvc?type=SUCCESS_WITH_WARNING" target="_blank">Download warning reprot?</a>';
+					status = 'Warn'
+				} else {
+					message = msg.numRecordImported + 'records imported successfully'
+					status = 'Success';
+				}
+			} else {
+				message = '<br>Import failed!<br/><a href="gammonqs/transitDownload.smvc?type=TERROR" target="_blank">Download error report?</a>';
+				status = "Fail";
+			}
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, message);
 		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
 		});
