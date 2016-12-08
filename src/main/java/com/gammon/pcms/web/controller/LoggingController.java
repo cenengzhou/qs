@@ -16,7 +16,7 @@ public class LoggingController {
 	
 	@RequestMapping(value = "logToBackend", method = RequestMethod.POST)
 	public void logToBackend(@RequestBody Object message){
-		logger.error("\n\n\nJS Error:\n" + message + "\n\n\n");
+		logger.error("JS Error:" + message);
 	}
 
 

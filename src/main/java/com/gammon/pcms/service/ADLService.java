@@ -92,6 +92,13 @@ public class ADLService {
 			return accountBalanceAAJISCDao.findMonthlyJobCost(year, month, noJob, noSubcontract);
 	}
 
+	public List<?> getMonthlyJobCostListByPeriodRange(String noJob, String noSubcontract, BigDecimal fromYear, BigDecimal fromMonth, BigDecimal toYear, BigDecimal toMonth) {
+		if (StringUtils.isEmpty(noSubcontract))
+		return accountBalanceAAJIDao.findMonthlyJobCostByPeriodRange(noJob, fromYear, fromMonth, toYear, toMonth);
+		else
+		return accountBalanceAAJISCDao.findMonthlyJobCostByPeriodRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth);
+	}
+
 	/**
 	 * General searching with account code in AA & JI Ledger only
 	 *

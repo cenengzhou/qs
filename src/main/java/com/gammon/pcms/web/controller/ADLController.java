@@ -74,6 +74,29 @@ public class ADLController {
 		}
 	}
 
+	@RequestMapping(value = "getMonthlyJobCostListByPeroidRange",
+			method = RequestMethod.GET)
+	public List<?> getMonthlyJobCostListByPeroidRange(
+										@RequestParam(required = true) String noJob,
+										@RequestParam(required = false) String noSubcontract,
+										@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal fromYear,
+										@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal fromMonth,
+										@RequestParam(	required = false,
+														defaultValue = "0") BigDecimal toYear,
+										@RequestParam(	required = false,
+										defaultValue = "0") BigDecimal toMonth
+										) {
+	try {
+		return adlService.getMonthlyJobCostListByPeriodRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth);
+	} catch (Exception e) {
+		e.printStackTrace();
+		GlobalExceptionHandler.checkAccessDeniedException(e);
+		return new ArrayList<>();
+	}
+	}
+		
 	/**
 	 * * * To get AA and JI records based on Account Code <br/>
 	 * AA Ledger - Actual Spending with SCRate for Sub-contract & CostRate for L, P, M, O (including Document Type: PS, JS, RI, RM, JE, etc...) <br/>

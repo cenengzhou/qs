@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -51,6 +52,52 @@ public class AccountBalanceAAJISCDao extends BaseAdlHibernateDao<AccountBalanceA
 		return new ArrayList<AccountBalanceAAJISC>(criteria.list());
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<AccountBalanceAAJISC> findMonthlyJobCostByPeriodRange(String noJob, String noSubcontract, BigDecimal fromYear, BigDecimal fromMonth, BigDecimal toYear, BigDecimal toMonth) throws DataAccessException {
+		Criteria criteria = getSession().createCriteria(getType());
+		Criterion sameYear, firstYear, middlePeriod, lastYear;
+		// Data Formatting
+		noJob = StringUtils.leftPad(StringUtils.defaultString(noJob), 12);
+		noSubcontract = StringUtils.rightPad(StringUtils.defaultString(noSubcontract), 8);
+
+		// Where
+		criteria.add(Restrictions.eq("entityBusinessUnitKey", noJob))
+				.add(Restrictions.eq("accountSubLedger", noSubcontract))
+				.add(Restrictions.eq("accountTypeSubLedger", AccountBalanceAAJISC.TYPE_SUBLEDGER_X))
+				.add(Restrictions.ilike("accountObject", AccountBalanceAAJISC.CODE_OBJECT_COSTCODE_STARTER, MatchMode.START))
+				.add(Restrictions.ne("accountSubsidiary", AccountBalanceAAJISC.CODE_SUBSIDIARY_EMPTY));
+		sameYear = Restrictions.and(
+				Restrictions.eq("fiscalYear", fromYear),
+				Restrictions.ge("accountPeriod", fromMonth),
+				Restrictions.le("accountPeriod", toMonth)
+				);
+		firstYear = Restrictions.and(Restrictions.eq("fiscalYear", fromYear), Restrictions.ge("accountPeriod", fromMonth));
+		middlePeriod = Restrictions.and(Restrictions.gt("fiscalYear", fromYear), Restrictions.le("accountPeriod", toYear));
+		lastYear = Restrictions.and(Restrictions.eq("fiscalYear", toYear), Restrictions.le("accountPeriod", toMonth));
+		if(toYear.intValue() > 0 && fromYear.intValue() > 0){
+			if(toYear.intValue() < fromYear.intValue()){
+			// yearEnd < yearStart
+				throw new IllegalArgumentException("toYear less then fromYear");
+			} else if(toYear.intValue() == fromYear.intValue()){
+			// toYear == fromYear
+				if(toMonth.intValue() < fromMonth.intValue()){
+					throw new IllegalArgumentException("toMonth less then fromMonth when toYear eq fromYear");
+				}
+				criteria.add(sameYear);
+			} else if(toYear.intValue() > fromYear.intValue()){
+			// toYear > fromYear
+				criteria.add(Restrictions.or(firstYear, middlePeriod, lastYear));
+			}
+		}
+		// Order by
+		criteria.addOrder(Order.asc("fiscalYear"))
+				.addOrder(Order.asc("accountPeriod"))
+				.addOrder(Order.asc("accountObject"))
+				.addOrder(Order.asc("accountSubsidiary"));
+		
+		return new ArrayList<AccountBalanceAAJISC>(criteria.list());
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<AccountBalanceAAJISC> find(BigDecimal yearStart, BigDecimal yearEnd, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(getType());

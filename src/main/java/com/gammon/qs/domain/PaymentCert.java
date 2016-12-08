@@ -47,6 +47,14 @@ public class PaymentCert extends BasePersistedObject {
 	public static final String INTERIM_PAYMENT = "Interim";
 	public static final String FINAL_PAYMENT = "Final";
 	
+	public static final int PAYMENT_TERM_DATE_QS1=7;
+	public static final int PAYMENT_TERM_DATE_QS2=14;
+	public static final int PAYMENT_TERM_DATE_QS3=56;
+	public static final int PAYMENT_TERM_DATE_QS4=28;
+	public static final int PAYMENT_TERM_DATE_QS5=30;
+	public static final int PAYMENT_TERM_DATE_QS6=45;
+	public static final int PAYMENT_TERM_DATE_QS7=60;
+	
 	//Direct Payment Status
 	public static final String NON_DIRECT_PAYMENT = "N";
 	public static final String DIRECT_PAYMENT = "Y";

@@ -8,6 +8,7 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	getAccountLedgerListByGlDate:				getAccountLedgerListByGlDate,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
     	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
+    	getMonthlyJobCostListByPeroidRange:			getMonthlyJobCostListByPeroidRange
     });
     
   //Asyn Call
@@ -82,6 +83,23 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	var request = $http.post('service/adl/obtainCompanyCodeAndName');
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
+    
+    function getMonthlyJobCostListByPeroidRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth){
+    	var request = $http({
+    		method: 'GET',
+    		url: 'service/adl/getMonthlyJobCostListByPeroidRange',
+    		params:{
+    			noJob: noJob,
+    			noSubcontract: noSubcontract,
+    			fromYear: fromYear,
+    			fromMonth: fromMonth,
+    			toYear: toYear,
+    			toMonth: toMonth
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
     
 }]);
 

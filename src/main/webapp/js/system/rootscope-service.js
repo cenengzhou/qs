@@ -24,17 +24,17 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     
     function gettingJob(jobNo){
     	var deferral = $q.defer();
-    	if(!$rootScope.jobs) $rootScope.jobs = {};
-    	if($rootScope.jobs[jobNo] && $rootScope.jobs[jobNo].jobNumber == jobNo){
+    	if(!$rootScope.jobDetails) $rootScope.jobDetails = {};
+    	if($rootScope.jobDetails[jobNo] && $rootScope.jobDetails[jobNo].jobNumber == jobNo){
     		deferral.resolve({
-    			job: $rootScope.jobs[jobNo]
+    			job: $rootScope.jobDetails[jobNo]
     		});
     	} else{
     		jobService.getJob(jobNo)
     		.then(function(data){
-    			$rootScope.jobs[jobNo] = data;
+    			$rootScope.jobDetails[jobNo] = data;
     			deferral.resolve({
-        			job: $rootScope.jobs[jobNo]
+        			job: $rootScope.jobDetails[jobNo]
         		})
     		})
     	}

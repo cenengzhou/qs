@@ -32,7 +32,6 @@ import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.service.businessLogic.SCPaymentLogic;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
@@ -390,9 +389,9 @@ public class PaymentPostingService {
 
 				calculatedDueDate.setTime(mainCertAsAtRecDateWrapper.getReceivedDate());
 				if ("QS1".equals(scPackage.getPaymentTerms()))
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS1);
+					calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS1);
 				else
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS2);
+					calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS2);
 
 			}
 			// 2. QS3
@@ -422,7 +421,7 @@ public class PaymentPostingService {
 					}
 
 					calculatedDueDate.setTime(ipaOrInvoiceDate);
-					calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS3);
+					calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS3);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
@@ -454,13 +453,13 @@ public class PaymentPostingService {
 					
 					calculatedDueDate.setTime(ipaOrInvoiceDate);
 					if ("QS4".equals(scPackage.getPaymentTerms()))
-						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS4);
+						calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS4);
 					else if ("QS5".equals(scPackage.getPaymentTerms()))
-						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS5);
+						calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS5);
 					else if ("QS6".equals(scPackage.getPaymentTerms()))
-						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS6);
+						calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS6);
 					else if ("QS7".equals(scPackage.getPaymentTerms()))
-						calculatedDueDate.add(Calendar.DATE, SCPaymentLogic.PAYMENT_TERM_DATE_QS7);
+						calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS7);
 					
 					// invoice received date  - payment as at date  < 30 days
 					Calendar calendar = Calendar.getInstance();

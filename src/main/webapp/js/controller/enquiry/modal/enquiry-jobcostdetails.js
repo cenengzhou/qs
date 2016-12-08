@@ -8,10 +8,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.noJob = $scope.parentScope.searchAccountLedger.jobNo;
 	$scope.typeLedger = $scope.parentScope.searchAccountLedger.ledgerType;
-	$scope.fromDate = moment($scope.parentScope.searchAccountLedger.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
-	$scope.thruDate = moment($scope.parentScope.searchAccountLedger.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
-	$scope.searchYear = $scope.parentScope.searchYear;
-	$scope.searchMonth = $scope.parentScope.searchMonth;
+	$scope.fromDate = moment($scope.parentScope.searchAccountLedger.fromDate).format('YYYY-MM');
+	$scope.thruDate = moment($scope.parentScope.searchAccountLedger.thruDate).format('YYYY-MM');
+	$scope.searchFrom = $scope.fromDate;
+	$scope.searchTo = $scope.thruDate;
 	$scope.typeDocument = null;
 	$scope.noSubcontract = $scope.parentScope.searchAccountLedger.subcontractNo;
 	$scope.codeObject = $scope.parentScope.searchAccountLedger.accountObject;
@@ -19,10 +19,11 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	$scope.postFlag = $scope.parentScope.searchAccountLedger.postFlag;
 	
 	$scope.loadAccountLedgerList = function(){
-		$scope.yearStart = $scope.searchYear.substring(2,4);
-		$scope.yearEnd = $scope.yearStart;
-		$scope.monthStart = $scope.searchMonth;
-		$scope.monthEnd = $scope.monthStart;
+		checkFromTo();
+		$scope.yearStart = $scope.searchFrom.substring(2,4);
+		$scope.yearEnd = $scope.searchTo.substring(2,4);
+		$scope.monthStart = $scope.searchFrom.substring(5,7);
+		$scope.monthEnd = $scope.searchTo.substring(5,7);
 		
 		adlService.getAccountLedgerList($scope.noJob, $scope.typeLedger, $scope.yearStart, $scope.yearEnd, 
 		$scope.monthStart, $scope.monthEnd, $scope.typeDocument, $scope.noSubcontract, $scope.codeObject, $scope.codeSubsidiary)
@@ -32,6 +33,14 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 				addRecordKeyMatchedPoSplit();
 			};
 		});
+	}
+	
+	function checkFromTo(){
+		if(new Date($scope.searchFrom).getTime() > new Date($scope.searchTo).getTime()){
+			var tmpDate = $scope.searchFrom;
+			$scope.searchFrom = $scope.searchTo;
+			$scope.searchTo = tmpDate;
+		}
 	}
 	
 	$scope.loadAccountLedgerList();
@@ -59,6 +68,7 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 		.then(function(response){
 			if(response === 'Yes') {
 				$scope.cancel();
+				checkFromTo();
 				$state.go('enquiry.accountLedger', {searchObject: getSearchObject()});
 			}
 		});
@@ -66,10 +76,10 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 	
 	function getSearchObject(){
 		var searchObjectMap = {};
-		$scope.yearStart = $scope.searchYear.substring(0,4);
-		$scope.yearEnd = $scope.yearStart;
-		$scope.monthStart = $scope.searchMonth - 2;
-		$scope.monthEnd = $scope.searchMonth - 1;
+		$scope.yearStart = $scope.searchFrom.substring(0,4);
+		$scope.yearEnd = $scope.searchTo.substring(0,4);
+		$scope.monthStart = $scope.searchFrom.substring(5,7) - 2;
+		$scope.monthEnd = $scope.searchTo.substring(5,7) - 1 ;
 		var nextDate = $scope.parentScope.getNextDate($scope.yearStart, $scope.monthStart, $scope.yearEnd, $scope.monthEnd);
 		searchObjectMap.noJob = $scope.noJob;
 		searchObjectMap.typeLedger = $scope.typeLedger;

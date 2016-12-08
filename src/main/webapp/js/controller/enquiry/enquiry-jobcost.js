@@ -2,15 +2,15 @@
 mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'modalService', 'GlobalHelper',
                                   function($scope, $http,  modalService, blockUI, GlobalParameter, uiGridConstants, adlService, modalService, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.currentDate = new Date();
+	$scope.yearMonth = moment().format('YYYY-MM');
 	$scope.showCumulative = true;
-	$scope.searchYear = $scope.currentDate.getFullYear().toString();
-	$scope.searchMonth = $scope.currentDate.getMonth() + 1;
+	$scope.searchFrom = $scope.yearMonth;
+	$scope.searchTo = $scope.yearMonth;
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.searchAccountLedger = {};
 	
 	$scope.showJobCostDetails = function(entity){
-		var nextDate = $scope.getNextDate($scope.searchYear, $scope.searchMonth - 1, $scope.searchYear, $scope.searchMonth - 1);
+		var nextDate = $scope.getNextDate('20' + entity.fiscalYear, entity.accountPeriod - 1, '20' + entity.fiscalYear, entity.accountPeriod - 1);
 		$scope.searchAccountLedger.jobNo = $scope.searchJobNo;
 		$scope.searchAccountLedger.accountObject = entity.accountObject;
 		$scope.searchAccountLedger.accountSubsidiary = entity.accountSubsidiary;
@@ -251,13 +251,33 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	}
 	
 	$scope.loadGridData = function(){
-		adlService.getMonthlyJobCostList($scope.searchJobNo, $scope.searchSubcontractNo, $scope.searchYear.substring(2,4), $scope.searchMonth)
-		    .then(function(data) {
-		    	$scope.gridOptions.data = data;
-		    	$scope.triggerShowCumulative();
-			}, function(data){
+		checkFromTo();
+		var fromYear = parseInt($scope.searchFrom.substring(2,4));
+		var fromMonth = parseInt($scope.searchFrom.substring(5,7));
+		var toYear = parseInt($scope.searchTo.substring(2,4));
+		var toMonth = parseInt($scope.searchTo.substring(5,7));
+		adlService.getMonthlyJobCostListByPeroidRange(
+				$scope.searchJobNo, 
+				$scope.searchSubcontractNo, 
+				fromYear, 
+				fromMonth,
+				toYear,
+				toMonth
+		)
+	    .then(function(data) {
+	    	$scope.gridOptions.data = data;
+	    	$scope.triggerShowCumulative();
+		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
+	}
+	
+	function checkFromTo(){
+		if(new Date($scope.searchFrom).getTime() > new Date($scope.searchTo).getTime()){
+			var tmpDate = $scope.searchFrom;
+			$scope.searchFrom = $scope.searchTo;
+			$scope.searchTo = tmpDate;
+		}
 	}
 	
 	$scope.filter = function() {

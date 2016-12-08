@@ -3416,7 +3416,7 @@ public class SubcontractService {
 			endYear  = year;
 		}
 		
-		logger.info("start:"+startMonth+"-"+startYear+"; End: "+endMonth+"-"+endYear ); 
+		logger.info("JobNo:"+jobNo+" subcontract:"+subcontractNo+" start:"+startMonth+"-"+startYear+"; End: "+endMonth+"-"+endYear ); 
 		
 		List<SubcontractDashboardDTO> subcontractDashboardWrappeList = new ArrayList<SubcontractDashboardDTO>();
 		try {
