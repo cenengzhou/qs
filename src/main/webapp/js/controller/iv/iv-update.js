@@ -3,6 +3,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 	rootscopeService.setSelectedTips('');
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
+	var finalizedSubcontractNos = [];
 	var optionList = [{ id: '', value: '' },
 	                  { id: 'true', value: 'Excluded' },
 	                  { id: 'false', value: 'Included' }
@@ -300,7 +301,8 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 								 term: '',
 								 options: optionList
 							 }, 
-							 cellFilter: 'mapExclude'}
+							 cellFilter: 'mapExclude'},
+						 {field: 'finalized', displayName: "Final Post",  enableCellEdit: false, width:80}
 						 ]
 	};
 
@@ -309,8 +311,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     }
 
     function validateSubcontractNos(rowEntity){
-    	return rowEntity.packageNo && rowEntity.objectCode.indexOf('14') >= 0 && 
-        			(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0 || uneditableUnawardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0);
+    	return rowEntity.packageNo && rowEntity.objectCode.indexOf('14') >= 0;
     }
     
     function validateSameFloatValue(value1, value2){
@@ -366,7 +367,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				return;
 			}
 			if(validateSubcontractNos(rowEntity)){
-				if(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0){
+				if(awardedSubcontractNos.indexOf(rowEntity.packageNo) >= 0 && finalizedSubcontractNos.indexOf(rowEntity.packageNo) < 0){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_UPDATE_SUBCONTRACT_DETAILS);
 					return;
 				}
@@ -439,7 +440,6 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			return;
 		}
 		
-//		console.log(dataRows);
 		
 		updateIVAmount(dataRows);
 	}
@@ -458,6 +458,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		getResourceSummaries();
 		getUnawardedSubcontractNosUnderPaymentRequisition();
 		getAwardedSubcontractNos();
+		getFinalizedSubcontractNos();
 	}
 	
 	function getResourceSummaries() {
@@ -469,7 +470,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					$scope.finalizedMovementAmount = 0;
 					$scope.resetData = [];
 					angular.forEach(data, function(value, key){
-						value.ivMovement = roundUtil.round(value.currIVAmount - value.postedIVAmount, 2);
+						//value.ivMovement = roundUtil.round(value.currIVAmount - value.postedIVAmount, 2);
 						var newObj = angular.copy(value);
 						$scope.resetData.push(newObj);
 						/*if(){
@@ -506,6 +507,15 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				});
 	}
 
+	function getFinalizedSubcontractNos() {
+		subcontractService.getFinalizedSubcontractNos($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data)
+						finalizedSubcontractNos = data;
+				});
+	}
+	
 	function updateIVAmount(resourceSummaryList) {
 		resourceSummaryService.updateIVAmount(resourceSummaryList)
 		.then(

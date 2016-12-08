@@ -1052,6 +1052,21 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state("iv.final", {
+		url: "/final",
+		templateUrl: "view/iv/iv-post.html",
+		controller: "IVPostCtrl",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [	
+               	         	'js/controller/iv/iv-post.js'
+                    ] 
+                });
+            }]
+        }
+	})
 
 	//Enquiry
 	.state("enquiry", {
@@ -1063,7 +1078,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [	
-               	         	'js/controller/enquiry/enquiry-info.js',
 							'js/controller/enquiry/enquiry-jobinfo.js',
 							'js/controller/enquiry/enquiry-jobcost.js',
 							'js/controller/enquiry/enquiry-ivhistory.js',
@@ -1112,8 +1126,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		params: {
 			'jobNo': null,
 			'jobDescription': null,
-		},
-		controller: 'EnquiryInfoCtrl'
+		}
 	})
 	.state('enquiry.jobInfo', {
 		url: '/jobInfo',

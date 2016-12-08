@@ -492,11 +492,11 @@ public class IVPostingService  {
 		//STEP 5: Update BQ Resource Summaries / BQ Item & Resources 
 		//(currIV -> postedIV)
 		updatedPostedIVInDB = updatedPostedIVInDB && bqResourceSummaryDao.updateBQResourceSummariesAfterPosting(job, username, finalized);
-		if(job.getRepackagingType().equals("3")){
+		/*if(job.getRepackagingType().equals("3")){
 			updatedPostedIVInDB = updatedPostedIVInDB && bqItemHBDao.updateBpiItemsAfterPosting(job, username);
 			updatedPostedIVInDB = updatedPostedIVInDB && resourceHBDao.updateResourcesAfteringPosting(job, username);
 			bqResourceSummaryDao.updateBQResourceSummariesAfterPostingForRepackaging3(job, username);
-		}
+		}*/
 		
 		return updatedPostedIVInDB;
 	}

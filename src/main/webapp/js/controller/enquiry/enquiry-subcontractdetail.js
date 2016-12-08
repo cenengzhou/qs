@@ -359,7 +359,6 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 				.getSCDetailList($scope.jobNo)
 				.then(
 						function(data) {
-							console.log(data);
 							if (angular.isArray(data)) {
 								$scope.gridOptions.data = data;
 							}

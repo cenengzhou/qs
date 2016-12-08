@@ -1440,12 +1440,23 @@ public class ResourceSummaryService implements Serializable {
 		logger.info("STARTED -> updateIVAmount()");
 		String error = "";
 		try {
-			for(ResourceSummary resourceSummary : resourceSummaries){
-				ResourceSummary summaryInDB = resourceSummaryDao.get(resourceSummary.getId());
-				summaryInDB.setCurrIVAmount(resourceSummary.getCurrIVAmount());
-//			logger.info("SAVE - BQResourceSummary J#"+summaryInDB.getJob().getJobNumber()+" ID: "+summaryInDB.getId()+
-//						" Current IV Amount: "+(summaryInDB.getCurrIVAmount()==null?"null":summaryInDB.getCurrIVAmount()));
-				resourceSummaryDao.saveOrUpdate(summaryInDB);
+			if(resourceSummaries!=null && resourceSummaries.size()>0){
+				List<String> finalizedSubcontractNos = packageRepository.getFinalizedSubcontractNos(resourceSummaries.get(0).getJobInfo().getJobNumber(), null);
+				for(ResourceSummary resourceSummary : resourceSummaries){
+					ResourceSummary summaryInDB = resourceSummaryDao.get(resourceSummary.getId());
+					summaryInDB.setCurrIVAmount(resourceSummary.getCurrIVAmount());
+					//			logger.info("SAVE - BQResourceSummary J#"+summaryInDB.getJob().getJobNumber()+" ID: "+summaryInDB.getId()+
+					//						" Current IV Amount: "+(summaryInDB.getCurrIVAmount()==null?"null":summaryInDB.getCurrIVAmount()));
+					
+					if(finalizedSubcontractNos.contains(summaryInDB.getPackageNo())){
+						if(summaryInDB.getFinalized().equals(ResourceSummary.POSTED)){
+							error = "Subcontract "+summaryInDB.getPackageNo()+" has been posted for the final IV posting already. No more update is allowed.";
+							return error;
+						}else
+							summaryInDB.setFinalized(ResourceSummary.UPDATED);
+					}
+					resourceSummaryDao.saveOrUpdate(summaryInDB);
+				}
 			}
 		} catch (Exception e) {
 			error = "IV cannot be updated.";

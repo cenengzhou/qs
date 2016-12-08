@@ -1,5 +1,5 @@
-mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', 'roundUtil', 'modalService', '$state', '$cookies',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, roundUtil, modalService, $state, $cookies) {
+mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', 'confirmService', 'modalService', '$state', '$cookies', '$location',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, confirmService,  modalService, $state, $cookies, $location) {
 	
 	var optionList = [{ id: '', value: '' },
 	                  { id: 'true', value: 'Excluded' },
@@ -138,28 +138,57 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 	}
 
 	$scope.post = function() {
-		postIVAmounts();
+		if($location.path().indexOf("/final")>0){
+			var modalOptions = {
+					bodyText: "Post IV Movements? <br/>"+
+					"Movements (Finalized Subcontract): "+$scope.finalizedMovementAmount + "<br/><br/>" +
+					"Please note that IV Posting of Finalized Subcontract can be posted only once. <br/>" +
+					"No admendment can be made after posting.</b> "
+			};
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					postIVAmounts(true);
+				}
+			});
+		}
+		else
+			postIVAmounts(false);
 	}
 
 	function loadData() {
-		getResourceSummaries();
 		getFinalizedSubcontractNos();
+		getResourceSummaries();
 	}
 	
 	function getResourceSummaries() {
 		resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
 		.then(
 				function( data ) {
+					var rows=  [];
+					var finalized = false;
+					
 					$scope.nonFinalizedMovementAmount = 0;
 					$scope.finalizedMovementAmount = 0;
+					
+					if($location.path().indexOf("/final")>0)
+						finalized = true;
+					
 					angular.forEach(data, function(value, key){
-						value.ivMovement = value.currIVAmount - value.postedIVAmount;
-						if($scope.finalizedSubcontractNos.indexOf(value.packageNo) >= 0)
+						//value.ivMovement = roundUtil.round(value.currIVAmount - value.postedIVAmount, 2);
+						if($scope.finalizedSubcontractNos.indexOf(value.packageNo) >= 0){
 							$scope.finalizedMovementAmount += value.ivMovement;
-						else
+							if(finalized)
+								rows.push(value);
+						}
+						else{
 							$scope.nonFinalizedMovementAmount  += value.ivMovement;
-						
+							if(!finalized)
+								rows.push(value);
+						}
 					});
+					
+					
 
 					/*$timeout(function () {
 						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
@@ -167,7 +196,7 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 						//$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
 					}, 100);*/
 						
-					var filteredData = data.filter(function(obj) {
+					var filteredData = rows.filter(function(obj) {
 					    return (obj.ivMovement != 0);
 					});
 					$scope.gridOptions.data = filteredData;
@@ -185,8 +214,8 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 	}
 
 
-	function postIVAmounts() {
-		resourceSummaryService.postIVAmounts($scope.jobNo, false)
+	function postIVAmounts(finalized) {
+		resourceSummaryService.postIVAmounts($scope.jobNo, finalized)
 		.then(
 				function( data ) {
 					if(data.length!=0){

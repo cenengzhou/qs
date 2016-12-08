@@ -355,6 +355,11 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 		this.amountBudget = (amountBudget!=null?CalculationUtil.round(amountBudget, 2):0.00);
 	}
 	
+	@Transient
+	public Double getIvMovement() {
+		return (currIVAmount != null && postedIVAmount != null ? CalculationUtil.round(currIVAmount - postedIVAmount, 2): 0.0);
+	}
+	
 	@JsonProperty("cumQuantity")
 	@Transient
 	public Double cumQuantity() {
