@@ -12,7 +12,7 @@ import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.service.security.SecurityService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq()) or hasRole(@securityConfig.getPcmsRole('MAINTENANCE'))")
 @RequestMapping(value = "service/security/")
 public class SecurityController {
 	

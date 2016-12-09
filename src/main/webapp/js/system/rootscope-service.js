@@ -20,6 +20,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	configHiddenMenu:	configHiddenMenu,
     	setEnv:				setEnv,
     	getShowAdminMenu:	getShowAdminMenu,
+    	checkMaintenance:	checkMaintenance,
     });
     
     function gettingJob(jobNo){
@@ -132,6 +133,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 			$http.get('service/security/getCurrentUser')
 			.then(function(response){
 				$rootScope.user = response.data;
+				checkMaintenance();
 				configHiddenMenu();
 				deferral.resolve({
 					user : $rootScope.user
@@ -236,6 +238,15 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 			$rootScope.showAdminMenu = GlobalHelper.containRole('ROLE_QS_IMS_ENQ', $rootScope.user.UserRoles)
 									||GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $rootScope.user.UserRoles);
 		}
+	}
+	
+	function checkMaintenance(){
+		gettingUser()
+		.then(function(response){
+			if(GlobalHelper.containRole('ROLE_MAINTENANCE', response.user.UserRoles)){
+				$window.location = '503.html';
+			}
+		});
 	}
 	
 	function setEnv(){

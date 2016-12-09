@@ -1471,7 +1471,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 }]);
 
 mainApp.config(['$httpProvider', function($httpProvider){
-		var httpIntercepter = ['$q', '$log', '$window', function($q, $log, $window) {
+		var httpIntercepter = ['$q', '$log', '$window', '$rootScope', function($q, $log, $window, $rootScope) {
 			return {
 				'request' : function(config) {
 					return config;
@@ -1488,7 +1488,19 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					if(status === 401 || status === 405) {
 						$window.location.href = 'login.htm?status=' + status;
 					}else if (status === 403){
-						$window.location.href = '403.html';
+						var maintenance = false;
+						if($rootScope.user){
+							angular.forEach($rootScope.user.UserRoles, function(r){
+								if(r.RoleName === 'ROLE_MAINTENANCE'){
+									maintenance = true;	
+								}
+							})
+						} 
+						if(maintenance){
+							$window.location.href = '503.html';
+						} else {
+							$window.location.href = '403.html';	
+						}
 					}
 					/*else if (status === 404){
 						console.log("Status 404");

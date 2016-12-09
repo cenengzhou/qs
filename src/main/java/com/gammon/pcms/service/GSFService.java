@@ -15,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.gammon.pcms.application.User;
+import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.GetFunctionSecurity;
 import com.gammon.pcms.dto.rs.consumer.gsf.GetJobSecurity;
@@ -40,6 +42,8 @@ public class GSFService {
 	private LdapService ldapService;
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private SecurityConfig securityConfig;
 
 	private List<GetUserListWithStaffId.Result> allApproverList;
 	private Map<String, Set<GetUserListWithStaffId.Result>> approvalByJobMap = new HashMap<>();
@@ -56,8 +60,9 @@ public class GSFService {
 		try {
 			ResponseEntity<GetRole.Response> roleResponse = getResponseEntity(wsUrl, roleRequest, GetRole.Response.class);
 			user = roleResponse.getBody().getUser();
-		} catch (HttpMessageNotReadableException e) {
+		} catch (RestClientException | HttpMessageNotReadableException e) {
 			e.printStackTrace();
+			user.getUserRoleList().add(new User.Role(securityConfig.getPcmsRole("MAINTENANCE"), "ROLE_" + securityConfig.getPcmsRole("MAINTENANCE")));
 		}
 		user.setUsername(login[0]);
 		user.setTitle(title);
