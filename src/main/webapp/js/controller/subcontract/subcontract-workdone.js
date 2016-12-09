@@ -424,7 +424,9 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	
 	function updateFilteredWDandIVByPercent(percent) {
 		var filteredIds = [];
-		$scope.gridApi.core.getVisibleRows().forEach(row =>	filteredIds.push(row.entity.id));
+		$scope.gridApi.core.getVisibleRows().forEach(function(row){
+			filteredIds.push(row.entity.id);
+		});
 		subcontractService.updateFilteredWDandIVByPercent($scope.jobNo, $scope.subcontractNo, filteredIds, percent)
 	   	 .then(
 				 function( data ) {
