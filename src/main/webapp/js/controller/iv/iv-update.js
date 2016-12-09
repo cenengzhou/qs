@@ -1,5 +1,5 @@
-mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', 'rootscopeService', 'repackagingService', 'blockUI', '$cookies',
-                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, rootscopeService, repackagingService, blockUI, $cookies) {
+mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcontractService', 'uiGridConstants', '$timeout', '$interval', 'roundUtil', 'modalService', '$state', 'uiGridValidateService', '$q', 'uiGridImporterService', 'rootscopeService', 'repackagingService', 'blockUI', '$cookies', 'confirmService',
+                                    function($scope , resourceSummaryService, subcontractService, uiGridConstants, $timeout, $interval, roundUtil, modalService, $state, uiGridValidateService, $q, uiGridImporterService, rootscopeService, repackagingService, blockUI, $cookies, confirmService) {
 	rootscopeService.setSelectedTips('');
 	var awardedSubcontractNos = [];
 	var uneditableUnawardedSubcontractNos = [];
@@ -337,6 +337,33 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
     	return false;
     }
     
+    function validateGreaterThenBudgetManual(row, colDef){
+    	if(row.amountBudget>0){
+    		if(colDef.name == 'currIVAmount'){
+            	if((parseFloat(row.amountBudget) < parseFloat(row.currIVAmount)) || parseFloat(row.currIVAmount) < 0){
+            		return true;
+            	}
+    			
+    		}else if(colDef.name == 'ivMovement'){
+            	if((parseFloat(row.amountBudget) < parseFloat(row.ivMovement)+parseFloat(row.postedIVAmount)) || (parseFloat(row.ivMovement)+parseFloat(row.postedIVAmount)) < 0){
+            		return true;
+            	}
+    		}
+    	}else{
+    		if(colDef.name == 'currIVAmount'){
+	        	if((parseFloat(row.amountBudget) > parseFloat(row.currIVAmount)) || parseFloat(row.currIVAmount) > 0){
+	        		return true;
+	        	}
+        	}
+    		else if(colDef.name == 'ivMovement'){
+	        	if((parseFloat(row.amountBudget) > parseFloat(row.ivMovement)+parseFloat(row.postedIVAmount)) || (parseFloat(newObjrow.ivMovement)+parseFloat(row.postedIVAmount)) > 0){
+	        		return true;
+	        	}
+        	}
+    	}
+    	return false;
+    }
+    
     function isUneditableOrAwardedSubcontract(packageNo){
     	if(awardedSubcontractNos.indexOf(packageNo) >= 0 ||
 			uneditableUnawardedSubcontractNos.indexOf(packageNo) >= 0){
@@ -381,9 +408,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(!validateSameFloatValue(newValue, oldValue)){
 				if(colDef.name == "currIVAmount"){
-					if(validateGreaterThenBudget(rowEntity, rowEntity)){
+					if(validateGreaterThenBudgetManual(rowEntity, colDef)){
 						rowEntity.currIVAmount = oldValue;
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET+"1");
 						return;
 					}else{
 						rowEntity.currIVAmount  = roundUtil.round(newValue, 2);
@@ -391,9 +418,9 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					}
 				}
 				else if(colDef.name == "ivMovement"){
-					if(validateGreaterThenBudget(rowEntity, rowEntity)){
+					if(validateGreaterThenBudgetManual(rowEntity, colDef)){
 						rowEntity.ivMovement = oldValue;
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET);
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', MSG_GREATER_THEN_BUDGET+"2");
 						return;
 					}else{
 						var cumIVAmount = roundUtil.round(parseFloat(rowEntity.ivMovement) + parseFloat(rowEntity.postedIVAmount), 2); 
@@ -528,6 +555,25 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					}
 				});
 	}
+	
+	
+	
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){
+			event.preventDefault();
+			var modalOptions = {
+					bodyText: "There are unsaved data, do you want to leave without saving?"
+			};
+			confirmService.showModal({}, modalOptions)
+			.then(function (result) {
+				if(result == "Yes"){
+					$scope.gridDirtyRows = null;
+					$state.go(toState.name);
+				}
+			});
+			
+		}
+	});
 	
 }])
 .filter('mapExclude', function() {

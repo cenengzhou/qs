@@ -24,8 +24,6 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 			             { field: 'resourceDescription', width: '200', displayName: "Description", enableCellEdit: true },
 			             { field: 'objectCode', width: '100', displayName: "Object Code", enableCellEdit: true },
 			             { field: 'subsidiaryCode', width: '100', displayName: "Subsidiary Code", enableCellEdit: true },
-			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true },
-			             { field: 'resourceType', width: '100', displayName: "Resource Type", enableCellEdit: true },
 			             { field: 'amountBudget', width: '100', displayName: "Budget", enableCellEdit: true,
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -42,12 +40,6 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.currIVAmount);
-			            	 },  
-			             },
-			             { field: 'cumQuantity', width: '100', displayName: "Cumulative Quantity", enableCellEdit: true,
-			            	 cellFilter: 'number:4',
-			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            		 return GlobalHelper.numberClass(row.entity.cumQuantity);
 			            	 },  
 			             },
 			             { field: 'postedIVAmount', width: '100', displayName: "Posted Amount", enableCellEdit: true,
@@ -77,13 +69,14 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 				     			editDropdownIdLabel : 'id',
 				     			editDropdownValueLabel : 'value',
 			             },
+			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true },
 			             { field: 'forIvRollbackOnly', width: '100', displayName: "IV Rollback Only", enableCellEdit: true,
 			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
 			            	 editDropdownOptionsArray : GlobalParameter.zeroOneOptions,
 				     			cellFilter : 'dropdownFilter:"zeroOneOptions"',
 				     			editDropdownIdLabel : 'id',
 				     			editDropdownValueLabel : 'value',
-			             },
+			             }
 			             ]
 	}
 	

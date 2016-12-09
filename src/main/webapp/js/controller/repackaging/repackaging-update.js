@@ -180,6 +180,9 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			else if (colDef.name == "quantity"){
 				rowEntity.amountBudget = roundUtil.round(rowEntity.quantity * rowEntity.rate, 2);
 			}
+			
+			$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
+			$scope.gridDirtyRows = $scope.gridApi.rowEdit.getDirtyRows($scope.gridApi);
 		});
 
 	}
@@ -341,6 +344,24 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 				});
 	}
 	
+	
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+		console
+		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){
+			event.preventDefault();
+			var modalOptions = {
+					bodyText: "There are unsaved data, do you want to leave without saving?"
+			};
+			confirmService.showModal({}, modalOptions)
+			.then(function (result) {
+				if(result == "Yes"){
+					$scope.gridDirtyRows = null;
+					$state.go(toState.name);
+				}
+			});
+			
+		}
+	});
 
 }])
 .filter('mapExclude', function() {

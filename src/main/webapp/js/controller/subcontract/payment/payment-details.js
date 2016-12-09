@@ -1,5 +1,5 @@
-mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', '$filter', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter', 'uiGridConstants',
-                                          function($scope, $stateParams, $cookies, $filter, paymentService, modalService, roundUtil, $state, GlobalParameter, uiGridConstants) {
+mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', '$filter', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter', 'uiGridConstants', 'confirmService',
+                                          function($scope, $stateParams, $cookies, $filter, paymentService, modalService, roundUtil, $state, GlobalParameter, uiGridConstants, confirmService) {
 	loadData();
 	$scope.disableButtons = true;
 	$scope.GlobalParameter = GlobalParameter;
@@ -463,5 +463,23 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 				});
 	}
 
-
+	
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){
+			event.preventDefault();
+			var modalOptions = {
+					bodyText: "There are unsaved data, do you want to leave without saving?"
+			};
+			confirmService.showModal({}, modalOptions)
+			.then(function (result) {
+				if(result == "Yes"){
+					$scope.gridDirtyRows = null;
+					$state.go(toState.name);
+				}
+			});
+			
+		}
+	});
+	
+	
 }]);

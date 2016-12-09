@@ -1645,25 +1645,6 @@ mainApp.config(function(blockUIConfig, colorCode) {
 });
 
 
-
-/**
- * Check authentication and user role if location changed
- */
-mainApp.run(['$window', '$document', '$location', function ($window, $document, $location) {
-//	window.onbeforeunload = function(authenticate)
-//	{
-//		$http({
-//		    method: "get",
-//		    url: "logout",
-//		    })
-//			.success(function(data) {
-//				console.log("logout...");
-//			});
-//	};
-
-}]);
-
-
 /**
  * Event-Listner for Location change
  */

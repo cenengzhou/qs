@@ -185,6 +185,34 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 					cellFilter : 'number:2'
 				},
 				{
+					field : 'cumWorkDoneQuantity',
+					width : '150',
+					displayName : "Cum. Work Done Qty",
+					filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
+					cellClass : function(grid, row,
+							col, rowRenderIndex,
+							colRenderIndex) {
+						var c = 'text-right';
+						if (row.entity.amountCumulativeWD < 0) {
+							c += ' red';
+						}
+						return c;
+					},
+					aggregationHideLabel : true,
+					aggregationType : uiGridConstants.aggregationTypes.sum,
+					footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+					footerCellClass : function(grid,
+							row, col, rowRenderIndex,
+							colRenderIndex) {
+						var c = 'text-right';
+						if (col.getAggregationValue() < 0) {
+							c += ' red';
+						}
+						return c;
+					},
+					cellFilter : 'number:4'
+				},
+				{
 					field : 'amountCumulativeWD',
 					width : '150',
 					displayName : "Cum. Work Done Amt",

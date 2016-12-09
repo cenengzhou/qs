@@ -7377,7 +7377,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
     float: none;
     display: table-cell !important;
     text-align: center;
-    padding: 10px 20px;
+    padding: 5px 10px;
     background: #eff0f1;
 }
 .bwizard-steps > li {
@@ -7397,14 +7397,14 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 }
 .bwizard-steps > li .label {
     display: block;
-    width: 36px;
-    height: 36px;
-    line-height: 32px;
+    width: 30px;
+    height: 30px;
+    line-height: 26px;
     border: 2px solid;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
-    font-size: 16px;
+    font-size: 15px;
     margin: 5px auto;
     color: #30373e;
     font-weight: normal;
@@ -7413,7 +7413,7 @@ ul.tagit .ui-state-default .ui-icon.ui-icon-close:before {
 .bwizard-steps a {
     display: block;
     font-size: 15px;
-    line-height: 20px;
+    line-height: 15px;
 }
 .bwizard-steps a:hover,
 .bwizard-steps a:focus {
