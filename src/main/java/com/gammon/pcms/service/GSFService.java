@@ -3,6 +3,7 @@ package com.gammon.pcms.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -120,12 +122,23 @@ public class GSFService {
 		return new ArrayList<GetUserListWithStaffId.Result>(approverForJobSet);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean isFnEnabled(String ctrl, String method, String roleName){
 		boolean fnStatus = false;
 		try{
 			String fn = securityConfig.getFnMethodsCtrlMethod(ctrl, method);
-			fnStatus = obtainFnStatus(fn, roleName);
-			logger.info(fn + " isFnEnabled: " + fnStatus + " ( ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Collection<User.Role> userRoles = (Collection<User.Role>) auth.getAuthorities();
+			boolean containRole = false;
+			for(User.Role role : userRoles){
+				if(role.getRoleName().equals("ROLE_" + roleName)) containRole = true;
+			}
+			if(containRole){
+				fnStatus = obtainFnStatus(fn, roleName);
+				logger.info(fn + " isFnEnabled for " + ": " + fnStatus + " ( ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
+			} else {
+				logger.info(fn + " require ROLE_" + roleName + " ( " + ctrl + " - " + method + ")");
+			}
 		} catch (NullPointerException e){
 			logger.error( ctrl + " - " + method  + " not found in securityConfig.fnMethods");
 			e.printStackTrace();
@@ -136,15 +149,16 @@ public class GSFService {
 	public boolean obtainFnStatus(String fn, String roleName){
 		boolean fnStatus = false;
 		if(fn == null) throw new NullPointerException();
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		GetFunctionSecurity.Request functionSecurityRequest = new GetFunctionSecurity.Request(
-				WebServiceConfig.GSF_APPLICATION_CODE, "gamska\\" + SecurityContextHolder.getContext().getAuthentication().getName(), fn, "ROLE_" + roleName);
+				WebServiceConfig.GSF_APPLICATION_CODE, "gamska\\" + username, fn, "ROLE_" + roleName);
 		ResponseEntity<GetFunctionSecurity.Response> functionSecurityResponse = getResponseEntity(
 				webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETFUNCTIONSECURITY, functionSecurityRequest, GetFunctionSecurity.Response.class);
 		List<GetFunctionSecurity.Result> functionSecurityList = functionSecurityResponse.getBody().getResultList();
 		if(functionSecurityList!= null){
 			fnStatus = GetFunctionSecurity.AccessRight.ENABLE.equals(functionSecurityList.get(0).getAccessRight());
 		} else {
-			logger.error( fn + " not linked for ROLE_" + roleName);
+			logger.error( fn + " not linked for ROLE_" + roleName + " or " + username + " do not have ROLE_" + roleName);
 		}
 		return fnStatus;
 	}
