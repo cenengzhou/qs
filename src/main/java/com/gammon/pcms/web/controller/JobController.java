@@ -39,7 +39,7 @@ public class JobController {
 	private ObjectMapper objectMapper;
 	
 	@JsonView(JobInfoView.NameAndDescription.class)
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsEnq())")
 //	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
 	@RequestMapping(value = "getJobList", method = RequestMethod.POST)
 	public List<JobInfo> getJobList(@RequestBody boolean isCompletedJob){

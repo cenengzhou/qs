@@ -1,14 +1,14 @@
 --insert 1 record into AC_ACCESSRIGHT
---insert 253 records into AC_FUNCTION and AC_FUNCTIONSECURITY
+--insert 254 records into AC_FUNCTION and AC_FUNCTIONSECURITY
 SET SERVEROUTPUT ON
 DECLARE
 	TYPE FN IS VARRAY(6) OF VARCHAR2(128);
 	TYPE FnTable IS TABLE OF FN INDEX BY VARCHAR2(16);
 	fn_list	FnTable;
-	DEBUGON                         	    NUMBER:=0;
-	EXEC_INSERT_FNSEC						NUMBER:=1;
-	EXEC_INSERT_ACCESSRIGHT					NUMBER:=1;
-  	EXEC_DELETE_FNSEC           			NUMBER:=0;
+	DEBUGON                         	    NUMBER:=0;--0 off, 1 print out insert SQL
+	EXEC_INSERT_FNSEC						NUMBER:=1;--0 do not execute insert SQL for AC_FUNCTION and AC_FUNCTIONSECURITY, 1 run SQL
+	EXEC_INSERT_ACCESSRIGHT					NUMBER:=1;--0 do not execute insert SQL for AC_ACCESSRIGHT, 1 run SQL
+  	EXEC_DELETE_FNSEC           			NUMBER:=0;--0 do not execute delete SQL for AC_FUNCTION and AC_FUNCTIONSECURITY, 1 delete all fn/sec where APPLICATIONCODE = 'QS'
 	ACDATA_SCHEMA		                    VARCHAR2(16):='ACDATAPROD';
 	access_right		                    VARCHAR2(32):='ENABLE';
 	count_insert_fn                 	    NUMBER:=0;
@@ -280,6 +280,7 @@ BEGIN
 	fn_list('253') := fn('F02180205', 'ROLE_QS_ENQ', 'SubcontractorController', 'obtainTenderAnalysisWrapperByVendorNo', 'POST', 'service/subcontractor/obtainTenderAnalysisWrapperByVendorNo');
   	fn_list('254') := fn('F02070207', 'ROLE_QS_ENQ', 'RepackagingController', 'getRepackaging', 'GET', 'service/repackaging/getRepackaging');
 
+  	IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_INSERT_ACCESSRIGHT_DISABLE || ';'); END IF;
 	IF(EXEC_INSERT_ACCESSRIGHT = 1) THEN 
 		execute immediate SQL_INSERT_ACCESSRIGHT_DISABLE;
 	END IF;
@@ -318,7 +319,7 @@ BEGIN
 						sysdate,
 						''SYSTEM''
 						)';
-	IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_INSERT_FN); END IF;
+	IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_INSERT_FN || ';'); END IF;
     IF(EXEC_INSERT_FNSEC = 1) THEN 
       execute immediate SQL_INSERT_FN;
       IF(SQL%ROWCOUNT>0) THEN
@@ -347,7 +348,7 @@ BEGIN
 						sysdate,
 						''SYSTEM''
 						)';
-    IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_INSERT_SEC); END IF;
+    IF(DEBUGON = 1) THEN DBMS_Output.PUT_LINE(SQL_INSERT_SEC || ';'); END IF;
     IF(EXEC_INSERT_FNSEC = 1) THEN 
       execute immediate SQL_INSERT_SEC;
       IF(SQL%ROWCOUNT>0) THEN
