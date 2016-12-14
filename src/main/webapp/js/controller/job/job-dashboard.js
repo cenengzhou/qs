@@ -1,5 +1,5 @@
-mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'adlService', 'resourceSummaryService', '$cookies', '$q', '$http',
-                               function($scope, colorCode, jobService, adlService, resourceSummaryService, $cookies, $q, $http) {
+mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'adlService', 'resourceSummaryService', '$cookies', '$q', 'repackagingService', 
+                               function($scope, colorCode, jobService, adlService, resourceSummaryService, $cookies, $q, repackagingService) {
 	$scope.loading = true;
 	
 	//Initialize panel setting
@@ -22,12 +22,35 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     }
     
     function loadJobData() {
+    	getJobInfo();
+    	getRepackaging();
     	getJobData($scope.selectedYear.toString().substring(2, 4));
     	getResourceSummariesGroupByObjectCode();
     }
 
-   
-
+    function getRepackaging(){
+    	repackagingService.getRepackaging($scope.jobNo, 1)
+		.then(
+				function( data ) {
+					if(data)
+						$scope.originalBudget = data.totalResourceAllowance;
+				});
+		
+    }
+    
+    function getJobInfo(){
+    	jobService.getJob($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.job = data;
+				});
+		jobService.getJobDates($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.jobDates = data;
+				});
+    }
+    
     function getJobData(year) {
     	var contractReceivableList = adlService.getJobDashboardData($scope.jobNo, 'ContractReceivable', year);
     	var turnoverList = adlService.getJobDashboardData($scope.jobNo,  'Turnover', year);

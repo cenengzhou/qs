@@ -79,7 +79,21 @@ public class PaymentCert extends BasePersistedObject {
 		PAYMENT_STATUS_DESCRIPTION.put(PAYMENTSTATUS_PCS_WAITING_FOR_POSTING, "Waiting For Posting");
 		PAYMENT_STATUS_DESCRIPTION.put(PAYMENTSTATUS_APR_POSTED_TO_FINANCE, "Posted To Finance");
 	}
-
+	
+	public static final Map<String, String> PAYMENT_TERMS_DESCRIPTION;
+	static{
+		PAYMENT_TERMS_DESCRIPTION = new HashMap<String, String>();
+		PAYMENT_TERMS_DESCRIPTION.put("QS0", "QS0 - Manual Input Due Date");
+		PAYMENT_TERMS_DESCRIPTION.put("QS1", "QS1 -Pay when Paid + 7 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS2", "QS2 -Pay when Paid + 14 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS3", "QS3 -Pay when IPA Received + 56 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS4", "QS4 -Pay when Invoice Received + 28 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS5", "QS5 -Pay when Invoice Received + 30 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS6", "QS6 -Pay when Invoice Received + 45 days");
+		PAYMENT_TERMS_DESCRIPTION.put("QS7", "QS7 -Pay when Invoice Received + 60 days");
+		
+	}
+	
 	private Subcontract subcontract;
 
 	private Integer paymentCertNo;

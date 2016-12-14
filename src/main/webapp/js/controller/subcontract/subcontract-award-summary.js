@@ -1,6 +1,7 @@
-mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'masterListService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService',
-                                            function($scope, tenderVarianceService, tenderService, subcontractService, masterListService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService) {
+mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'masterListService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'rootscopeService', 'GlobalParameter',
+                                            function($scope, tenderVarianceService, tenderService, subcontractService, masterListService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, rootscopeService, GlobalParameter) {
 	loadData();
+	
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
@@ -42,6 +43,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
     
     function loadData(){
     	getCompanyName();
+    	
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
 			htmlService.makeHTMLStringForTenderAnalysis({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, htmlVersion:'A'})
@@ -81,6 +83,15 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 						$scope.disableButtons = true;
 					else
 						$scope.disableButtons = false;
+					
+					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
+					
+					subcontractService.getWorkScope($scope.subcontract.workscope)
+					.then(
+							function(data){
+								$scope.workscopeDescription =  data.description;
+							});
+
 				});
 	}
 	

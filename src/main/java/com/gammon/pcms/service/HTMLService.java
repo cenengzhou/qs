@@ -39,6 +39,7 @@ import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
+import com.gammon.qs.dao.UnitWSDao;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MasterListVendor;
@@ -53,6 +54,7 @@ import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
+import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
 
 @Service
@@ -96,6 +98,8 @@ public class HTMLService implements Serializable{
 	private AddendumDetailHBDao addendumDetailHBDao;
 	@Autowired
 	private AccountCodeWSDao accountCodeDao;
+	@Autowired
+	private UnitWSDao unitDao;
 	@Autowired
 	private FreemarkerConfig freemarkerConfig;
 	@Autowired
@@ -256,6 +260,14 @@ public class HTMLService implements Serializable{
 		}
 		String companyCurrencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
 		
+		String workScopeDescription = "";
+		if(subcontract !=null && subcontract.getWorkscope() !=null){
+			UDC workScope = unitDao.obtainWorkScope(subcontract.getWorkscope().toString());
+			workScopeDescription = workScope.getCode().concat(" - ").concat(workScope.getDescription());
+		}
+		
+		String paymentTerms = PaymentCert.PAYMENT_TERMS_DESCRIPTION.get(subcontract.getPaymentTerms());
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		String template = freemarkerConfig.getTemplates().get("award");
 		data.put("template", template);
@@ -269,6 +281,11 @@ public class HTMLService implements Serializable{
 		data.put("rcmTenderer", rcmTenderer != null ? rcmTenderer : new Tender());
 		data.put("tenderVarianceList", tenderVarianceList != null ? tenderVarianceList : new ArrayList<>());
 		data.put("companyCurrencyCode", companyCurrencyCode != null ? companyCurrencyCode: "");
+		data.put("workScopeDescription", workScopeDescription);
+		data.put("paymentTerms", paymentTerms);
+		
+		
+		
 		return FreeMarkerHelper.returnHtmlString(template, data);
 	}
 

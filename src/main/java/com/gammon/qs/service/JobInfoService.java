@@ -325,7 +325,6 @@ public class JobInfoService {
 		JobDates jobDates = null;
 		try {
 			jobDates = jobWSDao.obtainJobDates(jobNumber);
-			logger.info("getPlannedStartDate: "+jobDates.getPlannedStartDate());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

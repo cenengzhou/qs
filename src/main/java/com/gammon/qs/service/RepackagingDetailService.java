@@ -306,7 +306,7 @@ public class RepackagingDetailService implements Serializable {
 			wrappers.put(detail.keyCode().hashCode(),detail);			
 		}
 		if(repackagingEntry.getRepackagingVersion() > 1){
-			Repackaging previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJobInfo(), repackagingEntry.getRepackagingVersion() - 1);
+			Repackaging previousEntry = repackagingEntryDao.getRepackaging(repackagingEntry.getJobInfo().getJobNumber(), repackagingEntry.getRepackagingVersion() - 1);
 			List<RepackagingDetailComparisonWrapper> previousDetails = searchRepackagingDetails(previousEntry, null, null, null);
 			if(previousDetails != null){
 				for(RepackagingDetailComparisonWrapper detail : previousDetails){

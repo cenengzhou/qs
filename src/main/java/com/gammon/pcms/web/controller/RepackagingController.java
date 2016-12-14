@@ -59,6 +59,12 @@ public class RepackagingController {
 		return repackaging;
 	}
 	
+	@RequestMapping(value = "getRepackaging", method = RequestMethod.GET)
+	public Repackaging getRepackaging(@RequestParam(required = true) String jobNo, @RequestParam(required = true) Integer version) throws Exception{
+		Repackaging repackaging = repackagingService.getRepackaging(jobNo, version);
+		return repackaging;
+	}
+	
 	@RequestMapping(value = "getRepackagingListByJobNo", method = RequestMethod.GET)
 	public List<Repackaging> getRepackagingListByJobNo(@RequestParam(required = true) String jobNo) throws Exception{
 		logger.info("jobNo: "+jobNo);

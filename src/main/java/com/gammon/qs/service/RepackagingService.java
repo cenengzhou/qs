@@ -48,6 +48,15 @@ public class RepackagingService {
 
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
+	public Repackaging getRepackaging(String jobNo, Integer version) {
+		try {
+			return repackagingDao.getRepackaging(jobNo, version);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public Repackaging getLatestRepackaging(String jobNo) throws Exception {
 		return repackagingDao.getLatestRepackaging(jobNo);
 	}
@@ -238,6 +247,10 @@ public class RepackagingService {
 		}
 		return error;
 	}
+
+
+
+	
 	
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

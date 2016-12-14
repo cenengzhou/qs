@@ -2,6 +2,7 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
 	// Return public API.
     return({
     	getRepackagingEntry:				getRepackagingEntry,
+    	getRepackaging:						getRepackaging,
     	getLatestRepackaging:				getLatestRepackaging,
     	getRepackagingListByJobNo: 			getRepackagingListByJobNo,
     	getRepackagingDetails:				getRepackagingDetails, 
@@ -24,6 +25,19 @@ mainApp.service('repackagingService', ['$http', '$q', 'GlobalHelper', function($
             dataType: "application/json;charset=UTF-8",
             params: {
             	repackagingID: repackagingID
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getRepackaging(jobNo, version) {
+        var request = $http({
+            method: "get",
+            url: "service/repackaging/getRepackaging",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	version: version
             }
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

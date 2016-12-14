@@ -131,7 +131,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/job/job-dashboard.js',
                            'js/service/adl-service.js',
-                           'js/service/resource-summary-service.js'
+                           'js/service/resource-summary-service.js',
+                           'js/service/repackaging-service.js'
                     ] 
                 });
             }]

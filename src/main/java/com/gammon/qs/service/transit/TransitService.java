@@ -238,6 +238,8 @@ public class TransitService implements Serializable {
 		else{
 			bqItem.setCostRate(transitBq.getCostRate());
 			bqItem.setSellingRate(transitBq.getSellingRate());
+			bqItem.setAmountBudget(transitBq.getQuantity()!=null && transitBq.getCostRate() != null ? transitBq.getQuantity() * transitBq.getCostRate() : 0.0);
+			bqItem.setAmountSelling(transitBq.getQuantity()!=null && transitBq.getSellingRate() != null ? transitBq.getQuantity()*transitBq.getSellingRate() : 0.0);
 		}
 		bqItem.setUnit(transitBq.getUnit());
 		bqItem.setBqType("TI");

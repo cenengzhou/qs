@@ -114,7 +114,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 					if(rowEntity.packageNo !=null && rowEntity.packageNo.length > 0){
 						if(rowEntity.objectCode.substring(0, 2) == "13"){
 							var modalOptions = {
-									bodyText: "Are you sure to remove subcontract from Material resource? It cannot be added back again."
+									bodyText: "Are you sure to remove material package from Material resource? It cannot be added back again."
 							};
 
 							confirmService.showModal({}, modalOptions).then(function (result) {
@@ -331,6 +331,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 						$scope.disableButtons = false;
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Resources have been updated.");
+						$scope.gridDirtyRows = null;
 						$state.reload();
 					}
 				});
@@ -346,7 +347,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	
 	
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-		console
 		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){
 			event.preventDefault();
 			var modalOptions = {

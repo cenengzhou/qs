@@ -79,9 +79,10 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		}
 	}
 	
-	public Repackaging getRepackagingEntry(JobInfo jobInfo, Integer version) throws Exception{
+	public Repackaging getRepackaging(String jobNo, Integer version) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("jobInfo", jobInfo));
+		criteria.createAlias("jobInfo", "jobInfo");
+		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
 		criteria.add(Restrictions.eq("repackagingVersion", version));
 		return (Repackaging)criteria.uniqueResult();
 	}

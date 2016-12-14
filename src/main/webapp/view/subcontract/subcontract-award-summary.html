@@ -1,3 +1,4 @@
+
 <div class="invoice">
 	<span class="pull-right hidden-print" id="createSubcontractStep9PrintBtn"> <a href="javascript:;"
 		onclick="window.print()"
@@ -17,13 +18,16 @@
 			<label class="pull-right"><b>PDS/07/Form 4</b></label>
 		</div>
 		<div class="col-md-12">
-			<label><b>Job No.: {{jobNo}}</b></label>
+			<label><b>Job No.: {{jobNo}} - {{jobDescription}}</b></label>
 		</div>
 		<div class="col-md-12">
-			<label><b>Contract Title: {{jobDescription}}</b></label>
+			<label><b>TRADE: <span class="invoice-underline">Subcontract {{subcontractNo}} - {{subcontract.description}}</span></b></label>
 		</div>
 		<div class="col-md-12">
-			<label class="m-t-10"><b>TRADE: <span class="invoice-underline">Subcontract {{subcontractNo}} - {{subcontract.description}}</span></b></label>
+			<label><b>Work Scope: {{subcontract.workscope}} - {{workscopeDescription}}</b></label>
+		</div>
+		<div class="col-md-12">
+			<label><b>Payment Terms: {{paymentTerms}}</b></label>
 		</div>
 	</div>
 	
