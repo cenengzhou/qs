@@ -185,7 +185,7 @@ public class ADLService {
 					
 				}
 			}else if("ActualValue".equals(type)){
-				List<AccountBalance> accountBalance = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_OBJECT_COSTCODE_STARTER);
+				List<AccountBalance> accountBalance = accountBalanceDao.calculateSumOfActualValue(year, month, AccountBalance.TYPE_LEDGER.AA.toString(), noJob, AccountBalance.CODE_OBJECT_COSTCODE_STARTER, AccountBalance.CODE_SUBSIDIARY_EMPTY);
 				
 				for(AccountBalance account : accountBalance){
 					if(account.getAccountPeriod().compareTo(new BigDecimal(12)) <= 0)
