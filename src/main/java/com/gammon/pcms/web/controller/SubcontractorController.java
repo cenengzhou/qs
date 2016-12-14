@@ -18,13 +18,13 @@ import com.gammon.qs.wrapper.SubcontractorWrapper;
 import com.gammon.qs.wrapper.tenderAnalysis.SubcontractorTenderAnalysisWrapper;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/subcontractor/")
 public class SubcontractorController {
 
 	@Autowired
 	private SubcontractorService subcontractorService;
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainSubcontractorWrappers', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainSubcontractorWrappers", method = RequestMethod.POST)
 	public List<SubcontractorWrapper> obtainSubcontractorWrappers(
 			@RequestParam(defaultValue = "") String workScope, @RequestParam(defaultValue = "") String subcontractor) throws DatabaseOperationException{
@@ -36,6 +36,7 @@ public class SubcontractorController {
 		return wrapperList;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainClientWrappers', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainClientWrappers", method = RequestMethod.POST)
 	public List<SubcontractorWrapper> obtainClientWrappers(@RequestParam String client) throws DatabaseOperationException{
 		List<SubcontractorWrapper> wrapperList = new ArrayList<SubcontractorWrapper>();
@@ -43,20 +44,22 @@ public class SubcontractorController {
 		return wrapperList;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainSubconctractorStatistics', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainSubconctractorStatistics", method = RequestMethod.POST)
 	public List<String> obtainSubconctractorStatistics(@RequestParam String vendorNo) throws DatabaseOperationException {
 		return subcontractorService.obtainSubconctractorStatistics(vendorNo);
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainPackagesByVendorNo', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainPackagesByVendorNo", method = RequestMethod.POST)
 	public List<Subcontract> obtainPackagesByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException {
 		return subcontractorService.obtainPackagesByVendorNo(vendorNo);
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainTenderAnalysisWrapperByVendorNo', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainTenderAnalysisWrapperByVendorNo", method = RequestMethod.POST)
 	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException  {
 		return subcontractorService.obtainTenderAnalysisWrapperByVendorNo(vendorNo);
 	}
-
 
 }

@@ -38,12 +38,12 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 						   reportUrls: [
 						                	{
 					 	            	   type: 'xls',
-					 	            	   url:'paymentCertificateEnquiryExcelExport.smvc',
+					 	            	   url:'paymentCertificateEnquiryExcelExport',
 					 	            	   parameters: paymentCertParameters
 						                	}, 
 						                	{
 					 	            	   type: 'pdf',
-					 	            	   url: 'printPaymentCertificateReportPdf.rpt',
+					 	            	   url: 'printPaymentCertificateReportPdf',
 					 	            	   parameters: paymentCertParameters
 						                	}
 						               ],
@@ -64,12 +64,12 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
-					 	            	   url: 'financeSubcontractListDownload.smvc',
+					 	            	   url: 'financeSubcontractListDownload',
 					 	            	   parameters: commonParameters
 					 	               }, 
 					 	               {
 					 	            	   type: 'pdf',
-					 	            	   url: 'subcontractReportExport.rpt',
+					 	            	   url: 'subcontractReportExport',
 					 	            	   parameters: commonParameters
 						            	   }
 						   ],
@@ -91,12 +91,12 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
-					 	            	   url: 'subcontractLiabilityExcelExport.rpt',
+					 	            	   url: 'subcontractLiabilityExcelExport',
 					 	            	   parameters: commonParameters
 					 	               }, 
 					 	               {
 					 	            	   type: 'pdf',
-					 	            	   url: 'subcontractLiabilityReportExport.rpt',
+					 	            	   url: 'subcontractLiabilityReportExport',
 					 	            	   parameters:commonParameters
 						            	   }
 					    ],
@@ -119,12 +119,12 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 						   reportUrls: [
 					 	               {
 					 	            	   type: 'xls',
-					 	            	   url: 'subcontractorAnalysisExcelExport.rpt',
+					 	            	   url: 'subcontractorAnalysisExcelExport',
 					 	            	   parameters: commonParameters
 					 	               }, 
 					 	               {
 					 	            	   type: 'pdf',
-					 	            	   url: 'subcontractorAnalysisReportExport.rpt',
+					 	            	   url: 'subcontractorAnalysisReportExport',
 					 	            	   parameters: commonParameters
 						            	   }
 					 	               ],
@@ -242,7 +242,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 	}
 	
 	function getUrlWithParameters(link, parameters, values){
-		var url = 'gammonqs/' + link + '?';
+		var url = 'service/attachment/' + link + '?';
 		parameters.forEach(function(parameter){
 			if(parameter === 'dueDate' && values['dueDate']) values['dueDate'] = moment(values['dueDate']).format('DD/MM/YYYY');
 			if(parameter === 'jobNumber' && values['jobNumber'] === '*') values['jobNumber'] = '';

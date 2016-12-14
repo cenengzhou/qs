@@ -1,6 +1,5 @@
 package com.gammon.pcms.web.session;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
@@ -12,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 import org.springframework.stereotype.Component;
+
+import com.gammon.pcms.web.controller.SystemController;
 @Component
 public class HttpSessionDestoryedEventListener implements ApplicationListener<HttpSessionDestroyedEvent> {
  
@@ -24,7 +25,7 @@ public class HttpSessionDestoryedEventListener implements ApplicationListener<Ht
     	String username = authentication != null ? authentication.getName() : " {NULL}";
         logger.info("Session destoyed:" + username + " | " + httpSession.getId());
         
-		Manager tomcatManager = TomcatSessionController.getTomcatManager(httpSession.getServletContext());
+		Manager tomcatManager = SystemController.getTomcatManager(httpSession.getServletContext());
 		Session sessions[] = tomcatManager.findSessions();
 		for(Session session: sessions){
 			if(session.getPrincipal() == null) {

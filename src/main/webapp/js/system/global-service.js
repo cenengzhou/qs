@@ -89,7 +89,7 @@ mainApp.factory('SessionHelper',['$http', '$q', function SessionHelperFactory($h
 	var defer = $q.defer();
 	return{
 		getCurrentSessionId: function(){
-			return $http.post('service/GetCurrentSessionId')
+			return $http.post('service/system/GetCurrentSessionId')
 			.then(function(response){
 				if(typeof response.data === 'string'){
 					return response.data;
@@ -101,7 +101,7 @@ mainApp.factory('SessionHelper',['$http', '$q', function SessionHelperFactory($h
 			});
 		},
 		getSessionList: function(){
-			return $http.post('service/GetSessionList')
+			return $http.post('service/system/GetSessionList')
 			.then(function(response){
 				if(typeof response.data === 'object'){
 					return response.data;
@@ -113,7 +113,7 @@ mainApp.factory('SessionHelper',['$http', '$q', function SessionHelperFactory($h
 			});
 		},
 		validateSession: function(){
-			return $http.post('service/ValidateCurrentSession')
+			return $http.post('service/system/ValidateCurrentSession')
 			.then(function(response){
 				if(typeof response.data === 'boolean'){
 					return response.data;
@@ -127,7 +127,7 @@ mainApp.factory('SessionHelper',['$http', '$q', function SessionHelperFactory($h
 		invalidateSessionList: function(sessionIds){
 			$http({
 				method: "post",
-				url: "service/InvalidateSessionList",
+				url: "service/system/InvalidateSessionList",
 				data: sessionIds
 			})
 			.success(function(data) {

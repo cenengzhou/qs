@@ -38,7 +38,6 @@ import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/repackaging/")
 public class RepackagingController {
 	private Logger logger = Logger.getLogger(getClass());
@@ -52,6 +51,7 @@ public class RepackagingController {
 	@Autowired
 	private GSFService gsfService;
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getRepackagingEntry', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRepackagingEntry", method = RequestMethod.GET)
 	public Repackaging getRepackagingEntry(@RequestParam(required = true) String repackagingID) throws Exception{
 		Repackaging repackaging = null;
@@ -59,12 +59,14 @@ public class RepackagingController {
 		return repackaging;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getRepackaging', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRepackaging", method = RequestMethod.GET)
 	public Repackaging getRepackaging(@RequestParam(required = true) String jobNo, @RequestParam(required = true) Integer version) throws Exception{
 		Repackaging repackaging = repackagingService.getRepackaging(jobNo, version);
 		return repackaging;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getRepackagingListByJobNo', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRepackagingListByJobNo", method = RequestMethod.GET)
 	public List<Repackaging> getRepackagingListByJobNo(@RequestParam(required = true) String jobNo) throws Exception{
 		logger.info("jobNo: "+jobNo);
@@ -73,6 +75,7 @@ public class RepackagingController {
 		return repackagingList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getLatestRepackaging', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestRepackaging", method = RequestMethod.GET)
 	public Repackaging getLatestRepackaging(@RequestParam(required = true) String jobNo) throws Exception{
 		logger.info("jobNo: "+jobNo);
@@ -81,6 +84,7 @@ public class RepackagingController {
 		return repackaging;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getRepackagingDetails', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRepackagingDetails", method = RequestMethod.GET)
 	public RepackagingPaginationWrapper<RepackagingDetailComparisonWrapper> getRepackagingDetails(@RequestParam(required = true) String repackagingID, 
 																									@RequestParam(required = true) boolean changesOnly) throws NumberFormatException, Exception{
@@ -89,7 +93,7 @@ public class RepackagingController {
 		return wrapper;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','addRepackaging', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addRepackaging", method = RequestMethod.POST)
 	public String addRepackaging(@RequestParam(required = true) String jobNo){
 		String result = null;
@@ -103,7 +107,7 @@ public class RepackagingController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','updateRepackaging', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateRepackaging", method = RequestMethod.POST)
 	public String  updateRepackaging(@RequestBody Repackaging repackaging){
 		String result = null;
@@ -117,7 +121,7 @@ public class RepackagingController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','generateSnapshot', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "generateSnapshot", method = RequestMethod.POST)
 	public String  generateSnapshot(@RequestParam(required = true) String id, @RequestParam(required = true) String jobNo){
 		String result = null;
@@ -131,7 +135,7 @@ public class RepackagingController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','deleteRepackaging', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteRepackaging", method = RequestMethod.DELETE)
 	public String deleteRepackaging(@RequestParam(required = true) String id){
 		String result = null;
@@ -145,7 +149,7 @@ public class RepackagingController {
 		return result;
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','confirmAndPostRepackaingDetails', @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "confirmAndPostRepackaingDetails", method = RequestMethod.POST)
 	public String confirmAndPostRepackaingDetails(@RequestParam(required = true) String repackagingID){
 		String result = null;
@@ -161,7 +165,7 @@ public class RepackagingController {
 	}
 
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','sendEmailToReviewer', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "sendEmailToReviewer", method = RequestMethod.POST)
 	public boolean sendEmailToReviewer(@RequestBody Map<String, String> mailData){
 		boolean result;
@@ -181,6 +185,7 @@ public class RepackagingController {
 		return result;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getReviewerList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getReviewerList", method = RequestMethod.GET)
 	public String getReviewerList(@Value("#{'file:///' + linkConfig.getPcmsLink('REVIEWER_JSON')}") Resource reviewerJson) throws IOException{
 		logger.info("Get reviewer list:" + reviewerJson.getFile().getPath());
@@ -192,6 +197,7 @@ public class RepackagingController {
 		return result;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('RepackagingController','getReviewerListFromGSF', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getReviewerListFromGSF", method = RequestMethod.POST)
 	public List<GetUserListWithStaffId.Result> getReviewerListFromGSF(@RequestParam String jobNo){
 		return gsfService.getApproverListByJob(jobNo, false);

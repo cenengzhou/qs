@@ -1,5 +1,5 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'masterListService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 'uiGridConstants',  
-                                   function($http, $scope, $location, $cookies, blockUI, masterListService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'jdeService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 'uiGridConstants',  
+                                   function($http, $scope, $location, $cookies, blockUI, jdeService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
 	
 	rootscopeService.setEnv();
 	$scope.tab = 'profile';
@@ -105,10 +105,10 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 				}
 			}
 			
-			userpreferenceService.gettingUserPreference()
-			.then(function(response){
-				updateDefaultJobNo(response.userPreference.DEFAULT_JOB_NO);
-			});			
+//			userpreferenceService.gettingUserPreference()
+//			.then(function(response){
+//				updateDefaultJobNo(response.userPreference.DEFAULT_JOB_NO);
+//			});			
 		});
 	}
 	
@@ -261,7 +261,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.ObjectCodeloadGridData = function(){
 		if($scope.objectLoaded === false){
-			masterListService.searchObjectList('*')
+			jdeService.searchObjectList('*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.ObjectCodeGridOptions.data = data;
@@ -300,7 +300,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.SubsidiaryCodeloadGridData = function(){
 		if($scope.subsidiaryLoaded === false){
-			masterListService.searchSubsidiaryList('*')
+			jdeService.searchSubsidiaryList('*')
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.SubsidiaryCodeGridOptions.data = data;

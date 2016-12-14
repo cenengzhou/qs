@@ -96,7 +96,7 @@ public class APController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/ws/completeAwardApproval ",
+	@RequestMapping(path = "/ws/completeAwardApproval",
 					method = { RequestMethod.GET, RequestMethod.POST })
 	public CompleteAwardApprovalResponse completeAwardApproval(@Valid @RequestBody CompleteAwardApprovalRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
@@ -420,7 +420,7 @@ public class APController {
 	 * @return
 	 */
 	@RequestMapping(path = "/ws/getTextAttachment/{nameObject}/{textKey}/{sequenceNo}", method = RequestMethod.GET)
-	public GetTextAttachmentResponse getTextAttachmentRequest(	HttpServletRequest request,
+	public GetTextAttachmentResponse getTextAttachment(	HttpServletRequest request,
 																@PathVariable String nameObject,
 																@PathVariable String textKey,
 																@PathVariable Integer sequenceNo) {

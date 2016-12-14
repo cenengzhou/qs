@@ -1,5 +1,5 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'budgetpostingService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants', 'jobcostService',
-                          function($q, $scope, colorCode, modalService, transitService, budgetpostingService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants, jobcostService) {
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'jdeService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants',
+                          function($q, $scope, colorCode, modalService, transitService, jdeService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants) {
 	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -331,12 +331,12 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
     		$scope.completeTransitMsg = '';
     		$scope.completeTransitErr = false;
     		
-    		jobcostService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
+    		jdeService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
     		.then(
     				function( result ) {
     					if(data === ''){
     		    			$scope.completeTransitMsg += 'Complete Transit: Success\n';
-    		    			budgetpostingService.postBudget($scope.jobNo)
+    		    			jdeService.postBudget($scope.jobNo)
     		    			.then(function(data){
     		    				if(data === ''){
     		    					$scope.completeTransitMsg += 'Budget posting: Success\n';

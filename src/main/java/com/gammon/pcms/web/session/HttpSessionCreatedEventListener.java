@@ -14,13 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.session.HttpSessionCreatedEvent;
 import org.springframework.stereotype.Component;
 
-import com.gammon.pcms.config.SecurityConfig;
+import com.gammon.pcms.web.controller.SystemController;
 @Component
 public class HttpSessionCreatedEventListener implements ApplicationListener<HttpSessionCreatedEvent>{
 	private Logger logger = Logger.getLogger(getClass().getName());
-	
-	@Autowired
-	private SecurityConfig securityConfig;
 	
 	@Override
 	public void onApplicationEvent(HttpSessionCreatedEvent event) {
@@ -30,7 +27,7 @@ public class HttpSessionCreatedEventListener implements ApplicationListener<Http
 		MDC.put("username", username);
 	    logger.info("Session create:" + username + " | " + currentSession.getId());
 	    
-		Manager tomcatManager = TomcatSessionController.getTomcatManager(currentSession.getServletContext());
+		Manager tomcatManager = SystemController.getTomcatManager(currentSession.getServletContext());
 		Session sessions[] = tomcatManager.findSessions();
 		for(Session session: sessions){
 			if(session.getPrincipal() == null) {

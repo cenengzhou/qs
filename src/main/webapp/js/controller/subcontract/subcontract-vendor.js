@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'masterListService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'paymentService',
-                                         function($scope, subcontractService, masterListService, tenderService, modalService, confirmService, $state, GlobalMessage, paymentService) {
+mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeService', 'tenderService', 'modalService', 'confirmService', '$state', 'GlobalMessage', 'paymentService',
+                                         function($scope, subcontractService, jdeService, tenderService, modalService, confirmService, $state, GlobalMessage, paymentService) {
 	
 	loadData();
 
@@ -32,7 +32,7 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'master
 	$scope.addVendor = function(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			if($scope.newVendorNo != null){
-				masterListService.getSubcontractor($scope.newVendorNo)
+				jdeService.getSubcontractor($scope.newVendorNo)
 				.then(
 						function( data ) {
 							if(data.length==0)

@@ -12,7 +12,6 @@ import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.service.security.SecurityService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq()) or hasRole(@securityConfig.getPcmsRole('MAINTENANCE'))")
 @RequestMapping(value = "service/security/")
 public class SecurityController {
 	
@@ -21,11 +20,13 @@ public class SecurityController {
 	@Autowired
 	private GSFService gsfService;
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getPcmsRole('MAINTENANCE')) or @GSFService.isFnEnabled('SecurityController','getCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getCurrentUser", method = RequestMethod.GET)
 	public User getCurrentUser(){
 		return securityService.getCurrentUser();
 	}
-	
+
+	@PreAuthorize(value = "hasRole(@securityConfig.getPcmsRole('MAINTENANCE')) or @GSFService.isFnEnabled('SecurityController','getUserByUsername', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getUserByUsername", method = RequestMethod.GET)
 	public User getUserByUsername(@RequestParam String username){
 		return gsfService.getRole(username);

@@ -10,7 +10,9 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		createTender:				createTender,
 		updateTenderDetails: 		updateTenderDetails,
 		updateRecommendedTender:	updateRecommendedTender,
-		deleteTender:				deleteTender
+		deleteTender:				deleteTender,
+		getTenderVarianceList: 	getTenderVarianceList,
+		createTenderVariance:	createTenderVariance
 
 	});
 
@@ -156,6 +158,35 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 				subcontractNo: subcontractNo,
 				subcontractorNo: subcontractorNo
 			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
+	function getTenderVarianceList(jobNo, subcontractNo, subcontractorNo) {
+		var request = $http({
+			method: "get",
+			url: "service/tender/getTenderVarianceList",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				subcontractorNo: subcontractorNo
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+	
+	function createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList) {
+		var request = $http({
+			method: "post",
+			url: "service/tender/createTenderVariance",
+			dataType: "application/json;charset=UTF-8",
+			params: {
+				jobNo: jobNo,
+				subcontractNo: subcontractNo,
+				subcontractorNo: subcontractorNo
+			},
+			data: tenderVarianceList
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}

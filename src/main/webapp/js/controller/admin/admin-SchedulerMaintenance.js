@@ -1,10 +1,10 @@
 mainApp.controller('AdminSchedulerMaintenanceCtrl', 
-		['$scope', '$http', 'SessionHelper', 'modalService', 'quartzService', '$sce', 'audithousekeepService', 'GlobalParameter',
-		function($scope, $http, SessionHelper, modalService, quartzService, $sce, audithousekeepService, GlobalParameter) {
+		['$scope', '$http', 'SessionHelper', 'modalService', '$sce', 'systemService', 'GlobalParameter',
+		function($scope, $http, SessionHelper, modalService, $sce, systemService, GlobalParameter) {
 			$scope.GlobalParameter = GlobalParameter;
 			$scope.onSubmit = function(){
 				$scope.datetimeToTimestamp();
-				quartzService.updateQrtzTriggerList($scope.triggers)
+				systemService.updateQrtzTriggerList($scope.triggers)
 				.then(function(data){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Schedule updated.");
 				},function(data){
@@ -12,7 +12,7 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 				});
 			};
 			$scope.getAllTriggers = function() {
-				quartzService.getAllTriggers().then(function(data) {
+				systemService.getAllTriggers().then(function(data) {
 					if (data instanceof Object) {
 						$scope.triggers = data;
 						$scope.addNextFireDatetime();
@@ -34,7 +34,7 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 			}
 			$scope.auditTables = [];
 			$scope.loadAuditTableMap = function(){
-				audithousekeepService.getAuditTableMap()
+				systemService.getAuditTableMap()
 				.then(function(data){
 					$scope.scheduleTip = $sce.trustAsHtml('<table width=150 class="table table-bordered table-condensed">');
 					$scope.scheduleTip+= $sce.trustAsHtml('<tr class="info"><th>Table Name</th><th>Housekeeping</th><th>Records&nbsp;old&nbsp;than</th></tr>');

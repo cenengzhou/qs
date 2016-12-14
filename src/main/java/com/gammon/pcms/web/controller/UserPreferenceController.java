@@ -13,13 +13,13 @@ import com.gammon.pcms.service.UserPreferenceService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/userPreference/")
 public class UserPreferenceController {
 
 	@Autowired
 	private UserPreferenceService userPreferenceService;
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','obtainUserPreferenceByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)
 	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{
 		Map<String, String> preferenceMap = null;
@@ -31,6 +31,7 @@ public class UserPreferenceController {
 		return preferenceMap;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','setDefaultJobNo', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "setDefaultJobNo", method = RequestMethod.POST)
 	public Map<String, String> setDefaultJobNo(@RequestBody String defaultJobNo) throws DatabaseOperationException{
 		return userPreferenceService.setDefaultJobNo(defaultJobNo);

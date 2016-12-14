@@ -75,7 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private Map<String, String> pcmsRole;
 	@Value("#{${pcms.job}}")
 	private Map<String, String> pcmsJob;
-		
+	@Value("#{${function.security.methods}}")
+	private Map<String, Map<String, String>> fnMethods;
+	
 	// Kerberos
 	@Value("#{${kerberos.service-principal}}")
 	private Map<String, String> kerberosServicePrincipal;
@@ -89,6 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	//cache
 	@Value("#{${cacheKey.prefix}}")
 	private Map<String, String> cacheKeyPrefix;
+	
+	public static final String FN_ENABLE = "Enable";
+	public static final String FN_DISABLE = "Disable";
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -456,4 +461,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public String getCacheKeyPrefix(String key){
 		return getCacheKeyPrefix().get(key);
 	}
+
+	/**
+	 * @return the fnMethods
+	 */
+	public Map<String, Map<String, String>> getFnMethods() {
+		return fnMethods;
+	}
+	public Map<String, String> getFnMethodsCtrl(String ctrl){
+		return (Map<String, String>) getFnMethods().get(ctrl);
+	}
+	public String getFnMethodsCtrlMethod(String ctrl, String method){
+		return getFnMethodsCtrl(ctrl).get(method);
+	}
+	
+	public String getFunctionSecurity(String ctrl, String method){
+		return getFnMethodsCtrlMethod(ctrl, method);
+	}
+	
 }

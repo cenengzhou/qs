@@ -29,7 +29,6 @@ import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/payment/")
 public class PaymentController {
 	private Logger logger = Logger.getLogger(getClass());
@@ -39,7 +38,7 @@ public class PaymentController {
 	@Autowired
 	private PaymentPostingService paymentPostingService;	
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getLatestPaymentCert', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestPaymentCert", method = RequestMethod.GET)
 	public PaymentCert getLatestPaymentCert(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo) throws DatabaseOperationException{
 		PaymentCert paymentCert = null;
@@ -47,6 +46,7 @@ public class PaymentController {
 		return paymentCert;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getPaymentCertList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPaymentCertList", method = RequestMethod.GET)
 	public List<PaymentCert> getPaymentCertList(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo) throws DatabaseOperationException{
 		List<PaymentCert> paymentCertList = null;
@@ -54,6 +54,7 @@ public class PaymentController {
 		return paymentCertList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getPaymentCert', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPaymentCert", method = RequestMethod.GET)
 	public PaymentCert getPaymentCert(@RequestParam(required = true) String jobNo, 
 													@RequestParam(required = true) String subcontractNo,
@@ -63,6 +64,7 @@ public class PaymentController {
 		return scPaymentCert;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getPaymentDetailList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPaymentDetailList", method = RequestMethod.GET)
 	public List<PaymentCertDetail> getPaymentDetailList(@RequestParam(required = true) String jobNo, 
 													@RequestParam(required = true) String subcontractNo,
@@ -72,6 +74,7 @@ public class PaymentController {
 		return paymentDetailList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getTotalPostedCertAmount', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTotalPostedCertAmount", method = RequestMethod.GET)
 	public Double getTotalPostedCertAmount(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo){
@@ -80,6 +83,7 @@ public class PaymentController {
 		return totalPostedCertAmount;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getSCPaymentCertSummary', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPaymentCertSummary", method = RequestMethod.GET)
 	public PaymentCertViewWrapper getSCPaymentCertSummary(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo,
@@ -89,6 +93,7 @@ public class PaymentController {
 		return paymentCertViewWrapper;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getGSTAmount', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getGSTAmount", method = RequestMethod.GET)
 	public Double getGSTAmount(@RequestParam(required = true) String jobNo, 
 								@RequestParam(required = true) String subcontractNo,
@@ -99,7 +104,7 @@ public class PaymentController {
 		return gstAmount;
 	}
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','getPaymentResourceDistribution', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPaymentResourceDistribution", method = RequestMethod.GET)
 	public Double getPaymentResourceDistribution(@RequestParam(required = true) String jobNo, 
 								@RequestParam(required = true) String subcontractNo,
@@ -111,6 +116,7 @@ public class PaymentController {
 		return amount;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','calculatePaymentDueDate', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "calculatePaymentDueDate", method = RequestMethod.GET)
 	public PaymentDueDateAndValidationResponseWrapper calculatePaymentDueDate(@RequestParam(required = true) String jobNo, 
 															@RequestParam(required = true) String subcontractNo, 
@@ -124,7 +130,7 @@ public class PaymentController {
 		return paymentCertViewWrapper;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','createPayment', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createPayment", method = RequestMethod.POST)
 	public String createPayment(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo){
@@ -133,7 +139,7 @@ public class PaymentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updatePaymentCertificate', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updatePaymentCertificate", method = RequestMethod.POST)
 	public String updatePaymentCertificate(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo,
@@ -147,7 +153,7 @@ public class PaymentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updatePaymentDetails', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updatePaymentDetails", method = RequestMethod.POST)
 	public String updatePaymentDetails(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo,
@@ -159,7 +165,7 @@ public class PaymentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','submitPayment', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "submitPayment", method = RequestMethod.POST)
 	public String submitPayment(@RequestParam(required = true) String jobNo,
 												@RequestParam(required = true) String subcontractNo,
@@ -169,13 +175,13 @@ public class PaymentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updateF58011FromSCPaymentCertManually', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateF58011FromSCPaymentCertManually", method = RequestMethod.POST)
 	public void updateF58011FromSCPaymentCertManually(){
 		paymentService.updateF58011FromSCPaymentCertManually();
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','updatePaymentCert', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updatePaymentCert", method = RequestMethod.POST)
 	public String updatePaymentCert(@RequestBody PaymentCert paymentCert) {
 		if(paymentCert.getId() == null) throw new IllegalArgumentException("Invalid Payment Cert");
@@ -183,12 +189,13 @@ public class PaymentController {
 		return result;
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','runPaymentPosting', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "runPaymentPosting", method = RequestMethod.POST)
 	public void runPaymentPosting(){
 		paymentPostingService.runPaymentPosting();
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','obtainPaymentCertificateList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainPaymentCertificateList", method = RequestMethod.POST)
 	public List<PaymentCertWrapper> obtainPaymentCertificateList(@RequestBody PaymentCertWrapper paymentCertWrapper, @RequestParam String dueDateType) throws DatabaseOperationException{
 		List<PaymentCertWrapper> wrapperList = new ArrayList<PaymentCertWrapper>();

@@ -28,14 +28,13 @@ import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/resourceSummary/")
 public class ResourceSummaryController {
 	
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummaries', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummaries(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo, 
@@ -45,6 +44,7 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesForAddendum', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesForAddendum", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesForAddendum(@RequestParam(required =true) String jobNo){
 		List<ResourceSummary> resourceSummaries = null;
@@ -52,12 +52,13 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','obtainResourceSummariesByJobNumberForAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "obtainResourceSummariesByJobNumberForAdmin", method = RequestMethod.GET)
 	public List<ResourceSummary> obtainResourceSummariesByJobNumberForAdmin(@RequestParam String jobNumber){
 		return resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(jobNumber);
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesBySC', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesBySC", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesBySC(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo 
@@ -67,6 +68,7 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesByAccountCode', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesByAccountCode", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesByAccountCode(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
@@ -78,6 +80,7 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesByLineType', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesByLineType", method = RequestMethod.GET)
 	public List<ResourceSummary> getResourceSummariesByLineType(@RequestParam(required =true) String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
@@ -91,7 +94,7 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesForIV', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesForIV", method = RequestMethod.GET)
 	public IVInputPaginationWrapper getResourceSummariesForIV(@RequestParam(required =true) String jobNo) throws DatabaseOperationException{
 		IVInputPaginationWrapper ivInputPaginationWrapper = null;
@@ -99,6 +102,7 @@ public class ResourceSummaryController {
 		return ivInputPaginationWrapper;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummariesGroupByObjectCode', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummariesGroupByObjectCode", method = RequestMethod.GET)
 	public List<ResourceSummayDashboardDTO> getResourceSummariesGroupByObjectCode(@RequestParam(required =true) String jobNo){
 		List<ResourceSummayDashboardDTO> rsList = null;
@@ -106,6 +110,7 @@ public class ResourceSummaryController {
 		return rsList;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getUneditableResourceSummaryID', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getUneditableResourceSummaryID", method = RequestMethod.GET)
 	public List<Integer> getUneditableResourceSummaryID(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
 		List<Integer> rsList = null;
@@ -117,7 +122,7 @@ public class ResourceSummaryController {
 		return rsList;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','addResourceSummary', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addResourceSummary", method = RequestMethod.POST)
 	public String addResourceSummary(@RequestParam(required =true) String jobNo, 
 									@RequestParam(required =false) String repackagingId,
@@ -132,7 +137,7 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','deleteResources', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteResources", method = RequestMethod.POST)
 	public String deleteResources( @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		String result = "";
@@ -140,7 +145,7 @@ public class ResourceSummaryController {
 		return result;
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateResourceSummaries', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateResourceSummaries", method = RequestMethod.POST)
 	public String updateResourceSummaries(@RequestParam(required =true) String jobNo, 
 									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
@@ -149,14 +154,14 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateResourceSummariesForAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateResourceSummariesForAdmin", method = RequestMethod.POST)
 	public void updateResourceSummariesForAdmin(@RequestParam(required =true) String jobNo, 
 									 @RequestBody List<ResourceSummary> resourceSummaryList) throws Exception{
 		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummaryList, jobNo);
 	}
 		
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','splitOrMergeResources', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "splitOrMergeResources", method = RequestMethod.POST)
 	public String splitOrMergeResources(@RequestParam(required =true) String jobNo, 
 										 @RequestBody ResourceSummarySplitMergeWrapper resourceSummarySplitMergeWrapper) throws NumberFormatException, Exception{
@@ -165,8 +170,7 @@ public class ResourceSummaryController {
 		return wrapper.getError();
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs()) ")
-			//+ "&& @GSFService.allowFunctionWrite(@webServiceConfig.GSF_ACCESSRIGHT_FN, @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVAmount', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateIVAmount", method = RequestMethod.POST)
 	public String updateIVAmount(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";
@@ -180,7 +184,7 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','postIVAmounts', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "postIVAmounts", method = RequestMethod.POST)
 	public String postIVAmounts(@RequestParam(required =true) String jobNo, @RequestParam(required =true) boolean finalized){
 		String result = "";
@@ -195,7 +199,7 @@ public class ResourceSummaryController {
 	}
 	
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','generateResourceSummaries', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "generateResourceSummaries", method = RequestMethod.POST)
 	public String generateResourceSummaries(@RequestParam(required =true) String jobNo){
 		String result = "";
@@ -210,7 +214,7 @@ public class ResourceSummaryController {
 	}
 
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','updateIVForSubcontract', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateIVForSubcontract", method = RequestMethod.POST)
 	public String updateIVForSubcontract(@RequestBody List<ResourceSummary> resourceSummaryList){
 		String result = "";

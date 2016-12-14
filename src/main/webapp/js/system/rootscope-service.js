@@ -42,7 +42,6 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	return deferral.promise;
     }
     
-    var cacheKeyArray = {};
 //  1. 		!$rootScope.jobs
 //  1.1			obtainCacheKey  
 //  1.2 		get jobs from localStorage
@@ -168,7 +167,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function gettingProperties(){
 		var deferral = $q.defer();
 		if(!$rootScope.properties){
-			$http.post('service/properties/getProperties')
+			$http.post('service/system/getProperties')
 			.then(function(response){
 	    		$rootScope.properties = response.data;
 	    		deferral.resolve({
@@ -272,19 +271,19 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	
     //====================================================
     function obtainCacheKey(itemType){
-    	if(!cacheKeyArray) cacheKeyArray = [];
+    	if(!$rootScope.cacheKeyArray) $rootScope.cacheKeyArray = [];
     	var deferral = $q.defer();
-    	if(!cacheKeyArray[itemType]){
-    		$http.post('service/properties/obtainCacheKey', JSON.stringify(itemType))
+    	if(!$rootScope.cacheKeyArray[itemType]){
+    		$http.post('service/system/obtainCacheKey', JSON.stringify(itemType))
     		.then(function(response){
-    			cacheKeyArray[itemType] = response.data;
+    			$rootScope.cacheKeyArray[itemType] = response.data;
     			deferral.resolve({
-    				cacheKey : cacheKeyArray[itemType]
+    				cacheKey : $rootScope.cacheKeyArray[itemType]
     			});
     		})
     	} else {
     		deferral.resolve({
-    			cacheKey: cacheKeyArray[itemType]
+    			cacheKey: $rootScope.cacheKeyArray[itemType]
     		});
     	}
     	return deferral.promise;

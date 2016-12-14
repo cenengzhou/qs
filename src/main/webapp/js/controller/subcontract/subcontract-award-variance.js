@@ -1,5 +1,5 @@
-mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'modalService', '$state',
-                                         function ($scope, tenderVarianceService, tenderService, subcontractService, modalService, $state) {
+mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderService', 'subcontractService', 'modalService', '$state',
+                                         function ($scope, tenderService, subcontractService, modalService, $state) {
 	
 	loadData();
 
@@ -123,7 +123,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 	}
 
 	function getTenderVarianceList(tenderNo) {
-		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
+		tenderService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
 		.then(
 				function( data ) {
 					$scope.gridOptions.data = data;
@@ -131,7 +131,7 @@ mainApp.controller('TenderVarianceCtrl', ['$scope', 'tenderVarianceService', 'te
 	}
 	
 	function createTenderVariance(tenderVarianceList) {
-		tenderVarianceService.createTenderVariance($scope.jobNo, $scope.subcontractNo, $scope.tender.vendorNo, tenderVarianceList)
+		tenderService.createTenderVariance($scope.jobNo, $scope.subcontractNo, $scope.tender.vendorNo, tenderVarianceList)
 		.then(
 				function( data ) {
 					if(data.length!=0){

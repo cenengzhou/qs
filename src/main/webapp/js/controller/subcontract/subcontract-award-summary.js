@@ -1,12 +1,11 @@
-mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceService', 'tenderService', 'subcontractService', 'masterListService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'rootscopeService', 'GlobalParameter',
-                                            function($scope, tenderVarianceService, tenderService, subcontractService, masterListService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, rootscopeService, GlobalParameter) {
+mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService',
+                                            function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService) {
 	loadData();
-	
 	
     $scope.submit = function () {
     	if($scope.rcmTenderer!=null){
     		//if($scope.subcontract.preAwardMeetingDate!=null || $scope.subcontract.formOfSubcontract == 'Consultancy Agreement'){
-		    	masterListService.getSubcontractor($scope.rcmTenderer.vendorNo)
+    		jdeService.getSubcontractor($scope.rcmTenderer.vendorNo)
 		    	.then(
 		    			function( data ) {
 		    				if(data.length!=0){
@@ -43,7 +42,6 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
     
     function loadData(){
     	getCompanyName();
-    	
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			getSubcontract();
 			htmlService.makeHTMLStringForTenderAnalysis({jobNumber: $scope.jobNo, packageNo: $scope.subcontractNo, htmlVersion:'A'})
@@ -125,7 +123,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderVarianceServ
 	}
 
 	function getTenderVarianceList(tenderNo) {
-		tenderVarianceService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
+		tenderService.getTenderVarianceList($scope.jobNo, $scope.subcontractNo, tenderNo)
 		.then(
 				function( data ) {
 					$scope.tenderVarianceList = data;

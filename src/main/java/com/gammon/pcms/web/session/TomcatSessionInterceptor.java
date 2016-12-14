@@ -16,6 +16,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.SecurityConfig;
+import com.gammon.pcms.web.controller.SystemController;
 
 @Component(value = "SessionInterceptor")
 public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
@@ -32,7 +33,7 @@ public class TomcatSessionInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		Manager tomcatManager = TomcatSessionController.getTomcatManager(request.getSession().getServletContext());
+		Manager tomcatManager = SystemController.getTomcatManager(request.getSession().getServletContext());
 		Session session = tomcatManager.findSession(request.getSession().getId());
 		SessionInformation sessionInformation = sessionRegistry.getSessionInformation(session.getId());
 		if(sessionInformation != null) {

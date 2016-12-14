@@ -1,7 +1,7 @@
 
 mainApp.controller('AdminManualProceduresCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'audithousekeepService', 'GlobalParameter',
-		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, audithousekeepService, GlobalParameter) {
+		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'paymentService', 'mainCertService', 'systemService', 'GlobalParameter',
+		function($scope, $http, modalService, blockUI, subcontractService, paymentService, mainCertService, systemService, GlobalParameter) {
 	$scope.provisionGlDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.auditTables = [];
 	$scope.auditTableName = '';
@@ -9,7 +9,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 //	$scope.blockProcedures = blockUI.instances.get('blockProcedures');
 	
 	$scope.loadAuditTableMap = function(){
-		audithousekeepService.getAuditTableMap()
+		systemService.getAuditTableMap()
 		.then(function(data){
 			angular.forEach(data, function(value, key){
 				  $scope.auditTables.push({
@@ -24,7 +24,7 @@ mainApp.controller('AdminManualProceduresCtrl',
 	
 	$scope.onSubmitAuditHousekeep = function(){
 		var tableName = $scope.auditTableName;
-		audithousekeepService.housekeepAuditTable($scope.auditTableName)
+		systemService.housekeepAuditTable($scope.auditTableName)
 		.then(function(data){
 			if(data > -1){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Removed ' + data + ' records from ' + tableName);

@@ -21,7 +21,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/master-list-service.js',
+                           'js/service/jde-service.js',
                            'js/service/adl-service.js',
                            'js/service/subcontractor-service.js',
                            'js/service/userpreference-service.js',
@@ -162,7 +162,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	           'js/service/jobcost-service.js',
+               	           'js/service/jde-service.js',
                            'js/controller/job/job-account-master.js'
                     ] 
                 });
@@ -272,7 +272,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                	         'js/controller/subcontract/subcontract-vendor.js',
                	         'js/controller/subcontract/subcontract-vendor-feedback.js',
-               	         'js/service/master-list-service.js',
+               	         'js/service/jde-service.js',
                	         'js/service/tender-service.js'
                     ] 
                 });
@@ -289,7 +289,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                	         'js/controller/subcontract/subcontract-award-variance.js',
-               	         'js/service/tender-variance-service.js',
                	         'js/service/tender-service.js'
                     ] 
                 });
@@ -321,9 +320,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                	         'js/controller/subcontract/subcontract-award-summary.js',
-               	         'js/service/tender-variance-service.js',
                	         'js/service/tender-service.js',
-               	         'js/service/master-list-service.js',
+               	         'js/service/jde-service.js',
                	         'js/service/html-service.js'
                     ] 
                 });
@@ -674,7 +672,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/subcontract/payment/payment-select.js',
                            'js/service/payment-service.js',
                            'js/controller/enquiry/modal/enquiry-supplierledgerdetails.js',
-                           'js/service/jobcost-service.js',
+                           'js/service/jde-service.js',
                     ] 
                 });
             }]
@@ -860,7 +858,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/main-cert/main-cert-select.js',
                            'js/service/main-cert-service.js',
                            'js/controller/enquiry/modal/enquiry-customerledgerdetails.js',
-                           'js/service/jobcost-service.js',
+                           'js/service/jde-service.js',
                     ] 
                 });
             }]
@@ -978,8 +976,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/transit/transit-dashboard.js',
                            'js/service/subcontract-service.js',
                            'js/service/transit-service.js',
-                           'js/service/budgetposting-service.js',
-                           'js/service/jobcost-service.js'
+                           'js/service/jde-service.js'
                     ] 
                 });
             }]
@@ -1111,9 +1108,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         	'js/service/subcontractor-service.js',
                	         	'js/service/ivpostinghist-service.js',
                	         	'js/service/job-service.js',
-               	         	'js/service/master-list-service.js',
                	         	'js/controller/nav-menu.js',
-               	         	'js/service/jobcost-service.js',
+               	         	'js/service/jde-service.js',
                     ] 
                 });
             }]
@@ -1306,10 +1302,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	           'js/service/main-cert-service.js',
                	           'js/service/payment-service.js',
                	           'js/service/transit-service.js',
-               	           'js/service/quartz-service.js',
                	           'js/service/addendum-service.js',
                	           'js/service/resource-summary-service.js',
-               	           'js/service/audithousekeep-service.js',
+               	           'js/service/system-service.js',
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',

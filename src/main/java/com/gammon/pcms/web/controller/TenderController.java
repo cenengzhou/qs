@@ -21,20 +21,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.dto.rs.provider.response.ta.TenderComparisonDTO;
+import com.gammon.pcms.model.TenderVariance;
+import com.gammon.pcms.service.TenderVarianceService;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.service.TenderService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/tender/")
 public class TenderController {
 //	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private TenderService tenderService;
+	@Autowired
+	private TenderVarianceService tenderVarianceService;
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderDetailList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTenderDetailList", method = RequestMethod.GET)
 	public List<TenderDetail> getTenderDetailList(@RequestParam(name="jobNo") String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
@@ -45,6 +48,7 @@ public class TenderController {
 		return tenderDetailList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTender', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTender", method = RequestMethod.GET)
 	public Tender getTender(@RequestParam(name="jobNo") String jobNo, 
 													@RequestParam(name="subcontractNo") String subcontractNo,
@@ -55,6 +59,7 @@ public class TenderController {
 		return tender;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getRecommendedTender', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getRecommendedTender", method = RequestMethod.GET)
 	public Tender getRecommendedTender(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
@@ -65,6 +70,7 @@ public class TenderController {
 		return tender;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTenderList", method = RequestMethod.GET)
 	public List<Tender> getTenderList(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
@@ -75,6 +81,7 @@ public class TenderController {
 		return tenderList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderComparisonList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTenderComparisonList", method = RequestMethod.GET)
 	public TenderComparisonDTO getTenderComparisonList(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo) throws Exception{
@@ -82,7 +89,7 @@ public class TenderController {
 
 	}
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getUneditableTADetailIDs', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getUneditableTADetailIDs", method = RequestMethod.GET)
 	public List<String> getUneditableTADetailIDs(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
@@ -93,7 +100,7 @@ public class TenderController {
 	}
 
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','createTender', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createTender", method = RequestMethod.POST)
 	public String createTender(@RequestParam(name="jobNo") String jobNo, 
 								@RequestParam(name="subcontractNo") String subcontractNo,
@@ -104,7 +111,7 @@ public class TenderController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','updateRecommendedTender', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateRecommendedTender", method = RequestMethod.POST)
 	public String updateRecommendedTender(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
@@ -114,7 +121,7 @@ public class TenderController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','updateTenderDetails', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateTenderDetails", method = RequestMethod.POST)
 	public String updateTenderDetails(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
@@ -130,7 +137,7 @@ public class TenderController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','deleteTender', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteTender", method = RequestMethod.POST)
 	public String deleteTender(@RequestParam(name="jobNo") String jobNo, 
 										@RequestParam(name="subcontractNo") String subcontractNo,
@@ -140,6 +147,25 @@ public class TenderController {
 		return result;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','getTenderVarianceList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getTenderVarianceList", method = RequestMethod.GET)
+	public List<TenderVariance> getTenderVarianceList(@RequestParam(name="jobNo") String jobNo, 
+														@RequestParam(name="subcontractNo") String subcontractNo,
+														@RequestParam(name="subcontractorNo") String subcontractorNo){
+		List<TenderVariance> tenderVarianceList = null;
+		tenderVarianceList = tenderVarianceService.obtainTenderVarianceList(jobNo, subcontractNo, subcontractorNo);
+		return tenderVarianceList;
+	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','createTenderVariance', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "createTenderVariance", method = RequestMethod.POST)
+	public String createTenderVariance(@RequestParam(name="jobNo") String jobNo, 
+									@RequestParam(name="subcontractNo") String subcontractNo,
+									@RequestParam(name="subcontractorNo") String subcontractorNo,
+									@Valid @RequestBody List<TenderVariance> tenderVarianceList) throws Exception{
+		String result = "";
+		result = tenderVarianceService.createTenderVariance(jobNo, subcontractNo, subcontractorNo, tenderVarianceList);
+		return result;
+	}
 }
 

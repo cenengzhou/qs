@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jobcostService',
-                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jobcostService) {
+mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jdeService',
+                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jdeService) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
@@ -38,7 +38,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService',
 		$scope.searchJobNo = $scope.jobNo;
 		$scope.searchSubcontractNo = $scope.subcontractNo;
 		$scope.searchInvoiceNo = $scope.jobNo + '/' + $scope.subcontractNo + '/' + paymentNo.substring(paymentNo.length - 4);
-		jobcostService.obtainAPRecordList(
+		jdeService.obtainAPRecordList(
 				$scope.searchJobNo, 
 				$scope.searchInvoiceNo, 
 				$scope.searchSupplierNo, 

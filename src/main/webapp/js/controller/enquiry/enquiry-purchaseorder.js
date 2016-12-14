@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jobcostService', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope, $http, modalService, uiGridConstants, GlobalParameter, jobcostService, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService', 'uiGridConstants', 'GlobalParameter', 'jdeService', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, modalService, uiGridConstants, GlobalParameter, jdeService, GlobalParameter, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
@@ -61,7 +61,7 @@ mainApp.controller('EnquiryPurchaseOrderCtrl', ['$scope', '$http', 'modalService
 		if(!$scope.searchOrderNo && !$scope.searchOrderType && !$scope.searchSupplierNo) {
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please search with at least one of the following searching criteria: Supplier Number, Order No or Order Type' ); 
 		} else {
-		jobcostService.getPORecordList($scope.jobNo, $scope.searchOrderNo, $scope.searchOrderType, $scope.searchSupplierNo)
+			jdeService.getPORecordList($scope.jobNo, $scope.searchOrderNo, $scope.searchOrderType, $scope.searchSupplierNo)
 	    .then(function(data) {
 			if(angular.isArray(data)){
 				$scope.gridOptions.data = data;

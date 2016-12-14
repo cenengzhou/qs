@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$http', 'modalService', 'jobcostService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
-                                  function($scope , $http, modalService, jobcostService, uiGridConstants, GlobalHelper, GlobalParameter) {
+mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$http', 'modalService', 'jdeService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+                                  function($scope , $http, modalService, jdeService, uiGridConstants, GlobalHelper, GlobalParameter) {
 	
 	
 	$scope.searchJobNo = $scope.jobNo;
@@ -101,7 +101,7 @@ mainApp.controller('EnquiryCustomerLedgerCtrl', ['$scope' , '$http', 'modalServi
 	}
 	
 	$scope.loadGridData = function(){
-		jobcostService.getARRecordList($scope.searchJobNo, $scope.searchReference, $scope.searchCustomerNo, $scope.searchDocumentNo, $scope.searchDocumentType)
+		jdeService.getARRecordList($scope.searchJobNo, $scope.searchReference, $scope.searchCustomerNo, $scope.searchDocumentNo, $scope.searchDocumentType)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.gridOptions.data = data;

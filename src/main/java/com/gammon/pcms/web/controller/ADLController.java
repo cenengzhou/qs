@@ -31,7 +31,6 @@ import com.gammon.pcms.service.ADLService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/adl/",
 				produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class ADLController {
@@ -56,8 +55,8 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 6, 2016 1:49:37 PM
 	 */
-	@RequestMapping(value = "getMonthlyJobCostList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getMonthlyJobCostList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getMonthlyJobCostList", method = RequestMethod.GET)
 	public List<?> getMonthlyJobCostList(
 											@RequestParam(required = true) String noJob,
 											@RequestParam(required = false) String noSubcontract,
@@ -74,8 +73,8 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getMonthlyJobCostListByPeroidRange",
-			method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getMonthlyJobCostListByPeroidRange', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getMonthlyJobCostListByPeroidRange", method = RequestMethod.GET)
 	public List<?> getMonthlyJobCostListByPeroidRange(
 										@RequestParam(required = true) String noJob,
 										@RequestParam(required = false) String noSubcontract,
@@ -88,13 +87,13 @@ public class ADLController {
 										@RequestParam(	required = false,
 										defaultValue = "0") BigDecimal toMonth
 										) {
-	try {
-		return adlService.getMonthlyJobCostListByPeriodRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth);
-	} catch (Exception e) {
-		e.printStackTrace();
-		GlobalExceptionHandler.checkAccessDeniedException(e);
-		return new ArrayList<>();
-	}
+		try {
+			return adlService.getMonthlyJobCostListByPeriodRange(noJob, noSubcontract, fromYear, fromMonth, toYear, toMonth);
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+			return new ArrayList<>();
+		}
 	}
 		
 	/**
@@ -111,8 +110,8 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 6, 2016 1:53:23 PM
 	 */
-	@RequestMapping(value = "getAAJILedgerList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAAJILedgerList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAAJILedgerList", method = RequestMethod.GET)
 	public List<?> getAAJILedgerList(	@RequestParam(required = true) String noJob,
 										@RequestParam(required = false) String noSubcontract,
 										@RequestParam(	required = false,
@@ -144,8 +143,8 @@ public class ADLController {
 	 * @author tikywong
 	 * @since Jul 11, 2016 9:26:48 AM
 	 */
-	@RequestMapping(value = "getJobDashboardData",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getJobDashboardData', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getJobDashboardData", method = RequestMethod.GET)
 	public List<BigDecimal> getJobDashboardData(	@RequestParam(required = true) String noJob,
 												@RequestParam(	required = true) String type,
 												@RequestParam(	required = false,
@@ -162,8 +161,8 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getAccountBalanceList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAccountBalanceList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountBalanceList", method = RequestMethod.GET)
 	public List<?> getAccountBalanceList(	@RequestParam(required = true) String noJob,
 											@RequestParam(	required = false,
 															defaultValue = "0") BigDecimal year,
@@ -182,8 +181,8 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getAccountLedgerList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAccountLedgerList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountLedgerList", method = RequestMethod.GET)
 	public List<AccountLedger> getAccountLedgerList(@RequestParam String noJob,
 													@RequestParam String typeLedger,
 													@RequestParam(defaultValue = "0") BigDecimal yearStart,
@@ -203,6 +202,7 @@ public class ADLController {
 		}
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAccountLedgerListByGlDate', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAccountLedgerListByGlDate", method = RequestMethod.POST)
 	public List<AccountLedger> getAccountLedgerListByGlDate(@RequestBody Map<String, Object> searchObjectMap){
 		String noJob = objectMapper.convertValue(searchObjectMap.get("noJob"), String.class);
@@ -216,8 +216,8 @@ public class ADLController {
 		return adlService.getAccountLedgerListByGlDate(fromDate, thruDate, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 
-	@RequestMapping(value = "getAccountMasterList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAccountMasterList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountMasterList", method = RequestMethod.GET)
 	public List<AccountMaster> getAccountMasterList(@RequestParam(required = true) String noJob) {
 		try {
 			return adlService.getAccountMasterList(noJob);
@@ -228,8 +228,8 @@ public class ADLController {
 		}
 	}
 
-	@RequestMapping(value = "getAccountMaster",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAccountMaster', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountMaster", method = RequestMethod.GET)
 	public AccountMaster getAccountMaster(	@RequestParam(required = true) String noJob,
 											@RequestParam(required = true) String codeObject,
 											@RequestParam(	required = false,
@@ -244,9 +244,9 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBookListOfSubcontractorAndClient', @securityConfig.getRolePcmsEnq())")
 	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
-	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient",
-					method = RequestMethod.GET)
+	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient", method = RequestMethod.GET)
 	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {
 		try {
 			return adlService.getAddressBookListOfSubcontractorAndClient();
@@ -258,8 +258,8 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
-	@RequestMapping(value = "getAddressBook",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBook', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAddressBook", method = RequestMethod.GET)
 	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal addressBookNo) {
 		try {
 			return adlService.getAddressBook(addressBookNo);
@@ -271,8 +271,8 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
-	@RequestMapping(value = "getBusinessUnit",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getBusinessUnit', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getBusinessUnit", method = RequestMethod.GET)
 	public BusinessUnit getBusinessUnitList(@RequestParam(required = true) String jobNo) {
 //		try {
 			return adlService.getBusinessUnit(jobNo);
@@ -282,8 +282,8 @@ public class ADLController {
 //		return null;
 	}
 	
-	@RequestMapping(value = "getApprovalHeaderList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getApprovalHeaderList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getApprovalHeaderList", method = RequestMethod.GET)
 	public List<ApprovalHeader> getApprovalHeaderList(	@RequestParam(	required = true,
 																		defaultValue = "APPROVED") String statusApproval,
 														@RequestParam(required = true) String noJob,
@@ -307,8 +307,8 @@ public class ADLController {
 	}
 
 	// TODO: Pending for CNC team to add unique id (2016-07-15)
-	@RequestMapping(value = "getApprovalDetailList",
-					method = RequestMethod.GET)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getApprovalDetailList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getApprovalDetailList", method = RequestMethod.GET)
 	public List<ApprovalDetail> getApprovalDetailList(	@RequestParam(	required = false,
 																		defaultValue = "APPROVED") String statusApproval,
 														@RequestParam(required = false) String noJob,
@@ -331,6 +331,7 @@ public class ADLController {
 		}
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','obtainCompanyCodeAndName', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainCompanyCodeAndName", method = RequestMethod.POST)
 	public List<Map<String, String>> obtainCompanyCodeAndName() throws DatabaseOperationException{
 		return adlService.obtainCompanyCodeAndName();

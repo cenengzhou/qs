@@ -75,7 +75,6 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			criteria.createAlias("subcontract.jobInfo","jobInfo" );
 			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
 			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-//			criteria.add(Restrictions.eq("directPayment", "N"));
 			return (PaymentCert) criteria.uniqueResult();
 		}catch (HibernateException he){
 			logger.info("Fail: obtainPaymentCertificate(" + jobNumber + ", " + packageNo + ", " + paymentCertNo + ")");

@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetFunctionSecurity {
-	public enum AccessRight {ENABLE, READ, WRITE}
+	public enum AccessRight {ENABLE, DISABLE, READ, WRITE}
 	public static class Request implements Serializable {
 
 		private static final long serialVersionUID = 6959791552653844015L;

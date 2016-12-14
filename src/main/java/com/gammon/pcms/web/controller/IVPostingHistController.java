@@ -17,7 +17,6 @@ import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.service.IVPostingHistService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/ivpostinghist/")
 public class IVPostingHistController {
 
@@ -26,6 +25,7 @@ public class IVPostingHistController {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('IVPostingHistController','obtainIVPostingHistoryList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainIVPostingHistoryList", method = RequestMethod.POST)
 	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestBody Map<String, Object> searchObject) throws Exception{
 		String jobNumber = objectMapper.convertValue(searchObject.get("jobNumber"), String.class);

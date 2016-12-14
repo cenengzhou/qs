@@ -28,7 +28,6 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.service.AddendumService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/addendum/"/*,
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
@@ -38,7 +37,7 @@ public class AddendumController {
 	@Autowired
 	private AddendumService addendumService;
 
-
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getLatestAddendum', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getLatestAddendum", method = RequestMethod.GET)
 	public Addendum getLatestAddendum(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		Addendum addendum = null;
@@ -46,6 +45,7 @@ public class AddendumController {
 		return addendum;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAddendum', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAddendum", method = RequestMethod.GET)
 	public Addendum getAddendum(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo, @RequestParam(required = true) String addendumNo){
 		Addendum addendum = null;
@@ -53,6 +53,7 @@ public class AddendumController {
 		return addendum;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAddendumList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAddendumList", method = RequestMethod.GET)
 	public List<Addendum> getAddendumList(@RequestParam(required = true) String jobNo, @RequestParam(required = true) String subcontractNo){
 		List<Addendum> addendumList = null;
@@ -60,6 +61,7 @@ public class AddendumController {
 		return addendumList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getTotalApprovedAddendumAmount', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getTotalApprovedAddendumAmount", method = RequestMethod.GET)
 	public Double getTotalApprovedAddendumAmount(@RequestParam(required = true) String jobNo, 
 																	@RequestParam(required = true) String subcontractNo){
@@ -68,6 +70,7 @@ public class AddendumController {
 		return totalApprovedAddendumAmount;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAddendumDetailHeader', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAddendumDetailHeader", method = RequestMethod.GET)
 	public AddendumDetail getAddendumDetailHeader(BigDecimal addendumDetailHeaderRef){
 		AddendumDetail addendumDetail = null;
@@ -75,6 +78,7 @@ public class AddendumController {
 		return addendumDetail;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAddendumDetailsByHeaderRef', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAddendumDetailsByHeaderRef", method = RequestMethod.GET)
 	public List<AddendumDetail> getAddendumDetailsByHeaderRef(BigDecimal addendumDetailHeaderRef){
 		List<AddendumDetail> addendumDetailList = null;
@@ -82,6 +86,7 @@ public class AddendumController {
 		return addendumDetailList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAddendumDetailsWithoutHeaderRef', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAddendumDetailsWithoutHeaderRef", method = RequestMethod.GET)
 	public List<AddendumDetail> getAddendumDetailsWithoutHeaderRef(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo,
@@ -91,6 +96,7 @@ public class AddendumController {
 		return addendumDetailList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getAllAddendumDetails', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAllAddendumDetails", method = RequestMethod.GET)
 	public List<AddendumDetail> getAllAddendumDetails(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo, 
@@ -100,6 +106,7 @@ public class AddendumController {
 		return addendumDetailList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','getDefaultValuesForAddendumDetails', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getDefaultValuesForAddendumDetails", method = RequestMethod.GET)
 	public AddendumDetail getDefaultValuesForAddendumDetails(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo, 
@@ -112,7 +119,7 @@ public class AddendumController {
 		return addendumDetail;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','createAddendum', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createAddendum", method = RequestMethod.POST)
 	public String createAddendum(@RequestBody Addendum addendum){
 		String result = "";
@@ -127,7 +134,7 @@ public class AddendumController {
 		return result;
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendum', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateAddendum", method = RequestMethod.POST)
 	public String updateAddendum(@RequestBody Addendum addendum){
 		String result = "";
@@ -142,7 +149,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetailHeader', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateAddendumDetailHeader", method = RequestMethod.POST)
 	public String updateAddendumDetailHeader(@RequestParam(required = true) String jobNo, 
 												@RequestParam(required = true) String subcontractNo,
@@ -162,7 +169,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','deleteAddendumDetailHeader', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteAddendumDetailHeader", method = RequestMethod.POST)
 	public String deleteAddendumDetailHeader(@RequestParam(required = true)BigDecimal addendumDetailHeaderRef){
 		String result = "";
@@ -177,7 +184,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','deleteAddendumDetail', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteAddendumDetail", method = RequestMethod.POST)
 	public String deleteAddendumDetail(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -195,7 +202,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','addAddendumDetail', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumDetail", method = RequestMethod.POST)
 	public String addAddendumDetail(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -213,7 +220,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetail', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateAddendumDetail", method = RequestMethod.POST)
 	public String updateAddendumDetail(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -231,7 +238,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','addAddendumFromResourceSummaries', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumFromResourceSummaries", method = RequestMethod.POST)
 	public String addAddendumFromResourceSummaries(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -250,7 +257,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','deleteAddendumFromSCDetails', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "deleteAddendumFromSCDetails", method = RequestMethod.POST)
 	public String deleteAddendumFromSCDetails(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,
@@ -269,7 +276,7 @@ public class AddendumController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','submitAddendumApproval', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "submitAddendumApproval", method = RequestMethod.POST)
 	public String submitAddendumApproval(@RequestParam(required = true) String jobNo, 
 										@RequestParam(required = true) String subcontractNo,

@@ -86,7 +86,10 @@ public class GSFService {
 
 	public List<GetUserListWithStaffId.Result> getAllApproverList(boolean reload){
 		if(reload || allApproverList == null) {
-			GetUserListWithStaffId.Request userListRequest = new GetUserListWithStaffId.Request(WebServiceConfig.GSF_APPLICATION_CODE, WebServiceConfig.GSF_REVIEWER_FN);
+			GetUserListWithStaffId.Request userListRequest = new GetUserListWithStaffId.Request(
+					WebServiceConfig.GSF_APPLICATION_CODE, 
+					securityConfig.getFnMethodsCtrlMethod("RepackagingController","confirmAndPostRepackaingDetails")
+					);
 	//		if(jobNo != null) userListRequest.setJobNo(jobNo);
 			ResponseEntity<GetUserListWithStaffId.Response> userListResponse = getResponseEntity(
 					webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETUSERLISTWITHSTAFFID, userListRequest, GetUserListWithStaffId.Response.class);
@@ -117,17 +120,33 @@ public class GSFService {
 		return new ArrayList<GetUserListWithStaffId.Result>(approverForJobSet);
 	}
 	
-	public boolean allowFunctionWrite(String fn, String roleName){
-		boolean allowWrite = false;
+	public boolean isFnEnabled(String ctrl, String method, String roleName){
+		boolean fnStatus = false;
+		try{
+			String fn = securityConfig.getFnMethodsCtrlMethod(ctrl, method);
+			fnStatus = obtainFnStatus(fn, roleName);
+			logger.info(fn + " isFnEnabled: " + fnStatus + " ( ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
+		} catch (NullPointerException e){
+			logger.error( ctrl + " - " + method  + " not found in securityConfig.fnMethods");
+			e.printStackTrace();
+		}
+		return fnStatus;
+	}
+	
+	public boolean obtainFnStatus(String fn, String roleName){
+		boolean fnStatus = false;
+		if(fn == null) throw new NullPointerException();
 		GetFunctionSecurity.Request functionSecurityRequest = new GetFunctionSecurity.Request(
 				WebServiceConfig.GSF_APPLICATION_CODE, "gamska\\" + SecurityContextHolder.getContext().getAuthentication().getName(), fn, "ROLE_" + roleName);
 		ResponseEntity<GetFunctionSecurity.Response> functionSecurityResponse = getResponseEntity(
 				webServiceConfig.getWsGsf("URL") + "/" + WebServiceConfig.GSF_GETFUNCTIONSECURITY, functionSecurityRequest, GetFunctionSecurity.Response.class);
 		List<GetFunctionSecurity.Result> functionSecurityList = functionSecurityResponse.getBody().getResultList();
 		if(functionSecurityList!= null){
-			allowWrite = GetFunctionSecurity.AccessRight.WRITE.equals(functionSecurityList.get(0).getAccessRight());
+			fnStatus = GetFunctionSecurity.AccessRight.ENABLE.equals(functionSecurityList.get(0).getAccessRight());
+		} else {
+			logger.error( fn + " not linked for ROLE_" + roleName);
 		}
-		return allowWrite;
+		return fnStatus;
 	}
 	
 	public <Q, S> ResponseEntity<S> getResponseEntity(String path, Q request, Class<S> response) {

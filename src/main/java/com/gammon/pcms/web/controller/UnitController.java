@@ -16,13 +16,13 @@ import com.gammon.qs.service.UnitService;
 import com.gammon.qs.wrapper.UDC;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/unit/")
 public class UnitController {
 
 	@Autowired
 	private UnitService unitService;
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UnitController','getAllWorkScopes', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAllWorkScopes", method = RequestMethod.GET)
 	public List<UDC> getAllWorkScopes() throws DatabaseOperationException{
 		List<UDC> wrapperList = new ArrayList<UDC>();
@@ -30,7 +30,7 @@ public class UnitController {
 		return wrapperList;
 	}
 	
-	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UnitController','getUnitOfMeasurementList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getUnitOfMeasurementList", method = RequestMethod.GET)
 	public List<UnitOfMeasurement> getUnitOfMeasurementList() throws Exception{
 		List<UnitOfMeasurement> unitList = new ArrayList<UnitOfMeasurement>();
@@ -38,11 +38,13 @@ public class UnitController {
 		return unitList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UnitController','getAppraisalPerformanceGroupMap', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAppraisalPerformanceGroupMap", method = RequestMethod.GET)
 	public Map<String, String> getAppraisalPerformanceGroupMap(){
 		return unitService.getAppraisalPerformanceGroupMap();
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UnitController','getSCStatusCodeMap', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getSCStatusCodeMap", method = RequestMethod.GET)
 	public Map<String, String> getSCStatusCodeMap(){
 		return unitService.getSCStatusCodeMap();

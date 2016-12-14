@@ -95,29 +95,30 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     }
 
     function loadContacts() {
-    	var contacts = [];
-    	repackagingService.getReviewerList()
-    	.then(function(data){
-    		contacts = JSON.parse(data)['contactList'];
-    		contacts.forEach(function(contact){
-    			contact.name = contact.username;
-    			contact.email = contact.emailaddress;
-    			contact.image = GlobalParameter.imageServerAddress + contact.staffid + '.jpg'
-    			contact._lowername = contact.name.toLowerCase();
-    		});
-    		self.allContacts = contacts; 
-    	});
-//		Get reveiewer email list from GSF
-//    	repackagingService.getReviewerListFromGSF(self.jobNo)
+//    	var contacts = [];
+//    	repackagingService.getReviewerList()
 //    	.then(function(data){
-//    		data.forEach(function(contact){
-//    			contact.name = contact.UserName;
-//    			contact.email = contact.UserMail;
-//    			contact.image = GlobalParameter.imageServerAddress + contact.StaffID + '.jpg'
+//    		contacts = JSON.parse(data)['contactList'];
+//    		contacts.forEach(function(contact){
+//    			contact.name = contact.username;
+//    			contact.email = contact.emailaddress;
+//    			contact.image = GlobalParameter.imageServerAddress + contact.staffid + '.jpg'
 //    			contact._lowername = contact.name.toLowerCase();
 //    		});
-//    		self.allContacts = data; 
-//    	})
+//    		self.allContacts = contacts; 
+//    	});
+//		Get reveiewer email list from GSF
+    	repackagingService.getReviewerListFromGSF(self.jobNo)
+    	.then(function(data){
+    		if(data.length>0)
+    		data.forEach(function(contact){
+    			contact.name = contact.UserName;
+    			contact.email = contact.UserMail;
+    			contact.image = GlobalParameter.imageServerAddress + contact.StaffID + '.jpg'
+    			contact._lowername = contact.name.toLowerCase();
+    		});
+    		self.allContacts = data; 
+    	})
     }
 	
 	$scope.tinymceOptions = {

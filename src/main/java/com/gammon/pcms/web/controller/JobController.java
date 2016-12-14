@@ -30,7 +30,6 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.JobInfoService;
 
 @RestController
-@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
 @RequestMapping(value = "service/job/")
 public class JobController {
 	
@@ -40,7 +39,7 @@ public class JobController {
 	private ObjectMapper objectMapper;
 	
 	@JsonView(JobInfoView.NameAndDescription.class)
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsQs())")
 //	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
 	@RequestMapping(value = "getJobList", method = RequestMethod.POST)
 	public List<JobInfo> getJobList(@RequestBody boolean isCompletedJob){
@@ -49,6 +48,7 @@ public class JobController {
 		return jobList;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobDetailList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getJobDetailList", method = RequestMethod.POST)
 	public List<JobInfo> getJobDetailList() throws DatabaseOperationException{
 		List<JobInfo> jobList = null;
@@ -56,6 +56,7 @@ public class JobController {
 		return jobList;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getCompanyName', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getCompanyName", method = RequestMethod.GET)
 	public String getCompanyName(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
 		String companyName = "";
@@ -63,6 +64,7 @@ public class JobController {
 		return companyName;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJob', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
 		JobInfo job = null;
@@ -70,6 +72,7 @@ public class JobController {
 		return job;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobDates', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getJobDates", method = RequestMethod.GET)
 	public JobDates getJobDates(@RequestParam(name="jobNo") String jobNo) throws Exception{
 		JobDates jobDates = null;
@@ -77,7 +80,7 @@ public class JobController {
 		return jobDates;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateJobInfo", method = RequestMethod.POST)
 	public String updateJobInfo(@Valid @RequestBody JobInfo job){
 		String result = null;
@@ -91,7 +94,7 @@ public class JobController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobDates', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateJobDates", method = RequestMethod.POST)
 	public String updateJobDates(@Valid @RequestBody JobDates jobDates){
 		String result = null;
@@ -105,7 +108,7 @@ public class JobController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfoAndDates', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateJobInfoAndDates", method = RequestMethod.POST)
 	public String updateJobInfoAndDates(@RequestBody Map<String, Object> jobAndDates){
 		JobInfo job = objectMapper.convertValue(jobAndDates.get("job"), JobInfo.class);
@@ -122,11 +125,13 @@ public class JobController {
 		return result;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','obtainAllJobCompany', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainAllJobCompany", method = RequestMethod.GET)
 	public List<String> obtainAllJobCompany() throws DatabaseOperationException{
 		return jobService.obtainAllJobCompany();
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','obtainAllJobDivision', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainAllJobDivision", method = RequestMethod.GET)
 	public List<String> obtainAllJobDivision() throws DatabaseOperationException{
 		return jobService.obtainAllJobDivision();

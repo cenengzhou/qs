@@ -1,5 +1,5 @@
-mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jobcostService',
-                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jobcostService) {
+mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService',
+                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService) {
 	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
@@ -22,7 +22,7 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 	$scope.showReceiptHistory = function(arDocNo){
 		$scope.searchEntity = {};
 		$scope.searchEntity.company = $scope.job.company;
-		jobcostService.getARRecordList($scope.jobNo, '', '', arDocNo, '')
+		jdeService.getARRecordList($scope.jobNo, '', '', arDocNo, '')
 		.then(function(data){
 			angular.extend($scope.searchEntity, data[0]);
 		})

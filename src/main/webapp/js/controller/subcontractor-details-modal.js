@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'masterListService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
-                                            function ($scope, $uibModalInstance, $interval, $http, $window, modalService, confirmService, modalStatus, modalParam, GlobalMessage, masterListService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil, attachmentService) {
+mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'jdeService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
+                                            function ($scope, $uibModalInstance, $interval, $http, $window, modalService, confirmService, modalStatus, modalParam, GlobalMessage, jdeService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil, attachmentService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.status = modalStatus;
 	$scope.vendorNo = modalParam;
@@ -25,7 +25,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	$scope.workscopeGridOptions = {};
 	
 	$scope.loadVendor = function(){
-		masterListService.searchVendorAddressDetails($scope.vendorNo)
+		jdeService.searchVendorAddressDetails($scope.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.vendor = data;
@@ -208,7 +208,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	}
 	
 	function loadWorkScope(){
-		masterListService.getSubcontractorWorkScope($scope.vendorNo)
+		jdeService.getSubcontractorWorkScope($scope.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.workScopes = data;
