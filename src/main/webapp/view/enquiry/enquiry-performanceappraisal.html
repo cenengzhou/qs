@@ -16,27 +16,27 @@
 					<div class="panel-heading bg-warning">Performance Appraisal</div>
 					<div class="panel-body">
 						<form role="form" name="searchPerformanceAppraisalForm" id="searchAccountLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
-							<div class="form-group">
+							<div>
 								<div class="col-md-2">
-									<label for="searchJobNo">Job No.:</label> 
+									<label for="searchJobNo">Job No.</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
 									<p ng-show="searchPerformanceAppraisalForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
 								</div>
 								
 								<div class="col-md-2">
-									<label for="searchVendorNo">Vendor No:</label> 
+									<label for="searchVendorNo">Vendor No.</label> 
 									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo" ng-model="searchVendorNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchPerformanceAppraisalForm.searchVendorNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 
 								<div class="col-md-2">
-									<label for="searchSubcontractNo">Subcontract No:</label> 
+									<label for="searchSubcontractNo">Subcontract No.</label> 
 									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchPerformanceAppraisalForm.searchSubcontractNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 								
-								<div class="col-md-2">
-									<label for="searchStatus">Performance Group:</label> 									
+								<div class="col-md-3">
+									<label for="searchStatus">Performance Group</label> 									
 									<select class="form-control" id="searchStatus" name="searchGroup" 
 										ng-options="v.id as (v.id + ': ' + v.value) for v in performanceAppraisalGroup | orderBy:'id'" ng-model="searchGroup">
 										<option value="">All</option>
@@ -44,14 +44,15 @@
 								</div>
 
 								<div class="col-md-2">
-									<label for="searchStatus">Status:</label> 									
+									<label for="searchStatus">Status</label> 									
 									<select class="form-control" id="searchStatus" name="searchStatus" 
 										ng-options="v.id as v.value for v in GlobalParameter.PerformanceAppraisalStatus | orderBy: 'id'" ng-model="searchStatus">
 										<option value="">All</option>
 									</select>
 								</div>
 
-								<div class="col-md-2">
+								<!-- <div class="col-md-1"></div> -->
+								<div class="col-md-1">
 										<label>&nbsp;</label>
 										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 									</div>

@@ -13,24 +13,24 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-primary">
-					<div class="panel-heading bg-success">Account Ledger</div>
+					<div class="panel-heading bg-inverse">Account Ledger</div>
 						<div class="panel-body">
 						<form role="form" name="searchAccountLedgerForm" id="searchAccountLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
-							<div class="form-group">
-								<div class="col-md-3">
-									<label for="searchJobNo">Job No.:</label> 
+							<div>
+								<div class="col-md-1">
+									<label for="searchJobNo">Job No.</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
 								</div>
-								<div class="col-md-3">
-									<label for="searchTypeLedger">Ledger Type:</label> 
+								<div class="col-md-1">
+									<label for="searchTypeLedger">Ledger Type</label> 
 									<input type="text" class="form-control" id="searchTypeLedger" name="searchTypeLedger" ng-model="searchTypeLedger" required pattern=".{2,2}" title="Please enter 2 characters">
 								</div>
-								<div class="col-md-3">
-									<label for="searchCodeObject">Object:</label> 
+								<div class="col-md-1">
+									<label for="searchCodeObject">Object</label> 
 									<input type="text" class="form-control" id="searchCodeObject" name="searchCodeObject" ng-model="searchCodeObject">
 								</div>
-								<div class="col-md-3">
-									<label for="searchCodeSubsidiary">Subsidiary:</label> 
+								<div class="col-md-1">
+									<label for="searchCodeSubsidiary">Subsidiary</label> 
 									<input type="text" class="form-control" id="searchCodeSubsidiary" name="searchCodeSubsidiary" ng-model="searchCodeSubsidiary">
 								</div>
 <!-- 								<div class="col-md-3"> -->
@@ -58,25 +58,25 @@
 <!-- 									<p ng-show="searchProvisionHistoryForm.searchMonth.$error.pattern" class="red">Please select Month from the date picker</p> -->
 <!-- 								</div> -->								
 
-								<div class="col-md-3">
-									<label for="searchSubcontractNo">Subcontract No:</label>
+								<div class="col-md-2">
+									<label for="searchSubcontractNo">Subcontract No.</label>
 									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model=searchSubcontractNo>
 								</div>
 
-								<div class="col-md-3">
-									<label for="searchTypeDocument">Document Type:</label>
+								<div class="col-md-2">
+									<label for="searchTypeDocument">Document Type</label>
 									<input type="text" class="form-control" id="searchTypeDocument" name="searchTypeDocument" ng-model=searchTypeDocument>
 								</div>
 
 								<div class="col-md-3">
-									<label for="search.dateRange">Date range:</label>
+									<label for="search.dateRange">Date range</label>
 									<div class="input-group">
 										<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
 										<input class="form-control" type="text" name="search.dateRange" ng-model="searchDate"/>
 									</div>
 								</div>
 
-								<div class="col-md-3">
+								<div class="col-md-1">
 										<label>&nbsp;</label>
 										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 									</div>

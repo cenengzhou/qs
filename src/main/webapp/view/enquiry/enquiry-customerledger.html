@@ -3,7 +3,7 @@
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
 					Enquiry</a></li>
-			<li class="active">Customer Ledger</li>
+			<li class="active">Main Contract Certificate Payment Status (Customer Ledger)</li>
 		</ol>
 	</section>
 	<div class="clearfix"></div>
@@ -13,36 +13,36 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-primary">
-					<div class="panel-heading bg-success">Customer Ledger</div>
+					<div class="panel-heading bg-inverse">Main Contract Certificate Payment Status (Customer Ledger)</div>
 					<div class="panel-body">
 						<form role="form" name="searchCustomerLedgerForm" id="searchCustomerLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
-							<div class="form-group">
+							<div>
 								<div class="col-md-2">
-									<label for="searchJobNo">Job No.:</label> 
+									<label for="searchJobNo">Job No.</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
 									<p ng-show="searchCustomerLedgerForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
 								</div>
 								
 								<div class="col-md-2">
-									<label for="searchReference">Reference:</label> 
+									<label for="searchReference">Reference</label> 
 									<input type="text" class="form-control" id="searchReference" name="searchReference" ng-model="searchReference" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchCustomerLedgerForm.searchReference.$error.pattern" class="red">Please input number only</p>
 								</div>
 
 								<div class="col-md-2">
-									<label for="searchCustomerNo">Customer No:</label> 
+									<label for="searchCustomerNo">Customer No.</label> 
 									<input type="text" class="form-control" id="searchCustomerNo" name="searchCustomerNo" ng-model="searchCustomerNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchCustomerLedgerForm.searchCustomerNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 								
 								<div class="col-md-2">
-									<label for="searchDocumentNo">Document No:</label> 
+									<label for="searchDocumentNo">Document No.</label> 
 									<input type="text" class="form-control" id="searchDocumentNo" name="searchDocumentNo" ng-model="searchDocumentNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchCustomerLedgerForm.searchDocumentNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 								
 								<div class="col-md-2">
-									<label for="searchSubcontractNo">Document Type:</label> 
+									<label for="searchSubcontractNo">Document Type</label> 
 									<input type="text" class="form-control" id="searchDocumentType" name="searchDocumentType" ng-model="searchDocumentType">
 								</div>
 								

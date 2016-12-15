@@ -17,9 +17,9 @@
 					<div class="panel-body">
 						<form role="form" name="searchIVPostingHistForm" id="searchIVPostingHistForm" ng-submit="loadGridData()" class="form-input-flat">
 						
-						<div class="form-group">
+						<div>
 								<div class="col-md-3">
-									<label for="searchJobNo">Job Number:</label> 
+									<label for="searchJobNo">Job No.</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" pattern=".{5,5}" title="Please input 5 characters">
 								</div>
 <!-- 								<div class="col-md-3"> -->
@@ -44,16 +44,17 @@
 <!-- 									</div> -->
 <!-- 								</div> -->
 
-									<div class="col-md-4">
-										<label for="search.dateRange">Date range:</label>
+									<div class="col-md-3">
+										<label for="search.dateRange">Date Range</label>
 										<div class="input-group">
 											<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
 											<input class="form-control" type="text" name="search.dateRange" ng-model="searchDate"/>
 										</div>
 									</div>
 
+								<div class="col-md-5"></div>
 								
-								<div class="col-md-5">
+								<div class="col-md-1">
 									<label>&nbsp;</label>
 									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 								</div>

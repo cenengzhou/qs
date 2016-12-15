@@ -23,6 +23,7 @@ import com.gammon.pcms.model.adl.id.AccountLedgerId;
 public class AccountLedger implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5688170504117669153L;
+	public static final String CODE_OBJECT_COSTCODE_STARTER = "1";
 
 	private String entityDocCompanyKey;
 	private String typeDocument;

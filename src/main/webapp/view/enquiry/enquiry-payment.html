@@ -3,7 +3,7 @@
 		<ol class="breadcrumb pull-right">
 			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
 					Enquiry</a></li>
-			<li class="active">Payment</li>
+			<li class="active">Payment Certificate</li>
 		</ol>
 	</section>
 	<div class="clearfix"></div>
@@ -13,27 +13,27 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-primary">
-					<div class="panel-heading">Payment</div>
+					<div class="panel-heading">Payment Certificate</div>
 					<div class="panel-body">
 						<div class="col-md-12">
 							<form role="form" class="form-input-flat form-horizatial"
 								name="enquiryPaymentForm">
 								<div class="form-group">
-								<div class="col-md-3">
-									<label for="searchJobNo">Job Number:</label> <input type="text"
+								<div class="col-md-2">
+									<label for="searchJobNo">Job No.</label> <input type="text"
 										class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo"
 										pattern=".{5,5}" required title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }">
 										<p ng-show="enquiryPaymentForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
 								</div>					
-									<div class="col-md-3">
-									<label for="searchDueDateType">Due Date:</label>
+									<div class="col-md-2">
+									<label for="searchDueDateType">Due Date Range</label>
 										<select ng-model="searchDueDateType" class="form-control">
 											<option value="onOrBefore">On Or Before</option>
 											<option value="exactDate">Exact Date</option>
 										</select>
 									</div>
-									<div class="col-md-3">
-									<label>&nbsp;</label>
+									<div class="col-md-2">
+									<label>Due Date</label>
 										<div class="input-group block" moment-picker="searchDueDate"
 											format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true">
 											<span class="input-group-addon"> <i
@@ -42,7 +42,8 @@
 												ng-model="searchDueDate">
 										</div>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-5"></div>
+									<div class="col-md-1">
 									<label >&nbsp;</label>
 										<button class="btn btn-block btn-primary" type="submit"
 											ng-click="loadGridData()"><span class="fa fa-search"></span> Search</button>

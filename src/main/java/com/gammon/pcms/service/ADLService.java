@@ -235,6 +235,10 @@ public class ADLService {
 	}
 	
 	public List<AccountLedger> getAccountLedgerListByGlDate(Date fromDate, Date thruDate, String typeLedger, String typeDocument, String noJob, String noSubcontract, String codeObject, String codeSubsidiary) {
+		//filter by cost code only (i.e. object code starts with '1') if no object / subsidiary is passed in
+		if(StringUtils.isEmpty(codeObject) && StringUtils.isEmpty(codeSubsidiary))
+			codeObject = AccountLedger.CODE_OBJECT_COSTCODE_STARTER;
+		
 		return accountLedgerDao.find(fromDate, thruDate, typeLedger, typeDocument, noJob, noSubcontract, codeObject, codeSubsidiary);
 	}
 	/**

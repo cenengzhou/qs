@@ -17,8 +17,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			exporterMenuPdf: false,
 			enableCellSelection: false,
 			columnDefs: [
-			             { field: 'typeDocument', width:'100', displayName: "Document Type", enableCellEdit: false },
-			             { field: 'numberDocument', width:'100', displayName: "Document", enableCellEdit: false },
+			             { field: 'typeDocument', width:'80', displayName: "Doc. Type", enableCellEdit: false },
+			             { field: 'numberDocument', width:'80', displayName: "Doc. No.", enableCellEdit: false },
 			             { field: 'dateGl', width:'100', displayName: "G/L Date", 
 			            	 cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
 			            	 filterCellFiltered:true, 
@@ -39,8 +39,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			             },
 			             { field: 'accountObject', width:'60', displayName: "Object", enableCellEdit: false },
 			             { field: 'accountSubsidiary', width:'80', displayName: "Subsidiary", enableCellEdit: false },
-			             { field: 'explanationAddressBook', width:'100', displayName: "Explanation", enableCellEdit: false },
-			             { field: 'amount', width:'100', displayName: "Amount", cellFilter: 'number:2',
+			             { field: 'explanationAddressBook', width:'200', displayName: "Explanation", enableCellEdit: false },
+			             { field: 'amount', width:'120', displayName: "Amount", cellFilter: 'number:2',
 			            	 filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
@@ -59,13 +59,13 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			            		 return c;
 			            	 }
 			             },
-			             { field: 'accountTypeLedger', width:'100', displayName: "Ledger Type", enableCellEdit: false },
-			             { field: 'statusPost', width:'100', displayName: "Post Status", enableCellEdit: false },
+			             { field: 'accountTypeLedger', width:'90', displayName: "Ledger Type", enableCellEdit: false },
+			             { field: 'statusPost', width:'80', displayName: "Post Status", enableCellEdit: false },
 			             { field: 'accountTypeSubLedger', width:'100', displayName: "SubLedger Type", enableCellEdit: false },
-			             { field: 'accountSubLedger', width:'100', displayName: "Sub Ledger", enableCellEdit: false },
-			             { field: 'entityCompanyKey', width:'100', displayName: "Entity Company Key", enableCellEdit: false },
-			             { field: 'currencyCode', width:'100', displayName: "Currency", enableCellEdit: false },
-			             { field: 'quantity', width:'100', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:3',
+			             { field: 'accountSubLedger', width:'80', displayName: "SubLedger", enableCellEdit: false },
+			             { field: 'entityCompanyKey', width:'80', displayName: "Company", enableCellEdit: false },
+			             { field: 'currencyCode', width:'80', displayName: "Currency", enableCellEdit: false },
+			             { field: 'quantity', width:'80', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:3',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.quantity < 0){
@@ -74,10 +74,10 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			            		 return c;
 			            	 }, 			            	 
 			             },
-			             { field: 'explanationRemark', width:'100', displayName: "Remark", enableCellEdit: false },
-			             { field: 'recordKeyMatchedPoSplit', width:'100', displayName: "PO No.", enableCellEdit: false },
+			             { field: 'explanationRemark', width:'200', displayName: "Remark", enableCellEdit: false },
+			             { field: 'recordKeyMatchedPoSplit', width:'80', displayName: "PO No.", enableCellEdit: false },
 			             { field: 'typeBatch', width:'100', displayName: "Batch Type", enableCellEdit: false },
-			             { field: 'numberBatch', width:'100', displayName: "Batch Number", enableCellEdit: false },
+			             { field: 'numberBatch', width:'100', displayName: "Batch No.", enableCellEdit: false },
 			             { field: 'dateBatch', width:'100', displayName: "Batch Date", cellFilter: 'date:"' + GlobalParameter.DATE_FORMAT +'"', 
 			            	 filterCellFiltered:true,  enableCellEdit: false }
 			             
