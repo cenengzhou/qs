@@ -10,7 +10,19 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	$scope.searchAccountLedger = {};
 	
 	$scope.showJobCostDetails = function(entity){
-		var nextDate = $scope.getNextDate('20' + entity.fiscalYear, entity.accountPeriod - 1, '20' + entity.fiscalYear, entity.accountPeriod - 1);
+		var fromYear, fromMonth, toYear, toMonth;
+		if($scope.showCumulative){
+			fromYear = $scope.fromYear;
+			fromMonth = $scope.fromMonth - 1;
+			toYear = fromYear;
+			toMonth = fromMonth;
+		} else {
+			fromYear = $scope.fromYear;
+			fromMonth = $scope.fromMonth - 1;
+			toYear = $scope.toYear;
+			toMonth = $scope.toMonth - 1;
+		}
+		var nextDate = $scope.getNextDate(fromYear, fromMonth, toYear, toMonth);
 		$scope.searchAccountLedger.jobNo = $scope.searchJobNo;
 		$scope.searchAccountLedger.accountObject = entity.accountObject;
 		$scope.searchAccountLedger.accountSubsidiary = entity.accountSubsidiary;
@@ -22,7 +34,6 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 		$scope.searchAccountLedger.postFlag = "";
 		$scope.searchAccountLedger.fromDate = nextDate.fromDate;
 		$scope.searchAccountLedger.thruDate = nextDate.thruDate;
-		
 		
 		//showAccountLedgerEnquiryDetailPanel(accountCode, ledgerType, subLedger, subLedgerType, fromDate, thruDate, postFlag);
 		modalService.open('1000px', 'view/enquiry/modal/enquiry-jobcostdetails.html', 'EnquiryJobCostDetailsCtrl', 'Success', $scope);
@@ -229,7 +240,9 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	
 	$scope.triggerShowCumulative = function(){
 		// odd - Period (3,5,7), even - Cumulative (4,6,8)
+		$scope.loadGridData();
 		if($scope.showCumulative){
+			$scope.gridOptions.data = $scope.cumulativeData;
 			$scope.gridOptions.columnDefs[3].visible = false;
 	    	$scope.gridOptions.columnDefs[5].visible = false;
 	    	$scope.gridOptions.columnDefs[7].visible = false;
@@ -239,6 +252,7 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	    	$scope.gridOptions.columnDefs[8].visible = true;
 		}
 		else{
+			$scope.gridOptions.data = $scope.movementData;
 			$scope.gridOptions.columnDefs[3].visible = true;
 	    	$scope.gridOptions.columnDefs[5].visible = true;
 	    	$scope.gridOptions.columnDefs[7].visible = true;
@@ -247,29 +261,45 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 	    	$scope.gridOptions.columnDefs[6].visible = false;
 	    	$scope.gridOptions.columnDefs[8].visible = false;
 		}
-		$scope.gridApi.grid.refresh();
 	}
 	
 	$scope.loadGridData = function(){
 		checkFromTo();
-		var fromYear = parseInt($scope.searchFrom.substring(2,4));
-		var fromMonth = parseInt($scope.searchFrom.substring(5,7));
-		var toYear = parseInt($scope.searchTo.substring(2,4));
-		var toMonth = parseInt($scope.searchTo.substring(5,7));
-		adlService.getMonthlyJobCostListByPeroidRange(
-				$scope.searchJobNo, 
-				$scope.searchSubcontractNo, 
-				fromYear, 
-				fromMonth,
-				toYear,
-				toMonth
-		)
-	    .then(function(data) {
-	    	$scope.gridOptions.data = data;
-	    	$scope.triggerShowCumulative();
-		}, function(data){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-		});
+		if($scope.showCumulative){
+			$scope.fromYear = $scope.searchFrom.substring(0,4);
+			$scope.fromMonth = parseInt($scope.searchFrom.substring(5,7));
+			$scope.toYear = $scope.fromYear
+			$scope.toMonth = $scope.fromMonth;
+			
+			adlService.getMonthlyJobCostList(
+					$scope.searchJobNo, 
+					$scope.searchSubcontractNo, 
+					parseInt($scope.fromYear.substring(2,4)), 
+					$scope.fromMonth
+			)
+			.then(function(data){
+				$scope.gridOptions.data = $scope.cumulativeData = data;
+			})
+		} else {
+			$scope.fromYear = $scope.searchFrom.substring(0,4);
+			$scope.fromMonth = parseInt($scope.searchFrom.substring(5,7));
+			$scope.toYear = $scope.searchTo.substring(0,4);
+			$scope.toMonth = parseInt($scope.searchTo.substring(5,7));
+			
+			adlService.getMonthlyJobCostListByPeroidRange(
+					$scope.searchJobNo, 
+					$scope.searchSubcontractNo, 
+					parseInt($scope.fromYear.substring(2,4)), 
+					$scope.fromMonth,
+					parseInt($scope.toYear.substring(2,4)),
+					$scope.toMonth
+			)
+		    .then(function(data) {
+		    	$scope.gridOptions.data = $scope.movementData = data;
+			}, function(data){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
+			});
+		}
 	}
 	
 	function checkFromTo(){
@@ -284,5 +314,5 @@ mainApp.controller('EnquiryJobCostCtrl', ['$scope', '$http', 'modalService', 'bl
 		$scope.gridApi.grid.refresh();
 	};
 	
-	$scope.loadGridData();
+	$scope.triggerShowCumulative();
 }]);

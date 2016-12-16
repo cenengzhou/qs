@@ -1484,6 +1484,7 @@ mainApp.config(['$httpProvider', function($httpProvider){
 					if(status === 401 || status === 405) {
 						$window.location.href = 'login.htm?status=' + status;
 					}else if (status === 403){
+						//redirect to 503 if user contain MAINTENANCE role
 						var maintenance = false;
 						if($rootScope.user){
 							angular.forEach($rootScope.user.UserRoles, function(r){

@@ -64,6 +64,8 @@ public class GSFService {
 			user = roleResponse.getBody().getUser();
 		} catch (RestClientException | HttpMessageNotReadableException e) {
 			e.printStackTrace();
+			// cannot get role from GSF so the user will have no ROLE at all
+			// "MAINTENANCE" role only assign to user when GSF down, UI will redirect to 503 when have MAINTENANCE role
 			user.getUserRoleList().add(new User.Role(securityConfig.getPcmsRole("MAINTENANCE"), "ROLE_" + securityConfig.getPcmsRole("MAINTENANCE")));
 		}
 		user.setUsername(login[0]);

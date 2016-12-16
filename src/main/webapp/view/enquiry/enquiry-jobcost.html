@@ -30,7 +30,8 @@
 										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
 								</div>
 								<div class="col-md-2">
-									<label for="searchFrom">From:</label>
+									<label for="searchFrom" ng-if="!showCumulative">From:{{searchFrom}}</label>
+									<label for="searchFrom" ng-if="showCumulative">Period:</label>
 									<div class="input-group" moment-picker="searchFrom"
 										format="YYYY-MM" start-view="year" today="true">
 										<span class="input-group-addon"> <i
@@ -41,8 +42,8 @@
 									</div>
 									<p ng-show="searchJobCostForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
 								</div>
-								<div class="col-md-2">
-									<label for="searchTo">To</label>
+								<div class="col-md-2" ng-show="!showCumulative">
+									<label for="searchTo">To:</label>
 									<div class="input-group" moment-picker="searchTo"
 										format="YYYY-MM" start-view="year" today="true">
 										<span class="input-group-addon"> <i
@@ -62,7 +63,7 @@
 										ng-change="triggerShowCumulative()">
 								</div>
 
-								<div class="col-md-2">
+								<div ng-class="{'col-md-2':!showCumulative, 'col-md-4':showCumulative}">
 									<label>&nbsp;</label>
 									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 								</div>

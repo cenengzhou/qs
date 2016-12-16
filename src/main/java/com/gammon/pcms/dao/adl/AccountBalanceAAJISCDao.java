@@ -9,7 +9,9 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -89,13 +91,29 @@ public class AccountBalanceAAJISCDao extends BaseAdlHibernateDao<AccountBalanceA
 				criteria.add(Restrictions.or(firstYear, middlePeriod, lastYear));
 			}
 		}
+		
+		criteria.setProjection(Projections.projectionList()
+                .add(Projections.groupProperty("accountObject"), "accountObject")
+                .add(Projections.groupProperty("accountSubsidiary"), "accountSubsidiary")
+                .add(Projections.sum("aaAmountPeriod"), "aaAmountPeriod")
+                .add(Projections.sum("jiAmountPeriod"), "jiAmountPeriod")
+                .add(Projections.sum("aaAmountAccum"), "aaAmountAccum")
+                .add(Projections.sum("jiAmountAccum"), "jiAmountAccum")
+                .add(Projections.min("accountDescription"), "accountDescription")   
+                .add(Projections.min("fiscalYear"), "fiscalYear")    
+                .add(Projections.min("accountPeriod"), "accountPeriod")    
+        );
+		
 		// Order by
 		criteria.addOrder(Order.asc("fiscalYear"))
 				.addOrder(Order.asc("accountPeriod"))
 				.addOrder(Order.asc("accountObject"))
 				.addOrder(Order.asc("accountSubsidiary"));
 		
-		return new ArrayList<AccountBalanceAAJISC>(criteria.list());
+		criteria.setResultTransformer(new AliasToBeanResultTransformer(AccountBalanceAAJISC.class));
+		List<AccountBalanceAAJISC> resultList = criteria.list();
+		
+		return resultList;
 	}
 
 	@SuppressWarnings("unchecked")
