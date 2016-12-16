@@ -135,9 +135,9 @@ public class GSFService {
 			}
 			if(containRole){
 				fnStatus = obtainFnStatus(fn, roleName);
-				logger.info(fn + " isFnEnabled for " + ": " + fnStatus + " ( ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
+				logger.info(fn + " isFnEnabled" + ": " + fnStatus + " (ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
 			} else {
-				logger.info(fn + " require ROLE_" + roleName + " ( " + ctrl + " - " + method + ")");
+				logger.info(fn + " require ROLE_" + roleName + " (" + ctrl + " - " + method + ")");
 			}
 		} catch (NullPointerException e){
 			logger.error( ctrl + " - " + method  + " not found in securityConfig.fnMethods");

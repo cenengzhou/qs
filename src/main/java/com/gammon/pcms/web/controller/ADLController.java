@@ -271,7 +271,7 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getBusinessUnit', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getBusinessUnitList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getBusinessUnit", method = RequestMethod.GET)
 	public BusinessUnit getBusinessUnitList(@RequestParam(required = true) String jobNo) {
 //		try {

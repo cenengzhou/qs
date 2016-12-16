@@ -315,7 +315,7 @@ public class AttachmentController {
 		return attachmentService.uploadTextAttachment(nameObject, textKey, sequenceNo, fileName, textAttachment);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','downloadScAttachment', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','generateSCAttachment', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value="downloadScAttachment",method=RequestMethod.GET)
 	public void generateSCAttachment(@RequestParam(required=true,value="nameObject") String nameObject,
 															@RequestParam(required=true,value="textKey") String textKey,
@@ -440,7 +440,7 @@ public class AttachmentController {
 		return attachmentService.obtainAttachmentList(nameObject, textKey);
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','transitUpload', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','uploadTransit', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "transitUpload", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
 								@RequestParam(required = true, value = "type") String type, 

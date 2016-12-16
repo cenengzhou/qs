@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,22 @@ public class LdapService {
 	public String getObjectAttribute(String username, final String attributeName) {
 		List result = new ArrayList();
 		try {
-			System.err.println(ldapTemplate.getContextSource().toString());			
+//			System.err.println(ldapTemplate.getContextSource().toString());			
 			ldapTemplate.setIgnorePartialResultException(true);
 			result = ldapTemplate.search("", "(sAMAccountName="+username+")", new AttributesMapper() {
 				public Object mapFromAttributes(Attributes attrs)  throws NamingException {
-					return (String)attrs.get(attributeName).get();
+					Attribute value = attrs.get(attributeName);
+					if(value!=null) return value.get();
+					return "";
 				}
 			});
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		if (result.size() == 1)
+		if (result.size() == 1){
 			return (String)result.get(0);
-		else
-			return null;
+		}
+		return null;
 	}
 
 }

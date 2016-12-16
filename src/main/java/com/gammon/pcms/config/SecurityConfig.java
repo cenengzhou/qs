@@ -183,7 +183,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/logout.htm*"
 					).permitAll()
 			.antMatchers("/swagger-ui.html*")
-			.hasAnyRole(securityConfig.getRolePcmsImsAdmin())
+			.hasAnyRole(securityConfig.getRolePcmsImsEnq())
 			.antMatchers("/**/*")
 			.hasAnyRole(
 					securityConfig.getPcmsRole("MAINTENANCE"),

@@ -1686,7 +1686,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					.add(Projections.sum("currIVAmount"))
 					.add(Projections.sum("postedIVAmount")));
 			Object[] rowTotals = (Object[])criteria.uniqueResult();
-			Integer rows = rowTotals[0] == null ? Integer.valueOf(0) : (Integer)rowTotals[0];
+			Integer rows = rowTotals[0] == null ? Integer.valueOf(0) : ((Long)rowTotals[0]).intValue();
 			Double ivCumTotal = rowTotals[1] == null ? Double.valueOf(0) : (Double)rowTotals[1];
 			Double ivPostedTotal = rowTotals[2] == null ? Double.valueOf(0) : (Double)rowTotals[2];
 			
@@ -1700,10 +1700,10 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				return paginationWrapper;
 			}*/
 			
-			String hql = "from ResourceSummary where job = :job and systemStatus = 'ACTIVE'"; 
+			String hql = "from ResourceSummary where job_info_id = :job and systemStatus = 'ACTIVE'"; 
 			hql += " order by substr(objectCode, 1, 2) asc, packageNo asc, objectCode asc, subsidiaryCode asc, resourceDescription asc, unit asc, rate asc";
 			Query query = getSession().createQuery(hql);
-			query.setEntity("jobInfo", job);
+			query.setEntity("job", job);
 			paginationWrapper.setCurrentPageContentList(query.list());
 			return paginationWrapper;
 		}
