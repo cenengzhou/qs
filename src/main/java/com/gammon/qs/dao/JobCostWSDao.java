@@ -165,7 +165,7 @@ public class JobCostWSDao {
 		if(subledgerType!=null && subledgerType.trim().length()>0)
 			requestObj.setSubledgerType(subledgerType);
 		
-		logger.info("---Searching Criteria---"
+		logger.info("Searching Criteria: "
 		+ " jobNumber:"+requestObj.getCostCenter()
 		+ " invoiceNumber:"+requestObj.getVendorInvoiceNumber()
 		+ " supplierNumber:"+requestObj.getAddressNumber()
@@ -416,10 +416,10 @@ public class JobCostWSDao {
 		requestObj.setSupplierNumber(supplierNumber);
 
 		logger.info("Calling WS(paymentHistoriesEnquiryWSTemplate): Request Object -" +
-					"CompanyName: " + requestObj.getCompany() +
-					"DocumentNumber: " + requestObj.getDocumentNumber() +
-					"DocumentType: " + requestObj.getDocumentType() +
-					"SupplierNumber: " + requestObj.getSupplierNumber());
+					" CompanyName: " + requestObj.getCompany() +
+					" DocumentNumber: " + requestObj.getDocumentNumber() +
+					" DocumentType: " + requestObj.getDocumentType() +
+					" SupplierNumber: " + requestObj.getSupplierNumber());
 		responseObj = (GetPaymentHistoriesResponseObjList) paymentHistoriesEnquiryWSTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
 
 		if (responseObj.getE1MessageList() != null && responseObj.getE1MessageList().size() > 0) {

@@ -123,14 +123,6 @@ public class MasterListService{
 		return resultList;
 	}
 	
-	public List<MasterListVendor> obtainVendorListWithUser(String searchStr, String username) throws Exception{
-		return trimVendorListAccessibleByUser(searchVendorList(searchStr), username);
-	}
-	
-	public List<MasterListVendor> obtainClientListWithUser(String searchStr, String username) throws Exception{
-		return trimVendorListAccessibleByUser(searchClientList(searchStr), username);
-	}
-	
 	public List<MasterListVendor> obtainVendorListByWorkScopeWithUser(String workScope, String username) throws Exception{
 		return trimVendorListAccessibleByUser(obtainSubcontractorListByWorkScopeCode(workScope), username);
 	}

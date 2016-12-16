@@ -1,6 +1,6 @@
 mainApp.controller('EnquirySupplierLedgerDetailsCtrl', 
-			['$scope', '$q', 'modalStatus', 'modalParam', '$uibModalInstance', 'jdeService', 'jdeService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
-    function($scope, $q, modalStatus, modalParam, $uibModalInstance, jdeService, jdeService, uiGridConstants, GlobalHelper, GlobalParameter){
+			['$scope', '$q', 'modalStatus', 'modalParam', '$uibModalInstance', 'jdeService', 'adlService', 'uiGridConstants', 'GlobalHelper', 'GlobalParameter',
+    function($scope, $q, modalStatus, modalParam, $uibModalInstance, jdeService, adlService, uiGridConstants, GlobalHelper, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
 	$scope.cancel = function () {
@@ -36,18 +36,27 @@ mainApp.controller('EnquirySupplierLedgerDetailsCtrl',
 				$scope.paymentDates = data;
 			};
 		});
+		
+		adlService.getAddressBookListOfSubcontractorAndClient()
+		.then(function(data){
+			if(angular.isArray(data)){
+				$scope.supplierName = data[0].addressBookName;
+			}
+		})
+/*		
 		jdeService.getSubcontractorList($scope.entity.supplierNumber)
 		.then(function(data){
 			if(angular.isArray(data)){
 				$scope.supplierName = data[0].vendorName;
 			}
-		})
+		})*/
 	}
 	function searchPaymentStatus (){
 		var deferral = $q.defer();
 		var paymentNo = '0000' + $scope.parentScope.searchPaymentCert.paymentCertNo;
 		$scope.searchJobNo = $scope.parentScope.jobNo;
 		$scope.searchSubcontractNo = $scope.parentScope.subcontractNo;
+		$scope.searchDocumentType = $scope.parentScope.documentType;
 		$scope.searchInvoiceNo = $scope.parentScope.jobNo + '/' + $scope.parentScope.subcontractNo + '/' + paymentNo.substring(paymentNo.length - 4);
 		jdeService.obtainAPRecordList(
 				$scope.searchJobNo, 

@@ -29,14 +29,16 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService',
 	
 	$scope.showPaymentHistory = function(payment){
 		$scope.searchPaymentCert = payment;
+		$scope.documentType = 'PS';
 		modalService.open('md', 'view/enquiry/modal/enquiry-supplierledgerdetails.html', 'EnquirySupplierLedgerDetailsCtrl', 'Success', $scope);
 	};
 	
-	$scope.searchPaymentStatus = function(){
+	/*$scope.searchPaymentStatus = function(){
 		var deferral = $q.defer();
 		var paymentNo = '0000' + payment.paymentCertNo;
 		$scope.searchJobNo = $scope.jobNo;
 		$scope.searchSubcontractNo = $scope.subcontractNo;
+		$scope.searchDocumentType = 'PS'; console.log('@select');
 		$scope.searchInvoiceNo = $scope.jobNo + '/' + $scope.subcontractNo + '/' + paymentNo.substring(paymentNo.length - 4);
 		jdeService.obtainAPRecordList(
 				$scope.searchJobNo, 
@@ -55,7 +57,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService',
 					}
 				});
 		return deferral.promise;
-	}
+	}*/
 
 	function getSubcontract(){
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
