@@ -2582,9 +2582,10 @@ public class PaymentService{
 							}
 							scDetailDao.update(scDetail);
 
-							Double postedAmount = CalculationUtil.round(paymentDetailInDB.getCumAmount()-paymentDetailInDB.getMovementAmount(), 2);
+
+							paymentDetailInDB.setMovementAmount(CalculationUtil.round(paymentDetail.getCumAmount()-paymentDetailInDB.getPostedAmount(), 2));
 							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
-							paymentDetailInDB.setMovementAmount(CalculationUtil.round(paymentDetail.getCumAmount()-postedAmount, 2));
+							
 							paymentDetailDao.update(paymentDetailInDB);	
 
 

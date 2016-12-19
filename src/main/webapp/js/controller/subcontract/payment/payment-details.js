@@ -401,7 +401,6 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 						$scope.edit = true;
 					$scope.resetData = [];
 					angular.forEach(data, function(value, key){
-						value.postedAmount = value.cumAmount - value.movementAmount;
 						var newObj = angular.copy(value);
 						$scope.resetData.push(newObj);
 						
