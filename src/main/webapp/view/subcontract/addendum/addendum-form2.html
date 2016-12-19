@@ -35,6 +35,8 @@
 				<tr>
 					<th class = "t-header">Item</th>
 					<th class = "t-header">Description</th>
+					<th class = "t-header">Object Code</th>
+					<th class = "t-header">Subsidiary Code</th>
 					<th class = "t-header">Quantity</th>
 					<th class = "t-header">Unit</th>
 					<th class = "t-header">Rate</th>
@@ -46,6 +48,8 @@
 				<tr class="row1" ng-repeat="addendumDetail in addendumDetails">
 					<td class="column1 text-right">{{addendumDetail.bpi}}</td>
 					<td class="column1 text-right">{{addendumDetail.description}}</td>
+					<td class="column1 text-right">{{addendumDetail.codeObject}}</td>
+					<td class="column1 text-right">{{addendumDetail.codeSubsidiary}}</td>
 					<td class="column1 text-right">{{addendumDetail.quantity}}</td>
 					<td class="column1 text-right">{{addendumDetail.unit}}</td>
 					<td class="column1 text-right">{{addendumDetail.rateAddendum}}</td>

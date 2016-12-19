@@ -16,8 +16,15 @@ mainApp.controller('SubcontractCtrl', ['$scope', 'colorCode', 'subcontractServic
 		getSubcontract();
 		var year =  new Date().getFullYear();
 		$scope.selectedYear = "Latest";
-		$scope.yearList = ["Latest", year, year-1];
+		$scope.yearList = ["Latest"];
 
+		for(var i=0; i < 20; i++){
+			var yearToAdd = year - i;		
+			if(i>0 && yearToAdd > 2002){
+				$scope.yearList.push(yearToAdd);
+			}
+		} 
+		
 		getSubcontractDashboardData("Latest");
 		getSubcontractDetailsDashboardData();
 	}

@@ -12,7 +12,14 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
 
 	var year =  new Date().getFullYear();
 	$scope.selectedYear = year;
-	$scope.yearList = [year, year-1, year-2];
+	$scope.yearList = [year];
+	
+	for(var i=0; i < 20; i++){
+		var yearToAdd = year - i;		
+		if(i>0 && yearToAdd > 2002){
+			$scope.yearList.push(yearToAdd);
+		}
+	} 
 	
     loadJobData();
     

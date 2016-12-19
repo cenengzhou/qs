@@ -9,8 +9,15 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 
 	var year =  new Date().getFullYear();
 	$scope.selectedYear = year;
-	$scope.yearList = [year, year-1, year-2];
+	$scope.yearList = [year];
 
+	for(var i=0; i < 20; i++){
+		var yearToAdd = year - i;		
+		if(i>0 && yearToAdd > 2002){
+			$scope.yearList.push(yearToAdd);
+		}
+	} 
+	
 	loadData();
 
 	$scope.gridOptions = {
@@ -93,7 +100,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 					datasetFill : false,
 					animation : true,
 					//scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
-					scaleLabel: " <%= Number(value / 1000000) + ' M'%>"
+					scaleLabel: " <%= Number(value / 1000000).toFixed(2) + ' M'%>"
 				}
 		};
 	}
