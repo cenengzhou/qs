@@ -264,14 +264,14 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 			if(msg.success){
 				if(msg.haveWarning){
 					message = msg.numRecordImported + ' ' + typeStr + ' have been imported with warning. '
-					message += 'Would you like to download the warning report?<br>If yes, please click <a href="gammonqs/transitDownload.smvc?type=SUCCESS_WITH_WARNING" target="_blank">here</a>.';
+					message += 'Would you like to download the warning report?<br>If yes, please click <a href="service/attachment/transitDownload?type=SUCCESS_WITH_WARNING" target="_blank">here</a>.';
 					status = 'Warn'
 				} else {
 					message = msg.numRecordImported + ' ' + typeStr + ' imported successfully.'
 					status = 'Success';
 				}
 			} else {
-				message = 'Failed to import ' + typeStr + '. Would you like to download the error report?<br>If yes, please click <a href="gammonqs/transitDownload.smvc?type=TERROR" target="_blank">here</a>.';
+				message = 'Failed to import ' + typeStr + '. Would you like to download the error report?<br>If yes, please click <a href="service/attachment/transitDownload?type=TERROR" target="_blank">here</a>.';
 				status = "Fail";
 			}
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, message);

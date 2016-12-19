@@ -11,8 +11,9 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 	$scope.isAddTextAttachment = false;
 	
 	$scope.latestVersion = false;
+	$scope.isResourceGenerated = false;
 	getLatestRepackaging();
-
+	
 	$scope.click = function(view) {
 		if(view=="generateResourceSummaries"){
 			generateResourceSummaries();
@@ -60,14 +61,16 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 		repackagingService.getLatestRepackaging($scope.jobNo)
 		.then(
 				function( data ) {
-					if(data != null){
+					if(data != null && data != ''){
 						$scope.repackaging = data;
 						$scope.latestVersion = true;
 						$scope.latestID = $scope.repackaging.id;
 						$cookies.put('repackagingId', $scope.repackaging.id);
 						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.loadAttachment($scope.repackaging.id);
-						
+						$scope.isResourceGenerated = true;
+					} else {
+						$scope.isResourceGenerated = false;
 					}
 				});
 

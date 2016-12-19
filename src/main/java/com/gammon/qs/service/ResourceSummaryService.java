@@ -749,7 +749,7 @@ public class ResourceSummaryService implements Serializable {
 		String error = "";
 		try {
 			Transit transit = transitHBDao.getTransitHeader(jobNo);
-			if(!Transit.TRANSIT_COMPLETED.equals(transit.getStatus())){
+			if(transit != null && !Transit.TRANSIT_COMPLETED.equals(transit.getStatus())){
 				error = "Transit has not been completed yet.";
 				return error;
 			}

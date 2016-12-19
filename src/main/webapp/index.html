@@ -53,11 +53,11 @@ var initApp = angular.module('initApp',  ['blockUI'])
 		});
 	};
 	
-	if (browsers['chrome'].test(userAgent) && !browsers['edge'].test(userAgent)) {
+// 	if (browsers['chrome'].test(userAgent) && !browsers['edge'].test(userAgent)) {
     	window.location.href = 'home.html';
-    } else {
-    	validateSession();
-    }
+//     } else {
+//     	validateSession();
+//     }
 
 }]); 
 

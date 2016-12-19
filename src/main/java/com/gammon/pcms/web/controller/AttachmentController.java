@@ -42,6 +42,7 @@ import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;
+import com.gammon.qs.shared.GlobalParameter;
 import com.google.gson.Gson;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.BaseFont;
@@ -1034,6 +1035,51 @@ public class AttachmentController {
 			}
 			catch (IOException ioe) {
 				ioe.printStackTrace();  
+			}
+		}
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value="transitDownload",method=RequestMethod.GET)
+	public void generateTransitExcel(@RequestParam(required=true,value="type") String type,
+														HttpServletRequest request, HttpServletResponse response ){		
+				
+		logger.info("generateTransitExcel");
+
+		try {
+			
+			ExcelFile excelFile = null;
+			if(GlobalParameter.TRANSIT_CODE_MATCHING.equals(type))
+				excelFile = transitService.downloadCodeMatching();
+			else if(GlobalParameter.TRANSIT_UOM_MATCHING.equals(type))
+				excelFile = transitService.downloadUomMatching();
+			else if(GlobalParameter.TRANSIT_ERROR.equals(type))
+				excelFile = transitService.downloadErrorList();
+			else if(GlobalParameter.TRANSIT_SUCCESS_WITH_WARNING.equals(type))
+				excelFile = transitService.downloadWarningList();
+			
+
+			if (excelFile != null) {
+				byte[] file = excelFile.getBytes();
+				response.setContentType(RESPONSE_CONTENT_TYPE_APPLICATION_OCTENT_STREAM);
+				response.setContentLength(file.length);
+				response.setHeader(RESPONSE_HEADER_NAME_CONTENT_DISPOSITION, "attachment; filename=\"" + excelFile.getFileName() + "\"");
+
+				response.getOutputStream().write(file);
+				response.getOutputStream().flush();
+			} else{
+				showReportError(response);
+			}			
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
+			e.printStackTrace();
+			logger.info("Error: "+e.getLocalizedMessage());
+			showReportError(response);
+		} finally{
+			try {
+				response.getOutputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}

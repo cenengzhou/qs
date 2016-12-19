@@ -160,14 +160,14 @@
 							<textarea class="form-control" rows="3"
 								placeholder="Please enter remarks in here..."
 								ng-model="repackaging.remarks"
-								ng-disabled="repackaging.status == '900'"></textarea>
+								ng-disabled="repackaging.status == '900' || !isResourceGenerated"></textarea>
 						</div>
 					</form>
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer">
 					<button class="btn btn-primary btn-block"
-						ng-disabled="repackaging.status == '900'"
+						ng-disabled="repackaging.status == '900' || !isResourceGenerated"
 						ng-click="updateRemarks()">
 						Update <i class="fa fa-edit"></i>
 					</button>
@@ -222,11 +222,12 @@
 						<div class="col-md-4">
 							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
-								<label class="btn btn-block btn-primary"> <i
+								<label class="btn btn-block btn-primary" ng-disabled="!isResourceGenerated"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
 									Attachment&hellip; <input style="display: none;"
 									class="form-control file-loading" type="file" name="files"
 									id="attachmentFiles" ng-model="attachmentFiles"
+									ng-disabled="!isResourceGenerated"
 									onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
 									multiple />
 								</label>
@@ -234,7 +235,7 @@
 						</div>
 
 						<div class="col-md-4">
-							<label class="btn btn-block btn-success" ng-disabled="!isUpdatable"
+							<label class="btn btn-block btn-success" ng-disabled="!isUpdatable && !isResourceGenerated"
 								ng-click="isUpdatable &&deleteAttachment()">
 								<i class="glyphicon glyphicon-remove-circle"></i> Delete
 								selected Item
@@ -242,6 +243,7 @@
 						</div>
 						<div class="col-md-4">
 							<button class="btn btn-block btn-danger"
+							ng-disabled="!isResourceGenerated"
 								ng-click="addTextAttachment()">
 								<i class="glyphicon glyphicon-plus-sign"></i> Add Text
 								Attachment

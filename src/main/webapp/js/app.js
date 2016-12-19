@@ -1481,10 +1481,12 @@ mainApp.config(['$httpProvider', function($httpProvider){
 				'responseError' : function(rejection) {
 					var status = rejection.status;
 					var deferred = $q.defer();
-					if(status === 401 || status === 405) {
+					switch(status){
+					case 401:
+					case 405:
 						$window.location.href = 'login.htm?status=' + status;
-					}else if (status === 403){
-						//redirect to 503 if user contain MAINTENANCE role
+						break;
+					case 403:
 						var maintenance = false;
 						if($rootScope.user){
 							angular.forEach($rootScope.user.UserRoles, function(r){
@@ -1498,11 +1500,11 @@ mainApp.config(['$httpProvider', function($httpProvider){
 						} else {
 							$window.location.href = '403.html';	
 						}
+						break;
+					case 503:
+						$window.location.href = '503.html';
+						break;
 					}
-					/*else if (status === 404){
-						console.log("Status 404");
-						$window.location.href = 'logout.html?=404';
-					}*/
 					deferred.reject(rejection);
 					return deferred.promise;
 				}
