@@ -2476,7 +2476,7 @@ public class PaymentService{
 	/**
 	 * @author koeyyeung
 	 * created on 12 Jul, 2016
-	 * New flow for Payment: input from payment details instead of scDetails**/
+	 * New workflow for Payment: input from payment details instead of scDetails**/
 	public String updatePaymentDetails(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentType, List<PaymentCertDetail> paymentDetails){
 		logger.info("updatePaymentDetails - jobNo: "+jobNo +" - subcontractNo: "+subcontractNo+" - paymentCertNo: "+paymentCertNo+" - paymentType: "+paymentType);
 		String error = "";
@@ -2582,8 +2582,9 @@ public class PaymentService{
 							}
 							scDetailDao.update(scDetail);
 
+							Double postedAmount = CalculationUtil.round(paymentDetailInDB.getCumAmount()-paymentDetailInDB.getMovementAmount(), 2);
 							paymentDetailInDB.setCumAmount(paymentDetail.getCumAmount());
-							paymentDetailInDB.setMovementAmount(paymentDetail.getMovementAmount());
+							paymentDetailInDB.setMovementAmount(CalculationUtil.round(paymentDetail.getCumAmount()-postedAmount, 2));
 							paymentDetailDao.update(paymentDetailInDB);	
 
 
