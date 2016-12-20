@@ -6,6 +6,7 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	getMonthlyJobCostList:						getMonthlyJobCostList,
     	getAccountLedgerList:						getAccountLedgerList,
     	getAccountLedgerListByGlDate:				getAccountLedgerListByGlDate,
+    	getAddressBook:								getAddressBook,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
     	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
     	getMonthlyJobCostListByPeroidRange:			getMonthlyJobCostListByPeroidRange
@@ -70,6 +71,17 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     		method: 'POST',
     		url: 'service/adl/getAccountLedgerListByGlDate',
     		data: searchObjectMap
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getAddressBook(addressBookNo){
+    	var request = $http({
+    		method: 'GET',
+    		url: 'service/adl/getAddressBook',
+    		params:{
+    			addressBookNo: addressBookNo
+    		}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }

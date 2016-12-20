@@ -37,12 +37,11 @@ mainApp.controller('EnquirySupplierLedgerDetailsCtrl',
 			};
 		});
 		
-		adlService.getAddressBookListOfSubcontractorAndClient()
-		.then(function(data){
-			if(angular.isArray(data)){
-				$scope.supplierName = data[0].addressBookName;
-			}
-		})
+		adlService.getAddressBook($scope.entity.supplierNumber)
+		.then(function(data){				
+				$scope.supplierName = data.addressBookName;
+			
+		});
 /*		
 		jdeService.getSubcontractorList($scope.entity.supplierNumber)
 		.then(function(data){
