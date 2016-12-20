@@ -42,12 +42,15 @@ public class QrtzTriggerService {
 	 */
 	public String updateQrtzTriggerList(List<QrtzTriggers> updatedQrtzList) {
 		logger.info("Updating Quartz...");
-		for (QrtzTriggers trigger : updatedQrtzList)
+		String result = "";
+		for (QrtzTriggers trigger : updatedQrtzList) {
 			try {
 				qrtzTriggerDao.updateSpecificColumnOfTrigger(trigger);
 			} catch (DatabaseOperationException e) {
-				return e.getLocalizedMessage();
+				result += "Cannot update trigger:" + trigger.getTriggerName() + "\n";
+				e.printStackTrace();
 			}
-		return "";
+		}
+		return result;
 	}
 }

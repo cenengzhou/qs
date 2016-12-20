@@ -13,7 +13,7 @@
 	<!-- Main content -->
 	<form name="triggerForm" ng-submit="onSubmit()">
 	<div class="row" vertilize-container resize ng-style="resizeWithOffset(180)">
-		<div class="col-sm-6 col-md-4" ng-repeat="trigger in triggers" on-finish-ng-repeat call-fn="loadDatePickerFn()">
+		<div class="col-sm-6 col-md-4" ng-repeat="(triggerName, trigger) in allTriggers" on-finish-ng-repeat call-fn="loadDatePickerFn()">
 			<div class="box"
 				ng-class="{'box-warning' : isHover($index) , 'box-default' : !isHover($index)}"
 				ng-mouseenter="setHover($index)" ng-mouseleave="setHover(-1)"
@@ -22,53 +22,63 @@
 					<i class="fa fa-2x fa-connectdevelop fa-fw"
 						ng-class="{'fa-pulse':isHover($index)}"></i>
 					<div style="word-break: break-all; overflow: hidden">
-						<h3 class="box-title pull-right">{{trigger.triggerName}}</h3>
+						<h3 class="box-title pull-right">{{trigger.qrtz.triggerName}}</h3>
 					</div>
 				</div>
 				<div class="box-body">
 					<table class="table table-bordered table-condensed">
 						<tr ng-class="{info:isHover($index)}">
 							<th>Job Name:</th>
-							<th><div style="word-break: break-all; overflow: hidden">{{trigger.jobName}}</div></th>
+							<th><div style="word-break: break-all; overflow: hidden">{{trigger.qrtz.jobName}}</div></th>
 						</tr>
 						<tr>
 							<td>Description:</td>
-							<td><div ng-if="trigger.triggerName !='cronTriggerAuditHousekeep'" class="well"
-									style="word-break: break-all; overflow: hidden">{{trigger.description}}</div>
-									<div ng-if="trigger.triggerName =='cronTriggerAuditHousekeep'" class="well">{{trigger.description}}
+							<td><div ng-if="trigger.qrtz.triggerName !='cronTriggerAuditHousekeep'" class="well"
+									style="word-break: break-all; overflow: hidden">{{trigger.qrtz.description}}</div>
+									<div ng-if="trigger.qrtz.triggerName =='cronTriggerAuditHousekeep'" class="well">{{trigger.qrtz.description}}
 									 <label popover-title="Schedule details" uib-popover-html="scheduleTip" popover-placement="bottom-left" type="button" 
 									 popover-trigger="outsideClick" class="btn btn-primary" id="scheduleDetails" name="scheduleDetails">View details</label>
 									</div></td>
 						</tr>
 						<tr>
 							<td>Start Time:</td>
-							<td>{{trigger.startTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+							<td>{{trigger.qrtz.startTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
 						</tr>
 						<tr>
 							<td>Previous Fire Time:</td>
-							<td>{{trigger.prevFireTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+							<td>{{trigger.qrtz.prevFireTime | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
 						</tr>
 						<tr>
 							<td>
-								<label for="{{trigger.triggerName}}_nextFireDatetime">Next Fire Time:</label></td>
+								<label for="{{trigger.qrtz.triggerName}}_nextFireDatetime">Next Fire Time:</label></td>
 							<td>
 								<div class="input-group">
 									<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-									<input class="form-control" type="text" name="{{trigger.triggerName}}.singleDate" ng-model="trigger.nextFireDatetime"/>
+									<input class="form-control" style="color:{{triggerForm[trigger.qrtz.triggerName+'.singleDate'].$dirty?'#610b38':'black'}}" type="text" name="{{trigger.qrtz.triggerName}}.singleDate" ng-model="trigger.qrtz.nextFireDatetime"/>
 								</div>
 								
 							</td>
 						</tr>
 						<tr>
-							<td><label for="{{trigger.triggerName}}_triggerState">Trigger
+							<td>
+								<label for="{{trigger.cron.triggerName}}_cronExpression">Cron Expression:</label></td>
+							<td>
+								<div>
+									<input class="form-control" type="text" style="color:{{triggerForm[trigger.cron.cronExpression].$dirty?'#610b38':'black'}}" name="{{trigger.cron.cronExpression}}" ng-model="trigger.cron.cronExpression"/>
+								</div>
+								
+							</td>
+						</tr>						<tr>
+							<td><label for="{{qrtz.triggerName}}_triggerState">Trigger
 									State:</label></td>
-							<td>{{trigger.triggerState}}
-<!-- 							<select name="{{trigger.triggerName}}_triggerState" id="{{trigger.triggerName}}_triggerState" -->
-<!-- 								class="form-control" ng-model="trigger.triggerState"> -->
-<!-- 									<option>ACQUIRED</option> -->
-<!-- 									<option>PAUSED</option> -->
-<!-- 									<option>WAITING</option> -->
-<!-- 							</select> -->
+							<td>
+							<select name="{{trigger.qrtz.triggerName}}_triggerState" id="{{trigger.qrtz.triggerName}}_triggerState"
+							style="color:{{triggerForm[trigger.qrtz.triggerName + '_triggerState'].$dirty?'#610b38':'black'}}"
+								class="form-control" ng-model="trigger.qrtz.triggerState">
+									<option>ACQUIRED</option>
+									<option>PAUSED</option>
+									<option>WAITING</option>
+							</select>
 							</td>
 						</tr>
 					</table>

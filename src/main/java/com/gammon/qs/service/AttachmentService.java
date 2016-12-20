@@ -111,11 +111,11 @@ public class AttachmentService {
 	public Integer addRepackagingFileAttachment(Long repackagingEntryID, Integer sequenceNo, String fileName,
 			byte[] bytes) throws Exception{
 		logger.info("START - addRepackagingFileAttachment");
+		logger.info("repackagingEntryID:" + repackagingEntryID + " sequenceNo:" + sequenceNo + " fileName:" + fileName);
 		//Timer
 		long start = System.currentTimeMillis();
 		
-		if(repackagingEntryID == null || sequenceNo == null || fileName == null 
-				|| fileName.length() == 0 || bytes == null || bytes.length == 0)
+		if(repackagingEntryID == null || sequenceNo == null || fileName == null || fileName.length() == 0 || bytes == null || bytes.length == 0)
 			return null;
 		logger.info("addFileAttachment: repackagingEntryID = " + repackagingEntryID.toString() + ", sequenceNo = " + sequenceNo.toString() + ", fileName = " + fileName);
 		if(repackagingEntry == null || !repackagingEntry.getId().equals(repackagingEntryID))

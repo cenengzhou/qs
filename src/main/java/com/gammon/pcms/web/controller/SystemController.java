@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.User;
@@ -52,11 +53,13 @@ import com.gammon.pcms.dto.rs.provider.response.SessionDTO;
 import com.gammon.pcms.helper.JsonHelper;
 import com.gammon.pcms.scheduler.service.AuditHousekeepService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.quartz.CronTriggers;
 import com.gammon.qs.domain.quartz.QrtzTriggers;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.service.admin.AdminService;
+import com.gammon.qs.service.admin.CronTriggerService;
 import com.gammon.qs.service.admin.QrtzTriggerService;
 import com.gammon.qs.service.security.SecurityServiceSpringImpl;
 
@@ -96,6 +99,8 @@ public class SystemController {
 	private AdminService adminService;
 	@Autowired
 	private QrtzTriggerService qrtzTriggerService;
+	@Autowired
+	private CronTriggerService cronTriggerService;
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	@Autowired
@@ -233,14 +238,22 @@ public class SystemController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','getAllTriggers', @securityConfig.getRolePcmsImsEnq())")
 	@RequestMapping(value = "getAllTriggers", method = RequestMethod.POST)
-	public List<QrtzTriggers> getAllTriggers(){
-		return qrtzTriggerService.getAllTriggers();
+	public Map<String, Object> getAllTriggers(){
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("quartzTrigger", qrtzTriggerService.getAllTriggers());
+		resultMap.put("cronTrigger", cronTriggerService.getAllTriggers());
+		return resultMap;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','updateQrtzTriggerList', @securityConfig.getRolePcmsImsAdmin())")
 	@RequestMapping(value = "updateQrtzTriggerList", method = RequestMethod.POST)
-	public void updateQrtzTriggerList(@RequestBody List<QrtzTriggers> updatedQrtzList){
-		qrtzTriggerService.updateQrtzTriggerList(updatedQrtzList);
+	public String updateQrtzTriggerList(@RequestBody Map<String, Object> triggers){
+		String result = "";
+		List<QrtzTriggers> quartzTriggerList = objectMapper.convertValue(triggers.get("qrtz"), new TypeReference<List<QrtzTriggers>>(){});
+		List<CronTriggers> cronTriggerList = objectMapper.convertValue(triggers.get("cron"), new TypeReference<List<CronTriggers>>(){});
+		result += qrtzTriggerService.updateQrtzTriggerList(quartzTriggerList);
+		result += cronTriggerService.updateCronTriggerList(cronTriggerList);
+		return result;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','getSessionList', @securityConfig.getRolePcmsEnq())")

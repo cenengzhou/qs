@@ -4,18 +4,39 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 			$scope.GlobalParameter = GlobalParameter;
 			$scope.onSubmit = function(){
 				$scope.datetimeToTimestamp();
-				systemService.updateQrtzTriggerList($scope.triggers)
+				var triggerMap = {}
+				var qrtzList = [];
+				var cronList = [];
+				$scope.triggers.forEach(function(trigger){
+					qrtzList.push($scope.allTriggers[trigger.triggerName]['qrtz']);
+					cronList.push($scope.allTriggers[trigger.triggerName]['cron']);
+				})
+				triggerMap['qrtz'] = qrtzList;
+				triggerMap['cron'] = cronList;
+				systemService.updateQrtzTriggerList(triggerMap)
 				.then(function(data){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Schedule updated.");
-				},function(data){
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data );
+					if(data == ''){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Schedule updated.");
+					} else {
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace(/\n/g, '<br>'));
+					}
 				});
 			};
 			$scope.getAllTriggers = function() {
 				systemService.getAllTriggers().then(function(data) {
 					if (data instanceof Object) {
-						$scope.triggers = data;
+						$scope.allTriggers = {}
+						$scope.triggers = data['quartzTrigger'];
+						$scope.crons = data['cronTrigger'];
 						$scope.addNextFireDatetime();
+						$scope.triggers.forEach(function(trigger){
+							if(!$scope.allTriggers[trigger.triggerName])  $scope.allTriggers[trigger.triggerName] = {};
+							$scope.allTriggers[trigger.triggerName]['qrtz'] = trigger;
+						});
+						$scope.crons.forEach(function(cron){
+							if(!$scope.allTriggers[cron.triggerName])  $scope.allTriggers[cron.triggerName] = {};
+							$scope.allTriggers[cron.triggerName]['cron'] = cron;
+						});
 					};
 				});
 			};
@@ -27,11 +48,12 @@ mainApp.controller('AdminSchedulerMaintenanceCtrl',
 			}
 			
 			$scope.datetimeToTimestamp = function(){
-				angular.forEach($scope.triggers, function(trigger){
-					trigger.nextFireTime = Date.parse(trigger.nextFireDatetime);
-					if(isNaN(trigger.nextFireTime)) trigger.nextFireTime = Date.parse(trigger.nextFireDatetime.replace(' ','T'));
+				angular.forEach($scope.allTriggers, function(trigger){
+					trigger.qrtz.nextFireTime = Date.parse(trigger.qrtz.nextFireDatetime);
+					if(isNaN(trigger.qrtz.nextFireTime)) trigger.qrtz.nextFireTime = Date.parse(trigger.qrtz.nextFireDatetime.replace(' ','T'));
 				});
 			}
+
 			$scope.auditTables = [];
 			$scope.loadAuditTableMap = function(){
 				systemService.getAuditTableMap()

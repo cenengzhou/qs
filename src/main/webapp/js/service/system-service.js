@@ -24,7 +24,12 @@ mainApp.service('systemService', ['$http', '$q', 'GlobalHelper', function($http,
     }
     
     function updateQrtzTriggerList(triggers){
-    	var request = $http.post('service/system/updateQrtzTriggerList', triggers);
+    	var request = $http({
+            method: "post",
+            url: "service/system/updateQrtzTriggerList",
+            dataType: "application/json;charset=UTF-8",
+            data:    	triggers
+    	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 }]);

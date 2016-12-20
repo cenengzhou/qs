@@ -2,6 +2,7 @@ package com.gammon.qs.dao.application;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +13,9 @@ import com.gammon.qs.dao.BaseHibernateDao;
 import com.gammon.qs.domain.quartz.QrtzTriggers;
 @Repository
 public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
+	
+	private Logger logger = Logger.getLogger(getClass());
+	
 	public QrtzTriggerHBDao() {
 		super(QrtzTriggers.class);
 	}
@@ -32,10 +36,18 @@ public class QrtzTriggerHBDao extends BaseHibernateDao<QrtzTriggers> {
 	
 	public void updateSpecificColumnOfTrigger(QrtzTriggers trigger) throws DatabaseOperationException{
 		QrtzTriggers oldTrigger = getTrigger(trigger.getTriggerName(),trigger.getTriggerGroup());
-		oldTrigger.setTriggerState(trigger.getTriggerState());
-		oldTrigger.setNextFireTime(trigger.getNextFireTime());
-		saveOrUpdate(oldTrigger);
-		//criteria.
+		boolean modified = false;
+		if(!oldTrigger.getTriggerState().equals(trigger.getTriggerState())){
+			logger.info("updating " + oldTrigger.getTriggerName() + ": set State from:" +oldTrigger.getTriggerState() + " to:" + trigger.getTriggerState());
+			oldTrigger.setTriggerState(trigger.getTriggerState());
+			modified = true;
+		}
+		if(oldTrigger.getNextFireTime().compareTo(trigger.getNextFireTime()) != 0){
+			logger.info("updating " + oldTrigger.getTriggerName() + ": set NextFireTime from:" +oldTrigger.getNextFireTime() + " to:" + trigger.getNextFireTime());
+			oldTrigger.setNextFireTime(trigger.getNextFireTime());
+			modified = true;
+		}
+		if(modified) saveOrUpdate(oldTrigger);
 	}
 /*	@SuppressWarnings("unchecked")
 	public List<ActiveSession> getByHostName(String hostname) throws DatabaseOperationException {
