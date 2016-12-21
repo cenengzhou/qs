@@ -1,10 +1,12 @@
 package com.gammon.pcms.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
+import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
@@ -23,6 +26,8 @@ import com.gammon.qs.service.JobCostService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountLedgerWrapper;
 
 @RestController
 @RequestMapping(value = "service/jde/")
@@ -150,5 +155,33 @@ public class JdeController {
 	public String postBudget(@RequestParam String jobNumber){
 		return budgetPostingService.postBudget(jobNumber, null);
 	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountBalanceByDateRangeList", method = RequestMethod.GET)
+	public List<AccountBalanceByDateRangeWrapper> getAccountBalanceByDateRangeList(
+			@RequestParam String jobNumber, 
+			@RequestParam String subLedger, 
+			@RequestParam String subLedgerType,
+			@RequestParam String totalFlag, 
+			@RequestParam String postFlag, 
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, 
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date thruDate, 
+			@RequestParam String year, 
+			@RequestParam String period
+		) throws Exception{
+		return jobCostService.getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
+	}
 
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	public List<AccountLedgerWrapper> getAccountLedgerListByAccountCodeList(
+			@RequestParam String accountCode, 
+			@RequestParam String postFlag, 
+			@RequestParam String ledgerType, 
+			@RequestParam @DateTimeFormat(pattern = "YYYY-MM-DD") Date fromDate, 
+			@RequestParam @DateTimeFormat(pattern = "YYYY-MM-DD") Date thruDate, 
+			@RequestParam String subLedgerType, 
+			@RequestParam String subLedger
+		)throws Exception{
+		return jobCostService.getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
+	}
 }

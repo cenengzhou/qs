@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +39,8 @@ import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 import com.gammon.qs.wrapper.PurchaseOrderEnquiryWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountLedgerWrapper;
 @Service
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class JobCostService implements Serializable {
@@ -593,6 +596,51 @@ public class JobCostService implements Serializable {
 		return wrapperList;
 	}
 
+	public List<AccountBalanceByDateRangeWrapper> getAccountBalanceByDateRangeList(String jobNumber, String subLedger, String subLedgerType,
+			String totalFlag, String postFlag, Date fromDate, Date thruDate, String year, String period) throws Exception{
+		return jobCostDao.getAccountBalanceByDateRangeList(getAccountMasterList(jobNumber), jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
+	}
+	
+	public List<AccountLedgerWrapper> getAccountLedgerListByAccountCodeList(String accountCode, String postFlag, String ledgerType, Date fromDate, Date thruDate, String subLedgerType, String subLedger)throws Exception {
+		ArrayList<String> accountCodeAL = new ArrayList<String>(); //[JobNumber,ObjectCode,SubsidiaryCode]	
+		StringTokenizer st = new StringTokenizer(accountCode, ".");
+		
+		while(st.hasMoreTokens())
+			accountCodeAL.add(st.nextToken());
+			
+		//Web Service - get Account IDs of the provided Account Code
+		List<AccountMaster> accountMasterList = new ArrayList<AccountMaster>();
+		if(accountCodeAL.size()==2)
+			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), null);
+		else if (accountCodeAL.size()==3)
+			accountMasterList = getAccountMasterListByAccountCode(accountCodeAL.get(0), accountCodeAL.get(1), accountCodeAL.get(2));
+		
+		List<AccountMaster> filteredAccountMasterList = new ArrayList<AccountMaster>();
+		List<AccountMaster> filteredAccountMasterWithSubsidiaryList = new ArrayList<AccountMaster>();
+				
+		//Filter
+		for(AccountMaster accountMaster: accountMasterList){
+			//No Subsidiary Code
+			if(accountCodeAL.size()==2 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()))
+				filteredAccountMasterList.add(accountMaster);
+			//With Subsidiary Code
+			if(accountCodeAL.size()==3 && accountMaster.getObjectCode().trim().equals(accountCodeAL.get(1).trim()) && accountMaster.getSubsidiaryCode().trim().equals(accountCodeAL.get(2).trim()))
+				filteredAccountMasterWithSubsidiaryList.add(accountMaster);
+		}	
+		List<AccountLedgerWrapper> accountLedgerList = new ArrayList<AccountLedgerWrapper>();
+		//Web Service - get Account Ledgers of the Account IDs
+		if(accountCodeAL.size()==3){
+			for(AccountMaster accountMaster:filteredAccountMasterWithSubsidiaryList)
+				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
+		}
+		else{
+			for(AccountMaster accountMaster:filteredAccountMasterList)
+				accountLedgerList.addAll(jobCostDao.getAccountLedger(accountMaster.getAccountID(), postFlag, ledgerType, thruDate, fromDate, subLedgerType, subLedger));
+		}		
+		logger.info("RETURNED ACCOUNT LEDGER RECORDS(FULL LIST FROM WS)SIZE: " + accountLedgerList.size());
+		
+		return accountLedgerList;
+	}
 	/*************************************** FUNCTIONS FOR PCMS - END *******************************************************/
 
 }

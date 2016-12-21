@@ -1078,6 +1078,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [	
 							'js/controller/enquiry/enquiry-jobinfo.js',
 							'js/controller/enquiry/enquiry-jobcost.js',
+							'js/controller/enquiry/enquiry-jobcost-adl.js',
+							'js/controller/enquiry/enquiry-jobcost-jde.js',
 							'js/controller/enquiry/enquiry-ivhistory.js',
 							
 							'js/controller/enquiry/enquiry-subcontract.js',
@@ -1096,7 +1098,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/enquiry-customerledger.js',
 							'js/controller/enquiry/enquiry-supplierledger.js',
 							'js/controller/enquiry/enquiry-performanceappraisal.js',
-							'js/controller/enquiry/modal/enquiry-jobcostdetails.js',
+							'js/controller/enquiry/modal/enquiry-jobcostdetails-adl.js',
 							'js/controller/enquiry/modal/enquiry-customerledgerdetails.js',
 							'js/controller/enquiry/modal/enquiry-supplierledgerdetails.js',
 
@@ -1143,7 +1145,24 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		},
 		controller: 'EnquiryJobCostCtrl'
 		})
-	.state('enquiry.ivHistory', {
+	.state('enquiry.jobCost.adl', {
+		url: '/jobCost/adl',
+		templateUrl: 'view/enquiry/enquiry-jobcost-adl.html',
+		params: {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryJobCostAdlCtrl'
+		})
+	.state('enquiry.jobCost.jde', {
+		url: '/jobCost/jde',
+		templateUrl: 'view/enquiry/enquiry-jobcost-jde.html',
+		params: {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryJobCostJdeCtrl'
+		})	.state('enquiry.ivHistory', {
 		url: '/ivHistory',
 		templateUrl: 'view/enquiry/enquiry-ivhistory.html',
 		params: {

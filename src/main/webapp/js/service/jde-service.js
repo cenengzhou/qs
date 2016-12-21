@@ -15,7 +15,9 @@ mainApp.service('jdeService', ['$http', '$q', 'GlobalHelper',  function($http, $
 		getSubcontractorWorkScope:		getSubcontractorWorkScope,
 		searchVendorAddressDetails:		searchVendorAddressDetails,
 		
-		postBudget:		postBudget
+		postBudget:		postBudget,
+		getAccountBalanceByDateRangeList:	getAccountBalanceByDateRangeList,
+		getAccountLedgerListByAccountCodeList:	getAccountLedgerListByAccountCodeList,
     });
  
     function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
@@ -183,6 +185,42 @@ mainApp.service('jdeService', ['$http', '$q', 'GlobalHelper',  function($http, $
     		url: 'service/jde/postBudget',
     		params:{
     			jobNumber: jobNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }getAccountBalanceByDateRangeList
+    
+    function getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period){
+    	var request = $http({
+    		method: 'get',
+    		url: 'service/jde/getAccountBalanceByDateRangeList',
+    		params:{
+    			jobNumber: jobNumber,
+    			subLedger: subLedger,
+    			subLedgerType: subLedgerType,
+    			totalFlag: totalFlag,
+    			postFlag: postFlag,
+    			fromDate: fromDate,
+    			thruDate: thruDate,
+    			year: year,
+    			period: period
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger){
+    	var request = $http({
+    		method: 'get',
+    		url: 'service/jde/getAccountLedgerListByAccountCodeList',
+    		params:{
+    			accountCode: accountCode,
+    			postFlag: postFlag,
+    			ledgerType: ledgerType,
+    			fromDate: fromDate,
+    			thruDate: thruDate,
+    			subLedgerType: subLedgerType,
+    			subLedger: subLedger
     		}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

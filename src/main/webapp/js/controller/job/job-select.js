@@ -4,7 +4,7 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode'
 	$scope.loading = true;
 	$scope.selectedDivision = '';
 	$scope.searchquery = '';
-
+	$scope.showCompleted = true;
 	//Clear cookies
 	var cookies = $cookies.getAll();
 	angular.forEach(cookies, function (v, k) {

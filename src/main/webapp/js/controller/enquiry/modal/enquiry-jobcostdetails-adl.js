@@ -1,4 +1,4 @@
-mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'confirmService', 
+mainApp.controller('EnquiryJobCostDetailsAdlCtrl', ['$scope', '$timeout', '$state', 'modalStatus', 'modalParam', '$uibModalInstance', 'adlService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'confirmService', 
                                             function($scope, $timeout, $state, modalStatus, modalParam, $uibModalInstance, adlService, uiGridConstants, GlobalParameter, GlobalHelper, GlobalMessage, confirmService){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
@@ -225,27 +225,27 @@ mainApp.controller('EnquiryJobCostDetailsCtrl', ['$scope', '$timeout', '$state',
 			columnDefs: $scope.columnDefs
 	};
 
-	$timeout(function(){
-		angular.element('input[name$=".dateRange"').daterangepicker({
-		    showDropdowns: true,
-		    startDate: $scope.fromDate,
-		    endDate: $scope.thruDate,
-		    autoApply: true,
-		    viewMode: 'months',
-			locale: {
-			      format: 'YYYY-MM'//GlobalParameter.MOMENT_DATE_FORMAT
-			    },
-
-		}, function(start, end) {
-			$scope.fromDate = start;
-			$scope.thruDate = end;
-	       }
-		)
-	}, 500);
-	
-	$scope.openDropdown = function( $event){
-		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
-	}
+//	$timeout(function(){
+//		angular.element('input[name$=".dateRange"').daterangepicker({
+//		    showDropdowns: true,
+//		    startDate: $scope.fromDate,
+//		    endDate: $scope.thruDate,
+//		    autoApply: true,
+//		    viewMode: 'months',
+//			locale: {
+//			      format: 'YYYY-MM'//GlobalParameter.MOMENT_DATE_FORMAT
+//			    },
+//
+//		}, function(start, end) {
+//			$scope.fromDate = start;
+//			$scope.thruDate = end;
+//	       }
+//		)
+//	}, 500);
+//	
+//	$scope.openDropdown = function( $event){
+//		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
+//	}
 
 	
 }]);

@@ -177,7 +177,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
 	};
-	$scope.loadGridData();
+	
+	if($stateParams.searchObject) $scope.loadGridData();
 	
 	$timeout(function(){
 		angular.element('input[name$=".dateRange"').daterangepicker({

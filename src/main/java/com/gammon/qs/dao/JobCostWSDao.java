@@ -1,6 +1,7 @@
 package com.gammon.qs.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,9 +13,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
+import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListRequestObj;
+import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeListResponseObj;
+import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeRequestObj;
+import com.gammon.jde.webservice.serviceRequester.AccountBalanceByDateRangeManager.getAccountBalanceByDateRangeList.GetAccountBalanceByDateRangeResponseObj;
 import com.gammon.jde.webservice.serviceRequester.AccountIDListByJobManager.getAccountIDListByJob.GetAccountIDListByJobRequestObj;
 import com.gammon.jde.webservice.serviceRequester.AccountIDListByJobManager.getAccountIDListByJob.GetAccountIDListByJobResponseListObj;
 import com.gammon.jde.webservice.serviceRequester.AccountIDListByJobManager.getAccountIDListByJob.GetAccountIDListByJobResponseObj;
+import com.gammon.jde.webservice.serviceRequester.AccountLedgerManager.GetAccountLedger.GetAccountLedgerRequestObj;
+import com.gammon.jde.webservice.serviceRequester.AccountLedgerManager.GetAccountLedger.GetAccountLedgerResponseListObj;
+import com.gammon.jde.webservice.serviceRequester.AccountLedgerManager.GetAccountLedger.GetAccountLedgerResponseObj;
 import com.gammon.jde.webservice.serviceRequester.GetAAIAccountManager.getAAIAccount.GetAAIAccountRequestObj;
 import com.gammon.jde.webservice.serviceRequester.GetAAIAccountManager.getAAIAccount.GetAAIAccountResponseObj;
 import com.gammon.jde.webservice.serviceRequester.GetAPRecordsEnquiryManager.getAPRecords.GetAPRecordRequestObj;
@@ -40,6 +48,8 @@ import com.gammon.qs.domain.PORecord;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
+import com.gammon.qs.wrapper.monthEndResult.AccountLedgerWrapper;
 @Repository
 public class JobCostWSDao {
 
@@ -63,7 +73,6 @@ public class JobCostWSDao {
 	@Autowired
 	@Qualifier("getPORecordsWSTemplate")
 	private WebServiceTemplate getPORecordsEnquiryWSTemplate;
-	@Deprecated
 	@Autowired
 	@Qualifier("getAccountBalanceByDateRangeWSTemplate")
 	private WebServiceTemplate getAccountBalanceByDateRangeWSTemplate;
@@ -429,4 +438,161 @@ public class JobCostWSDao {
 		} else
 			return responseObj.getPaymentHistoriesList();
 	}
+	
+	public List<AccountBalanceByDateRangeWrapper> getAccountBalanceByDateRangeList(
+			List<AccountMaster> accountMasterList, String jobNumber, String subLedger, String subLedgerType,
+			String totalFlag, String postFlag, Date fromDate, Date thruDate, String year, String period) {
+
+		List<AccountBalanceByDateRangeWrapper> returnWrapper = new ArrayList<AccountBalanceByDateRangeWrapper>();
+
+		// Input (Where Fields)
+		GetAccountBalanceByDateRangeListRequestObj requestObjList = new GetAccountBalanceByDateRangeListRequestObj();
+		ArrayList<GetAccountBalanceByDateRangeRequestObj> requestObjStore = new ArrayList<GetAccountBalanceByDateRangeRequestObj>();
+
+		for (AccountMaster accountMaster : accountMasterList) {
+			GetAccountBalanceByDateRangeRequestObj requestObj = new GetAccountBalanceByDateRangeRequestObj();
+
+			// By another WS-AccountIDListByJob
+			if (accountMaster.getAccountID() != null && accountMaster.getAccountID().trim().length() > 0)
+				requestObj.setSzAccountId(accountMaster.getAccountID().trim());
+
+			requestObj.setSzLedgerType("JI");
+			requestObj.setSzLedgerType2("AA");
+
+			if (subLedger != null && subLedger.trim().length() > 0)
+				requestObj.setSzSubledger(subLedger.trim());
+
+			if (subLedgerType != null && subLedgerType.trim().length() > 0)
+				requestObj.setcSubledgerType(subLedgerType.trim());
+
+			if (totalFlag != null && totalFlag.trim().length() > 0)
+				requestObj.setcTotalFlag(totalFlag.trim());
+
+			if (postFlag != null && postFlag.trim().length() > 0)
+				requestObj.setcPostedFlag(postFlag.trim());
+
+			// By another WS-AccountIDListByJob
+			if (accountMaster.getJobInfo().getCompany() != null
+					&& accountMaster.getJobInfo().getCompany().trim().length() > 0)
+				requestObj.setSzCompany(accountMaster.getJobInfo().getCompany().trim());
+
+			if (fromDate != null)
+				requestObj.setJdStartPeriod(fromDate);
+
+			if (thruDate != null)
+				requestObj.setJdEndPeriod(thruDate);
+
+			if (year != null && year.trim().length() > 0)
+				requestObj.setMnYear(Integer.parseInt(year));
+
+			if (period != null && period.trim().length() > 0)
+				requestObj.setMnPeriodNo(Integer.parseInt(period));
+			requestObjStore.add(requestObj);
+		}
+
+		requestObjList.setGetAccountBalanceByDateRangeRequestObjStore(requestObjStore);
+
+		logger.info("REQUEST - " + " jobNumber:" + jobNumber + " subLedger:" + subLedger + " subLedgerType:"
+				+ subLedgerType + " totalFlag:" + totalFlag + " postFlag:" + postFlag + " fromDate:" + fromDate
+				+ " thruDate:" + thruDate + " year:" + year + " period:" + period);
+		GetAccountBalanceByDateRangeListResponseObj responseObjList = (GetAccountBalanceByDateRangeListResponseObj) getAccountBalanceByDateRangeWSTemplate
+				.marshalSendAndReceive(requestObjList,
+						new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
+
+		// Output (Select Fields)
+		ArrayList<GetAccountBalanceByDateRangeResponseObj> responseList = responseObjList
+				.getAccountBalanceByDateRangeResponseObjStore();
+
+		// Nothing to be returned
+		if (responseList == null || responseList.size() == 0)
+			return returnWrapper;
+
+		for (GetAccountBalanceByDateRangeResponseObj currentResponseObj : responseList) {
+
+			AccountBalanceByDateRangeWrapper newWrapper = new AccountBalanceByDateRangeWrapper();
+
+			newWrapper.setAccountID(
+					currentResponseObj.getSzAccountId() != null ? currentResponseObj.getSzAccountId() : "");
+			newWrapper.setLedgerJIType(
+					currentResponseObj.getSzLedgerType() != null ? currentResponseObj.getSzLedgerType() : "");
+			newWrapper.setLedgerAAType(
+					currentResponseObj.getSzLedgerType2() != null ? currentResponseObj.getSzLedgerType2() : "");
+			newWrapper.setAmountJI(
+					currentResponseObj.getMnAmount() != null ? currentResponseObj.getMnAmount() : new Double(0.00));
+			newWrapper.setAmountAA(
+					currentResponseObj.getMnAmount2() != null ? currentResponseObj.getMnAmount2() : new Double(0.00));
+
+			// insert object code, subidiary code and description into data
+			for (AccountMaster accountMaster : accountMasterList) {
+				if (accountMaster.getAccountID().equals(newWrapper.getAccountID())) {
+					newWrapper.setObjectCode(accountMaster.getObjectCode().toString());
+					newWrapper.setSubsidiaryCode(accountMaster.getSubsidiaryCode().toString());
+					newWrapper.setAccountCodeDescription(accountMaster.getDescription());
+					break;
+				}
+			}
+
+			returnWrapper.add(newWrapper);
+		}
+		logger.info("RETURNED ACCOUNT BALANCE RECORDS TOTAL SIZE: " + returnWrapper.size());
+		return returnWrapper;
+	}
+
+	public List<AccountLedgerWrapper> getAccountLedger(String accountId, String postedCode, String ledgerType, Date glDate1, Date glDate2, String subledgerType, String subledger) {
+		List<AccountLedgerWrapper> resultList = new LinkedList<AccountLedgerWrapper>();
+		try{
+
+			GetAccountLedgerRequestObj requestObj  = new GetAccountLedgerRequestObj();
+			requestObj.setAccountId(accountId);
+			requestObj.setPostedCode(postedCode);
+
+			requestObj.setLedgerType(ledgerType);
+
+			requestObj.setGlDate1(glDate1);
+			requestObj.setGlDate2(glDate2);
+			requestObj.setSubledgerType(subledgerType);
+			requestObj.setSubledger(subledger);
+
+			long start = System.currentTimeMillis();
+			GetAccountLedgerResponseListObj responseListObj = (GetAccountLedgerResponseListObj) getAccountLedgerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
+			long end = System.currentTimeMillis();
+
+	        logger.info("Time for call WS(getAccountLedger): "+ ((end-start)/1000.00));
+			
+			for(GetAccountLedgerResponseObj responseObj : responseListObj.getGetAccountLedgerResponseObjList())
+			{
+				AccountLedgerWrapper curAccountLedger = new AccountLedgerWrapper();
+
+				curAccountLedger.setAmount(responseObj.getAmount()!=null && !"".equals(responseObj.getAmount().toString().trim())?responseObj.getAmount():new Double(0));
+				curAccountLedger.setCurrencyCode(responseObj.getCurrencyCode()!=null && !"".equals(responseObj.getCurrencyCode().trim())?responseObj.getCurrencyCode().trim():"");
+				curAccountLedger.setDocumentCompany(responseObj.getDocumentCompany()!=null && !"".equals(responseObj.getDocumentCompany().trim())?responseObj.getDocumentCompany().trim():"");
+				curAccountLedger.setDocumentNumber(responseObj.getDocumentNumber()!=null && !"".equals(responseObj.getDocumentNumber().toString().trim())?responseObj.getDocumentNumber():null);
+				curAccountLedger.setDocumentType(responseObj.getDocumentType()!=null && !"".equals(responseObj.getDocumentType().trim())?responseObj.getDocumentType().trim():"");
+				curAccountLedger.setExplanation(responseObj.getExplanation()!=null && !"".equals(responseObj.getExplanation().trim())?responseObj.getExplanation().trim():"");
+
+				curAccountLedger.setExplanationRemark(responseObj.getExplanationRemark()!=null && !"".equals(responseObj.getExplanationRemark().trim())?responseObj.getExplanationRemark().trim():"");
+				curAccountLedger.setGlDate((responseObj.getGlDate()!=null && !"".equals(responseObj.getGlDate().toString().trim())?responseObj.getGlDate():null));
+				curAccountLedger.setLedgerType(responseObj.getLedgerType()!=null && !"".equals(responseObj.getLedgerType().trim())?responseObj.getLedgerType().trim():"");
+				curAccountLedger.setPurchaseOrder(responseObj.getPurchaseOrder()!=null && !"".equals(responseObj.getPurchaseOrder().trim())?responseObj.getPurchaseOrder().trim():"");
+				curAccountLedger.setSubledger(responseObj.getSubledger()!=null && !"".equals(responseObj.getSubledger().trim())?responseObj.getSubledger().trim():"");
+				curAccountLedger.setSubledgerType(responseObj.getSubledgerType()!=null && !"".equals(responseObj.getSubledgerType().trim())?responseObj.getSubledgerType().trim():"");
+				curAccountLedger.setTransactionOriginator(responseObj.getTransactionOriginator()!=null && !"".equals(responseObj.getTransactionOriginator().trim())?responseObj.getTransactionOriginator().trim():"");
+				curAccountLedger.setUserId(responseObj.getUserId()!=null && !"".equals(responseObj.getUserId().trim())?responseObj.getUserId().trim():"");
+				curAccountLedger.setBatchDate(responseObj.getBatchDate());
+				curAccountLedger.setBatchNumber(responseObj.getBatchNumber());
+				curAccountLedger.setBatchType(responseObj.getBatchType());
+				curAccountLedger.setPostedCode(responseObj.getPostedCode());
+				curAccountLedger.setUnits(responseObj.getUnits());
+				resultList.add(curAccountLedger);
+				
+			}
+
+		}catch (SoapFaultClientException e){
+			logger.log(Level.SEVERE, "DAO Exception:", e);
+		}
+		
+		logger.info("RETURNED ACCOUNTLEDGER RECORDS TOTAL SIZE: " + resultList.size());
+		return resultList;
+	}
+	
 }
