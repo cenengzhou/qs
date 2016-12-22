@@ -173,6 +173,7 @@ public class JdeController {
 	}
 
 	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAccountLedgerListByAccountCodeList", method = RequestMethod.GET)
 	public List<AccountLedgerWrapper> getAccountLedgerListByAccountCodeList(
 			@RequestParam String accountCode, 
 			@RequestParam String postFlag, 
