@@ -28,6 +28,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/job-service.js',
                            'js/service/unit-service.js',
                            'js/service/ap-service.js',
+                           'js/service/userpreference-service.js',
                            'js/system/rootscope-service.js',
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
@@ -36,10 +37,12 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/attachment-service.js',
                            'js/controller/subcontract/attachment/attachment-sc-text.js',
                            'js/controller/subcontractor-details-modal.js',
+                           'js/controller/navigation-menu.js'
                     ] 
                 });
             }]
         },
+		 controller: 'NavigationCtrl'
 	  })
 	 .state('profile',{
 		 url: '/profile',
@@ -97,10 +100,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	}) 
 	  
 	
-	/*.state('announcement', {
-		url: "/announcement",
-		templateUrl: "view/job/job-menu.html"
-	})*/
 	
 	
 	//Job

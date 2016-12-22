@@ -1,6 +1,7 @@
 package com.gammon.pcms.service;
 
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class UserPreferenceService {
 			try{
 				adminService.canAccessJob(defaultJobNo);
 				JobInfo job = jobInfoService.obtainJob(defaultJobNo);
-				preferenceMap.put("DEFAULT_JOB_DESCRIPTION", job.getDescription());
+				preferenceMap.put(UserPreference.DEFAULT_JOB_NO, job.getDescription());
 			} catch(Exception e){
 				e.printStackTrace();
 				User user = securityService.getCurrentUser();
@@ -71,6 +72,47 @@ public class UserPreferenceService {
 			}
 		}
 		return preferenceMap;
+	}
+
+	public String getNotificationReadStatusByCurrentUser() {
+		String username = securityService.getCurrentUser().getUsername();
+		UserPreference preference = userPreferenceHBDao.getUserNotificationReadStatus(username);
+		if(preference!=null)
+			return preference.getValuePreference();
+		else
+			return "";
+	}
+
+	public String insertNotificationReadStatusByCurrentUser() {
+		String error = "";
+		User user = securityService.getCurrentUser();
+		if(user !=null){
+			Map<String, String> preferenceMap = userPreferenceHBDao.obtainUserPreferenceByUsername(user.getUsername());
+			String status = preferenceMap.get(UserPreference.NOTIFICATION_READ_STATUS);
+			
+			if (status == null){
+				UserPreference userPreference = new UserPreference();
+				userPreference.setUsername(user.getUsername());
+				userPreference.setNoStaff(new BigDecimal(user.getStaffId()));
+				userPreference.setKeyPreference(UserPreference.NOTIFICATION_READ_STATUS);
+				userPreference.setValuePreference(UserPreference.NOTIFICATION_READ_STATUS_VALUE.N.toString());
+				userPreferenceHBDao.insert(userPreference);
+			}		
+			
+		}
+		
+		return error;
+	}
+	
+	public String updateNotificationReadStatusByCurrentUser(String status) {
+		String error = "";
+		User user = securityService.getCurrentUser();
+		UserPreference preference = userPreferenceHBDao.getUserNotificationReadStatus(user.getUsername());
+		preference.setValuePreference(status);
+		
+		userPreferenceHBDao.update(preference);
+		
+		return error;
 	}
 	
 }

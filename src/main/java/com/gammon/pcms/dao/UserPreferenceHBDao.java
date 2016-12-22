@@ -69,4 +69,12 @@ public class UserPreferenceHBDao extends BaseHibernateDao<UserPreference> {
 			insert(defaultJobNoPref);
 		}
 	}
+	
+	public UserPreference getUserNotificationReadStatus(String username){
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("username", username));
+		criteria.add(Restrictions.eq("keyPreference", UserPreference.NOTIFICATION_READ_STATUS));
+		criteria.setMaxResults(1);
+		return (UserPreference) criteria.uniqueResult();
+	}
 }

@@ -228,6 +228,7 @@ public class AddendumService{
 
 	public String addAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
 		String error = "";
+		boolean validateToAddCF = true;
 		try {
 			AddendumDetail addendumDetailHeader = addendumDetailHBDao.getAddendumDetailHeader(addendumDetail.getIdHeaderRef());
 			if(addendumDetailHeader!= null && addendumDetailHeader.getId()!=null){
@@ -247,6 +248,7 @@ public class AddendumService{
 				
 				SubcontractDetail scDetail = subcontractDetailHBDao.get(addendumDetail.getIdSubcontractDetail().getId());
 				if(scDetail !=null){
+					validateToAddCF = false;
 					if (Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountPostedCert().doubleValue()) 
 							|| Math.abs(addendumDetail.getAmtAddendum().doubleValue()) < Math.abs(scDetail.getAmountCumulativeWD().doubleValue())){
 						error = "Addendum Amount should not be smaller than posted Cert amount and cumulative workdone amount";
@@ -292,7 +294,7 @@ public class AddendumService{
 				addendumDetail.setDescription(addendumDetail.getDescription().substring(0, 255));
 			}
 
-			error = addVOValidate(addendumDetail);
+			error = addVOValidate(addendumDetail, validateToAddCF);
 
 			if(error == null || error.length()==0){
 				addendumDetailHBDao.insert(addendumDetail);
@@ -310,7 +312,7 @@ public class AddendumService{
 	public String updateAddendumDetail(String noJob, String noSubcontract, Long addendumNo, AddendumDetail addendumDetail) {
 		String error = "";
 		try {
-			error = addVOValidate(addendumDetail);
+			error = addVOValidate(addendumDetail, true);
 
 			if(addendumDetail.getIdSubcontractDetail() != null){
 				SubcontractDetail scDetail = subcontractDetailHBDao.get(addendumDetail.getIdSubcontractDetail().getId());
@@ -418,7 +420,7 @@ public class AddendumService{
 				addendumDetail.setAmtBudget(new BigDecimal(resourceSummary.getAmountBudget()));
 				addendumDetail.setRateBudget(new BigDecimal(resourceSummary.getRate()));
 
-				error = addVOValidate(addendumDetail);
+				error = addVOValidate(addendumDetail, true);
 				if (error!=null)
 					return error;
 				
@@ -628,21 +630,21 @@ public class AddendumService{
 		}
 	}
 	
-	private String addVOValidate(AddendumDetail addendumDetail) throws Exception {
+	private String addVOValidate(AddendumDetail addendumDetail, boolean validateToAddCF) throws Exception {
 		String ableToSubmitAddendum = ableToSubmitAddendum(addendumDetail.getNoJob(), addendumDetail.getNoSubcontract());
 		if (ableToSubmitAddendum !=null){
 			return "Subcontract "+addendumDetail.getNoSubcontract()+" cannot be edited(" +ableToSubmitAddendum +")";
 		}
 
-		if ("CF".equals(addendumDetail.getTypeVo())){
+		if ("CF".equals(addendumDetail.getTypeVo()) && validateToAddCF){
 			List<SubcontractDetail> tmpDetails = subcontractDetailHBDao.getSCDetails(addendumDetail.getNoJob(),
 					addendumDetail.getNoSubcontract(), addendumDetail.getTypeVo());
 			if (tmpDetails!=null && tmpDetails.size()>0)
 				return "SC Line Type "+addendumDetail.getTypeVo()+" exist in the package. Only one line can be added to subcontract in this line type.";
-		}else{
-			if(addendumDetail.getUnit()==null || addendumDetail.getUnit().trim().length()<1)
-				return "Unit must be provided";
 		}
+
+		if(addendumDetail.getUnit()==null || addendumDetail.getUnit().trim().length()<1)
+				return "Unit must be provided";
 		if ("L2".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())||"C2".equals(addendumDetail.getTypeVo())){
 			if (addendumDetail.getNoSubcontractChargedRef()==null||addendumDetail.getNoSubcontractChargedRef().trim().length()<1)
 				return "Corresponsing Subcontract must be provided";

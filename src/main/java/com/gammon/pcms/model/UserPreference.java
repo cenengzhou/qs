@@ -28,6 +28,13 @@ public class UserPreference extends com.gammon.pcms.application.PcmsPersistedAud
 	private static final long serialVersionUID = 7089655179002194991L;
 	
 	public static final String DEFAULT_JOB_NO = "DEFAULT_JOB_NO";
+	public static final String NOTIFICATION_READ_STATUS = "NOTIFICATION_READ_STATUS";
+	
+	public static enum NOTIFICATION_READ_STATUS_VALUE {
+		Y,
+		N
+	}
+	
 	
 	private long id;
 	private BigDecimal noStaff;

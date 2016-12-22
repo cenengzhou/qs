@@ -19,6 +19,43 @@ public class UserPreferenceController {
 	@Autowired
 	private UserPreferenceService userPreferenceService;
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getNotificationReadStatusByCurrentUser", method = RequestMethod.GET)
+	public String getNotificationReadStatusByCurrentUser() throws DatabaseOperationException{
+		String status = null;
+		try{
+			status = userPreferenceService.getNotificationReadStatusByCurrentUser();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "insertNotificationReadStatusByCurrentUser", method = RequestMethod.POST)
+	public String insertNotificationReadStatusByCurrentUser() throws DatabaseOperationException{
+		String msg = null;
+		try{
+			msg = userPreferenceService.insertNotificationReadStatusByCurrentUser();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "updateNotificationReadStatusByCurrentUser", method = RequestMethod.POST)
+	public String updateNotificationReadStatusByCurrentUser(@RequestBody String status) throws DatabaseOperationException{
+		String msg = null;
+		try{
+			msg = userPreferenceService.updateNotificationReadStatusByCurrentUser(status);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','obtainUserPreferenceByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)
 	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{

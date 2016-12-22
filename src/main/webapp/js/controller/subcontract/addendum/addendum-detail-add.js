@@ -58,7 +58,6 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			return;
 		}
 
-		
 		if(modalStatus == 'ADD'){
 			if($scope.addendumDetail.idResourceSummary == null ){//&& idSubcontractDetail ==null
 				//Addendum without budget
@@ -118,7 +117,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 				});
 	}
 	
-	function updateAddendumDetail(addendumDetail){
+	function updateAddendumDetail(addendumDetail){console.log('UPDATe');
 		addendumService.updateAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail)
 		.then(
 				function( data ) {

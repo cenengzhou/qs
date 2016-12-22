@@ -101,9 +101,32 @@
 						</td>
 						<td>
 							<!-- begin navbar-right -->
-<div class="navbar-custom-menu">
+		<div class="navbar-custom-menu">
         <ul class="nav navbar-nav navbar-right">
-          
+          <li class="dropdown">
+                <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle has-notify" data-click="toggle-notify">
+                    <i class="fa fa-bell"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-notification pull-right">
+                    <li class="dropdown-header">Notifications</li>
+                    <li class="notification-item">
+                        <a href="javascript:;" ng-click="openAnnouncement()">
+                            <div class="media bg-lime-light"><i class="fa fa-bullhorn text-white"></i></div>
+                            <div class="message">
+                                <h6 class="title">Year End Procedure</h6>
+                                <div class="time">Please click to view details</div>
+                            </div>
+                            <div class="option" ng-class="{'read': status == 'Y'}"
+                            	ng-attr-title="{{readStatus}}" ng-click="updateNotificationReadStatus()">
+                                <i class="fa fa-circle-o"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="dropdown-footer text-center">
+                        <a href="javascript:;" ng-click="openAnnouncement()">Go to Announcement Board</a>
+                    </li>
+                </ul>
+            </li>
 
           
           
@@ -223,13 +246,13 @@
 		                                    <div class="desc" uib-popover="Step-by-Step video to guide you through the core workflows and comprehensive documentation of QS 2.0" popover-trigger="mouseenter" popover-title="Guidelines">Step-by-Step video to guide you through the core workflows and comprehensive documentation of QS 2.0</div>
 		                                </div>
 		                            </li>
-		                            <li>
+		                            <!-- <li>
 		                                <div class="media bg-lime-light"><i class="fa fa-bullhorn text-white"></i></div>
 		                                <div class="info">
 		                                    <div class="title"><a href="{{properties.ANNOUNCEMENT}}" target="announcement">Announcement</a></div>
 		                                    <div class="desc">System recent news</div>
 		                                </div>
-		                            </li>
+		                            </li> -->
 		                            <li ng-click="openForms()" style="cursor:pointer;" id="FormsDiv">
 		                                <div class="media bg-primary-light"><i class="fa fa-file-text text-white"></i></div>
 		                                <div class="info">
