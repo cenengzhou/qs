@@ -29,6 +29,19 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     self.filterToCc = filterToCc;
     self.sendEmail = sendEmail;
     
+    $scope.clickContact = function(index){
+    	if(self.focusElement.placeholder == 'Cc'){
+    		self.contactsCc.push(self.allContacts[index]);
+    	} else {
+    		self.contacts.push(self.allContacts[index]);
+    	}
+    	self.focusElement.focus();
+    }
+    
+    $scope.checkFocusElement = function(){
+    	self.focusElement = angular.element(window.document.activeElement)[0];
+    }
+    
     function sendEmail(){
     	self.mailData.contacts = getEmailAddress(self.contacts);
     	self.mailData.contactsCc = getEmailAddress(self.contactsCc);
@@ -93,7 +106,7 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
       };
 
     }
-
+    
     function loadContacts() {
 //    	var contacts = [];
 //    	repackagingService.getReviewerList()

@@ -4,23 +4,23 @@
 
 		 <md-list layout="column" class="fixedRows" resize ng-style="resizeWithOffset(100)" style="width:450px !important">
                <md-subheader class="md-no-sticky">Contacts</md-subheader>
-               <md-list-item class=" contact-item" ng-repeat="(index, contact) in ctrl.allContacts | orderBy:'name'"
+               <md-list-item class=" contact-item" ng-click="clickContact($index)" ng-mouseover="checkFocusElement()" style="width:100% !important" ng-repeat="(index, contact) in ctrl.allContacts | orderBy:'name'"
                   ng-if="ctrl.contacts.indexOf(contact) < 0 && ctrl.contactsCc.indexOf(contact) < 0">
-                  <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
-                  <div class=" compact">
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <div class=" compact" style="cursor:pointer" >
                      <h3>{{contact.name}}</h3>
                      <p>{{contact.email}}</p>
                   </div>
                </md-list-item>
                <md-list-item class=" contact-item selected" ng-repeat="(index, contact) in ctrl.contacts | orderBy:'name'">
-                  <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
                   <div class=" compact">
                      <h3>{{contact.name}}</h3>
                      <p>{{contact.email}}</p>
                   </div>
                </md-list-item>
               <md-list-item class=" contact-item selected" ng-repeat="(index, contact) in ctrl.contactsCc | orderBy:'name'">
-                  <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
+                  <img ng-src="{{contact.image}}" style="cursor:pointer" class="md-avatar" alt="{{contact.name}}" imageonload roll-back-image="resources/images/profile.png"/>
                   <div class=" compact">
                      <h3>{{contact.name}}</h3>
                      <p>{{contact.email}}</p>
@@ -30,6 +30,7 @@
             <div class="col-md-12">
 			<div>
             <md-contact-chips
+            	md-name="toField"
                ng-model="ctrl.contacts"
                md-contacts="ctrl.querySearch($query)"
                md-contact-name="name"
