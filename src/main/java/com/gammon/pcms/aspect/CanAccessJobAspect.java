@@ -31,7 +31,7 @@ public class CanAccessJobAspect {
 	@Pointcut("!execution(* com.gammon.qs.service.admin.AdminService.*(..))")
 	public void excludeAdminService(){}
 	
-	@Pointcut("!execution(* *(..)) && @annotation(CanAccessJobChecking)")
+	@Pointcut("!(execution(* *(..)) && @annotation(CanAccessJobChecking))")
 	public void excludeCanAccessJobChecking(){}
 	
 	@Pointcut("com.gammon.pcms.aspect.CanAccessJobAspect.inServiceLayer() && "
