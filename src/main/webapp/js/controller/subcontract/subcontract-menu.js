@@ -53,7 +53,6 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 										.then(
 												function( data ) {
 													var paymentList = data;
-												//	console.log(paymentList);
 													if((paymentList != null && paymentList.length > 1) || latestPayment.paymentStatus == 'APR')
 														$scope.hideItemForPayReq = false;
 													else
@@ -61,7 +60,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 												});
 										
 										if(latestPayment.paymentStatus.length >0)
-											$scope.status = "Payment Requisition Status: "+GlobalParameter.getValueById(GlobalParameter.paymentStatus, data.paymentStatus);
+											$scope.requisitionStatus = "Payment Requisition Status: "+GlobalParameter.getValueById(GlobalParameter.paymentStatus, data.paymentStatus);
 									}else
 										$scope.hideItemForPayReq = true;
 								});

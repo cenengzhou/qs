@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService',
-                                            function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService) {
+mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 'subcontractService', 'jdeService', 'modalService', 'confirmService','GlobalMessage', '$state', 'htmlService', 'GlobalHelper', 'jobService', 'GlobalParameter',
+                                            function($scope, tenderService, subcontractService, jdeService, modalService, confirmService, GlobalMessage, $state, htmlService, GlobalHelper, jobService, GlobalParameter) {
 	loadData();
 	
     $scope.submit = function () {
@@ -83,6 +83,7 @@ mainApp.controller('SubcontractAwardSummaryCtrl', ['$scope', 'tenderService', 's
 						$scope.disableButtons = false;
 					
 					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
+				
 					
 					subcontractService.getWorkScope($scope.subcontract.workscope)
 					.then(
