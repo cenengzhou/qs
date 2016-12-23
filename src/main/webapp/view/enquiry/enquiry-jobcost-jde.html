@@ -13,12 +13,24 @@
 										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
 										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
 								</div>
-								<div ng-class="{'col-md-2':singleDatePicker, 'col-md-3':!singleDatePicker}">
-									<label ng-if="!singleDatePicker" for="jdesearch.dateRange">Date range:</label>
-									<label ng-if="singleDatePicker" for="jdesearch.dateRange">Exact date:</label>
+								<div ng-class="{'col-md-2':showCumulative, 'col-md-3':!showCumulative}">
+									<div ng-show="showCumulative" >
+										<label for="searchJdePeriod">Period:</label>
+										<div class="input-group" moment-picker="searchJdePeriod"
+											format="YYYY-MM" start-view="year" today="true">
+											<span class="input-group-addon"> <i
+												class="fa fa-calendar"></i>
+											</span> <input class="form-control" id="searchJdePeriod" name="searchJdePeriod"
+												ng-model="searchJdePeriod"
+												pattern=".{7,7}" required title="Please select period from the date picker" ng-model-options="{ updateOn: 'blur' }">
+										</div>
+									</div>
+									<div ng-show="!showCumulative">
+									<label for="jdesearch.dateRange">Exact date:</label>
 									<div class="input-group">
 										<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
 										<input class="form-control" type="text" name="jdesearch.dateRange" ng-model="jdesearchDate"/>
+									</div>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -47,7 +59,7 @@
 										ng-change="triggerCumulative()">
 								</div>
 
-								<div ng-class="{'col-md-2':singleDatePicker, 'col-md-1':!singleDatePicker}">
+								<div ng-class="{'col-md-2':showCumulative, 'col-md-1':!showCumulative}">
 									<label>&nbsp;</label>
 									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 								</div>

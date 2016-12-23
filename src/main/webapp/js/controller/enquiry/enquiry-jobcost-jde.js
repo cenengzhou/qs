@@ -1,9 +1,11 @@
 
 mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'modalService', 'blockUI', 'GlobalParameter', 'uiGridConstants', 'adlService', 'jdeService', 'modalService', 'GlobalHelper',
                                   function($scope, $http, $timeout, modalService, blockUI, GlobalParameter, uiGridConstants, adlService, jdeService, modalService, GlobalHelper) {
+	window.scope = $scope;
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.showCumulative = true;
 	$scope.searchJobNo = $scope.jobNo;
+//	$scope.searchPeriod = moment().format('YYYY-MM');
 	$scope.fromDate = moment().month(moment().month() ).format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.thruDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.searchAccountLedger = {};
@@ -194,17 +196,37 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 	}
 	
 	$scope.loadGridData = function(){
+		var fromDate, thruDte, year, month;
 		if($scope.searchSubcontractNo) {
 			$scope.subLedgerTyper = 'X';
 		} else {
 			$scope.subLedgerTyper = '';
 			$scope.searchSubcontractNo = '';
 		}
-		if($scope.showCumulative) {
+//		byDate
+//			totalFlag = "I"
+//			fromDate = fromDateTextField.getValue();
+//			thruDate = thruDateTextField.getValue();
+//
+//		byPeriod
+//			year = yearComboBox.getText().substring(yearComboBox.getText().trim().length()-2, yearComboBox.getText().trim().length());
+//					period = periodComboBox.getText();
+//			cumulative 
+//				totalFlag = "I"
+//			movement
+//				totalFlag = "P";
+		if(!$scope.showCumulative) {		//byDate => movement
 			$scope.totalFlag = 'I';
-			$scope.movementDate = $scope.jdesearchDate;
-		} else {
-			$scope.totalFlag = 'P';
+			fromDate = moment($scope.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
+			thruDate = moment($scope.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
+			year = '';
+			month = '';
+		} else {							//byPeriod => cumulative
+			$scope.totalFlag = 'I';
+			fromDate = '';
+			thruDate = '';
+			year = $scope.searchJdePeriod.substring(2,4);
+			month = $scope.searchJdePeriod.substring(5,7);
 		}
 		jdeService.getAccountBalanceByDateRangeList(
 				$scope.searchJobNo, 
@@ -212,10 +234,10 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 				$scope.subLedgerTyper,
 				$scope.totalFlag,
 				$scope.postFlag,
-				moment($scope.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT),
-				moment($scope.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT), 
-				'',
-				''
+				fromDate,
+				thruDate, 
+				year,
+				month
 		)
 		.then(function(data){
 			if(data){
@@ -236,18 +258,23 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 	$scope.openDropdown = function( $event){
 		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
 	}
+
 	$scope.triggerCumulative = function(){
-		$scope.singleDatePicker = false;
+		$scope.dateRangeFormat = GlobalParameter.MOMENT_DATE_FORMAT;
 		if($scope.showCumulative){
-			$scope.singleDatePicker = true;
-			$scope.thruDate = $scope.fromDate;
+			var period = getPeriod(moment($scope.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT),'from');
+			$scope.searchJdePeriod = period.year + '-' + (period.month+1);
 		} else {
-			$scope.movementDate = $scope.jdesearchDate;
+			var year = $scope.searchJdePeriod.substring(0,4);
+			var month = $scope.searchJdePeriod.substring(5.7) - 1;
+			var nextDate = $scope.getNextDate(year, month-1, year, month);
+			$scope.fromDate = nextDate.fromDate;
+			$scope.thruDate = nextDate.thruDate;
 		}
 		$timeout(function(){
 			angular.element('input[name$=".dateRange"').daterangepicker({
 			    showDropdowns: true,
-			    singleDatePicker: $scope.singleDatePicker,
+			    singleDatePicker: false,
 			    startDate: $scope.fromDate,
 			    endDate: $scope.thruDate,
 			    autoApply: true,
@@ -262,14 +289,7 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 		       }
 			)
 		}, 500);
-		if($scope.singleDatePicker) {
-			if($scope.jdesearchDate){
-				var r = $scope.jdesearchDate.split(' - ');
-				if(r[0] != r[1] || r[0] != $scope.movementDate)
-					$scope.loadGridData();
-			}
-			
-		}
+		$scope.loadGridData();
 	}
 	$scope.triggerCumulative();
 	$scope.loadGridData();
