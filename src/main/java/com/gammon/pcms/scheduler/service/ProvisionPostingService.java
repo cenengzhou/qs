@@ -84,9 +84,6 @@ public class ProvisionPostingService {
 	private boolean needToPost = false;
 	private int numOfProcessedJobs = 0;
 	
-	// GLDate
-	private Date glDate = null;
-	
 	// Keep record of GLDate for each company
 	HashMap<String,Date> companyGLDateCachedMap = null;
 
@@ -193,7 +190,6 @@ public class ProvisionPostingService {
 		if (this.startTime == null)
 			this.startTime = new Date();
 
-		this.glDate = glDate;
 		this.overwritePreviousProvisionPosting = overwritePreviousProvisionPosting;
 		this.username = username;
 
@@ -211,7 +207,7 @@ public class ProvisionPostingService {
 		numOfProcessedJobs = 0;
 
 		// Keep record of GLDate for each company
-		if (this.glDate == null)
+		if (glDate == null)
 			companyGLDateCachedMap = new HashMap<String, Date>();
 		// --------------------- END: Setup ---------------------
 
@@ -219,7 +215,7 @@ public class ProvisionPostingService {
 		for (JobInfo job : jobList) {
 			logger.info("Start Job: " + job.getJobNumber() + " Company: " + job.getCompany());
 			try {
-				calculateAndInsertProvisionByJob(job);
+				calculateAndInsertProvisionByJob(job, glDate);
 			} catch (Exception e) {
 				logger.info("Failed Job: " + job.getJobNumber());
 				e.printStackTrace();
@@ -251,7 +247,7 @@ public class ProvisionPostingService {
 	 */
 	@Transactional(	propagation = Propagation.REQUIRES_NEW,
 					rollbackFor = { Exception.class }, value = "transactionManager")
-	private void calculateAndInsertProvisionByJob(JobInfo job) throws Exception {
+	private void calculateAndInsertProvisionByJob(JobInfo job, Date glDate) throws Exception {
 		// Provision records
 		List<ProvisionWrapper> listOfProvision = new ArrayList<ProvisionWrapper>();
 		
@@ -264,8 +260,8 @@ public class ProvisionPostingService {
 		 * G/L date Should be refreshed by each job.  
 		 * **/
 		// call from scheduler that do not have GL Date and look for GLDate from JDE
-		if (this.glDate == null)
-			this.glDate = obtainGLDate(job);
+		if (glDate == null)
+			glDate = obtainGLDate(job);
 		
 		// Prepare Account Codes for current job
 		List<AccountMaster> accountMasterList = jobCostDao.getAccountIDListByJob(job.getJobNumber());
@@ -278,7 +274,7 @@ public class ProvisionPostingService {
 
 				// Calculate provision for each package, each wrapper represents a provision record (i.e. 13518.140299.29999999 of SC1009)
 				Calendar glCalDate = Calendar.getInstance();
-				glCalDate.setTime(this.glDate);
+				glCalDate.setTime(glDate);
 
 				List<ProvisionWrapper> provisionWrapperList = calculateProvisionByPackage(currentPackage, Integer.valueOf(glCalDate.get(Calendar.YEAR)), Integer.valueOf(glCalDate.get(Calendar.MONTH) + 1), overwritePreviousProvisionPosting, accountMasterList);
 
