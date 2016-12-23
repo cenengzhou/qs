@@ -63,7 +63,7 @@ public class UserPreferenceService {
 			try{
 				adminService.canAccessJob(defaultJobNo);
 				JobInfo job = jobInfoService.obtainJob(defaultJobNo);
-				preferenceMap.put(UserPreference.DEFAULT_JOB_NO, job.getDescription());
+				preferenceMap.put("DEFAULT_JOB_DESCRIPTION", job.getDescription());
 			} catch(Exception e){
 				e.printStackTrace();
 				User user = securityService.getCurrentUser();
