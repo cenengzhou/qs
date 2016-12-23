@@ -8,15 +8,13 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 		//$window.location.href = 'ad';
 		 $window.open('ad/announcement.html', '_blank');
 		 $scope.updateNotificationReadStatus();
+		 
 	}
 
 	$scope.updateNotificationReadStatus = function(){
 		userpreferenceService.updateNotificationReadStatusByCurrentUser('Y')
-		.then(function(status){
-			if(status == 'Y')
-				$scope.readStatus = "Read";
-			else
-				$scope.readStatus = "Not Read";
+		.then(function(msg){
+			$scope.readStatus = "Read";
 		});
 	}
 	
@@ -25,7 +23,6 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 		userpreferenceService.getNotificationReadStatusByCurrentUser()
 		.then(function(status){
 			$scope.status = status;
-		//	console.log(status);
 			if(status == 'Y')
 				$scope.readStatus = "Read";
 			else
