@@ -417,8 +417,8 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 						 modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data);
 					 else{
 						 //$state.reload();
-//						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
-						 }
+						 getResourceSummariesByLineType(scDetail.objectCode, scDetail.subsidiaryCode, scDetail.lineType, scDetail.resourceNo);
+					 }
 				 });
 	    }
 	
