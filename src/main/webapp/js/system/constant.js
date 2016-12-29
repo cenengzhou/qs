@@ -63,7 +63,16 @@ mainApp.constant('GlobalParameter', {
 		})
 		return result;
 	},
-
+	changeKeyValue: function(arr, oldKey, oldValue, newKey, newValue){
+		var newArr = [];
+		arr.forEach(function(obj){
+			var newObj = {};
+			newObj[newKey] = obj[oldKey];
+			newObj[newValue] = obj[oldValue];
+			newArr.push(newObj);
+		});
+		return newArr;
+	},
 	DATE_FORMAT: 'dd/MM/yyyy',
 	DATETIME_FORMAT: ' dd/MM/yyyy hh:mm',
 	MOMENT_DATE_FORMAT: 'YYYY-MM-DD',
@@ -349,6 +358,34 @@ mainApp.constant('GlobalParameter', {
 	ApprovalStatus:[
 	                {id:'A', value:'Approved'},
 	                {id:'N', value:'Not Apprvoved'}
+    ],
+    SubcontractDetailLineType: [
+    	{value: 'AP', display: 'AP'},
+    	{value: 'B1', display: 'B1'},
+    	{value: 'BD', display: 'BD'},
+    	{value: 'BQ', display: 'BQ'},
+    	{value: 'BS', display: 'BS'},
+    	{value: 'C1', display: 'C1'},
+    	{value: 'C2', display: 'C2'},
+    	{value: 'CF', display: 'CF'},
+    	{value: 'D1', display: 'D1'},
+    	{value: 'D2', display: 'D2'},
+    	{value: 'HD', display: 'HD'},
+    	{value: 'L1', display: 'L1'},
+    	{value: 'L2', display: 'L2'},
+    	{value: 'MS', display: 'MS'},
+    	{value: 'OA', display: 'OA'},
+    	{value: 'RA', display: 'RA'},
+    	{value: 'RR', display: 'RR'},
+    	{value: 'V1', display: 'V1'},
+    	{value: 'V2', display: 'V2'},
+    	{value: 'V3', display: 'V3'}
+    ],
+    SubcontractDetailStatus:[
+    	{value: 'A', display: 'Approved'},
+    	{value: 'N', display: 'Not Approved'},
+    	{value: 'P', display: 'Pending'},
+    	{value: 'S', display: 'Suspend'},
     ],
 	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/',
 	tinyMceMaxCharLength: 2000,

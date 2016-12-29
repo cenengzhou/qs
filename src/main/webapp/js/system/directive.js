@@ -324,3 +324,52 @@ mainApp.directive('onFinishNgRepeat', function($timeout) {
 	};
 });
 
+mainApp.directive('selectBox', function(){
+	return {
+		restrict: 'AE',
+		replace: true,
+		template: '\
+			<select  class="form-control" ng-options="item.value as item.display for item in items" ng-model="selectedItem">\
+				<option></option>\
+			</select>',
+		scope:{
+			selectedItem: '=',
+			itemType: '@'
+		},
+		controller: function($scope, rootscopeService, GlobalParameter){
+			switch($scope.itemType){
+			case 'company':
+				rootscopeService.gettingCompanies()
+				.then(function(response){
+					$scope.items = response.companies;
+				})
+				break;
+			case 'division':
+				rootscopeService.gettingDivisions()
+				.then(function(response){
+					$scope.items = response.divisions;
+				})
+				break;
+			case 'subcontractDetailLineType':
+				$scope.items = GlobalParameter.SubcontractDetailLineType;
+				break;
+			case 'subcontractDetailStatus':
+				$scope.items = GlobalParameter.SubcontractDetailStatus;
+				break;
+			case 'paymentTerms':
+				$scope.items = GlobalParameter.changeKeyValue(GlobalParameter.getIdPlusValue(GlobalParameter.paymentTerms), 'id', 'value', 'value', 'display');
+				break;
+			case 'paymentStatus':
+				$scope.items = GlobalParameter.changeKeyValue(GlobalParameter.getIdPlusValue(GlobalParameter.paymentStatus), 'id', 'value', 'value', 'display');
+				break;
+			default:
+				$scope.items = [{value:'default', display:'default'}];
+				break;
+			}
+			
+		},
+		link: function(scope, element, attrs){
+			
+		}
+	}
+})

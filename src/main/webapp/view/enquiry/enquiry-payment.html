@@ -19,18 +19,45 @@
 							<form role="form" class="form-input-flat form-horizatial"
 								name="enquiryPaymentForm">
 								<div class="form-group">
-								<div class="col-md-2">
+								<div class="col-md-2">{{searchJobNo}}
 									<label for="searchJobNo">Job No.</label> <input type="text"
 										class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo"
-										pattern=".{5,5}" required title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }">
+										pattern=".{5,5}" title="Please enter 5 characters">
 										<p ng-show="enquiryPaymentForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
-								</div>					
+								</div>
+								<div class="col-md-2">
+									<label for="searchPackage">Subcontract No.</label> 
+									<input type="text"
+										class="form-control" id="searchSubcontractNo" name="searchPackage"
+										ng-model="searchPackage" pattern=".{4,4}"
+										title="Please enter 4 characters">
+									<p ng-show="searchSubcontractDetailForm.searchPackage.$error.pattern"
+										class="red">Please enter 5 characters</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchVendorNo">Subcontractor No.</label> 
+									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo"
+										ng-model="searchVendorNo">
+								</div>
+								<div class="col-md-2">
+									<label for="searchCompany">Company</label> 
+									<select-box selected-item="searchCompany" item-type="company"></select-box>
+								</div>	
+								<div class="col-md-2">
+									<label for="searchPaymentTerms">Payment Terms</label> 
+									<select-box selected-item="searchPaymentTerms" item-type="paymentTerms"></select-box>
+								</div>	
+								<div class="col-md-2">
+									<label for="searchPaymentStatus">Payment Status</label> 
+									<select-box selected-item="searchPaymentStatus" item-type="paymentStatus"></select-box>
+								</div>	
 									<div class="col-md-2">
 									<label for="searchDueDateType">Due Date Range</label>
-										<select ng-model="searchDueDateType" class="form-control">
-											<option value="onOrBefore">On Or Before</option>
-											<option value="exactDate">Exact Date</option>
-										</select>
+										<input
+										type="checkbox" data-ios-toggle="toggle"
+										id="searchDueDateType" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="On Or Before"
+										data-off="Exact Date" ng-model="searchDueDateType" data-width="100%">
 									</div>
 									<div class="col-md-2">
 									<label>Due Date</label>
@@ -39,10 +66,10 @@
 											<span class="input-group-addon"> <i
 												class="fa fa-calendar"></i>
 											</span> <input class="form-control" id="searchDueDate" 
-												ng-model="searchDueDate">
+												ng-model="searchDueDate" ng-model-options="{ updateOn: 'blur' }">
 										</div>
 									</div>
-									<div class="col-md-5"></div>
+									<div class="col-md-7"></div>
 									<div class="col-md-1">
 									<label >&nbsp;</label>
 										<button class="btn btn-block btn-primary" type="submit"

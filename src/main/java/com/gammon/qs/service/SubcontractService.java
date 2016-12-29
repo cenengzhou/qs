@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -3806,9 +3807,62 @@ public class SubcontractService {
 		return subcontractList;
 	}
 	
+	public List<?> obtainSubcontractSnapshotList(BigDecimal year, BigDecimal month, boolean awardOnly, Map<String, String> commonKeyValue) throws Exception {
+		List<?> subcontractList = new ArrayList<Subcontract>();
+		String noJob = commonKeyValue.get("jobInfo.jobNumber");
+		if (StringUtils.isNotBlank(noJob)) adminService.canAccessJob(noJob);
+		// 1. check if there is any record from in subcontract snapshot table
+		subcontractList = subcontractSnapshotDao.obtainSubcontractSnapshotList(year, month, awardOnly, commonKeyValue);
+		// 2. if no record is found, obtain from subcontract table
+		if (CollectionUtils.isEmpty(subcontractList))
+			subcontractList = subcontractHBDao.obtainSubcontractSnapshotList(awardOnly, commonKeyValue);
+			
+		return subcontractList;
+	}
+
+	public List<Object> filterSubcontractSnapshotListByJobInfoAndSubcontract(List<?> subcontractList, Map<String, Map<String, String>> filterKeyValue){
+		List<Object> filteredList = null;
+		if(subcontractList != null && subcontractList.size() > 0){
+			for(Object item : subcontractList){
+				JobInfo job;
+				Subcontract subcontract;
+				filteredList = new ArrayList<Object>();
+				boolean includesive = false;
+				if(subcontractList.get(0) instanceof SubcontractSnapshot){
+					job = ((SubcontractSnapshot) item).getJobInfo();
+					subcontract = ((SubcontractSnapshot) item).getSubcontract();
+					item = (SubcontractSnapshot) item;
+				} else if(subcontractList.get(0) instanceof Subcontract){
+					job = ((Subcontract) item).getJobInfo();
+					subcontract = (Subcontract) item;
+					item = (Subcontract) item;
+				}
+				
+				filterKeyValue.get("JobInfo").forEach((k,v) ->{
+					
+				});
+				
+				
+				if(includesive){
+					filteredList.add(item);
+				}
+			}
+
+		}
+		return filteredList;
+	}
 	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
 		return subcontractDetailHBDao.getScDetails(jobNumber);
 		
+	}
+
+	public List<SubcontractDetail> obtainSubcontractDetails(Map<String, String> commonKeyValue) {
+		String noJob = commonKeyValue.get("jobNo");
+		if(StringUtils.isNotEmpty(noJob)) adminService.canAccessJob(noJob);
+		LinkedHashMap<String, String> orderMap = new LinkedHashMap<>();
+		orderMap.put("subcontract.packageNo", "ASC");
+		orderMap.put("sequenceNo", "ASC");
+		return subcontractDetailHBDao.getResultListByKeyValue(commonKeyValue, orderMap, false);
 	}
 	
 	/**

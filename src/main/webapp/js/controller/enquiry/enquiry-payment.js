@@ -2,7 +2,7 @@
 mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'paymentService', 'GlobalParameter', 'uiGridConstants', 'GlobalHelper',
                                 function($scope, $http, modalService, blockUI, GlobalParameter, paymentService, GlobalParameter, uiGridConstants, GlobalHelper) {
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.searchDueDateType = 'onOrBefore';
+	$scope.searchDueDateType = false;
 //	$scope.blockEnquiryPayment = blockUI.instances.get('blockEnquiryPayment');
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.gridOptions = {
@@ -68,32 +68,33 @@ mainApp.controller('EnquiryPaymentCtrl', ['$scope', '$http', 'modalService', 'bl
 	}
 	
 	$scope.loadGridData = function(){
+		if(!$scope.searchJobNo && !$scope.searchCompany){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Job No. or Company' ); 
+			return;
+		}
 		var paymentCertWrapper = {};
 		paymentCertWrapper.jobInfo = {}
 		paymentCertWrapper.jobInfo.jobNumber = $scope.searchJobNo;
 		paymentCertWrapper.jobNo = $scope.searchJobNo;
-		paymentCertWrapper.jobInfo.setCompany = $scope.searchCompany;
+		paymentCertWrapper.jobInfo.company = $scope.searchCompany;
 		paymentCertWrapper.subcontract = {};
 		paymentCertWrapper.subcontract.packageNo = $scope.searchPackage;
-		paymentCertWrapper.subcontract.venderNo = $scope.searchVenderNo;
+		paymentCertWrapper.subcontract.vendorNo = $scope.searchVendorNo;
 		paymentCertWrapper.subcontract.paymentTerms = $scope.searchPaymentTerms;
 		paymentCertWrapper.paymentStatus = $scope.searchPaymentStatus;
 		paymentCertWrapper.intermFinalPayment = $scope.searchIntermFinalPayment;
 		paymentCertWrapper.directPayment = $scope.searchDirectPayment;
-		paymentCertWrapper.dueDate = $scope.searchDueDate !== undefined ? new moment($scope.searchDueDate) : null;
+		paymentCertWrapper.dueDate = $scope.searchDueDate !== undefined && $scope.searchDueDate != '' ? new moment($scope.searchDueDate) : null;
 		paymentCertWrapper.certIssueDate = $scope.searchCertIssueDate;
-		
-		var dueDateType = $scope.searchDueDateType !== undefined ? $scope.searchDueDateType : 'ignore';
-//		$scope.blockEnquiryPayment.start('Loading...')
+		var dueDateType = $scope.searchDueDateType !== undefined ? ($scope.searchDueDateType?'onOrBefore':'exactDate'): 'ignore';
+
 		paymentService.obtainPaymentCertificateList(paymentCertWrapper, dueDateType)
 		.then(function(data){
 				if(angular.isArray(data)){
 					$scope.convertAbbr(data);
 					$scope.gridOptions.data = data;
 				} 
-//				$scope.blockEnquiryPayment.stop();
 		}, function(data){
-//			$scope.blockEnquiryPayment.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 

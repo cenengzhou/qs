@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.AccountMaster;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;

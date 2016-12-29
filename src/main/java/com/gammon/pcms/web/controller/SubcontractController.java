@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,14 +70,10 @@ public class SubcontractController {
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractSnapshotList', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "getSubcontractSnapshotList", method = RequestMethod.GET)
-	public List<?> getSubcontractSnapshotList(	@RequestParam(required = false) String noJob,
-															@RequestParam(required = true) BigDecimal year,
-															@RequestParam(required = true) BigDecimal month,
-															@RequestParam(	required = true, defaultValue = "false") boolean awardedOnly,
-															@RequestParam(	required = true, defaultValue = "false") boolean showJobInfo) {
+	@RequestMapping(value = "getSubcontractSnapshotList", method = RequestMethod.POST)
+	public List<?> getSubcontractSnapshotList(@RequestParam BigDecimal year, @RequestParam BigDecimal month, @RequestParam boolean awardOnly, @RequestBody Map<String, String> commonKeyValue) throws Exception{
 		try {
-			return subcontractService.getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo);
+			return subcontractService.obtainSubcontractSnapshotList(year, month, awardOnly, commonKeyValue);
 		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
@@ -145,11 +142,9 @@ public class SubcontractController {
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSCDetailList', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "getSCDetailList", method = RequestMethod.GET)
-	public List<SubcontractDetail> getSCDetailList(@RequestParam(required =true) String jobNo) throws DatabaseOperationException{
-		List<SubcontractDetail> scDetails = new ArrayList<SubcontractDetail>();
-		scDetails.addAll(subcontractService.getScDetails(jobNo));
-		return scDetails;
+	@RequestMapping(value = "getSCDetailList", method = RequestMethod.POST)
+	public List<SubcontractDetail> getSCDetailList(@RequestBody Map<String, String> commonKeyValue) throws DatabaseOperationException{
+		return subcontractService.obtainSubcontractDetails(commonKeyValue);
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractDashboardData', @securityConfig.getRolePcmsEnq())")

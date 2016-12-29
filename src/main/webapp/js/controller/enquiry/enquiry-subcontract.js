@@ -1,12 +1,11 @@
 
 mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'GlobalParameter', 'subcontractService', 'uiGridConstants', '$timeout', 'GlobalHelper', '$state',
                                       function($scope, $http, modalService, blockUI, GlobalParameter, subcontractService, uiGridConstants, $timeout, GlobalHelper, $state) {
-	$scope.searchJobNo = $scope.jobNo;
 	$scope.currentDate = new Date(); // Default: Today
-	$scope.searchYear = $scope.currentDate.getFullYear();
-	$scope.searchMonth = $scope.currentDate.getMonth()+1;
+	$scope.searchPeriod = moment().format('YYYY-MM');
 	$scope.GlobalParameter = GlobalParameter;
-//	$scope.blockEnquirySubcontract = blockUI.instances.get('blockEnquirySubcontract');
+	$scope.commonKeyValue = {};
+	$scope.commonKeyValue['jobInfo.jobNumber'] = $scope.jobNo;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -29,6 +28,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 			             { field: 'jobInfo.jvPercentage', width:'60', displayName: "JV%", enableCellEdit: false},
 			             { field: 'jobInfo.employer', width:'60', displayName: "Client No", enableCellEdit: false},
 			             { field: 'packageNo', width:'60', displayName: "Subcontract", enableCellEdit: false},
+			             { field: 'vendorNo', width:'80', displayName: "Subcontractor No.", enableCellEdit: false}, // TODO:ADL
 			             { field: 'nameSubcontractor', width:'180', displayName: "Subcontractor Name", enableCellEdit: false}, // TODO:ADL
 			             { field: 'description', width:'180', displayName: "Description", enableCellEdit: false},
 			             { field: 'paymentCurrency', width:'60', displayName: "Currency", enableCellEdit: false},
@@ -377,13 +377,18 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquirySubcontract.start("Loading...")
-		subcontractService.getSubcontractSnapshotList($scope.searchJobNo, $scope.searchYear, $scope.searchMonth, true, false)
+		if(!$scope.commonKeyValue['jobInfo.jobNumber'] && !$scope.commonKeyValue['jobInfo.company'] && !$scope.commonKeyValue['jobInfo.division']){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Job No., Company or Division' ); 
+			return;
+		}
+		$scope.searchYear = $scope.searchPeriod.substring(0,4);
+		$scope.searchMonth = $scope.searchPeriod.substring(5,7);
+		$scope.awardOnly = true;
+		$scope.commonKeyValue['packageType'] = 'S';
+		subcontractService.getSubcontractSnapshotList($scope.searchYear, $scope.searchMonth, $scope.awardOnly, $scope.commonKeyValue)
 		.then(function(data){
 				$scope.gridOptions.data = data;
-//				$scope.blockEnquirySubcontract.stop();
 			}, function(data){
-//				$scope.blockEnquirySubcontract.stop();
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 			})
 	}

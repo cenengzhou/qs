@@ -41,13 +41,12 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	createSystemConstant: 								createSystemConstant,
     	updateSubcontractAdmin:								updateSubcontractAdmin,
     	
-
     	getSubcontractSnapshotList:							getSubcontractSnapshotList,
     	getProvisionPostingHistList:						getProvisionPostingHistList,
     	getSCDetailList:									getSCDetailList,
     	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate,
     	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails,
-    	getPerforamceAppraisalsList:						getPerforamceAppraisalsList
+    	getPerforamceAppraisalsList:						getPerforamceAppraisalsList,
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -523,19 +522,17 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
        	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function getSubcontractSnapshotList(noJob, year, month, awardedOnly, showJobInfo){
+    function getSubcontractSnapshotList(year, month, awardOnly, commonKeyValue){
     	var request = $http({
-    		method: 'get',
+    		method: 'post',
     		url: 'service/subcontract/getSubcontractSnapshotList',
-    		params: {
-    			noJob: noJob,
+    		params:{
     			year: year,
     			month: month,
-    			awardedOnly: awardedOnly,
-    			showJobInfo: showJobInfo
-    		}
-    	});
-    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    			awardOnly: awardOnly
+    		},
+    		data: commonKeyValue
+    	});    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
     function getProvisionPostingHistList(jobNo, subcontractNo, year, month){
@@ -552,13 +549,11 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function getSCDetailList(jobNo) {
+    function getSCDetailList(commonKeyValue) {
         var request = $http({
-            method: "get",
+            method: "POST",
             url: "service/subcontract/getSCDetailList",
-            params: {
-            	jobNo: jobNo
-            }
+            data: commonKeyValue
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
@@ -590,7 +585,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }   
-    
+
 }]);
 
 

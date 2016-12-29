@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,6 +49,31 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		super(SubcontractSnapshot.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<SubcontractSnapshot> obtainSubcontractSnapshotList(BigDecimal year, BigDecimal month, boolean awardedOnly, Map<String, String> commonKeyValue){
+		LinkedHashMap<String, String> orderMap = new LinkedHashMap<>();
+		orderMap.put("jobInfo.company", "ASC");
+		orderMap.put("jobInfo.division", "ASC");
+		orderMap.put("jobInfo.jobNumber", "ASC");
+		orderMap.put("packageNo", "ASC");
+		Criteria criteria = getCriteriaByKeyValue(commonKeyValue, orderMap, true);
+		if (awardedOnly)
+			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
+		if (month.intValue() > 0 && year.intValue() > 0) {
+			// start date (first day of the month)
+			Calendar startCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, 1, 0, 0, 0);
+			// end date (last day of the month)
+			Calendar endCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, startCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+
+			// Formatting
+			String startDate = DateHelper.formatDate(startCalendar.getTime(), GlobalParameter.DATE_FORMAT);
+			String endDate = DateHelper.formatDate(endCalendar.getTime(), GlobalParameter.DATE_FORMAT);
+			
+			criteria.add(Restrictions.between("snapshotDate", DateHelper.parseDate(startDate, GlobalParameter.DATE_FORMAT), DateHelper.parseDate(endDate, GlobalParameter.DATE_FORMAT)));
+		}
+		return criteria.list();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(this.getType());

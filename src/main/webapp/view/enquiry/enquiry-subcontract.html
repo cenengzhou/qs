@@ -19,47 +19,48 @@
 						class="form-input-flat">
 
 						<div>
-							<div class="col-md-2">
-								<label for="searchJobNo">Job No.</label> <input type="text"
+							<div class="col-md-1">
+								<label for="searchJobNo">Job No.</label> 
+								<input type="text"
 									class="form-control" id="searchJobNo" name="searchJobNo"
-									ng-model="searchJobNo" pattern=".{5,5}" required
+									ng-model="commonKeyValue['jobInfo.jobNumber']" pattern=".{5,5}"
 									title="Please enter 5 characters"
 									ng-model-options="{ updateOn: 'blur' }">
 								<p ng-show="searchSubcontractForm.searchJobNo.$error.pattern"
 									class="red">Please enter 5 characters</p>
 							</div>
-
 							<div class="col-md-2">
-								<label for="searchYear">Year</label>
-								<div class="input-group" moment-picker="searchYear"
-									format="YYYY" start-view="year" today="true">
+								<label for="searchCompany">Company</label> 
+								<select-box selected-item="commonKeyValue['jobInfo.company']" item-type="company"></select-box>
+							</div>
+							<div class="col-md-2">
+								<label for="searchDivision">Division</label> 
+								<select-box selected-item="commonKeyValue['jobInfo.division']" item-type="division"></select-box>
+							</div>
+							<div class="col-md-2">
+								<label for="searchSubcontractorNo">Subcontractor No.</label> 
+								<input type="text"
+									class="form-control" id="searchSubcontractorNo" name="searchSubcontractorNo"
+									ng-model="commonKeyValue['vendorNo']">
+							</div>
+							<div class="col-md-2">
+								<label for="searchParentJobNo">Parent Job No.</label> 
+								<input type="text"
+									class="form-control" id="searchParentJobNo" name="searchParentJobNo"
+									ng-model="commonKeyValue['jobInfo.parentJobNo']">
+							</div>
+							<div class="col-md-2">
+								<label for="searchPeriod">Period</label>
+								<div class="input-group" moment-picker="searchPeriod"
+									format="YYYY-MM" start-view="month" today="true">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" id="searchYear" name="searchYear"
-										ng-model="searchYear" pattern=".{4,4}"
-										title="Please select Year from the date picker"
+									</span> <input class="form-control" id="searchPeriod" name="searchPeriod"
+										ng-model="searchPeriod" pattern=".{7,7}"
+										title="Please select Period from the date picker"
 										ng-model-options="{ updateOn: 'blur' }">
 								</div>
-								<p ng-show="searchSubcontractForm.searchYear.$error.pattern"
-									class="red">Please select Year from the date picker</p>
 							</div>
-
-							<div class="col-md-2">
-								<label for="searchMonth">Period</label>
-								<div class="input-group" moment-picker="searchMonth" format="M"
-									start-view="month" today="true">
-									<span class="input-group-addon"> <i
-										class="fa fa-calendar"></i>
-									</span> <input class="form-control" id="searchMonth"
-										name="searchMonth" ng-model="searchMonth" pattern=".{1,2}"
-										title="Please select Month from the date picker"
-										ng-model-options="{ updateOn: 'blur' }">
-								</div>
-								<p ng-show="searchSubcontractForm.searchMonth.$error.pattern"
-									class="red">Please select Month from the date picker</p>
-							</div>
-							
-							<div class="col-md-5"></div>
 							<div class="col-md-1">
 								<label>&nbsp;</label>
 								<button type="submit" class="btn btn-block btn-primary">

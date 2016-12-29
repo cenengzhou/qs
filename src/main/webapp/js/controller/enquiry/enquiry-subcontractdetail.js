@@ -1,9 +1,7 @@
 mainApp.controller('EnquirySubcontractDetailCtrl', 
 		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'uiGridConstants', 'GlobalHelper',
 function($scope, $http, modalService, blockUI, subcontractService, uiGridConstants, GlobalHelper) {
-
-//	$scope.blockEnquirySubcontractDetail = blockUI.instances.get('blockEnquirySubcontractDetail');
-
+	$scope.commonKeyValue = {};
 	$scope.gridOptions = {
 		enableFiltering : true,
 		enableColumnResizing : true,
@@ -382,18 +380,16 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 	}
 
 	$scope.loadGridData = function() {
-//		$scope.blockEnquirySubcontractDetail.start('Loading...');
+		$scope.commonKeyValue['jobNo'] = $scope.jobNo;
 		subcontractService
-				.getSCDetailList($scope.jobNo)
+				.getSCDetailList($scope.commonKeyValue)
 				.then(
 						function(data) {
 							if (angular.isArray(data)) {
 								$scope.gridOptions.data = data;
 							}
-//							$scope.blockEnquirySubcontractDetail.stop();
 						},
 						function(data) {
-//							$scope.blockEnquirySubcontractDetail.stop();
 							modalService
 									.open(
 											'md',

@@ -2,8 +2,10 @@ package com.gammon.qs.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -699,6 +701,16 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Subcontract> obtainSubcontractSnapshotList(boolean awardedOnly, Map<String, String> commonKeyValue) throws DataAccessException {
+		LinkedHashMap<String, String> orderMap = new LinkedHashMap<>();
+		orderMap.put("packageNo", "ASC");
+		Criteria criteria = getCriteriaByKeyValue(commonKeyValue, orderMap, true);
+		if (awardedOnly)
+			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
+		return criteria.list();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Subcontract> find(String jobNo, boolean awardedOnly) throws DataAccessException {
 		Criteria criteria = getSession().createCriteria(this.getType());
