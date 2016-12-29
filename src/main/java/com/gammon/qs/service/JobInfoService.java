@@ -11,6 +11,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.aspect.CanAccessJobChecking;
+import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -230,6 +232,7 @@ public class JobInfoService {
 	 * @author tikywong
 	 * created on Aug 9, 2013 3:08:08 PM
 	 */
+	@CanAccessJobChecking(checking = CanAccessJobCheckingType.BYPASS)
 	public List<String> obtainParentJobList(String jobNo) throws DatabaseOperationException {
 		List<String> parentJobList = packageHBDao.obtainParentJobList(jobNo);
 		
