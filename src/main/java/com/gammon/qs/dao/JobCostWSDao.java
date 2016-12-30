@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -532,7 +533,11 @@ public class JobCostWSDao {
 				}
 			}
 
-			returnWrapper.add(newWrapper);
+			if(StringUtils.startsWith(newWrapper.getObjectCode(), "1") && StringUtils.isNotBlank(newWrapper.getSubsidiaryCode())) {
+				returnWrapper.add(newWrapper);
+			} else {
+				logger.info("ObjectCode not start with '1' or SubsidiaryCode is blank:" + newWrapper.getObjectCode() + "-" + newWrapper.getSubsidiaryCode());
+			}
 		}
 		logger.info("RETURNED ACCOUNT BALANCE RECORDS TOTAL SIZE: " + returnWrapper.size());
 		return returnWrapper;
