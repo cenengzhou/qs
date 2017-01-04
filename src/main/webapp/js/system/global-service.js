@@ -300,8 +300,27 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 	
 	function uiGridFilters(filterNameList){
 		var filters = [];
-		filters["GREATER_THAN"] = {condition: uiGridConstants.filter.GREATER_THAN, placeholder: 'greater than'};
-		filters["LESS_THAN"] = {condition: uiGridConstants.filter.LESS_THAN, placeholder: 'less than'};
+		filters["GREATER_THAN"] = {
+//				condition: uiGridConstants.filter.GREATER_THAN, 
+				condition: function(term, value, row, column){
+					if(!term) return true;
+					term = term.replace(/\\/, '');
+					return parseFloat(value) > parseFloat(term);
+				},
+				placeholder: 'greater than'
+		};
+		
+		filters["LESS_THAN"] = {
+//				condition: uiGridConstants.filter.LESS_THAN,
+				condition: function(term, value, row, column){
+					if(!term) return true;
+					term = term.replace(/\\/, '');
+					return parseFloat(value) < parseFloat(term);
+					
+				},
+				placeholder: 'less than'
+		};
+		
 		var resultList = [];
 		filterNameList.forEach(function(filterName){
 			if(filters[filterName]){
