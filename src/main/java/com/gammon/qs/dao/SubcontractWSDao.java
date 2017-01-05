@@ -441,7 +441,7 @@ public class SubcontractWSDao {
 		if (scPackage.getPackageNo() != null)
 			headerRequestObj.setOrderNumber07(Integer.parseInt(scPackage.getPackageNo()));
 		Boolean plant = scPackage.getPlantIncludedContract();
-		if (plant)
+		if (plant != null && plant)
 			headerRequestObj.setMultiPlantFlag("1");
 		else
 			headerRequestObj.setMultiPlantFlag("0");
