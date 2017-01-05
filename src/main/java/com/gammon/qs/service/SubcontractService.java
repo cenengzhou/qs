@@ -3858,7 +3858,11 @@ public class SubcontractService {
 
 	public List<SubcontractDetail> obtainSubcontractDetails(Map<String, String> commonKeyValue) {
 		String noJob = commonKeyValue.get("jobNo");
-		if(StringUtils.isNotEmpty(noJob)) adminService.canAccessJob(noJob);
+		if(StringUtils.isNotEmpty(noJob)) {
+			adminService.canAccessJob(noJob);
+		} else {
+			throw new IllegalArgumentException("Job number is empty");
+		}
 		LinkedHashMap<String, String> orderMap = new LinkedHashMap<>();
 		orderMap.put("subcontract.packageNo", "ASC");
 		orderMap.put("sequenceNo", "ASC");

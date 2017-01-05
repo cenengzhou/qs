@@ -39,6 +39,7 @@ public class TransitHBDao extends BaseHibernateDao<Transit> {
 			logger.info("getAllTransitHeaders: " + "status not inputted");
 		
 		Criteria criteria = getSession().createCriteria(this.getType());
+		addCriteriaByCanAccessJobList(criteria, "jobNumber");
 		criteria.add(Restrictions.eq("systemStatus","ACTIVE"));
 		criteria.addOrder(Order.asc("jobNumber"));
 		if(!GenericValidator.isBlankOrNull(status)){

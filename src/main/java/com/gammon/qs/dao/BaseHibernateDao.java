@@ -212,20 +212,20 @@ public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 		
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		if(showCanAccessJobOnly && StringUtils.isEmpty(commonKeyValue.get("jobInfo.jobNumber"))){
-			addCriteriaByCanAccessJobList(criteria);
+			addCriteriaByCanAccessJobList(criteria, "jobInfo.jobNumber");
 		}
 		return criteria;
 	}
 	
-	public Criteria addCriteriaByCanAccessJobList(Criteria criteria){
+	public Criteria addCriteriaByCanAccessJobList(Criteria criteria, String fieldName){
 		List<String> jobNoList = adminService.obtainCanAccessJobNoStringList();
-		if(jobNoList != null){
+		if(jobNoList != null && !StringUtils.equals(jobNoList.get(0), "JOB_ALL")){
 			Disjunction or = Restrictions.disjunction();
 			for(int i=0; i < jobNoList.size(); i+=500){
 				int from = i;
 				int to = i+499 < jobNoList.size() ? i+499 : jobNoList.size(); 
 				logger.info("addCriteriaByCanAccessJobList from:" + from + " to:" + to);
-				or.add(Restrictions.in("jobInfo.jobNumber", jobNoList.subList(from, to)));
+				or.add(Restrictions.in(fieldName, jobNoList.subList(from, to)));
 			}
 			criteria.add(or);
 		}

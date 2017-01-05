@@ -399,7 +399,7 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
 	$scope.loadGridData();
 	
 	$scope.recalculateSCSummary = function (){
-		subcontractService.calculateTotalWDandCertAmount($scope.searchJobNo, '', true)
+		subcontractService.calculateTotalWDandCertAmount($scope.commonKeyValue['jobInfo.jobNumber'], '', true)
 		.then(
 				function( data ) {
 					if(data){
