@@ -1,5 +1,5 @@
-mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService',
-                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService) {
+mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state',
+                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state) {
 	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
@@ -104,6 +104,10 @@ mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'col
 			eventTextColor: colorCode.white,
 			eventRender: function(event, element) {
 				element.attr('title', event.tooltip);
+			},
+			eventClick: function(calEvent, jsEvent, view) {
+				var selectedMainCertNo = calEvent.title.substring(9);
+				$state.go('cert-details', {mainCertNo: selectedMainCertNo});
 			}
 		});
 	}

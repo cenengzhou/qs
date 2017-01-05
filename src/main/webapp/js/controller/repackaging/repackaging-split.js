@@ -1,7 +1,7 @@
 mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitService', 'resourceSummaryService', '$uibModalInstance', 'uiGridConstants', '$cookies', 'modalStatus', 'modalParam', 'modalService', 'roundUtil', '$state', 
                                                  function ($scope, $location, unitService, resourceSummaryService, $uibModalInstance, uiGridConstants, $cookies, modalStatus, modalParam, modalService, roundUtil, $state) {
 
-	var action = modalStatus;
+	$scope.action = modalStatus;
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	//$scope.repackagingId = $cookies.get("repackagingId");
@@ -228,13 +228,13 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 			return;
 		}
 		
-		if(action == "Split"){
+		if($scope.action == "Split"){
 			if($scope.gridOptionsSplit.data.length < 2){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please split into at least 2 new resources.");
 				$scope.disableButtons = false;
 				return;
 			}
-		}else if (action == "Merge"){
+		}else if ($scope.action == "Merge"){
 			if($scope.gridOptionsSplit.data.length != 1){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources should be merged into one resource only.");
 				$scope.disableButtons = false;

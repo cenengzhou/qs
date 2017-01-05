@@ -1751,7 +1751,7 @@ public class SubcontractService {
 		return message;
 	}
 
-	private void updateResourceSummaryIVFromSCNonVO(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double movement){
+	/*private void updateResourceSummaryIVFromSCNonVO(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double movement){
 		logger.info("Job: " + job.getJobNumber() + ", Package: " + packageNo + ", Object: " + objectCode + ", Subsidiary: " + subsidiaryCode + ", Movement: " + movement);
 
 		try{
@@ -1803,6 +1803,87 @@ public class SubcontractService {
 				double currIv = resourceSummary.getCurrIVAmount() + resourceMovement;
 				resourceSummary.setCurrIVAmount(new Double(currIv));
 				resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+			}
+		}catch (DatabaseOperationException dbException){
+			dbException.printStackTrace();
+		}
+	}*/
+
+	private void updateResourceSummaryIVFromBQ(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double cumIVAmount){
+		logger.info("Job: " + job.getJobNumber() + ", Package: " + packageNo + ", Object: " + objectCode + ", Subsidiary: " + subsidiaryCode + ", cumIVAmount: " + cumIVAmount);
+
+		try{
+			//double accountAmount = 0;
+			//double movementProportion = 0;
+			
+			//Validation: No Resource Summary
+			List<ResourceSummary> resourceSummaries = resourceSummaryHBDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+			if (resourceSummaries == null){
+				logger.info("Resource Summary does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode);
+				return;
+			}
+			
+			HashMap<Long, SubcontractDetail> resourceIDofSCAddendum = new HashMap<Long, SubcontractDetail>();
+			for (SubcontractDetail scDetails : subcontractDetailHBDao.getBQSCDetails(job.getJobNumber(), packageNo)) {
+				ResourceSummary resourceSummaryInDB = null;
+				if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
+					resourceSummaryInDB = resourceSummaryHBDao.get(scDetails.getResourceNo().longValue());
+					
+					if (resourceSummaryInDB == null || 
+						!packageNo.equals(resourceSummaryInDB.getPackageNo()) || 
+						!resourceSummaryInDB.getObjectCode().equals(scDetails.getObjectCode()) || 
+						!resourceSummaryInDB.getSubsidiaryCode().equals(scDetails.getSubsidiaryCode()) || 
+						!resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber()))
+						resourceSummaryInDB = null;
+				}
+				if (!"BQ".equals(scDetails.getLineType()) && 
+					!"B1".equals(scDetails.getLineType()) && 
+					!Double.valueOf(0.0).equals(scDetails.getCostRate()) && 
+					resourceSummaryInDB != null)
+					resourceIDofSCAddendum.put(scDetails.getResourceNo().longValue(), scDetails);
+			}
+
+			
+			// Update the Cumulative iv of the resource summaries
+			for (ResourceSummary resourceSummary : resourceSummaries) {
+				double resourceAmount = resourceSummary.getAmountBudget();
+				if (resourceAmount == 0 || resourceIDofSCAddendum.get(resourceSummary.getId()) != null)
+					continue;
+				
+				//TODO
+				//Need to handle negative amount as well 
+				//Case 1: positive IV amount
+				if(cumIVAmount > 0 && resourceAmount > 0){
+					if(resourceAmount > cumIVAmount){
+						resourceSummary.setCurrIVAmount(cumIVAmount);
+						resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+						cumIVAmount = 0.0;
+					}else{
+						resourceSummary.setCurrIVAmount(resourceAmount);
+						resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+						cumIVAmount -= resourceAmount;
+					}
+				}
+				//Case 2: negative IV amount
+				else if (cumIVAmount < 0 && resourceAmount < 0){
+					if(resourceAmount < cumIVAmount){
+						resourceSummary.setCurrIVAmount(cumIVAmount);
+						resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+						cumIVAmount = 0.0;
+					}else{
+						resourceSummary.setCurrIVAmount(resourceAmount);
+						resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+						cumIVAmount -= resourceAmount;
+					}
+				}
+				//Set the rest as zero when cumIVAmount = 0
+				else{
+					resourceSummary.setCurrIVAmount(0.0);
+					resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+
+				}
+					
+
 			}
 		}catch (DatabaseOperationException dbException){
 			dbException.printStackTrace();
@@ -3910,8 +3991,8 @@ public class SubcontractService {
 				return message;
 			}
 
-			double cumWorkDoneQty = subcontractDetail.getCumWorkDoneQuantity()!=null ? subcontractDetail.getCumWorkDoneQuantity():0.0;
-			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? subcontractDetail.getAmountCumulativeWD().doubleValue():0.0;
+			double cumWorkDoneQty = subcontractDetail.getCumWorkDoneQuantity()!=null ? CalculationUtil.round(subcontractDetail.getCumWorkDoneQuantity(), 4):0.0;
+			double cumWorkDoneAmt = subcontractDetail.getAmountCumulativeWD()!=null ? CalculationUtil.round(subcontractDetail.getAmountCumulativeWD().doubleValue(), 2):0.0;
 			message = calculateWDandIV((SubcontractDetailOA)scDetailInDB, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
 
 		} catch (DatabaseOperationException e) {
@@ -4049,9 +4130,12 @@ public class SubcontractService {
 														scDetailInDB.getResourceNo().longValue());
 					// Update IV for BQ, V1 (no budget)
 					else
-						updateResourceSummaryIVFromSCNonVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
+						updateResourceSummaryIVFromBQ(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
+								scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),	
+								CalculationUtil.round(cumWorkDoneQty  * scDetailInDB.getCostRate(), 2));
+						/*updateResourceSummaryIVFromSCNonVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
 														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
-														CalculationUtil.round(cumWorkDoneQtyMovement  * scDetailInDB.getCostRate(), 2));
+														CalculationUtil.round(cumWorkDoneQtyMovement  * scDetailInDB.getCostRate(), 2));*/
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -4284,7 +4368,10 @@ public class SubcontractService {
 			// Update resource summaries
 			for (Entry<String, Double> entry : accountIV.entrySet()) {
 				String[] objSub = entry.getKey().split("\\.");
-				updateResourceSummaryIVFromSCNonVO(job, packageNo, objSub[0], objSub[1], entry.getValue());
+				//TODO
+				//Rewrite this part for resource summary recalculation
+				updateResourceSummaryIVFromBQ(job, packageNo, objSub[0], objSub[1], entry.getValue());
+				
 			}
 
 		}catch(DatabaseOperationException dbException){

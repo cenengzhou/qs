@@ -20,16 +20,16 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			exporterMenuPdf: false,
 
 			columnDefs: [
-			             { field: 'objectCode'},
-			             { field: 'subsidiaryCode'},
-			             { field: 'resourceDescription', displayName: "Description"},
-			             { field: 'unit'},
-			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'rate', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
+			             { field: 'objectCode', width: 60},
+			             { field: 'subsidiaryCode', width: 80},
+			             { field: 'resourceDescription', displayName: "Description", width: 100},
+			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2', width: 100},
+			             { field: 'rate', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2', width: 100},
+			             { field: 'amountBudget', displayName: "Amount", width: 100, enableFiltering: false, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+		            	 { field: 'unit', width: 60},
 			             { field: 'id', visible: false}
 			             ]
 
@@ -53,17 +53,17 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 
 			columnDefs: [
-			             { field: 'objectCode'},
-			             { field: 'subsidiaryCode'},
-			             { field: 'description'},
-			             { field: 'unit',  editableCellTemplate: 'ui-grid/dropdownEditor',
-			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
-			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: 'rateBudget', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4'},
-			             { field: 'amountBudget', displayName: "Amount", enableFiltering: false, 
+			             { field: 'objectCode', width: 60},
+			             { field: 'subsidiaryCode', width: 80},
+			             { field: 'description', width: 100},
+			             { field: 'quantity', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4', width: 100},
+			             { field: 'rateBudget', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4', width: 100},
+			             { field: 'amountBudget', displayName: "Amount", width: 100, enableFiltering: false, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2',
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
+			            { field: 'unit',  editableCellTemplate: 'ui-grid/dropdownEditor', width: 60,
+				            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units},
 			            { field: 'resourceNo', visible: false}	 
 
 			             ]
@@ -113,10 +113,10 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			"objectCode": "",
 			"subsidiaryCode": "",
 			"description": "",
-			"unit": "",
 			"quantity": 0,
 			"rateBudget": 1,
-			"amountBudget": 0
+			"amountBudget": 0, 
+			"unit": ""
 		});
 	};
 
@@ -133,11 +133,11 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 				"objectCode": resources[i]['objectCode'],
 				"subsidiaryCode": resources[i]['subsidiaryCode'],
 				"description": resources[i]['resourceDescription'],
-				"unit": resources[i]['unit'],
 				"quantity": resources[i]['quantity'],
 				"rateBudget": resources[i]['rate'],
 				"amountBudget": resources[i]['amountBudget'],
-				"resourceNo": resources[i]['id']
+				"resourceNo": resources[i]['id'],
+				"unit": resources[i]['unit']
 			});
 		}
 

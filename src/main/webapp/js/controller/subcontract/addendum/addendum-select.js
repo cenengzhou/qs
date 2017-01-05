@@ -1,5 +1,5 @@
-mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode', 'addendumService', 'subcontractService',
-                                    function($scope, modalService, colorCode,  addendumService, subcontractService) {
+mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode', 'addendumService', 'subcontractService', '$state',
+                                    function($scope, modalService, colorCode,  addendumService, subcontractService, $state) {
 
 	$scope.maxAddendumNo = 0;
 	$scope.latestAddendumStatus = '';
@@ -89,6 +89,10 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 			eventTextColor: colorCode.white,
 			eventRender: function(event, element) {
 				element.attr('title', event.tooltip);
+			},
+			eventClick: function(calEvent, jsEvent, view) {
+				var selectedAddendumNo = calEvent.title.substring(13);
+				$state.go('subcontract.addendum.title', {addendumNo: selectedAddendumNo});
 			}
 		});
 	}

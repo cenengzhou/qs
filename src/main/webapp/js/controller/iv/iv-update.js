@@ -221,7 +221,7 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 			enableCellEditOnFocus : true,
 			rowEditWaitInterval :-1,
 			exporterMenuPdf: false,
-			columnDefs: [
+			columnDefs: [{ field: 'id', enableCellEdit: false, width:80, visible:false},
 			             { field: 'packageNo', displayName: "Subcontract No.", enableCellEdit: false, width:80},
 			             { field: 'objectCode', displayName: 'Object Code',  enableCellEdit: false , width:80},
 			             { field: 'subsidiaryCode', displayName: 'Subsidiary Code', enableCellEdit: false, width:80},

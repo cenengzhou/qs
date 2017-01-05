@@ -220,6 +220,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		}
 		
 		var resourceType = '-';
+		var scNoListForMerge = '';
 		for (i in selectedRows){
 			if(resourceType == '-'){
 				resourceType = selectedRows[i]['resourceType'];
@@ -228,17 +229,29 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources cannot be merged - resources must have the same type.");
 				return false;
 			}
+			
+			if (selectedRows[i]['postedIVAmount'] != 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");
+				return false;
+			}
+			
 			if (selectedRows[i]['packageNo'] != null && selectedRows[i]['packageNo'].length > 0){
-				if(action != 'split' || selectedRows[i]['objectCode'].substring(0, 2) != "13"){
+				if(selectedRows[i]['objectCode'].substring(0, 2) != "13"){
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resources with assigned subcontract cannot be edited here.");
 					return false;
 					
 				}
 			}
-			if (selectedRows[i]['postedIVAmount'] != 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected resource has posted IV amount.");
-				return false;
+			
+			if(action == 'merge' && selectedRows[i]['objectCode'].substring(0, 2) == "13"){
+				if(scNoListForMerge != null && scNoListForMerge.length ==0)
+					scNoListForMerge = selectedRows[i]['packageNo'];
+				else if(scNoListForMerge!=selectedRows[i]['packageNo']){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Only resources with the same Subcontract No. can be merged.");
+					return false;
+				}
 			}
+			
 		}
 		
 		return true;
@@ -246,7 +259,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	
 	$scope.deleteResources = function(){
 		var selectedRows = $scope.gridApi.selection.getSelectedRows();
-		//console.log(selectedRows);
 		if(selectedRows.length == 0){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select resources to delete.");
 			return;

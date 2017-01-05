@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jdeService',
-                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jdeService) {
+mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jdeService', '$state',
+                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jdeService, $state) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
@@ -198,6 +198,10 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService',
 			eventTextColor: colorCode.white,
 			eventRender: function(event, element) {
 				element.attr('title', event.tooltip);
+			},
+			eventClick: function(calEvent, jsEvent, view) {
+				var selectedCertNo = calEvent.title.substring(9);
+				$state.go('subcontract.payment.certificate', {paymentCertNo: selectedCertNo, paymentTermsDesc: $scope.paymentTerms});
 			}
 		});
 	}
