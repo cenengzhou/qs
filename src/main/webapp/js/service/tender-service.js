@@ -99,7 +99,7 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
 	
-	function createTender(jobNo, subcontractNo, subcontractorNo) {
+	function createTender(jobNo, subcontractNo, subcontractorNo, subcontractorName) {
 		var request = $http({
 			method: "post",
 			url: "service/tender/createTender",
@@ -107,7 +107,9 @@ mainApp.service('tenderService', ['$http', '$q', 'GlobalHelper', function($http,
 			params: {
 				jobNo: jobNo,
 				subcontractNo: subcontractNo,
-				subcontractorNo: subcontractorNo
+				subcontractorNo: subcontractorNo,
+				subcontractorName: subcontractorName
+				
 			}
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

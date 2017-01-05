@@ -181,7 +181,7 @@ public class Tender extends BasePersistedObject{
 		this.datePrepared = datePrepared;
 	}
 
-	@Column(name = "NAME_SUBCONTRACTOR", length = 20)
+	@Column(name = "NAME_SUBCONTRACTOR", length = 40)
 	public String getNameSubcontractor() {
 		return nameSubcontractor;
 	}

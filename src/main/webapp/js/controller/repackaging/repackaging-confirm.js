@@ -34,27 +34,28 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 			exporterMenuPdf: false,
 
 			columnDefs: [
+						 { field: 'id', visible: false},
 			             { field: 'packageNo', displayName: "Subcontract No.", width: 60},
 			             { field: 'objectCode', width: 80},
 			             { field: 'subsidiaryCode', width: 80},
-			             { field: 'description', width: 100},
-			             { field: 'unit', enableFiltering: false, width: 60},
+			             { field: 'description', width: 130},
+			             { field: 'unit', enableFiltering: false, width: 50},
 			             /*{ field: 'rate', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2'},*/
-			             { field: 'previousAmount', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+			             { field: 'previousAmount', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2', width: 130,
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
-			             { field: 'amount', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2',
+			             { field: 'amount', enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2', width: 130,
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
 			             { field: 'variance', enableFiltering: false, 
-			            	cellClass: 'text-right', cellFilter: 'number:2',
+			            	cellClass: 'text-right', cellFilter: 'number:2', width: 130,
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'
 			             },
-			             { field: 'resourceType', displayName: "Type", width: 60},
-			             { field: 'excludeDefect', displayName: "Defect", 
+			             { field: 'resourceType', displayName: "Type", width: 50},
+			             { field: 'excludeDefect', displayName: "Defect", width: 60,
 			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
 			                 filter: { 
 			                   term: '',
@@ -63,7 +64,7 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 			            	 editableCellTemplate: 'ui-grid/dropdownEditor',
 			            	 cellFilter: 'mapExclude', editDropdownValueLabel: 'value',  editDropdownOptionsArray: optionList
 			             },
-			             { field: 'excludeLevy', displayName: "Levy", 
+			             { field: 'excludeLevy', displayName: "Levy", width: 60,
 			            	 filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-repeat="colFilter in col.filters"><div my-custom-dropdown></div></div>', 
 			                 filter: { 
 			                   term: '',
@@ -113,7 +114,6 @@ mainApp.controller('RepackagingConfirmModalCtrl', ['$scope' ,'modalService', 're
 		repackagingService.getRepackagingDetails($scope.repackagingId, showChangesOnly)
 		.then(
 				function( data ) {
-					console.log(data);
 					$scope.gridOptions.data= data.currentPageContentList;
 					$scope.totalBudget = data.totalBudget;
 					$scope.previousBudget = data.previousBudget; 

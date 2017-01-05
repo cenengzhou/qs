@@ -1,8 +1,10 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h4 class="modal-title">Input Feedback Rates -
+			<h4 class="modal-title" ng-if ="tender.vendorNo > 0">Input Feedback Rates -
 				Vendor:{{vendorNo}} Subcontract: {{subcontractNo}}</h4>
+			<h4 class="modal-title" ng-if="tender.vendorNo < 0">Input
+				Feedback Rates - Subcontract: {{subcontractNo}}</h4>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-default pull-right" type="button"

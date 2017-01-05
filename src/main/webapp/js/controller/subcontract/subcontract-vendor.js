@@ -29,7 +29,7 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 		$scope.gridApi.grid.refresh();
 	};
 
-	$scope.addVendor = function(){
+	$scope.addTenderer = function(){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
 			if($scope.newVendorNo != null){
 				jdeService.getSubcontractor($scope.newVendorNo)
@@ -44,11 +44,11 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 									};
 									confirmService.showModal({}, modalOptions).then(function (result) {
 										if(result == "Yes"){
-											createTender();
+											createTender($scope.newVendorNo, null);
 										}
 									});
 								}else
-									createTender();
+									createTender($scope.newVendorNo, null);
 							}
 						});
 			}
@@ -61,6 +61,19 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 	};
 	
 
+	$scope.addNotApprovedTenderer = function (){
+		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
+			if($scope.newVendorName != null){
+				createTender(null, $scope.newVendorName);
+			}
+			else{
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input tenderer number.");
+			}
+		}else{
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");
+		}
+	}
+		
 	$scope.editSubcontractor = function(subcontractorToUpdate){
 		modalService.open('lg', 'view/subcontract/modal/subcontract-vendor-feedback.html', 'SubcontractVendorFeedbackModalCtrl', '', subcontractorToUpdate);
 	};
@@ -162,17 +175,19 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 				});
 	}
 
-	function createTender(){
-		tenderService.createTender($scope.jobNo, $scope.subcontractNo, $scope.newVendorNo)
+	function createTender(tenderNo, tenderName){
+		tenderService.createTender($scope.jobNo, $scope.subcontractNo, tenderNo, tenderName)
 		.then(
 				function( data ) {
 					if(data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('lg', 'view/subcontract/modal/subcontract-vendor-feedback.html', 'SubcontractVendorFeedbackModalCtrl', '', $scope.newVendorNo);
+						if (isNaN(data))
+							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+						else
+							modalService.open('lg', 'view/subcontract/modal/subcontract-vendor-feedback.html', 'SubcontractVendorFeedbackModalCtrl', '', data);	//vendorNo							
 					}
 				});
 	}
+	
 	
 	function getTenderComparisonList() {
 		tenderService.getTenderComparisonList($scope.jobNo, $scope.subcontractNo)

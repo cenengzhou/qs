@@ -34,6 +34,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			rowEditWaitInterval :-1,
 			
 			columnDefs: [
+						 { field: 'id', enableCellEdit: false, visible: false},
 			             { field: 'packageNo', displayName: "Subcontract No."},
 			             { field: 'objectCode', cellClass: "blue"},
 			             { field: 'subsidiaryCode', cellClass: "blue"},
@@ -320,6 +321,9 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		resourceSummaryService.getResourceSummaries($scope.jobNo, "", "")
 		.then(
 				function( data ) {
+					/*data.sort(function(a, b) {
+					    return new Date(b.lastModifiedDate) - new Date(a.lastModifiedDate);
+					});*/
 					$scope.gridOptions.data= data;
 				});
 	}

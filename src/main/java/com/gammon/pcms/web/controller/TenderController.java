@@ -102,14 +102,17 @@ public class TenderController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','createTender', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "createTender", method = RequestMethod.POST)
-	public String createTender(@RequestParam(name="jobNo") String jobNo, 
-								@RequestParam(name="subcontractNo") String subcontractNo,
-								@RequestParam(name="subcontractorNo") Integer subcontractorNo) throws Exception{
+	public String createTender(@RequestParam(required = true) String jobNo, 
+								@RequestParam(required = true) String subcontractNo,
+								@RequestParam(required = false) Integer subcontractorNo, 
+								@RequestParam(required = false) String subcontractorName
+								) throws Exception{
 
 		String result = "";
-		result = tenderService.createTender(jobNo, subcontractNo, subcontractorNo);
+		result = tenderService.createTender(jobNo, subcontractNo, subcontractorNo, subcontractorName);
 		return result;
 	}
+	
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TenderController','updateRecommendedTender', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "updateRecommendedTender", method = RequestMethod.POST)

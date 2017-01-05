@@ -565,45 +565,63 @@ public class TenderService implements Serializable {
 	
 	/**
 	 * @author koeyyeung
-	 * created on 04 Jul, 2016**/
-	public String createTender(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{
-		String error = "";
+	 * created on 04 Jul, 2016
+	 * @param subcontractorName **/
+	public String createTender(String jobNo, String subcontractNo, Integer subcontractorNo, String subcontractorName) throws Exception{
+		logger.info("jobNo: "+jobNo+" - subcontractNo: "+subcontractNo+" - subcontractorNo: "+subcontractorNo+" - subcontractorName: "+subcontractorName);
+		String result = "";
 		try {
-			Tender tenderInDB = this.obtainTender(jobNo, subcontractNo, subcontractorNo);
-			if(tenderInDB != null){
-				error = "Subcontractor already exists.";
-				return error;
+			if(subcontractorNo != null){
+				Tender tenderInDB = this.obtainTender(jobNo, subcontractNo, subcontractorNo);
+				if(tenderInDB != null){
+					result = "Subcontractor already exists.";
+					return result;
+				}
 			}
 			
 			JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
-			MasterListVendor masterListVendor = masterListService.obtainVendorByVendorNo(String.valueOf(subcontractorNo));
-			
 			
 			Tender tender = new Tender();
 			tender.setSubcontract(subcontractDao.obtainSCPackage(jobNo, subcontractNo));
-			tender.setVendorNo(subcontractorNo);
-			tender.setNameSubcontractor(masterListVendor!=null? masterListVendor.getVendorName():"");
+			
 			tender.setJobNo(jobNo);
 			tender.setPackageNo(subcontractNo);
 			tender.setCurrencyCode("HKD");
 			tender.setExchangeRate(Double.valueOf(1));
-			if("1".equals(job.getRepackagingType()))
-				tender.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontractNo));
-			else
-				tender.setBudgetAmount(bpiItemResourceDao.getBudgetForPackage(jobNo, subcontractNo));
+			//if("1".equals(job.getRepackagingType()))
+			tender.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontractNo));
+			/*else
+				tender.setBudgetAmount(bpiItemResourceDao.getBudgetForPackage(jobNo, subcontractNo));*/
 
+			
+			if(subcontractorNo != null){
+				MasterListVendor masterListVendor = masterListService.obtainVendorByVendorNo(String.valueOf(subcontractorNo));
+				tender.setVendorNo(subcontractorNo);
+				tender.setNameSubcontractor(masterListVendor!=null? masterListVendor.getVendorName():"");
+			}else{
+				List<Tender> tenderList = tenderDao.obtainTenderList(jobNo, subcontractNo);
+				subcontractorNo = -1;
+				if(tenderList !=null && tenderList.get(0).getVendorNo() < 0)
+					subcontractorNo = tenderList.get(0).getVendorNo() -1;
+				tender.setVendorNo(subcontractorNo);
+				tender.setNameSubcontractor(subcontractorName);
+			}
+			
+			
 			tenderDao.insert(tender);
 
-			error = createTenderDetails(jobNo, subcontractNo, subcontractorNo);
+			result = createTenderDetails(jobNo, subcontractNo, subcontractorNo);
+			if(result.length()==0)
+				result = subcontractorNo.toString();
 		} catch (Exception e) {
-			error = "Subcontractor cannot be created.";
+			result = "Subcontractor cannot be created.";
 			e.printStackTrace();
 		}
-		return error;
+		return result;
 	}
-
-
+	
 	private String createTenderDetails(String jobNo, String subcontractNo, Integer subcontractorNo) throws Exception{
+		logger.info("jobNo: "+jobNo+" - subcontractNo: "+subcontractNo+" - subcontractorNo: "+subcontractorNo);
 		String error = "";
 		try {
 			Tender tenderInDB = tenderDao.obtainTender(jobNo, subcontractNo, subcontractorNo);
@@ -1023,6 +1041,11 @@ public class TenderService implements Serializable {
 	public String updateRecommendedTender(String jobNo, String subcontractNo, Integer vendorNo) {
 		String error = "";
 		try {
+			if(vendorNo == null || vendorNo <0){
+				error = "Only registered Tenderer in system can be selected as recommended Tenderer.";
+				return error;
+			}
+			
 			PaymentCert latestPaymentCert = paymentCertDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 			
 			if(latestPaymentCert!=null 
@@ -1108,8 +1131,9 @@ public class TenderService implements Serializable {
 		tenderComparisonDTO.setVendorDetailMap(vendorDetailMap);
 		return tenderComparisonDTO;
 	}
-	
-	
+
+
+
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	
 }
