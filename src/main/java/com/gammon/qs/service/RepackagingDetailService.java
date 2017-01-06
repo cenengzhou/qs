@@ -370,14 +370,15 @@ public class RepackagingDetailService implements Serializable {
 		wrapper.setTotalSellingValue(totalBudget + totalMarkup);
 		wrapper.setPreviousBudget(previousBudget);
 		wrapper.setPreviousSellingValue(previousBudget + previousMarkup);
-		int size = cachedResults.size();
+		/*int size = cachedResults.size();
 		wrapper.setTotalRecords(size);
 		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
 		int fromInd = pageNum * RECORDS_PER_PAGE;
 		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
 		if(toInd > cachedResults.size())
 			toInd = cachedResults.size();
-		wrapper.setCurrentPageContentList(new ArrayList<RepackagingDetailComparisonWrapper>(cachedResults.subList(fromInd, toInd)));
+		wrapper.setCurrentPageContentList(new ArrayList<RepackagingDetailComparisonWrapper>(cachedResults.subList(fromInd, toInd)));*/
+		wrapper.setCurrentPageContentList(new ArrayList<RepackagingDetailComparisonWrapper>(cachedResults));
 		return wrapper;
 	}
 	
