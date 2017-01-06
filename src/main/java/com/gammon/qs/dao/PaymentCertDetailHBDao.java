@@ -84,14 +84,12 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 
 	@SuppressWarnings("unchecked")
 	public List<PaymentCertDetail> getPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo) throws DatabaseOperationException {
-		PaymentCert paymentCert = null;
 		if (jobNumber == null || packageNo == null || paymentCertNo == null)
 			throw new NullPointerException("Job No. / Package No. / Payment Certificate No. is Null");
 
-		paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
-
-		if(paymentCert == null)
-			throw new NullPointerException("SC Payment Cert is Null");
+		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
+		if (paymentCert == null)
+			throw new NullPointerException("Payment Certificate is Null");
 
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -99,7 +97,7 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			return (List<PaymentCertDetail>) criteria.list();
 
 		} catch (HibernateException he) {
-			logger.info("Fail: getPaymentCert(String jobNumber, Integer packageNo, Integer paymentCertNo)");
+			logger.info("Fail: getPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}
