@@ -6,7 +6,8 @@ mainApp.service('userpreferenceService', ['$http', '$q', 'GlobalHelper', '$rootS
     	settingDefaultJobNo:						settingDefaultJobNo,
     	getNotificationReadStatusByCurrentUser: 	getNotificationReadStatusByCurrentUser,
     	insertNotificationReadStatusByCurrentUser: insertNotificationReadStatusByCurrentUser,
-    	updateNotificationReadStatusByCurrentUser: updateNotificationReadStatusByCurrentUser
+    	updateNotificationReadStatusByCurrentUser: updateNotificationReadStatusByCurrentUser,
+    	updateAnnouncentSetting: 						updateAnnouncentSetting
     });
    
     function obtainUserPreferenceByCurrentUser(){
@@ -53,6 +54,10 @@ mainApp.service('userpreferenceService', ['$http', '$q', 'GlobalHelper', '$rootS
 	}
 
 	
+	function updateAnnouncentSetting(setting){
+		var request = $http.post('service/userPreference/updateAnnouncentSetting', JSON.stringify(setting));
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
 }]);
 
 

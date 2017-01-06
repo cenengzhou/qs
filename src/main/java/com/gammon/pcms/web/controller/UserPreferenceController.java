@@ -55,6 +55,17 @@ public class UserPreferenceController {
 		return msg;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsEnq())")
+	@RequestMapping(value = "updateAnnouncentSetting", method = RequestMethod.POST)
+	public String updateAnnouncentSetting(@RequestBody String setting) throws DatabaseOperationException{
+		String msg = null;
+		try{
+			msg = userPreferenceService.updateAnnouncentSetting(setting);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return msg;
+	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','obtainUserPreferenceByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)

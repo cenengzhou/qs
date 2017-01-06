@@ -77,4 +77,11 @@ public class UserPreferenceHBDao extends BaseHibernateDao<UserPreference> {
 		criteria.setMaxResults(1);
 		return (UserPreference) criteria.uniqueResult();
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<UserPreference> getUserPreferenceAnnouncementList() {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("keyPreference", UserPreference.NOTIFICATION_READ_STATUS));
+		return criteria.list();
+	}
 }

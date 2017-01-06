@@ -42,8 +42,8 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 	function showNotiifcation(){
 		$timeout(function(){
 			$.gritter.add({
-				title: 'Announcement: Year End Cutoff!',
-				text: 'Please view the details in the announcement board.',
+				title: 'Announcement',
+				text: 'Please view the details in the announcement board to see what has been updated.',
 				image: 'image/new2.png',
 				sticky: false,
 				time: '8000'

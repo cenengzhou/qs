@@ -1338,6 +1338,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-SubcontractStandardTermsAddModal.js',
                            'js/controller/admin/admin-SchedulerMaintenance.js',
                            'js/controller/admin/admin-SystemInformation.js',
+                           'js/controller/admin/admin-AnnouncementSetting.js',
                            'view/admin/admin-Revisions-Subcontract.html',
                            'view/admin/admin-Revisions-Payment.html',
                            'view/admin/admin-Revisions-Addendum.html',
@@ -1352,30 +1353,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.session',{
 		url: '/session',
 		templateUrl: 'view/admin/admin-session.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: "AdminSessionCtrl",
 		controllerAs: 'sessionCtrl'
 	})
 	.state('admin.ManualProcedures',{
 		url: '/ManualProcedures',
 		templateUrl: 'view/admin/admin-ManualProcedures.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminManualProceduresCtrl',
 		controllerAs: 'manualProceduresCtrl'
 	})
 	.state('admin.Revisions',{
 		url: '/Revisions',
 		templateUrl: 'view/admin/admin-Revisions.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminRevisionsCtrl',
 		controllerAs: 'revisionsCtrl'
 	})
@@ -1412,68 +1401,41 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',
 		templateUrl: 'view/admin/admin-TransitUOMMaintenance.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminTransitUOMMaintenanceCtrl',
 		controllerAs: 'transitUOMMaintenanceCtrl'
 	})
 	.state('admin.TransitResourceCodeMaintenance',{
 		url: '/TransitResourceCodeMaintenance',
 		templateUrl: 'view/admin/admin-TransitResourceCodeMaintenance.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminTransitResourceCodeMaintenanceCtrl',
 		controllerAs: 'resourceCodeMaintenanceCtrl'
 	})
 	.state('admin.SubcontractStandardTermsMaintenance',{
 		url: '/SubcontractStandardTermsMaintenance',
 		templateUrl: 'view/admin/admin-SubcontractStandardTermsMaintenance.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminSubcontractStandardTermsMaintenanceCtrl',
 		controllerAs: 'standardTermsMaintenanceCtrl'
 	})
 	.state('admin.SchedulerMaintenance',{
 		url: '/SchedulerMaintenance',
 		templateUrl: 'view/admin/admin-SchedulerMaintenance.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminSchedulerMaintenanceCtrl',
 		controllerAs: 'schedulerMaintenance'
 	})
 	.state('admin.SystemInformation',{
 		url: '/SystemInformation',
 		templateUrl: 'view/admin/admin-SystemInformation.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminSystemInformationCtrl'
 	})
 	.state('admin.SystemInformation.info',{
 		url: '/info',
 		templateUrl: 'view/admin/admin-SystemInformation-info.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
 		controller: 'AdminSystemInformationCtrl'
 	})
-	.state('admin.SystemInformation.test',{
-		url: '/test',
-		templateUrl: 'view/admin/admin-SystemInformation-test.html',
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		}
+	.state('admin.announcementSetting',{
+		url: '/AnnouncementSetting',
+		templateUrl: 'view/admin/admin-announcementSetting.html',
+		controller: 'AnnouncementSettingCtrl'
 	});
 
 }])

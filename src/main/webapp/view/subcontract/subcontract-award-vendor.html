@@ -16,6 +16,7 @@
 						</div>
 						<div class="col-md-10">
 						<h5 ng-if ="tender.vendorNo > 0">{{tender.vendorNo}}</h5>
+						<h5 ng-if ="tender.vendorNo < 0">(Not Registered in System)</h5>
 						<h5>{{tender.nameSubcontractor}}</h5>
 						<h5 class="text-primary" ng-if="companyCurrencyCode==tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss) | currency}}</h5>
 						<h5 class="text-primary" ng-if="companyCurrencyCode!=tender.currencyCode">Tender Budget: {{tender.currencyCode}} {{(tender.budgetAmount-tender.amtBuyingGainLoss)/tender.exchangeRate | currency}}</h5>

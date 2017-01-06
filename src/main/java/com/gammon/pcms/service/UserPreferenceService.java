@@ -2,11 +2,13 @@ package com.gammon.pcms.service;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,6 +113,22 @@ public class UserPreferenceService {
 		preference.setValuePreference(status);
 		
 		userPreferenceHBDao.update(preference);
+		
+		return error;
+	}
+
+	public String updateAnnouncentSetting(String setting) {
+		String error = "";
+		try {
+			List<UserPreference> preferenceList = userPreferenceHBDao.getUserPreferenceAnnouncementList();
+			
+			for(UserPreference preference: preferenceList){
+				preference.setValuePreference(setting);
+				userPreferenceHBDao.update(preference);
+			}
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
 		
 		return error;
 	}
