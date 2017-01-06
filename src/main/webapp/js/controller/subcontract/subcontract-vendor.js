@@ -63,11 +63,11 @@ mainApp.controller('SubcontractorCtrl', ['$scope', 'subcontractService', 'jdeSer
 
 	$scope.addNotApprovedTenderer = function (){
 		if($scope.subcontractNo!="" && $scope.subcontractNo!=null){
-			if($scope.newVendorName != null){
+			if($scope.newVendorName != null && $scope.newVendorName.trim().length > 0){
 				createTender(null, $scope.newVendorName);
 			}
 			else{
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input tenderer number.");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input tenderer name.");
 			}
 		}else{
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract does not exist.");

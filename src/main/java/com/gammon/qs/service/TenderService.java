@@ -601,7 +601,7 @@ public class TenderService implements Serializable {
 			}else{
 				List<Tender> tenderList = tenderDao.obtainTenderList(jobNo, subcontractNo);
 				subcontractorNo = -1;
-				if(tenderList !=null && tenderList.get(0).getVendorNo() < 0)
+				if(tenderList !=null && tenderList.size()>0 && tenderList.get(0).getVendorNo() < 0)
 					subcontractorNo = tenderList.get(0).getVendorNo() -1;
 				tender.setVendorNo(subcontractorNo);
 				tender.setNameSubcontractor(subcontractorName);
