@@ -287,9 +287,9 @@ mainApp.constant('GlobalParameter', {
        {id:'12', value:'December'}
     ],
     subcontractorVenderType: [
-       {id:1, value:'Supplier'},
-       {id:2, value:'Subcontractor'},
-       {id:3, value:'Both (Supplier & Subcontractor)'}
+       {id:'1', value:'Supplier'},
+       {id:'2', value:'Subcontractor'},
+       {id:'3', value:'Both (Supplier & Subcontractor)'}
     ],
     subcontractorVendorStatus: [
        {id:'1', value:'Performance being observed'},
