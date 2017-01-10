@@ -1,5 +1,5 @@
-mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'systemService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', '$location', 
-                                              function($scope ,modalService, addendumService, subcontractService, systemService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam, $location) {
+mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'jdeService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', '$location', 
+                                              function($scope ,modalService, addendumService, subcontractService, jdeService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam, $location) {
 
 	var jobNo = $cookies.get('jobNo');
 	var subcontractNo = $cookies.get('subcontractNo');
@@ -133,7 +133,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	}
 	
 	function getUnitOfMeasurementList() {
-		systemService.getUnitOfMeasurementList()
+		jdeService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

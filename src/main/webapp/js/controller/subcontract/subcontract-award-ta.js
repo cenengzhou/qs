@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'systemService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil', 'paymentService',
-                                         function ($scope, resourceSummaryService, tenderService, subcontractService, systemService, modalService, $state, uiGridConstants, confirmService, roundUtil, paymentService) {
+mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'tenderService', 'subcontractService', 'jdeService', 'modalService', '$state', 'uiGridConstants', 'confirmService', 'roundUtil', 'paymentService',
+                                         function ($scope, resourceSummaryService, tenderService, subcontractService, jdeService, modalService, $state, uiGridConstants, confirmService, roundUtil, paymentService) {
 
 	$scope.units=[];
 	var accountBalance = {};
@@ -325,7 +325,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 		}
 
 	function getUnitOfMeasurementList() {
-		systemService.getUnitOfMeasurementList()
+		jdeService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

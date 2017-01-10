@@ -44,6 +44,8 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 		$scope.failCount = [];
 		$scope.testQueue = [];
 		$scope.runningQueue = [];
+		$scope.panelList = [];
+		$scope.categorys = {};
 		$scope.testQueueInterval = {};
 		$scope.allTestCase = response.data;
 		$scope.allTestCase.forEach(function(testCase){
@@ -56,6 +58,10 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 			$scope.runningCount[testCase.category] = {};
 			$scope.successCount[testCase.category] = {};
 			$scope.failCount[testCase.category] = {};
+			if(!$scope.categorys[testCase.category]) {
+				$scope.categorys[testCase.category] = {'name': testCase.category, 'show': true};
+				$scope.panelList.push($scope.categorys[testCase.category]);
+			}
 		});
 	})
 
@@ -188,6 +194,19 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 // 			console.log(tid + ':' + time);
 		}, 1000)
 	}
+	
+	$scope.showPanel = function(panel){
+		$scope.panelList.forEach(function(p){
+			if(p.name === panel){
+				$scope.flipVisiblity(p);
+				location.href = '#' + panel;
+			}
+		})
+	}
+	$scope.flipVisiblity = function(s){
+		s.show = false;
+		angular.element('#'+(s.name+'Body').replace('|', '\\|')).slideToggle();
+	}
 }]); 
 
 </script>
@@ -198,21 +217,22 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 <div class="navbar navbar-fixed-bottom" style="margin-bottom:-20px">
  	<label class="form-control btn btn-primary" style="color:white" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
 	<div class="well bg-white">All Task: {{allTestCase.length ? allTestCase.length : 0}} | Success: {{getCount(successCount)}} | Fail: {{getCount(failCount)}} | Test Queue: {{testQueue.length}} | Running: {{getCount(runningCount)}} 
-		<div class="pull-right"><span ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'"><a href="#{{categoryKey}}"><label class="btn btn-primary">{{categoryKey}}</label></a> </span></div>
+		<div class="pull-right"><label class="m-r-20">JUMP TO: </label><span ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'"><a href="#{{categoryKey}}"><label class="btn btn-primary">{{categoryKey}}</label></a> </span></div>
 	</div>
 </div>
 <div class="row" style="padding-bottom:100px">
 		<div ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'">
-		<div class="panel panel-inverse"><a name="{{categoryKey}}">
+		<div class="panel panel-inverse">
+            <a href="javascript:;" name="{{categoryKey}}" ng-click="showPanel(categoryKey)" data-click="panel-collapse">
             <div class="panel-heading">
                  <div class="panel-heading-btn">
-                     <label class="btn btn-primary" type="button" ng-click="runGroupTest(categoryValue)">Run Group</label>
-                 </div>
-                
-                	<h4 class="panel-title">{{categoryKey}} | Total Task: {{categoryValue.length}} | Success: {{successCount[categoryKey].length ? successCount[categoryKey].length : 0}} | Fail: {{failCount[categoryKey].length ? failCount[categoryKey].length : 0}} <span ng-show="runningCount[categoryKey].length>0">| Running: {{runningCount[categoryKey].length}}</span></h4>
-               
-            </div> </a>
-            <div class="panel-body p-b-15" style="overflow: auto; width: auto; height: auto;">
+                     <label class="btn btn-primary m-r-20" type="button" ng-click="runGroupTest(categoryValue)">Run Group</label>
+                     <i class="fa fa-wa fa-minus btn btn-xs btn-icon btn-circle btn-inverse"></i>
+                  </div>
+                <h4 class="panel-title">{{categoryKey}} | Total Task: {{categoryValue.length}} | Success: {{successCount[categoryKey].length ? successCount[categoryKey].length : 0}} | Fail: {{failCount[categoryKey].length ? failCount[categoryKey].length : 0}} <span ng-show="runningCount[categoryKey].length>0">| Running: {{runningCount[categoryKey].length}}</span></h4>
+            </div>
+            </a>
+            <div class="panel-body p-b-15" id="{{categoryKey}}Body">
                 <div ng-repeat="(methodKey, methodValue) in categoryValue | groupBy: 'method'">
                     <ul class="feeds">{{methodKey}}
                         <li ng-repeat="(itemKey, itemValue) in methodValue" ng-class="{'bg-warning-light' : itemValue.isRunning === true, 'bg-success-light' : itemValue.testResult.status === true, 'bg-danger-light' : itemValue.testResult.status === false }">
@@ -225,9 +245,9 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
                         </li>
                     </ul>
                 </div>
-              </div>
-            </div>
-        </div>
+           </div>
+      </div>
+      </div>
 		</div>
 		<div></div>
 		</div>

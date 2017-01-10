@@ -76,10 +76,16 @@
 					<span>Announcement Setting</span>
 				</a>
 			</li>	
-			<li ng-if="showIMSEnquiry" ng-class="{'active': activeAdminSideMenu.indexOf('SystemInformation/')>0}">
-				<a ui-sref="admin.SystemInformation.info({activeTab:'System Information'})">
+			<li ng-if="showIMSEnquiry || showIMSAdmin" ng-class="{'active': activeAdminSideMenu.indexOf('SystemInformation/')>0}">
+				<a ui-sref="admin.SystemInformation">
 					<i class="glyphicon glyphicon-info-sign"></i>
 					<span>System Information</span>
+				</a>
+			</li>	
+			<li ng-if="showIMSEnquiry || showIMSAdmin" ng-class="{'active': activeAdminSideMenu.indexOf('healthCheck/')>0}">
+				<a ui-sref="admin.HealthCheck">
+					<i class="fa fa-medkit"></i>
+					<span>Health Check</span>
 				</a>
 			</li>	
 				

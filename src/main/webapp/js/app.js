@@ -255,7 +255,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/controller/subcontract/subcontract-award-ta.js',
                	         'js/service/resource-summary-service.js',
                	         'js/service/tender-service.js',
-               	         'js/service/system-service.js'
+               	         'js/service/jde-service.js'
                     ] 
                 });
             }]
@@ -529,7 +529,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         	'js/service/system-service.js',
+               	         	'js/service/jde-service.js',
                	         	'js/service/resource-summary-service.js',
                	         	'js/service/repackaging-service.js',
                	         	'js/controller/subcontract/addendum/addendum-details.js',
@@ -637,7 +637,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/addendum/other-addendum-detail.js',
-                           'js/service/system-service.js'
+                           'js/service/jde-service.js'
                     ] 
                 });
             }]
@@ -1429,21 +1429,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('admin.SystemInformation',{
 		url: '/SystemInformation',
-		templateUrl: 'view/admin/admin-SystemInformation.html',
-		params: {
-			'activeTab': null
-		},
-		controller: 'AdminSystemInformationCtrl'
+		templateUrl: 'view/admin/admin-SystemInformation.html'
 	})
-	.state('admin.SystemInformation.info',{
-		url: '/info',
-		templateUrl: 'view/admin/admin-SystemInformation-info.html',
-		controller: 'AdminSystemInformationCtrl'
-	})
-	.state('admin.SystemInformation.test',{
-		url: '/test',
-		templateUrl: 'view/admin/admin-SystemInformation-test.html',
-		controller: 'AdminSystemInformationCtrl'
+	.state('admin.HealthCheck',{
+		url: '/HealthCheck',
+		templateUrl: 'view/admin/admin-HealthCheck.html'
 	})
 	.state('admin.announcementSetting',{
 		url: '/AnnouncementSetting',
