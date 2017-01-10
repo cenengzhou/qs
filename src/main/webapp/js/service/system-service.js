@@ -5,7 +5,12 @@ mainApp.service('systemService', ['$http', '$q', 'GlobalHelper', function($http,
     	housekeepAuditTable:	housekeepAuditTable,
     	
     	getAllTriggers:				getAllTriggers,
-    	updateQrtzTriggerList:		updateQrtzTriggerList
+    	updateQrtzTriggerList:		updateQrtzTriggerList,
+    	searchSystemConstants:								searchSystemConstants,
+    	createSystemConstant: 								createSystemConstant,
+    	updateMultipleSystemConstants:						updateMultipleSystemConstants,
+    	inactivateSystemConstant:							inactivateSystemConstant,
+
     });
    
     function getAuditTableMap(){
@@ -32,6 +37,27 @@ mainApp.service('systemService', ['$http', '$q', 'GlobalHelper', function($http,
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
+    
+	function createSystemConstant(newRecord){
+    	var request = $http.post('service/system/createSystemConstant', newRecord);
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+	function updateMultipleSystemConstants(systemConstants){
+    	var request = $http.post("service/system/updateMultipleSystemConstants", systemConstants);
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+	function inactivateSystemConstant(systemConstants){
+    	var request = $http.post('service/system/inactivateSystemConstant', systemConstants);
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+	
+	function searchSystemConstants(){
+    	var request = $http.post("service/system/searchSystemConstants");
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
 }]);
 
 

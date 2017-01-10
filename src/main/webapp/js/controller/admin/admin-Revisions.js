@@ -1,13 +1,11 @@
 
-mainApp.controller('AdminRevisionsCtrl', 
-		['$scope', 
-		 function($scope) {
-	$scope.tab = 'Subcontract';
+mainApp.controller('AdminRevisionsCtrl',  ['$scope', '$stateParams', function($scope, $stateParams) {
+	$scope.activeTab = $stateParams.activeTab;
 	$scope.selectTab = function(setTab){
-		$scope.tab = setTab;
+		$scope.activeTab = setTab;
 	};
 	$scope.isSelected = function(checkTab){
-		return $scope.tab === checkTab;
+		return $scope.activeTab === checkTab;
 	};
 	
 	

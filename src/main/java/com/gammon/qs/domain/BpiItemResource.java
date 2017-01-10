@@ -103,12 +103,6 @@ public class BpiItemResource extends BasePersistedObject {
 		splitStatus = res.getSplitStatus();
 	}
 	
-	@Override
-	public String toString() {
-		return super.toString() + "\n" + "ResourceNo: " + resourceNo + ", Obj: " + objectCode 
-			+ ", Sub: " + subsidiaryCode + ", Package: " + packageNo + ", Desc: " + description
-			+ ", Unit: " + unit + ", Rate: " + costRate + ", Quantity: " + quantity;
-	}
 
 	@Override
 	@Id
@@ -340,5 +334,22 @@ public class BpiItemResource extends BasePersistedObject {
 	}
 	public void setBpiItem(BpiItem bpiItem) {
 		this.bpiItem = bpiItem;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BpiItemResource [jobNumber=" + jobNumber + ", bpiItem=" + bpiItem + ", resourceNo=" + resourceNo
+				+ ", subsidiaryCode=" + subsidiaryCode + ", objectCode=" + objectCode + ", resourceType=" + resourceType
+				+ ", description=" + description + ", quantity=" + quantity + ", remeasuredFactor=" + remeasuredFactor
+				+ ", unit=" + unit + ", costRate=" + costRate + ", materialWastage=" + materialWastage + ", packageNo="
+				+ packageNo + ", packageNature=" + packageNature + ", packageStatus=" + packageStatus + ", packageType="
+				+ packageType + ", splitStatus=" + splitStatus + ", ivPostedQuantity=" + ivPostedQuantity
+				+ ", ivCumQuantity=" + ivCumQuantity + ", ivPostedAmount=" + ivPostedAmount + ", ivCumAmount="
+				+ ivCumAmount + ", ivMovementAmount=" + ivMovementAmount + ", refBillNo=" + refBillNo
+				+ ", refSubBillNo=" + refSubBillNo + ", refSectionNo=" + refSectionNo + ", refPageNo=" + refPageNo
+				+ ", refItemNo=" + refItemNo + ", amountBudget=" + amountBudget + "]";
 	}
 }

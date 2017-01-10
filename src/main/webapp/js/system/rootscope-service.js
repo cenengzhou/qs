@@ -1,5 +1,5 @@
-mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '$rootScope', 'jobService', 'unitService', 'adlService', 'SessionHelper',
-	function($http, $q, $window, GlobalHelper, $rootScope, jobService, unitService, adlService, SessionHelper){
+mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '$rootScope', 'jobService', 'jdeService', 'adlService', 'SessionHelper',
+	function($http, $q, $window, GlobalHelper, $rootScope, jobService, jdeService, adlService, SessionHelper){
 	// Return public API.
     return({
     	gettingJob:			gettingJob,
@@ -185,7 +185,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function gettingWorkScopes(){
 		var deferral = $q.defer();
 		if(!$rootScope.workScopes){
-			unitService.getAllWorkScopes()
+			jdeService.getAllWorkScopes()
 			.then(function(data){
 				$rootScope.workScopes = data;
 				deferral.resolve({

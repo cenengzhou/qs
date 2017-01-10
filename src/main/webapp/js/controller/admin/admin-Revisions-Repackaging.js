@@ -1,8 +1,16 @@
-mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService', 'GlobalHelper', 'GlobalParameter',
-										function($scope, resourceSummaryService, modalService, GlobalHelper, GlobalParameter){
+mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryService', 'modalService', 'GlobalHelper', 'GlobalParameter', 'rootscopeService',
+										function($scope, resourceSummaryService, modalService, GlobalHelper, GlobalParameter, rootscopeService){
 	$scope.onSubmitResourceSummarySearch = onSubmitResourceSummarySearch;
 	$scope.onUpdateResourceSummaryRecord = onUpdateResourceSummaryRecord;
 
+	rootscopeService.gettingUser()
+	.then(function (response){
+		$scope.isEditable =  GlobalHelper.containRole('ROLE_QS_QS_ADM', response.user.UserRoles);
+	});
+	$scope.canEdit = function(){
+		return $scope.isEditable;
+	}
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -20,57 +28,57 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 			rowEditWaitInterval :-1,
 			columnDefs: [
 			             { field: 'id', width: '60', displayName: "ID", enableCellEdit: false },
-			             { field: 'packageNo', width: '100', displayName: "Subcontract No.", enableCellEdit: true },
-			             { field: 'resourceDescription', width: '200', displayName: "Description", enableCellEdit: true },
-			             { field: 'objectCode', width: '100', displayName: "Object Code", enableCellEdit: true },
-			             { field: 'subsidiaryCode', width: '100', displayName: "Subsidiary Code", enableCellEdit: true },
-			             { field: 'amountBudget', width: '100', displayName: "Budget", enableCellEdit: true,
+			             { field: 'packageNo', width: '100', displayName: "Subcontract No.", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
+			             { field: 'resourceDescription', width: '200', displayName: "Description", enableCellEdit: true, cellEditableCondition : $scope.canEdit},
+			             { field: 'objectCode', width: '100', displayName: "Object Code", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
+			             { field: 'subsidiaryCode', width: '100', displayName: "Subsidiary Code", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
+			             { field: 'amountBudget', width: '100', displayName: "Budget", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.quantity);
 			            	 },  	            	 
 			             },
-			             { field: 'quantity', width: '100', displayName: "Quantity", enableCellEdit: true,
+			             { field: 'quantity', width: '100', displayName: "Quantity", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 cellFilter: 'number:4',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.quantity);
 			            	 },  
 			             },
-			             { field: 'currIVAmount', width: '100', displayName: "Current Amount", enableCellEdit: true,
+			             { field: 'currIVAmount', width: '100', displayName: "Current Amount", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.currIVAmount);
 			            	 },  
 			             },
-			             { field: 'postedIVAmount', width: '100', displayName: "Posted Amount", enableCellEdit: true,
+			             { field: 'postedIVAmount', width: '100', displayName: "Posted Amount", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.postedIVAmount);
 			            	 },  
 			             },
-			             { field: 'rate', width: '100', displayName: "Rate", enableCellEdit: true,
+			             { field: 'rate', width: '100', displayName: "Rate", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 cellFilter: 'number:2',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 return GlobalHelper.numberClass(row.entity.rate);
 			            	 },  
 			             },
-			             { field: 'unit', width: '100', displayName: "Unit", enableCellEdit: true },
-			             { field: 'excludeDefect', width: '100', displayName: "Exclude Defect", enableCellEdit: true,
+			             { field: 'unit', width: '100', displayName: "Unit", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
+			             { field: 'excludeDefect', width: '100', displayName: "Exclude Defect", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
 			            	 editDropdownOptionsArray : GlobalParameter.booleanOptions,
 			     			cellFilter : 'dropdownFilter:"booleanOptions"',
 			     			editDropdownIdLabel : 'id',
 			     			editDropdownValueLabel : 'value',
 			             },
-			             { field: 'excludeLevy', width: '100', displayName: "Exclude Levy", enableCellEdit: true,
+			             { field: 'excludeLevy', width: '100', displayName: "Exclude Levy", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
 			            	 editDropdownOptionsArray : GlobalParameter.booleanOptions,
 				     			cellFilter : 'dropdownFilter:"booleanOptions"',
 				     			editDropdownIdLabel : 'id',
 				     			editDropdownValueLabel : 'value',
 			             },
-			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true },
-			             { field: 'forIvRollbackOnly', width: '100', displayName: "IV Rollback Only", enableCellEdit: true,
+			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
+			             { field: 'forIvRollbackOnly', width: '100', displayName: "IV Rollback Only", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
 			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
 			            	 editDropdownOptionsArray : GlobalParameter.zeroOneOptions,
 				     			cellFilter : 'dropdownFilter:"zeroOneOptions"',

@@ -1,5 +1,5 @@
-mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitService', 'resourceSummaryService', '$uibModalInstance', 'uiGridConstants', '$cookies', 'modalStatus', 'modalParam', 'modalService', 'roundUtil', '$state', 
-                                                 function ($scope, $location, unitService, resourceSummaryService, $uibModalInstance, uiGridConstants, $cookies, modalStatus, modalParam, modalService, roundUtil, $state) {
+mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'jdeService', 'resourceSummaryService', '$uibModalInstance', 'uiGridConstants', '$cookies', 'modalStatus', 'modalParam', 'modalService', 'roundUtil', '$state', 
+                                                 function ($scope, $location, jdeService, resourceSummaryService, $uibModalInstance, uiGridConstants, $cookies, modalStatus, modalParam, modalService, roundUtil, $state) {
 
 	$scope.action = modalStatus;
 	
@@ -280,7 +280,7 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'unitSer
 	
 	
 	function getUnitOfMeasurementList() {
-		unitService.getUnitOfMeasurementList()
+		jdeService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

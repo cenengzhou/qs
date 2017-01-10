@@ -1,7 +1,9 @@
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,10 +22,13 @@ import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.PORecord;
+import com.gammon.qs.domain.UnitOfMeasurement;
 import com.gammon.qs.service.BudgetPostingService;
 import com.gammon.qs.service.JobCostService;
 import com.gammon.qs.service.MasterListService;
+import com.gammon.qs.service.UnitService;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
+import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
 import com.gammon.qs.wrapper.monthEndResult.AccountBalanceByDateRangeWrapper;
 import com.gammon.qs.wrapper.monthEndResult.AccountLedgerWrapper;
@@ -38,6 +43,8 @@ public class JdeController {
 	private MasterListService masterListService;
 	@Autowired
 	private BudgetPostingService budgetPostingService;
+	@Autowired
+	private UnitService unitService;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getPORecordList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getPORecordList", method = RequestMethod.POST)
@@ -155,7 +162,7 @@ public class JdeController {
 		return budgetPostingService.postBudget(jobNumber, null);
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getAccountBalanceByDateRangeList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAccountBalanceByDateRangeList", method = RequestMethod.GET)
 	public List<AccountBalanceByDateRangeWrapper> getAccountBalanceByDateRangeList(
 			@RequestParam String jobNumber, 
@@ -171,7 +178,7 @@ public class JdeController {
 		return jobCostService.getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period);
 	}
 
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getAccountLedgerListByAccountCodeList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getAccountLedgerListByAccountCodeList", method = RequestMethod.GET)
 	public List<AccountLedgerWrapper> getAccountLedgerListByAccountCodeList(
 			@RequestParam String accountCode, 
@@ -184,4 +191,33 @@ public class JdeController {
 		)throws Exception{
 		return jobCostService.getAccountLedgerListByAccountCodeList(accountCode, postFlag, ledgerType, fromDate, thruDate, subLedgerType, subLedger);
 	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getAllWorkScopes', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAllWorkScopes", method = RequestMethod.GET)
+	public List<UDC> getAllWorkScopes() throws DatabaseOperationException{
+		List<UDC> wrapperList = new ArrayList<UDC>();
+		wrapperList.addAll(unitService.getAllWorkScopes());
+		return wrapperList;
+	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getUnitOfMeasurementList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getUnitOfMeasurementList", method = RequestMethod.GET)
+	public List<UnitOfMeasurement> getUnitOfMeasurementList() throws Exception{
+		List<UnitOfMeasurement> unitList = new ArrayList<UnitOfMeasurement>();
+		unitList = unitService.getUnitOfMeasurementList();
+		return unitList;
+	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getAppraisalPerformanceGroupMap', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAppraisalPerformanceGroupMap", method = RequestMethod.GET)
+	public Map<String, String> getAppraisalPerformanceGroupMap(){
+		return unitService.getAppraisalPerformanceGroupMap();
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JdeController','getSCStatusCodeMap', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getSCStatusCodeMap", method = RequestMethod.GET)
+	public Map<String, String> getSCStatusCodeMap(){
+		return unitService.getSCStatusCodeMap();
+	}
+
 }

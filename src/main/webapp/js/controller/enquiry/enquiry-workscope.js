@@ -1,8 +1,6 @@
 
-mainApp.controller('EnquiryWorkScopeCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'unitService', 'GlobalHelper',
-                                   function($scope, $http, modalService, blockUI, unitService, GlobalHelper) {
-	
-//	$scope.blockEnquiryWorkScope = blockUI.instances.get('blockEnquiryWorkScope');
+mainApp.controller('EnquiryWorkScopeCtrl', ['$scope', '$http', 'modalService', 'blockUI', 'jdeService', 'GlobalHelper',
+                                   function($scope, $http, modalService, blockUI, jdeService, GlobalHelper) {
 	
 	$scope.gridOptions = {
 			enableFiltering: true,
@@ -28,15 +26,12 @@ mainApp.controller('EnquiryWorkScopeCtrl', ['$scope', '$http', 'modalService', '
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryWorkScope.start('Loading...');
-		unitService.getAllWorkScopes()
+		jdeService.getAllWorkScopes()
 		    .then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				} 
-//				$scope.blockEnquiryWorkScope.stop();
 		}, function(data){
-//			$scope.blockEnquiryWorkScope.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 

@@ -1,6 +1,6 @@
 mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl', 
-		['$scope', '$uibModalInstance', '$http', 'modalStatus', 'modalParam', 'modalService', 'subcontractService',
-		function($scope, $uibModalInstance, $http, modalStatus, modalParam, modalService, subcontractService) {
+		['$scope', '$uibModalInstance', '$http', 'modalStatus', 'modalParam', 'modalService', 'systemService',
+		function($scope, $uibModalInstance, $http, modalStatus, modalParam, modalService, systemService) {
 	
 	$scope.dataList = modalParam;
 	$scope.newRecord = {};
@@ -22,7 +22,7 @@ mainApp.controller('AdminSubcontractStandardTermsAddModalCtrl',
 	};
 	
 	$scope.onSubmit = function(){		
-		subcontractService.createSystemConstant($scope.newRecord)
+		systemService.createSystemConstant($scope.newRecord)
 		.then(function(data){
 			var newObj = {};
 			angular.copy($scope.newRecord, newObj);

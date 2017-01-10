@@ -3,20 +3,15 @@ package com.gammon.qs.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-
-@Entity
-@DynamicUpdate
-@SelectBeforeUpdate
-@Table(name = "V_CONTRACT_RECEIVABLE_RPT")
+//@Entity
+//@DynamicUpdate
+//@SelectBeforeUpdate
+//@Table(name = "V_CONTRACT_RECEIVABLE_RPT")
 public class ContractReceivableWrapper implements Serializable{
 
 	/**

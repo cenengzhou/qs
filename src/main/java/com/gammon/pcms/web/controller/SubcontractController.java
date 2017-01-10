@@ -317,16 +317,7 @@ public class SubcontractController {
 		} 
 		return result;
 	}
-	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs())")
-	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
-	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
-		boolean result = false;
-		result = subcontractService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
-		return result;
-	}
-	
-	
+		
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','calculateTotalWDandCertAmount', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "calculateTotalWDandCertAmount", method = RequestMethod.POST)
 	public boolean calculateTotalWDandCertAmount(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateRententionAmount){
@@ -413,24 +404,6 @@ public class SubcontractController {
 	@RequestMapping(value = "updateF58001FromSCPackageManually", method = RequestMethod.POST)
 	public void updateF58001FromSCPackageManually(){
 		subcontractService.updateF58001FromSCPackageManually();
-	}
-
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','searchSystemConstants', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "searchSystemConstants", method = RequestMethod.POST)
-	public List<AppSubcontractStandardTerms> searchSystemConstants(){
-		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
-	}
-
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateMultipleSystemConstants', @securityConfig.getRolePcmsQsAdmin())")
-	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
-	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
-		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, null);
-	}
-
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','inactivateSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
-	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
-	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
-		subcontractService.inactivateSystemConstantList(appSubcontractStandardTermsList);
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','createSystemConstant', @securityConfig.getRolePcmsQsAdmin())")

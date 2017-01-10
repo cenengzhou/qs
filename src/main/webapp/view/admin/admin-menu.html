@@ -21,9 +21,9 @@
 					<i class="glyphicon glyphicon-tasks"></i>
 					<span>Manual Procedures</span>
 				</a>
-			</li>		
-			<li ui-sref-active="active">
-				<a ui-sref="admin.Revisions.Subcontract">
+			</li>
+			<li ng-class="{'active': activeAdminSideMenu.indexOf('Revisions/')>0}">
+				<a ui-sref="admin.Revisions.Subcontract({activeTab:'Subcontract'})">
 					<i class="glyphicon glyphicon-sunglasses"></i>
 					<span>Revisions</span>
 				</a>
@@ -76,8 +76,8 @@
 					<span>Announcement Setting</span>
 				</a>
 			</li>	
-			<li ui-sref-active="active" ng-if="showIMSEnquiry">
-				<a ui-sref="admin.SystemInformation.info">
+			<li ng-if="showIMSEnquiry" ng-class="{'active': activeAdminSideMenu.indexOf('SystemInformation/')>0}">
+				<a ui-sref="admin.SystemInformation.info({activeTab:'System Information'})">
 					<i class="glyphicon glyphicon-info-sign"></i>
 					<span>System Information</span>
 				</a>

@@ -19,7 +19,7 @@ public class UserPreferenceController {
 	@Autowired
 	private UserPreferenceService userPreferenceService;
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','getNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getNotificationReadStatusByCurrentUser", method = RequestMethod.GET)
 	public String getNotificationReadStatusByCurrentUser() throws DatabaseOperationException{
 		String status = null;
@@ -31,7 +31,7 @@ public class UserPreferenceController {
 		return status;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','insertNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "insertNotificationReadStatusByCurrentUser", method = RequestMethod.POST)
 	public String insertNotificationReadStatusByCurrentUser() throws DatabaseOperationException{
 		String msg = null;
@@ -43,7 +43,7 @@ public class UserPreferenceController {
 		return msg;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','updateNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "updateNotificationReadStatusByCurrentUser", method = RequestMethod.POST)
 	public String updateNotificationReadStatusByCurrentUser(@RequestBody String status) throws DatabaseOperationException{
 		String msg = null;
@@ -55,7 +55,7 @@ public class UserPreferenceController {
 		return msg;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsImsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','updateAnnouncentSetting', @securityConfig.getRolePcmsImsEnq())")
 	@RequestMapping(value = "updateAnnouncentSetting", method = RequestMethod.POST)
 	public String updateAnnouncentSetting(@RequestBody String setting) throws DatabaseOperationException{
 		String msg = null;

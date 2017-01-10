@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope', '$http', 'modalService', 'unitService', 'GlobalParameter', 'subcontractService', 'GlobalHelper',
-                                  function($scope, $http, modalService, unitService, GlobalParameter, subcontractService, GlobalHelper) {
+mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope', '$http', 'modalService', 'jdeService', 'GlobalParameter', 'subcontractService', 'GlobalHelper',
+                                  function($scope, $http, modalService, jdeService, GlobalParameter, subcontractService, GlobalHelper) {
 	
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.gridOptions = {
@@ -35,7 +35,7 @@ mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope', '$http', 'modal
 	}
 	$scope.performanceAppraisalGroup = [];
 	$scope.loadOptionsValue = function(){
-		unitService.getAppraisalPerformanceGroupMap()
+		jdeService.getAppraisalPerformanceGroupMap()
 		.then(function(data){
 			if(angular.isObject(data)){
 				angular.forEach(data, function(value, key){
@@ -60,13 +60,12 @@ mainApp.controller('EnquiryPerformanceAppraisalCtrl', ['$scope', '$http', 'modal
 				$scope.searchGroup,
 				$scope.searchStatus)
 				.then(function(data){
-//					if(angular.isObject(data)){
+					if(angular.isObject(data)){
 						$scope.addDataString(data);
 						$scope.gridOptions.data = data;
-//					} 
-//					else {
-//						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Cannot access Job:' + $scope.searchJobNo);
-//					}
+					} else {
+						$scope.gridOptions.data = [];
+					}
 				});
 	}
 	

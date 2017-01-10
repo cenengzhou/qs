@@ -603,7 +603,7 @@ public class APController {
 	 * @param htmlVersion
 	 * @return
 	 */
-	@RequestMapping(path = "/ws/makeHTMLStrForPaymentCert/{jobNumber}/{packageNo}/{paymentNo}{htmlVersion}", method = RequestMethod.GET)
+	@RequestMapping(path = "/ws/makeHTMLStrForPaymentCert/{jobNumber}/{packageNo}/{paymentNo}/{htmlVersion}", method = RequestMethod.GET)
 	public MakeHTMLStrForPaymentCertServiceResponse makeHTMLStrForPaymentCert(	HttpServletRequest request,
 																				@PathVariable String jobNumber,
 																				@PathVariable String packageNo,

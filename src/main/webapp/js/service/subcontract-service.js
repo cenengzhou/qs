@@ -23,7 +23,6 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	updateWDandIVList:									updateWDandIVList,
     	updateFilteredWDandIVByPercent:						updateFilteredWDandIVByPercent,
     	submitAwardApproval:								submitAwardApproval,
-    	recalculateResourceSummaryIV:						recalculateResourceSummaryIV,
     	calculateTotalWDandCertAmount:						calculateTotalWDandCertAmount,
     	addAddendumToSubcontractDetail:						addAddendumToSubcontractDetail,
     	updateSubcontractDetailAddendum:					updateSubcontractDetailAddendum,
@@ -35,10 +34,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	runProvisionPostingManually:						runProvisionPostingManually,
     	generateSCPackageSnapshotManually: 					generateSCPackageSnapshotManually,
     	updateF58001FromSCPackageManually: 					updateF58001FromSCPackageManually,
-    	searchSystemConstants:								searchSystemConstants,
-    	updateMultipleSystemConstants:						updateMultipleSystemConstants,
-    	inactivateSystemConstant:							inactivateSystemConstant,
-    	createSystemConstant: 								createSystemConstant,
+
     	updateSubcontractAdmin:								updateSubcontractAdmin,
     	
     	getSubcontractSnapshotList:							getSubcontractSnapshotList,
@@ -352,20 +348,6 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage) {
-        var request = $http({
-            method: "post",
-            url: "service/subcontract/recalculateResourceSummaryIV",
-            dataType: "application/json;charset=UTF-8",
-            params: {
-                jobNo: jobNo,
-                subcontractNo: subcontractNo,
-                recalculateFinalizedPackage: recalculateFinalizedPackage
-            }
-        });
-        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
-    
     function calculateTotalWDandCertAmount(jobNo, subcontractNo, recalculateRententionAmount) {
         var request = $http({
             method: "post",
@@ -497,26 +479,6 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
-	function searchSystemConstants(){
-    	var request = $http.post("service/subcontract/searchSystemConstants");
-    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
-    
-	function updateMultipleSystemConstants(systemConstants){
-    	var request = $http.post("service/subcontract/updateMultipleSystemConstants", systemConstants);
-    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
-    
-	function inactivateSystemConstant(systemConstants){
-    	var request = $http.post('service/subcontract/inactivateSystemConstant', systemConstants);
-    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
-    
-	function createSystemConstant(newRecord){
-    	var request = $http.post('service/subcontract/createSystemConstant', newRecord);
-    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }
-    
     function updateSubcontractAdmin(subcontract){
        	var request = $http.post('service/subcontract/updateSubcontractAdmin', subcontract);
        	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );

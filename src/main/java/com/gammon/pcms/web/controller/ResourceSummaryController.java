@@ -8,7 +8,10 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,11 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.domain.ResourceSummary;
+import com.gammon.qs.service.IVPostingHistService;
 import com.gammon.qs.service.ResourceSummaryService;
+import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;
@@ -33,6 +40,12 @@ public class ResourceSummaryController {
 	
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;
+	@Autowired
+	private IVPostingHistService ivPostingHistService;
+	@Autowired
+	private SubcontractService subcontractService;
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummaries', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getResourceSummaries", method = RequestMethod.GET)
@@ -52,7 +65,7 @@ public class ResourceSummaryController {
 		return resourceSummaries;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','obtainResourceSummariesByJobNumberForAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','obtainResourceSummariesByJobNumberForAdmin', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "obtainResourceSummariesByJobNumberForAdmin", method = RequestMethod.GET)
 	public List<ResourceSummary> obtainResourceSummariesByJobNumberForAdmin(@RequestParam String jobNumber){
 		return resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(jobNumber);
@@ -227,5 +240,25 @@ public class ResourceSummaryController {
 		} 
 		return result;
 	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','obtainIVPostingHistoryList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "obtainIVPostingHistoryList", method = RequestMethod.POST)
+	public List<IVPostingHist> obtainIVPostingHistoryList(@RequestBody Map<String, Object> searchObject) throws Exception{
+		String jobNumber = objectMapper.convertValue(searchObject.get("jobNumber"), String.class);
+		Date fromDate = objectMapper.convertValue(searchObject.get("fromDate"), Date.class);
+		Date toDate = objectMapper.convertValue(searchObject.get("toDate"), Date.class);
+		List<IVPostingHist> resultList = new ArrayList<IVPostingHist>();
+		resultList.addAll(ivPostingHistService.obtainIVPostingHistoryList(jobNumber, fromDate, toDate));
+		return resultList;
+	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
+	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
+		boolean result = false;
+		result = subcontractService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
+		return result;
+	}
+	
 }
 

@@ -242,7 +242,7 @@ mainApp.controller('ReportMainCtrl', ['$scope' , '$http', 'modalService', 'block
 	}
 	
 	function getUrlWithParameters(link, parameters, values){
-		var url = 'service/attachment/' + link + '?';
+		var url = 'service/report/' + link + '?';
 		parameters.forEach(function(parameter){
 			if(parameter === 'dueDate' && values['dueDate']) values['dueDate'] = moment(values['dueDate']).format('DD/MM/YYYY');
 			if(parameter === 'jobNumber' && values['jobNumber'] === '*') values['jobNumber'] = '';

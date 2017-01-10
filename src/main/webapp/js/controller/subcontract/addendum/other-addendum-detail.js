@@ -1,5 +1,5 @@
-mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subcontractService', 'unitService', '$cookies', 'roundUtil', '$location', 'paymentService',
-                                              function($scope ,modalService, subcontractService, unitService, $cookies, roundUtil, $location, paymentService) {
+mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subcontractService', 'systemService', '$cookies', 'roundUtil', '$location', 'paymentService',
+                                              function($scope ,modalService, subcontractService, systemService, $cookies, roundUtil, $location, paymentService) {
 
 	var scDetailID = $cookies.get('scDetailID');
 	
@@ -118,7 +118,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 	}
 	
 	function getUnitOfMeasurementList() {
-		unitService.getUnitOfMeasurementList()
+		systemService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

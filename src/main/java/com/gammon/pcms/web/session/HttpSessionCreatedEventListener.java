@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Session;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

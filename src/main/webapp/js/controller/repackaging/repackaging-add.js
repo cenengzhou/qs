@@ -1,5 +1,5 @@
-mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'resourceSummaryService', 'unitService', 'modalService', '$cookies', '$state', 'roundUtil',
-                                               function ($scope, $uibModalInstance, resourceSummaryService, unitService, modalService, $cookies, $state, roundUtil) {
+mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'resourceSummaryService', 'jdeService', 'modalService', '$cookies', '$state', 'roundUtil',
+                                               function ($scope, $uibModalInstance, resourceSummaryService, jdeService, modalService, $cookies, $state, roundUtil) {
 
 	$scope.repackagingId = $cookies.get("repackagingId");
 
@@ -92,7 +92,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'r
 
 	
 	function getUnitOfMeasurementList() {
-		unitService.getUnitOfMeasurementList()
+		jdeService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

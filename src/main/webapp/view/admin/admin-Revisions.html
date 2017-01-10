@@ -14,18 +14,12 @@
 		<div class="row">
 			<section class="box box-primary">
 				<ul class="nav nav-tabs">
-					<li role="presentation" ng-class="{active:isSelected('Subcontract')}"><a
-						href ui-sref="admin.Revisions.Subcontract" ng-click="selectTab('Subcontract')">Subcontract</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Payment')}"><a
-						href ui-sref="admin.Revisions.Payment" ng-click="selectTab('Payment')">Payment</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Addendum')} "><a
-						href ui-sref="admin.Revisions.Addendum" ng-click="selectTab('Addendum')">Addendum</a></li>
-					<li role="presentation" ng-class="{active:isSelected('MainCert')}"><a
-						href ui-sref="admin.Revisions.MainCert" ng-click="selectTab('MainCert')">Main Certificate</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Repackaging')}"><a
-						href ui-sref="admin.Revisions.Repackaging" ng-click="selectTab('Repackaging')">Repackaging</a></li>
-					<li role="presentation" ng-class="{active:isSelected('Approval')}"><a
-						href ui-sref="admin.Revisions.Approval" ng-click="selectTab('Approval')">Approval</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Subcontract')}"><a href ui-sref="admin.Revisions.Subcontract({activeTab:'Subcontract'})" ng-click="selectTab('Subcontract')">Subcontract</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Payment')}"><a href ui-sref="admin.Revisions.Payment({activeTab:'Payment'})" ng-click="selectTab('Payment')">Payment</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Addendum')} "><a href ui-sref="admin.Revisions.Addendum({activeTab:'Addendum'})" ng-click="selectTab('Addendum')">Addendum</a></li>
+					<li role="presentation" ng-class="{active:isSelected('MainCert')}"><a href ui-sref="admin.Revisions.MainCert({activeTab:'MainCert'})" ng-click="selectTab('MainCert')">Main Certificate</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Repackaging')}"><a href ui-sref="admin.Revisions.Repackaging({activeTab:'Repackaging'})" ng-click="selectTab('Repackaging')">Repackaging</a></li>
+					<li role="presentation" ng-class="{active:isSelected('Approval')}"><a href ui-sref="admin.Revisions.Approval({activeTab:'Approval'})" ng-click="selectTab('Approval')">Approval</a></li>
 				</ul>
 				
 				<div class="box col-md-12" ui-view></div>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html ng-app="testApp">
+<head>
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-store" />
+<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="expires" content="0" />
+<meta charset="utf-8">
+<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
+<title>Index</title>
+<link rel="stylesheet" href="../plugins/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="../plugins/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../plugins/iconfont/1.0.0/css/icofont.css">
+<link rel="stylesheet" href="../css/adminLTE.css">
+<link rel="stylesheet" href="../plugins/angular-block-ui/v0.2/css/angular-block-ui.min.css"/>
+<link href="../css/font.css" rel="stylesheet" id="fontFamilySrc" />
+<link href="../css/style.css" rel="stylesheet" />
+
+<script src="../plugins/jquery/jquery-1.9.1.min.js"></script>
+<script src="../plugins/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../plugins/bootstrap-toggle/2.2.1/bootstrap-toggle.min.js"></script>
+<script src="../plugins/angularjs/1.4.9/angular.js"></script>	
+<script src="../plugins/angular-filter/v0.5.12/angular-filter.js"></script>
+<script src="../plugins/angular-block-ui/v0.2/js/angular-block-ui.js"></script>
+<script src="../plugins/fullcalendar/lib/moment.min.js"></script>
+<script>
+var testApp = angular.module('testApp',  ['blockUI', 'angular.filter']);
+testApp.config(function(blockUIConfig) {		
+	blockUIConfig.autoBlock = true;
+	blockUIConfig.delay = 1;
+	blockUIConfig.autoInjectBodyBlock = true;
+	blockUIConfig.requestFilter = function(config) {
+	  return 'Test running ...';
+	}
+});
+
+testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function($http, $scope, $interval, $timeout){
+	$http.post('getTestAllTestCase')
+	.then(function(response){
+		$scope.runningCount = [];
+		$scope.successCount = [];
+		$scope.failCount = [];
+		$scope.testQueue = [];
+		$scope.runningQueue = [];
+		$scope.testQueueInterval = {};
+		$scope.allTestCase = response.data;
+		$scope.allTestCase.forEach(function(testCase){
+			if(testCase.testResult.message == 'Not implement yet'){
+				testCase.isRunning = true;
+			}
+			if(!testCase.runTimeDisplay){
+				testCase.testResult.status = testCase.testResult.message = 'No result';
+			}
+			$scope.runningCount[testCase.category] = {};
+			$scope.successCount[testCase.category] = {};
+			$scope.failCount[testCase.category] = {};
+		});
+	})
+
+	$scope.runGroupTest = function(testCaseGroup){
+		testCaseGroup.forEach(function(testCase){
+			if(!testCase.isRunning) {
+				addToQueue($scope.testQueue, testCase);
+			}
+		});
+		runTestQueue();
+	}
+
+	function runTestQueue(){
+		$scope.testQueueInterval = $interval(function(){
+			for(var k in $scope.testQueue){
+				if($scope.runningQueue.length < 5){
+					$scope.runTest($scope.testQueue[k]);
+					removeFromQueue($scope.testQueue, $scope.testQueue[k]);
+				}
+			};
+			if($scope.runningQueue.length == 0){
+				$interval.cancel($scope.testQueueInterval);
+			}
+		}, 1000);
+	}
+		
+	function addToQueue(queue, testCase){
+		if(!queue[getKey(testCase)]){
+			queue[getKey(testCase)] = testCase;
+			if(!angular.isNumber(queue.length)) {
+				queue.length = 1;
+			} else {
+				queue.length++;
+			}
+		}
+	}
+
+	function removeFromQueue(queue, testCase){
+		if(queue[getKey(testCase)]){
+			if(!angular.isNumber(queue.length)) {
+				queue.length = 0;
+			} else {
+				queue.length--;
+			}
+			delete queue[getKey(testCase)];
+		}
+	}
+	
+	function getKey(testCase){
+		return testCase.category + '-' + testCase.method + '-' + testCase.item;
+	}
+	
+	$scope.runTest = function(testCase){
+// 		console.log("testcase run:" + testCase.id);
+		addToQueue($scope.runningQueue, testCase);
+		$scope.allTestCase[testCase.id].startTime = new Date();
+		$scope.allTestCase[testCase.id].runTimeDisplay = null;
+		$scope.allTestCase[testCase.id].testResult = {};
+		$scope.allTestCase[testCase.id].isRunning = true;
+		$scope.allTestCase[testCase.id].runTime = runTime(testCase.id);
+		addToQueue($scope.runningCount[testCase.category], testCase);
+	    location.href = '#testCase' + testCase.id;
+		$http({
+			url: 'runTest',
+			method: 'post',
+			params: {id: testCase.id, category: testCase.category, method: testCase.method, item: testCase.item}
+		})
+		.then(function(response){
+			removeFromQueue($scope.runningQueue, testCase);
+			removeFromQueue($scope.runningCount[testCase.category], testCase);
+			if(!$scope.allTestCase[testCase.id].runTimeDisplay) {
+				$scope.allTestCase[testCase.id].runTimeDisplay = "00:00:01";
+			}
+			$scope.allTestCase[testCase.id].testResult = response.data;
+			updateCount(testCase);
+			$scope.allTestCase[testCase.id].isRunning = false;
+			if(angular.isDefined($scope.allTestCase[testCase.id].runTime)){
+				$interval.cancel($scope.allTestCase[testCase.id].runTime);
+				$scope.allTestCase[testCase.id].runTime = null;
+			}
+		}, function(error){
+			removeFromQueue($scope.runningQueue, testCase);
+			removeFromQueue($scope.runningCount[testCase.category], testCase);
+			addToQueue($scope.failCount[testCase.category], testCase);
+			removeFromQueue($scope.successCount[testCase.category], testCase);
+			$scope.allTestCase[testCase.id].testResult = {};
+			$scope.allTestCase[testCase.id].testResult.status = false;
+			$scope.allTestCase[testCase.id].testResult.message = 'HTTP Error:' + error.status;
+			$scope.allTestCase[testCase.id].isRunning = false;
+			if(angular.isDefined($scope.allTestCase[testCase.id].runTime)){
+				$interval.cancel($scope.allTestCase[testCase.id].runTime);
+				$scope.allTestCase[testCase.id].runTime = null;
+			}
+		});
+	}
+	$scope.getCount = function(arr){
+		var total = 0;
+		for(var k in arr){
+				var length = isNaN(arr[k].length)?0:arr[k].length;
+				total += length;
+		}
+		return total;
+	}
+	
+	function updateCount(testCase){
+		var addQueue = {};
+		var removeQueue = {};
+		if(testCase.testResult.status){
+			addQueue = $scope.successCount[testCase.category];
+			removeQueue = $scope.failCount[testCase.category];
+		} else {
+			addQueue = $scope.failCount[testCase.category];
+			removeQueue = $scope.successCount[testCase.category];
+		}
+		addToQueue(addQueue, testCase);
+		removeFromQueue(removeQueue, testCase);
+	}
+	
+	$scope.checkLastRun = function(testCase){
+		if(!testCase.lastRun) return false;
+		return (new Date() - testCase.lastRun) < 60000;
+	}
+	
+	function runTime (testCaseId){
+		var tid = testCaseId;
+		return $interval(function(){
+			var sec = (new Date() - $scope.allTestCase[tid].startTime + 1000) / 1000;
+			var time = moment().startOf('day').seconds(sec).format('HH:mm:ss');
+			$scope.allTestCase[tid].runTimeDisplay = time;
+// 			console.log(tid + ':' + time);
+		}, 1000)
+	}
+}]); 
+
+</script>
+ 
+</head>
+<body ng-controller="ctrl">
+<div class="wrapper container">
+<div class="navbar navbar-fixed-bottom" style="margin-bottom:-20px">
+ 	<label class="form-control btn btn-primary" style="color:white" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
+	<div class="well bg-white">All Task: {{allTestCase.length ? allTestCase.length : 0}} | Success: {{getCount(successCount)}} | Fail: {{getCount(failCount)}} | Test Queue: {{testQueue.length}} | Running: {{getCount(runningCount)}} 
+		<div class="pull-right"><span ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'"><a href="#{{categoryKey}}"><label class="btn btn-primary">{{categoryKey}}</label></a> </span></div>
+	</div>
+</div>
+<div class="row" style="padding-bottom:100px">
+		<div ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'">
+		<div class="panel panel-inverse"><a name="{{categoryKey}}">
+            <div class="panel-heading">
+                 <div class="panel-heading-btn">
+                     <label class="btn btn-primary" type="button" ng-click="runGroupTest(categoryValue)">Run Group</label>
+                 </div>
+                
+                	<h4 class="panel-title">{{categoryKey}} | Total Task: {{categoryValue.length}} | Success: {{successCount[categoryKey].length ? successCount[categoryKey].length : 0}} | Fail: {{failCount[categoryKey].length ? failCount[categoryKey].length : 0}} <span ng-show="runningCount[categoryKey].length>0">| Running: {{runningCount[categoryKey].length}}</span></h4>
+               
+            </div> </a>
+            <div class="panel-body p-b-15" style="overflow: auto; width: auto; height: auto;">
+                <div ng-repeat="(methodKey, methodValue) in categoryValue | groupBy: 'method'">
+                    <ul class="feeds">{{methodKey}}
+                        <li ng-repeat="(itemKey, itemValue) in methodValue" ng-class="{'bg-warning-light' : itemValue.isRunning === true, 'bg-success-light' : itemValue.testResult.status === true, 'bg-danger-light' : itemValue.testResult.status === false }">
+                                <a name="testCase{{itemValue.id}}" class="text-black"><div class="col-md-3">{{itemValue.item}}</div>
+                                <div class="col-md-3">Message:<br>{{itemValue.testResult.message}} <span ng-if="categoryKey == 'FUNCTION|SECURITY' && itemValue.testResult.message != 'No result'"><i class="fa fa-dot-circle-o" ng-class="{'text-success' : itemValue.testResult.message.indexOf('is ENABLE') > 0, 'text-warning' : itemValue.testResult.message.indexOf('is DISABLE') > 0, 'text-danger' : itemValue.testResult.message.indexOf('not found') > 0 }"></i></span></div>
+                                <div class="col-md-3">Status: <i ng-class="{'fa fa-link text-success' : itemValue.testResult.status === true, 'fa fa-chain-broken text-danger' : itemValue.testResult.status === false}" title="{{itemValue.testResult.status?'Success':itemValue.testResult.message==''?'No Result':'Fail'}}"></i></div>
+                                <div class="col-md-3">Last run: {{itemValue.runTimeDisplay}} <i ng-show="itemValue.isRunning" class="fa fa-spinner fa-pulse"></i></div>
+                                <div class="pull-right"><label class="btn btn-primary" type="button" ng-disabled="itemValue.isRunning" ng-click="!itemValue.isRunning && runTest(itemValue)">Run</label></div>
+                                </a>
+                        </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+		</div>
+		<div></div>
+		</div>
+</body>
+</html>

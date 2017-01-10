@@ -31,6 +31,8 @@ import com.gammon.pcms.helper.RestTemplateHelper;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.user.LdapService;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 @Service
 public class GSFService {
 
@@ -125,21 +127,26 @@ public class GSFService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean isFnEnabled(String ctrl, String method, String roleName){
+	public boolean isFnEnabled(String ctrl, String method, String... roleNameArray){
 		boolean fnStatus = false;
 		try{
+			boolean containRole = false;
 			String fn = securityConfig.getFnMethodsCtrlMethod(ctrl, method);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Collection<User.Role> userRoles = (Collection<User.Role>) auth.getAuthorities();
-			boolean containRole = false;
-			for(User.Role role : userRoles){
-				if(role.getRoleName().equals("ROLE_" + roleName)) containRole = true;
+			for(String roleName : roleNameArray){
+				for(User.Role role : userRoles){
+					if(role.getRoleName().equals("ROLE_" + roleName)) {
+						containRole = true;
+						fnStatus = obtainFnStatus(fn, roleName);
+						logger.info(fn + " isFnEnabled" + ": " + fnStatus + " (ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
+						break;
+					}
+				}
+				if(containRole) break;
 			}
-			if(containRole){
-				fnStatus = obtainFnStatus(fn, roleName);
-				logger.info(fn + " isFnEnabled" + ": " + fnStatus + " (ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
-			} else {
-				logger.info(fn + " require ROLE_" + roleName + " (" + ctrl + " - " + method + ")");
+			if(!containRole){
+				logger.info(fn + " require ROLE_" + Arrays.toString(roleNameArray) + " (" + ctrl + " - " + method + ")");
 			}
 		} catch (NullPointerException e){
 			logger.error( ctrl + " - " + method  + " not found in securityConfig.fnMethods");

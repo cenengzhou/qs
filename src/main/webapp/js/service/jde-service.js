@@ -18,6 +18,11 @@ mainApp.service('jdeService', ['$http', '$q', 'GlobalHelper',  function($http, $
 		postBudget:		postBudget,
 		getAccountBalanceByDateRangeList:	getAccountBalanceByDateRangeList,
 		getAccountLedgerListByAccountCodeList:	getAccountLedgerListByAccountCodeList,
+    	
+    	getAllWorkScopes:		getAllWorkScopes,
+    	getUnitOfMeasurementList: getUnitOfMeasurementList,
+    	getAppraisalPerformanceGroupMap: getAppraisalPerformanceGroupMap,
+    	getSCStatusCodeMap: getSCStatusCodeMap,
     });
  
     function getPORecordList(jobNumber, orderNumber, orderType, supplierNumber){
@@ -225,6 +230,27 @@ mainApp.service('jdeService', ['$http', '$q', 'GlobalHelper',  function($http, $
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
+    
+    function getAllWorkScopes(){
+    	var request = $http.get('service/jde/getAllWorkScopes');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getUnitOfMeasurementList(){
+    	var request = $http.get('service/jde/getUnitOfMeasurementList');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function getAppraisalPerformanceGroupMap(){
+    	var request = $http.get('service/jde/getAppraisalPerformanceGroupMap');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function getSCStatusCodeMap(){
+    	var request = $http.get('service/jde/getSCStatusCodeMap');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
 }]);
 
 

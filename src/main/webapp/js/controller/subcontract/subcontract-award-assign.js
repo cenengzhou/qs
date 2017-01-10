@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 'paymentService', 'unitService',
-                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state, paymentService, unitService ) {
+mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'modalService', 'confirmService', '$state', 'paymentService', 'systemService',
+                                             function($scope, resourceSummaryService, subcontractService, modalService, confirmService, $state, paymentService, systemService ) {
 
 	loadData();
 	
@@ -298,7 +298,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 	}
 	
 	function getUnitOfMeasurementList() {
-		unitService.getUnitOfMeasurementList()
+		systemService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

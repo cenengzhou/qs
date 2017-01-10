@@ -35,7 +35,7 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     function transitUpload(formData){
     	var request = $http({
 			method : 'post',
-			url : 'service/attachment/transitUpload',
+			url : 'service/transit/transitUpload',
 			data : formData,
 			headers : {
 				'Content-Type' : undefined

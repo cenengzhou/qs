@@ -53,6 +53,7 @@ import com.gammon.pcms.dto.rs.provider.response.SessionDTO;
 import com.gammon.pcms.helper.JsonHelper;
 import com.gammon.pcms.scheduler.service.AuditHousekeepService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
+import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.quartz.CronTriggers;
 import com.gammon.qs.domain.quartz.QrtzTriggers;
 import com.gammon.qs.service.JobInfoService;
@@ -353,4 +354,35 @@ public class SystemController {
 	public void logToBackend(@RequestBody Object message){
 		logger.error("JS Error:" + message);
 	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','createSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "createSystemConstant", method = RequestMethod.POST)
+	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
+			HttpServletRequest request, HttpServletResponse response) {
+		boolean result = false;
+		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, null);
+		if (!result) {
+			response.setStatus(HttpServletResponse.SC_CONFLICT);
+		}
+	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','updateMultipleSystemConstants', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateMultipleSystemConstants", method = RequestMethod.POST)
+	public void updateMultipleSystemConstants(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
+		subcontractService.updateMultipleSystemConstants(appSubcontractStandardTermsList, null);
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','inactivateSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
+	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
+		subcontractService.inactivateSystemConstantList(appSubcontractStandardTermsList);
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','searchSystemConstants', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "searchSystemConstants", method = RequestMethod.POST)
+	public List<AppSubcontractStandardTerms> searchSystemConstants(){
+		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
+	}
+
+
 }

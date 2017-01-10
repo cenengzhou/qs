@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'modalService', 'blockUI', 'ivpostinghistService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
-                                  function($scope, $http, $timeout, modalService, blockUI, ivpostinghistService, uiGridConstants, GlobalParameter, GlobalHelper) {
+mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'modalService', 'blockUI', 'resourceSummaryService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
+                                  function($scope, $http, $timeout, modalService, blockUI, resourceSummaryService, uiGridConstants, GlobalParameter, GlobalHelper) {
 	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	$scope.GlobalParameter = GlobalParameter;
@@ -62,15 +62,12 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'moda
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryIvHistory.start('Loading...')
-		ivpostinghistService.obtainIVPostingHistoryList($scope.searchJobNo, $scope.searchFromDate, $scope.searchToDate)
+		resourceSummaryService.obtainIVPostingHistoryList($scope.searchJobNo, $scope.searchFromDate, $scope.searchToDate)
 		.then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
 				}
-//				$scope.blockEnquiryIvHistory.stop();
 		}, function(data){
-//			$scope.blockEnquiryIvHistory.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		})
 	}

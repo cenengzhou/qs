@@ -1,12 +1,10 @@
 mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'subcontractService', 'GlobalParameter',
-		 function($scope, $http, modalService, blockUI, subcontractService, GlobalParameter ) {
+		['$scope', '$http', 'modalService', 'blockUI', 'systemService', 'GlobalParameter',
+		 function($scope, $http, modalService, blockUI, systemService, GlobalParameter ) {
 	$scope.blockStandardTerms = blockUI.instances.get('blockStandardTerms');
 	$scope.loadData = function(){
-//		$scope.blockStandardTerms.start('Loading...');
-		subcontractService.searchSystemConstants().then(
+		systemService.searchSystemConstants().then(
 			function(data) {
-//				$scope.blockStandardTerms.stop();
 				$scope.gridOptions.data = data;
 			});
 	};
@@ -106,7 +104,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		var dataRows = $scope.gridDirtyRows.map(function(gridRow) {
 			return gridRow.entity;
 		});
-		subcontractService.updateMultipleSystemConstants(dataRows)
+		systemService.updateMultipleSystemConstants(dataRows)
 		.then(function(data){
 			$scope.gridApi.rowEdit.setRowsClean(dataRows);
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Updated " + dataRows.length + " records");;
@@ -118,7 +116,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 
 	$scope.onDelete = function() {
 		$scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
-		subcontractService.inactivateSystemConstant($scope.selectedRows)
+		systemService.inactivateSystemConstant($scope.selectedRows)
 		.then(function(data){
 			angular.forEach($scope.selectedRows, function (data, index) {
 			    $scope.gridOptions.data.splice($scope.gridOptions.data.lastIndexOf(data), 1);

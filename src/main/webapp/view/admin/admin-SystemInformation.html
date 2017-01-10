@@ -16,7 +16,10 @@
 				<section class="box box-primary">
 					<ul class="nav nav-tabs">
 						<li role="presentation" ng-class="{active:isSelected('System Information')}"><a
-								href ui-sref="admin.SystemInformation.info" ng-click="selectTab('System Information')">Information</a></li>
+								href ui-sref="admin.SystemInformation.info({activeTab:'System Information'})"">Information</a></li>
+						<li role="presentation" ng-class="{active:isSelected('System Test')}"><a
+								href ui-sref="admin.SystemInformation.test({activeTab:'System Test'})">Test</a></li>
+								
 					</ul>
 					<div class="box col-md-12" ui-view></div>
 				</section>

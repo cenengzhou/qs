@@ -364,7 +364,7 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 	}
 	
 	$scope.recalculateIV = function recalculateResourceSummaryIV() {
-		subcontractService.recalculateResourceSummaryIV($scope.jobNo, $scope.subcontractNo, false)
+		resourceSummaryService.recalculateResourceSummaryIV($scope.jobNo, $scope.subcontractNo, false)
 	   	 .then(
 				 function( data ) {
 					 if(data == false)

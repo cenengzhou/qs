@@ -1,5 +1,5 @@
-mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'jdeService', '$cookies', 'transitService',  '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants',
-                          function($q, $scope, colorCode, modalService, transitService, jdeService, $cookies, transitService, $window, $timeout, rootscopeService, uiGridGroupingConstants) {
+mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 'transitService', 'jdeService', '$cookies', 'transitService', 'confirmService', '$window', '$timeout', 'rootscopeService', 'uiGridGroupingConstants',
+                          function($q, $scope, colorCode, modalService, transitService, jdeService, $cookies, transitService, confirmService, $window, $timeout, rootscopeService, uiGridGroupingConstants) {
 	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.jobNo = $cookies.get("jobNo");
@@ -261,20 +261,34 @@ mainApp.controller('TransitCtrl', ['$q', '$scope', 'colorCode', 'modalService', 
 				typeStr = 'Resources';
 			}
 			
+			var url='service/report/transitDownload?type=';
+			var showDialog = false;
 			if(msg.success){
 				if(msg.haveWarning){
 					message = msg.numRecordImported + ' ' + typeStr + ' have been imported with warning. '
-					message += 'Would you like to download the warning report?<br>If yes, please click <a href="service/attachment/transitDownload?type=SUCCESS_WITH_WARNING" target="_blank">here</a>.';
-					status = 'Warn'
+					message += 'Would you like to download the warning report?';
+					status = 'Warn';
+					url+= 'SUCCESS_WITH_WARNING';
+					showDialog = true;
 				} else {
 					message = msg.numRecordImported + ' ' + typeStr + ' imported successfully.'
 					status = 'Success';
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, message);
 				}
 			} else {
-				message = 'Failed to import ' + typeStr + '. Would you like to download the error report?<br>If yes, please click <a href="service/attachment/transitDownload?type=TERROR" target="_blank">here</a>.';
+				message = 'Failed to import ' + typeStr + '. Would you like to download the error report?';
 				status = "Fail";
+				url+='TERROR';
+				showDialog = true;
 			}
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', status, message);
+			if(showDialog)
+			confirmService.show({}, {bodyText:message})
+			.then(function(response){
+				if(response === 'Yes') {
+					$window.open(url, 'transitDownload', '_blank');
+				}
+			});
+			
 		}, function(data){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
 		});

@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'unitService', '$cookies', '$stateParams', '$state', 'uiGridConstants', 'confirmService', 'subcontractService', '$location', 'roundUtil',
-                                             function($scope, modalService, resourceSummaryService, unitService, $cookies, $stateParams, $state, uiGridConstants, confirmService, subcontractService, $location, roundUtil) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'jdeService', '$cookies', '$stateParams', '$state', 'uiGridConstants', 'confirmService', 'subcontractService', '$location', 'roundUtil',
+                                             function($scope, modalService, resourceSummaryService, jdeService, $cookies, $stateParams, $state, uiGridConstants, confirmService, subcontractService, $location, roundUtil) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
@@ -329,7 +329,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 	}
 	
 	function getUnitOfMeasurementList() {
-		unitService.getUnitOfMeasurementList()
+		jdeService.getUnitOfMeasurementList()
 		.then(
 				function( data ) {
 					angular.forEach(data, function(value, key){

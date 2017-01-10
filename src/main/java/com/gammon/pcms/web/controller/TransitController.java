@@ -8,11 +8,14 @@
 package com.gammon.pcms.web.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,19 +23,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitCodeMatch;
 import com.gammon.qs.domain.TransitResource;
+import com.gammon.qs.service.transit.TransitImportResponse;
 import com.gammon.qs.service.transit.TransitService;
+import com.google.gson.Gson;
 
 @RestController
 @RequestMapping(value = "service/transit/")
 public class TransitController {
 	@Autowired
 	private TransitService transitService;
+	private Logger logger = Logger.getLogger(getClass());
+	private String RESPONSE_CONTENT_TYPE_TEXT_HTML = "text/html";
+	private String RESPONSE_HEADER_NAME_CACHE_CONTROL = "Cache-Control";
+	private String RESPONSE_HEADER_VALUE_NO_CACHE = "no-cache";
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','getIncompleteTransitList', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getIncompleteTransitList", method = RequestMethod.GET)
@@ -116,6 +126,44 @@ public class TransitController {
 		String result = null;
 		result = transitService.createOrUpdateTransitHeader(jobNo, estimateNo, matchingCode, newJob);
 		return result;
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','uploadTransit', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "transitUpload", method = RequestMethod.POST)
+	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
+								@RequestParam(required = true, value = "type") String type, 
+								@RequestParam("files") List<MultipartFile> multipartFiles,
+								HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.info("Upload Transit - START");
+		
+		response.setContentType(RESPONSE_CONTENT_TYPE_TEXT_HTML);
+		response.setHeader(RESPONSE_HEADER_NAME_CACHE_CONTROL, RESPONSE_HEADER_VALUE_NO_CACHE);
+	
+//		List<MultipartFile> multipartFiles = FileUtil.getMultipartFiles(request);
+
+		TransitImportResponse transitImportResponse = null;
+		
+		for (MultipartFile multipartFile : multipartFiles) {
+			byte[] file = multipartFile.getBytes();
+			if (file != null) {
+
+				transitImportResponse =  transitService.importBqItemsOrResourcesFromXls(jobNumber, type, file); 
+				
+				Map<String, Object> resultMap = new HashMap<String, Object>();
+				if (transitImportResponse == null) {
+					resultMap.put("success", true);
+					logger.info("Upload Attachment: success.");
+				} else {
+					resultMap.put("success", false);
+					resultMap.put("error", transitImportResponse);
+					logger.info("error: " + transitImportResponse);
+				}
+				
+//				response.setContentType("text/html");
+				response.getWriter().print((new Gson()).toJson(transitImportResponse));
+				logger.info("Upload Transit -END");
+			}
+		}
 	}
 
 }

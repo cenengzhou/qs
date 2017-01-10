@@ -26,7 +26,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/subcontractor-service.js',
                            'js/service/userpreference-service.js',
                            'js/service/job-service.js',
-                           'js/service/unit-service.js',
+                           'js/service/system-service.js',
                            'js/service/ap-service.js',
                            'js/service/userpreference-service.js',
                            'js/system/rootscope-service.js',
@@ -236,7 +236,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/controller/repackaging/repackaging-split.js',
                	         'js/controller/repackaging/repackaging-add.js',
                	         'js/service/resource-summary-service.js',
-               	         'js/service/unit-service.js'
+               	         'js/service/jde-service.js',
+               	         'js/service/system-service.js'
                     ] 
                 });
             }]
@@ -254,7 +255,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/controller/subcontract/subcontract-award-ta.js',
                	         'js/service/resource-summary-service.js',
                	         'js/service/tender-service.js',
-               	         'js/service/unit-service.js'
+               	         'js/service/system-service.js'
                     ] 
                 });
             }]
@@ -528,7 +529,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-               	         	'js/service/unit-service.js',
+               	         	'js/service/system-service.js',
                	         	'js/service/resource-summary-service.js',
                	         	'js/service/repackaging-service.js',
                	         	'js/controller/subcontract/addendum/addendum-details.js',
@@ -636,7 +637,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/addendum/other-addendum-detail.js',
-                           'js/service/unit-service.js'
+                           'js/service/system-service.js'
                     ] 
                 });
             }]
@@ -933,7 +934,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/repackaging/repackaging-add.js',
                            'js/controller/repackaging/repackaging-split.js',
                            'js/service/resource-summary-service.js',
-                           'js/service/unit-service.js',
+                           'js/service/system-service.js',
+                           'js/service/jde-service.js',
                            'js/service/subcontract-service.js',
                     ] 
                 });
@@ -1105,9 +1107,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         	'js/service/payment-service.js',
                	         	'js/service/subcontract-service.js',
                	         	'js/service/adl-service.js',
-               	         	'js/service/unit-service.js',
+               	         	'js/service/system-service.js',
                	         	'js/service/subcontractor-service.js',
-               	         	'js/service/ivpostinghist-service.js',
+               	         	'js/service/resource-summary-service.js',
                	         	'js/service/job-service.js',
                	         	'js/controller/nav-menu.js',
                	         	'js/service/jde-service.js',
@@ -1365,6 +1367,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.Revisions',{
 		url: '/Revisions',
 		templateUrl: 'view/admin/admin-Revisions.html',
+		params: {
+			'activeTab': null
+		},
 		controller: 'AdminRevisionsCtrl',
 		controllerAs: 'revisionsCtrl'
 	})
@@ -1425,11 +1430,19 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('admin.SystemInformation',{
 		url: '/SystemInformation',
 		templateUrl: 'view/admin/admin-SystemInformation.html',
+		params: {
+			'activeTab': null
+		},
 		controller: 'AdminSystemInformationCtrl'
 	})
 	.state('admin.SystemInformation.info',{
 		url: '/info',
 		templateUrl: 'view/admin/admin-SystemInformation-info.html',
+		controller: 'AdminSystemInformationCtrl'
+	})
+	.state('admin.SystemInformation.test',{
+		url: '/test',
+		templateUrl: 'view/admin/admin-SystemInformation-test.html',
 		controller: 'AdminSystemInformationCtrl'
 	})
 	.state('admin.announcementSetting',{
