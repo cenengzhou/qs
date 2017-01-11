@@ -98,7 +98,7 @@ public class AdminTestController implements InitializingBean{
 	@RequestMapping(value = "runTestByRest", method = RequestMethod.GET)
 	public Map<String, String> runTestByRest(
 			@RequestParam(defaultValue = "1") Integer limitSubTaskTo, 
-			@RequestParam(defaultValue = "false") boolean runAllTask,
+			@RequestParam(defaultValue = "false") boolean overrideAndRunAllSubTask,
 			HttpServletRequest request){
 		AdminTestController.HOST = request.getServerName() + ":" + request.getServerPort();
 		AdminTestController.CONTEXTPATH = request.getContextPath();
@@ -121,18 +121,18 @@ public class AdminTestController implements InitializingBean{
 					returnMap = rerunIntervalMap;
 				} else {
 					restLastRun = Calendar.getInstance();
-					returnMap = performTestByRest(limitSubTaskTo, runAllTask);
+					returnMap = performTestByRest(limitSubTaskTo, overrideAndRunAllSubTask);
 				}
 			} else {
 				restLastRun = Calendar.getInstance();
-				returnMap = performTestByRest(limitSubTaskTo, runAllTask);
+				returnMap = performTestByRest(limitSubTaskTo, overrideAndRunAllSubTask);
 			}
 			restRunning = false;
 			return returnMap;
 		}
 	}
 	
-	private synchronized Map<String, String> performTestByRest(Integer limitSubTaskTo, boolean runAllTask){
+	private synchronized Map<String, String> performTestByRest(Integer limitSubTaskTo, boolean overrideAndRunAllSubTask){
 		resultMap.clear();
 		counterMap.clear();
 		resultMap.put(TestResult.SUCCESS, "0");
@@ -141,7 +141,7 @@ public class AdminTestController implements InitializingBean{
 		testCaseList.forEach(testCase ->{
 			String mapKey = "::" + testCase.getCategory() + "::" + testCase.getMethod();
 			Integer count = counterMap.get(mapKey) != null ? counterMap.get(mapKey) : 0;
-			if( runAllTask || count < limitSubTaskTo) {
+			if( overrideAndRunAllSubTask || count < limitSubTaskTo) {
 				TestResult testResult = runTestMethod(testCase);
 				counterMap.put(mapKey, count+1);
 				resultMap.put(mapKey + "::" + testCase.getItem(), testResult.getMessage());

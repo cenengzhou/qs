@@ -226,7 +226,7 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 			<label class="form-control btn btn-primary" style="color:white;" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
 		</div>
 	 	<div class="col-md-2 m-t-20 m-b-10" style="padding-left:0px">
-	 		<a href="runTestByRest?limitSubTaskTo=2&runAllTask=false" target="RESTTEST"><label class="form-control btn btn-warning col-md-3;" style="color:white">Run with REST</label></a>
+	 		<a href="runTestByRest?limitSubTaskTo=2&overrideAndRunAllSubTask=false" target="RESTTEST"><label class="form-control btn btn-warning col-md-3;" style="color:white">Run with REST</label></a>
 	 	</div>
 		<div >
 			<div class="col-md-10">All Task: {{allTestCase.length ? allTestCase.length : 0}} | Success: {{getCount(successCount)}} | Fail: {{getCount(failCount)}} | Test Queue: {{testQueue.length}} | Running: {{getCount(runningCount)}}</div> 
