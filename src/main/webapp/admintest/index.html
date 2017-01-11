@@ -204,8 +204,14 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 		})
 	}
 	$scope.flipVisiblity = function(s){
-		s.show = false;
-		angular.element('#'+(s.name+'Body').replace('|', '\\|')).slideToggle();
+		if(angular.element('#'+(s.name+'RunGroup').replace('|', '\\|') + ':hover').size() < 1) {
+			s.show = false;
+			angular.element('#'+(s.name+'Body').replace('|', '\\|')).slideToggle();
+		}
+	}
+	
+	$scope.jumpTo = function(){
+		location.href = '#' + $scope.jumpItem.name;
 	}
 }]); 
 
@@ -214,10 +220,20 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
 </head>
 <body ng-controller="ctrl">
 <div class="wrapper container">
-<div class="navbar navbar-fixed-bottom" style="margin-bottom:-20px">
- 	<label class="form-control btn btn-primary" style="color:white" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
-	<div class="well bg-white">All Task: {{allTestCase.length ? allTestCase.length : 0}} | Success: {{getCount(successCount)}} | Fail: {{getCount(failCount)}} | Test Queue: {{testQueue.length}} | Running: {{getCount(runningCount)}} 
-		<div class="pull-right"><label class="m-r-20">JUMP TO: </label><span ng-repeat="(categoryKey, categoryValue) in allTestCase | groupBy: 'category'"><a href="#{{categoryKey}}"><label class="btn btn-primary">{{categoryKey}}</label></a> </span></div>
+<div class="navbar navbar-fixed-bottom p-b-40" style="margin-bottom:-40px">
+	<div class="bg-white" style="bgColor:#ff00ff;height:140px" >
+		<div class="col-md-10 m-t-20 m-b-10" style="padding-right:0px">
+			<label class="form-control btn btn-primary" style="color:white;" type="button" ng-click="runGroupTest(allTestCase)">Run All</label>
+		</div>
+	 	<div class="col-md-2 m-t-20 m-b-10" style="padding-left:0px">
+	 		<a href="runTestByRest?limitSubTaskTo=2&runAllTask=false" target="RESTTEST"><label class="form-control btn btn-warning col-md-3;" style="color:white">Run with REST</label></a>
+	 	</div>
+		<div >
+			<div class="col-md-10">All Task: {{allTestCase.length ? allTestCase.length : 0}} | Success: {{getCount(successCount)}} | Fail: {{getCount(failCount)}} | Test Queue: {{testQueue.length}} | Running: {{getCount(runningCount)}}</div> 
+			<div class="col-md-2">
+				<label for="jumpMenu">JUMP TO: </label><select id="jumpMenu" class="form-control input-sm" ng-model="jumpItem" ng-options="category.name for category in categorys" ng-change="jumpTo()"></select>
+			</div>
+		</div>
 	</div>
 </div>
 <div class="row" style="padding-bottom:100px">
@@ -226,7 +242,7 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', function
             <a href="javascript:;" name="{{categoryKey}}" ng-click="showPanel(categoryKey)" data-click="panel-collapse">
             <div class="panel-heading">
                  <div class="panel-heading-btn">
-                     <label class="btn btn-primary m-r-20" type="button" ng-click="runGroupTest(categoryValue)">Run Group</label>
+                     <label class="btn btn-primary m-r-20" type="button" ng-click="runGroupTest(categoryValue)" id="{{categoryKey}}RunGroup">Run Group</label>
                      <i class="fa fa-wa fa-minus btn btn-xs btn-icon btn-circle btn-inverse"></i>
                   </div>
                 <h4 class="panel-title">{{categoryKey}} | Total Task: {{categoryValue.length}} | Success: {{successCount[categoryKey].length ? successCount[categoryKey].length : 0}} | Fail: {{failCount[categoryKey].length ? failCount[categoryKey].length : 0}} <span ng-show="runningCount[categoryKey].length>0">| Running: {{runningCount[categoryKey].length}}</span></h4>

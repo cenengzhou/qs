@@ -3,6 +3,7 @@ package com.gammon.pcms.web.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +52,7 @@ public class AdminTestController implements InitializingBean{
 	public static String HOST;
 	public static String CONTEXTPATH;
 	public static String FNTEST = "FUNCTION|SECURITY";
+	private static String GSF_REQUEST_USERNAME;
 	
 	@Autowired
 	private AdminTestConfig adminTestConfig;
@@ -75,7 +77,12 @@ public class AdminTestController implements InitializingBean{
 	
 	private List<TestCase> testCaseList;
 	private Map<String, Object> beans = new HashMap<>();
+	private Logger logger = Logger.getLogger(getClass());
 	
+	private final Map<String, String> resultMap = new LinkedHashMap<>();
+	private final Map<String, Integer> counterMap = new HashMap<>();
+	private boolean restRunning;
+	private Calendar restLastRun;
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		adminTestController = (AdminTestController) applicationContext.getBean("adminTestController");
@@ -86,6 +93,68 @@ public class AdminTestController implements InitializingBean{
 		beans.put("objectMapper", objectMapper);
 		beans.put("entityManager", entityManager);
 		beans.put("adlEntityManager", adlEntityManager);
+	}
+	
+	@RequestMapping(value = "runTestByRest", method = RequestMethod.GET)
+	public Map<String, String> runTestByRest(
+			@RequestParam(defaultValue = "1") Integer limitSubTaskTo, 
+			@RequestParam(defaultValue = "false") boolean runAllTask,
+			HttpServletRequest request){
+		AdminTestController.HOST = request.getServerName() + ":" + request.getServerPort();
+		AdminTestController.CONTEXTPATH = request.getContextPath();
+		if(restRunning){
+			Map<String, String> runningResultMap = new LinkedHashMap<>();
+			runningResultMap.put(TestResult.SUCCESS, "0");
+			runningResultMap.put(TestResult.FAIL, "1");
+			runningResultMap.put("::ERROR", "Test running in other instance, please try later");
+			return runningResultMap;
+		} else{
+			restRunning = true;
+			Map<String, String> returnMap = null;
+			if(restLastRun != null){
+				String  msg = TestMethod.hitRerunInterval(restLastRun);
+				if(StringUtils.isNotEmpty(msg)) {
+					Map<String, String> rerunIntervalMap = new LinkedHashMap<>();
+					rerunIntervalMap.put(TestResult.SUCCESS, "0");
+					rerunIntervalMap.put(TestResult.FAIL, "1");
+					rerunIntervalMap.put("::ERROR", msg);
+					returnMap = rerunIntervalMap;
+				} else {
+					restLastRun = Calendar.getInstance();
+					returnMap = performTestByRest(limitSubTaskTo, runAllTask);
+				}
+			} else {
+				restLastRun = Calendar.getInstance();
+				returnMap = performTestByRest(limitSubTaskTo, runAllTask);
+			}
+			restRunning = false;
+			return returnMap;
+		}
+	}
+	
+	private synchronized Map<String, String> performTestByRest(Integer limitSubTaskTo, boolean runAllTask){
+		resultMap.clear();
+		counterMap.clear();
+		resultMap.put(TestResult.SUCCESS, "0");
+		resultMap.put(TestResult.FAIL, "0");
+		List<TestCase> testCaseList = getAllTestCaseList();
+		testCaseList.forEach(testCase ->{
+			String mapKey = "::" + testCase.getCategory() + "::" + testCase.getMethod();
+			Integer count = counterMap.get(mapKey) != null ? counterMap.get(mapKey) : 0;
+			if( runAllTask || count < limitSubTaskTo) {
+				TestResult testResult = runTestMethod(testCase);
+				counterMap.put(mapKey, count+1);
+				resultMap.put(mapKey + "::" + testCase.getItem(), testResult.getMessage());
+				if(testResult.status){
+					Integer successCount = new Integer(resultMap.get(TestResult.SUCCESS));
+					resultMap.put(TestResult.SUCCESS, "" + (successCount + 1));
+				} else {
+					Integer failCount = new Integer(resultMap.get(TestResult.FAIL));
+					resultMap.put(TestResult.FAIL, "" + (failCount + 1));
+				}
+			}
+		});
+		return resultMap;
 	}
 	
 	@JsonView(ExcludeDetailsView.class)
@@ -105,6 +174,7 @@ public class AdminTestController implements InitializingBean{
 				switch(category){
 				case "SETTING":
 					AdminTestController.RERUN_INTERVAL = new Integer(adminTestConfig.getCategoryMethodItemDetail(category, "ALL", "TASK", "RERUN_INTERVAL"));
+					AdminTestController.GSF_REQUEST_USERNAME = adminTestConfig.getCategoryMethodItemDetail(category, "ALL", "TASK", "GSF_REQUEST_USERNAME");
 					break;
 				default:
 					adminTestConfig.getCategoryMethodList(category)
@@ -140,20 +210,26 @@ public class AdminTestController implements InitializingBean{
 		TestResult testResult = null;
 		TestCase testCase = testCaseList.get(id);
 		if(category.equals(testCase.getCategory()) && method.equals(testCase.getMethod()) && item.equals(testCase.getItem())){
-			TestMethod testMethod = testCase.getTestMethod();
-			if(testMethod != null) {
-				if(testCase.getCategory().equals("DB")){
-					if(testCase.getItem().equals("ADL")){
-						testResult = adminTestController.adlTest(testMethod);
-					} else {
-						testResult = adminTestController.pcmsdataTest(testMethod);
-					}
-				} else {
-					testResult = testMethod.process();
-				}
-			}
+			testResult = runTestMethod(testCase);
 		}
 		TimeUnit.MILLISECONDS.sleep(150);
+		return testResult;
+	}
+
+	private TestResult runTestMethod(TestCase testCase) {
+		TestResult testResult = null;
+		TestMethod testMethod = testCase.getTestMethod();
+		if(testMethod != null) {
+			if(testCase.getCategory().equals("DB")){
+				if(testCase.getItem().equals("ADL")){
+					testResult = adminTestController.adlTest(testMethod);
+				} else {
+					testResult = adminTestController.pcmsdataTest(testMethod);
+				}
+			} else {
+				testResult = testMethod.process();
+			}
+		}
 		return testResult;
 	}
 	
@@ -296,12 +372,10 @@ public class AdminTestController implements InitializingBean{
 			} else {
 				running = true;
 				if(lastRun != null){
-					Calendar now = Calendar.getInstance();
-					Calendar checkRerun = (Calendar) lastRun.clone();
-					checkRerun.add(Calendar.SECOND, RERUN_INTERVAL);
-					if(checkRerun.after(now)) {
+					String  msg = hitRerunInterval(lastRun);
+					if(StringUtils.isNotEmpty(msg)) {
 						result.setStatus(false);
-						result.setMessage("Hit minimum rerun interval, please try " + ((checkRerun.getTime().getTime() - now.getTime().getTime())/1000 + 1) + " seconds later.");
+						result.setMessage(msg);
 					} else {
 						result = performanceTest();
 						lastRun = Calendar.getInstance();
@@ -314,6 +388,18 @@ public class AdminTestController implements InitializingBean{
 			}
 			return result;
 		}
+		
+		public static String hitRerunInterval(Calendar lastRun){
+			Calendar now = Calendar.getInstance();
+			Calendar checkRerun = (Calendar) lastRun.clone();
+			checkRerun.add(Calendar.SECOND, RERUN_INTERVAL);
+			String msg = "";
+			if(checkRerun.after(now)){
+				msg = "Hit minimum rerun interval, please try " + ((checkRerun.getTime().getTime() - now.getTime().getTime())/1000 + 1) + " seconds later.";
+			}
+			return msg;
+		}
+		
 		public TestResult performanceTest(){return testResult;};
 	}
 	
@@ -347,7 +433,7 @@ public class AdminTestController implements InitializingBean{
 				RestTemplate restTemplate = restTemplateHelper.getRestTemplate(host, null, null);
 				if(FNTEST.equals(category)){
 					GetFunctionSecurity.Request functionSecurityRequest = new GetFunctionSecurity.Request(
-							WebServiceConfig.GSF_APPLICATION_CODE, "gamska\\paulnpyiu", details.get("FN"));
+							WebServiceConfig.GSF_APPLICATION_CODE, AdminTestController.GSF_REQUEST_USERNAME, details.get("FN"));
 					ResponseEntity<GetFunctionSecurity.Response> functionSecurityResponse = 
 							restTemplate.postForEntity(url, functionSecurityRequest, GetFunctionSecurity.Response.class);
 					List<GetFunctionSecurity.Result> functionSecurityList = functionSecurityResponse.getBody().getResultList();
@@ -467,6 +553,8 @@ public class AdminTestController implements InitializingBean{
 	}
 
 	public static class TestResult {
+		public static final String SUCCESS = "SUCCESS";
+		public static final String FAIL = "FAIL";
 		@JsonView(ExcludeDetailsView.class)
 		private boolean status = false;
 		@JsonView(ExcludeDetailsView.class)
