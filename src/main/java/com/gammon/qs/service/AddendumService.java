@@ -274,8 +274,10 @@ public class AddendumService{
 					
 					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
 					subcontractDetailHBDao.update(scDetail);
-					
+
+					addendumDetail.setIdResourceSummary(new BigDecimal(scDetail.getResourceNo()));	
 				}
+				
 				addendumDetail.setTypeAction(AddendumDetail.TYPE_ACTION.UPDATE.toString());
 				
 			}
