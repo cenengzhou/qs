@@ -568,7 +568,7 @@ public class Subcontract extends BasePersistedObject {
 
 	@Column(name = "labourIncluded")
 	public Boolean getLabourIncludedContract() {
-		return labourIncludedContract;
+		return labourIncludedContract != null ? labourIncludedContract : false;
 	}
 
 	public void setLabourIncludedContract(Boolean labourIncludedContract) {
@@ -577,7 +577,7 @@ public class Subcontract extends BasePersistedObject {
 
 	@Column(name = "plantIncluded")
 	public Boolean getPlantIncludedContract() {
-		return plantIncludedContract;
+		return plantIncludedContract != null ? plantIncludedContract : false;
 	}
 
 	public void setPlantIncludedContract(Boolean plantIncludedContract) {
@@ -586,7 +586,7 @@ public class Subcontract extends BasePersistedObject {
 
 	@Column(name = "materialIncluded")
 	public Boolean getMaterialIncludedContract() {
-		return materialIncludedContract;
+		return materialIncludedContract != null ? materialIncludedContract : false;
 	}
 
 	public void setMaterialIncludedContract(Boolean materialIncludedContract) {
