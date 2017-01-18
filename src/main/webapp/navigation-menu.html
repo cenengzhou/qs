@@ -339,11 +339,11 @@
 									target="_self" ng-click="showCodePanel('Subsidiary')" ng-init="showObjectCode=false">Subsidiary Code</a></li>
 							</ul>
 							<div class="tab-pane active" id="AccountCodeObjectCode">
-								<div id="objectCodePanel" ng-if="showObjectCode == true" ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
+								<div id="objectCodePanel" ng-if="showObjectCode == true" save-and-restore-grid-state="sidebar_objectCode" ui-grid-save-state ui-grid="ObjectCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 							<div class="tab-pane" id="AccountCodeSubsidiaryCode">
-							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
+							<div id="subsidiaryCodePanel" ng-if="showSubsidiaryCode == true" save-and-restore-grid-state="sidebar_subsidiaryCode" ui-grid-save-state ui-grid="SubsidiaryCodeGridOptions" external-scopes="clickHandler" ui-grid-auto-resize ui-grid-exporter ui-grid-resize-columns class="grid"
 									resize ng-style="resizeWithOffset(160)"></div>
 							</div>
 						</div>
@@ -352,7 +352,7 @@
 				<div class="tab-pane box box-primary" id="AddressBook">
 					<ul class="nav">
 						<div class="tab-content">
-								<div id="addressBookPanel" ng-if="showAddressBook == true" ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize class="grid"
+								<div id="addressBookPanel" ng-if="showAddressBook == true" save-and-restore-grid-state="sidebar_addressBook" ui-grid-save-state ui-grid="AddressBookGridOptions" external-scopes="clickHandler" ui-grid-exporter ui-grid-resize-columns ui-grid-auto-resize class="grid"
 									resize ng-style="resizeWithOffset(120)"></div>
 						</div>
 					</ul>

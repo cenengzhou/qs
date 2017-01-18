@@ -1,6 +1,8 @@
 package com.gammon.pcms.helper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,4 +41,16 @@ public class JsonHelper {
 		}
 		return param;
 	}
+	
+	public static List<String> splitToList(String str, int size){
+		int totalLength = str.length();
+		int index = 0;
+		List<String> resultList = new ArrayList<>();
+		while (index < totalLength){
+			resultList.add(str.substring(index, Math.min(index + size, totalLength)));
+			index += size;
+		}
+		return resultList;
+	}
+
 }

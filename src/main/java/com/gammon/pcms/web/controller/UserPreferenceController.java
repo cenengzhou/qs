@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gammon.pcms.service.UserPreferenceService;
@@ -79,6 +80,18 @@ public class UserPreferenceController {
 		return preferenceMap;
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "saveGridPreference", method = RequestMethod.POST)
+	public void saveGridPreference(@RequestBody Map<String, String> preference){
+		userPreferenceService.saveGridPreference(preference);
+	}
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "clearGridPreference", method = RequestMethod.POST)
+	public void clearGridPreference(@RequestParam String gridName){
+		userPreferenceService.clearGridPreference(gridName);
+	}
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','setDefaultJobNo', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "setDefaultJobNo", method = RequestMethod.POST)
 	public Map<String, String> setDefaultJobNo(@RequestBody String defaultJobNo) throws DatabaseOperationException{

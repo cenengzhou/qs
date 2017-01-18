@@ -1,7 +1,8 @@
-mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'jdeService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 'uiGridConstants',  
-                                   function($http, $scope, $location, $cookies, blockUI, jdeService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
+mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', 'blockUI', 'userpreferenceService', 'jdeService', 'modalService', 'adlService', '$state', 'GlobalHelper', '$interval', '$timeout', 'GlobalParameter', 'userpreferenceService', 'rootscopeService', 'uiGridConstants',  
+                                   function($http, $scope, $location, $cookies, blockUI, userpreferenceService, jdeService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
 	
 	rootscopeService.setEnv();
+	userpreferenceService.gettingGridPreference();
 	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
 		$scope.tab = setTab;

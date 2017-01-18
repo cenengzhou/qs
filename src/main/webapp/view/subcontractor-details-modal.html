@@ -90,19 +90,19 @@
 
 				<div ng-show="isSelected('awarded')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected('awarded')" id="awardedGrid" ui-grid="awardedGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('awarded')" id="awardedGrid" save-and-restore-grid-state="subcontractorDetailModal_awarded" ui-grid-save-state ui-grid="awardedGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
 				</div>
 				<div  ng-show="isSelected('history')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected('history')" id="tenderAnalysisGrid" ui-grid="tenderAnalysisGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('history')" id="tenderAnalysisGrid" save-and-restore-grid-state="subcontractorDetailModal_tenderAnalysis" ui-grid-save-state ui-grid="tenderAnalysisGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
 				</div>
 				<div ng-show="isSelected('workscope')" style="height:350px;overflow:auto">
 					<div class="box col-md-12">
-						<div ng-if="isSelected('workscope')" id="workscopeGrid" ui-grid="workscopeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
+						<div ng-if="isSelected('workscope')" id="workscopeGrid" save-and-restore-grid-state="subcontractorDetailModal_workscope" ui-grid-save-state ui-grid="workscopeGridOptions" external-scopes="clickHandler" ui-grid-resize-columns
 							ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" style="height:320px"></div>
 					</div>
 				</div>

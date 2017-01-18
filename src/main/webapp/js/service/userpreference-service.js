@@ -7,7 +7,10 @@ mainApp.service('userpreferenceService', ['$http', '$q', 'GlobalHelper', '$rootS
     	getNotificationReadStatusByCurrentUser: 	getNotificationReadStatusByCurrentUser,
     	insertNotificationReadStatusByCurrentUser: insertNotificationReadStatusByCurrentUser,
     	updateNotificationReadStatusByCurrentUser: updateNotificationReadStatusByCurrentUser,
-    	updateAnnouncentSetting: 						updateAnnouncentSetting
+    	updateAnnouncentSetting: 						updateAnnouncentSetting,
+    	gettingGridPreference:		gettingGridPreference,
+    	savingGridPreference:		savingGridPreference,
+    	clearGridPreference:		clearGridPreference,
     });
    
     function obtainUserPreferenceByCurrentUser(){
@@ -23,11 +26,69 @@ mainApp.service('userpreferenceService', ['$http', '$q', 'GlobalHelper', '$rootS
 				$rootScope.userPreference = data;
 				deferral.resolve({
 					userPreference : $rootScope.userPreference
-				})
+				});
 			});
 		} else {
 			deferral.resolve({
 				userPreference : $rootScope.userPreference
+			});
+		}
+		return deferral.promise;
+	}
+	
+	function savingGridPreference(gridName, state){
+		var deferral = $q.defer();
+		gettingUserPreference()
+		.then(function(response){
+			$rootScope.gridPreference[$rootScope.userPreference['GRIDPREFIX'] + gridName] = state;
+			var data = {};
+			data[($rootScope.userPreference['GRIDPREFIX'] + gridName)] = JSON.stringify($rootScope.gridPreference[$rootScope.userPreference['GRIDPREFIX'] + gridName]);
+	    	var request = $http({
+	    		method: 'post',
+	    		url: 'service/userPreference/saveGridPreference',
+	    		data: data
+	    	});
+	    	return( request.then( deferral.resolve, deferral.reject ) );
+		});
+		return deferral.promise;
+	}
+	
+	function clearGridPreference(gridName){
+		var deferral = $q.defer();
+		var request = $http({
+    		method: 'post',
+    		url: 'service/userPreference/clearGridPreference',
+    		params:{gridName: gridName}
+    	}).then(function(response){
+    		delete $rootScope.gridPreference[$rootScope.userPreference['GRIDPREFIX'] + gridName];
+    		return deferral.resolve();
+    	}, function(error){
+    		return deferral.reject();
+    	});
+		return deferral.promise;
+	}
+	
+	function gettingGridPreference(reload){
+		var deferral = $q.defer();
+		if(!$rootScope.gridPreference){
+			gettingUserPreference(reload)
+			.then(function(response){
+				$rootScope.gridPreference = {};
+				angular.forEach(response.userPreference, function(preference, key){
+					if(key.indexOf(response.userPreference['GRIDPREFIX']) >= 0){
+//						console.log('Key:' + key + ' pref:' + preference);
+						$rootScope.gridPreference[key] = JSON.parse(preference);
+					};
+				});
+				deferral.resolve({
+					gridPreference : $rootScope.gridPreference,
+					gridPrefix : $rootScope.userPreference['GRIDPREFIX']
+				});
+			});
+		} else {
+			deferral.resolve({
+				gridPreference : $rootScope.gridPreference,
+				gridPrefix : $rootScope.userPreference['GRIDPREFIX']
 			});
 		}
 		return deferral.promise;

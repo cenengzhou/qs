@@ -373,3 +373,114 @@ mainApp.directive('selectBox', function(){
 		}
 	}
 })
+
+//reuqire ui-grid and ui-grid-save-state directive
+//Grid stateKey mapping can be found at userPreference.properties => GridNameMap
+//<div save-and-restore-grid-state="stateKey" ui-grid-save-state ui-grid="gridOptions"></div>
+mainApp.directive('saveAndRestoreGridState', function($compile, $timeout, userpreferenceService){
+	return {
+		restrict: 'A',
+		require: '^uiGrid',
+		link: function(scope, element, attrs, uiGridCtrl){			
+			var byPassSaving = ['RESTORE_DB', 'RESTORE_DEFAULT'];
+			var isSaving = false;
+			var currentState = '';
+			var stateKey = attrs['saveAndRestoreGridState'];
+			var gridApi = uiGridCtrl.grid.api;
+			var defaultState = {};
+		    var clearPrefMenuItem = {
+		            title: 'Clear grid state',
+		            icon: 'fa fa-trash-o',
+		            action: function($event) {
+		              clearState();
+		            }
+		    };
+			if(gridApi){
+				if(!gridApi.grid.options.gridMenuCustomItems) gridApi.grid.options.gridMenuCustomItems = [];
+				gridApi.grid.options.saveWidths = true;
+				gridApi.grid.options.saveOrder = true;
+				gridApi.grid.options.saveScroll = true;
+				gridApi.grid.options.saveFocus = true;
+				gridApi.grid.options.saveVisible = true;
+				gridApi.grid.options.saveSort = true;
+				gridApi.grid.options.saveFilter = true;
+				gridApi.grid.options.savePinning = true;
+				gridApi.grid.options.saveGrouping = true;
+				gridApi.grid.options.saveGroupingExpandedStates = true;
+				gridApi.grid.options.saveTreeView = true;
+				gridApi.grid.options.saveSelection = true;
+				if(gridApi.colMovable) {
+			    	gridApi.colMovable.on.columnPositionChanged(scope, saveState);
+				}
+				if(gridApi.colResizable){
+					gridApi.colResizable.on.columnSizeChanged(scope, saveState);
+				}
+			    if(gridApi.grouping) {
+				    gridApi.grouping.on.aggregationChanged(scope, saveState);
+				    gridApi.grouping.on.groupingChanged(scope, saveState);
+			    }
+			    if(gridApi.core){
+				    gridApi.core.on.columnVisibilityChanged(scope, saveState);
+				    gridApi.core.on.filterChanged(scope, saveState);
+				    gridApi.core.on.sortChanged(scope, saveState);
+			    }
+			    $timeout(function(){
+			    	defaultState = gridApi.saveState.save();
+			    	restoreGridState();	
+			    });
+			}
+			
+			function saveState() {
+				if(byPassSaving.indexOf(currentState) >= 0) {
+					return;
+				}
+				if(!isSaving) {
+					isSaving = true;
+					$timeout(function(){
+						var state = gridApi.saveState.save();
+						userpreferenceService.savingGridPreference(stateKey, state)
+						.then(function(response){
+							isSaving = false;
+							addMenuItem();
+						});
+					}, 1000);
+				} 
+			}
+			
+			function restoreGridState(){
+				var state;
+				userpreferenceService.gettingGridPreference()
+				.then(function(response) {
+					state = response.gridPreference[(response.gridPrefix + stateKey)];
+				    if (state) {
+				    	addMenuItem();
+				    	currentState = 'RESTORE_DB';
+				    	gridApi.saveState.restore(scope, state);
+				    	currentState = '';
+				    }
+				});
+			}
+			
+			function clearState(){
+				userpreferenceService.clearGridPreference(stateKey)
+				.then(function(response){
+					currentState = 'RESTORE_DEFAULT';
+					gridApi.saveState.restore(scope, defaultState);
+					removeMenuItem();
+					gridApi.core.refresh();
+					currentState = '';
+				});
+			}
+			
+			function addMenuItem(){
+				removeMenuItem();
+				gridApi.grid.options.gridMenuCustomItems.push(clearPrefMenuItem);
+			}
+			
+			function removeMenuItem(){
+				var menuItemPosition =  gridApi.grid.options.gridMenuCustomItems.map(function(i){ return i.title = clearPrefMenuItem.title;}).indexOf(clearPrefMenuItem.title);
+				gridApi.grid.options.gridMenuCustomItems.splice(menuItemPosition, 1);
+			}
+		}
+	}
+});

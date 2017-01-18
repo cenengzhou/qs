@@ -11,7 +11,7 @@
 	<!-- ng-style="{height: 800 + 'px'}" -->
 	<!-- Main content -->
 	<div class="row col-md-12" block-ui="blockStandardTerms">
-		<div ui-grid="gridOptions" external-scopes="clickHandler"
+		<div save-and-restore-grid-state="admin_subcontractStandardTemsMaintenance" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler"
 			ui-grid-row-edit ui-grid-selection ui-grid-cellnav
 			ui-grid-edit class="grid" resize ng-style="resizeWithOffset(215)"></div>
 	</div>

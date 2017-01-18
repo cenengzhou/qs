@@ -168,7 +168,7 @@
 	<div class="col-md-12" ng-if="showPanel === 'viewBq'">
 
 		<div class="row">
-			<div id="bqGrid" name="bqGrid" ui-grid="bqGridOptions"
+			<div id="bqGrid" name="bqGrid" save-and-restore-grid-state="transit_dashboard_bq" ui-grid-save-state ui-grid="bqGridOptions"
 				external-scopes="clickHandler" ui-grid-exporter ui-grid-selection
 				ui-grid-resize-columns="true" ui-grid-selection ui-grid-grouping
 				ui-grid-cellnav ui-grid-edit class="grid col-md-12" resize
@@ -229,6 +229,7 @@
 </div>
 		<div class="row">
 			<div id="resourcesGrid" name="resourcesGrid"
+				save-and-restore-grid-state="transit_dashboard_resources" ui-grid-save-state 
 				ui-grid="resourcesGridOptions" external-scopes="clickHandler"
 				ui-grid-exporter ui-grid-selection ui-grid-grouping
 				ui-grid-resize-columns="true" ui-grid-selection ui-grid-cellnav
