@@ -233,6 +233,4 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		System.setProperty("ws.jde.server.url", getWsJde("URL"));
 	}
 
-
-	
 }

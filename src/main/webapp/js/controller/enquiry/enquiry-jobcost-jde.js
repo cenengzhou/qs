@@ -6,14 +6,16 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 	$scope.showCumulative = true;
 	$scope.searchJobNo = $scope.jobNo;
 //	$scope.searchPeriod = moment().format('YYYY-MM');
-	$scope.fromDate = moment().month(moment().month() ).format(GlobalParameter.MOMENT_DATE_FORMAT);
-	$scope.thruDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.jdesearchDate = {};
+	$scope.jdesearchDate.title = 'Exact date:';
+	$scope.jdesearchDate.startDate = moment().month(moment().month() ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.jdesearchDate.endDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.searchAccountLedger = {};
 	$scope.postFlag = '*';
 	$scope.showJobCostDetails = function(entity){		
 		var fromYear, fromMonth, toYear, toMonth;
-		var nextFromDate = getPeriod($scope.fromDate, 'from');
-		var nextThruDate = getPeriod($scope.thruDate, 'to');
+		var nextFromDate = getPeriod($scope.jdesearchDate.startDate, 'from');
+		var nextThruDate = getPeriod($scope.jdesearchDate.endDate, 'to');
 		fromYear = nextFromDate.year;
 		fromMonth = nextFromDate.month;
 		toYear = nextThruDate.year;
@@ -217,8 +219,8 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 //				totalFlag = "P";
 		if(!$scope.showCumulative) {		//byDate => movement
 			$scope.totalFlag = 'I';
-			fromDate = moment($scope.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
-			thruDate = moment($scope.thruDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
+			fromDate = moment($scope.jdesearchDate.startDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
+			thruDate = moment($scope.jdesearchDate.endDate).format(GlobalParameter.MOMENT_DATE_FORMAT);
 			year = '';
 			month = '';
 		} else {							//byPeriod => cumulative
@@ -260,37 +262,18 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 	}
 
 	$scope.triggerCumulative = function(){
-		$scope.dateRangeFormat = GlobalParameter.MOMENT_DATE_FORMAT;
 		if($scope.showCumulative){
-			var period = getPeriod(moment($scope.fromDate).format(GlobalParameter.MOMENT_DATE_FORMAT),'from');
+			var period = getPeriod(moment($scope.jdesearchDate.startDate).format(GlobalParameter.MOMENT_DATE_FORMAT),'from');
 			$scope.searchJdePeriod = period.year + '-' + (period.month+1);
 		} else {
 			var year = $scope.searchJdePeriod.substring(0,4);
 			var month = $scope.searchJdePeriod.substring(5.7) - 1;
 			var nextDate = $scope.getNextDate(year, month-1, year, month);
-			$scope.fromDate = nextDate.fromDate;
-			$scope.thruDate = nextDate.thruDate;
+			$scope.jdesearchDate.DateRangePicker.setStartDate(moment(nextDate.fromDate).format($scope.jdesearchDate.format));
+			$scope.jdesearchDate.DateRangePicker.setEndDate(moment(nextDate.thruDate).format($scope.jdesearchDate.format));
+			$scope.jdesearchDate.DateRangePicker.callback($scope.jdesearchDate.DateRangePicker.startDate, $scope.jdesearchDate.DateRangePicker.endDate);
 		}
-		$timeout(function(){
-			angular.element('input[name$=".dateRange"').daterangepicker({
-			    showDropdowns: true,
-			    singleDatePicker: false,
-			    startDate: $scope.fromDate,
-			    endDate: $scope.thruDate,
-			    autoApply: true,
-			    viewMode: 'months',
-				locale: {
-				      format: GlobalParameter.MOMENT_DATE_FORMAT
-				    },
-
-			}, function(start, end) {
-				$scope.fromDate = start;
-				$scope.thruDate = end;
-		       }
-			)
-		}, 500);
 		$scope.loadGridData();
 	}
 	$scope.triggerCumulative();
-	$scope.loadGridData();
 }]);

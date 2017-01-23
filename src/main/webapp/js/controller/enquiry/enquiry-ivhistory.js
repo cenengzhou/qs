@@ -1,12 +1,12 @@
 
 mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'modalService', 'blockUI', 'resourceSummaryService', 'uiGridConstants', 'GlobalParameter', 'GlobalHelper',
                                   function($scope, $http, $timeout, modalService, blockUI, resourceSummaryService, uiGridConstants, GlobalParameter, GlobalHelper) {
-	
 //	$scope.blockEnquiryIvHistory = blockUI.instances.get('blockEnquiryIvHistory');
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.searchJobNo = $scope.jobNo;
-	$scope.searchToDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
-	$scope.searchFromDate =  moment().year(moment().year() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchDate = {};
+	$scope.searchDate.startDate =  moment().year(moment().year() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchDate.endDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 //	$scope.searchFromDate.setFullYear($scope.searchToDate.getFullYear()-1);
 	
 	$scope.gridOptions = {
@@ -62,7 +62,7 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'moda
 	}
 	
 	$scope.loadGridData = function(){
-		resourceSummaryService.obtainIVPostingHistoryList($scope.searchJobNo, $scope.searchFromDate, $scope.searchToDate)
+		resourceSummaryService.obtainIVPostingHistoryList($scope.searchJobNo, $scope.searchDate.startDate, $scope.searchDate.endDate)
 		.then(function(data) {
 				if(angular.isArray(data)){
 					$scope.gridOptions.data = data;
@@ -76,26 +76,4 @@ mainApp.controller('EnquiryIvHistoryCtrl', ['$scope', '$http', '$timeout', 'moda
 		$scope.gridApi.grid.refresh();
 	};
 	$scope.loadGridData();
-	
-	$timeout(function(){
-	angular.element('input[name$=".dateRange"').daterangepicker({
-	    showDropdowns: true,
-	    startDate: $scope.searchFromDate,
-	    endDate: $scope.searchToDate,
-	    autoApply: true,
-	    viewMode: 'months',
-		locale: {
-		      format: GlobalParameter.MOMENT_DATE_FORMAT
-		    },
-
-	}, function(start, end) {
-		$scope.searchFromDate = start;
-		$scope.searchToDate = end;
-       }
-	)
-	}, 500);
-	$scope.openDropdown = function( $event){
-		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
-	}
-
 }]);

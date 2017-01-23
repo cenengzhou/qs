@@ -224,28 +224,5 @@ mainApp.controller('EnquiryJobCostDetailsAdlCtrl', ['$scope', '$timeout', '$stat
 			exporterMenuPdf: false,
 			columnDefs: $scope.columnDefs
 	};
-
-//	$timeout(function(){
-//		angular.element('input[name$=".dateRange"').daterangepicker({
-//		    showDropdowns: true,
-//		    startDate: $scope.fromDate,
-//		    endDate: $scope.thruDate,
-//		    autoApply: true,
-//		    viewMode: 'months',
-//			locale: {
-//			      format: 'YYYY-MM'//GlobalParameter.MOMENT_DATE_FORMAT
-//			    },
-//
-//		}, function(start, end) {
-//			$scope.fromDate = start;
-//			$scope.thruDate = end;
-//	       }
-//		)
-//	}, 500);
-//	
-//	$scope.openDropdown = function( $event){
-//		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
-//	}
-
 	
 }]);

@@ -130,8 +130,9 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 	$scope.searchSubcontractNo = searchObject.noSubcontract || '';
 //	$scope.searchFromYearMonth = moment().month(moment().month() -1 ).format('YYYY-MM');
 //	$scope.searchToYearMonth = moment().format('YYYY-MM');
-	$scope.fromDate = searchObject.fromDate || moment().month(moment().month() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
-	$scope.thruDate = searchObject.thruDate || moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchDate = {};
+	$scope.searchDate.startDate = searchObject.fromDate || moment().month(moment().month() -1 ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.searchDate.endDate = searchObject.thruDate || moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.searchTypeDocument = searchObject.typeDocument || '';
 	$scope.searchTypeLedger = searchObject.typeLedger || 'AA';
 	$scope.searchCodeObject = searchObject.codeObject || '';
@@ -164,8 +165,8 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 		var searchObjectMap = {};
 		searchObjectMap.noJob = $scope.searchJobNo;
 		searchObjectMap.typeLedger = $scope.searchTypeLedger;
-		searchObjectMap.fromDate = $scope.fromDate;
-		searchObjectMap.thruDate = $scope.thruDate;
+		searchObjectMap.fromDate = $scope.searchDate.startDate;
+		searchObjectMap.thruDate = $scope.searchDate.endDate;
 		searchObjectMap.typeDocument = $scope.searchTypeDocument;
 		searchObjectMap.noSubcontract = $scope.searchSubcontractNo;
 		searchObjectMap.codeObject = $scope.searchCodeObject;
@@ -180,26 +181,4 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 	
 	if($stateParams.searchObject) $scope.loadGridData();
 	
-	$timeout(function(){
-		angular.element('input[name$=".dateRange"').daterangepicker({
-		    showDropdowns: true,
-		    startDate: $scope.fromDate,
-		    endDate: $scope.thruDate,
-		    autoApply: true,
-		    viewMode: 'months',
-			locale: {
-			      format: GlobalParameter.MOMENT_DATE_FORMAT
-			    },
-
-		}, function(start, end) {
-			$scope.fromDate = start;
-			$scope.thruDate = end;
-	       }
-		)
-	}, 500);
-	
-	$scope.openDropdown = function( $event){
-		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
-	}
-
 }]);

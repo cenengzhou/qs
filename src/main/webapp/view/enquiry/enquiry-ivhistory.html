@@ -22,35 +22,10 @@
 									<label for="searchJobNo">Job No.</label> 
 									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" pattern=".{5,5}" title="Please input 5 characters">
 								</div>
-<!-- 								<div class="col-md-3"> -->
-<!-- 									<label for="searchFromDate">From Date:</label> -->
-<!-- 									<div class="input-group" moment-picker="searchFromDate" -->
-<!-- 										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true"> -->
-<!-- 										<span class="input-group-addon"> <i -->
-<!-- 											class="fa fa-calendar"></i> -->
-<!-- 										</span> <input class="form-control" id="searchFromDate" name="searchFromDate" required  -->
-<!-- 											ng-model="searchFromDate"> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-								
-<!-- 								<div class="col-md-3"> -->
-<!-- 									<label for="searchToDate">To Date:</label> -->
-<!-- 									<div class="input-group" moment-picker="searchToDate" -->
-<!-- 										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="year" min-view="year" today="true"> -->
-<!-- 										<span class="input-group-addon"> <i -->
-<!-- 											class="fa fa-calendar"></i> -->
-<!-- 										</span> <input class="form-control" id="searchToDate" name="searchToDate" required  -->
-<!-- 											ng-model="searchToDate"> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
 
-									<div class="col-md-3">
-										<label for="search.dateRange">Date Range</label>
-										<div class="input-group">
-											<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-											<input class="form-control" type="text" name="search.dateRange" ng-model="searchDate"/>
-										</div>
-									</div>
+								<div class="col-md-3">
+									<date-range-picker ng-model="searchDate"></date-range-picker>
+								</div>
 
 								<div class="col-md-5"></div>
 								

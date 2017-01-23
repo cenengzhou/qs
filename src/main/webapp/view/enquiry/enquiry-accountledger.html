@@ -69,11 +69,7 @@
 								</div>
 
 								<div class="col-md-3">
-									<label for="search.dateRange">Date range</label>
-									<div class="input-group">
-										<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-										<input class="form-control" type="text" name="search.dateRange" ng-model="searchDate"/>
-									</div>
+									<date-range-picker ng-model="searchDate"></date-range-picker>
 								</div>
 
 								<div class="col-md-1">

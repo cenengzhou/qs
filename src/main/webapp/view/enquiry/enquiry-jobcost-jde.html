@@ -26,11 +26,7 @@
 										</div>
 									</div>
 									<div ng-show="!showCumulative">
-									<label for="jdesearch.dateRange">Exact date:</label>
-									<div class="input-group">
-										<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-										<input class="form-control" type="text" name="jdesearch.dateRange" ng-model="jdesearchDate"/>
-									</div>
+										<date-range-picker ng-model="jdesearchDate"></date-range-picker>
 									</div>
 								</div>
 								<div class="col-md-3">

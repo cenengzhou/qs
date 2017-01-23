@@ -324,6 +324,83 @@ mainApp.directive('onFinishNgRepeat', function($timeout) {
 	};
 });
 
+//JS:
+//  //custom init date range as need (if $scope.searchDate === undefine then default date range is today)
+//	$scope.searchDate = {};
+//	$scope.searchDate.startDate = '2016-01-01';
+//	$scope.searchDate.endDate = '2017-01-01';
+//HTML:
+//<date-range-picker ng-model="searchDate"></date-range-picker>
+mainApp.directive('dateRangePicker', function(){
+	return {
+		restrict: 'AE',
+		replace: true,
+		template: '\
+			<div>\
+				<label ng-if="model.showTitle !== false" for="{{model.name}}">{{model.title}}</label>\
+				<div class="input-group">\
+					<span class="input-group-addon" ng-click="openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>\
+					<input class="form-control" type="text" name="{{model.name}}" ng-model="model.range"/>\
+				</div>\
+			</div>',
+		scope:{
+			model: '=ngModel'
+		},
+		controller: function($scope, $timeout, GlobalParameter){
+			var baseOptions = {'name':'dateRangePicker', 'title':'Date Range'};
+			if(!$scope.model)	{
+				$scope.model = baseOptions;
+			} else {
+				if($scope.model.singleDatePicker && !$scope.model.title) $scope.model.title = 'Date';
+			    for (var property in baseOptions)
+			    	if(!$scope.model[property])
+			    	$scope.model[property] = baseOptions[property];
+			}
+			if($scope.model.timePicker){
+				$scope.model.format = GlobalParameter.MOMENT_DATETIME_FORMAT;
+			} else {
+				$scope.model.format = GlobalParameter.MOMENT_DATE_FORMAT;
+			}
+
+			$timeout(
+				function(){
+					$scope.model.DateRangePicker = angular.element('input[name="' + $scope.model.name + '"]')
+					.daterangepicker(
+						{
+							singleDatePicker: $scope.model.singleDatePicker || false,
+							timePicker: $scope.model.timePicker || false,
+							timePicker24Hour: $scope.model.timePicker24Hour || false,
+							showDropdowns: $scope.model.showDropdowns || true,
+						    startDate: $scope.model.startDate,
+						    endDate: $scope.model.endDate,
+						    autoApply: $scope.model.autoApply || true,
+						    viewMode: $scope.model.viewMode || 'months',
+							locale: {
+							      format: $scope.model.format
+							    },
+						}, 
+						function(start, end) {
+							$scope.model.startDate = moment(start).format($scope.model.format);
+							$scope.model.endDate = moment(end).format($scope.model.format);
+				        }
+					).data('daterangepicker');
+					$scope.model.DateRangePicker.container.find('.calendar')
+					.on('change.daterangepicker', '.daterangepicker_input input', $scope.updateValue);
+			    	}, 500);
+			$scope.updateValue = function (){
+				$scope.model.DateRangePicker.callback($scope.model.DateRangePicker.startDate, $scope.model.DateRangePicker.endDate);
+			}
+			$scope.openDropdown = function( $event){
+				angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"]').click();
+			}
+
+		},
+		link: function(scope, element, attrs){
+
+		}
+	}
+});
+
 mainApp.directive('selectBox', function(){
 	return {
 		restrict: 'AE',
