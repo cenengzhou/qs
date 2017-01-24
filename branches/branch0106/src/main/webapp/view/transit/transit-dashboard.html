@@ -1,0 +1,375 @@
+<div class="m-t-20 m-l-20 m-r-20">
+	<div class="row">
+		<div class="col-md-9">
+			<h1 class="page-header">
+				{{jobNo}}<small> {{jobDescription}}</small>
+			</h1>
+		</div>
+	
+		<div class="col-md-3">
+			<ol class="breadcrumb pull-right">
+				<li><a ui-sref="job.dashboard"><i class="fa fa-home"></i>
+						Home</a></li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box  box-default">
+				<div class="box-header with-border">
+					<h3 class="box-title">Transit</h3>
+				</div>
+
+				<br>
+
+				<div class="stepwizard">
+					<div class="stepwizard-row">
+						<div class="liner"></div>
+						<div class="stepwizard-step" ng-if="showPanel !== 'dashboard'">
+							<button class="btn icon-btn btn-primary" ng-click="showDashboard()">
+								<span
+									class="glyphicon btn-glyphicon fa fa-dashboard img-circle text-info"></span>
+								Dashboard
+							</button>
+						</div>
+
+						<div class="stepwizard-step" ng-show="step <= 1">
+							<label class="btn icon-btn {{getStyle('ImportBqButton')}}"
+								style="opacity: 100 !important"
+								uib-popover="{{getMessage('ImportBq')}}"
+								popover-trigger="mouseenter" popover-title="Import BQ items"
+								popover-animation="true" type="button"> <span
+								class="glyphicon btn-glyphicon glyphicon-import img-circle {{getStyle('ImportBqText')}}"></span>
+								Import BQ
+								<form name="importBqItemsForm" id="importBqItemsForm"
+									ng-submit="onSubmitTransitUpload(importBqItemsForm.files, 'BQ')">
+									<input ng-disabled="!importBqStatus" style="display: none;"
+										class="form-control file-loading" type="file" name="files"
+										id="importBqFile" ng-model="importBqFile"
+										onChange="angular.element(this).scope().onSubmitTransitUpload(importBqItemsForm.files, 'BQ')" />
+								</form>
+							</label>
+						</div>
+						<div class="stepwizard-step" ng-show="step >= 2"
+							ng-click="showBqItems()" >
+							<button class="btn icon-btn btn-primary" ng-disabled="showPanel === 'viewBq'">
+								<span
+									class="glyphicon btn-glyphicon glyphicon-list-alt img-circle text-info"></span>
+								View Imported BQ Items
+							</button>
+						</div>
+
+						<div class="stepwizard-step" ng-show="step <= 2">
+							<label class="btn icon-btn {{getStyle('ImportResourcesButton')}}"
+								style="opacity: 100 !important"
+								uib-popover="{{getMessage('ImportResources')}}"
+								popover-trigger="mouseenter" popover-title="Import Resources"
+								popover-animation="true" type="button"> <span
+								class="glyphicon btn-glyphicon glyphicon-import img-circle {{getStyle('ImportResourcesText')}}"></span>
+								Import Resources
+								<form name="importResourcesForm" id="importResourcesForm"
+									ng-submit="onSubmitTransitUpload(importResourcesForm.files, 'Resource')">
+									<input ng-disabled="!importResourcesStatus"
+										style="display: none;" class="form-control file-loading"
+										type="file" name="files" id="importResourcesFile"
+										ng-model="importResourcesFile"
+										onChange="angular.element(this).scope().onSubmitTransitUpload(importResourcesForm.files, 'Resource')" />
+								</form>
+							</label>
+						</div>
+						<div class="stepwizard-step" ng-show="step >= 3"
+							ng-click="showResourcesItems()">
+							<button class="btn icon-btn btn-primary" ng-disabled="showPanel === 'viewResources'">
+								<span
+									class="glyphicon btn-glyphicon glyphicon-list-alt img-circle text-info"></span>
+								View Imported Resources
+							</button>
+						</div>
+
+						<div class="stepwizard-step">
+							<label ng-disabled="!confirmResourcesStatus"
+								class="btn icon-btn {{getStyle('ConfirmResourcesButton')}}"
+								style="opacity: 100 !important"
+								uib-popover="{{getMessage('ConfirmResources')}}"
+								popover-trigger="mouseenter" popover-title="Confirm Resources"
+								popover-animation="true" type="button"> <span
+								class="glyphicon btn-glyphicon glyphicon-check img-circle {{getStyle('ConfirmResourcesText')}}"></span>
+								Confirm Resources <input ng-disabled="!confirmResourcesStatus"
+								style="display: none;" ng-click="confirmResources()">
+							</label>
+						</div>
+						<div class="stepwizard-step dropdown">
+							<label ng-disabled="!printReportStatus"
+								class="btn icon-btn dropdown-toggle {{getStyle('PrintReportButton')}}"
+								style="opacity: 100 !important"
+								uib-popover="{{getMessage('PrintReport')}}"
+								popover-trigger="mouseenter" popover-title="Print Report"
+								popover-animation="true" type="button" id="printReportMenu"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								<span
+								class="glyphicon btn-glyphicon glyphicon-print img-circle  {{getStyle('PrintReportText')}}"></span>
+								Print Report
+							</label>
+
+							<ul class="dropdown-menu" aria-labelledby="printReportMenu"
+								style="background: none !important">
+								<li>
+									<button ng-disabled="!printReportStatus"
+										class="btn icon-btn btn-primary"
+										style="opacity: 100 !important;"
+										ng-click="openPrintReport('service/attachment/printBQMasterReconciliationReport?jobNumber='+jobNo)"
+										uib-popover="Print BQ Master Reconciliation Report"
+										popover-trigger="mouseenter" popover-title="Print report"
+										popover-animation="true" type="button">
+										<span
+											class="glyphicon btn-glyphicon glyphicon-print img-circle {{getStyle('PrintReportText')}}"></span>
+										Print BQ Master Reconciliation Report
+									</button>
+								<li>
+								<li>
+									<button ng-disabled="!printReportStatus"
+										class="btn icon-btn btn-primary"
+										style="opacity: 100 !important;"
+										ng-click="openPrintReport('service/attachment/printBQRecourseReconciliationReport?jobNumber='+jobNo)"
+										uib-popover="Print BQ Resource Reconciliation Report"
+										popover-trigger="mouseenter" popover-title="Print report"
+										popover-animation="true" type="button">
+										<span
+											class="glyphicon btn-glyphicon glyphicon-print img-circle {{getStyle('PrintReportText')}}"></span>
+										Print BQ Resource Reconciliation Report
+									</button>
+								<li>
+							</ul>
+						</div>
+
+						<div class="stepwizard-step">
+							<label ng-disabled="!completeTransitStatus"
+								class="btn icon-btn {{getStyle('CompleteTransitButton')}}"
+								style="opacity: 100 !important"
+								uib-popover="{{getMessage('CompleteTransit')}}"
+								popover-trigger="mouseenter" popover-title="Complete Transit"
+								popover-animation="true" type="button"> <span
+								class="glyphicon btn-glyphicon glyphicon-ok img-circle  {{getStyle('CompleteTransitText')}}"></span>
+								Complete Transit <input ng-disabled="!completeTransitStatus"
+								style="display: none;" ng-click="completeTransit()">
+							</label>
+						</div>
+
+					</div>
+				</div>
+
+				<br>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-12" ng-if="showPanel === 'viewBq'">
+
+		<div class="row">
+			<div id="bqGrid" name="bqGrid" ui-grid="bqGridOptions"
+				external-scopes="clickHandler" ui-grid-exporter ui-grid-selection
+				ui-grid-resize-columns="true" ui-grid-selection ui-grid-grouping
+				ui-grid-cellnav ui-grid-edit class="grid col-md-12" resize
+				ng-style="resizeWithOffset(310)"></div>
+		</div>
+
+		<div class="row" ng-show="step < 7">
+			<form name="reImportBqItemsForm" id="reImportBqItemsForm"
+				ng-submit="onSubmitTransitUpload(reImportBqItemsForm.files, 'BQ')">
+				<div class="form-group horizontal">
+					<label class="btn btn-block btn-primary"
+						uib-popover="{{getMessage('ReImportBq')}}"
+						popover-trigger="mouseenter" popover-title="Complete Transit"
+						popover-animation="true" type="button"> <i
+						class="glyphicon glyphicon-upload"></i> Re-Import BQ&hellip; <input
+						style="display: none;" class="form-control file-loading"
+						type="file" name="files" id="reimportBqFile"
+						ng-model="reImportBqFile"
+						onChange="angular.element(this).scope().onSubmitTransitUpload(reImportBqItemsForm.files, 'BQ')" />
+					</label>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	<div class="col-md-12" ng-if="showPanel === 'viewResources'">
+<div class="row" ng-show="resourceEdit">
+		<form role="form" name="applyForm" ng-submit="applyForm.$valid && onResourceApplyChange(resourceApplyOptions[resourceApplyTo].value, resourceApplyToText)">
+		<fieldset>
+			
+				<div class="input-group">
+					<input type="number" step="1" min="0" class="form-control col-md-5" aria-label="..." ng-model-option="updateOn:blur"
+						ng-model="resourceApplyToText" required ng-pattern="resourceApplyOptions[resourceApplyTo].regex"
+						uib-popover="{{resourceApplyOptions[resourceApplyTo].value}} for all listed resources. &nbsp Require {{resourceApplyOptions[resourceApplyTo].length}} number"
+						popover-trigger="mouseenter" popover-title="Complete Transit"
+						popover-animation="true" data-placement="right" 
+						placeholder="{{resourceApplyOptions[resourceApplyTo].value}}: {{resourceApplyRegex}}">
+
+					<div class="input-group-btn">
+						<select class="form-control btn btn-primary"
+							ng-options="v.id as v.value for v in resourceApplyOptions"
+							ng-model="resourceApplyTo"
+							uib-popover="Select which column to change"
+							popover-trigger="mouseenter" popover-title="Complete Transit"
+							popover-animation="true"></select>
+							</div>
+						<div class="input-group-btn">	
+						<button type="submit" class="btn btn-primary"
+							uib-popover="Change all {{resourceApplyOptions[resourceApplyTo].value}} to {{resourceApplyToText}}..."
+							popover-trigger="mouseenter" popover-title="Complete Transit"
+							popover-animation="true">Apply {{resourceApplyOptions[resourceApplyTo].value}}</button>
+					</div>
+					</div>
+			
+			</fieldset>
+		</form>
+</div>
+		<div class="row">
+			<div id="resourcesGrid" name="resourcesGrid"
+				ui-grid="resourcesGridOptions" external-scopes="clickHandler"
+				ui-grid-exporter ui-grid-selection ui-grid-grouping
+				ui-grid-resize-columns="true" ui-grid-selection ui-grid-cellnav
+				ui-grid-edit ui-grid-row-edit class="grid col-md-12" resize
+				ng-style="resizeWithOffset(335)"></div>
+		</div>
+
+		<div class="row" ng-show="step < 7">
+			<form name="reImportResourcesForm" id="reImportResourcesForm"
+				ng-submit="onSubmitTransitUpload(reImportResourcesForm.files, 'Resource')">
+				<div class="form-group horizontal">
+					<label class="btn btn-block btn-primary"
+						uib-popover="{{getMessage('ReImportResources')}}"
+						popover-trigger="mouseenter" popover-title="Complete Transit"
+						popover-animation="true" type="button"> <i
+						class="glyphicon glyphicon-upload"></i> Re-Import
+						Resources&hellip; <input style="display: none;"
+						class="form-control file-loading" type="file" name="files"
+						id="reimportBqFile" ng-model="reImportResourceFile"
+						onChange="angular.element(this).scope().onSubmitTransitUpload(reImportResourcesForm.files, 'Resource')" />
+					</label>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	
+	<div class="row" ng-if="showPanel === 'dashboard'">
+		<div class="col-md-12 m-t-40">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Transit Dashboard</h3>
+				</div>
+				<div class="box-body" resize ng-style="resizeWithOffset(380)">
+					<h1 class="text-center m-t-40"><span class="icofont icofont-engineer"></span> Coming Soon!</h1> 
+				</div>
+			</div>
+		</div>
+
+		
+	</div>
+
+
+	<!-- Bar Chart  -->
+	<!-- <div class="row" ng-if="showPanel === 'dashboard'">
+		<div class="col-md-4">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Selling vs ECA</h3>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-1"></div>
+						<div class="col-md-9">
+							<canvas id="bar" class="chart chart-bar"
+								chart-data="barChartParameters.data"
+								chart-labels="barChartParameters.labels"
+								chart-colours="barChartParameters.colours"
+								chart-series="barChartParameters.series"
+								chart-options="barChartParameters.options" height="300">
+										</canvas>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<ul class="chart-legend clearfix">
+									<li><i class="fa fa-circle text-red"></i> <label>{{barChartParameters.series[0]}}:$3000,000,000</label></li>
+									<li><i class="fa fa-circle text-aqua"></i> <label>{{barChartParameters.series[1]}}:$2800,000,000</label></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Selling Distribution</h3>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="selling.data" chart-labels="selling.labels"
+								chart-colours="selling.colours" height="150">
+										</canvas>
+						</div>
+						<div class="col-md-12">
+							<ul class="chart-legend clearfix">
+								<li><i class="fa fa-circle text-red"></i> <label>{{selling.labels[0]}}:
+										{{selling.data[0] | currency}}</label></li>
+								<li><i class="fa fa-circle text-aqua"></i> <label>{{selling.labels[1]}}:
+										{{selling.data[1] | currency}}</label></li>
+								<li><i class="fa fa-circle text-green"></i> <label>{{selling.labels[2]}}:
+										{{selling.data[2] | currency}}</label></li>
+								<li><i class="fa fa-circle text-purple"></i> <label>{{selling.labels[3]}}:
+										{{selling.data[3] | currency}}</label></li>
+								<li><i class="fa fa-circle text-gray"></i> <label>{{selling.labels[4]}}:
+										{{selling.data[4] | currency}}</label></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">ECA Distribution</h3>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="selling.data" chart-labels="selling.labels"
+								chart-colours="selling.colours" height="150">
+										</canvas>
+						</div>
+						<div class="col-md-12">
+							<ul class="chart-legend clearfix">
+								<li><i class="fa fa-circle text-red"></i> <label>{{selling.labels[0]}}:
+										{{selling.data[0] | currency}}</label></li>
+								<li><i class="fa fa-circle text-aqua"></i> <label>{{selling.labels[1]}}:
+										{{selling.data[1] | currency}}</label></li>
+								<li><i class="fa fa-circle text-green"></i> <label>{{selling.labels[2]}}:
+										{{selling.data[2] | currency}}</label></li>
+								<li><i class="fa fa-circle text-purple"></i> <label>{{selling.labels[3]}}:
+										{{selling.data[3] | currency}}</label></li>
+								<li><i class="fa fa-circle text-gray"></i> <label>{{selling.labels[4]}}:
+										{{selling.data[4] | currency}}</label></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+
+	
+</div>

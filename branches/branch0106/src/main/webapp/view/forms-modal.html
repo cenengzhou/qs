@@ -1,0 +1,50 @@
+<div class="modal-header bg-inverse">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12"><tr>
+		<td>
+			<h4 class="modal-title text-white">Forms, Templates & Documents</h4> 
+		</td>
+		<td>
+		</td>
+		</tr></table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body" style="overflow:auto;height:500px">
+	<div class="row">
+		<div class="{{formPanel.class}}" ng-repeat="formPanel in formPanelArray">
+		<div class="panel panel-inverse">
+            <div class="panel-heading">
+                 <div class="panel-heading-btn">
+                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-lime" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                 </div>
+                <h4 class="panel-title">{{formPanel.title}}</h4>
+            </div>
+            <div class="panel-body p-b-15" style="overflow: auto; width: auto; height: auto;">
+                <div >
+                    <ul class="feeds">
+                        <li ng-repeat="formItem in formPanel.forms">
+                            <a href="{{formItem.baseAddress + formItem.fileName + formItem.fileExt}}" target="formsDownload">
+                                <div class="{{formItem.iconBgClass}}"><i class="{{formItem.icon}}"></i></div>
+                                <div class="time">{{formItem.releaseDate}}</div>
+                                <div class="desc">{{formItem.description}} <span class="label {{formItem.labelClass}} m-l-5" title="{{formItem.label}}">{{formItem.label}}</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+		</div>
+	</div>
+
+</div>

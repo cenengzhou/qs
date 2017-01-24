@@ -1,0 +1,401 @@
+<!-- begin #content -->
+<div class="col-xs-12 col-md-4">
+	<div class="col-md-12" id="paymentSummary">
+		<div class="panel panel-inverse ">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+						href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					Overall
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6" ng-hide="overallChart.data[0] + overallChart.data[1] == 0">
+						<canvas id="doughnut" class="chart chart-doughnut"
+							chart-data="overallChart.data"
+							chart-labels="overallChart.labels"
+							chart-colours="overallChart.colours"
+							height="250">
+											</canvas>
+					</div>
+					<div class="col-md-6" ng-show="overallChart.data[0] + overallChart.data[1] == 0">
+						<h4 class="text-center">No Data</h4>
+					</div>
+					<div class="col-md-6">
+						<ul class="chart-legend clearfix text-left" >
+							<li class="col-md-12">
+									<label>Total:
+										{{overallChart.data[0] + overallChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-primary"></i>
+									<label>{{overallChart.labels[0]}}:
+										{{overallChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{overallChart.labels[1]}}:
+										{{overallChart.data[1] | currency}}</label></li>
+							
+						</ul>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-md-12">
+		<div class="panel panel-inverse ">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+						href="javascript:;"
+						class="btn btn-xs btn-icon btn-circle btn-white"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					Payment Resource Distribution
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6" ng-hide="cumPaymentResourceDistributionChart.data[0] + cumPaymentResourceDistributionChart.data[1] == 0">
+						<canvas id="doughnut" class="chart chart-doughnut"
+							chart-data="cumPaymentResourceDistributionChart.data"
+							chart-labels="cumPaymentResourceDistributionChart.labels"
+							chart-colours="cumPaymentResourceDistributionChart.colours"
+							height="250">
+											</canvas>
+					</div>
+					<div class="col-md-6" ng-show="cumPaymentResourceDistributionChart.data[0] + cumPaymentResourceDistributionChart.data[1] == 0">
+						<h4 class="text-center">No Data</h4>
+					</div>
+					<div class="col-md-6">
+						<ul class="chart-legend text-left">
+							<li class="col-md-12"><i class="fa fa-circle text-primary-light"></i>
+								<label>{{cumPaymentResourceDistributionChart.labels[0]}}:
+									{{cumPaymentResourceDistributionChart.data[0] | currency}}</label></li>
+							<li class="col-md-12"><i class="fa fa-circle text-danger-light"></i>
+								<label>{{cumPaymentResourceDistributionChart.labels[1]}}:
+									{{cumPaymentResourceDistributionChart.data[1] | currency}}</label></li>
+							<li class="col-md-12"><i class="fa fa-circle text-warning-light"></i>
+								<label>{{cumPaymentResourceDistributionChart.labels[2]}}:
+									{{cumPaymentResourceDistributionChart.data[2] | currency}}</label></li>
+							<li class="col-md-12"><i class="fa fa-circle text-success-light"></i>
+								<label>{{cumPaymentResourceDistributionChart.labels[3]}}:
+									{{cumPaymentResourceDistributionChart.data[3] | currency}}</label></li>
+							<li class="col-md-12"><i class="fa fa-circle text-purple-light"></i> 
+								<label>{{cumPaymentResourceDistributionChart.labels[4]}}:
+									{{cumPaymentResourceDistributionChart.data[4] | currency}}</label></li>
+							<li class="col-md-12"><i class="fa fa-circle text-muted"></i>
+								<label>{{cumPaymentResourceDistributionChart.labels[5]}}:
+									{{cumPaymentResourceDistributionChart.data[5] | currency}}</label></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<div class="col-xs-12 col-md-8">
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Measured Works/Goods (BQ)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" ng-hide="bqChart.data[0] + bqChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="bqChart.data"
+								chart-labels="bqChart.labels"
+								chart-colours="bqChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="bqChart.data[0] + bqChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{bqChart.data[0] + bqChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-primary"></i>
+									<label>{{bqChart.labels[0]}}:
+										{{bqChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{bqChart.labels[1]}}:
+										{{bqChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Addendum (V1, V2, V3, L1, L2, D1, D2)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row" >
+						<div class="col-md-6" ng-hide="voChart.data[0] + voChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="voChart.data"
+								chart-labels="voChart.labels"
+								chart-colours="voChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="voChart.data[0] + voChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{voChart.data[0] + voChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-danger-light"></i>
+									<label>{{voChart.labels[0]}}:
+										{{voChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{voChart.labels[1]}}:
+										{{voChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Others (OA, CF)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" ng-hide="othersChart.data[0] + othersChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="othersChart.data"
+								chart-labels="othersChart.labels"
+								chart-colours="othersChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="othersChart.data[0] + othersChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{othersChart.data[0] + othersChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-gray"></i>
+									<label>{{othersChart.labels[0]}}:
+										{{othersChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{othersChart.labels[1]}}:
+										{{othersChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Advanced (AP, MS, MR)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" ng-hide="advancedChart.data[0] + advancedChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="advancedChart.data"
+								chart-labels="advancedChart.labels"
+								chart-colours="advancedChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="advancedChart.data[0] + advancedChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{advancedChart.data[0] + advancedChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-purple-light"></i>
+									<label>{{advancedChart.labels[0]}}:
+										{{advancedChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{advancedChart.labels[1]}}:
+										{{advancedChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Retention (RT, RA, RR)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" ng-hide="retentionChart.data[0] + retentionChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="retentionChart.data"
+								chart-labels="retentionChart.labels"
+								chart-colours="retentionChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="retentionChart.data[0] + retentionChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{retentionChart.data[0] + retentionChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-success-light"></i>
+									<label>{{retentionChart.labels[0]}}:
+										{{retentionChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{retentionChart.labels[1]}}:
+										{{retentionChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-primary ">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-expand"><i class="fa fa-expand"></i></a> <a
+							href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-white"
+							data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					</div>
+					<h4 class="panel-title">
+						Contra Charge (C1, C2)
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6" ng-hide="ccChart.data[0] + ccChart.data[1] == 0">
+							<canvas id="pie" class="chart chart-pie"
+								chart-data="ccChart.data"
+								chart-labels="ccChart.labels"
+								chart-colours="ccChart.colours"
+								height="150">
+											</canvas>
+						</div>
+						<div class="col-md-6" ng-show="ccChart.data[0] + ccChart.data[1] == 0">
+							<h4 class="text-center">No Data</h4>
+						</div>
+						<div class="col-md-6">
+							<ul class="chart-legend clearfix text-left">
+								<li class="col-md-12">
+									<label>Total:
+										{{ccChart.data[0] + ccChart.data[1] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-warning-light"></i>
+									<label>{{ccChart.labels[0]}}:
+										{{ccChart.data[0] | currency}}</label></li>
+								<li class="col-md-12"><i class="fa fa-circle text-inverse"></i>
+									<label>{{ccChart.labels[1]}}:
+										{{ccChart.data[1] | currency}}</label></li>
+								
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+

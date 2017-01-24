@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.autentia.web.rest</groupId>
+  <artifactId>spring-wadl-showcase</artifactId>
+  <versioning>
+    <versions>
+      <version>1.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20160114002422</lastUpdated>
+  </versioning>
+</metadata>

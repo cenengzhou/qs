@@ -1,0 +1,152 @@
+<!-- Addendum Summary -->
+<div class="animated fadeIn" >
+	<div class="row">
+
+		<div class="col-lg-10 col-md-offset-1">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						<a href="javascript:;"
+							class="btn btn-xs btn-icon btn-circle btn-inverse"
+							data-click="panel-collapse"> <i class="fa fa-minus"></i>
+						</a>
+					</div>
+					<h3 class="panel-title">Addendum No.{{addendum.no}} - Addendum Amount: {{addendum.amtAddendum | currency}}</h3>
+
+				</div>
+				<div class="panel-body">
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Addendum Status:</label>
+						</div>
+						<div class="col-md-6"
+							ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
+							<b>{{addendum.status}}</b>
+						</div>
+					</div>
+
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Prepared by:</label>
+						</div>
+						<div class="col-md-6">
+							<label>{{addendum.usernamePreparedBy}}</label>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Approval Status:</label>
+						</div>
+						<div class="col-md-6"
+							ng-class="{'text-danger' : addendum.status=='APPROVED', 'text-green' : addendum.status!='APPROVED'}">
+							<b>{{addendum.statusApproval}}</b>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Submission Date:</label>
+						</div>
+						<div class="col-md-6">
+							<label>{{addendum.dateSubmission}}</label>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Subcontractor No.:</label>
+						</div>
+						<div class="col-md-6">
+							<label>{{addendum.noSubcontractor}}</label>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Approved Date:</label>
+						</div>
+						<div class="col-md-6">
+							<label>{{addendum.dateApproval}}</label>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-6">
+						<div class="col-md-6">
+							<label>Subcontractor Name.:</label>
+						</div>
+						<div class="col-md-6">
+							<label>{{addendum.nameSubcontractor}}</label>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-md-5 m-l-20">
+					<div class="box no-border">
+						<div class="box-body">
+							<div class="widget widget-stat bg-inverse text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-calculator"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">Revised Subcontract Sum</div>
+									<div class="widget-stat-number">{{addendum.amtSubcontractRevised | currency}}</div>
+									<div class="widget-stat-text">(Current)</div>
+								</div>
+							</div>
+							<ul class="list-group list-group-unbordered">
+								<li class="list-group-item">
+									<b>Remeasured Subcontract Sum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRemeasured | currency}}</b>
+								</li>
+								<li class="list-group-item">
+									<b>Total Addendum Amount</b> 
+									<b class="pull-right">{{addendum.amtAddendumTotal | currency}}</b>
+								</li>
+
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-5 m-l-20">
+					<div class="box no-border">
+						<div class="box-body">
+							<div class="widget widget-stat bg-primary text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-calculator"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title ">To be Approved Revised Subcontract Sum</div>
+									<div class="widget-stat-number ">{{addendum.amtSubcontractRevisedTba | currency}}</div>
+									<div class="widget-stat-text">(Not Approved)</div>
+								</div>
+							</div>
+							<ul class="list-group list-group-unbordered">
+								<li class="list-group-item">
+									<b>Remeasured Subcontract Sum</b> 
+									<b class="pull-right">{{addendum.amtSubcontractRemeasured | currency}}</b>
+								</li>
+								<li class="list-group-item text-red">
+									<b>To be Approved Total Addendum Amount</b> 
+									<b class="pull-right text-red">{{addendum.amtAddendumTotalTba | currency}}</b>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:pas="http://com.gammon.qs.ph3.service.checkJobIsConverted/types/"
+        xmlns:this="/WEB-INF/xsd/CheckJobIsConverted.xsd"
+        elementFormDefault="qualified"
+        targetNamespace="http://com.gammon.qs.ph3.service.checkJobIsConverted/types/">
+    <xsd:element name="checkJobIsConvertedRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="jobNumber" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="checkJobIsConvertedResponse">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="converted" type="xsd:boolean"/>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+</xsd:schema>

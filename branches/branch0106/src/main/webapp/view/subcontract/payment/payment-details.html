@@ -1,0 +1,31 @@
+<!-- Payment Details  -->
+<div class="animated fadeIn">
+	<div class="animated fadeIn pull-right" style="text-align:right">
+		<button ng-show="statusArray.length>0" class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show import status</button>
+	</div>
+	<div class="row">
+		<div class="col-md-12" id="paymentDetailGrid">
+			<div id="" ui-grid="gridOptions" ui-grid-selection ui-grid-importer ui-grid-grouping
+				ui-grid-auto-resize ui-grid-cellnav ui-grid-edit ui-grid-row-edit ui-grid-resize-columns
+				ui-grid-exporter class="grid "></div>
+			<label class="text-red">* Retention is excluded from the total calculation.</label>
+		</div>
+		
+		<div class="col-md-12">
+			<table class="col-md-12"><tr>
+			<td>
+			<button class="m-t-5 btn btn-primary btn-block" id="paymentDetailUpdateBtn"
+				ng-hide="disableButtons" ng-click="update()" ng-disabled="disableButtons">
+				<span class="fa fa-save"></span> Update
+			</button>
+			</td>
+			<td>
+			<button class="m-t-5 btn btn-warning btn-block"
+				ng-hide="disableButtons" ng-click="reset()" ng-disabled="disableButtons">
+				<span class="fa fa-refresh"></span> Cancel
+			</button>
+			</td>
+			</tr></table>
+		</div>
+	</div>
+</div>

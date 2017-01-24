@@ -1,0 +1,72 @@
+<div>
+	<section class="content-header">
+		<ol class="breadcrumb pull-right">
+			<li><a ui-sref="enquiry.info"><i class="fa fa-dashboard"></i>
+					Enquiry</a></li>
+			<li class="active">Performance Appraisal</li>
+		</ol>
+	</section>
+	<div class="clearfix"></div>
+
+	<!-- Main content -->
+	<section class="content" style="margin-left: 0px !important">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading bg-warning">Performance Appraisal</div>
+					<div class="panel-body">
+						<form role="form" name="searchPerformanceAppraisalForm" id="searchAccountLedgerForm" ng-submit="loadGridData()" class="form-input-flat">
+							<div>
+								<div class="col-md-2">
+									<label for="searchJobNo">Job No.</label> 
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
+									<p ng-show="searchPerformanceAppraisalForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+								</div>
+								
+								<div class="col-md-2">
+									<label for="searchVendorNo">Vendor No.</label> 
+									<input type="text" class="form-control" id="searchVendorNo" name="searchVendorNo" ng-model="searchVendorNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchPerformanceAppraisalForm.searchVendorNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+
+								<div class="col-md-2">
+									<label for="searchSubcontractNo">Subcontract No.</label> 
+									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
+									<p ng-show="searchPerformanceAppraisalForm.searchSubcontractNo.$error.pattern" class="red">Please input number only</p>
+								</div>
+								
+								<div class="col-md-3">
+									<label for="searchStatus">Performance Group</label> 									
+									<select class="form-control" id="searchStatus" name="searchGroup" 
+										ng-options="v.id as (v.id + ': ' + v.value) for v in performanceAppraisalGroup | orderBy:'id'" ng-model="searchGroup">
+										<option value="">All</option>
+									</select>
+								</div>
+
+								<div class="col-md-2">
+									<label for="searchStatus">Status</label> 									
+									<select class="form-control" id="searchStatus" name="searchStatus" 
+										ng-options="v.id as v.value for v in GlobalParameter.PerformanceAppraisalStatus | orderBy: 'id'" ng-model="searchStatus">
+										<option value="">All</option>
+									</select>
+								</div>
+
+								<!-- <div class="col-md-1"></div> -->
+								<div class="col-md-1">
+										<label>&nbsp;</label>
+										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									</div>
+								</div>
+							</form>
+						<div class="col-md-12"><br>
+								<div id="" ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-exporter
+									ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid" ui-grid-move-columns
+									style="height:450px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</section>
+
+</div>

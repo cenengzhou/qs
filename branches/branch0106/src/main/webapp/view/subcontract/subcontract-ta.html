@@ -1,0 +1,67 @@
+
+<div class="modal-header">
+	<div class="row">
+		<div class="col-md-11">
+			<h3 class="modal-title"> Tender Analysis
+				{{packageno}}</h3>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-warning pull-right" type="button" ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body bg-gray-light">
+	<div class="row">
+		
+		<div class="col-md-5">
+			<div class="box box-info">
+				<div class="box-header with-border">
+	                  <h3 class="box-title">Resource Summaries in Package </h3>
+	                </div>
+				<div class="box-body">
+					<div id="rs_grid" ui-grid="gridOptions" ui-grid-selection  ui-grid-edit ui-grid-exporter class="grid "></div>
+				</div>
+			</div>
+		</div>
+	         
+	    <div class="col-md-2">
+	    	<div ng-style="{height: 200 + 'px'}">
+	    	</div>
+	    	
+	    	 <a class="btn btn-app bg-red-gradient">
+              <i class="fa fa-plus-square-o"></i> Add
+            </a>
+	    	
+	    	<a class="btn btn-app bg-light-blue-gradient">
+              <i class="fa fa-copy"></i> Copy
+            </a>
+            
+            <a class="btn btn-app bg-green-gradient">
+              <i class="fa fa-trash-o"></i> Clear
+            </a>
+            
+            
+	    </div>     
+	         
+	    <div class="col-md-5">
+			<div class="box box-info">
+				<div class="box-header with-border">
+	                  <h3 class="box-title">Tender Analysis Details</h3>
+	                </div>
+				<div class="box-body">
+					<div id="ta_grid" ui-grid="gridOptions" ui-grid-selection  ui-grid-edit ui-grid-exporter class="grid "></div>
+				</div>
+			</div>
+		</div>     
+	         
+   </div><!-- /.row -->
+	
+	
+</div>
+<div class="modal-footer">
+    <button class="btn btn-twitter btn-block" type="button" ng-click="save()"><span class="fa fa-save"></span> Save</button>
+<!--     <button class="btn btn-warning btn-block" type="button" ng-click="cancel()">Cancel</button> -->
+</div>
+

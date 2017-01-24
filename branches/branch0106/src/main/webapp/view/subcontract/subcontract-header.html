@@ -1,0 +1,407 @@
+<div id="content" class="content">
+
+	<h1 class="page-header">
+		{{jobNo}}<small> {{jobDescription}}</small> - Subcontract
+		{{subcontractNo}}<small> {{subcontractDescription}}</small> <small
+			class="text-red m-l-30" ng-show="paymentStatus == 'F'"> <b>Final</b></small>
+	</h1>
+
+	<div class="animated fadeIn">
+		<form name="form-validate" id="form-validate" class="ng-valid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="box box-solid">
+							<div class="box-body">
+								<div class="col-md-12">
+									<div class="box box-primary">
+										<div class="box-body">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="col-md-6">
+														<div class="col-md-6">
+															<label>Subcontract Number</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.packageNo}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Description</label>
+														</div>
+														<div class="form-group col-md-6">
+															<label> {{subcontract.description}}</label>
+														</div>
+
+														<!-- Subcontractor Nature -->
+														<div class="col-md-6">
+															<label>Subcontractor Nature</label>
+														</div>
+														<div class="form-group col-md-6">
+															<label> {{subcontract.subcontractorNature}}</label>
+														</div>
+														<div class="col-md-6">
+															<label>Subcontractor Number</label>
+														</div>
+														<div class="form-group col-md-6">
+															<label> {{subcontract.vendorNo}}</label>
+														</div>
+														<div class="col-md-6">
+															<label>Subcontractor Name</label>
+														</div>
+														<div class="form-group col-md-6">
+															<label> {{subcontract.nameSubcontractor}}</label>
+														</div>
+
+														<div class="col-md-6">
+															<label>Work Scope</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.workscope}}</label>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<label>Status</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label>{{subcontractStatus}}</label>
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="col-md-6">
+															<label>Payment Terms</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.paymentTerms}}
+																	{{subcontract.paymentInformation}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Currency</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.currency}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Exchange Rate</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.exchangeRate}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Payment Status</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.paymentStatus ==='I' ? 'Interim':
+																subcontract.paymentStatus ==='F'?'Final':
+																subcontract.paymentStatus ==='D'?'Payment Requisition':
+																'No Payment'}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Addendum Approval</label>
+														</div>
+														<div class="form-group col-md-6">
+															<label> {{subcontract.submittedAddendum ==='1' ?
+																'Submitted':'Not Submitted'}}</label>
+														</div>
+														<div class="col-md-6">
+															<label>Payment Approval</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label>{{payment.paymentStatus}} </label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Split/Terminate</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{
+																	subcontract.splitTerminateStatus==='1' ? '1 - Split
+																	Submitted': subcontract.splitTerminateStatus==='2' ? '2
+																	- Terminate Submitted':
+																	subcontract.splitTerminateStatus==='3' ? '3 - Split
+																	Approved': subcontract.splitTerminateStatus==='4' ? '4
+																	- Terminate Approved':
+																	subcontract.splitTerminateStatus==='5' ? '5 - Split
+																	Approved': subcontract.splitTerminateStatus==='6' ? '6
+																	- Terminate Rejected': 'Not Submitted'}}</label>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label>Approval Sub-type</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.approvalRoute}}</label>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<label>Notes</label>
+														</div>
+														<div class="form-group col-md-6">
+															<div class="input-group col-md-12">
+																<label> {{subcontract.notes}}</label>
+															</div>
+														</div>
+
+
+													</div>
+												</div>
+
+												<div class="col-md-12">
+													<!-- Subcontract Type -->
+													<div class="col-md-3">
+														<label>Subcontract Type</label>
+													</div>
+
+													<div class="form-group col-md-9">
+														<div class="btn-group btn-group-justified">
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.labourIncludedContract == true, 'btn-inverse' : subcontract.labourIncludedContract != true}"
+																ng-model="subcontract.labourIncludedContract">Labour</label>
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.plantIncludedContract == true, 'btn-inverse' : subcontract.plantIncludedContract != true}"
+																ng-model="subcontract.plantIncludedContract">Plant</label>
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.materialIncludedContract == true, 'btn-inverse' : subcontract.materialIncludedContract != true}"
+																ng-model="subcontract.materialIncludedContract">Material</label>
+														</div>
+
+													</div>
+
+													<!-- Subcontract Term -->
+													<div class="col-md-3">
+														<label>Subcontract Term</label>
+													</div>
+													<div class="form-group col-md-9">
+														<div class="btn-group btn-group-justified">
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Lump Sum', 'btn-inverse' : subcontract.subcontractTerm != 'Lump Sum'}"
+																ng-model="subcontract.subcontractTerm">Lump Sum</label>
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.subcontractTerm == 'Re-measurement', 'btn-inverse' : subcontract.subcontractTerm != 'Re-measurement'}"
+																ng-model="subcontract.subcontractTerm">Re-measurement</label>
+
+														</div>
+													</div>
+
+
+													<div class="col-md-3">
+														<label>Form of Subcontract</label>
+													</div>
+													<div class="form-group col-md-9">
+														<div class="btn-group btn-group-justified">
+															<label class="btn"
+																ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Major', 'btn-inverse' : subcontract.formOfSubcontract != 'Major'}"
+																ng-model="subcontract.formOfSubcontract">Major</label> <label
+																class="btn"
+																ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Minor', 'btn-inverse' : subcontract.formOfSubcontract != 'Minor'}"
+																ng-model="subcontract.formOfSubcontract">Minor</label> <label
+																class="btn"
+																ng-class="{'btn-primary' : subcontract.formOfSubcontract == 'Consultancy Agreement', 'btn-inverse' : subcontract.formOfSubcontract != 'Consultancy Agreement'}"
+																ng-model="subcontract.formOfSubcontract">Consultancy
+																Agreement</label> <label class="btn"
+																ng-class="{'btn-primary' : subcontract.formOfSubcontract.toLowerCase() == 'internal trading', 'btn-inverse' : subcontract.formOfSubcontract.toLowerCase() != 'internal trading'}"
+																ng-model="subcontract.formOfSubcontract">Internal
+																Trading</label>
+														</div>
+														<div class="row"
+															ng-show="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'">
+															<div class="col-md-9"></div>
+															<div class="form-group col-md-3">
+																<div class="input-group">
+																	<input type="text" class="form-control"
+																		placeholder="Internal Job No."
+																		ng-model="subcontract.internalJobNo"
+																		ng-disabled="disableButtons"
+																		data-ng-required="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'">
+																</div>
+															</div>
+														</div>
+													</div>
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Retention -->
+								<div class="col-md-12">
+									<div class="box box-primary">
+										<div class="box-body ">
+											<div class="row">
+												<div class="col-md-12">
+													<label class="col-md-3">Retention</label>
+
+													<div class="col-md-9">
+														<div class="form-group">
+															<div class="btn-group btn-group-justified">
+																<label class="btn"
+																	ng-class="{'btn-primary' : subcontract.retentionTerms == 'No Retention', 'btn-inverse' : subcontract.retentionTerms != 'No Retention'}"
+																	ng-model="subcontract.retentionTerms">No
+																	Retention</label> <label class="btn"
+																	ng-class="{'btn-primary' : subcontract.retentionTerms == 'Lump Sum', 'btn-inverse' : subcontract.retentionTerms != 'Lump Sum'}"
+																	ng-model="subcontract.retentionTerms">Lump Sum
+																	Retention</label> <label class="btn"
+																	ng-class="{'btn-primary' : subcontract.retentionTerms == 'Percentage', 'btn-inverse' : subcontract.retentionTerms != 'Percentage'}"
+																	ng-model="subcontract.retentionTerms">Percentage</label>
+															</div>
+
+
+															<br>
+
+															<div class="btn-group btn-group-justified"
+																ng-show="subcontract.retentionTerms == 'Percentage'">
+																<label class="btn"
+																	ng-class="{'btn-primary' : percentageOption == 'Original', 'btn-inverse' : percentageOption != 'Original'}"
+																	ng-model="percentageOption">Original</label> <label
+																	class="btn"
+																	ng-class="{'btn-primary' : percentageOption == 'Revised', 'btn-inverse' : percentageOption != 'Revised'}"
+																	ng-model="percentageOption">Revised</label>
+															</div>
+
+
+															<br>
+															<div class="col-md-4 col-xs-12 text-center"
+																ng-show="subcontract.retentionTerms == 'Lump Sum'">
+																<div class="col-md-12">
+																	<div class="input-group">
+																		<span class="input-group-addon">$</span> <input
+																			type="number" class="form-control"
+																			ng-model="subcontract.retentionAmount"
+																			ng-disabled="disableButtons">
+																	</div>
+																</div>
+																<label>Lump Sum Amount</label>
+															</div>
+
+															<div class="col-md-4 col-xs-12 text-center"
+																ng-show="subcontract.retentionTerms == 'Percentage'">
+																<div class="col-md-12">
+																	<input type="text" class="knob" value="30"
+																		data-width="60" data-height="60"
+																		data-fgColor="#f56954"
+																		ng-model="subcontract.maxRetentionPercentage"
+																		ng-disabled="disableButtons" ng-knob>
+																</div>
+																<label>Maximum (%)</label>
+															</div>
+
+															<div class="col-md-4 col-xs-12 text-center"
+																ng-hide="subcontract.retentionTerms == 'No Retention'">
+																<div class="col-md-12">
+																	<input type="text" class="knob" value="30"
+																		data-width="60" data-height="60"
+																		data-fgColor="#3c8dbc"
+																		ng-model="subcontract.interimRentionPercentage"
+																		ng-disabled="disableButtons" ng-knob>
+																</div>
+																<label class="text-center">Interim (%)</label>
+															</div>
+
+
+
+															<div class="col-md-4 col-xs-12 text-center"
+																ng-hide="subcontract.retentionTerms == 'No Retention'">
+																<div class="col-md-12">
+																	<input type="text" class="knob" value="30"
+																		data-width="60" data-height="60"
+																		data-fgColor="#3c8dbc"
+																		ng-model="subcontract.mosRetentionPercentage"
+																		ng-disabled="disableButtons" ng-knob>
+																</div>
+																<label>MOS (%)</label>
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<!-- CPF -->
+								<div class="col-md-12">
+									<div class="box box-warning">
+										<div class="box-body">
+											<div class="row">
+												<div class="col-md-12">
+													<label class="col-md-3">CPF</label>
+
+													<div class="row col-md-9">
+														<div class="col-md-12">
+															<input type="checkbox" data-ios-toggle="toggle"
+																name="cpfCalculation" data-style="ios"
+																data-onstyle="primary" data-offstyle="warning"
+																data-on="Subject to CPF" data-off="No CPF"
+																ng-model="subcontract.cpfCalculation"
+																ng-disabled="disableCPFButton || disableButtons">
+														</div>
+
+
+														<div class="col-md-6">
+															<div class="form-group"
+																ng-show="subcontract.cpfCalculation == true">
+																<label>CPF Base Period</label>
+																<div class="input-group col-md-12">
+																	<label>{{subcontract.cpfBasePeriod}}</label>
+																</div>
+															</div>
+														</div>
+
+														<div class="col-md-6">
+															<div class="form-group"
+																ng-show="subcontract.cpfCalculation == true">
+																<label>CPF Base Year</label>
+																<div class="input-group col-md-12">
+																	<label>{{subcontract.cpfBaseYear}}</label>
+																</div>
+															</div>
+														</div>
+
+													</div>
+
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+
+
+
+				</div>
+
+
+			</div>
+
+
+		</form>
+	</div>
+
+</div>

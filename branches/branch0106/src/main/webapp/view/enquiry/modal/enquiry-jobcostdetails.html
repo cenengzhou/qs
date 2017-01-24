@@ -1,0 +1,72 @@
+<div class="modal-header bg-primary">
+	<div class="row">
+		<div class="col-md-11">
+		<table class="col-md-12">
+		<tr>
+		<td><label for="accountCode">Detail - Account Code: {{parentScope.searchAccountLedger.accountCode}}</label></td>
+		</tr>
+		</table>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-white pull-right" type="button"
+				ng-click="cancel()">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="modal-body">
+
+	<div class="row col-md-12" style="padding:0px">
+						<form role="form" name="searchAccountLedgerForm" id="searchAccountLedgerForm" class="form-input-flat">
+							<div class="form-group">
+								<div class="col-md-2">
+									<label for="noSubcontract">Subcontract No:</label> 
+									<input type="text" class="form-control" id="noSubcontract" name="noSubcontract" ng-model="noSubcontract">
+								</div>
+								<div class="col-md-2">
+									<label for="typeLedger">Ledger Type:</label> 
+									<input type="text" class="form-control" id="typeLedger" name="typeLedger" ng-model="typeLedger">
+								</div>
+								<div class="col-md-2">
+									<label for="searchFrom">From:</label>
+									<div class="input-group" moment-picker="searchFrom"
+										format="YYYY-MM" start-view="year" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchFrom" name="searchFrom"
+											ng-model="searchFrom"
+											pattern=".{7,7}" required title="Please select Year from the date picker" ng-model-options="{ updateOn: 'blur' }">
+									</div>
+									<p ng-show="searchJobCostForm.searchYear.$error.pattern" class="red">Please select Year from the date picker</p>
+								</div>
+								<div class="col-md-2">
+									<label for="searchTo">To:</label>
+									<div class="input-group" moment-picker="searchTo"
+										format="YYYY-MM" start-view="month" today="true">
+										<span class="input-group-addon"> <i
+											class="fa fa-calendar"></i>
+										</span> <input class="form-control" id="searchTo" name="searchTo"
+											ng-model="searchTo"
+											pattern=".{7,7}" required title="Please select Month from the date picker" ng-model-options="{ updateOn: 'blur' }">
+									</div>
+									<p ng-show="searchJobCostForm.searchMonth.$error.pattern" class="red">Please select Month from the date picker</p>
+								</div>
+								<div class="col-md-2">
+										<label>&nbsp;</label>
+										<button type="button" ng-click="loadAccountLedgerList()" class="btn btn-block btn-primary"><span class="fa fa-search"></span> By Period</button>
+								</div>
+								<div class="col-md-2">
+										<label>&nbsp;</label>
+										<button type="button" ng-click="goAccountLedger()" class="btn btn-block btn-warning"><span class="fa fa-search"></span> By Date</button>
+								</div>
+								</div>
+							</form>
+	</div>
+	<div class="clearfix"></div><br>
+	<div class="row">
+<div ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-move-columns
+							ui-grid-resize-columns ui-grid-selection ui-grid-auto-resize
+							ui-grid-exporter ui-grid-cellnav ui-grid-edit class="grid"></div>
+							</div>
+</div>

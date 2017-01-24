@@ -1,0 +1,39 @@
+<!-- begin #content -->
+<div id="content" class="content">
+	<!-- begin breadcrumb -->
+	<ol class="breadcrumb pull-right">
+		<li><a ui-sref="admin.session"><i class="fa fa-dashboard"></i>
+				Home</a></li>
+		<li class="active">Subcontract Standard Terms Maintenance</li>
+	</ol>
+	<!-- end breadcrumb -->
+
+	<!-- ng-style="{height: 800 + 'px'}" -->
+	<!-- Main content -->
+	<div class="row col-md-12" block-ui="blockStandardTerms">
+		<div ui-grid="gridOptions" external-scopes="clickHandler"
+			ui-grid-row-edit ui-grid-selection ui-grid-cellnav
+			ui-grid-edit class="grid" resize ng-style="resizeWithOffset(215)"></div>
+	</div>
+	<div class="row"  ng-show="showQSAdmin" >
+		<table class="box box-primary col-md-12">
+			<tr>
+				<td ng-show="gridDirtyRows!= null && gridDirtyRows.length>0 ">
+					<button class="btn btn-block btn-warning glyphicon glyphicon-edit"
+						ng-click="onUpdate()"> Update Modified Standard Terms</button>
+				</td>
+				<td ng-show="selectedRows.length>0">
+					<button
+						class="btn btn-block btn-success glyphicon glyphicon-remove-sign"
+						ng-click="onDelete()"> Delete Selected Standard Terms</button>
+				</td>
+				<td>
+					<button
+						class="btn btn-block btn-danger"
+						ng-click="onAdd()"><i class="glyphicon glyphicon-plus-sign"></i> Create New Standard Terms</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- end #content -->

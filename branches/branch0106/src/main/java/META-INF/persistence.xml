@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="PCMSv2">
+		<mapping-file>META-INF/orm.xml</mapping-file>
+		<properties>
+			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
+			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@erpodadev-scan.gamska.com:1521/jded_srv_dev"/>
+			<property name="hibernate.default_schema" value="pcmsdatadev"/>
+			<property name="hibernate.connection.username" value="pcmsuser"/>
+			<property name="hibernate.connection.password" value="pcmsuat"/>
+			<property name="org.hibernate.envers.audit_table_suffix" value="_AUDIT"/>
+			<property name="org.hibernate.envers.audit_strategy_validity_store_revend_timestamp" value="false"/>
+			<property name="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>
+			<property name="org.hibernate.envers.store_data_at_delete" value="true"/>
+			<property name="org.hibernate.envers.track_entities_changed_in_revision" value="true"/>
+		</properties>
+	</persistence-unit>
+</persistence>
