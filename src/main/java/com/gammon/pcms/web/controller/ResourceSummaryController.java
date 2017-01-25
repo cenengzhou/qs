@@ -43,8 +43,6 @@ public class ResourceSummaryController {
 	@Autowired
 	private IVPostingHistService ivPostingHistService;
 	@Autowired
-	private SubcontractService subcontractService;
-	@Autowired
 	private ObjectMapper objectMapper;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','getResourceSummaries', @securityConfig.getRolePcmsEnq())")
@@ -256,7 +254,7 @@ public class ResourceSummaryController {
 	@RequestMapping(value = "recalculateResourceSummaryIV", method = RequestMethod.POST)
 	public boolean recalculateResourceSummaryIV(@RequestParam(required =true) String jobNo, @RequestParam(required =false) String subcontractNo,   @RequestParam(required =false) boolean recalculateFinalizedPackage){
 		boolean result = false;
-		result = subcontractService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
+		result = resourceSummaryService.recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage);
 		return result;
 	}
 	

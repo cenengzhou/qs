@@ -254,7 +254,7 @@ mainApp.service('resourceSummaryService', ['$http', '$q', 'GlobalHelper', functi
     function recalculateResourceSummaryIV(jobNo, subcontractNo, recalculateFinalizedPackage) {
         var request = $http({
             method: "post",
-            url: "service/subcontract/recalculateResourceSummaryIV",
+            url: "service/resourceSummary/recalculateResourceSummaryIV",
             dataType: "application/json;charset=UTF-8",
             params: {
                 jobNo: jobNo,
