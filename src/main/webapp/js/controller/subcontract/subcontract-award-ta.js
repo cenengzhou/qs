@@ -116,7 +116,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			"quantity": 0,
 			"rateBudget": 1,
 			"amountBudget": 0, 
-			"unit": ""
+			"unit": "AM"
 		});
 	};
 
@@ -207,6 +207,10 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 	
 	function proceedToSave(){
 		var ta = $scope.gridOptionsTa.data;
+		if(ta.length == 0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input Tender Analysis Details with total amount equals to Resource Summaries.");
+			return;
+		}
 
 		//Validate Account Balance
 		var taBalance = JSON.parse(JSON.stringify(accountBalance));
@@ -232,38 +236,19 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			}
 		}
 
-
-		//Update
-		var newTADetailList = [];
-		for (i in ta){
-			var newTADetail = {
-					//billItem : ta[i]['billItem'],
-					objectCode: ta[i]['objectCode'],
-					subsidiaryCode: ta[i]['subsidiaryCode'],
-					description: ta[i]['description'],
-					unit: ta[i]['unit'],
-					quantity: ta[i]['quantity'],
-					rateBudget: ta[i]['rateBudget'],
-					amountBudget: ta[i]['amountBudget'],
-					resourceNo: ta[i]['resourceNo'],
-					lineType: 'BQ'
-			}
-			newTADetailList.push(newTADetail);
-		}
-
 		if($scope.subcontract.scStatus >= "160"){
 			var modalOptions = {
-					bodyText: 'All existing tenders and tender details will be deleted. Continue?'
+					bodyText: 'Existing tenders and tender details will be changed or deleted. Continue?'
 			};
 
 
 			confirmService.showModal({}, modalOptions).then(function (result) {
 				if(result == "Yes"){
-					updateTenderDetails(newTADetailList);
+					updateTenderDetails(ta);
 				}
 			});
 		}else{
-			updateTenderDetails(newTADetailList);
+			updateTenderDetails(ta);
 		}
 	}
 

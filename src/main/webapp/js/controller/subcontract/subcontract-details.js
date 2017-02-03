@@ -299,7 +299,8 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			             {field: 'contraChargeSCNo', width: 100},
 			             {field: 'sequenceNo', width: 100},
 			             {field: 'resourceNo', width: 100},
-			             {field: 'balanceType', width: 100}
+			             {field: 'balanceType', width: 100},
+			             {field: 'tenderAnalysisDetail_ID', width: 100, visible:false}
 			             ]
 
 			

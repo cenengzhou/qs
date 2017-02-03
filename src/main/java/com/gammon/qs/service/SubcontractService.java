@@ -2999,8 +2999,8 @@ public class SubcontractService {
 		PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 		Tender rcmTender = tenderHBDao.obtainRecommendedTender(jobNo, subcontractNo);
 		//Step 2: 1st Payment & Pending OR No Payment yet
-		if(latestPaymentCert == null){
-			logger.info("Step 2: No Payment Cert - Regenerate All SC Details.");
+		if(latestPaymentCert == null || subcontract.getTotalPostedCertifiedAmount().compareTo(new BigDecimal(0)) == 0){
+			logger.info("Step 2: No Payment Cert OR Zero Total Posted Cert Amount - Regenerate All SC Details.");
 			
 			//Check if the status > 160
 			if (subcontract.getSubcontractStatus() >= 160){

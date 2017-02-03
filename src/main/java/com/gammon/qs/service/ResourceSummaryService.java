@@ -296,9 +296,14 @@ public class ResourceSummaryService implements Serializable {
 			String subsidiaryCode = resourceSummary.getSubsidiaryCode();
 			String unit = resourceSummary.getUnit();
 			String resourceDescription = resourceSummary.getResourceDescription();
-			ResourceSummary resourceInDB = resourceSummaryHBDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), null);
-			if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId()))
-				errorMsg.append("Changing the package number will create a duplicate resource: Package " + packageNo + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
+			ResourceSummary resourceInDB;
+			try {
+				resourceInDB = resourceSummaryHBDao.getResourceSummary(job, packageNo, objectCode, subsidiaryCode, resourceDescription, unit, resourceSummary.getRate(), null);
+				if(resourceInDB != null && !resourceInDB.getId().equals(resourceSummary.getId()))
+					errorMsg.append("Changing the package number will create a duplicate resource: Subcontract No. " + (packageNo !=null?packageNo:"") + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
+			} catch (Exception e) {
+				errorMsg.append("Changing the package number will create a duplicate resource: Subcontract No. " + (packageNo !=null?packageNo:"") + ", Object Code " + objectCode + ", Subsidiary Code " + subsidiaryCode + ", Unit " + unit + ", Rate " + resourceSummary.getRate());
+			}
 		}
 		if(errorMsg.length() > 0)
 			return errorMsg.toString();

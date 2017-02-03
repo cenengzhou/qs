@@ -224,7 +224,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		
 		if($scope.subcontract.scStatus == "160"){
 			var modalOptions = {
-					bodyText: 'Eexisting tenders and tender details will be changed or deleted. Continue?'
+					bodyText: 'Existing tenders and tender details will be changed or deleted. Continue?'
 			};
 
 

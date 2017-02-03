@@ -68,7 +68,7 @@ mainApp.controller('AddendumSelectCtrl', ['$scope', 'modalService', 'colorCode',
 			curDate = (new Date($scope.addendums[i].dateApproval)).yyyymmdd();
 
 			myEvent.push({
-				title:"Addendum. No."+$scope.addendums[i].no,
+				title:"Addendum "+$scope.addendums[i].no,
 				allDay: true,
 				start:  curDate,
 				tooltip: "Approved on "+ curDate

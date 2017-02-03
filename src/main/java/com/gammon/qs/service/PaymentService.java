@@ -2256,7 +2256,16 @@ public class PaymentService{
 				error = "Subcontract Does not exist.";
 				return error;
 			}
-				
+			
+			if(subcontract.getSubcontractStatus() == null || subcontract.getSubcontractStatus() <160){
+				error = "Please prepare Tender Analysis in order to issue Payment Requisition.";
+				return error;
+			}
+			
+			if(subcontract.getVendorNo() == null || subcontract.getVendorNo().length()==0){
+				error = "No recommended Tenderer has been selected yet.";
+				return error;
+			}
 			
 			if(subcontract.getPaymentStatus()!=null && "F".trim().equalsIgnoreCase(subcontract.getPaymentStatus().trim())){
 				error = "Subcontract is final paid.";

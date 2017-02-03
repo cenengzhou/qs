@@ -69,12 +69,12 @@ public class TenderDetailHBDao extends BaseHibernateDao<TenderDetail>{
 	}
 	
 	public Integer getNextSequenceNoForTA(Tender tender) throws Exception{
+		Integer maxSequenceNo = 0;
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("tender", tender));
 		criteria.setProjection(Projections.max("sequenceNo"));
-		Integer maxSequenceNo = Integer.valueOf(criteria.uniqueResult().toString());
-		if(maxSequenceNo == null)
-			return Integer.valueOf(1);
+		if(criteria.uniqueResult()!=null)
+			maxSequenceNo = Integer.valueOf(criteria.uniqueResult().toString());
 		return maxSequenceNo + 1;
 	}
 	
