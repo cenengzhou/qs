@@ -139,7 +139,8 @@ public class AdminTestController implements InitializingBean{
 		resultMap.put(TestResult.FAIL, "0");
 		List<TestCase> testCaseList = getAllTestCaseList();
 		testCaseList.forEach(testCase ->{
-			String mapKey = "::" + testCase.getCategory() + "::" + testCase.getMethod();
+//			String mapKey = "::" + testCase.getCategory() + "::" + testCase.getMethod();
+			String mapKey = "::" + testCase.getDetails().get("GROUP");
 			Integer count = counterMap.get(mapKey) != null ? counterMap.get(mapKey) : 0;
 			if( overrideAndRunAllSubTask || count < limitSubTaskTo) {
 				TestResult testResult = runTestMethod(testCase);
@@ -157,7 +158,7 @@ public class AdminTestController implements InitializingBean{
 		return resultMap;
 	}
 	
-	@JsonView(ExcludeDetailsView.class)
+	@JsonView(DetailsView.class)
 	@RequestMapping(value = "getTestAllTestCase", method = RequestMethod.POST)
 	public List<TestCase> getTestItems(HttpServletRequest request){
 		AdminTestController.HOST = request.getServerName() + ":" + request.getServerPort();
@@ -189,18 +190,18 @@ public class AdminTestController implements InitializingBean{
 					break;
 				}
 			});
-			securityConfig.getFnMethods()
-			.forEach((controller, methods) -> {
-				methods.forEach((method, fn) ->{
-					Map<String, String> fnMap = new HashMap<String, String>();
-					fnMap.put("HOST", webServiceConfig.getWsGsf("URL"));
-					fnMap.put("URL", "GetFunctionSecurity");
-					fnMap.put("METHODNAME", method);
-					fnMap.put("FN", fn);
-					TestCase testCase = new TestCase(FNTEST, controller, fn, fnMap, beans);
-					testCaseList.add(testCase.id, testCase);
-				});
-			});
+//			securityConfig.getFnMethods()
+//			.forEach((controller, methods) -> {
+//				methods.forEach((method, fn) ->{
+//					Map<String, String> fnMap = new HashMap<String, String>();
+//					fnMap.put("HOST", webServiceConfig.getWsGsf("URL"));
+//					fnMap.put("URL", "GetFunctionSecurity");
+//					fnMap.put("METHODNAME", method);
+//					fnMap.put("FN", fn);
+//					TestCase testCase = new TestCase(FNTEST, controller, fn, fnMap, beans);
+//					testCaseList.add(testCase.id, testCase);
+//				});
+//			});
 		}
 		return testCaseList;
 	}
@@ -221,7 +222,7 @@ public class AdminTestController implements InitializingBean{
 		TestMethod testMethod = testCase.getTestMethod();
 		if(testMethod != null) {
 			if(testCase.getCategory().equals("DB")){
-				if(testCase.getItem().equals("ADL")){
+				if(testCase.getMethod().equals("ADL")){
 					testResult = adminTestController.adlTest(testMethod);
 				} else {
 					testResult = adminTestController.pcmsdataTest(testMethod);
@@ -245,19 +246,20 @@ public class AdminTestController implements InitializingBean{
 	public static class TestCase{
 		public static int count = 0;
 		private Map<String, Object> beans;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private int id;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private String category;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private String method;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private String item;
+		@JsonView(DetailsView.class)
 		private Map<String, String> details;
 		private TestMethod testMethod;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private Calendar lastRun;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private TestResult testResult;
 		
 		public TestCase(String category, String method, String item, Map<String, String> details, Map<String, Object> beans){
@@ -275,10 +277,10 @@ public class AdminTestController implements InitializingBean{
 				testMethod = new RestTestMethod(category, method, details, beans);
 				break;
 			case "SOAP":
-				testMethod = new SoapTestMethod(method, details, beans);
+				testMethod = new SoapTestMethod(category, method, details, beans);
 				break;
 			case "DB":
-				testMethod = new DbTestMethod(method, details, beans);
+				testMethod = new DbTestMethod(category, method, details, beans);
 				break;
 			}
 		}
@@ -355,7 +357,7 @@ public class AdminTestController implements InitializingBean{
 
 	}
 		
-	public static interface ExcludeDetailsView{}
+	public static interface DetailsView{}
 	
 	public abstract static class TestMethod{
 		protected String category;
@@ -459,7 +461,9 @@ public class AdminTestController implements InitializingBean{
 						response = restTemplate.postForEntity(url, requestEntity, Object.class);
 					}		
 					testResult.setMessage("REST Test finished");
-					logger.info(message + StringUtils.substring(response.toString(), 0, 255));
+					String result = message + StringUtils.substring(response.toString(), 0, 255);
+					testResult.setResult(result);
+					logger.info(result);
 				}
 				testResult.setStatus(true);
 			} catch(Exception e){
@@ -477,7 +481,7 @@ public class AdminTestController implements InitializingBean{
 		private WSConfig wsConfig;
 		private ObjectMapper objectMapper;
 		private Logger logger = Logger.getLogger(getClass());
-		public SoapTestMethod(String method, Map<String, String> details, Map<String, Object> beans) {
+		public SoapTestMethod(String category, String method, Map<String, String> details, Map<String, Object> beans) {
 			this.details = details;
 			this.applicationContext = (ApplicationContext) beans.get("applicationContext");
 			this.wsConfig = (WSConfig) beans.get("wsConfig");
@@ -492,7 +496,9 @@ public class AdminTestController implements InitializingBean{
 				requestString = requestString.replace("'", "\"");
 				Object request = objectMapper.readValue(requestString, Class.forName(details.get("requestClass")));
 				Object response = webServiceTemplate.marshalSendAndReceive(request, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-				logger.info("SOAP Test response:" + StringUtils.substring(response.toString(), 0, 255));
+				String result = "SOAP Test response:" + StringUtils.substring(response.toString(), 0, 255);
+				logger.info(result);
+				testResult.setResult(result);
 				testResult.setStatus(true);
 				testResult.setMessage("SOAP Test finished");
 			} catch(Exception e){
@@ -509,7 +515,7 @@ public class AdminTestController implements InitializingBean{
 		private Logger logger = Logger.getLogger(getClass());
 		private EntityManager entityManager;
 		private ObjectMapper objectMapper;
-		public DbTestMethod(String method, Map<String, String> details, Map<String, Object> beans) {
+		public DbTestMethod(String category, String method, Map<String, String> details, Map<String, Object> beans) {
 			this.method = method;
 			this.details = details;
 			this.objectMapper = (ObjectMapper) beans.get("objectMapper");
@@ -536,7 +542,9 @@ public class AdminTestController implements InitializingBean{
 						query.setMaxResults(1);
 						List<?> result = query.getResultList();
 						Calendar after = Calendar.getInstance();
-						logger.info("DB Test response: " + ((after.getTimeInMillis() - before.getTimeInMillis()) / 1000) + "s " + " => " + StringUtils.substring(result.toString(), 0, 255) + "...");
+						String resultString = "DB Test response: " + ((after.getTimeInMillis() - before.getTimeInMillis()) / 1000) + "s " + " => " + StringUtils.substring(result.toString(), 0, 255) + "...";
+						logger.info(resultString);
+						testResult.setResult(resultString);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
@@ -555,10 +563,13 @@ public class AdminTestController implements InitializingBean{
 	public static class TestResult {
 		public static final String SUCCESS = "SUCCESS";
 		public static final String FAIL = "FAIL";
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private boolean status = false;
-		@JsonView(ExcludeDetailsView.class)
+		@JsonView(DetailsView.class)
 		private String message = "";
+		@JsonView(DetailsView.class)
+		private String result = "";
+		
 		/**
 		 * @return the status
 		 */
@@ -582,6 +593,18 @@ public class AdminTestController implements InitializingBean{
 		 */
 		public void setMessage(String message) {
 			this.message = message;
+		}
+		/**
+		 * @return the result
+		 */
+		public String getResult() {
+			return result;
+		}
+		/**
+		 * @param result the result to set
+		 */
+		public void setResult(String result) {
+			this.result = result;
 		}
 		
 	}

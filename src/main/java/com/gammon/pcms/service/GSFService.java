@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -135,8 +136,8 @@ public class GSFService {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Collection<User.Role> userRoles = (Collection<User.Role>) auth.getAuthorities();
 			for(String roleName : roleNameArray){
-				for(User.Role role : userRoles){
-					if(role.getRoleName().equals("ROLE_" + roleName)) {
+				for(GrantedAuthority role : userRoles){
+					if(role.getAuthority().equals("ROLE_" + roleName)) {
 						containRole = true;
 						fnStatus = obtainFnStatus(fn, roleName);
 						logger.info(fn + " isFnEnabled" + ": " + fnStatus + " (ROLE_" + roleName + " - " + ctrl + " - " + method + ")");
