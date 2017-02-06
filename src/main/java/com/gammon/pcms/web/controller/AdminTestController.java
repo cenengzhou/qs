@@ -72,6 +72,9 @@ public class AdminTestController implements InitializingBean{
 	@Qualifier("webservicePasswordConfig")
 	private WSConfig wsConfig;
 	@Autowired
+	@Qualifier("apWebservicePasswordConfig")
+	private WSConfig apWsConfig;
+	@Autowired
 	private ApplicationContext applicationContext;
 	private AdminTestController adminTestController;
 	
@@ -90,6 +93,7 @@ public class AdminTestController implements InitializingBean{
 		beans.put("webServiceConfig", webServiceConfig);
 		beans.put("applicationContext", applicationContext);
 		beans.put("wsConfig", wsConfig);
+		beans.put("apWsConfig", apWsConfig);
 		beans.put("objectMapper", objectMapper);
 		beans.put("entityManager", entityManager);
 		beans.put("adlEntityManager", adlEntityManager);
@@ -484,7 +488,12 @@ public class AdminTestController implements InitializingBean{
 		public SoapTestMethod(String category, String method, Map<String, String> details, Map<String, Object> beans) {
 			this.details = details;
 			this.applicationContext = (ApplicationContext) beans.get("applicationContext");
-			this.wsConfig = (WSConfig) beans.get("wsConfig");
+			if(details.get("GROUP").equals("AP")) {
+				this.wsConfig = (WSConfig) beans.get("apWsConfig");
+			} else {
+				this.wsConfig = (WSConfig) beans.get("wsConfig");
+			}
+			
 			this.objectMapper = (ObjectMapper) beans.get("objectMapper");
 		}
 
