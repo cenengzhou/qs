@@ -1454,7 +1454,8 @@ public class TransitService implements Serializable {
 				String obj = resource.getObjectCode().substring(0, 2);
 				if(obj.equals("14") || obj.equals("13")){
 					// test take 5 digits in resource code to group
-					String res = resource.getResourceCode().substring(0, 5) + obj + resource.getSubsidiaryCode().charAt(0);
+					String resourceCode = resource.getResourceCode();
+					String res = resource.getResourceCode().substring(0, resourceCode.length() >= 5 ? 5 : resourceCode.length()) + obj + resource.getSubsidiaryCode().charAt(0);
 					String packageNo = packages.get(res);
 					if(packageNo == null){
 						if(obj.equals("13"))

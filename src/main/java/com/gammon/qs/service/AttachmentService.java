@@ -422,6 +422,9 @@ public class AttachmentService {
 
 			if (Attachment.AddendumNameObject.equals(nameObject.trim())){
 				Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
+				if(addendum == null){
+					throw new NullPointerException("Addendum not found: addendumService.getAddendum(" + noJob + ", " + noSubcontract + ", " + splittedTextKey[2] + ")");
+				}
 				Attachment uploadAttachment = new Attachment();
 				uploadAttachment.setTypeDocument(Attachment.FILE);
 				uploadAttachment.setNoSequence(sequenceNo);
@@ -520,7 +523,10 @@ public class AttachmentService {
 		switch(nameObject){
 		case Attachment.AddendumNameObject:
 			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-			if(addendum != null) attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
+			if(addendum == null){
+				throw new NullPointerException("addendum not found: addendumService.getAddendum(" + noJob + ", " + noSubcontract + ", " + splittedTextKey[2] + ")");
+			}
+			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
 			if(attachment == null) attachment = new Attachment();
 			attachment.setText(textContent);
 			attachment.setNameFile(filename);
@@ -1017,6 +1023,9 @@ public class AttachmentService {
 		String packageNo="";
 		if (!AbstractAttachment.VendorNameObject.equals(nameObject)){
 			splittedTextKey = textKey.split("\\|");
+			if(splittedTextKey == null || splittedTextKey.length < 2) {
+				throw new IllegalArgumentException("textKey wrong format:" + textKey);
+			}
 			jobNumber= splittedTextKey[0].trim();
 			packageNo = splittedTextKey[1].trim();
 			adminService.canAccessJob(jobNumber);

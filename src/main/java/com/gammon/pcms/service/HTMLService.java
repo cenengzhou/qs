@@ -197,6 +197,9 @@ public class HTMLService implements Serializable{
 			e.printStackTrace();
 		}
 		String strPaymentStatus = "";
+		if(paymentCert == null || paymentCert.getPaymentStatus() == null){
+			throw new NullPointerException("paymentCert " + paymentCert.getId() + " payment status is null");
+		}
 		switch(paymentCert.getPaymentStatus()){
 		case "PND":
 			strPaymentStatus = "Pending";

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -342,9 +343,12 @@ public class AttachmentController {
 				response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 				response.setContentLength(file.length);
 				response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachementFile.getFileName() + "\"");
-
-				response.getOutputStream().write(file);
-				response.getOutputStream().flush();
+				ServletOutputStream o = response.getOutputStream();
+				if(o == null){
+					throw new IOException("Cannot get output stream");
+				}
+				o.write(file);
+				o.flush();
 			} else{
 				showAttachmentError(response);
 			}
