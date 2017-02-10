@@ -251,7 +251,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 //					}
 //				});
 		var wsFound = $scope.allWorkScopes.some(function(ws){
-			return ws.code === workScopeCode;
+			return ws.codeWorkscope.indexOf(workScopeCode) > -1;
 		});
 		
 		if(wsFound){

@@ -38,7 +38,7 @@
 													<select class="form-control" ng-disabled="disableButtons" 
 														data-parsley-minlength="3" data-parsley-error-message="Please select work scope"
  														required ng-model="subcontract.workscope" 
- 														ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
+ 														ng-options="v.codeWorkscope.trim() as (v.codeWorkscope.trim() + ' - ' + v.workscopeDescription.trim()) for v in allWorkScopes">
 													</select>
 												</div>
 											</div>
