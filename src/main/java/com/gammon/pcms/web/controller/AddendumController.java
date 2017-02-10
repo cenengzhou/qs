@@ -32,6 +32,7 @@ import com.gammon.qs.service.AddendumService;
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"*/)
 public class AddendumController {
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired

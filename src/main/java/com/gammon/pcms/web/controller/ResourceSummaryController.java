@@ -29,7 +29,6 @@ import com.gammon.qs.domain.IVPostingHist;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.IVPostingHistService;
 import com.gammon.qs.service.ResourceSummaryService;
-import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.ResourceSummarySplitMergeWrapper;

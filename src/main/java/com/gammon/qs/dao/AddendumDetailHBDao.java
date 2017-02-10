@@ -21,6 +21,7 @@ import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.qs.domain.SubcontractDetail;
 @Repository
 public class AddendumDetailHBDao extends BaseHibernateDao<AddendumDetail> {
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(AddendumDetailHBDao.class.getName());
 
 

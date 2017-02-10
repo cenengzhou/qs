@@ -9,7 +9,8 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	getAddressBook:								getAddressBook,
     	getAddressBookListOfSubcontractorAndClient: getAddressBookListOfSubcontractorAndClient,
     	obtainCompanyCodeAndName:					obtainCompanyCodeAndName,
-    	getMonthlyJobCostListByPeroidRange:			getMonthlyJobCostListByPeroidRange
+    	getMonthlyJobCostListByPeroidRange:			getMonthlyJobCostListByPeroidRange,
+    	getAllWorkScopes:							getAllWorkScopes,
     });
     
   //Asyn Call
@@ -112,6 +113,10 @@ mainApp.service('adlService', ['$http', '$q', '$log', 'GlobalHelper',
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 
+    function getAllWorkScopes(){
+    	var request = $http.get('service/adl/getAllWorkScopes');
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
     
 }]);
 

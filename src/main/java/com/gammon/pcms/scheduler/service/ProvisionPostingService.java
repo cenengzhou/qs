@@ -255,8 +255,7 @@ public class ProvisionPostingService {
 		if (job.getCompany() == null)
 			updateCompany(job.getJobNumber());
 
-		/**TODO
-		 * Currently only get the G/L date from the first job
+		/**TODO: Currently only get the G/L date from the first job
 		 * G/L date Should be refreshed by each job.  
 		 * **/
 		// call from scheduler that do not have GL Date and look for GLDate from JDE

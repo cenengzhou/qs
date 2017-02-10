@@ -31,6 +31,7 @@ import com.gammon.qs.service.security.SecurityService;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class UserPreferenceService {
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 	@Autowired
 	private UserPreferenceHBDao userPreferenceHBDao;

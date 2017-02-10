@@ -10,7 +10,9 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	gettingSessionId:	gettingSessionId,
     	gettingProperties:	gettingProperties,
     	gettingWorkScopes:	gettingWorkScopes,
-    	
+    	gettingAddressBookListOfSubcontractor:	gettingAddressBookListOfSubcontractor,
+    	gettingAddressBookListOfClient:	gettingAddressBookListOfClient,
+    	gettingAddressBookListOfSubcontractorAndClient: gettingAddressBookListOfSubcontractorAndClient,
     	getPreviousStatus:	getPreviousStatus,
     	setPreviousStatus:	setPreviousStatus,
     	getRoutedToDefaultJob:	getRoutedToDefaultJob,
@@ -185,7 +187,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function gettingWorkScopes(){
 		var deferral = $q.defer();
 		if(!$rootScope.workScopes){
-			jdeService.getAllWorkScopes()
+			adlService.getAllWorkScopes()
 			.then(function(data){
 				$rootScope.workScopes = data;
 				deferral.resolve({
@@ -195,6 +197,84 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 		} else {
 			deferral.resolve({
 				workScopes: $rootScope.workScopes
+			});
+		}
+		return deferral.promise;
+	}
+	
+	function gettingAddressBookListOfClient(){
+		var deferral = $q.defer();
+		if(!$rootScope.addressBookListOfClient){
+			gettingAddressBookListOfSubcontractorAndClient()
+			.then(function(response){
+				$rootScope.addressBookListOfClient = getAddressBookList(response.addressBookListOfSubcontractorAndClient, 'C  ');
+				deferral.resolve({
+					addressBookListOfClient : $rootScope.addressBookListOfClient
+				});
+			});
+		} else {
+			deferral.resolve({
+				addressBookListOfClient : $rootScope.addressBookListOfClient
+			});
+		}
+		return deferral.promise;		
+	}
+	
+	function gettingAddressBookListOfSubcontractor(searchSubcontractor, searchWorkScopes){
+		var deferral = $q.defer();
+		gettingAddressBookListOfSubcontractorAndClient()
+		.then(function(response){
+			var addressBookListOfSubcontractor = getAddressBookList(response.addressBookListOfSubcontractorAndClient, 'V  ');
+			var filteredAddressBookListOfSubcontractor = addressBookListOfSubcontractor.filter(function(item){
+				var subcon = true;
+				var ws = false;
+				if(searchSubcontractor) {
+					subcon = item.addressBookName.toLowerCase().indexOf(searchSubcontractor.toLowerCase()) > -1 || item.addressBookNumber == searchSubcontractor;
+				}
+				if(searchWorkScopes) {
+					if(item.subcontractorWorkscopes && item.subcontractorWorkscopes.length > 0){
+						var workscopes = item.subcontractorWorkscopes;
+						workscopes.forEach(function(workscope){
+							if(!ws && workscope.codeWorkscope.trim() == searchWorkScopes){
+								ws = true;
+							}
+						})
+					}
+						
+//					workscope = item.subcontractorWorkscopes && item.subcontractorWorkscopes.indexOf(searchWorkScopes) > -1;
+				} else {
+					ws = true;
+				}
+				
+				return subcon && ws;
+			});
+			
+			deferral.resolve({
+				addressBookListOfSubcontractor : filteredAddressBookListOfSubcontractor
+			});
+		});
+		return deferral.promise;
+	}
+	
+	function getAddressBookList(array, addressBookTypeCode) {
+		return array.filter(function(item){
+			return item.addressBookTypeCode === addressBookTypeCode;
+		});
+	}
+	
+	function gettingAddressBookListOfSubcontractorAndClient(){
+		var deferral = $q.defer();
+		if(!$rootScope.addressBookListOfSubcontractorAndClient){
+			adlService.getAddressBookListOfSubcontractorAndClient()
+			.then(function(data){
+				$rootScope.addressBookListOfSubcontractorAndClient = data;
+				deferral.resolve({
+					addressBookListOfSubcontractorAndClient : $rootScope.addressBookListOfSubcontractorAndClient
+				});
+			});
+		} else {
+			deferral.resolve({
+				addressBookListOfSubcontractorAndClient : $rootScope.addressBookListOfSubcontractorAndClient
 			});
 		}
 		return deferral.promise;

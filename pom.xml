@@ -612,11 +612,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
-			<artifactId>JDE-AccountBalanceByDateRangeManager</artifactId>
-			<version>2016-09-09</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AccountIDListByJobManager</artifactId>
 			<version>2016-09-09</version>
 		</dependency>

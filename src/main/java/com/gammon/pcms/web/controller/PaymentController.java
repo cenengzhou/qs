@@ -31,6 +31,7 @@ import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrappe
 @RestController
 @RequestMapping(value = "service/payment/")
 public class PaymentController {
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired

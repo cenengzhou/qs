@@ -27,6 +27,8 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope.workscopeCodeAndDescription;
 import com.gammon.pcms.service.ADLService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 
@@ -245,7 +247,7 @@ public class ADLController {
 
 	// TODO: migrate from web service to ADL
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBookListOfSubcontractorAndClient', @securityConfig.getRolePcmsEnq())")
-	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
+	@JsonView(AddressBookView.SubcontractorAndClientEnquiry.class)
 	@RequestMapping(value = "getAddressBookListOfSubcontractorAndClient", method = RequestMethod.GET)
 	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() {
 		try {
@@ -335,5 +337,12 @@ public class ADLController {
 	@RequestMapping(value = "obtainCompanyCodeAndName", method = RequestMethod.POST)
 	public List<Map<String, String>> obtainCompanyCodeAndName() throws DatabaseOperationException{
 		return adlService.obtainCompanyCodeAndName();
+	}
+	
+	@JsonView(workscopeCodeAndDescription.class)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAllWorkScopes', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getAllWorkScopes", method = RequestMethod.GET)
+	public List<SubcontractorWorkscope> getAllWorkScopes() throws DatabaseOperationException{
+		return adlService.getAllWorkScopes();
 	}
 }

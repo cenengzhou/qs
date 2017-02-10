@@ -3,7 +3,6 @@ package com.gammon.qs.service;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -166,12 +165,12 @@ public class MainCertService {
 		return message;
 	}
 	
-	private void setModifiedDate(MainCert mainContractCertificate){
-		if (mainContractCertificate!=null){
-			if (mainContractCertificate.getCreatedDate()==null)
-				mainContractCertificate.setCreatedDate(Calendar.getInstance().getTime());
-		}
-	}
+//	private void setModifiedDate(MainCert mainContractCertificate){
+//		if (mainContractCertificate!=null){
+//			if (mainContractCertificate.getCreatedDate()==null)
+//				mainContractCertificate.setCreatedDate(Calendar.getInstance().getTime());
+//		}
+//	}
 
 	/*****************************************
 	 * Combined Operations - WS+QS

@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +31,6 @@ import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
-import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
@@ -47,7 +45,6 @@ import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AppSubcontractStandardTermsHBDao;
 import com.gammon.qs.dao.AttachPaymentHBDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.HedgingNotificationWSDao;
 import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -80,7 +77,6 @@ import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.businessLogic.SCDetailsLogic;
 import com.gammon.qs.service.businessLogic.SCPackageLogic;
@@ -111,8 +107,6 @@ public class SubcontractService {
 	// Configurations
 	@Autowired
 	private MessageConfig messageConfig;
-	@Autowired
-	private ExcelWorkbookProcessor excelFileProcessor;
 	
 	// Administration
 	@Autowired
@@ -140,8 +134,6 @@ public class SubcontractService {
 	private JobInfoHBDao jobHBDao;
 	@Autowired
 	private JobInfoWSDao jobWSDao;
-	@Autowired
-	private BpiItemResourceHBDao bpiItemResourceHBDao;
 	// Resource Summary
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;
@@ -187,8 +179,6 @@ public class SubcontractService {
 	private UnitService unitService;
 	@Autowired
 	private AccountCodeWSDao accountCodeWSDao;
-	@Autowired
-	private SecurityConfig securityConfig;
 
 	// Approval System
 	@Autowired
@@ -3795,37 +3785,6 @@ public class SubcontractService {
 		return subcontractList;
 	}
 
-	public List<Object> filterSubcontractSnapshotListByJobInfoAndSubcontract(List<?> subcontractList, Map<String, Map<String, String>> filterKeyValue){
-		List<Object> filteredList = null;
-		if(subcontractList != null && subcontractList.size() > 0){
-			for(Object item : subcontractList){
-				JobInfo job;
-				Subcontract subcontract;
-				filteredList = new ArrayList<Object>();
-				boolean includesive = false;
-				if(subcontractList.get(0) instanceof SubcontractSnapshot){
-					job = ((SubcontractSnapshot) item).getJobInfo();
-					subcontract = ((SubcontractSnapshot) item).getSubcontract();
-					item = (SubcontractSnapshot) item;
-				} else if(subcontractList.get(0) instanceof Subcontract){
-					job = ((Subcontract) item).getJobInfo();
-					subcontract = (Subcontract) item;
-					item = (Subcontract) item;
-				}
-				
-				filterKeyValue.get("JobInfo").forEach((k,v) ->{
-					
-				});
-				
-				
-				if(includesive){
-					filteredList.add(item);
-				}
-			}
-
-		}
-		return filteredList;
-	}
 	public List<SubcontractDetail> getScDetails(String jobNumber) throws DatabaseOperationException {
 		return subcontractDetailHBDao.getScDetails(jobNumber);
 		

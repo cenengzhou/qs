@@ -27,9 +27,7 @@ import com.gammon.jde.webservice.serviceRequester.ValidateAAICompletelyManager.g
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.BpiItemHBDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -43,10 +41,6 @@ public class IVPostingService  {
 	private Logger logger = Logger.getLogger(getClass().getName());
 	@Autowired
 	private ResourceSummaryHBDao bqResourceSummaryDao;
-	@Autowired
-	private BpiItemHBDao bqItemHBDao;
-	@Autowired
-	private BpiItemResourceHBDao resourceHBDao;
 	@Autowired
 	@Qualifier("getNextNumberWebServiceTemplate")
 	private WebServiceTemplate getJDENextNumberWebServiceTemplate;

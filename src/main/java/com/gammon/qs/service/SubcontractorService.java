@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetSupplierMasterManager_Refactor.getSupplierMaster.SupplierMasterResponseObj;
+import com.gammon.pcms.dao.adl.SubcontractorWorkscopeDao;
 import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.dao.SubcontractHBDao;
@@ -58,7 +60,8 @@ public class SubcontractorService{
 	//SC Package
 	@Autowired
 	private SubcontractHBDao scPackageDao;
-	
+	@Autowired
+	private SubcontractorWorkscopeDao subcontractorWorkscopeDao;
 
 	//pagination cache
 	private List<SubcontractorWrapper> cachedSuncontractorWrapperList = new ArrayList<SubcontractorWrapper>();
@@ -583,6 +586,10 @@ public class SubcontractorService{
 			tenderAnalysisWrapperList.add(tenderAnalysisWrapper);
 		}
 		return tenderAnalysisWrapperList;
+	}
+	
+	public List<SubcontractorWorkscope> obtainWorkscopeByVendorNo(String vendorNo){
+		return subcontractorWorkscopeDao.obtainWorkscopeByVendorNo(vendorNo);
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 }

@@ -3,6 +3,7 @@ package com.gammon.pcms.dao.adl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -22,8 +23,11 @@ public class AddressBookDao extends BaseAdlHibernateDao<AddressBook> {
 
 		// Where
 		criteria.add(Restrictions.in("addressBookTypeCode", addressBookTypeList));
-		
-		return (List<AddressBook>) criteria.list();
+		List<AddressBook> resultList = (List<AddressBook>) criteria.list();
+		for(AddressBook addressBook : resultList){
+			Hibernate.initialize(addressBook.getSubcontractorWorkscopes());
+		}
+		return resultList;
 	}
 
 }

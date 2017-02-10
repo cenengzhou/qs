@@ -149,7 +149,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		formTemplate: formTemplate,
 		addressBookRowTemplate: addressBookRowTemplate,
 		attachmentIconClass: attachmentIconClass,
-		getSubcontractorDetailsModal: getSubcontractorDetailsModal,
+		getAddressbookDetailsModal: getAddressbookDetailsModal,
 		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
 		uiGridFilters : uiGridFilters,
 		camelToNormalString: camelToNormalString,
@@ -229,8 +229,8 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		return html;
 	}
 	
-	function addressBookRowTemplate(titleField, parameterField){
-		return '<div style="cursor:pointer" ng-click="grid.appScope.GlobalHelper.getSubcontractorDetailsModal(row.entity.' + parameterField + ')">' +
+	function addressBookRowTemplate(titleField, parameterField, verdorTypeField){
+		return '<div style="cursor:pointer" ng-click="grid.appScope.GlobalHelper.getAddressbookDetailsModal(row.entity.' + parameterField + ', row.entity.' + verdorTypeField + ')">' +
         '  <div ng-if="row.entity.merge">{{row.entity.title}}</div>' +
         '  <div title="Click to view more details of {{row.entity.' + titleField + '}}" ng-if="!row.entity.merge" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
         '</div>';
@@ -261,8 +261,9 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		return iconClass;
 	}
 	
-	function getSubcontractorDetailsModal(vendorNo){		
-		modalService.open('lg', 'view/subcontractor-details-modal.html', 'SubcontractorDetailsModalCtrl', 'Success', vendorNo ); 
+	function getAddressbookDetailsModal(vendorNo){
+		var vendor = {'vendorNo': vendorNo};
+		modalService.open('lg', 'view/addressbook-details-modal.html', 'AddressbookDetailsModalCtrl', 'Success', vendor ); 
 	}
 	
 	function addSubcontractCatalogGroup(data, groupBy){

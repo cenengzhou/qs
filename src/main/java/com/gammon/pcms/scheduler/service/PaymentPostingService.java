@@ -18,7 +18,6 @@ import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
@@ -54,8 +53,6 @@ public class PaymentPostingService {
 	private SubcontractDetailHBDao scDetailDao;
 	@Autowired
 	private ResourceSummaryHBDao bqResourceSummaryDao;
-	@Autowired
-	private BpiItemResourceHBDao resourceHBDao;
 	@Autowired
 	private PaymentWSDao paymentWSDao;
 	@Autowired

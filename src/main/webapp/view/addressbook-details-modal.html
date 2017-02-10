@@ -1,7 +1,7 @@
 <div class="modal-header bg-primary">
 	<div class="row">
 		<div class="col-md-11">
-			<h4 class="modal-title text-white">{{vendorNo}} {{vendor.vendorName}}</h4>
+			<h4 class="modal-title text-white">{{vendor.vendorNo}} {{vendor.vendorName}}</h4>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-white pull-right" type="button"
@@ -19,23 +19,23 @@
 					<li role="presentation" ng-class="{active:isSelected('info')}">
 						<a href ng-click="selectTab('info')"><span class="fa fa-2x fa-user"></span> Information</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected('awarded')}">
+					<li role="presentation" ng-class="{active:isSelected('awarded')}" ng-hide="showInfoOnly">
 						<a href ng-click="selectTab('awarded')"><span class="fa fa-2x fa fa-trophy"></span> Awarded Subcontracts</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected('history')}">
+					<li role="presentation" ng-class="{active:isSelected('history')}" ng-hide="showInfoOnly">
 						<a href ng-click="selectTab('history')"><span class="fa fa-2x fa-history"></span> Tender Analysis History</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected('workscope')}">
+					<li role="presentation" ng-class="{active:isSelected('workscope')}" ng-hide="showInfoOnly">
 						<a href ng-click="selectTab('workscope')"><span class="fa fa-2x fa-calculator"></span> Work Scope</a>
 					</li>
-					<li role="presentation" ng-class="{active:isSelected('attachment')}">
+					<li role="presentation" ng-class="{active:isSelected('attachment')}" ng-hide="showInfoOnly">
 						<a href ng-click="selectTab('attachment')"><span class="fa fa-2x fa-paperclip"></span> Attachment</a>
 					</li>
 				</ul>
 				
 				<div ng-show="isSelected('info')" style="height:350px;overflow:auto">
 					<div class="box col-md-12" style="padding-left:0px; padding-right:0px">
-					<div class="col-md-7" style="padding-left:0px">
+					<div ng-class="{'col-md-7' : !showInfoOnly, 'col-md-12' : showInfoOnly}" style="padding-left:0px">
 						<table class="table table-striped">
 							<thead class="thead-inverse"><tr><th colspan="2"><span class="fa fa-info-circle"></span>  Contact Information</th></tr></thead>
 							<tbody>
@@ -62,7 +62,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="col-md-5" style="padding-right:0px">
+					<div class="col-md-5" style="padding-right:0px" ng-hide="showInfoOnly">
 						<table class="table table-striped panel panel-inverse">
 							<thead><tr><th colspan="2"><span class="fa fa-pie-chart"></span> Statistics</th></tr></thead>
 							<tbody>

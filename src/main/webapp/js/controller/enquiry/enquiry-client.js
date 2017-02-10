@@ -1,9 +1,10 @@
 
-mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'subcontractorService', 
-                                function($scope , $http, modalService, blockUI, subcontractorService) {
+mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper',
+                                function($scope , $http, modalService, blockUI, rootscopeService, GlobalHelper) {
 	
 //	$scope.blockEnquiryClient = blockUI.instances.get('blockEnquiryClient');
 	$scope.searchClient = '';
+	$scope.GlobalHelper = GlobalHelper;
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -17,9 +18,10 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'bl
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,
+			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
-			             { field: 'subcontractorNo', displayName: "Client Number", enableCellEdit: false },
-			             { field: 'subcontractorName', displayName: "Client Name", enableCellEdit: false }
+			             { field: 'addressBookNumber', displayName: "Client Number", enableCellEdit: false },
+			             { field: 'addressBookName', displayName: "Client Name", enableCellEdit: false }
             			 ]
 	};
 	
@@ -28,15 +30,12 @@ mainApp.controller('EnquiryClientCtrl', ['$scope' , '$http', 'modalService', 'bl
 	}
 	
 	$scope.loadGridData = function(){
-//		$scope.blockEnquiryClient.start('Loading...')
-		subcontractorService.obtainClientWrappers('*')
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.gridOptions.data = data;
-//					$scope.blockEnquiryClient.stop();
+		rootscopeService.gettingAddressBookListOfClient()
+		    .then(function(response) {
+				if(angular.isArray(response.addressBookListOfClient)){
+					$scope.gridOptions.data = response.addressBookListOfClient;
 				}
 		}, function(data){
-//			$scope.blockEnquiryClient.stop();
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
 		});
 	}

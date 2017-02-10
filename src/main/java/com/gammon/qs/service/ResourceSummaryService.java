@@ -1546,7 +1546,7 @@ public class ResourceSummaryService implements Serializable {
 				String lineType = scDetail.getLineType();
 				if ("BQ".equals(lineType) || "V3".equals(lineType) || "V1".equals(lineType)) {
 					double costRate = scDetail.getCostRate() != null ? scDetail.getCostRate() : 0.0;
-					double scRate = scDetail.getScRate() != null ? scDetail.getScRate() : 0.0;
+//					double scRate = scDetail.getScRate() != null ? scDetail.getScRate() : 0.0;
 					double bqQty = scDetail.getQuantity() != null ? scDetail.getQuantity() : 0.0;
 					double cumWDQty = scDetail.getCumWorkDoneQuantity()!=null ? scDetail.getCumWorkDoneQuantity(): 0.0;
 
@@ -1592,8 +1592,7 @@ public class ResourceSummaryService implements Serializable {
 			// Update resource summaries
 			for (Entry<String, Double> entry : accountIV.entrySet()) {
 				String[] objSub = entry.getKey().split("\\.");
-				//TODO
-				//Rewrite this part for resource summary recalculation
+				//TODO: Rewrite this part for resource summary recalculation
 				updateResourceSummaryIVFromBQ(job, packageNo, objSub[0], objSub[1], entry.getValue());
 				
 			}
@@ -1646,8 +1645,7 @@ public class ResourceSummaryService implements Serializable {
 				if (resourceAmount == 0 || resourceIDofSCAddendum.get(resourceSummary.getId()) != null)
 					continue;
 				
-				//TODO
-				//Need to handle negative amount as well 
+				//TODO: Need to handle negative amount as well 
 				//Case 1: positive IV amount
 				if(cumIVAmount > 0 && resourceAmount > 0){
 					if(resourceAmount > cumIVAmount){

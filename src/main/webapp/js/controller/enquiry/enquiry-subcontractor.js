@@ -1,6 +1,6 @@
 
-mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'rootscopeService', 
-                                      function($scope, $http, modalService, subcontractorService, GlobalParameter, GlobalHelper, rootscopeService) {
+mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'rootscopeService', 'uiGridConstants', 
+                                      function($scope, $http, modalService, subcontractorService, GlobalParameter, GlobalHelper, rootscopeService, uiGridConstants) {
 	
 	$scope.allWorkScopes = {};
 	$scope.searchWorkScopes = null;
@@ -11,6 +11,32 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 		$scope.allWorkScopes = response.workScopes;
 	});
 	
+	var rcmOptions = [
+		{label: '--', value:'--'},
+        {label: 'Recommended', value:"text-warning fa-thumbs-up"},
+        {label: 'Not Recommended', value:"text-danger fa-thumbs-down"}
+        ];
+	var ynOptions = [
+		{label: '--', value:'-'},
+        {label: 'Yes', value:"Yes"},
+        {label: 'No', value:"No"}	
+	];
+	var vtOptions = [
+		{label: '--', value:'-'},
+        {label: 'Supplier', value:"Supplier"},
+        {label: 'Subcontractor', value:"Subcontractor"},
+        {label: 'Both (Supplier & Subcontractor)', value:"Both (Supplier & Subcontractor)"}
+	];
+	var vsOptions = [
+		{label: '--', value:'-'},
+        {label: 'Performance being observed', value:"Performance being observed"},
+        {label: 'Suspended', value:"Suspended"}	,
+        {label: 'Blacklisted', value:"Blacklisted"}	,
+        {label: 'Obsolete', value:"Obsolete"}	,
+        {label: 'On HSE League Table', value:"On HSE League Table"}	,
+        {label: 'Observed & On HSE League', value:"Observed & On HSE League"}	,
+        {label: 'Suspended & On HSE League', value:"Suspended & On HSE League"}	
+	];
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -24,31 +50,47 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 			allowCellFocus: false,
 			exporterMenuPdf: false,
 			enableCellSelection: false,
-			rowTemplate: GlobalHelper.addressBookRowTemplate('subcontractorName', 'subcontractorNo'),
+			rowTemplate: GlobalHelper.addressBookRowTemplate('addressBookName', 'addressBookNumber'),
 			columnDefs: [
-			             { field: 'subcontractorNo', displayName: "Subcontractor No", enableCellEdit: false },
-			             { field: 'subcontractorName', displayName: "Subcontractor Name", enableCellEdit: false },
-			             { field: 'businessRegistrationNo', displayName: "Business Registration No", enableCellEdit: false},
-			             { field: 'getValueById("subcontractorVenderType", "vendorType")', displayName: "Vendor Type", enableCellEdit: false},
-			             { field: 'getValueById("subcontractorVendorStatus", "vendorStatus")', displayName: "Vendor Status", enableCellEdit: false},
-			             { field: 'getValueById("subcontractorApproval", "subcontractorApproval")', 
+			             { field: 'addressBookNumber', displayName: "Subcontractor No", enableCellEdit: false },
+			             { field: 'addressBookName', displayName: "Subcontractor Name", enableCellEdit: false },
+			             { field: 'businessRegistrationNumber', displayName: "Business Registration No", enableCellEdit: false},
+			             { field: 'getValueById("subcontractorVenderType", "vendorTypeCode")', displayName: "Vendor Type", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: vtOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
+			             },
+			             { field: 'getValueById("subcontractorVendorStatus", "vendorStatusCode")', displayName: "Vendor Status", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: vsOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
+			             },
+			             { field: 'getValueById("subcontractorApproval", "subcontractorApprovalCode")', 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            		 if(row.entity.subcontractorApproval === 'N'){
+			            		 if(row.entity.subcontractorApprovalCode.indexOf('N') > -1){
 			            			 return 'red';
 			            		 }
 			            	 },
-			            	 displayName: "Approved Subcontractor", enableCellEdit: false
+			            	 displayName: "Approved Subcontractor", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: ynOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
 			             },
-			             { field: 'getValueById("subcontractorHoldPayment","holdPayment")', 
+			             { field: 'paymentOnHold', 
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-			            		 if(row.entity.holdPayment === 'Y' && row.entity.subcontractorApproval !== 'Y'){
+			            		 if(row.entity.paymentOnHold.indexOf('Y') > -1 && row.entity.subcontractorApprovalCode.indexOf('Y') < 0 ){
 			            			 return 'red';
 			            		 }			            	
 			            	 },
-			            	 displayName: "Payment on Hold", enableCellEdit: false
+			            	 displayName: "Payment on Hold", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: ynOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
 			             },
-			             { field: 'getFinanceAlert(scFinancialAlert)', displayName: "on Hold by Finance", enableCellEdit: false},
-			             { field: 'getRecommended()', cellTemplate: '<div class="ui-grid-cell-contents text-center"><i class="fa {{COL_FIELD}}"></i></div>', displayName: "Recommended", enableCellEdit: false},
+			             { field: 'getFinanceAlert("holdCode")', 
+			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+			            		 if(row.entity.holdCode && row.entity.holdCode.trim() !== ''){
+			            			 return 'red';
+			            		 }			            	
+			            	 },
+			            	 displayName: "on Hold by Finance", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: ynOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
+			             },
+			             { field: 'getRecommended()', cellTemplate: '<div class="ui-grid-cell-contents text-center"><i class="fa {{COL_FIELD}}"></i></div>', displayName: "Recommended", enableCellEdit: false,
+			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: rcmOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
+			             }
             			 ]
 	};
 	
@@ -57,19 +99,17 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 	}
 	
 	$scope.loadGridData = function(){
-		if($scope.searchWorkScopes === null && $scope.searchSubcontractorNo === '') {
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
-		} else {
-		subcontractorService.obtainSubcontractorWrappers($scope.searchWorkScopes, $scope.searchSubcontractorNo !== '' ? '*' + $scope.searchSubcontractorNo + '*' : '')
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.convertAbbr(data);
-					$scope.gridOptions.data = data;
-				} 
-			}, function(data){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
-			});
-		}
+//		if($scope.searchWorkScopes === null && $scope.searchSubcontractorNo === '') {
+//			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input work scope or subcontractor to search" ); 
+//		} else {
+		rootscopeService.gettingAddressBookListOfSubcontractor($scope.searchSubcontractorNo, $scope.searchWorkScopes)
+		.then(function(response){
+			if(angular.isArray(response.addressBookListOfSubcontractor)){
+				$scope.convertAbbr(response.addressBookListOfSubcontractor);
+				$scope.gridOptions.data = response.addressBookListOfSubcontractor;
+			}
+		});
+//		}
 	}
 	
 	$scope.filter = function() {
@@ -81,16 +121,34 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
     		d.getValueById = $scope.getValueById;
     		d.getFinanceAlert = $scope.getFinanceAlert;
     		d.getRecommended = $scope.getRecommended;
+    		if(d.payeeMaster){
+    			switch(d.payeeMaster.holdPaymentCode){
+    			case '':
+    				d.paymentOnHold = '-';
+    				break;
+    			case 'N':
+    				d.paymentOnHold = 'No';
+    				break;
+    			case 'Y':
+    				d.paymentOnHold = 'Yes';
+    				break;
+    			}
+    		} else {
+    			d.paymentOnHold = '-';
+    		}
     	})
     }
 	
 	$scope.getValueById = function(arr, id){
 		var obj = this;
-		return GlobalParameter.getValueById(GlobalParameter[arr], obj[id]);
+		if(!id) id ='';
+		var param = obj[id] != null ? obj[id].replace(/ /g,'') : obj[id];
+		return GlobalParameter.getValueById(GlobalParameter[arr], param);
 	}
 	
 	$scope.getFinanceAlert = function(status){
-		if(status != null && status.length > 0){
+		var obj = this;
+		if(obj[status] != null && obj[status].trim().length > 0){
 			return "Yes";
 		} else {
 			return "No";
@@ -99,13 +157,15 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 	
 	$scope.getRecommended = function(){
 		var obj = this;
-		if(obj['subcontractorApproval'].indexOf('Y') > -1 &&
-				obj['holdPayment'].indexOf('N') > -1 &&
-				obj['scFinancialAlert'] === ''){
+		if(obj['subcontractorApprovalCode'].indexOf('N') < 0 &&
+				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('N') > -1) &&
+				obj['holdCode'].trim() == ''){
 			return 'text-warning fa-thumbs-up';
-		} else if(obj['subcontractorApproval'].indexOf('N') > -1 &&
-				obj['holdPayment'].indexOf('Y') > -1){
+		} else if(obj['subcontractorApprovalCode'].indexOf('N') > -1 &&
+				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('Y') > -1)){
 			return 'text-danger fa-thumbs-down';
+		} else {
+			return '-';
 		}
 	}
 	

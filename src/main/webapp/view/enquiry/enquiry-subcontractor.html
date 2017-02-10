@@ -23,7 +23,7 @@
 								</div>
 								<div class="col-md-5">
 								<label for="searchWorkScopes">Work Scope (Trade)</label>
-									<select class="form-control" id="searchWorkScopes" ng-model="searchWorkScopes" ng-options="v.code as (v.code + ' - ' + v.description) for v in allWorkScopes">
+									<select class="form-control" id="searchWorkScopes" ng-model="searchWorkScopes" ng-options="v.codeWorkscope.trim() as (v.codeWorkscope.trim() + ' - ' + v.workscopeDescription.trim()) for v in allWorkScopes">
 										<option value="">All</option>
 									</select>
 								</div>

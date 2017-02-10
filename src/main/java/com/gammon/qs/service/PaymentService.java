@@ -31,12 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.GetPeriodYearManager.getPeriodYearByCompany.GetPeriodYearResponseObj;
-import com.gammon.pcms.application.User;
 import com.gammon.pcms.aspect.CanAccessJobChecking;
 import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
-import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -158,10 +156,6 @@ public class PaymentService{
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
 	@Autowired
 	private SubcontractService subcontractService;
-	@Autowired
-	private SecurityService securityService;
-	@Autowired
-	private SecurityConfig securityConfig;
 	@Autowired
 	private AdminService adminService;
 	
@@ -1828,7 +1822,7 @@ public class PaymentService{
 			tempscPaymentCertWrapper.setCertIssueDate(certIssueDate);
 		logger.info("dueDate : " + tempscPaymentCertWrapper.getDueDate() + " certIssueDate : " + tempscPaymentCertWrapper.getCertIssueDate());
 		
-		User user = securityService.getCurrentUser();
+//		User user = securityService.getCurrentUser();
 		List<PaymentCertWrapper> scPaymentCertWrapperList = new ArrayList<>();
 //		if(jobNo == null && !user.hasRole(securityConfig.getRolePcmsJobAll())){
 //			List<String> canAccessJobList = adminService.obtainCanAccessJobNoList();

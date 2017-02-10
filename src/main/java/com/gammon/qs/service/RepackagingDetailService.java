@@ -33,7 +33,6 @@ import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.RepackagingDetail;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.admin.EnvironmentConfig;
-import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
@@ -68,8 +67,6 @@ public class RepackagingDetailService implements Serializable {
 	private transient WebServiceConfig webServiceConfig;
 	@Autowired
 	private transient EnvironmentConfig environmentConfig;
-	@Autowired
-	private SecurityService securityService;
 	
 	private List<RepackagingDetailComparisonWrapper> cachedResults = new ArrayList<RepackagingDetailComparisonWrapper>();
 	private Double totalBudget;
@@ -78,6 +75,7 @@ public class RepackagingDetailService implements Serializable {
 	private Double previousMarkup;
 	
 	static final int RECORDS_PER_PAGE = 200;  
+	@SuppressWarnings("unused")
 	private static final String ROLE_QS_APPROVER_ID = "ROLE_QS_APPROVER";
 
 	public Repackaging generateResourceSummaries(JobInfo job) throws Exception {
@@ -249,7 +247,7 @@ public class RepackagingDetailService implements Serializable {
 			return Boolean.FALSE;
 		}
 		//username to UPPERCASE
-		String username = securityService.getCurrentUser().getUsername().toUpperCase();
+//		String username = securityService.getCurrentUser().getUsername().toUpperCase();
 		//Insert new details
 		List<InsertRepackagingBudgetRequestObj> insertRequestList = repackagingDetailDao.preparePostingOfRepackagingDetails(repackagingEntry);
 		Date postingDate = new Date();

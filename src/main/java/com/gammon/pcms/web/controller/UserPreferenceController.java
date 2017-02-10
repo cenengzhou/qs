@@ -80,13 +80,13 @@ public class UserPreferenceController {
 		return preferenceMap;
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','saveGridPreference', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "saveGridPreference", method = RequestMethod.POST)
 	public void saveGridPreference(@RequestBody Map<String, String> preference){
 		userPreferenceService.saveGridPreference(preference);
 	}
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','clearGridPreference', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "clearGridPreference", method = RequestMethod.POST)
 	public void clearGridPreference(@RequestParam String gridName){
 		userPreferenceService.clearGridPreference(gridName);

@@ -5,7 +5,8 @@ mainApp.service('subcontractorService', ['$http', '$q', 'GlobalHelper',  functio
     	obtainClientWrappers:	obtainClientWrappers,
     	obtainSubconctractorStatistics:	obtainSubconctractorStatistics,
     	obtainPackagesByVendorNo: obtainPackagesByVendorNo,
-    	obtainTenderAnalysisWrapperByVendorNo: obtainTenderAnalysisWrapperByVendorNo
+    	obtainTenderAnalysisWrapperByVendorNo: obtainTenderAnalysisWrapperByVendorNo,
+    	obtainWorkscopeByVendorNo:	obtainWorkscopeByVendorNo
     });
    
     function obtainSubcontractorWrappers(workScope, subcontractor){
@@ -56,6 +57,17 @@ mainApp.service('subcontractorService', ['$http', '$q', 'GlobalHelper',  functio
     function obtainTenderAnalysisWrapperByVendorNo(vendorNo){
     	var request = $http({
     		url: 'service/subcontractor/obtainTenderAnalysisWrapperByVendorNo',
+    		method: 'POST',
+    		params: {
+    			vendorNo: vendorNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function obtainWorkscopeByVendorNo(vendorNo){
+    	var request = $http({
+    		url: 'service/subcontractor/obtainWorkscopeByVendorNo',
     		method: 'POST',
     		params: {
     			vendorNo: vendorNo

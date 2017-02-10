@@ -25,6 +25,7 @@ import com.gammon.pcms.dao.adl.AddressBookDao;
 import com.gammon.pcms.dao.adl.ApprovalDetailDao;
 import com.gammon.pcms.dao.adl.ApprovalHeaderDao;
 import com.gammon.pcms.dao.adl.BusinessUnitDao;
+import com.gammon.pcms.dao.adl.SubcontractorWorkscopeDao;
 import com.gammon.pcms.model.adl.AccountBalance;
 import com.gammon.pcms.model.adl.AccountBalanceSC;
 import com.gammon.pcms.model.adl.AccountLedger;
@@ -33,6 +34,7 @@ import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.pcms.model.adl.ApprovalDetail;
 import com.gammon.pcms.model.adl.ApprovalHeader;
 import com.gammon.pcms.model.adl.BusinessUnit;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.service.RepackagingService;
 import com.gammon.qs.service.admin.AdminService;
@@ -67,7 +69,8 @@ public class ADLService {
 	private RepackagingService repackagingService;
 	@Autowired
 	private AdminService adminService;
-	
+	@Autowired
+	private SubcontractorWorkscopeDao subcontractorWorkscopeDao;
 	/*
 	 * ----------------------------------------------- JDE @ Data Layer -----------------------------------------------
 	 */
@@ -267,13 +270,21 @@ public class ADLService {
 		return accountMasterDao.findByAccountCode(noJob, codeObject, codeSubsidiary);
 	}
 	
-	public List<AddressBook> getAddressBookListOfSubcontractorAndClient(){
+	public List<AddressBook> getAddressBookListOfSubcontractorAndClient() throws Exception{
 		List<String> addressBookTypeList = new ArrayList<String>();
 		// should be enum of AddressBook class
 		addressBookTypeList.add(AddressBook.TYPE_VENDOR);
 		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
-		
-		return addressBookDao.findByAddressBookTypeList(addressBookTypeList);
+//		Map<String, Set<String>> subcontractorWorkscopeMap = masterListService.obtainSubcontractorWorkScopeMap(null, null);
+		List<AddressBook> addressBookList = addressBookDao.findByAddressBookTypeList(addressBookTypeList);
+//		for(AddressBook addressBook : addressBookList) {
+//			PayeeMaster payeeMaster = payeeMasterHBDao.find(addressBook.getAddressBookNumber());
+//			if(payeeMaster != null){
+//				addressBook.setHoldPaymentCode(payeeMaster.getHoldPaymentCode());
+//			}
+//			addressBook.setWorkScopeList(subcontractorWorkscopeMap.get(addressBook.getAddressBookNumber().toString()));
+//		}
+		return addressBookList;
 	}
 	
 	public AddressBook getAddressBook(BigDecimal addressBookNo) throws DataAccessException {
@@ -414,5 +425,9 @@ public class ADLService {
 			}
 		}
 		return resultList;
+	}
+	
+	public List<SubcontractorWorkscope> getAllWorkScopes() throws DatabaseOperationException{
+		return subcontractorWorkscopeDao.getAllWorkScopes();
 	}
 }

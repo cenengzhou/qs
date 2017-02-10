@@ -37,7 +37,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.config.AdminTestConfig;
-import com.gammon.pcms.config.SecurityConfig;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dto.rs.consumer.gsf.GetFunctionSecurity;
 import com.gammon.pcms.helper.RestTemplateHelper;
@@ -61,8 +60,6 @@ public class AdminTestController implements InitializingBean{
 	@Autowired
 	private WebServiceConfig webServiceConfig;
 	@Autowired
-	private SecurityConfig securityConfig;
-	@Autowired
 	private ObjectMapper objectMapper;	
 	@PersistenceContext(unitName = "PersistenceUnit")
 	protected EntityManager entityManager;
@@ -80,6 +77,7 @@ public class AdminTestController implements InitializingBean{
 	
 	private List<TestCase> testCaseList;
 	private Map<String, Object> beans = new HashMap<>();
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 	
 	private final Map<String, String> resultMap = new LinkedHashMap<>();

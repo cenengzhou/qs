@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -528,6 +533,26 @@ public class MasterListWSDao{
 				return curVendor;
 		}
 		return null;
+	}
+	
+	public Map<String, Set<String>> obtainSubcontractorWorkScopeMap(String subcontractorNo, String workscope){
+		GetSubcontractorWSRequestObj requestObj = new GetSubcontractorWSRequestObj();
+		Map<String, Set<String>> subcontractorWorkscopeMap = new TreeMap<>();
+		requestObj.setSupplementalDatabaseCode("AB");
+		requestObj.setTypeofData("WS");
+		if(StringUtils.isNotEmpty(workscope)) requestObj.setUserDefinedCode(workscope);
+		if(StringUtils.isNotEmpty(subcontractorNo)) requestObj.setSuppDataNumericKey1(new Integer(subcontractorNo));
+		GetSubcontractorWSResponseListObj responseListObj = (GetSubcontractorWSResponseListObj) getSubcontractorWorkScopeWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
+		for (GetSubcontractorWSResponseObj curResponseObj : responseListObj.getGetSubcontractorWSResponseObj()) {
+			String subcon = curResponseObj.getSuppDataNumericKey1().toString();
+			if(subcontractorWorkscopeMap.get(subcon) == null) {
+				subcontractorWorkscopeMap.put(subcon, new TreeSet<String>());
+			}
+			if(StringUtils.isNotEmpty(curResponseObj.getUserDefinedCode())) {
+				subcontractorWorkscopeMap.get(subcon).add(curResponseObj.getUserDefinedCode().trim());
+			}
+		}
+		return subcontractorWorkscopeMap;
 	}
 	
 	/**

@@ -313,9 +313,32 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 		}
 	}
 	var approveOptions = [
+		{label: '--', value:"--"},
         {label: 'Approved', value:"Approved"},
         {label: 'Not Approved', value:"Not Approved"}
         ];
+	
+	$scope.getValueById = function(array, id){
+		var param = id != null ? id.replace(/ /g,'') : id;
+		for (var i = 0; i < array.length; i++) {
+			switch(param){
+			case '':
+				param = '--';
+				break;
+			case 'Y':
+				param = 'Approved';
+				break;
+			case 'N':
+				param = 'Not Approved';
+				break;
+			}
+	        if (array[i].label === param) {
+	            return array[i].value;
+	        }
+	    }
+		return null;
+	}
+	
 	$scope.AddressBookGridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,
@@ -335,7 +358,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 			            	filter:{condition: uiGridConstants.filter.EXACT} 
 			             },
 			             { field: 'addressBookName', displayName: "Name", width: '100', enableCellEdit: false },
-			             { field: 'subcontractorApproval', displayName: "Approved", width: '80', enableCellEdit: false, headerCellClass:'gridHeaderText',
+			             { field: 'approved', displayName: "Approved", width: '80', enableCellEdit: false, headerCellClass:'gridHeaderText',
 			            	 filter: { selectOptions: approveOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}, 
 			             },
             			 ]
@@ -348,10 +371,13 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	
 	$scope.AddressBookloadGridData = function(){
 		if($scope.addressLoaded === false){
-			adlService.getAddressBookListOfSubcontractorAndClient()
-		    .then(function(data) {
-				if(angular.isArray(data)){
-					$scope.AddressBookGridOptions.data = data;
+			rootscopeService.gettingAddressBookListOfSubcontractorAndClient()
+		    .then(function(response) {
+				if(angular.isArray(response.addressBookListOfSubcontractorAndClient)){
+					response.addressBookListOfSubcontractorAndClient.forEach(function(addressBook){
+						addressBook.approved = $scope.getValueById(approveOptions, addressBook.subcontractorApprovalCode);
+					})
+					$scope.AddressBookGridOptions.data = response.addressBookListOfSubcontractorAndClient;
 					$scope.addressLoaded = true;
 				}
 		}, function(data){

@@ -2,10 +2,13 @@ package com.gammon.pcms.model.adl;
 // Generated Jul 25, 2016 6:30:47 PM by Hibernate Tools 4.3.4.Final
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -23,27 +26,32 @@ public class AddressBook implements java.io.Serializable {
 	public static final String TYPE_VENDOR = "V  ";
 	public static final String TYPE_CLIENT = "C  ";
 	
-	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private BigDecimal addressBookNumber;
-	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String addressBookName;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String businessRegistrationNumber;
 	private String securityBu;
 	private String vendorApprStatusCode;
 	private String vendorApprovalStatus;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String addressBookTypeCode;
 	private String addrBookType;
 	private String supplierApprovalCode;
 	private String supplierApproval;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String subcontractorApprovalCode;
-	@JsonView(AddressBookView.NameAndCodeAndApproved.class)
 	private String subcontractorApproval;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String vendorTypeCode;
 	private String vendorType;
 	private String clientGroupCode;
 	private String clientGroup;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String vendorStatusCode;
 	private String vendorStatus;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String holdCode;
 	private String hold;
 	private String vmsExemptedCode;
@@ -52,7 +60,11 @@ public class AddressBook implements java.io.Serializable {
 	private String proposedVendor;
 	private String businessSectorCode;
 	private String businessSector;
-
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	private PayeeMaster payeeMaster;
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	private List<SubcontractorWorkscope> subcontractorWorkscopes;
+	
 	public AddressBook() {
 	}
 
@@ -92,7 +104,7 @@ public class AddressBook implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "ADDRESS_BOOK_NUMBER", precision = 22, scale = 0)
+	@Column(name = "ADDRESS_BOOK_NUMBER", insertable=false, updatable=false, precision = 22, scale = 0)
 	public BigDecimal getAddressBookNumber() {
 		return this.addressBookNumber;
 	}
@@ -101,7 +113,7 @@ public class AddressBook implements java.io.Serializable {
 		this.addressBookNumber = addressBookNumber;
 	}
 
-	@Column(name = "ADDRESS_BOOK_NAME", length = 160)
+	@Column(name = "ADDRESS_BOOK_NAME", insertable=false, updatable=false, length = 160)
 	public String getAddressBookName() {
 		return this.addressBookName;
 	}
@@ -110,7 +122,7 @@ public class AddressBook implements java.io.Serializable {
 		this.addressBookName = addressBookName;
 	}
 
-	@Column(name = "BUSINESS_REGISTRATION_NUMBER", length = 80)
+	@Column(name = "BUSINESS_REGISTRATION_NUMBER", insertable=false, updatable=false, length = 80)
 	public String getBusinessRegistrationNumber() {
 		return this.businessRegistrationNumber;
 	}
@@ -119,7 +131,7 @@ public class AddressBook implements java.io.Serializable {
 		this.businessRegistrationNumber = businessRegistrationNumber;
 	}
 
-	@Column(name = "SECURITY_BU", length = 48)
+	@Column(name = "SECURITY_BU", insertable=false, updatable=false, length = 48)
 	public String getSecurityBu() {
 		return this.securityBu;
 	}
@@ -128,7 +140,7 @@ public class AddressBook implements java.io.Serializable {
 		this.securityBu = securityBu;
 	}
 
-	@Column(name = "VENDOR_APPR_STATUS_CODE", length = 40)
+	@Column(name = "VENDOR_APPR_STATUS_CODE", insertable=false, updatable=false, length = 40)
 	public String getVendorApprStatusCode() {
 		return this.vendorApprStatusCode;
 	}
@@ -137,7 +149,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorApprStatusCode = vendorApprStatusCode;
 	}
 
-	@Column(name = "VENDOR_APPROVAL_STATUS", length = 244)
+	@Column(name = "VENDOR_APPROVAL_STATUS", insertable=false, updatable=false, length = 244)
 	public String getVendorApprovalStatus() {
 		return this.vendorApprovalStatus;
 	}
@@ -146,7 +158,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorApprovalStatus = vendorApprovalStatus;
 	}
 
-	@Column(name = "ADDRESS_BOOK_TYPE_CODE", length = 12)
+	@Column(name = "ADDRESS_BOOK_TYPE_CODE", insertable=false, updatable=false, length = 12)
 	public String getAddressBookTypeCode() {
 		return this.addressBookTypeCode;
 	}
@@ -155,7 +167,7 @@ public class AddressBook implements java.io.Serializable {
 		this.addressBookTypeCode = addressBookTypeCode;
 	}
 
-	@Column(name = "ADDR_BOOK_TYPE", length = 244)
+	@Column(name = "ADDR_BOOK_TYPE", insertable=false, updatable=false, length = 244)
 	public String getAddrBookType() {
 		return this.addrBookType;
 	}
@@ -164,7 +176,7 @@ public class AddressBook implements java.io.Serializable {
 		this.addrBookType = addrBookType;
 	}
 
-	@Column(name = "SUPPLIER_APPROVAL_CODE", length = 12)
+	@Column(name = "SUPPLIER_APPROVAL_CODE", insertable=false, updatable=false, length = 12)
 	public String getSupplierApprovalCode() {
 		return this.supplierApprovalCode;
 	}
@@ -173,7 +185,7 @@ public class AddressBook implements java.io.Serializable {
 		this.supplierApprovalCode = supplierApprovalCode;
 	}
 
-	@Column(name = "SUPPLIER_APPROVAL", length = 244)
+	@Column(name = "SUPPLIER_APPROVAL", insertable=false, updatable=false, length = 244)
 	public String getSupplierApproval() {
 		return this.supplierApproval;
 	}
@@ -182,7 +194,7 @@ public class AddressBook implements java.io.Serializable {
 		this.supplierApproval = supplierApproval;
 	}
 
-	@Column(name = "SUBCONTRACTOR_APPROVAL_CODE", length = 12)
+	@Column(name = "SUBCONTRACTOR_APPROVAL_CODE", insertable=false, updatable=false, length = 12)
 	public String getSubcontractorApprovalCode() {
 		return this.subcontractorApprovalCode;
 	}
@@ -191,7 +203,7 @@ public class AddressBook implements java.io.Serializable {
 		this.subcontractorApprovalCode = subcontractorApprovalCode;
 	}
 
-	@Column(name = "SUBCONTRACTOR_APPROVAL", length = 244)
+	@Column(name = "SUBCONTRACTOR_APPROVAL", insertable=false, updatable=false, length = 244)
 	public String getSubcontractorApproval() {
 		return this.subcontractorApproval;
 	}
@@ -200,7 +212,7 @@ public class AddressBook implements java.io.Serializable {
 		this.subcontractorApproval = subcontractorApproval;
 	}
 
-	@Column(name = "VENDOR_TYPE_CODE", length = 12)
+	@Column(name = "VENDOR_TYPE_CODE", insertable=false, updatable=false, length = 12)
 	public String getVendorTypeCode() {
 		return this.vendorTypeCode;
 	}
@@ -209,7 +221,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorTypeCode = vendorTypeCode;
 	}
 
-	@Column(name = "VENDOR_TYPE", length = 244)
+	@Column(name = "VENDOR_TYPE", insertable=false, updatable=false, length = 244)
 	public String getVendorType() {
 		return this.vendorType;
 	}
@@ -218,7 +230,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorType = vendorType;
 	}
 
-	@Column(name = "CLIENT_GROUP_CODE", length = 12)
+	@Column(name = "CLIENT_GROUP_CODE", insertable=false, updatable=false, length = 12)
 	public String getClientGroupCode() {
 		return this.clientGroupCode;
 	}
@@ -227,7 +239,7 @@ public class AddressBook implements java.io.Serializable {
 		this.clientGroupCode = clientGroupCode;
 	}
 
-	@Column(name = "CLIENT_GROUP", length = 244)
+	@Column(name = "CLIENT_GROUP", insertable=false, updatable=false, length = 244)
 	public String getClientGroup() {
 		return this.clientGroup;
 	}
@@ -236,7 +248,7 @@ public class AddressBook implements java.io.Serializable {
 		this.clientGroup = clientGroup;
 	}
 
-	@Column(name = "VENDOR_STATUS_CODE", length = 12)
+	@Column(name = "VENDOR_STATUS_CODE", insertable=false, updatable=false, length = 12)
 	public String getVendorStatusCode() {
 		return this.vendorStatusCode;
 	}
@@ -245,7 +257,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorStatusCode = vendorStatusCode;
 	}
 
-	@Column(name = "VENDOR_STATUS", length = 244)
+	@Column(name = "VENDOR_STATUS", insertable=false, updatable=false, length = 244)
 	public String getVendorStatus() {
 		return this.vendorStatus;
 	}
@@ -254,7 +266,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vendorStatus = vendorStatus;
 	}
 
-	@Column(name = "HOLD_CODE", length = 12)
+	@Column(name = "HOLD_CODE", insertable=false, updatable=false, length = 12)
 	public String getHoldCode() {
 		return this.holdCode;
 	}
@@ -263,7 +275,7 @@ public class AddressBook implements java.io.Serializable {
 		this.holdCode = holdCode;
 	}
 
-	@Column(name = "HOLD", length = 244)
+	@Column(name = "HOLD", insertable=false, updatable=false, length = 244)
 	public String getHold() {
 		return this.hold;
 	}
@@ -272,7 +284,7 @@ public class AddressBook implements java.io.Serializable {
 		this.hold = hold;
 	}
 
-	@Column(name = "VMS_EXEMPTED_CODE", length = 12)
+	@Column(name = "VMS_EXEMPTED_CODE", insertable=false, updatable=false, length = 12)
 	public String getVmsExemptedCode() {
 		return this.vmsExemptedCode;
 	}
@@ -281,7 +293,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vmsExemptedCode = vmsExemptedCode;
 	}
 
-	@Column(name = "VMS_EXEMPTED", length = 244)
+	@Column(name = "VMS_EXEMPTED", insertable=false, updatable=false, length = 244)
 	public String getVmsExempted() {
 		return this.vmsExempted;
 	}
@@ -290,7 +302,7 @@ public class AddressBook implements java.io.Serializable {
 		this.vmsExempted = vmsExempted;
 	}
 
-	@Column(name = "PROPOSED_VENDOR_CODE", length = 12)
+	@Column(name = "PROPOSED_VENDOR_CODE", insertable=false, updatable=false, length = 12)
 	public String getProposedVendorCode() {
 		return this.proposedVendorCode;
 	}
@@ -299,7 +311,7 @@ public class AddressBook implements java.io.Serializable {
 		this.proposedVendorCode = proposedVendorCode;
 	}
 
-	@Column(name = "PROPOSED_VENDOR", length = 244)
+	@Column(name = "PROPOSED_VENDOR", insertable=false, updatable=false, length = 244)
 	public String getProposedVendor() {
 		return this.proposedVendor;
 	}
@@ -308,7 +320,7 @@ public class AddressBook implements java.io.Serializable {
 		this.proposedVendor = proposedVendor;
 	}
 
-	@Column(name = "BUSINESS_SECTOR_CODE", length = 12)
+	@Column(name = "BUSINESS_SECTOR_CODE", insertable=false, updatable=false, length = 12)
 	public String getBusinessSectorCode() {
 		return this.businessSectorCode;
 	}
@@ -317,7 +329,7 @@ public class AddressBook implements java.io.Serializable {
 		this.businessSectorCode = businessSectorCode;
 	}
 
-	@Column(name = "BUSINESS_SECTOR", length = 244)
+	@Column(name = "BUSINESS_SECTOR", insertable=false, updatable=false, length = 244)
 	public String getBusinessSector() {
 		return this.businessSector;
 	}
@@ -326,127 +338,38 @@ public class AddressBook implements java.io.Serializable {
 		this.businessSector = businessSector;
 	}
 
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof AddressBook))
-			return false;
-		AddressBook castOther = (AddressBook) other;
-
-		return ((this.getAddressBookNumber() == castOther.getAddressBookNumber())
-				|| (this.getAddressBookNumber() != null && castOther.getAddressBookNumber() != null
-						&& this.getAddressBookNumber().equals(castOther.getAddressBookNumber())))
-				&& ((this.getAddressBookName() == castOther.getAddressBookName())
-						|| (this.getAddressBookName() != null && castOther.getAddressBookName() != null
-								&& this.getAddressBookName().equals(castOther.getAddressBookName())))
-				&& ((this.getBusinessRegistrationNumber() == castOther.getBusinessRegistrationNumber())
-						|| (this.getBusinessRegistrationNumber() != null
-								&& castOther.getBusinessRegistrationNumber() != null
-								&& this.getBusinessRegistrationNumber()
-										.equals(castOther.getBusinessRegistrationNumber())))
-				&& ((this.getSecurityBu() == castOther.getSecurityBu()) || (this.getSecurityBu() != null
-						&& castOther.getSecurityBu() != null && this.getSecurityBu().equals(castOther.getSecurityBu())))
-				&& ((this.getVendorApprStatusCode() == castOther.getVendorApprStatusCode())
-						|| (this.getVendorApprStatusCode() != null && castOther.getVendorApprStatusCode() != null
-								&& this.getVendorApprStatusCode().equals(castOther.getVendorApprStatusCode())))
-				&& ((this.getVendorApprovalStatus() == castOther.getVendorApprovalStatus())
-						|| (this.getVendorApprovalStatus() != null && castOther.getVendorApprovalStatus() != null
-								&& this.getVendorApprovalStatus().equals(castOther.getVendorApprovalStatus())))
-				&& ((this.getAddressBookTypeCode() == castOther.getAddressBookTypeCode())
-						|| (this.getAddressBookTypeCode() != null && castOther.getAddressBookTypeCode() != null
-								&& this.getAddressBookTypeCode().equals(castOther.getAddressBookTypeCode())))
-				&& ((this.getAddrBookType() == castOther.getAddrBookType())
-						|| (this.getAddrBookType() != null && castOther.getAddrBookType() != null
-								&& this.getAddrBookType().equals(castOther.getAddrBookType())))
-				&& ((this.getSupplierApprovalCode() == castOther.getSupplierApprovalCode())
-						|| (this.getSupplierApprovalCode() != null && castOther.getSupplierApprovalCode() != null
-								&& this.getSupplierApprovalCode().equals(castOther.getSupplierApprovalCode())))
-				&& ((this.getSupplierApproval() == castOther.getSupplierApproval())
-						|| (this.getSupplierApproval() != null && castOther.getSupplierApproval() != null
-								&& this.getSupplierApproval().equals(castOther.getSupplierApproval())))
-				&& ((this.getSubcontractorApprovalCode() == castOther.getSubcontractorApprovalCode())
-						|| (this.getSubcontractorApprovalCode() != null
-								&& castOther.getSubcontractorApprovalCode() != null
-								&& this.getSubcontractorApprovalCode()
-										.equals(castOther.getSubcontractorApprovalCode())))
-				&& ((this.getSubcontractorApproval() == castOther.getSubcontractorApproval())
-						|| (this.getSubcontractorApproval() != null && castOther.getSubcontractorApproval() != null
-								&& this.getSubcontractorApproval().equals(castOther.getSubcontractorApproval())))
-				&& ((this.getVendorTypeCode() == castOther.getVendorTypeCode())
-						|| (this.getVendorTypeCode() != null && castOther.getVendorTypeCode() != null
-								&& this.getVendorTypeCode().equals(castOther.getVendorTypeCode())))
-				&& ((this.getVendorType() == castOther.getVendorType()) || (this.getVendorType() != null
-						&& castOther.getVendorType() != null && this.getVendorType().equals(castOther.getVendorType())))
-				&& ((this.getClientGroupCode() == castOther.getClientGroupCode())
-						|| (this.getClientGroupCode() != null && castOther.getClientGroupCode() != null
-								&& this.getClientGroupCode().equals(castOther.getClientGroupCode())))
-				&& ((this.getClientGroup() == castOther.getClientGroup())
-						|| (this.getClientGroup() != null && castOther.getClientGroup() != null
-								&& this.getClientGroup().equals(castOther.getClientGroup())))
-				&& ((this.getVendorStatusCode() == castOther.getVendorStatusCode())
-						|| (this.getVendorStatusCode() != null && castOther.getVendorStatusCode() != null
-								&& this.getVendorStatusCode().equals(castOther.getVendorStatusCode())))
-				&& ((this.getVendorStatus() == castOther.getVendorStatus())
-						|| (this.getVendorStatus() != null && castOther.getVendorStatus() != null
-								&& this.getVendorStatus().equals(castOther.getVendorStatus())))
-				&& ((this.getHoldCode() == castOther.getHoldCode()) || (this.getHoldCode() != null
-						&& castOther.getHoldCode() != null && this.getHoldCode().equals(castOther.getHoldCode())))
-				&& ((this.getHold() == castOther.getHold()) || (this.getHold() != null && castOther.getHold() != null
-						&& this.getHold().equals(castOther.getHold())))
-				&& ((this.getVmsExemptedCode() == castOther.getVmsExemptedCode())
-						|| (this.getVmsExemptedCode() != null && castOther.getVmsExemptedCode() != null
-								&& this.getVmsExemptedCode().equals(castOther.getVmsExemptedCode())))
-				&& ((this.getVmsExempted() == castOther.getVmsExempted())
-						|| (this.getVmsExempted() != null && castOther.getVmsExempted() != null
-								&& this.getVmsExempted().equals(castOther.getVmsExempted())))
-				&& ((this.getProposedVendorCode() == castOther.getProposedVendorCode())
-						|| (this.getProposedVendorCode() != null && castOther.getProposedVendorCode() != null
-								&& this.getProposedVendorCode().equals(castOther.getProposedVendorCode())))
-				&& ((this.getProposedVendor() == castOther.getProposedVendor())
-						|| (this.getProposedVendor() != null && castOther.getProposedVendor() != null
-								&& this.getProposedVendor().equals(castOther.getProposedVendor())))
-				&& ((this.getBusinessSectorCode() == castOther.getBusinessSectorCode())
-						|| (this.getBusinessSectorCode() != null && castOther.getBusinessSectorCode() != null
-								&& this.getBusinessSectorCode().equals(castOther.getBusinessSectorCode())))
-				&& ((this.getBusinessSector() == castOther.getBusinessSector())
-						|| (this.getBusinessSector() != null && castOther.getBusinessSector() != null
-								&& this.getBusinessSector().equals(castOther.getBusinessSector())));
+	//bi-directional many-to-one association to SubcontractorWorkscope
+	@OneToMany(mappedBy="addressBook")
+	public List<SubcontractorWorkscope> getSubcontractorWorkscopes() {
+		return this.subcontractorWorkscopes;
 	}
 
-	public int hashCode() {
-		int result = 17;
+	public void setSubcontractorWorkscopes(List<SubcontractorWorkscope> subcontractorWorkscopes) {
+		this.subcontractorWorkscopes = subcontractorWorkscopes;
+	}
 
-		result = 37 * result + (getAddressBookNumber() == null ? 0 : this.getAddressBookNumber().hashCode());
-		result = 37 * result + (getAddressBookName() == null ? 0 : this.getAddressBookName().hashCode());
-		result = 37 * result
-				+ (getBusinessRegistrationNumber() == null ? 0 : this.getBusinessRegistrationNumber().hashCode());
-		result = 37 * result + (getSecurityBu() == null ? 0 : this.getSecurityBu().hashCode());
-		result = 37 * result + (getVendorApprStatusCode() == null ? 0 : this.getVendorApprStatusCode().hashCode());
-		result = 37 * result + (getVendorApprovalStatus() == null ? 0 : this.getVendorApprovalStatus().hashCode());
-		result = 37 * result + (getAddressBookTypeCode() == null ? 0 : this.getAddressBookTypeCode().hashCode());
-		result = 37 * result + (getAddrBookType() == null ? 0 : this.getAddrBookType().hashCode());
-		result = 37 * result + (getSupplierApprovalCode() == null ? 0 : this.getSupplierApprovalCode().hashCode());
-		result = 37 * result + (getSupplierApproval() == null ? 0 : this.getSupplierApproval().hashCode());
-		result = 37 * result
-				+ (getSubcontractorApprovalCode() == null ? 0 : this.getSubcontractorApprovalCode().hashCode());
-		result = 37 * result + (getSubcontractorApproval() == null ? 0 : this.getSubcontractorApproval().hashCode());
-		result = 37 * result + (getVendorTypeCode() == null ? 0 : this.getVendorTypeCode().hashCode());
-		result = 37 * result + (getVendorType() == null ? 0 : this.getVendorType().hashCode());
-		result = 37 * result + (getClientGroupCode() == null ? 0 : this.getClientGroupCode().hashCode());
-		result = 37 * result + (getClientGroup() == null ? 0 : this.getClientGroup().hashCode());
-		result = 37 * result + (getVendorStatusCode() == null ? 0 : this.getVendorStatusCode().hashCode());
-		result = 37 * result + (getVendorStatus() == null ? 0 : this.getVendorStatus().hashCode());
-		result = 37 * result + (getHoldCode() == null ? 0 : this.getHoldCode().hashCode());
-		result = 37 * result + (getHold() == null ? 0 : this.getHold().hashCode());
-		result = 37 * result + (getVmsExemptedCode() == null ? 0 : this.getVmsExemptedCode().hashCode());
-		result = 37 * result + (getVmsExempted() == null ? 0 : this.getVmsExempted().hashCode());
-		result = 37 * result + (getProposedVendorCode() == null ? 0 : this.getProposedVendorCode().hashCode());
-		result = 37 * result + (getProposedVendor() == null ? 0 : this.getProposedVendor().hashCode());
-		result = 37 * result + (getBusinessSectorCode() == null ? 0 : this.getBusinessSectorCode().hashCode());
-		result = 37 * result + (getBusinessSector() == null ? 0 : this.getBusinessSector().hashCode());
-		return result;
+	public SubcontractorWorkscope addSubcontractorWorkscope(SubcontractorWorkscope subcontractorWorkscope) {
+		getSubcontractorWorkscopes().add(subcontractorWorkscope);
+		subcontractorWorkscope.setAddressBook(this);
+
+		return subcontractorWorkscope;
+	}
+
+	public SubcontractorWorkscope removeSubcontractorWorkscope(SubcontractorWorkscope subcontractorWorkscope) {
+		getSubcontractorWorkscopes().remove(subcontractorWorkscope);
+		subcontractorWorkscope.setAddressBook(null);
+
+		return subcontractorWorkscope;
+	}
+
+	//bi-directional one-to-one association to PayeeMaster
+	@OneToOne (mappedBy="addressBook")
+	public PayeeMaster getPayeeMaster() {
+		return this.payeeMaster;
+	}
+
+	public void setPayeeMaster(PayeeMaster payeeMaster) {
+		this.payeeMaster = payeeMaster;
 	}
 
 	/* (non-Javadoc)
@@ -465,7 +388,262 @@ public class AddressBook implements java.io.Serializable {
 				+ vendorStatusCode + ", vendorStatus=" + vendorStatus + ", holdCode=" + holdCode + ", hold=" + hold
 				+ ", vmsExemptedCode=" + vmsExemptedCode + ", vmsExempted=" + vmsExempted + ", proposedVendorCode="
 				+ proposedVendorCode + ", proposedVendor=" + proposedVendor + ", businessSectorCode="
-				+ businessSectorCode + ", businessSector=" + businessSector + "]";
+				+ businessSectorCode + ", businessSector=" + businessSector + ", PayeeMaster.holdPaymentCode=" 
+				+ (payeeMaster != null && payeeMaster.getHoldPaymentCode() != null ? payeeMaster.getHoldPaymentCode() : "null")
+				+ ", SubcontractorWorkscopes=" + subcontractorWorkscopes + "]";
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((payeeMaster == null) ? 0 : payeeMaster.hashCode());
+		result = prime * result + ((subcontractorWorkscopes == null) ? 0 : subcontractorWorkscopes.hashCode());
+		result = prime * result + ((addrBookType == null) ? 0 : addrBookType.hashCode());
+		result = prime * result + ((addressBookName == null) ? 0 : addressBookName.hashCode());
+		result = prime * result + ((addressBookNumber == null) ? 0 : addressBookNumber.hashCode());
+		result = prime * result + ((addressBookTypeCode == null) ? 0 : addressBookTypeCode.hashCode());
+		result = prime * result + ((businessRegistrationNumber == null) ? 0 : businessRegistrationNumber.hashCode());
+		result = prime * result + ((businessSector == null) ? 0 : businessSector.hashCode());
+		result = prime * result + ((businessSectorCode == null) ? 0 : businessSectorCode.hashCode());
+		result = prime * result + ((clientGroup == null) ? 0 : clientGroup.hashCode());
+		result = prime * result + ((clientGroupCode == null) ? 0 : clientGroupCode.hashCode());
+		result = prime * result + ((hold == null) ? 0 : hold.hashCode());
+		result = prime * result + ((holdCode == null) ? 0 : holdCode.hashCode());
+		result = prime * result + ((proposedVendor == null) ? 0 : proposedVendor.hashCode());
+		result = prime * result + ((proposedVendorCode == null) ? 0 : proposedVendorCode.hashCode());
+		result = prime * result + ((securityBu == null) ? 0 : securityBu.hashCode());
+		result = prime * result + ((subcontractorApproval == null) ? 0 : subcontractorApproval.hashCode());
+		result = prime * result + ((subcontractorApprovalCode == null) ? 0 : subcontractorApprovalCode.hashCode());
+		result = prime * result + ((supplierApproval == null) ? 0 : supplierApproval.hashCode());
+		result = prime * result + ((supplierApprovalCode == null) ? 0 : supplierApprovalCode.hashCode());
+		result = prime * result + ((vendorApprStatusCode == null) ? 0 : vendorApprStatusCode.hashCode());
+		result = prime * result + ((vendorApprovalStatus == null) ? 0 : vendorApprovalStatus.hashCode());
+		result = prime * result + ((vendorStatus == null) ? 0 : vendorStatus.hashCode());
+		result = prime * result + ((vendorStatusCode == null) ? 0 : vendorStatusCode.hashCode());
+		result = prime * result + ((vendorType == null) ? 0 : vendorType.hashCode());
+		result = prime * result + ((vendorTypeCode == null) ? 0 : vendorTypeCode.hashCode());
+		result = prime * result + ((vmsExempted == null) ? 0 : vmsExempted.hashCode());
+		result = prime * result + ((vmsExemptedCode == null) ? 0 : vmsExemptedCode.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof AddressBook)) {
+			return false;
+		}
+		AddressBook other = (AddressBook) obj;
+		if (payeeMaster == null) {
+			if (other.payeeMaster != null) {
+				return false;
+			}
+		} else if (!payeeMaster.equals(other.payeeMaster)) {
+			return false;
+		}
+		if (subcontractorWorkscopes == null) {
+			if (other.subcontractorWorkscopes != null) {
+				return false;
+			}
+		} else if (!subcontractorWorkscopes.equals(other.subcontractorWorkscopes)) {
+			return false;
+		}
+		if (addrBookType == null) {
+			if (other.addrBookType != null) {
+				return false;
+			}
+		} else if (!addrBookType.equals(other.addrBookType)) {
+			return false;
+		}
+		if (addressBookName == null) {
+			if (other.addressBookName != null) {
+				return false;
+			}
+		} else if (!addressBookName.equals(other.addressBookName)) {
+			return false;
+		}
+		if (addressBookNumber == null) {
+			if (other.addressBookNumber != null) {
+				return false;
+			}
+		} else if (!addressBookNumber.equals(other.addressBookNumber)) {
+			return false;
+		}
+		if (addressBookTypeCode == null) {
+			if (other.addressBookTypeCode != null) {
+				return false;
+			}
+		} else if (!addressBookTypeCode.equals(other.addressBookTypeCode)) {
+			return false;
+		}
+		if (businessRegistrationNumber == null) {
+			if (other.businessRegistrationNumber != null) {
+				return false;
+			}
+		} else if (!businessRegistrationNumber.equals(other.businessRegistrationNumber)) {
+			return false;
+		}
+		if (businessSector == null) {
+			if (other.businessSector != null) {
+				return false;
+			}
+		} else if (!businessSector.equals(other.businessSector)) {
+			return false;
+		}
+		if (businessSectorCode == null) {
+			if (other.businessSectorCode != null) {
+				return false;
+			}
+		} else if (!businessSectorCode.equals(other.businessSectorCode)) {
+			return false;
+		}
+		if (clientGroup == null) {
+			if (other.clientGroup != null) {
+				return false;
+			}
+		} else if (!clientGroup.equals(other.clientGroup)) {
+			return false;
+		}
+		if (clientGroupCode == null) {
+			if (other.clientGroupCode != null) {
+				return false;
+			}
+		} else if (!clientGroupCode.equals(other.clientGroupCode)) {
+			return false;
+		}
+		if (hold == null) {
+			if (other.hold != null) {
+				return false;
+			}
+		} else if (!hold.equals(other.hold)) {
+			return false;
+		}
+		if (holdCode == null) {
+			if (other.holdCode != null) {
+				return false;
+			}
+		} else if (!holdCode.equals(other.holdCode)) {
+			return false;
+		}
+		if (proposedVendor == null) {
+			if (other.proposedVendor != null) {
+				return false;
+			}
+		} else if (!proposedVendor.equals(other.proposedVendor)) {
+			return false;
+		}
+		if (proposedVendorCode == null) {
+			if (other.proposedVendorCode != null) {
+				return false;
+			}
+		} else if (!proposedVendorCode.equals(other.proposedVendorCode)) {
+			return false;
+		}
+		if (securityBu == null) {
+			if (other.securityBu != null) {
+				return false;
+			}
+		} else if (!securityBu.equals(other.securityBu)) {
+			return false;
+		}
+		if (subcontractorApproval == null) {
+			if (other.subcontractorApproval != null) {
+				return false;
+			}
+		} else if (!subcontractorApproval.equals(other.subcontractorApproval)) {
+			return false;
+		}
+		if (subcontractorApprovalCode == null) {
+			if (other.subcontractorApprovalCode != null) {
+				return false;
+			}
+		} else if (!subcontractorApprovalCode.equals(other.subcontractorApprovalCode)) {
+			return false;
+		}
+		if (supplierApproval == null) {
+			if (other.supplierApproval != null) {
+				return false;
+			}
+		} else if (!supplierApproval.equals(other.supplierApproval)) {
+			return false;
+		}
+		if (supplierApprovalCode == null) {
+			if (other.supplierApprovalCode != null) {
+				return false;
+			}
+		} else if (!supplierApprovalCode.equals(other.supplierApprovalCode)) {
+			return false;
+		}
+		if (vendorApprStatusCode == null) {
+			if (other.vendorApprStatusCode != null) {
+				return false;
+			}
+		} else if (!vendorApprStatusCode.equals(other.vendorApprStatusCode)) {
+			return false;
+		}
+		if (vendorApprovalStatus == null) {
+			if (other.vendorApprovalStatus != null) {
+				return false;
+			}
+		} else if (!vendorApprovalStatus.equals(other.vendorApprovalStatus)) {
+			return false;
+		}
+		if (vendorStatus == null) {
+			if (other.vendorStatus != null) {
+				return false;
+			}
+		} else if (!vendorStatus.equals(other.vendorStatus)) {
+			return false;
+		}
+		if (vendorStatusCode == null) {
+			if (other.vendorStatusCode != null) {
+				return false;
+			}
+		} else if (!vendorStatusCode.equals(other.vendorStatusCode)) {
+			return false;
+		}
+		if (vendorType == null) {
+			if (other.vendorType != null) {
+				return false;
+			}
+		} else if (!vendorType.equals(other.vendorType)) {
+			return false;
+		}
+		if (vendorTypeCode == null) {
+			if (other.vendorTypeCode != null) {
+				return false;
+			}
+		} else if (!vendorTypeCode.equals(other.vendorTypeCode)) {
+			return false;
+		}
+		if (vmsExempted == null) {
+			if (other.vmsExempted != null) {
+				return false;
+			}
+		} else if (!vmsExempted.equals(other.vmsExempted)) {
+			return false;
+		}
+		if (vmsExemptedCode == null) {
+			if (other.vmsExemptedCode != null) {
+				return false;
+			}
+		} else if (!vmsExemptedCode.equals(other.vmsExemptedCode)) {
+			return false;
+		}
+		return true;
+	}
+
 
 }

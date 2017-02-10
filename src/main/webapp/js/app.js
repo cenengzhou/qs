@@ -36,7 +36,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/forms-modal.js',
                            'js/service/attachment-service.js',
                            'js/controller/subcontract/attachment/attachment-sc-text.js',
-                           'js/controller/subcontractor-details-modal.js',
+                           'js/controller/addressbook-details-modal.js',
                            'js/controller/navigation-menu.js'
                     ] 
                 });

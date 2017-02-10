@@ -37,7 +37,6 @@ import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.dao.UnitWSDao;
 import com.gammon.qs.domain.JobInfo;
@@ -82,8 +81,6 @@ public class HTMLService implements Serializable{
 	private PaymentCertHBDao paymentCertHBDao;
 	@Autowired
 	private	TenderHBDao tenderHBDao;
-	@Autowired
-	private TenderDetailHBDao tenderDetailHBDao;
 	@Autowired
 	private TenderVarianceHBDao tenderVarianceHBDao;
 	@Autowired

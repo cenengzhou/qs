@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import com.gammon.pcms.model.Addendum;
 @Repository
 public class AddendumHBDao extends BaseHibernateDao<Addendum> {
+	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(AddendumHBDao.class.getName());
 
 	@SuppressWarnings("unchecked")

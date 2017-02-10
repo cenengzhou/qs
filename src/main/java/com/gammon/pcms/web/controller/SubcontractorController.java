@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope;
+import com.gammon.pcms.model.adl.SubcontractorWorkscope.statusPlusCodeAndDescription;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.SubcontractorService;
@@ -60,6 +63,13 @@ public class SubcontractorController {
 	@RequestMapping(value = "obtainTenderAnalysisWrapperByVendorNo", method = RequestMethod.POST)
 	public List<SubcontractorTenderAnalysisWrapper> obtainTenderAnalysisWrapperByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException  {
 		return subcontractorService.obtainTenderAnalysisWrapperByVendorNo(vendorNo);
+	}
+
+	@JsonView(statusPlusCodeAndDescription.class)
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractorController','obtainWorkscopeByVendorNo', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "obtainWorkscopeByVendorNo", method = RequestMethod.POST)
+	public List<SubcontractorWorkscope> obtainWorkscopeByVendorNo(@RequestParam String vendorNo) throws DatabaseOperationException  {
+		return subcontractorService.obtainWorkscopeByVendorNo(vendorNo);
 	}
 
 }

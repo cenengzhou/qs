@@ -1,8 +1,8 @@
-mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'jdeService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
+mainApp.controller('AddressbookDetailsModalCtrl', ['$scope', '$uibModalInstance', '$interval', '$http', '$window', 'modalService', 'confirmService', 'modalStatus', 'modalParam', 'GlobalMessage', 'jdeService', 'subcontractorService', 'GlobalParameter', 'GlobalHelper', 'roundUtil', 'attachmentService', 
                                             function ($scope, $uibModalInstance, $interval, $http, $window, modalService, confirmService, modalStatus, modalParam, GlobalMessage, jdeService, subcontractorService, GlobalParameter, GlobalHelper, roundUtil, attachmentService) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.status = modalStatus;
-	$scope.vendorNo = modalParam;
+	$scope.modalParam = modalParam;
 	$scope.cancel = function () {
 		$uibModalInstance.close();
 	};
@@ -25,16 +25,24 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	$scope.workscopeGridOptions = {};
 	
 	$scope.loadVendor = function(){
-		jdeService.searchVendorAddressDetails($scope.vendorNo)
+		jdeService.searchVendorAddressDetails($scope.modalParam.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.vendor = data;
-				loadStatistics();
-				loadSubcontract();
-				loadTenderAnalysis();
-				loadWorkScope();
+				switch($scope.vendor.addressType){
+				case 'V':
+					loadStatistics();
+					loadSubcontract();
+					loadTenderAnalysis();
+					loadWorkScope();
+					$scope.showInfoOnly = false;
+					break;
+				default:
+					$scope.showInfoOnly = true;
+					break;
+				} 
 			} else {
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'No subcontractor found:' + $scope.vendorNo);
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'No subcontractor found:' + $scope.modalParam.vendorNo);
 			}
 			
 		}, function(error){
@@ -140,8 +148,8 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	               			 ];
 
 	$scope.workscopeColumnDefs = [
-	           	             { field: 'workScopeCode', displayName: "Work Scope", enableCellEdit: false },
-	           	             { field: 'description', displayName: "Description", enableCellEdit: false },
+	           	             { field: 'codeWorkscope', displayName: "Work Scope", enableCellEdit: false },
+	           	             { field: 'workscopeDescription', displayName: "Description", enableCellEdit: false },
 	           	             { field: 'isApprovedText', displayName: "Status", enableCellEdit: false }
 	               			 ];
 
@@ -171,7 +179,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	}
 
 	function loadStatistics(){
-		subcontractorService.obtainSubconctractorStatistics($scope.vendorNo)
+		subcontractorService.obtainSubconctractorStatistics($scope.modalParam.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.statistics = data;
@@ -180,7 +188,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	}
 	
 	function loadSubcontract(){
-		subcontractorService.obtainPackagesByVendorNo($scope.vendorNo)
+		subcontractorService.obtainPackagesByVendorNo($scope.modalParam.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.subcontracts = data;
@@ -195,7 +203,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	}
 	
 	function loadTenderAnalysis(){
-		subcontractorService.obtainTenderAnalysisWrapperByVendorNo($scope.vendorNo)
+		subcontractorService.obtainTenderAnalysisWrapperByVendorNo($scope.modalParam.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.tenderAnalysis = data;
@@ -208,12 +216,12 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	}
 	
 	function loadWorkScope(){
-		jdeService.getSubcontractorWorkScope($scope.vendorNo)
+		subcontractorService.obtainWorkscopeByVendorNo($scope.modalParam.vendorNo)
 		.then(function(data){
 			if(angular.isObject(data)){
 				$scope.workScopes = data;
 				$scope.workScopes.forEach(function(workScope){
-					workScope.isApprovedText = GlobalParameter.getValueById(GlobalParameter.ApprovalStatus, workScope.isApproved.trim());
+					workScope.isApprovedText = GlobalParameter.getValueById(GlobalParameter.ApprovalStatus, workScope.statusApproval.trim());
 				});
 				$scope.workscopeGridOptions.data = $scope.workScopes;
 			}
@@ -227,7 +235,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	$scope.sequenceNo = 0;
 	$scope.isUpdatable = true;
 	$scope.nameObject = GlobalParameter.AbstractAttachment['VendorNameObject'];
-	$scope.textKey = $scope.vendorNo;
+	$scope.textKey = $scope.modalParam.vendorNo;
 	$scope.saveTextAttachmentFacade = attachmentService.uploadTextAttachment;
 	$scope.disableRichEditor = true;
 	$scope.loadAttachment = function (nameObject, textKey){
@@ -275,7 +283,7 @@ mainApp.controller('SubcontractorDetailsModalCtrl', ['$scope', '$uibModalInstanc
 	$scope.attachmentClick = function(){
 		$scope.isAddTextAttachment = false;
 		if(this.attach.documentType === 5){
-			url = 'service/attachment/downloadScAttachment?nameObject='+GlobalParameter.AbstractAttachment['VendorNameObject']+'&textKey='+$scope.vendorNo+'&sequenceNo='+this.attach.sequenceNo;
+			url = 'service/attachment/downloadScAttachment?nameObject='+GlobalParameter.AbstractAttachment['VendorNameObject']+'&textKey='+$scope.modalParam.vendorNo+'&sequenceNo='+this.attach.sequenceNo;
 			var wnd = $window.open(url, 'Download Attachment', '_blank');
 		} else {
 			$scope.textAttachment = this.attach;

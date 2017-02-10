@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
@@ -25,8 +24,6 @@ public class TenderHBDao extends BaseHibernateDao<Tender> {
 
 	@Autowired
 	private TenderDetailHBDao tenderAnalysisDetailHBDao;
-	@Autowired
-	private TenderVarianceHBDao tenderVarianceHBDao;
 	
 	
 	public TenderHBDao() {
