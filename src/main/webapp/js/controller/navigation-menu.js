@@ -43,7 +43,7 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 		$timeout(function(){
 			$.gritter.add({
 				title: 'Announcement',
-				text: 'Please view the details in the announcement board to see what has been updated.',
+				text: 'Do you know we have just updated the system? You can find out more in the Annoucement Board!',
 				image: 'image/new2.png',
 				sticky: false,
 				time: '8000'
