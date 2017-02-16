@@ -567,7 +567,7 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', 'DTOptio
 						<div class="panel-body">
 							<div class="row">
 								<table class="table" style="margin-bottom:0px">
-									<tr ng-if="!overrideAndRunAllSubTask">
+									<tr ng-show="!overrideAndRunAllSubTask">
 										<td>Limit subtask</td>
 										<td>:</td>
 										<td><input type="text" ng-model="limitSubTaskTo"></td>
@@ -580,7 +580,7 @@ testApp.controller("ctrl", ['$http', '$scope', '$interval', '$timeout', 'DTOptio
 									<tr>
 										<td colspan="3">
 											<a href="runTestByRest?limitSubTaskTo={{limitSubTaskTo}}&overrideAndRunAllSubTask={{overrideAndRunAllSubTask}}" target="RESTTEST">
-												<label class="btn btn-primary m-r-20 form-control" style="color:white" type="button" ng-click="runGroupTest()" id="RestCheckBtn">REST Check</label>
+												<label class="btn btn-primary m-r-20 form-control" style="color:white" type="button" id="RestCheckBtn">REST Check</label>
 											</a>
 										</td>
 									</tr>
