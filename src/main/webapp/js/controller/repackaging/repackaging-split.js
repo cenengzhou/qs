@@ -126,12 +126,19 @@ mainApp.controller("RepackagingSplitModalCtrl", ['$scope', '$location', 'jdeServ
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subsidiary code should be in 8 digits.");
 					return;
 				}
-				if(rowEntity.resourceType == "VO" 
-					&& rowEntity.subsidiaryCode.substring(0, 1) != "4" 
-						&& rowEntity.subsidiaryCode.substring(2, 4) != "80"){
-					rowEntity.subsidiaryCode = oldValue;
-					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subsidiary code of VO should start with [4X80XXXX].");
-					return;
+				if(rowEntity.resourceType == "VO"){
+					var voValid = false;
+					if(rowEntity.subsidiaryCode.substring(0, 1) == "4" && rowEntity.subsidiaryCode.substring(2, 4) == "80")
+						voValid = true;
+					else if(rowEntity.subsidiaryCode.substring(0, 1) == "3" && 
+							(rowEntity.subsidiaryCode.substring(2, 4) == "80" || rowEntity.subsidiaryCode.substring(2, 4) == "99"))
+						voValid = true;
+					
+					if(!voValid){
+						rowEntity.subsidiaryCode = oldValue;
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subsidiary code of VO should start with [4X80XXXX] for DSC or [3X80XXXX],[3X99XXXX] for NSC.");
+						return;
+					}
 				}
 			}
 			

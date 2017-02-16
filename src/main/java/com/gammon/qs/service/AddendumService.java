@@ -392,12 +392,21 @@ public class AddendumService{
 				return error;
 			}
 			
+			Subcontract subcontract = subcontractHBDao.obtainSCPackage(jobNo, subcontractNo);
 			Addendum addendum = addendumHBDao.getAddendum(jobNo, subcontractNo, addendumNo);
 			int nextSeqNo = addendum.getNoAddendumDetailNext().intValue();
 			for(ResourceSummary resourceSummary: resourceSummaryList){
 				String lineType = "";
-				if ("VO".equals(resourceSummary.getResourceType()))
+				
+				if ("VO".equals(resourceSummary.getResourceType())){
+					//Validation 2.3: [3980XXXX] can only be used by NSC
+					if(resourceSummary.getSubsidiaryCode().startsWith("3") && !"NSC".equals(subcontract.getSubcontractorNature())){
+						error = "Subsidiary code started with '3' is reserved for NSC only.";
+						logger.info(error);
+						return error;
+					}
 					lineType = "V1";
+				}
 				else
 					lineType = "V3";
 

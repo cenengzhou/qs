@@ -78,22 +78,22 @@ mainApp.controller('AddendumDetailV3Ctrl', ['$scope', 'resourceSummaryService', 
 
 	function loadData(){
 		if(subcontractNo!="" && subcontractNo!=null){
-			getSubcontract();
+			//getSubcontract();
 			getResourceSummariesForAddendum();
 		}
 	}
 
-	function getSubcontract(){
+	/*function getSubcontract(){
 		subcontractService.getSubcontract(jobNo, subcontractNo)
 		.then(
 				function( data ) {
-					/*$scope.subcontract = data;
+					$scope.subcontract = data;
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
 						$scope.disableButtons = true;
 					else
-						$scope.disableButtons = false;*/
+						$scope.disableButtons = false;
 				});
-	}
+	}*/
 
 	function getLatestRepackaging(){
 		repackagingService.getLatestRepackaging(jobNo)
