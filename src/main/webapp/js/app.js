@@ -182,7 +182,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/subcontract/subcontract-select.js',
                            'js/controller/subcontract/subcontract-create.js',
-                           'js/service/subcontract-service.js'
+                           'js/service/subcontract-service.js',
+                           'js/service/repackaging-service.js'
                     ] 
                 });
             }]
@@ -985,25 +986,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: "TransitCtrl"
 	})
 	
-	//IV
-	/*.state("iv", {
-		url: "/iv",
-		parent: "navigation",
-		templateUrl: "view/iv/iv-menu.html",
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [	
-               	         	'js/service/resource-summary-service.js',
-               	         	'js/service/subcontract-service.js',
-               	         	'js/service/repackaging-service.js'
-                    ] 
-                });
-            }]
-        },
-        controller: 'NavMenuCtrl'
-	})*/
 	.state("iv", {
 		url: "/iv",
 		parent: "navigation",

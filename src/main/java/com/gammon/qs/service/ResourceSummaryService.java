@@ -1592,8 +1592,9 @@ public class ResourceSummaryService implements Serializable {
 			// Update resource summaries
 			for (Entry<String, Double> entry : accountIV.entrySet()) {
 				String[] objSub = entry.getKey().split("\\.");
-				//TODO: Rewrite this part for resource summary recalculation
-				updateResourceSummaryIVFromBQ(job, packageNo, objSub[0], objSub[1], entry.getValue());
+				//TODO
+				//Rewrite this part for resource summary recalculation
+				recalculateAllIVFromBQ(job, packageNo, objSub[0], objSub[1], entry.getValue());
 				
 			}
 
@@ -1604,7 +1605,110 @@ public class ResourceSummaryService implements Serializable {
 		return Boolean.TRUE;
 	}
 
-	public void updateResourceSummaryIVFromBQ(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double cumIVAmount){
+	public void updateIVFromBQ(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double cumIVMovtAmount){
+		logger.info("Job: " + job.getJobNumber() + ", Package: " + packageNo + ", Object: " + objectCode + ", Subsidiary: " + subsidiaryCode + ", cumIVAmount: " + cumIVMovtAmount);
+
+		try{
+			//Validation: No Resource Summary
+			List<ResourceSummary> resourceSummaries = resourceSummaryHBDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
+			if (resourceSummaries == null){
+				logger.info("Resource Summary does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode);
+				return;
+			}
+			
+			HashMap<Long, SubcontractDetail> resourceIDofSCAddendum = new HashMap<Long, SubcontractDetail>();
+			for (SubcontractDetail scDetails : subcontractDetailHBDao.getBQSCDetails(job.getJobNumber(), packageNo)) {
+				ResourceSummary resourceSummaryInDB = null;
+				if (scDetails.getResourceNo() != null && scDetails.getResourceNo() > 0) {
+					resourceSummaryInDB = resourceSummaryHBDao.get(scDetails.getResourceNo().longValue());
+					
+					if (resourceSummaryInDB == null || 
+						!packageNo.equals(resourceSummaryInDB.getPackageNo()) || 
+						!resourceSummaryInDB.getObjectCode().equals(scDetails.getObjectCode()) || 
+						!resourceSummaryInDB.getSubsidiaryCode().equals(scDetails.getSubsidiaryCode()) || 
+						!resourceSummaryInDB.getJobInfo().getJobNumber().equals(job.getJobNumber()))
+						resourceSummaryInDB = null;
+				}
+				if (!"BQ".equals(scDetails.getLineType()) && 
+					!"B1".equals(scDetails.getLineType()) && 
+					!Double.valueOf(0.0).equals(scDetails.getCostRate()) && 
+					resourceSummaryInDB != null)
+					resourceIDofSCAddendum.put(scDetails.getResourceNo().longValue(), scDetails);
+			}
+
+			
+			// Update the Cumulative iv of the resource summaries
+			
+			for (ResourceSummary resourceSummary : resourceSummaries) {
+				if(cumIVMovtAmount != 0.0){
+					double resourceAmount = resourceSummary.getAmountBudget();
+					if (resourceAmount == 0 || resourceIDofSCAddendum.get(resourceSummary.getId()) != null)
+						continue;
+
+					double currIVAmount = resourceSummary.getCurrIVAmount()!=null?resourceSummary.getCurrIVAmount():0.0;
+					double netAmount = resourceAmount  - currIVAmount;
+					
+					//Case 1: positive IV amount
+					if(resourceAmount > 0){
+						if(cumIVMovtAmount >0.0){
+							if(cumIVMovtAmount > netAmount){
+								resourceSummary.setCurrIVAmount(CalculationUtil.round(currIVAmount+netAmount, 2));
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount -= netAmount;
+							}else{
+								resourceSummary.setCurrIVAmount(CalculationUtil.round(currIVAmount+cumIVMovtAmount, 2));
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = 0.0;
+							}
+						}else if(cumIVMovtAmount <0.0){
+							double variance =  CalculationUtil.round(currIVAmount + cumIVMovtAmount, 2);
+							if(variance >= 0.0){
+								resourceSummary.setCurrIVAmount(variance);
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = 0.0;
+							}else{
+								resourceSummary.setCurrIVAmount(0.0);
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = variance;
+							}
+						}
+					}
+					//Case 2: negative IV amount
+					else if (resourceAmount < 0){
+						if(cumIVMovtAmount <0.0){
+							if(cumIVMovtAmount < netAmount){
+								resourceSummary.setCurrIVAmount(CalculationUtil.round(currIVAmount+netAmount, 2));
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount -= netAmount;
+							}else{
+								resourceSummary.setCurrIVAmount(CalculationUtil.round(currIVAmount+cumIVMovtAmount, 2));
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = 0.0;
+							}
+						}else{
+							double variance =  CalculationUtil.round(currIVAmount + cumIVMovtAmount, 2);
+							if(variance <= 0.0){
+								resourceSummary.setCurrIVAmount(variance);
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = 0.0;
+							}else{
+								resourceSummary.setCurrIVAmount(0.0);
+								resourceSummaryHBDao.saveOrUpdate(resourceSummary);
+								cumIVMovtAmount = variance;
+							}
+						}
+					}
+					
+				}else
+					break;
+				
+			}
+		}catch (DatabaseOperationException dbException){
+			dbException.printStackTrace();
+		}
+	}
+	
+	public void recalculateAllIVFromBQ(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double cumIVAmount){
 		logger.info("Job: " + job.getJobNumber() + ", Package: " + packageNo + ", Object: " + objectCode + ", Subsidiary: " + subsidiaryCode + ", cumIVAmount: " + cumIVAmount);
 
 		try{

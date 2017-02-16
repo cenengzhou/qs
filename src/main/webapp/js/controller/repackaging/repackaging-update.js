@@ -106,8 +106,10 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 								}
 							});
 						}else {
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please go to corresponding non-awarded subcontract to assign resources.");
-							return;
+							if(colDef.name == 'packageNo'){
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please go to corresponding non-awarded subcontract to assign resources.");
+								return;
+							}
 						}
 					}						
 				}

@@ -477,15 +477,15 @@ mainApp.directive('saveAndRestoreGridState', function($compile, $timeout, userpr
 				gridApi.grid.options.saveWidths = true;
 				gridApi.grid.options.saveOrder = true;
 				gridApi.grid.options.saveScroll = true;
-				gridApi.grid.options.saveFocus = true;
+				gridApi.grid.options.saveFocus = false;
 				gridApi.grid.options.saveVisible = true;
 				gridApi.grid.options.saveSort = true;
-				gridApi.grid.options.saveFilter = true;
+				gridApi.grid.options.saveFilter = false;
 				gridApi.grid.options.savePinning = true;
 				gridApi.grid.options.saveGrouping = true;
 				gridApi.grid.options.saveGroupingExpandedStates = true;
 				gridApi.grid.options.saveTreeView = true;
-				gridApi.grid.options.saveSelection = true;
+				gridApi.grid.options.saveSelection = false;
 				if(gridApi.colMovable) {
 			    	gridApi.colMovable.on.columnPositionChanged(scope, saveState);
 				}

@@ -1,5 +1,5 @@
-mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookies', '$window', 'rootscopeService',
-                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookies, $window, rootscopeService) {
+mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalService', '$animate', 'subcontractService', '$cookies', 'rootscopeService', 'repackagingService',
+                                             function($scope, $uibModal, modalService, $animate, subcontractService, $cookies, rootscopeService, repackagingService) {
 	rootscopeService.setSelectedTips('subcontractStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -8,16 +8,8 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
 	$scope.finalPaymentStatus ="";
 	
     loadSubcontractList();
+    getLatestRepackaging();
     
-    function loadSubcontractList() {
-    	subcontractService.getSubcontractList($scope.jobNo, false)
-   	 .then(
-			 function( data ) {
-				 $scope.subcontracts= data;
-			 });
-    }
-    
-   
     $scope.searchquery = '';
     
     $scope.removeDefaultAnimation = function (){
@@ -44,6 +36,25 @@ mainApp.controller('SubcontractSelectCtrl', ['$scope', '$uibModal', 'modalServic
     };
 
 
+    function loadSubcontractList() {
+    	subcontractService.getSubcontractList($scope.jobNo, false)
+   	 .then(
+			 function( data ) {
+				 $scope.subcontracts= data;
+			 });
+    }
+    function getLatestRepackaging() {
+		repackagingService.getLatestRepackaging($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data != null && data != ''){
+						$scope.disableCreateButton = false;
+					}else
+						$scope.disableCreateButton = true;
+					
+				});
+
+	}
 
     //Get filtered list
     /*$scope.filter =  function () {

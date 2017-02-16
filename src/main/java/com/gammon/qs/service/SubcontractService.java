@@ -3983,9 +3983,9 @@ public class SubcontractService {
 														scDetailInDB.getResourceNo().longValue());
 					// Update IV for BQ, V1 (no budget)
 					else
-						resourceSummaryService.updateResourceSummaryIVFromBQ(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
+						resourceSummaryService.updateIVFromBQ(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
 								scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),	
-								CalculationUtil.round(cumWorkDoneQty  * scDetailInDB.getCostRate(), 2));
+								CalculationUtil.round(cumWorkDoneQtyMovement  * scDetailInDB.getCostRate(), 2));
 						/*updateResourceSummaryIVFromSCNonVO(subcontract.getJobInfo(), scDetailInDB.getSubcontract().getPackageNo(),
 														scDetailInDB.getObjectCode(), scDetailInDB.getSubsidiaryCode(),
 														CalculationUtil.round(cumWorkDoneQtyMovement  * scDetailInDB.getCostRate(), 2));*/

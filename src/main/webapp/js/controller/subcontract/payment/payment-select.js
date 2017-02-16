@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCtrl', ['$scope', '$q', '$uibModal',  'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jdeService', '$state',
-                                   function($scope, $q, $uibModal, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jdeService, $state) {
+mainApp.controller('PaymentCtrl', ['$scope', '$q', 'modalService', '$cookies', '$animate', 'colorCode', 'paymentService', 'subcontractService', 'GlobalParameter', '$q', 'rootscopeService', 'jdeService', '$state',
+                                   function($scope, $q, modalService, $cookies, $animate, colorCode, paymentService, subcontractService, GlobalParameter, $q, rootscopeService, jdeService, $state) {
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';

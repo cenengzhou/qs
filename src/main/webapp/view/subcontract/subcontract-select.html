@@ -47,7 +47,7 @@
 				ng-model="checkedFinal"  ng-icheck /> Finalized Subcontract Only</label>
 		</div>
 		<div class="col-xs-2" id="createSubcontractDiv">
-			<button type="button" class="btn btn-danger btn-block pull-right" ui-sref="subcontract-award.hearder" ng-click="updateSubcontract('', '', '')">
+			<button type="button" class="btn btn-danger btn-block pull-right" ui-sref="subcontract-award.hearder" ng-click="updateSubcontract('', '', '')" ng-disabled="disableCreateButton">
 				<i class="fa fa-plus-circle"></i><span> Create</span>
 			</button>
 		</div>
