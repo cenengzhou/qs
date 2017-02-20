@@ -78,13 +78,7 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 				     			editDropdownValueLabel : 'value',
 			             },
 			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
-			             { field: 'forIvRollbackOnly', width: '100', displayName: "IV Rollback Only", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
-			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
-			            	 editDropdownOptionsArray : GlobalParameter.zeroOneOptions,
-				     			cellFilter : 'dropdownFilter:"zeroOneOptions"',
-				     			editDropdownIdLabel : 'id',
-				     			editDropdownValueLabel : 'value',
-			             }
+			             { field: 'resourceType', width: '100', displayName: "Type", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
 			             ]
 	}
 	
@@ -250,7 +244,7 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 	function onSubmitResourceSummarySearch(){
 		resourceSummaryService.obtainResourceSummariesByJobNumberForAdmin(
 				$scope.resourceSummarySearch.jobNo)
-		.then(function(data){
+		.then(function(data){console.log(data);
 			$scope.gridOptions.data = data;
 			if(data.length > 0) $scope.searchJobNo = data[0].jobInfo.jobNo;
 			$scope.resourceSummaryList = data;
