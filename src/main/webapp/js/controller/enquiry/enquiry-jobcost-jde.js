@@ -248,10 +248,19 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 						row.variance = row.amountJI - row.amountAA;
 					}
 				})
-				$scope.gridOptions.data = data;
+				data.sort(function(a,b){
+					if(a.objectCode > b.objectCode) return 1;
+					if(b.objectCode > a.objectCode) return -1;
+					if(a.subsidiaryCode > b.subsidiaryCode) return 1;
+					if(b.subsidiaryCode > a.subsidiaryCode) return -1;
+					return 0;
+				});
+				$scope.gridOptions.data = data.filter(function(obj){
+					return (obj.amountAA != 0) && (obj.amountJI != 0);
+				});
 			}
 		});
-	}
+	};
 	
 	$scope.filter = function() {
 		$scope.gridApi.grid.refresh();
