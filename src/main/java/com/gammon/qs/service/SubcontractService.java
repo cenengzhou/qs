@@ -4670,18 +4670,21 @@ public class SubcontractService {
 	
 	public String deleteSubcontractDetailAddendum(String jobNo, String subcontractNo, Integer sequenceNo, String lineType) throws Exception{
 		String error = null; 
-			
+		boolean recalculateTotalWD = false;	
 		try {
 			SubcontractDetail scDetails = subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, subcontractNo, sequenceNo, lineType);
 			if(scDetails.getLineType().equals("AP") || scDetails.getLineType().equals("OA") || scDetails.getLineType().equals("C1") ||
 				scDetails.getLineType().equals("MS") || scDetails.getLineType().equals("RA") || scDetails.getLineType().equals("RR")){
 				
 				Subcontract subcontract = scDetails.getSubcontract();
-				if ((scDetails.getAmountPostedCert().compareTo(new BigDecimal(0))!=0)  || (scDetails.getAmountPostedWD().compareTo(new BigDecimal(0))!=0) 
+				if ((scDetails.getAmountPostedCert().compareTo(new BigDecimal(0))!=0)  //|| (scDetails.getAmountPostedWD().compareTo(new BigDecimal(0))!=0) 
 						|| (scDetails.getAmountCumulativeCert().compareTo(new BigDecimal(0))!=0) || (scDetails.getAmountCumulativeWD().compareTo(new BigDecimal(0))!=0)){
-					error = "Cannot delete SC Detail because Cum/Posted Work Done/Cert is not zero.";
+					error = "Cannot delete SC Detail because Cum Work Done/Cert or Posted Cert Amount is not zero.";
 					return error;
 				}
+				if(scDetails.getAmountPostedWD().compareTo(new BigDecimal(0))!=0)
+					recalculateTotalWD = true;
+				
 				if(subcontract.getSubmittedAddendum() != null && subcontract.getSubmittedAddendum().trim().equals("1")){
 					error = "Cannot delete SC Detail, addendum is being submitted";
 					return error;
@@ -4699,6 +4702,7 @@ public class SubcontractService {
 					error= "Payment Submitted";
 					return error;
 				}
+			
 				
 				//Remove ScDetail from pending Payment Detail
 				try {
@@ -4720,6 +4724,9 @@ public class SubcontractService {
 				
 				//Inactivate SC Detail
 				subcontractDetailHBDao.inactivateSCDetails(scDetails);
+				if(recalculateTotalWD)
+					this.calculateTotalWDandCertAmount(jobNo, subcontractNo, false);
+				
 				
 			}else {
 				error =  "Only AP, C1, MS, OA, RA, RR can be deleted in here.";

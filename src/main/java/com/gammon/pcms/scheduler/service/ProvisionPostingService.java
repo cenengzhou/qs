@@ -439,15 +439,17 @@ public class ProvisionPostingService {
 					scDetailProvisionHistoryDao.insert(scDetailProvisionHistory);
 					scDetailProvisionHistoryList.add(scDetailProvisionHistory);
 					
+				}
+				
+				if(((SubcontractDetailOA) scDetails).getAmountCumulativeWD() != ((SubcontractDetailOA) scDetails).getAmountPostedWD()){
 					/**
 					 * @author koeyyeung
 					 * Convert to Amount Based - Update Posted Work Done = Cumulative Work Done for all SCDetail with Work Done
 					 * Quantity - For carrying work done to iv as they are using different rates (SCRate VS CostRate) and therefore simply amount-based is not enough
 					 * Amount - For Provision
 					 **/
-					logger.debug("Cumulative Work Done Quantity: "+((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());
-					logger.debug("Cumulative Work Done Amount: "+((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
-					
+					logger.debug("Cumulative Work Done Quantity: "+((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity() + " - Cumulative Work Done Amount: "+((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
+
 					((SubcontractDetailOA) scDetails).setPostedWorkDoneQuantity(((SubcontractDetailOA) scDetails).getCumWorkDoneQuantity());	
 					((SubcontractDetailOA) scDetails).setAmountPostedWD(((SubcontractDetailOA) scDetails).getAmountCumulativeWD());
 

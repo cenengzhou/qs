@@ -621,41 +621,6 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		}
 	}
 	
-	/**
-	 * @author koeyyeung
-	 * Payment Requisition
-	 * For Repackaging 2, 3
-	 * **/
-	public SubcontractDetailBQ obtainSCDetailsByBQItem(	String jobNo,String packageNo, String billItem, 
-												String objectCode, String subsidiaryCode, Integer resourceNo
-												) throws DatabaseOperationException{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.eq("jobNo", jobNo.trim()));
-			
-			criteria.createAlias("subcontract", "subcontract");
-			if(!GenericValidator.isBlankOrNull(packageNo))
-				criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-
-			if(!GenericValidator.isBlankOrNull(billItem))
-				criteria.add(Restrictions.eq("billItem", billItem));
-
-			if(!GenericValidator.isBlankOrNull(objectCode))
-				criteria.add(Restrictions.eq("objectCode", objectCode));
-
-			if(!GenericValidator.isBlankOrNull(objectCode))
-				criteria.add(Restrictions.eq("subsidiaryCode", subsidiaryCode));
-
-			if(resourceNo!=null)
-				criteria.add(Restrictions.eq("resourceNo", resourceNo));
-			
-			return (SubcontractDetailBQ) criteria.uniqueResult();
-		}
-		catch(HibernateException ex){
-			throw new DatabaseOperationException(ex);
-		}
-	}
 	
 	/**
 	 * @author koeyyeung

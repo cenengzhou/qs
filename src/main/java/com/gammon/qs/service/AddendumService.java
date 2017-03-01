@@ -516,8 +516,7 @@ public class AddendumService{
 				}else if(AddendumDetail.TYPE_ACTION.UPDATE.toString().equals(addendumDetail.getTypeAction()) 
 						|| AddendumDetail.TYPE_ACTION.DELETE.toString().equals(addendumDetail.getTypeAction())){
 					
-					Integer resourceNo = addendumDetail.getIdResourceSummary() != null ? addendumDetail.getIdResourceSummary().intValue(): 0;
-					SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), resourceNo);
+					SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.getSCDetail(addendumDetail.getIdSubcontractDetail());
 					
 					if(scDetail != null){
 						scDetail.setApproved(SubcontractDetail.APPROVED);
@@ -1017,8 +1016,10 @@ public class AddendumService{
 	}
 	
 	private void updateSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
-		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
-		
+		//SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), 0);
+		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.getSCDetail(addendumDetail.getIdSubcontractDetail());
+		//idSubcontractDetail
+
 		if(scDetail !=null){
 			scDetail.setScRate(addendumDetail.getRateAddendum().doubleValue());
 			scDetail.setQuantity(addendumDetail.getQuantity().doubleValue());
@@ -1068,8 +1069,7 @@ public class AddendumService{
 	}
 	
 	private void deleteSCDetails(String jobNo, String subcontractNo, AddendumDetail addendumDetail) throws Exception{
-		Integer resourceNo = addendumDetail.getIdResourceSummary() != null ? addendumDetail.getIdResourceSummary().intValue(): 0;
-		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.obtainSCDetailsByBQItem(jobNo, subcontractNo, addendumDetail.getBpi(), addendumDetail.getCodeObject(), addendumDetail.getCodeSubsidiary(), resourceNo);
+		SubcontractDetailVO scDetail = (SubcontractDetailVO) subcontractDetailHBDao.getSCDetail(addendumDetail.getIdSubcontractDetail());
 		if(scDetail != null){
 			//Delete C2
 			if(("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType())) &&
