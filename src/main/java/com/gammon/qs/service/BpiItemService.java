@@ -2,16 +2,8 @@ package com.gammon.qs.service;
 
 
 import java.io.Serializable;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
@@ -21,84 +13,46 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.pcms.helper.DateHelper;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.AuditResourceSummaryHBDao;
-import com.gammon.qs.dao.BpiBillHBDao;
 import com.gammon.qs.dao.BpiItemHBDao;
 import com.gammon.qs.dao.BpiItemResourceHBDao;
-import com.gammon.qs.dao.BpiPageHBDao;
-import com.gammon.qs.dao.JobInfoHBDao;
-import com.gammon.qs.dao.PaymentCertHBDao;
-import com.gammon.qs.dao.RepackagingHBDao;
-import com.gammon.qs.dao.ResourceSummaryHBDao;
-import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.BQLineType;
-import com.gammon.qs.domain.BpiBill;
 import com.gammon.qs.domain.BpiItem;
 import com.gammon.qs.domain.BpiItemResource;
-import com.gammon.qs.domain.BpiPage;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.PaymentCert;
-import com.gammon.qs.domain.ResourceSummary;
-import com.gammon.qs.domain.ResourceSummaryAuditCustom;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.domain.SubcontractDetailOA;
-import com.gammon.qs.domain.SubcontractDetailVO;
-import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.io.ExcelWorkbook;
-import com.gammon.qs.io.ExcelWorkbookProcessor;
-import com.gammon.qs.service.bpi.BpiItemReportGenerator;
-import com.gammon.qs.service.bpi.ResourceReportGenerator;
-import com.gammon.qs.service.bpi.UploadIVByExcelResponse;
 import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.util.ComparatorUtilResource;
-import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBQItemWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBQResourceSummaryWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiItemGroupedByIDWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiResourceSummaryGroupedBySCWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVInputByBQItemPaginationWrapper;
 import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVInputByResourcePaginationWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVResourceWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVSCDetailsWrapper;
-import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
-import com.gammon.qs.wrapper.updateIVByResource.UpdateIVByResourceUpdateWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Transactional(rollbackFor = Exception.class, value = "transactionManager")
 public class BpiItemService implements Serializable {
 	private static final long serialVersionUID = 6521439591143450718L;
-	private final int uploadBatchSize = 100;
+	//private final int uploadBatchSize = 100;
 	private transient Logger logger = Logger.getLogger(BpiItemService.class.getName());
 	@Autowired
 	private transient BpiItemHBDao bqItemHBDao;
-	@Autowired
+	/*@Autowired
 	private transient ResourceSummaryHBDao bqResourceSummaryDao;
 	@Autowired
 	private transient JobInfoHBDao jobHBDao;
 	@Autowired
 	private transient BpiBillHBDao billHBDao;
 	@Autowired
-	private transient BpiPageHBDao pageHBDao;
+	private transient BpiPageHBDao pageHBDao;*/
 	@Autowired
 	private transient BpiItemResourceHBDao resourceHBDao;
-	@Autowired
+/*	@Autowired
 	private transient RepackagingHBDao repackagingEntryDao;
 	@Autowired
 	private transient SubcontractService packageRepository;
 	@Autowired
 	private transient SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
-	private transient TenderService tenderAnalysisRepository;
+	private transient TenderService tenderAnalysisRepository;*/
 	@Autowired
 	private transient MasterListService masterListRepository;
-	@Autowired
+	/*@Autowired
 	private transient ResourceSummaryService bqResourceSummaryRepositoryHB;
 	@Autowired
 	private transient SubcontractDetailHBDao scDetailsHBDaoImpl;
@@ -107,7 +61,7 @@ public class BpiItemService implements Serializable {
 	@Autowired
 	private AuditResourceSummaryHBDao auditDao;
 	
-	private ArrayList<BpiItemResource> cachedResourceList;
+	private ArrayList<BpiItemResource> cachedResourceList;*/
 	
 	//For Update IV by BQ Item
 	private ArrayList<BpiItem> listOfBQItem;
@@ -118,8 +72,8 @@ public class BpiItemService implements Serializable {
 	private IVInputByResourcePaginationWrapper ivInputByResourcePaginationWrapper;
 	
 	static final int RECORDS_PER_PAGE = 200;
-	@Autowired
-	private transient ExcelWorkbookProcessor excelFileProcessor;
+	/*@Autowired
+	private transient ExcelWorkbookProcessor excelFileProcessor;*/
 	
 	//pagination cache
 	@SuppressWarnings("unused")
@@ -129,28 +83,28 @@ public class BpiItemService implements Serializable {
 		
 	}
 
-	public List<BpiItemResource> getCachedResourceList() {
+	/*public List<BpiItemResource> getCachedResourceList() {
 		return cachedResourceList;
-	}
+	}*/
 
-	public void setCachedResourceList(ArrayList<BpiItemResource> cachedResourceList) {
+	/*public void setCachedResourceList(ArrayList<BpiItemResource> cachedResourceList) {
 		this.cachedResourceList = cachedResourceList;
-	}
+	}*/
 	
-	public IVInputByBQItemPaginationWrapper getIvInputByBQItemPaginationWrapper() {
+	/*public IVInputByBQItemPaginationWrapper getIvInputByBQItemPaginationWrapper() {
 		return ivInputByBQItemPaginationWrapper;
-	}
+	}*/
 
-	public void setIvInputByBQItemPaginationWrapper(
+	/*public void setIvInputByBQItemPaginationWrapper(
 			IVInputByBQItemPaginationWrapper ivInputByBQItemPaginationWrapper) {
 		this.ivInputByBQItemPaginationWrapper = ivInputByBQItemPaginationWrapper;
 	}
 
 	public IVInputByResourcePaginationWrapper getIvInputByResourcePaginationWrapper() {
 		return ivInputByResourcePaginationWrapper;
-	}
+	}*/
 
-	public void setIvInputByResourcePaginationWrapper(
+	/*public void setIvInputByResourcePaginationWrapper(
 			IVInputByResourcePaginationWrapper ivInputByResourcePaginationWrapper) {
 		this.ivInputByResourcePaginationWrapper = ivInputByResourcePaginationWrapper;
 	}
@@ -161,26 +115,26 @@ public class BpiItemService implements Serializable {
 
 	public void setExcelFileProcessor(ExcelWorkbookProcessor excelFileProcessor) {
 		this.excelFileProcessor = excelFileProcessor;
-	}
+	}*/
 	
-	public List<BpiBill> getBillListWithPagesByJob(JobInfo job) throws Exception {
+	/*public List<BpiBill> getBillListWithPagesByJob(JobInfo job) throws Exception {
 		return billHBDao.getBillListWithPagesByJob(job);
 	}
 
 	public List<BpiItem> getBQItemListByBPI(String jobNumber, String billNo, String subBillNo, String sectionNo, String pageNo) throws Exception {
 		return  bqItemHBDao.getBpiItemListByBP(jobNumber, billNo, subBillNo, sectionNo, pageNo);
 		
-	}
+	}*/
 	
 	public List<BpiItem> obtainBQItemList(String jobNumber, String billNo, String subbillNo, String pageNo, String itemNo, String bqDesc)  throws Exception{
 		return bqItemHBDao.obtainBpiItem(jobNumber, billNo, subbillNo, pageNo, itemNo, bqDesc);
 	}
 	
-	public List<BpiItemResource> obtainResources(ResourceWrapper wrapper)throws Exception{
+	/*public List<BpiItemResource> obtainResources(ResourceWrapper wrapper)throws Exception{
 		return resourceHBDao.obtainResources(wrapper);
-	}
+	}*/
 
-	public List<String> obtainUneditableResources(JobInfo job) throws Exception {
+	/*public List<String> obtainUneditableResources(JobInfo job) throws Exception {
 		List<String> uneditableResourceIDs = new ArrayList<String>(); 
 
 		List<BpiItemResource> resources = resourceHBDao.obtainSCResources(job.getJobNumber());
@@ -214,7 +168,7 @@ public class BpiItemService implements Serializable {
 		}
 
 		return uneditableResourceIDs;
-	}
+	}*/
 	
 	
 
@@ -222,27 +176,27 @@ public class BpiItemService implements Serializable {
 	 * @author koeyyeung
 	 * modified on 09 Aug, 2013
 	 * **/
-	public ExcelFile getIVResourceExcelFileByJob(ResourceWrapper resourceWrapper) throws Exception {
+	/*public ExcelFile getIVResourceExcelFileByJob(ResourceWrapper resourceWrapper) throws Exception {
 		List<BpiItemResource> resourceList = obtainResources(resourceWrapper);
 		ResourceReportGenerator reportGenerator = new ResourceReportGenerator(resourceList, resourceWrapper.getJobNumber());
 		ExcelFile excelFile = reportGenerator.generate();
 		
 		return excelFile;
-	}
+	}*/
 	
 	/**
 	 * @author koeyyeung
 	 * modified on 09 Aug, 2013
 	 * **/
-	public ExcelFile getBQExcelFileByJob(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String bqDesc) throws Exception{
+	/*public ExcelFile getBQExcelFileByJob(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String bqDesc) throws Exception{
 		List<BpiItem> bqList = obtainBQItemList(jobNumber, billNo, subBillNo, pageNo, itemNo, bqDesc);
 		BpiItemReportGenerator reportGenerator = new BpiItemReportGenerator(bqList, jobNumber);
 		ExcelFile excelFile = reportGenerator.generate();
 		
 		return excelFile;
-	}
+	}*/
 
-	public UploadIVByExcelResponse uploadIVByExcel(String jobNumber, String userID,  byte[] file) throws Exception {
+	/*public UploadIVByExcelResponse uploadIVByExcel(String jobNumber, String userID,  byte[] file) throws Exception {
 		
 		UploadIVByExcelResponse uploadIVByExcelResponse = new UploadIVByExcelResponse();
 		NumberFormat formatter = new DecimalFormat("#####");
@@ -311,11 +265,11 @@ public class BpiItemService implements Serializable {
 			boolean result = true;
 			startWS = System.currentTimeMillis();
 			//batch update for a limited size;	
-			for(int i =0; (i*/*100*/uploadBatchSize) < updateWrapperList.size(); i ++)
+			for(int i =0; (i*100uploadBatchSize) < updateWrapperList.size(); i ++)
 			{
 								
-				int begin = i*/*100*/uploadBatchSize;
-				int end = ((i+1)*/*100*/uploadBatchSize)>updateWrapperList.size()?updateWrapperList.size():(i+1)*/*100*/uploadBatchSize;
+				int begin = i*100uploadBatchSize;
+				int end = ((i+1)*100uploadBatchSize)>updateWrapperList.size()?updateWrapperList.size():(i+1)*100uploadBatchSize;
 				
 				logger.info("Update form "+begin+" to "+end);
 				
@@ -357,9 +311,9 @@ public class BpiItemService implements Serializable {
 		
 		
 		return uploadIVByExcelResponse;
-	}
+	}*/
 	
-	public RepackagingPaginationWrapper<BpiItem> searchBQItemsByPage(String jobNumber, 
+	/*public RepackagingPaginationWrapper<BpiItem> searchBQItemsByPage(String jobNumber, 
 			String billNo, String subBillNo, String pageNo,	String itemNo, String description, 
 			int pageNum) throws Exception{
 //		long start = System.nanoTime();
@@ -367,9 +321,9 @@ public class BpiItemService implements Serializable {
 				billNo, subBillNo, pageNo, itemNo, description, pageNum);
 //		logger.info("Time taken for searchBQItemsByPage: " + (System.nanoTime() - start));
 		return wrapper;
-	}
+	}*/
 	
-	public String updateBQItemQuantities(JobInfo job, List<BpiItem> bqItems) throws Exception{
+	/*public String updateBQItemQuantities(JobInfo job, List<BpiItem> bqItems) throws Exception{
 		logger.info("Updating BQ Items (Remeasurement)");
 		Long repackagingEntryId = repackagingEntryDao.getIdOfLatestRepackagingEntry(job);
 		for(BpiItem bqItem : bqItems){
@@ -412,9 +366,9 @@ public class BpiItemService implements Serializable {
 			bqItemHBDao.saveOrUpdate(bqItemDB); //save is cascaded to resources
 		}
 		return null;
-	}
+	}*/
 	
-	public RepackagingPaginationWrapper<BpiItemResource> searchResourcesByPage(String jobNumber, String billNo, 
+	/*public RepackagingPaginationWrapper<BpiItemResource> searchResourcesByPage(String jobNumber, String billNo, 
 			String subBillNo, String pageNo, String itemNo, String packageNo, String objectCode, 
 			String subsidiaryCode, String description, int pageNum) throws Exception{
 		long start = System.nanoTime();
@@ -422,17 +376,17 @@ public class BpiItemService implements Serializable {
 				billNo, subBillNo, pageNo, itemNo, packageNo, objectCode, subsidiaryCode, description, pageNum);
 		logger.info("Time taken for searchBQItemsByPage: " + (System.nanoTime() - start));
 		return wrapper;
-	}
+	}*/
 	
 	public List<BpiItemResource> getResourcesByBqItemId(Long id) throws Exception{
 		return resourceHBDao.getResourcesByBpiItemId(id);
 	}
 	
-	public String saveResourceUpdates(List<BpiItemResource> resources) throws Exception{
+	/*public String saveResourceUpdates(List<BpiItemResource> resources) throws Exception{
 		return saveResourceUpdates(resources, true, true);
-	}
+	}*/
 	
-	private String saveResourceUpdates(List<BpiItemResource> resources, boolean doValidate, boolean doSplit) throws Exception{
+	/*private String saveResourceUpdates(List<BpiItemResource> resources, boolean doValidate, boolean doSplit) throws Exception{
 		logger.info("Saving resources");
 		//validate all - return error message if there is one, otherwise continue and save
 		String jobNumber = resources.get(0).getJobNumber();
@@ -706,9 +660,9 @@ public class BpiItemService implements Serializable {
 			}
 		}
 		return null;
-	}
+	}*/
 	
-	public String saveSplitMergeResources(List<BpiItemResource> oldResources, List<BpiItemResource> newResources) throws Exception{
+	/*public String saveSplitMergeResources(List<BpiItemResource> oldResources, List<BpiItemResource> newResources) throws Exception{
 		logger.info("Split or merge resources");
 		
 		StringBuffer errorSB = new StringBuffer();
@@ -799,9 +753,9 @@ public class BpiItemService implements Serializable {
 			
 		}
 		return error;
-	}
+	}*/
 	
-	public String saveBalancedResources(List<BpiItemResource> resources, Double remeasuredQuantity) throws Exception{
+	/*public String saveBalancedResources(List<BpiItemResource> resources, Double remeasuredQuantity) throws Exception{
 		logger.info("Saving balanced resources");
 		JobInfo job = jobHBDao.obtainJobInfo(resources.get(0).getJobNumber());
 		Long repackagingEntryId = repackagingEntryDao.getIdOfLatestRepackagingEntry(job);
@@ -892,9 +846,9 @@ public class BpiItemService implements Serializable {
 			bqItemHBDao.saveOrUpdate(bqItem);
 		}
 		return null;
-	}
+	}*/
 	
-	public String saveResourceSubcontractAddendums(List<BpiItemResource> resources) throws Exception{
+	/*public String saveResourceSubcontractAddendums(List<BpiItemResource> resources) throws Exception{
 		logger.info("Saving sc addendums");
 		//Lists of things to save later (validate and prepare everything before saving)
 		List<BpiItemResource> resourcesDb = new ArrayList<BpiItemResource>(resources.size());
@@ -1045,7 +999,7 @@ public class BpiItemService implements Serializable {
 			auditDao.saveOrUpdate(audit);
 		
 		return null; //Return null if there are no errors
-	}
+	}*/
 	
 	public void validateResource(BpiItemResource resource, StringBuffer errorSB) throws Exception{
 		String objectCode = resource.getObjectCode();
@@ -1075,7 +1029,7 @@ public class BpiItemService implements Serializable {
 	 * modified on Aug 27, 2012 11:07:26 AM
 	 * More checking is added to prevent null pointer exception
 	 */
-	private String checkPackageDetailsCanBeEdited(BpiItemResource resource) throws Exception{
+	/*private String checkPackageDetailsCanBeEdited(BpiItemResource resource) throws Exception{
 		String jobNumber = resource.getJobNumber();
 		String packageNo = resource.getPackageNo();
 		Subcontract scPackage = packageRepository.obtainSCPackage(jobNumber, packageNo);
@@ -1143,9 +1097,9 @@ public class BpiItemService implements Serializable {
 				return "Resource "+resource.getDescription()+" cannot be edited. It is being used in Payment Requisition.<br/>";
 		}
 		return null;
-	}
+	}*/
 	
-	private void updateTaOrScDetails(BpiItemResource resource) throws Exception{
+	/*private void updateTaOrScDetails(BpiItemResource resource) throws Exception{
 		logger.info("Updating ta/sc detail from resource");
 		String jobNumber = resource.getJobNumber();
 		String packageNo = resource.getPackageNo();
@@ -1160,7 +1114,7 @@ public class BpiItemService implements Serializable {
 			tenderAnalysisRepository.createOrUpdateTADetailFromResource(resource);
 		}
 		return;
-	}
+	}*/
 	
 	public BpiItem getBillItemFieldsForChangeOrder(JobInfo job, String bqType) throws Exception{
 		BpiItem bqItem = new BpiItem();
@@ -1190,7 +1144,7 @@ public class BpiItemService implements Serializable {
 		return bqItem;
 	}
 	
-	public String validateBqItemChangeOrder(BpiItem bqItem) throws Exception{
+	/*public String validateBqItemChangeOrder(BpiItem bqItem) throws Exception{
 		String error = "";
 		//Validate bpi for OI (check for duplicates)
 		if("OI".equals(bqItem.getBqType())){
@@ -1203,9 +1157,9 @@ public class BpiItemService implements Serializable {
 		if(error.length() != 0)
 			return error;
 		return null; 
-	}
+	}*/
 	
-	public String saveChangeOrderBqAndResources(BpiItem bqItem, List<BpiItemResource> resources) throws Exception{
+	/*public String saveChangeOrderBqAndResources(BpiItem bqItem, List<BpiItemResource> resources) throws Exception{
 		logger.info("Saving BQ Item Change Order");
 		//Separate the bqItem and resources (so when we save the bqItem, it doesn't cascade and save the resources)
 		
@@ -1337,9 +1291,9 @@ public class BpiItemService implements Serializable {
 			}
 		}
 		return error;
-	}
+	}*/
 	
-	public void splitTerminateResourceFromScDetail(SubcontractDetail scDetail) throws Exception{
+	/*public void splitTerminateResourceFromScDetail(SubcontractDetail scDetail) throws Exception{
 		if(scDetail.getBillItem() == null || scDetail.getResourceNo() == null || scDetail.getNewQuantity() == null)
 			return;
 		//Split bill item ref
@@ -1374,27 +1328,27 @@ public class BpiItemService implements Serializable {
 		splitResource.setPackageNo("0");
 		splitResource.setResourceNo(resourceHBDao.getNextResourceNoForBpiItem(bqItem));
 		
-/*		// Never implement
+		// Never implement
  		//update IV amount (For method 3)
 		if (resource.getIvCumAmount()!=null && Math.abs(resource.getIvCumAmount().doubleValue())>=0.01 ){
 			resource.setIvCumAmount(resource.getCostRate() * resource.getQuantity() * resource.getRemeasuredFactor());
 			resource.setIvCumQuantity(newResourceQuantity);
 			resource.setIvMovementAmount(resource.getIvCumAmount()-resource.getIvPostedAmount());
-		}*/
+		}
 			
 		
 		//Save
 		resourceHBDao.saveOrUpdate(resource);
 		resourceHBDao.saveOrUpdate(splitResource);		
-	}
+	}*/
 	
 	public BpiItem getBqItemWithResources(Long id) throws Exception{
 		return bqItemHBDao.getBpiItemWithResources(id);
 	}
 	
-	public List<BpiItemResource> getResourcesByBpi(String jobNumber, String bpi) throws Exception{
+	/*public List<BpiItemResource> getResourcesByBpi(String jobNumber, String bpi) throws Exception{
 		return resourceHBDao.getResourcesByBpi(jobNumber, bpi);
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
@@ -1449,7 +1403,7 @@ public class BpiItemService implements Serializable {
 	 * @author tikywong
 	 * April 1, 2011
 	 */
-	public IVInputByBQItemPaginationWrapper getBQItemsForIVInputByPage(int pageNum) throws Exception {
+	/*public IVInputByBQItemPaginationWrapper getBQItemsForIVInputByPage(int pageNum) throws Exception {
 		logger.info("STARTED -> getBQItemsForIVInputByPage()");
 		IVInputByBQItemPaginationWrapper paginationWrapper = new IVInputByBQItemPaginationWrapper();
 		paginationWrapper.setTotalPage(ivInputByBQItemPaginationWrapper.getTotalPage());
@@ -1475,7 +1429,7 @@ public class BpiItemService implements Serializable {
 		
 		logger.info("RETURNED BQITEM RECORDS(PAGINATION) SIZE: "+paginationWrapper.getCurrentPageContentList().size()+" RANGE:"+(start+1)+"-"+end);
 		return paginationWrapper;
-	}
+	}*/
 	
 	public List<BpiItemResource> searchResourcesByBPIDescriptionObjSubsiPackageNo(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String resourceDescription, String objectCode, String subsidiaryCode, String packageNo) throws Exception {
 		return resourceHBDao.searchResourcesByBPIDescriptionObjSubsiPackageNo(jobNumber, billNo, subBillNo, pageNo, itemNo, resourceDescription, objectCode, subsidiaryCode, packageNo);
@@ -1563,7 +1517,7 @@ public class BpiItemService implements Serializable {
 	 * @author tikywong
 	 * Apr 27, 2011 6:06:51 PM
 	 */
-	public Boolean updateBQItemsIVAmount(List<BpiItem> bqItems, String username) throws Exception {
+	/*public Boolean updateBQItemsIVAmount(List<BpiItem> bqItems, String username) throws Exception {
 		logger.info("STARTED -> updateBQItemsIVAmount()");
 		String jobNumber = null;
 		for(BpiItem bqItem: bqItems){
@@ -1606,14 +1560,14 @@ public class BpiItemService implements Serializable {
 		
 		logger.info("NUMBER OF UPDATED BQITEM RECORDS: "+bqItems.size());
 		return true;
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
 	 * Apr 26, 2011 10:17:18 AM
 	 * @see com.gammon.qs.service.BpiItemService#updateResourcesIVAmount(java.util.List)
 	 */
-	public Boolean updateResourcesIVAmount(List<BpiItemResource> resources, String username) throws Exception {
+	/*public Boolean updateResourcesIVAmount(List<BpiItemResource> resources, String username) throws Exception {
 		logger.info("STARTED -> updateResourcesIVAmount()");
 		String jobNumber = null;
 		for(BpiItemResource resource: resources){
@@ -1662,13 +1616,13 @@ public class BpiItemService implements Serializable {
 		
 		logger.info("NUMBER OF UPDATED RESOURCE RECORDS: "+resources.size());
 		return true;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * Apr 26, 2011 4:15:38 PM
 	 */
-	public List<IVResourceWrapper> updateResourcesIVAmountByBQItem(IVBQItemWrapper bqItemWrapper) throws Exception {
+	/*public List<IVResourceWrapper> updateResourcesIVAmountByBQItem(IVBQItemWrapper bqItemWrapper) throws Exception {
 		logger.info("STARTED -> updateResourcesIVAmountByBQItem()");
 		BpiItem bqItemInDB = bqItemWrapper.getBqItem();
 		
@@ -1742,14 +1696,14 @@ public class BpiItemService implements Serializable {
 		}
 
 		return updatedresourceWrappers;
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
 	 * Apr 27, 2011 6:07:39 PM
 	 * @see com.gammon.qs.service.BpiItemService#updateBQItemIVAmountByResource(com.gammon.qs.wrapper.IVResourceWrapper)
 	 */
-	public IVBQItemWrapper updateBQItemIVAmountByResource(IVResourceWrapper resourceWrapper) throws Exception {
+	/*public IVBQItemWrapper updateBQItemIVAmountByResource(IVResourceWrapper resourceWrapper) throws Exception {
 		logger.info("STARTED -> updateBQItemIVAmountByResource()");
 		
 		BpiItemResource updatedResource = resourceWrapper.getResource();
@@ -1785,14 +1739,14 @@ public class BpiItemService implements Serializable {
 //					" Cumulative IV Amount: "+bqItemWrapper.getUpdatedIVCumulativeAmount());
 		
 		return bqItemWrapper;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * Apr 26, 2011 4:17:11 PM
 	 * @see com.gammon.qs.service.BpiItemService#saveIVAmountForUpdateByBQItemOrResource(com.gammon.qs.wrapper.IVBQItemWrapper, java.util.List, java.util.List, java.util.List)
 	 */
-	@Transactional(rollbackFor = Exception.class, value = "transactionManager")
+	/*@Transactional(rollbackFor = Exception.class, value = "transactionManager")
 	public Boolean saveIVAmountForUpdateByBQItemOrResource(	IVBQItemWrapper bqItemWrapper, 
 															List<IVResourceWrapper> resourceWrappers,
 															List<IVBQResourceSummaryWrapper> bqResourceSummaryWrappers,
@@ -1888,13 +1842,13 @@ public class BpiItemService implements Serializable {
 		
 //		logger.info("DONE -> saveIVAmountForUpdateByBQItemOrResource()");
 		return true;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * April 19, 2011
 	 */
-	public ExcelFile downloadBQItemIVExcel(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String bqDescription) throws Exception {
+	/*public ExcelFile downloadBQItemIVExcel(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String bqDescription) throws Exception {
 		logger.info("STARTED -> downloadBQItemIVExcel()");
 		List<BpiItem> bqItems = obtainBQItemList(jobNumber, billNo, subBillNo, pageNo, itemNo, bqDescription);
 		
@@ -1984,13 +1938,13 @@ public class BpiItemService implements Serializable {
 
 		logger.info("DONE -> downloadBQItemIVExcel()");
 		return excel;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * April 20, 2011
 	 */
-	public ExcelFile downloadResourceIVExcel(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String resourceDescription, String objectCode, String subsidiaryCode, String packageNo) throws Exception {
+	/*public ExcelFile downloadResourceIVExcel(String jobNumber, String billNo, String subBillNo, String pageNo, String itemNo, String resourceDescription, String objectCode, String subsidiaryCode, String packageNo) throws Exception {
 	logger.info("STARTED -> downloadResourceIVExcel()");
 		List<BpiItemResource> resourcesList = searchResourcesByBPIDescriptionObjSubsiPackageNo(jobNumber, billNo, subBillNo, pageNo, itemNo, resourceDescription, objectCode, subsidiaryCode, packageNo);
 
@@ -2074,13 +2028,13 @@ public class BpiItemService implements Serializable {
 
 		logger.info("DONE -> downloadResourceIVExcel()");
 		return excel;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * April 20, 2011
 	 */
-	public String uploadBQItemIVExcel(String jobNumber, String username, byte[] file) throws Exception {
+	/*public String uploadBQItemIVExcel(String jobNumber, String username, byte[] file) throws Exception {
 		logger.info("STARTED -> uploadBQItemIVExcel()");
 		try{		
 			//Open Excel File
@@ -2184,13 +2138,13 @@ public class BpiItemService implements Serializable {
 			e.printStackTrace();
 			return "Error reading file:<br/>" + e.getMessage();
 		}
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
 	 * April 20, 2011
 	 */
-	public String uploadResourceIVExcel(String jobNumber, String username, byte[] file) throws Exception {
+	/*public String uploadResourceIVExcel(String jobNumber, String username, byte[] file) throws Exception {
 		logger.info("STARTED -> uploadResourceIVExcel()");
 		try{
 			//Open Excel File
@@ -2298,14 +2252,14 @@ public class BpiItemService implements Serializable {
 			e.printStackTrace();
 			return "Error reading file:<br/>" + e.getMessage();
 		}
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * May 20, 2011 2:42:49 PM
 	 * @see com.gammon.qs.service.BpiItemService#recalculateIVAmountsByResourceForMethodThree(java.lang.String)
 	 */
-	public Boolean recalculateIVAmountsByResourceForMethodThree(String jobNumber)throws Exception {
+	/*public Boolean recalculateIVAmountsByResourceForMethodThree(String jobNumber)throws Exception {
 		logger.info("STARTED -> recalculateIVAmountsByResourceForMethodThree()");
 		Boolean toBeUpdated = true;
 		//UPDATE	
@@ -2323,13 +2277,13 @@ public class BpiItemService implements Serializable {
 		
 		logger.info("DONE -> recalculateIVAmountsByResourceForMethodThree()");
 		return toBeUpdated;
-	}
+	}*/
 
 	/**
 	 * @author tikywong
 	 * May 20, 2011 3:20:43 PM
 	 */
-	public Boolean recalculateBQItemIVAmountByResource(String jobNumber)throws DatabaseOperationException {
+	/*public Boolean recalculateBQItemIVAmountByResource(String jobNumber)throws DatabaseOperationException {
 		logger.info("Recalculating BQItems...");
 		double total = 0;
 		List<IVBpiItemGroupedByIDWrapper> updatedWrappers = resourceHBDao.groupResourcesToBpiItems(jobNumber);
@@ -2356,14 +2310,13 @@ public class BpiItemService implements Serializable {
 		logger.info("BQItems Total IVAmount: "+numberFormat.format(total));
 		bqItemHBDao.updateBpiItems(bqItems);
 		return true;
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
 	 * May 23, 2011 5:24:57 PM
 	 */
-	public Boolean recalculateBQResourceSummaryIVAmountByResource(String jobNumber) throws Exception{
-		logger.info("Recalculating BQResourceSummaries...");
+	/*public Boolean recalculateBQResourceSummaryIVAmountByResource(String jobNumber) throws Exception{ logger.info("Recalculating BQResourceSummaries...");
 		double total = 0;
 		List<IVBpiResourceSummaryGroupedBySCWrapper> updatedSCWrappers = resourceHBDao.groupResourcesToBQResourceSummariesForSC(jobNumber);
 		List<IVBpiResourceSummaryGroupedBySCWrapper> updatedNonSCWrappers = resourceHBDao.groupResourcesToBpiResourceSummariesForNonSC(jobNumber);
@@ -2416,14 +2369,14 @@ public class BpiItemService implements Serializable {
 		logger.info("BQResourceSummaries Total IVAmount: "+numberFormat.format(total));
 		bqResourceSummaryDao.updateBQResourceSummaries(bqResourceSummaries);
 		return true;
-	}
+	}*/
 	
 	/**
 	 * @author tikywong
 	 * May 24, 2011 9:16:07 AM
 	 * @throws Exception 
 	 */
-	public Boolean recalculateSCDetailsWorkdoneQuantityByResource(String jobNumber) throws Exception {
+	/*public Boolean recalculateSCDetailsWorkdoneQuantityByResource(String jobNumber) throws Exception {
 		logger.info("Recalculating SCDetails...");
 		double total = 0;
 		List<BpiItemResource> resources = resourceHBDao.obtainSCResources(jobNumber);
@@ -2451,6 +2404,6 @@ public class BpiItemService implements Serializable {
 		logger.info("SCDetails Total WorkdoneAmount: "+numberFormat.format(total));
 		scDetailsHBDao.updateSCDetails(scDetails);
 		return true;
-	}
+	}*/
 	
 }
