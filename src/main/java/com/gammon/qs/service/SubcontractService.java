@@ -4558,6 +4558,26 @@ public class SubcontractService {
 					
 					logger.info("Inserting Payment detail" + paymentDetail.toString());
 					paymentCertDetailHBDao.insert(paymentDetail);
+					
+					
+					if ("MS".equals(scDetails.getLineType())){
+						List<PaymentCertDetail> paymentDetailMRList = paymentCertDetailHBDao.getSCPaymentDetail(paymentCert, "MR");
+						if(paymentDetailMRList== null){
+							PaymentCertDetail paymentDetailMR = new PaymentCertDetail();
+							paymentDetailMR.setBillItem("");
+							paymentDetailMR.setPaymentCertNo(paymentCert.getPaymentCertNo().toString());
+							paymentDetailMR.setPaymentCert(paymentCert);
+							paymentDetailMR.setLineType("MR");
+							paymentDetailMR.setObjectCode(scDetails.getObjectCode());
+							paymentDetailMR.setSubsidiaryCode(scDetails.getSubsidiaryCode());
+							paymentDetailMR.setCumAmount(0.0);
+							paymentDetailMR.setMovementAmount(0.0);
+							paymentDetailMR.setScSeqNo(100002);
+							
+							paymentCertDetailHBDao.insert(paymentDetailMR);
+						}
+
+					}
 				}
 				
 			}

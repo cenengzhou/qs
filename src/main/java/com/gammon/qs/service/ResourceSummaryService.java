@@ -1814,11 +1814,18 @@ public class ResourceSummaryService implements Serializable {
 		}
 	}
 
-	public Boolean recalculateResourceSummaryIVbyJob(JobInfo job) throws Exception{
-		List<String> packageNos = subcontractHBDao.getAwardedPackageNos(job);
-		for(String packageNo : packageNos)
-			recalculateResourceSummaryIV(job.getJobNumber(), packageNo, false);
-		return Boolean.TRUE;
+	public String recalculateResourceSummaryIVbyJob(String jobNo) throws Exception{
+		String error = "";
+		try {
+			JobInfo job = jobDao.obtainJobInfo(jobNo);
+			List<String> packageNos = subcontractHBDao.getAwardedPackageNos(job);
+			for(String packageNo : packageNos)
+				recalculateResourceSummaryIV(job.getJobNumber(), packageNo, false);
+		} catch (Exception e) {
+			error = "IV failed to be recalculated.";
+			e.printStackTrace();
+		}
+		return error;
 	}
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 	

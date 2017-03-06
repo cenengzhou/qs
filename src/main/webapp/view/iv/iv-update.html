@@ -4,25 +4,14 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<div class="col-md-6">
-						<p class="text-red"><span class="icofont icofont-star-alt-2"></span>Resources of <b>Finalized Subcontract</b> can be updated in here directly and do the final IV posting in Step 3.</p>
-					</div>
+					<p class="text-red">
+						<span class="icofont icofont-star-alt-2"></span>Resources of <b>Finalized
+							Subcontract</b> can be updated in here directly and do the final IV
+						posting in Step 3.
+					</p>
+				</div>
 				<div class="box-title pull-right col-md-6">
-					<!-- div class="col-md-4">
-					<div class="input-group-btn">
-						  <button ng-show="statusArray.length>0" type="button" class="pull-right btn btn-primary dropdown-toggle" style="line-height:18px !important;padding-top:5px !important;padding-bottom:5px !important" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    <span class="caret"></span>
-					    <span class="sr-only">Toggle Dropdown</span>
-					  </button>
-					  <ul ng-show="statusArray.length>0" class="pull-right dropdown-menu">
-					    <li><a href ng-click="showStatus()">Show Import Status</a></li>
-					  </ul>
-					  <label class="btn btn-sm pull-right btn-primary"  style="padding-top:5px !important;padding-bottom:5px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;">
-					                <i class="fa fa-file-excel-o"></i> Import&hellip; 
-									<input style="display:none" type="file" accept=".xls,.xlsx,.csv" js-xls onread="readXls" onreadcsv="readCsv" onerror="error">
-								</label>
-					</div>
-				</div -->
-					
+
 					<div class="col-md-4 animated fadeIn" style="text-align: right">
 						<button ng-show="statusArray.length>0"
 							class="btn btn-sm btn-block btn-primary" ng-click="showStatus()">Show
@@ -41,23 +30,35 @@
 
 			</div>
 			<div class="box-body">
-				<div id="grid" save-and-restore-grid-state="iv_update" ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
-					ui-grid-importer external-scopes="clickHandler"
-					ui-grid-resize-columns ui-grid-cellnav ui-grid-validate
-					ui-grid-row-edit ui-grid-edit ui-grid-exporter class="grid" resize
-					ng-style="resizeWithOffset(360)"></div>
-				<div class="col-md-12">
-					<div class="col-md-6">
-						<button type="button" class="btn bg-primary btn-block"
-							ng-show="repackaging.status === '900'" ng-click="update()">
-							<i class="fa fa-floppy-o"></i> Update
-						</button>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="grid" save-and-restore-grid-state="iv_update"
+							ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
+							ui-grid-importer external-scopes="clickHandler"
+							ui-grid-resize-columns ui-grid-cellnav ui-grid-validate
+							ui-grid-row-edit ui-grid-edit ui-grid-exporter class="grid"
+							resize ng-style="resizeWithOffset(360)"></div>
 					</div>
-					<div class="col-md-6">
-						<button type="button" class="btn bg-warning btn-block text-white"
-							ng-show="repackaging.status === '900'" ng-click="reset()">
-							<i class="fa fa-refresh"></i> Cancel
-						</button>
+					<div class="col-md-12">
+						<div class="col-md-4">
+							<button type="button" class="btn bg-primary btn-block"
+								ng-show="repackaging.status === '900'"
+								ng-click="recalculateIV()">
+								<i class="fa fa-floppy-o"></i> Recalculate IV by Job
+							</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn bg-primary btn-block"
+								ng-show="repackaging.status === '900'" ng-click="update()">
+								<i class="fa fa-floppy-o"></i> Update
+							</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn bg-warning btn-block text-white"
+								ng-show="repackaging.status === '900'" ng-click="reset()">
+								<i class="fa fa-refresh"></i> Cancel
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

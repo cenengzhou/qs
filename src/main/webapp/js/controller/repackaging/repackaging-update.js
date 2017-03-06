@@ -196,10 +196,25 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		});
 
 	}
-
-
-	//Open Window
+	
 	$scope.open = function(view){
+		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){
+			var modalOptions = {
+					bodyText: "There are unsaved data, do you want to leave without saving?"
+			};
+			confirmService.showModal({}, modalOptions)
+			.then(function (result) {
+				if(result == "Yes"){
+					$scope.gridDirtyRows = null;
+					openWindow(view);
+				}
+			});
+			
+		}else
+			openWindow(view);
+	};
+
+	function openWindow(view){
 
 		if(view=="split"){
 			var valid = validate(view);
@@ -216,8 +231,8 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 		}else if (view=="add"){
 			modalService.open('md', 'view/repackaging/modal/repackaging-add.html', 'RepackagingAddModalCtrl');
 		}
-	};
-
+	}
+	
 	var validate = function(action){
 		var selectedRows = $scope.gridApi.selection.getSelectedRows();
 		if(action == 'split' && selectedRows.length != 1){

@@ -2315,10 +2315,10 @@ public class PaymentService{
 			if (scDetailList!=null){
 				List<PaymentCertDetail> resultList = new ArrayList<PaymentCertDetail>();
 
-				double totalMOSAmount = 0;
+				//double totalMOSAmount = 0;
 				String tempSubsidCode = "";
 				String tempObjCode = "";
-
+				boolean createMR = false;
 				
 				for (SubcontractDetail scDetails:scDetailList){
 					if(scPaymentCert.getSubcontract().getSubcontractStatus()==500 && !"A".equals(scDetails.getApproved()))
@@ -2364,21 +2364,11 @@ public class PaymentService{
 							}
 						}
 						
-						/*scPaymentDetail.setCumAmount(0.0);
-						scPaymentDetail.setMovementAmount(0.0);
-						if (scPaymentCert.getPaymentCertNo()>1 && previousPaymentCert != null){
-							logger.info(scDetails.getLineType()+" - "+scDetails.getId());
-							PaymentCertDetail paymentDetail = paymentDetailDao.obtainPaymentDetail(previousPaymentCert, scDetails);
-							logger.info("paymentDetail:"+paymentDetail);
-							if(paymentDetail!=null)
-								scPaymentDetail.setCumAmount(paymentDetail.getCumAmount());
-						}*/
-						
-						
 						if (scDetails.getLineType()!=null && "MS".equals(scDetails.getLineType().trim())){
-							totalMOSAmount += scPaymentDetail.getCumAmount();
+							//totalMOSAmount += scPaymentDetail.getCumAmount();
 							tempSubsidCode = scDetails.getSubsidiaryCode();
 							tempObjCode = scDetails.getObjectCode();
+							createMR = true;
 						}
 						resultList.add(scPaymentDetail);
 					}
@@ -2412,8 +2402,8 @@ public class PaymentService{
 				}
 				
 				//create MR payment Detail
-				double cumMOSRetention = CalculationUtil.round(totalMOSAmount*scPaymentCert.getSubcontract().getMosRetentionPercentage()/100.0, 2);
-				if(cumMOSRetention != 0 || preMRAmount != 0){
+				//double cumMOSRetention = CalculationUtil.round(totalMOSAmount*scPaymentCert.getSubcontract().getMosRetentionPercentage()/100.0, 2);
+				if(createMR){
 					PaymentCertDetail scPaymentDetailMR = new PaymentCertDetail();
 					scPaymentDetailMR.setBillItem("");
 					scPaymentDetailMR.setPaymentCertNo(scPaymentCert.getPaymentCertNo().toString());

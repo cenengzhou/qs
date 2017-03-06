@@ -257,5 +257,18 @@ public class ResourceSummaryController {
 		return result;
 	}
 	
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('ResourceSummaryController','recalculateResourceSummaryIV', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "recalculateResourceSummaryIVbyJob", method = RequestMethod.POST)
+	public String recalculateResourceSummaryIVbyJob(@RequestParam(required =true) String jobNo){
+		String result = "";
+		try {
+			result = resourceSummaryService.recalculateResourceSummaryIVbyJob(jobNo);
+		} catch (Exception e) {
+			result = "IV cannot be updated.";
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
 

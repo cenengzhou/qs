@@ -497,13 +497,8 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					$scope.finalizedMovementAmount = 0;
 					$scope.resetData = [];
 					angular.forEach(data, function(value, key){
-						//value.ivMovement = roundUtil.round(value.currIVAmount - value.postedIVAmount, 2);
 						var newObj = angular.copy(value);
 						$scope.resetData.push(newObj);
-						/*if(){
-							$scope.nonFinalizedMovementAmount += ;
-							$scope.finalizedMovementAmount += ;
-						}*/
 
 					});
 					
@@ -557,7 +552,18 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 				});
 	}
 	
-	
+	$scope.recalculateIV = function() {
+		resourceSummaryService.recalculateResourceSummaryIVbyJob($scope.jobNo)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IV has been recalculated.");
+						$state.reload();
+					}
+				});
+	}
 	
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
 		if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length >0){

@@ -2,7 +2,7 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl',
 		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
 		 function($scope, $http, modalService, blockUI, transitService) {
 	
-		$scope.blockCodeMaintenance = blockUI.instances.get('blockCodeMaintenance');
+		//$scope.blockCodeMaintenance = blockUI.instances.get('blockCodeMaintenance');
 		$scope.loadData = function() {
 //		$scope.blockCodeMaintenance.start('Loading...')
 		transitService.obtainTransitCodeMatcheList().then(
