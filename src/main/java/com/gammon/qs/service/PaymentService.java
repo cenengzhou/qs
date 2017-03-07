@@ -2475,6 +2475,7 @@ public class PaymentService{
 		String error = "";
 		double totalCertAmount = 0.0;
 		double totalMOSAmount = 0.0;
+		boolean updateMR = false;
 		
 		try {
 			//1. Validate Subcontract
@@ -2572,6 +2573,7 @@ public class PaymentService{
 
 							if (scDetail.getLineType()!=null && "MS".equals(scDetail.getLineType().trim())){
 								totalMOSAmount += paymentDetail.getCumAmount();
+								updateMR = true;
 							}
 							scDetailDao.update(scDetail);
 
@@ -2642,12 +2644,25 @@ public class PaymentService{
 				
 			}
 			
-			List<PaymentCertDetail> paymentDetailMRList = paymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
-			if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){
-				PaymentCertDetail paymentDetailMR = paymentDetailMRList.get(0);
-				paymentDetailMR.setCumAmount(cumMOSRetention);
-				paymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
-				paymentDetailDao.update(paymentDetailMR);
+			if(updateMR){
+				List<PaymentCertDetail> paymentDetailMRList = paymentDetailDao.getSCPaymentDetail(paymentCert, "MR");
+				if(paymentDetailMRList!= null && paymentDetailMRList.size()==1){
+					PaymentCertDetail paymentDetailMR = paymentDetailMRList.get(0);
+					paymentDetailMR.setCumAmount(cumMOSRetention);
+					paymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
+					paymentDetailDao.update(paymentDetailMR);
+				}else{
+					PaymentCertDetail scPaymentDetailMR = new PaymentCertDetail();
+					scPaymentDetailMR.setBillItem("");
+					scPaymentDetailMR.setPaymentCertNo(paymentCert.getPaymentCertNo().toString());
+					scPaymentDetailMR.setPaymentCert(paymentCert);
+					scPaymentDetailMR.setLineType("MR");
+					scPaymentDetailMR.setObjectCode("231310");
+					scPaymentDetailMR.setCumAmount(cumMOSRetention);
+					scPaymentDetailMR.setMovementAmount(cumMOSRetention - preMRAmount);
+					scPaymentDetailMR.setScSeqNo(100002);
+					paymentDetailDao.insert(scPaymentDetailMR);
+				}
 			}
 			
 			//6. Update Payment Cert Amount

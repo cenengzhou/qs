@@ -4558,11 +4558,13 @@ public class SubcontractService {
 					
 					logger.info("Inserting Payment detail" + paymentDetail.toString());
 					paymentCertDetailHBDao.insert(paymentDetail);
-					
+				
 					
 					if ("MS".equals(scDetails.getLineType())){
+						logger.info("MS");
 						List<PaymentCertDetail> paymentDetailMRList = paymentCertDetailHBDao.getSCPaymentDetail(paymentCert, "MR");
-						if(paymentDetailMRList== null){
+						logger.info("paymentDetailMRList: "+paymentDetailMRList);
+						if(paymentDetailMRList== null || paymentDetailMRList.size() ==0){
 							PaymentCertDetail paymentDetailMR = new PaymentCertDetail();
 							paymentDetailMR.setBillItem("");
 							paymentDetailMR.setPaymentCertNo(paymentCert.getPaymentCertNo().toString());
