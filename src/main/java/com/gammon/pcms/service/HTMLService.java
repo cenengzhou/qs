@@ -111,12 +111,8 @@ public class HTMLService implements Serializable{
 		List<PaymentCert> scPaymentCertList = null;
 		MasterListVendor masterList = new MasterListVendor();
 
-		String strPaymentDueDate = null;
-		String strPaymentAsAtDate = null;
 		String strIpaOrInvoiceReceivedDate = null;
 		String strCertIssueDate = null;
-		Double gstPayable = new Double(0);
-		Double gstReceivable = new Double(0);
 		Double postedIVAmt = new Double(0);
 		Double maxRetentionAmount = new Double(0);
 		
@@ -147,28 +143,13 @@ public class HTMLService implements Serializable{
 				currentPaymentNo = Integer.valueOf(paymentNo);
 				logger.info("PaymentNo: "+paymentNo);
 			}
-			gstPayable = paymentService.obtainPaymentGstAmount(jobNumber, subcontractNumber, currentPaymentNo, "GP");
-			gstReceivable = paymentService.obtainPaymentGstAmount(jobNumber, subcontractNumber, currentPaymentNo, "GR");
 			paymentCert = paymentService.obtainPaymentCertificate(jobNumber, subcontractNumber, new Integer(currentPaymentNo));
 			logger.info("Job No.: "+jobNumber+"- Package No.: "+subcontractNumber+"- Payment No.: "+currentPaymentNo);
-			paymentCertViewWrapper = paymentService.calculatePaymentCertificateSummary(jobNumber, subcontractNumber, currentPaymentNo);
+			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNumber, subcontractNumber, String.valueOf(currentPaymentNo), false);
 			
 			mainCertNumber 		= paymentCertViewWrapper.getMainCertNo();
-			strPaymentDueDate 	= paymentCertViewWrapper.getDueDate();
-			strPaymentAsAtDate	= paymentCertViewWrapper.getAsAtDate();
 			strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
 			strCertIssueDate = DateHelper.formatDate(paymentCert.getCertIssueDate(), GlobalParameter.DATE_FORMAT);
-			
-			String currency = paymentCert.getSubcontract().getPaymentCurrency();
-			paymentCertViewWrapper.setCurrency(currency);
-			
-			String companyBaseCurrency = accountCodeDao.obtainCurrencyCode(jobNumber);
-			paymentCertViewWrapper.setCompanyBaseCurrency(companyBaseCurrency);
-			
-			
-			Double exchangeRate = paymentCert.getSubcontract().getExchangeRate();
-			paymentCertViewWrapper.setExchangeRate(exchangeRate);
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -228,11 +209,7 @@ public class HTMLService implements Serializable{
 		data.put("clientCertAmount", clientCertAmount != null ? clientCertAmount : new Double(0));
 		data.put("scPaymentCertList", scPaymentCertList != null ? scPaymentCertList : new ArrayList<>());
 		data.put("postedIVAmt", postedIVAmt != null ? postedIVAmt : new Double(0));
-		data.put("gstPayable", gstPayable != null ? gstPayable : new Double(0));
-		data.put("gstReceivable", gstReceivable != null ? gstReceivable : new Double(0));
 		data.put("mainCertNumber", mainCertNumber);
-		data.put("strPaymentDueDate", strPaymentDueDate != null ? strPaymentDueDate : "");
-		data.put("strPaymentAsAtDate", strPaymentAsAtDate != null ? strPaymentAsAtDate : "");
 		data.put("strIpaOrInvoiceReceivedDate", strIpaOrInvoiceReceivedDate != null ? strIpaOrInvoiceReceivedDate : "");
 		data.put("strCertIssueDate", strCertIssueDate != null ? strCertIssueDate : "");
 		data.put("strPaymentStatus", strPaymentStatus);
