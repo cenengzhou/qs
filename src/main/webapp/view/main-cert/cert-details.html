@@ -198,14 +198,14 @@
 									<div class="input-group">
 										<!-- <span class="input-group-addon">$</span> -->
 										<input type="text" class="form-control input-sm text-right"
-											ng-currency ng-model="cert.appliedMainContractorAmount"
+											ng-currency ng-required="true"  ng-model="cert.appliedMainContractorAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
 										<!-- <span class="input-group-addon">.00</span> -->
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMainContractorAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -217,7 +217,7 @@
 									Amount</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedNSCNDSCAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -225,7 +225,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedNSCNDSCAmount"
 											ng-disabled="disableButtons  || cert.certificateStatus >= 150">
@@ -236,7 +236,7 @@
 								<label class="col-md-5 control-label">+ MOS Amount</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedMOSAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -244,7 +244,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMOSAmount"
 											ng-disabled="disableButton || cert.certificateStatus >= 150">
@@ -256,7 +256,7 @@
 									Retention Released</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedMainContractorRetentionReleased"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -264,7 +264,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMainContractorRetentionReleased"
 											ng-disabled="disableButtons|| cert.certificateStatus >= 150 ">
@@ -276,7 +276,7 @@
 									NSC / NDSC Released</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedRetentionforNSCNDSCReleased"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -284,7 +284,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedRetentionforNSCNDSCReleased"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -296,7 +296,7 @@
 									Released</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedMOSRetentionReleased"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -304,7 +304,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMOSRetentionReleased"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -316,7 +316,7 @@
 									Amount</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedAdjustmentAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -324,7 +324,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedAdjustmentAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -335,7 +335,7 @@
 								<label class="col-md-5 control-label">+ Advance Payment</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedAdvancePayment"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -343,7 +343,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedAdvancePayment"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -354,7 +354,7 @@
 								<label class="col-md-5 control-label">+ CPF Amount</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedCPFAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -362,7 +362,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right text-right"
 											ng-model="cert.certifiedCPFAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -376,13 +376,13 @@
 									<div class="input-group">
 										<input type="text"
 											class="form-control input-sm text-right text-right"
-											ng-currency ng-model="cert.appliedMainContractorRetention"
+											ng-currency ng-required="true"  ng-model="cert.appliedMainContractorRetention"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMainContractorRetention"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -394,7 +394,7 @@
 									Retention for NSC / NDSC</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedRetentionforNSCNDSC"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -402,7 +402,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedRetentionforNSCNDSC"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -414,7 +414,7 @@
 									Retention</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedMOSRetention"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -422,7 +422,7 @@
 								</div>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.certifiedMOSRetention"
 											ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -434,7 +434,7 @@
 									Charge Amount</label>
 								<div class="col-md-3">
 									<div class="input-group">
-										<input type="text" ng-currency
+										<input type="text" ng-currency ng-required="true" 
 											class="form-control input-sm text-right"
 											ng-model="cert.appliedContraChargeAmount"
 											ng-disabled="disableButtons || cert.certificateStatus >= 120">
@@ -462,7 +462,7 @@
 											<div class="form-group col-md-6">
 												<label>GST Amount (Receivable)</label>
 												<div class="input-group">
-													<input type="text" ng-currency
+													<input type="text" ng-currency ng-required="true" 
 														class="form-control input-sm text-right"
 														ng-model="cert.gstReceivable"
 														ng-disabled="disableButtons || cert.certificateStatus >= 150">
@@ -471,7 +471,7 @@
 											<div class="form-group col-md-6">
 												<label>GST Contra Charge (Payable)</label>
 												<div class="input-group">
-													<input type="text" ng-currency
+													<input type="text" ng-currency ng-required="true" 
 														class="form-control input-sm text-right"
 														ng-model="cert.gstPayable"
 														ng-disabled="disableButtons || cert.certificateStatus >= 150">
