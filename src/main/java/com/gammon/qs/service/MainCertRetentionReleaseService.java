@@ -219,6 +219,9 @@ public class MainCertRetentionReleaseService {
 					if ("F".equals(modifiedList.get(i).getStatus())) {
 						if (CalculationUtil.round(modifiedList.get(i).getForecastReleaseAmt() - dbRR.getForecastReleaseAmt(), 2) != 0.00 || modifiedList.get(i).getContractualDueDate() != dbRR.getContractualDueDate() || modifiedList.get(i).getDueDate() != dbRR.getDueDate())
 							rrToUpdateList.add(modifiedList.get(i));
+					} else if("D".equals(modifiedList.get(i).getStatus())){
+						retentionReleaseHBDao.inactivate(dbRR);
+						updated = true;
 					}
 					rrToInsertList.remove(modifiedList.get(i));
 					break;

@@ -109,12 +109,11 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 				return;			
 			}
 			
-			if($scope.removeRowIndex != null){
-				if($scope.removeRowIndex == 0)
-					$scope.gridOptions.data.splice(0,1);
-				else
-					$scope.gridOptions.data.splice($scope.removeRowIndex, 1);
-			}
+			selectedRows[0]['status'] = 'D';
+			$scope.gridApi.rowEdit.setRowsDirty(selectedRows);
+			$scope.gridOptions.data = $scope.gridOptions.data.filter(function(row){
+				return row.status != 'D';
+			});
 		}
 
 	};
@@ -128,7 +127,11 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 					+"Cumulative Retention Amount: "+$scope.cumRetentionAmount );
 		}else{
 			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-			var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+			var dataRows = gridRows.map( function( gridRow ) { 
+					if(gridRow.id!=0 && gridRow.status != 'D'){
+						return gridRow.entity;
+					}
+				});
 			
 			if(dataRows.length==0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
