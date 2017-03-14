@@ -115,6 +115,10 @@ public class SubcontractSnapshot extends BasePersistedObject {
 	private Date onSiteStartDate;
 	private Date snapshotDate;
 	private Subcontract subcontract;
+	
+	private String nameSubcontractor = " ";
+	private String notes;
+	private Integer workscope;
 
 	@Transient
 	public boolean isAwarded() {
@@ -713,6 +717,68 @@ public class SubcontractSnapshot extends BasePersistedObject {
 		this.subcontract = subcontract;
 	}
 
+	@Column(name = "NOTES",
+			length = 1000)
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	@Column(name = "WORK_SCOPE")
+	public Integer getWorkscope() {
+		return workscope;
+	}
+
+	public void setWorkscope(Integer workscope) {
+		this.workscope = workscope;
+	}
+
+	@Column(name = "NAME_SUBCONTRACTOR", length = 500)
+	public String getNameSubcontractor() {
+		return nameSubcontractor;
+	}
+
+	public void setNameSubcontractor(String nameSubcontractor) {
+		this.nameSubcontractor = nameSubcontractor;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SubcontractSnapshot [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description
+				+ ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus
+				+ ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature
+				+ ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount
+				+ ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute
+				+ ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage
+				+ ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage="
+				+ mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention="
+				+ accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation="
+				+ paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate
+				+ ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation="
+				+ cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear
+				+ ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus="
+				+ paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus="
+				+ splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription
+				+ ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract="
+				+ plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract
+				+ ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount="
+				+ totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount
+				+ ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount="
+				+ totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount
+				+ ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate="
+				+ tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate="
+				+ loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate
+				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + ", snapshotDate="
+				+ snapshotDate + ", subcontract=" + subcontract + ", nameSubcontractor=" + nameSubcontractor
+				+ ", notes=" + notes + ", workscope=" + workscope + "]";
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -737,6 +803,8 @@ public class SubcontractSnapshot extends BasePersistedObject {
 		result = prime * result + ((materialIncludedContract == null) ? 0 : materialIncludedContract.hashCode());
 		result = prime * result + ((maxRetentionPercentage == null) ? 0 : maxRetentionPercentage.hashCode());
 		result = prime * result + ((mosRetentionPercentage == null) ? 0 : mosRetentionPercentage.hashCode());
+		result = prime * result + ((nameSubcontractor == null) ? 0 : nameSubcontractor.hashCode());
+		result = prime * result + ((notes == null) ? 0 : notes.hashCode());
 		result = prime * result + ((onSiteStartDate == null) ? 0 : onSiteStartDate.hashCode());
 		result = prime * result + ((originalSubcontractSum == null) ? 0 : originalSubcontractSum.hashCode());
 		result = prime * result + ((packageNo == null) ? 0 : packageNo.hashCode());
@@ -772,6 +840,7 @@ public class SubcontractSnapshot extends BasePersistedObject {
 		result = prime * result + ((totalPostedWorkDoneAmount == null) ? 0 : totalPostedWorkDoneAmount.hashCode());
 		result = prime * result + ((vendorNo == null) ? 0 : vendorNo.hashCode());
 		result = prime * result + ((workCommenceDate == null) ? 0 : workCommenceDate.hashCode());
+		result = prime * result + ((workscope == null) ? 0 : workscope.hashCode());
 		return result;
 	}
 
@@ -907,6 +976,20 @@ public class SubcontractSnapshot extends BasePersistedObject {
 				return false;
 			}
 		} else if (!mosRetentionPercentage.equals(other.mosRetentionPercentage)) {
+			return false;
+		}
+		if (nameSubcontractor == null) {
+			if (other.nameSubcontractor != null) {
+				return false;
+			}
+		} else if (!nameSubcontractor.equals(other.nameSubcontractor)) {
+			return false;
+		}
+		if (notes == null) {
+			if (other.notes != null) {
+				return false;
+			}
+		} else if (!notes.equals(other.notes)) {
 			return false;
 		}
 		if (onSiteStartDate == null) {
@@ -1154,40 +1237,14 @@ public class SubcontractSnapshot extends BasePersistedObject {
 		} else if (!workCommenceDate.equals(other.workCommenceDate)) {
 			return false;
 		}
+		if (workscope == null) {
+			if (other.workscope != null) {
+				return false;
+			}
+		} else if (!workscope.equals(other.workscope)) {
+			return false;
+		}
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "SubcontractSnapshot [jobInfo=" + jobInfo + ", packageNo=" + packageNo + ", description=" + description
-				+ ", packageType=" + packageType + ", vendorNo=" + vendorNo + ", packageStatus=" + packageStatus
-				+ ", subcontractStatus=" + subcontractStatus + ", subcontractorNature=" + subcontractorNature
-				+ ", originalSubcontractSum=" + originalSubcontractSum + ", approvedVOAmount=" + approvedVOAmount
-				+ ", remeasuredSubcontractSum=" + remeasuredSubcontractSum + ", approvalRoute=" + approvalRoute
-				+ ", retentionTerms=" + retentionTerms + ", maxRetentionPercentage=" + maxRetentionPercentage
-				+ ", interimRentionPercentage=" + interimRentionPercentage + ", mosRetentionPercentage="
-				+ mosRetentionPercentage + ", retentionAmount=" + retentionAmount + ", accumlatedRetention="
-				+ accumlatedRetention + ", retentionReleased=" + retentionReleased + ", paymentInformation="
-				+ paymentInformation + ", paymentCurrency=" + paymentCurrency + ", exchangeRate=" + exchangeRate
-				+ ", paymentTerms=" + paymentTerms + ", subcontractTerm=" + subcontractTerm + ", cpfCalculation="
-				+ cpfCalculation + ", cpfBasePeriod=" + cpfBasePeriod + ", cpfBaseYear=" + cpfBaseYear
-				+ ", formOfSubcontract=" + formOfSubcontract + ", internalJobNo=" + internalJobNo + ", paymentStatus="
-				+ paymentStatus + ", submittedAddendum=" + submittedAddendum + ", splitTerminateStatus="
-				+ splitTerminateStatus + ", paymentTermsDescription=" + paymentTermsDescription
-				+ ", labourIncludedContract=" + labourIncludedContract + ", plantIncludedContract="
-				+ plantIncludedContract + ", materialIncludedContract=" + materialIncludedContract
-				+ ", totalPostedWorkDoneAmount=" + totalPostedWorkDoneAmount + ", totalCumWorkDoneAmount="
-				+ totalCumWorkDoneAmount + ", totalPostedCertifiedAmount=" + totalPostedCertifiedAmount
-				+ ", totalCumCertifiedAmount=" + totalCumCertifiedAmount + ", totalCCPostedCertAmount="
-				+ totalCCPostedCertAmount + ", totalMOSPostedCertAmount=" + totalMOSPostedCertAmount
-				+ ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate="
-				+ tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate="
-				+ loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate
-				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + ", snapshotDate="
-				+ snapshotDate + ", subcontract=" + subcontract + "]";
-	}
-
+	
 }
