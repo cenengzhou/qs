@@ -15,9 +15,4 @@ where s.id = w.subcontract_id and w.workscope != ' ' group by w.SUBCONTRACT_ID);
 drop table PCMSDATAPROD.SUBCONTRACT_WORKSCOPE;
 ----------------------------------------------------------------------------------------------------------------
 
-UPDATE PCMSDATAPROD.SUBCONTRACT_SNAPSHOT ss
-SET ( NAME_SUBCONTRACTOR, NOTES, WORK_SCOPE, LAST_MODIFIED_USER, LAST_MODIFIED_DATE) = 
-(select NAME_SUBCONTRACTOR, NOTES, WORK_SCOPE, 'IMS' AS LAST_MODIFIED_USER, sysdate AS LAST_MODIFIED_DATE 
-from PCMSDATADEV.SUBCONTRACT s where s.id = ss.SUBCONTRACT_ID);
-
 spool off;
