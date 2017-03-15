@@ -237,17 +237,18 @@ public class PaymentPostingService {
 	 * @author tikywong
 	 * refactored on Nov 28, 2013 12:11:11 PM
 	 */
-	public void updateSCDetailandPackageAfterPostingToFinance(Subcontract scPackage, List<SubcontractDetail> scDetailsList){
-		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
+	public void updateSCDetailandPackageAfterPostingToFinance(Subcontract subcoontract, List<SubcontractDetail> scDetailsList){
+		logger.info("Update Package and Detail after successfully posting to Finance (AP) - Job: "+subcoontract.getJobInfo().getJobNumber()+" Package: "+subcoontract.getPackageNo());
 		
 		BigDecimal totalPostedCert = new BigDecimal(0.0);
 		BigDecimal totalCCPostedCert = new BigDecimal(0.0);
 		BigDecimal totalMOSPostedCert = new BigDecimal(0.0);
+		BigDecimal totalAPPostedCert = new BigDecimal(0.0);
+		
 		
 		for(SubcontractDetail scDetails : scDetailsList){
 			if(BasePersistedAuditObject.ACTIVE.equals(scDetails.getSystemStatus())){
 				//1. update package detail
-				//scDetails.setPostedCertifiedQuantity(scDetails.getCumCertifiedQuantity());
 				/**
 				 * @author koeyyeung
 				 * created on 19 Jul, 2016
@@ -259,20 +260,26 @@ public class PaymentPostingService {
 					scDetails.setApproved(SubcontractDetail.NOT_APPROVED_BUT_PAID);
 
 				//calculate total for package
-				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) &&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) && !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType()))
+				if (!"C1".equals(scDetails.getLineType()) && !"C2".equals(scDetails.getLineType()) 
+					&&!"MS".equals(scDetails.getLineType()) && !"RR".equals(scDetails.getLineType()) 
+					&& !"RT".equals(scDetails.getLineType()) && !"RA".equals(scDetails.getLineType())
+					&& !"AP".equals(scDetails.getLineType()))
 					totalPostedCert = totalPostedCert.add(scDetails.getAmountPostedCert());
 				else if("C1".equals(scDetails.getLineType()) || "C2".equals(scDetails.getLineType()))
 					totalCCPostedCert = totalCCPostedCert.add(scDetails.getAmountPostedCert());
 				else if("MS".equals(scDetails.getLineType()))
 					totalMOSPostedCert = totalMOSPostedCert.add(scDetails.getAmountPostedCert());
+				else if("AP".equals(scDetails.getLineType()))
+					totalAPPostedCert = totalAPPostedCert.add(scDetails.getAmountPostedCert());
 			}
 
 		}
 		
 		//2. update package
-		scPackage.setTotalPostedCertifiedAmount(totalPostedCert);
-		scPackage.setTotalCCPostedCertAmount(totalCCPostedCert);
-		scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCert);
+		subcoontract.setTotalPostedCertifiedAmount(totalPostedCert);
+		subcoontract.setTotalCCPostedCertAmount(totalCCPostedCert);
+		subcoontract.setTotalMOSPostedCertAmount(totalMOSPostedCert);
+		subcoontract.setTotalAPPostedCertAmount(totalAPPostedCert);
 	}
 	
 	public PaymentCert calculateAndUpdatePaymentDueDate(PaymentCert paymentCert) throws ValidateBusinessLogicException {

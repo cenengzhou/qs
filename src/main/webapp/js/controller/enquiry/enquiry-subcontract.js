@@ -346,29 +346,52 @@ mainApp.controller('EnquirySubcontractCtrl', ['$scope', '$http', 'modalService',
  		            		cellFilter : 'number:2',
         						enableCellEdit: false
         					},
-			             { field: 'totalMOSPostedCertAmount', width:'120', displayName: "Material On Site", 
+        					{ field: 'totalMOSPostedCertAmount', width:'120', displayName: "Material On Site", 
         						filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
         						cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
- 		            			var c = 'text-right';
- 		            			if (row.entity.totalMOSPostedCertAmount < 0) {
- 		            				c += ' red';
- 		            			}
- 		            			return c;
- 		            		},
- 		            		aggregationHideLabel : true,
- 		            		aggregationType : uiGridConstants.aggregationTypes.sum,
- 		            		footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
- 		            		footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
- 		            			var c = 'text-right';
- 		            			if (col.getAggregationValue() < 0) {
- 		            				c += ' red';
- 		            			}
- 		            			return c;
- 		            		},
- 		            		cellFilter : 'number:2',
+        							var c = 'text-right';
+        							if (row.entity.totalMOSPostedCertAmount < 0) {
+        								c += ' red';
+        							}
+        							return c;
+        						},
+        						aggregationHideLabel : true,
+        						aggregationType : uiGridConstants.aggregationTypes.sum,
+        						footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+        						footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+        							var c = 'text-right';
+        							if (col.getAggregationValue() < 0) {
+        								c += ' red';
+        							}
+        							return c;
+        						},
+        						cellFilter : 'number:2',
 
         						enableCellEdit: false
+        					},
+        					{ field: 'totalAPPostedCertAmount', width:'120', displayName: "Advanced Payment", 
+        						filters: GlobalHelper.uiGridFilters(['GREATER_THAN', 'LESS_THAN']),
+        						cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+        							var c = 'text-right';
+        							if (row.entity.totalAPPostedCertAmount < 0) {
+        								c += ' red';
+        							}
+        							return c;
         						},
+        						aggregationHideLabel : true,
+        						aggregationType : uiGridConstants.aggregationTypes.sum,
+        						footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+        						footerCellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+        							var c = 'text-right';
+        							if (col.getAggregationValue() < 0) {
+        								c += ' red';
+        							}
+        							return c;
+        						},
+        						cellFilter : 'number:2',
+
+        						enableCellEdit: false
+        					}
             			 ]
 	};
 	

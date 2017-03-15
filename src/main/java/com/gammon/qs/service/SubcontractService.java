@@ -4007,17 +4007,17 @@ public class SubcontractService {
 	}
 	
 	
-	public Boolean calculateTotalWDandCertAmount(String jobNumber, String packageNo, boolean recalculateRententionAmount){
-		logger.info("Recalculate Subcontract Figures - JobNo: "+jobNumber+" - PackageNo: "+packageNo);
-			List<Subcontract> packages = new ArrayList<Subcontract>();
+	public Boolean calculateTotalWDandCertAmount(String jobNumber, String subcontractNo, boolean recalculateRententionAmount){
+		logger.info("Recalculate Subcontract Figures - JobNo: "+jobNumber+" - SubcontractNo: "+subcontractNo);
+			List<Subcontract> subcontracts = new ArrayList<Subcontract>();
 			try {
-				if(GenericValidator.isBlankOrNull(packageNo))
-					packages = subcontractHBDao.obtainPackageList(jobNumber);
+				if(GenericValidator.isBlankOrNull(subcontractNo))
+					subcontracts = subcontractHBDao.obtainPackageList(jobNumber);
 				else{
 					JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-					Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
-					if(scPackage!=null)
-						packages.add(scPackage);
+					Subcontract subcontract = subcontractHBDao.obtainPackage(job, subcontractNo);
+					if(subcontract!=null)
+						subcontracts.add(subcontract);
 				}
 			} catch (DatabaseOperationException e) {
 				logger.info("Unable to obtain Package List for Job: "+jobNumber+" - No calculation on Total WD and Certified Amount has been done.");
@@ -4025,7 +4025,7 @@ public class SubcontractService {
 				return false;
 			}
 			
-			for(Subcontract scPackage: packages){
+			for(Subcontract subcontract: subcontracts){
 				//if (scPackage.isAwarded()){
 				List<SubcontractDetail> scDetails;
 				BigDecimal totalCumWorkDoneAmount = new BigDecimal(0.00); 
@@ -4035,61 +4035,58 @@ public class SubcontractService {
 				BigDecimal totalCCPostedCertAmount = new BigDecimal(0.00);
 				BigDecimal totalMOSPostedCertAmount = new BigDecimal(0.00);
 				BigDecimal totalRetentionReleasedAmount = new BigDecimal(0.00);
+				BigDecimal totalAPPostedCertAmount = new BigDecimal(0.00);
 				try {
-					scDetails = subcontractDetailHBDao.getSCDetails(scPackage);
+					scDetails = subcontractDetailHBDao.getSCDetails(subcontract);
 
 					for (SubcontractDetail scDetail: scDetails){
 						// Not updating work done (C1, C2, RR, RA, AP, MS)
 						// Updating work done (B1, BQ, V1, V2, V3, OA, CF, D1, D2, L1, L2)
 						boolean excludedFromProvisionCalculation = "C1".equals(scDetail.getLineType()) || 
-																   "C2".equals(scDetail.getLineType()) || 
-																   "RR".equals(scDetail.getLineType()) || 
-																   "RT".equals(scDetail.getLineType()) || 
-																   "RA".equals(scDetail.getLineType()) ||
-																   "AP".equals(scDetail.getLineType()) ||
-																   "MS".equals(scDetail.getLineType());
+																	"C2".equals(scDetail.getLineType()) || 
+																	"RR".equals(scDetail.getLineType()) || 
+																	"RT".equals(scDetail.getLineType()) || 
+																	"RA".equals(scDetail.getLineType()) ||
+																	"AP".equals(scDetail.getLineType()) ||
+																	"MS".equals(scDetail.getLineType());
 
 						String systemStatus = scDetail.getSystemStatus();
 						if(BasePersistedAuditObject.ACTIVE.equals(systemStatus)){
 							//Total Posted Contra Charge Certified Amount
 							if("C1".equals(scDetail.getLineType()) || "C2".equals(scDetail.getLineType())){
-								//totalCCPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
 								totalCCPostedCertAmount = totalCCPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Retention Released Amount
 							if("RR".equals(scDetail.getLineType())){
-								//totalRetentionReleasedAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
 								totalRetentionReleasedAmount = totalRetentionReleasedAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Posted Material On Site Certified Amount
 							if("MS".equals(scDetail.getLineType())){
-								//totalMOSPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
 								totalMOSPostedCertAmount = totalMOSPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
+							}
+							//Total AP Posted Certified Amount
+							if ("AP".equals(scDetail.getLineType())){
+								totalAPPostedCertAmount = totalAPPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
 							//Total Cumulative Work Done Amount
 							if (!excludedFromProvisionCalculation){
-								//totalCumWorkDoneAmount += CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
 								totalCumWorkDoneAmount = totalCumWorkDoneAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountCumulativeWD(), 2));
-							}
-							//Total Cumulative Certified Amount
-							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Cumulative Certified Amount" 
-							if("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								//totalCumCertAmount += CalculationUtil.round(scDetail.getCumCertifiedQuantity() * scDetail.getScRate(), 2);
-								totalCumCertAmount = totalCumCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountCumulativeCert(), 2));
 							}
 							//Total Posted Work Done Amount
 							if (!excludedFromProvisionCalculation){
-								//totalPostedWorkDoneAmount += CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
 								totalPostedWorkDoneAmount = totalPostedWorkDoneAmount.add( CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedWD(), 2));
 							}
+							//Total Cumulative Certified Amount
+							if(!excludedFromProvisionCalculation){
+								totalCumCertAmount = totalCumCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountCumulativeCert(), 2));
+							}
 							//Total Posted Certified Amount
-							//AP doesn't have special field called "Total Advanced Payment Amount", therefore it merges with general "Total Posted Certified Amount"
-							if ("AP".equals(scDetail.getLineType()) || !excludedFromProvisionCalculation){
-								//totalPostedCertAmount += CalculationUtil.round(scDetail.getPostedCertifiedQuantity() * scDetail.getScRate(), 2);
+							if (!excludedFromProvisionCalculation){
 								totalPostedCertAmount = totalPostedCertAmount.add(CalculationUtil.roundToBigDecimal(scDetail.getAmountPostedCert(), 2));
 							}
+
 						}
-						}
+					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -4100,7 +4097,7 @@ public class SubcontractService {
 					if(recalculateRententionAmount){
 						try {
 							Double accumulatedRetentionAmount=0.0;
-							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, scPackage.getPackageNo())){
+							for(PaymentCert paymentCert: paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, subcontract.getPackageNo())){
 								if(PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE.equals(paymentCert.getPaymentStatus())){
 									//RT+RA
 									Double retentionAmount = paymentCertDetailHBDao.obtainPaymentRetentionAmount(paymentCert);
@@ -4109,23 +4106,24 @@ public class SubcontractService {
 								}
 							}
 							
-							scPackage.setAccumlatedRetention(CalculationUtil.roundToBigDecimal(accumulatedRetentionAmount, 2));
+							subcontract.setAccumlatedRetention(CalculationUtil.roundToBigDecimal(accumulatedRetentionAmount, 2));
 						} catch (DatabaseOperationException e) {
 							e.printStackTrace();
 						}
 					}
 					
-					scPackage.setTotalCumCertifiedAmount(totalCumCertAmount);
-					scPackage.setTotalCumWorkDoneAmount(totalCumWorkDoneAmount);
-					scPackage.setTotalPostedCertifiedAmount(totalPostedCertAmount);
-					scPackage.setTotalPostedWorkDoneAmount(totalPostedWorkDoneAmount);
-					scPackage.setTotalCCPostedCertAmount(totalCCPostedCertAmount);
-					scPackage.setTotalMOSPostedCertAmount(totalMOSPostedCertAmount);
-					scPackage.setRetentionReleased(totalRetentionReleasedAmount);
+					subcontract.setTotalCumCertifiedAmount(totalCumCertAmount);
+					subcontract.setTotalCumWorkDoneAmount(totalCumWorkDoneAmount);
+					subcontract.setTotalPostedCertifiedAmount(totalPostedCertAmount);
+					subcontract.setTotalPostedWorkDoneAmount(totalPostedWorkDoneAmount);
+					subcontract.setTotalCCPostedCertAmount(totalCCPostedCertAmount);
+					subcontract.setTotalMOSPostedCertAmount(totalMOSPostedCertAmount);
+					subcontract.setTotalAPPostedCertAmount(totalAPPostedCertAmount);
+					subcontract.setRetentionReleased(totalRetentionReleasedAmount);
 					try {
-						subcontractHBDao.saveOrUpdate(scPackage);
+						subcontractHBDao.saveOrUpdate(subcontract);
 					} catch (DataAccessException e) {
-						logger.info("Unable to update Package: "+scPackage.getPackageNo());
+						logger.info("Unable to update Package: "+subcontract.getPackageNo());
 						e.printStackTrace();
 						return false;
 					}
