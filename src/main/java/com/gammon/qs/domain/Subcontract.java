@@ -162,6 +162,7 @@ public class Subcontract extends BasePersistedObject {
 
 	private BigDecimal totalCCPostedCertAmount;
 	private BigDecimal totalMOSPostedCertAmount;
+	private BigDecimal totalAPPostedCertAmount;
 
 	// Dates
 	private Date requisitionApprovedDate;
@@ -845,6 +846,17 @@ public class Subcontract extends BasePersistedObject {
 		this.nameSubcontractor = nameSubcontractor;
 	}
 	
+	@Column(name = "AMOUNT_TOTAL_AP_POSTED_CERT", 
+			precision = 19,
+			scale = 2)
+	public BigDecimal getTotalAPPostedCertAmount() {
+		return totalAPPostedCertAmount;
+	}
+
+	public void setTotalAPPostedCertAmount(BigDecimal totalAPPostedCertAmount) {
+		this.totalAPPostedCertAmount = totalAPPostedCertAmount;
+	}
+	
 	@ManyToOne
 	@Cascade(value = CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "Job_Info_ID",
@@ -909,7 +921,8 @@ public class Subcontract extends BasePersistedObject {
 				+ ", requisitionApprovedDate=" + requisitionApprovedDate + ", tenderAnalysisApprovedDate="
 				+ tenderAnalysisApprovedDate + ", preAwardMeetingDate=" + preAwardMeetingDate + ", loaSignedDate="
 				+ loaSignedDate + ", scDocScrDate=" + scDocScrDate + ", scDocLegalDate=" + scDocLegalDate
-				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate + "]";
+				+ ", workCommenceDate=" + workCommenceDate + ", onSiteStartDate=" + onSiteStartDate 
+				+ ", totalAPPostedCertAmount="+totalAPPostedCertAmount+ "]";
 	}
 
 	/* (non-Javadoc)
@@ -976,6 +989,7 @@ public class Subcontract extends BasePersistedObject {
 		result = prime * result + ((totalCumCertifiedAmount == null) ? 0 : totalCumCertifiedAmount.hashCode());
 		result = prime * result + ((totalCumWorkDoneAmount == null) ? 0 : totalCumWorkDoneAmount.hashCode());
 		result = prime * result + ((totalMOSPostedCertAmount == null) ? 0 : totalMOSPostedCertAmount.hashCode());
+		result = prime * result + ((totalAPPostedCertAmount == null) ? 0 : totalAPPostedCertAmount.hashCode());
 		result = prime * result + ((totalPostedCertifiedAmount == null) ? 0 : totalPostedCertifiedAmount.hashCode());
 		result = prime * result + ((totalPostedWorkDoneAmount == null) ? 0 : totalPostedWorkDoneAmount.hashCode());
 		result = prime * result + ((vendorNo == null) ? 0 : vendorNo.hashCode());
@@ -1270,6 +1284,11 @@ public class Subcontract extends BasePersistedObject {
 			if (other.totalMOSPostedCertAmount != null)
 				return false;
 		} else if (!totalMOSPostedCertAmount.equals(other.totalMOSPostedCertAmount))
+			return false;
+		if (totalAPPostedCertAmount == null) {
+			if (other.totalAPPostedCertAmount != null)
+				return false;
+		} else if (!totalAPPostedCertAmount.equals(other.totalAPPostedCertAmount))
 			return false;
 		if (totalPostedCertifiedAmount == null) {
 			if (other.totalPostedCertifiedAmount != null)
