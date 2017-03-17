@@ -56,42 +56,43 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 	      fPosition = new java.text.FieldPosition(0);
 	      buffer = new StringBuffer();
 
-		for (int i=0; i<line.length;i++) {
-			
-			if (row.getCell(i) != null) {
-				if (row.getCell(i).getCellType() == Cell.CELL_TYPE_STRING) {
-					line[i] = row.getCell(i).getRichStringCellValue().getString();
-				} 
-				else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC ) {
-					//line[i] = (new Double(row.getCell(i).getNumericCellValue())).toString();
-			         buffer = new StringBuffer();
-		               
-			          // Recover the numeric value from the cell
-			          value  = row.getCell(i).getNumericCellValue();
-			              
-			          // Format that number for display
-			          formatter.format(value, buffer, fPosition);
-			              
-			          resultString = buffer.toString();
-			          
-			          line[i]=resultString;
-			          // Simply display the result to screen
-			          //logger.info("STRING row "+ i +" "+ resultString);
+	      if(row != null){
+	    	  for (int i=0; i<line.length;i++) {
+	    		  if (row.getCell(i) != null) {
+	    			  if (row.getCell(i).getCellType() == Cell.CELL_TYPE_STRING) {
+	    				  line[i] = row.getCell(i).getRichStringCellValue().getString();
+	    			  } 
+	    			  else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC ) {
+	    				  //line[i] = (new Double(row.getCell(i).getNumericCellValue())).toString();
+	    				  buffer = new StringBuffer();
 
-				}
-				else if(row.getCell(i).getCellType() == Cell.CELL_TYPE_FORMULA){
-					if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
-						line[i] = Double.toString(row.getCell(i).getNumericCellValue());
-					else if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
-						line[i] = row.getCell(i).getRichStringCellValue().getString();
-				}
-				else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_BLANK) {
-				} else {
-					logger.info("Unexpected cell type!!! " + row.getCell(i).getCellType());
-				}
-			}
-		}
-		
+	    				  // Recover the numeric value from the cell
+	    				  value  = row.getCell(i).getNumericCellValue();
+
+	    				  // Format that number for display
+	    				  formatter.format(value, buffer, fPosition);
+
+	    				  resultString = buffer.toString();
+
+	    				  line[i]=resultString;
+	    				  // Simply display the result to screen
+	    				  //logger.info("STRING row "+ i +" "+ resultString);
+
+	    			  }
+	    			  else if(row.getCell(i).getCellType() == Cell.CELL_TYPE_FORMULA){
+	    				  if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+	    					  line[i] = Double.toString(row.getCell(i).getNumericCellValue());
+	    				  else if(row.getCell(i).getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+	    					  line[i] = row.getCell(i).getRichStringCellValue().getString();
+	    			  }
+	    			  else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_BLANK) {
+	    			  } else {
+	    				  logger.info("Unexpected cell type!!! " + row.getCell(i).getCellType());
+	    			  }
+	    		  }
+	    	  }
+	      }else
+	    	  line = null;
 		linePointer++;
 		return line;
 	}
@@ -140,4 +141,7 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 		linePointer++;
 		return line;
 	}
+	
+	
 }
+

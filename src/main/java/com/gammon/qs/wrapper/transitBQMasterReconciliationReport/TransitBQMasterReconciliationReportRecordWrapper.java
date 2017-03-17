@@ -4,7 +4,7 @@
 package com.gammon.qs.wrapper.transitBQMasterReconciliationReport;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  * @author briantse
@@ -17,22 +17,20 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 	private String billNo = null;
 	private String subBillNo = null;
 	private String pageNo = null;
-	private Double eCAValue = Double.valueOf(0);
+	private BigDecimal eCAValue = new BigDecimal(0);
 	private Double genuineMarkup = Double.valueOf(0);
-	private Double internalValue = Double.valueOf(0);
+	private BigDecimal internalValue = new BigDecimal(0);
 	private Double sellingValue = Double.valueOf(0);
-	private Double grossProfit = Double.valueOf(0);
-	private Date printDate;
-	private String printDateString;
+	//private Double grossProfit = Double.valueOf(0);
 	
 //	constructor
 	public TransitBQMasterReconciliationReportRecordWrapper(){
-		if(this.eCAValue != null){
-			this.internalValue = this.eCAValue;
+		/*if(this.eCAValue != null){
+			this.internalValue = this.eCAValue.doubleValue();
 			if(this.sellingValue != null){
-				this.grossProfit = (this.sellingValue - this.eCAValue);
+				this.grossProfit = (this.sellingValue - this.eCAValue.doubleValue());
 			}
-		}
+		}*/
 	}
 
 	public String getBillNo() {
@@ -59,11 +57,11 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 		this.pageNo = pageNo;
 	}
 
-	public Double geteCAValue() {
+	public BigDecimal geteCAValue() {
 		return eCAValue;
 	}
 
-	public void seteCAValue(Double eCAValue) {
+	public void seteCAValue(BigDecimal eCAValue) {
 		this.eCAValue = eCAValue;
 	}
 
@@ -75,11 +73,11 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 		this.genuineMarkup = genuineMarkup;
 	}
 
-	public Double getInternalValue() {
+	public BigDecimal getInternalValue() {
 		return internalValue;
 	}
 
-	public void setInternalValue(Double internalValue) {
+	public void setInternalValue(BigDecimal internalValue) {
 		this.internalValue = internalValue;
 	}
 
@@ -92,12 +90,12 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 	}
 
 	public Double getGrossProfit() {
-		return grossProfit;
+		return this.sellingValue!=null && this.eCAValue!=null ? (this.sellingValue - this.eCAValue.doubleValue()) : 0.0;
 	}
 
-	public void setGrossProfit(Double grossProfit) {
+	/*public void setGrossProfit(Double grossProfit) {
 		this.grossProfit = grossProfit;
-	}
+	}*/
 
 	public String getJobNumber() {
 		return jobNumber;
@@ -107,19 +105,5 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 		this.jobNumber = jobNumber;
 	}
 
-	public Date getPrintDate() {
-		return printDate;
-	}
 
-	public void setPrintDate(Date printDate) {
-		this.printDate = printDate;
-	}
-
-	public String getPrintDateString() {
-		return printDateString;
-	}
-
-	public void setPrintDateString(String printDateString) {
-		this.printDateString = printDateString;
-	}
 }

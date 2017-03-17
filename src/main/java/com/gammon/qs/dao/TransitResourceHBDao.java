@@ -1,25 +1,29 @@
 package com.gammon.qs.dao;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.hibernate.type.DoubleType;
-import org.hibernate.type.Type;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
-import com.gammon.qs.domain.TransitBpi;
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.Transit;
+import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.service.transit.TransitService;
 import com.gammon.qs.wrapper.PaginationWrapper;
@@ -401,13 +405,15 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.createAlias("transitBpi", "transitBpi");
 		criteria.add(Restrictions.eq("transitBpi.transit", transit));
+		criteria.createAlias("transitBpi.transit", "transit");
 		criteria.addOrder(Order.asc("type"));
 		criteria.addOrder(Order.asc("objectCode"));
 		criteria.addOrder(Order.asc("resourceCode"));
 		criteria.addOrder(Order.asc("packageNo"));
 		criteria.addOrder(Order.asc("description"));
 		criteria.setProjection(Projections.projectionList()
-				.add(Projections.sqlProjection("sum(Round(totalQuantity * rate,2)) as eCAValue", new String[]{"eCAValue"}, new Type[]{DoubleType.INSTANCE}), "eCAValue")
+				.add(Projections.sum("value"),"eCAValue")
+				.add(Projections.groupProperty("transit.jobNumber"), "jobNumber")
 				.add(Projections.groupProperty("type"), "type")
 				.add(Projections.groupProperty("objectCode"), "objectCode")
 				.add(Projections.groupProperty("resourceCode"), "resourceCode")
@@ -418,6 +424,31 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		return criteria.list();
 	}
 
+	// Last modified: Brian Tse
+		@SuppressWarnings("unchecked")
+		public List<ResourceSummayDashboardDTO> getResourceGroupByObjectCode(String jobNo){
+			List<ResourceSummayDashboardDTO> rsList = new ArrayList<ResourceSummayDashboardDTO>();
+			
+			String schema =((SessionFactoryImpl)this.getSessionFactory()).getSettings().getDefaultSchemaName();
+			String hql =
+					"select objectCode, Sum(value) As amountBudget from "
+					+"(select Substr (Objectcode, 1, 2) As objectCode, value" 
+					+ " from "+schema+".TRANSIT_RESOURCE where transit_bpi_id  in "
+					+"(Select id From "+schema+".TRANSIT_BPI Where transit_id = (Select id From "+schema+".Transit Where Jobnumber = '"+jobNo+"')))"
+					+" Group By Objectcode order by Objectcode";
+			
+			//Object Code: 11,12,13,14,15,19
+			
+			SQLQuery query = getSession().createSQLQuery(hql)
+										.addScalar("objectCode", StringType.INSTANCE)
+										.addScalar("amountBudget", DoubleType.INSTANCE);
+			
+			rsList = query.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummayDashboardDTO.class)).list();
+			
+			return rsList;
+		}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<TransitResource> obtainTransitResourceListByTransitBQ(TransitBpi transitBpi) {
 		Criteria criteria = getSession().createCriteria(this.getType());
@@ -432,5 +463,19 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 		criteria.add(Restrictions.eq("transitBpi.transit", transit));
 		List<TransitResource> resources = criteria.list();
 		return resources;
+	}
+
+	public Double getTransitTotalECAAmount(String jobNo) {
+		Double amount = 0.0;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("transitBpi", "transitBpi");
+		criteria.createAlias("transitBpi.transit", "transit");
+		criteria.add(Restrictions.eq("transit.jobNumber", jobNo));
+		criteria.add(Restrictions.ne("transitBpi.billNo", "80"));//exclude Genuine Markup
+		criteria.setProjection(Projections.sum("value"));
+		amount = (Double) criteria.uniqueResult();
+		if (amount == null)
+			amount = 0.0;
+		return amount;
 	}
 }

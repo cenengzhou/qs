@@ -36,7 +36,6 @@ import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.ResourceSummaryAuditCustom;
 import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.IVInputPaginationWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
@@ -524,8 +523,9 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					.add(Projections.groupProperty("unit"), "unit")
 					.add(Projections.groupProperty("costRate"), "rate")
 					.add(Projections.sum("quantity"), "quantity")
-					.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
-					.add(Projections.sum("ivCumQuantity"), "currIVAmount")); //Put ivCumQty in currIVAmount first, calculate actual amount (* rate) later - allows for margin lines with rate = 0; For Data Conversion
+					.add(Projections.sum("amountBudget"), "amountBudget"));
+					//.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
+					//.add(Projections.sum("ivCumQuantity"), "currIVAmount")); //Put ivCumQty in currIVAmount first, calculate actual amount (* rate) later - allows for margin lines with rate = 0; For Data Conversion
 			criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));		
 			List<ResourceSummary> resourceSummaries = (List<ResourceSummary>)criteria.list();
 			logger.info("Number of Non-SC ResourceSummaries: "+resourceSummaries.size());
@@ -535,21 +535,23 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				//Set PackageNo = null if the packageNo@Resource = "" or 0 (packageNo 1-999 from Legacy system will not be affected)
 				if(resourceSummary.getPackageNo() != null && (resourceSummary.getPackageNo().trim().equals("") || resourceSummary.getPackageNo().trim().equals("0")))
 					resourceSummary.setPackageNo(null);
-				if(resourceSummary.getSubsidiaryCode().startsWith("9"))
+				if(resourceSummary.getSubsidiaryCode().startsWith("9")){
 					resourceSummary.setRate(Double.valueOf(1));
-				Double ivQty = resourceSummary.getCurrIVAmount();
+					resourceSummary.setAmountBudget(resourceSummary.getQuantity());
+				}
+					
 				if(resourceSummary.getRate() == null)
 					resourceSummary.setRate(Double.valueOf(0));
+				/*Double ivQty = resourceSummary.getCurrIVAmount();
 				if(ivQty != null)
 					resourceSummary.setCurrIVAmount(ivQty * resourceSummary.getRate());
 				else
-					resourceSummary.setCurrIVAmount(Double.valueOf(0));
+					resourceSummary.setCurrIVAmount(Double.valueOf(0));*/
 				if(resourceSummary.getResourceDescription() != null)
 					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
-				if(resourceSummary.getRate()!=null && resourceSummary.getQuantity()!=null){
-					resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getRate()*resourceSummary.getQuantity(), 2));
+				if(resourceSummary.getAmountBudget() == null){
+					resourceSummary.setAmountBudget(0.0);
 				}
-//				logger.info("Created Non-SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 			
@@ -564,9 +566,11 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 					.add(Projections.groupProperty("objectCode"), "objectCode")
 					.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
 					.add(Projections.groupProperty("packageNo"), "packageNo")
-					.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.quantity) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}), "quantity")
-					.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
-					.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.ivCumQty) as currIVAmount", new String[]{"currIVAmount"}, new Type[]{DoubleType.INSTANCE}), "currIVAmount"));
+					.add(Projections.sum("amountBudget"), "quantity")
+					.add(Projections.sum("amountBudget"), "amountBudget"));
+					//.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.quantity) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}), "quantity")
+					//.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
+					//.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.ivCumQty) as currIVAmount", new String[]{"currIVAmount"}, new Type[]{DoubleType.INSTANCE}), "currIVAmount"));
 			criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));		
 			resourceSummaries = (List<ResourceSummary>)criteria.list();
 			logger.info("Number of SC ResourceSummaries: "+resourceSummaries.size());
@@ -596,10 +600,6 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 				else
 					resourceSummary.setResourceDescription("Unspecified package");
 				
-				if(resourceSummary.getRate()!=null && resourceSummary.getQuantity()!=null){
-					resourceSummary.setAmountBudget(CalculationUtil.round(resourceSummary.getRate()*resourceSummary.getQuantity(), 2));
-				}
-//				logger.info("Created SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
 				getSession().saveOrUpdate(resourceSummary);
 			}
 		}
@@ -609,193 +609,6 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 		return Boolean.TRUE;
 	}
 
-	/**
-	 * For Generate Resource Summary for method three.
-	 * 
-	 * @author peterchan 
-	 * Date: Aug 31, 2011
-	 * @param jobInfo
-	 * @return
-	 * @throws DatabaseOperationException
-	 */
-	
-	@SuppressWarnings("unchecked")
-	public Boolean groupResourcesIntoSummariesMethodThree(JobInfo jobInfo) throws DatabaseOperationException{
-		logger.info("Grouping Resource into ResourceSummary...");
-		try{
-			//Check if resoureSummaries already exist
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
-			if(criteria.list().size() > 0)
-				return Boolean.FALSE;
-			
-			//Non SC resources (object code does not start with 14)
-			//Get list of resources
-			logger.info("Grouping Non-SC Resource...");
-			criteria = getSession().createCriteria(BpiItemResource.class);
-			criteria.add(Restrictions.eq("jobNumber", jobInfo.getJobNumber()));
-			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.groupProperty("objectCode"), "objectCode")
-					.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
-					.add(Projections.groupProperty("packageNo"), "packageNo")
-					.add(Projections.groupProperty("description"), "resourceDescription")
-					.add(Projections.groupProperty("unit"), "unit")
-					.add(Projections.groupProperty("costRate"), "rate")
-					//By Peter Chan 2011-09-20
-					.add(Projections.sqlProjection("sum({alias}.quantity *{alias}.remeasuredFactor) as rquantity", new String[]{"rquantity"}, new Type[]{DoubleType.INSTANCE}), "quantity")
-//					.add(Projections.sum("quantity"), "quantity")
-					.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
-					.add(Projections.sum("ivCumAmount"), "currIVAmount")); //Put ivCumQty in currIVAmount first, calculate actual amount (* rate) later - allows for margin lines with rate = 0
-			criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));		
-			List<ResourceSummary> resourceSummaries = (List<ResourceSummary>)criteria.list();
-			logger.info("Number of Non-SC ResourceSummaries: "+resourceSummaries.size());
-			//Save Resource Summaries
-			for(ResourceSummary resourceSummary : resourceSummaries){
-				resourceSummary.setJobInfo(jobInfo);
-				//Set PackageNo = null if the packageNo@Resource = "" or 0 (packageNo 1-999 from Legacy system will not be affected)
-				if(resourceSummary.getPackageNo() != null && (resourceSummary.getPackageNo().trim().equals("") || resourceSummary.getPackageNo().trim().equals("0")))
-					resourceSummary.setPackageNo(null);
-				if(resourceSummary.getSubsidiaryCode().startsWith("9"))
-					resourceSummary.setRate(Double.valueOf(1));
-				@SuppressWarnings("unused")
-				Double ivQty = resourceSummary.getCurrIVAmount();
-				if(resourceSummary.getRate() == null)
-					resourceSummary.setRate(Double.valueOf(0));
-				if (resourceSummary.getCurrIVAmount() == null)
-					resourceSummary.setCurrIVAmount(Double.valueOf(0));
-				if(resourceSummary.getResourceDescription() != null)
-					resourceSummary.setResourceDescription(resourceSummary.getResourceDescription().trim());
-//				logger.info("Created Non-SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				getSession().saveOrUpdate(resourceSummary);
-			}
-			
-			//SC resources (object code starts with 14)
-			//Get list of resources
-			logger.info("Grouping SC Resource...");
-			criteria = getSession().createCriteria(BpiItemResource.class);
-			criteria.add(Restrictions.eq("jobNumber", jobInfo.getJobNumber()));
-			criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-			criteria.add(Restrictions.like("this.objectCode", "14%"));
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.groupProperty("objectCode"), "objectCode")
-					.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
-					.add(Projections.groupProperty("packageNo"), "packageNo")
-					.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.quantity *{alias}.remeasuredFactor) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}), "quantity")
-					.add(Projections.sum("ivPostedAmount"), "postedIVAmount")
-					.add(Projections.sum("ivCumAmount"), "currIVAmount"));
-			criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));		
-			resourceSummaries = (List<ResourceSummary>)criteria.list();
-			logger.info("Number of SC ResourceSummaries: "+resourceSummaries.size());
-			//Save Resource Summaries
-			HashMap<String, String> packageDescriptions = new HashMap<String, String>();
-			for(ResourceSummary resourceSummary : resourceSummaries){
-				resourceSummary.setJobInfo(jobInfo);
-				resourceSummary.setRate(Double.valueOf(1));
-				resourceSummary.setUnit("AM");
-				String packageNo = resourceSummary.getPackageNo();
-				//Set PackageNo = null if the packageNo@Resource = "" or 0 (packageNo 1-999 from Legacy system will not be affected)
-				if(packageNo != null && (packageNo.trim().equals("") || packageNo.trim().equals("0"))){
-					resourceSummary.setPackageNo(null);
-					packageNo = null;
-				}
-				if(packageNo != null){
-					if(packageDescriptions.get(packageNo) == null){
-						String description = scPackageDao.getPackageDescription(jobInfo, packageNo);
-						if(description == null)
-							description = "Package " + packageNo;
-						packageDescriptions.put(packageNo, description);
-						resourceSummary.setResourceDescription(description);
-					}
-					else
-						resourceSummary.setResourceDescription(packageDescriptions.get(packageNo));
-				}
-				else
-					resourceSummary.setResourceDescription("Unspecified package");
-//				logger.info("Created SC ResourceSummary: "+resourceSummary.getPackageNo()+"-"+resourceSummary.getObjectCode()+"-"+resourceSummary.getSubsidiaryCode()+"-"+resourceSummary.getResourceDescription()+"-"+resourceSummary.getCurrIVAmount());
-				getSession().saveOrUpdate(resourceSummary);
-			}
-		}
-		catch(HibernateException ex){
-			throw new DatabaseOperationException(ex);
-		}
-		return Boolean.TRUE;
-	}
-
-	
-	@SuppressWarnings("unchecked")
-	public List<ResourceSummary> groupResourcesIntoSummariesForMethodTwo(JobInfo jobInfo) throws Exception{
-		//Non SC resources (object code does not start with 14)
-		//Group by object, subsid, package, description, unit, rate
-		//Sum quantity (remeasuredFactor * quantity)
-		Criteria criteria = getSession().createCriteria(BpiItemResource.class);
-		criteria.add(Restrictions.eq("jobNumber", jobInfo.getJobNumber()));
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.not(Restrictions.like("this.objectCode", "14%")));
-		criteria.setProjection(Projections.projectionList()
-				.add(Projections.groupProperty("objectCode"), "objectCode")
-				.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
-				.add(Projections.groupProperty("packageNo"), "packageNo")
-				.add(Projections.groupProperty("description"), "resourceDescription")
-				.add(Projections.groupProperty("unit"), "unit")
-				.add(Projections.groupProperty("costRate"), "rate")
-				.add(Projections.sqlProjection("sum({alias}.remeasuredFactor * {alias}.quantity) as remeasuredQuant", new String[]{"remeasuredQuant"}, new Type[]{DoubleType.INSTANCE}), "quantity"));
-		criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));
-		List<ResourceSummary> summaries = criteria.list();
-		for(ResourceSummary summary : summaries){
-			summary.setJobInfo(jobInfo);
-			//Set PackageNo = null if the packageNo@Resource = "" or 0 (packageNo 1-999 from Legacy system will not be affected)
-			if(summary.getPackageNo() != null && (summary.getPackageNo().trim().equals("") || summary.getPackageNo().trim().equals("0")))
-				summary.setPackageNo(null);
-			if(summary.getSubsidiaryCode().startsWith("9")) // set the rate for margin lines as 1, rather than 0 (in JDE, only the quantity mattered for margin lines)
-				summary.setRate(Double.valueOf(1));
-			if(summary.getResourceDescription() != null)
-				summary.setResourceDescription(summary.getResourceDescription().trim());
-		}
-		
-		//SC resources (object code starts with 14)
-		//Group by object, subsid, package
-		//Sum amount as quantity, set rate as 1, unit as 'AM', description as package description (if it is found)
-		criteria = getSession().createCriteria(BpiItemResource.class);
-		criteria.add(Restrictions.eq("jobNumber", jobInfo.getJobNumber()));
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.like("this.objectCode", "14%"));
-		criteria.setProjection(Projections.projectionList()
-				.add(Projections.groupProperty("objectCode"), "objectCode")
-				.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
-				.add(Projections.groupProperty("packageNo"), "packageNo")
-				.add(Projections.sqlProjection("sum({alias}.costRate * {alias}.quantity * {alias}.remeasuredFactor) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}), "quantity"));
-		criteria.setResultTransformer(new AliasToBeanResultTransformer(ResourceSummary.class));		
-		List<ResourceSummary> scSummaries = (List<ResourceSummary>)criteria.list();
-		HashMap<String, String> packageDescriptions = new HashMap<String, String>();
-		for(ResourceSummary summary : scSummaries){
-			summary.setJobInfo(jobInfo);
-			summary.setRate(Double.valueOf(1));
-			summary.setUnit("AM");
-			String packageNo = summary.getPackageNo();
-			//Set PackageNo = null if the packageNo@Resource = "" or 0 (packageNo 1-999 from Legacy system will not be affected)
-			if(packageNo != null && (packageNo.trim().equals("") || packageNo.trim().equals("0"))){
-				summary.setPackageNo(null);
-				packageNo = null;
-			}
-			if(packageNo != null){
-				if(packageDescriptions.get(packageNo) == null){
-					String description = scPackageDao.getPackageDescription(jobInfo, packageNo);
-					if(description == null)
-						description = "Package " + packageNo;
-					packageDescriptions.put(packageNo, description);
-					summary.setResourceDescription(description);
-				}
-				else
-					summary.setResourceDescription(packageDescriptions.get(packageNo));
-			}
-			else
-				summary.setResourceDescription("Unspecified package");
-		}
-		summaries.addAll(scSummaries);
-		return summaries;
-	}
 	
 	/**
 	 * @author koeyyeung
@@ -1617,6 +1430,7 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			criteria.addOrder(Order.asc("objectCode"));
 			criteria.addOrder(Order.asc("packageNo"));
 			criteria.addOrder(Order.asc("subsidiaryCode"));
+			criteria.addOrder(Order.asc("resourceDescription"));
 			resourceSummaries = criteria.list();
 			return resourceSummaries;
 		}

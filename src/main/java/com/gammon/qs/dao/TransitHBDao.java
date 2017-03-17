@@ -23,7 +23,7 @@ public class TransitHBDao extends BaseHibernateDao<Transit> {
 	private Logger logger = Logger.getLogger(TransitHBDao.class.getName());
 	
 	public Transit getTransitHeader(String jobNumber) throws DatabaseOperationException {
-		logger.info("getTransitHeader: " + jobNumber);
+		//logger.info("getTransitHeader: " + jobNumber);
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("jobNumber", jobNumber.trim()));
 		return (Transit)criteria.uniqueResult();
@@ -48,4 +48,5 @@ public class TransitHBDao extends BaseHibernateDao<Transit> {
 		return criteria.list();
 		
 	}
+
 }

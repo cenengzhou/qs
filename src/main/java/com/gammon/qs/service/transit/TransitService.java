@@ -5,9 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.JasperConfig;
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
@@ -53,10 +53,10 @@ import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.shared.GlobalParameter;
+import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
 import com.gammon.qs.wrapper.PaginationWrapper;
-import com.gammon.qs.wrapper.TransitResourceWrapper;
 import com.gammon.qs.wrapper.transitBQMasterReconciliationReport.TransitBQMasterReconciliationReportRecordWrapper;
 import com.gammon.qs.wrapper.transitBQResourceReconciliationReportRecordWrapper.TransitBQResourceReconciliationReportRecordWrapper;
 
@@ -101,125 +101,16 @@ public class TransitService implements Serializable {
 	private transient JasperConfig jasperConfig;
 	
 	
-	private List<TransitBpi> bqCache;
 	private List<TransitCodeMatch> codeMatchCache;
 	private List<AppTransitUom> uomMatchCache;
 	private List<String> errorList;
 	private List<String> warningList; // added by brian on 20110224
-	private Transit header;
 	
 	public static final int RECORDS_PER_PAGE = 200;
 	
 	private transient Logger logger = Logger.getLogger(TransitService.class.getName());
 	
-	
-	public PaginationWrapper<TransitBpi> getTransitBQItemsNewSearch(String jobNumber, String billNo, String subBillNo, 
-			String pageNo, String itemNo, String description) throws Exception{
-		bqCache = transitBqDao.getTransitBQItems(jobNumber, billNo, subBillNo, pageNo, itemNo, description);
-		// add the total line to bqCache
-		addBQTotalLine(bqCache);
-		return getTransitBQItemsByPage(0);
-	}
-	
-	// added by brian on 20110120
-	// add the total line to bqCache
-	private void addBQTotalLine(List<TransitBpi> bqList){
-		if(bqList == null)
-			return;
-		else{
-			Double total = 0.0;
-			for(int i = 0; i < bqList.size(); i++)
-				total += bqList.get(i).getValue();
-			
-			TransitBpi totalLine = new TransitBpi();
-			totalLine.setDescription("TOTAL:");
-			totalLine.setValue(total);
-			bqList.add(totalLine);
-		}
-	}
-	
-	public PaginationWrapper<TransitBpi> getTransitBQItemsByPage(int pageNum){
-		PaginationWrapper<TransitBpi> wrapper = new PaginationWrapper<TransitBpi>();
-		wrapper.setCurrentPage(pageNum);
-		if(bqCache == null)
-			return wrapper;
-		int size = bqCache.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > bqCache.size())
-			toInd = bqCache.size();
-		wrapper.setCurrentPageContentList(new ArrayList<TransitBpi>(bqCache.subList(fromInd, toInd)));
-		return wrapper;
-	}
-	
-	public void nullifyBqCache(){
-
-		if(bqCache != null){
-			bqCache.clear();
-			bqCache = null;
-		}
-	}
-	
-	// modified by brian on 20110120
-	// add total line before pass the PaginationWrapper to UI
-	@SuppressWarnings("unused")
-	public PaginationWrapper<TransitResourceWrapper> searchTransitResourcesByPage(String jobNumber, String billNo, String subBillNo,
-			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
-		if(header == null || !header.getJobNumber().equals(jobNumber))
-			header = transitHeaderDao.getTransitHeader(jobNumber);
-		
-		List<TransitResourceWrapper> resourceList = transitResourceDao.searchTransitResources(header, billNo, subBillNo, pageNo, itemNo, resourceCode, objectCode, subsidiaryCode, description, pageNum);
-		logger.info("b4 add: " + resourceList.size());
-		addBQResourceTotalLine(resourceList);
-		logger.info("after add: " + resourceList.size());
-		PaginationWrapper<TransitResourceWrapper> wrapper = new PaginationWrapper<TransitResourceWrapper>();
-		
-		wrapper.setCurrentPage(pageNum);
-		if(resourceList == null)
-			return wrapper;
-		int size = resourceList.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > resourceList.size())
-			toInd = resourceList.size();
-		wrapper.setCurrentPageContentList(new ArrayList<TransitResourceWrapper>(resourceList.subList(fromInd, toInd)));
-		
-		return wrapper;
-	}
-	
-	// added by brian on 20110120
-	// add the total line to bqCache
-	private void addBQResourceTotalLine(List<TransitResourceWrapper> resourceList){
-		if(resourceList == null)
-			return;
-		else{
-			Double total = 0.0;
-			for(int i = 0; i < resourceList.size(); i++)
-				total += resourceList.get(i).getValue();
-			
-			TransitResourceWrapper totalLine = new TransitResourceWrapper();
-			totalLine.setBillNo(null);
-			totalLine.setSubBillNo(null);
-			totalLine.setItemNo(null);
-			totalLine.setDescription("TOTAL:");
-			totalLine.setValue(total);
-			resourceList.add(totalLine);
-		}
-	}
-	
-//	public PaginationWrapper<TransitResourceWrapper> searchTransitResourcesByPage(String jobNumber, String billNo, String subBillNo,
-//			String pageNo, String itemNo, String resourceCode, String objectCode, String subsidiaryCode, String description, int pageNum) throws Exception{
-//		if(header == null || !header.getJobNumber().equals(jobNumber))
-//			header = transitHeaderDao.getTransitHeader(jobNumber);
-//		return transitResourceDao.searchTransitResourcesByPage(header, billNo, subBillNo, pageNo, itemNo, resourceCode, objectCode, subsidiaryCode, description, pageNum);
-//	}
-	
 	private BpiItem bqItemFromTransit(TransitBpi transitBq){
-//		logger.info("bqItemFromTransit: " + transitBq.getId());
 		BpiItem bqItem = new BpiItem();
 		bqItem.setRefBillNo(transitBq.getBillNo());
 		bqItem.setRefSubBillNo(transitBq.getSubBillNo());
@@ -235,16 +126,20 @@ public class TransitService implements Serializable {
 		else{
 			bqItem.setCostRate(transitBq.getCostRate());
 			bqItem.setSellingRate(transitBq.getSellingRate());
-			bqItem.setAmountBudget(transitBq.getQuantity()!=null && transitBq.getCostRate() != null ? transitBq.getQuantity() * transitBq.getCostRate() : 0.0);
-			bqItem.setAmountSelling(transitBq.getQuantity()!=null && transitBq.getSellingRate() != null ? transitBq.getQuantity()*transitBq.getSellingRate() : 0.0);
+			/**
+			 * @author koeyyeung
+			 * modified on 20 Feb, 2017
+			 * Convert to Amount Based**/
+			bqItem.setAmountBudget(CalculationUtil.round(transitBq.getAmountBudget().doubleValue(), 2));
+			bqItem.setAmountSelling(transitBq.getValue());
 		}
 		bqItem.setUnit(transitBq.getUnit());
 		bqItem.setBqType("TI");
+		
 		return bqItem;
 	}
 	
 	private BpiItemResource resourceFromTransit(TransitResource transitResource){
-//		logger.info("resourceFromTransit: " + transitResource.getId());
 		BpiItemResource resource = new BpiItemResource();
 		String obj = transitResource.getObjectCode();
 		resource.setObjectCode(obj);
@@ -289,14 +184,20 @@ public class TransitService implements Serializable {
 		resource.setUnit(transitResource.getUnit());
 		resource.setCostRate(transitResource.getRate());
 		resource.setSplitStatus("100");
+		/**
+		 * @author koeyyeung
+		 * created on 20 Feb, 2017
+		 * Convert to Amount Based**/
+		logger.info("transitResource.getValue(): "+transitResource.getValue());
+		resource.setAmountBudget(transitResource.getValue());
 		return resource;
 	}
 	
 	public TransitImportResponse importBqItemsOrResourcesFromXls(String jobNumber, String type, byte[] file) throws Exception{
 		if(type.equals(GlobalParameter.TRANSIT_BQ))
-			return importBqItems(jobNumber, file);
+			return importBqItemsFromCauseway(jobNumber, file);			
 		else if(type.equals(GlobalParameter.TRANSIT_RESOURCE))
-			return importTransitResources(jobNumber, file);
+			return importResourcesFromCauseway(jobNumber, file);				
 		else if(type.equals(GlobalParameter.TRANSIT_CODE_MATCHING))
 			return importResourceCodeMatching(file);
 		else if(type.equals(GlobalParameter.TRANSIT_UOM_MATCHING))
@@ -308,7 +209,7 @@ public class TransitService implements Serializable {
 		}
 	}
 	
-	public TransitImportResponse importBqItems(String jobNumber, byte[] file) throws Exception{
+	public TransitImportResponse importBqItemsFromCauseway(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		errorList = new ArrayList<String>();
 		// added by brian on 20110224
@@ -330,6 +231,7 @@ public class TransitService implements Serializable {
 		int importBQCount = 0;
 		int i = 0;
 		List<TransitBpi> transitBpiList = new ArrayList<TransitBpi>();
+		List<TransitBpi> headersList = new ArrayList<TransitBpi>(); 
 		try{
 			List<Object[]> uomCodeMatches = transitUomMatchDao.getAllUomMatches();
 			Map<String, String> uomMap = new HashMap<String, String>(uomCodeMatches.size());
@@ -338,7 +240,7 @@ public class TransitService implements Serializable {
 			
 			//Open file
 			excelFileProcessor.openFile(file);
-			//skip the header line
+			//Skip header 
 			excelFileProcessor.readLine(0);
 			
 			//Map to hold the bqItems (does not include headers), to check for duplicates - maps item to line number
@@ -348,19 +250,19 @@ public class TransitService implements Serializable {
 			
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
 				String[] row = excelFileProcessor.readLine(8);
-				if(isRowEmpty(row))
+				if(row == null || isRowEmpty(row))
 					continue;
 				
 				String description = row[3];
 				if(description == null || description.length() == 0){
-					errorList.add("Description is blank. Line " + i);
+					errorList.add("Line " + i+": [Column D] Description is blank.");
 					continue;		
 				}
 				
 				// added by brian on 30110119
 				// check description longer than 1000 or not, if yes, log in error report and don't insert into database
 				if(description != null && description.length() > 1000){
-					errorList.add("Description is longer than 1000 characters. Line " + i);
+					errorList.add("Line " + i+": [Column D] Description is longer than 1000 characters.");
 					continue;
 				}
 				
@@ -370,50 +272,47 @@ public class TransitService implements Serializable {
 				bqItem.setSequenceNo(sequenceNo++);
 				importBQCount += 1;
 				
-				//if the first col is not empty, it's a bq item, otherwise it's a header
-				if(row[0] != null && row[0].length() > 0){
-					//Make sure bill/page/item aren't null
-					
-					// added by Biran on 20110117
-					// check if the bill and sub bill column is 3 digit or more
-					if(row[0].length() < 3){
-						errorList.add("Number of digits is less than 3. Line " + i);
+				
+				
+				if(!isHeader(row)){
+					//First 2 digits: Bill, 3-5: SubBill
+					if(row[0].length() < 2){
+						errorList.add("Line " + i+": [Column A] Bill should not be less than 2 digits.");
 						continue;
 					}
 					
-					String billNo = row[0].substring(1, 3);
-					String subBillNo = row[0].substring(3);
-//					if(Integer.parseInt(subBillNo) == 0)
+					String billNo = row[0].substring(0, 2);
+					String subBillNo = row[0].substring(2);
 					// check if the sub bill number is "0" or "00" or "000"
 					if("00000".substring(0, subBillNo.length()).equals(subBillNo))
 						subBillNo = null;
 					String pageNo = row[1];
 					if(pageNo == null){
-						errorList.add("Page Number is blank. Line " + i);
+						errorList.add("Line " + i+": [Column B] Page is blank.");
 						continue;
 					}
 					String itemNo = row[2];
 					if(itemNo == null){
-						errorList.add("Item Number is blank. Line " + i);
+						errorList.add("Line " + i+": [Column C] Item is blank.");
 						continue;
 					}
 					//Validate unit
 					String causewayUom = row[5];
 					if(causewayUom == null){
-						errorList.add("Unit is blank. Line " + i);
+						errorList.add("Line " + i+": [Column F] Units is blank.");
 						continue;
 					}
 					else{
 						String jdeUnit = uomMap.get(causewayUom.toUpperCase().trim());
 						if(jdeUnit == null){
-							errorList.add("Uom match could not be found: " + causewayUom + ". Line " + i);
+							errorList.add("Line " + i+": [Column F] Units: "+causewayUom+" does not exsit in Causeway UOM.");
 							continue;
 						}
 						
 						// added by brian on 20110119
 						// check if unit too long
 						if(jdeUnit != null && jdeUnit.length() > 10){
-							errorList.add("unit is longer than 10 characters. Line " + i);
+							errorList.add("Line " + i+": [Column F] Units is longer than 10 characters.");
 							continue;
 						}
 						
@@ -426,55 +325,48 @@ public class TransitService implements Serializable {
 					bqItem.setItemNo(itemNo);
 					// logic to get quantity, rate and total value
 					double quantity = row[4] == null ? 0.0 : Double.parseDouble(row[4]);
-					bqItem.setQuantity(new Double(quantity));
+					bqItem.setQuantity(CalculationUtil.round(quantity, 4));
 					double rate = row[6] == null ? 0.0 : Double.parseDouble(row[6]);
-					bqItem.setSellingRate(new Double(rate));
+					bqItem.setSellingRate(CalculationUtil.round(rate, 4));
 					
 					// added by brian on 20110224 - start
 					// Get the total value from Excel
 					if(row[7] != null && row[7].length() > 0){
 						double value = Double.parseDouble(row[7]);
-						bqItem.setValue(value);
+						bqItem.setValue(CalculationUtil.round(value, 2));
 					}
 					else{
-						this.errorList.add("Total Value is blank. Line " + i);
+						this.errorList.add("Line "+i+": [Column H] Total Value is blank.");
 						continue;
 					}
 					
-					// old logic to get Total Value by Dan
-//					double value = quantity * rate;
-//					bqItem.setValue(value);
 					
 					// check is there any different between total value and Qty*Rate (include rounding error)
-					int dp = 4;
-					if(this.haveRoundingDifferent(bqItem.getValue(), (bqItem.getSellingRate()*bqItem.getQuantity()), dp)){
-//						this.warningList.add("The Total Value from Excel: " + RoundingUtil.round(bqItem.getValue(), dp) 
-//											+ " is different from Qty*Rate: " + RoundingUtil.round(bqItem.getQuantity(), dp) + "*" + RoundingUtil.round(bqItem.getSellingRate(), dp) 
-//											+ " = " + RoundingUtil.round((bqItem.getSellingRate()*bqItem.getQuantity()), dp) + " when round to " + dp + " dp"
-//											+ ". The different is " + RoundingUtil.round((bqItem.getValue()-(bqItem.getSellingRate()*bqItem.getQuantity())), dp) 
-//											+ ". Line " + i);
-						
-						this.warningList.add("The Total Value from Excel is different from Qty*Rate when round to " + dp + " dp."
-								+ " The different is " + RoundingUtil.round((bqItem.getValue()-(bqItem.getSellingRate()*bqItem.getQuantity())), dp) 
-								+ ". Line " + i);
+					double difference = CalculationUtil.round((bqItem.getValue()-(bqItem.getSellingRate()*bqItem.getQuantity())), 2);
+					if(difference != 0.0){
+						this.warningList.add("Line " + i+": [Column E] Qty: "+bqItem.getQuantity()+" * [Column G] Rate: "+bqItem.getSellingRate()
+								+" does not equal to [Column H] Total Value: "+bqItem.getValue()
+								+ ". Difference: " + difference );
 						
 						response.setHaveWarning(true);
 					}
 					
-//					double valueExcel = row[7] == null ? 0.0 : Double.parseDouble(row[7]);
-//					if(RoundingUtil.round(value, 4) != RoundingUtil.round(valueExcel, 4))
-//						logger.info("value != valueExcel. Possible rounding error.");
 					
 					// added by brian on 20110224 - end
 					
 					//Check that bqItem doesn't already exist (same bill, subBill, page, item - done in hashCode/equals)
 					Integer itemLineNo = bqItemMap.get(bqItem);
 					if(itemLineNo != null){
-						errorList.add("Bill/Sub Bill/Page/Item is duplicated. Lines " + itemLineNo.toString() + " and " + i);
+						errorList.add("Lines " + itemLineNo.toString() + " and " + i+
+								": Bill "+bqItem.getBillNo()+"/Sub Bill "+bqItem.getSubBillNo()+"/Page "+bqItem.getPageNo()+"/Item "+bqItem.getItemNo()+" is duplicated.");
 						continue;
 					}
 					else
 						bqItemMap.put(bqItem, Integer.valueOf(i));
+					
+					
+					transitBpiList.add(bqItem);
+					
 					
 					//Check if header fields need to be filled
 					if(headersTempList.size() != 0){
@@ -482,10 +374,11 @@ public class TransitService implements Serializable {
 							bqHeader.setBillNo(billNo);
 							bqHeader.setSubBillNo(subBillNo);
 							bqHeader.setPageNo(pageNo);
+							
+							headersList.add(bqHeader);
 						}
 						headersTempList.clear();
 					}
-					transitBpiList.add(bqItem);
 				}
 				else{
 					//Add header to temp list - have to scan ahead to find the bill/subBill/page, then go back and fill the header(s)
@@ -502,6 +395,9 @@ public class TransitService implements Serializable {
 			header.setStatus(Transit.BQ_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
 			for(TransitBpi transitBpi: transitBpiList){
+				transitBqDao.saveOrUpdate(transitBpi);
+			}
+			for(TransitBpi transitBpi: headersList){
 				transitBqDao.saveOrUpdate(transitBpi);
 			}
 //			response.setNumRecordImported(sequenceNo);
@@ -526,7 +422,8 @@ public class TransitService implements Serializable {
 		return response;
 	}
 	
-	public TransitImportResponse importTransitResources(String jobNumber, byte[] file) throws Exception{
+	
+	public TransitImportResponse importResourcesFromCauseway(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		
 		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
@@ -576,7 +473,9 @@ public class TransitService implements Serializable {
 			excelFileProcessor.readLine(0);
 			resources = new ArrayList<TransitResource>(excelFileProcessor.getNumRow());
 			for(i = 2; i <= excelFileProcessor.getNumRow(); i++){
-				String[] row = excelFileProcessor.readLine(19);
+				String[] row = excelFileProcessor.readLine(20);
+				if(row == null || isRowEmpty(row))
+					continue;
 				
 				//Skip non-resource lines, check if resource has code, type, desc
 				String resourceCode = (row[8] != null && row[8].trim().length() != 0) ? row[8].trim() : null;
@@ -586,14 +485,14 @@ public class TransitService implements Serializable {
 				
 				if(!(resourceCode != null && type != null && description != null)){
 					if(resourceCode != null || type != null || description != null)
-						errorList.add("Resource code, type, and description must not be blank. Line " + i);
+						errorList.add("Line " + i+": [Column I] Resource code, [Column J] Type, and [Column K] Description must not be blank.");
 					continue;
 				}
 				
 				// added by brian on 20110119
 				// check if resource code too long
 				if(resourceCode != null && resourceCode.length() > 10){
-					errorList.add("Resource Code is longer than 10 characters. Line " + i);
+					errorList.add("Line " + i+": [Column I] Resource Code is longer than 10 characters.");
 					continue;
 				}
 				
@@ -603,34 +502,34 @@ public class TransitService implements Serializable {
 				typeLimitation.add("IC"); typeLimitation.add("L");typeLimitation.add("M");
 				typeLimitation.add("O"); typeLimitation.add("S"); typeLimitation.add("P");
 				if(type != null && !typeLimitation.contains(type)){
-					errorList.add("Only IC , L , M , O , S and P are allowed to be Resource Type. Line " + i);
+					errorList.add("Line " + i+": Only IC , L , M , O , S and P are allowed to be [Column J] Resource Type.");
 					continue;
 				}
 				
 				// added by brian on 20110119
 				// check if description too long
 				if(description != null && description.length() > 255){
-					errorList.add("Resource Description is longer than 255 characters. Line " + i);
+					errorList.add("Line " + i + ":[Column K] Description is longer than 255 characters.");
 					continue;
 				}
 				
 				//Check if resource is under a new bqItem, and if so, get it from the map
 				if(row[0] != null && row[0].length() > 0){
 					//Get bpi
-					String billNo = row[0].substring(1, 3);
-					String subBillNo = row[0].substring(3);
+					String billNo = row[0].substring(0, 2);
+					String subBillNo = row[0].substring(2);
 //					if(Integer.parseInt(subBillNo) == 0)
 					// check if the sub bill number is "0" or "00" or "000"
 					if("00000".substring(0, subBillNo.length()).equals(subBillNo))
 						subBillNo = "";
 					String pageNo = row[1];
 					if(pageNo == null){
-						errorList.add("Page Number is blank. Line " + i);
+						errorList.add(" Line " + i+": [Column B] Page is blank.");
 						continue;
 					}
 					String itemNo = row[2];
 					if(itemNo == null){
-						errorList.add("Item Number is blank. Line " + i);
+						errorList.add(" Line " + i+": [Column C] Item is blank.");
 						continue;
 					}
 					String bpi = billNo + "/" + subBillNo + "//" + pageNo + "/" + itemNo;
@@ -638,7 +537,7 @@ public class TransitService implements Serializable {
 					bqItem = bqItemMap.get(bpi);
 					//Make sure item is not null
 					if(bqItem == null){
-						errorList.add("Could not find BQ Item (you may have to import the BQ items again). Line " + i);
+						errorList.add(" Line " + i+": Could not find BQ Item (you may have to import the BQ items again).");
 						continue;
 					}
 					//reset resourceNo
@@ -661,172 +560,98 @@ public class TransitService implements Serializable {
 				// Old Transit Resource logic for calculate total value, total qty and rate (rate can get from value/qty)
 				
 				// added by brian on 20110224
-				// Get the Total value of Resource from Excel,
-				// if  blank, return error (assume input is double value)
 				if(row[16] != null && row[16].length() > 0){
 					Double totalValue = new Double(row[16]);
-					resource.setValue(totalValue);
+					resource.setValue(CalculationUtil.round(totalValue, 2));
 				}
 				else{
-					errorList.add("Resource's Total Value of " + bpi + "is blank. Line " + i);
+					errorList.add("Line " + i+": [Column Q] Total Value of " + bpi + "is blank.");
 					continue;
 				}
 				
-				// added by brian on 20110224
-				// Get the Resource Quantity from Excel
-				// only S type allow blank, if type == S and  blank, copy BQ Qty, for other type if blank return error (assume input is double)
-				if("S".equals(resource.getType())){
-					if(row[13] != null && row[13].length() > 0){
-						Double totalQuantity = new Double(row[13]);
-						resource.setTotalQuantity(totalQuantity);
-					}
+				// Get the Resource Quantity
+				if(row[13] != null && row[13].length() > 0){
+					Double totalQuantity = new Double(row[13]);
+					resource.setTotalQuantity(CalculationUtil.round(totalQuantity, 4));
+				}
+				else if("S".equals(resource.getType())){
+					//Quantity can be calculated from excel if Type = "S"
+					resource.setTotalQuantity(CalculationUtil.round(bqItem.getQuantity(), 4));
+				}
+				else{
+					errorList.add("Line " + i+": [Column N] Total Qty of " + bpi + " is blank.");
+					continue;
+				}
+				
+				// Get Resource Rate 
+				if(row[15] != null && row[15].length() > 0){
+					Double rate = new Double(row[15]);
+					resource.setRate(CalculationUtil.round(rate, 4));
+				}
+				else if("S".equals(resource.getType())){
+					//Rate can be calculated from excel if Type = "S"
+					if(bqItem.getValue()== 0.0)
+						resource.setRate(0.0);
 					else
-						resource.setTotalQuantity(bqItem.getQuantity());
+						resource.setRate(CalculationUtil.round(resource.getValue()/resource.getTotalQuantity(), 4));
 				}
 				else{
-					if(row[13] != null && row[13].length() > 0){
-						Double totalQuantity = new Double(row[13]);
-						resource.setTotalQuantity(totalQuantity);
-					}
-					else{
-						errorList.add("Resource's Total Quantity of " + bpi + " is blank. Line " + i);
-						continue;
-					}
+					errorList.add("Line " + i+": [Column P] Rate of " + bpi + " is blank.");
+					continue;
 				}
+								
 				
-				// added by brian on 20110224
-				// Get the Resource Rate from Excel
-				// if type == S and blank calculate from Total Value/Qty or 0.0 if Total Value 0.0, otherwise copy Excel (assume input is double)
-				if("S".equals(resource.getType())){
-					if(row[15] != null && row[15].length() > 0){
-						Double rate = new Double(row[15]);
-						resource.setRate(rate);
-					}
-					else{
-						if(bqItem.getValue().equals(Double.valueOf(0)))
-							resource.setRate(Double.valueOf(0));
-						else{
-							// modified by brian on 20110309
-//							resource.setRate(bqItem.getValue()/bqItem.getQuantity());
-							resource.setRate(resource.getValue()/resource.getTotalQuantity());
-						}
-					}
-				}
-				else{
-					if(row[15] != null && row[15].length() > 0){
-						Double rate = new Double(row[15]);
-						resource.setRate(rate);
-					}
-					else{
-						errorList.add("Resource's Rate of " + bpi + " is blank. Line " + i);
-						continue;
-					}
-				}
-				
-//				Double totalValue = row[16] != null && row[16].length() != 0 ? new Double(row[16]) : bqItem.getValue(); // if value blank don't copy BQ , it is a ERROR
-//				Double totalQuantity = row[13] != null && row[13].length() > 0 ? new Double(row[13]) : bqItem.getQuantity(); // only if Resource type is S and Qty blank, copy BQ Qty
-//				Double rate = totalQuantity.doubleValue() != 0.0 ? totalValue/totalQuantity : new Double(0);
 				
 				resource.setWaste(row[12] != null ? new Double(row[12].trim()) : new Double(0));
 				
-//				resource.setTotalQuantity(totalQuantity);
-//				resource.setRate(rate);
-//				resource.setValue(totalValue);
 				
-				// only S type and Blank will copy otherwise if blank = ERROR
-				if("S".equals(resource.getType())){
-					if(row[14] != null && row[14].length() > 0){
-						String causewayUom = row[14].trim().toUpperCase();
-						String jdeUom = uomMap.get(causewayUom);
-						if(jdeUom == null){
-							errorList.add("Uom match could not be found: " + causewayUom + ". Line " + i);
-							continue;
-						}
-						
-						// added by brian on 20110119
-						// check if unit too long
-						if(jdeUom != null && jdeUom.length() > 10){
-							errorList.add("Unit is longer than 10 characters. Line " + i);
-							continue;
-						}
-						resource.setUnit(jdeUom);
+				//Verify Unit
+				if(row[14] != null && row[14].length() > 0){
+					String causewayUom = row[14].trim().toUpperCase();
+					String jdeUom = uomMap.get(causewayUom);
+					if(jdeUom == null){
+						errorList.add("Line " + i+": [Column O] Units: "+causewayUom+" does not exsit in Causeway UOM.");
+						continue;
 					}
-					else
-						resource.setUnit(bqItem.getUnit());
+
+					if(jdeUom != null && jdeUom.length() > 10){
+						errorList.add("Line " + i+": [Column O] Unit is longer than 10 characters.");
+						continue;
+					}
+					resource.setUnit(jdeUom);
 				}
 				else{
-					if(row[14] != null && row[14].length() > 0){
-						String causewayUom = row[14].trim().toUpperCase();
-						String jdeUom = uomMap.get(causewayUom);
-						if(jdeUom == null){
-							errorList.add("Uom match could not be found: " + causewayUom + ". Line " + i);
-							continue;
-						}
-							
-						// added by brian on 20110119
-						// check if unit too long
-						if(jdeUom != null && jdeUom.length() > 10){
-							errorList.add("Unit is longer than 10 characters. Line " + i);
-							continue;
-						}
-						resource.setUnit(jdeUom);
-					}
+					//Unit can be copied from BQ if Type is "S"
+					if("S".equals(resource.getType()))
+						resource.setUnit(bqItem.getUnit());
 					else{
-						errorList.add("Resource's Unit of " + bpi + " is blank. Line " + i);
+						errorList.add("Line " + i+": [Column O] Unit of " + bpi + " is blank.");
 						continue;
 					}
 				}
 				
-				// check is there any rounding different
-				int dp = 4;
-				if(this.haveRoundingDifferent(resource.getValue(), resource.getRate()*resource.getTotalQuantity(), dp)){
-//					this.warningList.add("The Total Value from Excel File: " + RoundingUtil.round(resource.getValue(), dp) 
-//										+ " is different from Qty*Rate: " + RoundingUtil.round(resource.getTotalQuantity(), dp) + "*" + RoundingUtil.round(resource.getRate(), dp) 
-//										+ " = " + RoundingUtil.round((resource.getRate()*resource.getTotalQuantity()), dp) + " when round to " + dp + " dp"
-//										+ ". The different is " + RoundingUtil.round((resource.getValue()-(resource.getRate()*resource.getTotalQuantity())), dp) 
-//										+ ". Line " + i);
-					
-					this.warningList.add("The Total Value from Excel File is different from Qty*Rate when round to " + dp + " dp."
-							+ " The different is " + RoundingUtil.round((resource.getValue()-(resource.getRate()*resource.getTotalQuantity())), dp) 
-							+ ". Line " + i);
+				
+				// check if there is rounding difference
+				double difference = CalculationUtil.round((resource.getValue()-(resource.getRate()*resource.getTotalQuantity())), 2);
+				if(difference != 0.0){
+					this.warningList.add("Line " + i+": [Column N] Total Qty: "+resource.getTotalQuantity()+" * [Column P] Rate: "+resource.getRate()
+							+" does not equal to [Column Q] Total Value: "+resource.getValue()
+							+ ". Difference: " + difference );
 					
 					response.setHaveWarning(true);
 				}
 				
-//				if(row[14] != null && row[14].length() > 0){
-//					String causewayUom = row[14].trim().toUpperCase();
-//					String jdeUom = uomMap.get(causewayUom);
-//					if(jdeUom == null){
-//						errorList.add("Uom match could not be found: " + causewayUom + ". Line " + i);
-//						continue;
-//					}
-//					
-//					// added by brian on 20110119
-//					// check if unit too long
-//					if(jdeUom != null && jdeUom.length() > 10){
-//						errorList.add("Unit is longer than 10 characters. Line " + 1);
-//						continue;
-//					}
-//					
-//					resource.setUnit(jdeUom);
-//				}
-//				else
-//					resource.setUnit(bqItem.getUnit());
 				
 				if(row[17] != null && row[17].trim().length() > 0 && isDigits(row[17].trim())
 						&& row[18] != null && row[18].trim().length() > 0 && isDigitsOrLetter(row[18].trim())){
 					
-					// added by brian on 20110119
-					// check if object code too long
 					if(row[17] != null && row[17].trim().length() > 6){
-						errorList.add("Object Code is longer than 6 characters. Line " + i);
+						errorList.add(" Line " + i+": [Column R] Object Code is longer than 6 characters.");
 						continue;
 					}
 					
-					// added by brian on 20110119
-					// check if subsidiary code too long
 					if(row[18] != null && row[18].trim().length() > 8){
-						errorList.add("Subsidiary Code is longer than 8 characters. Line " + i);
+						errorList.add(" Line " + i+": [Column S] Subsidiary Code is longer than 8 characters.");
 						continue;
 					}
 					
@@ -841,17 +666,13 @@ public class TransitService implements Serializable {
 					if(accountCode != null){
 						String[] objSub = accountCode.split("\\.");
 						
-						// added by brian on 20110119
-						// check if object code too long
 						if(objSub[0] != null && objSub[0].length() > 6){
-							errorList.add("Object Code is longer than 6 characters. Line " + i);
+							errorList.add(" Line " + i+": [Column R] Object Code is longer than 6 characters.");
 							continue;
 						}
 						
-						// added by brian on 20110119
-						// check if subsidiary code too long
 						if(objSub[1] != null && objSub[1].length() > 8){
-							errorList.add("Subsidiary Code is longer than 8 characters. Line " + i);
+							errorList.add(" Line " + i+": [Column S] Subsidiary Code is longer than 8 characters.");
 							continue;
 						}
 						
@@ -860,6 +681,32 @@ public class TransitService implements Serializable {
 						accountCodes.add(accountCode);
 					}
 				}
+				
+				//Verify Package Number for Material and Subcontract package
+				if(row[19] != null && row[19].trim().length() > 0 && isDigits(row[19].trim())){
+					String packageNo = row[19].trim();
+					String obj = resource.getObjectCode().substring(0, 2);
+					if("13".equals(obj) || "14".equals(obj)){
+						if("13".equals(obj) && !packageNo.startsWith("6")){
+							errorList.add(" Line " + i+": [Column T] Package No. should start with '6' for object code '13xxx' (Material Package).");
+							continue;
+						}
+						else if("14".equals(obj) && resource.getSubsidiaryCode().startsWith("3") && !packageNo.startsWith("3")){
+							errorList.add(" Line " + i+": [Column T] Package No. should start with '3' for object code '14xxx' and subsidiary code '3xxxxxxx' (NSC).");
+							continue;
+						}
+						else if("14".equals(obj) && !resource.getSubsidiaryCode().startsWith("3") && !packageNo.startsWith("1") && !packageNo.startsWith("2")){
+							errorList.add(" Line " + i+": [Column T] Package No. should start with '1' or '2' for object code '14xxx' (DSC, NDSC)." );
+							continue;
+						}
+					}else{
+						errorList.add(" Line " + i+": [Column T] Package No. can be only assigned to object code '14xxx' and '13xxx'." );
+						continue;
+					}
+
+					resource.setPackageNo(row[19].trim());
+				}
+				
 				
 				resources.add(resource);
 				resourceNo++;
@@ -900,6 +747,7 @@ public class TransitService implements Serializable {
 		return response;
 	}
 	
+	
 	public ExcelFile downloadErrorList(){
 		if(errorList == null || errorList.size() == 0)
 			return null;
@@ -931,11 +779,6 @@ public class TransitService implements Serializable {
 		return excel;
 	}
 	
-	// added by brian on 20110224
-	// check is there different after round to X dp
-	private boolean haveRoundingDifferent(Double valueFromExcel, Double valueCalculated, int dp){
-		return (RoundingUtil.round(valueFromExcel, dp) != RoundingUtil.round(valueCalculated, dp));
-	}
 	
 	private TransitImportResponse importResourceCodeMatching(byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
@@ -1171,6 +1014,20 @@ public class TransitService implements Serializable {
 				return false;
 		return true;
 	}
+	
+	private boolean isHeader(String[] row){
+		boolean isHeader = false;
+		if(row[3] != null && row[3].length() > 0){
+			isHeader = true;
+		}
+		if((row[4] != null && row[4].length() > 0) ||
+				(row[5] != null && row[5].length() > 0) ||
+				(row[6] != null && row[6].length() > 0) ||
+				(row[7] != null && row[7].length() > 0)){
+			isHeader = false;
+		}
+		return isHeader;
+	}
 
 	// Last modified: Brian Tse
 	// call callJasperReport to generate TransitBQ Resource Reconciliation Report
@@ -1208,15 +1065,13 @@ public class TransitService implements Serializable {
 	
 	// Last modified: Brian Tse
 	// Generate the TransitBQ Resource Reconciliation report by using Jasper library and return ByteArrayOutputStream
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ByteArrayOutputStream callJasperReportforBQResourceReconciliationReport(String jobNumber, List<TransitBQResourceReconciliationReportRecordWrapper> reportWrapperList, String templateName) throws JRException, IOException{
 		
 		logger.info("Call Jasper Report for BQ Resource Reconciliation Report");
 		
-		// calculate the data member of reportReocrdWrapperList
-		UpdateTransitBQResourceReportReocrdField(jobNumber, reportWrapperList);
 		
-		Map parameters = new HashMap();
+		HashMap<String,Object> parameters = new HashMap<String, Object>();
+		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
 		
 		//return outputStream;
 		try {
@@ -1231,14 +1086,14 @@ public class TransitService implements Serializable {
 	
 	// Last Modified: Brian Tse
 	// Generate the TransitBQ Master Reconciliation report by using Jasper library and return ByteArrayOutputStream
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ByteArrayOutputStream callJasperReportforBQMasterReconciliationReport(String jobNumber, List<TransitBQMasterReconciliationReportRecordWrapper> reportWrapperList, String templateName) throws JRException, FileNotFoundException{
 		logger.info("Call Jasper Report for BQ Master Reconciliation Report");
 		
 		// Calculate the remaining data member of reportRecordWrapperList
 		UpdateTransitBQMasterReportReocrdField(jobNumber, reportWrapperList);
 		
-		Map parameters = new HashMap();
+		HashMap<String,Object> parameters = new HashMap<String, Object>();
+		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
 		
 		JRBeanCollectionDataSource beanDataSource = new JRBeanCollectionDataSource(reportWrapperList);
 		
@@ -1261,109 +1116,19 @@ public class TransitService implements Serializable {
 		if(reportWrapperList == null)
 			return false;
 		
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		String date2String = formatter.format(cal.getTime());
-		
-		for(int i = 0; i < reportWrapperList.size(); i++){
-			reportWrapperList.get(i).setJobNumber(jobNumber);
-			CalculateTransitBQMasterReportRecordField(reportWrapperList.get(i));
-			reportWrapperList.get(i).setPrintDate(cal.getTime());
-			reportWrapperList.get(i).setPrintDateString(date2String);
+		for(TransitBQMasterReconciliationReportRecordWrapper wrapper:reportWrapperList){
+			if(wrapper.getBillNo().trim().equals("80")){
+				wrapper.setGenuineMarkup(wrapper.getSellingValue());
+				wrapper.setInternalValue(wrapper.getSellingValue()!=null ?CalculationUtil.roundToBigDecimal(wrapper.getSellingValue(), 2): new BigDecimal(0));
+				//wrapper.setGrossProfit(Double.valueOf(0));
+				wrapper.setSellingValue(Double.valueOf(0));
+			}
 		}
 		return true;
 	}
 	
-	// Last modified: Brian Tse
-	// set the jobNumber to each record
-	private boolean UpdateTransitBQResourceReportReocrdField(String jobNumber, List<TransitBQResourceReconciliationReportRecordWrapper> reportWrapperList){
-		if(reportWrapperList == null)
-			return false;
-		
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		String date2String = formatter.format(cal.getTime());
-		
-		for(int i = 0; i < reportWrapperList.size(); i++){
-			String shortType = reportWrapperList.get(i).getType();
-			reportWrapperList.get(i).setType(shortToLongForm(shortType));
-			reportWrapperList.get(i).setJobNumber(jobNumber);
-			reportWrapperList.get(i).setPrintDate(cal.getTime());
-			reportWrapperList.get(i).setPrintDateString(date2String);
-		}
-		return true;
-	}
 	
-	// Last Modified: Brian Tse
-	private void CalculateTransitBQMasterReportRecordField(TransitBQMasterReconciliationReportRecordWrapper wrapper){
-		Double tempSellingValue = Double.valueOf(0);
-		Double tempECAValue = Double.valueOf(0);
-		
-		if(!wrapper.getBillNo().trim().equals("80")){
-			
-			// ECA Value equals to Internal Value
-			wrapper.setInternalValue(wrapper.geteCAValue());
-			
-			// assign value to temp if not null, assign 0 if null
-			if(wrapper.getSellingValue() != null)
-				tempSellingValue = wrapper.getSellingValue();
-			else
-				tempSellingValue = Double.valueOf(0);
-			
-			// assign value to temp if not null, assign 0 if null
-			if(wrapper.geteCAValue() != null)
-				tempECAValue = wrapper.geteCAValue();
-			else
-				tempECAValue = Double.valueOf(0);
-			
-			wrapper.setGrossProfit(tempSellingValue - tempECAValue);
-		}
-		else{
-			wrapper.setGenuineMarkup(wrapper.getSellingValue());
-			wrapper.setInternalValue(wrapper.getSellingValue());
-			wrapper.setGrossProfit(Double.valueOf(0));
-			wrapper.setSellingValue(Double.valueOf(0));
-		}
-	}
 	
-	// last modified: Brian Tse
-	private String shortToLongForm(String shortForm){
-		if(shortForm.trim().equals("IC"))
-			return "Income";
-		else if(shortForm.trim().equals("L"))
-			return "Labour";
-		else if(shortForm.trim().equals("M"))
-			return "Material";
-		else if(shortForm.trim().equals("O"))
-			return "Others";
-		else if(shortForm.trim().equals("P"))
-			return "Plant";
-		else if(shortForm.trim().equals("S"))
-			return "Subcontract";
-		else
-			return shortForm;
-	}
-
-	// last modified: Brian Tse
-	@SuppressWarnings("unused")
-	public Boolean allowPrint(String jobNumber) {
-		try{
-			Transit tempHeader = this.transitHeaderDao.getTransitHeader(jobNumber);
-			
-			logger.info("TransitRepositoryHBImpl -- checking Transit Header status");
-			logger.info("Header's Status : " + tempHeader.getStatus());
-			
-			if(tempHeader != null)
-				return Boolean.valueOf(((Transit.RESOURCES_CONFIRMED.equals(tempHeader.getStatus())) || (Transit.REPORT_PRINTED.equals(tempHeader.getStatus()))) || (Transit.TRANSIT_COMPLETED.equals(tempHeader.getStatus()))); // modified on 20110117 by brian
-			else
-				return Boolean.FALSE;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return Boolean.FALSE;
-		}
-	}
-
 	public List<Transit> getIncompleteTransitList() {
 		try {
 			return transitHeaderDao.getAllTransitHeaders(Transit.TRANSIT_COMPLETED);
@@ -1406,7 +1171,22 @@ public class TransitService implements Serializable {
 		return resourceList;
 	}
 
-	public String confirmResourcesAndCreatePackages(String jobNumber) {	
+	
+	public Double getTransitTotalAmount(String jobNo, String type) {
+		Double totalAmount = 0.0;
+		if(type.equals("Selling")){
+			totalAmount = transitBqDao.getTransitTotalSellingAmount(jobNo);			
+		}else if(type.equals("ECA")){
+			totalAmount = transitResourceDao.getTransitTotalECAAmount(jobNo);
+		}
+		return totalAmount;
+	}
+	
+	public List<ResourceSummayDashboardDTO> getBQResourceGroupByObjectCode(String jobNo) {
+		return transitResourceDao.getResourceGroupByObjectCode(jobNo);
+	}
+	
+	public String confirmResourcesAndCreatePackages(String jobNumber, Boolean createPackage) {	
 		logger.info("TRANSIT: confirming resources for job " + jobNumber);
 		Transit header;
 		try {
@@ -1444,41 +1224,42 @@ public class TransitService implements Serializable {
 		for(TransitBpi bqItem : bqItems){
 			double totalResourceValue = 0;
 			List<TransitResource> resources = transitResourceDao.obtainTransitResourceListByTransitBQ(bqItem);
-			//Iterate through resources. Get bq cost rate (total resource value / bq quant) and assign package no.s
 			for(TransitResource resource : resources){
-				totalResourceValue += resource.getTotalQuantity() * resource.getRate();
+				totalResourceValue += resource.getValue();
 				
-				String obj = resource.getObjectCode().substring(0, 2);
-				if(obj.equals("14") || obj.equals("13")){
-					// test take 5 digits in resource code to group
-					String resourceCode = resource.getResourceCode();
-					String res = resource.getResourceCode().substring(0, resourceCode.length() >= 5 ? 5 : resourceCode.length()) + obj + resource.getSubsidiaryCode().charAt(0);
-					String packageNo = packages.get(res);
-					if(packageNo == null){
-						if(obj.equals("13"))
-							packageNo = Integer.toString(matNo++);	
-						else if(resource.getSubsidiaryCode().startsWith("3"))
-							packageNo = Integer.toString(nscNo++);
-						else
-							packageNo = Integer.toString(dscNo++);
-						packages.put(res, packageNo);
+				if (createPackage){
+					String obj = resource.getObjectCode().substring(0, 2);
+					if(obj.equals("14") || obj.equals("13")){
+						// test take 5 digits in resource code to group
+						String resourceCode = resource.getResourceCode();
+						String res = resource.getResourceCode().substring(0, resourceCode.length() >= 5 ? 5 : resourceCode.length()) + obj + resource.getSubsidiaryCode().charAt(0);
+						String packageNo = packages.get(res);
+						if(packageNo == null){
+							if(obj.equals("13"))
+								packageNo = Integer.toString(matNo++);	
+							else if(resource.getSubsidiaryCode().startsWith("3"))
+								packageNo = Integer.toString(nscNo++);
+							else
+								packageNo = Integer.toString(dscNo++);
+							packages.put(res, packageNo);
+						}
+
+						// check if package number too long
+						if(packageNo != null && packageNo.length() > 4)
+							errorMsg.append("Package Number: " + packageNo + " is longer than 4 characters." + "<br/>");
+
+						resource.setPackageNo(packageNo);
 					}
-					
-					// check if package number too long
-					if(packageNo != null && packageNo.length() > 5)
-						errorMsg.append("Package Number: " + packageNo + " is long than 5 characters." + "<br/>");
-					
-					resource.setPackageNo(packageNo);
+					else
+						resource.setPackageNo("0");
 				}
-				else
-					resource.setPackageNo("0");
-				
+
 				accountCodes.add(resource.getObjectCode() + "." + resource.getSubsidiaryCode());
 			}
-			double itemCostRate = !bqItem.getQuantity().equals(new Double(0)) ? RoundingUtil.round(totalResourceValue / bqItem.getQuantity(), 4) : new Double(0);
-			//keep track of markup (for bill 80)
-			totalMarkup += bqItem.getQuantity() * (bqItem.getSellingRate() - itemCostRate);
-			bqItem.setCostRate(itemCostRate);
+			//Calculate Genuine Markup
+			totalMarkup += CalculationUtil.round(bqItem.getValue() - totalResourceValue, 2);
+			//Set Budget Amount in BQ Item
+			bqItem.setAmountBudget(CalculationUtil.roundToBigDecimal(totalResourceValue, 2));
 		}
 		
 		for(String accountCode : accountCodes){
@@ -1500,9 +1281,10 @@ public class TransitService implements Serializable {
 		markupBq.setItemNo("A");
 		markupBq.setSequenceNo(Integer.valueOf(10001));
 		markupBq.setDescription("Genuine Markup");
-		markupBq.setQuantity(new Double(totalMarkup));
-		markupBq.setValue(new Double(totalMarkup));
+		markupBq.setQuantity(totalMarkup);
+		markupBq.setValue(totalMarkup);
 		markupBq.setSellingRate(new Double(1));
+		markupBq.setAmountBudget(CalculationUtil.roundToBigDecimal(totalMarkup, 2));
 		markupBq.setUnit("NO");
 		TransitResource markupResource = new TransitResource();
 		markupResource.setTransitBpi(markupBq);
@@ -1511,7 +1293,7 @@ public class TransitService implements Serializable {
 		markupResource.setSubsidiaryCode("99019999");
 		markupResource.setType("IC");
 		markupResource.setDescription("Genuine Markup");
-		markupResource.setTotalQuantity(new Double(totalMarkup));
+		markupResource.setTotalQuantity(totalMarkup);
 		markupResource.setUnit("NO");
 		transitBqDao.saveOrUpdate(markupBq);
 		transitResourceDao.saveOrUpdate(markupResource);
@@ -1671,6 +1453,27 @@ public class TransitService implements Serializable {
 			String objectCode = resource.getObjectCode();
 			String subsidiaryCode = resource.getSubsidiaryCode();
 			String error = masterListRepository.validateObjectAndSubsidiaryCodes(objectCode, subsidiaryCode);
+			
+			String packageNo = resource.getPackageNo()!=null?resource.getPackageNo().trim(): "";
+			if(packageNo.length()>0 && !"0".equals(packageNo)){
+				String obj = resource.getObjectCode().substring(0, 2);
+				String bpi = resource.getTransitBpi().getBillNo()+"/"+resource.getTransitBpi().getSubBillNo()+"//"+resource.getTransitBpi().getPageNo()+"/"+resource.getTransitBpi().getItemNo();
+				if("13".equals(obj) || "14".equals(obj)){
+					if("13".equals(obj) && !packageNo.startsWith("6")){
+						sbError.append(bpi+": Package No. should start with '6' for object code '13xxx' (Material Package).");
+					}
+					else if("14".equals(obj) && resource.getSubsidiaryCode().startsWith("3") && !packageNo.startsWith("3")){
+						sbError.append(bpi+": Package No. should start with '3' for object code '14xxx' and subsidiary code '3xxxxxxx' (NSC).");
+					}
+					else if("14".equals(obj) && !resource.getSubsidiaryCode().startsWith("3") && !packageNo.startsWith("1") && !packageNo.startsWith("2")){
+						sbError.append(bpi+": Package No. should start with '1' or '2' for object code '14xxx' (DSC, NDSC).");
+					}
+				}else{
+					sbError.append(bpi+ ": Package No. can be only assigned to object code '14xxx' and '13xxx'.");
+				}	
+			}
+
+			
 			if(error != null)
 				sbError.append(error);
 			
@@ -1680,11 +1483,14 @@ public class TransitService implements Serializable {
 		//Save if all are valid
 		if(sbError.length() == 0){
 			for(TransitResource resource : resources){
-				TransitResource resourceInDb = transitResourceDao.get(resource.getId());
+				/*TransitResource resourceInDb = transitResourceDao.get(resource.getId());
 				resourceInDb.setObjectCode(resource.getObjectCode());
 				resourceInDb.setSubsidiaryCode(resource.getSubsidiaryCode());
 				resourceInDb.setDescription(resource.getDescription().trim());
-				transitResourceDao.saveOrUpdate(resourceInDb);
+				resourceInDb.setDescription(resource.getDescription().trim());*/
+				
+				//transitResourceDao.saveOrUpdate(resourceInDb);
+				transitResourceDao.saveOrUpdate(resource);
 			}
 			header.setStatus(Transit.RESOURCES_UPDATED);
 			transitHeaderDao.saveOrUpdate(header);

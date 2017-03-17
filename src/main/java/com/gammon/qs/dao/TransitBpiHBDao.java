@@ -14,13 +14,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToBeanResultTransformer;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.Type;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.domain.Transit;
+import com.gammon.qs.domain.TransitBpi;
 import com.gammon.qs.wrapper.transitBQMasterReconciliationReport.TransitBQMasterReconciliationReportRecordWrapper;
 @Repository
 public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
@@ -133,8 +131,13 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 				.add(Projections.property("billNo"), "billNo")
 				.add(Projections.property("subBillNo"), "subBillNo")
 				.add(Projections.property("pageNo"), "pageNo")
-				.add(Projections.sqlProjection("sum({alias}.quantity * {alias}.costRate) as eCAValue", new String[]{"eCAValue"}, new Type[]{DoubleType.INSTANCE}), "eCAValue")
-				.add(Projections.sqlProjection("sum({alias}.quantity * {alias}.sellingRate) as sellingValue", new String[]{"sellingValue"}, new Type[]{DoubleType.INSTANCE}), "sellingValue")
+				//.add(Projections.sqlProjection("sum({alias}.quantity * {alias}.costRate) as eCAValue", new String[]{"eCAValue"}, new Type[]{DoubleType.INSTANCE}), "eCAValue")
+				//.add(Projections.sqlProjection("sum({alias}.quantity * {alias}.sellingRate) as sellingValue", new String[]{"sellingValue"}, new Type[]{DoubleType.INSTANCE}), "sellingValue")
+				.add(Projections.sum("amountBudget"),"eCAValue")
+				.add(Projections.sum("value"),"sellingValue")
+				.add(Projections.sum("amountBudget"),"internalValue")
+				//.add(Projections.sqlProjection("sum({alias}.value - {alias}.amount_Budget) as grossProfit", new String[]{"grossProfit"}, new Type[]{DoubleType.INSTANCE}), "grossProfit")
+				.add(Projections.groupProperty("transit.jobNumber"),"jobNumber")
 				.add(Projections.groupProperty("billNo"),"billNo")
 				.add(Projections.groupProperty("subBillNo"),"subBillNo")
 				.add(Projections.groupProperty("pageNo"),"pageNo")
@@ -180,4 +183,18 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 		criteria.add(Restrictions.eq("transit", transit));
 		return criteria.list();
 	}
+
+	public Double getTransitTotalSellingAmount(String jobNo) {
+		Double amount = 0.0;
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.createAlias("transit", "transit");
+		criteria.add(Restrictions.eq("transit.jobNumber", jobNo.trim()));
+		criteria.add(Restrictions.ne("billNo", "80"));//exclude Genuine Markup
+		criteria.setProjection(Projections.sum("value"));
+		amount = (Double) criteria.uniqueResult();
+		if (amount == null)
+			amount = 0.0;
+		return amount;
+	}
+
 }

@@ -3,15 +3,13 @@ package com.gammon.qs.service;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
-import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AttachPaymentHBDao;
@@ -49,8 +46,6 @@ import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
 import com.gammon.qs.domain.Transit;
-import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -106,8 +101,6 @@ public class ResourceSummaryService implements Serializable {
 	private SubcontractHBDao subcontractHBDao;
 	@Autowired
 	private SubcontractDetailHBDao subcontractDetailHBDao;
-	@Autowired
-	private JobInfoHBDao jobHBDao;
 	
 	private static final int RECORDS_PER_PAGE = 50;
 
@@ -924,7 +917,7 @@ public class ResourceSummaryService implements Serializable {
 		return resourceSummary;
 	}
 	
-	public Boolean generateSnapshotMethodTwo(JobInfo job, Repackaging repackagingEntry) throws Exception{
+	/*public Boolean generateSnapshotMethodTwo(JobInfo job, Repackaging repackagingEntry) throws Exception{
 		Boolean updated = false;
 		
 		//Put old summaries in map
@@ -964,9 +957,9 @@ public class ResourceSummaryService implements Serializable {
 
 		updated=true;
 		return updated;
-	}
+	}*/
 	
-	public Boolean generateSnapshotMethodThree(JobInfo job, Repackaging repackagingEntry) throws Exception {
+	/*public Boolean generateSnapshotMethodThree(JobInfo job, Repackaging repackagingEntry) throws Exception {
 		logger.info("Generating ResourceSummary Snapshot for method three...");
 		Boolean updated = false;
 		if(repackagingEntry == null)
@@ -983,23 +976,23 @@ public class ResourceSummaryService implements Serializable {
 		
 		updated=true;
 		return updated;
-	}
+	}*/
 	
-	private HashMap<ResourceSummary, ResourceSummary> getMapOfSummaries(JobInfo job) throws Exception{
+	/*private HashMap<ResourceSummary, ResourceSummary> getMapOfSummaries(JobInfo job) throws Exception{
 		List<ResourceSummary> summaries = resourceSummaryHBDao.getResourceSummariesByJob(job);
 		HashMap<ResourceSummary, ResourceSummary> summariesMap = new HashMap<ResourceSummary, ResourceSummary>(summaries.size(), 1.0f);
 		for(ResourceSummary summary : summaries){
 			summariesMap.put(summary, summary);
 		}
 		return summariesMap;
-	}
+	}*/
 	
 	
 	/**
 	 * @author koeyyeung 
 	 * modified on 22 April, 2013
 	 **/
-	public ExcelFile downloadIVExcel(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, String description, String finalizedPackage) throws Exception{
+	/*public ExcelFile downloadIVExcel(String jobNumber, String packageNo, String objectCode, String subsidiaryCode, String description, String finalizedPackage) throws Exception{
 		List<ResourceSummary> resources = new ArrayList<ResourceSummary>();
 		if("Final".equals(finalizedPackage))
 			resources = obtainBQResourceSummaries(jobNumber, packageNo, objectCode, subsidiaryCode, description, true);
@@ -1054,9 +1047,9 @@ public class ResourceSummaryService implements Serializable {
 		doc.setColumnWidth(8, 15);
 		doc.setColumnWidth(9, 15);
 		return excel;
-	}
+	}*/
 	
-	public String uploadIVExcel(String jobNumber, byte[] bytes) throws Exception{
+	/*public String uploadIVExcel(String jobNumber, byte[] bytes) throws Exception{
 		try{
 			JobInfo job = jobDao.obtainJobInfo(jobNumber);
 			excelFileProcessor.openFile(bytes);
@@ -1112,9 +1105,9 @@ public class ResourceSummaryService implements Serializable {
 			e.printStackTrace();
 			return "Error reading file:<br/>" + e.getMessage();
 		}
-	}
+	}*/
 	
-	public ExcelFile downloadTenderAnalysisBaseDetailsExcel(String jobNumber, String packageNo) throws Exception{
+	/*public ExcelFile downloadTenderAnalysisBaseDetailsExcel(String jobNumber, String packageNo) throws Exception{
 		JobInfo job = jobDao.obtainJobInfo(jobNumber);
 		List<ResourceSummary> resources =getResourceSummariesSearch(job, packageNo, "14*", null);
 		if(resources == null || resources.size() == 0)
@@ -1143,7 +1136,7 @@ public class ResourceSummaryService implements Serializable {
 		doc.setColumnWidth(5, 15);
 		doc.setColumnWidth(6, 15);
 		return excel;
-	}
+	}*/
 	
 	
 
@@ -1154,9 +1147,9 @@ public class ResourceSummaryService implements Serializable {
 	
 	
 
-	public Double getIVMovementOfJobFromResourceSummary(JobInfo job) {
+	/*public Double getIVMovementOfJobFromResourceSummary(JobInfo job) {
 		return resourceSummaryHBDao.getIVMovementOfJob(job);
-	}
+	}*/
 
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
@@ -1526,7 +1519,7 @@ public class ResourceSummaryService implements Serializable {
 	public Boolean recalculateResourceSummaryIV(String jobNo, String packageNo, boolean recalculateFinalizedPackage){
 		logger.info("Recalculating IV for job: " + jobNo + ", packageNo: " + packageNo);
 		try{
-			JobInfo job = jobHBDao.obtainJobInfo(jobNo);
+			JobInfo job = jobDao.obtainJobInfo(jobNo);
 			Subcontract scPackage = subcontractHBDao.obtainPackage(job, packageNo);
 			if (scPackage == null){
 				logger.info("No re-calculation of IV has been done because the package does not exist - Job: "+job.getJobNumber()+" Package: "+packageNo);

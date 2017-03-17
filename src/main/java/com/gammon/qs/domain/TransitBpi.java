@@ -1,5 +1,7 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +46,7 @@ public class TransitBpi extends BasePersistedObject{
 	private Double sellingRate = new Double(0);
 	private Double costRate = new Double(0);
 	private Double value = new Double(0);
+	private BigDecimal amountBudget = new BigDecimal(0);
 	
 	public TransitBpi() {
 		super();
@@ -194,6 +197,18 @@ public class TransitBpi extends BasePersistedObject{
 		this.value = value;
 	}
 	
+	@Column(name = "AMOUNT_BUDGET",
+			precision = 19,
+			scale = 2)
+	public BigDecimal getAmountBudget() {
+		return amountBudget;
+	}
+	
+	
+	public void setAmountBudget(BigDecimal amountBudget) {
+		this.amountBudget = amountBudget;
+	}
+	
 	@ManyToOne
 	@LazyToOne(value = LazyToOneOption.PROXY)
 	@JoinColumn(name = "Transit_ID", foreignKey = @ForeignKey(name = "FK_TransitBpi_Transit_PK"))
@@ -203,4 +218,6 @@ public class TransitBpi extends BasePersistedObject{
 	public void setTransit(Transit transit) {
 		this.transit = transit;
 	}
+
+	
 }

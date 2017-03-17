@@ -1,6 +1,7 @@
-mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpreferenceService',
-	function($scope, $timeout, $window, userpreferenceService) {
+mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpreferenceService', 'transitService', '$cookies', '$location',
+	function($scope, $timeout, $window, userpreferenceService, transitService, $cookies, $location) {
 
+	$scope.jobNo = $cookies.get("jobNo");
 	checkUserNotiifcationSetting();
 	
 
@@ -16,6 +17,30 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 		.then(function(msg){
 			$scope.readStatus = "Read";
 		});
+	}
+	
+	$scope.navigateToTransit = function(){
+		transitService.getTransit($cookies.get("jobNo"))
+		.then(
+				function(transit){
+						if(transit){
+							if(transit.status === 'Header Created'){
+								$location.path('/transit/userGuide');
+				    		} else if(transit.status === 'BQ Items Imported'){
+				    			$location.path('/transit/BQ');
+				    		} else if(transit.status === 'Resources Imported' || transit.status === 'Resources Updated') {
+				    			$location.path('/transit/resources');
+				    		} else if(transit.status === 'Resources Confirmed') {
+				    			$location.path('/transit/confirm');
+				    		} else if(transit.status === 'Report Printed') {
+				    			$location.path('/transit/report');
+				    		}else if(transit.status === 'Transit Completed') {
+				    			$location.path('/transit/complete');
+				    		}else
+								$location.path('/transit/userGuide');
+						}else
+							$location.path('/transit/userGuide');
+				});
 	}
 	
 	

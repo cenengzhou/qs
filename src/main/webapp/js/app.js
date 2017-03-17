@@ -29,6 +29,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/system-service.js',
                            'js/service/ap-service.js',
                            'js/service/userpreference-service.js',
+                           'js/service/transit-service.js',
                            'js/system/rootscope-service.js',
                            'js/controller/message-modal.js',
                            'js/controller/excelupload-modal.js',
@@ -961,29 +962,71 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'RepackagingEmailCtrl as ctrl',
 	})
+	
 	//Transit
-	.state("transit", {
+	.state('transit', {
 		url: "/transit",
 		parent: "navigation",
-		templateUrl: "view/transit/transit-dashboard.html",
-		params: {
-			'jobNo': null,
-			'jobDescription': null
-		},
+		templateUrl: "view/transit/transit-tab.html",
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/transit/transit-dashboard.js',
-                           'js/service/subcontract-service.js',
-                           'js/service/transit-service.js',
-                           'js/service/jde-service.js'
+               		 	'js/controller/transit/transit.js',
+	               		'js/controller/transit/transit-import.js',
+	               		'js/controller/transit/transit-confirm.js',
+	               		'js/controller/admin/admin-TransitUOMMaintenance.js',
+                        'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
+	               		'js/service/subcontract-service.js',
+	               		'js/service/transit-service.js',
+	               		'js/service/jde-service.js'
                     ] 
                 });
             }]
         },
-		controller: "TransitCtrl"
+        controller: 'TransitCtrl'
+	})
+	.state('transit.userGuide', {
+		url: "/userGuide",
+		templateUrl: "view/transit/transit-user-guide.html",
+        controller: 'TransitCtrl'
+	})
+	.state('transit.bq', {
+		url: "/BQ",
+		templateUrl: "view/transit/transit-bq.html",
+        controller: 'TransitImportCtrl'
+	})
+	.state('transit.resources', {
+		url: "/resources",
+		templateUrl: "view/transit/transit-resources.html",
+        controller: 'TransitImportCtrl'
+	})
+	.state('transit.confirm', {
+		url: "/confirm",
+		templateUrl: "view/transit/transit-confirm.html",
+        controller: 'TransitConfirmCtrl'
+	})
+	.state('transit.report', {
+		url: "/report",
+		templateUrl: "view/transit/transit-report.html",
+        controller: 'TransitCompleteCtrl'
+	})
+	.state('transit.complete', {
+		url: "/complete",
+		templateUrl: "view/transit/transit-complete.html",
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               		 	'js/controller/transit/transit-complete.js',
+	               		'js/service/resource-summary-service.js'
+                    ] 
+                });
+            }]
+        },
+        controller: 'TransitCompleteCtrl'
 	})
 	
 	.state("iv", {

@@ -7,6 +7,7 @@
  */
 package com.gammon.pcms.web.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
@@ -84,10 +86,27 @@ public class TransitController {
 		return transitService.searchTransitResources(jobNumber);
 	}
 	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getTransitTotalAmount", method = RequestMethod.GET)
+	public Double getTransitTotalAmount(@RequestParam String jobNo, @RequestParam String type){
+		Double totalAmount = transitService.getTransitTotalAmount(jobNo, type);
+		return totalAmount;
+	}
+
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getBQResourceGroupByObjectCode", method = RequestMethod.GET)
+	public List<ResourceSummayDashboardDTO> getBQResourceGroupByObjectCode(@RequestParam String jobNo){
+		List<ResourceSummayDashboardDTO> dataList = new ArrayList<ResourceSummayDashboardDTO>();
+		
+		dataList = transitService.getBQResourceGroupByObjectCode(jobNo);
+		return dataList;
+	}
+	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','confirmResourcesAndCreatePackages', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
-	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber){
-		return transitService.confirmResourcesAndCreatePackages(jobNumber);
+	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber, @RequestParam Boolean createPackage){
+		return transitService.confirmResourcesAndCreatePackages(jobNumber, createPackage);
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','completeTransit', @securityConfig.getRolePcmsQs())")
@@ -98,22 +117,17 @@ public class TransitController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResourcesList', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "saveTransitResourcesList", method = RequestMethod.POST)
-	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList,
-																HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveTransitResourcesList(@RequestParam String jobNumber, @RequestBody List<TransitResource> resourcesList) throws Exception{
 		String result = null;
 		result = transitService.saveTransitResources(jobNumber, resourcesList);
-		if(result != null){
-			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-		}
 		return result;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResources', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "saveTransitResources", method = RequestMethod.POST)
-	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources,
-													HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveTransitResources(@RequestParam String jobNumber, @RequestBody TransitResource resources) throws Exception{
 		String result = null;
-		result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources), request, response);
+		result = saveTransitResourcesList(jobNumber, Collections.singletonList(resources));
 		return result;
 	}
 
@@ -131,7 +145,7 @@ public class TransitController {
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','uploadTransit', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "transitUpload", method = RequestMethod.POST)
 	public void uploadTransit(@RequestParam(required = true, value = "jobNumber") String jobNumber, 
-								@RequestParam(required = true, value = "type") String type, 
+								@RequestParam(required = true, value = "type") String type,
 								@RequestParam("files") List<MultipartFile> multipartFiles,
 								HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("Upload Transit - START");
@@ -152,11 +166,11 @@ public class TransitController {
 				Map<String, Object> resultMap = new HashMap<String, Object>();
 				if (transitImportResponse == null) {
 					resultMap.put("success", true);
-					logger.info("Upload Attachment: success.");
+					logger.info("Upload Transit: success.");
 				} else {
 					resultMap.put("success", false);
 					resultMap.put("error", transitImportResponse);
-					logger.info("error: " + transitImportResponse);
+					logger.info("error: " + transitImportResponse.getMessage());
 				}
 				
 //				response.setContentType("text/html");

@@ -33,7 +33,6 @@ import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.RepackagingDetail;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.service.admin.EnvironmentConfig;
-import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
@@ -405,7 +404,9 @@ public class RepackagingDetailService implements Serializable {
 			repackagingDetail.setUnit(resourceSummary.getUnit());
 			Double quantity = resourceSummary.getQuantity();
 			Double rate = resourceSummary.getRate();
-			Double amount = quantity != null && rate != null ? Double.valueOf(CalculationUtil.round(quantity * rate,4)) : Double.valueOf(0);
+			//Double amount = quantity != null && rate != null ? Double.valueOf(CalculationUtil.round(quantity * rate,4)) : Double.valueOf(0);
+			Double amount = resourceSummary.getAmountBudget();
+			
 			if(!resourceSummary.getSubsidiaryCode().startsWith("9"))
 				totalAmount += amount; //total Amount is budget only - don't include markup lines
 			repackagingDetail.setQuantity(quantity);

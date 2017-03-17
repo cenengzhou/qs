@@ -1,8 +1,9 @@
 mainApp.controller('AdminTransitUOMMaintenanceCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
-		function($scope, $http, modalService, blockUI, transitService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'transitService', 'modalStatus', '$uibModalInstance',
+		function($scope, $http, modalService, blockUI, transitService, modalStatus, $uibModalInstance) {
 	
-//	$scope.blockUOM = blockUI.instances.get('blockUOM');
+	$scope.type = modalStatus;
+
 	$scope.onSubmit = function(){
 		var formData = new FormData();
 		formData.append('files', uploadFile1.files[0]);
@@ -44,6 +45,7 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 		enablePaginationControls : true,
 		allowCellFocus : false,
 		enableCellSelection : false,
+		exporterMenuPdf: false,
 		columnDefs : [ {
 			field : 'causewayUom',
 			displayName : "Causeway UOM",
@@ -58,5 +60,11 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
 	};
+	
+	//Close Window for Enquiry Screen
+	$scope.cancel = function () {
+		$uibModalInstance.dismiss("cancel");
+	};
+
 	
 }]);

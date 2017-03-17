@@ -1,0 +1,104 @@
+<div class="tab-content">
+	<p class="lead m-b-10">
+		<small>Please confirm total budget of the resources before it
+			can be generated successfully in reports.</small>
+	<p class="text-red">
+		<span class="icofont icofont-star"></span>BQ items and resources are
+		still able to be imported again.
+	</p>
+	</p>
+
+	<div class="row">
+		<div class="col-md-offset-1">
+			<div class="col-md-6 col-xs-12">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Selling vs ECA</h3>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-6 col-md-offset-1">
+								<canvas id="bar" class="chart chart-bar"
+									chart-data="barChartParameters.data"
+									chart-labels="barChartParameters.labels"
+									chart-colours="barChartParameters.colours"
+									chart-series="barChartParameters.series"
+									chart-options="barChartParameters.options" height="250">
+										</canvas>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<ul class="chart-legend text-left m-t-40">
+										<li class="col-md-12"><i class="fa fa-circle text-red"></i>
+											<label>{{barChartParameters.series[0]}}:
+												{{totalSellingAmount| currency}}</label></li>
+										<li class="col-md-12"><i
+											class="fa fa-circle text-primary"></i> <label>{{barChartParameters.series[1]}}:
+												{{totalECAAmount| currency}}</label></li>
+										<li class="col-md-12"><i
+											class="fa fa-circle"></i> <label>Genuine Markup:
+												{{totalSellingAmount - totalECAAmount| currency}}</label></li>		
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-md-5 col-xs-12">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">ECA Distribution</h3>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-6">
+								<canvas id="pie" class="chart chart-pie" chart-data="eca.data"
+									chart-labels="eca.labels" chart-colours="eca.colours"
+									height="300">
+										</canvas>
+							</div>
+							<div class="col-md-6">
+								<ul class="chart-legend text-left m-t-40">
+									<li class="col-md-12"><i class="fa fa-circle text-yellow"></i>
+										<label>{{eca.labels[0]}}: {{eca.data[0] | currency}}</label></li>
+									<li class="col-md-12"><i
+										class="fa fa-circle text-purple-light"></i> <label>{{eca.labels[1]}}:
+											{{eca.data[1] | currency}}</label></li>
+									<li class="col-md-12"><i class="fa fa-circle text-success"></i>
+										<label>{{eca.labels[2]}}: {{eca.data[2] | currency}}</label></li>
+									<li class="col-md-12"><i class="fa fa-circle text-primary"></i>
+										<label>{{eca.labels[3]}}: {{eca.data[3] | currency}}</label></li>
+									<li class="col-md-12"><i class="fa fa-circle text-muted"></i>
+										<label>{{eca.labels[4]}}: {{eca.data[4] | currency}}</label></li>
+								</ul>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade active in" id="profile-tab">
+
+					<div class="col-md-11">
+						<button type="button" class="btn btn-primary btn-block"
+							ng-disabled="disableConfirmResouces"
+							ng-click="confirmResources()">
+							<i class="icofont icofont-tick-boxed icofont-2x"></i><b>Confirm
+								Total Budget</b>
+						</button>
+					</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+
+</div>

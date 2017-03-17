@@ -1,7 +1,9 @@
-mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService', 
-							function($http, $q, GlobalHelper, modalService){
+mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService', '$log',
+							function($http, $q, GlobalHelper, modalService, $log){
 	// Return public API.
     return({
+    	getTransitTotalAmount: 				getTransitTotalAmount,
+    	getBQResourceGroupByObjectCode:		getBQResourceGroupByObjectCode,
     	getIncompleteTransitList:			getIncompleteTransitList,
     	obtainTransitCodeMatcheList:		obtainTransitCodeMatcheList,
     	obtainTransitUomMatcheList:			obtainTransitUomMatcheList,
@@ -16,6 +18,41 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     	createOrUpdateTransitHeader: 		createOrUpdateTransitHeader
     });
    
+  //Asyn Call
+    function getTransitTotalAmount(jobNo, type){
+    	var deferred = $q.defer();
+    	$http({
+    		method: 'GET',
+    		url: 'service/transit/getTransitTotalAmount',
+    		params:{
+    			jobNo: jobNo,
+    			type: type
+    		}
+    	}).success(function(data) { 
+    		deferred.resolve(data);
+    	}).error(function(msg, code) {
+    		deferred.reject(msg);
+    		$log.error(msg, code);
+    	});
+    	return deferred.promise;
+    }
+    
+    function getBQResourceGroupByObjectCode(jobNo){
+    	var request = $http({
+    		method: 'get',
+    		url: 'service/transit/getBQResourceGroupByObjectCode',
+    		params:{
+    			jobNo: jobNo
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
+    function getIncompleteTransitList(){
+    	var request = $http.get("service/transit/getIncompleteTransitList");
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
     
     function getIncompleteTransitList(){
     	var request = $http.get("service/transit/getIncompleteTransitList");
@@ -77,12 +114,13 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-    function confirmResourcesAndCreatePackages(jobNo){
+    function confirmResourcesAndCreatePackages(jobNo, createPackage){
     	var request = $http({
     		method: 'POST',
     		url: 'service/transit/confirmResourcesAndCreatePackages',
     		params:{
-    			jobNumber: jobNo
+    			jobNumber: jobNo,
+    			createPackage: createPackage
     		}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
@@ -100,22 +138,25 @@ mainApp.service('transitService', ['$http', '$q', 'GlobalHelper', 'modalService'
     }
     
     function saveTransitResources(jobNo, resources){
-    	var defer = $q.defer();
-			$http({
-				method: 'POST',
-				url: 'service/transit/saveTransitResources',
-	    		params:{
-	    			jobNumber: jobNo,
-	    		}, 
-	    		data: resources
-			})
-			.then(function(response) {
-				defer.resolve(response.data)
-			}, function(response){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', response.statusText+':'+response.data);
-				defer.reject(response.data);
-			});
-			return defer.promise;
+    	var deferred = $q.defer();
+    	$http({
+    		method: 'POST',
+    		url: 'service/transit/saveTransitResources',
+    		params:{
+    			jobNumber: jobNo,
+    		}, 
+    		data: resources
+    	}).success(function(data) {
+    		if(data == null || data.length==0)
+    			deferred.resolve(data);
+    		else{
+    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+    			deferred.reject(data);
+    		}
+    	}).error(function(msg, code) {
+    		deferred.reject(msg);
+    	});
+    	return deferred.promise;
     }
 
     function saveTransitResourcesList(jobNo, resourcesList){

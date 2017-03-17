@@ -199,25 +199,13 @@ public class RepackagingService {
 	public String generateSnapshot(Long id, String jobNo) throws Exception {
 		String result = "";
 		
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNo);
-		Repackaging repackagingEntry = repackagingDao.get(id);
-		
-		if(job.getRepackagingType().equals("1")){
+		try {
+			Repackaging repackagingEntry = repackagingDao.get(id);
 			repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
-		}else if(job.getRepackagingType().equals("2")){
-			boolean updated = resourceSummaryService.generateSnapshotMethodTwo(job, repackagingEntry);
-			if(updated)
-				repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
-			else
-				result = "Snapshot cannot be generated.";
-		}else if(job.getRepackagingType().equals("3")){
-			boolean updated = resourceSummaryService.generateSnapshotMethodThree(job, repackagingEntry);
-			if(updated)
-				repackagingDetailService.prepareRepackagingDetails(repackagingEntry);
-			else
-				result = "Snapshot cannot be generated.";
+		} catch (Exception e) {
+			result = "Snapshot cannot be generated.";
+			e.printStackTrace();
 		}
-		
 		
 		return result;
 	}

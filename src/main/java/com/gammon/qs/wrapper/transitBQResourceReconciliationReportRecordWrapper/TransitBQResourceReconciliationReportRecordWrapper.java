@@ -4,7 +4,6 @@
 package com.gammon.qs.wrapper.transitBQResourceReconciliationReportRecordWrapper;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author briantse
@@ -22,8 +21,6 @@ public class TransitBQResourceReconciliationReportRecordWrapper implements Seria
 	private Double rate = Double.valueOf(0);
 	private Double totalQuantity = Double.valueOf(0);
 	private Double eCAValue = Double.valueOf(0);
-	private Date printDate;
-	private String printDateString;
 	
 	public String getJobNumber() {
 		return jobNumber;
@@ -97,19 +94,4 @@ public class TransitBQResourceReconciliationReportRecordWrapper implements Seria
 		this.eCAValue = eCAValue;
 	}
 
-	public Date getPrintDate() {
-		return printDate;
-	}
-
-	public void setPrintDate(Date printDate) {
-		this.printDate = printDate;
-	}
-
-	public String getPrintDateString() {
-		return printDateString;
-	}
-
-	public void setPrintDateString(String printDateString) {
-		this.printDateString = printDateString;
-	}
 }

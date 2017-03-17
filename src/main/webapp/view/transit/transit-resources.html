@@ -1,0 +1,61 @@
+<div class="row">
+<h6 class="text-red"><span class="icofont icofont-star"></span>Object code, subsidiary code, description and package number can be updated manually here.</h6>
+	<div class="col-md-12" ng-show="resourceEdit">
+		<form role="form" name="applyForm"
+			ng-submit="applyForm.$valid && onResourceApplyChange(resourceApplyOptions[resourceApplyTo].value, resourceApplyToText)">
+			<fieldset>
+
+				<div class="input-group">
+					<input type="number" step="1" min="0" class="form-control col-md-5"
+						aria-label="..." ng-model-option="updateOn:blur"
+						ng-model="resourceApplyToText" required
+						ng-pattern="resourceApplyOptions[resourceApplyTo].regex"
+						uib-popover="{{resourceApplyOptions[resourceApplyTo].value}} for all listed resources. &nbsp Require {{resourceApplyOptions[resourceApplyTo].length}} digits"
+						popover-trigger="mouseenter" popover-title="Change Object/Subsidiary Code"
+						popover-animation="true" data-placement="right"
+						placeholder="{{resourceApplyOptions[resourceApplyTo].value}}: {{resourceApplyRegex}}">
+
+					<div class="input-group-btn">
+						<select class="form-control btn btn-primary"
+							ng-options="v.id as v.value for v in resourceApplyOptions"
+							ng-model="resourceApplyTo"
+							uib-popover="Select which column to change"
+							popover-trigger="mouseenter" 
+							popover-animation="true"></select>
+					</div>
+					<div class="input-group-btn">
+						<button type="submit" class="btn btn-primary">Apply
+							{{resourceApplyOptions[resourceApplyTo].value}}</button>
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+	</div>
+	<div class="col-md-12">
+		<div id="resourcesGrid" name="resourcesGrid"
+			save-and-restore-grid-state="transit_dashboard_resources" ui-grid-save-state 
+			ui-grid="resourcesGridOptions" external-scopes="clickHandler"
+			ui-grid-exporter ui-grid-selection 
+			ui-grid-resize-columns ui-grid-cellnav
+			ui-grid-edit ui-grid-row-edit  resize ng-style="resizeWithOffset(360)"></div>
+	</div>
+
+	<div class="col-md-12" ng-if = "transit.status != 'Transit Completed'">
+		<form name="importResourceCauseway" id="importResourceCauseway">
+			<div class="form-group horizontal">
+				<label class="btn btn-block btn-primary"
+					uib-popover="All exisitng resources will be deleted"
+					popover-trigger="mouseenter" popover-title="Import Resources"
+					popover-animation="true" type="button"> <i
+					class="icofont icofont-upload-alt"></i> Import Resources
+					<input style="display: none;" class="form-control file-loading"
+					type="file" name="files" id="reimportBqFile"
+					onChange="angular.element(this).scope().onSubmitTransitUpload(importResourceCauseway.files, 'Resource')" />
+				</label>
+			</div>
+		</form>
+	</div>
+	
+
+</div>
