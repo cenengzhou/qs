@@ -256,7 +256,7 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 					return 0;
 				});
 				$scope.gridOptions.data = data.filter(function(obj){
-					return (obj.amountAA != 0) && (obj.amountJI != 0);
+					return (obj.amountAA != 0) || (obj.amountJI != 0);
 				});
 			}
 		});

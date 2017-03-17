@@ -298,7 +298,7 @@ mainApp.controller('EnquiryJobCostAdlCtrl', ['$scope', '$http', 'modalService', 
 			)
 		    .then(function(data) {
 		    	$scope.gridOptions.data = $scope.movementData = data.filter(function(obj){
-		    		return (obj.jiAmountPeriod != 0) && (obj.aaAmountPeriod != 0);
+		    		return (obj.jiAmountPeriod != 0) || (obj.aaAmountPeriod != 0);
 		    	});
 			}, function(data){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 
