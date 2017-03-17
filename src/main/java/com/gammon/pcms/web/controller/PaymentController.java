@@ -90,7 +90,7 @@ public class PaymentController {
 																	@RequestParam(required = true) String subcontractNo,
 																	@RequestParam(required = true) String paymentCertNo) throws Exception{
 		PaymentCertViewWrapper paymentCertViewWrapper = null;
-		paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo, true);
+		paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNo, subcontractNo, paymentCertNo);
 		return paymentCertViewWrapper;
 	}
 	

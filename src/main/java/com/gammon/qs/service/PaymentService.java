@@ -2151,7 +2151,7 @@ public class PaymentService{
 	}
 		
 // Generate Payment Cert Report
-	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo, boolean addendumIncluded) throws Exception {
+	public PaymentCertViewWrapper getSCPaymentCertSummaryWrapper(String jobNumber, String packageNo, String paymentCertNo) throws Exception {
 		String company = subcontractHBDao.obtainSCPackage(jobNumber, packageNo).getJobInfo().getCompany();
 
 		// Get the Basic Payment Cert information
@@ -2230,8 +2230,6 @@ public class PaymentService{
 		paymentCertViewWrapper.setExchangeRate(exchangeRate);
 		// END: Get the Payment Cert additional information
 
-		if (!addendumIncluded)
-			paymentCertViewWrapper.setAddendum(Double.valueOf(0.0));
 		
 		return paymentCertViewWrapper;
 	}

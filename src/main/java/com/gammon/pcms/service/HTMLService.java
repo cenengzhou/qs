@@ -145,7 +145,7 @@ public class HTMLService implements Serializable{
 			}
 			paymentCert = paymentService.obtainPaymentCertificate(jobNumber, subcontractNumber, new Integer(currentPaymentNo));
 			logger.info("Job No.: "+jobNumber+"- Package No.: "+subcontractNumber+"- Payment No.: "+currentPaymentNo);
-			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNumber, subcontractNumber, String.valueOf(currentPaymentNo), false);
+			paymentCertViewWrapper = paymentService.getSCPaymentCertSummaryWrapper(jobNumber, subcontractNumber, String.valueOf(currentPaymentNo));
 			
 			mainCertNumber 		= paymentCertViewWrapper.getMainCertNo();
 			strIpaOrInvoiceReceivedDate = DateHelper.formatDate(paymentCert.getIpaOrInvoiceReceivedDate(), GlobalParameter.DATE_FORMAT);
