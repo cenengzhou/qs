@@ -279,7 +279,7 @@ mainApp.controller('EnquiryJobCostAdlCtrl', ['$scope', '$http', 'modalService', 
 			)
 			.then(function(data){
 				$scope.gridOptions.data = $scope.cumulativeData = data.filter(function(obj){
-					return (obj.jiAmountAccum != 0) && (obj.aaAmountAccum != 0);
+					return (obj.jiAmountAccum != 0) || (obj.aaAmountAccum != 0);
 				});
 			})
 		} else {
