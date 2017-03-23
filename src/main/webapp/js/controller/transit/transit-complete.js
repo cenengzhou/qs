@@ -17,7 +17,7 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	$scope.transit = data;
-	    	$scope.$emit("UpdatedTransitStatus", data.status);
+	    	$scope.$emit("UpdateTransitStatus", data.status);
 	    	if(data instanceof Object) {
 	    		if($scope.transit.status === 'Header Created'){
 	    			$scope.disableImportBQ = false;

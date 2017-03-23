@@ -27,7 +27,7 @@ mainApp.controller('TransitCtrl', ['$scope', 'modalService', 'transitService', '
 		}
 	}
 	
-	$rootScope.$on("UpdatedTransitStatus", function(event, transitStatus){
+	$rootScope.$on("UpdateTransitStatus", function(event, transitStatus){
 		$scope.transitStatus = transitStatus;
 	});
 	

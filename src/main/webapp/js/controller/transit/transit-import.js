@@ -27,7 +27,7 @@ mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitServi
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	$scope.transit = data;
-	    	$scope.$emit("UpdatedTransitStatus", data.status);
+	    	$scope.$emit("UpdateTransitStatus", data.status);
 	    	if(data instanceof Object) {
 	    		if($scope.transit.status === 'Header Created'){
 	    			$scope.disableImportBQ = false;
@@ -424,6 +424,7 @@ mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitServi
     		},
     		{
     			field : 'packageNo',
+    			displayName : "Package No.",
     			enableCellEdit : true,
     			width: 100,
     			cellClass : function(){

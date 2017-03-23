@@ -976,8 +976,10 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                		 	'js/controller/transit/transit.js',
 	               		'js/controller/transit/transit-import.js',
 	               		'js/controller/transit/transit-confirm.js',
+	               		'js/controller/transit/transit-complete.js',
 	               		'js/controller/admin/admin-TransitUOMMaintenance.js',
                         'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
+                        'js/service/resource-summary-service.js',
 	               		'js/service/subcontract-service.js',
 	               		'js/service/transit-service.js',
 	               		'js/service/jde-service.js'
@@ -1015,17 +1017,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	.state('transit.complete', {
 		url: "/complete",
 		templateUrl: "view/transit/transit-complete.html",
-		resolve: {
-            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
-                return $ocLazyLoad.load({
-               	 name: 'app',
-               	 files: [
-               		 	'js/controller/transit/transit-complete.js',
-	               		'js/service/resource-summary-service.js'
-                    ] 
-                });
-            }]
-        },
         controller: 'TransitCompleteCtrl'
 	})
 	
