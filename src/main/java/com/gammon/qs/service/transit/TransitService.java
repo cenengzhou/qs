@@ -1121,7 +1121,9 @@ public class TransitService implements Serializable {
 				wrapper.setGenuineMarkup(wrapper.getSellingValue());
 				wrapper.setInternalValue(wrapper.getSellingValue()!=null ?CalculationUtil.roundToBigDecimal(wrapper.getSellingValue(), 2): new BigDecimal(0));
 				//wrapper.setGrossProfit(Double.valueOf(0));
+				
 				wrapper.setSellingValue(Double.valueOf(0));
+				wrapper.seteCAValue(new BigDecimal(0));
 			}
 		}
 		return true;
