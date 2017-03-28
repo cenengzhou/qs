@@ -99,8 +99,16 @@ mainApp.controller('EnquirySupplierLedgerCtrl',
 	
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.loadGridData = function(){
+		if(!$scope.searchJobNo && !$scope.searchSubcontractNo && !$scope.searchSupplierNo){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Job No and Subcontract No. or Subcontractor No.' );
+			return;
+		}
 		if(!$scope.searchSubcontractNo && !$scope.searchSupplierNo){
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Subcontract No. or Supplier No.' );
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Subcontract No. or Subcontractor No.' );
+			return;
+		}
+		if($scope.searchSubcontractNo && !$scope.searchJobNo){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'Please enter Job Number' );
 			return;
 		}
 		if($scope.searchSubcontractNo && !$scope.searchSupplierNo ){

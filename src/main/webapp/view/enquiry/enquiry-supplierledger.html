@@ -19,16 +19,16 @@
 							<div class="form-group col-md-12" style="padding-right:0px">
 								<div class="col-md-1">
 									<label for="searchJobNo">Job No.</label> 
-									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" required pattern=".{5,5}" title="Please enter 5 characters">
-									<p ng-show="searchSupplierLedgerForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
+									<input type="text" class="form-control" id="searchJobNo" name="searchJobNo" ng-model="searchJobNo" pattern=".{5,5}" title="Please enter 5 characters or leave blank">
+									<p ng-show="searchSupplierLedgerForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters or leave blank</p>
 								</div>							
 								<div class="col-md-2">
 									<label for="searchSubcontractNo">Subcontract No.</label> 
-									<input type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
+									<input type="text" class="form-control" id="searchSubcontractNo" ng-change="searchSupplierNo=''" name="searchSubcontractNo" ng-model="searchSubcontractNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchSupplierLedgerForm.searchSubcontractNo.$error.pattern" class="red">Please input number only</p>
 								</div>
 								<div class="col-md-2">
-									<label for="searchSupplierNo">Supplier No.</label> 
+									<label for="searchSupplierNo">Subcontractor No.</label> 
 									<input type="text" class="form-control" id="searchSupplierNo" name="searchSupplierNo" ng-model="searchSupplierNo" pattern="[0-9]+" title="Please enter number only">
 									<p ng-show="searchSupplierLedgerForm.searchSupplierNo.$error.pattern" class="red">Please input number only</p>
 								</div>
