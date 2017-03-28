@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.service.GSFService;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.domain.JobInfo;
@@ -29,7 +30,8 @@ public class RepackagingService {
 	private RepackagingDetailService repackagingDetailService;
 	@Autowired
 	private ResourceSummaryService resourceSummaryService;
-	
+	@Autowired
+	private GSFService gsfService;
 
 	public List<Repackaging> getRepackagingEntriesByJob(JobInfo job)
 			throws Exception {
@@ -207,6 +209,7 @@ public class RepackagingService {
 			e.printStackTrace();
 		}
 		
+		gsfService.getApproverListByJob(jobNo,true);
 		return result;
 	}
 

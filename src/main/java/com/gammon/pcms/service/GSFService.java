@@ -109,18 +109,20 @@ public class GSFService {
 		List<GetUserListWithStaffId.Result> approverList = getAllApproverList(reload);
 		Set<GetUserListWithStaffId.Result> approverForJobSet = new TreeSet<>();
 		if(reload || approvalByJobMap.get(jobNo) == null){
-			if(approvalByJobMap.get(jobNo) == null) approvalByJobMap.put(jobNo, new TreeSet<>());
+			Map<String, Set<GetUserListWithStaffId.Result>> reloadMap = new HashMap<>();
+			reloadMap.put(jobNo, new TreeSet<>());
 			for(GetUserListWithStaffId.Result approver : approverList){
 				List<String> jobNoList = adminService.obtainCanAccessJobNoStringList(approver.getUserAccount());
 				if(jobNoList != null && jobNoList.size() > 0 ){
 					for(String canAccessJob : jobNoList){
-						if(approvalByJobMap.get(canAccessJob) == null) {
-							approvalByJobMap.put(canAccessJob, new TreeSet<>());
+						if(reloadMap.get(canAccessJob) == null) {
+							reloadMap.put(canAccessJob, new TreeSet<>());
 						}
-						approvalByJobMap.get(canAccessJob).add(approver);
+						reloadMap.get(canAccessJob).add(approver);
 					}
 				}
 			}
+			approvalByJobMap = reloadMap;
 		} 
 		approverForJobSet = approvalByJobMap.get(jobNo);
 		if(approvalByJobMap.get("JOB_ALL") != null) approverForJobSet.addAll(approvalByJobMap.get("JOB_ALL"));
