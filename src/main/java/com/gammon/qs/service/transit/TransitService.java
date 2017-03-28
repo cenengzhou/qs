@@ -195,9 +195,9 @@ public class TransitService implements Serializable {
 	
 	public TransitImportResponse importBqItemsOrResourcesFromXls(String jobNumber, String type, byte[] file) throws Exception{
 		if(type.equals(GlobalParameter.TRANSIT_BQ))
-			return importBqItemsFromCauseway(jobNumber, file);			
+			return importBqItems(jobNumber, file);			
 		else if(type.equals(GlobalParameter.TRANSIT_RESOURCE))
-			return importResourcesFromCauseway(jobNumber, file);				
+			return importResources(jobNumber, file);				
 		else if(type.equals(GlobalParameter.TRANSIT_CODE_MATCHING))
 			return importResourceCodeMatching(file);
 		else if(type.equals(GlobalParameter.TRANSIT_UOM_MATCHING))
@@ -209,7 +209,7 @@ public class TransitService implements Serializable {
 		}
 	}
 	
-	public TransitImportResponse importBqItemsFromCauseway(String jobNumber, byte[] file) throws Exception{
+	public TransitImportResponse importBqItems(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		errorList = new ArrayList<String>();
 		// added by brian on 20110224
@@ -423,7 +423,7 @@ public class TransitService implements Serializable {
 	}
 	
 	
-	public TransitImportResponse importResourcesFromCauseway(String jobNumber, byte[] file) throws Exception{
+	public TransitImportResponse importResources(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		
 		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
