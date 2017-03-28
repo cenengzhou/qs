@@ -5,7 +5,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	
 	
 	$scope.action = $stateParams.action;
-	
+	$scope.nameObject = $stateParams["nameObject"];
 	if($scope.action == 'Split')
 		$scope.canEdit = true;
 	else
@@ -192,11 +192,11 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	
 	$scope.openAttachment = function(){
 //		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-file.html', 'AttachmentSCFileCtrl', 'Success', $scope);
-		$scope.nameObject = GlobalParameter['AbstractAttachment'].SCPackageNameObject;
+		$scope.nameObject = $scope.action == 'Split' ? GlobalParameter['AbstractAttachment'].SplitNameObject : GlobalParameter['AbstractAttachment'].TerminateNameObject;
 		$scope.uibModalInstance = $uibModal.open({
 			animation: true,
-			templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
-			controller: 'AttachmentSCFileCtrl',
+			templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
+			controller: 'AttachmentAddendumFileCtrl',
 			size: 'lg',
 			backdrop: 'static',
 			scope: $scope

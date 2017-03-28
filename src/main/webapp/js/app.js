@@ -788,7 +788,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/split",
 		templateUrl: "view/subcontract/subcontract-split-terminate.html",
 		params: {
-			'action': 'Split'
+			'action': 'Split',
+			'nameObject': GlobalParameter['AbstractAttachment'].SplitNameObject,
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -796,9 +797,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/subcontract-split-terminate.js',
-	                     'js/controller/subcontract/attachment/attachment-sc-file.js',
-	                     'js/controller/subcontract/attachment/attachment-sc-text.js',
-	                     'js/service/attachment-service.js'
+	                     'js/controller/subcontract/attachment/attachment-addendum-file.js',
+	                     'js/controller/subcontract/attachment/attachment-addendum-text.js',
+	                     'js/service/attachment-service.js',
+                         'js/service/addendum-service.js',
+                         'js/service/subcontract-service.js'
                     ] 
                 });
             }]
@@ -810,7 +813,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: "/terminate",
 		templateUrl: "view/subcontract/subcontract-split-terminate.html",
 		params: {
-			'action': 'Terminate'
+			'action': 'Terminate',
+			'nameObject': GlobalParameter['AbstractAttachment'].TerminateNameObject,
 		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
@@ -818,9 +822,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/subcontract-split-terminate.js',
-                           'js/controller/subcontract/attachment/attachment-sc-file.js',
-                           'js/controller/subcontract/attachment/attachment-sc-text.js',
-                           'js/service/attachment-service.js'
+                           'js/controller/subcontract/attachment/attachment-addendum-file.js',
+                           'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                           'js/service/attachment-service.js',
+                           'js/service/addendum-service.js',
+                           'js/service/subcontract-service.js'
                     ] 
                 });
             }]

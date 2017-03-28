@@ -324,7 +324,10 @@ mainApp.constant('GlobalParameter', {
 	                    'SCDetailsNameObject' : 'GT58011',
 //						'TenderAnalysisNameObject' : 'GT58023'; //Never used
 	                    'VendorNameObject' : 'GT58024',
-	                    'MainCertNameObject' : 'GT59026'
+	                    'MainCertNameObject' : 'GT59026',
+	                    'SplitNameObject' : 'SPLIT',
+	                    'TerminateNameObject' : 'TERMINATE',
+	                    
 	},
 	PurchaseOrderType:[
 		{id:'GH', value:'Plant Blanket Sundry Order'},

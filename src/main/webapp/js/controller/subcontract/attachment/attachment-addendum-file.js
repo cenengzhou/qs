@@ -1,32 +1,50 @@
-mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService) {
+mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService', 'subcontractService',
+                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService, subcontractService ) {
 	$scope.GlobalParameter = GlobalParameter;
+	if(!$scope.nameObject) {
+		$scope.inBox = false;
+		$scope.nameObject = $stateParams.nameObject;
+	} else {		
+		$scope.inBox = true;
+		$scope.cancel = function () {
+			$scope.uibModalInstance.close();
+		};
+	}
 	$scope.jobNo = $cookies.get('jobNo');
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo = $cookies.get('addendumNo');
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
-	$scope.nameObject = $stateParams.nameObject;
 	$scope.offsetTop = $stateParams.offsetTop;
 	$scope.insideContent = false;
 	$scope.sequenceNo = 0;
 	$scope.textKey = $scope.jobNo + '|' + $scope.subcontractNo + '|';
 	$scope.hideButton = false;
 	$scope.isUpdatable = false;
-	$scope.loadAttachmentFacade = attachmentService.getAttachmentListForPCMS;
-	$scope.uploadAttachmentFacade = attachmentService.uploadSCAttachment;
-	$scope.deleteAttachmentFacade = attachmentService.deleteAttachment;
-	$scope.saveTextAttachmentFacade = attachmentService.uploadTextAttachment;
+	$scope.loadAttachmentFacade = attachmentService.obtainAttachmentList;
+	$scope.uploadAttachmentFacade = attachmentService.uploadAddendumAttachment;
+	$scope.deleteAttachmentFacade = attachmentService.deleteAddendumAttachment;
+	$scope.saveTextAttachmentFacade = attachmentService.uploadAddendumTextAttachment;
 	
-	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCDetailsNameObject){
+	switch($scope.nameObject){
+	case GlobalParameter['AbstractAttachment'].SCDetailsNameObject:
 		$scope.textKey += $scope.addendumNo ? $scope.addendumNo : '-1';
 		$scope.insideContent = true;
-		$scope.loadAttachmentFacade = attachmentService.obtainAttachmentList;
-		$scope.uploadAttachmentFacade = attachmentService.uploadAddendumAttachment;
-		$scope.deleteAttachmentFacade = attachmentService.deleteAddendumAttachment;
-		$scope.saveTextAttachmentFacade = attachmentService.uploadAddendumTextAttachment;
-	} else if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCPaymentNameObject){
+		checkAddendumUpdatable();
+		break;
+	case GlobalParameter['AbstractAttachment'].SCPaymentNameObject:
 		$scope.textKey += $scope.paymentCertNo;
 		$scope.insideContent = true;
+		checkPaymentCertUpdatable();
+		break;
+	case GlobalParameter['AbstractAttachment'].SplitNameObject:
+		checkSplitTerminateStatus();
+		break;
+	case GlobalParameter['AbstractAttachment'].TerminateNameObject:
+		checkSplitTerminateStatus();
+		break;
+	default:
+		checkSubcontractUpdatable();
+		break;
 	}
 	
     $scope.loadAttachment = function(nameObject, textKey){
@@ -101,7 +119,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     	if(this.attach.typeDocument === '5'){
 //	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 	    	url = 'service/attachment/obtainAddendumFileAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.noSequence;
-	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
+	    	var wnd = $window.open(encodeURI(url), 'Download Attachment', '_blank');
     	} else {
     		$scope.textAttachment = this.attach;
     		$scope.isTextUpdatable = $scope.isUpdatable; 
@@ -109,7 +127,7 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     	}
     }
     
-	function getAddendum(){
+	function checkAddendumUpdatable(){
 		if($scope.addendumNo)
 		addendumService.getAddendum($scope.jobNo, $scope.subcontractNo, $scope.addendumNo)
 		.then(
@@ -120,7 +138,49 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 					else
 						$scope.isUpdatable = false;
 				});
-	} getAddendum()
+	} 
+
+    function checkSubcontractUpdatable(){
+    	subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(function( data ) {
+			if(angular.isObject(data)){
+				$scope.subcontract = data;
+				if($scope.subcontract.scStatus !="330" && $scope.subcontract.scStatus !="500")
+					$scope.isUpdatable = true;
+			}
+		})
+    }
+    
+//	public static final String SPLITTERMINATE_DEFAULT = "0";
+//	public static final String SPLIT_SUBMITTED = "1";
+//	public static final String TERMINATE_SUBMITTED = "2";
+//	public static final String SPLIT_APPROVED = "3";
+//	public static final String TERMINATE_APPROVED = "4";
+//	public static final String SPLIT_REJECTED = "5";
+//	public static final String TERMINATE_REJECTED = "6";
+    
+    function checkSplitTerminateStatus(){
+    	subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
+		.then(function( data ) {
+			if(angular.isObject(data)){
+				$scope.subcontract = data;
+				if($scope.subcontract.splitTerminateStatus == 0 || $scope.subcontract.splitTerminateStatus >= 5 )
+					$scope.isUpdatable = true;
+			}
+		})
+    }
+
+    function checkPaymentCertUpdatable(){
+    	paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
+		.then(function( data ) {
+			if(angular.isObject(data)){
+				$scope.payment = data;
+				if($scope.payment.paymentStatus == "PND")
+					$scope.isUpdatable = true;
+			}		
+		})
+    }
+
 	
 	function getUserByUsername (username){
 		return $http.get('service/security/getUserByUsername?username='+username);

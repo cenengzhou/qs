@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +46,7 @@ import com.gammon.qs.domain.AttachSubcontractDetail;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
+import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.admin.AdminService;
@@ -381,9 +384,12 @@ public class AttachmentService {
 		//Timer
 		long start = System.currentTimeMillis();
 		
-		String splittedTextKey[] = textKey.split("\\|");	
-		String noJob = splittedTextKey[0].trim();
-		String noSubcontract = splittedTextKey[1].trim();
+		Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
+		String noJob = paramMap.get(Attachment.TEXTKEY_1);
+//		String noSubcontract = paramMap.get(Attachment.TEXTKEY_2);
+//		String altParam = paramMap.get(Attachment.TEXTKEY_3);
+		String name_table = paramMap.get(Attachment.NAME_TABLE);
+		BigDecimal id_table = new BigDecimal(paramMap.get(Attachment.ID_TABLE));
 		adminService.canAccessJob(noJob);
 
 		try{
@@ -417,24 +423,18 @@ public class AttachmentService {
 
 			attachmentOutputStream.write(file);
 			attachmentOutputStream.close();
-			logger.info("Vendor/Job: "+splittedTextKey[0].trim()+" TextKey: "+textKey);
+			logger.info("Vendor/Job: "+ noJob +" TextKey: "+textKey);
 			String attachmentPathInDB = noJob+ "\\"+ fileName;
 
-			if (Attachment.AddendumNameObject.equals(nameObject.trim())){
-				Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-				if(addendum == null){
-					throw new NullPointerException("Addendum not found: addendumService.getAddendum(" + noJob + ", " + noSubcontract + ", " + splittedTextKey[2] + ")");
-				}
-				Attachment uploadAttachment = new Attachment();
-				uploadAttachment.setTypeDocument(Attachment.FILE);
-				uploadAttachment.setNoSequence(sequenceNo);
-				uploadAttachment.setPathFile(attachmentPathInDB);
-				uploadAttachment.setNameFile(fileName);
-				uploadAttachment.setUsernameCreated(createdUser);
-				uploadAttachment.setIdTable(addendum.getId());
-				uploadAttachment.setNameTable(Attachment.ADDENDUM_TABLE);
-				attachmentHBDao.saveOrUpdate(uploadAttachment);
-			}
+			Attachment uploadAttachment = new Attachment();
+			uploadAttachment.setTypeDocument(Attachment.FILE);
+			uploadAttachment.setNoSequence(sequenceNo);
+			uploadAttachment.setPathFile(attachmentPathInDB);
+			uploadAttachment.setNameFile(fileName);
+			uploadAttachment.setUsernameCreated(createdUser);
+			uploadAttachment.setIdTable(id_table);
+			uploadAttachment.setNameTable(name_table);
+			attachmentHBDao.saveOrUpdate(uploadAttachment);
 			
 			//Logging
 			long end = System.currentTimeMillis();
@@ -449,27 +449,25 @@ public class AttachmentService {
 	
 	@SuppressWarnings("resource")
 	public AttachmentFile obtainAddendumFileAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
-		logger.info("START - obtainAddendumFileAttachment");
+		logger.info("START - obtainFileAttachment");
 		//Timer
 		long start = System.currentTimeMillis();
 		
 		AttachmentFile attachmentFile = new AttachmentFile();
 		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String fileLink = null;
-		String splittedTextKey[] = textKey.split("\\|");
-		String noJob = splittedTextKey[0].trim();
-		String noSubcontract = splittedTextKey[1].trim();
+		Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
+		String noJob = paramMap.get(Attachment.TEXTKEY_1);
+//		String noSubcontract = paramMap.get(Attachment.TEXT_KEY2);
+		String name_table = paramMap.get(Attachment.NAME_TABLE);
+		BigDecimal id_table = new BigDecimal(paramMap.get(Attachment.ID_TABLE));
 		adminService.canAccessJob(noJob);
 		Attachment attachment = null;
-		switch(nameObject){
-		case Attachment.AddendumNameObject:
-			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-			attachment  = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNumber));
-			if (attachment==null)
-				throw new Exception("Attachment Type Error");
-			fileLink = serverPath + attachment.getPathFile();
-			break;
-		}
+		attachment  = attachmentHBDao.obtainAttachment(name_table, id_table, new BigDecimal(sequenceNumber));
+		if (attachment==null)
+			throw new Exception("Attachment Type Error");
+		fileLink = serverPath + attachment.getPathFile();
+		
 		if(attachment.getTypeDocument().equals(Attachment.TEXT)){
 			attachmentFile.setBytes(attachment.getText().getBytes());
 		} else {
@@ -505,7 +503,7 @@ public class AttachmentService {
 				//Logging
 				long end = System.currentTimeMillis();
 				long timeInSeconds = (end-start)/1000;
-				logger.info("Execution Time - obtainAddendumFileAttachment:"+ timeInSeconds+" seconds");
+				logger.info("Execution Time - obtainFileAttachment:"+ timeInSeconds+" seconds");
 				
 			}catch(Exception e){
 				logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
@@ -515,49 +513,41 @@ public class AttachmentService {
 	}
 
 	public Boolean uploadAddendumTextAttachment(String nameObject, String textKey, Integer sequenceNo, String filename, String textContent) throws Exception {
-		String splittedTextKey[] = textKey.split("\\|");
-		String noJob = splittedTextKey[0].trim();
-		String noSubcontract = splittedTextKey[1].trim();
+		Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
+		String noJob = paramMap.get(Attachment.TEXTKEY_1);
+//		String noSubcontract = paramMap.get(Attachment.TEXTKEY_2);
+//		String altParam = paramMap.get(Attachment.TEXTKEY_3);
+		String name_table = paramMap.get(Attachment.NAME_TABLE);
+		BigDecimal id_table = new BigDecimal(paramMap.get(Attachment.ID_TABLE));
 		adminService.canAccessJob(noJob);
-		Attachment attachment = null;
-		switch(nameObject){
-		case Attachment.AddendumNameObject:
-			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-			if(addendum == null){
-				throw new NullPointerException("addendum not found: addendumService.getAddendum(" + noJob + ", " + noSubcontract + ", " + splittedTextKey[2] + ")");
-			}
-			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNo));
-			if(attachment == null) attachment = new Attachment();
-			attachment.setText(textContent);
-			attachment.setNameFile(filename);
-			attachment.setPathFile(Attachment.FileLinkForText);
-			attachment.setTypeDocument(Attachment.TEXT);
-			attachment.setNoSequence(new BigDecimal(sequenceNo));
-			attachment.setIdTable(addendum.getId());
-			attachment.setNameTable(Attachment.ADDENDUM_TABLE);
-			attachmentHBDao.saveOrUpdate(attachment);
-			return true;
-		}
-		return false;
+		Attachment attachment = attachmentHBDao.obtainAttachment(name_table, id_table, new BigDecimal(sequenceNo));
+		if(attachment == null) attachment = new Attachment();
+		attachment.setText(textContent);
+		attachment.setNameFile(filename);
+		attachment.setPathFile(Attachment.FileLinkForText);
+		attachment.setTypeDocument(Attachment.TEXT);
+		attachment.setNoSequence(new BigDecimal(sequenceNo));
+		attachment.setIdTable(id_table);
+		attachment.setNameTable(name_table);
+		attachmentHBDao.saveOrUpdate(attachment);
+		return true;
 	}
 
 	public Boolean deleteAddendumAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
 		String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
 		String directoryPath="";
 
-		String splittedTextKey[] = textKey.split("\\|");
-		String noJob = splittedTextKey[0].trim();
-		String noSubcontract = splittedTextKey[1].trim();
+		Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
+		String noJob = paramMap.get(Attachment.TEXTKEY_1);
+//		String noSubcontract = paramMap.get(Attachment.TEXTKEY_2);
+//		String altParam = paramMap.get(Attachment.TEXTKEY_3);
+		String name_table = paramMap.get(Attachment.NAME_TABLE);
+		BigDecimal id_table = new BigDecimal(paramMap.get(Attachment.ID_TABLE));
 		adminService.canAccessJob(noJob);
 		Attachment attachment;
-		switch(nameObject){
-		case Attachment.AddendumNameObject:
-			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(splittedTextKey[2]));
-			attachment = attachmentHBDao.obtainAttachment(Attachment.ADDENDUM_TABLE, addendum.getId(), new BigDecimal(sequenceNumber));
+			attachment = attachmentHBDao.obtainAttachment(name_table, id_table, new BigDecimal(sequenceNumber));
 			directoryPath = serverPath + attachment.getPathFile();
 			attachmentHBDao.delete(attachment);
-			break;
-		}
 		try{
 			if (!directoryPath.isEmpty()){
 				File deleteFile = new File(directoryPath);
@@ -1333,23 +1323,45 @@ public class AttachmentService {
 		logger.info("Attachment is deleted.");
 		return true;
 	}
-	/***************************Main Contract Certificate Attachment --END***************************/
+	/***************************Main Contract Certificate Attachment --END ***************************/
 
-	public List<Attachment> obtainAttachmentList(String nameObject, String textKey){
+	public List<Attachment> obtainAttachmentList(String nameObject, String textKey) throws DatabaseOperationException{
+		Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
+		List<Attachment> attachmentList = attachmentHBDao.obtainAttachmentList(
+												paramMap.get(Attachment.NAME_TABLE), 
+												new BigDecimal(paramMap.get(Attachment.ID_TABLE))
+											);
+		return attachmentList;
+	}
+	
+	private Map<String, String> obtainAttachmentTableNameAndId(String nameObject, String textKey) throws DatabaseOperationException{
+		Map<String, String> resultMap = new HashMap<>();
 		String splittedTextKey[] = textKey.split("\\|");
 		String noJob = splittedTextKey[0].trim();
 		String noSubcontract = splittedTextKey[1].trim();
-		String altParam = !splittedTextKey[2].isEmpty() ? splittedTextKey[2] : "0";
-		List<Attachment> attachmentList = null;
+		String altParam = splittedTextKey.length == 3 && !splittedTextKey[2].isEmpty() ? splittedTextKey[2] : "0";
+
+		resultMap.put(Attachment.TEXTKEY_1, noJob);
+		resultMap.put(Attachment.TEXTKEY_2, noSubcontract);
+		resultMap.put(Attachment.TEXTKEY_3, altParam);
 		
-		if(Attachment.AddendumNameObject.equals(nameObject)){
+		switch(nameObject){
+		case Attachment.AddendumNameObject:
 			Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(altParam));
-			if(addendum == null) throw new IllegalArgumentException("Job " + noJob + " subcontract " + noSubcontract + " addendum " + altParam + " not found");
-			attachmentList = attachmentHBDao.obtainAttachmentList(Attachment.ADDENDUM_TABLE, addendum.getId());
+			resultMap.put(Attachment.NAME_TABLE, Attachment.ADDENDUM_TABLE);
+			resultMap.put(Attachment.ID_TABLE, addendum.getId().toString());
+			break;
+		case Attachment.SPLIT_TABLE:
+		case Attachment.TERMINATE:
+			Subcontract subcontract = packageHBDao.obtainSubcontract(noJob, noSubcontract);
+			if(subcontract == null) throw new IllegalArgumentException("Job " + noJob + " subcontract " + noSubcontract + " not found");
+			resultMap.put(Attachment.NAME_TABLE, Attachment.SPLIT_TABLE.equals(nameObject) ? Attachment.SPLIT_TABLE : Attachment.TERMINATE);
+			resultMap.put(Attachment.ID_TABLE, subcontract.getId().toString());
+			break;
 		}
-		
-		return attachmentList;
+		return resultMap;
 	}
+	
 	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 }
 

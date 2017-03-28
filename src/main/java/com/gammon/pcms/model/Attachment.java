@@ -28,7 +28,6 @@ import com.gammon.pcms.application.PcmsPersistedAuditObject;
 public class Attachment extends PcmsPersistedAuditObject {
 
 	private static final long serialVersionUID = 5560045256198537931L;
-	public static final String ADDENDUM_TABLE = "ADDENDUM";
 	public static final String TEXT = "0";
 	public static final String FILE = "5";
 	public static final String FileLinkForText = " ";
@@ -38,6 +37,15 @@ public class Attachment extends PcmsPersistedAuditObject {
 //	public static final String TenderAnalysisNameObject = "GT58023"; //Never used
 	public static final String VendorNameObject = "GT58024";
 	public static final String MainCertNameObject = "GT59026";
+	
+	public static final String ADDENDUM_TABLE = "ADDENDUM";
+	public static final String SPLIT_TABLE = "SPLIT";
+	public static final String TERMINATE = "TERMINATE";
+	public static final String NAME_TABLE = "NAME_TABLE";
+	public static final String ID_TABLE = "ID_TABLE";
+	public static final String TEXTKEY_1 = "noJob";
+	public static final String TEXTKEY_2 = "noSubcontract";
+	public static final String TEXTKEY_3 = "altParam";
 	
 	private BigDecimal id;
 	private BigDecimal idTable;
