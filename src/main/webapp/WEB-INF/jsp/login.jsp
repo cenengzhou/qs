@@ -5,6 +5,12 @@
 <html ng-app = "loginApp">
 <head>
 	<title>QS 2.0</title>
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-store" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="expires" content="0" />
+	<meta charset="utf-8">
 	<META HTTP-EQUIV="X-UA-Compatible" CONTENT="IE=edge" />
 	<script>
 		window.onerror = function(errorMsg, url, lineNumber) {
