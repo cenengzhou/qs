@@ -2,6 +2,7 @@ package com.gammon.pcms.web.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -235,7 +236,7 @@ public class AttachmentController {
 		try {
 			
 			Integer sequenceNo = Integer.parseInt(sequenceNoString);
-			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(nameObject.trim(), textKey, sequenceNo);
+			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(nameObject.trim(), URLDecoder.decode(textKey, "UTF-8"), sequenceNo);
 
 			if (attachmentFile != null) {
 				byte[] file = attachmentFile.getBytes();
@@ -300,7 +301,7 @@ public class AttachmentController {
 		try {
 			
 			Integer sequenceNo = Integer.parseInt(sequenceNoString);
-			AttachmentFile attachmentFile = attachmentService.obtainFileAttachment(nameObject.trim(), textKey, sequenceNo);
+			AttachmentFile attachmentFile = attachmentService.obtainFileAttachment(nameObject.trim(), URLDecoder.decode(textKey,"UTF-8"), sequenceNo);
 
 			if (attachmentFile != null) {
 				byte[] file = attachmentFile.getBytes();

@@ -1,5 +1,5 @@
-mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitService', '$cookies', 'transitService', 'confirmService', '$window', 'rootscopeService', 'uiGridGroupingConstants', 'uiGridConstants', '$location',
-                          function($scope, modalService, transitService, $cookies, transitService, confirmService, $window, rootscopeService, uiGridGroupingConstants, uiGridConstants, $location) {
+mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitService', '$cookies', 'transitService', 'confirmService', '$window', 'rootscopeService', 'uiGridGroupingConstants', 'uiGridConstants', '$location', 'GlobalHelper',
+                          function($scope, modalService, transitService, $cookies, transitService, confirmService, $window, rootscopeService, uiGridGroupingConstants, uiGridConstants, $location, GlobalHelper) {
 	rootscopeService.setSelectedTips('');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -119,7 +119,8 @@ mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitServi
     			confirmService.show({}, {bodyText:message})
     			.then(function(response){
     				if(response === 'Yes') {
-    					$window.open(url, 'transitDownload', '_blank');
+//    					$window.open(url, 'transitDownload', '_blank');
+    					GlobalHelper.downloadFile(url);
     				}
     			});
     			

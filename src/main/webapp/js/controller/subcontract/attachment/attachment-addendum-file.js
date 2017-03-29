@@ -119,7 +119,8 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
     	if(this.attach.typeDocument === '5'){
 //	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 	    	url = 'service/attachment/obtainAddendumFileAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.noSequence;
-	    	var wnd = $window.open(encodeURI(url), 'Download Attachment', '_blank');
+//	    	var wnd = $window.open(encodeURI(url), 'Download Attachment', '_blank');
+	    	GlobalHelper.downloadFile(encodeURI(url));
     	} else {
     		$scope.textAttachment = this.attach;
     		$scope.isTextUpdatable = $scope.isUpdatable; 

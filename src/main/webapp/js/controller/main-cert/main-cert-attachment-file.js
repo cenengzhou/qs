@@ -69,7 +69,8 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
     	if(this.attach.documentType === 5){
 //	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 	    	url = 'service/attachment/downloadScAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.sequenceNo;
-	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
+//	    	var wnd = $window.open(url, 'Download Attachment', '_blank');
+	    	GlobalHelper.downloadFile(url);
     	} else {
     		$scope.textAttachment = this.attach;
     		$scope.isTextUpdatable = $scope.isUpdatable; 

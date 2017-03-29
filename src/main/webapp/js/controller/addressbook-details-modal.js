@@ -284,7 +284,8 @@ mainApp.controller('AddressbookDetailsModalCtrl', ['$scope', '$uibModalInstance'
 		$scope.isAddTextAttachment = false;
 		if(this.attach.documentType === 5){
 			url = 'service/attachment/downloadScAttachment?nameObject='+GlobalParameter.AbstractAttachment['VendorNameObject']+'&textKey='+$scope.modalParam.vendorNo+'&sequenceNo='+this.attach.sequenceNo;
-			var wnd = $window.open(url, 'Download Attachment', '_blank');
+//			var wnd = $window.open(url, 'Download Attachment', '_blank');
+			GlobalHelper.downloadFile(url);
 		} else {
 			$scope.textAttachment = this.attach;
 			$scope.isTextUpdatable = $scope.isUpdatable; 

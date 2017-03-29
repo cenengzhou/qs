@@ -121,7 +121,8 @@ mainApp.controller('RepackagingCtrl', ['$state', '$scope', '$location', '$cookie
 		$scope.isAddTextAttachment = false;
 		if(this.attach.documentType === 5){
 			url = 'service/attachment/downloadRepackagingAttachment?repackagingEntryID='+$scope.repackaging.id+'&sequenceNo='+this.attach.sequenceNo;
-			var wnd = $window.open(url, 'Download Attachment', '_blank');
+//			var wnd = $window.open(url, 'Download Attachment', '_blank');
+			GlobalHelper.downloadFile(url);
 		} else {
 			$scope.repackaging.attachment = this.attach;
 			$scope.isTextUpdatable = $scope.isUpdatable; 

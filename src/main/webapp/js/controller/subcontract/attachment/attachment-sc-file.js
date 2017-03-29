@@ -101,7 +101,8 @@ mainApp.controller('AttachmentSCFileCtrl', ['$scope', '$location','attachmentSer
     	if(this.attach.documentType === 5){
 //	    	console.log('file:'+$scope.attachServerPath+this.attach.fileLink);
 	    	url = 'service/attachment/downloadScAttachment?nameObject='+$scope.nameObject+'&textKey='+$scope.textKey+'&sequenceNo='+this.attach.sequenceNo;
-	    	var wnd = $window.open(encodeURI(url), 'Download Attachment', '_blank');
+//	    	var wnd = $window.open(encodeURI(url), 'Download Attachment', '_blank');
+	    	GlobalHelper.downloadFile(encodeURI(url));
     	} else {
     		$scope.textAttachment = this.attach;
     		$scope.isTextUpdatable = $scope.isUpdatable; 

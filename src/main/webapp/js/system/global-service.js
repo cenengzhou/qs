@@ -153,6 +153,7 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 		addSubcontractCatalogGroup: addSubcontractCatalogGroup,
 		uiGridFilters : uiGridFilters,
 		camelToNormalString: camelToNormalString,
+		downloadFile: downloadFile
 	}
 	
     // ---
@@ -334,6 +335,35 @@ mainApp.factory('GlobalHelper', ['$q', 'modalService', '$sce', '$http', 'uiGridC
 	function camelToNormalString (text){
 		return text.replace(/([A-Z])/g, ' $1')
 	    .replace(/^./, function(str){ return str.toUpperCase(); });
+	}
+	
+	function downloadFile(url){
+		$http({
+ 			method:'get',
+ 			responseType: 'arraybuffer',
+ 			url:encodeURI(url)
+ 		})
+ 		.then(function(response){
+ 			var type = response.headers('Content-type');
+ 			var disposition = response.headers('Content-Disposition');
+ 			var defaultFileName = 'downloadFile';
+ 			var fileNotFound = true;
+ 			if(disposition){
+ 				var match = disposition.match(/.*filename=\"?([^;\"]+)\"?.*/);
+ 				if(match && match[1]){
+ 					defaultFileName = match[1];
+ 					defaultFileName = defaultFileName.replace(/[<>:"\/\\|?*]+/g, '_')
+ 		 			var blob = new Blob([response.data], {type: type});
+ 		 			if(blob.size>0){
+ 		 				fileNotFound = false;
+ 		 				saveAs(blob, defaultFileName);
+ 		 			}
+ 				}
+ 			}
+ 			if(fileNotFound){
+ 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', 'File not found');
+ 			}
+ 		});
 	}
 }]);
 

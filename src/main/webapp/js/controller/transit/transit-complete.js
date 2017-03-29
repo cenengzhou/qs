@@ -1,5 +1,5 @@
-mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitService', 'jdeService', '$cookies', '$window', '$timeout', 'rootscopeService', 'confirmService', 'resourceSummaryService',
-                          function($scope, modalService, transitService, jdeService, $cookies, $window, $timeout, rootscopeService, confirmService, resourceSummaryService) {
+mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitService', 'jdeService', '$cookies', '$window', '$timeout', 'rootscopeService', 'confirmService', 'resourceSummaryService', 'GlobalHelper',
+                          function($scope, modalService, transitService, jdeService, $cookies, $window, $timeout, rootscopeService, confirmService, resourceSummaryService, GlobalHelper) {
 	rootscopeService.setSelectedTips('');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -51,8 +51,8 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     
     
 	$scope.openPrintReport = function(url){
-    	var wnd = $window.open(url, 'Print Report', '_blank');
-    	
+//    	var wnd = $window.open(url, 'Print Report', '_blank');
+		GlobalHelper.downloadFile(url);
     	$timeout(function(){
     		getTransit();
     	}, 3000);
