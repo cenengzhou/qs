@@ -1368,9 +1368,6 @@ public class SubcontractService {
 										logger.info("scDetails id Remove: "+scDetails.getId());
 										scDetailsIterator.remove();
 										logger.info("REMOVED DAO TRANSACTION - remove SC detail not in TA (SC Award)");
-										//For DAO Transaction
-										//scPackage.getScDetails().remove(scDetails);
-										//For DAO Transaction ----END
 										subcontractDetailHBDao.delete(scDetails); 
 									}	
 								}
@@ -1419,7 +1416,6 @@ public class SubcontractService {
 					List<SubcontractDetail> scDetailsList = subcontractDetailHBDao.obtainSCDetails(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
 					for(SubcontractDetail scDetails: scDetailsList){
 						if("BQ".equals(scDetails.getLineType()) || "RR".equals(scDetails.getLineType())){
-							//scDetails.setCumCertifiedQuantity(scDetails.getPostedCertifiedQuantity());
 							scDetails.setAmountCumulativeCert(scDetails.getAmountPostedCert());
 							subcontractDetailHBDao.update(scDetails);
 						}
@@ -1429,53 +1425,25 @@ public class SubcontractService {
 			else{//No Payment Requisition
 				//Delete existing scDetails
 				logger.info("Remove ALL SC detail (SC Award)");
-				//For SERVICE Transaction
+				
 				for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(scPackage)){
 					subcontractDetailHBDao.delete(scDetails);
 				}
-				//For SERVICE Transaction ----END
-				
+								
 				//Create SC Details from scratch
 				scPackage = this.awardSubcontract(scPackage, tenderHBDao.obtainTenderAnalysisList(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo()));
 				
 			}
 			
+			//Recalculate IV after awarding Subcontract
+			try {
+				resourceSummaryService.recalculateResourceSummaryIV(jobNumber, packageNo, false);
+			} catch (Exception e1) {
+				logger.info("Failed to recalculate IV for Job: "+scPackage.getJobInfo().getJobNumber()+" Package: "+scPackage.getPackageNo());
+				e1.printStackTrace();
+			}
 			
-			// Special handling to reassign the Cost Rate for Method 2 and Method 3
-			/*if (scPackage.getJobInfo().getRepackagingType()!=null &&
-				(JobInfo.REPACKAGING_TYPE_3.equals(scPackage.getJobInfo().getRepackagingType().trim()) ||
-				 JobInfo.REPACKAGING_TYPE_2.equals(scPackage.getJobInfo().getRepackagingType().trim()))) {
-				
-				List<BpiItemResource> resourceList = bpiItemResourceHBDao.getResourcesByPackage(jobNumber, packageNo);
-				for (SubcontractDetail aSCDetail : subcontractDetailHBDao.getSCDetails(scPackage)) {
-					for (BpiItemResource resourceSearch : resourceList) {
-						String resourceBQItem = resourceSearch.getRefBillNo().trim() + "/";
-						
-						if (resourceSearch.getRefSubBillNo() != null)
-							resourceBQItem += resourceSearch.getRefSubBillNo().trim();
-						resourceBQItem += "/";
-						
-						if (resourceSearch.getRefSectionNo() != null)
-							resourceBQItem += resourceSearch.getRefSectionNo().trim();
-						resourceBQItem += "/";
-						
-						if (resourceSearch.getRefPageNo() != null)
-							resourceBQItem += resourceSearch.getRefPageNo().trim();
-						resourceBQItem += "/";
-						
-						if (resourceSearch.getRefItemNo() != null)
-							resourceBQItem += resourceSearch.getRefItemNo().trim();
-						
-						if (aSCDetail.getBillItem() != null && resourceBQItem.equals(aSCDetail.getBillItem().trim()) && resourceSearch.getResourceNo().equals(aSCDetail.getResourceNo())) {
-							((SubcontractDetailBQ) aSCDetail).setCostRate(resourceSearch.getCostRate());
-							resourceBQItem = null;
-							break;
-						}
-						resourceBQItem = null;
-					}
-				}
-			}*/
-
+			
 			subcontractHBDao.updateSubcontract(scPackage);
 
 			// update Work Scope in JDE
