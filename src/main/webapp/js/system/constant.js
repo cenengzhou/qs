@@ -240,6 +240,12 @@ mainApp.constant('GlobalParameter', {
 		{id:'VND', value:'Vietnam Dong'},
 		{id:'ZAR', value:'South African Rand'}		
 	],
+	insuranceStatus: [
+		{id:' ', value:'No Policy'},
+		{id:'1', value:'Annual Policy'},
+		{id:'2', value:'Difference In Condition'},
+		{id:'3', value:'Separate Policy'}
+	],
 	submittedAddendum: [
 		{id:' ', value:'Not submitted'},
 		{id:'1', value: 'Submitted'}

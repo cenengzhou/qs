@@ -288,7 +288,7 @@ public class TransitServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.transit.TransitService#importBqItemsFromCauseway(java.lang.String, byte[])}.
+	 * Test method for {@link com.gammon.qs.service.transit.TransitService#importBqItems(java.lang.String, byte[])}.
 	 */
 	public TransactionTestCase.TestDataMethod testImportBqItems() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -315,7 +315,7 @@ public class TransitServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.transit.TransitService#importResourcesFromCauseway(java.lang.String, byte[])}.
+	 * Test method for {@link com.gammon.qs.service.transit.TransitService#importResources(java.lang.String, byte[])}.
 	 */
 	public TransactionTestCase.TestDataMethod testImportTransitResources() {
 		return new TransactionTestCase.TestDataMethod() {

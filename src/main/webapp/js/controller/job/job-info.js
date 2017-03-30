@@ -20,6 +20,10 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					else
 						$scope.job.levyApplicable = false;
 					
+					$scope.job.insuranceCAR = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
+					$scope.job.insuranceECI = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
+					$scope.job.insuranceTPL = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
+					
 				});
 		jobService.getJobDates($scope.jobNo)
 		.then(
