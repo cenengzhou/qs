@@ -107,6 +107,8 @@ public class AttachmentService {
 	private AttachmentHBDao attachmentHBDao;;
 	@Autowired
 	private AddendumService addendumService;
+	@Autowired
+	private SubcontractService subcontractService;
 	
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
 
@@ -633,7 +635,18 @@ public class AttachmentService {
 			adminService.canAccessJob(jobNumber);
 		}
 		try{
-			if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 
+			if(Attachment.SplitNameObject.equals(nameObject) || Attachment.TerminateNameObject.equals(nameObject)){
+				Subcontract subcontract = subcontractService.obtainSCPackage(jobNumber, packageNo);
+				List<Attachment> attachmentList = attachmentHBDao.obtainAttachmentList(nameObject, new BigDecimal(subcontract.getId()));
+				List<AttachSubcontract> resultList = new ArrayList<>();
+				for(Attachment attachment : attachmentList){
+					AttachSubcontract scAttachment = new AttachSubcontract(attachment);
+					String path = Attachment.FILE.equals(attachment.getTypeDocument()) ? serverPath + attachment.getPathFile() : attachment.getPathFile();
+					scAttachment.setFileLink(path);
+					resultList.add(scAttachment);
+				}
+				return resultList;
+			} else if (AttachSubcontract.SCPackageNameObject.equals(nameObject.trim())){ 
 				List<AttachSubcontract> resultList = scAttachmentDao.getSCAttachment(jobNumber, packageNo);
 				if (resultList==null || resultList.size()<1)
 					return new ArrayList<AttachSubcontract>();
@@ -1339,7 +1352,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String noJob = splittedTextKey[0].trim();
 		String noSubcontract = splittedTextKey[1].trim();
-		String altParam = splittedTextKey.length == 3 && !splittedTextKey[2].isEmpty() ? splittedTextKey[2] : "0";
+		String altParam = splittedTextKey.length > 2 && !splittedTextKey[2].isEmpty()?splittedTextKey[2]:"0";
 
 		resultMap.put(Attachment.TEXTKEY_1, noJob);
 		resultMap.put(Attachment.TEXTKEY_2, noSubcontract);
@@ -1352,10 +1365,10 @@ public class AttachmentService {
 			resultMap.put(Attachment.ID_TABLE, addendum.getId().toString());
 			break;
 		case Attachment.SPLIT_TABLE:
-		case Attachment.TERMINATE:
+		case Attachment.TERMINATE_TABLE:
 			Subcontract subcontract = packageHBDao.obtainSubcontract(noJob, noSubcontract);
 			if(subcontract == null) throw new IllegalArgumentException("Job " + noJob + " subcontract " + noSubcontract + " not found");
-			resultMap.put(Attachment.NAME_TABLE, Attachment.SPLIT_TABLE.equals(nameObject) ? Attachment.SPLIT_TABLE : Attachment.TERMINATE);
+			resultMap.put(Attachment.NAME_TABLE, Attachment.SPLIT_TABLE.equals(nameObject) ? Attachment.SPLIT_TABLE : Attachment.TERMINATE_TABLE);
 			resultMap.put(Attachment.ID_TABLE, subcontract.getId().toString());
 			break;
 		}

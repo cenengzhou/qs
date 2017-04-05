@@ -37,10 +37,12 @@ public class Attachment extends PcmsPersistedAuditObject {
 //	public static final String TenderAnalysisNameObject = "GT58023"; //Never used
 	public static final String VendorNameObject = "GT58024";
 	public static final String MainCertNameObject = "GT59026";
+	public static final String SplitNameObject = "SPLIT";
+	public static final String TerminateNameObject = "TERMINATE";
 	
 	public static final String ADDENDUM_TABLE = "ADDENDUM";
 	public static final String SPLIT_TABLE = "SPLIT";
-	public static final String TERMINATE = "TERMINATE";
+	public static final String TERMINATE_TABLE = "TERMINATE";
 	public static final String NAME_TABLE = "NAME_TABLE";
 	public static final String ID_TABLE = "ID_TABLE";
 	public static final String TEXTKEY_1 = "noJob";

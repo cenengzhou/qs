@@ -10,6 +10,8 @@ import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
+import com.gammon.pcms.model.Attachment;
+
 @Entity
 @DynamicUpdate
 @SelectBeforeUpdate
@@ -24,6 +26,13 @@ public class AttachSubcontract extends AbstractAttachment {
 	public AttachSubcontract() {
 	}
 
+	public AttachSubcontract(Attachment attachment){
+		this.sequenceNo = attachment.getNoSequence().intValue();
+		this.documentType = new Integer(attachment.getTypeDocument());
+		this.fileName = attachment.getNameFile();
+		this.fileLink = attachment.getPathFile();
+		this.textAttachment = attachment.getText();
+	}
 	@Override
 	public String toString() {
 		return "AttachSubcontract [subcontract=" + subcontract + ", sequenceNo=" + sequenceNo + ", toString()="

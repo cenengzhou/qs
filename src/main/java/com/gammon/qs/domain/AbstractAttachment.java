@@ -19,11 +19,11 @@ public abstract class AbstractAttachment extends BasePersistedAuditObject {
 	public static final String TEXTFileName = "Text";
 	public static final String FileLinkForText = " ";
 	
-	private Integer sequenceNo;
-	private Integer documentType;
-	private String fileName;
-	private String fileLink;
-	private String textAttachment;
+	protected Integer sequenceNo;
+	protected Integer documentType;
+	protected String fileName;
+	protected String fileLink;
+	protected String textAttachment;
 	
 	public AbstractAttachment() {
 		super();

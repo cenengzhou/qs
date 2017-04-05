@@ -401,7 +401,9 @@ public class APController {
 	public GetTextAttachmentResponse getTextAttachment(@Valid @RequestBody GetTextAttachmentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetTextAttachmentResponse responseObj = new GetTextAttachmentResponse();
-		if(Attachment.AddendumNameObject.equals(requestObj.getNameObject())){
+		if(Attachment.AddendumNameObject.equals(requestObj.getNameObject())
+		||Attachment.SplitNameObject.equals(requestObj.getNameObject())
+		||Attachment.TerminateNameObject.equals(requestObj.getNameObject())){
 			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo());
 			responseObj.setTextAttachment(new String(attachmentFile.getBytes()));
 		} else {
