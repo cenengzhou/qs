@@ -8,7 +8,7 @@
 			></div>
 	</div>
 
-	<div class="col-md-12 m-t-10" ng-if = "transit.status != 'Transit Completed'">
+	<div class="col-md-12 m-t-10" ng-if = "transit.status != 'Transit Completed' && transit.status.length >0">
 		<form name="importBQCauseway" id="importBQCauseway">
 			<div class="form-group horizontal">
 				<label class="btn btn-block btn-primary"

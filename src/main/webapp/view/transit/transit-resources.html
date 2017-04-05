@@ -41,7 +41,7 @@
 			ui-grid-edit ui-grid-row-edit  resize ng-style="resizeWithOffset(360)"></div>
 	</div>
 
-	<div class="col-md-12" ng-if = "transit.status != 'Transit Completed'">
+	<div class="col-md-12" ng-if = "transit.status != 'Transit Completed' && transit.status.length >0">
 		<form name="importResourceCauseway" id="importResourceCauseway">
 			<div class="form-group horizontal">
 				<label class="btn btn-block btn-primary"
