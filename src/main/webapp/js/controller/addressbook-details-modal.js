@@ -31,6 +31,7 @@ mainApp.controller('AddressbookDetailsModalCtrl', ['$scope', '$uibModalInstance'
 				$scope.vendor = data;
 				switch($scope.vendor.addressType){
 				case 'V':
+				case 'O':
 					loadStatistics();
 					loadSubcontract();
 					loadTenderAnalysis();

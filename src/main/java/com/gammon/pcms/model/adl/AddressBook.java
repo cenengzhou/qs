@@ -25,6 +25,7 @@ public class AddressBook implements java.io.Serializable {
 	
 	public static final String TYPE_VENDOR = "V  ";
 	public static final String TYPE_CLIENT = "C  ";
+	public static final String TYPE_COMPANY = "O  ";
 	
 	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private BigDecimal addressBookNumber;

@@ -275,6 +275,7 @@ public class ADLService {
 		// should be enum of AddressBook class
 		addressBookTypeList.add(AddressBook.TYPE_VENDOR);
 		addressBookTypeList.add(AddressBook.TYPE_CLIENT);
+		addressBookTypeList.add(AddressBook.TYPE_COMPANY);
 //		Map<String, Set<String>> subcontractorWorkscopeMap = masterListService.obtainSubcontractorWorkScopeMap(null, null);
 		List<AddressBook> addressBookList = addressBookDao.findByAddressBookTypeList(addressBookTypeList);
 //		for(AddressBook addressBook : addressBookList) {
