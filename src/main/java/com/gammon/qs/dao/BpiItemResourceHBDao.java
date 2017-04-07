@@ -1,7 +1,6 @@
 package com.gammon.qs.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,7 +9,6 @@ import org.apache.commons.validator.GenericValidator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -24,18 +22,15 @@ import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.domain.BpiItem;
 import com.gammon.qs.domain.BpiBill;
-import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.BpiPage;
+import com.gammon.qs.domain.BpiItem;
 import com.gammon.qs.domain.BpiItemResource;
+import com.gammon.qs.domain.BpiPage;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.wrapper.BudgetPostingWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiItemGroupedByIDWrapper;
-import com.gammon.qs.wrapper.updateIVAmountByMethodThree.IVBpiResourceSummaryGroupedBySCWrapper;
 import com.gammon.qs.wrapper.updateIVByResource.ResourceWrapper;
 
 @Repository
