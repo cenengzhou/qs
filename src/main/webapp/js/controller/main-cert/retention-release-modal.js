@@ -194,10 +194,10 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 		mainCertService.getCertificate($scope.jobNo, $scope.mainCertNo)
 		.then(
 				function( data ) {
-					$scope.cumRetentionAmount = 
-						(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
-						+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
-						+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
+					$scope.cumRetentionAmount = data.amount_cumulativeRetention;
+//						(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
+//						+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
+//						+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
 					
 					getCalculatedRetentionRelease($scope.mainCertNo);
 				});
@@ -208,10 +208,10 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 		.then(
 				function( data ) {
 					if(data){
-						$scope.cumRetentionAmount = 
-							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
-							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
-							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
+						$scope.cumRetentionAmount = data.amount_cumulativeRetention;
+//							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
+//							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
+//							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
 						
 						getCalculatedRetentionRelease(data.certificateNumber);
 					}

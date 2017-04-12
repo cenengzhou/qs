@@ -1,5 +1,6 @@
 package com.gammon.qs.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.AttributeOverride;
@@ -64,12 +65,12 @@ public class MainCert extends BasePersistedObject {
 	private Double certifiedMainContractorAmount = 0.0;
 	private Double certifiedNSCNDSCAmount = 0.0;
 	private Double certifiedMOSAmount = 0.0;
-	private Double certifiedMainContractorRetention = 0.0;
-	private Double certifiedMainContractorRetentionReleased = 0.0;
-	private Double certifiedRetentionforNSCNDSC = 0.0;
-	private Double certifiedRetentionforNSCNDSCReleased = 0.0;
-	private Double certifiedMOSRetention = 0.0;
-	private Double certifiedMOSRetentionReleased = 0.0;
+	private BigDecimal certifiedMainContractorRetention = new BigDecimal(0.0);
+	private BigDecimal certifiedMainContractorRetentionReleased = new BigDecimal(0.0);
+	private BigDecimal certifiedRetentionforNSCNDSC = new BigDecimal(0.0);
+	private BigDecimal certifiedRetentionforNSCNDSCReleased = new BigDecimal(0.0);
+	private BigDecimal certifiedMOSRetention = new BigDecimal(0.0);
+	private BigDecimal certifiedMOSRetentionReleased = new BigDecimal(0.0);
 	private Double certifiedContraChargeAmount = 0.0;
 	private Double certifiedAdjustmentAmount = 0.0;
 	private Double certifiedAdvancePayment = 0.0;
@@ -89,7 +90,6 @@ public class MainCert extends BasePersistedObject {
 	private String remark;
 	private Double totalReceiptAmount;
 	
-
 	public MainCert() {
 	}
 	
@@ -180,12 +180,12 @@ public class MainCert extends BasePersistedObject {
 		return  (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
 				+(certifiedMOSAmount==null?0:certifiedMOSAmount)
-				-(certifiedMainContractorRetention==null?0:certifiedMainContractorRetention)
-				+(certifiedMainContractorRetentionReleased==null?0:certifiedMainContractorRetentionReleased)
-				-(certifiedRetentionforNSCNDSC==null?0:certifiedRetentionforNSCNDSC)
-				+(certifiedRetentionforNSCNDSCReleased==null?0:certifiedRetentionforNSCNDSCReleased)
-				-(certifiedMOSRetention==null?0:certifiedMOSRetention)
-				+(certifiedMOSRetentionReleased==null?0:certifiedMOSRetentionReleased)
+				-(certifiedMainContractorRetention==null?0:certifiedMainContractorRetention.doubleValue())
+				+(certifiedMainContractorRetentionReleased==null?0:certifiedMainContractorRetentionReleased.doubleValue())
+				-(certifiedRetentionforNSCNDSC==null?0:certifiedRetentionforNSCNDSC.doubleValue())
+				+(certifiedRetentionforNSCNDSCReleased==null?0:certifiedRetentionforNSCNDSCReleased.doubleValue())
+				-(certifiedMOSRetention==null?0:certifiedMOSRetention.doubleValue())
+				+(certifiedMOSRetentionReleased==null?0:certifiedMOSRetentionReleased.doubleValue())
 				-(certifiedContraChargeAmount==null?0:certifiedContraChargeAmount)
 				+(certifiedAdjustmentAmount==null?0:certifiedAdjustmentAmount)
 				+(certifiedAdvancePayment==null?0:certifiedAdvancePayment)
@@ -316,6 +316,20 @@ public class MainCert extends BasePersistedObject {
 		result += ("\"certStatusChangeDate\": \"" +getCertStatusChangeDate()+"\",");
 		result += ("\"certDueDate\": \"" +getCertDueDate()+"\"}");
 		return /*super.toString()+*/result;
+	}
+	
+	@JsonProperty("amount_cumulativeRetention")
+	@Transient
+	public BigDecimal amountCumulativeRetention(){
+		BigDecimal amount_cumulativeRetention = certifiedRetentionforNSCNDSC.add(certifiedMainContractorRetention).add(certifiedMOSRetention);
+		return amount_cumulativeRetention;
+	}
+	
+	@JsonProperty("amount_retentionRelease")
+	@Transient
+	public BigDecimal amountRetentionRelease(){
+		BigDecimal amount_retentionRelease =  certifiedRetentionforNSCNDSCReleased.add(certifiedMainContractorRetentionReleased).add(certifiedMOSRetentionReleased);
+		return amount_retentionRelease;
 	}
 	
 	@Override
@@ -472,54 +486,54 @@ public class MainCert extends BasePersistedObject {
 	}
 	
 	@Column(name = "certMainContractorRet")
-	public Double getCertifiedMainContractorRetention() {
+	public BigDecimal getCertifiedMainContractorRetention() {
 		return certifiedMainContractorRetention;
 	}
 	public void setCertifiedMainContractorRetention(
-			Double certifiedMainContractorRetention) {
+			BigDecimal certifiedMainContractorRetention) {
 		this.certifiedMainContractorRetention = certifiedMainContractorRetention;
 	}
 	
 	@Column(name = "certMainContractorRetRel")
-	public Double getCertifiedMainContractorRetentionReleased() {
+	public BigDecimal getCertifiedMainContractorRetentionReleased() {
 		return certifiedMainContractorRetentionReleased;
 	}
 	public void setCertifiedMainContractorRetentionReleased(
-			Double certifiedMainContractorRetentionReleased) {
+			BigDecimal certifiedMainContractorRetentionReleased) {
 		this.certifiedMainContractorRetentionReleased = certifiedMainContractorRetentionReleased;
 	}
 	
 	@Column(name = "certRetForNSCNDSC")
-	public Double getCertifiedRetentionforNSCNDSC() {
+	public BigDecimal getCertifiedRetentionforNSCNDSC() {
 		return certifiedRetentionforNSCNDSC;
 	}
-	public void setCertifiedRetentionforNSCNDSC(Double certifiedRetentionforNSCNDSC) {
+	public void setCertifiedRetentionforNSCNDSC(BigDecimal certifiedRetentionforNSCNDSC) {
 		this.certifiedRetentionforNSCNDSC = certifiedRetentionforNSCNDSC;
 	}
 	
 	@Column(name = "certRetRelForNSCNDSC")
-	public Double getCertifiedRetentionforNSCNDSCReleased() {
+	public BigDecimal getCertifiedRetentionforNSCNDSCReleased() {
 		return certifiedRetentionforNSCNDSCReleased;
 	}
 	public void setCertifiedRetentionforNSCNDSCReleased(
-			Double certifiedRetentionforNSCNDSCReleased) {
+			BigDecimal certifiedRetentionforNSCNDSCReleased) {
 		this.certifiedRetentionforNSCNDSCReleased = certifiedRetentionforNSCNDSCReleased;
 	}
 	
 	@Column(name = "certMOSRet")
-	public Double getCertifiedMOSRetention() {
+	public BigDecimal getCertifiedMOSRetention() {
 		return certifiedMOSRetention;
 	}
-	public void setCertifiedMOSRetention(Double certifiedMOSRetention) {
+	public void setCertifiedMOSRetention(BigDecimal certifiedMOSRetention) {
 		this.certifiedMOSRetention = certifiedMOSRetention;
 	}
 	
 	@Column(name = "certMOSRetRel")
-	public Double getCertifiedMOSRetentionReleased() {
+	public BigDecimal getCertifiedMOSRetentionReleased() {
 		return certifiedMOSRetentionReleased;
 	}
 	public void setCertifiedMOSRetentionReleased(
-			Double certifiedMOSRetentionReleased) {
+			BigDecimal certifiedMOSRetentionReleased) {
 		this.certifiedMOSRetentionReleased = certifiedMOSRetentionReleased;
 	}
 	
