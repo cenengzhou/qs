@@ -58,45 +58,56 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     	}, 3000);
     }
 	
-	 $scope.completeTransitMsg = '';
+	$scope.completeTransitMsg = '';
     $scope.completeTransitErr = false;
     $scope.completeTransit = function(){
-    	transitService.completeTransit($scope.jobNo)
-    	.then(function(data){
-    		getTransit();
-    		$scope.completeTransitMsg = '';
-    		$scope.completeTransitErr = false;
-    		
-    		jdeService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
-    		.then(
-    				function( result ) {
-    					if(data === ''){
-    		    			$scope.completeTransitMsg += 'Complete Transit: Success<br/>';
-    		    			jdeService.postBudget($scope.jobNo)
-    		    			.then(function(data){
-    		    				if(data === ''){
-    		    					$scope.completeTransitMsg += 'Budget posting: Success<br/>';
-    		    					generateResourceSummaries();
-    		    				} else {
-    		    					$scope.completeTransitMsg += 'Budget posting:' + data + '<br/>';
-    		    					$scope.completeTransitErr = true;
-    		    					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', data.replace('<br/>', '\n') );
-    		    				}
-    		    			}, function(data){
-    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-    		    			});
-    		    		} else {
-    		    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '<br/>';
-    		    			$scope.completeTransitErr = true;
-    		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-    		    		}
+    	
+    	var modalOptions = {
+				bodyText: 'No admendment can be made after completing the Transit. Confirm?'
+		};
 
-    				});
-    		
-    	}, function(data){
-    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
-    	});
-   	
+
+		confirmService.showModal({}, modalOptions).then(function (result) {
+			if(result == "Yes"){
+				transitService.completeTransit($scope.jobNo)
+		    	.then(function(data){
+		    		getTransit();
+		    		$scope.completeTransitMsg = '';
+		    		$scope.completeTransitErr = false;
+		    		
+		    		jdeService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
+		    		.then(
+		    				function( result ) {
+		    					if(data === ''){
+		    		    			$scope.completeTransitMsg += 'Complete Transit: Success<br/>';
+		    		    			jdeService.postBudget($scope.jobNo)
+		    		    			.then(function(data){
+		    		    				if(data === ''){
+		    		    					$scope.completeTransitMsg += 'Budget posting: Success<br/>';
+		    		    					generateResourceSummaries();
+		    		    				} else {
+		    		    					$scope.completeTransitMsg += 'Budget posting:' + data + '<br/>';
+		    		    					$scope.completeTransitErr = true;
+		    		    					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', data.replace('<br/>', '\n') );
+		    		    				}
+		    		    			}, function(data){
+		    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
+		    		    			});
+		    		    		} else {
+		    		    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '<br/>';
+		    		    			$scope.completeTransitErr = true;
+		    		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
+		    		    		}
+
+		    				});
+		    		
+		    	}, function(data){
+		    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
+		    	});
+			
+			}
+		});
+		
     }
     
 

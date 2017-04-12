@@ -276,7 +276,7 @@ public class TransitService implements Serializable {
 				
 				if(!isHeader(row)){
 					//First 2 digits: Bill, 3-5: SubBill
-					if(row[0].length() < 2){
+					if(row[0]== null || row[0].length() < 2){
 						errorList.add("Line " + i+": [Column A] Bill should not be less than 2 digits.");
 						continue;
 					}
@@ -358,7 +358,7 @@ public class TransitService implements Serializable {
 					Integer itemLineNo = bqItemMap.get(bqItem);
 					if(itemLineNo != null){
 						errorList.add("Lines " + itemLineNo.toString() + " and " + i+
-								": Bill "+bqItem.getBillNo()+"/Sub Bill "+bqItem.getSubBillNo()+"/Page "+bqItem.getPageNo()+"/Item "+bqItem.getItemNo()+" is duplicated.");
+								": "+bqItem.getBillNo()+"/"+bqItem.getSubBillNo()+"/"+bqItem.getPageNo()+"/"+bqItem.getItemNo()+" (Bill/SubBill/Page/Item) is duplicated.");
 						continue;
 					}
 					else
