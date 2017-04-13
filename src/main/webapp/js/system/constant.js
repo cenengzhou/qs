@@ -333,6 +333,7 @@ mainApp.constant('GlobalParameter', {
 	                    'MainCertNameObject' : 'GT59026',
 	                    'SplitNameObject' : 'SPLIT',
 	                    'TerminateNameObject' : 'TERMINATE',
+	                    'TransitNameObject' : 'TRANSIT'
 	                    
 	},
 	PurchaseOrderType:[

@@ -1020,6 +1020,28 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		templateUrl: "view/transit/transit-report.html",
         controller: 'TransitCompleteCtrl'
 	})
+	.state('transit.attachment', {
+		url: "/attachment",
+		templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
+		params: {
+			'nameObject': GlobalParameter['AbstractAttachment'].TransitNameObject,
+			'offsetTop':440
+		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	files: [
+                    'js/controller/subcontract/attachment/attachment-addendum-file.js',
+                    'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                    'js/service/attachment-service.js',
+                    'js/service/addendum-service.js'
+               ] 
+                });
+            }]
+        },
+		controller: 'AttachmentAddendumFileCtrl'
+	})
 	.state('transit.complete', {
 		url: "/complete",
 		templateUrl: "view/transit/transit-complete.html",

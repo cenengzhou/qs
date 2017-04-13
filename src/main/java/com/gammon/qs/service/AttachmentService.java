@@ -48,10 +48,12 @@ import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
+import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.scPackage.UploadSCAttachmentResponseObj;
 import com.gammon.qs.service.security.SecurityService;
+import com.gammon.qs.service.transit.TransitService;
 
 /**
  * koeyyeung
@@ -109,6 +111,9 @@ public class AttachmentService {
 	private AddendumService addendumService;
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private TransitService transitService;
+	
 	
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
 
@@ -1370,6 +1375,11 @@ public class AttachmentService {
 			if(subcontract == null) throw new IllegalArgumentException("Job " + noJob + " subcontract " + noSubcontract + " not found");
 			resultMap.put(Attachment.NAME_TABLE, Attachment.SPLIT_TABLE.equals(nameObject) ? Attachment.SPLIT_TABLE : Attachment.TERMINATE_TABLE);
 			resultMap.put(Attachment.ID_TABLE, subcontract.getId().toString());
+			break;
+		case Attachment.TRANSIT_TABLE:
+			Transit transit = transitService.getTransitHeader(noJob);
+			resultMap.put(Attachment.NAME_TABLE, Attachment.TRANSIT_TABLE);
+			resultMap.put(Attachment.ID_TABLE, transit.getId().toString());
 			break;
 		}
 		return resultMap;

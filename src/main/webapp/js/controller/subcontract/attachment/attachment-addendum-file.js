@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService', 'subcontractService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService, subcontractService ) {
+mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'addendumService', 'subcontractService', 'transitService',
+                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, addendumService, subcontractService, transitService) {
 	$scope.GlobalParameter = GlobalParameter;
 	if(!$scope.nameObject) {
 		$scope.inBox = false;
@@ -41,6 +41,9 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 		break;
 	case GlobalParameter['AbstractAttachment'].TerminateNameObject:
 		checkSplitTerminateStatus();
+		break;
+	case GlobalParameter['AbstractAttachment'].TransitNameObject:
+		checkTransitStatus();
 		break;
 	default:
 		checkSubcontractUpdatable();
@@ -182,6 +185,21 @@ mainApp.controller('AttachmentAddendumFileCtrl', ['$scope', '$location','attachm
 		})
     }
 
+    
+    function checkTransitStatus(){
+    	transitService.getTransit($scope.jobNo)
+		.then(
+				function(transit){
+					if(transit){
+						if(transit.status === 'Transit Completed') {
+							$scope.isUpdatable = false;
+			    		}else
+			    			$scope.isUpdatable = true;
+						
+					}
+
+				});
+    }
 	
 	function getUserByUsername (username){
 		return $http.get('service/security/getUserByUsername?username='+username);
