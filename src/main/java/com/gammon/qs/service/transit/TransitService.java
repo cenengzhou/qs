@@ -553,7 +553,7 @@ public class TransitService implements Serializable {
 				
 				// For ERROR Report
 				String bpi = resource.getTransitBpi().getBillNo() + "/" 
-				+ resource.getTransitBpi().getSubBillNo() + "//" 
+				+ (resource.getTransitBpi().getSubBillNo()!=null?resource.getTransitBpi().getSubBillNo():"") + "//" 
 				+ resource.getTransitBpi().getPageNo() + "/" 
 				+ resource.getTransitBpi().getItemNo();
 				
