@@ -18,7 +18,6 @@ import com.gammon.qs.dao.MainCertRetentionReleaseHBDao;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
 import com.gammon.qs.service.security.SecurityService;
-import com.gammon.qs.shared.RoleSecurityFunctions;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Service
@@ -95,10 +94,10 @@ public class MainCertRetentionReleaseService {
 		}
 
 		try {
-			String username = securityService.getCurrentUser().getUsername();
-			List<String> securityList = userAccessRightsService.getAccessRights(username, RoleSecurityFunctions.F010405_RETENTION_RELEASE_WINDOW);
+			//String username = securityService.getCurrentUser().getUsername();
+			//List<String> securityList = userAccessRightsService.getAccessRights(username, RoleSecurityFunctions.F010405_RETENTION_RELEASE_WINDOW);
 
-			if (securityList.contains("WRITE")) {
+			//if (securityList.contains("WRITE")) {
 				List<MainCert> mainCertList = mainCertHBDao.getMainCertList(noJob);
 				ArrayList<MainCertRetentionRelease> newRRSList = new ArrayList<MainCertRetentionRelease>();
 				MainCert prevMainCert = null;
@@ -136,7 +135,7 @@ public class MainCertRetentionReleaseService {
 						}
 					}
 				updateActualRetentionRelease(noJob, mainCert, prevMainCert, newRRSList);
-			}
+			//}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("Failed: error occured in calculating the retention release.");
