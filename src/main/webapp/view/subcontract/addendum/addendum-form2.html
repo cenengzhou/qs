@@ -1,10 +1,9 @@
 <div class="invoice">
-	<span class="pull-right hidden-print"> <a href="javascript:;"
-		onclick="window.print()" id="printBtn"
-		class="btn btn-sm width-100 btn-rounded btn-danger pull-right hidden-print">
-			<i class="fa fa-print m-r-3"></i> Print
-	</a>
-	</span>
+	<div class="invoice-logo m-l-5 pull-right">
+		<div class="table-border">
+			<h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6>
+		</div>
+	</div>
 
 	<div class="invoice-logo">
 		<img src="image/gammon.bmp" class="logo" style="width: 128px" />
@@ -17,6 +16,12 @@
 		</div>
 		<div class="col-md-12">
 			<label><b>Project.: {{jobNo}} - {{jobDescription}}</b></label>
+			<span class="pull-right hidden-print"> <a href="javascript:;"
+					onclick="window.print()" id="printBtn"
+					class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+						<i class="fa fa-print m-r-3"></i> Print
+				</a>
+				</span>
 		</div>
 		<div class="col-md-12">
 			<label><b>Addendum No.{{addendumNo}} for Subcontract No.{{subcontractNo}} - {{subcontract.description}}</b></label>

@@ -315,8 +315,8 @@ public class MainCertService {
 		if(mainContractCertificate==null)
 			return mainCertWrapper;
 		
-		mainCertWrapper.setCertifiedRetentionforNSCNDSC(mainContractCertificate.getCertifiedRetentionforNSCNDSC().doubleValue());
-		mainCertWrapper.setCertifiedMainContractorRetention(mainContractCertificate.getCertifiedMainContractorRetention().doubleValue());
+		mainCertWrapper.setCertifiedRetentionforNSCNDSC(CalculationUtil.round(mainContractCertificate.getCertifiedRetentionforNSCNDSC().doubleValue(), 2));
+		mainCertWrapper.setCertifiedMainContractorRetention(CalculationUtil.round(mainContractCertificate.getCertifiedMainContractorRetention().doubleValue(), 2));
 		mainCertWrapper.setGstPayable(mainContractCertificate.getGstPayable());
 		mainCertWrapper.setCertifiedCPFAmount(mainContractCertificate.getCertifiedCPFAmount());
 		mainCertWrapper.setCertificateDueDate(mainContractCertificate.getCertDueDate());
@@ -324,13 +324,13 @@ public class MainCertService {
 		mainCertWrapper.setCertifiedDate(mainContractCertificate.getCertIssueDate());
 		mainCertWrapper.setCertifiedContraChargeAmount(mainContractCertificate.getCertifiedContraChargeAmount());
 		mainCertWrapper.setCertifiedAdjustmentAmount(mainContractCertificate.getCertifiedAdjustmentAmount());
-		mainCertWrapper.setCertifiedMainContractorRetentionReleased(mainContractCertificate.getCertifiedMainContractorRetentionReleased().doubleValue());
-		mainCertWrapper.setCertifiedMOSRetention(mainContractCertificate.getCertifiedMOSRetention().doubleValue());
+		mainCertWrapper.setCertifiedMainContractorRetentionReleased(CalculationUtil.round(mainContractCertificate.getCertifiedMainContractorRetentionReleased().doubleValue(), 2));
+		mainCertWrapper.setCertifiedMOSRetention(CalculationUtil.round(mainContractCertificate.getCertifiedMOSRetention().doubleValue(), 2));
 		mainCertWrapper.setCertificateStatusChangeDate(mainContractCertificate.getCertStatusChangeDate());
-		mainCertWrapper.setCertifiedRetentionforNSCNDSCReleased(mainContractCertificate.getCertifiedRetentionforNSCNDSCReleased().doubleValue());
+		mainCertWrapper.setCertifiedRetentionforNSCNDSCReleased(CalculationUtil.round(mainContractCertificate.getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2));
 		mainCertWrapper.setIpaNumber(mainContractCertificate.getCertificateNumber());
 		mainCertWrapper.setJobNumber(mainContractCertificate.getJobNo());
-		mainCertWrapper.setCertifiedMOSRetentionReleased(mainContractCertificate.getCertifiedMOSRetentionReleased().doubleValue());
+		mainCertWrapper.setCertifiedMOSRetentionReleased(CalculationUtil.round(mainContractCertificate.getCertifiedMOSRetentionReleased().doubleValue(), 2));
 		mainCertWrapper.setCertificateStatus(MainCert.CERT_CONFIRMED);
 		mainCertWrapper.setCertifiedMainContractorAmount(mainContractCertificate.getCertifiedMainContractorAmount());
 		Double mosAmount = mainContractCertificate.getCertifiedMOSAmount() == null ? Double.valueOf(0) : mainContractCertificate.getCertifiedMOSAmount();
@@ -338,7 +338,7 @@ public class MainCertService {
 		mainCertWrapper.setCertifiedMOSAmount(mosAmount + advancePayment);
 		mainCertWrapper.setGstReceivable(mainContractCertificate.getGstReceivable());
 		mainCertWrapper.setCertificateNumber(mainContractCertificate.getCertificateNumber());
-		Double netCertAmount = 	mainContractCertificate.getCertifiedMainContractorAmount()+
+		Double netCertAmount = 	CalculationUtil.round(mainContractCertificate.getCertifiedMainContractorAmount()+
 								mainContractCertificate.getCertifiedNSCNDSCAmount()+
 								mainContractCertificate.getCertifiedAdjustmentAmount()+
 								mosAmount+
@@ -350,7 +350,7 @@ public class MainCertService {
 								mainContractCertificate.getCertifiedRetentionforNSCNDSC().doubleValue()+
 								mainContractCertificate.getCertifiedMainContractorRetentionReleased().doubleValue()+
 								mainContractCertificate.getCertifiedRetentionforNSCNDSCReleased().doubleValue()+
-								mainContractCertificate.getCertifiedMOSRetentionReleased().doubleValue();
+								mainContractCertificate.getCertifiedMOSRetentionReleased().doubleValue(), 2);
 		mainCertWrapper.setNetCertAmount(netCertAmount);
 		
 		//web service information

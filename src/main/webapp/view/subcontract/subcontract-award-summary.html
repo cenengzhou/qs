@@ -1,12 +1,8 @@
 
 <div class="invoice">
-	<span class="pull-right hidden-print" id="createSubcontractStep9PrintBtn"> <a href="javascript:;"
-		onclick="window.print()"
-		class="btn btn-sm width-100 btn-rounded btn-danger pull-right hidden-print">
-			<i class="fa fa-print m-r-3"></i> Print
-	</a> <!-- <a ui-sref="subcontract.paymentdetails"	class="btn btn-sm width-100 btn-rounded btn-primary pull-right hidden-print">
-				<i class="fa fa-arrow-left"></i> Back</a> -->
-	</span>
+	<div class="invoice-logo m-l-5 pull-right">
+				<div class="table-border"><h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6></div>
+			</div>
 
 	<div class="invoice-logo">
 		<img src="image/gammon.bmp" class="logo" style="width: 128px" />
@@ -19,6 +15,12 @@
 		</div>
 		<div class="col-md-12">
 			<label><b>Job No.: {{jobNo}} - {{jobDescription}}</b></label>
+			<span class="pull-right hidden-print"> <a href="javascript:;"
+					onclick="window.print()" id="printBtn"
+					class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+						<i class="fa fa-print m-r-3"></i> Print
+				</a>
+				</span>
 		</div>
 		<div class="col-md-12">
 			<label><b>TRADE: <span class="invoice-underline">Subcontract {{subcontractNo}} - {{subcontract.description}}</span></b></label>

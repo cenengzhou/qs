@@ -22,6 +22,7 @@ import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gammon.qs.application.BasePersistedObject;
+import com.gammon.qs.shared.util.CalculationUtil;
 
 @Entity
 @DynamicUpdate
@@ -177,7 +178,7 @@ public class MainCert extends BasePersistedObject {
 	@JsonProperty("certNetAmount")
 	@Transient
 	public Double calculateCertifiedNetAmount(){
-		return  (certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
+		return  CalculationUtil.round((certifiedMainContractorAmount==null?0:certifiedMainContractorAmount)
 				+(certifiedNSCNDSCAmount==null?0:certifiedNSCNDSCAmount)
 				+(certifiedMOSAmount==null?0:certifiedMOSAmount)
 				-(certifiedMainContractorRetention==null?0:certifiedMainContractorRetention.doubleValue())
@@ -189,7 +190,7 @@ public class MainCert extends BasePersistedObject {
 				-(certifiedContraChargeAmount==null?0:certifiedContraChargeAmount)
 				+(certifiedAdjustmentAmount==null?0:certifiedAdjustmentAmount)
 				+(certifiedAdvancePayment==null?0:certifiedAdvancePayment)
-				+(certifiedCPFAmount==null?0:certifiedCPFAmount);
+				+(certifiedCPFAmount==null?0:certifiedCPFAmount), 2);
 	}
 	
 	@JsonProperty("appNetAmount")
@@ -321,14 +322,14 @@ public class MainCert extends BasePersistedObject {
 	@JsonProperty("amount_cumulativeRetention")
 	@Transient
 	public BigDecimal amountCumulativeRetention(){
-		BigDecimal amount_cumulativeRetention = certifiedRetentionforNSCNDSC.add(certifiedMainContractorRetention).add(certifiedMOSRetention);
+		BigDecimal amount_cumulativeRetention = CalculationUtil.roundToBigDecimal(certifiedRetentionforNSCNDSC.add(certifiedMainContractorRetention).add(certifiedMOSRetention), 2);
 		return amount_cumulativeRetention;
 	}
 	
 	@JsonProperty("amount_retentionRelease")
 	@Transient
 	public BigDecimal amountRetentionRelease(){
-		BigDecimal amount_retentionRelease =  certifiedRetentionforNSCNDSCReleased.add(certifiedMainContractorRetentionReleased).add(certifiedMOSRetentionReleased);
+		BigDecimal amount_retentionRelease =  CalculationUtil.roundToBigDecimal(certifiedRetentionforNSCNDSCReleased.add(certifiedMainContractorRetentionReleased).add(certifiedMOSRetentionReleased), 2);
 		return amount_retentionRelease;
 	}
 	

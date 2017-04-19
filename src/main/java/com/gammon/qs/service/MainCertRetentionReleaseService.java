@@ -1,7 +1,6 @@
 package com.gammon.qs.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class MainCertRetentionReleaseService {
 
 		List<MainCertRetentionRelease> rrList = retentionReleaseHBDao.findByJobNo(jobNo);
 		MainCert mainCert = mainCertService.getCertificate(jobNo, mainCertNumber);
-		Double cumRRCalculatedByMainCert = mainCert.amountCumulativeRetention().doubleValue();
+		Double cumRRCalculatedByMainCert = CalculationUtil.round(mainCert.amountRetentionRelease().doubleValue(), 2);
 		BigDecimal cumRetentionRelease = new BigDecimal(0.0);
 		Double cumActualRetentionRelease = 0.0;
 
@@ -57,11 +56,11 @@ public class MainCertRetentionReleaseService {
 			for (MainCertRetentionRelease rr : rrList) {
 				if (MainCertRetentionRelease.STATUS_ACTUAL.equals(rr.getStatus())) {
 					cumActualRetentionRelease += rr.getActualReleaseAmt();
-					cumRetentionRelease.add(new BigDecimal(rr.getActualReleaseAmt()));
+					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getActualReleaseAmt()));
 				} else
-					cumRetentionRelease.add(new BigDecimal(rr.getForecastReleaseAmt()));
+					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getForecastReleaseAmt()));
 			}
-		cumRetentionRelease = cumRetentionRelease.setScale(2, RoundingMode.CEILING);
+		cumRetentionRelease = CalculationUtil.roundToBigDecimal(cumRetentionRelease, 2);
 
 		Double rrDiff = CalculationUtil.round(cumRetentionRelease.subtract(mainCert.getCertifiedMOSRetention()).subtract(mainCert.getCertifiedMainContractorRetention()).subtract(mainCert.getCertifiedRetentionforNSCNDSC()).doubleValue(), 2);
 		Double actualRRDiff = CalculationUtil.round(cumActualRetentionRelease - cumRRCalculatedByMainCert, 2);
@@ -110,15 +109,15 @@ public class MainCertRetentionReleaseService {
 							prevMainCert = mainCertList.get(i);
 
 						Double retentionRelease = 0.0;
-						retentionRelease += mainCertList.get(i).getCertifiedMainContractorRetentionReleased() == null ? 0 : mainCertList.get(i).getCertifiedMainContractorRetentionReleased().doubleValue();
-						retentionRelease += mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased().doubleValue();
-						retentionRelease += mainCertList.get(i).getCertifiedMOSRetentionReleased() == null ? 0 : mainCertList.get(i).getCertifiedMOSRetentionReleased().doubleValue();
+						retentionRelease += mainCertList.get(i).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMainContractorRetentionReleased().doubleValue(), 2);
+						retentionRelease += mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2);
+						retentionRelease += mainCertList.get(i).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMOSRetentionReleased().doubleValue(), 2);
 						if (i > 0) {
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased() == null ? 0 : mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased().doubleValue());
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased().doubleValue());
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMOSRetentionReleased() == null ? 0 : mainCertList.get(i - 1).getCertifiedMOSRetentionReleased().doubleValue());
+							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased().doubleValue(), 2));
+							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2));
+							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMOSRetentionReleased().doubleValue(), 2));
 						}
-						// logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
+						logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
 						if (CalculationUtil.round(retentionRelease, 2) != 0.00) {// Insert rr if not exist in db
 							MainCertRetentionRelease dbRR = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(noJob, mainCertList.get(i).getCertificateNumber());
 							if (dbRR == null) {
@@ -153,7 +152,8 @@ public class MainCertRetentionReleaseService {
 	 **/
 	private void updateActualRetentionRelease(String jobNumber, MainCert mainCert, MainCert prevMainCert, List<MainCertRetentionRelease> newRRSList) throws DatabaseOperationException {
 		logger.info("STARTED - generateActualRetentionRelease");
-
+		logger.info("newRRSList: "+newRRSList!=null ?newRRSList.size():0);
+		
 		double rrDiff = CalculationUtil.round(calculateRetentionReleaseAmount(mainCert) - calculateRetentionReleaseAmount(prevMainCert), 2);
 		MainCertRetentionRelease rr = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(jobNumber, mainCert.getCertificateNumber());
 
