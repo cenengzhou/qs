@@ -117,7 +117,7 @@ public class MainCertRetentionReleaseService {
 							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2));
 							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMOSRetentionReleased().doubleValue(), 2));
 						}
-						logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
+						//logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
 						if (CalculationUtil.round(retentionRelease, 2) != 0.00) {// Insert rr if not exist in db
 							MainCertRetentionRelease dbRR = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(noJob, mainCertList.get(i).getCertificateNumber());
 							if (dbRR == null) {
@@ -152,7 +152,6 @@ public class MainCertRetentionReleaseService {
 	 **/
 	private void updateActualRetentionRelease(String jobNumber, MainCert mainCert, MainCert prevMainCert, List<MainCertRetentionRelease> newRRSList) throws DatabaseOperationException {
 		logger.info("STARTED - generateActualRetentionRelease");
-		logger.info("newRRSList: "+newRRSList!=null ?newRRSList.size():0);
 		
 		double rrDiff = CalculationUtil.round(calculateRetentionReleaseAmount(mainCert) - calculateRetentionReleaseAmount(prevMainCert), 2);
 		MainCertRetentionRelease rr = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(jobNumber, mainCert.getCertificateNumber());
