@@ -28,10 +28,6 @@ public class MainCertRetentionReleaseService {
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	private SecurityService securityService;
-	@Autowired
-	private UserAccessRightsService userAccessRightsService;
-	@Autowired
 	private MainCertService mainCertService;
 
 	@Autowired
@@ -94,48 +90,44 @@ public class MainCertRetentionReleaseService {
 		}
 
 		try {
-			//String username = securityService.getCurrentUser().getUsername();
-			//List<String> securityList = userAccessRightsService.getAccessRights(username, RoleSecurityFunctions.F010405_RETENTION_RELEASE_WINDOW);
+			
+			List<MainCert> mainCertList = mainCertHBDao.getMainCertList(noJob);
+			ArrayList<MainCertRetentionRelease> newRRSList = new ArrayList<MainCertRetentionRelease>();
+			MainCert prevMainCert = null;
 
-			//if (securityList.contains("WRITE")) {
-				List<MainCert> mainCertList = mainCertHBDao.getMainCertList(noJob);
-				ArrayList<MainCertRetentionRelease> newRRSList = new ArrayList<MainCertRetentionRelease>();
-				MainCert prevMainCert = null;
+			if (mainCertList != null && mainCertList.size() > 0)
+				for (int i = 0; i < mainCertList.size(); i++) {// Calculate all certs
+					if (mainCertList.get(i).getCertificateNumber().equals(mainCert.getCertificateNumber() - 1))
+						prevMainCert = mainCertList.get(i);
 
-				if (mainCertList != null && mainCertList.size() > 0)
-					for (int i = 0; i < mainCertList.size(); i++) {// Calculate all certs
-						if (mainCertList.get(i).getCertificateNumber().equals(mainCert.getCertificateNumber() - 1))
-							prevMainCert = mainCertList.get(i);
+					Double retentionRelease = 0.0;
+					retentionRelease += mainCertList.get(i).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMainContractorRetentionReleased().doubleValue(), 2);
+					retentionRelease += mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2);
+					retentionRelease += mainCertList.get(i).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMOSRetentionReleased().doubleValue(), 2);
+					if (i > 0) {
+						retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased().doubleValue(), 2));
+						retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2));
+						retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMOSRetentionReleased().doubleValue(), 2));
+					}
+					//logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
+					if (CalculationUtil.round(retentionRelease, 2) != 0.00) {// Insert rr if not exist in db
+						MainCertRetentionRelease dbRR = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(noJob, mainCertList.get(i).getCertificateNumber());
+						if (dbRR == null) {
+							MainCertRetentionRelease newRR = new MainCertRetentionRelease();
+							newRR.setJobNo(noJob);
+							newRR.setMainCertNo(mainCertList.get(i).getCertificateNumber());
 
-						Double retentionRelease = 0.0;
-						retentionRelease += mainCertList.get(i).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMainContractorRetentionReleased().doubleValue(), 2);
-						retentionRelease += mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2);
-						retentionRelease += mainCertList.get(i).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i).getCertifiedMOSRetentionReleased().doubleValue(), 2);
-						if (i > 0) {
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMainContractorRetentionReleased().doubleValue(), 2));
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedRetentionforNSCNDSCReleased().doubleValue(), 2));
-							retentionRelease = retentionRelease - (mainCertList.get(i - 1).getCertifiedMOSRetentionReleased() == null ? 0 : CalculationUtil.round(mainCertList.get(i - 1).getCertifiedMOSRetentionReleased().doubleValue(), 2));
-						}
-						//logger.info("CertificateNumber: "+mainCertList.get(i).getCertificateNumber()+" - retentionRelease: "+retentionRelease);
-						if (CalculationUtil.round(retentionRelease, 2) != 0.00) {// Insert rr if not exist in db
-							MainCertRetentionRelease dbRR = retentionReleaseHBDao.obtainActualRetentionReleaseByMainCertNo(noJob, mainCertList.get(i).getCertificateNumber());
-							if (dbRR == null) {
-								MainCertRetentionRelease newRR = new MainCertRetentionRelease();
-								newRR.setJobNo(noJob);
-								newRR.setMainCertNo(mainCertList.get(i).getCertificateNumber());
-
-								newRR.setDueDate(mainCertList.get(i).getCertDueDate());
-								newRR.setActualReleaseAmt(CalculationUtil.round(retentionRelease, 2));
-								newRR.setForecastReleaseAmt(new Double(0.0));
-								newRR.setStatus(MainCertRetentionRelease.STATUS_ACTUAL);
-								// newRR.setReleasePercent(RoundingUtil.round(retentionRelease*100.0/totalRetentionAmount,2));//@deprecated
-								newRR.setSequenceNo(0);// @deprecated
-								newRRSList.add(newRR);
-							}
+							newRR.setDueDate(mainCertList.get(i).getCertDueDate());
+							newRR.setActualReleaseAmt(CalculationUtil.round(retentionRelease, 2));
+							newRR.setForecastReleaseAmt(new Double(0.0));
+							newRR.setStatus(MainCertRetentionRelease.STATUS_ACTUAL);
+							// newRR.setReleasePercent(RoundingUtil.round(retentionRelease*100.0/totalRetentionAmount,2));//@deprecated
+							newRR.setSequenceNo(0);// @deprecated
+							newRRSList.add(newRR);
 						}
 					}
-				updateActualRetentionRelease(noJob, mainCert, prevMainCert, newRRSList);
-			//}
+				}
+			updateActualRetentionRelease(noJob, mainCert, prevMainCert, newRRSList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("Failed: error occured in calculating the retention release.");
