@@ -29,7 +29,7 @@ public class AddressBook implements java.io.Serializable {
 	
 	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private BigDecimal addressBookNumber;
-	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
+	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class, AddressBookView.Name.class})
 	private String addressBookName;
 	@JsonView({AddressBookView.SubcontractorAndClientEnquiry.class})
 	private String businessRegistrationNumber;

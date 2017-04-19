@@ -260,7 +260,9 @@ public class ADLController {
 	}
 
 	// TODO: migrate from web service to ADL
+	//Only return addressBookName for account payable details
 	@PreAuthorize(value = "@GSFService.isFnEnabled('ADLController','getAddressBook', @securityConfig.getRolePcmsEnq())")
+	@JsonView(AddressBookView.Name.class)
 	@RequestMapping(value = "getAddressBook", method = RequestMethod.GET)
 	public AddressBook getAddressBook(@RequestParam(required = true) BigDecimal addressBookNo) {
 		try {
