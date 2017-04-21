@@ -87,7 +87,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		$scope.ipc = ipcList[11];
 
 		$scope.linChartParameters = {
-				labels : ['Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				series : ['IPA', 'IPC', 'Contract Receivable'],
 				data: [ipaList, ipcList, contractReceivableList],
 				options : {

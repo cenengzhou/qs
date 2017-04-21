@@ -17,7 +17,6 @@ import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertRetentionReleaseHBDao;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertRetentionRelease;
-import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
 
 @Service
