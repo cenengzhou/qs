@@ -1191,7 +1191,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: 'EnquiryJobCostCtrl'
 		})
 	.state('enquiry.jobCost.adl', {
-		url: '/jobCost/adl',
+		url: '/adl',
 		templateUrl: 'view/enquiry/enquiry-jobcost-adl.html',
 		params: {
 			'jobNo': null,
@@ -1200,7 +1200,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: 'EnquiryJobCostAdlCtrl'
 		})
 	.state('enquiry.jobCost.jde', {
-		url: '/jobCost/jde',
+		url: '/jde',
 		templateUrl: 'view/enquiry/enquiry-jobcost-jde.html',
 		params: {
 			'jobNo': null,

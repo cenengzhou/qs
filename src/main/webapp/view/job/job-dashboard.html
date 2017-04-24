@@ -33,7 +33,7 @@
 		<div class="col-md-3 col-xs-12">
 			<div class="widget widget-stat bg-success text-white">
 				<div class="widget-stat-btn">
-					<a ui-sref="iv.update"><i class="fa fa-info-circle fa-2x"></i></a>
+					<a ui-sref="enquiry.jobCost.adl"><i class="fa fa-info-circle fa-2x"></i></a>
 				</div>
 				<div class="widget-stat-icon">
 					<i class="fa fa-bar-chart"></i>
@@ -52,13 +52,13 @@
 		<div class="col-md-3 col-xs-12">
 			<div class="widget widget-stat bg-primary text-white">
 				<div class="widget-stat-btn">
-					<a ui-sref="iv.update"><i class="fa fa-info-circle fa-2x"></i></a>
+					<a ui-sref="enquiry.jobCost.adl"><i class="fa fa-info-circle fa-2x"></i></a>
 				</div>
 				<div class="widget-stat-icon">
 					<i class="fa fa-dollar"></i>
 				</div>
 				<div class="widget-stat-info">
-					<div class="widget-stat-title">Actual Value</div>
+					<div class="widget-stat-title">Actual Value (Cost)</div>
 					<div class="widget-stat-number">{{actualValue | currency}}</div>
 					<div class="widget-stat-text">
 						<small>including manual input entries by Finance</small>
@@ -77,7 +77,7 @@
 					<i class="fa fa-file"></i>
 				</div>
 				<div class="widget-stat-info">
-					<div class="widget-stat-title">Contract Receivable</div>
+					<div class="widget-stat-title">Main Contract Cert. Amount</div>
 					<div class="widget-stat-number">{{contractReceivable |
 						currency}}</div>
 					<div class="widget-stat-text">
@@ -146,7 +146,7 @@
 									data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 							</div> -->
 						<h4 class="panel-title">
-							Resources Distribution <small></small>
+							Resources Distribution of Total Budget<small></small>
 						</h4>
 					</div>
 					<div class="panel-body">
