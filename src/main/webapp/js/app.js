@@ -1631,7 +1631,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	// Display the property value in the custom template.
 	// blockUIConfig.template = '<div>{{ state.myProperty }}</div>';
 	
-	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:900"><i class="fa fa-connectdevelop fa-fw fa-pulse text-grey" style="width:100%; font-size: 1000px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
+	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:1"><i class="fa fa-spinner fa-pulse fa-fw text-grey" style="width:100%; font-size: 700px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
 	
 	// Disable automatically blocking of the user interface
 	blockUIConfig.autoBlock = true;
