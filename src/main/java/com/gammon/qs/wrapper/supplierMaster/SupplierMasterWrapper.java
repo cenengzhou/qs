@@ -35,7 +35,5 @@ public class SupplierMasterWrapper implements Serializable {
 	public void setPaymentTermsAP(String paymentTermsAP) {
 		this.paymentTermsAP = paymentTermsAP;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
 }

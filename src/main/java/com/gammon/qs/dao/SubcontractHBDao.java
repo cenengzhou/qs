@@ -3,7 +3,6 @@ package com.gammon.qs.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -35,7 +34,6 @@ import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.Tender;
@@ -49,8 +47,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	private TenderHBDao tenderAnalysisHBdao;
 	@Autowired
 	private TenderDetailHBDao tenderDetailDao;
-	@Autowired
-	private PaymentCertHBDao scPaymentCertHBDao;
 	@Autowired
 	private TenderVarianceHBDao tenderVarianceHBDao;
 	
@@ -92,31 +88,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Subcontract> obtainPackages(String jobNumber, String packageNo, String packageType)	throws DatabaseOperationException {
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("jobInfo", "jobInfo");
-		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
-		criteria.add(Restrictions.eq("packageNo", packageNo));
-		criteria.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
-		
-		return criteria.list();
-	}
-
-	
-	@SuppressWarnings("unchecked")
-	public List<Subcontract> getSCPackages(JobInfo jobInfo) throws Exception {
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
-			criteria.addOrder(Order.asc("packageNo"));
-			return (List<Subcontract>) criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getSCPackages(Job job)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	public List<Subcontract> obtainPackageList(String jobNumber) throws DatabaseOperationException {
 		if (GenericValidator.isBlankOrNull(jobNumber)){
 			logger.info("Fail: getPackagesList(String jobNumber)");
@@ -148,64 +119,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Object[]> getUnawardedPackageNos(JobInfo jobInfo) throws Exception{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
-			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			criteria.add(Restrictions.or
-							(Restrictions.and(
-									Restrictions.ne("subcontractStatus", 330), Restrictions.ne("subcontractStatus", 500)), Restrictions.isNull("subcontractStatus")));		
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("packageNo"))
-					.add(Projections.property("description"))
-					.add(Projections.property("subcontractStatus")));
-			criteria.addOrder(Order.asc("packageNo"));
-			return criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getUnawardedPackageNos(Job job)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Object[]> getAwardedPackageStore(JobInfo jobInfo) throws Exception{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
-			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			criteria.add(Restrictions.eq("subcontractStatus", 500));
-			criteria.setProjection(Projections.projectionList()
-					.add(Projections.property("packageNo"))
-					.add(Projections.property("description"))
-					.add(Projections.property("subcontractStatus")));
-			criteria.addOrder(Order.asc("packageNo"));
-			return criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getAwardedPackageNos(Job job)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getUneditableSubcontractNos(String jobNo) throws Exception{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo));
-			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));
-			//Getting Packages with sub-contract status > 160 except 340
-			criteria.add(Restrictions.gt("subcontractStatus", 160));
-			criteria.add(Restrictions.not(Restrictions.eq("subcontractStatus", 340)));
-			criteria.setProjection(Projections.property("packageNo"));
-			return criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getUneditableSubcontractNos(Job job)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<String> getAwardedPackageNos(JobInfo jobInfo) throws Exception{
 		try{
@@ -408,20 +321,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Subcontract> getPackagesFromList(JobInfo jobInfo, List<String> packageNos) throws Exception{
-		List<Subcontract> result = null;
-		try{			
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("jobInfo", jobInfo));
-			criteria.add(Restrictions.in("packageNo", packageNos));
-			result = (List<Subcontract>)criteria.list();
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-		return result;
-	}
-
 	public String getPackageDescription(JobInfo jobInfo, String packageNo) throws DatabaseOperationException{
 		try{			
 			Criteria criteria = getSession().createCriteria(this.getType());
@@ -450,87 +349,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 
 			tenderAnalysisHBdao.delete(tenderAnalysis);
 		}
-	}
-
-	/**
-	 * @author tikywong
-	 * May 24, 2011 4:48:38 PM
-	 * @throws DatabaseOperationException 
-	 */
-	@SuppressWarnings("unchecked")
-	public List<String> getReadyToUpdateWorkdoneQuantityPackageNos(String jobNumber) throws DatabaseOperationException {
-		try{			
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("jobInfo", "jobInfo");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
-			criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));			
-			criteria.add(Restrictions.and(Restrictions.isNotNull("packageNo"),Restrictions.ne("packageNo", "0")));
-			criteria.add(Restrictions.eq("splitTerminateStatus", "0"));
-			criteria.add(Restrictions.ne("paymentStatus", "F"));
-
-			criteria.setProjection(Projections.property("packageNo"));
-			criteria.addOrder(Order.asc("packageNo"));
-			
-			List<String> result = (List<String>)criteria.list();
-			//logger.info("NUMBER OF PACKAGES FOUND: "+result.size());
-			return result;
-		}catch(HibernateException e){
-			throw new DatabaseOperationException(e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Subcontract> obtainPackageListForSCPaymentPanel(String jobNumber) {
-		String[] packageNoArray; 
-		Criteria criteriaForPaymentCert = scPaymentCertHBDao.getSession().createCriteria(PaymentCert.class);
-		criteriaForPaymentCert.add(Restrictions.eq("jobNo", jobNumber.trim()));
-		List<PaymentCert> scPaymentCertList = criteriaForPaymentCert.list();
-		
-		if(scPaymentCertList.size()>0){
-			packageNoArray = new String[scPaymentCertList.size()];
-		} else {
-			packageNoArray = new String[0];
-		}
-		
-		for(int i = 0; i<packageNoArray.length; i++ ){
-			packageNoArray[i] = scPaymentCertList.get(i).getPackageNo();
- 		}
-		
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("jobInfo", "jobInfo");
-		criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim()));
-		criteria.add(Restrictions.eq("systemStatus", "ACTIVE"));			
-		criteria.add(Restrictions.and(Restrictions.isNotNull("packageNo"),Restrictions.ne("packageNo", "0")));
-		criteria.add(Restrictions.or(Restrictions.eq("subcontractStatus", Integer.valueOf(500)), Restrictions.in("packageNo", packageNoArray)));
-		criteria.addOrder(Order.asc("packageNo"));
-		return criteria.list();
-	}
-
-
-	@SuppressWarnings("unchecked")
-	public List<Subcontract> getScPackageListForSystemAdmin(String jobNo,String packageNo, String vendorNo, String packageStatus) throws DatabaseOperationException {
-		List<Subcontract> resultList = new LinkedList<Subcontract>();
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("jobInfo", "jobInfo");
-			if (jobNo!=null && !jobNo.equals("")){
-				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNo.trim()));
-			}
-			if (packageNo!=null && !packageNo.equals("")){
-				criteria.add(Restrictions.eq("packageNo", packageNo));
-			}
-			if (vendorNo!=null && !vendorNo.equals("")){
-				criteria.add(Restrictions.eq("vendorNo", vendorNo));
-			}
-			if (packageStatus!=null && !packageStatus.equals("")){
-				criteria.add(Restrictions.eq("packageStatus", packageStatus));
-			}
-
-			resultList = (List<Subcontract>) criteria.list();
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-		return resultList;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -563,36 +381,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo, String division, String jobNumber, String packageNumber, String paymentTerm, String paymentType) throws DatabaseOperationException {
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("vendorNo", vendorNo==null?null:vendorNo.trim()));
-		if (division!=null && !"".equals(division))
-			criteria.add(Restrictions.eq("jobInfo.division", division));
-		if (jobNumber!=null && !"".equals(jobNumber))
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-		if (packageNumber!=null && !"".equals(packageNumber))
-			criteria.add(Restrictions.eq("packageNo", packageNumber));
-		if (paymentType!=null && !"".equals(paymentType)){
-			if("I".equals(paymentType))
-				criteria.add(Restrictions.or(	Restrictions.isNull("paymentStatus"),
-							 Restrictions.or(	Restrictions.eq("paymentStatus", "I"),
-							 Restrictions.or(	Restrictions.eq("paymentStatus", ""),
-									 			Restrictions.eq("paymentStatus", " ")))));
-			else 
-				criteria.add(Restrictions.eq("paymentStatus", paymentType));
-		}
-		
-		if (paymentTerm!=null && !"".equals(paymentTerm))
-			criteria.add(Restrictions.eq("paymentTerms", paymentTerm)); 			
-			
-		criteria.createAlias("jobInfo", "jobInfo");
-		criteria.addOrder(Order.asc("jobInfo.jobNumber")).addOrder(Order.asc("packageNo"));
-		
-		return criteria.list();
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<Subcontract> obtainPackagesByVendorNo(String vendorNo) throws DatabaseOperationException {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
@@ -604,63 +392,6 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return criteria.list();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Subcontract> obtainSubcontractFilteredList(String subcontractorNumber, String division, String jobNumber, String packageNumber, String paymentStatus, String paymentType) throws DatabaseOperationException{
-		List<Subcontract> result = null;
-		try{			
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("jobInfo", "jobInfo");
-
-			if (division!=null && !"".equals(division))
-				criteria.add(Restrictions.eq("jobInfo.division", division));
-			if (jobNumber!=null && !"".equals(jobNumber))
-				criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-			if (packageNumber!=null && !"".equals(packageNumber))
-				criteria.add(Restrictions.eq("packageNo", packageNumber));
-			if (subcontractorNumber!=null && !"".equals(subcontractorNumber))
-				criteria.add(Restrictions.eq("vendorNo", subcontractorNumber)); 
-			if (paymentStatus!=null && !"".equals(paymentStatus)){
-				if("I".equals(paymentStatus))
-					criteria.add(Restrictions.or(	Restrictions.isNull("paymentStatus"),
-								 Restrictions.or(	Restrictions.eq("paymentStatus", "I"),
-								 Restrictions.or(	Restrictions.eq("paymentStatus", ""),
-										 			Restrictions.eq("paymentStatus", " ")))));
-				else 
-					criteria.add(Restrictions.eq("paymentStatus", paymentStatus));
-			}
-			
-			if (paymentType!=null && !"".equals(paymentType))
-				criteria.add(Restrictions.eq("paymentTerms", paymentType)); 
-			
-			//  Sort the subcontract list in Report > Finance > Subcontract List
-			criteria.addOrder(Order.asc("jobInfo.jobNumber")).addOrder(Order.asc("packageNo"));
-			result = (List<Subcontract>)criteria.list();
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> obtainSCPackageNosUnderPaymentRequisition(String jobNumber) {
-		List<String> packageNos = new ArrayList<String>();
-
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("jobInfo", "jobInfo");
-		if (jobNumber!=null && !"".equals(jobNumber))
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-
-		criteria.add(Restrictions.eq("paymentStatus", "D"));
-
-		criteria.setProjection(Projections.projectionList()
-				.add(Projections.property("packageNo"))
-		);
-
-		packageNos=criteria.list();
-
-		return packageNos;
-	}
-
 	/**@author koeyyeung
 	 * created on 24th Apr, 2015
 	 ** Call Stored Procedure to update F58001 from ScPackage**/

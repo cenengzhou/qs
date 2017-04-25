@@ -219,10 +219,4 @@ public class JasperReportHelper {
 	
 		return outputStream;
 	}
-	
-	public JasperReportHelper addSheetName(String name){
-		this.sheetNames.add(name);
-		return this;
-	}
-
 }

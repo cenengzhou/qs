@@ -1,6 +1,5 @@
 package com.gammon.qs.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AttachSubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetail;
-import com.gammon.qs.domain.Subcontract;
 
 @Repository
 public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcontractDetail> {
@@ -25,64 +23,12 @@ public class AttachSubcontractDetailHBDao extends BaseHibernateDao<AttachSubcont
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AttachSubcontractDetail> getSCDetailsAttachment(String jobNumber, String subcontractNo, String scDetailSequenceNo) throws DatabaseOperationException{
-		try{
-			List<AttachSubcontractDetail> resultList;
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
-			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.createAlias("subcontractDetail", "subcontractDetail");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-			criteria.add(Restrictions.eq("subcontractDetail.sequenceNo", new Integer (scDetailSequenceNo)));
-			resultList = criteria.list();
-			if(resultList == null)
-				resultList = new ArrayList<AttachSubcontractDetail>();
-			return resultList;
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-	}
-	@SuppressWarnings("unchecked")
-	public List<AttachSubcontractDetail> getSCDetailsAttachment(String jobNumber, String subcontractNo) throws DatabaseOperationException{
-		try{
-			List<AttachSubcontractDetail> resultList;
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
-			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.createAlias("subcontractDetail", "subcontractDetail");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-			resultList = criteria.list();
-			if(resultList == null)
-				resultList = new ArrayList<AttachSubcontractDetail>();
-			return resultList;
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<AttachSubcontractDetail> getSCDetailsAttachment(SubcontractDetail subcontractDetail) throws DatabaseOperationException{
 		try{
 			List<AttachSubcontractDetail> resultList;
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.eq("subcontractDetail", subcontractDetail));		
 			criteria.addOrder(Order.asc("sequenceNo"));
-			resultList = criteria.list();
-			return resultList;
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-	}
-	@SuppressWarnings("unchecked")
-	public List<AttachSubcontractDetail> getSCDetailsAttachment(Subcontract subcontract) throws DatabaseOperationException{
-		try{
-			List<AttachSubcontractDetail> resultList;
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontractDetail", "subcontractDetail");
-			criteria.createAlias("subcontractDetail.subcontract", "subcontract");
-			criteria.add(Restrictions.eq("subcontract", subcontract));		
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){

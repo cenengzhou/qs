@@ -1,6 +1,5 @@
 package com.gammon.qs.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,29 +25,9 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 	private Logger logger = Logger.getLogger(PaymentCertDetailHBDao.class.getName());
 	@Autowired
 	private PaymentCertHBDao paymentCertDao;
-	@Autowired
-	private SubcontractDetailHBDao scDetailsDao;
 
 	public PaymentCertDetailHBDao() {
 		super(PaymentCertDetail.class);
-	}
-
-	public boolean addSCPaymentDetail(PaymentCertDetail scPaymentDetail) throws DatabaseOperationException {
-		if (scPaymentDetail == null)
-			throw new NullPointerException();
-		try {
-			if (getPaymentDetail(scPaymentDetail) == null) {
-				scPaymentDetail.setCreatedDate(new Date());
-				scPaymentDetail.setCreatedUser(scPaymentDetail.getCreatedUser());
-				scPaymentDetail.setLastModifiedUser(scPaymentDetail.getLastModifiedUser());
-				this.saveOrUpdate(scPaymentDetail);
-			}
-		} catch (DatabaseOperationException e) {
-			logger.info("Fail: addSCPaymentCert(SCPaymentDetail scPaymentDetail)");
-			throw new DatabaseOperationException(e);
-		}
-
-		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,21 +42,6 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 
 		} catch (HibernateException he) {
 			logger.info("Fail: getSCPaymentDetail(SCPaymentCert scPaymentCert, String lineType)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-
-	public PaymentCertDetail getPaymentDetail(PaymentCertDetail paymentDetail) throws DatabaseOperationException {
-		if (paymentDetail == null)
-			throw new NullPointerException("SC Payment Detail is Null");
-		try {
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("scSeqNo", paymentDetail.getScSeqNo()));
-			criteria.add(Restrictions.sqlRestriction("Payment_Cert_ID = '" + (paymentCertDao.getSCPaymentCert(paymentDetail.getPaymentCert()).getId() + "'")));
-			return (PaymentCertDetail) criteria.uniqueResult();
-
-		} catch (HibernateException he) {
-			logger.info("Fail: getSCPaymentCert(PaymentDetail paymentDetail)");
 			throw new DatabaseOperationException(he);
 		}
 	}
@@ -98,26 +62,6 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 
 		} catch (HibernateException he) {
 			logger.info("Fail: getPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-
-	public boolean updateSCPaymentDetail(PaymentCertDetail scPaymentDetail) throws DatabaseOperationException {
-		if (scPaymentDetail == null)
-			throw new NullPointerException("SCPayment Cert is Null");
-		try {
-			PaymentCertDetail scPaymentDetailDB = getPaymentDetail(scPaymentDetail);
-			if (scPaymentDetailDB == null)
-				throw new DatabaseOperationException("Record of SCPaymentCert was not exist");
-			scPaymentDetailDB.setLineType(scPaymentDetail.getLineType());
-			scPaymentDetailDB.setBillItem(scPaymentDetail.getBillItem());
-			scPaymentDetailDB.setMovementAmount(scPaymentDetail.getMovementAmount());
-			scPaymentDetailDB.setCumAmount(scPaymentDetail.getCumAmount());
-			scPaymentDetailDB.setLastModifiedUser(scPaymentDetail.getLastModifiedUser());
-			saveOrUpdate(scPaymentDetailDB);
-			return true;
-		} catch (HibernateException he) {
-			logger.info("Fail: updateSCPaymentDetail(SCPaymentCert scPaymentDetail)");
 			throw new DatabaseOperationException(he);
 		}
 	}
@@ -285,15 +229,6 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		return criteria.list();
 	}
 
-	public long deleteDetailByJobSCPaymentNo(String jobNumber, Integer packageNo, Integer paymentCertNo) throws DatabaseOperationException {
-		long noOfRecord = 0;
-		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo.toString(), paymentCertNo);
-		getSession().merge(obtainSCPaymentDetailBySCPaymentCert(paymentCert));
-		Query query = getSession().createQuery("delete from PaymentCertDetail paymentCertDetail where Payment_Cert_ID =" + paymentCert.getId());
-		noOfRecord = query.executeUpdate();
-		return noOfRecord;
-	}
-
 	public long deleteDetailByPaymentCertID(Long paymentCertID) throws DatabaseOperationException {
 		long noOfRecord = 0;
 		getSession().clear();
@@ -302,48 +237,4 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 		return noOfRecord;
 	}
 
-	public void savePaymentCertDetails(List<PaymentCertDetail> scPaymentDetails) throws DatabaseOperationException {
-		PaymentCert currCert = null;
-		for (PaymentCertDetail scPaymentDetail : scPaymentDetails) {
-			if (currCert == null
-					|| !currCert.getSubcontract().getJobInfo().getJobNumber().equals(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber())
-					|| !currCert.getSubcontract().getPackageNo().equals(scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo())
-					|| !currCert.getPaymentCertNo().equals(scPaymentDetail.getPaymentCert().getPaymentCertNo()))
-				currCert = paymentCertDao.obtainPaymentCertificate(scPaymentDetail.getPaymentCert().getSubcontract().getJobInfo().getJobNumber(),
-						scPaymentDetail.getPaymentCert().getSubcontract().getPackageNo(),
-						scPaymentDetail.getPaymentCert().getPaymentCertNo());
-			scPaymentDetail.setPaymentCert(currCert);
-			scPaymentDetail.setCreatedUser(currCert.getCreatedUser());
-			scPaymentDetail.setLastModifiedUser(currCert.getLastModifiedUser());
-			scPaymentDetail.setCreatedDate(currCert.getCreatedDate());
-			if (scPaymentDetail.getSubcontractDetail() != null) {
-				scPaymentDetail.setSubcontractDetail(scDetailsDao.getSCDetail(scPaymentDetail.getSubcontractDetail()));
-			}
-			saveOrUpdate(scPaymentDetail);
-		}
-
-	}
-
-	public Double obtainAccumulatedPostedCertQtyByDetail(Long subcontractDetail_id) throws DatabaseOperationException{
-		try {
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("paymentCert", "paymentCert");
-			criteria.add(Restrictions.eq("paymentCert.paymentStatus", PaymentCert.PAYMENTSTATUS_APR_POSTED_TO_FINANCE));
-			criteria.createAlias("subcontractDetail", "subcontractDetail");
-			criteria.add(Restrictions.eq("subcontractDetail.id", subcontractDetail_id));
-			criteria.setProjection(Projections.sum("movementAmount"));
-			return criteria.uniqueResult() == null ? 0.0 : Double.valueOf(criteria.uniqueResult().toString());
-		} catch (Exception he) {
-			throw new DatabaseOperationException(he);
-		}
-	}
-
-	public int deleteSCPaymentDetailBySCPaymentCert(PaymentCert scPaymentCert) throws DatabaseOperationException{
-		int count = 0;
-		for(PaymentCertDetail scPaymentDetail : obtainSCPaymentDetailBySCPaymentCert(scPaymentCert)){
-			delete(scPaymentDetail);
-			count++;
-		}
-		return count;
-	}
 }

@@ -15,9 +15,7 @@ public class AccountCodeWrapper implements Serializable {
 	public void setJobNumber(String jobNumber) {
 		this.jobNumber = jobNumber;
 	}
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+
 	public AccountCodeWrapper() {
 	}
     public void setObjectAccount(String objectAccount) {

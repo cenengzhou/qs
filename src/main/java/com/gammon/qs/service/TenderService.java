@@ -25,7 +25,6 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.BpiItemHBDao;
-import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
@@ -35,7 +34,6 @@ import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.domain.BpiItem;
-import com.gammon.qs.domain.BpiItemResource;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.PaymentCert;
@@ -44,9 +42,6 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.Tender;
 import com.gammon.qs.domain.TenderDetail;
-import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.io.ExcelWorkbook;
-import com.gammon.qs.io.ExcelWorkbookProcessor;
 import com.gammon.qs.shared.util.CalculationUtil;
 @Service
 //SpringSession workaround: change "session" to "request"
@@ -69,13 +64,9 @@ public class TenderService implements Serializable {
 	@Autowired
 	private  ResourceSummaryHBDao resourceSummaryDao;
 	@Autowired
-	private  BpiItemResourceHBDao bpiItemResourceDao;
-	@Autowired
 	private  MasterListService masterListService;
 	@Autowired
 	private  AccountCodeWSDao accountCodeDao;
-	@Autowired
-	private  ExcelWorkbookProcessor excelWorkbookProcessor;
 	@Autowired
 	private  SubcontractService subcontractService;
 	@Autowired
@@ -87,11 +78,8 @@ public class TenderService implements Serializable {
 	@Autowired
 	private  AttachPaymentHBDao attachPaymentDao;
 	
-	
 	private  Logger logger = Logger.getLogger(TenderService.class.getName());
-	private List<TenderDetail> uploadCache = new ArrayList<TenderDetail>();
-	private Tender vendorTACache;
-
+	
 	public List<String> getUneditableTADetailIDs(String jobNo, String subcontractNo, Integer vendorNo){
 		List<String> uneditableTADetailIDs = new ArrayList<String>();
 		
@@ -121,415 +109,6 @@ public class TenderService implements Serializable {
 		
 		return uneditableTADetailIDs;
 	}
-	
-	
-	
-	public Boolean removeTenderAnalysisList(JobInfo job, String packageNo) throws Exception{
-		Subcontract scPackage = subcontractDao.obtainPackage(job, packageNo);
-		List<PaymentCert> scPaymentCertList = paymentCertDao.obtainSCPaymentCertListByPackageNo(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo());
-		if(scPaymentCertList!=null && scPaymentCertList.size()>0)
-			return null;
-		else
-			return tenderDao.removeTenderAnalysisListExceptBudgetTender(job, packageNo);
-	}
-	
-	
-	
-	public String uploadTenderAnalysisDetailsFromExcel(String jobNumber, String packageNo, byte[] file) throws Exception{		
-		if(uploadCache == null){
-			setUploadCache(new ArrayList<TenderDetail>());
-		}
-		else{
-			uploadCache.clear();
-		}
-		
-		String errorMessage = "";
-		
-		JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
-		List<ResourceSummary> resources = resourceSummaryDao.getResourceSummariesSearch(job, packageNo, "14*", null);
-		HashMap<String,Double> bqAccountAmounts = new HashMap<String, Double>();
-		HashMap<String,Double> excelAccountAmounts = new HashMap<String, Double>();
-		
-		for(ResourceSummary resource : resources){
-			String accountCode = resource.getObjectCode() + "-" + resource.getSubsidiaryCode();
-			if (bqAccountAmounts.get(accountCode) == null){
-				bqAccountAmounts.put(accountCode, resource.getQuantity()*resource.getRate());
-			}
-			else{
-				bqAccountAmounts.put(accountCode, bqAccountAmounts.get(accountCode) + resource.getQuantity()*resource.getRate());
-			}
-		}
-		try{
-			excelWorkbookProcessor.openFile(file);
-			excelWorkbookProcessor.readLine(0);
-			for(int i = 0; i < excelWorkbookProcessor.getNumRow() - 1; i++){
-				String[] line = excelWorkbookProcessor.readLine(7);
-				TenderDetail taDetail = new TenderDetail();
-				String bpi = (line[0] == null || line[0].trim().length() == 0) ? null : line[0].trim();
-				if(bpi != null && ((String)bpi).trim().length() > 0){
-					String[] bip = ((String)bpi).split("/");
-					if (bip.length != 5) {
-						errorMessage += "</br>Row " + (i+2) + " - B/P/I code is invalid." ;
-					}
-				}
-				String objectCode = (line[1] == null || line[1].trim().length() == 0) ? null : line[1].trim(); //ex object code: 140299.0 - convert to integer then back to string
-				String subsidiaryCode = (line[2] == null || line[2].trim().length() == 0) ? null : line[2].trim(); //ex subsid code: 2.9620999E7
-				if ((objectCode != null && objectCode.length() > 0) || (subsidiaryCode != null && subsidiaryCode.length() > 0)) {
-					try {
-						Integer.parseInt(objectCode);
-						//Integer.parseInt(subsidiaryCode); Now it can be 4X809999
-					} catch (Exception e) {
-						errorMessage += "</br>Row " + (i + 2) + " - Invalid Object code.";
-					}
-				}
-				if ((objectCode == null || ((String) objectCode).length() != 6)) {
-					errorMessage += "</br>Row " + (i + 2) + " - Object code must be 6 digits in length";
-				}
-				
-				if((subsidiaryCode == null || ((String)subsidiaryCode).length() != 8)){
-					errorMessage += "</br>Row " + (i+2) + " - Subsidiary code must be 8 digits in length";
-				}
-
-				
-				taDetail.setBillItem(bpi);
-				taDetail.setObjectCode(objectCode);
-				taDetail.setSubsidiaryCode(subsidiaryCode);
-				taDetail.setDescription((line[3] == null || line[3].trim().length() == 0) ? null : line[3].trim());
-				taDetail.setUnit((line[4] == null || line[4].trim().length() == 0) ? null : line[4].trim());
-				
-				String quantityString = (line[5] == null || line[5].trim().length() == 0) ? null : line[5].trim();
-				String rateString = (line[6] == null || line[6].trim().length() == 0) ? null : line[6].trim();
-				
-				if ((quantityString != null && quantityString.length() > 0) || (rateString != null && rateString.length() > 0)) {
-					try {
-						taDetail.setQuantity(Double.parseDouble(quantityString));
-						taDetail.setRateBudget(Double.parseDouble(rateString));
-
-					} catch (Exception e) {
-						errorMessage += "</br>Row " + (i + 2) + " - Invalid Number in the Quantity or Rate column.";
-					}
-				}
-				
-				String accountCode = taDetail.getObjectCode() + "-" + taDetail.getSubsidiaryCode();
-				if (excelAccountAmounts.get(accountCode) == null){
-					excelAccountAmounts.put(accountCode, taDetail.getQuantity()*taDetail.getRateBudget());
-				}
-				else{
-					Double excelTotal = excelAccountAmounts.get(accountCode);
-					excelAccountAmounts.put(accountCode, excelTotal + taDetail.getQuantity()*taDetail.getRateBudget());
-				}
-				
-				uploadCache.add(taDetail);
-			}
-			
-			for(String  accountCode : excelAccountAmounts.keySet()){
-				if(bqAccountAmounts.get(accountCode)==null){
-					logger.info("Invalid account code: " + accountCode);
-					errorMessage += "</br>Invalid account code: " + accountCode;
-				}
-			}
-			
-			for(String accountCode : bqAccountAmounts.keySet()){
-				if(excelAccountAmounts.get(accountCode)==null ){
-					logger.info("Omitted account code: " + accountCode);
-					errorMessage += "</br>Omitted account code: " + accountCode;
-				}
-				
-				logger.info("Account Code : " + accountCode + " dbTotal: " + CalculationUtil.round(bqAccountAmounts.get(accountCode),2) + " excelTotal : " + CalculationUtil.round(excelAccountAmounts.get(accountCode),2));
-				if(CalculationUtil.round(bqAccountAmounts.get(accountCode),2)!= CalculationUtil.round(excelAccountAmounts.get(accountCode),2)){
-					logger.info("Amounts are not balanced for account:" + accountCode);
-					errorMessage += "</br>Amounts are not balanced for account:" + accountCode;
-				}
-			}
-			
-			if(errorMessage!=null && errorMessage.trim().length()>0){
-				return errorMessage;
-			}else{
-				for (int i = 0; i < uploadCache.size(); i++) {
-					TenderDetail taDetail = uploadCache.get(0);
-					if (tenderDetailDao.getTenderAnalysisDetail(jobNumber, packageNo, i + 1, i + 1) != null) {
-						tenderDetailDao.update(taDetail);
-						uploadCache.remove(0);
-					} else {
-						taDetail.setSequenceNo(Integer.valueOf(i + 1));
-						taDetail.setResourceNo(Integer.valueOf(i + 1));
-						updateTenderAnalysisDetails(jobNumber, packageNo, 0, null, 1.0, null, null, uploadCache, true);
-					}
-				}
-			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return e.toString();
-		}
-		
-		return null;
-	}
-	
-	public String uploadTenderAnalysisVendorDetailsFromExcel(byte[] file) throws Exception{
-		//Store uploaded details in a cache (don't save them yet)
-		//If the upload is successful, the Input Vendor Feedback Rates window will be opened with the uploaded results (getVendorTACache())
-		vendorTACache = new Tender();
-		excelWorkbookProcessor.openFile(file);
-		excelWorkbookProcessor.readLine(0);
-		String[] vendorDetails = excelWorkbookProcessor.readLine(3);
-		//Fill in vendor/currency details - they will be validated when the details are saved later
-		try{
-			vendorTACache.setVendorNo(Integer.valueOf(vendorDetails[0]));
-		}catch(NumberFormatException e){
-			return "Please input a vendor no.";
-		}
-		vendorTACache.setCurrencyCode(vendorDetails[1].trim());
-		Double exchangeRate = null;
-		try{
-			exchangeRate = Double.valueOf(vendorDetails[2]);
-		}catch(NumberFormatException e){
-			return "Please input an exchange rate";
-		}
-		vendorTACache.setExchangeRate(exchangeRate);
-		excelWorkbookProcessor.readLine(0);
-		excelWorkbookProcessor.readLine(0);
-		for(int i = 0; i < excelWorkbookProcessor.getNumRow() - 4; i++){
-			String[] line = excelWorkbookProcessor.readLine(9);
-			TenderDetail taDetail = new TenderDetail();
-			if(line[0] != null && line[0].trim().length() != 0)
-				taDetail.setBillItem(line[0].trim());
-			taDetail.setObjectCode(Integer.valueOf(line[1].trim()).toString());
-			taDetail.setSubsidiaryCode(line[2].toString().trim());
-			taDetail.setDescription(line[3].trim());
-			taDetail.setUnit(line[4].trim());
-			taDetail.setQuantity(Double.valueOf(line[5].trim()));
-			//Put the budgeted rate in the feedbackRateDomestic field (to be displayed in the UI)
-			//the foreign/domestic fields will be properly filled when the details are saved later
-			if(line[6] != null && line[6].trim().length() != 0)
-				taDetail.setRateBudget(Double.valueOf(line[6].trim()));
-			taDetail.setRateSubcontract(Double.valueOf(line[7].trim()));
-			Integer resourceNo = Integer.valueOf(0);
-			//If the resourceNo column is blank or null, the detail is B1
-			if(line[8] != null && line[8].trim().length() != 0){
-				resourceNo = Integer.valueOf(line[8].trim());
-				taDetail.setLineType("BQ");
-			}
-			else
-				taDetail.setLineType("B1");
-			taDetail.setResourceNo(resourceNo);
-			taDetail.setTender(vendorTACache);;
-		}
-		return null;
-	}
-	
-	public ExcelFile downloadTenderAnalysisDetailsExcel(String jobNumber, String packageNo, String vendorNo) throws Exception{
-		List<TenderDetail> details = tenderDetailDao.getTenderAnalysisDetails(jobNumber, packageNo, 0);
-		if(details == null || details.size() == 0)
-			return null;
-		Tender vendorTender = null;
-		Map<TenderDetail, Double> baseDetailMap = null;
-		if(!vendorNo.equals("0")){
-			vendorTender = tenderDao.obtainTender(jobNumber, packageNo, Integer.valueOf(vendorNo));
-			baseDetailMap = new HashMap<TenderDetail, Double>(details.size());
-			for(TenderDetail detail : details)
-				baseDetailMap.put(detail, detail.getRateBudget());
-			details = tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(vendorTender);
-		}
-		
-		ExcelFile excel = new ExcelFile();
-		ExcelWorkbook doc = excel.getDocument();
-		String name = "Tender Analysis Vendor Feedback " + jobNumber + "-" + packageNo;
-		if(!vendorNo.equals("0"))
-			name += " (" + vendorNo + ")";
-		excel.setFileName(name + ExcelFile.EXTENSION);
-		doc.setCurrentSheetName(name);
-		//Insert rows for vendor details
-		String[] vendorDetails = new String[]{"Vendor No.", "Currency Code", "Exchange Rate"};
-		doc.insertRow(vendorDetails);
-		doc.setCellFontBold(0, 0, 0, 2);
-		if(vendorTender == null)
-			doc.insertRow(vendorDetails);
-		else
-			doc.insertRow(new String[]{vendorTender.getVendorNo().toString(), vendorTender.getCurrencyCode(), vendorTender.getExchangeRate().toString()});
-		doc.setCellFontEditable(1, 0, 1, 2);
-		doc.setCellValue(2, 6, "Note: If you add additional rows, please leave the Budgeted Rate blank");
-		//Insert headers
-		String[] colHeaders = new String[]{"B/P/I", "Object Code", "Subsidiary Code", "Description", "Unit", "Quantity", "Budgeted Rate", "Vendor Rate", "Resource No. (Don't Edit)"};
-		doc.insertRow(colHeaders);
-		doc.setCellFontBold(3, 0, 3, 8);
-		//Insert ta details
-		for(TenderDetail detail : details){
-			Double budgetedRate = detail.getRateBudget();
-			Double feedbackRate = Double.valueOf(0);
-			if(baseDetailMap != null){
-				budgetedRate = baseDetailMap.get(detail);
-				feedbackRate = detail.getRateSubcontract();
-			}
-			doc.insertRow(new String[]{detail.getBillItem() != null ? detail.getBillItem() : "",
-					detail.getObjectCode(),
-					detail.getSubsidiaryCode(),
-					detail.getDescription(),
-					detail.getUnit(),
-					detail.getQuantity().toString(),
-					budgetedRate != null ? budgetedRate.toString() : "",
-					feedbackRate.toString(), //vendor rate col
-					detail.getResourceNo() != null ? detail.getResourceNo().toString() : ""});
-		}
-		doc.setCellFontEditable(4, 7, 4+details.size(), 7);
-		//fix column widths
-		doc.setColumnWidth(0, 15);
-		doc.setColumnWidth(1, 15);
-		doc.setColumnWidth(2, 15);
-		doc.setColumnWidth(3, 40);
-		doc.setColumnWidth(4, 6);
-		doc.setColumnWidth(5, 15);
-		doc.setColumnWidth(6, 15);
-		doc.setColumnWidth(7, 15);
-		doc.setColumnWidth(8, 0);		
-		return excel;
-	}
-	
-	
-	
-	public void createOrUpdateTADetailFromResource(BpiItemResource resource) throws Exception{
-		logger.info("createOrUpdateTADetailFromResource resource ID = " + resource.getId());
-		String jobNumber = resource.getJobNumber();
-		String packageNo = resource.getPackageNo();
-		Tender tenderAnalysis = tenderDao.obtainTender(jobNumber, packageNo, Integer.valueOf(0));
-		//If TA has not been initiated, create TA with details copied from resources
-		if(tenderAnalysis == null){
-			JobInfo job = jobInfoDao.obtainJobInfo(jobNumber);
-			createTAFromResources(job, packageNo);
-			return;
-		}
-		
-		String bpi = "";
-		bpi += resource.getRefBillNo() == null ? "/" : resource.getRefBillNo() + "/";
-		bpi += resource.getRefSubBillNo() == null ? "/" : resource.getRefSubBillNo() + "/";
-		bpi += resource.getRefSectionNo() == null ? "/" : resource.getRefSectionNo() + "/";
-		bpi += resource.getRefPageNo() == null ? "/" : resource.getRefPageNo() + "/";
-		bpi += resource.getRefItemNo() == null ? "" : resource.getRefItemNo();
-		TenderDetail taDetail = tenderDetailDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
-		//if resource was already in package (taDetail exists) update taDetail, otherwise create a new one
-		if(taDetail != null){
-			Double totalBudget = tenderAnalysis.getBudgetAmount();
-			totalBudget -= taDetail.getQuantity() * taDetail.getRateBudget();
-			taDetail.updateFromResource(resource);
-			totalBudget += taDetail.getQuantity() * taDetail.getRateBudget();
-			tenderAnalysis.setBudgetAmount(totalBudget); //update TA budget
-			tenderDetailDao.saveOrUpdate(taDetail);
-			tenderDao.saveOrUpdate(tenderAnalysis);
-		}
-		else{
-			BpiItem bqItem = resource.getBpiItem();
-			String description = bqItem.getDescription();
-			if(description.length() > 255)
-				description = description.substring(0, 255);
-			taDetail = new TenderDetail(resource);
-			taDetail.setDescription(description);
-			taDetail.setTender(tenderAnalysis);
-			taDetail.setSequenceNo(tenderDetailDao.getNextSequenceNoForTA(tenderAnalysis));
-			Double totalBudget = tenderAnalysis.getBudgetAmount();
-			totalBudget += taDetail.getQuantity() * taDetail.getRateBudget();
-			tenderAnalysis.setBudgetAmount(totalBudget); //update TA budget
-			tenderDetailDao.saveOrUpdate(taDetail);
-			tenderDao.saveOrUpdate(tenderAnalysis);
-		}
-		
-		
-		/**
-		 * @author koeyyeung
-		 * Payment Requisition
-		 * Remove Pending Payment Cert
-		 * **/
-		deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo), subcontractDetailDao.obtainSCDetails(jobNumber, packageNo));
-
-	}
-	
-	public void deleteTADetailFromResource(BpiItemResource resource) throws Exception{
-		logger.info("deleteTADetailFromResource resource ID = " + resource.getId());
-		String jobNumber = resource.getJobNumber();
-		String packageNo = resource.getPackageNo();
-		
-		String bpi = "";
-		bpi += resource.getRefBillNo() == null ? "/" : resource.getRefBillNo() + "/";
-		bpi += resource.getRefSubBillNo() == null ? "/" : resource.getRefSubBillNo() + "/";
-		bpi += resource.getRefSectionNo() == null ? "/" : resource.getRefSectionNo() + "/";
-		bpi += resource.getRefPageNo() == null ? "/" : resource.getRefPageNo() + "/";
-		bpi += resource.getRefItemNo() == null ? "" : resource.getRefItemNo();
-		List<Tender> tenderAnlysisList = tenderDao.obtainTenderAnalysis(jobNumber, packageNo);
-		Double newBudget = null;
-		for (Tender tenderAnalysis:tenderAnlysisList){
-			logger.info("Getting taDetail with TA.ID: " + tenderAnalysis.getId() + ", bpi: " + bpi + ", resourceNo: " + resource.getResourceNo());
-			
-			TenderDetail taDetail = tenderDetailDao.getTenderAnalysisDetail(tenderAnalysis, bpi, resource.getResourceNo());
-			if(taDetail != null){
-				
-				if (Integer.valueOf(0).equals(tenderAnalysis.getVendorNo())){
-					Double totalBudget = tenderAnalysis.getBudgetAmount();
-					totalBudget -= taDetail.getQuantity() * taDetail.getRateBudget();
-					tenderAnalysis.setBudgetAmount(totalBudget); //update TA budget
-					newBudget=totalBudget;
-				}else
-					if (newBudget!=null)
-						tenderAnalysis.setBudgetAmount(newBudget);
-				 //Error from PD: org.springframework.dao.InvalidDataAccessApiUsageException: deleted object would be re-saved by cascade (remove deleted object from associations)
-				
-				tenderDetailDao.delete(taDetail);
-				tenderDao.saveOrUpdate(tenderAnalysis);
-			}
-		}
-		
-		/**
-		 * @author koeyyeung
-		 * Payment Requisition
-		 * Remove Pending Payment Cert
-		 * **/
-		deletePendingPaymentRequisition(paymentCertDao.obtainPaymentLatestCert(jobNumber, packageNo), subcontractDetailDao.obtainSCDetails(jobNumber, packageNo));
-	}
-	
-	private Tender createTAFromResources(JobInfo job, String packageNo) throws Exception{
-		Subcontract scPackage = subcontractDao.obtainSCPackage(job.getJobNumber(), packageNo);
-		//Create TA
-		Tender tenderAnalysis = new Tender();
-		tenderAnalysis.setJobNo(job.getJobNumber());
-		tenderAnalysis.setPackageNo(packageNo);
-		tenderAnalysis.setSubcontract(scPackage);
-		tenderAnalysis.setVendorNo(Integer.valueOf(0));
-		//tenderAnalysis.setStatus("100");
-		String currencyCode = accountCodeDao.obtainCurrencyCode(job.getJobNumber());
-		tenderAnalysis.setCurrencyCode(currencyCode);
-		tenderAnalysis.setExchangeRate(Double.valueOf(1));
-		
-		//Create TA Details
-		double totalBudget = 0; 
-		List<BpiItemResource> resources = bpiItemResourceDao.getResourcesByPackage(job.getJobNumber(), packageNo);
-		int i = 1;
-		for(BpiItemResource resource : resources){
-			BpiItem bqItem = resource.getBpiItem();
-			String description = bqItem.getDescription();
-			if(description.length() > 255)
-				description = description.substring(0, 255);
-			TenderDetail taDetail = new TenderDetail(resource);
-			taDetail.setDescription(description);
-			taDetail.setSequenceNo(Integer.valueOf(i++));
-			taDetail.setTender(tenderAnalysis);
-			totalBudget += taDetail.getQuantity() * taDetail.getRateBudget();
-			taDetail.setTender(tenderAnalysis);
-		}
-		tenderAnalysis.setBudgetAmount(totalBudget);
-		tenderDao.saveOrUpdate(tenderAnalysis);
-		return tenderAnalysis;
-	}
-	
-	public List<TenderDetail> obtainUploadCache() {
-		return uploadCache;
-	}
-	
-	public void setUploadCache(List<TenderDetail> uploadCache) {
-		this.uploadCache = uploadCache;
-	}
-	
-	public Tender obtainVendorTACache(){
-		return vendorTACache;
-	}
-	
 	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public List<TenderDetail> obtainTenderDetailList(String jobNo, String packageNo, Integer vendorNo) throws Exception{

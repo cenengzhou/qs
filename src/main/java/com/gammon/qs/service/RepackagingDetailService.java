@@ -23,7 +23,6 @@ import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetRequestListObj;
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetRequestObj;
 import com.gammon.jde.webservice.serviceRequester.InsertRepackagingBudgetManager.getInsertRepackagingBudget.InsertRepackagingBudgetResponseObj;
-import com.gammon.pcms.application.User;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.dao.RepackagingDetailHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
@@ -36,7 +35,6 @@ import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
-import com.gammon.qs.wrapper.EmailMessage;
 import com.gammon.qs.wrapper.RepackagingDetailComparisonWrapper;
 import com.gammon.qs.wrapper.RepackagingPaginationWrapper;
 @Service
@@ -92,134 +90,6 @@ public class RepackagingDetailService implements Serializable {
 		return entry;
 	}
 	
-	
-	
-	/*public ExcelFile downloadRepackagingDetailExcelFile(String repackagingEntryId, String packageNo, String objectCode, String subsidiaryCode, boolean changesOnly) throws Exception  {
-		List<RepackagingDetailComparisonWrapper> resultList = new ArrayList<RepackagingDetailComparisonWrapper>();
-		
-		Repackaging repackagingEntry = repackagingEntryDao.getRepackagingEntryWithJob(Long.parseLong(repackagingEntryId));
-		if(repackagingEntry == null) {
-			return null;
-		}
-		
-		List<RepackagingDetailComparisonWrapper> currentDetails = searchRepackagingDetails(repackagingEntry, packageNo, objectCode, subsidiaryCode);
-		if(currentDetails == null) {
-			return null;
-		}
-			
-		HashMap<Integer, RepackagingDetailComparisonWrapper> wrappers = new HashMap<Integer, RepackagingDetailComparisonWrapper>(currentDetails.size());
-		for(RepackagingDetailComparisonWrapper detail : currentDetails) {
-			wrappers.put(detail.keyCode().hashCode(), detail);			
-		}
-		
-		if(repackagingEntry.getRepackagingVersion() > 1) {
-			Repackaging previousEntry = repackagingEntryDao.getRepackagingEntry(repackagingEntry.getJobInfo(), repackagingEntry.getRepackagingVersion() - 1);
-			List<RepackagingDetailComparisonWrapper> previousDetails = searchRepackagingDetails(previousEntry, packageNo, objectCode, subsidiaryCode);
-			if(previousDetails != null) {
-				for(RepackagingDetailComparisonWrapper detail : previousDetails) {
-					Double previousAmount = detail.getAmount() != null ? detail.getAmount() : Double.valueOf(0);
-					RepackagingDetailComparisonWrapper wrapper = wrappers.remove(detail.keyCode().hashCode());
-					if(wrapper != null) {
-						wrapper.setPreviousAmount(previousAmount);
-						if(changesOnly) {
-							if(!wrapper.getAmount().equals(previousAmount)) {
-								resultList.add(wrapper);
-							}
-						} else {
-							resultList.add(wrapper);
-						}
-					} else {
-						detail.setPreviousAmount(previousAmount);
-						detail.setAmount(null);
-						resultList.add(detail);
-					}
-				}
-			}			
-		}
-		
-		for(RepackagingDetailComparisonWrapper wrapper : wrappers.values()) {
-			resultList.add(wrapper);
-		}
-		
-		Collections.sort(resultList);
-		
-		logger.info("DOWNLOAD EXCEL - REPACKAGING DETAIL: " + resultList.size());
-		
-		if(resultList==null || resultList.size()==0)
-			return null;
-	
-		ExcelFile excelFile = new ExcelFile();
-	
-		RepackagingDetailExcelGenerator excelGenerator = new RepackagingDetailExcelGenerator(resultList);			
-		excelFile = excelGenerator.generate();
-	
-		return excelFile;
-	}
-	
-	public Boolean clearCache(){
-		setCachedResults(null);
-		return Boolean.TRUE;
-	}
-	*/
-	
-	
-	public String sendRepackagingConfirmationEmail (EmailMessage emailMessage){
-		logger.info("sendRepackagingConfirmationEmail(STARTED)");
-		throw new RuntimeException("GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.sendRepackagingConfirmationEmail (EmailMessage emailMessage)");
-		//TODO: GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.sendRepackagingConfirmationEmail (EmailMessage emailMessage);
-//		@SuppressWarnings("unused")
-//		List<User> user = new ArrayList<User>();
-//		try {
-//			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
-//			//logger.info(new Gson().toJson(user));
-//		} catch (DatabaseOperationException e) {
-//			e.printStackTrace();
-//		}
-//		//logger.info("Test to send email" + user.size());
-//		Boolean emailSent = mailService.sendEmail(emailMessage);
-//		if(emailSent){
-//			return null;
-//		}else{
-//			return "Fail to send out the email. Please check the recipient address.";
-//		}
-	}
-	
-	public List<User> obtainRepackagingEmailRecipients() {
-		throw new RuntimeException("GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.obtainRepackagingEmailRecipients()");
-		//TODO: GSF | List<User> obtainUserByAuthorities(ROLE_QS_APPROVER_ID) | remark RepackagingDetailService.obtainRepackagingEmailRecipients()
-//		List<User> user = new ArrayList<User>();
-//		try {
-//			user = userDao.obtainUserByAuthorities(ROLE_QS_APPROVER_ID);
-//		} catch (DatabaseOperationException e) {
-//			e.printStackTrace();
-//		}
-//		logger.info(new Gson().toJson(user));
-//		return user;
-	}
-
-	/**
-	 * Created by Henry Lai
-	 * 05-Nov-2014
-	 */
-	public List<String> obtainUsernamesByEmails(List<String> emailAddressList) {
-		throw new RuntimeException("GSF | User obtainByEmail(emailAddress) | remark RepackagingDetailService.obtainUsernamesByEmails(List<String> emailAddressList)");
-		//TODO: GSF | User obtainByEmail(emailAddress) | remark RepackagingDetailService.obtainUsernamesByEmails(List<String> emailAddressList);
-//		List<String> usernames = new ArrayList<String>();
-//		for (int i=0; i<emailAddressList.size(); i++){
-//			User user = null;
-//			try {
-//				user = userDao.obtainByEmail(emailAddressList.get(i));
-//			} catch (DatabaseOperationException e) {
-//				e.printStackTrace();
-//			}
-//			if(user!=null)
-//				usernames.add(user.getUsername());
-//			else
-//				usernames.add(null);
-//		}
-//		return usernames;
-	}
-
 	public void setCachedResults(List<RepackagingDetailComparisonWrapper> cachedResults) {
 		this.cachedResults = cachedResults;
 	}

@@ -22,7 +22,6 @@ import com.gammon.jde.webservice.serviceRequester.InsertJournalEntryTransactions
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
 import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
@@ -171,109 +170,7 @@ public class CreateGLWSDao {
 
 		return ediTransactNumber;
 	}
-	
-	/**
-	 * Providing a list of provision and Insert the records to JDE General Ledger (GL) by Package
-	 *
-	 * @param job
-	 * @param scPackage
-	 * @param provisionList
-	 * @param glDate
-	 * @param user
-	 * @param ediBatchNumber
-	 * @param lastEdiTransactionNumber
-	 * @return
-	 * @throws Exception
-	 * @author	tikywong
-	 * @since	Apr 11, 2016 12:08:08 PM
-	 */
-	public Integer insertProvisionToGLByPackage(JobInfo job, Subcontract scPackage, List<ProvisionWrapper> provisionList, Date glDate, String user, String ediBatchNumber, Integer lastEdiTransactionNumber) throws Exception {
-		logger.info("EDI Batch Number: " + ediBatchNumber + " Job: " + job.getJobNumber() + " Package: " + scPackage.getPackageNo());
-
-		// For calling web service to insert the records to JDE GL
-		InsertJournalEntryTransactionsRequestListObj requestList = new InsertJournalEntryTransactionsRequestListObj();
-		requestList.setInsertFields(new ArrayList<InsertJournalEntryTransactionsRequestObj>());
-
-		Calendar currentTime = Calendar.getInstance();
-		Integer timeLastUpdated = currentTime.get(Calendar.HOUR_OF_DAY) * 1000 + currentTime.get(Calendar.MINUTE) * 100 + currentTime.get(Calendar.SECOND);
-
-		// Increment EDI Transaction Number (One transaction number for each package)
-		Integer ediTransactNumber = (++lastEdiTransactionNumber);
-
-		// Get period of Company from JDE
-		GetPeriodYearResponseObj periodYearWrapper = new GetPeriodYearResponseObj();
-		periodYearWrapper = getPeriodYear(job.getCompany(), glDate);
-		if (periodYearWrapper.getDateOther6() == null)
-			periodYearWrapper.setDateOther6(glDate);
-
-		// Reset "EDI Line Number" for every package
-		Integer ediLineNumber = 1;
-		for (int i = 0; i < provisionList.size(); i++) {
-			ValidateAccNumResponseObj accountCode = validateAccNumberResponseObj(provisionList.get(i).getJobNumber(), provisionList.get(i).getObjectCode(), provisionList.get(i).getSubsidaryCode());
-
-			// Prepare record
-			InsertJournalEntryTransactionsRequestObj requestObj = new InsertJournalEntryTransactionsRequestObj();
-			requestObj.setEdiUserId(user.toUpperCase());
-			requestObj.setEDIType(SC_PROVISION__TRANSACTION_TYPE);
-			requestObj.setEDISeq(ediLineNumber);
-			requestObj.setEdiTransactNumber(ediTransactNumber.toString());
-			requestObj.setEdiDocumentType(SC_PROVISION__DOCUMENT_TYPE);
-			requestObj.setEdiLineNumber(new Double(ediLineNumber));
-			requestObj.setEdiSendRcvIndicator(SC_PROVISION__EDI_SEND_RECEIVE_INDICATOR);
-			requestObj.setEdiSuccessfullyProcess(SC_PROVISION__ediSuccessfullyProcess);
-			requestObj.setEdiTransactionAction(SC_PROVISION__ediTransactionAction);
-			requestObj.setEdiTransactionType(SC_PROVISION__TRANSACTION_TYPE);
-			requestObj.setEdiBatchNumber(ediBatchNumber);
-			requestObj.setCompanyKey(job.getCompany());
-			requestObj.setDocumentType(SC_PROVISION__DOCUMENT_TYPE);
-			requestObj.setDateForGLandVoucherJULIA(periodYearWrapper.getDateOther6());
-			requestObj.setBatchType(SC_PROVISION__batchType);
-			requestObj.setDateBatchJulian(periodYearWrapper.getDateOther6());
-			requestObj.setBatchTime(timeLastUpdated);
-			requestObj.setCompany(job.getCompany());
-			requestObj.setAcctNoInputMode(accountCode.getAccountNumberInputModeUnknown());
-			requestObj.setAccountId(accountCode.getAccountID());
-			requestObj.setCostCenter(provisionList.get(i).getJobNumber());
-			requestObj.setObjectAccount(provisionList.get(i).getObjectCode());
-			requestObj.setSubsidiary(provisionList.get(i).getSubsidaryCode());
-			requestObj.setSubledger(provisionList.get(i).getSubcontractNo());
-			requestObj.setSubledgerType(SC_PROVISION__subledgerType);
-			requestObj.setLedgerType(SC_PROVISION__ledgerType);
-			requestObj.setPeriodNoGeneralLedge(periodYearWrapper.getPeriodNumberGeneralLedger());
-			requestObj.setCentury(periodYearWrapper.getCentury());
-			requestObj.setFiscalYear1(periodYearWrapper.getFiscalYear());
-			requestObj.setCurrencyCodeFrom(periodYearWrapper.getCurrencyCodeFrom());
-			requestObj.setAmountField(provisionList.get(i).getCumAmount());
-			requestObj.setReverseOrVoidRV(SC_PROVISION__reverseOrVoidRV);
-			requestObj.setNameAlphaExplanation(provisionList.get(i).getJobNumber() + "/" + provisionList.get(i).getSubcontractNo() + "/Provision/" + periodYearWrapper.getPeriodNumberGeneralLedger() + "/" + periodYearWrapper.getCentury() + periodYearWrapper.getFiscalYear());
-			requestObj.setDateCheckJ(periodYearWrapper.getDateOther6());
-			requestObj.setLineNumber(new Double(ediLineNumber));
-			requestObj.setTransactionOriginator(wsConfig.getUserName());
-			requestObj.setUserId(wsConfig.getUserName());
-			requestObj.setProgramId(WSPrograms.JP5909ZI_InsertJournalEntryTransactionsManager);
-			requestObj.setWorkStationId(environmentConfig.getNodeName());
-			requestObj.setDateUpdated(new Date());
-			requestObj.setTimeLastUpdated(timeLastUpdated);
-			requestObj.setCurrencyMode(SC_PROVISION__currencyMode);
-
-			// Add new provision record
-			requestList.getInsertFields().add(requestObj);
-			ediLineNumber++;
-		}
-
-		// insert to JDE by package
-		if (requestList.getInsertFields().size() > 0) {
-			Long numOfRecords = insertToGL(requestList);
-			logger.info("No of rows inserted to GL: "+ numOfRecords);
-
-			// Reset the list
-			requestList.getInsertFields().clear();
-		}
-
-		return ediTransactNumber;
-	}
-	
-	
+		
 	/**
 	 * JDE web service to post records that have already inserted to General Ledger (GL) earlier
 	 *

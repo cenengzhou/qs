@@ -172,27 +172,4 @@ public class UnitWSDao {
 		return getUDCMap("59", "ST");
 	}
 
-	public List<UDC> getTrimedUDCList(String productCode, String userDefinedCodes) {
-		GetTrimUDCRequestObj requestObj = new GetTrimUDCRequestObj();
-
-		requestObj.setProductCode(productCode);
-		requestObj.setUserDefinedCodes(userDefinedCodes);
-
-		GetTrimUDCResponseListObj responseListObj = (GetTrimUDCResponseListObj) getTrimUDCListResponseWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-
-		List<UDC> resultList = new ArrayList<UDC>();
-		if (responseListObj == null ||
-				responseListObj.getGetTrimUDCResponseObj() == null || responseListObj.getGetTrimUDCResponseObj().size() == 0)
-			return resultList;
-
-		for (GetUnitDescriptionResponseObj respondObj : responseListObj.getGetTrimUDCResponseObj()) {
-			UDC udc = new UDC();
-
-			udc.setCode(respondObj.getCode());
-			udc.setDescription(respondObj.getDescription());
-
-			resultList.add(udc);
-		}
-		return resultList;
-	}
 }

@@ -2,8 +2,6 @@ package com.gammon.pcms.service;
 
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -410,22 +408,6 @@ public class HTMLService implements Serializable{
 	public HTMLService() {
 	}
 	
-	public String amountRender(Double doubleValue){
-
-		NumberFormat formatter = new DecimalFormat("#,##0.00");
-		String refinedNumber = formatter.format(doubleValue);
-
-		return refinedNumber;
-	}
-	
-	public String blackberryAmountRender(Double doubleValue){
-
-		NumberFormat formatter = new DecimalFormat("#,##0");
-		String refinedNumber = formatter.format(doubleValue);
-
-		return refinedNumber;
-	}
-
 	public String receiveVendorName(String addressNumber) throws Exception {
 		return masterListDao.getVendorNameList(addressNumber).get(0).getVendorName();
 	}

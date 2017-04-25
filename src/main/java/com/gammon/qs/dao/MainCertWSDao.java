@@ -39,7 +39,6 @@ import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
-import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 @Repository
 public class MainCertWSDao {
@@ -71,15 +70,6 @@ public class MainCertWSDao {
 	private WSConfig wsConfig;
 	@Autowired
 	private EnvironmentConfig environmentConfig;
-
-	/**
-	 * @author matthewatc
-	 * 16:07:06 19 Dec 2011 (UTC+8)
-	 * Method stub included to satisfy interface MainContractCertificateDao.
-	 */
-	public PaginationWrapper<MainCert> getMainContractCertificateByPage(String jobNumber, int pageNum) throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("pagination not supported in WS implementation");
-	}
 
 	public long insertMainContractCert(MainCertRequest mainCertWrapper) throws DatabaseOperationException {
 		logger.info("Inserting Main Contract Certificate to JDE...");
@@ -206,11 +196,6 @@ public class MainCertWSDao {
 		return responseObj.getBusinessUnit();
 	}
 
-	@Deprecated
-	public Date getAsAtDate(String jobNumber, Integer mainCertNumber) {
-		return null;
-	}
-
 	public long insertAsAtDate(String jobNumber, Integer mainCertNumber, Date asAtDate, String userId) {
 		MainCertificateAsAtDateInsertRequestObj requestObj = new MainCertificateAsAtDateInsertRequestObj();
 		Calendar now = Calendar.getInstance();
@@ -274,13 +259,6 @@ public class MainCertWSDao {
 			//logger.info("Account Receivable haven't received yet.");
 			return null;
 		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public MainCert searchLatestPostedCert(String jobNumber) {
-		return null;
 	}
 
 }

@@ -95,11 +95,6 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 		return repackagingEntry;
 	}
 	
-	public void initializeJob(Repackaging repackagingEntry){
-		if(!Hibernate.isInitialized(repackagingEntry.getJobInfo()))
-			Hibernate.initialize(repackagingEntry.getJobInfo());
-	}
-	
 	public Repackaging getLatestRepackaging(JobInfo jobInfo) throws Exception{
 		Repackaging repackagingEntry = null;
 		try{
@@ -117,18 +112,6 @@ public class RepackagingHBDao extends BaseHibernateDao<Repackaging> {
 			throw new DatabaseOperationException(ex);
 		}
 		return repackagingEntry;
-	}
-	
-	public Long getIdOfLatestRepackagingEntry(JobInfo jobInfo) throws Exception{
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("jobInfo", jobInfo));
-		criteria.setProjection(Projections.max("repackagingVersion"));
-		Integer latestVersion = (Integer)criteria.uniqueResult();
-		criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("jobInfo", jobInfo));
-		criteria.add(Restrictions.eq("repackagingVersion", latestVersion));
-		criteria.setProjection(Projections.property("id"));
-		return (Long)criteria.uniqueResult();
 	}
 	
 	public Repackaging clearDetailsFromEntry(Long id){

@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -42,8 +37,6 @@ import com.gammon.jde.webservice.serviceRequester.GetSubcontractorWorkScopeQuery
 import com.gammon.jde.webservice.serviceRequester.GetSubcontractorWorkScopeQueryManager.getSubContractorWorkScope_Refactor.GetSubcontractorWSResponseObj;
 import com.gammon.jde.webservice.serviceRequester.GetUpdateAccMasterUsingCodeTypeCodeManager.getUpdateAccMasterUsingCodeTypeCode.UpdateAccMasterByObjSubRequestObj;
 import com.gammon.jde.webservice.serviceRequester.GetUpdateAccMasterUsingCodeTypeCodeManager.getUpdateAccMasterUsingCodeTypeCode.UpdateAccMasterByObjSubResponseObj;
-import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumRequestObj;
-import com.gammon.jde.webservice.serviceRequester.ValidateAccNumManager.getValidateAccNum.ValidateAccNumResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
@@ -524,37 +517,7 @@ public class MasterListWSDao{
 		}
 		return responseObj.getDescription();
 	}
-	public MasterListVendor getVendor(String vendorNo){
-		List<String> addressBookTypeList = new ArrayList<String>();
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-		for(MasterListVendor curVendor:obtainAddressBookList(addressBookTypeList)){
-			if (curVendor.getVendorNo().trim()!= null && vendorNo.trim().equalsIgnoreCase(curVendor.getVendorNo().trim()))
-				return curVendor;
-		}
-		return null;
-	}
-	
-	public Map<String, Set<String>> obtainSubcontractorWorkScopeMap(String subcontractorNo, String workscope){
-		GetSubcontractorWSRequestObj requestObj = new GetSubcontractorWSRequestObj();
-		Map<String, Set<String>> subcontractorWorkscopeMap = new TreeMap<>();
-		requestObj.setSupplementalDatabaseCode("AB");
-		requestObj.setTypeofData("WS");
-		if(StringUtils.isNotEmpty(workscope)) requestObj.setUserDefinedCode(workscope);
-		if(StringUtils.isNotEmpty(subcontractorNo)) requestObj.setSuppDataNumericKey1(new Integer(subcontractorNo));
-		GetSubcontractorWSResponseListObj responseListObj = (GetSubcontractorWSResponseListObj) getSubcontractorWorkScopeWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		for (GetSubcontractorWSResponseObj curResponseObj : responseListObj.getGetSubcontractorWSResponseObj()) {
-			String subcon = curResponseObj.getSuppDataNumericKey1().toString();
-			if(subcontractorWorkscopeMap.get(subcon) == null) {
-				subcontractorWorkscopeMap.put(subcon, new TreeSet<String>());
-			}
-			if(StringUtils.isNotEmpty(curResponseObj.getUserDefinedCode())) {
-				subcontractorWorkscopeMap.get(subcon).add(curResponseObj.getUserDefinedCode().trim());
-			}
-		}
-		return subcontractorWorkscopeMap;
-	}
-	
+
 	/**
 	 * @author tikywong
 	 * modified on April 19, 2013
@@ -629,28 +592,6 @@ public class MasterListWSDao{
 		return subcontractorList;
 	}
 
-	public boolean validateAccountNum(String jobNumber, String objectCode, String subsidiaryCode){
-		if(jobNumber == null || objectCode == null || subsidiaryCode == null)
-			return false;
-		ValidateAccNumRequestObj accNumRequest = new ValidateAccNumRequestObj();
-		accNumRequest.setJDEnterpriseOneEventPoint01("5");
-		accNumRequest.setJDEnterpriseOneEventPoint02("2");
-		accNumRequest.setBusinessUnit(jobNumber);
-		accNumRequest.setObjectAccount(objectCode);
-		accNumRequest.setSubsidiary(subsidiaryCode);
-		try{
-			ValidateAccNumResponseObj accNumResponse = (ValidateAccNumResponseObj) validateAccNumWebServiceTemplate.marshalSendAndReceive(accNumRequest, 
-					new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-			if(accNumResponse.getAccountID() == null || accNumResponse.getAccountID().trim().length() == 0){
-				return false;
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	
 	public boolean createAccountCode(String jobNumber, String objectCode, String subsidiaryCode) {
 		UpdateAccMasterByObjSubRequestObj requestObj = new UpdateAccMasterByObjSubRequestObj();
 		requestObj.setJobNumber(jobNumber);

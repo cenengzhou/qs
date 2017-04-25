@@ -25,7 +25,6 @@ import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.util.WildCardStringFinder;
 
 @Service
 //SpringSession workaround: change "session" to "request"
@@ -46,9 +45,6 @@ public class JobInfoService {
 	private AdminService adminService;
 	@Autowired
 	private SecurityService securityService;
-	
-	//server cache 
-	private List<JobInfo> jobList;
 	
 	public JobInfoHBDao getJobHBDao() {
 		return jobHBDao;
@@ -82,61 +78,8 @@ public class JobInfoService {
 		return adminService.obtainCanAccessJobInfoList(isCompletedJob);
 	}
 
-	public List<JobInfo> getJobListBySearchStr(String searchJobStr) throws Exception {
-		boolean isRefreshed = false;
-
-		if (this.jobList == null) {
-			jobList = getAllJobNoAndDescription();
-			isRefreshed = true;
-		}
-		if (searchJobStr == null || "*".equals(searchJobStr) || "".equals(searchJobStr)) {
-			if (!isRefreshed)
-				jobList = this.getAllJobNoAndDescription();
-
-			return jobList;
-		}
-
-		List<JobInfo> resultList = searchJobInLocalCacheList(searchJobStr);
-
-		// refresh list and search again
-		if (resultList.size() == 0 && !isRefreshed) {
-			this.jobList = this.getAllJobNoAndDescription();
-			return searchJobInLocalCacheList(searchJobStr);
-		}
-
-		// trim size
-		if (resultList != null && resultList.size() > 101) {
-			List<JobInfo> returnList = new ArrayList<JobInfo>();
-			returnList.addAll(resultList.subList(0, 101));
-
-			return returnList;
-		}
-		return resultList;
-	}
-	
-	private List<JobInfo> searchJobInLocalCacheList(String searchJobStr) throws Exception {
-
-		List<JobInfo> resultJobList = new ArrayList<JobInfo>();
-
-		for (JobInfo curJob : this.jobList) {
-			String curJobNumber = curJob.getJobNumber().toString().trim();
-			String curJobName = curJob.getDescription() != null ? curJob.getDescription().trim() : "";
-
-			WildCardStringFinder finder = new WildCardStringFinder();
-			if (finder.isStringMatching(curJobNumber, searchJobStr) || finder.isStringMatching(curJobName, "*" + searchJobStr + "*"))
-				resultJobList.add(curJob);
-		}
-
-		return resultJobList;
-	}
-
 	public JobInfo obtainJob(String jobNumber) throws DatabaseOperationException {
 		return jobHBDao.obtainJobInfo(jobNumber);
-	}
-
-	public String getCurrentRepackagingStatusByJobNumber(String jobNumber) throws Exception{	
-		JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-		return job.getRepackagingType();
 	}
 
 	public Boolean updateJob(JobInfo job) throws DatabaseOperationException, ValidateBusinessLogicException {
@@ -211,23 +154,6 @@ public class JobInfoService {
 	}
 	
 	/**
-	 * @author koeyyeung
-	 * created on 19 April, 2013
-	 * @author tikywong
-	 * modifiied on 09 August, 2013
-	 */
-	public Boolean isChildJobWithSingleParentJob(String jobNo) throws DatabaseOperationException {
-		List<String> parentJobList = obtainParentJobList(jobNo);
-		
-		Boolean hasSingleParentJob = false;	
-		if(parentJobList.size()==1)
-			hasSingleParentJob = true;
-		
-		logger.info("Job: "+jobNo+" has single Parent Job? "+hasSingleParentJob);
-		return hasSingleParentJob;
-	}
-	
-	/**
 	 * 
 	 * @author tikywong
 	 * created on Aug 9, 2013 3:08:08 PM
@@ -251,37 +177,6 @@ public class JobInfoService {
 	}
 	
 	/*Create by irischau on 15 Apr 2014*/
-	public List<JobInfo> obtainJobListByDivision(String searchStr, String division) throws Exception{
-		logger.info("obtainJobListByDivision --> STARTED");
-		List<JobInfo> jobList = new ArrayList<JobInfo>();
-		List<JobInfo> resultJobList = new ArrayList<JobInfo>();
-		
-		if(division!=null && division.length()>0){
-			jobList = jobHBDao.obtainJobsByDivCoJob(division, null, null);
-			logger.info("1. jobList size : " + jobList.size());
-		}
-		
-		if(division==null && searchStr!=null && searchStr.length()>0){
-			jobList = jobHBDao.obtainJobsByDivCoJob(null, null, null);
-			logger.info("2. jobList size : " + jobList.size());
-		}
-		if(jobList==null || jobList.size()==0){
-			return getJobListBySearchStr(searchStr);
-		}else{
-			for (JobInfo curJob : jobList) {
-				String curJobNumber = curJob.getJobNumber().toString().trim();
-				String curJobName = curJob.getDescription() != null ? curJob.getDescription().trim() : "";
-
-				WildCardStringFinder finder = new WildCardStringFinder();
-				if (finder.isStringMatching(curJobNumber, searchStr) || finder.isStringMatching(curJobName, "*" + searchStr + "*"))
-					resultJobList.add(curJob);
-			}
-			logger.info("RETURN - resultJobList");
-			return resultJobList;
-		}
-	}
-	
-	/*Create by irischau on 15 Apr 2014*/
 	public List<String> obtainAllJobDivision() throws DatabaseOperationException{
 		return jobHBDao.obtainAllJobDivision();
 	}
@@ -293,15 +188,6 @@ public class JobInfoService {
 		return jobHBDao.obtainAllJobCompany();
 	}
 
-	public List<JobInfo> obtainJobsLikeByDivCoJob(String division, String company,
-			String jobNo) throws Exception {
-		return jobHBDao.obtainJobsLikeByDivCoJob(division, company, jobNo);
-	}
-	
-	public List<String> obtainJobInfoByCompany(String company) throws DatabaseOperationException{
-		return jobHBDao.obtainJobNumberByCompany(company);
-	}
-	
 	/*************************************** FUNCTIONS FOR PCMS **************************************************************/
 	public String updateJobInfo(JobInfo job) throws Exception {
 		String error = "";

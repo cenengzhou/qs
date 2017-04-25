@@ -366,7 +366,6 @@ public class ResourceSummary extends BasePersistedObject implements Comparable<R
 		return (currIVAmount !=null && rate !=null && currIVAmount !=0 && rate !=0 ? round(currIVAmount/rate, 4): 0.0);
 	}
 	
-	
 	@ManyToOne 
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "Job_Info_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_ResourceSummary_JobInfo_PK"))

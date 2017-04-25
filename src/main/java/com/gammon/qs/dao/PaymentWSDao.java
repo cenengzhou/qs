@@ -1,32 +1,24 @@
 package com.gammon.qs.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.UnmarshallingFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import com.gammon.jde.webservice.serviceRequester.GetAPRecordsManager.getAPRecords.GetAPRecordRequestObj;
-import com.gammon.jde.webservice.serviceRequester.GetAPRecordsManager.getAPRecords.GetAPRecordResponseListObj;
-import com.gammon.jde.webservice.serviceRequester.GetAPRecordsManager.getAPRecords.GetAPRecordResponseObj;
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderRequestListObj;
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderRequestObj;
 import com.gammon.jde.webservice.serviceRequester.SCPaymentHeaderInsertManager.insertSCPaymentHeader.InsertSCPaymentHeaderResponseObj;
 import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.helper.DateHelper;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
-import com.gammon.qs.wrapper.paymentCertView.PaymentCertHeaderWrapper;
 @Repository
 public class PaymentWSDao{
 
@@ -43,64 +35,8 @@ public class PaymentWSDao{
 	@Autowired
 	private EnvironmentConfig environmentConfig;
 	@Autowired
-	private JobInfoHBDao jobHBDao;
-	@Autowired
 	private WebServiceConfig webServiceConfig;
 
-	/**
-	 * revised by Tiky Wong on February 13, 2014
-	 */
-	public List<PaymentCertHeaderWrapper> obtainAPRecords(String company, Date dueDate, String jobNumber, String docType, Double openAmount, String payStatusCode, String supplierNumber) throws Exception{
-		List<PaymentCertHeaderWrapper> wrapperList = new ArrayList<PaymentCertHeaderWrapper>();
-		try{
-			GetAPRecordRequestObj requestObj = new GetAPRecordRequestObj();
-			if(jobNumber == null || "".equals(jobNumber.trim()))
-				requestObj.setJobNumber(null);
-			else
-				requestObj.setJobNumber(jobNumber);
-			requestObj.setCompany(company);
-			requestObj.setDueDate(dueDate);
-			requestObj.setDocumentType(docType);
-			if(openAmount == null || openAmount.doubleValue() == 0.00)
-				requestObj.setOpenAmount(null);
-			else 
-				requestObj.setOpenAmount(openAmount);
-			requestObj.setPayStatusCode(payStatusCode);
-
-			logger.info("Calling Web Service(BEGIN:GetAPRecordsManager-getAPRecords(): "+
-						"Job: "+requestObj.getJobNumber()+" Company: "+requestObj.getCompany()+" Due Date: "+requestObj.getDueDate()+
-						"DocumentType: "+requestObj.getDocumentType()+" OpenAmount: "+requestObj.getOpenAmount()+" PayStatusCode: "+requestObj.getPayStatusCode());
-			GetAPRecordResponseListObj responseListObj = (GetAPRecordResponseListObj) getAPRecordWSTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-
-			if(responseListObj.getFieldsObj()!=null && responseListObj.getFieldsObj().size()>0){
-				for(GetAPRecordResponseObj responseObj : responseListObj.getFieldsObj()){
-					PaymentCertHeaderWrapper wrapper = new PaymentCertHeaderWrapper();
-					wrapper.setCompany(responseObj.getCompany()); // added by irischau for excel export on 31/03/2014
-					wrapper.setJobNumber(requestObj.getJobNumber());
-					wrapper.setSupplierNo(responseObj.getSupplierNumber());
-					wrapper.setOpenAmount(responseObj.getOpenAmount());
-					wrapper.setPaymentCurrency(responseObj.getPaymentCurrency());
-					Double foreignOpen = responseObj.getForeignOpen();
-					wrapper.setForeignOpen(foreignOpen == 0.00? null:foreignOpen);
-					wrapper.setInvoiceNo(responseObj.getInvoiceNo());
-					wrapper.setDueDate(date2String(responseObj.getDueDate()));
-					JobInfo job = jobHBDao.obtainJobInfo(responseObj.getJobNumber());
-					if (job != null && job.getConversionStatus() != null)
-						if (supplierNumber != null && supplierNumber.length() > 0) {
-							if (responseObj.getSupplierNumber().equals(supplierNumber))
-								wrapperList.add(wrapper);
-						} else {
-							wrapperList.add(wrapper);
-						}
-							
-				}
-			}
-		}catch(UnmarshallingFailureException e){
-			return new ArrayList<PaymentCertHeaderWrapper>();
-		}
-		return wrapperList;
-	}
-	
 	/**
 	 * @author Tiky Wong
 	 * revised on February 13, 2014
@@ -155,12 +91,5 @@ public class PaymentWSDao{
 		}
 		
 		return numberOfInsertedRows;
-	}
-	
-	private String date2String(Date date){
-		if (date!=null)
-			return (new SimpleDateFormat("dd/MM/yyyy")).format(date).toString();
-		else
-			return "";
 	}
 }

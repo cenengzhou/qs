@@ -63,7 +63,5 @@ public class AccountBalanceByDateRangeWrapper implements Serializable {
 	public void setAccountCodeDescription(String accountCodeDescription) {
 		this.accountCodeDescription = accountCodeDescription;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}	
+
 }

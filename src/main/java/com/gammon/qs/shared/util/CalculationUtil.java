@@ -34,10 +34,4 @@ public class CalculationUtil {
 			return new BigDecimal(0.0);
 	}
 
-	public static Double stringToDouble(String string){
-		if (string==null)
-			return null;
-		return Double.valueOf(string.replaceAll(",", ""));
-	}
-	
 }

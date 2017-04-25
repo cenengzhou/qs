@@ -1,6 +1,5 @@
 package com.gammon.qs.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,26 +21,6 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 	private Logger logger = Logger.getLogger(AttachPaymentHBDao.class.getName());
 	public AttachPaymentHBDao() {
 		super(AttachPayment.class);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<AttachPayment> getAttachPayment(String jobNumber, String subcontractNo, String paymentCertNo) throws DatabaseOperationException{
-		try{
-			List<AttachPayment> resultList;
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontract", "subcontract");
-			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.createAlias("paymentCert", "paymentCert");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-			criteria.add(Restrictions.eq("scPaymentCert.paymentCertNo", new Integer(paymentCertNo)));
-			resultList = criteria.list();
-			if(resultList == null)
-				resultList = new ArrayList<AttachPayment>();
-			return resultList;
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
 	}
 	
 	public AttachPayment getAttachPayment(PaymentCert paymentCert, Integer attachmentSequenceNo) throws DatabaseOperationException{
@@ -77,23 +56,6 @@ public class AttachPaymentHBDao extends BaseHibernateDao<AttachPayment> {
 			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
-	public AttachPayment getAttachPayment(String jobNumber, String subcontractNo,String paymentCertNo, Integer sequenceNo) throws DatabaseOperationException{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("paymentCert.subcontract", "subcontract");
-			criteria.createAlias("subcontract.jobInfo", "jobInfo");
-			criteria.createAlias("paymentCert", "paymentCert");
-			criteria.add(Restrictions.eq("jobInfo.jobNumber",jobNumber));
-			criteria.add(Restrictions.eq("subcontract.packageNo", subcontractNo));
-			criteria.add(Restrictions.eq("paymentCert.paymentCertNo", new Integer (paymentCertNo)));
-			criteria.add(Restrictions.eq("sequenceNo", sequenceNo));
-			return (AttachPayment)criteria.uniqueResult();
-		}catch (HibernateException he) {
-			logger.info("Fail: getAttachPayment(String jobNumber, String subcontractNo,String sequenceNo)");
 			throw new DatabaseOperationException(he);
 		}
 	}

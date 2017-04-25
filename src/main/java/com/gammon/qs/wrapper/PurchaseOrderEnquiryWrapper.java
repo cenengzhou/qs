@@ -8,8 +8,4 @@ public class PurchaseOrderEnquiryWrapper extends PaginationWrapper<PORecord> imp
 
 	private static final long serialVersionUID = -5484901028971422083L;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
 }

@@ -1,10 +1,8 @@
 package com.gammon.qs.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -17,25 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.jde.webservice.serviceRequester.PaymentHistoryEnquiryManager.getPaymentHistoriesList.GetPaymentHistoriesResponseObj;
-import com.gammon.pcms.config.JasperConfig;
-import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.BpiItemResourceHBDao;
 import com.gammon.qs.dao.JobCostWSDao;
-import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.domain.APRecord;
 import com.gammon.qs.domain.ARRecord;
 import com.gammon.qs.domain.AccountMaster;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.PORecord;
-import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.service.jobCost.AccountPayableExcelGenerator;
-import com.gammon.qs.service.jobCost.PurchaseOrderExcelGenerator;
-import com.gammon.qs.shared.GlobalParameter;
-import com.gammon.qs.util.JasperReportHelper;
-import com.gammon.qs.wrapper.APRecordPaginationWrapper;
-import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.PaymentHistoriesWrapper;
 import com.gammon.qs.wrapper.PurchaseOrderEnquiryWrapper;
 import com.gammon.qs.wrapper.accountCode.AccountCodeWrapper;
@@ -49,8 +36,6 @@ public class JobCostService implements Serializable {
 	@Autowired
 	private transient JobCostWSDao jobCostDao;
 	@Autowired
-	private transient JobInfoHBDao jobHBDao;
-	@Autowired
 	private transient BpiItemResourceHBDao resourceDao;
 	@Autowired
 	private transient ResourceSummaryHBDao resourceSummaryDao;
@@ -59,8 +44,6 @@ public class JobCostService implements Serializable {
 	//Repositories
 	@Autowired
 	private transient MasterListService masterListRepository;
-	@Autowired
-	private transient JasperConfig jasperConfig;
 	
 	private transient Logger logger = Logger.getLogger(JobCostService.class.getName());
 	
@@ -69,7 +52,6 @@ public class JobCostService implements Serializable {
 	// -----------------------------------
 	//APRecord
 	private List<APRecord> listOfAPRecord;
-	private APRecordPaginationWrapper apRecordPaginationWrapper;
 	
 	private List<PORecord> pORecordList = null;
 	private PurchaseOrderEnquiryWrapper purchaseOrderEnquiryWrapper = null;
@@ -252,303 +234,6 @@ public class JobCostService implements Serializable {
 			return accountList2;
 	}
 
-	
-	public APRecordPaginationWrapper obtainAPRecordPaginationWrapper(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws Exception {	
-		apRecordPaginationWrapper = new APRecordPaginationWrapper();
-		
-//		if(supplierNumber!=null && !supplierNumber.equals(""))
-//			subledger = null;
-
-		//WS returned records
-		List<APRecord> apRecordList = obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);	
-		
-		//Keep the records in application server for pagination
-		listOfAPRecord = apRecordList;
-		logger.info("RETURNED APRECORDS RECORDS(FULL LIST FROM WS)SIZE: " + listOfAPRecord.size());
-		
-		apRecordPaginationWrapper.setTotalPage(listOfAPRecord.size()%200==0?listOfAPRecord.size()/200:listOfAPRecord.size()/200+1);
-		apRecordPaginationWrapper.setTotalRecords(listOfAPRecord.size());
-		
-		Double tempTotalGross = apRecordPaginationWrapper.getTotalGross();
-		Double tempTotalOpen = apRecordPaginationWrapper.getTotalOpen();
-		Double tempTotalForeign = apRecordPaginationWrapper.getTotalForeign();
-		Double tempTotalForeignOpen = apRecordPaginationWrapper.getTotalForeignOpen();
-		
-		for(APRecord apRecord:listOfAPRecord){
-			tempTotalGross+=apRecord.getGrossAmount();
-			tempTotalOpen+=apRecord.getOpenAmount();
-			tempTotalForeign+=apRecord.getForeignAmount();
-			tempTotalForeignOpen+=apRecord.getForeignAmountOpen();
-		}
-		
-		apRecordPaginationWrapper.setTotalGross(tempTotalGross);
-		apRecordPaginationWrapper.setTotalOpen(tempTotalOpen);
-		apRecordPaginationWrapper.setTotalForeign(tempTotalForeign);
-		apRecordPaginationWrapper.setTotalForeignOpen(tempTotalForeignOpen);
-		
-		apRecordPaginationWrapper = getAPRecordPaginationWrapperByPage(0);
-		
-		return apRecordPaginationWrapper;
-	}
-	
-	public APRecordPaginationWrapper getAPRecordPaginationWrapperByPage(Integer pageNum) throws Exception {
-		apRecordPaginationWrapper.setCurrentPage(pageNum);
-		
-		//200 Records Per Page
-		int start = ((pageNum)*200);
-		int end = ((pageNum)*200)+200;
-		if(listOfAPRecord.size()<=end)
-			end = listOfAPRecord.size();
-		
-		if(listOfAPRecord.size()==0)
-			apRecordPaginationWrapper.setCurrentPageContentList(new ArrayList<APRecord>());
-		else
-			apRecordPaginationWrapper.setCurrentPageContentList(new ArrayList<APRecord>(listOfAPRecord.subList(start, end)));
-		
-		logger.info("RETURNED APRECORD RECORDS(PAGINATION) SIZE: " + apRecordPaginationWrapper.getCurrentPageContentList().size());
-		return apRecordPaginationWrapper;
-	}
-	
-	public PaginationWrapper<ARRecord> getARRecordListByPage(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType, int pageNum, int recordsPerPage) throws Exception {
-		List<ARRecord> recordList = jobCostDao.getARRecordList(jobNumber, reference, customerNumber, documentNumber, documentType);
-		PaginationWrapper<ARRecord> wrapper = new PaginationWrapper<ARRecord>();
-		int count = recordList.size();
-		
-		wrapper.setTotalRecords(count);
-		wrapper.setCurrentPage(pageNum);
-		wrapper.setTotalPage(count % recordsPerPage == 0 ? count/recordsPerPage : (count/recordsPerPage) + 1);
-		
-		int firstRecord = pageNum * recordsPerPage;
-		
-		ArrayList<ARRecord> returnList;
-		if(recordList.size() > firstRecord + recordsPerPage) {
-			returnList = new ArrayList<ARRecord>(recordList.subList(firstRecord, firstRecord + recordsPerPage));
-		} else {
-			returnList = new ArrayList<ARRecord>(recordList.subList(firstRecord, count));
-		}
-		wrapper.setCurrentPageContentList(returnList);
-		
-		return wrapper;
-	}
-
-	
-	// Last modified : Brian Tse
-	public PurchaseOrderEnquiryWrapper getPurchaseOrderEnquiryWrapperByPage(Integer pageNum){
-		int dataSize = 0;
-		int pageSize = GlobalParameter.PAGE_SIZE;
-		int fromIndex = pageSize*pageNum;
-		int toIndex = 1;
-		int totalPage = 1;
-		
-		if(this.pORecordList != null && this.pORecordList.size() > 0){
-			this.purchaseOrderEnquiryWrapper = new PurchaseOrderEnquiryWrapper();
-			this.purchaseOrderEnquiryWrapper.setCurrentPage(pageNum);
-			
-			dataSize = this.pORecordList.size();
-			if(pageSize * (pageNum + 1) < this.pORecordList.size())
-				toIndex = pageSize * (pageNum + 1);
-			else
-				toIndex = this.pORecordList.size();
-			
-			if(fromIndex > toIndex)
-				return null;
-			
-			totalPage = (dataSize + pageSize - 1) / pageSize;
-			List<PORecord> currentPageList = new ArrayList<PORecord>();
-			currentPageList.addAll(this.pORecordList.subList(fromIndex, toIndex));
-			this.purchaseOrderEnquiryWrapper.setCurrentPageContentList(currentPageList);
-			this.purchaseOrderEnquiryWrapper.setTotalPage(totalPage);
-			this.purchaseOrderEnquiryWrapper.setTotalRecords(dataSize);
-			return this.purchaseOrderEnquiryWrapper;
-			
-		}
-		else
-			return null;
-	}
-
-	// Last modified : Brian Tse
-	public PurchaseOrderEnquiryWrapper getPurchaseOrderEnquiryWrapperByPage(String jobNumber, String orderNumber, String orderType, String supplierNumber, String description, int pageNum){
-
-		List<PORecord> allOutputList = new ArrayList<PORecord>();
-		try{
-			allOutputList.addAll(jobCostDao.getPORecordList(orderNumber, orderType, jobNumber, supplierNumber));
-			this.pORecordList = this.filter(allOutputList, description);
-			logger.info("Number of PO Record List after filtering : " + pORecordList.size());
-		}
-		catch(Exception e){
-			logger.info(e.getLocalizedMessage());
-		}
-		
-		int dataSize = 0;
-		int pageSize = GlobalParameter.PAGE_SIZE;
-		int fromIndex = pageSize*pageNum;
-		int toIndex = 1;
-		int totalPage = 1;
-		
-		if(this.pORecordList != null && this.pORecordList.size() > 0){
-			this.purchaseOrderEnquiryWrapper = new PurchaseOrderEnquiryWrapper();
-			this.purchaseOrderEnquiryWrapper.setCurrentPage(pageNum);
-			
-			dataSize = this.pORecordList.size();
-			if((pageSize * (pageNum + 1)) < this.pORecordList.size())
-				toIndex = pageSize * (pageNum + 1);
-			else
-				toIndex = this.pORecordList.size();
-			
-			if(fromIndex > toIndex)
-				return null;
-			
-			totalPage = (dataSize + pageSize - 1) / pageSize;
-			List<PORecord> currentPageList = new ArrayList<PORecord>();
-			currentPageList.addAll(this.pORecordList.subList(fromIndex, toIndex));
-			this.purchaseOrderEnquiryWrapper.setCurrentPageContentList(currentPageList);
-			this.purchaseOrderEnquiryWrapper.setTotalPage(totalPage);
-			this.purchaseOrderEnquiryWrapper.setTotalRecords(dataSize);
-			return this.purchaseOrderEnquiryWrapper;
-		}
-		else
-			return null;	
-	}
-	
-	private List<PORecord> filter(List<PORecord> inputList, String filterString){
-		if(inputList != null && inputList.size() > 0){
-			List<PORecord> outputList = new ArrayList<PORecord>();
-			String regex = convertToRegex(filterString);				//edited by heisonwong
-			for(PORecord poRecord : inputList){
-				if(poRecord.getDescriptionLine1().toUpperCase().trim().matches(regex.toUpperCase()))
-					outputList.add(poRecord);
-				if (poRecord.getDescriptionLine1().toUpperCase().trim().equals(filterString.toUpperCase().trim()))	//edited by heisonwong, fix bug that cannot search exact words
-				outputList.add(poRecord);
-			}
-			return outputList;
-		}	
-		else
-			return null;
-	}
-	
-	// Last modified Brian
-	// convert the line description to regular expression
-	private String convertToRegex(String text){
-		// if text = null or empty string, set regular expression to show all results
-		if(text == null)
-			return ".*";
-		else if(text.trim().equals(""))
-			return ".*";
-		else{
-			logger.info("Change text to regular expression : " + text.trim().replaceAll("\\*", ".*"));
-			return text.trim().replaceAll("\\*", ".*");
-		}
-	}   
-	
-	/**
-	 * add by paulyiu 20150730
-	 */
-
-	public ByteArrayOutputStream downloadAccountPayableReportFile(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType,String jasperReportName,String fileType) throws Exception{
-	
-			List<APRecord> apRecordList = obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-
-			String jasperTemplate = jasperConfig.getTemplatePath();
-			String fileFullPath = jasperTemplate +jasperReportName;
-			Date asOfDate = new Date();
-			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-			HashMap<String,Object> parameters = new HashMap<String, Object>();
-			parameters.put("IMAGE_PATH", jasperTemplate);
-			parameters.put("AS_OF_DATE", asOfDate);
-			parameters.put("JOB_NO",jobNumber);
-			parameters.put("JOB_DESC",job.getDescription());
-			parameters.put("SEARCH_INVOICENUMBER", invoiceNumber);
-			parameters.put("SEARCH_SUPPLIERNUMBER", supplierNumber);
-			parameters.put("SEARCH_DOCUMENTNUMBER", documentNumber);
-			parameters.put("SEARCH_DOCUMENTTYPE", documentType);
-			parameters.put("SEARCH_SUBLEDGER", subledger);
-			parameters.put("SEARCH_SUBLEDGERTYPE",subledgerType);
-	
-			if (fileType.equalsIgnoreCase("pdf")) {
-				return JasperReportHelper.get().setCurrentReport(apRecordList, fileFullPath, parameters).compileAndAddReport().exportAsPDF();
-			}else if(fileType.equalsIgnoreCase("xls")){
-				return JasperReportHelper.get().setCurrentReport(apRecordList, fileFullPath, parameters).compileAndAddReport().exportAsExcel();
-			}
-				return null;
-	}
-	
-	/**
-	 * add by paulyiu 20150730
-	 */
-
-		public ByteArrayOutputStream downloadAccountCustomerLedgerReportFile(String jobNumber, String reference, String customerNumber, String documentNumber, String documentType,String jasperReportName, String fileType) throws Exception{
-		
-				List<ARRecord> arRecordList = getARRecordList(jobNumber, reference, customerNumber,documentNumber,documentType);
-
-				String jasperTemplate = jasperConfig.getTemplatePath();
-				String fileFullPath = jasperTemplate +jasperReportName;
-				Date asOfDate = new Date();
-				JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-				HashMap<String,Object> parameters = new HashMap<String, Object>();
-				parameters.put("IMAGE_PATH", jasperTemplate);
-				parameters.put("AS_OF_DATE", asOfDate);
-				parameters.put("JOB_NO",jobNumber);
-				parameters.put("JOB_DESC",job.getDescription());
-				parameters.put("SEARCH_REFERENCE", reference);
-				parameters.put("SEARCH_CUSTOMERNUMBER", customerNumber);
-				parameters.put("SEARCH_DOCUMENTNUMBER", documentNumber);
-				parameters.put("SEARCH_DOCUMENTTYPE", documentType);
-				
-				if (fileType.equalsIgnoreCase("pdf")) {
-					return JasperReportHelper.get().setCurrentReport(arRecordList, fileFullPath, parameters).compileAndAddReport().exportAsPDF();
-				}else if(fileType.equalsIgnoreCase("xls")){
-					return JasperReportHelper.get().setCurrentReport(arRecordList, fileFullPath, parameters).compileAndAddReport().exportAsExcel();
-				}
-					return null;
-		}
-
-	public ExcelFile downloadAccountPayableExcelFilegetAPRecordList(String jobNumber, String invoiceNumber, String supplierNumber, String documentNumber, String documentType, String subledger, String subledgerType) throws ValidateBusinessLogicException{
-		try {
-			List<APRecord> apRecordList = obtainAPRecordList(jobNumber, invoiceNumber, supplierNumber, documentNumber, documentType, subledger, subledgerType);
-			return (new AccountPayableExcelGenerator(apRecordList)).generate();
-		} catch (Exception e) {
-			ExcelFile excelFile = new ExcelFile();
-			excelFile.setFileName("Export Failure"+ExcelFile.EXTENSION);
-			excelFile.getDocument().setCellValue(0, 0, e.toString());
-			return excelFile;
-		}
-	}
-
-	/**
-	 * @author heisonwong
-	 * 
-	 * 3Aug 2015 14:40
-	 * 
-	 *  add Excel and PDF Report for purchase order
-	 * 
-	 * **/
-	
-	public ByteArrayOutputStream downloadPurchaseOrderReportFile(
-			String jobNumber, String supplierNumber, String orderNumber,
-			String orderType, String lineDescription, String reportName)
-			throws Exception {
-		String fileFullPath = jasperConfig.getTemplatePath()+reportName;
-		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
-		PurchaseOrderEnquiryWrapper wrapper = getPurchaseOrderEnquiryWrapperByPage(jobNumber, orderNumber, orderType, supplierNumber, lineDescription, 0);
-		return JasperReportHelper.get().setCurrentReport(wrapper.getCurrentPageContentList(),fileFullPath,parameters).compileAndAddReport().exportAsPDF();
-	}
-
-	public ExcelFile downloadPurchaseOrderExcelFile(String jobNumber,
-			String supplierNumber, String orderNumber, String orderType,
-			String lineDescription, String reportName) throws Exception {
-		ExcelFile excelFile =null;
-		
-		PurchaseOrderEnquiryWrapper wrapper = getPurchaseOrderEnquiryWrapperByPage(jobNumber, orderNumber, orderType, supplierNumber, lineDescription, 0);
-		if (wrapper!=null){
-			List<PORecord> wrapperList = wrapper.getCurrentPageContentList();
-			PurchaseOrderExcelGenerator reportGenerator = new PurchaseOrderExcelGenerator (wrapperList);
-			excelFile = reportGenerator.generate();
-			return excelFile;
-		}
-		return null;
-	}
-	
 	/*************************************** FUNCTIONS FOR PCMS**************************************************************/
 	public List<PORecord> getPORecordList(String jobNumber, String orderNumber, String orderType, String supplierNumber) throws Exception {
 		List<PORecord> listOfpoRecord = new ArrayList<>();

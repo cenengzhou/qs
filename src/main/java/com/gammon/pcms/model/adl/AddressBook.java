@@ -349,20 +349,6 @@ public class AddressBook implements java.io.Serializable {
 		this.subcontractorWorkscopes = subcontractorWorkscopes;
 	}
 
-	public SubcontractorWorkscope addSubcontractorWorkscope(SubcontractorWorkscope subcontractorWorkscope) {
-		getSubcontractorWorkscopes().add(subcontractorWorkscope);
-		subcontractorWorkscope.setAddressBook(this);
-
-		return subcontractorWorkscope;
-	}
-
-	public SubcontractorWorkscope removeSubcontractorWorkscope(SubcontractorWorkscope subcontractorWorkscope) {
-		getSubcontractorWorkscopes().remove(subcontractorWorkscope);
-		subcontractorWorkscope.setAddressBook(null);
-
-		return subcontractorWorkscope;
-	}
-
 	//bi-directional one-to-one association to PayeeMaster
 	@OneToOne (mappedBy="addressBook")
 	public PayeeMaster getPayeeMaster() {

@@ -86,12 +86,4 @@ public class TransitBQResourceReconciliationReportRecordWrapper implements Seria
 		this.totalQuantity = quantity;
 	}
 	
-	public Double geteCAValue() {
-		return eCAValue;
-	}
-	
-	public void seteCAValue(Double eCAValue) {
-		this.eCAValue = eCAValue;
-	}
-
 }

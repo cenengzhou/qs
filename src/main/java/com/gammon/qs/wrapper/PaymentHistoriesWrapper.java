@@ -102,8 +102,4 @@ public class PaymentHistoriesWrapper implements Serializable{
 		this.paymentDate = paymentDate;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

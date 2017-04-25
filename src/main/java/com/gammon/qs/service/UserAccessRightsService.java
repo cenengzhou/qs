@@ -42,30 +42,4 @@ public class UserAccessRightsService {
 		return new ArrayList<String>();
 	}
 	
-	/**
-	 * Created by Henry Lai
-	 * 05-Nov-2014
-	 */
-	public List<ArrayList<String>> obtainAccessRightsByUserLists(List<String> usernames, String functionName) throws Exception {
-		List<ArrayList<String>> accessRightsList = new ArrayList<ArrayList<String>>();
-		for(int i=0; i<usernames.size(); i++){
-			try {
-				UserAccessRightsRequest requestObj = new UserAccessRightsRequest();
-				requestObj.setFunctionName(functionName);
-				requestObj.setUsername(usernames.get(i));
-				Object tmpObj = userAccessRightsWebserviceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback("revampSOA", "revampSOA"));
-				UserAccessRightsResponseList responseList = (UserAccessRightsResponseList)tmpObj;
-				ArrayList<UserAccessRightsResponse> accessRightsReturned = responseList.getUserAccessRightsList();
-				ArrayList<String> accessRights = new ArrayList<String>();
-				for (UserAccessRightsResponse userAccessRightsResponse:accessRightsReturned){
-					accessRights.add(userAccessRightsResponse.getAccessRight());
-				}
-				accessRightsList.add(accessRights);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return accessRightsList;
-	}
-
 }

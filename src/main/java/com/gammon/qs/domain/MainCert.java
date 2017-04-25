@@ -94,87 +94,6 @@ public class MainCert extends BasePersistedObject {
 	public MainCert() {
 	}
 	
-	public void updateCert(MainCert updatedMainCert) {
-		setLastModifiedUser(updatedMainCert.getLastModifiedUser());
-		
-		if(updatedMainCert.getClientCertNo()!=null)
-			this.clientCertNo = updatedMainCert.getClientCertNo();
-		if (updatedMainCert.getAppliedMainContractorAmount()!=null)
-			this.appliedMainContractorAmount = updatedMainCert.getAppliedMainContractorAmount();
-		if (updatedMainCert.getAppliedNSCNDSCAmount()!=null) 
-			this.appliedNSCNDSCAmount = updatedMainCert.getAppliedNSCNDSCAmount();
-		if (updatedMainCert.getAppliedMOSAmount()!=null) 
-			this.appliedMOSAmount = updatedMainCert.getAppliedMOSAmount();
-		if (updatedMainCert.getAppliedMainContractorRetention()!=null) 
-			this.appliedMainContractorRetention = updatedMainCert.getAppliedMainContractorRetention();
-		if (updatedMainCert.getAppliedMainContractorRetentionReleased()!=null) 
-			this.appliedMainContractorRetentionReleased = updatedMainCert.getAppliedMainContractorRetentionReleased();
-		if (updatedMainCert.getAppliedRetentionforNSCNDSC()!=null) 
-			this.appliedRetentionforNSCNDSC = updatedMainCert.getAppliedRetentionforNSCNDSC();
-		if (updatedMainCert.getAppliedRetentionforNSCNDSCReleased()!=null) 
-			this.appliedRetentionforNSCNDSCReleased = updatedMainCert.getAppliedRetentionforNSCNDSCReleased();
-		if (updatedMainCert.getAppliedMOSRetention()!=null) 
-			this.appliedMOSRetention = updatedMainCert.getAppliedMOSRetention();
-		if (updatedMainCert.getAppliedMOSRetentionReleased()!=null) 
-			this.appliedMOSRetentionReleased = updatedMainCert.getAppliedMOSRetentionReleased();
-		if (updatedMainCert.getAppliedContraChargeAmount()!=null) 
-			this.appliedContraChargeAmount = updatedMainCert.getAppliedContraChargeAmount();
-		if (updatedMainCert.getAppliedAdjustmentAmount()!=null) 
-			this.appliedAdjustmentAmount = updatedMainCert.getAppliedAdjustmentAmount();
-		if (updatedMainCert.getAppliedAdvancePayment()!=null) 
-			this.appliedAdvancePayment = updatedMainCert.getAppliedAdvancePayment();
-		if (updatedMainCert.getAppliedCPFAmount()!=null) 
-			this.appliedCPFAmount = updatedMainCert.getAppliedCPFAmount();
-		if (updatedMainCert.getCertifiedMainContractorAmount()!=null) 
-			this.certifiedMainContractorAmount = updatedMainCert.getCertifiedMainContractorAmount();
-		if (updatedMainCert.getCertifiedNSCNDSCAmount()!=null) 
-			this.certifiedNSCNDSCAmount = updatedMainCert.getCertifiedNSCNDSCAmount();
-		if (updatedMainCert.getCertifiedMOSAmount()!=null) 
-			this.certifiedMOSAmount = updatedMainCert.getCertifiedMOSAmount();
-		if (updatedMainCert.getCertifiedMainContractorRetention()!=null) 
-			this.certifiedMainContractorRetention = updatedMainCert.getCertifiedMainContractorRetention();
-		if (updatedMainCert.getCertifiedMainContractorRetentionReleased()!=null) 
-			this.certifiedMainContractorRetentionReleased = updatedMainCert.getCertifiedMainContractorRetentionReleased();
-		if (updatedMainCert.getCertifiedRetentionforNSCNDSC()!=null) 
-			this.certifiedRetentionforNSCNDSC = updatedMainCert.getCertifiedRetentionforNSCNDSC();
-		if (updatedMainCert.getCertifiedRetentionforNSCNDSCReleased()!=null) 
-			this.certifiedRetentionforNSCNDSCReleased = updatedMainCert.getCertifiedRetentionforNSCNDSCReleased();
-		if (updatedMainCert.getCertifiedMOSRetention()!=null) 
-			this.certifiedMOSRetention = updatedMainCert.getCertifiedMOSRetention();
-		if (updatedMainCert.getCertifiedMOSRetentionReleased()!=null)
-			this.certifiedMOSRetentionReleased = updatedMainCert.getCertifiedMOSRetentionReleased();
-		if (updatedMainCert.getCertifiedContraChargeAmount()!=null)
-			this.certifiedContraChargeAmount = updatedMainCert.getCertifiedContraChargeAmount();
-		if (updatedMainCert.getCertifiedAdjustmentAmount()!=null)
-			this.certifiedAdjustmentAmount = updatedMainCert.getCertifiedAdjustmentAmount();
-		if (updatedMainCert.getCertifiedAdvancePayment()!=null) 
-			this.certifiedAdvancePayment = updatedMainCert.getCertifiedAdvancePayment();
-		if (updatedMainCert.getCertifiedCPFAmount()!=null)
-			this.certifiedCPFAmount = updatedMainCert.getCertifiedCPFAmount();
-		if (updatedMainCert.getGstReceivable()!=null)
-			this.gstReceivable = updatedMainCert.getGstReceivable();
-		if (updatedMainCert.getGstPayable()!=null) 
-			this.gstPayable = updatedMainCert.getGstPayable();
-		if (updatedMainCert.getCertificateStatus()!=null)
-			this.certificateStatus = updatedMainCert.getCertificateStatus();
-		if (updatedMainCert.getArDocNumber()!=null)
-			this.arDocNumber = updatedMainCert.getArDocNumber();
-		//if (updatedMainCert.getIpaDate()!=null)
-			this.ipaSubmissionDate = updatedMainCert.getIpaSubmissionDate();
-		//if (updatedMainCert.getIpaSentoutDate()!=null)
-			this.ipaSentoutDate = updatedMainCert.getIpaSentoutDate();
-		//if (updatedMainCert.getCertifiedDate()!=null)
-			this.certIssueDate = updatedMainCert.getCertIssueDate();
-		//if (updatedMainCert.getAsAtDate()!=null)
-			this.certAsAtDate = updatedMainCert.getCertAsAtDate();
-		//if (updatedMainCert.getCertificateStatusChangeDate()!=null)
-			this.certStatusChangeDate = updatedMainCert.getCertStatusChangeDate();
-		//if (updatedMainCert.getCertificateDueDate()!=null)
-			this.certDueDate = updatedMainCert.getCertDueDate();
-		if(updatedMainCert.getRemark()!=null)
-			this.remark = updatedMainCert.getRemark();
-	}
-	
 	@JsonProperty("certNetAmount")
 	@Transient
 	public Double calculateCertifiedNetAmount(){
@@ -232,50 +151,6 @@ public class MainCert extends BasePersistedObject {
 				+(appliedAdvancePayment==null?0:appliedAdvancePayment)
 				+(appliedCPFAmount==null?0:appliedCPFAmount);
 	}	
-	
-	
-	
-	public String toNormalString(){
-		String result = "\"jobNumber = " + getJobNo();
-		result += ("\"mainCertificateNumber = "+getCertificateNumber() );
-		result += ("\"appliedMainContractorAmount = " +getAppliedMainContractorAmount());
-		result += ("\"appliedNSCNDSCAmount = " +getAppliedNSCNDSCAmount());
-		result += ("\"appliedMOSAmount = " +getAppliedMOSAmount());
-		result += ("\"appliedMainContractorRetention = " +getAppliedMainContractorRetention());
-		result += ("\"appliedMainContractorRetentionReleased = " +getAppliedMainContractorRetentionReleased());
-		result += ("\"appliedRetentionforNSCNDSC = " +getAppliedRetentionforNSCNDSC());
-		result += ("\"appliedRetentionforNSCNDSCReleased = " +getAppliedRetentionforNSCNDSCReleased());
-		result += ("\"appliedMOSRetention = " +getAppliedMOSRetention());
-		result += ("\"appliedMOSRetentionReleased = " +getAppliedMOSRetentionReleased());
-		result += ("\"appliedContraChargeAmount = " +getAppliedContraChargeAmount());
-		result += ("\"appliedAdjustmentAmount = " +getAppliedAdjustmentAmount());
-		result += ("\"appliedAdvancePayment = " +getAppliedAdvancePayment());
-		result += ("\"appliedCPFAmount = " +getAppliedCPFAmount());
-		result += ("\"certifiedMainContractorAmount = " +getCertifiedMainContractorAmount());
-		result += ("\"certifiedNSCNDSCAmount = " +getCertifiedNSCNDSCAmount());
-		result += ("\"certifiedMOSAmount = " +getCertifiedMOSAmount());
-		result += ("\"certifiedMainContractorRetention = " +getCertifiedMainContractorRetention());
-		result += ("\"certifiedMainContractorRetentionReleased = " +getCertifiedMainContractorRetentionReleased());
-		result += ("\"certifiedRetentionforNSCNDSC = " +getCertifiedRetentionforNSCNDSC());
-		result += ("\"certifiedRetentionforNSCNDSCReleased = " +getCertifiedRetentionforNSCNDSCReleased());
-		result += ("\"certifiedMOSRetention = " +getCertifiedMOSRetention());
-		result += ("\"certifiedMOSRetentionReleased = " +getCertifiedMOSRetentionReleased());
-		result += ("\"certifiedContraChargeAmount = " +getCertifiedContraChargeAmount());
-		result += ("\"certifiedAdjustmentAmount = " +getCertifiedAdjustmentAmount());
-		result += ("\"certifiedAdvancePayment = " +getCertifiedAdvancePayment());
-		result += ("\"certifiedCPFAmount = " +getCertifiedCPFAmount());
-		result += ("\"gstReceivable = " +getGstReceivable());
-		result += ("\"gstPayable = " +getGstPayable());
-		result += ("\"certificateStatus = " +getCertificateStatus());
-		result += ("\"arDocNumber = " +getArDocNumber());
-		result += ("\"ipaSubmissionDate = " +getIpaSubmissionDate());
-		result += ("\"ipaSentoutDate = " +getIpaSentoutDate());
-		result += ("\"certIssueDate = " +getCertIssueDate());
-		result += ("\"certAsAtDate = " +getCertAsAtDate());
-		result += ("\"certStatusChangeDate = " +getCertStatusChangeDate());
-		result += ("\"certDueDate = " +getCertDueDate());
-		return super.toString()+result;
-	}
 	
 	public String toString(){
 		String result = "{ \"jobNumber\":\"" + getJobNo()+"\",";

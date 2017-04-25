@@ -146,11 +146,6 @@ public class AdminService {
 		}
 	}
 	
-	public Boolean canAccessJob(String username, String noJob){
-		User user = gsfService.getRole(username);
-		return canAccessJob(user, noJob);
-	}
-	
 	/**
 	 * Return true if user have access right to the jobNo
 	 * or throw AccessDeniedException (*never return false)
@@ -183,12 +178,6 @@ public class AdminService {
 		return companyCodeList;
 	}
 	
-	public List<GetJobSecurity.Result> obtainJobSecurityListByCurrentUser() {
-		List<GetJobSecurity.Result> jobSecurityList = obtainJobSecurityListByUsername(securityService.getCurrentUser().getUsername());
-		jobSecurityList.sort((o1, o2) -> o1.getCompany().compareTo(o2.getCompany()));
-		return jobSecurityList;
-	}
-
 	public List<GetJobSecurity.Result> obtainJobSecurityListByUsername(String username) {
 		return gsfService.getJobSecurityList(username);
 	}

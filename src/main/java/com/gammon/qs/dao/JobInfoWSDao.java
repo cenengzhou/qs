@@ -3,7 +3,6 @@ package com.gammon.qs.dao;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,8 @@ import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.u
 import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.updateJobBudgetPostedFlag.UpdateJobBudgetPostedFlagRequestWhereFieldObj;
 import com.gammon.jde.webservice.serviceRequester.JobAdditionalInfoUserManager.updateJobBudgetPostedFlag.UpdateJobBudgetPostedFlagResponseObj;
 import com.gammon.pcms.helper.DateHelper;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.JobDates;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.webservice.WSConfig;
@@ -422,19 +420,4 @@ public class JobInfoWSDao{
 			return error;
 	}
 
-	public List<JobInfo> obtainAllJobs() throws DatabaseOperationException {
-		return null;
-	}
-
-	public List<JobInfo> obtainJobsByDivCoJob(String division, String company, String jobNo) {
-		return null;
-	}
-
-	public String obtainJobCompany(String jobNumber) throws DatabaseOperationException {
-		return null;
-	}
-
-	public boolean updateJob(JobInfo job) throws DatabaseOperationException {
-		return false;
-	}
 }

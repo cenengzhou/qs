@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -22,7 +21,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.gammon.pcms.config.StoredProcedureConfig;
@@ -30,7 +28,6 @@ import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotD
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractSnapshot;
 import com.gammon.qs.shared.GlobalParameter;
 
@@ -74,42 +71,6 @@ public class SubcontractSnapshotHBDao extends BaseHibernateDao<SubcontractSnapsh
 		return criteria.list();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<SubcontractSnapshot> findByPeriod(String noJob, BigDecimal year, BigDecimal month, boolean awardedOnly) throws DataAccessException {
-		Criteria criteria = getSession().createCriteria(this.getType());
-		
-		// Join
-		criteria.createAlias("jobInfo", "jobInfo");
-		// Where
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE))
-				.add(Restrictions.eq("packageType", Subcontract.SUBCONTRACT_PACKAGE));
-		
-		if (StringUtils.isNotBlank(noJob))
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", noJob));
-		if (awardedOnly)
-			criteria.add(Restrictions.and(Restrictions.isNotNull("subcontractStatus"), Restrictions.ge("subcontractStatus", 500)));
-		if (month.intValue() > 0 && year.intValue() > 0) {
-			// start date (first day of the month)
-			Calendar startCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, 1, 0, 0, 0);
-			// end date (last day of the month)
-			Calendar endCalendar = new GregorianCalendar(year.intValue(), month.intValue()-1, startCalendar.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
-
-			// Formatting
-			String startDate = DateHelper.formatDate(startCalendar.getTime(), GlobalParameter.DATE_FORMAT);
-			String endDate = DateHelper.formatDate(endCalendar.getTime(), GlobalParameter.DATE_FORMAT);
-			
-			criteria.add(Restrictions.between("snapshotDate", DateHelper.parseDate(startDate, GlobalParameter.DATE_FORMAT), DateHelper.parseDate(endDate, GlobalParameter.DATE_FORMAT)));
-		}
-
-		// order by
-		criteria.addOrder(Order.asc("jobInfo.company"))
-				.addOrder(Order.asc("jobInfo.division"))
-				.addOrder(Order.asc("jobInfo.jobNumber"))
-				.addOrder(Order.asc("packageNo"));
-
-		return (List<SubcontractSnapshot>) criteria.list();
-	}
-
 	/**
 	 * @author koeyyeung
 	 * created on 20 Jul,2016

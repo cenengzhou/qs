@@ -1,14 +1,11 @@
 package com.gammon.qs.service;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gammon.jde.webservice.serviceRequester.AddressBookQueryManager.getAddressBookWithSCStatus.GetAddressBookWithSCStatusRequestObj;
 import com.gammon.jde.webservice.serviceRequester.MainCertReceiveDateQueryManager.getMainCertReceiveDate.GetMainCertReceiveDateResponseObj;
-import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.dao.adl.AccountBalanceDao;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertContraChargeRequest;
 import com.gammon.pcms.dto.rs.provider.request.jde.MainCertRequest;
@@ -33,18 +28,13 @@ import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.MainCertContraChargeHBDao;
 import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
-import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.ContractReceivableWrapper;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.MainCertContraCharge;
-import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.service.admin.EnvironmentConfig;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
-import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 @Service
@@ -63,15 +53,9 @@ public class MainCertService {
 	@Autowired
 	private SecurityService securityService;
 	@Autowired
-	private AdminService adminService;
-	@Autowired
 	private JobInfoService jobInfoService;
 	@Autowired
 	private MainCertContraChargeService mainCertContraChargeService;
-	@Autowired
-	private JasperConfig jasperConfig;
-	@Autowired
-	private MasterListService masterListService;
 	
 	// DAO
 	@Autowired
@@ -84,8 +68,6 @@ public class MainCertService {
 	private MainCertWSDao mainCertWSDao;
 	@Autowired
 	private MainCertHBDao mainCertHBDao;
-	@Autowired
-	private MasterListWSDao masterListWSDao;
 	@Autowired
 	private AccountBalanceDao accountBalanceDao;
 	@Autowired
@@ -249,24 +231,6 @@ public class MainCertService {
 		return message;
 	}
 
-	/**
-	 * @author tikywong
-	 * created on September 03, 2012
-	 */
-	public Boolean updateMainCertificateStatus(String jobNumber, Integer mainCertNumber, String newCertificateStatus) throws DatabaseOperationException {
-		MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		
-		Boolean updated = true;
-		
-		if(newCertificateStatus!=null){
-			mainCert.setCertificateStatus(newCertificateStatus);
-			mainCertHBDao.saveOrUpdate(mainCert);
-		}
-		else
-			updated = false;
-		return updated;
-	}
-	
 	/**
 	 * @author tikywong
 	 * created on 25 October, 2012
@@ -477,99 +441,6 @@ public class MainCertService {
 		return resultMsg;
 	}
 
-	
-	
-	/**
-	 * koeyyeung
-	 * Created on Nov 2, 2015
-	 * Contract Receivable Settlement Report
-	 */
-	@Transactional(readOnly = true, rollbackFor = Exception.class, value = "transactionManager")
-	public ByteArrayOutputStream downloadContractReceivableReport(ContractReceivableWrapper wrapper, String type)
-			throws DatabaseOperationException {
-		logger.info("downloadContractReceivableReport - START");
-		logger.info("SEARCH[Company: " + wrapper.getCompany() + " - Division: " + wrapper.getDivision() + " - JobNo: "
-				+ wrapper.getJobNo() + "]");
-
-		try {
-			final String REPORT_NAME = "ContractReceivableSettlementReport";
-			HashMap<String, String> clientHashMap = new HashMap<String, String>();
-			HashMap<String, String> currencyCodeHashMap = new HashMap<String, String>();
-
-			HashMap<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
-			parameters.put("P_JOBNO", StringUtils.isBlank(wrapper.getJobNo()) ? "" : wrapper.getJobNo());
-			parameters.put("P_COMPANY", StringUtils.isBlank(wrapper.getCompany()) ? "" : wrapper.getCompany());
-			parameters.put("P_DIVISION", StringUtils.isBlank(wrapper.getDivision()) ? "" : wrapper.getDivision());
-			parameters.put("P_CERT_STATUS",
-					StringUtils.isBlank(wrapper.getCertStatus()) ? "" : wrapper.getCertStatus());
-
-			// Step 1: Refresh Main Contract Certificate data
-			updateMainCertFromF03B14Manually();
-
-			// Apply Job Security
-//			List<String> companyList = adminService.obtainCompanyCodeListByCurrentUser();
-			List<String> jobNumberList = adminService.obtainCanAccessJobNoStringList();
-			// Step 2: Obtain Main Cert List
-			List<ContractReceivableWrapper> mainCertList = mainCertHBDao
-					.obtainContractReceivableList(wrapper, jobNumberList);
-
-			// Step 3: Retrieve Client Name from web service
-			List<MasterListVendor> clientList = masterListService.getClientList();
-			List<MasterListVendor> vendorList = masterListService.getVendorList();
-
-			if (clientList == null) {
-				logger.info("Retrieve Client List");
-				List<String> addressBookTypeList = new ArrayList<String>();
-				addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.CLIENT_ADDRESS_TYPE);
-				clientList = masterListWSDao.obtainAddressBookList(addressBookTypeList);
-				masterListService.setClientList(clientList);
-			}
-			if (vendorList == null) {
-				logger.info("Retrieve Vendor List");
-				List<String> addressBookTypeList = new ArrayList<String>();
-				addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.VENDOR_ADDRESS_TYPE);
-				addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.COMPANY_ADDRESS_TYPE);
-				vendorList = masterListWSDao.obtainAddressBookList(addressBookTypeList);
-				masterListService.setVendorList(vendorList);
-			}
-
-			for (MasterListVendor client : clientList) {
-				clientHashMap.put(client.getVendorNo(), client.getVendorName());
-			}
-			for (MasterListVendor vendor : vendorList) {
-				clientHashMap.put(vendor.getVendorNo(), vendor.getVendorName());
-			}
-
-			for (ContractReceivableWrapper mainCert : mainCertList) {
-				mainCert.setClientName(clientHashMap.get(mainCert.getClientNo()));
-				String refDocNo = mainCert.getJobNo();
-				if (mainCert.getCertNo().length() < 4)
-					refDocNo = refDocNo.concat(StringUtils.leftPad(mainCert.getCertNo(), 3, '0'));
-
-				// Step 4: Retrieve Currency Code from web service
-				if (currencyCodeHashMap.get(mainCert.getCompany()) == null) {
-					String currencyCode = accountCodeWSDao.obtainCurrencyCode(mainCert.getJobNo());
-					currencyCodeHashMap.put(mainCert.getCompany(), currencyCode);
-				}
-				mainCert.setCurrency(currencyCodeHashMap.get(mainCert.getCompany()));
-			}
-
-			if (type.contentEquals("pdf"))
-				return JasperReportHelper.get()
-						.setCurrentReport(mainCertList, jasperConfig.getTemplatePath() + REPORT_NAME, parameters)
-						.compileAndAddReport().exportAsPDF();
-			else if (type.contentEquals("xls"))
-				return JasperReportHelper.get()
-						.setCurrentReport(mainCertList, jasperConfig.getTemplatePath() + REPORT_NAME, parameters)
-						.compileAndAddReport().exportAsExcel();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	/**@author koeyyeung
 	 * created on 5th Aug, 2015**/
 	public Boolean updateMainCertFromF03B14Manually () {

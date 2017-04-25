@@ -116,32 +116,5 @@ private Logger logger = Logger.getLogger(ExcelWorkbookProcessor.class.getName())
 		}
 		return numOfCol;
 	}
-	public String[] readLineDirectly(int numCol) {
-		Row row = sheet.getRow(linePointer);
-		String[] line = new String[numCol];
-		
-		for (int i=0; i<line.length;i++) {
-			if (row.getCell(i) != null) {
-				if (row.getCell(i).getCellType() == Cell.CELL_TYPE_STRING) {
-					line[i] = row.getCell(i).getRichStringCellValue().getString();
-				} 
-				else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC ) {
-					if (row.getCell(i).getNumericCellValue() % 1 != 0)
-						line[i] = Double.toString(row.getCell(i).getNumericCellValue());						
-					else line[i] = Integer.toString((int)row.getCell(i).getNumericCellValue());
-				} 
-				else if (row.getCell(i).getCellType() == Cell.CELL_TYPE_BLANK) {
-				} 
-				else {
-					logger.info("Unexpected cell type!!! " + row.getCell(i).getCellType());
-				}
-			}
-		}
-		
-		linePointer++;
-		return line;
-	}
-	
-	
 }
 

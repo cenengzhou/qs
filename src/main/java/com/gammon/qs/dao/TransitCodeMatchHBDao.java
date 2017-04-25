@@ -37,13 +37,6 @@ public class TransitCodeMatchHBDao extends BaseHibernateDao<TransitCodeMatch> {
 		return null;
 	}
 	
-	public TransitCodeMatch getTransitCodeMatchByResourceCode(String matchingType, String resourceCode) throws Exception{
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("matchingType", matchingType));
-		criteria.add(Restrictions.eq("resourceCode", resourceCode));
-		return (TransitCodeMatch)criteria.uniqueResult();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getCodeMatchesByType(String matchingType) throws Exception{
 		Criteria criteria = getSession().createCriteria(this.getType());

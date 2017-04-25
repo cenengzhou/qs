@@ -33,10 +33,6 @@ public class UnitService {
 		return unitDao.getAppraisalPerformanceGroupMap();
 	}
 	
-	public Map<String, String> getUDCMap(String productCode, String userDefinedCodes) {
-		return unitDao.getUDCMap(productCode, userDefinedCodes);
-	}
-	
 	public Map<String, String> getSCStatusCodeMap() {
 		return unitDao.getSCStatusCodeMap();
 	}

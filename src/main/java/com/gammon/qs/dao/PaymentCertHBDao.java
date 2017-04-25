@@ -31,35 +31,11 @@ import com.gammon.qs.wrapper.scPayment.PaymentCertWrapper;
 public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 	private Logger logger = Logger.getLogger(PaymentCertHBDao.class.getName());
 	@Autowired
-	private SubcontractHBDao scPackageHBDao;
-	@Autowired
 	private PaymentCertDetailHBDao scPaymentDetailHBDao;
 
 	@Autowired
 	private StoredProcedureConfig storedProcedureConfig;
 	
-	public boolean addSCPaymentCert(PaymentCert scPaymentCert) throws DatabaseOperationException{
-		if (scPaymentCert==null)
-			throw new NullPointerException();
-		try {		
-			if (getSCPaymentCert(scPaymentCert)==null){
-				scPaymentCert.setSubcontract(
-						scPackageHBDao.obtainSCPackage(	
-								scPaymentCert.getSubcontract().getJobInfo().getJobNumber().trim(),
-								scPaymentCert.getSubcontract().getPackageNo()
-						)
-				);
-				this.saveOrUpdate(scPaymentCert);
-			}else
-				logger.info("SCPayment Cert Existed");
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-			throw new DatabaseOperationException(e); 
-		}
-
-		return false;
-	}
-
 	public PaymentCert obtainPaymentCertificate(String jobNumber, String packageNo,Integer paymentCertNo) throws DatabaseOperationException{
 		if (jobNumber==null)
 			throw new DatabaseOperationException("Jobnumber is null");
@@ -120,71 +96,7 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 			throw new DatabaseOperationException(he);
 		}
 	}
-	public boolean saveOrUpdateSCPaymentCert(PaymentCert scPaymentCert) throws DatabaseOperationException{
-		if (scPaymentCert==null)
-			throw new DatabaseOperationException("SCPayment Cert is Null");
-		try {
-			PaymentCert scPaymentCertDB =getSCPaymentCert(scPaymentCert);
-			if (scPaymentCertDB==null){		
-//				scPaymentCert.setCreatedDate(new Date());
-				//scPaymentCert.setCreatedUser(scPaymentCert.getLastModifiedUser());
-				
-				insert(scPaymentCert);
-				return true;
-			}
-			scPaymentCertDB.setPaymentStatus(scPaymentCert.getPaymentStatus());
-			scPaymentCertDB.setMainContractPaymentCertNo(scPaymentCert.getMainContractPaymentCertNo());
-			scPaymentCertDB.setDueDate(scPaymentCert.getDueDate());
-			scPaymentCertDB.setAsAtDate(scPaymentCert.getAsAtDate());
-			scPaymentCertDB.setIpaOrInvoiceReceivedDate(scPaymentCert.getIpaOrInvoiceReceivedDate());
-			scPaymentCertDB.setCertIssueDate(scPaymentCert.getCertIssueDate());
-			scPaymentCertDB.setCertAmount(scPaymentCert.getCertAmount());
-			scPaymentCertDB.setIntermFinalPayment(scPaymentCert.getIntermFinalPayment());
-			scPaymentCertDB.setAddendumAmount(scPaymentCert.getAddendumAmount());
-			scPaymentCertDB.setRemeasureContractSum(scPaymentCert.getRemeasureContractSum());
-//			scPaymentCertDB.setGstPayable(scPaymentCert.getGstPayable());
-//			scPaymentCertDB.setGstReceivable(scPaymentCert.getGstReceivable());
-			if (scPaymentCertDB.getCreatedDate()==null)
-				scPaymentCertDB.setCreatedDate(new Date());
-			scPaymentCertDB.setLastModifiedUser(scPaymentCert.getLastModifiedUser());
-			List<PaymentCertDetail> scPaymentDetailList = scPaymentDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(scPaymentCertDB);
-			for(PaymentCertDetail scPaymentDetail : scPaymentDetailList){
-				scPaymentDetail.setPaymentCert(scPaymentCertDB);
-				scPaymentDetailHBDao.saveOrUpdate(scPaymentDetail);
-			}
-			
-			saveOrUpdate(scPaymentCertDB);
-			return true;
-		}catch (HibernateException he){
-			logger.info("Fail: updateSCPaymentCert(SCPaymentCert scPaymentCert)");
-			throw new DatabaseOperationException(he);
-		}
-	}
 
-	@SuppressWarnings("unchecked")
-	public List<PaymentCert> obtainSCPaymentCertListByStatus(String jobNumber, String packageNo, String status, String directPayment) throws DatabaseOperationException{
-		if (jobNumber==null)
-			throw new DatabaseOperationException("Jobnumber is null");
-		if (packageNo==null)
-			throw new DatabaseOperationException("packageNo is null");
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("subcontract","subcontract" );
-			criteria.createAlias("subcontract.jobInfo","jobInfo" );
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber.trim() ));
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-			if(status!=null)
-				criteria.add(Restrictions.eq("paymentStatus",status));
-			if(directPayment!=null)
-				criteria.add(Restrictions.eq("directPayment",directPayment));
-			criteria.addOrder(Order.desc("paymentCertNo"));
-			return (List<PaymentCert>) criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: obtainSCPaymentCertListByStatus(String jobNumber, String packageNo, String status, String directPayment)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<PaymentCert> obtainSCPaymentCertListByPackageNo(String jobNumber, String packageNo) throws DatabaseOperationException{
 		if (jobNumber==null)
@@ -290,36 +202,6 @@ public class PaymentCertHBDao extends BaseHibernateDao<PaymentCert> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PaymentCert> obtainDirectPaymentRecords(String division,
-			String company, String jobNumber, String vendorNo, String packageNo, List<Integer> scStatusList) {
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.createAlias("subcontract","subcontract" );
-		criteria.createAlias("subcontract.jobInfo","jobInfo" );
-		criteria.add(Restrictions.eq("directPayment", PaymentCert.DIRECT_PAYMENT));
-		criteria.add(Restrictions.eq("paymentStatus", "APR"));
-		if (scStatusList!=null && scStatusList.size()>0)
-			criteria.add(Restrictions.in("subcontract.subcontractStatus", scStatusList));
-		if (packageNo!=null && packageNo.trim().length()>0)
-			criteria.add(Restrictions.eq("subcontract.packageNo", packageNo));
-		if (vendorNo!=null && vendorNo.trim().length()>0)
-			criteria.add(Restrictions.eq("subcontract.vendorNo",vendorNo));
-		else 
-			criteria.add(Restrictions.isNotNull("subcontract.vendorNo"));
-		if (jobNumber!=null && jobNumber.trim().length()>0)
-			criteria.add(Restrictions.eq("jobInfo.jobNumber", jobNumber));
-		else
-			criteria.add(Restrictions.isNotNull("jobInfo.jobNumber"));
-		if (division!=null && division.trim().length()>0)
-			criteria.add(Restrictions.eq("jobInfo.division", division));
-		if (company!=null && company.trim().length()>0)
-			criteria.add(Restrictions.eq("jobInfo.company", company));
-		criteria.addOrder(Order.asc("jobInfo.jobNumber"))
-				.addOrder(Order.asc("subcontract.packageNo"))
-				.addOrder(Order.asc("paymentCertNo"));
-		return criteria.list();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<PaymentCert> obtainSCPaymentCertList(PaymentCertWrapper scPaymentCertWrapper, List<String> jobNoList, String dueDateType){
 		Criteria criteria = getSession().createCriteria(this.getType());

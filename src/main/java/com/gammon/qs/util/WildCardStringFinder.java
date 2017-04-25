@@ -2,8 +2,6 @@ package com.gammon.qs.util;
 
 import java.util.Vector;
 
-import org.apache.commons.lang.StringUtils;
-
 public class WildCardStringFinder 
 {
     /**
@@ -266,12 +264,4 @@ public class WildCardStringFinder
         return true;
     }
 
-	public static String removeWildCard(String str){
-		str=str.replace("*", "");
-		str=str.replace("%", "");
-		if(StringUtils.isNotBlank(str))
-			return str;
-		return null;
-		
-	}
 }

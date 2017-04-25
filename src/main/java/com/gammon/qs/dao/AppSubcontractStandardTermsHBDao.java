@@ -1,7 +1,6 @@
 package com.gammon.qs.dao;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,7 +9,6 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -97,47 +95,6 @@ public class AppSubcontractStandardTermsHBDao extends BaseHibernateDao<AppSubcon
 		}
 		return resultList;
 	}
-	
-	public ArrayList<String> obtainSystemConstantsSelectionOption(String fieldName) throws DatabaseOperationException {
-		ArrayList<String> resultList = new ArrayList<String>();
-		try {
-			logger.info("Generate System Constant Searching field candidates of "+fieldName);
-			
-			if(isValidField(fieldName)){		
-				Criteria criteria = getSession().createCriteria(this.getType());
-				@SuppressWarnings("unchecked")
-				List<String> data = criteria
-										.add(Restrictions.eq("systemStatus", "ACTIVE"))
-										.setProjection(Projections.distinct(Projections.property(fieldName)))
-										.addOrder( Order.asc(fieldName))
-										.list();
-				for(String str : data){
-					resultList.add(str);
-				}
-			}
-			else{
-				logger.info(String.format("Searching for non acceptable field: %s", fieldName));
-			}
-		} catch(HibernateException he) {
-			logger.info("Failed to search system constants with HibernateException: " + he.getMessage());
-			throw new DatabaseOperationException(he);
-		}
-		return resultList;
-	}
-	
-	/*
-	 * @author xeth hung
-	 * 2015-05-06 13:58
-	 * check if the searching field is target field.
-	 */
-	private boolean isValidField(String fieldName){
-		ArrayList<String> tempList = new ArrayList<String>();
-		tempList.add(AppSubcontractStandardTerms.SEARCHING_FIELD_COMPANY_CODE);
-		tempList.add(AppSubcontractStandardTerms.SEARCHING_FIELD_SYSTEM_CODE);
-		
-		return tempList.contains(fieldName);
-	}
-
 	
 	public Boolean updateMultipleSystemConstants(List<AppSubcontractStandardTerms> requests, String user) throws DatabaseOperationException {
 		try {

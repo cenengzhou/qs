@@ -22,10 +22,6 @@ public class CronTriggerService {
 		return cronTriggerDao.getAllTriggers();
 	}
 	
-	public CronTriggers getTrigger(String triggerName,String triggerGroup){
-		return cronTriggerDao.getTrigger(triggerName, triggerGroup);
-	}
-
 	public String updateCronTriggerList(List<CronTriggers> updatedCronList) {
 		logger.info("Updating Cron...");
 		String result = "";
@@ -38,16 +34,5 @@ public class CronTriggerService {
 			}
 		}
 		return result;
-	}
-	
-	public String updateCronTrigger(CronTriggers updatedCron) {
-		try {
-			cronTriggerDao.updateSpecificColumnOfTrigger(updatedCron);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getLocalizedMessage();
-		}
-		
-		return "";
 	}
 }

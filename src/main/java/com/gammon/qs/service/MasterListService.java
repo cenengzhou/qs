@@ -1,13 +1,9 @@
 package com.gammon.qs.service;
 
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +16,6 @@ import com.gammon.qs.dao.MasterListWSDao;
 import com.gammon.qs.domain.MasterListObject;
 import com.gammon.qs.domain.MasterListSubsidiary;
 import com.gammon.qs.domain.MasterListVendor;
-import com.gammon.qs.io.ExcelFile;
-import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.service.admin.AdminService;
 import com.gammon.qs.util.WildCardStringFinder;
 import com.gammon.qs.wrapper.WorkScopeWrapper;
@@ -40,8 +34,6 @@ public class MasterListService{
 	private List<MasterListObject> objectList;
 	private List<MasterListSubsidiary> subsidiaryList;
 	private List<MasterListVendor> clientList;
-	
-	private List<MasterListVendor> vendorNameList;
 	
 	public List<MasterListVendor> getClientList() {
 		return clientList;
@@ -94,36 +86,6 @@ public class MasterListService{
 		return resultList;
 	}
 	
-	public List<MasterListVendor> searchClientList(String searchStr) throws Exception {	
-		logger.info("searchClientList --> START");
-		boolean isRefreshed = false;
-		List<String> addressBookTypeList = new ArrayList<String>();
-		addressBookTypeList.add(GetAddressBookWithSCStatusRequestObj.CLIENT_ADDRESS_TYPE);
-		
-		if(this.clientList== null){
-			this.clientList = masterListDao.obtainAddressBookList(addressBookTypeList);
-			isRefreshed = true;
-		}
-		if(searchStr==null || "*".equals(searchStr)|| "".equals(searchStr)){
-			return this.clientList.subList(0, 101);
-		}
-		List<MasterListVendor> resultList = searchClientInLocalCacheList(searchStr);
-		
-		if(resultList.size()==0 && !isRefreshed){
-			this.clientList = this.masterListDao.obtainAddressBookList(addressBookTypeList);
-			resultList = searchClientInLocalCacheList(searchStr);
-		}
-		
-		//trim size
-		if(resultList!=null &&  resultList.size()>101){
-			List<MasterListVendor> returnList = new ArrayList<MasterListVendor>();
-			returnList.addAll(resultList.subList(0, 101));
-			
-			return returnList;
-		}
-		return resultList;
-	}
-	
 	public List<MasterListVendor> obtainVendorListByWorkScopeWithUser(String workScope, String username) throws Exception{
 		return trimVendorListAccessibleByUser(obtainSubcontractorListByWorkScopeCode(workScope), username);
 	}
@@ -163,15 +125,6 @@ public class MasterListService{
 		}else{
 			return new MasterListVendor();
 		}
-	}
-	
-	public MasterListVendor getVendor(String vendorNo)throws Exception{
-		return masterListDao.getVendor(vendorNo);
-	}
-	
-	public List<MasterListVendor> searchVendorNameList(String addressNumber) throws Exception {	
-		this.vendorNameList = masterListDao.getVendorNameList(addressNumber);
-		return this.vendorNameList;
 	}
 	
 	private List<MasterListVendor> searchVendorInLocalCacheList(String searchStr) throws Exception{
@@ -256,14 +209,7 @@ public class MasterListService{
 		
 		return resultSubsidiaryList;
 	}
-	public List<MasterListVendor> getVendorNameListByJob(List<String> addressNumberList) throws Exception {
-		return masterListDao.getVendorNameListByBatch(addressNumberList);
-	}
-	
-	public boolean validateAccountNum(String jobNumber, String objectCode, String subsidiaryCode){
-		return masterListDao.validateAccountNum(jobNumber, objectCode, subsidiaryCode);
-	}
-	
+
 	public boolean createAccountCode(String jobNumber, String objectCode, String subsidiaryCode){
 		return masterListDao.createAccountCode(jobNumber, objectCode, subsidiaryCode);
 	}
@@ -376,231 +322,7 @@ public class MasterListService{
 		logger.info(message);
 		return message;
 	}
-	public boolean validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode ){
-		throw new RuntimeException("remove entity | ObjectSubsidiaryRule | remark validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode )");
-		//TODO: remove entity | ObjectSubsidiaryRule | remark validateObjectSubsidiaryRule(String objectCode, String subsidiaryCode )
-//		ObjectSubsidiaryRule checkingObj = new ObjectSubsidiaryRule();
-//		if (objectCode!=null)
-//			checkingObj.setResourceType(objectCode.substring(0, 2));
-//		if (subsidiaryCode!=null){
-//			checkingObj.setCostCategory(subsidiaryCode.substring(0,1));
-//			checkingObj.setMainTrade(subsidiaryCode.substring(2,4));
-//		}
-//		logger.info("ObjectSubsidiaryRule:ResourceType:"+checkingObj.getResourceType()+"-CostCategory:"+checkingObj.getCostCategory()+"-MainTrade:"+checkingObj.getMainTrade()+"-"+checkingObj.getApplicable());		
-//		List<ObjectSubsidiaryRule> returnObject = objectSubsidiaryRuleDao.getObjectSubsidiaryRule(checkingObj);
-//		if (returnObject==null || returnObject.size()<1){
-//			logger.info("result:Null");
-//			return false;
-//		}
-//		for (ObjectSubsidiaryRule aRule:returnObject)
-//			if (aRule.getApplicable()==null||!"Y".equalsIgnoreCase(aRule.getApplicable().trim())){
-//				logger.info("aRule.getApplicable():"+aRule.getApplicable());
-//				return false;				
-//			}
-//		logger.info("Found");
-//		return true;
-	}
-	
-	/**
-	 * @author Henry Lai created on 13-10-2014
-	 * 
-	 * For exporting Object Code via Master List Tab
-	 */
-	public ExcelFile downloadAccountCodeObjectExcelFile(String searchStr) throws Exception {
-		logger.info("downloadAccountCodeObjectExcelFile");
-		
-		int NUMBER_OF_COLUMNS = 2;
-		
-		boolean isRefreshed = false;
-		List<MasterListObject> resultList = null;		
-		
-		if (this.objectList == null) {
-			this.objectList = this.masterListDao.obtainObjectCodeList();
-			isRefreshed = true;
-		}
 
-		if (searchStr == null || "*".equals(searchStr) || "".equals(searchStr)) {
-			if (!isRefreshed)
-				this.objectList = masterListDao.obtainObjectCodeList();
-
-			resultList = this.objectList;
-		} else {
-			resultList = searchMasterListObjectInLocalCacheList(searchStr);
-		}
-		
-		if (resultList.size() == 0 && !isRefreshed) {
-			this.objectList = this.masterListDao.obtainObjectCodeList();
-			resultList = searchMasterListObjectInLocalCacheList(searchStr);
-		}
-
-		ExcelFile excelFile = new ExcelFile();
-
-		try {
-
-			SimpleDateFormat dateFormatter;
-			dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-			excelFile.setFileName("Account Code By Object "
-					+ dateFormatter.format(new Date()) + ExcelFile.EXTENSION);
-
-			ExcelWorkbook excelDoc = excelFile.getDocument();
-			
-			if (resultList.size() > 0) {
-				excelFile.setEmpty(false);
-				excelDoc.setCurrentSheetName("Account Code (Object)");
-
-				excelDoc.insertRow(generateAccountCodeObjectExcelGetTitleRow(NUMBER_OF_COLUMNS));
-				excelDoc.setCellFontBold(0, 0, 0, NUMBER_OF_COLUMNS); //(start row, start column, end row, end column)
-				
-				//insert content rows
-				for(MasterListObject object : resultList) {
-					excelDoc.insertRow(generateAccountCodeObjectExcelCreateContentRow(object, NUMBER_OF_COLUMNS));
-				}
-				
-				//Set Width size
-				excelFile.getDocument().setColumnWidth(0, 20);
-				excelFile.getDocument().setColumnWidth(1, 40);
-			} else {
-				excelFile.setEmpty(true);
-			}
-
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-		}
-		return excelFile;
-	}
-	
-	/**
-	 * Private Class for downloadAccountCodeObjectExcelFile()
-	 * 
-	 * @param object
-	 * @param sheetSize
-	 * @return
-	 */
-	private String[] generateAccountCodeObjectExcelCreateContentRow(MasterListObject object, int sheetSize) {
-		String[] contentRow = new String[sheetSize];
-
-		contentRow[0] = object.getObjectCode() != null ? object.getObjectCode(): "";
-		contentRow[1] = object.getDescription() != null ? object.getDescription() : "";
-
-		return contentRow;
-	}
-	
-	/**
-	 * Private Class for downloadAccountCodeObjectExcelFile()
-	 * 
-	 * @param sheetSize
-	 * @return
-	 */
-	private String[] generateAccountCodeObjectExcelGetTitleRow(int sheetSize) {
-		String[] titleRow = new String[sheetSize];
-		
-		titleRow[0] = "Code";
-		titleRow[1] = "Description";
-		
-		return titleRow;
-	}
-	
-	/**
-	 * For exporting Subsidiary Code via Master List Tab
-	 * 
-	 * @author Henry Lai created on 13-10-2014
-	 */
-	public ExcelFile downloadAccountCodeSubsidiaryExcelFile(String searchStr) throws Exception {
-		
-		logger.info("downloadAccountCodeSubsidiaryExcelFile");
-		
-		int NUMBER_OF_COLUMNS = 2;
-		
-		boolean isRefreshed = false;
-		List<MasterListSubsidiary> resultList = null;		
-		
-		if (this.subsidiaryList == null) {
-			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
-			isRefreshed = true;
-		}
-
-		if (searchStr == null || "*".equals(searchStr) || "".equals(searchStr)) {
-			if (!isRefreshed)
-				this.subsidiaryList = masterListDao.getAllSubsidiaryList();
-
-			resultList = this.subsidiaryList;
-		} else {
-			resultList = searchMasterListSubsidiaryInLocalCacheList(searchStr);
-		}
-		
-		if (resultList.size() == 0 && !isRefreshed) {
-			this.subsidiaryList = this.masterListDao.getAllSubsidiaryList();
-			resultList = searchMasterListSubsidiaryInLocalCacheList(searchStr);
-		}
-
-		ExcelFile excelFile = new ExcelFile();
-
-		try {
-
-			SimpleDateFormat dateFormatter;
-			dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-			excelFile.setFileName("Account Code By Subsidiary " + dateFormatter.format(new Date()) + ExcelFile.EXTENSION);
-
-			ExcelWorkbook excelDoc = excelFile.getDocument();
-
-			if (resultList.size() > 0) {
-				excelFile.setEmpty(false);
-				excelDoc.setCurrentSheetName("Account Code (Subsidiary)");
-				
-				excelDoc.insertRow(generateAccountCodeSubsidiaryExcelGetTitleRow(NUMBER_OF_COLUMNS));
-				excelDoc.setCellFontBold(0, 0, 0, NUMBER_OF_COLUMNS); //(start row, start column, end row, end column)
-				
-				//insert content rows
-				for(MasterListSubsidiary object : resultList) {
-					excelDoc.insertRow(generateAccountCodeSubsidiaryExcelCreateContentRow(object, NUMBER_OF_COLUMNS));
-				}
-				
-				//Set Width size
-				excelFile.getDocument().setColumnWidth(0, 20);
-				excelFile.getDocument().setColumnWidth(1, 40);
-			} else {
-				excelFile.setEmpty(true);
-			}
-			
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "WEB LAYER EXCEPTION ", e);
-			e.printStackTrace();
-		}
-		return excelFile;
-	}
-	
-	/**
-	 * Private Class for downloadAccountCodeSubsidiaryExcelFile()
-	 * 
-	 * @param subsidiary
-	 * @param sheetSize
-	 * @return
-	 */
-	private String[] generateAccountCodeSubsidiaryExcelCreateContentRow(MasterListSubsidiary subsidiary, int sheetSize) {
-		String[] contentRow = new String[sheetSize];
-				
-		contentRow[0] = subsidiary.getSubsidiaryCode() != null ? subsidiary.getSubsidiaryCode() : "";
-		contentRow[1] = subsidiary.getDescription() != null ? subsidiary.getDescription() : "";
-
-		return contentRow;
-	}
-	
-	/**
-	 * Private Class for downloadAccountCodeSubsidiaryExcelFile()
-	 * 
-	 * @param sheetSize
-	 * @return
-	 */
-	private String[] generateAccountCodeSubsidiaryExcelGetTitleRow(int sheetSize) {
-		String[] titleRow = new String[sheetSize];
-		
-		titleRow[0] = "Code";
-		titleRow[1] = "Description";
-		
-		return titleRow;
-	}
-	
 	/*************************************** FUNCTIONS FOR PCMS       **************************************************************/
 	/**
 	 * @author tikywong
@@ -790,10 +512,5 @@ public class MasterListService{
 	public List<WorkScopeWrapper> getSubcontractorWorkScope(String vendorNo)throws Exception{
 		return masterListDao.obtainSubcontractorWorkScope(vendorNo);
 	}
-
-	public Map<String, Set<String>> obtainSubcontractorWorkScopeMap(String subcontractorNo, String workscope){
-		return masterListDao.obtainSubcontractorWorkScopeMap(subcontractorNo, workscope);
-	}
-
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/
 }

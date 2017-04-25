@@ -57,10 +57,6 @@ public class TenderVarianceService {
 		return error;
 	}
 	
-	public List<TenderVariance> obtainAllTenderVariance() throws Exception{
-		return tenderVarianceHBDao.getAll();
-	}
-
 	public List<TenderVariance> obtainTenderVarianceList(String jobNo, String subcontractNo, String subcontractorNo) {
 		List<TenderVariance> tenderVarianceList = null;
 		try {

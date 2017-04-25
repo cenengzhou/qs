@@ -57,10 +57,6 @@ public class TransitBQMasterReconciliationReportRecordWrapper implements Seriali
 		this.pageNo = pageNo;
 	}
 
-	public BigDecimal geteCAValue() {
-		return eCAValue;
-	}
-
 	public void seteCAValue(BigDecimal eCAValue) {
 		this.eCAValue = eCAValue;
 	}

@@ -9,11 +9,6 @@ import java.util.List;
 import org.springframework.context.annotation.Configuration;
 
 import com.gammon.junit.testcase.TransactionTestCase;
-import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.JobInfo;
-import com.gammon.qs.domain.PaymentCert;
-import com.gammon.qs.domain.ResourceSummary;
-import com.gammon.qs.wrapper.addAddendum.AddAddendumWrapper;
 
 /**
  * @author paulyiu
@@ -401,55 +396,6 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#triggerUpdateSCPaymentDetail(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
-	 */
-	public TransactionTestCase.TestDataMethod testTriggerUpdateSCPaymentDetail() {
-		return new TransactionTestCase.TestDataMethod() {
-			private SubcontractService packageService = applicationContext.getBean(SubcontractService.class);
-			private PaymentService paymentService = applicationContext.getBean(PaymentService.class);
-			private List<PaymentCert> scPaymentCertList = null;
-			
-			private String jobNumber = "13389"; 
-			private String packageNo = "2010";
-			private String ifPayment = null;
-			private String createUser = "paulnpyiu"; 
-			private String directPaymentIndicator = "N";
-
-			@Override
-			public Object obtainObjectFromDB() {
-				try {
-					scPaymentCertList = paymentService.obtainSCPaymentCertListByPackageNo(jobNumber, packageNo);
-
-				} catch (DatabaseOperationException e) {
-					e.printStackTrace();
-				}
-				return scPaymentCertList;
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public Object obtainDataForCompare() {
-				List<Object> data = new ArrayList<Object>();
-				List<PaymentCert> tempObjList = (List<PaymentCert>) obtainObjectFromDB();
-				for(PaymentCert tempObj: tempObjList){
-					data.add(tempObj.getId());
-				}
-				return data;
-			}
-
-			@Override
-			public void executeTestMethod() {
-				try {
-					packageService.triggerUpdateSCPaymentDetail(jobNumber, packageNo, ifPayment, createUser, directPaymentIndicator);
-				} catch (DatabaseOperationException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		};
-	}
-
-	/**
 	 * Test method for {@link com.gammon.qs.service.SubcontractService#getScPaymentCertHBDao()}.
 	 */
 	public TransactionTestCase.TestDataMethod testGetScPaymentCertHBDao() {
@@ -565,57 +511,6 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 
 			@Override
 			public Object obtainObjectFromDB() {
-				return null;
-			}
-
-			@Override
-			public Object obtainDataForCompare() {
-				List<Object> data = new ArrayList<Object>();
-//				SCDetails tempObj = (SCDetails) obtainObjectFromDB();
-//				data.add(tempObj.getCumCertifiedQuantity());
-				return data;
-			}
-
-			@Override
-			public void executeTestMethod() {
-				
-			}
-			
-		};
-	}
-
-	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#addAddendumByWrapperListStr(java.util.List)}.
-	 */
-	public TransactionTestCase.TestDataMethod testAddAddendumByWrapperListStr() {
-		return new TransactionTestCase.TestDataMethod() {
-			private ResourceSummaryService bqResourceSummaryService = applicationContext.getBean(ResourceSummaryService.class);
-			private JobInfoService jobService = applicationContext.getBean(JobInfoService.class);
-			@SuppressWarnings("unused")
-			private List<AddAddendumWrapper> wrapperList;
-			
-			private String jobNumber = "13389";
-			private String packageNo = "2010";
-			private String objectCode = "140299";
-			private String subsidiaryCode = "29999999";
-			private String description = null;
-			private String type = null;
-			private String levyExcluded = "";
-			private String defectExcluded = "";
-			@SuppressWarnings("unused")
-			private List<ResourceSummary> bqResourceSummaries;
-			
-			@Override
-			public Object obtainObjectFromDB() {
-				try{
-					JobInfo job = jobService.obtainJob(jobNumber);
-					bqResourceSummaries = bqResourceSummaryService.obtainResourceSummariesSearchByPage(job, 
-							packageNo, objectCode, subsidiaryCode, description, type, levyExcluded, defectExcluded, 0)
-							.getCurrentPageContentList();
-					
-				}catch(Exception e){
-					e.printStackTrace();
-				}
 				return null;
 			}
 

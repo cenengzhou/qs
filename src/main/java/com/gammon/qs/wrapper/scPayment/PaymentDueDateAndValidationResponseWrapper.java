@@ -56,8 +56,4 @@ public class PaymentDueDateAndValidationResponseWrapper implements Serializable 
 		this.errorMsg = errorMsg;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

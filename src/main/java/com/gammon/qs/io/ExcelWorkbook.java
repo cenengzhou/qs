@@ -8,8 +8,6 @@ import java.util.Date;
 
 import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -102,14 +100,6 @@ public class ExcelWorkbook {
     }
 
     // START: Setting Cell Type
-    public void setCellTypeToFormula(int startRow, int startCol, int endRow, int endCol) {
-        for (int i=startRow; i<=endRow; i++ ) {
-            for (int j=startCol; j<=endRow; j++) {
-                this.setCellTypeToFormula(i, j);
-            }
-        }
-    }
-    
     /**
      * @author xethhung
      * Return XSSFFont
@@ -125,165 +115,9 @@ public class ExcelWorkbook {
         return wb.createCellStyle();
     }
 
-    
-    /**
-     * @author xethhung
-     * Set style for an area 
-     */
-   public void setCellStyle(int startRow, int startColumn, int endRow, int endColumn, XSSFCellStyle style){
-    	for(int i = startRow ; i <= endRow; i++){
-    		for(int j = startColumn ; j <= endColumn ; j++){
-    			setCellStyle(i,j,style);
-    		}
-    	}
-        
-    }
-
-   /**
-    * @author xethhung 
-    * Set style for single cell
-    */
-    public void setCellStyle(int row, int col, XSSFCellStyle style){
-    	XSSFCell cell = locateCell(row, col);
-    	if(cell != null)
-    		cell.setCellStyle(style);
-    }
-
-    /**
-     * @author xethhung 
-     * Set style for specific cell in same column
-     */
-    public void setCellStyle(int row, int[] cols, XSSFCellStyle style){
-    	XSSFCell cell = null;
-    	for(int col : cols){
-    		cell = locateCell(row, col);
-    		if(cell != null)
-    			cell.setCellStyle(style);
-    	}
-    	
-    	
-    		
-    }
-
-    /**
-     * @author xeth hung 
-     */
-    public void removeSheet(String sheetName){
-    	int index = this.wb.getSheetIndex(sheetName);
-    	this.wb.removeSheetAt(index);
-    }
-
-    public void setCellTypeToFormula(int row, int col) {
-        XSSFRichTextString formula = this.wb.getSheetAt(this.workingSheet).getRow(row).getCell(col).getRichStringCellValue();
-        this.wb.getSheetAt(this.workingSheet).getRow(row).getCell(col).setCellFormula(formula.getString());
-        this.wb.getSheetAt(this.workingSheet).getRow(row).getCell(col).setCellType(XSSFCell.CELL_TYPE_FORMULA);
-    }
-    
-    public void setCellFormula(String formula, int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        if (cell == null) {
-            cell = this.wb.getSheetAt(this.workingSheet).getRow(row).getCell(col);
-        }
-        cell.setCellFormula(formula);
-    }
-    
-    public void setCellTypeToString(int row, int col) {
-        this.wb.getSheetAt(this.workingSheet).getRow(row).getCell(col).setCellType(XSSFCell.CELL_TYPE_STRING);
-    }
-    
     // START: Sheet Level Styling
     public void setColumnWidth(int column, int width) {
         this.wb.getSheetAt(this.workingSheet).setColumnWidth(column, width*256);
-    }
-    
-    public void setRowHeight(int row, int height) {
-        XSSFRow aRow = this.wb.getSheetAt(this.workingSheet).getRow(row);
-        if (aRow != null) {
-            aRow.setHeightInPoints((float)height);
-        }
-    }
-    
-    public void addMergedRegion(int startRow, int startCol, int endRow, int endCol) {
-        this.wb.getSheetAt(this.workingSheet).addMergedRegion(new CellRangeAddress(startRow, startCol, endRow, endCol));
-    }
-
-    public void addMergedRegion(int startRow, int startCol, int endRow, int endCol, int height, int width) {
-        for (int row=startRow; row<=endRow; row+=height) {
-            for (int col=startCol; col<=endCol; col+=width) {
-                addMergedRegion(row,col,(row+height-1),(col+width-1));
-            }
-        }
-    }
-    
-    public void setPageMargin(short side, double size) {
-        this.wb.getSheetAt(this.workingSheet).setMargin(side,size);
-    }
-    public double getPageMargin(short side) {
-        return this.wb.getSheetAt(this.workingSheet).getMargin(side);
-    }
-    
-    // END: Sheet Level Styling
-    
-    // START: Cell Level Styling
-    public void setCellLeftBorder(int row, int col, short borderType) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setCellStyleProperty(cell, this.wb, "borderLeft", new Short(borderType));
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void setCellRightBorder(int row, int col, short borderType) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setCellStyleProperty(cell, this.wb, "borderRight", new Short(borderType));
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void setCellTopBorder(int row, int col, short borderType) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setCellStyleProperty(cell, this.wb, "borderTop", new Short(borderType));
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void setCellBottomBorder(int row, int col, short borderType) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setCellStyleProperty(cell, this.wb, "borderBottom", new Short(borderType));
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void enableTextWrapOnCell(int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setCellStyleProperty(cell, this.wb, "wrapText", new Boolean(true));
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void enableTextWrapOnCell(int startRow, int startCol, int endRow, int endCol) {
-    	XSSFCell cell;
-    	 for (int row=startRow; row<=endRow; row++) {
-             for (int col=startCol; col<=endCol; col++) {
-            	 cell = locateCell(row, col);
-                 try {
-                     CellUtil.setCellStyleProperty(cell, this.wb, "wrapText", new Boolean(true));
-                 } catch(Exception ex) {
-                     ex.printStackTrace();
-                 }
-             }
-         }
-    	
-       
     }
     
     public void setCellFontBold(int row, int col) {
@@ -301,68 +135,6 @@ public class ExcelWorkbook {
         }
     }
     
-    public void setCellFontEditable(int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        if(cell != null){
-        	cell.setCellStyle(editableStyle);
-        }
-    }
-    
-    /**added by heisonwong**/
-    public void setCellNegativeRed(int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        if(cell != null){
-        	cell.setCellStyle(negativeRedStyle);
-        }
-    }
-
-    public void setDateStyle(int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        if(cell != null){
-        	cell.setCellStyle(dateStyle);
-        }
-    }
-
-    public void setCellFontColour(int row, int col, XSSFColor xssfColor) {
-        XSSFCell cell = locateCell(row, col);
-        if(cell != null){
-        	 XSSFFont colorFont = this.wb.createFont();
-             colorFont.setColor(xssfColor);
-             XSSFCellStyle colorStyle = wb.createCellStyle();
-             colorStyle.setFont(colorFont);
-             cell.setCellStyle(colorStyle);
-        }
-    }
-    
-    public void setCellFontEditable(int startRow, int startCol, int endRow, int endCol) {
-        for (int row=startRow; row<=endRow; row++) {
-            for (int col=startCol; col<=endCol; col++) {
-                setCellFontEditable(row,col);
-            }
-        }
-    }
-    
-    public void setCellFontBoldAndUnderlined(int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            CellUtil.setFont(cell, this.wb, this.boldAndUnderlinedFont);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public void setCellFontByType(int row, int col, String type) {
-        XSSFCell cell = locateCell(row, col);
-        try {
-            if (type.equals(SUMMARY_SHEET_CONTENT_FONT))
-                CellUtil.setFont(cell, this.wb, this.summarySheet_fontSize_content);
-            else if (type.equals(SUMMARY_SHEET_HEADER_FONT)) 
-                CellUtil.setFont(cell, this.wb, this.summarySheet_fontSize_header);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
     public void setCellAlignment(short alignment, int row, int col) {
         XSSFCell cell = locateCell(row, col);
         try {
@@ -371,26 +143,7 @@ public class ExcelWorkbook {
             ex.printStackTrace();
         }
     }
-
-    public void setCellAlignment(short alignment, int startRow, int startCol, int endRow, int endCol) {
-        for (int row=startRow; row<=endRow; row++) {
-            for (int col=startCol; col<=endCol; col++) {
-                setCellAlignment(alignment,row,col);
-            }
-        }
-    }
     
-    public void setCellVerticalAlignmnet(short alignment, int row, int col) {
-        XSSFCell cell = locateCell(row, col);
-        XSSFCellStyle cs;
-        if (cell.getCellStyle()==null)
-            cs = this.wb.createCellStyle();
-        else 
-            cs = cell.getCellStyle();
-
-        cs.setVerticalAlignment(alignment);
-        cell.setCellStyle(cs);
-    }
     // END: Cell Level Styling
     
     // START: Sheet Operation
@@ -404,16 +157,6 @@ public class ExcelWorkbook {
             setCellValue(rowToInsert, i, content[i]);
         }
         return rowToInsert;
-    }
-    
-    public void insertRow(int rowToInsert, String[] content){
-    	XSSFRow row = this.wb.getSheetAt(this.workingSheet).getRow(rowToInsert);
-    	if (row == null) {
-            row = this.wb.getSheetAt(this.workingSheet).createRow(rowToInsert);
-        }
-        for(int i=0; i<content.length;i++) {
-            setCellValue(rowToInsert, i, content[i]);
-        }
     }
     
     public void setCellValue(int insertRow, int insertCol, String value) {
@@ -519,11 +262,6 @@ public class ExcelWorkbook {
         setWorkingSheet(this.wb.getSheetIndex(sheetName));
     }
     
-    public void insertSheet(String sheetName) {
-        this.wb.createSheet(sheetName);
-        setWorkingSheet(sheetName);
-    }
-    
     public void setCurrentSheetName(String sheetName) {
         this.wb.setSheetName(this.workingSheet, sheetName);
     }
@@ -537,26 +275,6 @@ public class ExcelWorkbook {
         return aCell;
     }
     // END: Sheet Operation
-    
-     public String getColLetter(int colIndex)
-     {
-        String ch = "";
-            if (colIndex  < 26)
-                ch = "" + (char)((colIndex) + 65);
-            else
-                ch = "" + (char)((colIndex) / 26 + 65 - 1) + (char)((colIndex) % 26 + 65);
-             return ch;
-     }    
-    
-    public static String convertRowColToGridId(int row, int col) {
-        String id = "";
-        if (col < 26) {
-            id = "" + (char)(col+65);
-        } else {
-            id = "" + (char)((col/26)+65-1) + (char)((col%26) + 65);
-        }
-        return id+(row+1);
-    }
     
     public boolean isValidDate(String inDate) {
 
@@ -581,22 +299,4 @@ public class ExcelWorkbook {
 	    return true;
 	  }
 
-	/**
-	 * created by matthewlam, 2015-01-19
-	 * Bug Fix #92: rearrange column names and order for SC Provision History Panel
-	 */
-	public void setCellDataFormat(String format, int startRow, int startColumn,
-			int endRow, int endColumn) {
-		short dataFormat = wb.createDataFormat().getFormat(format);
-		Cell cell;
-
-		for (int i = startRow; i <= endRow; i++) {
-			for (int j = startColumn; j <= endColumn; j++) {
-				cell = locateCell(i, j);
-
-				if (cell != null)
-					CellUtil.setCellStyleProperty(cell, wb, "dataFormat", dataFormat);
-			}
-		}
-	}
 } 

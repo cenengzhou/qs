@@ -1,12 +1,5 @@
 package com.gammon.qs.shared;
 
-import java.util.Map;
-
-import com.gammon.qs.domain.MainCert;
-import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.AppSubcontractStandardTerms;
-
-
 public class GlobalParameter {
 	
 	
@@ -65,78 +58,7 @@ public class GlobalParameter {
     public final static String TRANSIT_UOM_MATCHING = "Unit Code Matching";
     public final static String TRANSIT_ERROR = "TERROR";
     public final static String TRANSIT_SUCCESS_WITH_WARNING = "SUCCESS_WITH_WARNING"; // added by brian on 20110225
-
-	public static String[][] getContraChargeLineType(boolean withDefault){
-		if(withDefault)
-			return new String[][]{
-					new String[]{"","All"},
-					new String[]{"C1","C1"},
-					new String[]{"C2","C2"},
-		};
-		else
-		return new String[][]{
-				new String[]{"C1","C1"},
-				new String[]{"C2","C2"},
-		};
-	}
-
 	
-	public static String[][] getPaymentTerms(boolean withDefault){
-		if(withDefault)
-			return new String[][]{
-					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
-					new String[]{"QS0", "QS0 - Manual Input Due Date"},
-					new String[]{"QS1", "QS1 - Pay when Paid + 7 days"},
-					new String[]{"QS2", "QS2 - Pay when Paid + 14 days"},
-					new String[]{"QS3", "QS3 - Pay when IPA Received + 56 days"},
-					new String[]{"QS4", "QS4 - Pay when Invoice Received + 28 days"},
-					new String[]{"QS5", "QS5 - Pay when Invoice Received + 30 days"},
-					new String[]{"QS6", "QS6 - Pay when Invoice Received + 45 days"},
-					new String[]{"QS7", "QS7 - Pay when Invoice Received + 60 days"}
-		};	
-		else
-		return new String[][]{
-				new String[]{"QS0", "QS0 - Manual Input Due Date"},
-				new String[]{"QS1", "QS1 - Pay when Paid + 7 days"},
-				new String[]{"QS2", "QS2 - Pay when Paid + 14 days"},
-				new String[]{"QS3", "QS3 - Pay when IPA Received + 56 days"},
-				new String[]{"QS4", "QS4 - Pay when Invoice Received + 28 days"},
-				new String[]{"QS5", "QS5 - Pay when Invoice Received + 30 days"},
-				new String[]{"QS6", "QS6 - Pay when Invoice Received + 45 days"},
-				new String[]{"QS7", "QS7 - Pay when Invoice Received + 60 days"}
-		};
-	}
-	
-	public static String[][] getRetentionType(boolean withDefault){
-		if(withDefault)
-			return new String[][]{
-					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
-					new String[]{Subcontract.RETENTION_LUMPSUM,Subcontract.RETENTION_LUMPSUM},
-					new String[]{Subcontract.RETENTION_ORIGINAL,Subcontract.RETENTION_ORIGINAL},
-					new String[]{Subcontract.RETENTION_REVISED,Subcontract.RETENTION_REVISED}
-		};
-		else
-		return new String[][]{
-				new String[]{Subcontract.RETENTION_LUMPSUM,Subcontract.RETENTION_LUMPSUM},
-				new String[]{Subcontract.RETENTION_ORIGINAL,Subcontract.RETENTION_ORIGINAL},
-				new String[]{Subcontract.RETENTION_REVISED,Subcontract.RETENTION_REVISED}
-		};
-	}
-
-	public static String[][] getReviewedByFinance(boolean withDefault){
-		if(withDefault)
-			return new String[][]{
-					new String[]{"",AppSubcontractStandardTerms.CONST_ALL},
-					new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_Y,AppSubcontractStandardTerms.FINQS0REVIEW_Y},
-					new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_N,AppSubcontractStandardTerms.FINQS0REVIEW_N}
-		};
-		else
-		return new String[][]{
-				new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_Y,AppSubcontractStandardTerms.FINQS0REVIEW_Y},
-				new String[]{AppSubcontractStandardTerms.FINQS0REVIEW_N,AppSubcontractStandardTerms.FINQS0REVIEW_N}
-		};
-	}
-
 	/*
 	public final static String[][] getTerms(){
 		return new String[][]{
@@ -152,61 +74,6 @@ public class GlobalParameter {
 	}
 	*/
 
-	
-	private static Map<String, String> performanceGroupMap;
-
-	public static Map<String, String> getPerformanceGroupMap() {
-		return performanceGroupMap;
-	}
-
-	public static void setPerformanceGroupMap(Map<String, String> performanceGroupMapArgument) {
-		performanceGroupMap = performanceGroupMapArgument;
-	}
-	
-	private static Map<String, String> scStatusCodeMap;
-
-	public static Map<String, String> getScStatusCodeMap() {
-		return scStatusCodeMap;
-	}
-
-	public static void setScStatusCodeMap(Map<String, String> scStatusCodeMap) {
-		GlobalParameter.scStatusCodeMap = scStatusCodeMap;
-	}
-	
-	
-	public final static String[][] getMainCertficateStatuses(){
-		return new String[][]{
-				new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
-				new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
-				new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
-				new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
-				new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC}
-		};
-	}
-	
-	public final static String[][] getMainCertficateStatusesFull(boolean withOptions){
-		if(withOptions){
-			return new String[][]{
-					new String[]{"", 													"All"},
-					new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
-					new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
-					new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
-					new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
-					new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC},
-					new String[]{"400", 												"Payment Received"}
-			};
-		}
-		else
-			return new String[][]{
-					new String[]{MainCert.CERT_CREATED, 					MainCert.CERT_CREATED_DESC},
-					new String[]{MainCert.IPA_SENT, 						MainCert.IPA_SENT_DESC},
-					new String[]{MainCert.CERT_CONFIRMED, 				MainCert.CERT_CONFIRMED_DESC},
-					new String[]{MainCert.CERT_WAITING_FOR_APPROVAL, 	MainCert.CERT_WAITING_FOR_APPROVAL_DESC},
-					new String[]{MainCert.CERT_POSTED, 					MainCert.CERT_POSTED_DESC},
-					new String[]{"400", 												"Payment Received"}
-			};
-	}
-	
 	 /*
      * GWT-EXT Date format (i.e. DateField of Panels, Windows etc)
      * 

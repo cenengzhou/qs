@@ -65,12 +65,6 @@ public class SubcontractorWrapper implements Serializable{
 		return "";
 	}
 	
-	public static String convertSCFinancialAlertStatus(String status) {
-		if (status != null && status.length() > 0)
-			return "Yes";
-		return "No";
-	}
-	
 	//getter, setter
 	public String getSubcontractorNo() {
 		return subcontractorNo;

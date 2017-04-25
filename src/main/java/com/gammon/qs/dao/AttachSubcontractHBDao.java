@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AttachSubcontract;
-import com.gammon.qs.domain.Subcontract;
 
 @Repository
 public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> {
@@ -36,19 +35,6 @@ public class AttachSubcontractHBDao extends BaseHibernateDao<AttachSubcontract> 
 			resultList = criteria.list();
 			if(resultList == null)
 				resultList = new ArrayList<AttachSubcontract>();
-			return resultList;
-		}catch (HibernateException he){
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<AttachSubcontract> getSCAttachment(Subcontract subcontract) throws DatabaseOperationException{
-		try{
-			List<AttachSubcontract> resultList;
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.add(Restrictions.eq("subcontract", subcontract));		
-			resultList = criteria.list();
 			return resultList;
 		}catch (HibernateException he){
 			throw new DatabaseOperationException(he);

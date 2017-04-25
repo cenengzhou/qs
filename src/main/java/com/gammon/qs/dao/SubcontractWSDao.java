@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.UnmarshallingFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -17,8 +16,6 @@ import com.gammon.jde.webservice.serviceRequester.AddUpdateAttachmentLinkManager
 import com.gammon.jde.webservice.serviceRequester.AddUpdateAttachmentLinkManager_Refactor.addUpdateAttachmentLink.AddUpdateAttachmentLinkResponseObj;
 import com.gammon.jde.webservice.serviceRequester.AddUpdateTextManager_Refactor.addUpdateText.AddUpdateTextRequestObj;
 import com.gammon.jde.webservice.serviceRequester.AddUpdateTextManager_Refactor.addUpdateText.AddUpdateTextResponseObj;
-import com.gammon.jde.webservice.serviceRequester.CurrencyValidationManager_Refactor.getCurrencyValidation.GetCurrencyValidationRequestObj;
-import com.gammon.jde.webservice.serviceRequester.CurrencyValidationManager_Refactor.getCurrencyValidation.GetCurrencyValidationResponseListObj;
 import com.gammon.jde.webservice.serviceRequester.DeleteAttachmentLinkManager_Refactor.deleteAttachmentLink.DeleteAttachmentLinkRequestObj;
 import com.gammon.jde.webservice.serviceRequester.DeleteAttachmentLinkManager_Refactor.deleteAttachmentLink.DeleteAttachmentLinkResponseObj;
 import com.gammon.jde.webservice.serviceRequester.DeleteTextMediaObjectManager_Refactor.deleteTextMediaObject.DeleteTextMediaObjectRequestObj;
@@ -37,9 +34,6 @@ import com.gammon.jde.webservice.serviceRequester.SCHeaderInsertManager_Refactor
 import com.gammon.jde.webservice.serviceRequester.SCHeaderInsertManager_Refactor.insertSCHeader.InsertSCHeaderResponseObj;
 import com.gammon.jde.webservice.serviceRequester.UpdateSCWorkScopeManager.updateSCWorkScope.UpdateSCWorkScopeRequestObj;
 import com.gammon.jde.webservice.serviceRequester.UpdateSCWorkScopeManager.updateSCWorkScope.UpdateSCWorkScopeResponseObj;
-import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeRequestObj;
-import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeResponseFieldsObj;
-import com.gammon.jde.webservice.serviceRequester.getSCWorkScopeManager.getSCWorkScope.GetSCWorkScopeResponseObj;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AbstractAttachment;
 import com.gammon.qs.domain.AttachSubcontract;
@@ -50,7 +44,6 @@ import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.webservice.WSConfig;
 import com.gammon.qs.webservice.WSPrograms;
 import com.gammon.qs.webservice.WSSEHeaderWebServiceMessageCallback;
-import com.gammon.qs.wrapper.currencyCode.CurrencyCodeWrapper;
 
 @Repository
 public class SubcontractWSDao {
@@ -339,32 +332,6 @@ public class SubcontractWSDao {
 		return fileLink;
 	}
 
-	public List<String> getSCWorkscope(String jobNumber, Integer packageNo) {
-		GetSCWorkScopeRequestObj requestObj = new GetSCWorkScopeRequestObj();
-		requestObj.setJobNumber(jobNumber);
-		requestObj.setPackageNumber(packageNo);
-		long start = System.currentTimeMillis();
-		GetSCWorkScopeResponseObj responseObj;
-		try {
-			responseObj = (GetSCWorkScopeResponseObj)getSCWorkScopeManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		} catch (UnmarshallingFailureException e) {
-			long end = System.currentTimeMillis();
-			logger.info("Time for calliong web service (getSCWorkscope)=" + (end - start) / 1000.0);
-			logger.info("No Work Scope in Job " + jobNumber.trim() + " SC " + packageNo);
-			return new ArrayList<String>();
-		}
-		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCWorkscope)=" + (end - start) / 1000.0);
-		if (responseObj != null && responseObj.getFieldsObj() != null) {
-			List<String> scWorkScopeList = new ArrayList<String>();
-			for (GetSCWorkScopeResponseFieldsObj fieldsObj : responseObj.getFieldsObj())
-				scWorkScopeList.add(fieldsObj.getScWorkScope().trim());
-			return scWorkScopeList;
-		}
-		return null;
-
-	}
-
 	/**
 	 * Insert SCPackage (SC Header) to JDE
 	 * @author tikywong
@@ -489,48 +456,6 @@ public class SubcontractWSDao {
 		logger.info("time for calling ws(insertSCHeaderWebServiceTemplate):" + ((end - start) / 1000.00));
 
 		logger.info("responseObj size=" + headerResponseObj.getNumberOfRowsInserted());
-	}
-
-	public String currencyCodeValidation(String currencyCode) throws Exception {
-		GetCurrencyValidationRequestObj requestObj = new GetCurrencyValidationRequestObj();
-		requestObj.setCurrencyCodeFrom(currencyCode.trim());
-
-		GetCurrencyValidationResponseListObj responseObjList = new GetCurrencyValidationResponseListObj();
-		long start = System.currentTimeMillis();
-		responseObjList = (GetCurrencyValidationResponseListObj)getCurrencyValidationManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCDate)=" + (end - start) / 1000.0);
-		if (responseObjList.getGetCurrencyValidationResponseObjList().size() > 0)
-			if (responseObjList.getGetCurrencyValidationResponseObjList().get(0) != null) {
-				logger.info("Currency Code Description: "+responseObjList.getGetCurrencyValidationResponseObjList().get(0).getDescription());
-				return responseObjList.getGetCurrencyValidationResponseObjList().get(0).getDescription();}
-		return null;
-	}
-
-	// added by brian on 20110322
-	// Get the currency code list from JDE web services
-	// return full list if pass empty string to web service
-	// return empty list if cannot get
-	public List<CurrencyCodeWrapper> getCurrencyCodeList(String currencyCode) throws Exception {
-		logger.info("PackageWSDaoImpl - getCurrencyCodeList");
-		List<CurrencyCodeWrapper> currencyCodeList = new ArrayList<CurrencyCodeWrapper>();
-		GetCurrencyValidationRequestObj requestObj = new GetCurrencyValidationRequestObj();
-		requestObj.setCurrencyCodeFrom(currencyCode.trim());
-
-		GetCurrencyValidationResponseListObj responseObjList = new GetCurrencyValidationResponseListObj();
-		long start = System.currentTimeMillis();
-		responseObjList = (GetCurrencyValidationResponseListObj)getCurrencyValidationManagerWebServiceTemplate.marshalSendAndReceive(requestObj, new WSSEHeaderWebServiceMessageCallback(wsConfig.getUserName(), wsConfig.getPassword()));
-		long end = System.currentTimeMillis();
-		logger.info("Time for calliong web service (getSCDate)=" + (end - start) / 1000.0);
-		if(responseObjList.getGetCurrencyValidationResponseObjList() != null && responseObjList.getGetCurrencyValidationResponseObjList().size()>0){
-			for (int i = 0; i < responseObjList.getGetCurrencyValidationResponseObjList().size(); i++) {
-				CurrencyCodeWrapper temp = new CurrencyCodeWrapper();
-				temp.setCurrencyCode(responseObjList.getGetCurrencyValidationResponseObjList().get(i).getCurrencyCodeFrom());
-				temp.setCurrencyDescription(responseObjList.getGetCurrencyValidationResponseObjList().get(i).getDescription());
-				currencyCodeList.add(temp);
-			}
-		}
-		return currencyCodeList;
 	}
 
 	public WebServiceTemplate getGetSCWorkScopeManagerWebServiceTemplate() {

@@ -47,7 +47,6 @@ import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
 import com.gammon.qs.domain.Subcontract;
-import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.admin.AdminService;
@@ -223,11 +222,6 @@ public class AttachmentService {
 		logger.info("Execution Time - getRepackagingFileAttachment:"+ timeInSeconds+" seconds");
 
 		return attachmentFile;
-	}
-
-	public String getRepackagingTextAttachment(Long repackagingEntryID, Integer sequenceNo) throws Exception {
-		AttachRepackaging attachment = repackagingAttachmentDao.getRepackagingAttachment(repackagingEntryID, sequenceNo);
-		return attachment.getTextAttachment();
 	}
 
 	public List<AttachRepackaging> getRepackagingAttachments(
@@ -756,41 +750,6 @@ public class AttachmentService {
 	}
 	
 	@Transactional(readOnly = true, value = "transactionManager")
-	public List<? extends AbstractAttachment> getAddendumAttachmentList(String nameObject, String textKey) throws Exception{
-		String splittedTextKey[] = textKey.split("\\|");
-		String jobNumber = splittedTextKey[0].trim();
-		String packageNo = splittedTextKey[1].trim();
-		adminService.canAccessJob(jobNumber);
-		try{
-			List<SubcontractDetail> scDetailsList = scDetailsHBDao.obtainSCDetails(jobNumber, packageNo);
-			List<AttachSubcontractDetail> resultList = new ArrayList<AttachSubcontractDetail>();
-			for (SubcontractDetail scDetails : scDetailsList){
-				if(Math.abs(scDetails.getTotalAmount()-scDetails.getToBeApprovedAmount())>0 || (!SubcontractDetail.APPROVED.equals(scDetails.getApproved()) && !SubcontractDetail.SUSPEND.equals(scDetails.getApproved())))
-					resultList.addAll(scDetailAttachmentDao.getSCDetailsAttachment(scDetailsHBDao.obtainSCDetail(jobNumber, packageNo,scDetails.getSequenceNo().toString())));
-			}
-			Collections.sort(resultList, new Comparator<AttachSubcontractDetail>(){
-				public int compare(AttachSubcontractDetail scDetailAttachment1, AttachSubcontractDetail scDetailAttachment2) {
-					if(scDetailAttachment1== null || scDetailAttachment2 == null)
-						return 0;
-					return scDetailAttachment1.getSequenceNo().compareTo(scDetailAttachment2.getSequenceNo());				
-				}
-			});
-			
-			//Set the file link with server path 
-			String serverPath = serviceConfig.getAttachmentServer("PATH")+serviceConfig.getJobAttachmentsDirectory();
-			for(AttachSubcontractDetail scDetailsAttachment: resultList){
-				if(scDetailsAttachment.getDocumentType()!=0) //docType 0 = Text, others = File
-					scDetailsAttachment.setFileLink(serverPath + scDetailsAttachment.getFileLink());
-			}
-			
-			return resultList;
-		}catch(Exception e){
-			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
-			return null;
-		}
-	}
-
-	@Transactional(readOnly = true, value = "transactionManager")
 	public List<? extends AbstractAttachment> getPaymentAttachmentList(String nameObject, String textKey) throws Exception{
 		String splittedTextKey[] = textKey.split("\\|");
 		String jobNumber = splittedTextKey[0].trim();
@@ -1145,65 +1104,6 @@ public class AttachmentService {
 	}
 
 	/***************************Main Contract Certificate Attachment***************************/
-	/**
-	 * @author tikywong
-	 * created on January 18, 2012
-	 */
-	public String getMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo) throws DatabaseOperationException {
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		MainCert mainCert = mainContractCertificateRepository.getCertificate(jobNumber, mainCertNumber);
-		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
-		return attachment.getTextAttachment();
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on January 26, 2012
-	 */
-	public Boolean addMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String fileName) throws DatabaseOperationException{
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo);
-		if(jobNumber==null || mainCertNumber==null || sequenceNo==null)
-			return false;
-		
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			return false;
-		
-		AttachMainCert attachment = new AttachMainCert();
-		attachment.setMainCert(mainCert);
-		attachment.setSequenceNo(sequenceNo);
-		attachment.setFileName(fileName);
-		attachment.setDocumentType(AttachMainCert.TEXT);
-		
-		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
-		mainContractCertificateHBDaoImpl.saveOrUpdate(mainCert);
-
-		logger.info("Text Attachment is created.");
-		return true;
-	}
-	
-	/**
-	 * @author tikywong
-	 * created on January 26, 2012
-	 */
-	public Boolean saveMainCertTextAttachment(String jobNumber, Integer mainCertNumber, Integer sequenceNo, String text) throws DatabaseOperationException {
-		logger.info("jobNumber="+jobNumber+", mainCertNumber="+mainCertNumber+", sequenceNo="+sequenceNo+"\ntext="+text);
-		MainCert mainCert = mainContractCertificateHBDaoImpl.findByJobNoAndCertificateNo(jobNumber, mainCertNumber);
-		if(mainCert==null)
-			return false;
-		
-		AttachMainCert attachment = mainCertificateAttachmentHBDaoImpl.obtainAttachment(mainCert.getId(), sequenceNo);
-		if(attachment==null)
-			return false;
-		
-		attachment.setTextAttachment(text);
-		
-		
-		mainCertificateAttachmentHBDaoImpl.saveOrUpdate(attachment);
-		logger.info("Text Attachment is saved.");
-		return true;
-	}
-	
 	/**
 	 * @author tikywong
 	 * created on January 20, 2012

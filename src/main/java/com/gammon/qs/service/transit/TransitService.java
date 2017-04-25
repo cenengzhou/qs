@@ -56,7 +56,6 @@ import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.JasperReportHelper;
 import com.gammon.qs.util.RoundingUtil;
-import com.gammon.qs.wrapper.PaginationWrapper;
 import com.gammon.qs.wrapper.transitBQMasterReconciliationReport.TransitBQMasterReconciliationReportRecordWrapper;
 import com.gammon.qs.wrapper.transitBQResourceReconciliationReportRecordWrapper.TransitBQResourceReconciliationReportRecordWrapper;
 
@@ -856,20 +855,6 @@ public class TransitService implements Serializable {
 		return response;
 	}
 	
-	public PaginationWrapper<TransitCodeMatch> searchTransitCodeMatches(String matchingType, String resourceCode, 
-			String objectCode, String subsidiaryCode) throws Exception{
-		codeMatchCache = transitCodeMatchDao.searchTransitCodeMatches(matchingType, resourceCode, objectCode, subsidiaryCode);
-		Collections.sort(codeMatchCache, new Comparator<TransitCodeMatch>(){
-			public int compare(TransitCodeMatch cm1, TransitCodeMatch cm2) {
-				int typeComp = cm1.getMatchingType().compareTo(cm2.getMatchingType());
-				if(typeComp != 0)
-					return typeComp;
-				return cm1.getResourceCode().compareTo(cm2.getResourceCode());
-			}
-		});
-		return searchTransitCodeMatchesByPage(0);
-	}
-
 	public List<TransitCodeMatch> obtainTransitCodeMatcheList(String matchingType, String resourceCode, 
 			String objectCode, String subsidiaryCode){
 		List<TransitCodeMatch> transitCodeMatchList = null;
@@ -889,22 +874,6 @@ public class TransitService implements Serializable {
 		return transitCodeMatchList;
 	}
 
-	public PaginationWrapper<TransitCodeMatch> searchTransitCodeMatchesByPage(int pageNum){
-		PaginationWrapper<TransitCodeMatch> wrapper = new PaginationWrapper<TransitCodeMatch>();
-		wrapper.setCurrentPage(pageNum);
-		if(codeMatchCache == null)
-			return wrapper;
-		int size = codeMatchCache.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > codeMatchCache.size())
-			toInd = codeMatchCache.size();
-		wrapper.setCurrentPageContentList(new ArrayList<TransitCodeMatch>(codeMatchCache.subList(fromInd, toInd)));
-		return wrapper;
-	}
-	
 	public ExcelFile downloadCodeMatching() throws Exception{
 		if(codeMatchCache == null || codeMatchCache.size() == 0)
 			return null;
@@ -930,16 +899,6 @@ public class TransitService implements Serializable {
 		return excel;
 	}
 	
-	public PaginationWrapper<AppTransitUom> searchTransitUomMatches(String causewayUom, String jdeUom) throws Exception{
-		uomMatchCache = transitUomMatchDao.searchTransitUomMatches(causewayUom, jdeUom);
-		Collections.sort(uomMatchCache, new Comparator<AppTransitUom>(){
-			public int compare(AppTransitUom o1, AppTransitUom o2) {
-				return o1.getCausewayUom().compareTo(o2.getCausewayUom());
-			}
-		});
-		return searchTransitUomMatchesByPage(0);
-	}
-	
 	public List<AppTransitUom> obtainTransitUomMatcheList(String causewayUom, String jdeUom){
 		List<AppTransitUom> appTransitUomList = null;
 		try {
@@ -955,22 +914,6 @@ public class TransitService implements Serializable {
 		return appTransitUomList;
 	}
 
-	public PaginationWrapper<AppTransitUom> searchTransitUomMatchesByPage(int pageNum){
-		PaginationWrapper<AppTransitUom> wrapper = new PaginationWrapper<AppTransitUom>();
-		wrapper.setCurrentPage(pageNum);
-		if(uomMatchCache == null)
-			return wrapper;
-		int size = uomMatchCache.size();
-		wrapper.setTotalRecords(size);
-		wrapper.setTotalPage((size + RECORDS_PER_PAGE - 1)/RECORDS_PER_PAGE);
-		int fromInd = pageNum * RECORDS_PER_PAGE;
-		int toInd = (pageNum + 1) * RECORDS_PER_PAGE;
-		if(toInd > uomMatchCache.size())
-			toInd = uomMatchCache.size();
-		wrapper.setCurrentPageContentList(new ArrayList<AppTransitUom>(uomMatchCache.subList(fromInd, toInd)));
-		return wrapper;
-	}
-	
 	public ExcelFile downloadUomMatching() throws Exception{
 		if(uomMatchCache == null || uomMatchCache.size() == 0)
 			return null;

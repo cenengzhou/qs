@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -28,20 +27,6 @@ public class TransitBpiHBDao extends BaseHibernateDao<TransitBpi> {
 
 	private Logger logger = Logger.getLogger(TransitBpiHBDao.class.getName());
 
-	@SuppressWarnings("unchecked")
-	public List<TransitBpi> getTransitBQItems(String jobNumber) throws Exception{
-		try{
-			Criteria criteria = getSession().createCriteria(this.getType());
-			criteria.createAlias("transit", "transit");
-			criteria.add(Restrictions.eq("transit.jobNumber", jobNumber.trim()));
-			criteria.addOrder(Order.asc("sequenceNo"));
-			return criteria.list();
-		}catch (HibernateException he){
-			logger.info("Fail: getTransitBQ(String jobNumber)");
-			throw new DatabaseOperationException(he);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public List<TransitBpi> getTransitBqByHeaderNoCommentLines(Transit transit){
 		Criteria criteria = getSession().createCriteria(this.getType());

@@ -29,16 +29,7 @@ public class RepackagingService {
 	@Autowired
 	private RepackagingDetailService repackagingDetailService;
 	@Autowired
-	private ResourceSummaryService resourceSummaryService;
-	@Autowired
-	private GSFService gsfService;
-
-	public List<Repackaging> getRepackagingEntriesByJob(JobInfo job)
-			throws Exception {
-		return repackagingDao.getRepackagingEntriesByJob(job);
-	}
-
-	
+	private GSFService gsfService;	
 	
 	public Repackaging getRepackagingEntry(Long id) throws Exception{
 		return repackagingDao.get(id);

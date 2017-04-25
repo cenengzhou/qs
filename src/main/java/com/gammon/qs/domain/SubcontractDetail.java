@@ -139,22 +139,6 @@ public class SubcontractDetail extends BasePersistedObject {
 		return "D";
 	}
 
-	public static String convertApprovedStatus(String approved) {
-		if (approved != null && approved.trim().length() == 1) {
-			if (APPROVED.equals(approved.trim()))
-				return APPROVED_DESC;
-			else if (SUSPEND.equals(approved.trim()))
-				return SUSPEND_DESC;
-			else if (NOT_APPROVED.equals(approved.trim()))
-				return NOT_APPROVED_DESC;
-			else if (NOT_APPROVED_BUT_PAID.equals(approved.trim()))
-				return NOT_APPROVED_BUT_PAID_DESC;
-			else if (DELETED.equals(approved.trim()))
-				return DELETED_DESC;
-		}
-		return "";
-	}
-
 	@Transient
 	public Double getToBeApprovedQuantity() {
 		return new Double(0);
@@ -168,10 +152,6 @@ public class SubcontractDetail extends BasePersistedObject {
 	@Transient
 	public Double getCostRate() {
 		return new Double(0);
-	}
-
-	public void setCostRate() {
-		new Double(0);
 	}
 
 	@Transient
@@ -505,119 +485,6 @@ public class SubcontractDetail extends BasePersistedObject {
 
 	public void setSubcontract(Subcontract subcontract) {
 		this.subcontract = subcontract;
-	}
-
-	public static class LineType {
-		public static String BQ = "BQ";
-		public static String B1 = "B1";
-		public static String V1 = "V1";
-		public static String V2 = "V2";
-		public static String V3 = "V3";
-		public static String L1 = "L1";
-		public static String L2 = "L2";
-		public static String D1 = "D1";
-		public static String D2 = "D2";
-		public static String BS = "BS";
-		public static String CF = "CF";
-		public static String RR = "RR";
-		public static String C1 = "C1";
-		public static String C2 = "C2";
-		public static String RA = "RA";
-		public static String AP = "AP";
-		public static String MS = "MS";
-		public static String RT = "RT";
-		public static String GP = "GP";
-		public static String GR = "GR";
-		public static String OA = "OA";
-		public static String BD = "BD";
-
-		public static boolean isBQ(String lineType) {
-			return BQ.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isB1(String lineType) {
-			return B1.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isV1(String lineType) {
-			return V1.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isV2(String lineType) {
-			return V2.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isV3(String lineType) {
-			return V3.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isL1(String lineType) {
-			return L1.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isL2(String lineType) {
-			return L2.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isD1(String lineType) {
-			return D1.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isD2(String lineType) {
-			return D2.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isBS(String lineType) {
-			return BS.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isCF(String lineType) {
-			return CF.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isRR(String lineType) {
-			return RR.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isC1(String lineType) {
-			return C1.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isC2(String lineType) {
-			return C2.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isRA(String lineType) {
-			return RA.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isAP(String lineType) {
-			return AP.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isMS(String lineType) {
-			return MS.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isRT(String lineType) {
-			return RT.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isGP(String lineType) {
-			return GP.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isGR(String lineType) {
-			return GR.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isOA(String lineType) {
-			return OA.equalsIgnoreCase(lineType);
-		}
-
-		public static boolean isBD(String lineType) {
-			return BD.equalsIgnoreCase(lineType);
-		}
 	}
 
 	@Override

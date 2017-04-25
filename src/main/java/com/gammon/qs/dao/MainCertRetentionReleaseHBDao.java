@@ -51,39 +51,4 @@ public class MainCertRetentionReleaseHBDao extends BaseHibernateDao<MainCertRete
 		return (MainCertRetentionRelease) criteria.uniqueResult();
 	}
 	
-	public void saveList(List<MainCertRetentionRelease> saveList) throws DataAccessException {
-		for (MainCertRetentionRelease rr:saveList){
-			MainCertRetentionRelease dbObj = internalSelectByJobSeq(rr.getJobNo(), rr.getSequenceNo());
-			if (dbObj!=null){
-				dbObj.setActualReleaseAmt(rr.getActualReleaseAmt());
-				dbObj.setDueDate(rr.getDueDate());
-				dbObj.setContractualDueDate(rr.getContractualDueDate());
-				dbObj.setForecastReleaseAmt(rr.getForecastReleaseAmt());
-				dbObj.setJobNo(rr.getJobNo());
-				dbObj.setMainCertNo(rr.getMainCertNo());
-				dbObj.setReleasePercent(rr.getReleasePercent());
-				dbObj.setSequenceNo(rr.getSequenceNo());
-				dbObj.setStatus(rr.getStatus());
-				saveOrUpdate(dbObj);
-			}else saveOrUpdate(rr);
-		}
-	}
-	
-	private MainCertRetentionRelease internalSelectByJobSeq(String jobNo,Integer seqNo ){
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.eq("jobNo", jobNo));
-		criteria.add(Restrictions.eq("sequenceNo",seqNo));
-		return (MainCertRetentionRelease) criteria.uniqueResult();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<MainCertRetentionRelease> searchByJobList(List<String> jobList) {
-		Criteria criteria = getSession().createCriteria(this.getType());
-		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
-		criteria.add(Restrictions.in("jobNo", jobList.toArray()));
-		criteria.addOrder(Order.asc("jobNo"));
-		criteria.addOrder(Order.asc("sequenceNo"));
-		return criteria.list();
-	}
 }
