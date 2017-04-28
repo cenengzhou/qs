@@ -1,0 +1,71 @@
+<div class=" m-b-0">
+	<div class="row offset-15">
+		<div class="col-md-9">
+
+			<div class="col-md-6 col-xs-12">
+				<div class="widget widget-stat bg-inverse text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Project Contract Value</div>
+						<div class="widget-stat-number">{{ projectedContractValue |
+							currency}}</div>
+						<div class="widget-stat-text">Max Retention Percentage: {{
+							maxRetPercent | number: 2}}%</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 col-xs-12">
+				<div class="widget widget-stat bg-primary text-white">
+					<div class="widget-stat-icon">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<div class="widget-stat-info">
+						<div class="widget-stat-title">Cumulative Retention Amount</div>
+						<div class="widget-stat-number">{{ cumRetentionAmount |
+							currency}}</div>
+						<div class="widget-stat-text">(Cumulative to date)</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-md-3 col-xs-12">
+				<button type="button" class="btn btn-lg btn-block btn-danger"
+					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-click="addData()">
+					<i class="fa fa-plus-circle"></i> <small>Add</small>
+				</button>
+			</div>
+
+			<div class="col-md-3 col-xs-12">
+				<button type="button" class="btn btn-lg btn-block btn-success"
+					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-click="deleteData()">
+					<i class="fa fa-remove"></i> <small>Delete</small>
+				</button>
+			</div>
+			<div class="col-md-12">
+				<div id=""
+					save-and-restore-grid-state="maincert_retentionReleaseModal"
+					ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
+					ui-grid-auto-resize ui-grid-resize-columns ui-grid-row-edit
+					ui-grid-cellnav ui-grid-edit ui-grid-exporter class="grid"
+					resize ng-style="resizeWithOffset(500)"></div>
+				<!-- style="height: 450px;"  -->
+			</div>
+
+			<div class="col-md-12">
+				<button class="btn btn-primary btn-block" type="button"
+					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-click="save()">
+					<span class="fa fa-save"></span> Update
+				</button>
+			</div>
+
+		</div>
+
+	</div>
+</div>

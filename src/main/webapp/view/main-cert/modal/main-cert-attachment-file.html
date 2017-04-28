@@ -3,12 +3,6 @@
 			<div class="panel panel-inverse">
 				<div class="panel-heading col-md-12">
 					<div class="col-md-11">Attachment</div>
-					<div class="col-md-1">
-						<button class="btn btn-white pull-right" type="button"
-							ng-click="cancel()">
-							<span class="fa fa-remove"></span>
-						</button>
-					</div>
 				</div>
 				<div class="clearfix"></div>
 				<div class="panel-body" style="padding: 0 !important;height:400px;overflow:auto">
@@ -50,9 +44,9 @@
 						<div class="col-md-4">
 							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
-								<label class="btn btn-block btn-primary"> <i
+								<label class="btn btn-block btn-primary" ng-disabled="disableButton"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
-									Attachment&hellip; <input style="display: none;"  
+									Attachment&hellip; <input style="display: none;"  ng-disabled="disableButton"
 									class="form-control file-loading" type="file" name="files"
 									id="attachmentFiles" ng-model="attachmentFiles"
 									onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
@@ -62,15 +56,14 @@
 						</div>
 
 						<div class="col-md-4">
-							<label  ng-disabled="!isUpdatable"
-								class="btn btn-block btn-success" ng-click="isUpdatable && deleteAttachment()"
-								ng-disabled="!selectedAttachement"> 
+							<label  ng-disabled="disableButton || !isUpdatable || !selectedAttachement"
+								class="btn btn-block btn-success" ng-click="deleteAttachment()"> 
 								<i class="glyphicon glyphicon-remove-circle"></i> 
 								Delete selected	Item
 							</label>
 						</div>
 						<div class="col-md-4">
-							<button class="btn btn-block btn-danger" 
+							<button class="btn btn-block btn-danger" ng-disabled="disableButton"
 								ng-click="addTextAttachment()">
 								<i class="glyphicon glyphicon-plus-sign"></i> Add Text
 								Attachment

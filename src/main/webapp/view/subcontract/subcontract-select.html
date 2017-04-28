@@ -71,7 +71,7 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge bg-inverse">{{sc.originalSubcontractSum | currency}}</span></small>
+								<small><span class="pull-right badge bg-inverse">{{sc.paymentCurrency}} {{sc.originalSubcontractSum | currency}}</span></small>
 							</h3>
 							<h3 class="sc-panel-name">
 								<small><span class="pull-right badge bg-inverse">{{sc.paymentTerms}}</span></small>
@@ -111,7 +111,7 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge">{{sc.originalSubcontractSum | currency}}</span></small>
+								<small><span class="pull-right badge">{{sc.paymentCurrency}} {{sc.originalSubcontractSum | currency}}</span></small>
 							</h3>
 							<h3 class="sc-panel-name">
 								<small><span class="pull-right badge">{{sc.paymentTerms}}</span></small>

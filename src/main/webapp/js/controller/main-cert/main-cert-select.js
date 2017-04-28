@@ -1,4 +1,4 @@
-mainApp.controller('MainCertCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state',
+mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state',
                                    function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state) {
 	
 	$scope.maxCertNo = 0;

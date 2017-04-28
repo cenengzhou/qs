@@ -1,9 +1,10 @@
-mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', '$uibModalInstance', 'roundUtil', 'GlobalParameter', '$state',
-                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, $uibModalInstance, roundUtil, GlobalParameter, $state) {
+mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', 'jobService',  'mainCertService', '$cookies', 'uiGridConstants', 'roundUtil', 'GlobalParameter', '$state',
+                                                 function($scope, modalService, jobService, mainCertService, $cookies, uiGridConstants, roundUtil, GlobalParameter, $state) {
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.mainCertNo = $cookies.get("mainCertNo");
-
+	$scope.cumRetentionAmount = 0;
+	
 	loadData();
 
 	$scope.gridOptions = {
@@ -150,9 +151,7 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 	
 	function loadData(){
 		getJob();
-		if($scope.mainCertNo == null || $scope.mainCertNo == undefined || $scope.mainCertNo.length==0){
-			getLatestMainCert();
-		}else
+		if($scope.mainCertNo != null && $scope.mainCertNo != undefined && $scope.mainCertNo.length!=0)
 			getCertificate();
 		
 	}
@@ -194,31 +193,22 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 		mainCertService.getCertificate($scope.jobNo, $scope.mainCertNo)
 		.then(
 				function( data ) {
-					$scope.cumRetentionAmount = data.amount_cumulativeRetention;
-//						(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
-//						+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
-//						+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
+					$scope.cert = data;
+					if($scope.cert.certificateStatus < 200)
+						$scope.disableButtons = false;
+					else
+						$scope.disableButtons = true;
 					
-					getCalculatedRetentionRelease($scope.mainCertNo);
+					$scope.cumRetentionAmount = data.amount_cumulativeRetention;
+					
+					if($scope.cert.certificateStatus == 120)
+						getCalculatedRetentionRelease($scope.mainCertNo);
+					else
+						getRetentionReleaseList();
 				});
 	}
 
-	function getLatestMainCert() {
-		mainCertService.getLatestMainCert($scope.jobNo)
-		.then(
-				function( data ) {
-					if(data){
-						$scope.cumRetentionAmount = data.amount_cumulativeRetention;
-//							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
-//							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
-//							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
-						
-						getCalculatedRetentionRelease(data.certificateNumber);
-					}
-
-				});
-	}
-	
+		
 	function updateRetentionRelease(rrList){
 		mainCertService.updateRetentionRelease($scope.jobNo, rrList)
 		.then(
@@ -227,21 +217,33 @@ mainApp.controller('RetentionReleaseModalCtrl', ['$scope',  'modalService', 'job
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.message);
 						return;
 					}else{
-						$uibModalInstance.close();
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Retention Release Schedule has been updated.');
 						$state.reload();
 					}
 				});
 	}
 	
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-	};
+	function getRetentionReleaseList(){
+		mainCertService.getRetentionReleaseList($scope.jobNo)
+		.then( function (data){
+			$scope.gridOptions.data= data;
 
-	//Listen for location changes and call the callback
-	$scope.$on('$locationChangeStart', function(event){
-		$uibModalInstance.close();
-	});
+			angular.forEach(data, function(value, key){
+				angular.forEach(data, function(value, key){
+					
+					if(value.status == 'F')
+						value.amount = value.forecastReleaseAmt;
+					else
+						value.amount = value.actualReleaseAmt;
+					
+					value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
+
+				});
+				
+			});
+		});
+	}
+	
 
 }])
 .filter('mapStatus', function() {

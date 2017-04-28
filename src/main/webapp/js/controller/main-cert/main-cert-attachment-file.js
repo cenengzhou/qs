@@ -1,31 +1,16 @@
-mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachmentService', 'modalService', 'modalStatus', 'confirmService', 'modalParam', '$uibModalInstance', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage',
-                                         function($scope, $location, attachmentService, modalService, modalStatus, confirmService, modalParam, $uibModalInstance, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage) {
+mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', 'attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'mainCertService',
+                                         function($scope, attachmentService, modalService, confirmService, $cookies, $http,  $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, mainCertService) {
 	$scope.GlobalParameter = GlobalParameter;
-	$scope.status = modalStatus;
-	$scope.parentScope = modalParam;
-	
-	$scope.cancel = function () {
-		$uibModalInstance.close();
-	};
 	
 	$scope.jobNo = $cookies.get('jobNo');
-	$scope.subcontractNo = $cookies.get('subcontractNo');
-	$scope.addendumNo = $cookies.get('addendumNo');
-	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	$scope.mainCertNo = $cookies.get('mainCertNo');
-	$scope.nameObject = GlobalParameter['AbstractAttachment'].MainCertNameObject;
-	$scope.isUpdatable = !$scope.parentScope.disableButtons;
+	$scope.nameObject = $stateParams.nameObject;
+	$scope.disableButton = true;
+	$scope.isUpdatable = false;
 	$scope.sequenceNo = 0;
 	$scope.textKey = $scope.jobNo + '|' + $scope.mainCertNo + '|';
-	if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCDetailsNameObject){
-		$scope.textKey += $scope.addendumNo;
-		$scope.insideContent = true;
-	} else if($scope.nameObject === GlobalParameter['AbstractAttachment'].SCPaymentNameObject){
-		$scope.textKey += $scope.paymentCertNo;
-		$scope.insideContent = true;
-	}
 	
-    $scope.loadAttachment = function(nameObject, textKey){
+	$scope.loadAttachment = function(nameObject, textKey){
     	attachmentService.getAttachmentListForPCMS(nameObject, textKey)
     	.then(function(data){
     				if(angular.isArray(data)){
@@ -34,7 +19,14 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
     				}
     			});
     }
-    $scope.loadAttachment($scope.nameObject, $scope.textKey);
+	
+	if($scope.mainCertNo != null && $scope.mainCertNo.length > 0){
+		getCertificate($scope.mainCertNo);
+		$scope.loadAttachment($scope.nameObject, $scope.textKey);
+	}
+	
+	
+
     $scope.addAttachmentsData = function(d){
     	var index = 0;
        	angular.forEach(d, function(att){
@@ -117,19 +109,37 @@ mainApp.controller('AttachmentMainCertFileCtrl', ['$scope', '$location','attachm
 	}
 	
 	$scope.deleteAttachment = function(){
-		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
-		.then(function(response){
-			if(response === 'Yes')
-			angular.forEach($scope.attachments, function(att){
-				if(att.selectedAttachement === true){
-					attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
-					.then(function(data){
-						$scope.loadAttachment($scope.nameObject, $scope.textKey);
-						$scope.selectedAttachement = false;
-					});
-				}
+		if($scope.isUpdatable && $scope.selectedAttachement ){
+			confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
+			.then(function(response){
+				if(response === 'Yes')
+				angular.forEach($scope.attachments, function(att){
+					if(att.selectedAttachement === true){
+						attachmentService.deleteAttachment($scope.nameObject,$scope.textKey, parseInt(att.sequenceNo))
+						.then(function(data){
+							$scope.loadAttachment($scope.nameObject, $scope.textKey);
+							$scope.selectedAttachement = false;
+						});
+					}
+				});
 			});
-		});
+		}
 	}
+	
+	function getCertificate(mainCertNo){
+		mainCertService.getCertificate($scope.jobNo, mainCertNo)
+		.then(
+				function( cert ) {
+					if(cert != null){
+						$scope.disableButton = false;
+						if(cert.certificateStatus < 300)
+							$scope.isUpdatable = true;
+						else
+							$scope.isUpdatable = false;
+					}else
+						$scope.disableButton = true;
+				});
+	}
+
 	
 }]);

@@ -1,5 +1,5 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'modalService',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, modalService) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'modalService', 'jobService',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, modalService, jobService) {
 	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -34,10 +34,10 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 			exporterMenuPdf: false,
 
 			columnDefs: [
-			             { field: 'mainCertNo', displayName: "Cert No.", width: 80},
+			             { field: 'mainCertNo', displayName: "Cert No.", width: 65},
 			             { field: 'contractualDueDate', cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"', width: 100},
 			             { field: 'dueDate', displayName: "Forecast/Actual Due Date", cellFilter:'date:"' + GlobalParameter.DATE_FORMAT +'"', width: 100},
-			             { field: 'percent', displayName: "Percent", width: 80, 
+			             { field: 'percent', displayName: "Percent", width: 65, 
 			            	 cellClass: 'text-right', cellFilter: 'number:2', 
 			            	 aggregationType: uiGridConstants.aggregationTypes.sum,
 			            	 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
@@ -45,7 +45,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		            		 cellClass: 'text-right', cellFilter: 'number:2', 
 		            		 aggregationType: uiGridConstants.aggregationTypes.sum,
 		            		 footerCellTemplate: '<div class="ui-grid-cell-contents" style="text-align:right;"  >{{col.getAggregationValue() | number:2 }}</div>'},
-	            		 { field: 'status', cellFilter: 'mapStatus', width: 80}	
+	            		 { field: 'status', cellFilter: 'mapStatus', width: 65}	
 	            		 ]
 	};
 
@@ -58,12 +58,9 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		getMainCertData(year.toString().substring(2, 4));
 	}
 	
-	$scope.openRetentionReleaseSchedule = function() {
-		modalService.open('lg', 'view/main-cert/modal/retention-release-modal.html', 'RetentionReleaseModalCtrl');
-	}
-
 
 	function loadData(){
+		getJob();
 		getMainCertData(year.toString().substring(2, 4));	
 		getLatestMainCert();
 	}
@@ -105,19 +102,21 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		};
 	}
 
+	function getJob(){
+		jobService.getJob($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.projectedContractValue = data.projectedContractValue;
+					$scope.maxRetPercent = data.maxRetPercent;
+				});
+	}
 	
 	function getLatestMainCert(){
 		mainCertService.getLatestMainCert($scope.jobNo)
 		.then(
 				function( data ) {
-					if(data){
-						$scope.cumRetentionAmount = 
-							(data.certifiedRetentionforNSCNDSC==null?0:data.certifiedRetentionforNSCNDSC)
-							+ (data.certifiedMainContractorRetention==null?0:data.certifiedMainContractorRetention)
-							+ (data.certifiedMOSRetention==null?0:data.certifiedMOSRetention);
-
-						getRetentionReleaseList();
-					}
+					$scope.cert = data;
+					getRetentionReleaseList();
 				});
 	}
 	
@@ -134,7 +133,7 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 					else
 						value.amount = value.actualReleaseAmt;
 					
-					value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
+					value.percent = roundUtil.round(value.amount / $scope.cert.amount_cumulativeRetention * 100, 2);
 
 				});
 				

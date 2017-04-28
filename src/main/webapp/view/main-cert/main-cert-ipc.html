@@ -1,0 +1,393 @@
+<div class=" m-b-0">
+
+	<!-- <p class="text-purple-light">
+		<span class="icofont icofont-emo-angry icofont-2x"></span> Attention!
+		You will <u>NOT</u> be able to adjust the BQ Items and Resources after
+		completing the Transit.
+	</p> -->
+	<div class="row offset-md-15 offset-lg-15">
+		<div class="col-md-10">
+
+
+			<form name="form-validate" id="form-validate"
+				class="ng-pristine ng-valid">
+				<div class="row">
+
+					<div class="m-t-10">
+						<div class="col-lg-5 col-xs-12">
+							<div class="widget widget-stat bg-purple text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-bookmark"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">IPC Net Amount</div>
+									<div class="widget-stat-number">
+										{{(cert.certifiedMainContractorAmount +
+										cert.certifiedNSCNDSCAmount + cert.certifiedMOSAmount +
+										cert.certifiedMainContractorRetentionReleased +
+										cert.certifiedRetentionforNSCNDSCReleased +
+										cert.certifiedMOSRetentionReleased +
+										cert.certifiedAdvancePayment + cert.certifiedAdjustmentAmount
+										+ cert.certifiedCPFAmount -
+										cert.certifiedMainContractorRetention -
+										cert.certifiedRetentionforNSCNDSC - cert.certifiedMOSRetention
+										- cert.certifiedContraChargeAmount) | currency}}</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-5 col-xs-12">
+							<div class="widget widget-stat bg-purple text-white">
+								<div class="widget-stat-icon">
+									<i class="fa fa-bookmark"></i>
+								</div>
+								<div class="widget-stat-info">
+									<div class="widget-stat-title">IPC Gross Amount</div>
+									<div class="widget-stat-number">
+										{{cert.certifiedMainContractorAmount +
+										cert.certifiedNSCNDSCAmount + cert.certifiedMOSAmount +
+										cert.certifiedAdvancePayment + cert.certifiedAdjustmentAmount
+										+ cert.certifiedCPFAmount | currency}}</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Certificate Info -->
+					<div class="col-md-12">
+						<div class="panel panel-inverse ">
+							<div class="panel-heading">
+								<div class="panel-heading-btn">
+									<a href="javascript:;"
+										class="btn btn-xs btn-icon btn-circle btn-white"
+										data-click="panel-expand"><i class="fa fa-expand"></i> </a> <a
+										href="javascript:;"
+										class="btn btn-xs btn-icon btn-circle btn-white"
+										data-click="panel-collapse"><i class="fa fa-minus"></i> </a>
+								</div>
+								<div class="panel-title">
+									<b>Certificate No.: {{cert.certificateNumber}}</b> <label
+										class="m-l-10"><b>Client Cert No.: {{cert.clientCertNo}}</b></label> 
+									<label class="m-l-10"> <b>Posting Amount
+											{{postingAmount = (cert.certifiedMainContractorAmount +
+											cert.certifiedNSCNDSCAmount + cert.certifiedMOSAmount +
+											cert.certifiedMainContractorRetentionReleased +
+											cert.certifiedRetentionforNSCNDSCReleased +
+											cert.certifiedMOSRetentionReleased +
+											cert.certifiedAdvancePayment + cert.certifiedAdjustmentAmount
+											+ cert.certifiedCPFAmount -
+											cert.certifiedMainContractorRetention -
+											cert.certifiedRetentionforNSCNDSC -
+											cert.certifiedMOSRetention -
+											cert.certifiedContraChargeAmount) - previousCertNetAmount |
+											currency}}</b>
+									</label>
+								</div>
+							</div>
+
+							<div class="panel-body">
+								<div class="col-md-7">
+									<div class="form-group">
+										<label class="col-md-7"></label> <label
+											class="text-light-blue col-md-5">IPC</label>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">Main Contractor
+											Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMainContractorAmount"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ NSC / NDSC
+											Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedNSCNDSCAmount"
+													ng-disabled="disableButtons  || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ MOS Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMOSAmount"
+													ng-disabled="disableButton || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ Main
+											Contractor Retention Released</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMainContractorRetentionReleased"
+													ng-disabled="disableButtons|| cert.certificateStatus !=120 ">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ Retention for
+											NSC / NDSC Released</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedRetentionforNSCNDSCReleased"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ MOS Retention
+											Released</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMOSRetentionReleased"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ Adjustment
+											Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedAdjustmentAmount"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ Advance
+											Payment</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedAdvancePayment"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label">+ CPF Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right text-right"
+													ng-model="cert.certifiedCPFAmount"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label text-red">- Main
+											Contractor Retention</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMainContractorRetention"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label text-red">-
+											Retention for NSC / NDSC</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedRetentionforNSCNDSC"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label text-red">- MOS
+											Retention</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" ng-currency ng-required="true"
+													class="form-control input-sm text-right"
+													ng-model="cert.certifiedMOSRetention"
+													ng-disabled="disableButtons || cert.certificateStatus !=120">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-7 control-label text-red">-
+											Contra Charge Amount</label>
+										<div class="col-md-5">
+											<div class="input-group">
+												<input type="text" class="form-control input-sm text-right"
+													ng-click="editContraCharge()"
+													value="{{cert.certifiedContraChargeAmount | currency}}"
+													ng-disabled="disableButtons || cert.certificateStatus != 120">
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+
+								<div class="col-md-5">
+									<!-- GST -->
+									<div class="col-md-12" ng-show="jobNo.indexOf('14')>-1">
+										<div class="box box-primary">
+											<div class="box-body">
+												<div class="row">
+													<div class="form-group col-md-6 col-xs-12">
+														<label>GST Amount<div>(Receivable)</div></label>
+														<div class="input-group">
+															<input type="text" ng-currency ng-required="true"
+																class="form-control input-sm text-right"
+																ng-model="cert.gstReceivable"
+																ng-disabled="disableButtons || cert.certificateStatus !=120">
+														</div>
+													</div>
+													<div class="form-group col-md-6  col-xs-12">
+														<label>GST Contra Charge (Payable)</label>
+														<div class="input-group">
+															<input type="text" ng-currency ng-required="true"
+																class="form-control input-sm text-right"
+																ng-model="cert.gstPayable"
+																ng-disabled="disableButtons || cert.certificateStatus !=120">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Date  -->
+									<div class="col-md-12">
+										<div class="box box-primary">
+											<div class="box-body">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Certificate Issue Date:</label>
+															<div class="input-group"
+																moment-picker="cert.certIssueDate"
+																format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+																start-view="day" ng-model-options="{ updateOn: 'blur' }">
+																<span class="input-group-addon"> <i
+																	class="fa fa-calendar"></i>
+																</span> <input class="form-control"
+																	ng-model="cert.certIssueDate"
+																	ng-disabled="disableButtons || cert.certificateStatus !=120">
+
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label> Certificate As At Date:</label>
+															<div class="input-group"
+																moment-picker="cert.certAsAtDate" start-view="day"
+																format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+																ng-model-options="{ updateOn: 'blur' }">
+																<span class="input-group-addon"> <i
+																	class="fa fa-calendar"></i>
+																</span> <input class="form-control"
+																	ng-model="cert.certAsAtDate"
+																	ng-disabled="disableButtons || cert.certificateStatus !=120">
+
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Certificate Due Date:</label>
+															<div class="input-group" moment-picker="cert.certDueDate"
+																start-view="day"
+																format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+																ng-model-options="{ updateOn: 'blur' }">
+																<span class="input-group-addon"> <i
+																	class="fa fa-calendar"></i>
+																</span> <input class="form-control" ng-model="cert.certDueDate"
+																	ng-disabled="disableButtons || cert.certificateStatus !=120">
+
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6" ng-show="disableButtons">
+														<div class="form-group">
+															<label>Actual Receipt Date:</label>
+															<div class="input-group"
+																moment-picker="cert.actualReceiptDate" start-view="day"
+																format="{{GlobalParameter.MOMENT_DATE_FORMAT}}"
+																ng-model-options="{ updateOn: 'blur' }">
+																<span class="input-group-addon"> <i
+																	class="fa fa-calendar"></i>
+																</span> <input class="form-control"
+																	ng-model="cert.actualReceiptDate" disabled>
+
+															</div>
+														</div>
+													</div>
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Remark -->
+									<div class="col-md-12">
+										<div class="box box-primary">
+											<div class="box-body">
+												<div class="form-group">
+													<label>Remark</label>
+													<textarea class="form-control" rows="2"
+														ng-model="cert.remark" ng-style="{height: 50 + 'px'}"
+														ng-disabled="disableButtons || cert.certificateStatus !=120"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row ">
+									<div class=" col-md-12 m-t-10">
+										<button class="btn btn-primary btn-block"
+											ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+											ng-click="save()">
+											Save <i class="fa fa-floppy-o"></i>
+										</button>
+
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+
+
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

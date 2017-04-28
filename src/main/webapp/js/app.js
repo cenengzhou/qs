@@ -847,7 +847,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/main-cert/cert-dashboard.js',
                            'js/service/main-cert-service.js',
-                           'js/controller/main-cert/retention-release-modal.js',
+                           'js/service/job-service.js'
                     ] 
                 });
             }]
@@ -871,14 +871,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 });
             }]
         },
-		controller: 'MainCertCtrl'
+		controller: 'MainCertListCtrl'
 	})
 	
-	
-	.state('cert-details', {
-		url: "/cert-details",
+	.state('mainCert', {
+		url: "/mainCert",
 		parent: "navigation",
-		templateUrl: "view/main-cert/cert-details.html",
+		templateUrl: "view/main-cert/main-cert-tab.html",
 		params: {
 			'mainCertNo': null
 		},
@@ -887,20 +886,68 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [  'js/service/main-cert-service.js',
-                           'js/controller/main-cert/cert-details.js',
-                           'js/controller/main-cert/retention-release-modal.js',
+               		 	   'js/controller/main-cert/main-cert.js',
+               		 	   'js/controller/main-cert/main-cert-ipa.js',
+               		 	   'js/controller/main-cert/main-cert-ipc.js',
+                           'js/controller/main-cert/retention-release-schedule.js',
                            'js/controller/main-cert/contra-charge-modal.js',
                            'js/controller/main-cert/main-cert-attachment-file.js',
                            'js/controller/main-cert/main-cert-attachment-text.js',
                            'js/service/job-service.js',
                            'js/service/attachment-service.js'
-                           
                     ] 
                 });
             }]
         },
-		controller: 'CertDetailsCtrl'
+		controller: 'MainCertCtrl'
 	})
+	.state('mainCert.ipa', {
+		url: "/ipa",
+		templateUrl: "view/main-cert/main-cert-ipa.html",
+		params: {
+			'mainCertNo': null
+		},
+		controller: 'IPACtrl'
+	})
+	.state('mainCert.sendIPA', {
+		url: "/sendIPA",
+		templateUrl: "view/main-cert/main-cert-send-ipa.html",
+		params: {
+			'mainCertNo': null
+		},
+		controller: 'IPACtrl'
+	})
+	.state('mainCert.ipc', {
+		url: "/ipc",
+		templateUrl: "view/main-cert/main-cert-ipc.html",
+		controller: 'IPCCtrl'
+	})
+	.state('mainCert.rr', {
+		url: "/rr",
+		templateUrl: "view/main-cert/retention-release-schedule.html",
+		controller: 'RetentionReleaseScheduleCtrl'
+	})
+	.state('mainCert.confirmIPC', {
+		url: "/confirmIPC",
+		templateUrl: "view/main-cert/main-cert-confirm-reset-ipc.html",
+		controller: 'IPCCtrl'
+	})
+	.state('mainCert.attachment', {
+		url: "/attachment",
+		templateUrl: "view/main-cert/modal/main-cert-attachment-file.html",
+		params: {
+			'nameObject': GlobalParameter['AbstractAttachment'].MainCertNameObject,
+			'offsetTop':440,
+			'mainCertStatus':null
+		},
+		controller: 'AttachmentMainCertFileCtrl'
+	})
+	.state('mainCert.postIPC', {
+		url: "/postIPC",
+		templateUrl: "view/main-cert/main-cert-post-ipc.html",
+		controller: 'IPCCtrl'
+	})
+	
 	
 	//Repackaging
 	.state('repackaging', {
@@ -1126,6 +1173,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 							'js/controller/enquiry/enquiry-jobcost-adl.js',
 							'js/controller/enquiry/enquiry-jobcost-jde.js',
 							'js/controller/enquiry/enquiry-ivhistory.js',
+							'js/controller/enquiry/enquiry-main-cert.js',
 							
 							'js/controller/enquiry/enquiry-subcontract.js',
 							'js/controller/enquiry/enquiry-subcontractdetail.js',
@@ -1157,6 +1205,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         	'js/service/job-service.js',
                	         	'js/controller/nav-menu.js',
                	         	'js/service/jde-service.js',
+               	         	'js/service/main-cert-service.js'
                     ] 
                 });
             }]
@@ -1207,7 +1256,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 			'jobDescription' : null,
 		},
 		controller: 'EnquiryJobCostJdeCtrl'
-		})	.state('enquiry.ivHistory', {
+		})	
+	.state('enquiry.ivHistory', {
 		url: '/ivHistory',
 		templateUrl: 'view/enquiry/enquiry-ivhistory.html',
 		params: {
@@ -1215,7 +1265,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 			'jobDescription' : null,
 		},
 		controller: 'EnquiryIvHistoryCtrl'
-		})
+	})
 	.state('enquiry.subcontract', {
 		url: '/subcontract',
 		templateUrl: 'view/enquiry/enquiry-subcontract.html',
@@ -1334,6 +1384,16 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		},
 		controller: 'EnquiryPerformanceAppraisalCtrl'
 		})
+	.state('enquiry.main-cert', {
+		url: '/main-cert',
+		templateUrl: 'view/enquiry/enquiry-main-cert.html',
+		params: {
+			'jobNo': null,
+			'jobDescription' : null,
+		},
+		controller: 'EnquiryMainCertCtrl'
+		})
+		
 	//Reports
 	.state("reports", {
 		url: "/reports",
@@ -1631,7 +1691,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	// Display the property value in the custom template.
 	// blockUIConfig.template = '<div>{{ state.myProperty }}</div>';
 	
-	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:1"><i class="fa fa-spinner fa-pulse fa-fw text-grey" style="width:100%; font-size: 700px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
+	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:100"><i class="fa fa-spinner fa-pulse fa-fw text-grey" style="width:100%; font-size: 600px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
 	
 	// Disable automatically blocking of the user interface
 	blockUIConfig.autoBlock = true;

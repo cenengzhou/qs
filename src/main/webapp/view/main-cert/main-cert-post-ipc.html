@@ -1,0 +1,245 @@
+<div>
+	<!-- <p class="lead hidden-print">
+		<small>Please verify IPC values before posting it.</small> -->
+	<p class="text-purple-light hidden-print">
+		<b><span class="icofont icofont-emo-angry icofont-2x"></span>
+			Attention! You will <u>NOT</u> be able to edit IPC when it is posted to finance. 
+	</p>
+	<div class="tab-pane fade active in" id="profile-tab">
+
+
+
+		<div class="invoice">
+			
+			<div class="invoice-logo m-l-5 pull-right">
+				<div class="table-border"><h6 class="m-l-10 m-r-10">CONFIDENTIAL</h6></div>
+				<span class="pull-right hidden-print"> <a href="javascript:;"
+					onclick="window.print()" id="printBtn"
+					class="btn btn-sm width-100 btn-rounded btn-danger hidden-print">
+						<i class="fa fa-print m-r-3"></i> Print
+				</a>
+				</span>
+			</div>
+
+			<div class="invoice-logo m-l-5">
+				<img src="image/gammon.bmp" class="logo" style="width: 128px"/>
+				<!-- <div class="col-md-12">
+			<h5>{{cert.companyName}}</h5>
+		</div> -->
+			</div>
+
+
+
+			<h5 class="invoice-title" align="center">Main Contract
+				Certificate</h5>
+
+			<div>
+
+				<table class="table">
+					<tr>
+						<td><b>Job:</b></td>
+						<td class="text-right">{{cert.jobNo}}</td>
+						<!-- <td>{{cert.jobDescription}}</td> -->
+					</tr>
+					<tr>
+						<td><b>Certificate No.:</b></td>
+						<td class="text-right">{{cert.certificateNumber}}</td>
+
+						<td><b>Client Certificate No.:</b></td>
+						<td class="text-right">{{cert.clientCertNo}}</td>
+
+						<td><b>Certificate Status:</b></td>
+						<td class="text-right">{{convertCertStatus(cert.certificateStatus)}}</td>
+					</tr>
+
+
+				</table>
+			</div>
+
+
+			<div class="">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td></td>
+							<td class="text-right"><b>IPA</b></td>
+							<td class="text-right"><b>IPC</b></td>
+						</tr>
+						<tr>
+							<td>Main Contractor Amount</td>
+							<td class="text-right">{{cert.appliedMainContractorAmount |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedMainContractorAmount
+								| currency}}</td>
+						</tr>
+						<tr>
+							<td>+ NSC / NDSC Amount</td>
+							<td class="text-right">{{cert.appliedNSCNDSCAmount |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedNSCNDSCAmount |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td>+ MOS Amount</td>
+							<td class="text-right">{{cert.appliedMOSAmount | currency}}</td>
+							<td class="text-right">{{cert.certifiedMOSAmount |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td>+ Main Contractor Retention Released</td>
+							<td class="text-right">{{cert.appliedMainContractorRetentionReleased
+								| currency}}</td>
+							<td class="text-right">{{cert.certifiedMainContractorRetentionReleased
+								| currency}}</td>
+						</tr>
+
+						<tr>
+							<td>+ Retention for NSC / NDSC Released</td>
+							<td class="text-right">{{cert.appliedRetentionforNSCNDSCReleased
+								| currency}}</td>
+							<td class="text-right">{{cert.certifiedRetentionforNSCNDSCReleased
+								| currency}}</td>
+						</tr>
+
+						<tr>
+							<td>+ MOS Retention Released</td>
+							<td class="text-right">{{cert.appliedMOSRetentionReleased |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedMOSRetentionReleased
+								| currency}}</td>
+						</tr>
+						<tr>
+							<td>+ Adjustment Amount</td>
+							<td class="text-right">{{cert.appliedAdjustmentAmount |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedAdjustmentAmount |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td>+ Advance Payment</td>
+							<td class="text-right">{{cert.appliedAdvancePayment |
+								currency}}</td>
+							<td class="text-right">{{cert.certifiedAdvancePayment |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td>+ CPF Amount</td>
+							<td class="text-right">{{cert.appliedCPFAmount | currency}}</td>
+							<td class="text-right">{{cert.certifiedCPFAmount |
+								currency}}</td>
+						</tr>
+						<tr>
+							<td class="text-red">- Main Contractor Retention</td>
+							<td class="text-right text-red">({{cert.appliedMainContractorRetention
+								| currency}})</td>
+							<td class="text-right text-red">({{cert.certifiedMainContractorRetention
+								| currency}})</td>
+						</tr>
+						<tr>
+							<td class="text-red">- Retention for NSC / NDSC</td>
+							<td class="text-right text-red">({{cert.appliedRetentionforNSCNDSC
+								| currency}})</td>
+							<td class="text-right text-red">({{cert.certifiedRetentionforNSCNDSC
+								| currency}})</td>
+						</tr>
+						<tr>
+							<td class="text-red">- MOS Retention</td>
+							<td class="text-right text-red">({{cert.appliedMOSRetention
+								| currency}})</td>
+							<td class="text-right text-red">({{cert.certifiedMOSRetention
+								| currency}})</td>
+						</tr>
+						<tr>
+							<td class="text-red">- Contra Charge Amount</td>
+							<td class="text-right text-red">({{cert.appliedContraChargeAmount
+								| currency}})</td>
+							<td class="text-right text-red">({{cert.certifiedContraChargeAmount
+								| currency}})</td>
+						</tr>
+
+
+						<tr class="subtotal">
+							<td class="value"><b>Net Amount</b></td>
+							<td class="text-right value"><b>{{cert.appNetAmount |
+									currency}}</b></td>
+							<td class="text-right value"><b>{{cert.certNetAmount |
+									currency}}</b></td>
+						</tr>
+						<tr>
+							<td class="value"><b>Gross Amount</b></td>
+							<td class="text-right value"><b>{{cert.appGrossAmount |
+									currency}}</b></td>
+							<td class="text-right value"><b>{{cert.certGrossAmount |
+									currency}}</b></td>
+						</tr>
+
+					</tbody>
+				</table>
+
+
+				<table class="table table-border" ng-show="cert.jobNo.indexOf('14')>-1">
+					<tbody>
+						<tr>
+							<td>GST Amount(GST Receivable)</td>
+							<td class="text-right">{{cert.gstReceivable | currency}}</td>
+						</tr>
+						<tr>
+							<td>GST for Contra Charge(GST Payable)</td>
+							<td class="text-right">{{cert.gstPayable | currency}}</td>
+						</tr>
+						
+					</tbody>
+				</table>
+				
+				<table class="table table-border">
+					<tbody>
+						<tr>
+							<td>IPA Submission Date</td>
+							<td>{{cert.ipaSubmissionDate | jsonDate : 'dd MMM,yyyy'}}</td>
+							<td>Actual Receipt Date</td>
+							<td>{{cert.actualReceiptDate | jsonDate : 'dd MMM,yyyy'}}</td>
+						</tr>
+						
+						<tr>
+							<td>Certificate Issue Date</td>
+							<td>{{cert.certIssueDate | jsonDate : 'dd MMM,yyyy'}}</td>
+							<td>Certificate As At Date</td>
+							<td>{{cert.certAsAtDate | jsonDate : 'dd MMM,yyyy'}}</td>
+						</tr>
+						
+						<tr>
+							<td>Certificate Due Date</td>
+							<td>{{cert.certDueDate | jsonDate : 'dd MMM,yyyy'}}</td>
+							<td></td><td></td>
+						</tr>
+						
+					</tbody>
+				</table>
+				
+				<table class="table">
+					<tr>
+						<td><b>Remarks:</b></td>
+					</tr>
+					<tr>
+						<td>{{cert.remark}}</td>
+					</tr>
+
+				</table>
+			</div>
+
+			<div class="col-md-12">
+				<button class="m-t-5 btn btn-primary btn-block hidden-print" id="submitBtn"
+					ng-hide="disableButtons" ng-click="postIPC()"
+					ng-disabled="disableButtons || cert.certificateStatus !=150">
+					Post to Finance <span class="fa fa-share"></span>
+				</button>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+
+</div>

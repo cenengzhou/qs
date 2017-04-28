@@ -1,5 +1,5 @@
-mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$stateParams', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter', 'attachmentService',
-                                       function ($q, $scope,  mainCertService, $cookies, $stateParams, $location, modalService, confirmService, $state, roundUtil, GlobalParameter, attachmentService) {
+mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$location', 'modalService', 'confirmService', '$state', 'roundUtil', 'GlobalParameter', 'attachmentService',
+                                       function ($q, $scope,  mainCertService, $cookies,  $location, modalService, confirmService, $state, roundUtil, GlobalParameter, attachmentService) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.GlobalParameter = GlobalParameter;
@@ -9,14 +9,7 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 	$scope.previousGSTReceivable = 0;
 	$scope.previousGSTPayable = 0;
 
-	if($stateParams.mainCertNo){
-		if($stateParams.mainCertNo == '0'){
-			$cookies.put('mainCertNo', '');
-		}else{
-			$cookies.put('mainCertNo', $stateParams.mainCertNo);
-		}
-	}
-
+	
 	$scope.mainCertNo = $cookies.get("mainCertNo");
 
 
@@ -37,10 +30,7 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 		}
 
 
-		if($scope.cert.id == null || $scope.cert.id.length == 0)	
-			createMainCert();
-		else
-			updateCertificate();
+		updateCertificate();
 	};
 
 	$scope.editContraCharge = function() {
@@ -65,24 +55,35 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 	}, true);
 
 
-	$scope.openRetentionReleaseSchedule = function() {
-		if(!$scope.fieldChanged){
-			modalService.open('lg', 'view/main-cert/modal/retention-release-modal.html', 'RetentionReleaseModalCtrl');
-		}else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+		if($scope.fieldChanged){
+			event.preventDefault();
+			var modalOptions = {
+					bodyText: "There are unsaved data, do you want to leave without saving?"
+			};
+			confirmService.showModal({}, modalOptions)
+			.then(function (result) {
+				if(result == "Yes"){
+					$scope.fieldChanged = false;
+					$state.go(toState.name);
+				}
+			});
+			
 		}
-	}
-
+	});
+	
 	function getCertificate(mainCertNo){
 		mainCertService.getCertificate($scope.jobNo, mainCertNo)
 		.then(
 				function( data ) {
 					$scope.cert = data;
-					if($scope.cert.length==0 || $scope.cert.certificateStatus < 200)
+					if($scope.cert.certificateStatus < 200)
 						$scope.disableButtons = false;
 					else
 						$scope.disableButtons = true;
 
+					$scope.currentCertNetAmount = data.certNetAmount;
+					
 					if(mainCertNo > 1){
 						mainCertService.getCertificate($scope.jobNo, mainCertNo - 1)
 						.then(
@@ -104,86 +105,51 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Main Contract Certificate has been updated.");
+						$scope.fieldChanged = false;
 						$state.reload();
 					}
 				});
 	}
 
-	function createMainCert(){
-		mainCertService.createMainCert($scope.cert)
-		.then(
-				function( data ) {
-					if(data != null && data.length!=0){
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "New Main Contract Certificate has been added.");
-						$location.path("/main-cert-select");
-					}
-				});
-	}
 
 
-	$scope.insertIPA = function() {
-		if(!$scope.fieldChanged){
-			mainCertService.insertIPA($scope.cert)
-			.then(
-					function( data ) {
-						if(data.length!=0){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						}else{
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPA has been sent out.");
-							$state.reload();
-						}
-					});
-		}else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
-		}
-	}
 
 
 	$scope.confirmIPC = function() {
-		if(!$scope.fieldChanged){
-			mainCertService.getCumulativeRetentionReleaseByJob($scope.jobNo, $scope.cert.certificateNumber)
-			.then(
-					function (data) {
-						if(data.status == 'FAIL'){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.message);
-							return;
-						}else{
-							mainCertService.confirmIPC($scope.cert)
-							.then(
-									function( data ) {
-										if(data !=null && data.length!=0){
-											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-										}else{
-											modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been confirmed.");
-											$state.reload();
-										}
-									});
-						}
+		mainCertService.getCumulativeRetentionReleaseByJob($scope.jobNo, $scope.cert.certificateNumber)
+		.then(
+				function (data) {
+					if(data.status == 'FAIL'){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', data.message);
+						return;
+					}else{
+						mainCertService.confirmIPC($scope.cert)
+						.then(
+								function( data ) {
+									if(data !=null && data.length!=0){
+										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+									}else{
+										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been confirmed.");
+										$state.reload();
+									}
+								});
+					}
 
-					});
-		}else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
-		}
+				});
 
 	}
 
 	$scope.resetIPC = function() {
-		if(!$scope.fieldChanged){
-			mainCertService.resetIPC($scope.cert)
-			.then(
-					function( data ) {
-						if(data.length!=0){
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-						}else{
-							modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been reset.");
-							$state.reload();
-						}
-					});
-		}else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
-		}
+		mainCertService.resetIPC($scope.cert)
+		.then(
+				function( data ) {
+					if(data.length!=0){
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+					}else{
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been reset.");
+						$state.reload();
+					}
+				});
 	}
 
 	function checkAttachment(){
@@ -219,48 +185,44 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 		})
 
 	}
+	
 	function confirmPostIPC(){
-		if(!$scope.fieldChanged){
-			if($scope.postingAmount < 0){
-				var modalOptions = {
-						bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+roundUtil.round($scope.postingAmount, 2)+"<br/>" 
-						+" Net GST Receivable Movement Amount: $" + roundUtil.round($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>" 
-						+ "Net GST Payable Movement Amount: $" + roundUtil.round($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/><br/>"
-						+ "Are you sure you want to post this Main Certificate?<br/>" 
-						+ "Approval with approval route(RM) is required."
-				};
+		$scope.postingAmount = roundUtil.round($scope.currentCertNetAmount - $scope.previousCertNetAmount, 2);
+		var message = "Main Contract Certificate Net Movement Amount (without GST):  $"+$scope.postingAmount+"<br/>" 
+					+" Net GST Receivable Movement Amount: $" + roundUtil.round($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>" 
+					+ "Net GST Payable Movement Amount: $" + roundUtil.round($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/><br/>"
+					+ "Are you sure you want to post this Main Certificate?<br/>" ;
+		
+		if($scope.postingAmount < 0){
+			var modalOptions = {
+					bodyText: message + "Approval with approval route(RM) is required."
+			};
 
-				confirmService.showModal({}, modalOptions).then(function (result) {
-					if(result == "Yes"){
-						submitNegativeMainCertForApproval();
-					}
-				});
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					submitNegativeMainCertForApproval();
+				}
+			});
 
-			}else{
-				var modalOptions = {
-						bodyText: "Main Contract Certificate Net Movement Amount (without GST):  $"+roundUtil.round($scope.postingAmount, 2)+"<br/>"
-						+ "Net GST Receivable Movement Amount: $" + roundUtil.round($scope.cert.gstReceivable - $scope.previousGSTReceivable, 2) + "<br/>"
-						+ "Net GST Payable Movement Amount: $" + roundUtil.round($scope.cert.gstPayable - $scope.previousGSTPayable, 2) + "<br/>"
-						+ "Are you sure you want to post this Main Certificate?"
-				};
-
-				confirmService.showModal({}, modalOptions).then(function (result) {
-					if(result == "Yes"){
-						mainCertService.postIPC($scope.jobNo, $scope.cert.certificateNumber)
-						.then(
-								function( data ) {
-									if(data !=null && data.length!=0){
-										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
-									}else{
-										modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been posted to JDE Finance.");
-										$state.reload();
-									}
-								});
-					}
-				});
-			}
 		}else{
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Certificate has been modified, please save it first.");
+			var modalOptions = {
+					bodyText: message
+			};
+
+			confirmService.showModal({}, modalOptions).then(function (result) {
+				if(result == "Yes"){
+					mainCertService.postIPC($scope.jobNo, $scope.cert.certificateNumber)
+					.then(
+							function( data ) {
+								if(data !=null && data.length!=0){
+									modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+								}else{
+									modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "IPC has been posted to JDE Finance.");
+									$state.reload();
+								}
+							});
+				}
+			});
 		}
 	}
 
@@ -366,19 +328,23 @@ mainApp.controller('CertDetailsCtrl', ['$q', '$scope', 'mainCertService', '$cook
 				});
 	}
 	
-	$scope.openAttachment = function(){
-		modalService.open('lg', 'view/main-cert/modal/main-cert-attachment-file.html', 'AttachmentMainCertFileCtrl', 'Success', $scope);
+	$scope.convertCertStatus = function(status){
+		if(status!=null){
+			if (status.localeCompare('100') == 0) {
+				return "Certificate Created";
+			}else if (status.localeCompare('120') == 0) {
+				return "IPA Sent";
+			}else if (status.localeCompare('150') == 0) {
+				return "Certificate(IPC) Confirmed";
+			}else if (status.localeCompare('200') == 0) {
+				return "Certificate(IPC) Waiting for special approval";
+			}else if (status.localeCompare('300') == 0) {
+				return "Certificate Posted to Finance's AR";
+			}else if (status.localeCompare('400') == 0) {
+				return "Certifited Amount Received";
+			}
+		}
 	}
-
-	/*document.getElementById("number").onblur =function (){    
-		this.value = parseFloat(this.value.replace(/,/g, ""))
-		.toFixed(2)
-		.toString()
-		.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-		//document.getElementById("display").value = this.value.replace(/,/g, "")
-
-	}*/
 
 }]);
 

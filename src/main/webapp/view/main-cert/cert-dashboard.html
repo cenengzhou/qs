@@ -49,8 +49,7 @@
 							chart-labels="linChartParameters.labels"
 							chart-series="linChartParameters.series"
 							chart-options="linChartParameters.options" chart-legend="true"
-							resize ng-style="resizeWithOffset(400)"
-							>
+							resize ng-style="resizeWithOffset(400)">
 						           		</canvas>
 					</div>
 				</div>
@@ -78,18 +77,49 @@
 						<b>Retention Release Schedule</b>
 					</h4>
 				</div>
-				<div class="panel-body" >
-					<div id="" save-and-restore-grid-state="maincert_dashboard" ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
-						ui-grid-resize-columns ui-grid-exporter class="grid"
-						resize ng-style="resizeWithOffset(310)"></div>
+				<div class="panel-body">
+					<div class="col-md-6 col-xs-12">
+						<div class="widget widget-stat bg-inverse text-white">
+							<div class="widget-stat-icon">
+								<i class="fa fa-dollar"></i>
+							</div>
+							<div class="widget-stat-info">
+								<div class="widget-stat-title">Project Contract Value</div>
+								<div class="widget-stat-number">{{ projectedContractValue
+									| currency}}</div>
+								<div class="widget-stat-text">Max Retention: {{
+									maxRetPercent | number: 2}}%</div>
+							</div>
+						</div>
+					</div>
 
-					
+					<div class="col-md-6 col-xs-12">
+						<div class="widget widget-stat bg-primary text-white">
+							<div class="widget-stat-icon">
+								<i class="fa fa-dollar"></i>
+							</div>
+							<div class="widget-stat-info">
+								<div class="widget-stat-title">Cumulative Retention Amount</div>
+								<div class="widget-stat-number">{{ cert.amount_cumulativeRetention |
+									currency}}</div>
+								<div class="widget-stat-text">(Cumulative to date)</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div id="" save-and-restore-grid-state="maincert_dashboard"
+							ui-grid-save-state ui-grid="gridOptions" ui-grid-selection
+							ui-grid-resize-columns ui-grid-exporter class="grid" resize
+							ng-style="resizeWithOffset(380)"></div>
+					</div>
+
 				</div>
-				<div class="panel-footer bg-white">
+				<!-- <div class="panel-footer bg-white">
 					<a class="btn btn-primary btn-block" ng-click="openRetentionReleaseSchedule()">Edit Schedule 
 						<i class="fa fa-calendar"></i>
 					</a>
-				</div>
+				</div> -->
 			</div>
 
 		</div>
