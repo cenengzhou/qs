@@ -283,8 +283,14 @@ public class TransitService implements Serializable {
 					String billNo = row[0].substring(0, 2);
 					String subBillNo = row[0].substring(2);
 					// check if the sub bill number is "0" or "00" or "000"
-					if("00000".substring(0, subBillNo.length()).equals(subBillNo))
-						subBillNo = null;
+					try {
+						if(Integer.valueOf(subBillNo) == 0)
+							subBillNo = null;
+					} catch (Exception e) {
+						
+					}
+					/*if("00000".substring(0, subBillNo.length()).equals(subBillNo))
+						subBillNo = null;*/
 					String pageNo = row[1];
 					if(pageNo == null){
 						errorList.add("Line " + i+": [Column B] Page is blank.");
@@ -339,7 +345,6 @@ public class TransitService implements Serializable {
 						continue;
 					}
 					
-					
 					// check is there any different between total value and Qty*Rate (include rounding error)
 					double difference = CalculationUtil.round((bqItem.getValue()-(bqItem.getSellingRate()*bqItem.getQuantity())), 2);
 					if(difference != 0.0){
@@ -349,7 +354,6 @@ public class TransitService implements Serializable {
 						
 						response.setHaveWarning(true);
 					}
-					
 					
 					// added by brian on 20110224 - end
 					
@@ -362,7 +366,6 @@ public class TransitService implements Serializable {
 					}
 					else
 						bqItemMap.put(bqItem, Integer.valueOf(i));
-					
 					
 					transitBpiList.add(bqItem);
 					
