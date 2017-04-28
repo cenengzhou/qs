@@ -77,7 +77,7 @@ request.getSession().removeAttribute("SPRING_SECURITY_CONTEXT");
 			$http({
 				method : 'POST',
 				url : 'formlogin',
-	            data: "username="+$scope.user.username+"&password="+$scope.user.password,
+	            data: "username="+encodeURIComponent($scope.user.username)+"&password="+encodeURIComponent($scope.user.password),
 	            headers : {
 	            	 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 				}
