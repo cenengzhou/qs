@@ -83,9 +83,16 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
 			if(row.entity.postedIVAmount != 0){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Selected field cannot be edited - resource has posted IV amount.");
+				row.isSelected = false;
 				return;
 			}
 			
+			if(row.entity.quantity <= 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "The selected resource is not available because the Quantity is less than or equal to 0 (zero). Please pick another resource for Tendering.");
+				row.isSelected = false;
+				return;
+			}
+
 			if(row.isSelected) { 
 				row.entity.packageNo = $scope.subcontractNo;
 				$scope.gridApi.rowEdit.setRowsDirty([row.entity]);

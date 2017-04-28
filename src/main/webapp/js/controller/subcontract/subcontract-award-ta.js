@@ -220,6 +220,11 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			var subsidiaryCode = ta[i]['subsidiaryCode'];
 			var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
 
+			if(ta[i].quantity <= 0){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "There exists invalid Tender Analysis Details with the Quantity less than or equal to 0 (zero). Please update the Quantity of Tender Analysis Detail accordingly.");
+				return;
+			}
+			
 			if(Object.keys(taBalance).indexOf(accountCode) >= 0)
 				taBalance[accountCode] =  roundUtil.round(taBalance[accountCode] - ta[i]['amountBudget'], 2);
 			else{
