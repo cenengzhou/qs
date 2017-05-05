@@ -194,17 +194,6 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	}
 	
-	/*$scope.$watch('payment.asAtDate', function(newValue, oldValue) {
-		console.log("newValue: "+newValue);
-		console.log("oldValue: "+oldValue);
-
-		if (false === $('form[name="form-validate"]').parsley().validate("validate-asAtDate")) {
-			event.preventDefault();  
-			return;
-		}
-		
-		if(oldValue != null)
-			$scope.calculatePaymentDueDate();
-	});*/
+	
 
 }]);
