@@ -212,16 +212,15 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 			return;
 		}
 
-		//Validate Account Balance
 		var taBalance = JSON.parse(JSON.stringify(accountBalance));
-
+			
 		for (i in ta){
 			var objectCode = ta[i]['objectCode'];
 			var subsidiaryCode = ta[i]['subsidiaryCode'];
 			var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
 
 			if(ta[i].quantity <= 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "There exists invalid Tender Analysis Details with the Quantity less than or equal to 0 (zero). Please update the Quantity of Tender Analysis Detail accordingly.");
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Tender Analysis Details with Quantity less than or equal to 0 is invalid.");
 				return;
 			}
 			
@@ -236,7 +235,7 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 
 		for (i in taBalance){
 			if(taBalance[i] != 0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode);
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Amounts are not balanced for account: "+accountCode + " : "+taBalance[i]);
 				return;
 			}
 		}
@@ -269,10 +268,9 @@ mainApp.controller('SubcontractTACtrl', ['$scope', 'resourceSummaryService', 'te
 						var accountCode =  (objectCode).concat("-".concat(subsidiaryCode));
 						
 						if(Object.keys(accountBalance).indexOf(accountCode) >= 0)
-							accountBalance[accountCode] =  accountBalance[accountCode] + data[i]['amountBudget'];
+							accountBalance[accountCode] =  roundUtil.round(accountBalance[accountCode] + data[i]['amountBudget'], 2);
 						else
 							accountBalance[accountCode] =  data[i]['amountBudget'];
-
 					}
 				});
 	}
