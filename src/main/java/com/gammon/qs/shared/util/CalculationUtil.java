@@ -28,7 +28,7 @@ public class CalculationUtil {
 
 	public static BigDecimal roundToBigDecimal(Double doubleValue, int scale){
 		if(doubleValue!=null && !Double.isNaN(doubleValue)){
-			return new BigDecimal(doubleValue).setScale(scale, BigDecimal.ROUND_HALF_UP);
+			return new BigDecimal(doubleValue.toString()).setScale(scale, BigDecimal.ROUND_HALF_UP);
 		}
 		else
 			return new BigDecimal(0.0);
