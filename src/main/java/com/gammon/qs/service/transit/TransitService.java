@@ -187,7 +187,6 @@ public class TransitService implements Serializable {
 		 * @author koeyyeung
 		 * created on 20 Feb, 2017
 		 * Convert to Amount Based**/
-		logger.info("transitResource.getValue(): "+transitResource.getValue());
 		resource.setAmountBudget(transitResource.getValue());
 		return resource;
 	}
