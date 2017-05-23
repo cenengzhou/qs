@@ -384,7 +384,7 @@ public class SubcontractService {
 				scPackage.setExchangeRate(tender.getExchangeRate());
 				try { //
 					for(TenderDetail tenderDetails: tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(tender)){
-						scSum += tenderDetails.getAmountSubcontract();
+						scSum += tenderDetails.getAmountSubcontract() * tenderDetails.getTender().getExchangeRate();
 						scDetails = new SubcontractDetailBQ();
 						scDetails.setSubcontract(scPackage);
 						scDetails.setSequenceNo(tenderDetails.getSequenceNo());
@@ -424,8 +424,8 @@ public class SubcontractService {
 						 * created on 12 July, 2016
 						 * Convert to amount based**/
 						scDetails.setAmountBudget(new BigDecimal(tenderDetails.getAmountBudget()));
-						scDetails.setAmountSubcontract(new BigDecimal(tenderDetails.getAmountSubcontract()));
-						scDetails.setAmountSubcontractNew(new BigDecimal(tenderDetails.getAmountSubcontract()));
+						scDetails.setAmountSubcontract(new BigDecimal(tenderDetails.getAmountSubcontract() * tenderDetails.getTender().getExchangeRate()));
+						scDetails.setAmountSubcontractNew(new BigDecimal(tenderDetails.getAmountSubcontract() * tenderDetails.getTender().getExchangeRate()));
 						
 						subcontractDetailHBDao.insert(scDetails);
 						
@@ -1727,7 +1727,7 @@ public class SubcontractService {
 			 * created on 12 July, 2016
 			 * Convert to amount based**/
 			scDetails.setAmountBudget(new BigDecimal(taDetails.getAmountBudget()));
-			scDetails.setAmountSubcontract(new BigDecimal(taDetails.getAmountSubcontract()));
+			scDetails.setAmountSubcontract(new BigDecimal(taDetails.getAmountSubcontract() * taDetails.getTender().getExchangeRate()));
 			scDetails.setAmountSubcontractNew(new BigDecimal(taDetails.getAmountSubcontract()));
 			
 			scDetails.setJobNo(subcontract.getJobInfo().getJobNumber());
@@ -1754,7 +1754,7 @@ public class SubcontractService {
 		Double scSum = 0.00;
 		//Update scPackage Subcontract Sum
 		for(TenderDetail TADetails: taDetailsList){
-			scSum = scSum + (TADetails.getAmountSubcontract());
+			scSum = scSum + (TADetails.getAmountSubcontract() * TADetails.getTender().getExchangeRate());
 		}
 		
 		if (Subcontract.RETENTION_ORIGINAL.equals(subcontract.getRetentionTerms()) || Subcontract.RETENTION_REVISED.equals(subcontract.getRetentionTerms()))
