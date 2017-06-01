@@ -50,8 +50,11 @@ import com.gammon.qs.domain.TransitResource;
 import com.gammon.qs.io.ExcelFile;
 import com.gammon.qs.io.ExcelWorkbook;
 import com.gammon.qs.io.ExcelWorkbookProcessor;
+import com.gammon.qs.service.BudgetPostingService;
+import com.gammon.qs.service.JobCostService;
 import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.MasterListService;
+import com.gammon.qs.service.ResourceSummaryService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.util.JasperReportHelper;
@@ -98,7 +101,12 @@ public class TransitService implements Serializable {
 	private transient SubcontractHBDao scPackageDao;
 	@Autowired
 	private transient JasperConfig jasperConfig;
-	
+	@Autowired
+	private transient JobCostService jobCostService;
+	@Autowired
+	private transient BudgetPostingService budgetPostingService;
+	@Autowired
+	private transient ResourceSummaryService resourceSummaryService;
 	
 	private List<TransitCodeMatch> codeMatchCache;
 	private List<AppTransitUom> uomMatchCache;
@@ -1274,6 +1282,7 @@ public class TransitService implements Serializable {
 	
 	public String completeTransit(String jobNumber) {
 		logger.info("TRANSIT: complete transit for job " + jobNumber);
+		String message = "";
 		try {
 			JobInfo job = jobRepository.obtainJob(jobNumber);
 		job.setAllowManualInputSCWorkDone("Y");
@@ -1281,10 +1290,15 @@ public class TransitService implements Serializable {
 		jobRepository.updateJob(job);
 		
 		Transit header = transitHeaderDao.getTransitHeader(jobNumber);
-		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus()))
-			return "Transit for this job has already been completed";
-		else if(!header.getStatus().equals(Transit.REPORT_PRINTED))
-			return "Please confirm resources and create reports before completing the transit process.";
+		if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
+			message = "Transit for this job has already been completed"; 
+			return message; 
+		}
+		else if(!header.getStatus().equals(Transit.REPORT_PRINTED)){
+			message = "Please confirm resources and create reports before completing the transit process."; 
+			return message;
+		}
+			
 		List<TransitBpi> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
 		Collections.sort(transitBqItems, new Comparator<TransitBpi>(){
 			public int compare(TransitBpi bq1, TransitBpi bq2) {
@@ -1381,6 +1395,33 @@ public class TransitService implements Serializable {
 		}
 		header.setStatus(Transit.TRANSIT_COMPLETED);
 		transitHeaderDao.saveOrUpdate(header);
+		logger.info("Step 1: Transit has been completed.");
+		
+		//2. Create Account Master
+		jobCostService.createAccountMasterByGroup(true, false, false, false, jobNumber);
+		logger.info("Step 2: Create Account Master completes.");
+		
+		//3. Post Budget
+		String budgetPostingError = budgetPostingService.postBudget(jobNumber, null);
+		if(budgetPostingError !=null && budgetPostingError.length()>0){
+			logger.info("Step 3: Post Budget ERROR: "+budgetPostingError);
+			message = budgetPostingError;
+			return message; 
+		}
+		else
+			logger.info("Step 3: Post Budget completes.");
+		
+		//4. Generate Resource Summary
+		try {
+			String error = resourceSummaryService.generateResourceSummaries(jobNumber);
+			if(error.length()==0)
+				logger.info("Step 4: Generate Resource Summary completes.");
+			else
+				logger.info("Step 4: Generate Resource Summary ERROR: "+error);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();

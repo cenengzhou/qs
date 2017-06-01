@@ -193,7 +193,7 @@ mainApp.service('jdeService', ['$http', '$q', 'GlobalHelper',  function($http, $
     		}
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
-    }getAccountBalanceByDateRangeList
+    }
     
     function getAccountBalanceByDateRangeList(jobNumber, subLedger, subLedgerType, totalFlag, postFlag, fromDate, thruDate, year, period){
     	var request = $http({

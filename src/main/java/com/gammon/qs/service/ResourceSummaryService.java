@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
@@ -480,7 +481,8 @@ public class ResourceSummaryService implements Serializable {
 		}
 	}
 	
-	
+	@Transactional(	propagation = Propagation.REQUIRES_NEW,
+			rollbackFor = { Exception.class }, value = "transactionManager")
 	public String generateResourceSummaries(String jobNo) throws Exception{
 		String error = "";
 		try {

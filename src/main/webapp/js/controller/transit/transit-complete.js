@@ -59,7 +59,6 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     }
 	
 	$scope.completeTransitMsg = '';
-    $scope.completeTransitErr = false;
     $scope.completeTransit = function(){
     	
     	var modalOptions = {
@@ -72,37 +71,13 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
 				transitService.completeTransit($scope.jobNo)
 		    	.then(function(data){
 		    		getTransit();
-		    		$scope.completeTransitMsg = '';
-		    		$scope.completeTransitErr = false;
 		    		
-		    		jdeService.createAccountMasterByGroup($scope.jobNo, true, false, false, false)
-		    		.then(
-		    				function( result ) {
-		    					if(data === ''){
-		    		    			$scope.completeTransitMsg += 'Complete Transit: Success<br/>';
-		    		    			jdeService.postBudget($scope.jobNo)
-		    		    			.then(function(data){
-		    		    				if(data === ''){
-		    		    					$scope.completeTransitMsg += 'Budget posting: Success<br/>';
-		    		    					generateResourceSummaries();
-		    		    				} else {
-		    		    					$scope.completeTransitMsg += 'Budget posting:' + data + '<br/>';
-		    		    					$scope.completeTransitErr = true;
-		    		    					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', data.replace('<br/>', '\n') );
-		    		    				}
-		    		    			}, function(data){
-		    		    				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', msg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-		    		    			});
-		    		    		} else {
-		    		    			$scope.completeTransitMsg +=  'Complete Transit:' + data + '<br/>';
-		    		    			$scope.completeTransitErr = true;
-		    		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', $scope.completeTransitMsg.replace('<br/>', '\n') + data.replace('<br/>', '\n'));
-		    		    		}
-
-		    				});
+		    		if(data === ''){
+		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Transit has been completed successfully.");
+		    		} else {
+		    			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+		    		}
 		    		
-		    	}, function(data){
-		    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.replace('<br/>', '\n') );
 		    	});
 			
 			}
@@ -111,19 +86,4 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     }
     
 
-    function generateResourceSummaries() {
-		resourceSummaryService.generateResourceSummaries($scope.jobNo)
-		.then(
-				function( data ) {
-					if(data.length!=0){
-						/*$scope.completeTransitMsg += 'Generate Resource Summary:' + data + '<br/>';
-    					$scope.completeTransitErr = true;
-    					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', data.replace('<br/>', '\n') );*/
-					}else{
-						$scope.completeTransitMsg += 'Generate Resource Summary: Success<br/>';
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', $scope.completeTransitErr ? 'Fail' : 'Success', $scope.completeTransitMsg );
-					}
-				});
-	}
-    
 }]);

@@ -50,9 +50,9 @@ public class MainCertRetentionReleaseService {
 			for (MainCertRetentionRelease rr : rrList) {
 				if (MainCertRetentionRelease.STATUS_ACTUAL.equals(rr.getStatus())) {
 					cumActualRetentionRelease += rr.getActualReleaseAmt();
-					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getActualReleaseAmt()));
+					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getActualReleaseAmt()!=null?rr.getActualReleaseAmt():0.0));
 				} else
-					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getForecastReleaseAmt()));
+					cumRetentionRelease = cumRetentionRelease.add(new BigDecimal(rr.getForecastReleaseAmt()!=null?rr.getForecastReleaseAmt():0.0));
 			}
 		cumRetentionRelease = CalculationUtil.roundToBigDecimal(cumRetentionRelease, 2);
 
