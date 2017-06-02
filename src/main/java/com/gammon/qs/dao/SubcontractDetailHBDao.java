@@ -93,7 +93,7 @@ public class SubcontractDetailHBDao extends BaseHibernateDao<SubcontractDetail> 
 		criteria.addOrder(Order.desc("sequenceNo"));
 		criteria.setProjection(Projections.max("sequenceNo"));
 
-		if(Integer.valueOf(criteria.uniqueResult().toString())==null)
+		if(criteria.uniqueResult() == null || Integer.valueOf(criteria.uniqueResult().toString())==null)
 			return 0;
 		else
 			return Integer.valueOf(criteria.uniqueResult().toString());

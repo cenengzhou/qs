@@ -111,20 +111,20 @@ public class APController {
 	 * @param request
 	 * @param jobNumber
 	 * @param packageNo
-	 * @param approvedOrRejected
+	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = {"/ws/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}",
-							"service/ap/completeAwardApproval/{jobNumber}/{packageNo}/{approvedOrRejected}"}, 
+	@RequestMapping(path = {"/ws/completeAwardApproval/{jobNumber}/{packageNo}/{approvalDecision}",
+							"service/ap/completeAwardApproval/{jobNumber}/{packageNo}/{approvalDecision}"}, 
 							method = RequestMethod.GET)
 	public CompleteAwardApprovalResponse completeAwardApproval(	HttpServletRequest request,
 															@PathVariable String jobNumber,
 															@PathVariable String packageNo,
-															@PathVariable String approvedOrRejected) {
+															@PathVariable String approvalDecision) {
 		CompleteAwardApprovalRequest requestObj = new CompleteAwardApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
-		requestObj.setApprovedOrRejected(approvedOrRejected);
+		requestObj.setApprovedOrRejected(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompleteAwardApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeAwardApproval", requestObj, CompleteAwardApprovalResponse.class);
 		return responseObj;
@@ -238,7 +238,7 @@ public class APController {
 	 * @param request
 	 * @param jobNumber
 	 * @param packageNo
-	 * @param approvedOrRejected
+	 * @param approvalDecision
 	 * @return
 	 */
 	@RequestMapping(path = {"/ws/completePaymentApproval/{jobNumber}/{packageNo}/{approvalDecision}",
@@ -247,11 +247,11 @@ public class APController {
 	public CompletePaymentApprovalResponse completePaymentApproval(	HttpServletRequest request,
 														@PathVariable String jobNumber,
 														@PathVariable String packageNo,
-														@PathVariable String approvedOrRejected) {
+														@PathVariable String approvalDecision) {
 		CompletePaymentApprovalRequest requestObj = new CompletePaymentApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
-		requestObj.setApprovalDecision(approvedOrRejected);
+		requestObj.setApprovalDecision(approvalDecision);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
 		CompletePaymentApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completePaymentApproval", requestObj, CompletePaymentApprovalResponse.class);
 		return responseObj;
@@ -279,24 +279,24 @@ public class APController {
 	 * @param request
 	 * @param jobNumber
 	 * @param packageNo
-	 * @param approvedOrRejected
+	 * @param approvalDecision
 	 * @return
 	 */
-	@RequestMapping(path = {"/ws/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}",
-							"service/ap/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvedOrRejected}/{splitOrTerminate}"},
+	@RequestMapping(path = {"/ws/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvalDecision}/{splitOrTerminate}",
+							"service/ap/completeSplitTerminateApproval/{jobNumber}/{packageNo}/{approvalDecision}/{splitOrTerminate}"},
 							method = RequestMethod.GET)
 	public CompleteSplitTerminateApprovalResponse completeSplitTerminateApproval(	HttpServletRequest request,
 																	@PathVariable String jobNumber,
 																	@PathVariable String packageNo,
-																	@PathVariable String approvedOrRejected,
+																	@PathVariable String approvalDecision,
 																	@PathVariable String splitOrTerminate) {
 		CompleteSplitTerminateApprovalRequest requestObj = new CompleteSplitTerminateApprovalRequest();
 		requestObj.setJobNumber(jobNumber);
 		requestObj.setPackageNo(packageNo);
-		requestObj.setApprovedOrRejected(approvedOrRejected);
+		requestObj.setApprovedOrRejected(approvalDecision);
 		requestObj.setSplitOrTerminate(splitOrTerminate);
 		restTemplate = restTemplateHelper.getRestTemplateForAPI(request.getServerName());
-		CompleteSplitTerminateApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/awardSCPackage", requestObj, CompleteSplitTerminateApprovalResponse.class);
+		CompleteSplitTerminateApprovalResponse responseObj = restTemplate.postForObject("http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/ws/completeSplitTerminateApproval", requestObj, CompleteSplitTerminateApprovalResponse.class);
 		return responseObj;
 	}
 

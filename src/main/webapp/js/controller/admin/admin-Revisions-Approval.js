@@ -24,7 +24,6 @@ mainApp.controller('AdminRevisionsApprovalCtrl', ['$scope', 'GlobalHelper', 'Glo
 	$scope.toCompleteAddendumParams = [
 			new ApiParam('jobNumber', 'text'),
 			new ApiParam('packageNo', 'text'),
-			new ApiParam('username', 'text'),
 			new ApiParam('approvedOrRejected', 'select').setOptions(GlobalParameter.approvedOrRejectedOptions)
 	];
 	
