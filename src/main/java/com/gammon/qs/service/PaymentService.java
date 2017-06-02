@@ -36,7 +36,6 @@ import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AppSubcontractStandardTermsHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.CreateGLWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
@@ -102,7 +101,7 @@ public class PaymentService{
 	@Autowired
 	private PaymentCertDetailHBDao paymentDetailDao;
 	@Autowired
-	private AttachPaymentHBDao paymentAttachmentDao;
+	private AttachmentService attachmentService;
 	@Autowired
 	private MainCertWSDao mainContractCertificateWSDao;
 	@Autowired
@@ -1348,8 +1347,10 @@ public class PaymentService{
 	/**
 	 * @author koeyyeung
 	 * created on 12 Jul, 2016
-	 * New workflow for Payment: input from payment details instead of scDetails**/
-	public String updatePaymentDetails(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentType, List<PaymentCertDetail> paymentDetails){
+	 * New workflow for Payment: input from payment details instead of scDetails
+	 * @throws Exception 
+	 * @throws NumberFormatException **/
+	public String updatePaymentDetails(String jobNo, String subcontractNo, Integer paymentCertNo, String paymentType, List<PaymentCertDetail> paymentDetails) throws NumberFormatException, Exception{
 		logger.info("updatePaymentDetails - jobNo: "+jobNo +" - subcontractNo: "+subcontractNo+" - paymentCertNo: "+paymentCertNo+" - paymentType: "+paymentType);
 		String error = "";
 		double totalCertAmount = 0.0;
@@ -1476,7 +1477,7 @@ public class PaymentService{
 											PaymentCert ccLatestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(jobNo, scDetailsCC.getSubcontract().getPackageNo());
 											if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus()))){
 												paymentCertDao.delete(ccLatestPaymentCert);
-												paymentAttachmentDao.deleteAttachmentByByPaymentCertID(ccLatestPaymentCert.getId());
+												attachmentService.deleteAttachmentByPaymentCert(ccLatestPaymentCert);
 												paymentDetailDao.deleteDetailByPaymentCertID(ccLatestPaymentCert.getId());
 											}
 										}

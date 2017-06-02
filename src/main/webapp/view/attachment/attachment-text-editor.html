@@ -4,7 +4,12 @@
 		<table class="col-md-12">
 		<tr>
 		<td class="col-md-2"><label for="fileNameBox" class="control-label text-white">File Name:</label></td>
-		<td class="col-md-10"><div class="text-white" ng-if="parentScope.disableRichEditor">{{parentScope.textAttachment.fileName}}</div><input ng-if="!parentScope.disableRichEditor" type="text" class="form-control" id="fileNameBox" name="fileNameBox" ng-model="parentScope.textAttachment.fileName" ng-disabled="!parentScope.isTextUpdatable"></td>
+		<td class="col-md-10">
+			<div class="text-white" ng-if="parentScope.disableRichEditor">{{parentScope.textAttachment.nameFile}}</div>
+			<input ng-if="!parentScope.disableRichEditor" type="text" 
+			class="form-control" id="fileNameBox" name="fileNameBox" 
+			ng-model="parentScope.textAttachment.nameFile" ng-disabled="!parentScope.isTextUpdatable">
+		</td>
 		</tr>
 		</table>
 		</div>
@@ -18,7 +23,7 @@
 </div>
 <div class="modal-body">
 	<div class="row">
-		<input type="textarea" ui-tinymce="tinymceOptions" ng-model="parentScope.textAttachment.textAttachment">
+		<input type="textarea" ui-tinymce="tinymceOptions" ng-model="parentScope.textAttachment.text">
 	</div>
 
 </div>

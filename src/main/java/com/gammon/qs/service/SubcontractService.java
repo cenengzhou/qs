@@ -42,7 +42,6 @@ import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AppSubcontractStandardTermsHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.HedgingNotificationWSDao;
 import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
@@ -101,8 +100,6 @@ public class SubcontractService {
 	private AdminService adminService;
 	@Autowired
 	private SecurityService securityService;
-	@Autowired
-	private AttachPaymentHBDao attachmentPaymentDao;
 	@Autowired
 	private AppSubcontractStandardTermsHBDao appSubcontractStandardTermsHBDao;
 	@Autowired
@@ -163,6 +160,8 @@ public class SubcontractService {
 	private UnitService unitService;
 	@Autowired
 	private AccountCodeWSDao accountCodeWSDao;
+	@Autowired
+	private AttachmentService attachmentService;
 
 	// Approval System
 	@Autowired
@@ -287,7 +286,7 @@ public class SubcontractService {
 					//Delete Pending Payment
 
 					paymentCertHBDao.delete(latestPaymentCert);
-					attachmentPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+					attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
 					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 					
 					subcontractHBDao.update(scPackage);
@@ -2185,7 +2184,7 @@ public class SubcontractService {
 				if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 					//Delete Pending Payment
 					paymentCertHBDao.delete(latestPaymentCert);
-					attachmentPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+					attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
 					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 					
 					

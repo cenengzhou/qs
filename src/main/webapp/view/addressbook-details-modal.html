@@ -117,26 +117,17 @@
 														<th>No.</th>
 														<th>File name</th>
 														<th>Type</th>
-														<!-- <th>Created By</th>  -->
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-repeat="attach in subcontractorAttachments"
-														style="cursor: pointer">
+													<tr ng-repeat="attach in attachments" style="cursor: pointer">
 														<td><label for="fileRadiobox-{{$index}}">{{$index+1}}</label>
 															<input type="checkbox" ng-Icheck id="fileRadiobox-{{$index}}"
 															ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
 															ng-model="attach.selectedAttachement"></td>
-														<td ng-click="attachmentClick()">{{attach.fileName}}</td>
+														<td ng-click="attachmentClick()">{{attach.nameFile}}</td>
 														<td ng-click="attachmentClick()"><span
 															class="{{attach.fileIconClass}}"></span></td>
-														<!--  
-														<td ng-click="attachmentClick()"><img imageonload
-															roll-back-image="resources/images/profile.png"
-															class="rounded-corner" height="30" width="30"
-															data-ng-src="{{attach.user.userIcon}}">
-															{{attach.user.fullname}}</td>
-															-->
 													</tr>
 												</tbody>
 											</table>
@@ -146,14 +137,14 @@
 								<div class="box-footer">
 									<div class="col-md-12">
 										<div class="col-md-4">
-											<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
-												ng-submit="onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
+											<form name="uploadAttachmentFilesAddressBook" id="uploadAttachmentFilesAddressBook"
+												ng-submit="onSubmitAttachmentUpload(uploadAttachmentFilesAddressBook)">
 												<label class="btn btn-block btn-primary"> <i
 													class="glyphicon glyphicon-upload"></i> Upload File
 													Attachment&hellip; <input style="display: none;"
 													class="form-control file-loading" type="file" name="files"
-													id="attachmentFiles" ng-model="attachmentFiles"
-													onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFiles.files)"
+													id="uploadAttachmentFilesAddressBook" ng-model="uploadAttachmentFilesAddressBook"
+													onChange="angular.element(this).scope().onSubmitAttachmentUpload(uploadAttachmentFilesAddressBook)"
 													multiple />
 												</label>
 											</form>

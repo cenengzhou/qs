@@ -325,16 +325,15 @@ mainApp.constant('GlobalParameter', {
 		return 'No';
 	},
 	AbstractAttachment:{
-	                    'SCPaymentNameObject' : 'GT58012',
-	                   'SCPackageNameObject' :'GT58010',
-	                    'SCDetailsNameObject' : 'GT58011',
-//						'TenderAnalysisNameObject' : 'GT58023'; //Never used
-	                    'VendorNameObject' : 'GT58024',
-	                    'MainCertNameObject' : 'GT59026',
-	                    'SplitNameObject' : 'SPLIT',
-	                    'TerminateNameObject' : 'TERMINATE',
-	                    'TransitNameObject' : 'TRANSIT'
-	                    
+		'AddendumNameObject' : 'GT58011',
+        'SCPaymentNameObject' : 'GT58012',
+        'MainCertNameObject' : 'GT59026',
+	    'SCPackageNameObject' :'GT58010',
+        'VendorNameObject' : 'GT58024',
+        'SplitNameObject' : 'SPLIT',
+        'TerminateNameObject' : 'TERMINATE',
+        'RepackagingNameObject': 'REPACKAGING',
+        'TransitNameObject' : 'TRANSIT'
 	},
 	PurchaseOrderType:[
 		{id:'GH', value:'Plant Blanket Sundry Order'},

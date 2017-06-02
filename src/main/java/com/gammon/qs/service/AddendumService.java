@@ -27,7 +27,6 @@ import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
 import com.gammon.qs.dao.AddendumHBDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.JobCostWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
@@ -68,7 +67,7 @@ public class AddendumService{
 	@Autowired
 	private ResourceSummaryHBDao resourceSummaryHBDao;
 	@Autowired
-	private AttachPaymentHBDao attachmentPaymentDao;
+	private AttachmentService attachmentService;
 	@Autowired
 	private PaymentCertDetailHBDao paymentCertDetailHBDao;
 	@Autowired
@@ -269,7 +268,7 @@ public class AddendumService{
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
 						paymentCertHBDao.delete(paymentCert);
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+						attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 					}
 					
 					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
@@ -338,7 +337,7 @@ public class AddendumService{
 					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
 						paymentCertHBDao.delete(paymentCert);
-						attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+						attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
 					}
 					
@@ -885,7 +884,7 @@ public class AddendumService{
 			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
 				paymentCertHBDao.delete(paymentCert);
-				attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+				attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
 				
 			}
@@ -1006,7 +1005,7 @@ public class AddendumService{
 			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
 				paymentCertHBDao.delete(paymentCert);
 				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-				attachmentPaymentDao.deleteAttachmentByByPaymentCertID(paymentCert.getId());
+				attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 			}
 		}
 

@@ -191,12 +191,11 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 	}
 	
 	$scope.openAttachment = function(){
-//		modalService.open('lg', 'view/subcontract/attachment/attachment-sc-file.html', 'AttachmentSCFileCtrl', 'Success', $scope);
 		$scope.nameObject = $scope.action == 'Split' ? GlobalParameter['AbstractAttachment'].SplitNameObject : GlobalParameter['AbstractAttachment'].TerminateNameObject;
 		$scope.uibModalInstance = $uibModal.open({
 			animation: true,
-			templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
-			controller: 'AttachmentAddendumFileCtrl',
+			templateUrl: "view/attachment/attachment-main.html",
+			controller: 'AttachmentMainCtrl',
 			size: 'lg',
 			backdrop: 'static',
 			scope: $scope

@@ -55,10 +55,6 @@ import com.gammon.pcms.helper.RestTemplateHelper;
 import com.gammon.pcms.model.Attachment;
 import com.gammon.pcms.service.HTMLService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.AbstractAttachment;
-import com.gammon.qs.domain.AttachPayment;
-import com.gammon.qs.domain.AttachSubcontract;
-import com.gammon.qs.domain.AttachSubcontractDetail;
 import com.gammon.qs.io.AttachmentFile;
 import com.gammon.qs.service.AddendumService;
 import com.gammon.qs.service.AttachmentService;
@@ -312,59 +308,32 @@ public class APController {
 	public GetAttachmentListResponseList getAttachmentList(@Valid @RequestBody GetAttachmentListRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetAttachmentListResponseList responseListObj = new GetAttachmentListResponseList();
-		List<? extends AbstractAttachment> attachmentList;
-		if (Attachment.AddendumNameObject.equals(requestObj.getNameObject())) {
-			logger.info("Web Service called by AP: SCDetail Attachments");
-			List<Attachment> addendumAttachmentList = attachmentService.obtainAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
-			if (addendumAttachmentList != null && addendumAttachmentList.size() > 0) {
+			logger.info("Web Service called by AP: getAttachmentList");
+			List<Attachment> attachmentList = attachmentService.obtainAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
+			if (attachmentList != null && attachmentList.size() > 0) {
 				List<GetAttachmentListResponse> responseAttachmentList = new ArrayList<GetAttachmentListResponse>();
 				String serverPath = attachmentConfig.getAttachmentServer("PATH")+attachmentConfig.getJobAttachmentsDirectory();
-				for (Attachment attachment : addendumAttachmentList) {
+				for (Attachment attachment : attachmentList) {
 					GetAttachmentListResponse responseObj = new GetAttachmentListResponse();
-					responseObj.setTextKey(requestObj.getTextKey() + "|" +  attachment.getNoSequence());
-
+					switch(requestObj.getNameObject()){
+					case Attachment.AddendumNameObject:
+					case Attachment.SCPackageNameObject:
+					case Attachment.SCPaymentNameObject:
+						responseObj.setTextKey(requestObj.getTextKey() + "|" +  attachment.getNoSequence());
+						break;
+					default:
+						responseObj.setTextKey(requestObj.getTextKey());
+					}
+					
 					responseObj.setDocumentType(Integer.valueOf(attachment.getTypeDocument()));
 					responseObj.setFileLink(responseObj.getDocumentType() == Integer.valueOf(Attachment.FILE) ? serverPath + attachment.getPathFile() : attachment.getPathFile());
 					responseObj.setFileName(attachment.getNameFile());
 					responseObj.setSequenceNo(attachment.getNoSequence().intValue());
 					logger.info("Response - Text Key: " + responseObj.getTextKey() + " Document Type: " + responseObj.getDocumentType() + " File Link: " + responseObj.getFileLink());
-	
 					responseAttachmentList.add(responseObj);
 				}
 				responseListObj.setAttachmentList(responseAttachmentList);
 			}
-
-		} else {
-			if (AttachSubcontract.SCPaymentNameObject.equals(requestObj.getNameObject())) {
-				logger.info("Web Service called by AP: SCPayment Attachments");
-				attachmentList = attachmentService.getPaymentAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
-			} else {
-				logger.info("Web Service called by AP: SCPackage Attachments / Vendor Attachments (@JDE)");
-				attachmentList = attachmentService.getAttachmentList(requestObj.getNameObject(), requestObj.getTextKey());
-			}
-	
-			if (attachmentList != null && attachmentList.size() > 0) {
-				responseListObj.setAttachmentList(new ArrayList<GetAttachmentListResponse>());
-	
-				for (AbstractAttachment attachment : attachmentList) {
-					GetAttachmentListResponse responseObj = new GetAttachmentListResponse();
-					if (attachment instanceof AttachSubcontractDetail)
-						responseObj.setTextKey(requestObj.getTextKey() + "|" + ((AttachSubcontractDetail) attachment).getSubcontractDetail().getSequenceNo());
-					else if (attachment instanceof AttachPayment)
-						responseObj.setTextKey(requestObj.getTextKey() + "|" + ((AttachPayment) attachment).getPaymentCert().getPaymentCertNo().toString());
-					else
-						responseObj.setTextKey(requestObj.getTextKey());
-	
-					responseObj.setDocumentType(attachment.getDocumentType());
-					responseObj.setFileLink(attachment.getFileLink());
-					responseObj.setFileName(attachment.getFileName());
-					responseObj.setSequenceNo(attachment.getSequenceNo());
-					logger.info("Response - Text Key: " + responseObj.getTextKey() + " Document Type: " + responseObj.getDocumentType() + " File Link: " + responseObj.getFileLink());
-	
-					responseListObj.getAttachmentList().add(responseObj);
-				}
-			}
-		}
 		return responseListObj;
 	}
 
@@ -401,14 +370,8 @@ public class APController {
 	public GetTextAttachmentResponse getTextAttachment(@Valid @RequestBody GetTextAttachmentRequest requestObj, BindingResult result) throws Exception {
 		if (result.hasErrors()) throw new IllegalArgumentException(result.getAllErrors().toString());
 		GetTextAttachmentResponse responseObj = new GetTextAttachmentResponse();
-		if(Attachment.AddendumNameObject.equals(requestObj.getNameObject())
-		||Attachment.SplitNameObject.equals(requestObj.getNameObject())
-		||Attachment.TerminateNameObject.equals(requestObj.getNameObject())){
-			AttachmentFile attachmentFile = attachmentService.obtainAddendumFileAttachment(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo());
-			responseObj.setTextAttachment(new String(attachmentFile.getBytes()));
-		} else {
-			responseObj.setTextAttachment(attachmentService.obtainTextAttachmentContent(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo()));
-		}
+		AttachmentFile attachmentFile = attachmentService.obtainFileAttachment(requestObj.getNameObject(), requestObj.getTextKey(), requestObj.getSequenceNo());
+		responseObj.setTextAttachment(new String(attachmentFile.getBytes()));
 		return responseObj;
 	}
 

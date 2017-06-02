@@ -100,7 +100,7 @@ public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 		getSession().delete(persistentObject);
 		flush();
 	}
-
+	
 	public void flushAndDelete(T persistentObject) throws DataAccessException {
 		flush();
 		getSession().delete(persistentObject);

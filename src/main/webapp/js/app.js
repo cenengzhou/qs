@@ -36,7 +36,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/infotips-modal.js',
                            'js/controller/forms-modal.js',
                            'js/service/attachment-service.js',
-                           'js/controller/subcontract/attachment/attachment-sc-text.js',
+                           'js/controller/attachment/attachment-text-editor.js',
                            'js/controller/addressbook-details-modal.js',
                            'js/controller/navigation-menu.js'
                     ] 
@@ -77,7 +77,6 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
         },
 		controller: 'LogoutCtrl'
 	})
-	
 	.state('job-select', {
 		url: "/job-select",
 		parent: "navigation",
@@ -203,7 +202,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/service/subcontract-service.js',
                            'js/service/payment-service.js',
-                           'js/controller/subcontract/subcontract-menu.js'
+                           'js/controller/subcontract/subcontract-menu.js',
+                           'js/service/addendum-service.js'
                     ] 
                 });
             }]
@@ -333,8 +333,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract-award.attachment', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
-		controller: 'AttachmentSCFileCtrl',
+		templateUrl: "view/attachment/attachment-main.html",
+		controller: 'AttachmentMainCtrl',
 		params:{
 			'nameObject': GlobalParameter['AbstractAttachment'].SCPackageNameObject,
 			'offsetTop':450
@@ -344,8 +344,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/attachment/attachment-sc-file.js',
-                           'js/controller/subcontract/attachment/attachment-sc-text.js',
+                           'js/controller/attachment/attachment-main.js',
+                           'js/controller/attachment/attachment-text-editor.js',
                            'js/service/attachment-service.js'
                     ] 
                 });
@@ -363,7 +363,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/service/subcontract-service.js',
                            'js/service/payment-service.js',
-                           'js/controller/subcontract/subcontract-menu.js'
+                           'js/controller/subcontract/subcontract-menu.js',
+                           'js/service/addendum-service.js'
                     ] 
                 });
             }]
@@ -438,8 +439,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract.attachment.first', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
-		controller: 'AttachmentSCFileCtrl',
+		templateUrl: "view/attachment/attachment-main.html",
+		controller: 'AttachmentMainCtrl',
 		params:{
 			'nameObject': GlobalParameter['AbstractAttachment'].SCPackageNameObject,
 			'offsetTop':280
@@ -449,8 +450,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/attachment/attachment-sc-file.js',
-                           'js/controller/subcontract/attachment/attachment-sc-text.js',
+                           'js/controller/attachment/attachment-main.js',
+                           'js/controller/attachment/attachment-text-editor.js',
                            'js/service/attachment-service.js'
                     ] 
                 });
@@ -563,9 +564,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
        
 	.state('subcontract.addendum.attachment', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
+		templateUrl: "view/attachment/attachment-main.html",
 		params: {
-			'nameObject': GlobalParameter['AbstractAttachment'].SCDetailsNameObject,
+			'nameObject': GlobalParameter['AbstractAttachment'].AddendumNameObject,
 			'offsetTop':440
 		},
 		resolve: {
@@ -573,15 +574,15 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                         'js/controller/subcontract/attachment/attachment-addendum-file.js',
-                         'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                     'js/controller/attachment/attachment-main.js',
+                     'js/controller/attachment/attachment-text-editor.js',
                          'js/service/attachment-service.js',
                          'js/service/addendum-service.js',
                     ] 
                 });
             }]
         },
-		controller: 'AttachmentAddendumFileCtrl'
+		controller: 'AttachmentMainCtrl'
 	})
 	.state('subcontract.addendum.summary', {
 		url: "/summary",
@@ -747,7 +748,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('subcontract.payment.attachment', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-sc-file.html",
+		templateUrl: "view/attachment/attachment-main.html",
 		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].SCPaymentNameObject,
 			'offsetTop':440
@@ -757,14 +758,14 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                         'js/controller/subcontract/attachment/attachment-sc-file.js',
-                         'js/controller/subcontract/attachment/attachment-sc-text.js',
+                         'js/controller/attachment/attachment-main.js',
+                         'js/controller/attachment/attachment-text-editor.js',
                          'js/service/attachment-service.js'
                          ] 
                 });
             }]
         },
-		controller: 'AttachmentSCFileCtrl'
+		controller: 'AttachmentMainCtrl'
 	})
 	.state('subcontract.payment.invoice', {
 		url: "/invoice",
@@ -796,9 +797,9 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/subcontract/subcontract-split-terminate.js',
-	                     'js/controller/subcontract/attachment/attachment-addendum-file.js',
-	                     'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                         'js/controller/subcontract/subcontract-split-terminate.js',
+	                     'js/controller/attachment/attachment-main.js',
+	                     'js/controller/attachment/attachment-text-editor.js',
 	                     'js/service/attachment-service.js',
                          'js/service/addendum-service.js',
                          'js/service/subcontract-service.js'
@@ -822,8 +823,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/subcontract/subcontract-split-terminate.js',
-                           'js/controller/subcontract/attachment/attachment-addendum-file.js',
-                           'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                           'js/controller/attachment/attachment-main.js',
+  	                       'js/controller/attachment/attachment-text-editor.js',
                            'js/service/attachment-service.js',
                            'js/service/addendum-service.js',
                            'js/service/subcontract-service.js'
@@ -891,10 +892,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                		 	   'js/controller/main-cert/main-cert-ipc.js',
                            'js/controller/main-cert/retention-release-schedule.js',
                            'js/controller/main-cert/contra-charge-modal.js',
-                           'js/controller/main-cert/main-cert-attachment-file.js',
-                           'js/controller/main-cert/main-cert-attachment-text.js',
+                           'js/controller/attachment/attachment-main.js',
+                           'js/controller/attachment/attachment-text-editor.js',
                            'js/service/job-service.js',
-                           'js/service/attachment-service.js'
+                           'js/service/attachment-service.js',
+                           'js/service/subcontract-service.js',
+                           'js/service/payment-service.js',
+                           'js/service/addendum-service.js'
                     ] 
                 });
             }]
@@ -934,13 +938,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('mainCert.attachment', {
 		url: "/attachment",
-		templateUrl: "view/main-cert/modal/main-cert-attachment-file.html",
+		templateUrl: "view/attachment/attachment-main.html",
 		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].MainCertNameObject,
 			'offsetTop':440,
 			'mainCertStatus':null
 		},
-		controller: 'AttachmentMainCertFileCtrl'
+		controller: 'AttachmentMainCtrl'
 	})
 	.state('mainCert.postIPC', {
 		url: "/postIPC",
@@ -964,17 +968,43 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                	         'js/service/repackaging-service.js',
                	         'js/service/resource-summary-service.js',
-               	         'js/service/attachment-service.js',
                	         'js/controller/repackaging/repackaging.js',
                	         'js/controller/repackaging/repackaging-history.js',
                	         'js/controller/repackaging/repackaging-confirm.js',
-               	         'js/controller/repackaging/repackaging-textattachment.js',
+
 
                     ] 
                 });
             }]
         },
 		controller: 'RepackagingCtrl'
+	})
+	.state('repackaging.wizard', {
+		url: "/wizard",
+		views:{
+			"attachment":{
+				templateUrl: "view/attachment/attachment-main.html",
+				controller: 'AttachmentMainCtrl'
+			}
+		},
+		params:{
+			'nameObject': GlobalParameter['AbstractAttachment'].RepackagingNameObject,
+		},
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad){
+				return $ocLazyLoad.load({
+					name: 'app',
+					files: [
+              	        'js/service/attachment-service.js',
+                        'js/controller/attachment/attachment-main.js',
+                        'js/controller/attachment/attachment-text-editor.js',
+                        'js/service/subcontract-service.js',
+                        'js/service/payment-service.js',
+                        'js/service/addendum-service.js'
+					]
+				})
+			}]
+		}
 	})
 	.state('repackaging-update', {
 		url: "/repackaging-update",
@@ -1069,7 +1099,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('transit.attachment', {
 		url: "/attachment",
-		templateUrl: "view/subcontract/attachment/attachment-addendum-file.html",
+		templateUrl: "view/attachment/attachment-main.html",
 		params: {
 			'nameObject': GlobalParameter['AbstractAttachment'].TransitNameObject,
 			'offsetTop':440
@@ -1079,15 +1109,16 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	files: [
-                    'js/controller/subcontract/attachment/attachment-addendum-file.js',
-                    'js/controller/subcontract/attachment/attachment-addendum-text.js',
+                    'js/controller/attachment/attachment-main.js',
+                    'js/controller/attachment/attachment-text-editor.js',
                     'js/service/attachment-service.js',
-                    'js/service/addendum-service.js'
+                    'js/service/addendum-service.js',
+                    'js/service/payment-service.js',
                ] 
                 });
             }]
         },
-		controller: 'AttachmentAddendumFileCtrl'
+		controller: 'AttachmentMainCtrl'
 	})
 	.state('transit.complete', {
 		url: "/complete",

@@ -31,20 +31,26 @@ public class Attachment extends PcmsPersistedAuditObject {
 	public static final String TEXT = "0";
 	public static final String FILE = "5";
 	public static final String FileLinkForText = " ";
-	public static final String SCPaymentNameObject = "GT58012";
-	public static final String SCPackageNameObject = "GT58010";
+
 	public static final String AddendumNameObject = "GT58011";
+	public static final String SCPaymentNameObject = "GT58012";
+	public static final String MainCertNameObject = "GT59026";
+	public static final String SCPackageNameObject = "GT58010";
 //	public static final String TenderAnalysisNameObject = "GT58023"; //Never used
 	public static final String VendorNameObject = "GT58024";
-	public static final String MainCertNameObject = "GT59026";
 	public static final String SplitNameObject = "SPLIT";
 	public static final String TerminateNameObject = "TERMINATE";
+	public static final String RepackagingNameObject = "REPACKAGING";
 	public static final String TransitNameObject = "TRANSIT";
 	
-	
 	public static final String ADDENDUM_TABLE = "ADDENDUM";
+	public static final String PAYMENT_TABLE = "PAYMENT";
+	public static final String MAIN_CERT_TABLE = "MAIN_CERT";
+	public static final String SUBCONTRACT_TABLE = "SUBCONTRACT";
+	public static final String VENDER_TABLE = "VENDER";
 	public static final String SPLIT_TABLE = "SPLIT";
 	public static final String TERMINATE_TABLE = "TERMINATE";
+	public static final String REPACKAGING_TABLE = "REPACKAGING";
 	public static final String TRANSIT_TABLE = "TRANSIT";
 	public static final String NAME_TABLE = "NAME_TABLE";
 	public static final String ID_TABLE = "ID_TABLE";

@@ -1,17 +1,21 @@
-
+<!-- /*
+	 * attachment within ADDRESS BOOK modal is not using this template
+	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
+	 */ -->
 	<div class="row">
-		<div class="col-md-12 animated " id="fileAttachment">
+		<div class="col-md-12 animated fadeIn">
 			<div class="panel panel-inverse">
 				<div class="panel-heading col-md-12">
-					<span class="col-md-11">Attachment</span>
-					<span ng-if="inBox" class="col-md-1">
+					<div class="col-md-11">Attachment</div>
+					<div ng-if="inBox" class="col-md-1">
 						<button class="btn btn-white pull-right" type="button"
 							ng-click="cancel()">
 							<span class="fa fa-remove"></span>
 						</button>
-					</span>
+					</div>
 				</div>
-				<div class="panel-body col-md-12" style="padding: 0 !important" id="attachmentPanelBody">
+				<div class="clearfix"></div>
+				<div class="panel-body" style="padding: 0 !important;min-height:250px">
 					<div class="table-responsive" resize
 						ng-style="resizeWithOffset(offsetTop)">
 						<form class="form" role="form" id="attachmentForm">
@@ -31,7 +35,7 @@
 											<input type="checkbox" ng-Icheck id="fileRadiobox-{{$index}}"
 											ng-change="checkSelected()" name="fileRadiobox-{{$index}}"
 											ng-model="attach.selectedAttachement"></td>
-										<td ng-click="attachmentClick()">{{attach.fileName}}</td>
+										<td ng-click="attachmentClick()">{{attach.nameFile}}</td>
 										<td ng-click="attachmentClick()"><span
 											class="{{attach.fileIconClass}}"></span></td>
 										<td ng-click="attachmentClick()"><img
@@ -39,7 +43,7 @@
 											imageonload roll-back-image="resources/images/profile.png"
 											data-ng-src="{{attach.user.userIcon}}">
 											{{attach.user.fullname}}</td>
-										<td>{{attach.createdDate | date : GlobalParameter.DATE_FORMAT}}</td>
+											<td>{{attach.dateCreated | date : GlobalParameter.DATE_FORMAT}}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -47,9 +51,9 @@
 					</div>
 				</div>
 				<div class="box-footer">
-					<div class="col-md-12">
+					<div class="col-md-12" ng-hide="hideButton">
 						<div class="col-md-4">
-							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles" 
+							<form name="uploadAttachmentFiles" id="uploadAttachmentFiles"
 								ng-submit="isUpdatable && onSubmitAttachmentUpload(uploadAttachmentFiles.files)">
 								<label class="btn btn-block btn-primary"> <i
 									class="glyphicon glyphicon-upload"></i> Upload File
@@ -62,7 +66,7 @@
 							</form>
 						</div>
 
-						<div class="col-md-4" >
+						<div class="col-md-4">
 							<label 
 								class="btn btn-block btn-success" ng-click="isUpdatable && deleteAttachment()"
 								ng-disabled="!isUpdatable"> 

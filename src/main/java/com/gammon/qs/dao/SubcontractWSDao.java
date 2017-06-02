@@ -1,5 +1,6 @@
 package com.gammon.qs.dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +35,8 @@ import com.gammon.jde.webservice.serviceRequester.SCHeaderInsertManager_Refactor
 import com.gammon.jde.webservice.serviceRequester.SCHeaderInsertManager_Refactor.insertSCHeader.InsertSCHeaderResponseObj;
 import com.gammon.jde.webservice.serviceRequester.UpdateSCWorkScopeManager.updateSCWorkScope.UpdateSCWorkScopeRequestObj;
 import com.gammon.jde.webservice.serviceRequester.UpdateSCWorkScopeManager.updateSCWorkScope.UpdateSCWorkScopeResponseObj;
+import com.gammon.pcms.model.Attachment;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.AbstractAttachment;
-import com.gammon.qs.domain.AttachSubcontract;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.service.admin.EnvironmentConfig;
@@ -94,14 +94,14 @@ public class SubcontractWSDao {
 	@Autowired
 	private EnvironmentConfig environmentConfig;
 
-	public boolean addUpdateSCAttachmentLink(String nameObject, String textKey, AttachSubcontract attachment) throws Exception {
+	public boolean addUpdateSCAttachmentLink(String nameObject, String textKey, Attachment attachment) throws Exception {
 		AddUpdateAttachmentLinkRequestObj requestObj = new AddUpdateAttachmentLinkRequestObj();
 		requestObj.setObjectName(nameObject);
 		requestObj.setTextKey(textKey);
-		requestObj.setSequenceNo(attachment.getSequenceNo());
-		requestObj.setFileLink(attachment.getFileLink());
-		requestObj.setFileName(attachment.getFileName());
-		requestObj.setUserID(attachment.getCreatedUser());
+		requestObj.setSequenceNo(attachment.getNoSequence().intValue());
+		requestObj.setFileLink(attachment.getPathFile());
+		requestObj.setFileName(attachment.getNameFile());
+		requestObj.setUserID(attachment.getUsernameCreated());
 
 		long start;
 		long end;
@@ -234,11 +234,11 @@ public class SubcontractWSDao {
 		return true;
 	}
 
-	public List<AttachSubcontract> getAttachmentList(String nameObject,
+	public List<Attachment> getAttachmentList(String nameObject,
 			String textKey)  throws Exception{
 
 
-		List<AttachSubcontract> resultList = new LinkedList<AttachSubcontract>();
+		List<Attachment> resultList = new LinkedList<Attachment>();
 
 		GetAllMediaObjectListsRequestObj requestObj = new GetAllMediaObjectListsRequestObj();
 		requestObj.setNameObject(nameObject);
@@ -253,32 +253,32 @@ public class SubcontractWSDao {
 
 		for(GetAllMediaObjectListsResponseObj responseObj : responseListObj.getGetAllMediaObjectListsResponseObjList())
 		{
-			AttachSubcontract scAttachment = new AttachSubcontract();
+			Attachment scAttachment = new Attachment();
 
 			JobInfo dummyJob = new JobInfo();
 			dummyJob.setJobNumber(splittedTextKey[0].trim());
-			Subcontract dummySCPackage = new Subcontract();
-			if (splittedTextKey.length > 1) {
-				dummySCPackage.setPackageNo(splittedTextKey[1]);
-			}
-			dummySCPackage.setJobInfo(dummyJob);
+//			Subcontract dummySCPackage = new Subcontract();
+//			if (splittedTextKey.length > 1) {
+//				dummySCPackage.setPackageNo(splittedTextKey[1]);
+//			}
+//			dummySCPackage.setJobInfo(dummyJob);
 
-			scAttachment.setSubcontract(dummySCPackage);
-			scAttachment.setDocumentType(responseObj.getFileType());
-			scAttachment.setFileLink(responseObj.getFileLink());
-			scAttachment.setFileName(responseObj.getFileName());
-			scAttachment.setSequenceNo(responseObj.getSequenceNo());
+//			scAttachment.setSubcontract(dummySCPackage);
+			scAttachment.setTypeDocument(responseObj.getFileType().toString());
+			scAttachment.setPathFile(responseObj.getFileLink());
+			scAttachment.setNameFile(responseObj.getFileName());
+			scAttachment.setNoSequence(new BigDecimal(responseObj.getSequenceNo()));
 
-			if (scAttachment.getDocumentType().equals(AbstractAttachment.TEXT)) {
-				scAttachment.setTextAttachment(obtainSCTextAttachmentfromJDE(nameObject, textKey, responseObj.getSequenceNo()));
-				if (scAttachment.getTextAttachment() != null) {
-					scAttachment.setTextAttachment(scAttachment.getTextAttachment().replace("\n", "<br>"));
-					scAttachment.setTextAttachment(scAttachment.getTextAttachment().replace("\t", " "));
+			if (scAttachment.getTypeDocument().equals(Attachment.TEXT)) {
+				scAttachment.setText(obtainSCTextAttachmentfromJDE(nameObject, textKey, responseObj.getSequenceNo()));
+				if (scAttachment.getText() != null) {
+					scAttachment.setText(scAttachment.getText().replace("\n", "<br>"));
+					scAttachment.setText(scAttachment.getText().replace("\t", " "));
 					// scAttachment.setTextAttachment((scAttachment.getTextAttachment()));
-					if (scAttachment.getTextAttachment().length() > 1999) {
+					if (scAttachment.getText().length() > 1999) {
 						//scAttachment.setTextAttachment(scAttachment.getTextAttachment().substring(0, 1999));
-						logger.log(Level.SEVERE,"Attach of "+textKey+" did not do the conversion. \nData:"+scAttachment.getTextAttachment());
-						scAttachment.setTextAttachment("<b><I>Text Data is too larger</I></b><BR>No Conversion has done");
+						logger.log(Level.SEVERE,"Attach of "+textKey+" did not do the conversion. \nData:"+scAttachment.getText());
+						scAttachment.setText("<b><I>Text Data is too larger</I></b><BR>No Conversion has done");
 					}
 				}
 			}

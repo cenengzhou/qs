@@ -23,7 +23,6 @@ import com.gammon.pcms.dto.rs.provider.response.ta.TenderDetailDTO;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
-import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.BpiItemHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
@@ -76,7 +75,7 @@ public class TenderService implements Serializable {
 	@Autowired
 	private  SubcontractDetailHBDao subcontractDetailDao;
 	@Autowired
-	private  AttachPaymentHBDao attachPaymentDao;
+	private AttachmentService attachmentService;
 	
 	private  Logger logger = Logger.getLogger(TenderService.class.getName());
 	
@@ -612,14 +611,13 @@ public class TenderService implements Serializable {
 		return error;
 	}
 
-	private void deletePendingPaymentRequisition(PaymentCert latestPaymentCert, List<SubcontractDetail> scDetailsList){
+	private void deletePendingPaymentRequisition(PaymentCert latestPaymentCert, List<SubcontractDetail> scDetailsList) throws NumberFormatException, Exception{
 		try {
 			if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 				//Delete Pending Payment
 				paymentCertDao.delete(latestPaymentCert);
-				attachPaymentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+				attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
 				paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
-
 
 				//Reset cumulative Cert Amount in ScDetail
 				for(SubcontractDetail scDetails: scDetailsList){

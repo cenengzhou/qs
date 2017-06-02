@@ -1,4 +1,4 @@
-mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService', 'modalService', 'GlobalMessage', 'GlobalParameter',
+mainApp.controller('AttachmentTextEditorCtrl', ['$scope', 'modalStatus', 'modalParam', '$uibModalInstance', 'attachmentService', 'modalService', 'GlobalMessage', 'GlobalParameter',
                                             function($scope, modalStatus, modalParam, $uibModalInstance, attachmentService, modalService, GlobalMessage, GlobalParameter){
 	$scope.status = modalStatus;
 	$scope.parentScope = modalParam;
@@ -12,30 +12,18 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', GlobalMessage.maxCharLimitReached);
 			return;
 		}
-		if($scope.parentScope.isAddTextAttachment === false){
-			$scope.parentScope.saveTextAttachmentFacade(
-					$scope.parentScope.nameObject, 
-					$scope.parentScope.textKey, 
-					$scope.parentScope.textAttachment.sequenceNo, 
-					$scope.parentScope.textAttachment.fileName, 
-					$scope.parentScope.textAttachment.textAttachment)
-			.then(function(data){
-				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
-			});
-		} else {
-			$scope.parentScope.saveTextAttachmentFacade(
-					$scope.parentScope.nameObject, 
-					$scope.parentScope.textKey, 
-					$scope.parentScope.textAttachment.sequenceNo, 
-					$scope.parentScope.textAttachment.fileName, 
-					$scope.parentScope.textAttachment.textAttachment)
-			.then(function(data){
-				$scope.parentScope.loadAttachment($scope.parentScope.nameObject, $scope.parentScope.textKey);
-			});
-		}
+		var nameObject = $scope.parentScope.nameObject;
+		var textKey = $scope.parentScope.textKey;
+		var noSequence = $scope.parentScope.textAttachment.noSequence;
+		var nameFile = $scope.parentScope.textAttachment.nameFile;
+		var textValue = $scope.parentScope.textAttachment.text;
+		$scope.parentScope.saveTextAttachmentFacade(nameObject, textKey, noSequence, nameFile, textValue)
+		.then(function(data){
+			$scope.parentScope.loadAttachment(nameObject, textKey);
+		});
 		$scope.cancel();
 	}
-		
+
 	function getOptions(){
 		if($scope.parentScope.disableRichEditor){
 			return tinySimpleEditor;
@@ -43,6 +31,7 @@ mainApp.controller('AttachmentSCTextCtrl', ['$scope', 'modalStatus', 'modalParam
 			return tinyWithRichEditor;
 		}
 	}
+
 	var tinyWithRichEditor = {
 		    plugins: [
 		              'advlist autolink lists link textcolor colorpicker charmap', // code

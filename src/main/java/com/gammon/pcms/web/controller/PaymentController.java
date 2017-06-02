@@ -160,7 +160,7 @@ public class PaymentController {
 												@RequestParam(required = true) String subcontractNo,
 												@RequestParam(required = true) Integer paymentCertNo,
 												@RequestParam(required = false) String paymentType,
-												@RequestBody(required = false) List<PaymentCertDetail> paymentDetails){
+												@RequestBody(required = false) List<PaymentCertDetail> paymentDetails) throws NumberFormatException, Exception{
 		String result = "";
 		result = paymentService.updatePaymentDetails(jobNo, subcontractNo, paymentCertNo, paymentType, paymentDetails);
 		return result;

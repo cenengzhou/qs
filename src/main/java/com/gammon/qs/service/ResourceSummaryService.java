@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.AttachPaymentHBDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
@@ -79,8 +78,6 @@ public class ResourceSummaryService implements Serializable {
 	@Autowired
 	private transient SubcontractService packageRepository;
 	@Autowired
-	private transient AttachPaymentHBDao paymentAttachmentDao;
-	@Autowired
 	private transient TenderHBDao tenderAnalysisHBDao;
 	@Autowired
 	private transient TenderDetailHBDao tenderAnalySisDetailHBDao;
@@ -94,6 +91,8 @@ public class ResourceSummaryService implements Serializable {
 	private SubcontractHBDao subcontractHBDao;
 	@Autowired
 	private SubcontractDetailHBDao subcontractDetailHBDao;
+	@Autowired
+	private AttachmentService attachmentService;
 
 	//used when validating split/merged resources
 	private long[] oldSummaryIds;
@@ -789,7 +788,7 @@ public class ResourceSummaryService implements Serializable {
 							}
 							
 							scPaymentCertHBDao.delete(latestPaymentCert);
-							paymentAttachmentDao.deleteAttachmentByByPaymentCertID(latestPaymentCert.getId());
+							attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
 							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 							
 							scPackageDao.update(scPackage);
