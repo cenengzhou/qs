@@ -82,7 +82,7 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 
 		confirmService.showModal({}, modalOptions).then(function (result) {
 			if(result == "Yes"){
-				mainCertService.deleteMainCert($scope.jobNo, 32)
+				mainCertService.deleteMainCert($scope.jobNo, mainCertNo)
 				.then(
 						function( data ) {
 							if(data.length!=0){
