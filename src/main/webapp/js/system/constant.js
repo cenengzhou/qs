@@ -406,7 +406,7 @@ mainApp.constant('GlobalMessage', {
 	subcontractorHoldMessage:
 		"The subcontractor is under finance hold status. <br/>Please contact Finance Dept at 2516-8911 ext 7799 for details.",
 	paymentHoldMessage:
-		"Please contact Finance Dept -Ms Cindy Deng at 2516-8911 ext 7789 or Ms Kathy Chen at 2516-8911 ext 7798.<br/> For SGP vendors, please contact Mr Nix Goh at 6722-3654.",
+		"Vendor status is on hold. Please contact Finance Dept at 2516-8911 ext 7798 or 7799 or 6722-3654 (for SGP) for details.",
 	deleteAttachment:
 		"Are you sure to delete attachments",
 	maxCharLimitReached:

@@ -847,6 +847,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 name: 'app',
                	 files: [
                            'js/controller/main-cert/cert-dashboard.js',
+                           'js/controller/main-cert/retention-release-schedule.js',
                            'js/service/main-cert-service.js',
                            'js/service/job-service.js'
                     ] 

@@ -153,33 +153,11 @@ mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', '
 		getJob();
 		if($scope.mainCertNo != null && $scope.mainCertNo != undefined && $scope.mainCertNo.length!=0)
 			getCertificate();
-		
+		else
+			getLatestMainCert();
 	}
 
-	function getCalculatedRetentionRelease(certNo){
-		mainCertService.getCalculatedRetentionRelease($scope.jobNo, certNo)
-		.then(
-				function( data ) {
-					$scope.gridOptions.data = data;
-
-					angular.forEach(data, function(value, key){
-						if(value.contractualDueDate != null)
-							value.contractualDueDate = new Date(value.contractualDueDate);
-						if(value.dueDate != null)
-							value.dueDate = new Date(value.dueDate);
-						
-						
-						if(value.status == 'F')
-							value.amount = value.forecastReleaseAmt;
-						else
-							value.amount = value.actualReleaseAmt;
-						
-						value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
-
-					});
-				});
-	}
-
+	
 	function getJob(){
 		jobService.getJob($scope.jobNo)
 		.then(
@@ -189,6 +167,20 @@ mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', '
 				});
 	}
 
+	
+	function getLatestMainCert(){
+		mainCertService.getLatestMainCert($scope.jobNo)
+		.then(
+				function( data ) {
+					$scope.cert = data;
+					$scope.disableButtons = false;
+
+					$scope.cumRetentionAmount = data.amount_cumulativeRetention;
+					
+					getRetentionReleaseList();
+				});
+	}
+	
 	function getCertificate(){
 		mainCertService.getCertificate($scope.jobNo, $scope.mainCertNo)
 		.then(
@@ -223,27 +215,57 @@ mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', '
 				});
 	}
 	
+	
+	function getCalculatedRetentionRelease(certNo){
+		mainCertService.getCalculatedRetentionRelease($scope.jobNo, certNo)
+		.then(
+				function( data ) {
+					$scope.gridOptions.data = data;
+
+					angular.forEach(data, function(value, key){
+						if(value.contractualDueDate != null)
+							value.contractualDueDate = new Date(value.contractualDueDate);
+						if(value.dueDate != null)
+							value.dueDate = new Date(value.dueDate);
+						
+						
+						if(value.status == 'F')
+							value.amount = value.forecastReleaseAmt;
+						else
+							value.amount = value.actualReleaseAmt;
+						
+						value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
+
+					});
+				});
+	}
+	
 	function getRetentionReleaseList(){
 		mainCertService.getRetentionReleaseList($scope.jobNo)
 		.then( function (data){
 			$scope.gridOptions.data= data;
 
 			angular.forEach(data, function(value, key){
-				angular.forEach(data, function(value, key){
-					
-					if(value.status == 'F')
-						value.amount = value.forecastReleaseAmt;
-					else
-						value.amount = value.actualReleaseAmt;
-					
-					value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
-
-				});
+				if(value.contractualDueDate != null)
+					value.contractualDueDate = new Date(value.contractualDueDate);
+				if(value.dueDate != null)
+					value.dueDate = new Date(value.dueDate);
 				
+				if(value.status == 'F')
+					value.amount = value.forecastReleaseAmt;
+				else
+					value.amount = value.actualReleaseAmt;
+
+				value.percent = roundUtil.round(value.amount / $scope.cumRetentionAmount * 100, 2);
+
 			});
 		});
 	}
 	
+	
+	$scope.cancel = function () {
+		 $scope.modalInstance.dismiss('cancel');
+	};
 
 }])
 .filter('mapStatus', function() {

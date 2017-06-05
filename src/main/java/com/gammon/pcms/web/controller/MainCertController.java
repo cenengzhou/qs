@@ -116,7 +116,23 @@ public class MainCertController {
 		try {
 			return mainCertService.createMainCert(mainCert);
 		} catch (DatabaseOperationException e) {
-			result = "Main Cert caanot be created.";
+			result = "Main Cert cannot be created.";
+			e.printStackTrace();
+			GlobalExceptionHandler.checkAccessDeniedException(e);
+		}
+		return result;
+		
+	}
+	
+	
+	@PreAuthorize(value = "hasRole(@securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "deleteMainCert",	method = RequestMethod.DELETE)
+	public String deleteMainCert(@RequestParam(required = true) String jobNo, @RequestParam(required = true) Integer mainCertNo) {
+		String result = "";
+		try {
+			return mainCertService.deleteMainCert(jobNo, mainCertNo);
+		} catch (DatabaseOperationException e) {
+			result = "Main Cert cannot be deleted.";
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);
 		}

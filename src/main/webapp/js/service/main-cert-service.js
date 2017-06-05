@@ -25,6 +25,7 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
         updateCertificate: 					updateCertificate,
         updateCertificateByAdmin:			updateCertificateByAdmin,
         updateMainCertFromF03B14Manually: 	updateMainCertFromF03B14Manually,
+        deleteMainCert:						deleteMainCert
     });
 	
     
@@ -290,6 +291,19 @@ mainApp.service('mainCertService', ['$http', '$q', '$log', 'GlobalHelper',  func
     	var request = $http.post("service/mainCert/updateCertificateByAdmin", mainCert);
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
+    
+    function deleteMainCert(jobNo, mainCertNo) {
+        var request = $http({
+            method: "DELETE",
+            url: "service/mainCert/deleteMainCert",
+            params: {
+            	jobNo: jobNo,
+            	mainCertNo: mainCertNo
+            } 
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
 
 }]);
 

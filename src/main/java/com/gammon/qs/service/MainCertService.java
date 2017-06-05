@@ -147,12 +147,31 @@ public class MainCertService {
 		return message;
 	}
 	
-//	private void setModifiedDate(MainCert mainContractCertificate){
-//		if (mainContractCertificate!=null){
-//			if (mainContractCertificate.getCreatedDate()==null)
-//				mainContractCertificate.setCreatedDate(Calendar.getInstance().getTime());
-//		}
-//	}
+
+	/**
+	 * @author koeyyeung
+	 * Remove Main Cert with status < 120(IPA not yet sent out) 
+	 * created on 5 June, 2017
+	 */
+	public String deleteMainCert(String jobNo, Integer mainCertNo) throws DatabaseOperationException{
+		String message = null;
+		
+		MainCert mainCert = this.getCertificate(jobNo, mainCertNo);
+		if(mainCert ==null){
+			message = "Main Contract Certificate No."+ mainCertNo+" does not exist.";
+			return message;
+		}else{
+			if(!MainCert.CERT_CREATED.equals(mainCert.getCertificateStatus())){
+				message = "Main Contract Certificate No."+mainCertNo+" cannot be deleted. Status: "+MainCert.getCertStatusDescription(mainCert.getCertificateStatus())+".";
+				return message;
+			}else{
+				mainCertHBDao.delete(mainCert);
+			}
+		}
+			
+		return message;
+	}
+	
 
 	/*****************************************
 	 * Combined Operations - WS+QS

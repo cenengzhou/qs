@@ -1,5 +1,5 @@
-mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state',
-                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state) {
+mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state', 'confirmService',
+                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state, confirmService) {
 	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
@@ -73,6 +73,30 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 						$scope.totalCertificateAmount = data.certNetAmount;
 					}
 				});
+	}
+	
+	$scope.deleteMainCert = function (mainCertNo) {
+		var modalOptions = {
+				bodyText: "Are you sure to delete Main Contract Certificate No."+mainCertNo+" ?"
+		};
+
+		confirmService.showModal({}, modalOptions).then(function (result) {
+			if(result == "Yes"){
+				mainCertService.deleteMainCert($scope.jobNo, 32)
+				.then(
+						function( data ) {
+							if(data.length!=0){
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
+							}else{
+								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Main Contract Certificate No.'+mainCertNo+' has been deleted.');
+								$state.reload();
+							}
+						});
+			}
+			
+		});
+		
+		
 	}
 	
 	function prepareCalendar(){

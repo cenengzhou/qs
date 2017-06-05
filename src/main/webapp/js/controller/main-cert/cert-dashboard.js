@@ -1,9 +1,10 @@
-mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'modalService', 'jobService',
-                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, modalService, jobService) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'modalService', 'jobService', '$uibModal',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, modalService, jobService, $uibModal) {
 	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
-
+	$cookies.put("mainCertNo", undefined);
+	
 	Chart.defaults.global.colours = [colorCode.green, colorCode.blue, colorCode.purple];
 
 
@@ -58,6 +59,23 @@ mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cook
 		getMainCertData(year.toString().substring(2, 4));
 	}
 	
+	$scope.openRetentionReleaseSchedule = function() {
+		var modalScope = $scope.$new();
+	    
+        var modalInstance = $uibModal.open({
+            templateUrl: 'view/main-cert/modal/retention-release-schedule.html',
+            controller: 'RetentionReleaseScheduleCtrl',
+            size: 'lg',
+            keyboard: false,
+			backdrop: 'static',
+            scope: modalScope
+        });
+        
+        modalScope.modalInstance = modalInstance;
+        
+        modalInstance.result.then(function (result) {
+        }, null);
+	}
 
 	function loadData(){
 		getJob();

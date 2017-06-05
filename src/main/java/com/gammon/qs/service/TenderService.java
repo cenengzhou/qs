@@ -335,7 +335,7 @@ public class TenderService implements Serializable {
 							taDetailInDB.setRateBudget(taDetail.getRateBudget());
 							taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
 							taDetailInDB.setAmountSubcontract(taDetail.getAmountSubcontract());
-							taDetailInDB.setAmountForeign(taDetail.getAmountForeign());
+							taDetailInDB.setAmountForeign(CalculationUtil.round(taDetail.getAmountSubcontract()*tender.getExchangeRate(), 2));
 							
 							tenderDetailDao.update(taDetailInDB);
 						}

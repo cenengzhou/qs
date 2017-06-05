@@ -34,7 +34,7 @@
 
 			<div class="col-md-3 col-xs-12">
 				<button type="button" class="btn btn-lg btn-block btn-danger"
-					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-disabled="disableButtons" ng-hide="disableButtons"
 					ng-click="addData()">
 					<i class="fa fa-plus-circle"></i> <small>Add</small>
 				</button>
@@ -42,7 +42,7 @@
 
 			<div class="col-md-3 col-xs-12">
 				<button type="button" class="btn btn-lg btn-block btn-success"
-					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-disabled="disableButtons" ng-hide="disableButtons"
 					ng-click="deleteData()">
 					<i class="fa fa-remove"></i> <small>Delete</small>
 				</button>
@@ -59,7 +59,7 @@
 
 			<div class="col-md-12">
 				<button class="btn btn-primary btn-block" type="button"
-					ng-disabled="disableButtons || cert.certificateStatus != 120" ng-hide="disableButtons"
+					ng-disabled="disableButtons" ng-hide="disableButtons"
 					ng-click="save()">
 					<span class="fa fa-save"></span> Update
 				</button>

@@ -566,4 +566,22 @@ public class MainCert extends BasePersistedObject {
 		this.totalReceiptAmount = totalReceiptAmount;
 	}
 	
+	public static String getCertStatusDescription(String certStatus){
+		if(CERT_CREATED.equals(certStatus))
+			return CERT_CREATED_DESC;
+		else if(IPA_SENT.equals(certStatus))
+			return IPA_SENT_DESC;
+		else if(CERT_CREATED.equals(certStatus))
+			return CERT_CREATED_DESC;
+		else if(CERT_CONFIRMED.equals(certStatus))
+			return CERT_CONFIRMED_DESC;
+		else if(CERT_WAITING_FOR_APPROVAL.equals(certStatus))
+			return CERT_WAITING_FOR_APPROVAL_DESC;
+		else if(CERT_POSTED.equals(certStatus))
+			return CERT_POSTED_DESC;
+			
+		return certStatus;
+		
+	}
+	
 }

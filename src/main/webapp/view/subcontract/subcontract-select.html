@@ -71,8 +71,9 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge bg-inverse">{{sc.paymentCurrency}} {{sc.originalSubcontractSum | currency}}</span></small>
+								<small><span class="pull-right badge bg-inverse">{{sc.paymentCurrency}} {{(sc.remeasuredSubcontractSum+sc.approvedVOAmount)/sc.exchangeRate | currency}}</span></small>
 							</h3>
+							
 							<h3 class="sc-panel-name">
 								<small><span class="pull-right badge bg-inverse">{{sc.paymentTerms}}</span></small>
 							</h3>
@@ -111,7 +112,7 @@
 							</div>
 							<h3 class="sc-panel-name">
 								<b>{{sc.packageNo}}</b>
-								<small><span class="pull-right badge">{{sc.paymentCurrency}} {{sc.originalSubcontractSum | currency}}</span></small>
+								<!-- <small><span class="pull-right badge">{{sc.paymentCurrency}} {{(sc.remeasuredSubcontractSum==0? 0:sc.remeasuredSubcontractSum/sc.exchangeRate) | currency}}</span></small> -->
 							</h3>
 							<h3 class="sc-panel-name">
 								<small><span class="pull-right badge">{{sc.paymentTerms}}</span></small>
