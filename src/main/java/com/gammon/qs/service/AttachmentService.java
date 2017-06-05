@@ -100,8 +100,14 @@ public class AttachmentService {
 		case Attachment.TerminateNameObject:
 			nameTable = Attachment.TERMINATE_TABLE;
 			break;
+		case Attachment.RepackagingNameObject:
+			nameTable = Attachment.REPACKAGING_TABLE;
+			break;
+		case Attachment.TransitNameObject:
+			nameTable = Attachment.TRANSIT_TABLE;
+			break;
 		default:
-			nameTable = "DEFAULT";	
+			throw new IllegalArgumentException("nameObject not defined:" + nameObject);
 		}
 		return nameTable;
 	}
