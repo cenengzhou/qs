@@ -27,8 +27,19 @@ attach.CREATED_DATE as DATE_CREATED,
 attach.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 attach.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
 from PCMSDATAPROD.ATTACH_MAIN_CERT attach
+left join PCMSDATAPROD.MAIN_CERT owner
+on attach.MAIN_CERT_ID = owner.id
 where attach.SYSTEM_STATUS = 'ACTIVE'
+and owner.id is not null
 );
+
+-- should be empty result set 
+-- or some record at oldTable cannot be found at owner table
+select newTable.id AS newId, 'MAIN_CERT' as tableName, oldTable.* from PCMSDATAPROD.ATTACH_MAIN_CERT oldTable
+left outer join PCMSDATAPROD.ATTACHMENT newTable
+ON newTable.ID_TABLE = oldTable.MAIN_CERT_ID
+AND newTable.NO_SEQUENCE = oldTable.SEQUENCENO
+WHERE newTable.id IS NULL;
 
 --02.2 copy ATTACH_PAYMENT
 insert into PCMSDATAPROD.ATTACHMENT (
@@ -59,8 +70,19 @@ attach.CREATED_DATE as DATE_CREATED,
 attach.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 attach.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
 from PCMSDATAPROD.ATTACH_PAYMENT attach
+left join PCMSDATAPROD.PAYMENT_CERT owner
+on attach.PAYMENT_CERT_ID = owner.id
 where attach.SYSTEM_STATUS = 'ACTIVE'
+and owner.id is not null
 );
+
+-- should be empty result set 
+-- or some record at oldTable cannot be found at owner table
+select newTable.id AS newId, 'PAYMENT' as tableName, oldTable.* from PCMSDATAPROD.ATTACH_PAYMENT oldTable
+left outer join PCMSDATAPROD.ATTACHMENT newTable
+ON newTable.ID_TABLE = oldTable.PAYMENT_CERT_ID
+AND newTable.NO_SEQUENCE = oldTable.SEQUENCENO
+WHERE newTable.id IS NULL;
 
 --02.3 copy ATTACH_REPACKAGING
 insert into PCMSDATAPROD.ATTACHMENT (
@@ -91,8 +113,19 @@ attach.CREATED_DATE as DATE_CREATED,
 attach.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 attach.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
 from PCMSDATAPROD.ATTACH_REPACKAGING attach
+left join PCMSDATAPROD.REPACKAGING owner
+on attach.REPACKAGING_ID = owner.id
 where attach.SYSTEM_STATUS = 'ACTIVE'
+and owner.id is not null
 );
+
+-- should be empty result set 
+-- or some record at oldTable cannot be found at owner table
+select newTable.id AS newId, 'REPACKAGING' as tableName, oldTable.* from PCMSDATAPROD.ATTACH_REPACKAGING oldTable
+left outer join PCMSDATAPROD.ATTACHMENT newTable
+ON newTable.ID_TABLE = oldTable.REPACKAGING_ID
+AND newTable.NO_SEQUENCE = oldTable.SEQUENCENO
+WHERE newTable.id IS NULL;
 
 --02.4 copy ATTACH_SUBCONTRACT
 insert into PCMSDATAPROD.ATTACHMENT (
@@ -123,6 +156,16 @@ attach.CREATED_DATE as DATE_CREATED,
 attach.LAST_MODIFIED_USER as USERNAME_LAST_MODIFIED,
 attach.LAST_MODIFIED_DATE as DATE_LAST_MODIFIED
 from PCMSDATAPROD.ATTACH_SUBCONTRACT attach
+left join PCMSDATAPROD.SUBCONTRACT owner
+on attach.SUBCONTRACT_ID = owner.id
 where attach.SYSTEM_STATUS = 'ACTIVE'
+and owner.id is not null
 );
 
+-- should be empty result set 
+-- or some record at oldTable cannot be found at owner table
+select newTable.id AS newId, 'ATTACH_SUBCONTRACT' as tableName, oldTable.* from PCMSDATAPROD.ATTACH_SUBCONTRACT oldTable
+left outer join PCMSDATAPROD.ATTACHMENT newTable
+ON newTable.ID_TABLE = oldTable.SUBCONTRACT_ID
+AND newTable.NO_SEQUENCE = oldTable.SEQUENCENO
+WHERE newTable.id IS NULL;
