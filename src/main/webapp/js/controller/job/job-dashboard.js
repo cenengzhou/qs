@@ -80,7 +80,7 @@ mainApp.controller('JobDashboardCtrl', ['$scope', 'colorCode', 'jobService', 'ad
     	$scope.actualValue = actualValueList[11];
     	
     	$scope.chartParameters = {
-    			labels : ['Jan', 'Fev', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    			labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     			series : ['Total Budget', 'Internal Value', 'Main Contract Cert. Amount', 'Actual Value'],//  'Tender Budget'
     			//data : data.data,
     			data: [totalBudgetList, turnoverList, contractReceivableList, actualValueList],
