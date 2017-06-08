@@ -63,6 +63,12 @@ mainApp.constant('GlobalParameter', {
 		})
 		return result;
 	},
+	findWithAttr(array, attr, value){
+		for(var i = 0; i < array.length; i++){
+			if(array[i][attr] === value) return i;
+		}
+		return -1;
+	},
 	changeKeyValue: function(arr, oldKey, oldValue, newKey, newValue){
 		var newArr = [];
 		arr.forEach(function(obj){
@@ -335,6 +341,17 @@ mainApp.constant('GlobalParameter', {
         'RepackagingNameObject': 'REPACKAGING',
         'TransitNameObject' : 'TRANSIT'
 	},
+    nameObjectTable:[
+    	{value: 'GT58011', display: 'ADDENDUM'},
+    	{value: 'GT58012', display: 'PAYMENT'},
+    	{value: 'GT59026', display: 'MAIN_CERT'},
+    	{value: 'GT58010', display: 'SUBCONTRACT'},
+    	{value: 'GT58024', display: 'VENDOR'},
+    	{value: 'SPLIT', display: 'SPLIT'},
+    	{value: 'TERMINATE', display: 'TERMINATE'},
+    	{value: 'REPACKAGING', display: 'REPACKAGING'},
+    	{value: 'TRANSIT', display: 'TRANSIT'},
+   ],
 	PurchaseOrderType:[
 		{id:'GH', value:'Plant Blanket Sundry Order'},
 		{id:'P3', value:'Payment Requisition'},

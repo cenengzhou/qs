@@ -92,7 +92,7 @@ public class AttachmentService {
 			nameTable = Attachment.SUBCONTRACT_TABLE;
 			break;
 		case Attachment.VendorNameObject:
-			nameTable = Attachment.VENDER_TABLE;
+			nameTable = Attachment.VENDOR_TABLE;
 			break;
 		case Attachment.SplitNameObject:
 			nameTable = Attachment.SPLIT_TABLE;

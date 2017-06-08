@@ -47,7 +47,7 @@ public class Attachment extends PcmsPersistedAuditObject {
 	public static final String PAYMENT_TABLE = "PAYMENT";
 	public static final String MAIN_CERT_TABLE = "MAIN_CERT";
 	public static final String SUBCONTRACT_TABLE = "SUBCONTRACT";
-	public static final String VENDER_TABLE = "VENDER";
+	public static final String VENDOR_TABLE = "VENDOR";
 	public static final String SPLIT_TABLE = "SPLIT";
 	public static final String TERMINATE_TABLE = "TERMINATE";
 	public static final String REPACKAGING_TABLE = "REPACKAGING";

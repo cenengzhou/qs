@@ -439,6 +439,9 @@ mainApp.directive('selectBox', function(){
 			case 'paymentStatus':
 				$scope.items = GlobalParameter.changeKeyValue(GlobalParameter.getIdPlusValue(GlobalParameter.paymentStatus), 'id', 'value', 'value', 'display');
 				break;
+			case 'nameObjectTable':
+				$scope.items = GlobalParameter.nameObjectTable;
+				break;
 			default:
 				$scope.items = [{value:'default', display:'default'}];
 				break;

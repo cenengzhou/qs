@@ -1461,6 +1461,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	           'js/service/addendum-service.js',
                	           'js/service/resource-summary-service.js',
                	           'js/service/system-service.js',
+               	           'js/service/repackaging-service.js',
                            'js/controller/admin/admin-session.js',
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',
@@ -1470,6 +1471,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-Revisions-MainCert.js',
                            'js/controller/admin/admin-Revisions-Repackaging.js',
                            'js/controller/admin/admin-Revisions-Approval.js',
+                           'js/controller/admin/admin-Revisions-Attachment.js',
                            'js/controller/admin/admin-TransitUOMMaintenance.js',
                            'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
                            'js/controller/admin/admin-SubcontractStandardTermsMaintenance.js',
@@ -1538,6 +1540,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/Approval',
 		templateUrl: 'view/admin/admin-Revisions-Approval.html',
 		controller: 'AdminRevisionsApprovalCtrl'
+	})
+	.state('admin.Revisions.Attachment',{
+		url: '/Attachment',
+		templateUrl: 'view/admin/admin-Revisions-Attachment.html',
+		controller: 'AdminRevisionsAttachmentCtrl'
 	})
 	.state('admin.TransitUOMMaintenance',{
 		url: '/TransitUOMMaintenance',
