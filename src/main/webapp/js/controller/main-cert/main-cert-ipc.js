@@ -155,8 +155,8 @@ mainApp.controller('IPCCtrl', ['$q', '$scope', 'mainCertService', '$cookies', '$
 	function checkAttachment(){
 		var deferral = $q.defer();
 		var nameObject = GlobalParameter['AbstractAttachment'].MainCertNameObject;
-		var textKey = $scope.jobNo + '|' + $scope.mainCertNo + '|';
-    	attachmentService.getAttachmentListForPCMS(nameObject, textKey)
+		var textKey = $scope.jobNo + '|--|' + $scope.mainCertNo;
+    	attachmentService.obtainAttachmentList(nameObject, textKey)
     	.then(function(data){
     		deferral.resolve({
     			attachmentSize: data.length
