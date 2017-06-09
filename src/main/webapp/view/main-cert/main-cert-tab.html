@@ -32,26 +32,26 @@
 				<li ui-sref-active="active" id="mainCertTab3"><a
 					ui-sref="mainCert.ipc"> <span class="label">3</span> Input IPC
 				</a></li>
-				<li ng-if="mainCertStatus < 200" ui-sref-active="active" id="mainCertTab4"><a
+				<li ng-if="mainCertStatus <= 200" ui-sref-active="active" id="mainCertTab4"><a
 					ui-sref="mainCert.rr" ng-click="loadData()"> 
-					<span class="label" ng-if="mainCertStatus < 200">4</span>
+					<span class="label" ng-if="mainCertStatus <= 200">4</span>
 					 Retention Release Schedule
 				</a></li>
 				<li ui-sref-active="active" id="mainCertTab5"><a
 					ui-sref="mainCert.confirmIPC"> 
-					<span class="label" ng-if="mainCertStatus < 200">5</span>
+					<span class="label" ng-if="mainCertStatus <= 200">5</span>
 					<span class="label" ng-if="mainCertStatus > 200">4</span>
 						Confirm IPC
 				</a></li>
 				<li ui-sref-active="active" id="mainCertTab6"><a
 					ui-sref="mainCert.attachment({mainCertStatus: mainCertStatus})"> 
-					<span class="label" ng-if="mainCertStatus < 200">6</span>
+					<span class="label" ng-if="mainCertStatus <= 200">6</span>
 					<span class="label" ng-if="mainCertStatus > 200">5</span>
 						Add Attachment
 				</a></li>
 				<li ui-sref-active="active" id="mainCertTab7"><a
 					ui-sref="mainCert.postIPC"> 
-					<span class="label" ng-if="mainCertStatus < 200">7</span>
+					<span class="label" ng-if="mainCertStatus <= 200">7</span>
 					<span class="label" ng-if="mainCertStatus > 200">6</span> 
 					Post IPC<small>to JDE Finance</small>
 				</a></li>
