@@ -67,6 +67,8 @@ public class AttachmentService {
 	@Autowired
 	private PaymentCertHBDao scPaymentCertHBDao;
 	@Autowired
+	private PaymentService paymentService;
+	@Autowired
 	private AttachmentHBDao attachmentHBDao;;
 	@Autowired
 	private AddendumService addendumService;
@@ -137,12 +139,17 @@ public class AttachmentService {
 				resultMap.put(Attachment.ID_TABLE, subcontract.getId().toString());
 				break;
 			case Attachment.SCPaymentNameObject:
-				PaymentCert paymentCert = scPaymentCertHBDao.obtainPaymentCertificate(noJob, noSubcontract,
-						new Integer(altParam));
+				PaymentCert paymentCert;
+				if(altParam.equals("0")){
+					paymentCert = paymentService.obtainPaymentLatestCert(noJob, noSubcontract);
+				} else {
+					paymentCert = scPaymentCertHBDao.obtainPaymentCertificate(noJob, noSubcontract, new Integer(altParam));
+				}
 				resultMap.put(Attachment.ID_TABLE, paymentCert.getId().toString());
 				break;
 			case Attachment.MainCertNameObject:
-				MainCert mainCert = mainContractCertificateRepository.getCertificate(noJob, new Integer(altParam));
+				int mainCertNo = Integer.parseInt(altParam) != 0 ? new Integer(altParam) : new Integer(resultMap.get(Attachment.TEXTKEY_2));
+				MainCert mainCert = mainContractCertificateRepository.getCertificate(noJob, mainCertNo);
 				resultMap.put(Attachment.ID_TABLE, mainCert.getId().toString());
 				break;
 			case Attachment.RepackagingNameObject:
