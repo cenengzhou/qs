@@ -63,7 +63,7 @@ mainApp.constant('GlobalParameter', {
 		})
 		return result;
 	},
-	findWithAttr(array, attr, value){
+	findWithAttr: function(array, attr, value){
 		for(var i = 0; i < array.length; i++){
 			if(array[i][attr] === value) return i;
 		}
