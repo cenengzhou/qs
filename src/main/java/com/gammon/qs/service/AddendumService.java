@@ -861,6 +861,7 @@ public class AddendumService{
 
 				if(resultMsg == null || resultMsg.length()==0){
 					addendum.setStatus(Addendum.STATUS.SUBMITTED.toString());
+					addendum.setStatusApproval("NA");
 					addendum.setDateSubmission(new Date());
 					addendum.setUsernamePreparedBy(securityService.getCurrentUser().getUsername());
 					addendumHBDao.update(addendum);
