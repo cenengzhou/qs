@@ -266,9 +266,9 @@ public class AddendumService{
 					//Delete Pending Payment
 					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+						attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 						paymentCertHBDao.delete(paymentCert);
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-						attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 					}
 					
 					scDetail.setApproved(SubcontractDetail.NOT_APPROVED);
@@ -336,8 +336,8 @@ public class AddendumService{
 					//Delete Pending Payment
 					PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(noJob, noSubcontract);
 					if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
-						paymentCertHBDao.delete(paymentCert);
 						attachmentService.deleteAttachmentByPaymentCert(paymentCert);
+						paymentCertHBDao.delete(paymentCert);
 						paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
 					}
 					
@@ -884,8 +884,8 @@ public class AddendumService{
 			//Delete Pending Payment
 			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
-				paymentCertHBDao.delete(paymentCert);
 				attachmentService.deleteAttachmentByPaymentCert(paymentCert);
+				paymentCertHBDao.delete(paymentCert);
 				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
 				
 			}
@@ -1004,9 +1004,9 @@ public class AddendumService{
 			//Delete Pending Payment
 			PaymentCert paymentCert = paymentCertHBDao.obtainPaymentLatestCert(scDetailsCC.getJobNo(), scDetailsCC.getSubcontract().getPackageNo());
 			if(paymentCert !=null && PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())){
+				attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 				paymentCertHBDao.delete(paymentCert);
 				paymentCertDetailHBDao.deleteDetailByPaymentCertID(paymentCert.getId());
-				attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 			}
 		}
 

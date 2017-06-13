@@ -444,13 +444,12 @@ public class AttachmentService {
 		}
 		return attachmentFile;
 	}
-
+	
 	public void deleteAttachmentByPaymentCert(PaymentCert latestPaymentCert) throws NumberFormatException, Exception {
-		List<Attachment> attachmentList = obtainAttachmentList(Attachment.PAYMENT_TABLE, latestPaymentCert.getId().toString());
+		String textKey = latestPaymentCert.getJobNo() + "|"+latestPaymentCert.getPackageNo()+"|"+latestPaymentCert.getPaymentCertNo();
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, textKey);
 		for(int i=1;i<attachmentList.size();i++){
-			String nameTable = attachmentList.get(i).getNameTable();
-			String textKey = latestPaymentCert.getJobNo() + "|"+latestPaymentCert.getPackageNo()+"|"+latestPaymentCert.getPaymentCertNo();
-			deleteAttachment(nameTable, textKey, i);
+			deleteAttachment(Attachment.SCPaymentNameObject, textKey, i);
 		}
 	}
 
