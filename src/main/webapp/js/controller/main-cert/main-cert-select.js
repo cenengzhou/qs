@@ -131,7 +131,7 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 			},
 			eventClick: function(calEvent, jsEvent, view) {
 				var selectedMainCertNo = calEvent.title.substring(9);
-				$state.go('cert-details', {mainCertNo: selectedMainCertNo});
+				$state.go('mainCert.ipa', {mainCertNo: selectedMainCertNo});
 			}
 		});
 	}
