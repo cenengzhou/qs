@@ -225,7 +225,7 @@ public class AttachmentService {
 			directoryPath = serverPath + attachment.getPathFile();
 			attachmentHBDao.delete(attachment);
 			try {
-				if (!directoryPath.isEmpty()) {
+				if (attachment.getTypeDocument().equals(Attachment.FILE)) {
 					File deleteFile = new File(directoryPath);
 					if (deleteFile != null)
 						deleteFile.delete();
@@ -448,8 +448,8 @@ public class AttachmentService {
 	public void deleteAttachmentByPaymentCert(PaymentCert latestPaymentCert) throws NumberFormatException, Exception {
 		String textKey = latestPaymentCert.getJobNo() + "|"+latestPaymentCert.getPackageNo()+"|"+latestPaymentCert.getPaymentCertNo();
 		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, textKey);
-		for(int i=1;i<attachmentList.size();i++){
-			deleteAttachment(Attachment.SCPaymentNameObject, textKey, i);
+		for(Attachment attachment : attachmentList){
+			deleteAttachment(Attachment.SCPaymentNameObject, textKey, attachment.getNoSequence().intValue());
 		}
 	}
 
