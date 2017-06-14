@@ -131,7 +131,7 @@ public class MainCertController {
 		String result = "";
 		try {
 			return mainCertService.deleteMainCert(jobNo, mainCertNo);
-		} catch (DatabaseOperationException e) {
+		} catch (Exception e) {
 			result = "Main Cert cannot be deleted.";
 			e.printStackTrace();
 			GlobalExceptionHandler.checkAccessDeniedException(e);

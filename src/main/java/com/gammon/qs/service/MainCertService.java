@@ -72,6 +72,8 @@ public class MainCertService {
 	private AccountBalanceDao accountBalanceDao;
 	@Autowired
 	private MainCertContraChargeHBDao mainCertContraChargeHBDao;
+	@Autowired
+	private AttachmentService attachmentService;
 
 	/*****************************************
 	 * Web Services
@@ -152,8 +154,9 @@ public class MainCertService {
 	 * @author koeyyeung
 	 * Remove Main Cert with status < 120(IPA not yet sent out) 
 	 * created on 5 June, 2017
+	 * @throws Exception 
 	 */
-	public String deleteMainCert(String jobNo, Integer mainCertNo) throws DatabaseOperationException{
+	public String deleteMainCert(String jobNo, Integer mainCertNo) throws Exception{
 		String message = null;
 		
 		MainCert mainCert = this.getCertificate(jobNo, mainCertNo);
@@ -165,6 +168,7 @@ public class MainCertService {
 				message = "Main Contract Certificate No."+mainCertNo+" cannot be deleted. Status: "+MainCert.getCertStatusDescription(mainCert.getCertificateStatus())+".";
 				return message;
 			}else{
+				attachmentService.deleteAttachmentByMainCert(mainCert);
 				mainCertHBDao.delete(mainCert);
 			}
 		}

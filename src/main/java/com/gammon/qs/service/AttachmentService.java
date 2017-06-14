@@ -114,8 +114,7 @@ public class AttachmentService {
 		return nameTable;
 	}
 	
-	private Map<String, String> obtainAttachmentTableNameAndId(String nameObject, String textKey)
-			throws NumberFormatException, Exception {
+	private Map<String, String> obtainAttachmentTableNameAndId(String nameObject, String textKey) throws Exception {
 		Map<String, String> resultMap = new HashMap<>();
 		String splittedTextKey[] = textKey.split("\\|");
 		String noJob = splittedTextKey[0];
@@ -173,8 +172,7 @@ public class AttachmentService {
 		}
 	}
 
-	public List<Attachment> obtainAttachmentList(String nameObject, String textKey)
-			throws NumberFormatException, Exception {
+	public List<Attachment> obtainAttachmentList(String nameObject, String textKey) throws Exception{
 		List<Attachment> attachmentList = new ArrayList<>();
 		switch (nameObject) {
 		case Attachment.VendorNameObject:
@@ -198,11 +196,9 @@ public class AttachmentService {
 	}
 
 	public Boolean deleteAttachment(String nameObject, String textKey, Integer sequenceNumber) throws Exception {
-		String directoryPath = "";
-		
 		switch (nameObject) {
 		case Attachment.VendorNameObject:
-			directoryPath = packageWSDao.getSCAttachmentFileLink(nameObject, textKey, sequenceNumber);
+			String directoryPath = packageWSDao.getSCAttachmentFileLink(nameObject, textKey, sequenceNumber);
 			if (directoryPath == null || "".equals(directoryPath.trim())) {
 				return packageWSDao.deleteSCTextAttachment(nameObject, textKey, sequenceNumber);
 			}
@@ -212,7 +208,6 @@ public class AttachmentService {
 				return true;
 			}
 		default:
-			String serverPath = serviceConfig.getAttachmentServer("PATH") + serviceConfig.getJobAttachmentsDirectory();
 			Map<String, String> paramMap = obtainAttachmentTableNameAndId(nameObject, textKey);
 			String noJob = paramMap.get(Attachment.TEXTKEY_1);
 			// String noSubcontract = paramMap.get(Attachment.TEXTKEY_2);
@@ -220,25 +215,28 @@ public class AttachmentService {
 			String name_table = paramMap.get(Attachment.NAME_TABLE);
 			BigDecimal id_table = new BigDecimal(paramMap.get(Attachment.ID_TABLE));
 			adminService.canAccessJob(noJob);
-			Attachment attachment;
-			attachment = attachmentHBDao.obtainAttachment(name_table, id_table, new BigDecimal(sequenceNumber));
-			directoryPath = serverPath + attachment.getPathFile();
-			attachmentHBDao.delete(attachment);
-			try {
-				if (attachment.getTypeDocument().equals(Attachment.FILE)) {
-					File deleteFile = new File(directoryPath);
-					if (deleteFile != null)
-						deleteFile.delete();
-				}
-				return true;
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
-				return false;
-			}
-
+			Attachment attachment = attachmentHBDao.obtainAttachment(name_table, id_table, new BigDecimal(sequenceNumber));
+			return deleteAttachment(attachment);
 		}
 	}
 
+	public Boolean deleteAttachment(Attachment attachment){
+		try {
+			String serverPath = serviceConfig.getAttachmentServer("PATH") + serviceConfig.getJobAttachmentsDirectory();
+			String directoryPath = serverPath + attachment.getPathFile();
+			attachmentHBDao.delete(attachment);
+			if (attachment.getTypeDocument().equals(Attachment.FILE)) {
+				File deleteFile = new File(directoryPath);
+				if (deleteFile != null)
+					deleteFile.delete();
+			}
+			return true;
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "SERVICE EXCEPTION:", e);
+			return false;
+		}
+	}
+	
 	public Boolean uploadTextAttachment(String nameObject, String textKey, Integer sequenceNo, String filename,
 			String textContent) throws Exception {
 		
@@ -445,14 +443,24 @@ public class AttachmentService {
 		return attachmentFile;
 	}
 	
-	public void deleteAttachmentByPaymentCert(PaymentCert latestPaymentCert) throws NumberFormatException, Exception {
-		String textKey = latestPaymentCert.getJobNo() + "|"+latestPaymentCert.getPackageNo()+"|"+latestPaymentCert.getPaymentCertNo();
-		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, textKey);
+	public void deleteAttachmentList(List<Attachment> attachmentList) throws Exception{
 		for(Attachment attachment : attachmentList){
-			deleteAttachment(Attachment.SCPaymentNameObject, textKey, attachment.getNoSequence().intValue());
+			deleteAttachment(attachment);
 		}
 	}
 
+	public void deleteAttachmentByPaymentCert(PaymentCert latestPaymentCert) throws Exception {
+		String textKey = latestPaymentCert.getJobNo() + "|"+latestPaymentCert.getPackageNo()+"|"+latestPaymentCert.getPaymentCertNo();
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.SCPaymentNameObject, textKey);
+		deleteAttachmentList(attachmentList);
+	}
+
+	public void deleteAttachmentByMainCert(MainCert mainCert) throws Exception {
+		String textKey = mainCert.getJobNo() + "|--|" + mainCert.getCertificateNumber();
+		List<Attachment> attachmentList = obtainAttachmentList(Attachment.MainCertNameObject, textKey);
+		deleteAttachmentList(attachmentList);
+	}
+	
 	/***************************SC Package Attachment (SC, SC Detail, SC Payment)--END***************************/
 
 }
