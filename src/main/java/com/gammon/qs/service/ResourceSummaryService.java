@@ -787,8 +787,8 @@ public class ResourceSummaryService implements Serializable {
 								scPackage.setVendorNo(null);
 							}
 							
-							scPaymentCertHBDao.delete(latestPaymentCert);
 							attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
+							scPaymentCertHBDao.delete(latestPaymentCert);
 							scPaymentDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 							
 							scPackageDao.update(scPackage);

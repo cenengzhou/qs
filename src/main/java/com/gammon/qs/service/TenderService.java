@@ -615,8 +615,8 @@ public class TenderService implements Serializable {
 		try {
 			if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 				//Delete Pending Payment
-				paymentCertDao.delete(latestPaymentCert);
 				attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
+				paymentCertDao.delete(latestPaymentCert);
 				paymentCertDetailDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 
 				//Reset cumulative Cert Amount in ScDetail

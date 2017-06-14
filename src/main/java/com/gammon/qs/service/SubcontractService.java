@@ -284,9 +284,8 @@ public class SubcontractService {
 				
 				if(latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 					//Delete Pending Payment
-
-					paymentCertHBDao.delete(latestPaymentCert);
 					attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
+					paymentCertHBDao.delete(latestPaymentCert);
 					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 					
 					subcontractHBDao.update(scPackage);
@@ -2166,8 +2165,8 @@ public class SubcontractService {
 				PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontract.getPackageNo());
 				if(latestPaymentCert!=null && latestPaymentCert.getDirectPayment().equals("Y") && latestPaymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_PND_PENDING)){
 					//Delete Pending Payment
-					paymentCertHBDao.delete(latestPaymentCert);
 					attachmentService.deleteAttachmentByPaymentCert(latestPaymentCert);
+					paymentCertHBDao.delete(latestPaymentCert);
 					paymentCertDetailHBDao.deleteDetailByPaymentCertID(latestPaymentCert.getId());
 					
 					

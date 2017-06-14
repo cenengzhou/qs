@@ -1476,8 +1476,8 @@ public class PaymentService{
 
 											PaymentCert ccLatestPaymentCert = scPaymentCertHBDao.obtainPaymentLatestCert(jobNo, scDetailsCC.getSubcontract().getPackageNo());
 											if (ccLatestPaymentCert!=null && (PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(ccLatestPaymentCert.getPaymentStatus()))){
-												paymentCertDao.delete(ccLatestPaymentCert);
 												attachmentService.deleteAttachmentByPaymentCert(ccLatestPaymentCert);
+												paymentCertDao.delete(ccLatestPaymentCert);
 												paymentDetailDao.deleteDetailByPaymentCertID(ccLatestPaymentCert.getId());
 											}
 										}
