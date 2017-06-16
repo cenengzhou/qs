@@ -31,10 +31,10 @@ public class AccountLedger implements java.io.Serializable {
 	private BigDecimal numberJournalEntryLine;
 	private String numberJeLineExtension;
 	private String accountTypeLedger;
-	private BigDecimal accountPeriod;
-
-	private String typeDocumentDescription;
 	private Date dateGl;
+	
+	private String typeDocumentDescription;
+	private BigDecimal accountPeriod;
 	private String statusPost;
 	private String statusPostDescription;
 	private BigDecimal numberBatch;
@@ -91,7 +91,7 @@ public class AccountLedger implements java.io.Serializable {
 							BigDecimal numberJournalEntryLine,
 							String numberJeLineExtension,
 							String accountTypeLedger,
-							BigDecimal accountPeriod) {
+							Date dateGl) {
 		super();
 		this.entityDocCompanyKey = entityDocCompanyKey;
 		this.typeDocument = typeDocument;
@@ -99,7 +99,7 @@ public class AccountLedger implements java.io.Serializable {
 		this.numberJournalEntryLine = numberJournalEntryLine;
 		this.numberJeLineExtension = numberJeLineExtension;
 		this.accountTypeLedger = accountTypeLedger;
-		this.accountPeriod = accountPeriod;
+		this.dateGl = dateGl;
 	}
 
 	public AccountLedger(	String entityDocCompanyKey,
@@ -272,12 +272,12 @@ public class AccountLedger implements java.io.Serializable {
 	}
 
 	@Id
-	public BigDecimal getAccountPeriod() {
-		return this.accountPeriod;
+	public Date getDateGl() {
+		return this.dateGl;
 	}
 
-	public void setAccountPeriod(BigDecimal accountPeriod) {
-		this.accountPeriod = accountPeriod;
+	public void setDateGl(Date dateGl) {
+		this.dateGl = dateGl;
 	}
 
 	@Column(name = "TYPE_DOCUMENT_DESCRIPTION",
@@ -290,15 +290,15 @@ public class AccountLedger implements java.io.Serializable {
 		this.typeDocumentDescription = typeDocumentDescription;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "DATE_GL",
-			length = 7)
-	public Date getDateGl() {
-		return this.dateGl;
+	@Column(name = "ACCOUNT_PERIOD",
+			precision = 22,
+			scale = 0)
+	public BigDecimal getAccountPeriod() {
+		return this.accountPeriod;
 	}
 
-	public void setDateGl(Date dateGl) {
-		this.dateGl = dateGl;
+	public void setAccountPeriod(BigDecimal accountPeriod) {
+		this.accountPeriod = accountPeriod;
 	}
 
 	@Column(name = "STATUS_POST",
