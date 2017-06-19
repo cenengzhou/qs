@@ -318,8 +318,9 @@ public class APController {
 					switch(requestObj.getNameObject()){
 					case Attachment.AddendumNameObject:
 					case Attachment.SCPackageNameObject:
-					case Attachment.SCPaymentNameObject:
 						responseObj.setTextKey(requestObj.getTextKey() + "|" +  attachment.getNoSequence());
+					case Attachment.SCPaymentNameObject:
+						responseObj.setTextKey(requestObj.getTextKey() + "|--|" +  attachment.getNoSequence());
 						break;
 					default:
 						responseObj.setTextKey(requestObj.getTextKey());

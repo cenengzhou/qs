@@ -119,7 +119,7 @@ public class AttachmentService {
 		String splittedTextKey[] = textKey.split("\\|");
 		String noJob = splittedTextKey[0];
 		String noSubcontract = splittedTextKey.length > 1 ? splittedTextKey[1] : "0";
-		String altParam = splittedTextKey.length > 2 && !splittedTextKey[2].isEmpty() ? splittedTextKey[2] : "0";
+		String altParam = splittedTextKey.length > 2 && !splittedTextKey[2].isEmpty() && !"--".equals(splittedTextKey[2])? splittedTextKey[2] : "0";
 		String nameTable = obtainNameTable(nameObject);
 		resultMap.put(Attachment.TEXTKEY_1, noJob);
 		resultMap.put(Attachment.TEXTKEY_2, noSubcontract);
