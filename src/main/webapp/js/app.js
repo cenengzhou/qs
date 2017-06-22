@@ -1710,7 +1710,7 @@ mainApp.config(['momentPickerProvider', '$provide', function(momentPickerProvide
 		  });
 }]);
 
-mainApp.config(function(blockUIConfig, colorCode) {
+mainApp.config(function(blockUIConfig) {
 
 	// Change the default overlay message
 	// blockUIConfig.message = '';
@@ -1732,7 +1732,7 @@ mainApp.config(function(blockUIConfig, colorCode) {
 	
 	blockUIConfig.template = '<div class="block-ui-message-container"><div class="block-ui-message" ng-if="!state.hideMessage">{{state.message}}</div></div><div class="block-ui block-ui-overlay" style="z-index:100"><i class="fa fa-spinner fa-pulse fa-fw text-grey" style="width:100%; font-size: 600px;opacity: 0.1" ng-if="!state.hideAnimate"></i></div>';
 	
-	// Disable automatically blocking of the user interface
+	// Disable automatically blocking of the user interface( start a block whenever the Angular $http service has an pending request)
 	blockUIConfig.autoBlock = true;
 	
 	// Change the default delay to 100ms before the blocking is visible

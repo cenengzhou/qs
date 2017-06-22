@@ -36,9 +36,9 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			             { field: 'lineType', width: 50},
 			             { field: 'billItem', width: 100},
 			             { field: 'description', width: 100},
-			             { field: 'quantity', width: 100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'quantity', width: 100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 
-			             {field: 'scRate', width: 80, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             {field: 'scRate', width: 80, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 			             {field: 'objectCode', width: 100},
 			             {field: 'subsidiaryCode', width: 100},
 			             {field: 'amountSubcontract', displayName: "SC Amount", width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
@@ -48,7 +48,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			             { field: 'amountCumulativeCert', displayName: "Cum Certified Amount", width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 			             { field: 'amountPostedCert', displayName: "Posted Certified Amount", width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 
-			             {field: 'costRate', width: 80, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             {field: 'costRate', width: 80, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 			             {field: 'amountBudget', displayName: "Budget Amount", width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 			             {field: 'projectedProvision', width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
 			             {field: 'provision', width: 150, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },

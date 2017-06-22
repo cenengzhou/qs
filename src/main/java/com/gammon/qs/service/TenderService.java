@@ -290,7 +290,12 @@ public class TenderService implements Serializable {
 				tenderAnalysis.setStatusChangeExecutionOfSC(statusChangeExecutionOfSC);
 			}
 			tenderAnalysis.setCurrencyCode(currencyCode);
-			tenderAnalysis.setExchangeRate(exchangeRate);
+			
+			if(tenderAnalysis.getCurrencyCode().equals(companyCurrencyCode)){
+				tenderAnalysis.setExchangeRate(1.0);
+			}else
+				tenderAnalysis.setExchangeRate(exchangeRate);				
+
 		}
 		else{
 			tenderAnalysis = new Tender();
@@ -335,7 +340,11 @@ public class TenderService implements Serializable {
 							taDetailInDB.setRateBudget(taDetail.getRateBudget());
 							taDetailInDB.setRateSubcontract(taDetail.getRateSubcontract());
 							taDetailInDB.setAmountSubcontract(taDetail.getAmountSubcontract());
-							taDetailInDB.setAmountForeign(CalculationUtil.round(taDetail.getAmountSubcontract()*tender.getExchangeRate(), 2));
+							
+							if(tender.getCurrencyCode().equals(companyCurrencyCode))
+								taDetailInDB.setAmountForeign(taDetail.getAmountSubcontract());
+							else
+								taDetailInDB.setAmountForeign(CalculationUtil.round(taDetail.getAmountSubcontract()*tender.getExchangeRate(), 2));
 							
 							tenderDetailDao.update(taDetailInDB);
 						}
@@ -488,11 +497,14 @@ public class TenderService implements Serializable {
 					taDetail.setTender(tender); //Should save taDetail through cascades
 					taDetail.setLineType("BQ");
 					
-					if(tender.getCurrencyCode().equals(companyCurrencyCode))
+					if(tender.getCurrencyCode().equals(companyCurrencyCode)){
+						taDetail.setAmountForeign(taDetail.getAmountSubcontract());
 						totalBudget += taDetail.getAmountSubcontract();
-					else 
+					}
+					else{
+						taDetail.setAmountForeign(CalculationUtil.round(taDetail.getAmountSubcontract()*tender.getExchangeRate(), 2));
 						totalBudget += taDetail.getAmountForeign();
-					
+					}
 					tenderDetailDao.insert(taDetail);
 				}
 

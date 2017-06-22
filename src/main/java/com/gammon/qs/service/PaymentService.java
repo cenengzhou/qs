@@ -1466,7 +1466,7 @@ public class PaymentService{
 
 							//Update C2 of corresponding subcontract
 							try {
-								if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType()))){
+								if (scDetail.getLineType()!=null && ("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType())) && scDetail.getCorrSCLineSeqNo()!=null){
 									SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) scDetailDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 									if(scDetailsCC != null){
 										BigDecimal amountCumCertCC = scDetail.getAmountCumulativeCert().multiply(new BigDecimal(-1));
@@ -1483,7 +1483,6 @@ public class PaymentService{
 										}
 
 									}
-
 								}
 							} catch (DataAccessException e) {
 								e.printStackTrace();

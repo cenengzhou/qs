@@ -263,7 +263,7 @@ public class SubcontractService {
 							SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), taDetail.getId());
 							if(scDetailsInDB!=null){
 								//Update SC Details
-								scDetailsInDB.setScRate(CalculationUtil.round(taDetail.getRateSubcontract()*taDetail.getTender().getExchangeRate(), 2));
+								scDetailsInDB.setScRate(CalculationUtil.round(taDetail.getRateSubcontract()*taDetail.getTender().getExchangeRate(), 4));
 								scDetailsInDB.setApproved(SubcontractDetail.APPROVED);//Change status to "Approved"
 								subcontractDetailHBDao.update(scDetailsInDB);
 								
@@ -404,7 +404,7 @@ public class SubcontractService {
 						scDetails.setDescription(tenderDetails.getDescription());
 						scDetails.setOriginalQuantity(tenderDetails.getQuantity());
 						scDetails.setQuantity(tenderDetails.getQuantity());
-						scDetails.setScRate(CalculationUtil.round(tenderDetails.getRateSubcontract()*tender.getExchangeRate(), 2));
+						scDetails.setScRate(CalculationUtil.round(tenderDetails.getRateSubcontract()*tender.getExchangeRate(), 4));
 						scDetails.setSubsidiaryCode(tenderDetails.getSubsidiaryCode());
 						scDetails.setObjectCode(tenderDetails.getObjectCode());
 						scDetails.setLineType(tenderDetails.getLineType());
@@ -1623,7 +1623,7 @@ public class SubcontractService {
 						SubcontractDetailBQ scDetailsInDB = subcontractDetailHBDao.obtainSCDetailsByTADetailID(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo(), taDetail.getId());
 						if(scDetailsInDB!=null){
 							//Update SC Details
-							scDetailsInDB.setScRate(CalculationUtil.round(taDetail.getRateSubcontract()*taDetail.getTender().getExchangeRate(), 2));
+							scDetailsInDB.setScRate(CalculationUtil.round(taDetail.getRateSubcontract()*taDetail.getTender().getExchangeRate(), 4));
 							subcontractDetailHBDao.update(scDetailsInDB);
 
 							taIterator.remove();
@@ -1696,7 +1696,7 @@ public class SubcontractService {
 			scDetails.setDescription(taDetails.getDescription());
 			scDetails.setOriginalQuantity(taDetails.getQuantity());
 			scDetails.setQuantity(taDetails.getQuantity());
-			scDetails.setScRate(CalculationUtil.round(taDetails.getRateSubcontract()*tenderAnalysis.getExchangeRate(), 2));
+			scDetails.setScRate(CalculationUtil.round(taDetails.getRateSubcontract()*tenderAnalysis.getExchangeRate(), 4));
 			scDetails.setSubsidiaryCode(taDetails.getSubsidiaryCode());
 			scDetails.setObjectCode(taDetails.getObjectCode());
 			scDetails.setLineType("BQ");

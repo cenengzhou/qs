@@ -24,8 +24,8 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			             { field: 'typeVo', displayName:"Type", width:50},
 		            	 { field: 'bpi',  displayName:"BPI",  width:90 },
 		            	 {field: 'description' ,  width:100 },
-		            	 { field: 'quantity' , displayName:"Quantity", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
-		            	 { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+		            	 { field: 'quantity' , displayName:"Quantity", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
+		            	 { field: 'rateBudget', displayName:"Budget Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 			             { field: 'amtBudget' , displayName:"Budget Amount", width:100, enableFiltering: false, 
 			            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            			var c = 'text-right';
@@ -38,7 +38,7 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			            		
 		            	},
 			             
-			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:2' },
+			             { field: 'rateAddendum' , displayName:"SC Rate", width:100, enableFiltering: false, cellClass: 'text-right', cellFilter: 'number:4' },
 			             { field: 'amtAddendum' , displayName:"Amount",  width:100, enableFiltering: false, 
 		            	 cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		            			var c = 'text-right';

@@ -88,13 +88,13 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(colDef.name == "rateSubcontract"){
-				rowEntity.rateSubcontract  = roundUtil.round(newValue, 2);
+				rowEntity.rateSubcontract  = roundUtil.round(newValue, 4);
 				rowEntity.amountSubcontract = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract, 2);
 				rowEntity.amountForeign = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
 			}
 			else if(colDef.name == "amountSubcontract"){
 				rowEntity.amountSubcontract = roundUtil.round(newValue, 2);
-				rowEntity.rateSubcontract = roundUtil.round(rowEntity.amountSubcontract / rowEntity.quantity, 2);
+				rowEntity.rateSubcontract = roundUtil.round(rowEntity.amountSubcontract / rowEntity.quantity, 4);
 				rowEntity.amountForeign = roundUtil.round(rowEntity.quantity * rowEntity.rateSubcontract * $scope.tender.exchangeRate, 2);
 			}
 		});

@@ -42,7 +42,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			}
 		}else if (field == "rate" && $scope.addendumDetail.rateAddendum != null){
 			if($scope.addendumDetail.rateAddendum.indexOf('.') != $scope.addendumDetail.rateAddendum.length -1){
-				$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 2);
+				$scope.addendumDetail.rateAddendum = roundUtil.round($scope.addendumDetail.rateAddendum, 4);
 				$scope.addendumDetail.amtAddendum = roundUtil.round($scope.addendumDetail.quantity*$scope.addendumDetail.rateAddendum, 2);
 			}
 		}

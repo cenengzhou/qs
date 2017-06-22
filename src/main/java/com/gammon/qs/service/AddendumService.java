@@ -1042,7 +1042,7 @@ public class AddendumService{
 			subcontractDetailHBDao.update(scDetail);
 			
 			//Update C2
-			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0){
+			if(addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0 && scDetail.getCorrSCLineSeqNo()!=null){
 				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, addendumDetail.getNoSubcontractChargedRef(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 				if(scDetailsCC != null){
 					scDetailsCC.setJobNo(addendumDetail.getNoJob());
@@ -1075,7 +1075,9 @@ public class AddendumService{
 			if(("L2".equals(scDetail.getLineType()) || "D2".equals(scDetail.getLineType())) &&
 					scDetail.getContraChargeSCNo() != null && 
 					scDetail.getContraChargeSCNo().trim().length()>0 && 
-					!"0".equals(scDetail.getContraChargeSCNo())){
+					!"0".equals(scDetail.getContraChargeSCNo()) &&
+					scDetail.getCorrSCLineSeqNo()!=null){
+				
 				SubcontractDetailCC scDetailsCC = (SubcontractDetailCC) subcontractDetailHBDao.getSCDetailsBySequenceNo(jobNo, scDetail.getContraChargeSCNo(), scDetail.getCorrSCLineSeqNo().intValue(), "C2");
 				if(scDetailsCC != null){
 					subcontractDetailHBDao.inactivate(scDetailsCC);				
