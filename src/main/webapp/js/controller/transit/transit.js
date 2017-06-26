@@ -20,11 +20,11 @@ mainApp.controller('TransitCtrl', ['$scope', 'modalService', 'transitService', '
 	}
 
 	$scope.openWindow = function (type){
-		if(type == 'Resource'){
-			modalService.open('lg', 'view/transit/modal/code-match-enquiry-modal.html', 'AdminTransitResourceCodeMaintenanceCtrl', type);
-		}else if(type == 'Unit'){
-			modalService.open('lg', 'view/transit/modal/code-match-enquiry-modal.html', 'AdminTransitUOMMaintenanceCtrl', type);
-		}
+		//if(type == 'Resource'){
+			modalService.open('lg', 'view/transit/modal/code-match-enquiry-modal.html', 'CodeMatchEnquiryModalCtrl', type);
+		//}else if(type == 'Unit'){
+		//	modalService.open('lg', 'view/transit/modal/code-match-enquiry-modal.html', 'CodeMatchEnquiryModalCtrl', type);
+		//}
 	}
 	
 	$rootScope.$on("UpdateTransitStatus", function(event, transitStatus){

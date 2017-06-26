@@ -1,8 +1,6 @@
 mainApp.controller('AdminTransitUOMMaintenanceCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'transitService', 'modalStatus', '$uibModalInstance',
-		function($scope, $http, modalService, blockUI, transitService, modalStatus, $uibModalInstance) {
-	
-	$scope.type = modalStatus;
+		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
+		function($scope, $http, modalService, blockUI, transitService) {
 
 	$scope.onSubmit = function(){
 		var formData = new FormData();
@@ -60,11 +58,5 @@ mainApp.controller('AdminTransitUOMMaintenanceCtrl',
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		  $scope.gridApi = gridApi;
 	};
-	
-	//Close Window for Enquiry Screen
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-	};
-
 	
 }]);

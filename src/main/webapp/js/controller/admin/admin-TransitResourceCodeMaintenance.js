@@ -1,8 +1,7 @@
 mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl', 
-		['$scope', '$http', 'modalService', 'blockUI', 'transitService', 'modalStatus', '$uibModalInstance',
-		 function($scope, $http, modalService, blockUI, transitService, modalStatus, $uibModalInstance) {
-	
-		$scope.type = modalStatus;
+		['$scope', '$http', 'modalService', 'blockUI', 'transitService',
+		 function($scope, $http, modalService, blockUI, transitService) {
+
 		//$scope.blockCodeMaintenance = blockUI.instances.get('blockCodeMaintenance');
 		$scope.loadData = function() {
 //		$scope.blockCodeMaintenance.start('Loading...')
@@ -75,9 +74,5 @@ mainApp.controller('AdminTransitResourceCodeMaintenanceCtrl',
 		$scope.gridApi = gridApi;
 	};
 
-	//Close Window for Enquiry Screen
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss("cancel");
-	};
 
 }]);

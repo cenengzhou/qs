@@ -1057,12 +1057,13 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
+               		 	'js/controller/transit/modal/CodeMatchEnquiryModal.js',
                		 	'js/controller/transit/transit.js',
 	               		'js/controller/transit/transit-import.js',
 	               		'js/controller/transit/transit-confirm.js',
 	               		'js/controller/transit/transit-complete.js',
-	               		'js/controller/admin/admin-TransitUOMMaintenance.js',
-                        'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
+	               		//'js/controller/admin/admin-TransitUOMMaintenance.js',
+                        //'js/controller/admin/admin-TransitResourceCodeMaintenance.js',
                         'js/service/resource-summary-service.js',
 	               		'js/service/subcontract-service.js',
 	               		'js/service/transit-service.js',
