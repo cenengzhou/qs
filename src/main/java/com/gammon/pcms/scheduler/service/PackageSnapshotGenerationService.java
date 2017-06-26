@@ -101,7 +101,6 @@ public class PackageSnapshotGenerationService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class, value = "transactionManager")
 	public Boolean calculateTotalWDAmountByJob(String jobNumber) {
-		logger.info("STARTED -> recalculateTotalWDAmountByJob()");
 		try {
 			List<Subcontract> scPackages = scPackageHBDao.obtainPackageList(jobNumber);
 
