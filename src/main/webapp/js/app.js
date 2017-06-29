@@ -1698,7 +1698,7 @@ mainApp.config(['momentPickerProvider', '$provide', function(momentPickerProvide
 		      if (typeof(field.value) === 'string') {
 		    	  if(field.value === 'text-warning fa-thumbs-up') field.value = 'Yes';
 		    	  if(field.value === 'text-danger fa-thumbs-down') field.value = 'No';
-		    	  return '"' + field.value + '"';
+		    	  return '"' + field.value.replace(/\n/g,'').replace(/"/g, '""') + '"';
 		      }
 		      if ( field.value instanceof Date){
 		    	  return $filter('date')(field.value, 'yyyy-MM-dd');
