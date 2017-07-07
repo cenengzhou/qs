@@ -346,7 +346,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/attachment/attachment-main.js',
                            'js/controller/attachment/attachment-text-editor.js',
-                           'js/service/attachment-service.js'
+                           'js/service/attachment-service.js',
+                           'js/service/main-cert-service.js',
                     ] 
                 });
             }]
@@ -452,7 +453,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/controller/attachment/attachment-main.js',
                            'js/controller/attachment/attachment-text-editor.js',
-                           'js/service/attachment-service.js'
+                           'js/service/attachment-service.js',
+                           'js/service/main-cert-service.js',
                     ] 
                 });
             }]
@@ -578,6 +580,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                      'js/controller/attachment/attachment-text-editor.js',
                          'js/service/attachment-service.js',
                          'js/service/addendum-service.js',
+                         'js/service/main-cert-service.js',
                     ] 
                 });
             }]
@@ -760,7 +763,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                          'js/controller/attachment/attachment-main.js',
                          'js/controller/attachment/attachment-text-editor.js',
-                         'js/service/attachment-service.js'
+                         'js/service/attachment-service.js',
+                         'js/service/main-cert-service.js',
                          ] 
                 });
             }]
@@ -896,6 +900,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/attachment/attachment-main.js',
                            'js/controller/attachment/attachment-text-editor.js',
                            'js/service/job-service.js',
+                           'js/service/main-cert-service.js',
                            'js/service/attachment-service.js',
                            'js/service/subcontract-service.js',
                            'js/service/payment-service.js',
@@ -1116,6 +1121,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                     'js/service/attachment-service.js',
                     'js/service/addendum-service.js',
                     'js/service/payment-service.js',
+                    'js/service/main-cert-service.js',
                ] 
                 });
             }]

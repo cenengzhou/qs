@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'paymentService', 'addendumService', 'subcontractService', 'transitService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, paymentService, addendumService, subcontractService, transitService) {
+mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
+                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, paymentService, addendumService, subcontractService, transitService, mainCertService) {
 	/*
 	 * attachment within ADDRESS BOOK modal is not control by this controller
 	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
@@ -16,6 +16,8 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 		};
 	}
 	$scope.jobNo = $cookies.get('jobNo');
+	$scope.mainCertNo = $cookies.get("mainCertNo");
+	
 	$scope.subcontractNo = $cookies.get('subcontractNo');
 	$scope.addendumNo = $cookies.get('addendumNo');
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
@@ -61,7 +63,7 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 			break;
 		case GlobalParameter['AbstractAttachment'].MainCertNameObject:
 			$scope.textKey += $scope.mainCertNo;
-			$scope.isUpdatable = !$scope.disableButtons;
+			checkMainCertUpdatable();
 			loadAttachment($scope.nameObject, $scope.textKey);
 			break;
 		case GlobalParameter['AbstractAttachment'].RepackagingNameObject:
@@ -160,6 +162,25 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     		$scope.textAttachment = this.attach;
     		$scope.isTextUpdatable = $scope.isUpdatable; 
     		modalService.open('lg', 'view/attachment/attachment-text-editor.html', 'AttachmentTextEditorCtrl', 'Success', $scope);
+    	}
+    }
+    
+    function checkMainCertUpdatable(){
+    	if($scope.mainCertNo != null && $scope.mainCertNo.length > 0){
+    		mainCertService.getCertificate($scope.jobNo, $scope.mainCertNo)
+    		.then(
+    				function( data ) {
+    					$scope.cert = data;
+    					if($scope.cert.certificateStatus < 200){
+    						$scope.disableButtons = false;
+    					} else {
+    						$scope.disableButtons = true;
+    					}
+    					$scope.isUpdatable = !$scope.disableButtons;
+    				});
+    	} else {
+    		$scope.disableButtons = false;
+    		$scope.isUpdatable = !$scope.disableButtons;
     	}
     }
     
