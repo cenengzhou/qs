@@ -1555,7 +1555,7 @@ public class SubcontractService {
 						if(subcontractDetailHBDao.getSCDetails(subcontract).size()>0){
 							logger.info("Step 2.1: Remove All SC Details");
 							for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(subcontract)){
-								subcontractDetailHBDao.delete(scDetails);
+								subcontractDetailHBDao.inactivate(scDetails);
 							}
 						}
 						logger.info("Step 2.2: Generate New ScDetails");
