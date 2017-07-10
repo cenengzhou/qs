@@ -19,6 +19,7 @@ mainApp.controller('AdminSessionCtrl',
 			enableCellEditOnFocus : false,
 			allowCellFocus: false,
 			enableCellSelection: false,
+			exporterMenuPdf: false,
 			isRowSelectable: function(row){
 				 if(row.entity.sessionId === $scope.sessionId){
 					 return false;
