@@ -503,11 +503,11 @@ mainApp.controller('IVUpdateCtrl', ['$scope' , 'resourceSummaryService', 'subcon
 					});
 					
 					$timeout(function () {
-						$scope.postedIVAmount = $scope.gridApi.grid.columns[11].getAggregationValue();
+						$scope.postedIVAmount = $scope.gridApi.grid.columns[12].getAggregationValue();
 						$cookies.put('postedIVAmount', $scope.postedIVAmount);
-						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[9].getAggregationValue();
+						$scope.cumulativeIVAmount = $scope.gridApi.grid.columns[10].getAggregationValue();
 						$cookies.put('cumulativeIVAmount', $scope.cumulativeIVAmount);
-						$scope.ivMovement = $scope.gridApi.grid.columns[10].getAggregationValue();
+						$scope.ivMovement = $scope.gridApi.grid.columns[11].getAggregationValue();
 					}, 100);
 
 				});
