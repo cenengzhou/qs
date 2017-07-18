@@ -66,7 +66,8 @@ mainApp.controller('EnquirySupplierLedgerDetailsCtrl',
 				$scope.searchSubcontractNo, 
 				null)
 				.then(function(data){
-					if(angular.isObject(data)){
+					if(angular.isObject(data) && data.length > 0){
+						data[0].payStatusDesc = GlobalParameter.getValueById(GlobalParameter.paymentStatusCode, data[0].payStatus);
 						deferral.resolve({
 							paymentStatus : data[0]
 						});

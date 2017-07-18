@@ -120,11 +120,22 @@ mainApp.constant('GlobalParameter', {
         		{id:'APR', value:'Posted To Finance', color:'#707070'}
 	],
 	paymentStatusCode: [
-                {id:'A', value:'Approved for Payment'},
-                {id:'P', value:'Paid in Full'},
-                {id:'H', value:'Held/Pending Approval'},
-                {id:'#', value:'Check being Written'},
-                {id:'%', value:'Withholding Applies'}
+				{id:'#', value:'Check being Written'},
+				{id:'%', value:'Withholding Applies'},
+				{id:'A', value:'Approved for Payment'},
+				{id:'C', value:'Credit Pending'},
+				{id:'D', value:'Draft Accepted'},
+				{id:'E', value:'Draft - Expired not Collected'},
+				{id:'G', value:'Draft Deposited not Due'},
+				{id:'H', value:'Held/Pending Approval'},
+				{id:'N', value:'Need Tax Exemption Certificate'},
+				{id:'O', value:'Owner Payment'},
+				{id:'P', value:'Paid in Full'},
+				{id:'R', value:'Retainage'},
+				{id:'S', value:'Balance Forward Summarized'},
+				{id:'T', value:'Disputed Taxes'},
+				{id:'V', value:'Held/Variance in Receipt Match'},
+				{id:'X', value:'Draft Receipt Voucher'}
     ],
     approvalType: [
                {id:'SP', value:'Interim Payment', details:'For interim payment of awarded subcontract'},

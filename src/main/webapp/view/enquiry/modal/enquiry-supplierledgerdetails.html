@@ -28,7 +28,7 @@
 				<td>Invoice Date:</td><td>{{entity.invoiceDate | date: 'dd/MM/yyyy'}}</td><td>G/L Date:</td><td>{{entity.glDate | date: 'dd/MM/yyyy'}}</td>
 			</tr>
 			<tr>
-				<td>Currency:</td><td>{{entity.currency}}</td><td>Pay Status:</td><td>{{entity.payStatus}}</td>
+				<td>Currency:</td><td>{{entity.currency}}</td><td>Pay Status:</td><td>{{entity.payStatusDesc}}</td>
 			</tr>
 			<tr>
 				<td>Gross Amount:</td><td ng-class="{'red':entity.grossAmount<0}">{{entity.grossAmount | number:2}}</td><td>Open Amount:</td><td ng-class="{'red':entity.openAmount<0}">{{entity.openAmount | number:2}}</td>
