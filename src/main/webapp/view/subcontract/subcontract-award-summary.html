@@ -11,7 +11,7 @@
 	<div class="row">
 		<div class="col-md-12 m-t-10">
 			<label><b>{{companyName}}</b></label>
-			<label class="pull-right"><b>PDS/07/Form 4</b></label>
+			<label class="pull-right" ng-if="subcontract.subcontractorNature != 'NSC'"><b>PDS/07/Form 4</b></label>
 		</div>
 		<div class="col-md-12">
 			<label><b>Job No.: {{jobNo}} - {{jobDescription}}</b></label>
@@ -33,7 +33,8 @@
 		</div>
 	</div>
 	
-	<h5 class= "invoice-title invoice-underline" align="center">DOMESTIC SUB-CONTRACT TENDER ANALYSIS</h5>
+	<h5 class= "invoice-title invoice-underline" align="center" ng-if="subcontract.subcontractorNature != 'NSC'">DOMESTIC SUB-CONTRACT TENDER ANALYSIS</h5>
+	<h5 class= "invoice-title invoice-underline" align="center" ng-if="subcontract.subcontractorNature == 'NSC'">NOMINATED SUB-CONTRACT TENDER ANALYSIS</h5>
 	<label>TENDER RESULTS AFTER CHECKING</label>
 
 
@@ -163,7 +164,7 @@
 						<div>Date: <span class="invoice-underline"></span></div>
 					</td>
 				</tr>
-				<tr class="row1">
+				<tr class="row1" ng-if="subcontract.subcontractorNature != 'NSC'">
 					<td class="column1">
 						<div>Extended Approval by:</div>
 						<div>[Required only where different </div>
@@ -190,7 +191,7 @@
 						<div>BU Commercial Manager</div>
 					</td>
 				</tr>
-				<tr class="row1">
+				<tr class="row1" ng-if="subcontract.subcontractorNature != 'NSC'">
 					<td class="column1" colspan="3">
 						<div>Extended Approval by:</div>
 						<div>[Required only for Buying Loss / Waiver to Bond or Parent Company Guarantee on S/C sum > HK$10M (<span class="text-primary">PDS/07/4.5.17</span>)]</div> 
