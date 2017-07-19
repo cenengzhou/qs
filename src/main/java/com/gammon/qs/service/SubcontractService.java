@@ -1544,8 +1544,8 @@ public class SubcontractService {
 		
 		PaymentCert latestPaymentCert = paymentCertHBDao.obtainPaymentLatestCert(jobNo, subcontractNo);
 		Tender rcmTender = tenderHBDao.obtainRecommendedTender(jobNo, subcontractNo);
-		//Step 2: 1st Payment & Pending OR No Payment yet
-		if(latestPaymentCert == null || subcontract.getTotalPostedCertifiedAmount().compareTo(new BigDecimal(0)) == 0){
+		//Step 2: No Payment yet
+		if(latestPaymentCert == null){// && subcontract.getTotalPostedCertifiedAmount().compareTo(new BigDecimal(0)) == 0
 			logger.info("Step 2: No Payment Cert OR Zero Total Posted Cert Amount - Regenerate All SC Details.");
 			
 			//Check if the status > 160
@@ -1555,7 +1555,7 @@ public class SubcontractService {
 						if(subcontractDetailHBDao.getSCDetails(subcontract).size()>0){
 							logger.info("Step 2.1: Remove All SC Details");
 							for(SubcontractDetail scDetails: subcontractDetailHBDao.getSCDetails(subcontract)){
-								subcontractDetailHBDao.inactivate(scDetails);
+								subcontractDetailHBDao.delete(scDetails);
 							}
 						}
 						logger.info("Step 2.2: Generate New ScDetails");
