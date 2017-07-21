@@ -118,9 +118,9 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 	
 	$scope.convertAbbr = function(data){
     	data.forEach(function(d){
-    		//d.getValueById = $scope.getValueById;
-    		//d.getFinanceAlert = $scope.getFinanceAlert;
-    		//d.getRecommended = $scope.getRecommended;
+    		d.getValueById = $scope.getValueById;
+    		d.getFinanceAlert = $scope.getFinanceAlert;
+    		d.getRecommended = $scope.getRecommended;
     		if(d.payeeMaster){
     			switch(d.payeeMaster.holdPaymentCode){
     			case '':
@@ -160,9 +160,6 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 		if(obj['subcontractorApprovalCode'].indexOf('Y') > -1 &&
 				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('N') > -1) &&
 				obj['holdCode'].trim() == ''){
-			console.log(obj['subcontractorApprovalCode']);
-			console.log(obj['paymentOnHold']);
-			console.log(obj['holdCode'].trim());
 			return 'text-warning fa-thumbs-up';
 		} else if(obj['subcontractorApprovalCode'].indexOf('N') > -1 &&
 				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('Y') > -1)){
