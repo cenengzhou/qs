@@ -118,9 +118,9 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 	
 	$scope.convertAbbr = function(data){
     	data.forEach(function(d){
-    		d.getValueById = $scope.getValueById;
-    		d.getFinanceAlert = $scope.getFinanceAlert;
-    		d.getRecommended = $scope.getRecommended;
+    		//d.getValueById = $scope.getValueById;
+    		//d.getFinanceAlert = $scope.getFinanceAlert;
+    		//d.getRecommended = $scope.getRecommended;
     		if(d.payeeMaster){
     			switch(d.payeeMaster.holdPaymentCode){
     			case '':
@@ -157,14 +157,19 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 	
 	$scope.getRecommended = function(){
 		var obj = this;
-		if(obj['subcontractorApprovalCode'].indexOf('N') < 0 &&
+		if(obj['subcontractorApprovalCode'].indexOf('Y') > -1 &&
 				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('N') > -1) &&
 				obj['holdCode'].trim() == ''){
+			console.log(obj['subcontractorApprovalCode']);
+			console.log(obj['paymentOnHold']);
+			console.log(obj['holdCode'].trim());
 			return 'text-warning fa-thumbs-up';
 		} else if(obj['subcontractorApprovalCode'].indexOf('N') > -1 &&
 				(obj['paymentOnHold'] && obj['paymentOnHold'].indexOf('Y') > -1)){
+			console.log('Down');
 			return 'text-danger fa-thumbs-down';
 		} else {
+			console.log('NA');
 			return '-';
 		}
 	}
