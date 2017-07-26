@@ -87,7 +87,7 @@ mainApp.controller('RepackagingAssignResourcesCtrl', ['$scope', 'resourceSummary
 				return;
 			}
 			
-			if(row.entity.quantity <= 0){
+			if(row.entity.quantity <= 0 && !row.entity.packageNo){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "The selected resource is not available because the Quantity is less than or equal to 0 (zero). Please pick another resource for Tendering.");
 				row.isSelected = false;
 				return;
