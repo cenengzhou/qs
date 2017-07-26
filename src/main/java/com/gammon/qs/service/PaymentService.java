@@ -1804,7 +1804,7 @@ public class PaymentService{
 				scPaymentCert.setMainContractPaymentCertNo(mainCertNo);
 				if (paymentCert.getAsAtDate() != null)
 					scPaymentCert.setAsAtDate(paymentCert.getAsAtDate());
-				if (paymentCert.getDueDate() != null)
+				//if (paymentCert.getDueDate() != null)
 					scPaymentCert.setDueDate(paymentCert.getDueDate());
 				if (paymentCert.getIpaOrInvoiceReceivedDate() != null)
 					scPaymentCert.setIpaOrInvoiceReceivedDate(paymentCert.getIpaOrInvoiceReceivedDate());

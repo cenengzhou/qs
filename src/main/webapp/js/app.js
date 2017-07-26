@@ -806,7 +806,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	                     'js/controller/attachment/attachment-text-editor.js',
 	                     'js/service/attachment-service.js',
                          'js/service/addendum-service.js',
-                         'js/service/subcontract-service.js'
+                         'js/service/subcontract-service.js',
+                         'js/service/main-cert-service.js'
                     ] 
                 });
             }]
@@ -831,7 +832,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
   	                       'js/controller/attachment/attachment-text-editor.js',
                            'js/service/attachment-service.js',
                            'js/service/addendum-service.js',
-                           'js/service/subcontract-service.js'
+                           'js/service/subcontract-service.js',
+                           'js/service/main-cert-service.js'
                     ] 
                 });
             }]
