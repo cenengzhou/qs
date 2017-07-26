@@ -29,7 +29,7 @@ mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'Glo
 		new Field('idSubcontract', 'Subcontract Id', 'number').setReadOnly(true).hide(),
 		new Field('nameSubcontractor', 'Subcontractor Name'),
 		new Field('no', 'Addendum No.', 'number'),
-		new Field('noAddendumDetailNext', 'Nex Addendum Detail No.', 'number'),
+		new Field('noAddendumDetailNext', 'Next Addendum Detail No.', 'number'),
 		new Field('noJob', 'Job No.', 'number'),
 		new Field('noSubcontract', 'Subcontract No.', 'number'),
 		new Field('noSubcontractor', 'Subcontractor No.', 'number'),

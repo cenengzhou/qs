@@ -15,6 +15,7 @@ mainApp.controller('AdminRevisionsAttachmentCtrl', ['$q', '$scope', '$filter', '
         { field: 'idTable', width: '60', displayName: "Table Id", enableCellEdit: false, showInVendor:false },
         { field: 'nameTable', width: '100', displayName: "Table Name", enableCellEdit: false, showInVendor:false},
         { field: 'noSequence', width: '100', displayName: "Sequence No.", enableCellEdit: false, showInVendor:true },
+        { field: 'typeDocument', width: '100', displayName: "Docment Type", enableCellEdit: false, showInVendor:false },
         { field: 'nameFile', width: '200', displayName: "File Name", enableCellEdit: false, showInVendor:true},
         { field: 'pathFile', width: '200', displayName: "File Path", enableCellEdit: false, showInVendor:true},
         { field: 'text', width: '200', displayName: "Text", enableCellEdit: false, showInVendor:true},

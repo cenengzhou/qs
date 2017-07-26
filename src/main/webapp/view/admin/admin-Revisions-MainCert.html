@@ -85,8 +85,7 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_arDocNumber" class="control-label">AR
-								Document Number</label>
+							<label for="MainCertRecord_arDocNumber" class="control-label">AR Document Number</label>
 							<div>
 								<input type="number" class="form-control"
 									id="MainCertRecord_arDocNumber"
@@ -113,8 +112,7 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_gstPayable" class="control-label">GST
-								Payable</label> <span
+							<label for="MainCertRecord_gstPayable" class="control-label">GST Payable</label> <span
 								ng-show="RevisionsMainCertRecord.MainCertRecord_gstPayable.$error.pattern"
 								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
@@ -128,8 +126,7 @@
 
 					<div class="col-md-6" style="padding: 5px">
 						<div class="form-group">
-							<label for="MainCertRecord_gstReceivable" class="control-label">GST
-								Receivable</label> <span
+							<label for="MainCertRecord_gstReceivable" class="control-label">GST Receivable</label> <span
 								ng-show="RevisionsMainCertRecord.MainCertRecord_gstReceivable.$error.pattern"
 								class="text-danger"> Not a valid number!</span>
 							<div class="input-group">
@@ -657,6 +654,19 @@
 						</div>
 					</div>
 
+				</fieldset>
+
+				<fieldset>
+					<div class="col-md-6" style="padding: 5px">
+						<div class="form-group">
+							<label for="MainCertRecord_REMARK" class="control-label">Remark</label>
+							<div>
+								<input type="text" class="form-control"
+									id="MainCertRecord_REMARK"
+									ng-model="MainCertRecord.remark">
+							</div>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 

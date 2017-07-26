@@ -1,7 +1,11 @@
 mainApp.controller('AdminRevisionsSubcontractCtrl',
-		['$scope', '$http', 'modalService', 'blockUI', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 
-		function($scope, $http, modalService, blockUI, GlobalHelper, GlobalParameter, subcontractService) {
+		['$scope', '$http', 'modalService', 'blockUI', 'rootscopeService', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 
+		function($scope, $http, modalService, blockUI, rootscopeService, GlobalHelper, GlobalParameter, subcontractService) {
 	$scope.GlobalParameter = GlobalParameter;
+	rootscopeService.gettingWorkScopes()
+	.then(function(response){
+		$scope.allWorkScopes = response.workScopes;
+	});
 	$scope.SubcontractSearch = {};
 	$scope.onSubmitSubcontractSearch = function() {
 		var jobNo = $scope.SubcontractSearch.jobNo;
@@ -13,6 +17,7 @@ mainApp.controller('AdminRevisionsSubcontractCtrl',
 		subcontractService.getSubcontract(jobNo, packageNo).then(
 			function(data) {
 				if(data instanceof Object){
+					if(data.workscope) data.workscope = '' + data.workscope;
 					$scope.SubcontractRecord = data;
 				} else {
 					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract not found");

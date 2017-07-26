@@ -77,6 +77,13 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 				     			editDropdownIdLabel : 'id',
 				     			editDropdownValueLabel : 'value',
 			             },
+			             { field: 'forIvRollbackOnly', width: '100', displayName: "For IV Rollback Only", enableCellEdit: true, cellEditableCondition : $scope.canEdit,
+			            	 editableCellTemplate : 'ui-grid/dropdownEditor',
+			            	 editDropdownOptionsArray : GlobalParameter.booleanOptions,
+				     			cellFilter : 'dropdownFilter:"booleanOptions"',
+				     			editDropdownIdLabel : 'id',
+				     			editDropdownValueLabel : 'value',
+			             },
 			             { field: 'finalized', width: '100', displayName: "Finalized", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
 			             { field: 'resourceType', width: '100', displayName: "Type", enableCellEdit: true, cellEditableCondition : $scope.canEdit },
 			             ]
@@ -215,11 +222,11 @@ mainApp.controller('AdminRevisionsRepackagingCtrl', ['$scope', 'resourceSummaryS
 				options: $scope.booleanOptions
 			},
 			{
-				name: 'forIVRollbackOnly',
+				name: 'forIvRollbackOnly',
 				display: 'For IV Rollback Only',
 				order: 18,
 				type: 'boolean',
-				options: $scope.zeroOneOptions
+				options: $scope.booleanOptions
 			},
 			{
 				name: 'finalized',
