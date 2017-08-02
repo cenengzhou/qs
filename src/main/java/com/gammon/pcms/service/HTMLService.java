@@ -2,6 +2,7 @@ package com.gammon.pcms.service;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
 import com.gammon.pcms.model.TenderVariance;
+import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.AccountCodeWSDao;
 import com.gammon.qs.dao.AddendumDetailHBDao;
@@ -47,7 +49,6 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
-import com.gammon.qs.service.MasterListService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -65,8 +66,6 @@ public class HTMLService implements Serializable{
 
 	@Autowired
 	private MasterListWSDao masterListDao;
-	@Autowired
-	private MasterListService masterListService;
 	@Autowired
 	private JobInfoHBDao jobInfoHBDao;
 	@Autowired
@@ -99,6 +98,8 @@ public class HTMLService implements Serializable{
 	private FreemarkerConfig freemarkerConfig;
 	@Autowired
 	private ServletConfig servletConfig;
+	@Autowired
+	private ADLService adlService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -368,12 +369,7 @@ public class HTMLService implements Serializable{
 			try {
 				JobInfo job = jobInfoHBDao.obtainJobInfo(jobNumber);
 				
-				List<MasterListVendor> clientList = null;
-				try {
-					clientList = masterListService.obtainAllClientList(job.getEmployer());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				AddressBook clientAddressBook = adlService.getAddressBook(new BigDecimal(job.getEmployer()));
 				
 				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo));
 				MainCert previousCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo)-1);
@@ -383,7 +379,7 @@ public class HTMLService implements Serializable{
 				if(mainCert!=null){
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("job", job);
-					data.put("clientList", clientList);
+					data.put("clientAddressBook", clientAddressBook != null ? clientAddressBook : new AddressBook());
 					data.put("mainCert", mainCert);
 					data.put("previousCert", previousCert);
 
