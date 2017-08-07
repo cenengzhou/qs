@@ -247,7 +247,7 @@ public class SubcontractController {
 	public String upateSubcontract(@RequestParam(required =true) String jobNo,  @RequestBody Subcontract subcontract){
 		String result = null;
 		try {
-			result = subcontractService.saveOrUpdateSCPackage(jobNo, subcontract);
+			result = subcontractService.upateSubcontract(jobNo, subcontract);
 		} catch (Exception e) {
 			result = "Subcontract cannot be updated.";
 			e.printStackTrace();

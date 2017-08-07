@@ -2054,7 +2054,7 @@ public class SubcontractService {
 		return scDetails;
 	}
 	
-	public String saveOrUpdateSCPackage(String jobNo, Subcontract subcontract) throws Exception{
+	public String upateSubcontract(String jobNo, Subcontract subcontract) throws Exception{
 		logger.info("Job: " + jobNo + " SCPackage: " + subcontract.getPackageNo());
 		String error = "";
 		
@@ -2125,6 +2125,10 @@ public class SubcontractService {
 				newSubcontract.setMaterialIncludedContract(subcontract.getMaterialIncludedContract());
 				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
 				newSubcontract.setWorkscope(subcontract.getWorkscope());
+				
+				if("NSC".equals(subcontract.getSubcontractorNature()))
+					newSubcontract.setApprovalRoute("NSC");
+				
 				subcontractHBDao.addSCPackage(newSubcontract);
 		}else{
 			//check if subcontract is submitted or awarded
@@ -2157,6 +2161,10 @@ public class SubcontractService {
 				subcontractInDB.setCpfCalculation(subcontract.getCpfCalculation());
 				subcontractInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
 				subcontractInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
+				
+				if("NSC".equals(subcontract.getSubcontractorNature()))
+					subcontractInDB.setApprovalRoute("NSC");
+
 				
 				subcontractHBDao.update(subcontractInDB);
 				

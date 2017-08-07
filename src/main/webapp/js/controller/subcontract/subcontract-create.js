@@ -111,6 +111,31 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 //		if(paymentTerms) angular.element('#paymentTermsDescriptionTextarea').val(paymentTerms.id + ' - ' + paymentTerms.value);
 	}
 
+	$scope.updateApprovalSubType = function (approvalSubType){
+		 $scope.subcontract.approvalRoute = approvalSubType;
+	}
+	
+	$scope.updateStandardTerms = function (formOfSubcontract){
+		if(formOfSubcontract == 'Major'){
+			$scope.subcontract.retentionTerms = "Percentage";
+			$scope.subcontract.paymentTerms = "QS2";
+		}
+		else if(formOfSubcontract == 'Minor'){
+			$scope.subcontract.retentionTerms = "Percentage";
+			$scope.subcontract.paymentTerms = "QS2";
+		}
+		else if(formOfSubcontract == 'Consultancy Agreement'){
+			$scope.subcontract.retentionTerms = "No Retention";
+			$scope.subcontract.paymentTerms = "QS4";
+		}
+		else if(formOfSubcontract == 'Internal Trading'){
+			$scope.subcontract.retentionTerms = "No Retention";
+			$scope.subcontract.paymentTerms = "QS1";
+		}
+		$scope.resetRetentionOptions();
+		$scope.setPaymentTermsDescription($scope.subcontract.paymentTerms);
+	}
+	
 	//Save Function
 	$scope.save = function () {
 		
@@ -155,6 +180,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 				cpfBaseYear: $scope.subcontract.cpfBaseYear,
 				workscope: $scope.subcontract.workscope
 		}
+		
 		
 		if($scope.subcontract.retentionTerms == "Lump Sum"){
 			$scope.subcontractToUpdate.retentionTerms = subcontractRetentionTerms.RETENTION_LUMPSUM;
