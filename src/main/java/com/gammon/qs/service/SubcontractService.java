@@ -691,7 +691,7 @@ public class SubcontractService {
 					}
 					
 					String company = jobHBDao.obtainJobCompany(jobNumber);
-					approvalType = getApprovalType(jobNumber, company, subcontract, rcmTender, originalBudget, tenderBudget);
+					approvalType = assignApprovalType(jobNumber, company, subcontract, rcmTender, originalBudget, tenderBudget);
 					if(approvalType == null || approvalType.length() != 2)
 						return approvalType;//return error message 
 					
@@ -781,7 +781,7 @@ public class SubcontractService {
 	}
 
 	
-	public String getApprovalType(String jobNo, String company, Subcontract subcontract, Tender rcmTender, BigDecimal originalBudget, BigDecimal tenderBudget) throws Exception{
+	public String assignApprovalType(String jobNo, String company, Subcontract subcontract, Tender rcmTender, BigDecimal originalBudget, BigDecimal tenderBudget) throws Exception{
 		String  approvalType = "";
 		
 
@@ -800,7 +800,7 @@ public class SubcontractService {
 		boolean deviated = false;
 		
 		if (defaultPaymentTerms.equalsIgnoreCase(subcontract.getPaymentTerms()) &&
-			defaultRetentionType.substring(0, 10).equalsIgnoreCase(subcontract.getRetentionTerms().substring(0, 10)) &&
+			defaultRetentionType.equalsIgnoreCase(subcontract.getRetentionTerms()) &&
 				defaultInterimRetenPer.equals(subcontract.getInterimRentionPercentage()) &&
 				defaultMaxRetenPer.equals(subcontract.getMaxRetentionPercentage()) &&
 				defaultMosRetenPer.equals(subcontract.getMosRetentionPercentage())){
@@ -1321,7 +1321,7 @@ public class SubcontractService {
 
 		String approvalType = null;
 		try {
-			approvalType = getApprovalType(subcontract.getJobInfo().getJobNumber(), company, subcontract, rcmTender, originalBudget, tenderBudget);
+			approvalType = assignApprovalType(subcontract.getJobInfo().getJobNumber(), company, subcontract, rcmTender, originalBudget, tenderBudget);
 			if(approvalType ==null || approvalType.length()!= 2)
 				approvalType = null;
 		} catch (Exception e) {
