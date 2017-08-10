@@ -18,17 +18,11 @@
 			class="form-input-flat ng-pristine ng-valid" ng-submit="onSubmit()">
 			<fieldset>
 				<div class="row">
-					<div class="col-md-10 col-md-offset-1">
+					<div class="col-md-10">
 						<h3 class="form-header form-header-lg m-b-10">
 							<span class="icon text-primary"><i class="fa fa-star"></i></span>
 						</h3>
 						<p class="m-b-20">Please input the required fields below.</p>						
-					</div>
-					<div class="form-group horizontal col-md-6">
-						<label for="systemCode">System Code</label>
-						<select class="form-control" ng-options="systemCode for systemCode in systemCodeList" id="systemCode" name="systemCode" ng-model="newRecord.systemCode" ng-required="true">
-						<option></option>
-						</select>
 					</div>
 					<div class="form-group horizontal col-md-6">
 						<label for="company">Company</label>
@@ -36,10 +30,22 @@
 						<option></option>
 						</select>
 					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="formOfSubcontract">Form of Subcontract</label>
+						<select class="form-control" ng-options="formOfSubcontract for formOfSubcontract in formOfSubcontractList" id="formOfSubcontract" name="formOfSubcontract" ng-model="newRecord.formOfSubcontract" ng-required="true">
+						<option></option>
+						</select>
+					</div>
 
 					<div class="form-group horizontal col-md-6">
 						<label for="scPaymentTerm">SC Payment Term</label>
 						<select class="form-control" ng-options="scPaymentTerm for scPaymentTerm in scPaymentTermList" id="scPaymentTerm" name="scPaymentTerm" ng-model="newRecord.scPaymentTerm" ng-required="true">
+						<option></option>
+						</select>
+					</div>
+					<div class="form-group horizontal col-md-6">
+						<label for="retentionType">Retention Type</label>
+						<select class="form-control" ng-options="retentionType for retentionType in retentionTypeList" id="retentionType" name="retentionType" ng-model="newRecord.retentionType" ng-required="true">
 						<option></option>
 						</select>
 					</div>
@@ -57,20 +63,15 @@
 						<input type="number" class="form-control" id="scMOSRetentionPercent" name="scMOSRetentionPercent" ng-model="newRecord.scMOSRetentionPercent" ng-required="true">
 					</div>
 					
-					<div class="form-group horizontal col-md-6">
-						<label for="retentionType">Retention Type</label>
-						<select class="form-control" ng-options="retentionType for retentionType in retentionTypeList" id="retentionType" name="retentionType" ng-model="newRecord.retentionType" ng-required="true">
-						<option></option>
-						</select>
-					</div>
-					<div class="form-group horizontal col-md-6">
+					
+					<!-- <div class="form-group horizontal col-md-6">
 						<label for="finQS0Review">Reviewed by Finance</label> <select class="form-control"
 							ng-options="finQS0Review for finQS0Review in finQS0ReviewList"
 							id="finQS0Review" name="finQS0Review" ng-model="newRecord.finQS0Review"
 							ng-required="true">
 						<option></option>
 						</select>
-					</div>
+					</div> -->
 				</div>
 				<div class="modal-footer">
 	<button class="btn btn-primary btn-block" type="submit">

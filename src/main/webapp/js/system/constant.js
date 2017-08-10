@@ -215,7 +215,8 @@ mainApp.constant('GlobalParameter', {
 	retentionTerms: [
 		{id:'Percentage - Original SC Sum', value:'Percentage - Original SC Sum'},
 		{id:'Percentage - Revised SC Sum', value:'Percentage - Revised SC Sum'},
-		{id:'Lump Sum Amount Retention', value:'Lump Sum Amount Retention'}
+		{id:'Lump Sum Amount Retention', value:'Lump Sum Amount Retention'},
+		{id:'No Retention', value:'No Retention'}
 	],
 	subcontract_paymentStatus: [
 		{id:'N', value:'Not Submitted'},

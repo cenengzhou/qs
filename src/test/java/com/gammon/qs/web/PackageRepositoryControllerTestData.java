@@ -479,9 +479,9 @@ public class PackageRepositoryControllerTestData extends ControllerTestCase.Test
 	}
 
 	/**
-	 * Test data for {@link com.gammon.qs.web.PackageRepositoryController#searchSystemConstants(java.lang.String, java.lang.String, java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, java.lang.String)}.
+	 * Test data for {@link com.gammon.qs.web.PackageRepositoryController#getSCStandardTermsList(java.lang.String, java.lang.String, java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, java.lang.String)}.
 	 */
-	public Map<String, Object> testSearchSystemConstants() {
+	public Map<String, Object> testGetSCStandardTermsList() {
 		init();
 		// {serviceClass, methodName, parameters[], clazz[], initMethod, sql}
 		data.put("serviceClass", serviceClass);

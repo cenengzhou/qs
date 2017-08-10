@@ -35,7 +35,6 @@ import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.APWebServiceConnectionDao;
 import com.gammon.qs.dao.AccountCodeWSDao;
-import com.gammon.qs.dao.AppSubcontractStandardTermsHBDao;
 import com.gammon.qs.dao.CreateGLWSDao;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.MainCertWSDao;
@@ -47,7 +46,6 @@ import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.TenderDetailHBDao;
 import com.gammon.qs.dao.TenderHBDao;
 import com.gammon.qs.domain.ARRecord;
-import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MasterListVendor;
 import com.gammon.qs.domain.PaymentCert;
@@ -104,8 +102,7 @@ public class PaymentService{
 	private AttachmentService attachmentService;
 	@Autowired
 	private MainCertWSDao mainContractCertificateWSDao;
-	@Autowired
-	private AppSubcontractStandardTermsHBDao systemConstantDao;
+	
 	@Autowired
 	private CreateGLWSDao createGLDao;
 	@Autowired
@@ -423,27 +420,29 @@ public class PaymentService{
 			return Boolean.FALSE;
 		}
 
-		String company = scPaymentCert.getSubcontract().getJobInfo().getCompany();
+		
 		String userName = scPaymentCert.getLastModifiedUser();
-		AppSubcontractStandardTerms systemConstant = null;
-		if (company != null)
+		//String company = scPaymentCert.getSubcontract().getJobInfo().getCompany();
+		//AppSubcontractStandardTerms systemConstant = null;
+		/*if (company != null)
 			systemConstant = systemConstantDao.getSystemConstant(company);
 		else
-			systemConstant = systemConstantDao.getSystemConstant("00000");
+			systemConstant = systemConstantDao.getSystemConstant("00000");*/
 		/**
 		 * @author tikywong
 		 * created on March 20, 2013
 		 * Added to handle missing of System Constant as it will cause the approval not to be able to process
 		 */
-		if (systemConstant == null) {
+		/*if (systemConstant == null) {
 			logger.info("System Constant doesn't exist. Please add a new System Constant with Company: " + company + " via QS System's System Constant Enquiry.");
 			return Boolean.FALSE;
-		}
+		}*/
 
 		// current Payment status = SBM / UFR
 		if ("SBM".equals(scPaymentCert.getPaymentStatus()) || "UFR".equals(scPaymentCert.getPaymentStatus())) {
 			logger.info("Call toCompleteApprovalProcess (Job:" + jobNumber + " SC:" + packageNo + " P#:" + scPaymentCert.getPaymentCertNo() + " Approval Decision:" + approvalDecision + ")");
-			Subcontract scPackage = toCompleteApprovalProcess(scPaymentCert, systemConstant, approvalDecision);
+			Subcontract scPackage = toCompleteApprovalProcess(scPaymentCert, approvalDecision);
+			
 			subcontractHBDao.updateSubcontract(scPackage);
 
 			if ("UFR".equals(scPaymentCert.getPaymentStatus())) {
@@ -469,9 +468,9 @@ public class PaymentService{
 	 * modified on May 18, 2012 9:20:47 AM
 	 * Enhancement for SCPayment Review by Finance
 	 */
-	public Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, AppSubcontractStandardTerms systemConstant, String approvalDecision)throws Exception{		
-		if(scPaymentCert==null || systemConstant==null || approvalDecision==null)
-			throw new DatabaseOperationException(scPaymentCert==null?"SCPayment Certificate = null":(systemConstant==null?"System Constant = null":"Approval Decision = null"));
+	public Subcontract toCompleteApprovalProcess(PaymentCert scPaymentCert, String approvalDecision)throws Exception{		
+		if(scPaymentCert==null || approvalDecision==null)
+			throw new DatabaseOperationException(scPaymentCert==null?"SCPayment Certificate = null":"Approval Decision = null");
 		
 		Subcontract scPackage = scPaymentCert.getSubcontract();
 		if(scPackage==null)
@@ -485,17 +484,22 @@ public class PaymentService{
 		if("A".equals(approvalDecision.trim())){
 			logger.info("SCPayment Certificate Approval - APPROVED");		
 			logger.info("Payment Term: "+scPackage.getPaymentTerms()+
-						" FinQS0Review: "+job.getFinQS0Review()+
-						" SystemConstant: "+systemConstant.getFinQS0Review());
+						" FinQS0Review: "+job.getFinQS0Review());
+						//"+ SystemConstant: "+systemConstant.getFinQS0Review());
 			
 			//SBM --> UFR / PCS
 			if(scPaymentCert.getPaymentStatus().equals("SBM")){
 				if(	scPaymentCert.getSubcontract().getPaymentTerms().trim().equals("QS0") && 
-					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
-					(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))	
-					scPaymentCert.setPaymentStatus("UFR");
+					(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D))){// &&
+					//(systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)))	
+					
+					if(!job.getJobNumber().startsWith("14"))
+						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
+					else
+						scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
+				}
 				else	
-					scPaymentCert.setPaymentStatus("PCS");
+					scPaymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_PCS_WAITING_FOR_POSTING);
 				
 				logger.info("Job:"+job.getJobNumber()+" SC:"+scPackage.getPackageNo()+" P#:"+scPaymentCert.getPaymentCertNo()+" Payment Status: "+PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED+"-->"+scPaymentCert.getPaymentStatus());
 			}
@@ -1884,11 +1888,11 @@ public class PaymentService{
 				String approvalType = APPROVALTYPE_INTERIMPAYMENT_SP;
 
 				JobInfo job = paymentCert.getSubcontract().getJobInfo();
-				AppSubcontractStandardTerms systemConstant = null;
+				/*AppSubcontractStandardTerms systemConstant = null;
 				if (company != null)
 					systemConstant = systemConstantDao.getSystemConstant(company);
 				else
-					systemConstant = systemConstantDao.getSystemConstant("00000");
+					systemConstant = systemConstantDao.getSystemConstant("00000");*/
 
 				//Determine Special Approval Type (Initialized as SP)
 				if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
@@ -2020,19 +2024,8 @@ public class PaymentService{
 
 				logger.info("resultMsg" + resultMsg);
 				if (resultMsg == null || "".equals(resultMsg.trim())) {
-					/*
-					 * Set payment status to UFR if it has to be reviewed by Finance
-					 * @author Tiky Wong
-					 * 28-May-2012
-					 */
-					if (paymentCert.getSubcontract().getPaymentTerms().equals("QS0") &&
-							(job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_Y) || job.getFinQS0Review().equals(JobInfo.FINQS0REVIEW_D)) &&
-							(systemConstant != null && systemConstant.getFinQS0Review().equals(AppSubcontractStandardTerms.FINQS0REVIEW_Y)) &&
-							(paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED) || paymentCert.getPaymentStatus().equals(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW)))
-						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_UFR_UNDER_FINANCE_REVIEW);
-					else
-						paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED);
-
+					paymentCert.setPaymentStatus(PaymentCert.PAYMENTSTATUS_SBM_SUBMITTED);
+					
 					paymentCertDao.updateSCPaymentCert(paymentCert);
 				} else {
 					error = resultMsg;

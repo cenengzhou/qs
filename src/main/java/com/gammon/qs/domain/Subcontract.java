@@ -55,6 +55,7 @@ public class Subcontract extends BasePersistedObject {
 	public static final String RETENTION_LUMPSUM = "Lump Sum Amount Retention";
 	public static final String RETENTION_ORIGINAL = "Percentage - Original SC Sum";
 	public static final String RETENTION_REVISED = "Percentage - Revised SC Sum";
+	public static final String RETENTION_NONE = "No Retention";
 
 	// CPF
 	public static final String CPF_SUBJECT_TO = "Subject to CPF";

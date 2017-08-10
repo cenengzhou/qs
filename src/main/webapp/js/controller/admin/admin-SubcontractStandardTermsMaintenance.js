@@ -3,7 +3,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		 function($scope, $http, modalService, blockUI, systemService, GlobalParameter ) {
 	$scope.blockStandardTerms = blockUI.instances.get('blockStandardTerms');
 	$scope.loadData = function(){
-		systemService.searchSystemConstants().then(
+		systemService.getSCStandardTermsList().then(
 			function(data) {
 				$scope.gridOptions.data = data;
 			});
@@ -27,14 +27,16 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 		rowEditWaitInterval : -1,
 		enableCellEditOnFocus : true,
 		columnDefs : [ {
-			field : 'systemCode',
-			displayName : "System Code",
-			enableCellEdit : false
-		}, {
 			field : 'company',
 			displayName : "Company",
 			enableCellEdit : false
-		}, {
+		}, 
+		{
+			field : 'formOfSubcontract',
+			displayName : "Form of Subcontract",
+			enableCellEdit : false
+		}, 
+		{
 			field : 'scPaymentTerm',
 			displayName : 'SC Payment Term',
 			editableCellTemplate : 'ui-grid/dropdownEditor',
@@ -75,7 +77,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			editDropdownIdLabel : 'id',
 			editDropdownValueLabel : 'value',
 			enableCellEdit : true
-		}, {
+		}/*, {
 			field : 'finQS0Review',
 			displayName : "Reviewed by Finance",
 			editableCellTemplate : 'ui-grid/dropdownEditor',
@@ -83,7 +85,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 			editDropdownOptionsArray : GlobalParameter.finQS0Review,
 			cellFilter : 'dropdownFilter:"finQS0Review"',
 			enableCellEdit : true
-		} ]
+		}*/ ]
 	};
 	
 	$scope.afterCellEdit = function(rowEntity, colDef, newValue, oldValue) {
@@ -116,7 +118,7 @@ mainApp.controller('AdminSubcontractStandardTermsMaintenanceCtrl',
 
 	$scope.onDelete = function() {
 		$scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
-		systemService.inactivateSystemConstant($scope.selectedRows)
+		systemService.deleteSCStandardTerms($scope.selectedRows)
 		.then(function(data){
 			angular.forEach($scope.selectedRows, function (data, index) {
 			    $scope.gridOptions.data.splice($scope.gridOptions.data.lastIndexOf(data), 1);

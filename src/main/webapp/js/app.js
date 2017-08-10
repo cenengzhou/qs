@@ -1463,7 +1463,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
-               	 files: [  'js/service/subcontract-service.js',
+               	 files: [  'js/service/job-service.js',  
+               		 	   'js/service/subcontract-service.js',
                	           'js/service/main-cert-service.js',
                	           'js/service/payment-service.js',
                	           'js/service/transit-service.js',

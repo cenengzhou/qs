@@ -6,10 +6,10 @@ mainApp.service('systemService', ['$http', '$q', 'GlobalHelper', function($http,
     	
     	getAllTriggers:				getAllTriggers,
     	updateQrtzTriggerList:		updateQrtzTriggerList,
-    	searchSystemConstants:								searchSystemConstants,
+    	getSCStandardTermsList:								getSCStandardTermsList,
     	createSystemConstant: 								createSystemConstant,
     	updateMultipleSystemConstants:						updateMultipleSystemConstants,
-    	inactivateSystemConstant:							inactivateSystemConstant,
+    	deleteSCStandardTerms:							deleteSCStandardTerms,
 
     });
    
@@ -43,18 +43,18 @@ mainApp.service('systemService', ['$http', '$q', 'GlobalHelper', function($http,
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-	function updateMultipleSystemConstants(systemConstants){
-    	var request = $http.post("service/system/updateMultipleSystemConstants", systemConstants);
+	function updateMultipleSystemConstants(standardTerms){
+    	var request = $http.post("service/system/updateMultipleSystemConstants", standardTerms);
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
-	function inactivateSystemConstant(systemConstants){
-    	var request = $http.post('service/system/inactivateSystemConstant', systemConstants);
+	function deleteSCStandardTerms(standardTerms){
+     	var request = $http.post("service/system/deleteSCStandardTerms", standardTerms);
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
 	
-	function searchSystemConstants(){
-    	var request = $http.post("service/system/searchSystemConstants");
+	function getSCStandardTermsList(){
+    	var request = $http.post("service/system/getSCStandardTermsList");
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     

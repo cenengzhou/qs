@@ -2,7 +2,6 @@ package com.gammon.qs.service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -641,10 +640,10 @@ public class SubcontractService {
 			String approvalType;
 			
 			JobInfo job = jobHBDao.obtainJobInfo(jobNumber);
-			Subcontract scPackage = subcontractHBDao.obtainPackage(job, subcontractNumber);
+			Subcontract subcontract = subcontractHBDao.obtainPackage(job, subcontractNumber);
 
-			if (scPackage == null){
-				return "SCPackage does not exist";
+			if (subcontract == null){
+				return "Subcontract does not exist";
 			}
 			//Check if subcontractor is in the Tender Analysis.
 			
@@ -653,20 +652,13 @@ public class SubcontractService {
 			
 			if (rcmTender!=null){
 				//Check if the status is not 160 or 340
-				if (Integer.valueOf(160).equals(scPackage.getSubcontractStatus()) || Integer.valueOf(340).equals(scPackage.getSubcontractStatus())){
+				if (Integer.valueOf(160).equals(subcontract.getSubcontractStatus()) || Integer.valueOf(340).equals(subcontract.getSubcontractStatus())){
 					String resultMsg;
-					//Check Subcontractor Stauts by calling WS. 
-					//Check Subcontractor's work scope status by calling WS.
-					//Check if Subcontractor is BlackListed by calling WS.
-					/*List<SubcontractWorkScope> scWorkScopeList = scWorkScopeHBDao.obtainSCWorkScopeListByPackage(scPackage);
-					if (scWorkScopeList==null ||scWorkScopeList.size() == 0|| scWorkScopeList.get(0)==null
-							|| scWorkScopeList.get(0).getWorkScope()==null||"".equals(scWorkScopeList.get(0).getWorkScope().trim())){
-						return "There is no workscope in this Subcontract.";
-					}*/
-					if(scPackage.getWorkscope()==null)
+					
+					if(subcontract.getWorkscope()==null)
 						return "There is no workscope in this Subcontract.";
 
-					resultMsg = masterListWSDao.checkAwardValidation(rcmTender.getVendorNo(), String.valueOf(scPackage.getWorkscope()));
+					resultMsg = masterListWSDao.checkAwardValidation(rcmTender.getVendorNo(), String.valueOf(subcontract.getWorkscope()));
 					if (resultMsg != null && resultMsg.length() != 0){
 						return resultMsg;
 					}
@@ -675,74 +667,39 @@ public class SubcontractService {
 					BigDecimal originalBudget = CalculationUtil.roundToBigDecimal(rcmTender.getBudgetAmount(), 2);
 					BigDecimal tenderBudget = originalBudget.subtract(rcmTender.getAmtBuyingGainLoss()).setScale(2, BigDecimal.ROUND_HALF_UP);
 					
-					/*if (tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)!=null){
-						for(TenderDetail currentTenderAnalysisDetail: tenderAnalysisDetailHBDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)){
-							taSubcontractSum = taSubcontractSum + 
-							(currentTenderAnalysisDetail.getRateBudget() * currentTenderAnalysisDetail.getQuantity());
-						}
-					}else
-						return "No Tender Analysis Detail";*/
-					
+									
 					if (tenderDetailDao.obtainTenderAnalysisDetailByTenderAnalysis(rcmTender)==null)
 						return "No Tender Analysis Detail";
 					
-					if("Lump Sum Amount Retention".equals(scPackage.getRetentionTerms())){ 
-						if (scPackage.getRetentionAmount()==null){
+					if("Lump Sum Amount Retention".equals(subcontract.getRetentionTerms())){ 
+						if (subcontract.getRetentionAmount()==null){
 							return "Retention Amount has to be provided when the Retiontion Terms is Lump Sum Amount Retention";
-						}else if (scPackage.getRetentionAmount().compareTo(BigDecimal.ZERO)>0 && scPackage.getRetentionAmount().compareTo(tenderBudget)>0){
+						}else if (subcontract.getRetentionAmount().compareTo(BigDecimal.ZERO)>0 && subcontract.getRetentionAmount().compareTo(tenderBudget)>0){
 							return "Lum Sum Retention Amount is larger than Recommended Subcontract Sum";
 						}
 					}
-					AppSubcontractStandardTerms systemConstant;
-					String company;
-					String systemCode = "59";
-					company = jobHBDao.obtainJobCompany(jobNumber);
-					Double defaultInterimRetenPer;
-					Double defaultMaxRetenPer;
-					Double defaultMosRetenPer;
-					String defaultPaymentTerms;
-					String defaultRetentionType;
-					//modify the if statement
-					systemConstant = obtainSystemConstant(systemCode, company);
-					//Assume systemConstant's contents are not null
-					defaultInterimRetenPer = systemConstant.getScInterimRetentionPercent();
-					defaultMaxRetenPer = systemConstant.getScMaxRetentionPercent();
-					defaultMosRetenPer = systemConstant.getScMOSRetentionPercent();
-					defaultPaymentTerms = systemConstant.getScPaymentTerm();
-					defaultRetentionType = systemConstant.getRetentionType();
-					boolean deviated = false;
-					//Assume Retention Terms not equal to null
-					if ("Percentage - Original SC Sum".equals(scPackage.getRetentionTerms())||
-							"Percentage - Revised SC Sum".equals(scPackage.getRetentionTerms())){
-						if (scPackage.getInternalJobNo() == null){
-							//Hard Code for temporary use
-							if (scPackage.getInterimRentionPercentage()==null)
-								return "There is no Interim Retention Percentage";
-							else if(scPackage.getMaxRetentionPercentage()== null)
-								return "There is no Maximum Retention Percentage";
-							else if (scPackage.getMosRetentionPercentage()==null)
-								return "There is no MOS Retention Percentage";
-							else
-								if (!defaultInterimRetenPer.equals(scPackage.getInterimRentionPercentage())||
-										!defaultMaxRetenPer.equals(scPackage.getMaxRetentionPercentage())||
-										!defaultMosRetenPer.equals(scPackage.getMosRetentionPercentage())||
-										!defaultRetentionType.equalsIgnoreCase(scPackage.getRetentionTerms())||
-										(!defaultPaymentTerms.equalsIgnoreCase(scPackage.getPaymentTerms()))){
-									deviated = true;
-								}else 
-									logger.info("Standard terms");
-						}
-					}else{
-						if(!defaultRetentionType.equals(scPackage.getRetentionTerms())||
-								!defaultPaymentTerms.equals(scPackage.getPaymentTerms()))
-							deviated = true;
+					
+					//Check Subcontract Standard Terms
+					if (Subcontract.RETENTION_ORIGINAL.equals(subcontract.getRetentionTerms())||
+							Subcontract.RETENTION_REVISED.equals(subcontract.getRetentionTerms())){
+						if (subcontract.getInterimRentionPercentage()==null)
+							return "There is no Interim Retention Percentage";
+						else if(subcontract.getMaxRetentionPercentage()== null)
+							return "There is no Maximum Retention Percentage";
+						else if (subcontract.getMosRetentionPercentage()==null)
+							return "There is no MOS Retention Percentage";
 					}
+					
+					String company = jobHBDao.obtainJobCompany(jobNumber);
+					approvalType = getApprovalType(jobNumber, company, subcontract, rcmTender, originalBudget, tenderBudget);
+					if(approvalType == null || approvalType.length() != 2)
+						return approvalType;//return error message 
 					
 					 // Implement Payment Requisition
 					 // - Verify generated Payment Requisition before submit Payment Requisition
 					 // @Author Peter Chan
 					 // 08-Mar-2012
-					 List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, scPackage.getPackageNo());
+					 List<PaymentCert> scPaymentCertList = paymentCertHBDao.obtainSCPaymentCertListByPackageNo(jobNumber, subcontract.getPackageNo());
 					if (scPaymentCertList!=null && !scPaymentCertList.isEmpty()){
 						logger.info("Checking Payment Requisition");
 						boolean paidDirectPayment=false;
@@ -759,8 +716,8 @@ public class SubcontractService {
 							double certedAmount = 0;
 							
 							 // Check if selected vendor matched with paid vendor 
-							if (!rcmTender.getVendorNo().toString().equals(scPackage.getVendorNo().trim()))
-								return "Selected vendor("+rcmTender.getVendorNo()+") does not match with paid vendor("+scPackage.getVendorNo()+")";
+							if (!rcmTender.getVendorNo().toString().equals(subcontract.getVendorNo().trim()))
+								return "Selected vendor("+rcmTender.getVendorNo()+") does not match with paid vendor("+subcontract.getVendorNo()+")";
 
 							 // Check if the paid amount is smaller than to be award subcontract sum
 							List<PaymentCertDetail> scPaymentDetailList = paymentCertDetailHBDao.obtainSCPaymentDetailBySCPaymentCert(lastPaymentCert);
@@ -773,91 +730,14 @@ public class SubcontractService {
 					}
 
 					
-					/**
-					 * @author koeyyeung
-					 * created on 12 July, 2016
-					 * Determine Approval Type **/
-					boolean variedSubcontract = false;
-					List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNumber, subcontractNumber, String.valueOf(rcmTender.getVendorNo()));
-					List<Tender> tenderList = tenderHBDao.obtainTenderList(jobNumber, subcontractNumber);
 					
-					//1. Non-standard payment terms
-					if(deviated){
-						logger.info("1. Non-standard payment terms");
-						variedSubcontract = true;
-					}
-					//2. Tender Variance
-					else if(tenderVarianceList != null && tenderVarianceList.size()>0){
-						logger.info("2. Tender Variance exist");
-						variedSubcontract = true;
-					}
-					//3. Status Change Execution of SC - (Y)
-					else if("Y".equals(rcmTender.getStatusChangeExecutionOfSC())){
-						logger.info("3. Status Change Execution of SC - (Y)");
-						variedSubcontract = true;
-					}
-					//4. Tender List < 3
-					else if(tenderList.size()<3){
-						logger.info("4. Tender List < 3");
-						variedSubcontract = true;
-					}
-					
-					
-					//Tender Budget is greater than Original Budget
-					if(tenderBudget.compareTo(originalBudget) >0 ){
-						if(variedSubcontract)
-							approvalType = "V6";
-						else
-							approvalType = "ST";
-							
-					}else{
-						if(variedSubcontract)
-							approvalType = "V5";
-						else
-							approvalType = "AW";
-					}
 					
 					Double approvalAmount = tenderBudget.doubleValue();
 					
-					/*Double approvalAmount;
-					budgetSum = rcmTender.getBudgetAmount();
-					if (budgetSum == null)
-						budgetSum = 0.00;
-					Double diff = budgetSum - taSubcontractSum;						
-					Double diffForRounding = diff;
-					int roundDP = 2;
-
-					if (RoundingUtil.round(diffForRounding, roundDP) < 0 && budgetSum != null){
-						approvalAmount = diff*-1;
-						if (deviated)
-							approvalType = "V6";
-						else
-							approvalType = "ST";
-					}else{
-						approvalAmount = taSubcontractSum;
-						if(budgetSum == null){
-							if (deviated)
-								approvalType = "V6";
-							else
-								approvalType = "ST";
-						}else{
-							if(deviated)
-								approvalType = "V5";
-							else
-								approvalType = "AW";
-						}
-					}*/
-					
-					
-					
-
+								
 					//Submit Approval
 					String msg = "";
-					//String vendorName = masterListWSDao.getOneVendor(vendorNo.toString()).getVendorName();
-					String approvalSubType = scPackage.getApprovalRoute();	//used to pass "null" to Phase 2 in-order to display NA
-
-					/*if (vendorName != null)
-						vendorName = vendorName.trim();*/
+					String approvalSubType = subcontract.getApprovalRoute();	//used to pass "null" to Phase 2 in-order to display NA
 
 					// the currency pass to approval system should be the company base currency
 					// so change the currencyCode to company base currency here since it will not affect other part of code
@@ -878,11 +758,11 @@ public class SubcontractService {
 						}catch (Exception e){
 							e.printStackTrace();
 						}
-						scPackage.setSubcontractStatus(330);
-						scPackage.setLastModifiedUser(userID);
-						scPackage.setScAwardApprovalRequestSentDate(new Date());
+						subcontract.setSubcontractStatus(330);
+						subcontract.setLastModifiedUser(userID);
+						subcontract.setScAwardApprovalRequestSentDate(new Date());
 						try{
-							subcontractHBDao.update(scPackage);
+							subcontractHBDao.update(subcontract);
 						}catch(Exception e){
 							e.printStackTrace();
 						}
@@ -900,6 +780,88 @@ public class SubcontractService {
 		
 	}
 
+	
+	public String getApprovalType(String jobNo, String company, Subcontract subcontract, Tender rcmTender, BigDecimal originalBudget, BigDecimal tenderBudget) throws Exception{
+		String  approvalType = "";
+		
+
+		AppSubcontractStandardTerms scStandardTerms = getSCStandardTerms(subcontract.getFormOfSubcontract(), company);
+		if(scStandardTerms == null){
+			logger.info("Subcontact Standard Terms cannot be found.");
+			return "Subcontact Standard Terms cannot be found.";
+		}
+		
+		Double defaultInterimRetenPer = scStandardTerms.getScInterimRetentionPercent();
+		Double defaultMaxRetenPer = scStandardTerms.getScMaxRetentionPercent();
+		Double defaultMosRetenPer = scStandardTerms.getScMOSRetentionPercent();
+		String defaultPaymentTerms = scStandardTerms.getScPaymentTerm();
+		String defaultRetentionType = scStandardTerms.getRetentionType();
+		
+		boolean deviated = false;
+		
+		if (defaultPaymentTerms.equalsIgnoreCase(subcontract.getPaymentTerms()) &&
+			defaultRetentionType.substring(0, 10).equalsIgnoreCase(subcontract.getRetentionTerms().substring(0, 10)) &&
+				defaultInterimRetenPer.equals(subcontract.getInterimRentionPercentage()) &&
+				defaultMaxRetenPer.equals(subcontract.getMaxRetentionPercentage()) &&
+				defaultMosRetenPer.equals(subcontract.getMosRetentionPercentage())){
+				 
+				logger.info("Standard terms");
+				deviated = false;
+		}else {
+			logger.info("Non-Standard terms");
+			deviated = true;
+		}
+	
+		
+		/**
+		 * @author koeyyeung
+		 * created on 12 July, 2016
+		 * Determine Approval Type **/
+		boolean variedSubcontract = false;
+		List<TenderVariance> tenderVarianceList = tenderVarianceHBDao.obtainTenderVarianceList(jobNo, subcontract.getPackageNo(), String.valueOf(rcmTender.getVendorNo()));
+		List<Tender> tenderList = tenderHBDao.obtainTenderList(jobNo, subcontract.getPackageNo());
+		
+		//1. Non-standard payment terms
+		if(deviated){
+			logger.info("1. Non-standard payment terms");
+			variedSubcontract = true;
+		}
+		//2. Tender Variance
+		else if(tenderVarianceList != null && tenderVarianceList.size()>0){
+			logger.info("2. Tender Variance exist");
+			variedSubcontract = true;
+		}
+		//3. Status Change Execution of SC - (Y)
+		else if("Y".equals(rcmTender.getStatusChangeExecutionOfSC())){
+			logger.info("3. Status Change Execution of SC - (Y)");
+			variedSubcontract = true;
+		}
+		//4. Tender List < 3
+		else if(tenderList.size()<3){
+			logger.info("4. Tender List < 3");
+			variedSubcontract = true;
+		}
+		
+		
+		//Tender Budget is greater than Original Budget
+		if(tenderBudget.compareTo(originalBudget) >0 ){
+			if(variedSubcontract)
+				approvalType = Subcontract.APPROVAL_TYPE_V6;
+			else
+				approvalType = Subcontract.APPROVAL_TYPE_ST;
+				
+		}else{
+			if(variedSubcontract)
+				approvalType = Subcontract.APPROVAL_TYPE_V5;
+			else
+				approvalType = Subcontract.APPROVAL_TYPE_AW;
+		}
+		
+		return approvalType;
+	}
+	
+	
+	
 	public AppSubcontractStandardTermsHBDao getSystemConstantHBDaoImpl() {
 		return appSubcontractStandardTermsHBDao;
 	}
@@ -1175,18 +1137,18 @@ public class SubcontractService {
 		return message;
 	}*/
 
-	public AppSubcontractStandardTerms obtainSystemConstant(String systemCode, String company) throws DatabaseOperationException{
-		AppSubcontractStandardTerms result = appSubcontractStandardTermsHBDao.getSystemConstant(systemCode, company);
+	public AppSubcontractStandardTerms getSCStandardTerms(String formOfSubcontract, String company) throws DatabaseOperationException{
+		AppSubcontractStandardTerms result = appSubcontractStandardTermsHBDao.getSCStandardTerms(formOfSubcontract, company);
 		if(result !=null)
 			return result;
 		else
-			return appSubcontractStandardTermsHBDao.getSystemConstant("59", "00000");
+			return appSubcontractStandardTermsHBDao.getSCStandardTerms(formOfSubcontract, "00000");
 	}
 
-	public List<AppSubcontractStandardTerms> searchSystemConstants(String systemCode, String company, String scPaymentTerm, Double scMaxRetentionPercent, Double scInterimRetentionPercent, Double scMOSRetentionPercent, String retentionType, String finQS0Review) {
+	public List<AppSubcontractStandardTerms> getSCStandardTermsList() {
 		List<AppSubcontractStandardTerms> appSubcontractStandardTermsList = null;
 		try {
-			appSubcontractStandardTermsList = appSubcontractStandardTermsHBDao.searchSystemConstants(systemCode, company, scPaymentTerm, scMaxRetentionPercent, scInterimRetentionPercent, scMOSRetentionPercent, retentionType, finQS0Review);
+			appSubcontractStandardTermsList = appSubcontractStandardTermsHBDao.getSCStandardTermsList();
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
@@ -1348,79 +1310,24 @@ public class SubcontractService {
 	 * refactored on 21 October, 2013
 	 */
 
-	public String obtainPackageAwardedType(Subcontract scPackage) throws DatabaseOperationException {
-		String company = jobHBDao.obtainJobCompany(scPackage.getJobInfo().getJobNumber());
-		String systemCode = "59";
+	public String obtainPackageAwardedType(Subcontract subcontract) throws DatabaseOperationException {
+		String company = jobHBDao.obtainJobCompany(subcontract.getJobInfo().getJobNumber());
 		
-		//Assume systemConstant's contents are not null
-		AppSubcontractStandardTerms systemConstant = obtainSystemConstant(systemCode, company);
-		
-		Double defaultInterimRTPercentage = systemConstant.getScInterimRetentionPercent();
-		Double defaultMaxRTPercentage = systemConstant.getScMaxRetentionPercent();
-		Double defaultMosRTPercentage = systemConstant.getScMOSRetentionPercent();
-		String defaultPaymentTerms = systemConstant.getScPaymentTerm();
-		String defaultRetentionType = systemConstant.getRetentionType();
-		
-		boolean variedPackageAward = false;
-		if (Subcontract.RETENTION_ORIGINAL.equals(scPackage.getRetentionTerms())||
-			Subcontract.RETENTION_REVISED.equals(scPackage.getRetentionTerms())){
-			if (scPackage.getInternalJobNo() == null){
-				if (scPackage.getInterimRentionPercentage()==null){
-					logger.info("Interim Retention Percentage does not exist");
-					return null;
-				}
-				else if(scPackage.getMaxRetentionPercentage()== null){
-					logger.info("Maximum Retention Percentage does not exist");
-					return null;
-				}
-				else if (scPackage.getMosRetentionPercentage()==null){
-					logger.info("MOS Retention Percentage does not exist");
-					return null;
-				}
-				else
-					if (!defaultInterimRTPercentage.equals(scPackage.getInterimRentionPercentage())||
-						!defaultMaxRTPercentage.equals(scPackage.getMaxRetentionPercentage())||
-						!defaultMosRTPercentage.equals(scPackage.getMosRetentionPercentage())||
-						!defaultRetentionType.equalsIgnoreCase(scPackage.getRetentionTerms())||
-						(!defaultPaymentTerms.equalsIgnoreCase(scPackage.getPaymentTerms()))){
-						variedPackageAward = true;
-					}else 
-						logger.info("Standard Subcontract Award");
-			}
-		}else{
-			if(!defaultRetentionType.equals(scPackage.getRetentionTerms())||
-				!defaultPaymentTerms.equals(scPackage.getPaymentTerms()))
-				variedPackageAward = true;
+		Tender rcmTender = tenderHBDao.obtainRecommendedTender(subcontract.getJobInfo().getJobNumber(), subcontract.getPackageNo());
+		logger.info("VendorNo: "+rcmTender.getVendorNo());
+		//Get the Recommended SC Sum 
+		BigDecimal originalBudget = CalculationUtil.roundToBigDecimal(rcmTender.getBudgetAmount(), 2);
+		BigDecimal tenderBudget = originalBudget.subtract(rcmTender.getAmtBuyingGainLoss()).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+		String approvalType = null;
+		try {
+			approvalType = getApprovalType(subcontract.getJobInfo().getJobNumber(), company, subcontract, rcmTender, originalBudget, tenderBudget);
+			if(approvalType ==null || approvalType.length()!= 2)
+				approvalType = null;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		Tender vendorTender = tenderHBDao.obtainTenderAnalysis(scPackage, Integer.valueOf(scPackage.getVendorNo()));
-		Tender budgetTender = tenderHBDao.obtainTenderAnalysis(scPackage, 0);
-		BigDecimal approvalAmount = new BigDecimal(0);
-		BigDecimal budgetAmount = new BigDecimal(0);
-		
-		approvalAmount = BigDecimal.valueOf(vendorTender.getBudgetAmount()*vendorTender.getExchangeRate()).setScale(2, RoundingMode.HALF_UP);
-		budgetAmount = BigDecimal.valueOf(budgetTender.getBudgetAmount()).setScale(2, RoundingMode.HALF_UP);
-	
-		//Unable to obtain Subcontract Award Type due to approvel amount or budget amount == null
-		if(approvalAmount==null || budgetAmount==null){
-			logger.info("Unable to obtain Subcontract Award Type due to approvel amount or budget amount is null");
-			return null;
-		}
-		
-		String approvalType;
-		//approval amount > budget amount --> Over Budget ("ST" or "V6")
-		logger.info("Approval Amount: "+approvalAmount+" Budget Amount: "+budgetAmount); 
-		if(approvalAmount.compareTo(budgetAmount)==1){
-			if(variedPackageAward)
-				approvalType = Subcontract.APPROVAL_TYPE_V6;
-			else
-				approvalType = Subcontract.APPROVAL_TYPE_ST;
-		}else{
-			if(variedPackageAward)
-				approvalType = Subcontract.APPROVAL_TYPE_V5;
-			else
-				approvalType = Subcontract.APPROVAL_TYPE_AW;
-		}
+
 		
 		logger.info("Approval Type: "+approvalType);
 		return approvalType;
@@ -2218,29 +2125,15 @@ public class SubcontractService {
 		return error;
 	}
 	
-	/**
-	 * created by matthewlam, 2015-01-29
-	 * Bug fix #77 - unable to inactivate System Constants records
-	 * 
-	 * @throws DatabaseOperationException
-	 */
-	public Boolean inactivateSystemConstant(AppSubcontractStandardTerms request, String username) {
-		Boolean result = false;
-		if(username == null || username.equals("")){
-			username = securityService.getCurrentUser().getUsername();
-		}
-		try {
-			result = appSubcontractStandardTermsHBDao.inactivateSystemConstant(request, username);
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 	
-	public Boolean inactivateSystemConstantList(List<AppSubcontractStandardTerms> appSubcontractStandardTermsList) {
+	public Boolean deleteSCStandardTerms(List<AppSubcontractStandardTerms> appSubcontractStandardTermsList) {
 		Boolean result = false;
-		for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
-			inactivateSystemConstant(appSubcontractStandardTerms, null);
+		try {
+			for(AppSubcontractStandardTerms appSubcontractStandardTerms :appSubcontractStandardTermsList){
+				appSubcontractStandardTermsHBDao.deleteById(appSubcontractStandardTerms.getId());
+			}
+		} catch (DataAccessException e) {
+			e.printStackTrace();
 		}
 
 		return result;

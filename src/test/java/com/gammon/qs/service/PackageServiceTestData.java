@@ -2016,7 +2016,7 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#obtainSystemConstant(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.SubcontractService#getSCStandardTerms(java.lang.String, java.lang.String)}.
 	 */
 	public TransactionTestCase.TestDataMethod testObtainSystemConstant() {
 		return new TransactionTestCase.TestDataMethod() {
@@ -2043,9 +2043,9 @@ public class PackageServiceTestData extends TransactionTestCase.TestDataBase {
 	}
 
 	/**
-	 * Test method for {@link com.gammon.qs.service.SubcontractService#searchSystemConstants(java.lang.String, java.lang.String, java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.gammon.qs.service.SubcontractService#getSCStandardTermsList(java.lang.String, java.lang.String, java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, java.lang.String)}.
 	 */
-	public TransactionTestCase.TestDataMethod testSearchSystemConstants() {
+	public TransactionTestCase.TestDataMethod testGetSCStandardTermsList() {
 		return new TransactionTestCase.TestDataMethod() {
 
 			@Override

@@ -13,9 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,7 +29,6 @@ import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
 import com.gammon.qs.application.exception.DatabaseOperationException;
-import com.gammon.qs.domain.AppSubcontractStandardTerms;
 import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
@@ -406,17 +402,7 @@ public class SubcontractController {
 		subcontractService.updateF58001FromSCPackageManually();
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','createSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
-	@RequestMapping(value = "createSystemConstant", method = RequestMethod.POST)
-	public void createSystemConstant(@RequestBody AppSubcontractStandardTerms appSubcontractStandardTerms,
-			HttpServletRequest request, HttpServletResponse response) {
-		boolean result = false;
-		result = subcontractService.createSystemConstant(appSubcontractStandardTerms, null);
-		if (!result) {
-			response.setStatus(HttpServletResponse.SC_CONFLICT);
-		}
-	}
-
+	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractAdmin", method = RequestMethod.POST)
 	public String updateSubcontractAdmin(@RequestBody Subcontract subcontract) {

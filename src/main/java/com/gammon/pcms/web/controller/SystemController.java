@@ -373,15 +373,15 @@ public class SystemController {
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','inactivateSystemConstant', @securityConfig.getRolePcmsQsAdmin())")
-	@RequestMapping(value = "inactivateSystemConstant", method = RequestMethod.POST)
-	public void inactivateSystemConstant(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
-		subcontractService.inactivateSystemConstantList(appSubcontractStandardTermsList);
+	@RequestMapping(value = "deleteSCStandardTerms", method = RequestMethod.POST)
+	public void deleteSCStandardTerms(@RequestBody List<AppSubcontractStandardTerms> appSubcontractStandardTermsList){
+		subcontractService.deleteSCStandardTerms(appSubcontractStandardTermsList);
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','searchSystemConstants', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "searchSystemConstants", method = RequestMethod.POST)
-	public List<AppSubcontractStandardTerms> searchSystemConstants(){
-		return subcontractService.searchSystemConstants(null, null, null, null, null, null, null, null);
+	@RequestMapping(value = "getSCStandardTermsList", method = RequestMethod.POST)
+	public List<AppSubcontractStandardTerms> getSCStandardTermsList(){
+		return subcontractService.getSCStandardTermsList();
 	}
 
 

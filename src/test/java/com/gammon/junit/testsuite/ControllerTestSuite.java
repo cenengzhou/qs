@@ -199,7 +199,7 @@ public class ControllerTestSuite {
 //			{PackageRepositoryControllerTestData.class,"testUpdateNewQuantity"},
 //			{PackageRepositoryControllerTestData.class,"testSubmitAwardApproval"},
 //			{PackageRepositoryControllerTestData.class,"testGetSystemConstant"},
-//			{PackageRepositoryControllerTestData.class,"testSearchSystemConstants"},
+//			{PackageRepositoryControllerTestData.class,"testGetSCStandardTermsList"},
 //			{PackageRepositoryControllerTestData.class,"testObtainSystemConstantSearchOption"},
 //			{PackageRepositoryControllerTestData.class,"testUpdateMultipleSystemConstants"},
 //			{PackageRepositoryControllerTestData.class,"testCreateSystemConstant"},
