@@ -75,9 +75,14 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 			paymentService.calculatePaymentDueDate($scope.jobNo,  $scope.subcontractNo, $scope.mainCertNo.selected, $scope.payment.asAtDate, $scope.payment.invoiceReceivedDate, $scope.payment.dueDate)
 			.then(
 					function( data ) {
+						console.log(data);
 						if(data!=null){
-							if(data.valid ==true)
-								$scope.payment.dueDate = data.dueDate;
+							if(data.valid ==true){
+								if(data.dueDate !=null)
+									$scope.payment.dueDate = (new Date(data.dueDate)).yyyymmdd();
+								else
+									$scope.payment.dueDate = null;
+							}
 							else
 								modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data.errorMsg);
 						}
@@ -194,6 +199,13 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	}
 	
+	Date.prototype.yyyymmdd = function() {
+		var yyyy = this.getFullYear().toString();
+		var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+		var dd  = this.getDate().toString();
+
+		return  yyyy+"-"+(mm.length===2?mm:"0"+mm) +"-"+ (dd.length===2?dd:"0"+dd); // padding
+	};
 	
 
 }]);
