@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,7 @@ import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.MainCertHBDao;
+import com.gammon.qs.dao.MainCertWSDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.PaymentPostingWSDao;
@@ -27,14 +26,13 @@ import com.gammon.qs.dao.PaymentWSDao;
 import com.gammon.qs.dao.ResourceSummaryHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
-import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.ResourceSummary;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
-import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.shared.util.CalculationUtil;
+import com.gammon.qs.wrapper.ParentJobMainCertReceiveDateWrapper;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
 @Component
@@ -58,13 +56,11 @@ public class PaymentPostingService {
 	@Autowired
 	private PaymentWSDao paymentWSDao;
 	@Autowired
+	private MainCertWSDao mainContractCertificateWSDao;
+	@Autowired
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
-	@Autowired
-	private JobInfoService jobInfoService;
-	@Autowired
-	private MainCertHBDao mainCertHBDao;
 	/**
 	 * To run payment posting
 	 *
@@ -340,29 +336,8 @@ public class PaymentPostingService {
 			if ("QS1".equals(scPackage.getPaymentTerms()) || "QS2".equals(scPackage.getPaymentTerms())) {
 				logger.info("Calculating Due Date: QS1, QS2");
 				// 1a. Obtain Main Certificate's As At Date
-				//ParentJobMainCertReceiveDateWrapper mainCertAsAtRecDateWrapper = null;
-				
-				List<String> parentJobList = new ArrayList<String>();
-				String parentJobNo = jobNumber;
-				parentJobList = jobInfoService.obtainParentJobList(jobNumber);
-				while(parentJobList.size()==1){//loop until it gets the actual parent job
-					parentJobNo = parentJobList.get(0);
-					parentJobList = jobInfoService.obtainParentJobList(parentJobNo);
-				}
-				
-				logger.info("Job: "+jobNumber+" - Parent Job: "+parentJobNo);
-				
-				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(parentJobNo, mainCertNo);
-				
-				if(mainCert == null || mainCert.getCertAsAtDate() == null || !MainCert.CERT_POSTED.equals(mainCert.getCertificateStatus())){
-					logger.info(mainCert.toString());
-					logger.info("Main Contract Certificate does not exist or certificate has not been posted (Certificate Status is not 300)");
-					responseWrapper.setErrorMsg("Main Contract Certificate does not exist or certificate has not been posted (Certificate Status is not 300)");
-					responseWrapper.setIsvalid(false);
-					return responseWrapper;
-				}
-				
-				/*try {
+				ParentJobMainCertReceiveDateWrapper mainCertAsAtRecDateWrapper = null;
+				try {
 					mainCertAsAtRecDateWrapper = mainContractCertificateWSDao.obtainParentMainContractCertificate(jobNumber, mainCertNo);
 				} catch (Exception e) {
 					logger.info("Main Contract Certificate cannot be found");
@@ -376,7 +351,7 @@ public class PaymentPostingService {
 					responseWrapper.setErrorMsg("Main Contract Certificate does not exist or certificate has not been posted (Certificate Status is not 300)");
 					responseWrapper.setIsvalid(false);
 					return responseWrapper;
-				}*/
+				}
 
 				// if user's As At Date == null, then bypass validation of "Payment's As At Date must be ON or BEFORE than Main Contract Cert's As At Date"
 				try {
@@ -384,13 +359,11 @@ public class PaymentPostingService {
 					if (asAtDate != null){
 						try {
 							Date asAtDateWithoutTime = sdf.parse(sdf.format(asAtDate));
-							Date mainCertAsAtDateWithoutTime = mainCert.getCertAsAtDate() != null ?sdf.parse(sdf.format(mainCert.getCertAsAtDate())): null;
-							//Date mainCertAsAtDateWithoutTime = mainCertAsAtRecDateWrapper.getValueDateOnCert() != null ?sdf.parse(sdf.format(mainCertAsAtRecDateWrapper.getValueDateOnCert())): null;
+							Date mainCertAsAtDateWithoutTime = mainCertAsAtRecDateWrapper.getValueDateOnCert() != null ?sdf.parse(sdf.format(mainCertAsAtRecDateWrapper.getValueDateOnCert())): null;
 
 							if(asAtDateWithoutTime.after(mainCertAsAtDateWithoutTime)) {
 								SimpleDateFormat formattedDate = new SimpleDateFormat("dd/MM/yyyy");
-								String parentMainCertAsAtDate = formattedDate.format(mainCert.getCertAsAtDate());
-								//String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
+								String parentMainCertAsAtDate = formattedDate.format(mainCertAsAtRecDateWrapper.getValueDateOnCert());
 
 								responseWrapper.setErrorMsg("Payment's As At Date must be ON or BEFORE than Main Contract Certificate's As At Date.</br>" +
 										"Main Contract Certificate As At Date: " + parentMainCertAsAtDate);
@@ -412,15 +385,13 @@ public class PaymentPostingService {
 				}
 
 				// pass the null out and handle elsewhere
-				//if (mainCertAsAtRecDateWrapper.getReceivedDate() == null) {
-				if (mainCert.getActualReceiptDate() == null) {
+				if (mainCertAsAtRecDateWrapper.getReceivedDate() == null) {
 					responseWrapper.setIsvalid(true);
 					responseWrapper.setDueDate(null);
 					return responseWrapper;
 				}
 
-				//calculatedDueDate.setTime(mainCertAsAtRecDateWrapper.getReceivedDate());
-				calculatedDueDate.setTime(mainCert.getActualReceiptDate());
+				calculatedDueDate.setTime(mainCertAsAtRecDateWrapper.getReceivedDate());
 				if ("QS1".equals(scPackage.getPaymentTerms()))
 					calculatedDueDate.add(Calendar.DATE, PaymentCert.PAYMENT_TERM_DATE_QS1);
 				else
@@ -538,8 +509,6 @@ public class PaymentPostingService {
 
 		} catch (NumberFormatException e) {
 			logger.info("Invalid input format.");
-		} catch (DatabaseOperationException e1) {
-			e1.printStackTrace();
 		}
 		return responseWrapper;
 	}

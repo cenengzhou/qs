@@ -2033,8 +2033,8 @@ public class SubcontractService {
 				newSubcontract.setSubcontractStatus(Integer.valueOf(100));
 				newSubcontract.setWorkscope(subcontract.getWorkscope());
 				
-				if("NSC".equals(subcontract.getSubcontractorNature()))
-					newSubcontract.setApprovalRoute("NSC");
+				/*if("NSC".equals(subcontract.getSubcontractorNature()))
+					newSubcontract.setApprovalRoute("NSC");*/
 				
 				subcontractHBDao.addSCPackage(newSubcontract);
 		}else{
@@ -2069,8 +2069,8 @@ public class SubcontractService {
 				subcontractInDB.setCpfBasePeriod(subcontract.getCpfBasePeriod());
 				subcontractInDB.setCpfBaseYear(subcontract.getCpfBaseYear());
 				
-				if("NSC".equals(subcontract.getSubcontractorNature()))
-					subcontractInDB.setApprovalRoute("NSC");
+				/*if("NSC".equals(subcontract.getSubcontractorNature()))
+					subcontractInDB.setApprovalRoute("NSC");*/
 
 				
 				subcontractHBDao.update(subcontractInDB);

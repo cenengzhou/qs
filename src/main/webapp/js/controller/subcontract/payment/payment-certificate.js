@@ -77,8 +77,10 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 					function( data ) {
 						if(data!=null){
 							if(data.valid ==true){
-								if(data.dueDate !=null)
-									$scope.payment.dueDate = (new Date(data.dueDate)).yyyymmdd();
+								if(data.dueDate !=null){
+									
+									$scope.payment.dueDate = data.dueDate;
+								}
 								else
 									$scope.payment.dueDate = null;
 							}
@@ -198,13 +200,5 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	}
 	
-	Date.prototype.yyyymmdd = function() {
-		var yyyy = this.getFullYear().toString();
-		var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
-		var dd  = this.getDate().toString();
-
-		return  yyyy+"-"+(mm.length===2?mm:"0"+mm) +"-"+ (dd.length===2?dd:"0"+dd); // padding
-	};
 	
-
 }]);

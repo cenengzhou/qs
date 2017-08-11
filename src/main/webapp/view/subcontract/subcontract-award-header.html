@@ -75,18 +75,19 @@
 													<label class="btn"
 														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'DSC', 'btn-inverse' : subcontract.subcontractorNature != 'DSC'}"
 														ng-model="subcontract.subcontractorNature"
-														ng-change="updateApprovalSubType('')"
 														ng-disabled="disableButtons" uib-btn-radio="'DSC'">DSC</label>
+														<!-- ng-change="updateApprovalSubType('')" -->
 													<label class="btn"
 														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NDSC', 'btn-inverse' : subcontract.subcontractorNature != 'NDSC'}"
 														ng-model="subcontract.subcontractorNature"
-														ng-change="updateApprovalSubType('')"
 														ng-disabled="disableButtons" uib-btn-radio="'NDSC'">NDSC</label>
+														<!-- <!-- ng-change="updateApprovalSubType('')" -->
+														
 													<label class="btn"
 														ng-class="{'btn-primary' : subcontract.subcontractorNature == 'NSC', 'btn-inverse' : subcontract.subcontractorNature != 'NSC'}"
 														ng-model="subcontract.subcontractorNature"
-														ng-change ="updateApprovalSubType('NSC')"
 														ng-disabled="disableButtons" uib-btn-radio="'NSC'">NSC</label>
+														<!-- ng-change ="updateApprovalSubType('NSC')" -->
 												</div>
 
 											</div>
