@@ -19,7 +19,7 @@ import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
-import com.gammon.qs.dao.MainCertWSDao;
+import com.gammon.qs.dao.MainCertHBDao;
 import com.gammon.qs.dao.PaymentCertDetailHBDao;
 import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.PaymentPostingWSDao;
@@ -34,7 +34,6 @@ import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.service.JobInfoService;
-import com.gammon.qs.service.MainCertService;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.scPayment.AccountMovementWrapper;
 import com.gammon.qs.wrapper.scPayment.PaymentDueDateAndValidationResponseWrapper;
@@ -59,15 +58,13 @@ public class PaymentPostingService {
 	@Autowired
 	private PaymentWSDao paymentWSDao;
 	@Autowired
-	private MainCertWSDao mainContractCertificateWSDao;
-	@Autowired
 	private WebServiceConfig webServiceConfig;
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
 	@Autowired
 	private JobInfoService jobInfoService;
 	@Autowired
-	private MainCertService mainCertService;
+	private MainCertHBDao mainCertHBDao;
 	/**
 	 * To run payment posting
 	 *
@@ -355,7 +352,7 @@ public class PaymentPostingService {
 				
 				logger.info("Job: "+jobNumber+" - Parent Job: "+parentJobNo);
 				
-				MainCert mainCert = mainCertService.getCertificate(parentJobNo, mainCertNo);
+				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(parentJobNo, mainCertNo);
 				
 				if(mainCert == null || mainCert.getCertAsAtDate() == null || !MainCert.CERT_POSTED.equals(mainCert.getCertificateStatus())){
 					logger.info(mainCert.toString());
