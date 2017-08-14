@@ -43,6 +43,14 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 		}
 	}
 
+	function checkCookieAndPaymentNumber(){
+		if($scope.payment.paymentCertNo != $cookies.get('paymentCertNo')){
+			var errorMessage = 'Please reload the page and update again';
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', errorMessage);
+			throw new Error(errorMessage);
+		}
+	}
+	
 	$scope.update = function(){
 		if($scope.payment.paymentStatus == "PND"){
 			
@@ -51,9 +59,10 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 				return;
 			}
 			
+			checkCookieAndPaymentNumber();
 			
 			$scope.payment.mainContractPaymentCertNo =  $scope.mainCertNo.selected;
-			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
+			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.payment.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
 			.then(
 					function( data ) {
 						if(data != null){
@@ -93,7 +102,10 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	$scope.updatePaymentType = function(paymentType){
 		if(!$scope.disableButtons)
-			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), paymentType)
+			
+			checkCookieAndPaymentNumber();
+		
+			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.payment.paymentCertNo, paymentType)
 			.then(
 					function( data ) {
 						if(data.length != 0){

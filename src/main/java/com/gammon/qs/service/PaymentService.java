@@ -1387,6 +1387,9 @@ public class PaymentService{
 				logger.info(error);
 				return error;
 			}
+			else if(!"PND".equals(paymentCert.getPaymentStatus())){
+				error = "Cannot update payment No. " + paymentCertNo;
+			}
 
 			if(paymentType!=null && paymentType.trim().length()==0){
 				paymentType = paymentCert.getIntermFinalPayment();
