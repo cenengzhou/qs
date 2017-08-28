@@ -1395,19 +1395,7 @@ public class SubcontractService {
 		return message;
 	}
 	
-	public Boolean generateSCPackageSnapshotManually(){
-		logger.info("-----------------------generateSCPackageSnapshotManually(START)-------------------------");
-		boolean completed = false;
-		
-		try {
-			completed = subcontractSnapshotDao.callStoredProcedureToGenerateSnapshot();
-		} catch (DatabaseOperationException e) {
-			e.printStackTrace();
-		}
-		
-		logger.info("------------------------generateSCPackageSnapshotManually(END)---------------------------");
-		return completed;
-	}
+	
 
 	/**
 	 * Payment Requisition Revamp

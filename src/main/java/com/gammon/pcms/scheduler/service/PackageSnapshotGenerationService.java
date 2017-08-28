@@ -1,5 +1,6 @@
 package com.gammon.pcms.scheduler.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.dao.JobInfoHBDao;
 import com.gammon.qs.dao.SubcontractDetailHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
@@ -35,6 +37,31 @@ public class PackageSnapshotGenerationService {
 	private SubcontractHBDao scPackageHBDao;
 	@Autowired
 	private SubcontractDetailHBDao scDetailsHBDao;
+	
+	public Boolean generateSCPackageSnapshotManually(){
+		logger.info("-----------------------generateSCPackageSnapshotManually(START)-------------------------");
+		boolean completed = false;
+		
+		List<JobInfo> jobList;
+		try {
+			jobList = jobHBDao.getAllActive();
+			for (JobInfo job : jobList)
+				calculateTotalWDAmountByJob(job.getJobNumber());
+
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			completed = scPackageSnapshotDao.callStoredProcedureToGenerateSnapshot();
+		} catch (DatabaseOperationException e) {
+			e.printStackTrace();
+		}
+		
+		logger.info("------------------------generateSCPackageSnapshotManually(END)---------------------------");
+		return completed;
+	}
 	
 	/**
 	 * @author koeyyeung
@@ -108,19 +135,19 @@ public class PackageSnapshotGenerationService {
 			for (Subcontract scPackage : scPackages) {
 				if (scPackage.isAwarded()) {
 					List<SubcontractDetail> scDetails = scDetailsHBDao.getSCDetails(scPackage);
-					double totalCumWorkDoneAmount = 0.00;
-					double totalPostedWorkDoneAmount = 0.00;
+					BigDecimal totalCumWorkDoneAmount = new BigDecimal(0);
+					BigDecimal totalPostedWorkDoneAmount = new BigDecimal(0);
 
 					for (SubcontractDetail scDetail : scDetails) {
 						if (BasePersistedAuditObject.ACTIVE.equals(scDetail.getSystemStatus())) {
 							boolean toBeUpdated = !"C1".equals(scDetail.getLineType()) && !"C2".equals(scDetail.getLineType()) && !"MS".equals(scDetail.getLineType()) && !"RR".equals(scDetail.getLineType()) && !"RA".equals(scDetail.getLineType());
 
-							if (toBeUpdated && scDetail.getCumWorkDoneQuantity() != null && scDetail.getPostedWorkDoneQuantity() != null && scDetail.getScRate() != null) {
-								double cumWorkDoneAmount = CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
-								double postedWorkDoneAmount = CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
+							if (toBeUpdated) {// && scDetail.getCumWorkDoneQuantity() != null && scDetail.getPostedWorkDoneQuantity() != null && scDetail.getScRate() != null
+								//double cumWorkDoneAmount = CalculationUtil.round(scDetail.getCumWorkDoneQuantity() * scDetail.getScRate(), 2);
+								//double postedWorkDoneAmount = CalculationUtil.round(scDetail.getPostedWorkDoneQuantity() * scDetail.getScRate(), 2);
 
-								totalCumWorkDoneAmount += cumWorkDoneAmount;
-								totalPostedWorkDoneAmount += postedWorkDoneAmount;
+								totalCumWorkDoneAmount = totalCumWorkDoneAmount.add(scDetail.getAmountCumulativeWD());
+								totalPostedWorkDoneAmount = totalPostedWorkDoneAmount.add(scDetail.getAmountPostedWD());
 							}
 						}
 					}

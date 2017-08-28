@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.gammon.pcms.application.GlobalExceptionHandler;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.view.ProvisionPostingHistView;
+import com.gammon.pcms.scheduler.service.PackageSnapshotGenerationService;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.domain.Subcontract;
@@ -44,6 +45,8 @@ public class SubcontractController {
 	
 	@Autowired
 	private SubcontractService subcontractService;
+	@Autowired
+	private PackageSnapshotGenerationService packageSnapshotGenerationService;
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractDetailByID', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getSubcontractDetailByID",	method = RequestMethod.GET)
@@ -393,7 +396,7 @@ public class SubcontractController {
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','generateSCPackageSnapshotManually', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "generateSCPackageSnapshotManually", method = RequestMethod.POST)
 	public void generateSCPackageSnapshotManually(){
-		subcontractService.generateSCPackageSnapshotManually();
+		packageSnapshotGenerationService.generateSCPackageSnapshotManually();
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateF58001FromSCPackageManually', @securityConfig.getRolePcmsQsAdmin())")
