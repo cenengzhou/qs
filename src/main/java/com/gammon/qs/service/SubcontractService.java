@@ -2609,10 +2609,14 @@ public class SubcontractService {
 			scListWrapper.setJobNumber(jobNumber);
 			scListWrappers.add(scListWrapper);
 		}else{
-			if(scListWrappers.get(0).getSnapshotDate()!=null)
-				asOfDate = scListWrappers.get(0).getSnapshotDate();
-			else
+			if(scListWrappers.get(0).getSnapshotDate()!=null) {
+				Calendar snapshotCalendar = Calendar.getInstance();
+				snapshotCalendar.setTime(scListWrappers.get(0).getSnapshotDate());
+				snapshotCalendar.add(Calendar.DATE, -1);
+				asOfDate = snapshotCalendar.getTime();
+			} else {
 				asOfDate = new Date();
+			}
 		}
 
 		parameters.put("AS_OF_DATE", asOfDate);
