@@ -63,9 +63,8 @@ public class APWebServiceConnectionDao {
 			}
 			return errorMsg;
 		} catch (Exception e) {
-			logger.log(Level.INFO,e.getMessage());
-			return e.getLocalizedMessage();
-			
+			e.printStackTrace();
+			return "Please contact helpdesk";
 		}
 	}
 	
