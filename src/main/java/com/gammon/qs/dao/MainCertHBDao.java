@@ -128,7 +128,7 @@ public class MainCertHBDao extends BaseHibernateDao<MainCert> {
 		// Where
 		criteria.add(Restrictions.eq("jobNo", noJob));
 		if(!GenericValidator.isBlankOrNull(status)){
-			criteria.add(Restrictions.eq("certificateStatus", status));
+			criteria.add(Restrictions.gt("certificateStatus", status));
 		}
 				
 		//Order By
