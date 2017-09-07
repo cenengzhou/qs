@@ -393,7 +393,8 @@ public class TenderService implements Serializable {
 									ta.setBudgetAmount(resourceSummaryDao.getBudgetForPackage(job, subcontract.getPackageNo()));
 									Integer seqNo = tenderDetailDao.getNextSequenceNoForTA(ta);
 									for(TenderDetail taDetail: toBeUpdatedTaDetails){
-										if(taDetail.getId()==null){
+										TenderDetail taDetailInDB = tenderDetailDao.obtainTADetailByResourceNo(ta, taDetail.getResourceNo());
+										if(taDetailInDB == null){
 											logger.info("INSERT BUDGET DETAIL");
 											taDetail.setSequenceNo(seqNo);
 											taDetail.setLineType("BQ");
@@ -412,7 +413,7 @@ public class TenderService implements Serializable {
 							//Delete Pending Payments
 							deletePendingPaymentRequisition(latestPaymentCert, subcontractDetailDao.getSCDetails(subcontract));
 							
-							//Insert Tender Details for other Tenders
+							//Insert Tender Details for other Tenders under Payment Requisition
 							insertTenderDetailForVendor(job, subcontract.getPackageNo(), companyCurrencyCode);
 						}else{
 							logger.info("Update Budget Tender Analysis - Payment Requisition Roll Back");
