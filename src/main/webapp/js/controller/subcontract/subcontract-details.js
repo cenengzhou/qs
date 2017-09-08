@@ -292,7 +292,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 			             {field: 'altObjectCode', width: 100},
 
 
-			             {field: 'approved', width: 100},
+			             //{field: 'approved', width: 100},
 			             {field: 'unit', width: 100},
 
 			             {field: 'remark', width: 100},
@@ -318,7 +318,7 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		subcontractService.getSCDetails($scope.jobNo, $scope.subcontractNo)
 		.then(
 			function( data ) {
-				$scope.gridOptions.data = data;
+				$scope.gridOptions.data = data.filter(function(sd){return sd.approved =='A'});
 				GlobalHelper.addSubcontractCatalogGroup(data, 'lineType');
 				var retentions = $filter('filter')(data, function(value){
 					return value.catalog === 'Retention';
