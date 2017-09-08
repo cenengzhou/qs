@@ -56,7 +56,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			             {field: 'altObjectCode', width: 100},
 
 
-			             {field: 'approved', width: 100},
+			            // {field: 'approved', width: 100},
 			             {field: 'unit', width: 100},
 
 			             {field: 'remark', width: 100},
@@ -73,7 +73,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 		subcontractService.getSCDetailForAddendumUpdate(jobNo, subcontractNo)
 		.then(
 				function( data ) {
-					$scope.gridOptions.data = data;
+					$scope.gridOptions.data = data.filter(function(sd){return sd.approved == 'A'});
 				});
 	}
 	
