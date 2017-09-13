@@ -36,7 +36,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     		var newObj = {};
     		var importKey = getImportKey(importObj);
     		newObj.cumAmount = importObj.cumAmount;
-//    		newObj.movementAmount = importObj.movementAmount;
+    		newObj.movementAmount = importObj.movementAmount;
     		importArray[importKey] = newObj;
 		});
     	for(var i = 0; i<grid.rows.length; i++){
@@ -101,10 +101,12 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
     }
 
     function getImportKey(obj){
+    	var description = obj['subcontractDetail.description'] ? obj['subcontractDetail.description'] : obj['description'];
+    	description = description ? description : '';
     	var importKey = escape('@' + 
     	parseType('String', obj.lineType) + '-' + 
     	parseType('String', obj.billItem) + '-' + 
-		parseType('String', (obj.description+'').replace(/[\r\n]/g, '')) + '-' + 
+		parseType('String', (description +'').replace(/[\r\n]/g, '')) + '-' + 
 		parseType('String', obj.scSeqNo) + '-' + 
 		parseType('String', obj.objectCode) + '-' + 
 		parseType('String', obj.subsidiaryCode) + '-' + 
