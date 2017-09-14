@@ -230,7 +230,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
-					$scope.subcontractNo = $scope.subcontractr.subcontractNo;
+					$scope.subcontractNo = $scope.subcontractr.packageNo;
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500"){
 						$scope.disableButtons = true;
 					}

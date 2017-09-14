@@ -12,7 +12,7 @@ mainApp.controller('RetentionDetailsModalCtrl', ['$scope',  'modalService', 'sub
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
-					$scope.subcontractNo = $scope.subcontract.subcontractNo;
+					$scope.subcontractNo = $scope.subcontract.packageNo;
 				});
 	}
 

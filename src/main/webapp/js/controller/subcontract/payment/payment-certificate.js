@@ -52,8 +52,6 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 				return;
 			}
 			
-			checkCookieAndPaymentNumber();
-			
 			$scope.payment.mainContractPaymentCertNo =  $scope.mainCertNo.selected;
 			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
 			.then(
@@ -95,9 +93,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	$scope.updatePaymentType = function(paymentType){
 		if(!$scope.disableButtons)
-			
-			checkCookieAndPaymentNumber();
-		
+					
 			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, paymentType)
 			.then(
 					function( data ) {

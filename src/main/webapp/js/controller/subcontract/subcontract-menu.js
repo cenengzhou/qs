@@ -39,7 +39,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
-					$scope.subcontractNo = $scope.subcontract.subontractNo;
+					$scope.subcontractNo = $scope.subcontract.packageNo;
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
 						$scope.hideItem = false;
 					else
