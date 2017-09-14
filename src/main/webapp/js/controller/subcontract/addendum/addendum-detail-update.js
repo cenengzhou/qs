@@ -56,7 +56,7 @@ mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryServic
 			             {field: 'altObjectCode', width: 100},
 
 
-			            // {field: 'approved', width: 100},
+			             {field: 'approved', width: 100, visible:false},
 			             {field: 'unit', width: 100},
 
 			             {field: 'remark', width: 100},

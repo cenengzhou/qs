@@ -1388,7 +1388,7 @@ public class PaymentService{
 				return error;
 			}
 			else if(!"PND".equals(paymentCert.getPaymentStatus())){
-				error = "Cannot update payment No. " + paymentCertNo;
+				error = "Cannot update Job: " + jobNo + " - Subcontract: " + subcontractNo + " - Payment No. " + paymentCertNo + " with Payment Status: "+ paymentCert.getPaymentStatus();
 			}
 
 			if(paymentType!=null && paymentType.trim().length()==0){
