@@ -19,6 +19,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 			$cookies.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
 		}
 	}
+	//only for init page load, reassign value when paymentCert loaded from backend
 	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	$scope.paymentTermsDesc = $cookies.get('paymentTermsDesc');
 	$scope.paymentTerms = $scope.paymentTermsDesc.substring(0, 3);
@@ -43,14 +44,6 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 		}
 	}
 
-	function checkCookieAndPaymentNumber(){
-		if($scope.payment.paymentCertNo != $cookies.get('paymentCertNo')){
-			var errorMessage = 'Please reload the page and update again';
-			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', errorMessage);
-			throw new Error(errorMessage);
-		}
-	}
-	
 	$scope.update = function(){
 		if($scope.payment.paymentStatus == "PND"){
 			
@@ -62,7 +55,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 			checkCookieAndPaymentNumber();
 			
 			$scope.payment.mainContractPaymentCertNo =  $scope.mainCertNo.selected;
-			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.payment.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
+			paymentService.updatePaymentCertificate($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, $scope.paymentTerms, $scope.gstPayable, $scope.gstReceivable, $scope.payment)
 			.then(
 					function( data ) {
 						if(data != null){
@@ -105,7 +98,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 			
 			checkCookieAndPaymentNumber();
 		
-			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.payment.paymentCertNo, paymentType)
+			paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, paymentType)
 			.then(
 					function( data ) {
 						if(data.length != 0){
@@ -129,6 +122,7 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 		.then(
 				function( data ) {
 					$scope.payment = data;
+					$scope.paymentCertNo = $scope.payment.paymentCertNo;
 					$scope.mainCertNo.selected = data.mainContractPaymentCertNo;
 					
 					//Get GST value for Singapore jobs

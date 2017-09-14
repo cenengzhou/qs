@@ -1,5 +1,7 @@
 mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies', '$filter', 'paymentService', 'modalService', 'roundUtil', '$state', 'GlobalParameter', 'uiGridConstants', 'confirmService',
                                           function($scope, $stateParams, $cookies, $filter, paymentService, modalService, roundUtil, $state, GlobalParameter, uiGridConstants, confirmService) {
+	//only for init page load, reassign value when paymentCert loaded from backend
+	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	loadData();
 	$scope.disableButtons = true;
 	$scope.GlobalParameter = GlobalParameter;
@@ -373,19 +375,19 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	}
 	
 	function loadData() {
-		if($cookies.get('paymentCertNo') != ""){
+		if($scope.paymentCertNo != ""){
 			getPaymentCert();
 		}else
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please create a payment certificate.");
 	}
 	
 	function getPaymentCert() {
-		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
+		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					var payment = data;
 					$scope.payment = data;
-					
+					$scope.paymentCertNo = $scope.payment.paymentCertNo;
 					if($scope.payment.paymentStatus == "PND")
 						$scope.disableButtons = false;
 
@@ -394,7 +396,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	}
 
 	function getPaymentDetailList() {
-		paymentService.getPaymentDetailList($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
+		paymentService.getPaymentDetailList($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					if($scope.payment.paymentStatus!="PND")
@@ -452,7 +454,7 @@ mainApp.controller('PaymentDetailsCtrl', ['$scope' , '$stateParams', '$cookies',
 	}
 	
 	function updatePaymentDetails(paymentDetails) {
-		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'), '', paymentDetails)
+		paymentService.updatePaymentDetails($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo, '', paymentDetails)
 		.then(
 				function( data ) {
 					if(data.length != 0){

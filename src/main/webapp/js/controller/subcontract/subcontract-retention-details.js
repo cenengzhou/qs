@@ -2,6 +2,7 @@ mainApp.controller('RetentionDetailsModalCtrl', ['$scope',  'modalService', 'sub
                                                  function($scope, modalService, subcontractService , $cookies, $uibModalInstance, roundUtil) {
 
 	$scope.jobNo = $cookies.get("jobNo");
+	//only for init page load, reassign value when subcontract loaded from backend
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 
 	getSubcontract();
@@ -11,6 +12,7 @@ mainApp.controller('RetentionDetailsModalCtrl', ['$scope',  'modalService', 'sub
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
+					$scope.subcontractNo = $scope.subcontract.subcontractNo;
 				});
 	}
 

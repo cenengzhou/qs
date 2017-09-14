@@ -3,6 +3,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
+	//only for init page load, reassign value when subcontract loaded from backend
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 	$scope.subcontractDescription = $cookies.get("subcontractDescription");
 	$scope.paymentStatus = $cookies.get("paymentStatus");
@@ -38,7 +39,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
-
+					$scope.subcontractNo = $scope.subcontract.subontractNo;
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
 						$scope.hideItem = false;
 					else

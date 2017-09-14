@@ -3,6 +3,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 
 	$scope.vendorNo= modalParam;
 	$scope.jobNo = $cookies.get("jobNo");
+	//only for init page load, reassign value when subcontract loaded from backend
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 
 	$scope.currencyCode = {
@@ -229,7 +230,7 @@ mainApp.controller("SubcontractVendorFeedbackModalCtrl", ['$scope', '$uibModalIn
 		.then(
 				function( data ) {
 					$scope.subcontract = data;
-					
+					$scope.subcontractNo = $scope.subcontractr.subcontractNo;
 					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500"){
 						$scope.disableButtons = true;
 					}

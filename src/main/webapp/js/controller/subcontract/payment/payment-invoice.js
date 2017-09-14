@@ -2,6 +2,8 @@ mainApp.controller('PaymentInvoiceCtrl',
 		['$scope' , '$state', '$stateParams', '$cookies', 'paymentService', 'modalService', 'confirmService', 'roundUtil', 'htmlService', 'GlobalHelper',
         function($scope , $state, $stateParams, $cookies, paymentService, modalService, confirmService, roundUtil, htmlService, GlobalHelper) {
 	
+	//only for init page load, reassign value when paymentCert loaded from backend
+	$scope.paymentCertNo = $cookies.get('paymentCertNo');
 	$scope.disableButtons = true;
 	loadData();
 	
@@ -33,7 +35,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 	}
 
 	function loadData() {
-		if($cookies.get('paymentCertNo') != ""){
+		if($scope.paymentCertNo != ""){
 			getPaymentCert();
 			getPaymentCertSummary();
 		}else
@@ -41,7 +43,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 	}
 
 	function getPaymentCert() {
-		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
+		paymentService.getPaymentCert($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					$scope.payment = data;
@@ -53,7 +55,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 	}
 
 	function getPaymentCertSummary() {
-		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
+		paymentService.getPaymentCertSummary($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					$scope.paymentCertSummary = data;
@@ -66,7 +68,7 @@ mainApp.controller('PaymentInvoiceCtrl',
 	}
 	
 	function submitPayment() {
-		paymentService.submitPayment($scope.jobNo, $scope.subcontractNo, $cookies.get('paymentCertNo'))
+		paymentService.submitPayment($scope.jobNo, $scope.subcontractNo, $scope.paymentCertNo)
 		.then(
 				function( data ) {
 					if(data.length != 0){
