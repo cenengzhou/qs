@@ -1,6 +1,7 @@
 mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'resourceSummaryService', 'jdeService', 'modalService', '$cookies', '$state', 'roundUtil',
                                                function ($scope, $uibModalInstance, resourceSummaryService, jdeService, modalService, $cookies, $state, roundUtil) {
 
+	$scope.jobNo = $cookies.get("jobNo");
 	$scope.repackagingId = $cookies.get("repackagingId");
 
 	$scope.units=[];
@@ -76,7 +77,7 @@ mainApp.controller("RepackagingAddModalCtrl", ['$scope', '$uibModalInstance', 'r
 	
 	
 	function addResourceSummary() {
-		resourceSummaryService.addResourceSummary($cookies.get("jobNo"), $scope.repackagingId, $scope.resourceSummary)
+		resourceSummaryService.addResourceSummary($scope.jobNo, $scope.repackagingId, $scope.resourceSummary)
 		.then(
 				function( data ) {
 					if(data.length!=0){

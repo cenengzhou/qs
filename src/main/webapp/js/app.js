@@ -979,6 +979,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	         'js/controller/repackaging/repackaging.js',
                	         'js/controller/repackaging/repackaging-history.js',
                	         'js/controller/repackaging/repackaging-confirm.js',
+               	         'js/service/main-cert-service.js'
 
 
                     ] 

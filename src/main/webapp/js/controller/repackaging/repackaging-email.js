@@ -18,11 +18,11 @@ mainApp.controller("RepackagingEmailCtrl", ['$scope', '$q', '$state', '$http', '
     self.contactsCc = [];
     self.filterSelected = true;
     self.mailData = {};
-    self.emailContext = GlobalMessage.repackagingConfirmEmailContent.replace('%JOBNO%', $cookies.get('jobNo'));
+    self.emailContext = GlobalMessage.repackagingConfirmEmailContent.replace('%JOBNO%', self.jobNo);
     rootscopeService.gettingUser()
     .then(function(response){
     	self.emailSubject = GlobalMessage.repackagingConfirmEmailSubject
-    	.replace('%JOBNO%', $cookies.get('jobNo')).replace('%USERNAME%', response.user.fullname);
+    	.replace('%JOBNO%', self.jobNo).replace('%USERNAME%', response.user.fullname);
     });
     self.querySearch = querySearch;
     self.querySearchCc = querySearchCc;
