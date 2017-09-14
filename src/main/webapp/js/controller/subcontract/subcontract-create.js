@@ -292,7 +292,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	}
 
 	function upateSubcontract(){
-	subcontractService.upateSubcontract($cookies.get("jobNo"), $scope.subcontractToUpdate)
+	subcontractService.upateSubcontract($scope.jobNo, $scope.subcontractToUpdate)
 	.then(
 			function( data ) {
 				if(data.length>0){
@@ -302,7 +302,9 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 					$cookies.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
 			    	$cookies.put('subcontractDescription', $scope.subcontractToUpdate.description);
 			    	$cookies.put('paymentStatus', '');
-			    	$state.reload();
+			    	//replace $scope.jobNo read from $cookie at subcontract-menu.js
+			    	$cookies.put('jobNo', $scope.jobNo);
+			    	$state.reload(); 
 				}
 
 				//Download file				 
