@@ -697,7 +697,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 });
             }]
         },
-        controller: 'NavMenuCtrl'
+//        controller: 'NavMenuCtrl'
 	})
 	.state('subcontract.payment.certificate', {
 		url: "/certificate",

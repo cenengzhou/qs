@@ -63,6 +63,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', 'modalService', '$cookies', '
 		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
+					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
 					if(data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.submittedAddendum ==1){
 						$scope.disableButton = true;
 					}
@@ -97,16 +98,7 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', 'modalService', '$cookies', '
 					$scope.totalCertificateAmount = data;
 				});
 	}
-	
-	function getSubcontract(){
-		subcontractService.getSubcontract($scope.jobNo, $scope.subcontractNo)
-		.then(
-				function( data ) {
-					$scope.paymentTerms = data.paymentTerms + " - " + GlobalParameter.getValueById(GlobalParameter.paymentTerms, data.paymentTerms);
-				});
-	}
-
-	
+		
 	function getPaymentResourceDistribution(){
 		var bqCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'BQ', 'Cumulative');
     	var voCum = paymentService.getPaymentResourceDistribution($scope.jobNo, $scope.subcontractNo, 'VO', 'Cumulative');
