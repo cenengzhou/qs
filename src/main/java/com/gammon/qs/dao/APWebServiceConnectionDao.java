@@ -1,6 +1,7 @@
 package com.gammon.qs.dao;
 
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,9 @@ public class APWebServiceConnectionDao {
 			}
 			return errorMsg;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return "Approval cannot be created. Please contact helpdesk.";
+			logger.log(Level.SEVERE,e.getMessage(),e);
+			String message = e.getMessage() != null ? e.getMessage() : "Approval cannot be created. Please contact helpdesk.";
+			return message;
 		}
 	}
 	
