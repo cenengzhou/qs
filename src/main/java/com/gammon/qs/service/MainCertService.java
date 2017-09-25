@@ -117,6 +117,12 @@ public class MainCertService {
 		String jobNo = newMainContractCert.getJobNo();
 		Integer mainCertNo = newMainContractCert.getCertificateNumber();
 		
+		MainCert latestMainCert = getLatestMainCert(jobNo, null);
+		if(new Integer(latestMainCert.getCertificateStatus()) < new Integer(MainCert.CERT_POSTED)) {
+			message = "Main Cert " + latestMainCert.getCertificateNumber() + " not posted yet";
+			return message;
+		}		
+		
 		if (mainCertHBDao.findByJobNoAndCertificateNo(newMainContractCert.getJobNo(), mainCertNo)!=null){
 			message = "The Main Contract Certificate existed already. Job: "+jobNo+" Cert No.: "+mainCertNo;
 			logger.info(message);
