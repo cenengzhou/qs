@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -37,7 +38,7 @@ import com.gammon.qs.shared.util.CalculationUtil;
 @Entity
 @DynamicUpdate
 @SelectBeforeUpdate
-@Table(name = "PAYMENT_CERT")
+@Table(name = "PAYMENT_CERT", uniqueConstraints = @UniqueConstraint(columnNames = {"jobNo", "packageNo", "paymentCertNo"}))
 @OptimisticLocking(type = OptimisticLockType.NONE)
 @SequenceGenerator(name = "PAYMENT_CERT_GEN", sequenceName = "PAYMENT_CERT_SEQ", allocationSize = 1)
 @AttributeOverride(name = "id", column = @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false, precision = 19, scale = 0))
@@ -157,7 +158,7 @@ public class PaymentCert extends BasePersistedObject {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PAYMENT_CERT_GEN")
 	public Long getId(){return super.getId();}
 
-	@Column(name = "jobNo", length = 12)
+	@Column(name = "jobNo", length = 12, nullable = false)
 	public String getJobNo() {
 		return jobNo;
 	}
@@ -165,7 +166,7 @@ public class PaymentCert extends BasePersistedObject {
 		this.jobNo = jobNo;
 	}
 	
-	@Column(name = "packageNo", length = 10)
+	@Column(name = "packageNo", length = 10, nullable = false)
 	public String getPackageNo() {
 		return packageNo;
 	}
@@ -173,7 +174,7 @@ public class PaymentCert extends BasePersistedObject {
 		this.packageNo = packageNo;
 	}
 		
-	@Column(name = "paymentCertNo")
+	@Column(name = "paymentCertNo", nullable = false)
 	public Integer getPaymentCertNo() {
 		return paymentCertNo;
 	}

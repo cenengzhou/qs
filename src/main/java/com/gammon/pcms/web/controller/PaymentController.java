@@ -204,4 +204,11 @@ public class PaymentController {
 		return wrapperList;
 	}
 
+	@PreAuthorize(value = "@GSFService.isFnEnabled('PaymentController','deletePendingPaymentAndDetails', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "deletePendingPaymentAndDetails", method = RequestMethod.POST)
+	public void deletePendingPaymentAndDetails(@RequestParam long paymentCertId){
+		paymentService.deletePendingPaymentAndDetails(paymentCertId);
+	}
+	
+
 }

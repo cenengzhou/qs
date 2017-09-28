@@ -24,8 +24,7 @@
 		</form>
 	</div>
 
-	<form name="RevisionsPaymentCertRecord"
-		ng-submit="onSubmitPaymentCertRecord()">
+	<form name="RevisionsPaymentCertRecord">
 		<div class="row" style="padding: 20px" ng-show="PaymentCertRecord.paymentCertNo"
 			ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
 			<div class="row" resize ng-style="resizeWithOffset(330)">
@@ -260,7 +259,12 @@
 
 			<div class="row"
 				ng-show="true || PaymentCertRecord.paymentCertNo !== undefined">
-				<button ng-show="showQSAdmin" type="submit" class="btn btn-block btn-primary">Update</button>
+				<div ng-show="showQSAdmin" ng-class="{'col-md-6':PaymentCertRecord.paymentStatus == 'PND', 'col-md-12':PaymentCertRecord.paymentStatus != 'PND'}">
+					<button ng-click="onSubmitPaymentCertRecord()" type="button" class="btn btn-block btn-primary"">Update</button>
+				</div>
+				<div class="col-md-6" ng-show="showQSAdmin && PaymentCertRecord.paymentStatus == 'PND'" >
+					<button ng-click="deletePendingPaymentAndDetails()" type="button" class="btn btn-block btn-danger">Delete</button>
+				</div>
 			</div>
 
 		</div>

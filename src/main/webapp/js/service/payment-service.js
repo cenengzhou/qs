@@ -18,8 +18,8 @@ mainApp.service('paymentService', ['$http', '$q', '$log', 'GlobalHelper',  funct
     	submitPayment:							submitPayment,
     	updateF58011FromSCPaymentCertManually: 	updateF58011FromSCPaymentCertManually,
     	runPaymentPosting:						runPaymentPosting,
-    	obtainPaymentCertificateList:			obtainPaymentCertificateList
-    	
+    	obtainPaymentCertificateList:			obtainPaymentCertificateList,
+    	deletePendingPaymentAndDetails:			deletePendingPaymentAndDetails    	
     });
 	
     function getPaymentCertList(jobNo, subcontractNo) {
@@ -262,7 +262,18 @@ mainApp.service('paymentService', ['$http', '$q', '$log', 'GlobalHelper',  funct
 		});
 		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
 	}
-    
+  
+    function deletePendingPaymentAndDetails(paymentCertId) {
+		var request = $http({
+			method: "post",
+			url: "service/payment/deletePendingPaymentAndDetails",
+			params: {
+				paymentCertId: paymentCertId
+			}
+		});
+		return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+	}
+
 }]);
 
 

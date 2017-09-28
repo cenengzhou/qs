@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
@@ -2233,5 +2234,15 @@ public class PaymentService{
 		return results;
 	}
 
-	
+	public void deletePendingPaymentAndDetails(long paymentCertId) {
+		PaymentCert paymentCert = paymentCertDao.get(paymentCertId);
+		if(paymentCert == null) throw new NoSuchElementException("Payment not found");
+		if(!PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())) throw new IllegalArgumentException("Only pending payment can be deleted");
+		List<PaymentCertDetail> paymentCertDetailList = paymentDetailDao.obtainSCPaymentDetailBySCPaymentCert(paymentCert);	
+		paymentCertDetailList.forEach(paymentCertDetail -> {
+			paymentDetailDao.delete(paymentCertDetail);
+		});
+		paymentCertDao.delete(paymentCert);
+	}
+
 }

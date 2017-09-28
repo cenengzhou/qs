@@ -46,6 +46,16 @@ mainApp.controller('AdminRevisionsPaymentCtrl',
 		cleanupPaymentCertRecord();
 	};
 	
+	$scope.deletePendingPaymentAndDetails = function(){
+		paymentService.deletePendingPaymentAndDetails($scope.PaymentCertRecord.id)
+		.then(function(data){
+			if(data === ''){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Payment Certificate " + $scope.PaymentCertRecord.paymentCertNo + " deleted.");
+				$scope.PaymentCertRecord = null;
+			}
+		})
+	}
+	
 	function cleanupPaymentCertRecord(){
 		$scope.RevisionsPaymentCertRecord.$setPristine();
 //		$scope.PaymentCertRecord = {};
