@@ -16,6 +16,7 @@ import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.shared.util.CalculationUtil;
@@ -157,6 +158,7 @@ public class PaymentCertDetail extends BasePersistedAuditObject {
 		return (cumAmount !=null && movementAmount!=null ? CalculationUtil.round(cumAmount- movementAmount, 2): 0.0);
 	}
 	
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SUBCONTRACT_DETAIL_ID")
 	public SubcontractDetail getSubcontractDetail() {

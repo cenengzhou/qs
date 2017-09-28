@@ -19,6 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import com.gammon.pcms.application.PcmsPersistedAuditObject;
 import com.gammon.qs.domain.SubcontractDetail;
@@ -367,6 +368,7 @@ public class AddendumDetail extends PcmsPersistedAuditObject {
 		this.idResourceSummary = idResourceSummary;
 	}
 	
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@OneToOne
 	@JoinColumn(name = "ID_SUBCONTRACT_DETAIL")
 	public SubcontractDetail getIdSubcontractDetail() {

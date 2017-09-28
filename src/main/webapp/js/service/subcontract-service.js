@@ -43,6 +43,8 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getSCDetailForAddendumUpdate:						getSCDetailForAddendumUpdate,
     	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails,
     	getPerforamceAppraisalsList:						getPerforamceAppraisalsList,
+    	updateSubcontractDetailAdmin:						updateSubcontractDetailAdmin,
+    	getSubcontractDetail:								getSubcontractDetail
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -484,6 +486,25 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
        	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
+    function updateSubcontractDetailAdmin(subcontractDetail){
+       	var request = $http.post('service/subcontract/updateSubcontractDetailAdmin', subcontractDetail);
+       	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+    
+    function getSubcontractDetail(jobNo, subcontractNo, sequenceNo) {
+        var request = $http({
+            method: "get",
+            url: "service/subcontract/getSubcontractDetail",
+            dataType: "application/json;charset=UTF-8",
+            params: {
+            	jobNo: jobNo,
+            	subcontractNo: subcontractNo,
+            	sequenceNo: sequenceNo
+            }
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
     function getSubcontractSnapshotList(year, month, awardOnly, commonKeyValue){
     	var request = $http({
     		method: 'post',

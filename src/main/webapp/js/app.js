@@ -1477,6 +1477,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-ManualProcedures.js',
                            'js/controller/admin/admin-Revisions.js',
                            'js/controller/admin/admin-Revisions-Subcontract.js',
+                           'js/controller/admin/admin-Revisions-SubcontractDetail.js',
                            'js/controller/admin/admin-Revisions-Payment.js',
                            'js/controller/admin/admin-Revisions-Addendum.js',
                            'js/controller/admin/admin-Revisions-MainCert.js',
@@ -1527,6 +1528,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		templateUrl: 'view/admin/admin-Revisions-Subcontract.html',
 		controller: 'AdminRevisionsSubcontractCtrl'
 	})
+	.state('admin.Revisions.SubcontractDetail',{
+		url: '/SubcontractDetail',
+		templateUrl: 'view/admin/admin-Revisions-SubcontractDetail.html',
+		controller: 'AdminRevisionsSubcontractDetailCtrl'
+	})	
 	.state('admin.Revisions.Payment',{
 		url: '/Payment',
 		templateUrl: 'view/admin/admin-Revisions-Payment.html',

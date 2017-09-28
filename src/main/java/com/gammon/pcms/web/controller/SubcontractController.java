@@ -104,6 +104,12 @@ public class SubcontractController {
 		return scDetails;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractDetail', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getSubcontractDetail", method = RequestMethod.GET)
+	public SubcontractDetail getSubcontractDetail(@RequestParam String jobNo, @RequestParam String subcontractNo, String sequenceNo) throws DatabaseOperationException{
+		return subcontractService.obtainSubcontractDetail(jobNo, subcontractNo, sequenceNo);
+	}
+
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getSubcontractDetailForWD', @securityConfig.getRolePcmsEnq())")
 	@RequestMapping(value = "getSubcontractDetailForWD", method = RequestMethod.GET)
 	public List<SubcontractDetail> getSubcontractDetailForWD(@RequestParam(required =true) String jobNo, @RequestParam(required =true) String subcontractNo){
@@ -411,6 +417,13 @@ public class SubcontractController {
 	public String updateSubcontractAdmin(@RequestBody Subcontract subcontract) {
 		if(subcontract.getId() == null) throw new IllegalArgumentException("Invalid Subcontract");
 		return subcontractService.updateSubcontractAdmin(subcontract);
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateSubcontractDetailAdmin", method = RequestMethod.POST)
+	public void updateSubcontractDetailAdmin(@RequestBody SubcontractDetail subcontractDetail) throws Exception {
+		if((subcontractDetail).getId() == null) throw new IllegalArgumentException("Invalid Subcontract Detail");
+		subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getPerforamceAppraisalsList', @securityConfig.getRolePcmsEnq())")

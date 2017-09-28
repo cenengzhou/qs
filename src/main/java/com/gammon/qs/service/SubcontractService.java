@@ -1243,6 +1243,10 @@ public class SubcontractService {
 		}
 	}
 
+	public void updateSubcontractDetailAdmin(SubcontractDetail subcontractDetail) throws Exception {
+		subcontractDetailHBDao.saveOrUpdate(subcontractDetail);
+	}
+	
     public String updateSubcontractAdmin(Subcontract subcontract) {
     	//TODO: remove entity | SCPackageControl | remark SCPackageControl assignSCPackageControl(packageInDB, subcontract)
 	if (Subcontract.INTERNAL_TRADING.equalsIgnoreCase(subcontract.getFormOfSubcontract())) {
@@ -1947,6 +1951,12 @@ public class SubcontractService {
 			logger.info("Job: "+jobNo+" Package No.: "+subcontractNo+" SCDetail List size: "+scDetails.size());*/
 
 		return scDetails;
+	}
+	
+	public SubcontractDetail obtainSubcontractDetail(String jobNo, String subcontractNo, String sequenceNo) throws DatabaseOperationException {
+		Subcontract subcontract = obtainSubcontract(jobNo, subcontractNo);
+		SubcontractDetail subcontractDetail = subcontractDetailHBDao.getSCDetail(subcontract, sequenceNo);
+		return subcontractDetail;
 	}
 	
 	public String upateSubcontract(String jobNo, Subcontract subcontract) throws Exception{
