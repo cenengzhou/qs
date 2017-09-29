@@ -671,6 +671,10 @@ public class TransitService implements Serializable {
 					accountCodes.add(accountCode);
 				}
 				else{
+					if(resourceCode.length() < 5) {
+						errorList.add("An error occurred while trying to process the excel file, at line " + i + ": " + "[Column I] Resource code less then 5 characters");
+						continue;
+					}
 					String accountCode = codeMap.get(resourceCode.substring(0, 5).toUpperCase());
 					if(accountCode != null){
 						String[] objSub = accountCode.split("\\.");
