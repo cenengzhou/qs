@@ -20,7 +20,7 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 	}
 	
 	$scope.navigateToTransit = function(){
-		transitService.getTransit($scope.jobNo)
+		transitService.getTransit($cookies.get("jobNo"))
 		.then(
 				function(transit){
 						if(transit){
