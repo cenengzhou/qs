@@ -368,7 +368,7 @@ public class HTMLService implements Serializable{
 		if(!GenericValidator.isBlankOrNull(jobNumber) && !GenericValidator.isBlankOrNull(mainCertNo)){
 			try {
 				JobInfo job = jobInfoHBDao.obtainJobInfo(jobNumber);
-				
+				String currency = accountCodeDao.obtainCurrencyCode(jobNumber);
 				AddressBook clientAddressBook = adlService.getAddressBook(new BigDecimal(job.getEmployer()));
 				
 				MainCert mainCert = mainCertHBDao.findByJobNoAndCertificateNo(jobNumber, Integer.valueOf(mainCertNo));
@@ -379,6 +379,7 @@ public class HTMLService implements Serializable{
 				if(mainCert!=null){
 					Map<String, Object> data = new HashMap<String, Object>();
 					data.put("job", job);
+					data.put("currency", currency);
 					data.put("clientAddressBook", clientAddressBook != null ? clientAddressBook : new AddressBook());
 					data.put("mainCert", mainCert);
 					data.put("previousCert", previousCert);
