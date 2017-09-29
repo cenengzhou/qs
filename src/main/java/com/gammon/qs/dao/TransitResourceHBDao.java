@@ -81,6 +81,7 @@ public class TransitResourceHBDao extends BaseHibernateDao<TransitResource> {
 				.add(Projections.groupProperty("transit.jobNumber"), "jobNumber")
 				.add(Projections.groupProperty("type"), "type")
 				.add(Projections.groupProperty("objectCode"), "objectCode")
+				.add(Projections.groupProperty("subsidiaryCode"), "subsidiaryCode")
 				.add(Projections.groupProperty("resourceCode"), "resourceCode")
 				.add(Projections.groupProperty("packageNo"), "packageNo")
 				.add(Projections.groupProperty("description"), "description")

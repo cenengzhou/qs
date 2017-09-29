@@ -15,6 +15,7 @@ public class TransitBQResourceReconciliationReportRecordWrapper implements Seria
 	private String jobNumber;
 	private String type;
 	private String objectCode;
+	private String subsidiaryCode;
 	private String resourceCode;
 	private String description;
 	private String packageNo;
@@ -48,6 +49,14 @@ public class TransitBQResourceReconciliationReportRecordWrapper implements Seria
 	
 	public String getResourceCode() {
 		return resourceCode;
+	}
+	
+	public String getSubsidiaryCode() {
+		return subsidiaryCode;
+	}
+	
+	public void setSubsidiaryCode(String subsidiaryCode) {
+		this.subsidiaryCode = subsidiaryCode;
 	}
 	
 	public void setResourceCode(String resourceCode) {
