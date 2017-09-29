@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,7 +42,7 @@ import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
 @RestController
 @RequestMapping(value = "service/subcontract/", produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 public class SubcontractController {
-//	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	private SubcontractService subcontractService;
@@ -424,6 +425,18 @@ public class SubcontractController {
 	public void updateSubcontractDetailAdmin(@RequestBody SubcontractDetail subcontractDetail) throws Exception {
 		if((subcontractDetail).getId() == null) throw new IllegalArgumentException("Invalid Subcontract Detail");
 		subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
+	}
+
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
+	@RequestMapping(value = "updateSubcontractDetailListAdmin", method = RequestMethod.POST)
+	public void updateSubcontractDetailListAdmin(@RequestBody List<SubcontractDetail> subcontractDetailList) throws Exception {
+		subcontractDetailList.forEach(subcontractDetail -> {
+			try {
+				updateSubcontractDetailAdmin(subcontractDetail);
+			} catch (Exception e) {
+				logger.error("error", e);
+			}
+		});
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getPerforamceAppraisalsList', @securityConfig.getRolePcmsEnq())")

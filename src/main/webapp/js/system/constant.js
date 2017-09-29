@@ -284,6 +284,10 @@ mainApp.constant('GlobalParameter', {
 		{id: 'true', value: 'True'},
 		{id: 'false', value: 'False'}
 	],
+	systemStatuOptions:[
+		{id: 'ACTIVE', value: 'ACTIVE'},
+		{id: 'INACTIVE', value: 'INACTIVE'}
+	],
 	zeroOneOptions:[
 		{id: true, value: 'True'},
 		{id: false, value: 'False'}

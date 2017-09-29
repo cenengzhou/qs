@@ -1,134 +1,178 @@
-mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalService', 'GlobalHelper', 'GlobalParameter', 'subcontractService',
-										function($scope, modalService, GlobalHelper, GlobalParameter, subcontractService) {
+mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalService', 'GlobalHelper', 'GlobalParameter', 'subcontractService', 'rootscopeService',
+										function($scope, modalService, GlobalHelper, GlobalParameter, subcontractService, rootscopeService) {
 
-	Field.count = 0;
-	Field.prototype.getNextOrder = fieldGetNextOrder;
-	Field.prototype.setOrderNo = fieldSetOrderNo;
-	Field.prototype.setOptions = fieldSetOptions;
-	Field.prototype.setReadOnly = fieldSetReadOnly;
-	Field.prototype.hide = fieldHide;
-	$scope.subcontractDetail = {};
-	$scope.subcontractDetailSearch = {};
-	$scope.openDropdown = openDropdown;
-	$scope.loadDatePickerFn = loadDatePickerFn;
-	$scope.onSubcontractDetailSearch = onSubcontractDetailSearch;
-	$scope.onSubcontractDetailUpdate = onSubcontractDetailUpdate;
-	$scope.fieldList = [
-		new Field('id', null, 'number').setReadOnly(true).hide(),
-		new Field('lastModifiedDate', 'Last Modify Date', 'date').setReadOnly(true),
-		new Field('lastModifiedUser', 'Last Modify User', 'text').setReadOnly(true),
-		new Field('createdDate', 'Date Create', 'date').setReadOnly(true),
-		new Field('createdUser', 'User Create', 'text').setReadOnly(true),
-		new Field('systemStatus', 'System Status', 'select').setOptions([{id:'ACTIVE', value:'ACTIVE'}, {id:'INACTIVE', value:'INACTIVE'}]),
-		new Field('jobNo', 'Job Number', 'text').setReadOnly(true),
-		new Field('sequenceNo', 'Sequence Number', 'text').setReadOnly(true),
-		new Field('resourceNo', 'Resource Number', 'text'),
-		new Field('billItem', 'Bill Item', 'text'),
-		new Field('description', 'Description', 'text'),
-		new Field('quantity', 'Quantity', 'number'),
-		new Field('scRate', 'Subcontract Rate', 'number'),
-		new Field('objectCode', 'Object Code', 'text'),
-		new Field('subsidiaryCode', 'Subsidiary Code', 'text'),
-		new Field('lineType', 'Line Type', 'text'),
-		new Field('approved', 'Approved', 'select').setOptions([{id:'A', value:'Approved'}, {id:'N', value:'Not Approved'}]),
-		new Field('unit', 'Unit', 'text'),
-		new Field('remark', 'Remark', 'textarea'),
-		new Field('postedCertifiedQuantity', 'Posted Cert Qty', 'number'),
-		new Field('cumCertifiedQuantity', 'Cum Cert Qty', 'number'),
-		new Field('originalQuantity', 'Original Qty', 'number'),
-		new Field('newQuantity', 'New Qty', 'number'),
-		new Field('toBeApprovedRate', 'To Be Approved Rate', 'number'),
-		new Field('amountSubcontract', 'Subcontract Amount', 'number'),
-		new Field('amountBudget', 'Budget Amount', 'number'),
-		new Field('amountCumulativeCert', 'Cum Cert Amount', 'number'),
-		new Field('amountPostedCert', 'Posted Cert Amount', 'number'),
-		new Field('amountSubcontractNew', 'New Subcontract Amount', 'number')
-	];
+	$scope.onSubmitSubcontractDetailSearch = onSubmitSubcontractDetailSearch;
+
+	rootscopeService.gettingUser()
+	.then(function (response){
+		$scope.isEditable =  GlobalHelper.containRole('ROLE_QS_QS_ADM', response.user.UserRoles);
+	});
+	$scope.canEdit = function(){
+		return $scope.isEditable;
+	}
 	
-	function onSubcontractDetailSearch(){
-		if(GlobalHelper.checkNull([$scope.subcontractDetailSearch.jobNo, $scope.subcontractDetailSearch.subcontractNo, $scope.subcontractDetailSearch.sequenceNo])) return;
-		subcontractService.getSubcontractDetail($scope.subcontractDetailSearch.jobNo, $scope.subcontractDetailSearch.subcontractNo, $scope.subcontractDetailSearch.sequenceNo)
-		.then(function(data){
-			if(data == "") {
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Subcontract Detail not found");
-				$scope.subcontractDetail = {};
-			} else {
-				$scope.subcontractDetail = data;
+	$scope.gridOptions = {
+			enableFiltering: true,
+			enableColumnResizing : true,
+			enableGridMenu : true,
+			enableRowSelection: true,
+			enableSelectAll: true,
+			enableFullRowSelection: false,
+			multiSelect: true,
+			showGridFooter : true,
+			showColumnFooter: true,
+			enableCellEditOnFocus : true,
+			allowCellFocus: false,
+			exporterMenuPdf: false,
+			enableCellSelection: false,
+			rowEditWaitInterval :-1,
+			columnDefs: [
+	             { field: 'id', width: '120', displayName: "ID", enableCellEdit: false },
+	             { field: 'jobNo', width: '120', displayName: "Job Number", enableCellEdit: false },
+	             { field: 'subcontract.packageNo', width: '120', displayName: "Subcontract", enableCellEdit: false },
+	             { field: 'sequenceNo', width: '120', displayName: "Sequence Number", enableCellEdit: false },
+	             { field: 'description', width: '240', displayName: "Description", enableCellEdit: $scope.canEdit },
+	             { field: 'remark', width: '360', displayName: "Remark", enableCellEdit: $scope.canEdit },
+	             { field: 'objectCode', width: '120', displayName: "Object Code", enableCellEdit: $scope.canEdit },
+	             { field: 'subsidiaryCode', width: '120', displayName: "Subsidiary Code", enableCellEdit: $scope.canEdit },
+	             { field: 'billItem', width: '120', displayName: "Bill Item", enableCellEdit: $scope.canEdit },
+	             { field: 'unit', width: '120', displayName: "Unit", enableCellEdit: $scope.canEdit },
+	             { field: 'lineType', width: '120', displayName: "Line Type", enableCellEdit: $scope.canEdit },
+	             { field: 'approved', width: '120', displayName: "Approved", enableCellEdit: $scope.canEdit },
+	             { field: 'resourceNo', width: '120', displayName: "Resource Number", enableCellEdit: $scope.canEdit },
+	             { field: 'scRate', width: '120', displayName: "Subcontract Rate", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.scRate);
+	            	 }
+	             },
+	             { field: 'quantity', width: '120', displayName: "Quantity", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.quantity);
+	            	 }
+	             },
+	             { field: 'amountCumulativeCert', width: '120', displayName: "Cum Cert Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountCumulativeCert);
+	            	 }	            
+	             },
+	             { field: 'cumCertifiedQuantity', width: '120', displayName: "Cum Cert Qty", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.cumCertifiedQuantity);
+	            	 }	                        	 
+	             },
+	             { field: 'amountPostedCert', width: '120', displayName: "Posted Cert Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountPostedCert);
+	            	 }	                        	 
+	             },
+	             { field: 'postedCertifiedQuantity', width: '120', displayName: "Posted Cert Qty", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.postedCertifiedQuantity);
+	            	 }	                        	 
+	             },
+	             { field: 'amountSubcontractNew', width: '120', displayName: "New Subcontract Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountSubcontractNew);
+	            	 }	                        	 
+	             },
+	             { field: 'newQuantity', width: '120', displayName: "New Qty", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.newQuantity);
+	            	 }	                        	            	 
+	             },
+	             { field: 'originalQuantity', width: '120', displayName: "Original Qty", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.originalQuantity);
+	            	 }
+	             },
+	             { field: 'toBeApprovedRate', width: '120', displayName: "To Be Approved Rate", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.toBeApprovedRate);
+	            	 }
+	             },
+	             { field: 'amountSubcontract', width: '120', displayName: "Subcontract Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountSubcontract);
+	            	 }
+	             },
+	             { field: 'amountBudget', width: '120', displayName: "Budget Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountBudget);
+	            	 }
+	             },
+	             { field: 'lastModifiedDate', width: '120', displayName: "Last Modify Date", enableCellEdit: false },
+	             { field: 'lastModifiedUser', width: '120', displayName: "Last Modify User", enableCellEdit: false },
+	             { field: 'createdDate', width: '120', displayName: "Date Create", enableCellEdit: false },
+	             { field: 'createdUser', width: '120', displayName: "User Create", enableCellEdit: false },
+	             { field: 'systemStatus', width: '120', displayName: "System Status", enableCellEdit: $scope.canEdit,
+					editableCellTemplate : 'ui-grid/dropdownEditor',
+					editDropdownOptionsArray : GlobalParameter.systemStatuOptions,
+					cellFilter : 'dropdownFilter:"systemStatuOptions"',
+					editDropdownIdLabel : 'id',
+					editDropdownValueLabel : 'value'
+	             }
+			]
+	}
+	
+	$scope.updateGrid = function(){
+		var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
+		var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+		if(dataRows.length > 0){
+			subcontractService.updateSubcontractDetailListAdmin(dataRows)
+			.then(function(data){
+				$scope.gridApi.rowEdit.setRowsClean(dataRows);
+				if(data == ''){
+					modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Subcontract Detail updated');
+				} 
+			})
+		} else {
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', 'No Subcontract Detail modified');
+		}
+	}
+	
+	$scope.gridOptions.onRegisterApi= function(gridApi){
+		$scope.gridApi = gridApi;
+		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+			if(newValue != oldValue){
+				$scope.gridApi.rowEdit.setRowsDirty( [rowEntity]);
 			}
+		});
+	}
+	
+	function onSubmitSubcontractDetailSearch(){
+		subcontractService.getSCDetails($scope.subcontractDetailSearch.jobNo, $scope.subcontractDetailSearch.subcontractNo)
+		.then(function(data){
+			$scope.gridOptions.data = data;
+			$scope.subcontractDetailList = data;
+			$scope.subcontractDetailList.forEach(function(subcontractDetail){
+				$scope.fieldList.forEach(function(field){
+					if(field.type == 'boolean' && typeof subcontractDetail[field.name] == 'boolean'){
+						subcontractDetail[field.name] = subcontractDetail[field.name] ? 'true' : 'false';
+					}
+				});
+			});
 		})
 	}
 	
-	function onSubcontractDetailUpdate(){
-		subcontractService.updateSubcontractDetailAdmin($scope.subcontractDetail)
+	function onUpdateSubcontractDetailRecord(resourceSummary){
+		resourceSummaryService.updateResourceSummariesForAdmin(resourceSummary.jobInfo.jobNo, [resourceSummary])
 		.then(function(data){
-			if(data === ""){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Record updated");
+			if(data == ''){
+				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', 'Resource summary updated');
 			}
 		})
-	}
-	
-	function openDropdown( $event){
-		angular.element('input[name="' + $event.currentTarget.nextElementSibling.name + '"').click();
-	}
-	
-	function loadDatePickerFn (){
-		angular.element('input[name$=".singleDate"').daterangepicker({
-		    singleDatePicker: true,
-		    autoUpdateInput: false,
-		    showDropdowns: true,
-		    timePicker: false,
-		    timePicker24Hour: true,
-		    autoApply: true,
-			locale: {
-			      format: GlobalParameter.MOMENT_DATE_FORMAT
-			    },
-
-		});
-		
-		angular.element('input[name$=".singleDate"').on('apply.daterangepicker', function(ev, picker) {
-		      $(this).val(picker.startDate.format(GlobalParameter.MOMENT_DATE_FORMAT));
-		      $scope.subcontractDetail[ev.delegateTarget.name.replace(/.singleDate/, '')] = $(this).val();
-		  });
-		
-		angular.element('input[name$=".singleDate"').on('cancel.daterangepicker', function(ev, picker) {
-	      $(this).val('');
-		});
-	}
-
-	function Field(name, label, type, readOnly, visible){
-		this.name = name;
-		this.label = label || name;
-		this.type = type || 'text';
-		this.order = this.getNextOrder();
-		this.readOnly = readOnly || false;
-		this.visible = visible || true;
-		this.value = '';
-		return this;
-	}
-	
-	function fieldGetNextOrder(){
-		Field.count += 1;
-		return Field.count;
-	}
-	
-	function fieldSetOrderNo(no){
-		this.order = no;
-		return this;
-	}
-	
-	function fieldSetOptions(options){
-		this.options = options;
-		return this;
-	}
-	
-	function fieldSetReadOnly(isReadOnly){
-		this.readOnly = isReadOnly;
-		return this;
-	}
-	
-	function fieldHide(){
-		this.visible = false;
-		return this;
 	}
 	
 }]);

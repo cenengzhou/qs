@@ -44,6 +44,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getDefaultValuesForSubcontractDetails:				getDefaultValuesForSubcontractDetails,
     	getPerforamceAppraisalsList:						getPerforamceAppraisalsList,
     	updateSubcontractDetailAdmin:						updateSubcontractDetailAdmin,
+    	updateSubcontractDetailListAdmin:					updateSubcontractDetailListAdmin,
     	getSubcontractDetail:								getSubcontractDetail
     });
 	
@@ -491,6 +492,11 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
        	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
     
+    function updateSubcontractDetailListAdmin(subcontractDetailList){
+       	var request = $http.post('service/subcontract/updateSubcontractDetailListAdmin', subcontractDetailList);
+       	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+ 
     function getSubcontractDetail(jobNo, subcontractNo, sequenceNo) {
         var request = $http({
             method: "get",

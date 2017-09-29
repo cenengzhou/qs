@@ -1,54 +1,26 @@
 <div class="row well">
 	<form name="RevisionsSubcontractDetailSearch"
-		ng-submit="onSubcontractDetailSearch()" class="form">
-		<div class="col-md-3">
+		ng-submit="onSubmitSubcontractDetailSearch()" class="form">
+		<div class="col-md-4">
 			<input type="number" class="form-control" placeholder="Job Number:" required
 				id="subcontractDetailSearch_jobNo" ng-model="subcontractDetailSearch.jobNo">
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<input type="number" class="form-control" placeholder="Subcontract Number:" required
 				id="subcontractDetailSearch_subcontractNo" ng-model="subcontractDetailSearch.subcontractNo">
 		</div>
-		<div class="col-md-3">
-			<input type="number" class="form-control" placeholder="Sequence Number:" required
-				id="subcontractDetailSearch_sequenceNo" ng-model="subcontractDetailSearch.sequenceNo">
-		</div>
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<button type="submit" class="btn btn-block btn-primary"
 				id="subcontractDetailSearch_submit">Search</button>
 		</div>
 	</form>
 </div>
-<div ng-if="subcontractDetail.id" class="panel panel-default">
-	<div class="panel-headinig"></div>
-	<div class="panel-body">
-		<span ng-repeat="field in fieldList | filter:{visible:true, type:'textarea'} | orderBy: 'label'" class="col-md-12 p-t-20">
-			<label>{{field.label}}</label>
-			<textarea class="form-control" ng-model="subcontractDetail[field.name]" ng-disabled="field.readOnly" />
-		</span>
-		<span ng-repeat="field in fieldList | filter:{visible:true, type:'select'}" class="col-md-4 p-t-20">
-			<label>{{field.label}}</label>
-			<select class="form-control" ng-model="subcontractDetail[field.name]" ng-disabled="field.readOnly">
-				<option ng-repeat="option in field.options" value="{{option.id}}">{{option.value}}</option>
-			</select>
-		</span>
-		<span ng-repeat="field in fieldList | filter:{visible:true, type:'text'}:true | orderBy: 'label'" class="col-md-4 p-t-20">
-			<label>{{field.label}}</label>
-			<input type="text" class="form-control" ng-model="subcontractDetail[field.name]" ng-disabled="field.readOnly">
-		</span>
-		<span ng-repeat="field in fieldList | filter:{visible:true, type:'number'} | orderBy: 'label'"class="col-md-4 p-t-20">
-			<label>{{field.label}}</label>
-			<input type="number" class="form-control" ng-model="subcontractDetail[field.name]" ng-disabled="field.readOnly">
-		</span>
-		<span ng-repeat="field in fieldList | filter:{visible:true, type:'date'}" class="col-md-4 p-t-20" on-finish-ng-repeat call-fn="loadDatePickerFn()">
-			<label>{{field.label}}</label>
-			<div class="input-group">
-				<span class="input-group-addon" ng-click="!field.readOnly && openDropdown($event)"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-				<input class="form-control" type="text" name="{{field.name}}.singleDate" ng-model="subcontractDetail[field.name]" ng-disabled="field.readOnly"/>
-			</div>
-		</span>
-		<span class="col-md-12 p-t-20" >
-			<button class="form-control btn btn-primary" ng-show="showQSAdmin" type="submit" ng-click="onSubcontractDetailUpdate()" style="color:white">Update</button>
-		</span>
+<div class="col-md-12"><br>
+	<div id="" save-and-restore-grid-state="admin_revisions_subcontract_detail" ui-grid-save-state ui-grid="gridOptions" external-scopes="clickHandler" ui-grid-resize-columns ui-grid-move-columns 
+		ui-grid-row-edit ui-grid-exporter ui-grid-selection ui-grid-cellnav ui-grid-edit class="grid"
+		resize ng-style="resizeWithOffset(365)">
+	</div>
+	<div class="row">
+		<button ng-show="showQSAdmin" ng-click="updateGrid()" type="button" class="btn btn-block btn-primary">Update Subcontract Detail</button>
 	</div>
 </div>
