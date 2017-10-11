@@ -2234,7 +2234,7 @@ public class PaymentService{
 		return results;
 	}
 
-	public void deletePendingPaymentAndDetails(long paymentCertId) {
+	public void deletePendingPaymentAndDetails(long paymentCertId) throws Exception {
 		PaymentCert paymentCert = paymentCertDao.get(paymentCertId);
 		if(paymentCert == null) throw new NoSuchElementException("Payment not found");
 		if(!PaymentCert.PAYMENTSTATUS_PND_PENDING.equals(paymentCert.getPaymentStatus())) throw new IllegalArgumentException("Only pending payment can be deleted");
@@ -2242,6 +2242,7 @@ public class PaymentService{
 		paymentCertDetailList.forEach(paymentCertDetail -> {
 			paymentDetailDao.delete(paymentCertDetail);
 		});
+		attachmentService.deleteAttachmentByPaymentCert(paymentCert);
 		paymentCertDao.delete(paymentCert);
 	}
 
