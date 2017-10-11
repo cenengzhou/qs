@@ -165,7 +165,7 @@ mainApp.controller('TransitConfirmCtrl', ['$scope', 'modalService', 'transitServ
     
     $scope.confirmResources = function(){
     	var modalOptions = {
-				bodyText: 'Do you want system to group resources into Packages?'
+				bodyText: 'Do you want system to group resources into Packages (existing package number will be overwritten) ?'
 		};
 
 

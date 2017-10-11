@@ -3,7 +3,7 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 
 	$scope.jobNo = $cookies.get("jobNo");
 	checkUserNotiifcationSetting();
-	
+	detectBrowser();	
 
 	$scope.openAnnouncement = function(){
 		//$window.location.href = 'ad';
@@ -44,6 +44,7 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 	}
 	
 	
+
 	function checkUserNotiifcationSetting(){
 		userpreferenceService.getNotificationReadStatusByCurrentUser()
 		.then(function(status){
@@ -77,6 +78,27 @@ mainApp.controller('NavigationCtrl', ['$scope', '$timeout', '$window', 'userpref
 
 		}, 1000);
 
+	}
+	
+	function detectBrowser(){
+		//var isChrome = !!window.chrome && !!window.chrome.webstore;
+		// Internet Explorer 6-11
+		var isIE = /*@cc_on!@*/false || !!document.documentMode;
+		// Edge 20+
+		var isEdge = !isIE && !!window.StyleMedia;
+		if(isIE || isEdge){
+			$timeout(function(){
+				$.gritter.add({
+					title: 'Alert',
+					text: 'IE may slow down the performance. Please use Chrome!',
+					image: 'image/info.png',
+					sticky: false,
+					time: '15000'
+				});
+				return false;
+
+			}, 500);
+		}
 	}
 	
 }]);
