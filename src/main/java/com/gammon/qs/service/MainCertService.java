@@ -118,7 +118,7 @@ public class MainCertService {
 		Integer mainCertNo = newMainContractCert.getCertificateNumber();
 		
 		MainCert latestMainCert = getLatestMainCert(jobNo, null);
-		if(new Integer(latestMainCert.getCertificateStatus()) < new Integer(MainCert.CERT_POSTED)) {
+		if(latestMainCert != null && new Integer(latestMainCert.getCertificateStatus()) < new Integer(MainCert.CERT_POSTED)) {
 			message = "Main Cert " + latestMainCert.getCertificateNumber() + " not posted yet";
 			return message;
 		}		
