@@ -1,4 +1,4 @@
-<form name="form-validate" id="form-validate" class="ng-valid">
+<form name="formValidate" id="formValidate" class="ng-valid">
 	<fieldset>
 		<div class="row">
 			<div class="col-md-9 col-md-offset-2">
@@ -176,7 +176,12 @@
 																placeholder="Internal Job No."
 																ng-model="subcontract.internalJobNo"
 																ng-disabled="disableButtons"
-																data-ng-required="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'">
+																name="internalJobTextField"
+																data-ng-required="subcontract.formOfSubcontract.toLowerCase() == 'internal trading'"
+																ng-pattern="internalJobCheck">
+								<span
+								ng-show="formValidate.internalJobTextField.$error.pattern"
+								class="text-danger">Invalid internal job number</span>
 														</div>
 													</div>
 												</div>
@@ -419,7 +424,7 @@
 					</div>
 				</div>
 
-				<button class="m-t-5 btn btn-primary btn-block" ng-click="save()" id="subcontractStep1Save"
+				<button class="m-t-5 btn btn-primary btn-block" ng-click="formValidate.$valid && save()" id="subcontractStep1Save"
 					ng-hide="disableButtons" ng-disabled="disableButtons">
 					Save <span class="fa fa-save"></span>
 				</button>

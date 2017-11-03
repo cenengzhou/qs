@@ -139,7 +139,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 	//Save Function
 	$scope.save = function () {
 		
-		if (false === $('form[name="form-validate"]').parsley().validate()) {
+		if (false === $('form[name="formValidate"]').parsley().validate()) {
 			event.preventDefault();  
 			return;
 		}
@@ -254,6 +254,7 @@ mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontrac
 		jobService.getJob($scope.jobNo)
 		.then(
 				function( data ) {
+					$scope.internalJobCheck = new RegExp("((?!" + data.jobNo + ")).....$");
 					if(data.cpfApplicable=="1")
 						$scope.disableCPFButton = false;
 					else

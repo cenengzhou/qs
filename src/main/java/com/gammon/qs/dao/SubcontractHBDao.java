@@ -360,6 +360,7 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		criteria.createAlias("jobInfo", "jobInfo");
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
 		criteria.add(Restrictions.eq("internalJobNo", jobNo.trim()));
+		criteria.add(Restrictions.ne("jobInfo.jobNumber", jobNo.trim()));
 		criteria.setProjection(Projections.distinct(Projections.property("jobInfo.jobNumber")));
 		return criteria.list();
 	}

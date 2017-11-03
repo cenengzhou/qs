@@ -1183,7 +1183,7 @@ public class PaymentService{
 			//2. Generate Payment Details
 			createPaymentDetail(latestPaymentCert, newPayment);
 			
-		} catch (DatabaseOperationException e) {
+		} catch (Exception e) {
 			error = "Payment cannot be created.";
 			e.printStackTrace();
 		}
