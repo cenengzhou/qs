@@ -6,7 +6,7 @@
 		<td class="col-md-2"><label for="fileNameBox" class="control-label text-white">File Name:</label></td>
 		<td class="col-md-10">
 			<div class="text-white" ng-if="parentScope.disableRichEditor">{{parentScope.textAttachment.nameFile}}</div>
-			<input ng-if="!parentScope.disableRichEditor" type="text" 
+			<input ng-if="!parentScope.disableRichEditor" type="text" ng-required="true"
 			class="form-control" id="fileNameBox" name="fileNameBox" 
 			ng-model="parentScope.textAttachment.nameFile" ng-disabled="!parentScope.isTextUpdatable">
 		</td>

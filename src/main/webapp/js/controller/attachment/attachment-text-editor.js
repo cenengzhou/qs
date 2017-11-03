@@ -17,6 +17,10 @@ mainApp.controller('AttachmentTextEditorCtrl', ['$scope', 'modalStatus', 'modalP
 		var noSequence = $scope.parentScope.textAttachment.noSequence;
 		var nameFile = $scope.parentScope.textAttachment.nameFile;
 		var textValue = $scope.parentScope.textAttachment.text;
+		if(nameFile == null || nameFile.length==0){
+			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please input file name");
+			return;
+		}
 		$scope.parentScope.saveTextAttachmentFacade(nameObject, textKey, noSequence, nameFile, textValue)
 		.then(function(data){
 			$scope.parentScope.loadAttachment(nameObject, textKey);
