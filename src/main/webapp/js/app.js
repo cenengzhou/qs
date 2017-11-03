@@ -152,6 +152,34 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
+	.state('job.attachment', {
+		templateUrl: "view/job/job-attachment.html",
+	})
+	.state('job.attachment.first', {
+		url: "/attachment",
+		templateUrl: "view/attachment/attachment-main.html",
+		controller: 'AttachmentMainCtrl',
+		params:{
+			'nameObject': GlobalParameter['AbstractAttachment'].JobInfoNameObject,
+			'offsetTop':280
+		},
+		resolve: {
+            service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+                           'js/controller/attachment/attachment-main.js',
+                           'js/controller/attachment/attachment-text-editor.js',
+                           'js/service/attachment-service.js',
+                           'js/service/main-cert-service.js',
+                           'js/service/payment-service.js',
+                           'js/service/addendum-service.js',
+                           'js/service/subcontract-service.js',
+                    ] 
+                });
+            }]
+        }
+	})
 	.state('job.accountMaster', {
 		url: "/accountMaster",
 		templateUrl: "view/job/job-account-master.html",

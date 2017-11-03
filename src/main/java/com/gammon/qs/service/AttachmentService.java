@@ -29,6 +29,7 @@ import com.gammon.qs.dao.PaymentCertHBDao;
 import com.gammon.qs.dao.RepackagingHBDao;
 import com.gammon.qs.dao.SubcontractHBDao;
 import com.gammon.qs.dao.SubcontractWSDao;
+import com.gammon.qs.domain.JobInfo;
 import com.gammon.qs.domain.MainCert;
 import com.gammon.qs.domain.PaymentCert;
 import com.gammon.qs.domain.Repackaging;
@@ -74,6 +75,8 @@ public class AttachmentService {
 	private AddendumService addendumService;
 	@Autowired
 	private TransitService transitService;
+	@Autowired
+	private JobInfoService jobInfoService;
 	
 
 	private Logger logger = Logger.getLogger(AttachmentService.class.getName());
@@ -81,6 +84,9 @@ public class AttachmentService {
 	private String obtainNameTable(String nameObject){
 		String nameTable = "";
 		switch(nameObject){
+		case Attachment.JobInfoNameObject:
+			nameTable = Attachment.JOBINFO_TABLE;
+			break;
 		case Attachment.AddendumNameObject:
 			nameTable = Attachment.ADDENDUM_TABLE;
 			break;
@@ -127,6 +133,10 @@ public class AttachmentService {
 		resultMap.put(Attachment.NAME_TABLE, nameTable);
 		try {
 			switch (nameObject) {
+			case Attachment.JobInfoNameObject:
+				JobInfo jobInfo = jobInfoService.obtainJob(noJob);
+				resultMap.put(Attachment.ID_TABLE, jobInfo.getId().toString());
+				break;
 			case Attachment.AddendumNameObject:
 				Addendum addendum = addendumService.getAddendum(noJob, noSubcontract, new Long(altParam));
 				resultMap.put(Attachment.ID_TABLE, addendum.getId().toString());

@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, paymentService, addendumService, subcontractService, transitService, mainCertService) {
+mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
+                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
 	/*
 	 * attachment within ADDRESS BOOK modal is not control by this controller
 	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
@@ -35,6 +35,11 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 	$scope.loadAttachment = loadAttachment;
 	$scope.hideButton = false;
 	switch($scope.nameObject){
+		case GlobalParameter['AbstractAttachment'].JobInfoNameObject:
+			$scope.textKey = $scope.jobNo;
+			checkJobInfoUpdatable();
+			loadAttachment($scope.nameObject, $scope.textKey);
+			break;
 		case GlobalParameter['AbstractAttachment'].AddendumNameObject:
 			if($scope.addendumNo){
 				$scope.textKey += $scope.addendumNo;
@@ -163,6 +168,15 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     		$scope.isTextUpdatable = $scope.isUpdatable; 
     		modalService.open('lg', 'view/attachment/attachment-text-editor.html', 'AttachmentTextEditorCtrl', 'Success', $scope);
     	}
+    }
+    
+    function checkJobInfoUpdatable(){
+//    	jobService.getJob($scope.jobNo)
+//    	.then(function(data){
+//    		var jobInfo = jobInfo ? jobInfo : data;
+//    		$scope.isUpdatable = jobInfo.completionStatus !='1' ? false : true;
+//    	});
+    	$scope.isUpdatable = true;
     }
     
     function checkMainCertUpdatable(){

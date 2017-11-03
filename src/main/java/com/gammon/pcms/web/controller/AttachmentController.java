@@ -60,14 +60,14 @@ public class AttachmentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','deleteAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
 	@RequestMapping(value = "deleteAttachment", method = RequestMethod.POST)
 	public Boolean deleteAttachment(@RequestParam String nameObject, @RequestParam String textKey, @RequestParam Integer sequenceNumber) throws Exception{
 		Boolean result = attachmentService.deleteAttachment(nameObject, textKey, sequenceNumber);
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','uploadTextAttachment', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','uploadTextAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
 	@RequestMapping(value = "uploadTextAttachment", method = RequestMethod.POST)
 	public Boolean uploadTextAttachment(@RequestParam String nameObject, @RequestParam String textKey, 
 				@RequestParam Integer sequenceNo, @RequestParam String fileName, @RequestParam String textAttachment ) throws Exception{ 
@@ -75,7 +75,7 @@ public class AttachmentController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','uploadAttachment', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AttachmentController','uploadAttachment', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsDoc())")
 	@RequestMapping(value = "uploadAttachment", method = RequestMethod.POST)
 	public void uploadAttachment( 
 								@RequestParam(required = true, value = "nameObject") String nameObject,

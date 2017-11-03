@@ -407,6 +407,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public String getRolePcmsQs() {
 		return getPcmsRole("QS");
 	}
+	
+	/**
+	 * @return the rolePcmsQsDoc
+	 */
+	public String getRolePcmsQsDoc() {
+		return getPcmsRole("QS_DOC");
+	}
 
 	/**
 	 * @return the rolePcmsQsAdmin

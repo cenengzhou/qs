@@ -355,7 +355,8 @@ mainApp.constant('GlobalParameter', {
         'SplitNameObject' : 'SPLIT',
         'TerminateNameObject' : 'TERMINATE',
         'RepackagingNameObject': 'REPACKAGING',
-        'TransitNameObject' : 'TRANSIT'
+        'TransitNameObject' : 'TRANSIT',
+        'JobInfoNameObject' : 'JOBINFO'
 	},
     nameObjectTable:[
     	{value: 'GT58011', display: 'ADDENDUM'},
@@ -367,6 +368,7 @@ mainApp.constant('GlobalParameter', {
     	{value: 'TERMINATE', display: 'TERMINATE'},
     	{value: 'REPACKAGING', display: 'REPACKAGING'},
     	{value: 'TRANSIT', display: 'TRANSIT'},
+    	{value: 'JOBINFO', display: 'JOBINFO'}
    ],
 	PurchaseOrderType:[
 		{id:'GH', value:'Plant Blanket Sundry Order'},
