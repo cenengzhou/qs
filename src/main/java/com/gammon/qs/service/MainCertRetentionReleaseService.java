@@ -205,26 +205,22 @@ public class MainCertRetentionReleaseService {
 		List<MainCertRetentionRelease> dbList = retentionReleaseHBDao.findByJobNo(noJob);
 
 		for (MainCertRetentionRelease dbRR : dbList) {
+			// rr not found in db
+			boolean deleteRR = true;
 			for (int i = 0; i < modifiedList.size(); i++) {
 				if (modifiedList.get(i).getId().equals(dbRR.getId())) {
 					if ("F".equals(modifiedList.get(i).getStatus())) {
 						if (CalculationUtil.round(modifiedList.get(i).getForecastReleaseAmt() - dbRR.getForecastReleaseAmt(), 2) != 0.00 || modifiedList.get(i).getContractualDueDate() != dbRR.getContractualDueDate() || modifiedList.get(i).getDueDate() != dbRR.getDueDate())
 							rrToUpdateList.add(modifiedList.get(i));
-					} else if("D".equals(modifiedList.get(i).getStatus())){
-						retentionReleaseHBDao.inactivate(dbRR);
-						updated = true;
 					}
+					//rr found in db
+					deleteRR = false;
 					rrToInsertList.remove(modifiedList.get(i));
 					break;
 				}
-				/*if (i == modifiedList.size() - 1) {
-					logger.info("INACTIVE-retention release id:" + dbRR.getId());
-					retentionReleaseHBDao.inactivate(dbRR);
-					updated = true;
-				}*/
 			}
-			if (modifiedList.size() == 0) {
-				logger.info("INACTIVE-retention release id (size:0):" + dbRR.getId());
+			if (deleteRR) {
+				logger.info("INACTIVE-retention release id:" + dbRR.getId());
 				retentionReleaseHBDao.inactivate(dbRR);
 				updated = true;
 			}
@@ -244,7 +240,7 @@ public class MainCertRetentionReleaseService {
 		}
 
 		logger.info("END - updateForecastRetentionRelease");
-		return new PCMSDTO(updated ? PCMSDTO.Status.SUCCESS : PCMSDTO.Status.FAIL, "");
+		return new PCMSDTO(updated ? PCMSDTO.Status.SUCCESS : PCMSDTO.Status.FAIL, "No record updated");
 	}
 
 	/*************************************** FUNCTIONS FOR PCMS - END **************************************************************/

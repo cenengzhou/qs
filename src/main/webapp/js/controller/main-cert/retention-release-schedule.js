@@ -110,11 +110,7 @@ mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', '
 				return;			
 			}
 			
-			selectedRows[0]['status'] = 'D';
-			$scope.gridApi.rowEdit.setRowsDirty(selectedRows);
-			$scope.gridOptions.data = $scope.gridOptions.data.filter(function(row){
-				return row.status != 'D';
-			});
+			$scope.gridOptions.data.splice($scope.removeRowIndex, 1);
 		}
 
 	};
@@ -127,25 +123,13 @@ mainApp.controller('RetentionReleaseScheduleCtrl', ['$scope',  'modalService', '
 					+"Total Release Amount: "+totalRR+" \r\n"
 					+"Cumulative Retention Amount: "+$scope.cumRetentionAmount );
 		}else{
-			var gridRows = $scope.gridApi.rowEdit.getDirtyRows();
-			var dataRows = gridRows.map( function( gridRow ) { 
-					if(gridRow.id!=0 && gridRow.status != 'D'){
-						return gridRow.entity;
-					}
-				});
-			
-			if(dataRows.length==0){
-				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "No record has been modified");
-				return;
-			}
-			
-			angular.forEach(dataRows, function(value, key){
+			angular.forEach($scope.gridOptions.data, function(value, key){
 				if(value.status == 'F')
 					value.forecastReleaseAmt = value.amount;
 				else
 					value.actualReleaseAmt = value.amount;
 			});
-			updateRetentionRelease(dataRows);
+			updateRetentionRelease($scope.gridOptions.data);
 		}
 	};
 	
