@@ -1788,7 +1788,10 @@ mainApp.config(function(blockUIConfig) {
 	
 	blockUIConfig.requestFilter = function(config) {
 
-		  var message;
+		if(config.url.match(/^service\/adl($|\/).*/)) {
+			return false; // ... don't block it.
+		}
+		var message;
 
 		  switch(config.method) {
 		    case 'GET':
