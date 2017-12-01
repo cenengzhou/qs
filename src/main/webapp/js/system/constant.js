@@ -149,7 +149,7 @@ mainApp.constant('GlobalParameter', {
                {id:'AW', value:'SC Award', details:'For awarded subcontract'},
                {id:'ST', value:'SC Award over budget (Over-budget amount)', details:'For awarded subcontract with over-budget amount'},
                {id:'V5', value:'Varied SC Award', details:'For awarded subcontract with non-standard term payment'},
-               {id:'V6', value:'Varied SC Award and over-budget', details:'For awarded subcontract with non-standard term payment and over-budget amount'},
+               {id:'V6', value:'Varied SC Award and over-budget', details:'For awarded subcontract with non-standard term payment or tender variance exist or status change execution of SC or tenderer list < 3 and over-budget amount'},
                {id:'RM', value:'Negative Main Contract Certificate', details:'For Main Contract Certificate with negative net certificate amount'}
     ],
 	mainContractCertificateStatus: [
