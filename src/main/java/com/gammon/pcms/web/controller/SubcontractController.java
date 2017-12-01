@@ -35,6 +35,7 @@ import com.gammon.qs.domain.ProvisionPostingHist;
 import com.gammon.qs.domain.Subcontract;
 import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailOA;
+import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.SubcontractService;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.performanceAppraisal.PerformanceAppraisalWrapper;
@@ -422,14 +423,14 @@ public class SubcontractController {
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractDetailAdmin", method = RequestMethod.POST)
-	public void updateSubcontractDetailAdmin(@RequestBody SubcontractDetail subcontractDetail) throws Exception {
+	public void updateSubcontractDetailAdmin(@RequestBody SubcontractDetailVO subcontractDetail) throws Exception {
 		if((subcontractDetail).getId() == null) throw new IllegalArgumentException("Invalid Subcontract Detail");
 		subcontractService.updateSubcontractDetailAdmin(subcontractDetail);
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','updateSubcontractDetailListAdmin', @securityConfig.getRolePcmsQsAdmin())")
 	@RequestMapping(value = "updateSubcontractDetailListAdmin", method = RequestMethod.POST)
-	public void updateSubcontractDetailListAdmin(@RequestBody List<SubcontractDetail> subcontractDetailList) throws Exception {
+	public void updateSubcontractDetailListAdmin(@RequestBody List<SubcontractDetailVO> subcontractDetailList) throws Exception {
 		subcontractDetailList.forEach(subcontractDetail -> {
 			try {
 				updateSubcontractDetailAdmin(subcontractDetail);

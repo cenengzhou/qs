@@ -64,6 +64,21 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 	            		 return GlobalHelper.numberClass(row.entity.cumCertifiedQuantity);
 	            	 }	                        	 
 	             },
+	             
+	             { field: 'amountCumulativeWD', width: '120', displayName: "Cum WD Amount", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.amountCumulativeWD);
+	            	 }	            
+	             },
+	             { field: 'cumWorkDoneQuantity', width: '120', displayName: "Cum WD Qty", enableCellEdit: $scope.canEdit,
+	            	 cellFilter: 'number:4',
+	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+	            		 return GlobalHelper.numberClass(row.entity.cumWorkDoneQuantity);
+	            	 }	                        	 
+	             },
+
+	             
 	             { field: 'amountPostedCert', width: '120', displayName: "Posted Cert Amount", enableCellEdit: $scope.canEdit,
 	            	 cellFilter: 'number:4',
 	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
