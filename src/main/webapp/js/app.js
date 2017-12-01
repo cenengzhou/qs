@@ -1787,10 +1787,19 @@ mainApp.config(function(blockUIConfig) {
 	blockUIConfig.autoInjectBodyBlock = true;
 	
 	blockUIConfig.requestFilter = function(config) {
-
-		if(config.url.match(/^service\/adl($|\/).*/)) {
-			return false; // ... don't block it.
-		}
+//		if(config.url.match(/^service\/adl($|\/).*/)) {
+//			return false; // ... don't block it.
+//		}
+		var bypassBlockUI = [
+			'service/mainCert/getCertificateDashboardData', 
+			'service/adl/getJobDashboardData'
+			];
+		bypassBlockUI.forEach(function(addr){
+			if(config.url == addr) {
+				return false;
+			}
+		});
+		
 		var message;
 
 		  switch(config.method) {
