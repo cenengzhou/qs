@@ -318,7 +318,9 @@ mainApp.controller('SubcontractDetailsCtrl', ['$scope' , 'subcontractService', '
 		subcontractService.getSCDetails($scope.jobNo, $scope.subcontractNo)
 		.then(
 			function( data ) {
-				$scope.gridOptions.data = data.filter(function(sd){return sd.approved =='A'});
+				$scope.gridOptions.data = data.filter(function(sd){
+					return sd.subcontract.scStatus < 500 || sd.approved =='A';
+				});
 				GlobalHelper.addSubcontractCatalogGroup(data, 'lineType');
 				var retentions = $filter('filter')(data, function(value){
 					return value.catalog === 'Retention';
