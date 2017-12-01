@@ -88,9 +88,9 @@ mainApp.controller('EnquirySubcontractorCtrl', ['$scope', '$http', 'modalService
 			            	 displayName: "on Hold by Finance", enableCellEdit: false,
 			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: ynOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
 			             },
-			             { field: 'getRecommended()', cellTemplate: '<div class="ui-grid-cell-contents text-center"><i class="fa {{COL_FIELD}}"></i></div>', displayName: "Recommended", enableCellEdit: false,
-			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: rcmOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
-			             }
+//			             { field: 'getRecommended()', cellTemplate: '<div class="ui-grid-cell-contents text-center"><i class="fa {{COL_FIELD}}"></i></div>', displayName: "Recommended", enableCellEdit: false,
+//			            	 headerCellClass:'gridHeaderText', filter: { selectOptions: rcmOptions, type: uiGridConstants.filter.SELECT, condition: uiGridConstants.filter.STARTS_WITH}
+//			             }
             			 ]
 	};
 	
