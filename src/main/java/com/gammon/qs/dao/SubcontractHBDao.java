@@ -365,6 +365,19 @@ public class SubcontractHBDao extends BaseHibernateDao<Subcontract> {
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Subcontract> obtainParentSubcontractList(String jobNo) throws DatabaseOperationException {
+		if(jobNo==null)
+			throw new DatabaseOperationException("jobNo is null");
+		Criteria criteria = getSession().createCriteria(this.getType());
+		
+		criteria.createAlias("jobInfo", "jobInfo");
+		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));
+		criteria.add(Restrictions.eq("internalJobNo", jobNo.trim()));
+		criteria.add(Restrictions.ne("jobInfo.jobNumber", jobNo.trim()));
+		return criteria.list();
+	}
+
 	public Subcontract obtainPackageStatistics(String vendorNo, Date startDate) throws DatabaseOperationException {
 		Criteria criteria = getSession().createCriteria(this.getType());
 		criteria.add(Restrictions.eq("systemStatus", BasePersistedAuditObject.ACTIVE));

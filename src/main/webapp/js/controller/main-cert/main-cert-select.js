@@ -1,5 +1,5 @@
-mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state', 'confirmService',
-                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state, confirmService) {
+mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 'colorCode', 'mainCertService', '$cookies', 'rootscopeService', 'jdeService', '$state', 'confirmService', 'subcontractService',
+                                   function($scope, $uibModal, modalService, colorCode, mainCertService, $cookies, rootscopeService, jdeService, $state, confirmService, subcontractService) {
 	
 	$scope.maxCertNo = 0;
 	$scope.totalCertificateAmount = 0;
@@ -16,6 +16,32 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 		rootscopeService.gettingJob($scope.jobNo)
 		.then(function(response){
 			$scope.job = response.job;
+		});
+	}
+	
+	$scope.createMainCert = function(){
+		subcontractService.getParentSubcontractList($scope.jobNo)
+		.then(function(data){
+			console.info(data);
+			if(data == null) {
+				$state.go('mainCert.ipa', {mainCertNo: '0'});
+			} else {
+				var message = $scope.jobNo + ' is a child job of parent job ';
+				data.forEach(function(parentSubcontract){
+					message += parentSubcontract.jobInfo.jobNo + ', ';
+				});
+				message = message.substring(0, message.length - 2);
+				message += '.<br>This job is not required to input Main Contract Certificate.<br>Are you sure to add for ' + $scope.jobNo;
+				var modalOptions = {
+						bodyText: message
+				};
+				confirmService.showModal({}, modalOptions)
+				.then(function (result) {
+					if(result == "Yes"){
+						$state.go('mainCert.ipa', {mainCertNo: '0'});
+					}
+				});
+			}
 		});
 	}
 	

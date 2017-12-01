@@ -1,5 +1,5 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter', 'rootscopeService',
-                                   function($scope, jobService, modalService, $state, GlobalParameter, rootscopeService) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter', 'rootscopeService', 'subcontractService',
+                                   function($scope, jobService, modalService, $state, GlobalParameter, rootscopeService, subcontractService) {
 	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
 	loadJobInfo();
@@ -24,6 +24,10 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
 					
+					subcontractService.getParentSubcontractList($scope.jobNo)
+					.then(function(data){
+						$scope.parentSubcontractList = data;
+					});
 				});
 		jobService.getJobDates($scope.jobNo)
 		.then(
@@ -78,7 +82,6 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					}
 				});
 		}
-
 
 }]);
 

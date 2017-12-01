@@ -477,4 +477,10 @@ public class SubcontractController {
 			return new ArrayList<ProvisionPostingHist>();
 		}
 	}
+	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getParentSubcontractList', @securityConfig.getRolePcmsEnq())")
+	@RequestMapping(value = "getParentSubcontractList", method = RequestMethod.POST)
+	public List<Subcontract> getParentSubcontractList(@RequestParam String jobNumber) throws DatabaseOperationException{
+			return subcontractService.getParentSubcontractList(jobNumber);
+	}
 }

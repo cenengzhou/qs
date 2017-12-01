@@ -45,7 +45,8 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	getPerforamceAppraisalsList:						getPerforamceAppraisalsList,
     	updateSubcontractDetailAdmin:						updateSubcontractDetailAdmin,
     	updateSubcontractDetailListAdmin:					updateSubcontractDetailListAdmin,
-    	getSubcontractDetail:								getSubcontractDetail
+    	getSubcontractDetail:								getSubcontractDetail,
+    	getParentSubcontractList:							getParentSubcontractList
     });
 	
     function getSubcontractList(jobNo, awardedOnly) {
@@ -574,7 +575,17 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     	});
     	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }   
-
+    
+    function getParentSubcontractList(jobNumber){
+    	var request = $http({
+    		method: 'post',
+    		url: 'service/subcontract/getParentSubcontractList',
+    		params: {
+    			jobNumber: jobNumber
+    		}
+    	});
+    	return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }   
 }]);
 
 

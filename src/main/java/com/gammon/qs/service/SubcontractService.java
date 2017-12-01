@@ -3364,6 +3364,10 @@ public class SubcontractService {
 		return results;
 	}
 
+	public List<Subcontract> getParentSubcontractList(String jobNumber) throws DatabaseOperationException {
+		return subcontractHBDao.obtainParentSubcontractList(jobNumber);
+	}
+
 	
 
 }

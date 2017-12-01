@@ -146,7 +146,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/controller/job/job-info.js'
+                           'js/controller/job/job-info.js',
+                           'js/service/subcontract-service.js',
                     ] 
                 });
             }]
@@ -903,6 +904,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/main-cert-service.js',
                            'js/controller/enquiry/modal/enquiry-customerledgerdetails.js',
                            'js/service/jde-service.js',
+                           'js/service/subcontract-service.js',
                     ] 
                 });
             }]
@@ -934,7 +936,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/service/attachment-service.js',
                            'js/service/subcontract-service.js',
                            'js/service/payment-service.js',
-                           'js/service/addendum-service.js'
+                           'js/service/addendum-service.js',
                     ] 
                 });
             }]
