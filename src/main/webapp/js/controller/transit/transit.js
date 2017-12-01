@@ -27,6 +27,10 @@ mainApp.controller('TransitCtrl', ['$scope', 'modalService', 'transitService', '
 		//}
 	}
 	
+	$scope.editTransitHeader = function(){
+		modalService.open('md', 'view/transit/modal/transit-header-modal.html', 'TransitHeaderModalCtrl');
+	}
+	
 	$rootScope.$on("UpdateTransitStatus", function(event, transitStatus){
 		$scope.transitStatus = transitStatus;
 	});

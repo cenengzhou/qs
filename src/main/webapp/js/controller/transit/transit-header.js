@@ -36,14 +36,16 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 	
 	
 	function createOrUpdateTransitHeader() {
-		transitService.createOrUpdateTransitHeader($scope.transit.jobNumber, $scope.transit.estimateNo, $scope.matchingCodes.selected, true)
+		var jobNo = $scope.isNewJob ? $scope.transit.jobNumber : $scope.jobNo;
+		transitService.createOrUpdateTransitHeader(jobNo, $scope.transit.estimateNo, $scope.matchingCodes.selected, $scope.isNewJob)
 		.then(
 				function( data ) {
 					if(data.length!=0){
 						$scope.disableButton = false;
 						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data);
 					}else{
-						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Transit header has been added.");
+						var action = $scope.transitAction == 'Add' ? 'Added' : 'Updated'
+						modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Transit header has been " + action + ".");
 						$uibModalInstance.close();
 						$state.reload();
 					}
@@ -52,12 +54,19 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 
 	function getTransitHeader(){
 		if ($scope.jobNo != null && $scope.jobNo.length >0){
-			transitService.getTransitHeader($scope.jobNo)
+			transitService.getTransit($scope.jobNo)
 			.then(
 					function (data){
 						$scope.transit = data;
+						$scope.isNewJob = false;
+						$scope.transitAction = 'Update';
+						$scope.transitTitle = 'Transit Header';
 						$scope.matchingCodes.selected = data.matchingCode;
 					});
+		} else {
+			$scope.isNewJob = true;
+			$scope.transitAction = 'Add';
+			$scope.transitTitle = 'Create New Job';
 		}
 	}
 

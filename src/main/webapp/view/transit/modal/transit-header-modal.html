@@ -1,7 +1,7 @@
 <div class="modal-header">
 	<div class="row">
 		<div class="col-md-11">
-			<h3 class="modal-title">Create New Job</h3>
+			<h3 class="modal-title">{{transitTitle}}</h3>
 		</div>
 		<div class="col-md-1">
 			<button class="btn btn-default pull-right" type="button" ng-click="cancel()">
@@ -26,7 +26,7 @@
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
-									<label>Job Number</label> <input type="text"
+									<label>Job Number</label> <input type="text" ng-disabled="!isNewJob"
 										class="form-control " ng-model="transit.jobNumber" required />
 								</div>
 							</div>
@@ -75,7 +75,7 @@
 <div class="modal-footer">
 	<button class="btn btn-primary btn-block" type="button"
 		ng-click="save()" ng-disabled = "disableButton" ng-hide="disableButton">
-		<span class="fa fa-save"></span> Add
+		<span class="fa fa-save"></span> {{transitAction}}
 	</button>
 </div>
 

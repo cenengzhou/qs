@@ -1105,7 +1105,8 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                         'js/service/resource-summary-service.js',
 	               		'js/service/subcontract-service.js',
 	               		'js/service/transit-service.js',
-	               		'js/service/jde-service.js'
+	               		'js/service/jde-service.js',
+                        'js/controller/transit/transit-header.js',
                     ] 
                 });
             }]
