@@ -22,7 +22,6 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 	$scope.createMainCert = function(){
 		subcontractService.getParentSubcontractList($scope.jobNo)
 		.then(function(data){
-			console.info(data);
 			if(data == null) {
 				$state.go('mainCert.ipa', {mainCertNo: '0'});
 			} else {

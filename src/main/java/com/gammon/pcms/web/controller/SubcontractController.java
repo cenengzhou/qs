@@ -479,7 +479,7 @@ public class SubcontractController {
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('SubcontractController','getParentSubcontractList', @securityConfig.getRolePcmsEnq())")
-	@RequestMapping(value = "getParentSubcontractList", method = RequestMethod.POST)
+	@RequestMapping(value = "getParentSubcontractList", method = RequestMethod.GET)
 	public List<Subcontract> getParentSubcontractList(@RequestParam String jobNumber) throws DatabaseOperationException{
 			return subcontractService.getParentSubcontractList(jobNumber);
 	}

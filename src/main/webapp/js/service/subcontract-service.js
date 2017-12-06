@@ -578,7 +578,7 @@ mainApp.service('subcontractService', ['$http', '$q', 'GlobalHelper',  function(
     
     function getParentSubcontractList(jobNumber){
     	var request = $http({
-    		method: 'post',
+    		method: 'get',
     		url: 'service/subcontract/getParentSubcontractList',
     		params: {
     			jobNumber: jobNumber
