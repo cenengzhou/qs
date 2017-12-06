@@ -22,7 +22,7 @@ mainApp.controller('MainCertListCtrl', ['$scope', '$uibModal',  'modalService', 
 	$scope.createMainCert = function(){
 		subcontractService.getParentSubcontractList($scope.jobNo)
 		.then(function(data){
-			if(data == null) {
+			if(data == null || data.length == 0) {
 				$state.go('mainCert.ipa', {mainCertNo: '0'});
 			} else {
 				var message = $scope.jobNo + ' is a child job of parent job ';
