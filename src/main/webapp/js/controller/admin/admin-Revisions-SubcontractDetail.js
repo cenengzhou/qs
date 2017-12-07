@@ -171,13 +171,6 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 		.then(function(data){
 			$scope.gridOptions.data = data;
 			$scope.subcontractDetailList = data;
-			$scope.subcontractDetailList.forEach(function(subcontractDetail){
-				$scope.fieldList.forEach(function(field){
-					if(field.type == 'boolean' && typeof subcontractDetail[field.name] == 'boolean'){
-						subcontractDetail[field.name] = subcontractDetail[field.name] ? 'true' : 'false';
-					}
-				});
-			});
 		})
 	}
 	
