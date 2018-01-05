@@ -107,11 +107,41 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     				}
     			});
     }
+     
+	var blockFileExtension = [
+		'exe', 'js', 'dll', 'bat', 'ps1', 'zip', '7z', 'rar'
+	];
+	
+    function isAllowedFile(file){
+    	var ext = file.name.substring(file.name.lastIndexOf('.') + 1, file.name.length);
+    	return blockFileExtension.indexOf(ext) < 0;
+    }
     
-	$scope.onSubmitAttachmentUpload = function(f){
+    function showModalIfBlockUpload(result){
+    	var msg = '<table cellpadding=10 align=center>';
+    	if(result['blockedFile'].length > 0){
+    		if(result['allowedFile'].length > 0){
+    			msg += '<tr><td align=right>file uploaded</td><td>:</td><td align=left>' + result['allowedFile'].join() + '</td></tr>';
+    		}
+    		msg += '<tr><td align=right>file cannot be uploaded</td><td>:</td><td align=left>' + result['blockedFile'].join() + '</td></tr>';
+    		msg += '</table>';
+    		modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', msg);
+    	}
+    	
+    }
+
+    $scope.onSubmitAttachmentUpload = function(f){
 		var formData = new FormData();
+		var result = {};
+		result['allowedFile'] = [];
+		result['blockedFile'] = [];
 		angular.forEach(f.files, function(file){
-			formData.append('files', file);
+			if(isAllowedFile(file)){
+				formData.append('files', file);
+				result['allowedFile'].push(file.name);
+			} else {
+				result['blockedFile'].push(file.name);
+			}
 		});
 		formData.append('nameObject', $scope.nameObject);
 		formData.append('textKey', $scope.textKey)
@@ -120,10 +150,11 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 		.then(function(data){
 			f.value = null;
 			$scope.loadAttachment($scope.nameObject, $scope.textKey);
+			showModalIfBlockUpload(result);
 		});
 	}
 	
-	$scope.deleteAttachment = function(){
+    $scope.deleteAttachment = function(){
 		confirmService.show({}, {bodyText:GlobalMessage.deleteAttachment})
 		.then(function(response){
 			if(response === 'Yes')
