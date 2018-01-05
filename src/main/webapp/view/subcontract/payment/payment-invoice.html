@@ -181,6 +181,11 @@
 					<td class="text-right">{{paymentCertSummary.adjustmentTotal |
 						currency}}</td>
 				</tr>
+				<tr>
+					<td>ADVANCE PAYMENT</td>
+					<td class="text-right">{{paymentCertSummary.advancePaymentMovement | currency}}</td>
+					<td class="text-right">{{paymentCertSummary.advancePaymentTotal | currency}}</td>
+				</tr>
 				<tr ng-show = "jobNo.indexOf('14')>-1">
 					<td>VALUE OF GST PAYABLE</td>
 					<td class="text-right">{{paymentCertSummary.gstPayableMovement

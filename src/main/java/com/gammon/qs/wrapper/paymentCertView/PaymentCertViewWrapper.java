@@ -46,6 +46,8 @@ public class PaymentCertViewWrapper implements Serializable{
 	private Double subTotal3;
 	private Double adjustmentMovement;
 	private Double adjustmentTotal;
+	private Double advancePaymentMovement;
+	private Double advancePaymentTotal;
 	private Double gstPayableMovement;
 	
 	private Double gstPayableTotal;
@@ -106,6 +108,8 @@ public class PaymentCertViewWrapper implements Serializable{
 		subTotal3 = new Double (0);
 		adjustmentMovement = new Double (0);
 		adjustmentTotal = new Double (0);
+		advancePaymentMovement= new Double(0);
+		advancePaymentTotal = new Double(0);
 		gstPayableMovement = new Double (0);
 		gstPayableTotal = new Double (0);
 		subMovement4 = new Double (0);
@@ -387,13 +391,29 @@ public class PaymentCertViewWrapper implements Serializable{
 	public void setAdjustmentMovement(Double adjustmentMovement) {
 		this.adjustmentMovement = adjustmentMovement;
 	}
-
+	
 	public Double getAdjustmentTotal() {
 		return adjustmentTotal;
 	}
 
 	public void setAdjustmentTotal(Double adjustmentTotal) {
 		this.adjustmentTotal = adjustmentTotal;
+	}
+
+	public Double getAdvancePaymentMovement() {
+		return advancePaymentMovement;
+	}
+	
+	public void setAdvancePaymentMovement(Double advancePaymentMovement) {
+		this.advancePaymentMovement = advancePaymentMovement;
+	}
+
+	public Double getAdvancePaymentTotal() {
+		return advancePaymentTotal;
+	}
+	
+	public void setAdvancePaymentTotal(Double advancePaymentTotal) {
+		this.advancePaymentTotal = advancePaymentTotal;
 	}
 
 	public Double getGstPayableMovement() {

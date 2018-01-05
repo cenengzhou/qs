@@ -295,9 +295,12 @@ public class PaymentService{
 			} else if ("MR".equalsIgnoreCase(scLineType)) {
 				result.setLessRetentionTotal2(RoundingUtil.round(result.getLessRetentionTotal2() + cum, 2));
 				result.setLessRetentionMovement2(RoundingUtil.round(result.getLessRetentionMovement2() + movement, 2));
-			} else if ("AP".equalsIgnoreCase(scLineType) || "OA".equalsIgnoreCase(scLineType)) {
+			} else if ("OA".equalsIgnoreCase(scLineType)) {
 				result.setAdjustmentTotal(result.getAdjustmentTotal() + cum);
 				result.setAdjustmentMovement(result.getAdjustmentMovement() + movement);
+			} else if ("AP".equalsIgnoreCase(scLineType)) {
+					result.setAdvancePaymentTotal(result.getAdvancePaymentTotal() + cum);
+					result.setAdvancePaymentMovement(result.getAdvancePaymentMovement() + movement);
 			} else if ("C1".equalsIgnoreCase(scLineType) || "C2".equalsIgnoreCase(scLineType)) {
 				// Sum in Account
 				calculateAmountByAccount(scPaymentDetail, cert_CC);
