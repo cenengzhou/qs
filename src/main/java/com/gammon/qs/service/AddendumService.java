@@ -44,6 +44,7 @@ import com.gammon.qs.domain.SubcontractDetailCC;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.service.security.SecurityService;
 import com.gammon.qs.shared.util.CalculationUtil;
+import com.gammon.qs.wrapper.BQResourceSummaryWrapper;
 @Service
 //SpringSession workaround: change "session" to "request"
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -454,9 +455,11 @@ public class AddendumService{
 				addendumDetailHeader.setIdHeaderRef(addendumDetailHeader.getId());
 				addendumDetailHBDao.update(addendumDetailHeader);
 			}
-			resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
+			BQResourceSummaryWrapper result = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
+			if(result.getError() != null) throw new IllegalArgumentException(result.getError());
 		} catch (Exception e) {
 			error = "Addendum detail cannot be created from Resource Summary.";
+			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
 		return error;
