@@ -66,12 +66,14 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 	             },
 	             
 	             { field: 'amountCumulativeWD', width: '120', displayName: "Cum WD Amount", enableCellEdit: $scope.canEdit,
+	            	 cellEditableCondition: checkEditableForCumWD,
 	            	 cellFilter: 'number:4',
 	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 	            		 return GlobalHelper.numberClass(row.entity.amountCumulativeWD);
 	            	 }	            
 	             },
 	             { field: 'cumWorkDoneQuantity', width: '120', displayName: "Cum WD Qty", enableCellEdit: $scope.canEdit,
+	            	 cellEditableCondition: checkEditableForCumWD,
 	            	 cellFilter: 'number:4',
 	            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 	            		 return GlobalHelper.numberClass(row.entity.cumWorkDoneQuantity);
@@ -139,6 +141,19 @@ mainApp.controller('AdminRevisionsSubcontractDetailCtrl', ['$scope', 'modalServi
 					editDropdownValueLabel : 'value'
 	             }
 			]
+	}
+	
+	function checkEditableForCumWD(scope){
+		var allowEditLineTypeArray = [
+									'B1', 'BD', 'BQ', //BQ
+									'OA', //OA
+									'BS', 'CF', 'D1', 'D2', 'HD', 'L1', 'L2', 'OA', 'V1', 'V2', 'V3' // VO
+								];
+		if(allowEditLineTypeArray.indexOf(scope.row.entity.lineType) >= 0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	$scope.updateGrid = function(){
