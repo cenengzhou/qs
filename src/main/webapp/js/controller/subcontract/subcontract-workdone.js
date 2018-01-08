@@ -380,7 +380,9 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		subcontractService.getSubcontractDetailForWD($scope.jobNo, $scope.subcontractNo)
 		.then(
 				function( data ) {
-					$scope.gridOptions.data = data;
+					$scope.gridOptions.data = data.filter(function(sd){
+						return sd.subcontract.scStatus < 500 || sd.approved =='A';
+					});
 				});
 	}
 	
