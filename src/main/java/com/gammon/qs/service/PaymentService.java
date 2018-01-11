@@ -254,7 +254,7 @@ public class PaymentService{
 		result.setSubMovement1(CalculationUtil.round(result.getMeasuredWorksMovement() + result.getDayWorkSheetMovement() + result.getVariationMovement() + result.getOtherMovement(), 2));
 		result.setSubMovement2(CalculationUtil.round(result.getSubMovement1() - result.getLessRetentionMovement1(),2));
 		result.setSubMovement3(CalculationUtil.round(result.getSubMovement2() + result.getMaterialOnSiteMovement() - result.getLessRetentionMovement2(), 2));
-		result.setSubMovement4(CalculationUtil.round(result.getSubMovement3() + result.getAdjustmentMovement() + result.getGstPayableMovement(), 2));
+		result.setSubMovement4(CalculationUtil.round(result.getSubMovement3() + result.getAdjustmentMovement() + result.getAdvancePaymentMovement() + result.getGstPayableMovement(), 2));
 		result.setSubMovement5(CalculationUtil.round(result.getSubMovement4() - result.getLessContraChargesMovement() - result.getLessGSTReceivableMovement(), 2));
 
 		return result;
@@ -335,7 +335,7 @@ public class PaymentService{
 		result.setSubTotal1(result.getMeasuredWorksTotal() + result.getDayWorkSheetTotal() + result.getVariationTotal() + result.getOtherTotal());
 		result.setSubTotal2(result.getSubTotal1() - result.getLessRetentionTotal1());
 		result.setSubTotal3(result.getSubTotal2() + result.getMaterialOnSiteTotal() - result.getLessRetentionTotal2());
-		result.setSubTotal4(result.getSubTotal3() + result.getAdjustmentTotal() + result.getGstPayableTotal());
+		result.setSubTotal4(result.getSubTotal3() + result.getAdjustmentTotal() + result.getAdvancePaymentTotal() + result.getGstPayableTotal());
 		result.setSubTotal5(result.getSubTotal4() - result.getLessContraChargesTotal() - result.getLessGSTReceivableTotal());
 	}
 
