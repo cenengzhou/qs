@@ -444,7 +444,11 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 				function( data ) {
 					$scope.subcontract = data;
 
-					if(data.scStatus < 500 || data.paymentStatus == 'F' || data.splitTerminateStatus ==1  || data.splitTerminateStatus ==2 || data.splitTerminateStatus ==4)
+					if((data.paymentStatus != 'D' && data.scStatus < 500) 
+						|| data.paymentStatus == 'F' 
+						|| data.splitTerminateStatus ==1  
+						|| data.splitTerminateStatus ==2 
+						|| data.splitTerminateStatus ==4)
 						$scope.edit = false;
 					else
 						$scope.edit = true;

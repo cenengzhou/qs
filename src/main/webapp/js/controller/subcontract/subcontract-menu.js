@@ -40,7 +40,7 @@ mainApp.controller('SubcontractMenuCtrl', ['$scope', '$location', '$cookies', 's
 				function( data ) {
 					$scope.subcontract = data;
 					$scope.subcontractNo = $scope.subcontract.packageNo;
-					if($scope.subcontract.scStatus =="330" || $scope.subcontract.scStatus =="500")
+					if($scope.subcontract.scStatus =="500")
 						$scope.hideItem = false;
 					else
 						$scope.hideItem = true;
