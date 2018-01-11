@@ -109,7 +109,7 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
     }
      
 	var blockFileExtension = [
-		'exe', 'js', 'dll', 'bat', 'ps1', 'zip', '7z', 'rar'
+		'msi', 'exe', 'js', 'dll', 'bat', 'ps1', 'zip', '7z', 'rar'
 	];
 	
     function isAllowedFile(file){
