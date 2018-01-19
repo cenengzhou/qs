@@ -569,6 +569,21 @@
 							<h5></h5>
 
 							<div class="col-md-8">
+								<label>Expected PCC Date</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="job.expectedPCCDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="job.expectedPCCDate" >
+								</div>
+							</div>
+
+							<h5></h5>
+							
+							<div class="col-md-8">
 								<label>Actual Making Good Date</label>
 							</div>
 							<div class="form-group col-md-4">
