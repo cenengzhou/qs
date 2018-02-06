@@ -842,21 +842,23 @@ public class SubcontractService {
 			variedSubcontract = true;
 		}
 		
-		
-		//Tender Budget is greater than Original Budget
-		if(tenderBudget.compareTo(originalBudget) >0 ){
-			if(variedSubcontract)
-				approvalType = Subcontract.APPROVAL_TYPE_V6;
-			else
-				approvalType = Subcontract.APPROVAL_TYPE_ST;
-				
-		}else{
-			if(variedSubcontract)
-				approvalType = Subcontract.APPROVAL_TYPE_V5;
-			else
-				approvalType = Subcontract.APPROVAL_TYPE_AW;
+		//NSC
+		if("NSC".equals(subcontract.getSubcontractorNature())) {
+			approvalType = Subcontract.APPROVAL_TYPE_NS;		
+		} else {
+			//Tender Budget is greater than Original Budget
+			if(tenderBudget.compareTo(originalBudget) >0 ){
+				if(variedSubcontract)
+					approvalType = Subcontract.APPROVAL_TYPE_V6;
+				else
+					approvalType = Subcontract.APPROVAL_TYPE_ST;
+			}else{
+				if(variedSubcontract)
+					approvalType = Subcontract.APPROVAL_TYPE_V5;
+				else
+					approvalType = Subcontract.APPROVAL_TYPE_AW;
+			}
 		}
-		
 		return approvalType;
 	}
 	

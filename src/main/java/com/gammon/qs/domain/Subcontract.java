@@ -46,7 +46,8 @@ public class Subcontract extends BasePersistedObject {
 	// SC Award
 	public static final String APPROVAL_TYPE_AW = "AW";
 	public static final String APPROVAL_TYPE_ST = "ST"; // Over Budget
-
+	public static final String APPROVAL_TYPE_NS = "NS"; // For NSC, package start with "3"
+	
 	// SC Award - Varied
 	public static final String APPROVAL_TYPE_V5 = "V5";
 	public static final String APPROVAL_TYPE_V6 = "V6"; // Over Budget
