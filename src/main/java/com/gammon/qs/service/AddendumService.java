@@ -362,10 +362,10 @@ public class AddendumService{
 	}
 
 	
-	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) {
+	public String addAddendumFromResourceSummaries(String jobNo, String subcontractNo, Long addendumNo, BigDecimal idHeaderRef, List<ResourceSummary> resourceSummaryList) throws Exception {
 		String error = "";
 
-		try {
+//		try {
 			//Step 1: Check if any approval existed
 			String ableToSubmitAddendum = ableToSubmitAddendum(jobNo, subcontractNo);
 			if (ableToSubmitAddendum !=null){
@@ -457,11 +457,11 @@ public class AddendumService{
 			}
 			BQResourceSummaryWrapper result = resourceSummaryService.updateResourceSummaries(resourceSummaryList, jobNo);
 			if(result.getError() != null) throw new IllegalArgumentException(result.getError());
-		} catch (Exception e) {
-			error = "Addendum detail cannot be created from Resource Summary.";
-			logger.info(e.getMessage());
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			error = "Addendum detail cannot be created from Resource Summary.";
+//			logger.info(e.getMessage());
+//			e.printStackTrace();
+//		}
 		return error;
 
 	}
