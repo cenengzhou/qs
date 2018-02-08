@@ -842,10 +842,7 @@ public class SubcontractService {
 			variedSubcontract = true;
 		}
 		
-		//NSC
-		if("NSC".equals(subcontract.getSubcontractorNature())) {
-			approvalType = Subcontract.APPROVAL_TYPE_NS;		
-		} else {
+		
 			//Tender Budget is greater than Original Budget
 			if(tenderBudget.compareTo(originalBudget) >0 ){
 				if(variedSubcontract)
@@ -858,7 +855,7 @@ public class SubcontractService {
 				else
 					approvalType = Subcontract.APPROVAL_TYPE_AW;
 			}
-		}
+		
 		return approvalType;
 	}
 	

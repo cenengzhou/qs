@@ -142,7 +142,6 @@ public class PaymentService{
 	private static final String APPROVALTYPE_INTERIMPAYMENT_SP = "SP";
 	private static final String APPROVALTYPE_FINALPAYMENT_SF = "SF";
 	private static final String APPROVALTYPE_DIRECTPAYMENT_NP = "NP";
-	private static final String APPROVALTYPE_DIRECTPAYMENT_NP3 = "NP3";
 	private static final String APPROVALTYPE_PAYMENTREVIEW_FR = "FR";
 
 
@@ -1904,7 +1903,7 @@ public class PaymentService{
 
 				//Determine Special Approval Type (Initialized as SP)
 				if (PaymentCert.DIRECT_PAYMENT.equals(paymentCert.getDirectPayment())){
-					approvalType = paymentCertNo >= 3 ? APPROVALTYPE_DIRECTPAYMENT_NP3 : APPROVALTYPE_DIRECTPAYMENT_NP;
+					approvalType = APPROVALTYPE_DIRECTPAYMENT_NP;
 				}
 				else if ("F".equals(paymentCert.getIntermFinalPayment()))
 					approvalType = APPROVALTYPE_FINALPAYMENT_SF;
