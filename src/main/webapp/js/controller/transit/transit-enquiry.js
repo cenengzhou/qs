@@ -1,5 +1,5 @@
-mainApp.controller('TransitEnquiryCtrl', ['$scope', '$state', '$cookies', 'transitService', 'modalService', '$uibModalInstance', 'GlobalParameter',
-                                            function($scope, $state, $cookies, transitService, modalService, $uibModalInstance, GlobalParameter) {
+mainApp.controller('TransitEnquiryCtrl', ['$rootScope', '$scope', '$state', '$cookies', 'transitService', 'modalService', '$uibModalInstance', 'GlobalParameter',
+                                            function($rootScope, $scope, $state, $cookies, transitService, modalService, $uibModalInstance, GlobalParameter) {
 
 	
 	getIncompleteTransitList();
@@ -40,6 +40,7 @@ mainApp.controller('TransitEnquiryCtrl', ['$scope', '$state', '$cookies', 'trans
 
 	$scope.goToJob = function(row){
     	$cookies.put('jobNo', row.entity.jobNumber);
+    	$rootScope.jobNo = row.entity.jobNumber;
     	$cookies.put('jobDescription', row.entity.jobDescription);
     	$state.go('job.dashboard');
 	}

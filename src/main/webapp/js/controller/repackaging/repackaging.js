@@ -65,6 +65,8 @@ mainApp.controller('RepackagingCtrl', ['$q', '$state', '$scope', '$location', '$
 						$scope.latestVersion = true;
 						$scope.latestID = $scope.repackaging.id;
 						$cookies.put('repackagingId', $scope.repackaging.id);
+						$rootScope.repackagingId = $scope.repackaging.id;
+						$rootScope.jobNo = $scope.jobNo;
 						if($scope.repackaging.status != '900') $scope.isUpdatable = true;
 						$scope.isResourceGenerated = true;
 					} else {

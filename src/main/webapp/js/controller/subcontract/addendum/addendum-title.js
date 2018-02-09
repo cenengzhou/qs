@@ -1,14 +1,19 @@
-mainApp.controller('AddendumTitleCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', '$location', 
-                                           function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, $location) {
-	if($stateParams.addendumNo != undefined){
-		if($stateParams.addendumNo == 'New')
-			$cookies.put('addendumNo', '');
-		else
-			$cookies.put('addendumNo', $stateParams.addendumNo);
-	}
-
+mainApp.controller('AddendumTitleCtrl', ['$rootScope', '$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', '$location', 
+                                           function($rootScope, $scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, $location) {
 	$scope.addendum = [];
-	$scope.addendum.no = $cookies.get('addendumNo');
+	if($stateParams.addendumNo != undefined){
+		if($stateParams.addendumNo == 'New') {
+			$cookies.put('addendumNo', '');
+			$scope.addendum.no = $scope.addendumNo = '';
+			$rootScope.addendumNo = '';
+		} else{
+			$cookies.put('addendumNo', $stateParams.addendumNo);
+			$scope.addendum.no = $scope.addendumNo = $stateParams.addendumNo;
+			$rootScope.addendumNo = $stateParams.addendumNo;
+		}
+	} else {
+		$scope.addendum.no = $scope.addendumNo;
+	}
 	
 	loadData();
 	

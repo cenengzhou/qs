@@ -1,5 +1,5 @@
-mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
-                                         function($scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
+mainApp.controller('AttachmentMainCtrl', ['$rootScope', '$scope', '$location','attachmentService', 'modalService', 'confirmService', '$cookies', '$http', '$window', '$stateParams', 'GlobalParameter', 'GlobalHelper', 'GlobalMessage', 'jobService', 'paymentService', 'addendumService', 'subcontractService', 'transitService', 'mainCertService',
+                                         function($rootScope, $scope, $location, attachmentService, modalService, confirmService, $cookies, $http, $window, $stateParams, GlobalParameter, GlobalHelper, GlobalMessage, jobService, paymentService, addendumService, subcontractService, transitService, mainCertService) {
 	/*
 	 * attachment within ADDRESS BOOK modal is not control by this controller
 	 * because the modal is not manage by state of ui-router so that cannot inject with ui-view
@@ -15,13 +15,16 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 			$scope.uibModalInstance.close();
 		};
 	}
-	$scope.jobNo = $cookies.get('jobNo');
-	$scope.mainCertNo = $cookies.get("mainCertNo");
-	
-	$scope.subcontractNo = $cookies.get('subcontractNo');
-	$scope.addendumNo = $cookies.get('addendumNo');
-	$scope.paymentCertNo = $cookies.get('paymentCertNo');
-	$scope.mainCertNo = $cookies.get('mainCertNo');
+	if($rootScope.addendumNo == null){
+		$scope.addendumNo =  $cookies.get('addendumNo');
+	} else {
+		$scope.addendumNo = $rootScope.addendumNo;
+	}
+	$scope.jobNo = $rootScope.jobNo || $cookies.get('jobNo');
+	$scope.mainCertNo = $rootScope.mainCertNo || $cookies.get("mainCertNo");
+	$scope.subcontractNo = $rootScope.subcontractNo || $cookies.get('subcontractNo');
+	$scope.paymentCertNo = $rootScope.paymentCertNo || $cookies.get('paymentCertNo');
+
 	$scope.offsetTop = $stateParams.offsetTop;
 	$scope.insideContent = false;
 	$scope.sequenceNo = 0;
@@ -41,7 +44,7 @@ mainApp.controller('AttachmentMainCtrl', ['$scope', '$location','attachmentServi
 			loadAttachment($scope.nameObject, $scope.textKey);
 			break;
 		case GlobalParameter['AbstractAttachment'].AddendumNameObject:
-			if($scope.addendumNo){
+			if($scope.addendumNo != null){
 				$scope.textKey += $scope.addendumNo;
 			} else {
 				$scope.textKey += '-1';

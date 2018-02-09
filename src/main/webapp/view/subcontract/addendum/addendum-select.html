@@ -63,7 +63,7 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="pull-right" id="{{addendum.status!='APPROVED' ? 'pendingAddendumViewDetails' : 'AddendumViewDetails'+$index}}">
-									<a class="btn" ui-sref="subcontract.addendum.title({addendumNo: addendum.no})" 
+									<a class="btn" ui-sref="subcontract.addendum.title({jobNo:addendum.noJob, subcontractNo:addendum.noSubcontract,addendumNo: addendum.no, addendumDetailHeaderRef:addendumDetailHeaderRef})" 
 									ng-class="{'btn-grey' : addendum.status=='APPROVED', 'btn-lime' : addendum.status!='APPROVED'}">
 									View details</a>
 								</div>

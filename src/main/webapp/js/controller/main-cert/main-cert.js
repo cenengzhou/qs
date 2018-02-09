@@ -1,5 +1,5 @@
-mainApp.controller('MainCertCtrl', ['$scope', 'modalService', 'mainCertService', '$cookies', '$rootScope', '$stateParams',
-	function($scope, modalService, mainCertService, $cookies, $rootScope, $stateParams) {
+mainApp.controller('MainCertCtrl', ['$rootScope', '$scope', 'modalService', 'mainCertService', '$cookies', '$rootScope', '$stateParams',
+	function($rootScope, $scope, modalService, mainCertService, $cookies, $rootScope, $stateParams) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.mainCertStatus = '';	
@@ -7,8 +7,11 @@ mainApp.controller('MainCertCtrl', ['$scope', 'modalService', 'mainCertService',
 	if($stateParams.mainCertNo){
 		if($stateParams.mainCertNo == '0'){
 			$cookies.put('mainCertNo', '');
+			$rootScope.mainCertNo='';
 		}else{
 			$cookies.put('mainCertNo', $stateParams.mainCertNo);
+			$rootScope.mainCertNo = $stateParams.mainCertNo;
+			$rootScope.jobNo = $scope.jobNo;
 		}
 	}
 	

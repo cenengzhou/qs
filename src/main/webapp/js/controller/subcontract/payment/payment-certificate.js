@@ -1,5 +1,5 @@
-mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 'GlobalParameter',
-                                       function($scope, $stateParams, $cookies, paymentService, mainCertService, modalService, GlobalParameter) {
+mainApp.controller('PaymentCertCtrl', ['$rootScope', '$scope' , '$stateParams', '$cookies', 'paymentService', 'mainCertService', 'modalService', 'GlobalParameter',
+                                       function($rootScope, $scope, $stateParams, $cookies, paymentService, mainCertService, modalService, GlobalParameter) {
 	$scope.GlobalParameter = GlobalParameter;
 	$scope.disableButtons = true;
 
@@ -10,13 +10,16 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 	
 	if($stateParams.paymentCertNo){
+		$rootScope.jobNo = $scope.jobNo;
 		if($stateParams.paymentCertNo == '0'){
 			$cookies.put('paymentCertNo', '');
 			$cookies.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
+			$rootScope.paymentCertNo = '';
 			createPayment();
 		}else{
 			$cookies.put('paymentCertNo', $stateParams.paymentCertNo);
 			$cookies.put('paymentTermsDesc', $stateParams.paymentTermsDesc);
+			$rootScope.paymentCertNo = $stateParams.paymentCertNo;
 		}
 	}
 	//only for init page load, reassign value when paymentCert loaded from backend
@@ -191,8 +194,8 @@ mainApp.controller('PaymentCertCtrl', ['$scope' , '$stateParams', '$cookies', 'p
 
 					$cookies.put('paymentCertNo', $scope.payment.paymentCertNo);
 					$scope.paymentCertNo = $cookies.get('paymentCertNo');
-					
-					
+					$rootScope.paymentCertNo = $scope.payment.paymentCertNo;
+					$rootScope.jobNo = $scope.jobNo;
 					getMainCertNoList();
 
 					if($scope.payment.paymentStatus == "PND")

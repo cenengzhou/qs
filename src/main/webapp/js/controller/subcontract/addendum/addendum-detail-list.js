@@ -1,7 +1,6 @@
-mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addendumService', '$cookies', '$location', 'uiGridConstants',
-                                              function($scope , modalService, addendumService, $cookies, $location, uiGridConstants) {
+mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addendumService', '$cookies', '$stateParams', '$location', 'uiGridConstants',
+                                              function($scope , modalService, addendumService, $cookies, $stateParams, $location, uiGridConstants) {
 
-	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = "";
 
 
@@ -69,9 +68,9 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 		$scope.gridApi = gridApi;
 
 		gridApi.selection.on.rowSelectionChanged($scope,function(row){
-			if(row.entity.typeHd == 'HEADER')
+			if(row.entity.typeHd == 'HEADER'){
 				addendumDetailHeaderRef = row.entity.id;
-			else{
+			} else{
 				if(row.entity.idHeaderRef != null){
 					addendumDetailHeaderRef = row.entity.idHeaderRef;
 				}
@@ -79,6 +78,7 @@ mainApp.controller('AddendumDetailListCtrl', ['$scope' , 'modalService', 'addend
 					addendumDetailHeaderRef = 'Empty';
 				}
 			}
+			$scope.addendumDetailHeaderRef = addendumDetailHeaderRef;
 		});
 
 	}
