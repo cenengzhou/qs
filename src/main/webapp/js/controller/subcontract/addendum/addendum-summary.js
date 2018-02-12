@@ -1,7 +1,8 @@
 mainApp.controller('AddendumSummaryCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 
                                            function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state) {
 
-	$scope.addendumNo = $stateParams.addendumNo;
+	$scope.addendumNo = $cookies.get('addendumNo');
+	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 
 	loadData();
 	

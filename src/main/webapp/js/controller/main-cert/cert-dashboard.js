@@ -1,10 +1,9 @@
-mainApp.controller('CertCtrl', ['$rootScope', '$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'jobService', '$uibModal',
-                                function($rootScope, $scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, jobService, $uibModal) {
+mainApp.controller('CertCtrl', ['$scope', 'mainCertService', 'colorCode', '$cookies', '$q','uiGridConstants', 'roundUtil', 'GlobalParameter', 'rootscopeService', 'jobService', '$uibModal',
+                                function($scope, mainCertService, colorCode, $cookies, $q, uiGridConstants, roundUtil, GlobalParameter, rootscopeService, jobService, $uibModal) {
 	rootscopeService.setSelectedTips('mainContractCertificateStatus');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$cookies.put("mainCertNo", undefined);
-	$rootScope.mainCertNo = undefined;
 	
 	Chart.defaults.global.colours = [colorCode.green, colorCode.blue, colorCode.purple];
 

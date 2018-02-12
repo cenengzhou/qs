@@ -3,8 +3,8 @@ mainApp.controller('PaymentCtrl', ['$scope', '$q', 'modalService', '$cookies', '
 
 	$scope.maxPaymentNo = 0;
 	$scope.latestPaymentStatus = '';
-//	$scope.jobNo = $cookies.get("jobNo");
-//	$scope.jobDescription = $cookies.get("jobDescription");
+	$scope.jobNo = $cookies.get("jobNo");
+	$scope.jobDescription = $cookies.get("jobDescription");
 	
 	loadData();
 	

@@ -1,5 +1,5 @@
-mainApp.controller('JobSelectCtrl', ['$rootScope','$scope', '$state', '$timeout', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', 'rootscopeService', 'userpreferenceService', 'blockUI',
-                               function($rootScope, $scope, $state, $timeout, colorCode, jobService, $animate, $cookies, modalService, rootscopeService, userpreferenceService, blockUI) {
+mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode', 'jobService', '$animate',  '$cookies', 'modalService', 'rootscopeService', 'userpreferenceService', 'blockUI',
+                               function($scope, $state, $timeout, colorCode, jobService, $animate, $cookies, modalService, rootscopeService, userpreferenceService, blockUI) {
 	rootscopeService.setSelectedTips('');
 	$scope.loading = true;
 	$scope.selectedDivision = '';
@@ -56,7 +56,6 @@ mainApp.controller('JobSelectCtrl', ['$rootScope','$scope', '$state', '$timeout'
 	$scope.updateJobInfo = function (jobNo, jobDescription) {
     	$cookies.put('jobNo', jobNo);
     	$cookies.put('jobDescription', jobDescription);
-    	$rootScope.jobNo = jobNo;
     }
 	
 	$scope.createJob = function (){

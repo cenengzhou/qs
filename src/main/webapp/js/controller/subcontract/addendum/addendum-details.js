@@ -1,9 +1,7 @@
-mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', '$stateParams', 'uiGridConstants','$location',
-                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state, $stateParams, uiGridConstants, $location) {
+mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$cookies', '$state', 'uiGridConstants','$location',
+                                           function($scope ,modalService, addendumService, subcontractService, $cookies, $state, uiGridConstants, $location) {
 
-//	$scope.addendumNo = $stateParams.addendumNo;
-//	$scope.jobNo = $stateParams.jobNo;
-//	$scope.subcontractNo = $stateParams.subcontractNo;
+	$scope.addendumNo = $cookies.get('addendumNo');
 	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 	
 	loadData();
@@ -113,7 +111,6 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 	}
 
 	$scope.updateDetail = function () {
-		var modalStatus = {jobNo : $scope.jobNo, subcontractNo:$scope.subcontractNo,addendumNo:$scope.addendumNo, addendumDetailHeaderRef: addendumDetailHeaderRef, type:'UPDATE'};
 		var dataRows = $scope.gridApi.selection.getSelectedRows();
 		if(dataRows.length == 0 || dataRows.length > 1){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Please select 1 row to update addendum.");
@@ -124,20 +121,19 @@ mainApp.controller('AddendumDetailsCtrl', ['$scope' , 'modalService', 'addendumS
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Resource deleted from approved Subcontract Detail cannot be updated here.");
 			return;
 		}else{
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', modalStatus, dataRows[0]);
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'UPDATE', dataRows[0]);
 		}
 
 
 	};
 
 	$scope.open = function(view){
-		var modalStatus = {jobNo : $scope.jobNo, subcontractNo:$scope.subcontractNo,addendumNo:$scope.addendumNo, addendumDetailHeaderRef: addendumDetailHeaderRef, type:'ADD'};
 		if(view == 'noBudget')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', modalStatus); // Add V1/V2 (No Budget)
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-modal.html', 'AddendumDetailsAddCtrl', 'ADD'); // Add V1/V2 (No Budget)
 		else if(view == 'withBudget')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-v3-modal.html', 'AddendumDetailV3Ctrl', modalStatus); //Add V1/V3 (With Budget)
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-add-v3-modal.html', 'AddendumDetailV3Ctrl'); //Add V1/V3 (With Budget)
 		else if(view == 'update')
-			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-update-modal.html', 'AddendumDetailUpdateCtrl', modalStatus); // Update Approved Addendum
+			modalService.open('lg', 'view/subcontract/addendum/addendum-detail-update-modal.html', 'AddendumDetailUpdateCtrl'); // Update Approved Addendum
 
 	}
 

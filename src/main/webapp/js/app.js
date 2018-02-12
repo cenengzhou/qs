@@ -530,23 +530,18 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
-                           'js/service/addendum-service.js',
-                           'js/controller/subcontract/addendum/addendum-tab.js'
+                           'js/service/addendum-service.js' 
                     ] 
                 });
             }]
-        },
-		params: {
-			'jobNo': null,
-			'subcontractNo':null,
-			'addendumNo':null,
-			'addendumDetailHeaderRef':null
-		},
-		controller: 'AddendumTabCtrl'
+        }
 	})
 	.state('subcontract.addendum.title', {
 		url: "/title",
 		templateUrl: "view/subcontract/addendum/addendum-title.html",
+		params: {
+			"addendumNo": null 
+		},
 		resolve: {
             service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({

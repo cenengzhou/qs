@@ -1,11 +1,11 @@
-mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'jdeService', '$cookies', '$state', '$stateParams', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', '$location', 
-                                              function($scope ,modalService, addendumService, subcontractService, jdeService, $cookies, $state, $stateParams, $uibModalInstance, roundUtil, modalStatus, modalParam, $location) {
+mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', 'jdeService', '$cookies', '$state', '$uibModalInstance', 'roundUtil', 'modalStatus', 'modalParam', '$location', 
+                                              function($scope ,modalService, addendumService, subcontractService, jdeService, $cookies, $state, $uibModalInstance, roundUtil, modalStatus, modalParam, $location) {
 
-	var jobNo = modalStatus.jobNo;//$cookies.get('jobNo');
-	var subcontractNo = modalStatus.subcontractNo;//$cookies.get('subcontractNo');
-	var addendumNo = modalStatus.addendumNo;//$cookies.get('addendumNo');
+	var jobNo = $cookies.get('jobNo');
+	var subcontractNo = $cookies.get('subcontractNo');
+	var addendumNo = $cookies.get('addendumNo');
 	
-	var addendumDetailHeaderRef = modalStatus.addendumDetailHeaderRef;//$cookies.get('addendumDetailHeaderRef');
+	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 	if(addendumDetailHeaderRef=='Empty')
 		addendumDetailHeaderRef = '';
 	
@@ -58,7 +58,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			return;
 		}
 
-		if(modalStatus.type == 'ADD'){
+		if(modalStatus == 'ADD'){
 			if($scope.addendumDetail.idResourceSummary == null ){//&& idSubcontractDetail ==null
 				//Addendum without budget
 				$scope.addendumDetail.rateBudget = 0;
@@ -93,7 +93,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			}
 			addAddendumDetail(addendumDetailToAdd);
 		}
-		else if(modalStatus.type == 'UPDATE'){
+		else if(modalStatus == 'UPDATE'){
 			updateAddendumDetail($scope.addendumDetail);
 		}
 	};
@@ -143,7 +143,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 	}
 
 	$scope.$watch('lineType', function(newValue, oldValue) {
-		if(modalStatus.type == 'ADD' && modalParam == null){
+		if(modalStatus == 'ADD' && modalParam == null){
 			//1. Add V1/V2 (no budget)
 			addendumService.getDefaultValuesForAddendumDetails(jobNo, subcontractNo, addendumNo, newValue)
 			.then(
@@ -152,7 +152,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 							$scope.addendumDetail = data;
 						}
 					});
-		}else if(modalStatus.type == 'ADD' && modalParam != null){
+		}else if(modalStatus == 'ADD' && modalParam != null){
 			//Add from Approved Addendum
 			$scope.addendumDetail = modalParam;
 			$scope.lineType = modalParam.typeVo;
@@ -161,7 +161,7 @@ mainApp.controller('AddendumDetailsAddCtrl', ['$scope' , 'modalService', 'addend
 			
 			$scope.disableFields = true;
 		}
-		else if(modalStatus.type == 'UPDATE'){
+		else if(modalStatus == 'UPDATE'){
 			//2. Add new VO from SC Detail (no budget) OR Update VO (no budget)
 			//console.log(modalParam);
 			$scope.addendumDetail = modalParam;

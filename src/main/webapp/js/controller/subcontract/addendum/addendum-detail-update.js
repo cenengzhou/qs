@@ -1,11 +1,11 @@
-mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'addendumService', 'repackagingService', 'modalService', 'modalStatus', '$state', '$cookies', '$uibModalInstance',
-                                            function($scope, resourceSummaryService, subcontractService, addendumService, repackagingService, modalService, modalStatus, $state, $cookies, $uibModalInstance) {
+mainApp.controller('AddendumDetailUpdateCtrl', ['$scope', 'resourceSummaryService', 'subcontractService', 'addendumService', 'repackagingService', 'modalService', '$state', '$cookies', '$uibModalInstance',
+                                            function($scope, resourceSummaryService, subcontractService, addendumService, repackagingService, modalService, $state, $cookies, $uibModalInstance) {
 
-	var jobNo = modalStatus.jobNo;//$cookies.get('jobNo');
-	var subcontractNo = modalStatus.subcontractNo;//$cookies.get('subcontractNo');
-	var addendumNo = modalStatus.addendumNo;//$cookies.get('addendumNo');
+	var jobNo = $cookies.get('jobNo');
+	var subcontractNo = $cookies.get('subcontractNo');
+	var addendumNo = $cookies.get('addendumNo');
 
-	var addendumDetailHeaderRef = modalStatus.addendumDetailHeaderRef;//$cookies.get('addendumDetailHeaderRef');
+	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 	if(addendumDetailHeaderRef=='Empty')
 		addendumDetailHeaderRef = '';
 	

@@ -1,7 +1,8 @@
 mainApp.controller('AddendumForm2Ctrl', ['$scope' , 'modalService', 'addendumService', 'subcontractService', '$stateParams', '$cookies', '$state', 'htmlService', 'GlobalHelper', 'confirmService', 'jobService',
                                  function($scope ,modalService, addendumService, subcontractService, $stateParams, $cookies, $state, htmlService, GlobalHelper, confirmService, jobService) {
 
-	$scope.addendumNo = $stateParams.addendumNo;
+	$scope.addendumNo = $cookies.get('addendumNo');
+	var addendumDetailHeaderRef = $cookies.get('addendumDetailHeaderRef');
 
 	loadData();
 	

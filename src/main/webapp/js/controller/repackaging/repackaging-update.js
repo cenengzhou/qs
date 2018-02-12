@@ -1,5 +1,5 @@
-mainApp.controller('RepackagingUpdateCtrl', ['$rootScope', '$scope' ,'modalService', 'resourceSummaryService', 'jdeService', '$cookies', '$stateParams', '$state', 'uiGridConstants', 'confirmService', 'subcontractService', '$location', 'roundUtil',
-                                             function($rootScope, $scope, modalService, resourceSummaryService, jdeService, $cookies, $stateParams, $state, uiGridConstants, confirmService, subcontractService, $location, roundUtil) {
+mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resourceSummaryService', 'jdeService', '$cookies', '$stateParams', '$state', 'uiGridConstants', 'confirmService', 'subcontractService', '$location', 'roundUtil',
+                                             function($scope, modalService, resourceSummaryService, jdeService, $cookies, $stateParams, $state, uiGridConstants, confirmService, subcontractService, $location, roundUtil) {
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
 
@@ -102,8 +102,6 @@ mainApp.controller('RepackagingUpdateCtrl', ['$rootScope', '$scope' ,'modalServi
 							confirmService.showModal({}, modalOptions).then(function (result) {
 								if(result == "Yes"){
 									$cookies.put('subcontractNo', rowEntity.packageNo);
-									$rootScope.subcontractNo = rowEntity.packageNo;
-									$rootScope.jobNo = $scope.jobNo;
 									$location.path('/subcontract-award/tab/assign');
 								}
 							});

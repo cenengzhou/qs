@@ -1,5 +1,5 @@
-mainApp.controller("SubcontractCreateCtrl", ['$rootScope', '$scope', 'jobService', 'subcontractService', '$cookies', '$timeout', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
-                                                  function ($rootScope, $scope, jobService, subcontractService, $cookies, $timeout, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
+mainApp.controller("SubcontractCreateCtrl", ['$scope', 'jobService', 'subcontractService', '$cookies', '$timeout', 'modalService', 'subcontractRetentionTerms', '$state', 'GlobalParameter', 'paymentService', 'confirmService', 'rootscopeService',
+                                                  function ($scope, jobService, subcontractService, $cookies, $timeout, modalService, subcontractRetentionTerms, $state, GlobalParameter, paymentService, confirmService, rootscopeService) {
 	$scope.GlobalParameter = GlobalParameter;
 	getSubcontract();
 	getJob();
@@ -301,12 +301,10 @@ mainApp.controller("SubcontractCreateCtrl", ['$rootScope', '$scope', 'jobService
 				}else{
 			    	modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Success', "Subcontract has been saved successfully.");
 					$cookies.put('subcontractNo', $scope.subcontractToUpdate.packageNo);
-					$rootScope.subcontractNo = $scope.subcontractToUpdate.packageNo;
 			    	$cookies.put('subcontractDescription', $scope.subcontractToUpdate.description);
 			    	$cookies.put('paymentStatus', '');
 			    	//replace $scope.jobNo read from $cookie at subcontract-menu.js
 			    	$cookies.put('jobNo', $scope.jobNo);
-			    	$rootScope.jobNo = $scope.jobNo;
 			    	$state.reload(); 
 				}
 
