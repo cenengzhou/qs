@@ -1,11 +1,11 @@
 <div class="row">
-<h6 class="text-purple-light"><span class="icofont icofont-star"></span>Object Code, Subsidiary Code, Description and Package No. are editable.</h6>
+<h6 class="text-purple-light" ng-hide="transitLocked"><span class="icofont icofont-star"></span>Object Code, Subsidiary Code, Description and Package No. are editable.</h6>
 	<div class="col-md-12" ng-show="resourceEdit">
 		<form role="form" name="applyForm"
 			ng-submit="applyForm.$valid && onResourceApplyChange(resourceApplyOptions[resourceApplyTo].value, resourceApplyToText)">
 			<fieldset>
 
-				<div class="input-group">
+				<div class="input-group" ng-hide="transitLocked">
 					<input type="number" step="1" min="0" class="form-control col-md-5"
 						aria-label="..." ng-model-option="updateOn:blur"
 						ng-model="resourceApplyToText" required
@@ -44,7 +44,7 @@
 	<div class="col-md-12" ng-if = "transit.status != 'Transit Completed' && transit.status.length >0">
 		<form name="importResourceCauseway" id="importResourceCauseway">
 			<div class="form-group horizontal">
-				<label class="btn btn-block btn-primary"
+				<label class="btn btn-block btn-primary"  ng-hide="transitLocked"
 					uib-popover="All exisitng resources will be deleted"
 					popover-trigger="mouseenter" popover-title="Import Resources"
 					popover-animation="true" type="button"> <i

@@ -1,5 +1,5 @@
-mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'modalService', '$cookies', '$state', 'transitService', 
-                                               function ($scope, $uibModalInstance, modalService, $cookies, $state, transitService) {
+mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$rootScope', '$uibModalInstance', 'modalService', '$cookies', '$state', 'transitService', 
+                                               function ($scope, $rootScope, $uibModalInstance, modalService, $cookies, $state, transitService) {
 	
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.matchingCodes = {
@@ -57,6 +57,7 @@ mainApp.controller("TransitHeaderModalCtrl", ['$scope', '$uibModalInstance', 'mo
 			transitService.getTransit($scope.jobNo)
 			.then(
 					function (data){
+						$rootScope.transitLocked = data == undefined || data.systemStatus == 'LOCKED';
 						$scope.transit = data;
 						$scope.isNewJob = false;
 						$scope.transitAction = 'Update';

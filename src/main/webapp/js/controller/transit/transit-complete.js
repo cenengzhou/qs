@@ -1,5 +1,5 @@
-mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitService', 'jdeService', '$cookies', '$window', '$timeout', 'rootscopeService', 'confirmService', 'resourceSummaryService', 'GlobalHelper',
-                          function($scope, modalService, transitService, jdeService, $cookies, $window, $timeout, rootscopeService, confirmService, resourceSummaryService, GlobalHelper) {
+mainApp.controller('TransitCompleteCtrl', ['$scope', '$rootScope', 'modalService', 'transitService', 'jdeService', '$cookies', '$window', '$timeout', 'rootscopeService', 'confirmService', 'resourceSummaryService', 'GlobalHelper',
+                          function($scope, $rootScope, modalService, transitService, jdeService, $cookies, $window, $timeout, rootscopeService, confirmService, resourceSummaryService, GlobalHelper) {
 	rootscopeService.setSelectedTips('');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -17,6 +17,7 @@ mainApp.controller('TransitCompleteCtrl', ['$scope', 'modalService', 'transitSer
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	$scope.transit = data;
+	    	$rootScope.transitLocked = data.systemStatus == 'LOCKED';
 	    	$scope.$emit("UpdateTransitStatus", data.status);
 	    	if(data instanceof Object) {
 	    		if($scope.transit.status === 'Header Created'){

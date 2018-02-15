@@ -21,7 +21,8 @@ public abstract class BasePersistedAuditObject implements Serializable {
 	private static final long serialVersionUID = -4573307221144459420L;
 	public static final String ACTIVE = "ACTIVE";
 	public static final String INACTIVE = "INACTIVE";
-    
+	public static final String LOCKED = "LOCKED";
+	
 	protected String createdUser;
 	protected Date createdDate;
 	protected String lastModifiedUser;
@@ -95,6 +96,15 @@ public abstract class BasePersistedAuditObject implements Serializable {
 
 	public void setSystemStatus(String systemStatus) {
 		this.systemStatus = systemStatus;
+	}
+	
+	public void lock() throws IllegalAccessException {
+		if(LOCKED.equals(this.systemStatus)) throw new IllegalAccessException("entity is locked");
+		this.systemStatus = LOCKED;
+	}
+	
+	public void unlock() {
+		if(LOCKED.equals(this.systemStatus)) this.systemStatus = ACTIVE;
 	}
 
 	/* (non-Javadoc)

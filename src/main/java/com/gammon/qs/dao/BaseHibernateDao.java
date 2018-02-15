@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
@@ -53,6 +55,11 @@ public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 	}
 
 	public void saveOrUpdate(T object) throws DataAccessException {
+		getSession().saveOrUpdate(object);
+		flush();
+	}
+
+	private <U extends BasePersistedAuditObject> void saveOrUpdate(U object) {
 		getSession().saveOrUpdate(object);
 		flush();
 	}
@@ -247,4 +254,20 @@ public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 		}
 		return criteria;
 	}
+	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public <U extends BasePersistedAuditObject> void lock(U object) throws IllegalAccessException {
+		if(object != null) {
+			object.lock();
+			saveOrUpdate(object);
+		}
+	}
+	
+	public <U extends BasePersistedAuditObject> void unlock(U object) {
+		if(object != null) {
+			object.unlock();
+			saveOrUpdate(object);
+		}
+	}
+
 }

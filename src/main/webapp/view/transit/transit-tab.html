@@ -4,11 +4,12 @@
 			<h1 class="page-header">
 		{{jobNo}}<small> {{jobDescription}}</small>
 		 - Transit Status: <small> {{transitStatus}}</small>
+		 <small class="text-red m-l-30" ng-show="transitLocked"> <b>LOCKED</b></small>
 	</h1>
 		</div>
 	
 		<div class="col-xs-2" id="editTransitHeader">
-			<button type="button" class="btn btn-success btn-block pull-right" ng-click="editTransitHeader()">
+			<button type="button" ng-disabled="transitLocked" class="btn btn-success btn-block pull-right" ng-click="editTransitHeader()">
 				<i class="fa fa-pencil"></i><span> Edit Transit Header</span>
 			</button>
 		</div>

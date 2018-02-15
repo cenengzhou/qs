@@ -13,8 +13,10 @@ mainApp.controller('TransitCtrl', ['$scope', 'modalService', 'transitService', '
 		transitService.getTransit($scope.jobNo)
 		.then(
 				function(data){
-					if(data)
+					if(data){
 						$scope.transitStatus = data.status;
+						$rootScope.transitLocked = data.systemStatus == 'LOCKED';
+					}
 
 				});
 	}

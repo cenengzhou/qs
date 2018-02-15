@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.JasperConfig;
@@ -198,7 +200,7 @@ public class TransitService implements Serializable {
 		resource.setAmountBudget(transitResource.getValue());
 		return resource;
 	}
-	
+
 	public TransitImportResponse importBqItemsOrResourcesFromXls(String jobNumber, String type, byte[] file) throws Exception{
 		if(type.equals(GlobalParameter.TRANSIT_BQ))
 			return importBqItems(jobNumber, file);			
@@ -215,6 +217,7 @@ public class TransitService implements Serializable {
 		}
 	}
 	
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
 	public TransitImportResponse importBqItems(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();
 		errorList = new ArrayList<String>();
@@ -228,6 +231,13 @@ public class TransitService implements Serializable {
 		}
 		else if(Transit.TRANSIT_COMPLETED.equals(header.getStatus())){
 			response.setMessage("Transit for this job has already been completed");
+			return response;
+		}
+		try {
+			transitHeaderDao.lock(header);
+		}catch(IllegalAccessException e) {
+			e.printStackTrace();
+			response.setMessage(e.getMessage());
 			return response;
 		}
 		transitResourceDao.deleteResourcesByHeader(header);
@@ -399,7 +409,7 @@ public class TransitService implements Serializable {
 			errorList.add("An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 		if(errorList.size() == 0){
 			header.setStatus(Transit.BQ_IMPORTED);
 			transitHeaderDao.saveOrUpdate(header);
@@ -428,6 +438,7 @@ public class TransitService implements Serializable {
 		}
 		else
 			response.setMessage(GlobalParameter.TRANSIT_ERROR);
+		transitHeaderDao.unlock(header);
 		return response;
 	}
 	
@@ -440,7 +451,13 @@ public class TransitService implements Serializable {
 			response.setMessage("Transit for this job has already been completed");
 			return response;
 		}
-		
+		try {
+			transitHeaderDao.lock(header);
+		}catch(IllegalAccessException e) {
+			e.printStackTrace();
+			response.setMessage(e.getMessage());
+			return response;
+		}
 		errorList = new ArrayList<String>();
 		// added by brian on 20110225
 		warningList = new ArrayList<String>();
@@ -737,7 +754,7 @@ public class TransitService implements Serializable {
 			errorList.add("An error occurred while trying to process the excel file, at line " + i + ": " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+		transitHeaderDao.unlock(header);
 		if(errorList.size() == 0){
 			transitResourceDao.saveResources(resources);
 			header.setStatus(Transit.RESOURCES_IMPORTED);
@@ -756,7 +773,6 @@ public class TransitService implements Serializable {
 		}
 		else
 			response.setMessage(GlobalParameter.TRANSIT_ERROR);
-		
 		return response;
 	}
 	
@@ -1147,7 +1163,7 @@ public class TransitService implements Serializable {
 	
 	public String confirmResourcesAndCreatePackages(String jobNumber, Boolean createPackage) {	
 		logger.info("TRANSIT: confirming resources for job " + jobNumber);
-		Transit header;
+		Transit header = null;
 		try {
 			header = transitHeaderDao.getTransitHeader(jobNumber);
 		if(header == null)
@@ -1160,7 +1176,12 @@ public class TransitService implements Serializable {
 //			return "Please import resources";
 		else if(Transit.RESOURCES_CONFIRMED.equals(header.getStatus()) || Transit.REPORT_PRINTED.equals(header.getStatus()))
 			return "Transit Resources for this job has already been confirmed.";
-		
+		try {
+			transitHeaderDao.lock(header);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
 		//Check that there are no dummy account numbers (obj and sub codes all 0s)
 		if(transitResourceDao.dummyAccountCodesExist(header))
 			return "There are resources with dummy account codes (all '0's). Please update these to valid account codes before confirming resources.";
@@ -1281,6 +1302,7 @@ public class TransitService implements Serializable {
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		}
+		transitHeaderDao.unlock(header);
 		return null;
 	}
 	
@@ -1302,7 +1324,13 @@ public class TransitService implements Serializable {
 			message = "Please confirm resources and create reports before completing the transit process."; 
 			return message;
 		}
-			
+		try {
+			transitHeaderDao.lock(header);
+		} catch (IllegalAccessException e1) {
+			e1.printStackTrace();
+			return e1.getMessage();
+		}
+		
 		List<TransitBpi> transitBqItems = transitBqDao.obtainTransitBQByTransitHeader(header);
 		Collections.sort(transitBqItems, new Comparator<TransitBpi>(){
 			public int compare(TransitBpi bq1, TransitBpi bq2) {
@@ -1397,6 +1425,7 @@ public class TransitService implements Serializable {
 			}
 			scPackageDao.saveOrUpdate(scPackage);
 		}
+
 		header.setStatus(Transit.TRANSIT_COMPLETED);
 		transitHeaderDao.saveOrUpdate(header);
 		logger.info("Step 1: Transit has been completed.");
@@ -1415,18 +1444,17 @@ public class TransitService implements Serializable {
 		else
 			logger.info("Step 3: Post Budget completes.");
 		
-		//4. Generate Resource Summary
-		try {
-			String error = resourceSummaryService.generateResourceSummaries(jobNumber);
-			if(error.length()==0)
-				logger.info("Step 4: Generate Resource Summary completes.");
-			else
-				logger.info("Step 4: Generate Resource Summary ERROR: "+error);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
+			//4. Generate Resource Summary
+			try {
+				String error = resourceSummaryService.generateResourceSummaries(jobNumber);
+				if(error.length()==0)
+					logger.info("Step 4: Generate Resource Summary completes.");
+				else
+					logger.info("Step 4: Generate Resource Summary ERROR: "+error);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			transitHeaderDao.unlock(header);
 		} catch (DatabaseOperationException e) {
 			e.printStackTrace();
 		} catch (ValidateBusinessLogicException e) {

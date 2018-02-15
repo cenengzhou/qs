@@ -1,5 +1,5 @@
-mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitService', '$cookies', 'transitService', 'confirmService', '$window', 'rootscopeService', 'uiGridGroupingConstants', 'uiGridConstants', '$location', 'GlobalHelper',
-                          function($scope, modalService, transitService, $cookies, transitService, confirmService, $window, rootscopeService, uiGridGroupingConstants, uiGridConstants, $location, GlobalHelper) {
+mainApp.controller('TransitImportCtrl', ['$scope', '$rootScope', 'modalService', 'transitService', '$cookies', 'transitService', 'confirmService', '$window', 'rootscopeService', 'uiGridGroupingConstants', 'uiGridConstants', '$location', 'GlobalHelper',
+                          function($scope, $rootScope, modalService, transitService, $cookies, transitService, confirmService, $window, rootscopeService, uiGridGroupingConstants, uiGridConstants, $location, GlobalHelper) {
 	rootscopeService.setSelectedTips('');
 	$scope.jobNo = $cookies.get("jobNo");
 	$scope.jobDescription = $cookies.get("jobDescription");
@@ -27,6 +27,7 @@ mainApp.controller('TransitImportCtrl', ['$scope', 'modalService', 'transitServi
     	transitService.getTransit($scope.jobNo)
     	.then(function(data){
 	    	$scope.transit = data;
+	    	$rootScope.transitLocked = data.systemStatus == 'LOCKED';
 	    	$scope.$emit("UpdateTransitStatus", data.status);
 	    	if(data instanceof Object) {
 	    		if($scope.transit.status === 'Header Created'){

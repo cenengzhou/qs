@@ -11,7 +11,7 @@
 
 		<div class="row offset-35 m-t-40">
 				<div class="col-md-12">
-					<button type="button" class="btn btn-lg btn-primary" ng-disabled="disableCompleteTransit"
+					<button type="button" class="btn btn-lg btn-primary" ng-disabled="disableCompleteTransit || transitLocked"
 						style="width: 400px" ng-click="completeTransit()">
 						<i class="icofont icofont-check-circled fa-5x"></i><br> <b>Complete Transit</b>
 					</button>
