@@ -2112,9 +2112,9 @@ public class PaymentService{
 		//Validation 5 - Final Payment (To be submitted one)
 		if ("F".equals(scPaymentCert.getIntermFinalPayment())){
 			for (SubcontractDetail scDetail:scDetailsList){
-				//Skip inactive line
-				if (SubcontractDetail.INACTIVE.equals(scDetail.getSystemStatus())){
-					logger.info("SKIPPED - Line Type: "+scDetail.getLineType()+" ID: "+scDetail.getId()+"System Status: "+scDetail.getSystemStatus());
+				//Skip non-approved || inactive line 
+				if (!"A".equals(scDetail.getApproved()) || SubcontractDetail.INACTIVE.equals(scDetail.getSystemStatus())){
+					logger.info("SKIPPED - Line Type: "+scDetail.getLineType()+" ID: "+scDetail.getId()+ " approved:" + scDetail.getApproved() + " System Status: "+scDetail.getSystemStatus());
 					continue;
 				}
 
