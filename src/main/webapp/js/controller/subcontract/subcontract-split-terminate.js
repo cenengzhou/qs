@@ -103,7 +103,6 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 
 					rowEntity.newQuantity = roundUtil.round(newValue, 4);
 					rowEntity.amountSubcontractNew = roundUtil.round(rowEntity.newQuantity * rowEntity.scRate, 2);
-					rowEntity.amountBudgetNew = roundUtil.round(rowEntity.newQuantity * rowEntity.costRate, 2);
 				}
 			}else if(colDef.name == 'amountSubcontractNew'){
 				if(newValue.length ==0){
@@ -116,10 +115,10 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 
 					rowEntity.amountSubcontractNew = roundUtil.round(newValue, 2);
 					rowEntity.newQuantity = roundUtil.round(rowEntity.amountSubcontractNew / rowEntity.scRate, 4);
-					rowEntity.amountBudgetNew = roundUtil.round(rowEntity.newQuantity * rowEntity.costRate, 2);
 				}
 			}
-			
+
+			rowEntity.amountBudgetNew = roundUtil.round(rowEntity.amountSubcontractNew / rowEntity.scRate * rowEntity.costRate, 2);
 			
 			if(rowEntity.amountSubcontractNew <  rowEntity.amountCumulativeWD || rowEntity.amountSubcontractNew < rowEntity.amountCumulativeCert){
 				rowEntity.newQuantity = newQuantityOldValue;
@@ -211,9 +210,7 @@ mainApp.controller('SubcontractSplitTerminateCtrl', ['$scope' , 'subcontractServ
 						angular.forEach(data, function(value, key){
 							value.newQuantity = value.cumWorkDoneQuantity;
 							var oldAmountSubcontractNew = value.amountSubcontractNew;
-							value.amountBudgetNew = roundUtil.round(value.newQuantity * value.costRate, 2);
-							value.amountSubcontractNew = roundUtil.round(value.newQuantity * value.scRate, 2);
-
+							value.amountSubcontractNew = roundUtil.round(value.amountSubcontractNew / value.scRate * value.costRate, 2);
 							if(value.lineType == 'BQ'){
 								$scope.remeasuredSubcontractSumAfterSplit += value.amountSubcontractNew;
 							}else{
