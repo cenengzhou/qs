@@ -239,6 +239,20 @@ public class AddendumController {
 		return result;
 	}
 	
+	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','updateAddendumDetail', @securityConfig.getRolePcmsQs())")
+	@RequestMapping(value = "updateAddendumDetailList", method = RequestMethod.POST)
+	public String updateAddendumDetailList(@RequestBody List<AddendumDetail> addendumDetailList){
+		StringBuilder result = new StringBuilder();
+		addendumDetailList.forEach(addendumDetail -> {
+			String jobNo = addendumDetail.getNoJob();
+			String subcontractNo = addendumDetail.getNoSubcontract();
+			Long addendumNo = addendumDetail.getNo();
+			String error = addendumService.updateAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetail);
+			if(error != null) result.append(error);
+		});
+		return result.toString();
+	}
+	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('AddendumController','addAddendumFromResourceSummaries', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "addAddendumFromResourceSummaries", method = RequestMethod.POST)
 	public String addAddendumFromResourceSummaries(@RequestParam(required = true) String jobNo, 

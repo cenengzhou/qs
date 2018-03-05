@@ -17,6 +17,7 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
     	addAddendumDetail:					addAddendumDetail,
     	addAddendumFromResourceSummaries: 	addAddendumFromResourceSummaries,
     	updateAddendumDetail:				updateAddendumDetail,
+    	updateAddendumDetailList:			updateAddendumDetailList,
     	deleteAddendumDetail:				deleteAddendumDetail,
     	deleteAddendumFromSCDetails:		deleteAddendumFromSCDetails,
     	submitAddendumApproval:				submitAddendumApproval
@@ -242,7 +243,17 @@ mainApp.service('addendumService', ['$http', '$q', 'GlobalHelper',  function($ht
         });
         return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
     }
-    
+   
+    function updateAddendumDetailList(addendumDetailList) {
+        var request = $http({
+            method: "post",
+            url: "service/addendum/updateAddendumDetailList",
+            dataType: "application/json;charset=UTF-8",
+            data: addendumDetailList
+        });
+        return( request.then( GlobalHelper.handleSuccess, GlobalHelper.handleError ) );
+    }
+
     
     function deleteAddendumDetail(jobNo, subcontractNo, addendumNo, addendumDetailList) {
         var request = $http({

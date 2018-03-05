@@ -1511,6 +1511,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                            'js/controller/admin/admin-Revisions-SubcontractDetail.js',
                            'js/controller/admin/admin-Revisions-Payment.js',
                            'js/controller/admin/admin-Revisions-Addendum.js',
+                           'js/controller/admin/admin-Revisions-AddendumDetail.js',
                            'js/controller/admin/admin-Revisions-MainCert.js',
                            'js/controller/admin/admin-Revisions-Repackaging.js',
                            'js/controller/admin/admin-Revisions-Approval.js',
@@ -1573,6 +1574,11 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		url: '/Addendum',
 		templateUrl: 'view/admin/admin-Revisions-Addendum.html',
 		controller: 'AdminRevisionsAddendumCtrl'
+	})
+	.state('admin.Revisions.AddendumDetail',{
+		url: '/Addendum',
+		templateUrl: 'view/admin/admin-Revisions-AddendumDetail.html',
+		controller: 'AdminRevisionsAddendumDetailCtrl'
 	})
 	.state('admin.Revisions.MainCert',{
 		url: '/MainCert',

@@ -680,7 +680,8 @@ public class AddendumService{
 				}*/
 			}
 		}
-		else if (addendumDetail.getNoSubcontractChargedRef()!=null&&addendumDetail.getNoSubcontractChargedRef().trim().length()>0)
+		else if ((addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0 )
+			&& !addendumDetail.getNoSubcontractChargedRef().equals("0"))
 			return "No Corresponsing Subcontract allowed";
 		if ("D1".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())){
 			if (addendumDetail.getCodeObjectForDaywork()==null ||addendumDetail.getCodeObjectForDaywork().length()<1)
