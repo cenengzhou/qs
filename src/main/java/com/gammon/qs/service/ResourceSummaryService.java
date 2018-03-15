@@ -183,7 +183,7 @@ public class ResourceSummaryService implements Serializable {
 					packagesToReset.add(scPackage);
 				if (Integer.valueOf(330).equals(scPackage.getSubcontractStatus()))
 					errorMsg.append("Package "+packageNo+" submitted for awarded<br/>");
-				if(packageNo.startsWith("3") && (subsidiaryCode == null || !subsidiaryCode.startsWith("3")))
+				if(scPackage.getSubcontractStatus() < 500 && packageNo.startsWith("3") && (subsidiaryCode == null || !subsidiaryCode.startsWith("3")))
 					errorMsg.append("If package no. begins with '3,'  subsidiary code must also begin with '3'<br/>");
 			}
 		}
