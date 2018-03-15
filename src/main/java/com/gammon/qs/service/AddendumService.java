@@ -659,7 +659,7 @@ public class AddendumService{
 				return "Unit must be provided";
 		if ("L2".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())||"C2".equals(addendumDetail.getTypeVo())){
 			if (addendumDetail.getNoSubcontractChargedRef()==null||addendumDetail.getNoSubcontractChargedRef().trim().length()<1)
-				return "Corresponsing Subcontract must be provided";
+				return "Corresponding Subcontract must be provided";
 			else{
 				//int noSubcontractChargedRef = 0;
 				//try {
@@ -682,7 +682,7 @@ public class AddendumService{
 		}
 		else if ((addendumDetail.getNoSubcontractChargedRef() != null && addendumDetail.getNoSubcontractChargedRef().trim().length()>0 )
 			&& !addendumDetail.getNoSubcontractChargedRef().equals("0"))
-			return "No Corresponsing Subcontract allowed";
+			return "Corresponding Subcontract no. is not applicable";
 		if ("D1".equals(addendumDetail.getTypeVo())||"D2".equals(addendumDetail.getTypeVo())){
 			if (addendumDetail.getCodeObjectForDaywork()==null ||addendumDetail.getCodeObjectForDaywork().length()<1)
 				return "Must have Alternate Object Code";
