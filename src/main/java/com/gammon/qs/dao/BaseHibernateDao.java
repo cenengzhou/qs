@@ -262,7 +262,7 @@ public abstract class BaseHibernateDao<T> implements GenericDao<T> {
 			saveOrUpdate(object);
 		}
 	}
-	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public <U extends BasePersistedAuditObject> void unlock(U object) {
 		if(object != null) {
 			object.unlock();
