@@ -442,6 +442,10 @@ public class TransitService implements Serializable {
 		return response;
 	}
 	
+	public void unlockTransitHeader(String jobNumber) throws DatabaseOperationException {
+		Transit transit = transitHeaderDao.getTransitHeader(jobNumber);
+		transitHeaderDao.unlock(transit);
+	}
 	
 	public TransitImportResponse importResources(String jobNumber, byte[] file) throws Exception{
 		TransitImportResponse response = new TransitImportResponse();

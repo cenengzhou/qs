@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
+import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.domain.AppTransitUom;
 import com.gammon.qs.domain.Transit;
 import com.gammon.qs.domain.TransitBpi;
@@ -105,14 +106,18 @@ public class TransitController {
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','confirmResourcesAndCreatePackages', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "confirmResourcesAndCreatePackages", method = RequestMethod.POST)
-	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber, @RequestParam Boolean createPackage){
-		return transitService.confirmResourcesAndCreatePackages(jobNumber, createPackage);
+	public String confirmResourcesAndCreatePackages(@RequestParam String jobNumber, @RequestParam Boolean createPackage) throws DatabaseOperationException{
+		String msg = transitService.confirmResourcesAndCreatePackages(jobNumber, createPackage);
+		transitService.unlockTransitHeader(jobNumber);;
+		return msg;
 	}
 
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','completeTransit', @securityConfig.getRolePcmsQs())")
 	@RequestMapping(value = "completeTransit", method = RequestMethod.POST)
-	public String completeTransit(@RequestParam String jobNumber){
-		return transitService.completeTransit(jobNumber);
+	public String completeTransit(@RequestParam String jobNumber) throws DatabaseOperationException{
+		String msg = transitService.completeTransit(jobNumber);
+		transitService.unlockTransitHeader(jobNumber);
+		return msg;
 	}
 	
 	@PreAuthorize(value = "@GSFService.isFnEnabled('TransitController','saveTransitResourcesList', @securityConfig.getRolePcmsQs())")
@@ -171,6 +176,7 @@ public class TransitController {
 					resultMap.put("success", false);
 					resultMap.put("error", transitImportResponse);
 					logger.info("error: " + transitImportResponse.getMessage());
+					transitService.unlockTransitHeader(jobNumber);
 				}
 				
 //				response.setContentType("text/html");
