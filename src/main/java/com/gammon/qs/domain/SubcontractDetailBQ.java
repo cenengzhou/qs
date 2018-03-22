@@ -48,7 +48,7 @@ public class SubcontractDetailBQ extends SubcontractDetailOA {
 	@JsonProperty("amountBudgetNew")
 	@Transient
 	public Double getAmountBudgetNew(){
-		return  (this.getAmountSubcontractNew()!=null && costRate !=null && getScRate() != null )? CalculationUtil.round(this.getAmountSubcontractNew().doubleValue() / getScRate() * costRate, 2): 0.0;
+		return  (this.getAmountSubcontractNew()!=null && costRate !=null && getScRate() != null && getScRate() != 0.00 )? CalculationUtil.round(this.getAmountSubcontractNew().doubleValue() / getScRate() * costRate, 2): 0.0;
 	}
 	
 	@Override
