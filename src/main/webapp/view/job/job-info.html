@@ -465,7 +465,11 @@
 						<!-- JDE Dates  -->
 						<div class="col-md-6">
 							<div class="col-md-8">
-								<label>Planned Start Date</label>
+							<!-- Planned Start Date  -->
+								<label>Contract Commencement Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The date as stated in the Contract / Letter of Award or equivalent"></i>
+								</label>
+								
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
@@ -480,20 +484,10 @@
 
 
 							<div class="col-md-8">
-								<label>Planned End Date</label>
-							</div>
-							<div class="form-group col-md-4">
-								<div class="input-group" moment-picker="jobDates.plannedEndDate"
-									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
-									ng-model-options="{ updateOn: 'blur' }">
-									<span class="input-group-addon"> <i
-										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="jobDates.plannedEndDate" >
-								</div>
-							</div>
-
-							<div class="col-md-8">
-								<label>Actual Start Date</label>
+							<!-- Actual Start Date  -->
+								<label> Actual Commencement Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The actual date the Contract Works commenced"></i>
+								</label>
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
@@ -507,7 +501,27 @@
 							</div>
 
 							<div class="col-md-8">
-								<label>Actual End Date</label>
+							<!-- Planned End Date -->
+								<label>Contract Completion Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The date of Practical Completion / Substantial Completion as stated in the Contract / Letter of Award or equivalent"></i>
+								</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group" moment-picker="jobDates.plannedEndDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control" ng-model="jobDates.plannedEndDate" >
+								</div>
+							</div>
+
+							
+
+							<!-- <div class="col-md-8">
+								<label>Actual End Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="testing"></i>
+								</label>
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group" moment-picker="jobDates.actualEndDate"
@@ -517,10 +531,32 @@
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control" ng-model="jobDates.actualEndDate" >
 								</div>
-							</div>
+							</div> -->
+
 
 							<div class="col-md-8">
-								<label>Anticipated Completion Date</label>
+							<!-- Revised Completion Date -->
+								<label>Revised Contract Completion Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The original Practical / Substantial Completion Date or equivalent plus EOT formally awarded by the client"></i>
+								</label>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="input-group"
+									moment-picker="jobDates.revisedCompletionDate"
+									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
+									ng-model-options="{ updateOn: 'blur' }">
+									<span class="input-group-addon"> <i
+										class="fa fa-calendar"></i>
+									</span> <input class="form-control"
+										ng-model="jobDates.revisedCompletionDate" >
+								</div>
+							</div>
+							
+							<div class="col-md-8">
+							<!-- Anticipated Completion Date  -->
+								<label>Anticipated Contract Completion Date
+									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The forecast or actual date for achieving Practical Completion / Substantial Completion or equivalent"></i>
+								</label>
 							</div>
 							<div class="form-group col-md-4">
 								<div class="input-group"
@@ -534,26 +570,13 @@
 								</div>
 							</div>
 
-							<div class="col-md-8">
-								<label>Revised Completion Date</label>
-							</div>
-							<div class="form-group col-md-4">
-								<div class="input-group"
-									moment-picker="jobDates.revisedCompletionDate"
-									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
-									ng-model-options="{ updateOn: 'blur' }">
-									<span class="input-group-addon"> <i
-										class="fa fa-calendar"></i>
-									</span> <input class="form-control"
-										ng-model="jobDates.revisedCompletionDate" >
-								</div>
-							</div>
+							
 
 						</div>
 
 						<!-- QS Dates  -->
 						<div class="col-md-6">
-							<div class="col-md-8">
+							<!-- <div class="col-md-8">
 								<label>Actual PCC Date</label>
 							</div>
 							<div class="form-group col-md-4">
@@ -622,7 +645,7 @@
 										class="fa fa-calendar"></i>
 									</span> <input class="form-control" ng-model="job.financialEndDate" >
 								</div>
-							</div>
+							</div> -->
 
 							<div class="col-md-8">
 								<label>Final A/C Settlement Date</label>
