@@ -353,8 +353,7 @@ public class ProvisionPostingService {
 		List<ProvisionPostingHist> groupedProvisionHistoryList = scDetailProvisionHistoryDao.obtainSCDetailProvisionGroupedByAccountCode(scPackage.getJobInfo().getJobNumber(),scPackage.getPackageNo(), postYr, postMonth);
 		
 		Double provisionSum = 0.0;
-		logger.debug("\n\n================ start validateAndGroupByAccountCode: ===============================");
-		logger.debug("job:" + scPackage.getJobInfo().getJobNumber() + " subcontract:" + scPackage.getPackageNo() + " year:" + postYr + " month:" + postMonth);
+
 		//Go through the Provision History List to obtain from DB
 		for (ProvisionPostingHist groupedProvisionHistory : groupedProvisionHistoryList) {
 			// Calculate Provision of a specific account code
@@ -362,8 +361,7 @@ public class ProvisionPostingService {
 			ProvisionWrapper provisionWrapper = new ProvisionWrapper(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), groupedProvisionHistory.getObjectCode(), groupedProvisionHistory.getSubsidiaryCode(), provisionOfAccountCodeInHistory);
 			provisionWrapperList.add(provisionWrapper);
 			provisionSum += provisionOfAccountCodeInHistory;
-			logger.debug("groupedProvisionWrapper:" + provisionWrapper.toString());
-			logger.debug("provisionOfAccountCodeInHistory:" + provisionOfAccountCodeInHistory + " provisionSum:" + provisionSum);
+
 			if (groupedProvisionHistory.getObjectCode().startsWith("1")) {
 				String errorMessage = null;
 				boolean accountCodeExist = false;
@@ -400,13 +398,9 @@ public class ProvisionPostingService {
 				accountCodeWrapper = ndscProvisionAccount;
 			} else
 				logger.info("Invalid Subcontractor Nature: " + scPackage.getSubcontractorNature());
-			if(provisionSum != 0.0) {
-				ProvisionWrapper reverseEntry = new ProvisionWrapper(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), accountCodeWrapper.getObjectAccount(), accountCodeWrapper.getSubsidiary(), -1*provisionSum);
-				provisionWrapperList.add(reverseEntry);
-			}
-			logger.debug("subcontractor nature:" + scPackage.getSubcontractorNature());
-			logger.debug("return provisionWrapperList:" + provisionWrapperList.toString());
-			logger.debug("=========================\n\n");
+			
+			provisionWrapperList.add(new ProvisionWrapper(scPackage.getJobInfo().getJobNumber(), scPackage.getPackageNo(), accountCodeWrapper.getObjectAccount(), accountCodeWrapper.getSubsidiary(), -1*provisionSum));
+			
 //			logger.info("No of provision records to be posted: " + provisionWrapperList.size() + " for Job: " + scPackage.getJob().getJobNumber() + " Package: " + scPackage.getPackageNo());
 			return provisionWrapperList;
 		}
