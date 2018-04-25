@@ -22,6 +22,7 @@ public class ProvisionWrapper extends BasePersistedObject implements Serializabl
 		this.subcontractNo = subcontractNo;
 		this.subsidaryCode = subsidaryCode;
 	}
+
 	public String getJobNumber() {
 		return jobNumber;
 	}
@@ -53,4 +54,10 @@ public class ProvisionWrapper extends BasePersistedObject implements Serializabl
 		this.cumAmount = cumAmount;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format(
+				" {\"jobNumber\":\"%s\",\"subcontractNo\":\"%s\",\"subsidaryCode\":\"%s\",\"ObjectCode\":\"%s\",\"cumAmount\":\"%s\"}",
+				jobNumber, subcontractNo, subsidaryCode, ObjectCode, cumAmount);
+	}
 }
