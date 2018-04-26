@@ -211,7 +211,7 @@ public class TenderDetail extends BasePersistedObject{
 	
 	@Column(name = "quantity")
 	public Double getQuantity() {
-		return quantity;
+		return quantity != null ? quantity : 0.0;
 	}
 	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
@@ -219,7 +219,7 @@ public class TenderDetail extends BasePersistedObject{
 	
 	@Column(name = "RATE_BUDGET")
 	public Double getRateBudget() {
-		return rateBudget;
+		return rateBudget != null ? rateBudget : 0.0;
 	}
 	public void setRateBudget(Double rateBudget) {
 		this.rateBudget = rateBudget;
@@ -227,7 +227,7 @@ public class TenderDetail extends BasePersistedObject{
 	
 	@Column(name = "RATE_SUBCONTRACT")
 	public Double getRateSubcontract() {
-		return rateSubcontract;
+		return rateSubcontract != null ? rateSubcontract : 0.0;
 	}
 	public void setRateSubcontract(Double rateSubcontract) {
 		this.rateSubcontract = rateSubcontract;
