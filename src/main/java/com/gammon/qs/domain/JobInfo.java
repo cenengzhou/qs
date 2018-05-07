@@ -110,7 +110,6 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Double eotApplied = 0.0;
 	private Double eotAwarded = 0.0;
 	private Double ldExposureAmount = 0.0;
-	private Double gdExposureAmount = 0.0;
 	
 	public JobInfo() {}
 
@@ -738,19 +737,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		this.ldExposureAmount = ldExposureAmount;
 	}
 	
-	@Column(name = "GD_EXPOSURE_AMOUNT")
-	public Double getGdExposureAmount() {
-		return gdExposureAmount != null ? gdExposureAmount : 0.0;
-	}
-
-	public void setGdExposureAmount(Double gdExposureAmount) {
-		this.gdExposureAmount = gdExposureAmount;
-	}
 
 	@Override
 	public String toString() {
 		return String.format(
-				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\",\"gdExposureAmount\":\"%s\"}",
+				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\"}",
 				jobNumber, description, company, employer, contractType, division, department, internalJob, soloJV,
 				completionStatus, insuranceCAR, insuranceECI, insuranceTPL, clientContractNo, parentJobNo, jvPartnerNo,
 				jvPercentage, originalContractValue, projectedContractValue, orginalNominatedSCContractValue, tenderGP,
@@ -761,7 +752,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 				expectedMakingGoodDate, actualMakingGoodDate, defectLiabilityPeriod, defectListIssuedDate,
 				financialEndDate, dateFinalACSettlement, yearOfCompletion, bqFinalizedFlag, allowManualInputSCWorkDone,
 				legacyJob, conversionStatus, repackagingType, budgetPosted, finQS0Review, eotApplied, eotAwarded,
-				ldExposureAmount, gdExposureAmount);
+				ldExposureAmount);
 	}
 
 	@Override
@@ -799,7 +790,6 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		result = prime * result + ((financialEndDate == null) ? 0 : financialEndDate.hashCode());
 		result = prime * result + ((forecastEndPeriod == null) ? 0 : forecastEndPeriod.hashCode());
 		result = prime * result + ((forecastEndYear == null) ? 0 : forecastEndYear.hashCode());
-		result = prime * result + ((gdExposureAmount == null) ? 0 : gdExposureAmount.hashCode());
 		result = prime * result + ((grossFloorArea == null) ? 0 : grossFloorArea.hashCode());
 		result = prime * result + ((grossFloorAreaUnit == null) ? 0 : grossFloorAreaUnit.hashCode());
 		result = prime * result + ((insuranceCAR == null) ? 0 : insuranceCAR.hashCode());
@@ -994,11 +984,6 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 			if (other.forecastEndYear != null)
 				return false;
 		} else if (!forecastEndYear.equals(other.forecastEndYear))
-			return false;
-		if (gdExposureAmount == null) {
-			if (other.gdExposureAmount != null)
-				return false;
-		} else if (!gdExposureAmount.equals(other.gdExposureAmount))
 			return false;
 		if (grossFloorArea == null) {
 			if (other.grossFloorArea != null)
