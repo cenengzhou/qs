@@ -107,6 +107,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String budgetPosted; // Only used in JDE web services - no column in DB.
 	private String finQS0Review = FINQS0REVIEW_D; // Y: Needs Finance Review, N: Doesn't need Finance Review, D: Depends on the company
 
+	private Double eotApplied = 0.0;
+	private Double eotAwarded = 0.0;
+	private Double ldExposureAmount = 0.0;
+	private Double gdExposureAmount = 0.0;
+	
 	public JobInfo() {}
 
 	@Transient
@@ -705,46 +710,64 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		int diff = jobNumber.compareTo(o.getJobNumber());
 		return diff != 0 ? diff : company.compareTo(o.getCompany());
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "JobInfo [jobNumber=" + jobNumber + ", description=" + description + ", company=" + company
-				+ ", employer=" + employer + ", contractType=" + contractType + ", division=" + division
-				+ ", department=" + department + ", internalJob=" + internalJob + ", soloJV=" + soloJV
-				+ ", completionStatus=" + completionStatus + ", insuranceCAR=" + insuranceCAR + ", insuranceECI="
-				+ insuranceECI + ", insuranceTPL=" + insuranceTPL + ", clientContractNo=" + clientContractNo
-				+ ", parentJobNo=" + parentJobNo + ", jvPartnerNo=" + jvPartnerNo + ", jvPercentage=" + jvPercentage
-				+ ", originalContractValue=" + originalContractValue + ", projectedContractValue="
-				+ projectedContractValue + ", orginalNominatedSCContractValue=" + orginalNominatedSCContractValue
-				+ ", tenderGP=" + tenderGP + ", forecastEndYear=" + forecastEndYear + ", forecastEndPeriod="
-				+ forecastEndPeriod + ", maxRetentionPercentage=" + maxRetentionPercentage
-				+ ", interimRetentionPercentage=" + interimRetentionPercentage + ", mosRetentionPercentage="
-				+ mosRetentionPercentage + ", valueOfBSWork=" + valueOfBSWork + ", grossFloorArea=" + grossFloorArea
-				+ ", grossFloorAreaUnit=" + grossFloorAreaUnit + ", billingCurrency=" + billingCurrency
-				+ ", paymentTermsForNominatedSC=" + paymentTermsForNominatedSC + ", defectProvisionPercentage="
-				+ defectProvisionPercentage + ", cpfApplicable=" + cpfApplicable + ", cpfIndexName=" + cpfIndexName
-				+ ", cpfBaseYear=" + cpfBaseYear + ", cpfBasePeriod=" + cpfBasePeriod + ", levyApplicable="
-				+ levyApplicable + ", levyCITAPercentage=" + levyCITAPercentage + ", levyPCFBPercentage="
-				+ levyPCFBPercentage + ", expectedPCCDate=" + expectedPCCDate + ", actualPCCDate=" + actualPCCDate
-				+ ", expectedMakingGoodDate=" + expectedMakingGoodDate + ", actualMakingGoodDate="
-				+ actualMakingGoodDate + ", defectLiabilityPeriod=" + defectLiabilityPeriod + ", defectListIssuedDate="
-				+ defectListIssuedDate + ", financialEndDate=" + financialEndDate + ", dateFinalACSettlement="
-				+ dateFinalACSettlement + ", yearOfCompletion=" + yearOfCompletion + ", bqFinalizedFlag="
-				+ bqFinalizedFlag + ", allowManualInputSCWorkDone=" + allowManualInputSCWorkDone + ", legacyJob="
-				+ legacyJob + ", conversionStatus=" + conversionStatus + ", repackagingType=" + repackagingType
-				+ ", budgetPosted=" + budgetPosted + ", finQS0Review=" + finQS0Review + "]";
+	
+	@Column(name = "EOT_APPLIED")
+	public Double getEotApplied() {
+		return eotApplied != null ? eotApplied : 0.0;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	public void setEotApplied(Double eotApplied) {
+		this.eotApplied = eotApplied;
+	}
+
+	@Column(name = "EOT_AWARDED")
+	public Double getEotAwarded() {
+		return eotAwarded != null ? eotAwarded : 0.0;
+	}
+
+	public void setEotAwarded(Double eotAwarded) {
+		this.eotAwarded = eotAwarded;
+	}
+
+	@Column(name = "LD_EXPOSURE_AMOUNT")
+	public Double getLdExposureAmount() {
+		return ldExposureAmount != null ? ldExposureAmount : 0.0;
+	}
+
+	public void setLdExposureAmount(Double ldExposureAmount) {
+		this.ldExposureAmount = ldExposureAmount;
+	}
+	
+	@Column(name = "GD_EXPOSURE_AMOUNT")
+	public Double getGdExposureAmount() {
+		return gdExposureAmount != null ? gdExposureAmount : 0.0;
+	}
+
+	public void setGdExposureAmount(Double gdExposureAmount) {
+		this.gdExposureAmount = gdExposureAmount;
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\",\"gdExposureAmount\":\"%s\"}",
+				jobNumber, description, company, employer, contractType, division, department, internalJob, soloJV,
+				completionStatus, insuranceCAR, insuranceECI, insuranceTPL, clientContractNo, parentJobNo, jvPartnerNo,
+				jvPercentage, originalContractValue, projectedContractValue, orginalNominatedSCContractValue, tenderGP,
+				forecastEndYear, forecastEndPeriod, maxRetentionPercentage, interimRetentionPercentage,
+				mosRetentionPercentage, valueOfBSWork, grossFloorArea, grossFloorAreaUnit, billingCurrency,
+				paymentTermsForNominatedSC, defectProvisionPercentage, cpfApplicable, cpfIndexName, cpfBaseYear,
+				cpfBasePeriod, levyApplicable, levyCITAPercentage, levyPCFBPercentage, expectedPCCDate, actualPCCDate,
+				expectedMakingGoodDate, actualMakingGoodDate, defectLiabilityPeriod, defectListIssuedDate,
+				financialEndDate, dateFinalACSettlement, yearOfCompletion, bqFinalizedFlag, allowManualInputSCWorkDone,
+				legacyJob, conversionStatus, repackagingType, budgetPosted, finQS0Review, eotApplied, eotAwarded,
+				ldExposureAmount, gdExposureAmount);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((actualMakingGoodDate == null) ? 0 : actualMakingGoodDate.hashCode());
 		result = prime * result + ((actualPCCDate == null) ? 0 : actualPCCDate.hashCode());
 		result = prime * result + ((allowManualInputSCWorkDone == null) ? 0 : allowManualInputSCWorkDone.hashCode());
@@ -768,12 +791,15 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((division == null) ? 0 : division.hashCode());
 		result = prime * result + ((employer == null) ? 0 : employer.hashCode());
+		result = prime * result + ((eotApplied == null) ? 0 : eotApplied.hashCode());
+		result = prime * result + ((eotAwarded == null) ? 0 : eotAwarded.hashCode());
 		result = prime * result + ((expectedMakingGoodDate == null) ? 0 : expectedMakingGoodDate.hashCode());
 		result = prime * result + ((expectedPCCDate == null) ? 0 : expectedPCCDate.hashCode());
 		result = prime * result + ((finQS0Review == null) ? 0 : finQS0Review.hashCode());
 		result = prime * result + ((financialEndDate == null) ? 0 : financialEndDate.hashCode());
 		result = prime * result + ((forecastEndPeriod == null) ? 0 : forecastEndPeriod.hashCode());
 		result = prime * result + ((forecastEndYear == null) ? 0 : forecastEndYear.hashCode());
+		result = prime * result + ((gdExposureAmount == null) ? 0 : gdExposureAmount.hashCode());
 		result = prime * result + ((grossFloorArea == null) ? 0 : grossFloorArea.hashCode());
 		result = prime * result + ((grossFloorAreaUnit == null) ? 0 : grossFloorAreaUnit.hashCode());
 		result = prime * result + ((insuranceCAR == null) ? 0 : insuranceCAR.hashCode());
@@ -784,6 +810,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		result = prime * result + ((jobNumber == null) ? 0 : jobNumber.hashCode());
 		result = prime * result + ((jvPartnerNo == null) ? 0 : jvPartnerNo.hashCode());
 		result = prime * result + ((jvPercentage == null) ? 0 : jvPercentage.hashCode());
+		result = prime * result + ((ldExposureAmount == null) ? 0 : ldExposureAmount.hashCode());
 		result = prime * result + ((legacyJob == null) ? 0 : legacyJob.hashCode());
 		result = prime * result + ((levyApplicable == null) ? 0 : levyApplicable.hashCode());
 		result = prime * result + ((levyCITAPercentage == null) ? 0 : levyCITAPercentage.hashCode());
@@ -804,14 +831,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -931,6 +955,16 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 				return false;
 		} else if (!employer.equals(other.employer))
 			return false;
+		if (eotApplied == null) {
+			if (other.eotApplied != null)
+				return false;
+		} else if (!eotApplied.equals(other.eotApplied))
+			return false;
+		if (eotAwarded == null) {
+			if (other.eotAwarded != null)
+				return false;
+		} else if (!eotAwarded.equals(other.eotAwarded))
+			return false;
 		if (expectedMakingGoodDate == null) {
 			if (other.expectedMakingGoodDate != null)
 				return false;
@@ -960,6 +994,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 			if (other.forecastEndYear != null)
 				return false;
 		} else if (!forecastEndYear.equals(other.forecastEndYear))
+			return false;
+		if (gdExposureAmount == null) {
+			if (other.gdExposureAmount != null)
+				return false;
+		} else if (!gdExposureAmount.equals(other.gdExposureAmount))
 			return false;
 		if (grossFloorArea == null) {
 			if (other.grossFloorArea != null)
@@ -1010,6 +1049,11 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 			if (other.jvPercentage != null)
 				return false;
 		} else if (!jvPercentage.equals(other.jvPercentage))
+			return false;
+		if (ldExposureAmount == null) {
+			if (other.ldExposureAmount != null)
+				return false;
+		} else if (!ldExposureAmount.equals(other.ldExposureAmount))
 			return false;
 		if (legacyJob == null) {
 			if (other.legacyJob != null)
@@ -1093,6 +1137,5 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 			return false;
 		return true;
 	}
-
 
 }
