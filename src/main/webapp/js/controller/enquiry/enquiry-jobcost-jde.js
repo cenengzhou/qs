@@ -8,9 +8,10 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 //	$scope.searchPeriod = moment().format('YYYY-MM');
 	$scope.jdesearchDate = {};
 	$scope.jdesearchDate.title = 'Exact date:';
-	$scope.jdesearchDate.startDate = moment().month(moment().month() ).format(GlobalParameter.MOMENT_DATE_FORMAT);
+	$scope.jdesearchDate.startDate = moment().month(moment().month() -1).format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.jdesearchDate.endDate = moment().format(GlobalParameter.MOMENT_DATE_FORMAT);
 	$scope.searchAccountLedger = {};
+	$scope.showZero = false;
 	$scope.postFlag = '*';
 	$scope.showJobCostDetails = function(entity){		
 		var fromYear, fromMonth, toYear, toMonth;
@@ -256,7 +257,7 @@ mainApp.controller('EnquiryJobCostJdeCtrl', ['$scope', '$http', '$timeout', 'mod
 					return 0;
 				});
 				$scope.gridOptions.data = data.filter(function(obj){
-					return (obj.amountAA != 0) || (obj.amountJI != 0);
+					return (obj.amountAA != 0) || (obj.amountJI != 0) || $scope.showZero;
 				});
 			}
 		});

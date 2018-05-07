@@ -48,8 +48,18 @@
 								</div>
 
 								<div ng-class="{'col-md-2':!showCumulative, 'col-md-4':showCumulative}">
-									<label>&nbsp;</label>
-									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									<label>&nbsp;</label><br>
+									<div class="col-md-6">
+										<input
+										type="checkbox" data-ios-toggle="toggle"
+										id="showZero" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="Show Zero Amount"
+										data-off="Hide Zero Amount" ng-model="showZero" data-width="100%"
+										ng-change="loadGridData()">
+									</div>
+									<div class="col-md-6">
+										<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
+									</div>
 								</div>
 							</div>
 						</form>

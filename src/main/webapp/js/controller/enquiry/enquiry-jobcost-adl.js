@@ -8,6 +8,7 @@ mainApp.controller('EnquiryJobCostAdlCtrl', ['$scope', '$http', 'modalService', 
 	$scope.searchTo = $scope.yearMonth;
 	$scope.searchJobNo = $scope.jobNo;
 	$scope.searchAccountLedger = {};
+	$scope.showZero = false;
 	
 	$scope.showJobCostDetails = function(entity){
 		var fromYear, fromMonth, toYear, toMonth;
@@ -279,7 +280,7 @@ mainApp.controller('EnquiryJobCostAdlCtrl', ['$scope', '$http', 'modalService', 
 			)
 			.then(function(data){
 				$scope.gridOptions.data = $scope.cumulativeData = data.filter(function(obj){
-					return (obj.jiAmountAccum != 0) || (obj.aaAmountAccum != 0);
+					return (obj.jiAmountAccum != 0) || (obj.aaAmountAccum != 0) || $scope.showZero;
 				});
 			})
 		} else {
@@ -298,7 +299,7 @@ mainApp.controller('EnquiryJobCostAdlCtrl', ['$scope', '$http', 'modalService', 
 			)
 		    .then(function(data) {
 		    	$scope.gridOptions.data = $scope.movementData = data.filter(function(obj){
-		    		return (obj.jiAmountPeriod != 0) || (obj.aaAmountPeriod != 0);
+		    		return (obj.jiAmountPeriod != 0) || (obj.aaAmountPeriod != 0) || $scope.showZero;
 		    	});
 			}, function(data){
 				modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Fail', data ); 

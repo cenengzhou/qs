@@ -7,8 +7,8 @@
 										pattern=".{5,5}" required title="Please enter 5 characters" ng-model-options="{ updateOn: 'blur' }">
 										<p ng-show="searchJobCostForm.searchJobNo.$error.pattern" class="red">Please enter 5 characters</p>
 								</div>
-								<div class="col-md-2">
-									<label for="searchSubcontractNo">Subcontract No.:</label> <input
+								<div class="col-md-1">
+									<label for="searchSubcontractNo">SC No.:</label> <input
 										type="text" class="form-control" id="searchSubcontractNo" name="searchSubcontractNo"
 										ng-model="searchSubcontractNo" pattern=".{4,4}" title="Please enter 4 characters or leave it blank" ng-model-options="{ updateOn: 'blur' }">
 										<p ng-show="searchJobCostForm.searchSubcontractNo.$error.pattern" class="red">Please enter 4 characters or leave it blank</p>
@@ -55,8 +55,17 @@
 										ng-change="triggerCumulative()">
 								</div>
 
-								<div ng-class="{'col-md-2':showCumulative, 'col-md-1':!showCumulative}">
-									<label>&nbsp;</label>
+								<div ng-class="{'col-md-3':showCumulative, 'col-md-2':!showCumulative}">
+									<label>&nbsp;</label><br>
+									<div class="col-md-6">
+										<input
+										type="checkbox" data-ios-toggle="toggle"
+										id="showZero" data-style="ios" data-onstyle="primary"
+										data-offstyle="warning" data-on="Show Zero Amount"
+										data-off="Hide Zero Amount" ng-model="showZero" data-width="100%"
+										ng-change="loadGridData()">
+									</div>
+									<div class="col-md-6">
 									<button type="submit" class="btn btn-block btn-primary"><span class="fa fa-search"></span> Search</button>
 								</div>
 							</div>
