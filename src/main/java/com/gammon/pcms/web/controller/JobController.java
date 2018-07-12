@@ -80,7 +80,7 @@ public class JobController {
 		return jobDates;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateJobInfo", method = RequestMethod.POST)
 	public String updateJobInfo(@Valid @RequestBody JobInfo job){
 		String result = null;
@@ -94,7 +94,7 @@ public class JobController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobDates', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobDates', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateJobDates", method = RequestMethod.POST)
 	public String updateJobDates(@Valid @RequestBody JobDates jobDates){
 		String result = null;
@@ -108,7 +108,7 @@ public class JobController {
 		return result;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfoAndDates', @securityConfig.getRolePcmsQs())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfoAndDates', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
 	@RequestMapping(value = "updateJobInfoAndDates", method = RequestMethod.POST)
 	public String updateJobInfoAndDates(@RequestBody Map<String, Object> jobAndDates){
 		JobInfo job = objectMapper.convertValue(jobAndDates.get("job"), JobInfo.class);
