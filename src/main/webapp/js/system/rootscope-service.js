@@ -311,6 +311,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 								||GlobalHelper.containRole('ROLE_PCMS_IMS_ADMIN', $rootScope.user.UserRoles);
 		$rootScope.showIMSEnquiry = GlobalHelper.containRole('ROLE_QS_IMS_ENQ', $rootScope.user.UserRoles)
 								||GlobalHelper.containRole('ROLE_PCMS_IMS_ENQ', $rootScope.user.UserRoles);
+		$rootScope.showEditParentJob = GlobalHelper.containRole('ROLE_QS_QS_ADM', $rootScope.user.UserRoles);
 		if($rootScope.showQSAdmin || $rootScope.showIMSAdmin || $rootScope.showIMSEnquiry){
 			$rootScope.showAdminMenu = true;
 		} else {
