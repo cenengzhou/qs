@@ -188,7 +188,7 @@ mainApp.controller('EnquiryJobCostDetailsAdlCtrl', ['$scope', '$timeout', '$stat
 			             },
 			             { field: 'entityCompanyKey', width: '80', displayName: 'Company', enableCellEdit: false, visible:false},
 			             { field: 'currencyCode', width: '80', displayName: 'Currency', enableCellEdit: false, visible:false},
-			             { field: 'quantity', width:'100', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:3',
+			             { field: 'quantity', width:'100', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:4',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.quantity < 0){

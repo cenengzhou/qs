@@ -44,7 +44,7 @@ mainApp.controller('RepackagingUpdateCtrl', ['$scope' ,'modalService', 'resource
 			            	 editDropdownValueLabel: 'value', editDropdownOptionsArray: $scope.units
 			             },
 			             { field: 'quantity', enableCellEdit: true, enableFiltering: false, 
-			            	cellClass: 'text-right blue', cellFilter: 'number:2'},
+			            	cellClass: 'text-right blue', cellFilter: 'number:4'},
 			             { field: 'rate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 
 			            		cellClass: 'text-right', cellFilter: 'number:2'},
 			             { field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableCellEdit: false, enableFiltering: false, 

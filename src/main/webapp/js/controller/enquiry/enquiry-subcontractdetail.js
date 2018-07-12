@@ -198,7 +198,7 @@ function($scope, $http, modalService, blockUI, subcontractService, uiGridConstan
 					},
 					aggregationHideLabel : true,
 					aggregationType : uiGridConstants.aggregationTypes.sum,
-					footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:2 }}</div>',
+					footerCellTemplate : '<div class="ui-grid-cell-contents" >{{col.getAggregationValue() | number:4 }}</div>',
 					footerCellClass : function(grid,
 							row, col, rowRenderIndex,
 							colRenderIndex) {

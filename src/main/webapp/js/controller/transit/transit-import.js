@@ -240,7 +240,7 @@ mainApp.controller('TransitImportCtrl', ['$scope', '$rootScope', 'modalService',
     			}, {
     				field : 'quantity',
     				displayName : 'Quantity',
-    				cellFilter : 'number:3',
+    				cellFilter : 'number:4',
     				cellClass: 'text-right',
     				enableCellEdit : false,
     				width: 180

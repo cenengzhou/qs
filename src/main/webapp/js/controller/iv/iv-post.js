@@ -32,7 +32,7 @@ mainApp.controller('IVPostCtrl', ['$scope' , 'resourceSummaryService', 'subcontr
 			             { field: 'resourceDescription', displayName: "Description", enableCellEdit: false },
 			             { field: 'unit', enableCellEdit: false, enableFiltering: false, width:60},
 			             { field: 'quantity', enableCellEdit: false ,enableFiltering: false, width:100, 
-			            	 cellClass: 'text-right', cellFilter: 'number:2'},
+			            	 cellClass: 'text-right', cellFilter: 'number:4'},
 		            	 { field: 'rate', enableCellEdit: false, enableFiltering: false, width:100,
 		            		cellClass: 'text-right', cellFilter: 'number:2'},
 	            		 {field: 'amountBudget', displayName: "Amount", enableCellEdit: false, enableFiltering: false,

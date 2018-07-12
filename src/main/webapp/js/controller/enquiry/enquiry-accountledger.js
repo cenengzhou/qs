@@ -65,7 +65,7 @@ mainApp.controller('EnquiryAccountLedgerCtrl', ['$scope' , '$http', '$stateParam
 			             { field: 'accountSubLedger', width:'80', displayName: "SubLedger", enableCellEdit: false },
 			             { field: 'entityCompanyKey', width:'80', displayName: "Company", enableCellEdit: false },
 			             { field: 'currencyCode', width:'80', displayName: "Currency", enableCellEdit: false },
-			             { field: 'quantity', width:'80', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:3',
+			             { field: 'quantity', width:'80', displayName: "Quantity", enableCellEdit: false, cellFilter: 'number:4',
 			            	 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 			            		 var c = 'text-right';
 			            		 if(row.entity.quantity < 0){
