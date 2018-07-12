@@ -1422,7 +1422,7 @@ public class PaymentService{
 					if(paymentDetailInDB != null){
 						SubcontractDetail scDetail = scDetailDao.get(paymentDetail.getSubcontractDetail().getId());
 
-						if(scDetail != null){
+						if(scDetail != null && !"C2".equals(scDetail.getLineType())){
 							scDetail.setAmountCumulativeCert(new BigDecimal(paymentDetail.getCumAmount()));
 
 
@@ -1452,10 +1452,10 @@ public class PaymentService{
 								error = "RR: " + paymentDetail.getCumAmount() + " should be negative."+ " Sequence No.: " + scDetail.getSequenceNo();
 								logger.info(error);
 								return error;
-							}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getMovementAmount() !=0){
-								error = "C2:" + paymentDetail.getMovementAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
-								logger.info(error);
-								return error;
+//							}else if("C2".equals(scDetail.getLineType()) && paymentDetail.getMovementAmount() !=0){
+//								error = "C2:" + paymentDetail.getMovementAmount() + " should be entered by corresponding subcontract."+ " Sequence No.: " + scDetail.getSequenceNo();
+//								logger.info(error);
+//								return error;
 							}
 
 							if (scDetail instanceof SubcontractDetailBQ)
