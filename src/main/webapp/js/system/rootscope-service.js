@@ -1,5 +1,15 @@
-mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '$rootScope', 'jobService', 'jdeService', 'adlService', 'SessionHelper',
-	function($http, $q, $window, GlobalHelper, $rootScope, jobService, jdeService, adlService, SessionHelper){
+mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', 'GlobalParameter', '$rootScope', 'jobService', 'jdeService', 'adlService', 'hrService', 'SessionHelper', '$state', '$cookies',
+	function($http, $q, $window, GlobalHelper, GlobalParameter, $rootScope, jobService, jdeService, adlService, hrService, SessionHelper, $state, $cookies){
+	hasRole('QS_ENQ')
+	.then(function(){
+		hasRole('QS_DLOA')
+		.then(function(){
+			hasRole('QS_SITE_ADM')
+			.then(function(){
+				gettingAllUser();
+			});
+		});
+	});
 	// Return public API.
     return({
     	gettingJob:			gettingJob,
@@ -7,6 +17,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	gettingCompanies:	gettingCompanies,
     	gettingDivisions:	gettingDivisions,
     	gettingUser:		gettingUser,
+    	gettingAllUser:		gettingAllUser,
     	gettingSessionId:	gettingSessionId,
     	gettingProperties:	gettingProperties,
     	gettingWorkScopes:	gettingWorkScopes,
@@ -23,6 +34,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
     	setEnv:				setEnv,
     	getShowAdminMenu:	getShowAdminMenu,
     	checkMaintenance:	checkMaintenance,
+    	hasRole:			hasRole,
+    	defaultRoute:		defaultRoute,
     });
     
     function gettingJob(jobNo){
@@ -131,21 +144,91 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function gettingUser(){
 		var deferral = $q.defer();
 		if(!$rootScope.user){
-			$http.get('service/security/getCurrentUser')
-			.then(function(response){
-				$rootScope.user = response.data;
-				checkMaintenance();
-				configHiddenMenu();
-				deferral.resolve({
-					user : $rootScope.user
-				})
-			})
+			if(!$rootScope.loadinguser){
+				$rootScope.loadinguser = true;
+				$http.get('service/security/getCurrentUser')
+				.then(function(response){
+					$rootScope.loadinguser = false;
+					$rootScope.user = response.data;
+					checkMaintenance();
+					configHiddenMenu();
+					deferral.resolve({
+						user : $rootScope.user
+					})
+				});
+			}
 		} else {
 			deferral.resolve({
 				user: $rootScope.user
 			})
 		}
 		return deferral.promise;
+	}
+	
+	function gettingAllUser(){
+		var deferral = $q.defer();
+		if(!$rootScope.allUsers){
+			if(!$rootScope.loadingAllUser){
+				$rootScope.loadingAllUser = true;
+				hrService.findByUsernameIsNotNull()
+				.then(function(data){
+					$rootScope.allUsers = data;
+					$rootScope.allUsers.forEach(function(user){
+						user.image = GlobalParameter.imageServerAddress + user.employeeId+'.jpg';
+					});
+					deferral.resolve($rootScope.allUsers);
+					$rootScope.loadingAllUser = false;
+				});
+			}
+		} else {
+			deferral.resolve($rootScope.allUsers);
+		}
+		return deferral.promise;
+	}
+	
+	function hasRole(role){
+		var deferral = $q.defer();
+		if(!$rootScope.roles) $rootScope.roles = {};
+		if(!$rootScope.user){
+			gettingUser()
+			.then(function(data){
+				deferral.resolve(
+					$rootScope.roles['has_' + role] = JSON.stringify(data.user.authorities).indexOf(role) >= 0
+				);	
+			});
+		} else {
+			deferral.resolve(
+					$rootScope.roles['has_' + role] = JSON.stringify($rootScope.user.authorities).indexOf(role) >= 0
+			);	
+		}
+		return deferral.promise;
+	}
+	
+	function defaultRoute(){
+		if($cookies.get('jobNo')){
+			hasRole('QS_ENQ')
+	    	.then(function(data){
+	    		if(data){
+	    			$state.go("job.dashboard");
+	    		} else {
+	    			hasRole('QS_DLOA')
+	    			.then(function(data){
+	    				if(data){
+	    					$state.go("job.personnel");
+	    				} else {
+	    					hasRole('QS_SITE_ADM')
+	    	    			.then(function(data){
+	    	    				if(data){
+	    	    					$state.go("job.personnel");
+	    	    				}
+	    	    			});
+	    				}
+	    			});
+	    		}
+	    	});
+		} else {
+			$state.go("job-select");
+		}
 	}
 	
 	function gettingSessionId(){

@@ -11,9 +11,9 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode'
 		$cookies.remove(k);
 	});
 	
+	$scope.hasRole = rootscopeService.hasRole;
 	loadJobList();
 	
-    
 	function loadJobList() {
 		if(!rootscopeService.getPreviousStatus() && !rootscopeService.getRoutedToDefaultJob()){
 			userpreferenceService.gettingUserPreference()
@@ -56,6 +56,7 @@ mainApp.controller('JobSelectCtrl', ['$scope', '$state', '$timeout', 'colorCode'
 	$scope.updateJobInfo = function (jobNo, jobDescription) {
     	$cookies.put('jobNo', jobNo);
     	$cookies.put('jobDescription', jobDescription);
+    	rootscopeService.defaultRoute();
     }
 	
 	$scope.createJob = function (){

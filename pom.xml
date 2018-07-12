@@ -4,7 +4,7 @@
 
 	<groupId>com.gammon</groupId>
 	<artifactId>pcms</artifactId>
-	<version>2018-03-15</version>
+	<version>2018-07-12</version>
 	<packaging>war</packaging>
 	
     <scm>
@@ -119,6 +119,7 @@
 		<maven-buildnumber-plugin.version>1.4</maven-buildnumber-plugin.version>
 		<hibernate-maven-plugin.version>2.0.0</hibernate-maven-plugin.version>
 		<jrebel-maven-plugin.version>1.1.6</jrebel-maven-plugin.version>
+		<mssql-jdbc.version>6.1.0.jre7</mssql-jdbc.version>
 	</properties>
 
 	<!-- Bill of material for version management on framework dependency -->
@@ -195,6 +196,11 @@
 			<version>${ojdbc.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>${mssql-jdbc.version}</version>
+		</dependency>
 		<!-- Servlet API: principle communicate over HTTP client–server protocol -->
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
@@ -456,6 +462,14 @@
 					<artifactId>jackson-annotations</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -605,11 +619,6 @@
 		</dependency>
 		
 		<!-- JDE Web Services for PCMS to access JDE Web Services -->
-		<dependency>
-			<groupId>com.gammon.jde</groupId>
-			<artifactId>JDE-AccountBalanceByDateRangeManager</artifactId>
-			<version>2016-09-09</version>
-		</dependency>
 		<dependency>
 			<groupId>com.gammon.jde</groupId>
 			<artifactId>JDE-AccountBalanceByDateRangeManager</artifactId>

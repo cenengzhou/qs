@@ -2,6 +2,8 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
                                    function($http, $scope, $location, $cookies, blockUI, userpreferenceService, jdeService, modalService, adlService, $state, GlobalHelper, $interval, $timeout, GlobalParameter, userpreferenceService, rootscopeService, uiGridConstants) {
 	
 	rootscopeService.setEnv();
+	$scope.hasRole = rootscopeService.hasRole;
+	$scope.defaultRoute = rootscopeService.defaultRoute;
 	userpreferenceService.gettingGridPreference();
 	$scope.tab = 'profile';
 	$scope.selectTab = function(setTab){
@@ -46,7 +48,7 @@ mainApp.controller('NavMenuCtrl', ['$http', '$scope', '$location', '$cookies', '
 	$scope.jobDescription = $cookies.get("jobDescription");
 	$scope.subcontractNo = $cookies.get("subcontractNo");
 	$scope.subcontractDescription = $cookies.get("subcontractDescription");
-	$scope.userIcon = 'resources/images/profile.png';
+	$scope.userIcon = GlobalParameter.defaultIcon;
 	$scope.imageServerAddress = GlobalParameter.imageServerAddress //<= require login
 //	$scope.imageServerAddress = 'http://ipeople/Upload/PeopleDir/UserPics/'
 	$scope.GlobalHelper = GlobalHelper;

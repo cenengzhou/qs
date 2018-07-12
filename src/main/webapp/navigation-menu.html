@@ -8,8 +8,8 @@
 						<td>
 							<!-- begin mobile sidebar expand / collapse button -->
 							<div class="navbar-header">
-								<a ui-sref="job.dashboard" class="navbar-brand" ng-click="activeMenu = ''">
-									<div ng-if="env != 'PRO'" style="position:absolute; 
+								<a class="navbar-brand" ng-click="activeMenu = ''">
+									<div ng-click="defaultRoute()" ng-if="env != 'PRO'" style="position:absolute; 
 									text-align:right; 
 									top:15px;bottom:15px;
 									left:-5px;right:15px;
@@ -37,47 +37,47 @@
 							<div resize ng-style="resizeMenuBarWithWOffset(565, 150)" style="border: 0px solid red" id="menubar">
 								<ul class="nav navbar-nav" style="width:1000px;border: 0px solid white" id="innerMenu">
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Repackaging' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Repackaging' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a ui-sref="repackaging.wizard"> 
 											<i class="fa fa-cube"></i>
-											Repackaging
+											Repackaging 
 										</a></li>
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Certificate' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Certificate' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a 	ui-sref="cert-dashboard">
 											<i class="fa fa-bookmark"></i>
 											Main Contract Certificate
 										</a>
 									</li>
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Subcontract' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Subcontract' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a	ui-sref="subcontract-select"> 	
 											<i class="fa fa-trophy"></i>
 											Subcontract
 										</a></li>
 									<li ng-class="{'bg-primary-light' : activeMenu == 'IV' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'IV' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a ui-sref="iv.update"> 
 											<i class="fa fa-line-chart"></i>
 											Internal Valuation
 										</a>
 									</li>
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Enquiry' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Enquiry' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a ui-sref="enquiry.info"> 
 											<i class="fa fa-info-circle"></i>
 											Enquiry
 										</a>
 									</li>
 										<li ng-class="{'bg-primary-light' : activeMenu == 'Reports' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Reports' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a ui-sref="reports"> 
 											<i class="fa fa-book"></i>
 											Reports
 										</a>
 									</li>
 									<li ng-class="{'bg-primary-light' : activeMenu == 'Transit' && env !== 'DEV', 'bg-inverse-light' : activeMenu == 'Transit' && env == 'DEV'}" 
-										ng-hide = "hideNavMenu">
+										ng-hide = "hideNavMenu || !roles['has_QS_ENQ']">
 										<a href="" ng-click="navigateToTransit()">
 											<i class="fa fa-file-text"></i>
 											Transit 
@@ -236,9 +236,9 @@
 		    <div data-scrollbar="true" data-height="100%">
 		        <!-- begin sidebar-nav -->
 		        <ul class="nav nav-tabs" role="tablist">
-		            <li class="width-50 active"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
-		            <li class="width-100"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self" ng-click="showCodePanel('Account')">Account Code</a></li>
-		            <li class="width-100"><a href="#" data-target="#AddressBook" data-toggle="tab" target="_self" ng-click="showCodePanel('Address')">Address Book</a></li>
+		            <li class="width-50 active" ng-hide="!roles['has_QS_ENQ']"><a href="#" data-target="#links" data-toggle="tab" target="_self">Links</a></li>
+		            <li class="width-100" ng-hide="!roles['has_QS_ENQ']"><a href="#" data-target="#AccountCode" data-toggle="tab" target="_self" ng-click="showCodePanel('Account')">Account Code</a></li>
+		            <li class="width-100" ng-hide="!roles['has_QS_ENQ']"><a href="#" data-target="#AddressBook" data-toggle="tab" target="_self" ng-click="showCodePanel('Address')">Address Book</a></li>
 		        </ul>
 		        <div class="tab-content">
 		            <div class="tab-pane active" id="links">

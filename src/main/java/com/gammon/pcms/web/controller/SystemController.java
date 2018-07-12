@@ -168,7 +168,7 @@ public class SystemController {
 		return results;
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','obtainCacheKey', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','obtainCacheKey', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "obtainCacheKey", method = RequestMethod.POST)
 	public String obtainCacheKey(@RequestBody String itemType) throws NoSuchAlgorithmException, UnknownHostException{
 		User user = securityService.getCurrentUser();
@@ -198,7 +198,7 @@ public class SystemController {
         return cacheKey;
 	}
 			
-	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','getProperties', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('SystemController','getProperties', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "getProperties", method = RequestMethod.POST)
 	public Map<String, Object> getProperties(){
 		Map<String, Object> propertiesMap = new HashMap<>();

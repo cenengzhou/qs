@@ -52,12 +52,12 @@
 			</div>
 		</div>
 
-		<div class="col-md-2">
+		<div class="col-md-2" ng-hide="!roles['has_QS_ENQ']">
 			<button type="button" class="btn btn-inverse btn-block pull-right" ng-click="transitEnquiry()">
 				<i class="fa fa-info-circle"></i><span> Transit Status Enquiry</span>
 			</button>
 		</div>
-		<div class="col-md-2">
+		<div class="col-md-2" ng-hide="!roles['has_QS_ENQ']">
 			<button type="button" class="btn btn-danger btn-block pull-right" ng-click="createJob()">
 				<i class="fa fa-plus-circle"></i><span> Create New Job</span>
 			</button>
@@ -71,7 +71,7 @@
 			<div class="col-md-4 col-lg-3 animated fadeIn"
 				ng-repeat="job in jobs | filter:searchquery | filter:{division: selectedDivision} | orderBy : jobNo : true">
 				<div class="box box-widget sc-panel" id="joblabelDiv{{$index}}">
-					<a	ui-sref="job.dashboard" ng-click="updateJobInfo(job.jobNo, job.description)">
+					<a ng-click="updateJobInfo(job.jobNo, job.description)">
 						<div class="sc-panel-header text-white" 
 								ng-class="	job.division == 'BDG' ? 'bg-primary' : 
 											job.division == 'CVL' ?	'bg-orange' : 

@@ -39,7 +39,7 @@ public class JobController {
 	private ObjectMapper objectMapper;
 	
 	@JsonView(JobInfoView.NameAndDescription.class)
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJobList', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 //	@PostFilter(value = "@adminService.canAccessJob(principal, filterObject.jobNumber)") //too slow
 	@RequestMapping(value = "getJobList", method = RequestMethod.POST)
 	public List<JobInfo> getJobList(@RequestBody boolean isCompletedJob){
@@ -64,7 +64,7 @@ public class JobController {
 		return companyName;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJob', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','getJob', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "getJob", method = RequestMethod.GET)
 	public JobInfo getJob(@RequestParam(name="jobNo") String jobNo) throws DatabaseOperationException{
 		JobInfo job = null;
@@ -80,7 +80,7 @@ public class JobController {
 		return jobDates;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('JobController','updateJobInfo', @securityConfig.getRolePcmsQs(), @securityConfig.getRolePcmsQsReviewer(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "updateJobInfo", method = RequestMethod.POST)
 	public String updateJobInfo(@Valid @RequestBody JobInfo job){
 		String result = null;

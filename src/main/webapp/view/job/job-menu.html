@@ -11,7 +11,7 @@
                       <!-- end sidebar minify button -->
 			</li>
 			
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.dashboard">
 					<i class="fa fa-dashboard active"></i>
 					<span>Job Dashboard</span>
@@ -25,20 +25,26 @@
 				</a>
 			</li>
 			
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.info" >
 					<i class="fa fa-book"></i> 
 					<span>Job Information</span>
 				</a>
 			</li>
 			<li ui-sref-active="active">
+				<a ui-sref="job.personnel" >
+					<i class="fa fa-user"></i> 
+					<span>Personnel</span>
+				</a>
+			</li>			
+			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.attachment.first">
 					<i class="fa fa-file"></i>
 					<span>Attachment</span>
 				</a>
 			</li>
 
-			<li ui-sref-active="active">
+			<li ui-sref-active="active" ng-hide="!roles['has_QS_ENQ']">
 				<a ui-sref="job.accountMaster">
 					<i class="fa fa-plus-circle"></i> 
 					<span>Create Account Code</span>

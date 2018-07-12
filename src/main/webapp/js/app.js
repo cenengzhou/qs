@@ -3,7 +3,6 @@ var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngAnimate', 'ui.
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping', 'ui.grid.validate', 'ui.grid.saveState', 'angular-js-xlsx',
 									 'ng-currency']);  
 
-
 // configure our routes    
 mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalParameter', 
         function($stateProvider, $urlRouterProvider, $httpProvider, GlobalParameter/*, modalStateProvider*/) {
@@ -23,6 +22,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
                	 files: [
                            'js/service/jde-service.js',
                            'js/service/adl-service.js',
+                           'js/service/hr-service.js',
                            'js/service/subcontractor-service.js',
                            'js/service/userpreference-service.js',
                            'js/service/job-service.js',
@@ -197,7 +197,22 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
             }]
         }
 	})
-	
+	.state('job.personnel', {
+		url: "/personnel",
+		templateUrl: "view/job/job-personnel.html",
+		controller: "JobPersonnelCtrl as ctrl",
+		resolve: {
+			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
+                return $ocLazyLoad.load({
+               	 name: 'app',
+               	 files: [
+               		 		'js/service/job-service.js',
+               		 		'js/controller/job/job-personnel.js'
+                    ] 
+                });
+            }]
+		}
+	})
 	
 	//Subcontract
 	.state('subcontract-select', {

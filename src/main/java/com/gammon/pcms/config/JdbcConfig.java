@@ -16,6 +16,8 @@ public class JdbcConfig {
 	
 	@Value("#{${pcms.jdbc}}")
 	private Map<String, Object> pcmsJdbc;
+	@Value("#{${pcms.hrJdbc}}")
+	private Map<String, Object> pcmsHrJdbc;
 	@Value("#{${adl.jdbc}}")
 	private Map<String, Object> adlJdbc;
 	
@@ -31,6 +33,18 @@ public class JdbcConfig {
 		return getPcmsJdbc().get(key);
 	}
 	
+	/**
+	 * @return the pcmsHrJdbc
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPcmsHrJdbc() {
+		return (Map<String, String>) pcmsHrJdbc.get(applicationConfig.getDeployEnvironment());
+	}
+	
+	public String getPcmsHrJdbc(String key){
+		return getPcmsHrJdbc().get(key);
+	}
+
 	/**
 	 * @return the adlJdbc
 	 */

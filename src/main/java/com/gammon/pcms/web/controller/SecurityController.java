@@ -20,7 +20,7 @@ public class SecurityController {
 	@Autowired
 	private GSFService gsfService;
 	
-	@PreAuthorize(value = "hasRole(@securityConfig.getPcmsRole('MAINTENANCE')) or @GSFService.isFnEnabled('SecurityController','getCurrentUser', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "hasRole(@securityConfig.getPcmsRole('MAINTENANCE')) or @GSFService.isFnEnabled('SecurityController','getCurrentUser', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "getCurrentUser", method = RequestMethod.GET)
 	public User getCurrentUser(){
 		return securityService.getCurrentUser();

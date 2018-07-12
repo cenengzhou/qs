@@ -111,6 +111,24 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Double eotAwarded = 0.0;
 	private Double ldExposureAmount = 0.0;
 	
+	private String nameExecutiveDirector;
+	private String nameDirector;
+	private String nameDirectSupervisorPic;
+	private String nameProjectInCharge;
+	private String nameCommercialInCharge;
+	private String nameTempWorkController;
+	private String nameSafetyEnvRep;
+	private String nameAuthorizedPerson;
+	private String nameSiteAdmin;
+	private String nameSiteManagement1;
+	private String nameSiteManagement2;
+	private String nameSiteManagement3;
+	private String nameSiteManagement4;
+	private String nameSiteSupervision1;
+	private String nameSiteSupervision2;
+	private String nameSiteSupervision3;
+	private String nameSiteSupervision4;
+	
 	public JobInfo() {}
 
 	@Transient
@@ -736,12 +754,164 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public void setLdExposureAmount(Double ldExposureAmount) {
 		this.ldExposureAmount = ldExposureAmount;
 	}
-	
+
+	@Column(name = "NAME_EXECUTIVE_DIRECTOR")
+	public String getNameExecutiveDirector() {
+		return nameExecutiveDirector;
+	}
+
+	public void setNameExecutiveDirector(String nameExecutiveDirector) {
+		this.nameExecutiveDirector = nameExecutiveDirector;
+	}
+
+	@Column(name = "NAME_DIRECTOR")
+	public String getNameDirector() {
+		return nameDirector;
+	}
+
+	public void setNameDirector(String nameDirector) {
+		this.nameDirector = nameDirector;
+	}
+
+	@Column(name = "NAME_DIRECT_SUPERVISOR_PIC")
+	public String getNameDirectSupervisorPic() {
+		return nameDirectSupervisorPic;
+	}
+
+	public void setNameDirectSupervisorPic(String nameDirectSupervisorPic) {
+		this.nameDirectSupervisorPic = nameDirectSupervisorPic;
+	}
+
+	@Column(name = "NAME_PROJECT_IN_CHARGE")
+	public String getNameProjectInCharge() {
+		return nameProjectInCharge;
+	}
+
+	public void setNameProjectInCharge(String nameProjectInCharge) {
+		this.nameProjectInCharge = nameProjectInCharge;
+	}
+
+	@Column(name = "NAME_COMMERCIAL_IN_CHARGE")
+	public String getNameCommercialInCharge() {
+		return nameCommercialInCharge;
+	}
+
+	public void setNameCommercialInCharge(String nameCommercialInCharge) {
+		this.nameCommercialInCharge = nameCommercialInCharge;
+	}
+
+	@Column(name = "NAME_TEMP_WORK_CONTROLLER")
+	public String getNameTempWorkController() {
+		return nameTempWorkController;
+	}
+
+	public void setNameTempWorkController(String nameTempWorkController) {
+		this.nameTempWorkController = nameTempWorkController;
+	}
+
+	@Column(name = "NAME_SAFETY_ENV_REP")
+	public String getNameSafetyEnvRep() {
+		return nameSafetyEnvRep;
+	}
+
+	public void setNameSafetyEnvRep(String nameSafetyEnvRep) {
+		this.nameSafetyEnvRep = nameSafetyEnvRep;
+	}
+
+	@Column(name = "NAME_AUTHORIZED_PERSON")
+	public String getNameAuthorizedPerson() {
+		return nameAuthorizedPerson;
+	}
+
+	public void setNameAuthorizedPerson(String nameAuthorizedPerson) {
+		this.nameAuthorizedPerson = nameAuthorizedPerson;
+	}
+
+	@Column(name = "NAME_SITE_ADMIN")
+	public String getNameSiteAdmin() {
+		return nameSiteAdmin;
+	}
+
+	public void setNameSiteAdmin(String nameSiteAdmin) {
+		this.nameSiteAdmin = nameSiteAdmin;
+	}
+
+	@Column(name = "NAME_SITE_MANAGEMENT_1")
+	public String getNameSiteManagement1() {
+		return nameSiteManagement1;
+	}
+
+	public void setNameSiteManagement1(String nameSiteManagement1) {
+		this.nameSiteManagement1 = nameSiteManagement1;
+	}
+
+	@Column(name = "NAME_SITE_MANAGEMENT_2")
+	public String getNameSiteManagement2() {
+		return nameSiteManagement2;
+	}
+
+	public void setNameSiteManagement2(String nameSiteManagement2) {
+		this.nameSiteManagement2 = nameSiteManagement2;
+	}
+
+	@Column(name = "NAME_SITE_MANAGEMENT_3")
+	public String getNameSiteManagement3() {
+		return nameSiteManagement3;
+	}
+
+	public void setNameSiteManagement3(String nameSiteManagement3) {
+		this.nameSiteManagement3 = nameSiteManagement3;
+	}
+
+	@Column(name = "NAME_SITE_MANAGEMENT_4")
+	public String getNameSiteManagement4() {
+		return nameSiteManagement4;
+	}
+
+	public void setNameSiteManagement4(String nameSiteManagement4) {
+		this.nameSiteManagement4 = nameSiteManagement4;
+	}
+
+	@Column(name = "NAME_SITE_SUPERVISION_1")
+	public String getNameSiteSupervision1() {
+		return nameSiteSupervision1;
+	}
+
+	public void setNameSiteSupervision1(String nameSiteSupervision1) {
+		this.nameSiteSupervision1 = nameSiteSupervision1;
+	}
+
+	@Column(name = "NAME_SITE_SUPERVISION_2")
+	public String getNameSiteSupervision2() {
+		return nameSiteSupervision2;
+	}
+
+	public void setNameSiteSupervision2(String nameSiteSupervision2) {
+		this.nameSiteSupervision2 = nameSiteSupervision2;
+	}
+
+	@Column(name = "NAME_SITE_SUPERVISION_3")
+	public String getNameSiteSupervision3() {
+		return nameSiteSupervision3;
+	}
+
+	public void setNameSiteSupervision3(String nameSiteSupervision3) {
+		this.nameSiteSupervision3 = nameSiteSupervision3;
+	}
+
+	@Column(name = "NAME_SITE_SUPERVISION_4")
+	public String getNameSiteSupervision4() {
+		return nameSiteSupervision4;
+	}
+
+	public void setNameSiteSupervision4(String nameSiteSupervision4) {
+		this.nameSiteSupervision4 = nameSiteSupervision4;
+	}
 
 	@Override
 	public String toString() {
 		return String.format(
-				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\"}",
+				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\",\"nameExecutiveDirector\":\"%s\",\"nameDirector\":\"%s\",\"nameDirectSupervisorPic\":\"%s\",\"nameProjectInCharge\":\"%s\",\"nameCommercialInCharge\":\"%s\",\"nameTempWorkController\":\"%s\",\"nameSafetyEnvRep\":\"%s\",\"nameAuthorizedPerson\":\"%s\",\"nameSiteAdmin\":\"%s\",\"nameSiteManagement1\":\"%s\",\"nameSiteManagement2\":\"%s\",\"nameSiteManagement3\":\"%s\",\"nameSiteManagement4\":\"%s\",\"nameSiteSupervision1\":\"%s\",\"nameSiteSupervision2\":\"%s\",\"nameSiteSupervision3\":\"%s\",\"nameSiteSupervision4\":\"%s\"}",
 				jobNumber, description, company, employer, contractType, division, department, internalJob, soloJV,
 				completionStatus, insuranceCAR, insuranceECI, insuranceTPL, clientContractNo, parentJobNo, jvPartnerNo,
 				jvPercentage, originalContractValue, projectedContractValue, orginalNominatedSCContractValue, tenderGP,
@@ -752,375 +922,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 				expectedMakingGoodDate, actualMakingGoodDate, defectLiabilityPeriod, defectListIssuedDate,
 				financialEndDate, dateFinalACSettlement, yearOfCompletion, bqFinalizedFlag, allowManualInputSCWorkDone,
 				legacyJob, conversionStatus, repackagingType, budgetPosted, finQS0Review, eotApplied, eotAwarded,
-				ldExposureAmount);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((actualMakingGoodDate == null) ? 0 : actualMakingGoodDate.hashCode());
-		result = prime * result + ((actualPCCDate == null) ? 0 : actualPCCDate.hashCode());
-		result = prime * result + ((allowManualInputSCWorkDone == null) ? 0 : allowManualInputSCWorkDone.hashCode());
-		result = prime * result + ((billingCurrency == null) ? 0 : billingCurrency.hashCode());
-		result = prime * result + ((bqFinalizedFlag == null) ? 0 : bqFinalizedFlag.hashCode());
-		result = prime * result + ((budgetPosted == null) ? 0 : budgetPosted.hashCode());
-		result = prime * result + ((clientContractNo == null) ? 0 : clientContractNo.hashCode());
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((completionStatus == null) ? 0 : completionStatus.hashCode());
-		result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
-		result = prime * result + ((conversionStatus == null) ? 0 : conversionStatus.hashCode());
-		result = prime * result + ((cpfApplicable == null) ? 0 : cpfApplicable.hashCode());
-		result = prime * result + ((cpfBasePeriod == null) ? 0 : cpfBasePeriod.hashCode());
-		result = prime * result + ((cpfBaseYear == null) ? 0 : cpfBaseYear.hashCode());
-		result = prime * result + ((cpfIndexName == null) ? 0 : cpfIndexName.hashCode());
-		result = prime * result + ((dateFinalACSettlement == null) ? 0 : dateFinalACSettlement.hashCode());
-		result = prime * result + ((defectLiabilityPeriod == null) ? 0 : defectLiabilityPeriod.hashCode());
-		result = prime * result + ((defectListIssuedDate == null) ? 0 : defectListIssuedDate.hashCode());
-		result = prime * result + ((defectProvisionPercentage == null) ? 0 : defectProvisionPercentage.hashCode());
-		result = prime * result + ((department == null) ? 0 : department.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((division == null) ? 0 : division.hashCode());
-		result = prime * result + ((employer == null) ? 0 : employer.hashCode());
-		result = prime * result + ((eotApplied == null) ? 0 : eotApplied.hashCode());
-		result = prime * result + ((eotAwarded == null) ? 0 : eotAwarded.hashCode());
-		result = prime * result + ((expectedMakingGoodDate == null) ? 0 : expectedMakingGoodDate.hashCode());
-		result = prime * result + ((expectedPCCDate == null) ? 0 : expectedPCCDate.hashCode());
-		result = prime * result + ((finQS0Review == null) ? 0 : finQS0Review.hashCode());
-		result = prime * result + ((financialEndDate == null) ? 0 : financialEndDate.hashCode());
-		result = prime * result + ((forecastEndPeriod == null) ? 0 : forecastEndPeriod.hashCode());
-		result = prime * result + ((forecastEndYear == null) ? 0 : forecastEndYear.hashCode());
-		result = prime * result + ((grossFloorArea == null) ? 0 : grossFloorArea.hashCode());
-		result = prime * result + ((grossFloorAreaUnit == null) ? 0 : grossFloorAreaUnit.hashCode());
-		result = prime * result + ((insuranceCAR == null) ? 0 : insuranceCAR.hashCode());
-		result = prime * result + ((insuranceECI == null) ? 0 : insuranceECI.hashCode());
-		result = prime * result + ((insuranceTPL == null) ? 0 : insuranceTPL.hashCode());
-		result = prime * result + ((interimRetentionPercentage == null) ? 0 : interimRetentionPercentage.hashCode());
-		result = prime * result + ((internalJob == null) ? 0 : internalJob.hashCode());
-		result = prime * result + ((jobNumber == null) ? 0 : jobNumber.hashCode());
-		result = prime * result + ((jvPartnerNo == null) ? 0 : jvPartnerNo.hashCode());
-		result = prime * result + ((jvPercentage == null) ? 0 : jvPercentage.hashCode());
-		result = prime * result + ((ldExposureAmount == null) ? 0 : ldExposureAmount.hashCode());
-		result = prime * result + ((legacyJob == null) ? 0 : legacyJob.hashCode());
-		result = prime * result + ((levyApplicable == null) ? 0 : levyApplicable.hashCode());
-		result = prime * result + ((levyCITAPercentage == null) ? 0 : levyCITAPercentage.hashCode());
-		result = prime * result + ((levyPCFBPercentage == null) ? 0 : levyPCFBPercentage.hashCode());
-		result = prime * result + ((maxRetentionPercentage == null) ? 0 : maxRetentionPercentage.hashCode());
-		result = prime * result + ((mosRetentionPercentage == null) ? 0 : mosRetentionPercentage.hashCode());
-		result = prime * result
-				+ ((orginalNominatedSCContractValue == null) ? 0 : orginalNominatedSCContractValue.hashCode());
-		result = prime * result + ((originalContractValue == null) ? 0 : originalContractValue.hashCode());
-		result = prime * result + ((parentJobNo == null) ? 0 : parentJobNo.hashCode());
-		result = prime * result + ((paymentTermsForNominatedSC == null) ? 0 : paymentTermsForNominatedSC.hashCode());
-		result = prime * result + ((projectedContractValue == null) ? 0 : projectedContractValue.hashCode());
-		result = prime * result + ((repackagingType == null) ? 0 : repackagingType.hashCode());
-		result = prime * result + ((soloJV == null) ? 0 : soloJV.hashCode());
-		result = prime * result + ((tenderGP == null) ? 0 : tenderGP.hashCode());
-		result = prime * result + ((valueOfBSWork == null) ? 0 : valueOfBSWork.hashCode());
-		result = prime * result + ((yearOfCompletion == null) ? 0 : yearOfCompletion.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		JobInfo other = (JobInfo) obj;
-		if (actualMakingGoodDate == null) {
-			if (other.actualMakingGoodDate != null)
-				return false;
-		} else if (!actualMakingGoodDate.equals(other.actualMakingGoodDate))
-			return false;
-		if (actualPCCDate == null) {
-			if (other.actualPCCDate != null)
-				return false;
-		} else if (!actualPCCDate.equals(other.actualPCCDate))
-			return false;
-		if (allowManualInputSCWorkDone == null) {
-			if (other.allowManualInputSCWorkDone != null)
-				return false;
-		} else if (!allowManualInputSCWorkDone.equals(other.allowManualInputSCWorkDone))
-			return false;
-		if (billingCurrency == null) {
-			if (other.billingCurrency != null)
-				return false;
-		} else if (!billingCurrency.equals(other.billingCurrency))
-			return false;
-		if (bqFinalizedFlag == null) {
-			if (other.bqFinalizedFlag != null)
-				return false;
-		} else if (!bqFinalizedFlag.equals(other.bqFinalizedFlag))
-			return false;
-		if (budgetPosted == null) {
-			if (other.budgetPosted != null)
-				return false;
-		} else if (!budgetPosted.equals(other.budgetPosted))
-			return false;
-		if (clientContractNo == null) {
-			if (other.clientContractNo != null)
-				return false;
-		} else if (!clientContractNo.equals(other.clientContractNo))
-			return false;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (completionStatus == null) {
-			if (other.completionStatus != null)
-				return false;
-		} else if (!completionStatus.equals(other.completionStatus))
-			return false;
-		if (contractType == null) {
-			if (other.contractType != null)
-				return false;
-		} else if (!contractType.equals(other.contractType))
-			return false;
-		if (conversionStatus == null) {
-			if (other.conversionStatus != null)
-				return false;
-		} else if (!conversionStatus.equals(other.conversionStatus))
-			return false;
-		if (cpfApplicable == null) {
-			if (other.cpfApplicable != null)
-				return false;
-		} else if (!cpfApplicable.equals(other.cpfApplicable))
-			return false;
-		if (cpfBasePeriod == null) {
-			if (other.cpfBasePeriod != null)
-				return false;
-		} else if (!cpfBasePeriod.equals(other.cpfBasePeriod))
-			return false;
-		if (cpfBaseYear == null) {
-			if (other.cpfBaseYear != null)
-				return false;
-		} else if (!cpfBaseYear.equals(other.cpfBaseYear))
-			return false;
-		if (cpfIndexName == null) {
-			if (other.cpfIndexName != null)
-				return false;
-		} else if (!cpfIndexName.equals(other.cpfIndexName))
-			return false;
-		if (dateFinalACSettlement == null) {
-			if (other.dateFinalACSettlement != null)
-				return false;
-		} else if (!dateFinalACSettlement.equals(other.dateFinalACSettlement))
-			return false;
-		if (defectLiabilityPeriod == null) {
-			if (other.defectLiabilityPeriod != null)
-				return false;
-		} else if (!defectLiabilityPeriod.equals(other.defectLiabilityPeriod))
-			return false;
-		if (defectListIssuedDate == null) {
-			if (other.defectListIssuedDate != null)
-				return false;
-		} else if (!defectListIssuedDate.equals(other.defectListIssuedDate))
-			return false;
-		if (defectProvisionPercentage == null) {
-			if (other.defectProvisionPercentage != null)
-				return false;
-		} else if (!defectProvisionPercentage.equals(other.defectProvisionPercentage))
-			return false;
-		if (department == null) {
-			if (other.department != null)
-				return false;
-		} else if (!department.equals(other.department))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (division == null) {
-			if (other.division != null)
-				return false;
-		} else if (!division.equals(other.division))
-			return false;
-		if (employer == null) {
-			if (other.employer != null)
-				return false;
-		} else if (!employer.equals(other.employer))
-			return false;
-		if (eotApplied == null) {
-			if (other.eotApplied != null)
-				return false;
-		} else if (!eotApplied.equals(other.eotApplied))
-			return false;
-		if (eotAwarded == null) {
-			if (other.eotAwarded != null)
-				return false;
-		} else if (!eotAwarded.equals(other.eotAwarded))
-			return false;
-		if (expectedMakingGoodDate == null) {
-			if (other.expectedMakingGoodDate != null)
-				return false;
-		} else if (!expectedMakingGoodDate.equals(other.expectedMakingGoodDate))
-			return false;
-		if (expectedPCCDate == null) {
-			if (other.expectedPCCDate != null)
-				return false;
-		} else if (!expectedPCCDate.equals(other.expectedPCCDate))
-			return false;
-		if (finQS0Review == null) {
-			if (other.finQS0Review != null)
-				return false;
-		} else if (!finQS0Review.equals(other.finQS0Review))
-			return false;
-		if (financialEndDate == null) {
-			if (other.financialEndDate != null)
-				return false;
-		} else if (!financialEndDate.equals(other.financialEndDate))
-			return false;
-		if (forecastEndPeriod == null) {
-			if (other.forecastEndPeriod != null)
-				return false;
-		} else if (!forecastEndPeriod.equals(other.forecastEndPeriod))
-			return false;
-		if (forecastEndYear == null) {
-			if (other.forecastEndYear != null)
-				return false;
-		} else if (!forecastEndYear.equals(other.forecastEndYear))
-			return false;
-		if (grossFloorArea == null) {
-			if (other.grossFloorArea != null)
-				return false;
-		} else if (!grossFloorArea.equals(other.grossFloorArea))
-			return false;
-		if (grossFloorAreaUnit == null) {
-			if (other.grossFloorAreaUnit != null)
-				return false;
-		} else if (!grossFloorAreaUnit.equals(other.grossFloorAreaUnit))
-			return false;
-		if (insuranceCAR == null) {
-			if (other.insuranceCAR != null)
-				return false;
-		} else if (!insuranceCAR.equals(other.insuranceCAR))
-			return false;
-		if (insuranceECI == null) {
-			if (other.insuranceECI != null)
-				return false;
-		} else if (!insuranceECI.equals(other.insuranceECI))
-			return false;
-		if (insuranceTPL == null) {
-			if (other.insuranceTPL != null)
-				return false;
-		} else if (!insuranceTPL.equals(other.insuranceTPL))
-			return false;
-		if (interimRetentionPercentage == null) {
-			if (other.interimRetentionPercentage != null)
-				return false;
-		} else if (!interimRetentionPercentage.equals(other.interimRetentionPercentage))
-			return false;
-		if (internalJob == null) {
-			if (other.internalJob != null)
-				return false;
-		} else if (!internalJob.equals(other.internalJob))
-			return false;
-		if (jobNumber == null) {
-			if (other.jobNumber != null)
-				return false;
-		} else if (!jobNumber.equals(other.jobNumber))
-			return false;
-		if (jvPartnerNo == null) {
-			if (other.jvPartnerNo != null)
-				return false;
-		} else if (!jvPartnerNo.equals(other.jvPartnerNo))
-			return false;
-		if (jvPercentage == null) {
-			if (other.jvPercentage != null)
-				return false;
-		} else if (!jvPercentage.equals(other.jvPercentage))
-			return false;
-		if (ldExposureAmount == null) {
-			if (other.ldExposureAmount != null)
-				return false;
-		} else if (!ldExposureAmount.equals(other.ldExposureAmount))
-			return false;
-		if (legacyJob == null) {
-			if (other.legacyJob != null)
-				return false;
-		} else if (!legacyJob.equals(other.legacyJob))
-			return false;
-		if (levyApplicable == null) {
-			if (other.levyApplicable != null)
-				return false;
-		} else if (!levyApplicable.equals(other.levyApplicable))
-			return false;
-		if (levyCITAPercentage == null) {
-			if (other.levyCITAPercentage != null)
-				return false;
-		} else if (!levyCITAPercentage.equals(other.levyCITAPercentage))
-			return false;
-		if (levyPCFBPercentage == null) {
-			if (other.levyPCFBPercentage != null)
-				return false;
-		} else if (!levyPCFBPercentage.equals(other.levyPCFBPercentage))
-			return false;
-		if (maxRetentionPercentage == null) {
-			if (other.maxRetentionPercentage != null)
-				return false;
-		} else if (!maxRetentionPercentage.equals(other.maxRetentionPercentage))
-			return false;
-		if (mosRetentionPercentage == null) {
-			if (other.mosRetentionPercentage != null)
-				return false;
-		} else if (!mosRetentionPercentage.equals(other.mosRetentionPercentage))
-			return false;
-		if (orginalNominatedSCContractValue == null) {
-			if (other.orginalNominatedSCContractValue != null)
-				return false;
-		} else if (!orginalNominatedSCContractValue.equals(other.orginalNominatedSCContractValue))
-			return false;
-		if (originalContractValue == null) {
-			if (other.originalContractValue != null)
-				return false;
-		} else if (!originalContractValue.equals(other.originalContractValue))
-			return false;
-		if (parentJobNo == null) {
-			if (other.parentJobNo != null)
-				return false;
-		} else if (!parentJobNo.equals(other.parentJobNo))
-			return false;
-		if (paymentTermsForNominatedSC == null) {
-			if (other.paymentTermsForNominatedSC != null)
-				return false;
-		} else if (!paymentTermsForNominatedSC.equals(other.paymentTermsForNominatedSC))
-			return false;
-		if (projectedContractValue == null) {
-			if (other.projectedContractValue != null)
-				return false;
-		} else if (!projectedContractValue.equals(other.projectedContractValue))
-			return false;
-		if (repackagingType == null) {
-			if (other.repackagingType != null)
-				return false;
-		} else if (!repackagingType.equals(other.repackagingType))
-			return false;
-		if (soloJV == null) {
-			if (other.soloJV != null)
-				return false;
-		} else if (!soloJV.equals(other.soloJV))
-			return false;
-		if (tenderGP == null) {
-			if (other.tenderGP != null)
-				return false;
-		} else if (!tenderGP.equals(other.tenderGP))
-			return false;
-		if (valueOfBSWork == null) {
-			if (other.valueOfBSWork != null)
-				return false;
-		} else if (!valueOfBSWork.equals(other.valueOfBSWork))
-			return false;
-		if (yearOfCompletion == null) {
-			if (other.yearOfCompletion != null)
-				return false;
-		} else if (!yearOfCompletion.equals(other.yearOfCompletion))
-			return false;
-		return true;
+				ldExposureAmount, nameExecutiveDirector, nameDirector, nameDirectSupervisorPic, nameProjectInCharge,
+				nameCommercialInCharge, nameTempWorkController, nameSafetyEnvRep, nameAuthorizedPerson, nameSiteAdmin,
+				nameSiteManagement1, nameSiteManagement2, nameSiteManagement3, nameSiteManagement4,
+				nameSiteSupervision1, nameSiteSupervision2, nameSiteSupervision3, nameSiteSupervision4);
 	}
 
 }

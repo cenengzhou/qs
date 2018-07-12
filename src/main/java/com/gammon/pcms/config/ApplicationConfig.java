@@ -32,6 +32,8 @@ public class ApplicationConfig implements InitializingBean{
 	private String jdbcProperties;
 	@Value("${hibernate.properties}")
 	private String hibernateProperties;
+	@Value("${hibernate_hr.properties}")
+	private String hibernateHrProperties;
 	@Value("${stored_procedure.properties}")
 	private String stored_procedureProperties;
 	@Value("${webservice.properties}")
@@ -96,6 +98,10 @@ public class ApplicationConfig implements InitializingBean{
 
 	public String getHibernateProperties() {
 		return hibernateProperties;
+	}
+	
+	public String getHibernateHrProperties() {
+		return hibernateHrProperties;
 	}
 
 	public String getStored_procedureProperties() {

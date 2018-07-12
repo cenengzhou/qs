@@ -433,6 +433,7 @@ mainApp.constant('GlobalParameter', {
     	{value: 'P', display: 'Pending'},
     	{value: 'S', display: 'Suspend'},
     ],
+    defaultIcon: 'resources/images/profile.png',
 	imageServerAddress : 'http://gammon.gamska.com/PeopleDirectory_Picture/',
 	tinyMceMaxCharLength: 2000,
 });

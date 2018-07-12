@@ -20,7 +20,7 @@ public class UserPreferenceController {
 	@Autowired
 	private UserPreferenceService userPreferenceService;
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','getNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','getNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "getNotificationReadStatusByCurrentUser", method = RequestMethod.GET)
 	public String getNotificationReadStatusByCurrentUser() throws DatabaseOperationException{
 		String status = null;
@@ -44,7 +44,7 @@ public class UserPreferenceController {
 		return msg;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','updateNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','updateNotificationReadStatusByCurrentUser', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "updateNotificationReadStatusByCurrentUser", method = RequestMethod.POST)
 	public String updateNotificationReadStatusByCurrentUser(@RequestBody String status) throws DatabaseOperationException{
 		String msg = null;
@@ -68,7 +68,7 @@ public class UserPreferenceController {
 		return msg;
 	}
 	
-	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','obtainUserPreferenceByCurrentUser', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','obtainUserPreferenceByCurrentUser', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "obtainUserPreferenceByCurrentUser", method = RequestMethod.POST)
 	public Map<String, String> obtainUserPreferenceByCurrentUser() throws DatabaseOperationException{
 		Map<String, String> preferenceMap = null;

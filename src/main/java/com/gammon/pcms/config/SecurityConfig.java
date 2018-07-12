@@ -192,7 +192,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					securityConfig.getRolePcmsImsEnq(),
 					securityConfig.getRolePcmsQs(),
 					securityConfig.getRolePcmsQsAdmin(),
-					securityConfig.getRolePcmsQsReviewer()
+					securityConfig.getRolePcmsQsReviewer(),
+					securityConfig.getRolePcmsQsDloa(),
+					securityConfig.getRolePcmsQsSiteAdm(),
+					securityConfig.getRolePcmsQsDoc()
 					).and()
 			.exceptionHandling()
 			.authenticationEntryPoint(new SpnegoEntryPoint(securityConfig.getLoginPath())).and()
@@ -413,6 +416,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	public String getRolePcmsQsDoc() {
 		return getPcmsRole("QS_DOC");
+	}
+	
+	public String getRolePcmsQsDloa() {
+		return getPcmsRole("QS_DLOA");
+	}
+	
+	public String getRolePcmsQsSiteAdm() {
+		return getPcmsRole("QS_SITE_ADM");
 	}
 
 	/**
