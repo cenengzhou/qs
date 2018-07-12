@@ -94,6 +94,7 @@
 											ng-model="addendumDetail.quantity"
 											ng-change="calculate('quantity')" 
 											ng-paste="calculate('quantity')"
+											ng-model-options="{updateOn: 'blur'}"
 											ng-disabled ="disableFields"
 											required />
 									</div>
@@ -106,6 +107,7 @@
 												ng-model="addendumDetail.rateAddendum" 
 												ng-change="calculate('rate')" 
 												ng-paste="calculate('rate')"
+												ng-model-options="{updateOn: 'blur'}"
 												required />
 									</div>
 								</div>
