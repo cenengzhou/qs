@@ -2,6 +2,7 @@ package com.gammon.qs.service;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -520,8 +521,9 @@ public class ResourceSummaryService implements Serializable {
 	 * For LineType [BQ]
 	 */
 	public Boolean releaseResourceSummariesOfBQAfterSubcontractSplitTerminate(JobInfo job, String packageNo, String objectCode, String subsidiaryCode, Double newAmount, List<Long> voIDResourceSummaryList) throws Exception{
-		logger.info("Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode+" New Amount: "+newAmount);
-		
+		DecimalFormat format = new DecimalFormat("##,##0.0000");
+		logger.info("Job: "+job.getJobNumber()+" SCPackage: "+packageNo+" Object Code: "+objectCode+" Subsidiary Code: "+subsidiaryCode+" New Amount: "+format.format(newAmount));
+	
 		List<ResourceSummary> resourceSummaries = resourceSummaryHBDao.getResourceSummariesForAccount(job, packageNo, objectCode, subsidiaryCode);
 		
 		if(resourceSummaries == null || resourceSummaries.size() == 0)
@@ -533,10 +535,11 @@ public class ResourceSummaryService implements Serializable {
 		for (ResourceSummary resourceSummary : resourceSummaries) {
 			if(!voIDResourceSummaryList.contains(resourceSummary.getId())){
 				resourceSummariesOfBQs.add(resourceSummary);
+				logger.info("resourceSummary.getAmountBudget():" + format.format(resourceSummary.getAmountBudget()));
 				totalAmountofSameAccountCode += resourceSummary.getAmountBudget();
 			}
 		}
-		logger.info("Total Amount of the Same Account Code: "+totalAmountofSameAccountCode+"; New Amount: "+newAmount);
+		logger.info("Total Amount of the Same Account Code: "+format.format(totalAmountofSameAccountCode)+"; New Amount: "+format.format(newAmount));
 
 		//if (totalAmountofSameAccountCode == 0.0 && newAmount.doubleValue() != 0.0) {
 		if (totalAmountofSameAccountCode < newAmount.doubleValue()) {
@@ -563,7 +566,7 @@ public class ResourceSummaryService implements Serializable {
 		 * **/
 		double remainder = newAmount - CalculationUtil.round((totalAmountofSameAccountCode*proportion),4);
 		logger.info("remainder: "+remainder);
-		
+		double quantityRemainder = CalculationUtil.round(remainder / totalAmountofSameAccountCode, 4);
 		//ResourceSummary of BQs which created before contract award
 		String message = "";
 		int counter = 1;
@@ -571,8 +574,8 @@ public class ResourceSummaryService implements Serializable {
 			Double newQuantity = CalculationUtil.round((resourceSummary.getQuantity() * proportion), 4);
 			logger.info("newQuantity: "+newQuantity);
 			if(counter==resourceSummariesOfBQs.size()){
-				newQuantity += remainder;
-				remainder = 0;//reset remainder
+				newQuantity += quantityRemainder;
+				quantityRemainder = 0;//reset remainder
 				//logger.info("newQuantity+remainder: "+newQuantity);
 			}
 			message += "Resource Summary id: " + resourceSummary.getId() + " New Quantity: " + newQuantity + " for BQ\n";
@@ -592,7 +595,8 @@ public class ResourceSummaryService implements Serializable {
 		newResource.setResourceDescription("Split from SC " + packageNo + " " + (count+1));
 		newResource.setUnit("AM");
 		newResource.setRate(Double.valueOf(1));
-		newResource.setQuantity(totalAmountofSameAccountCode - newAmount);
+		newResource.setQuantity(totalAmountofSameAccountCode - newAmount + remainder);
+		newResource.setSplitFrom(resourceSummaries.get(0));
 		newResource.setAmountBudget(CalculationUtil.round(newResource.getQuantity()*newResource.getRate(), 2));
 		if (newResource.getQuantity().doubleValue()!=0){
 			resourceSummaryHBDao.saveOrUpdate(newResource);

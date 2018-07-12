@@ -2,6 +2,7 @@ package com.gammon.qs.service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -881,7 +882,7 @@ public class SubcontractService {
 		Subcontract scPackage = subcontractHBDao.obtainSCPackage(jobNumber, packageNo);
 		//Excluded Inactive (deleted) scDetails
 		List<SubcontractDetail> scDetailList = subcontractDetailHBDao.obtainSCDetails(jobNumber, packageNo);
-
+		DecimalFormat format = new DecimalFormat("##,##0.0000");
 		if ("A".equals(approvedOrRejected)){
 			if (scDetailList==null){
 				message = "Job: "+scPackage.getJobInfo().getJobNumber()+" SC:"+scPackage.getPackageNo()+" has no SCDetail.";
@@ -901,7 +902,7 @@ public class SubcontractService {
 
 				if ("BQ".equalsIgnoreCase(scDetail.getLineType())){
 					scDetailBQList.add(scDetail);
-					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate"+scDetail.getCostRate()+" Quantity:"+ scDetail.getQuantity() + " NewQuantity:" + scDetail.getNewQuantity());
+					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " CostRate:"+format.format(scDetail.getCostRate())+" Quantity:"+ format.format(scDetail.getQuantity()) + " NewQuantity:" + format.format(scDetail.getNewQuantity()));
 				}
 				else if (("V1".equalsIgnoreCase(scDetail.getLineType()) || "V3".equalsIgnoreCase(scDetail.getLineType())) && 
 						scDetail.getResourceNo()!=null && scDetail.getResourceNo()!=0){ 
@@ -931,7 +932,7 @@ public class SubcontractService {
 							scDetailBQList.add(scDetail);
 						}
 					}
-					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ scDetail.getQuantity() + " NewQuantity:" + scDetail.getNewQuantity());
+					logger.info("LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem() + " Quantity:"+ format.format(scDetail.getQuantity()) + " NewQuantity:" + format.format(scDetail.getNewQuantity()));
 				}
 				else{
 					logger.info("SKIPPED - LineType:" + scDetail.getLineType() + " BillItem:" + scDetail.getBillItem()+" ID:"+scDetail.getId());
@@ -948,14 +949,14 @@ public class SubcontractService {
 						
 						logger.info("VO Resources Summary of " +
 									" SCDetails ID:" + scDetail.getId() +
-									" New Quantity:" + scDetail.getNewQuantity() +
+									" New Quantity:" + format.format(scDetail.getNewQuantity()) +
 									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
 									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
 									" has "+ (bqResourceSummary!=null?"":"NOT ") +"been released.");
 					}catch(ValidateBusinessLogicException ve){
 						message = 	"VO Resources Summary of " +
 									" SCDetails ID:" + scDetail.getId() +
-									" New Quantity:" + scDetail.getNewQuantity() +
+									" New Quantity:" + format.format(scDetail.getNewQuantity()) +
 									" Job: " + scDetail.getSubcontract().getJobInfo().getJobNumber() +
 									" Package No.: " + scDetail.getSubcontract().getPackageNo() +
 									" has NOT been released.";
