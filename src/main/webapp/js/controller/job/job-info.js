@@ -1,5 +1,5 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter', 'rootscopeService', 'subcontractService',
-                                   function($scope, jobService, modalService, $state, GlobalParameter, rootscopeService, subcontractService) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter', 'rootscopeService', 'subcontractService', '$timeout',
+                                   function($scope, jobService, modalService, $state, GlobalParameter, rootscopeService, subcontractService, $timeout) {
 	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
 	loadJobInfo();
@@ -36,6 +36,35 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 				});
 	}
 
+	$scope.syncEotAndRevisedDate = function(item){
+		if($scope.loaded)
+		$timeout(function(){
+			switch (item){
+			case 'revised':
+				if($scope.jobDates.revisedCompletionDate && $scope.jobDates.plannedEndDate != null) {
+					$scope.job.eotAwarded = moment($scope.jobDates.revisedCompletionDate, 'YYYY-MM-DD').diff($scope.jobDates.plannedEndDate, 'd');
+				} else {
+					$scope.job.eotAwarded = 0;
+				}
+				break;
+			case 'eot':
+				if($scope.jobDates.plannedEndDate) {
+					$scope.jobDates.revisedCompletionDate = moment($scope.jobDates.plannedEndDate, 'YYYY-MM-DD').add($scope.job.eotAwarded, 'd');
+				} else {
+					$scope.jobDates.revisedCompletionDate = null;
+				}
+				break;
+			case 'complete':
+				if($scope.jobDates.revisedCompletionDate){
+					$scope.jobDates.revisedCompletionDate = moment($scope.jobDates.plannedEndDate, 'YYYY-MM-DD').subtract($scope.job.eotAwarded,'d');
+				} else {
+					$scope.job.eotAwarded = 0;
+				}
+				break;
+			}
+		}, 300);
+		else $scope.loaded = true;
+	}
 
 	//Save Function
 	$scope.saveJobInfo = function () {

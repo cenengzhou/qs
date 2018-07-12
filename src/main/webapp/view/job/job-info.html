@@ -442,46 +442,7 @@
 					<div class="box box-default">
 						<div class="box-body">
 							<div class="row">
-								<label class="col-md-4">Extension of Time</label>
-								<div class="row col-md-8">
-									<div class="form-group col-md-6">
-										<label>EOT Applied</label>
-										<div class="input-group col-md-12">
-											<input type="number" class="form-control"
-												ng-model="job.eotApplied">
-										</div>
-									</div>
-									<div class="form-group col-md-6">
-										<label>EOT Awarded</label>
-										<div class="input-group col-md-12">
-											<input type="number" class="form-control"
-												ng-model="job.eotAwarded">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<div class="box box-default">
-						<div class="box-body">
-							<div class="row">
-								<label class="col-md-4">Damages Exposure Amount</label>
-								<div class="row col-md-8">
-									<div class="form-group col-md-6">
-										<label>Liquidated Damages</label>
-										<div class="input-group col-md-12">
-											<input type="number" class="form-control"
-												ng-model="job.ldExposureAmount">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>					
-<div class="box box-default">
-	<div class="box-body">
-	<div class="row">
 		<div class="panel panel-inverse ">
 			<div ng-if="false" class="panel-heading">
 				<div class="panel-heading-btn">
@@ -546,13 +507,20 @@
 								</label>
 							</div>
 							<div class="form-group col-md-4">
-								<div class="input-group" moment-picker="jobDates.plannedEndDate"
-									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
-									ng-model-options="{ updateOn: 'blur' }">
+								<div class="input-group" >
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control" ng-model="jobDates.plannedEndDate" >
+									</span> 
+									<input class="form-control" 
+									change="syncEotAndRevisedDate('complete')"
+										moment-picker="jobDates.plannedEndDate"
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+										start-view="day"
+										ng-model-options="{ updateOn: 'blur' }"
+										ng-model="jobDates.plannedEndDate" 
+									>
 								</div>
+								
 							</div>
 
 							
@@ -578,16 +546,23 @@
 								<label>Revised Contract Completion Date
 									<i class="fa fa-2x fa-info-circle text-primary" style="cursor:pointer" data-toggle="tooltip" title="The original Practical / Substantial Completion Date or equivalent plus EOT formally awarded by the client"></i>
 								</label>
+							<div style="top:-10px;position:relative">
+							<span><small>*Contract Completion Date + EOT Awarded</small></span>
+							</div>
 							</div>
 							<div class="form-group col-md-4">
-								<div class="input-group"
-									moment-picker="jobDates.revisedCompletionDate"
-									format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" start-view="day"
-									ng-model-options="{ updateOn: 'blur' }">
+								<div class="input-group">
 									<span class="input-group-addon"> <i
 										class="fa fa-calendar"></i>
-									</span> <input class="form-control"
-										ng-model="jobDates.revisedCompletionDate" >
+									</span> 
+									<input class="form-control"
+										ng-model="jobDates.revisedCompletionDate" 
+										change="syncEotAndRevisedDate('revised')"
+										moment-picker="jobDates.revisedCompletionDate" 
+										format="{{GlobalParameter.MOMENT_DATE_FORMAT}}" 
+										start-view="day"
+										ng-model-options="{ updateOn: 'blur' }"
+										>
 								</div>
 							</div>
 							
@@ -615,7 +590,7 @@
 
 						<!-- QS Dates  -->
 						<div class="col-md-6">
-							<!-- <div class="col-md-8">
+							 <div class="col-md-8">
 								<label>Actual PCC Date</label>
 							</div>
 							<div class="form-group col-md-4">
@@ -629,7 +604,7 @@
 							</div>
 
 							<h5></h5>
-
+<!--
 							<div class="col-md-8">
 								<label>Expected PCC Date</label>
 							</div>
@@ -644,7 +619,7 @@
 							</div>
 
 							<h5></h5>
-							
+							-->
 							<div class="col-md-8">
 								<label>Actual Making Good Date</label>
 							</div>
@@ -658,7 +633,7 @@
 										ng-model="job.actualMakingGoodDate" >
 								</div>
 							</div>
-
+<!-- 
 							<div class="col-md-8">
 								<label>Defect List Issued Date</label>
 							</div>
@@ -710,10 +685,50 @@
 
 
 		</div>
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Extension of Time</label>
+								<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>EOT Applied</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control"
+												ng-model="job.eotApplied">
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>EOT Awarded</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control" ng-change="syncEotAndRevisedDate('eot')"
+												ng-model="job.eotAwarded">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Damages Exposure Amount</label>
+								<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>Liquidated Damages</label>
+										<div class="input-group col-md-12">
+											<input type="number" class="form-control"
+												ng-model="job.ldExposureAmount">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>		
 				</div>
 	</div>
 	</div>
+
 				<!-- /.box-body -->
 				<div class="box-footer">
 					<a class="btn btn-primary btn-block" ng-click="saveJobInfo()">Save
@@ -723,5 +738,6 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
