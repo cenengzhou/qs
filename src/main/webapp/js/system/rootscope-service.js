@@ -330,8 +330,8 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	
 	function setEnv(){
 		var env = [];
-		env['DEV'] = ['localhost', 'erpwls11'];
-		env['UAT'] = ['erpwls12'];
+		env['DEV'] = ['localhost', 'erpwls11', 'gambpm11'];
+		env['UAT'] = ['erpwls12', 'gambpm12'];
 		env['PRO'] = ['erpwls01', 'erpwls02'];
 		$rootScope.env = 'PRO';
 		for(var key in env){

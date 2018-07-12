@@ -488,8 +488,8 @@ public class SubcontractService {
 
 		logger.info("Job: "+jobNumber+" SCPackage: "+packageNumber+" Current Split/Terminate Status: "+splitTerminateStatus[status][1]);
 
-		List<SubcontractDetail> scDetailsIncludingInactive = subcontractDetailHBDao.getSCDetails(scPackage);
-		for(SubcontractDetail scDetail:scDetailsIncludingInactive){
+		List<SubcontractDetail> scDetailsWithBudget = subcontractDetailHBDao.getSubcontractDetailsWithBudget(jobNumber, packageNumber);
+		for(SubcontractDetail scDetail:scDetailsWithBudget){
 			//Validation 2: skip the deleted SCDetail 
 			if(scDetail.getSystemStatus().equals(SubcontractDetail.INACTIVE)){
 				logger.info("SKIPPED(INACTIVE) - LineType:"+scDetail.getLineType()+" BillItem:"+scDetail.getBillItem()+" ID:"+scDetail.getId());
