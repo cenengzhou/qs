@@ -57,12 +57,12 @@ mainApp.controller('JobPersonnelCtrl', [
 			self.site['Supervision'] = {}
 			self.site['Supervision'].sort = 2;
 			self.site['Supervision'].clazz = 'panel-warning';
-			self.site['Management (Optional)'] = {}
-			self.site['Management (Optional)'].sort = 3;
-			self.site['Management (Optional)'].clazz = 'panel-warning';
-			self.site['Supervision (Optional)'] = {}
-			self.site['Supervision (Optional)'].sort = 4;
-			self.site['Supervision (Optional)'].clazz = 'panel-warning';
+			self.site['Site Management (Optional)'] = {}
+			self.site['Site Management (Optional)'].sort = 3;
+			self.site['Site Management (Optional)'].clazz = 'panel-warning';
+			self.site['Site Supervision (Optional)'] = {}
+			self.site['Site Supervision (Optional)'].sort = 4;
+			self.site['Site Supervision (Optional)'].clazz = 'panel-warning';
 			self.querySearch = querySearch;
 			self.selectedItemChange = selectedItemChange;
 			self.searchTextChange = searchTextChange;
@@ -88,14 +88,14 @@ mainApp.controller('JobPersonnelCtrl', [
 						{id:'nameAuthorizedPerson', description:'Authorized Person', isDisabled:checkDisable('site'), store:'Supervision', sort:23},
 						{id:'nameSiteAdmin1', description:'Site Admin 1', isDisabled:checkDisable('site'), store:'Supervision', sort:24},
 						{id:'nameSiteAdmin2', description:'Site Admin 2 (Optional)', isDisabled:checkDisable('site'), store:'Supervision', sort:25},
-						{id:'nameSiteManagement1', description:'Site Management 1 (Optional)', isDisabled:checkDisable('site'), store:'Management (Optional)', sort:31},
-						{id:'nameSiteManagement2', description:'Site Management 2 (Optional)', isDisabled:checkDisable('site'), store:'Management (Optional)', sort:32},
-						{id:'nameSiteManagement3', description:'Site Management 3 (Optional)', isDisabled:checkDisable('site'), store:'Management (Optional)', sort:33},
-						{id:'nameSiteManagement4', description:'Site Management 4 (Optional)', isDisabled:checkDisable('site'), store:'Management (Optional)', sort:34},
-						{id:'nameSiteSupervision1', description:'Site Supervision 1 (Optional)', isDisabled:checkDisable('site'), store:'Supervision (Optional)', sort:41},
-						{id:'nameSiteSupervision2', description:'Site Supervision 2 (Optional)', isDisabled:checkDisable('site'), store:'Supervision (Optional)', sort:42},
-						{id:'nameSiteSupervision3', description:'Site Supervision 3 (Optional)', isDisabled:checkDisable('site'), store:'Supervision (Optional)', sort:43},
-						{id:'nameSiteSupervision4', description:'Site Supervision 4 (Optional)', isDisabled:checkDisable('site'), store:'Supervision (Optional)', sort:44}
+						{id:'nameSiteManagement1', description:'Site Management 1 (Optional)', isDisabled:checkDisable('site'), store:'Site Management (Optional)', sort:31},
+						{id:'nameSiteManagement2', description:'Site Management 2 (Optional)', isDisabled:checkDisable('site'), store:'Site Management (Optional)', sort:32},
+						{id:'nameSiteManagement3', description:'Site Management 3 (Optional)', isDisabled:checkDisable('site'), store:'Site Management (Optional)', sort:33},
+						{id:'nameSiteManagement4', description:'Site Management 4 (Optional)', isDisabled:checkDisable('site'), store:'Site Management (Optional)', sort:34},
+						{id:'nameSiteSupervision1', description:'Site Supervision 1 (Optional)', isDisabled:checkDisable('site'), store:'Site Supervision (Optional)', sort:41},
+						{id:'nameSiteSupervision2', description:'Site Supervision 2 (Optional)', isDisabled:checkDisable('site'), store:'Site Supervision (Optional)', sort:42},
+						{id:'nameSiteSupervision3', description:'Site Supervision 3 (Optional)', isDisabled:checkDisable('site'), store:'Site Supervision (Optional)', sort:43},
+						{id:'nameSiteSupervision4', description:'Site Supervision 4 (Optional)', isDisabled:checkDisable('site'), store:'Site Supervision (Optional)', sort:44}
 					];
 					
 					self.personData.forEach(function(p){
