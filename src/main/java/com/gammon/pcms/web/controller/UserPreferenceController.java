@@ -92,7 +92,7 @@ public class UserPreferenceController {
 		userPreferenceService.clearGridPreference(gridName);
 	}
 
-	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','setDefaultJobNo', @securityConfig.getRolePcmsEnq())")
+	@PreAuthorize(value = "@GSFService.isFnEnabled('UserPreferenceController','setDefaultJobNo', @securityConfig.getRolePcmsEnq(), @securityConfig.getRolePcmsQsDloa(), @securityConfig.getRolePcmsQsSiteAdm())")
 	@RequestMapping(value = "setDefaultJobNo", method = RequestMethod.POST)
 	public Map<String, String> setDefaultJobNo(@RequestBody String defaultJobNo) throws DatabaseOperationException{
 		return userPreferenceService.setDefaultJobNo(defaultJobNo);

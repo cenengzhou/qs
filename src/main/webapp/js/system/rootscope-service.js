@@ -168,7 +168,7 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 	function gettingAllUser(){
 		var deferral = $q.defer();
 		if(!$rootScope.allUsers){
-			if(!$rootScope.loadingAllUser){
+//			if(!$rootScope.loadingAllUser){
 				$rootScope.loadingAllUser = true;
 				hrService.findByUsernameIsNotNull()
 				.then(function(data){
@@ -176,10 +176,10 @@ mainApp.service('rootscopeService', ['$http', '$q', '$window', 'GlobalHelper', '
 					$rootScope.allUsers.forEach(function(user){
 						user.image = GlobalParameter.imageServerAddress + user.employeeId+'.jpg';
 					});
+//					$rootScope.loadingAllUser = false;
 					deferral.resolve($rootScope.allUsers);
-					$rootScope.loadingAllUser = false;
 				});
-			}
+//			}
 		} else {
 			deferral.resolve($rootScope.allUsers);
 		}
