@@ -9,14 +9,14 @@
 							<!-- begin mobile sidebar expand / collapse button -->
 							<div class="navbar-header">
 								<a class="navbar-brand" ng-click="activeMenu = ''">
-									<div ng-click="defaultRoute()" ng-if="env != 'PRO'" style="position:absolute; 
+									<div ng-click="defaultRoute()" style="position:absolute; 
 									text-align:right; 
 									top:15px;bottom:15px;
 									left:-5px;right:15px;
 									width:160px;height:35px;
 									border: 0px solid white;
 									font-size: 10px;"
-									class="text-white">{{env}}</div>
+									class="text-white"><span ng-if="env != 'PRO'" >{{env}}</span></div>
 									<img src="image/gammon.png" class="logo"  style="width: 128px"/>
 								</a>
 								<button type="button" class="navbar-toggle" data-click="sidebar-toggled">
