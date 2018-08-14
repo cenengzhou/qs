@@ -110,6 +110,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Double eotApplied = 0.0;
 	private Double eotAwarded = 0.0;
 	private Double ldExposureAmount = 0.0;
+	private Double residualAfterEot = 0.0;
 	
 	private String nameExecutiveDirector;
 	private String nameDirector;
@@ -756,6 +757,15 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		this.ldExposureAmount = ldExposureAmount;
 	}
 
+	@Column(name = "RESIDUAL_AFTER_EOT")
+	public Double getResidualAfterEot() {
+		return residualAfterEot != null ? residualAfterEot : 0.0;
+	}
+
+	public void setResidualAfterEot(Double residualAfterEot) {
+		this.residualAfterEot = residualAfterEot;
+	}
+
 	@Column(name = "NAME_EXECUTIVE_DIRECTOR")
 	public String getNameExecutiveDirector() {
 		return nameExecutiveDirector;
@@ -920,49 +930,23 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 
 	@Override
 	public String toString() {
-		return " {\"jobNumber\":\"" + jobNumber + "\",\"description\":\"" + description + "\",\"company\":\"" + company
-				+ "\",\"employer\":\"" + employer + "\",\"contractType\":\"" + contractType + "\",\"division\":\""
-				+ division + "\",\"department\":\"" + department + "\",\"internalJob\":\"" + internalJob
-				+ "\",\"soloJV\":\"" + soloJV + "\",\"completionStatus\":\"" + completionStatus
-				+ "\",\"insuranceCAR\":\"" + insuranceCAR + "\",\"insuranceECI\":\"" + insuranceECI
-				+ "\",\"insuranceTPL\":\"" + insuranceTPL + "\",\"clientContractNo\":\"" + clientContractNo
-				+ "\",\"parentJobNo\":\"" + parentJobNo + "\",\"jvPartnerNo\":\"" + jvPartnerNo
-				+ "\",\"jvPercentage\":\"" + jvPercentage + "\",\"originalContractValue\":\"" + originalContractValue
-				+ "\",\"projectedContractValue\":\"" + projectedContractValue
-				+ "\",\"orginalNominatedSCContractValue\":\"" + orginalNominatedSCContractValue + "\",\"tenderGP\":\""
-				+ tenderGP + "\",\"forecastEndYear\":\"" + forecastEndYear + "\",\"forecastEndPeriod\":\""
-				+ forecastEndPeriod + "\",\"maxRetentionPercentage\":\"" + maxRetentionPercentage
-				+ "\",\"interimRetentionPercentage\":\"" + interimRetentionPercentage
-				+ "\",\"mosRetentionPercentage\":\"" + mosRetentionPercentage + "\",\"valueOfBSWork\":\""
-				+ valueOfBSWork + "\",\"grossFloorArea\":\"" + grossFloorArea + "\",\"grossFloorAreaUnit\":\""
-				+ grossFloorAreaUnit + "\",\"billingCurrency\":\"" + billingCurrency
-				+ "\",\"paymentTermsForNominatedSC\":\"" + paymentTermsForNominatedSC
-				+ "\",\"defectProvisionPercentage\":\"" + defectProvisionPercentage + "\",\"cpfApplicable\":\""
-				+ cpfApplicable + "\",\"cpfIndexName\":\"" + cpfIndexName + "\",\"cpfBaseYear\":\"" + cpfBaseYear
-				+ "\",\"cpfBasePeriod\":\"" + cpfBasePeriod + "\",\"levyApplicable\":\"" + levyApplicable
-				+ "\",\"levyCITAPercentage\":\"" + levyCITAPercentage + "\",\"levyPCFBPercentage\":\""
-				+ levyPCFBPercentage + "\",\"expectedPCCDate\":\"" + expectedPCCDate + "\",\"actualPCCDate\":\""
-				+ actualPCCDate + "\",\"expectedMakingGoodDate\":\"" + expectedMakingGoodDate
-				+ "\",\"actualMakingGoodDate\":\"" + actualMakingGoodDate + "\",\"defectLiabilityPeriod\":\""
-				+ defectLiabilityPeriod + "\",\"defectListIssuedDate\":\"" + defectListIssuedDate
-				+ "\",\"financialEndDate\":\"" + financialEndDate + "\",\"dateFinalACSettlement\":\""
-				+ dateFinalACSettlement + "\",\"yearOfCompletion\":\"" + yearOfCompletion + "\",\"bqFinalizedFlag\":\""
-				+ bqFinalizedFlag + "\",\"allowManualInputSCWorkDone\":\"" + allowManualInputSCWorkDone
-				+ "\",\"legacyJob\":\"" + legacyJob + "\",\"conversionStatus\":\"" + conversionStatus
-				+ "\",\"repackagingType\":\"" + repackagingType + "\",\"budgetPosted\":\"" + budgetPosted
-				+ "\",\"finQS0Review\":\"" + finQS0Review + "\",\"eotApplied\":\"" + eotApplied + "\",\"eotAwarded\":\""
-				+ eotAwarded + "\",\"ldExposureAmount\":\"" + ldExposureAmount + "\",\"nameExecutiveDirector\":\""
-				+ nameExecutiveDirector + "\",\"nameDirector\":\"" + nameDirector + "\",\"nameDirectSupervisorPic\":\""
-				+ nameDirectSupervisorPic + "\",\"nameProjectInCharge\":\"" + nameProjectInCharge
-				+ "\",\"nameCommercialInCharge\":\"" + nameCommercialInCharge + "\",\"nameTempWorkController\":\""
-				+ nameTempWorkController + "\",\"nameSafetyEnvRep\":\"" + nameSafetyEnvRep
-				+ "\",\"nameAuthorizedPerson\":\"" + nameAuthorizedPerson + "\",\"nameSiteAdmin1\":\"" + nameSiteAdmin1
-				+ "\",\"nameSiteAdmin2\":\"" + nameSiteAdmin2 + "\",\"nameSiteManagement1\":\"" + nameSiteManagement1
-				+ "\",\"nameSiteManagement2\":\"" + nameSiteManagement2 + "\",\"nameSiteManagement3\":\""
-				+ nameSiteManagement3 + "\",\"nameSiteManagement4\":\"" + nameSiteManagement4
-				+ "\",\"nameSiteSupervision1\":\"" + nameSiteSupervision1 + "\",\"nameSiteSupervision2\":\""
-				+ nameSiteSupervision2 + "\",\"nameSiteSupervision3\":\"" + nameSiteSupervision3
-				+ "\",\"nameSiteSupervision4\":\"" + nameSiteSupervision4 + "\"}";
+		return String.format(
+				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\",\"residualAfterEot\":\"%s\",\"nameExecutiveDirector\":\"%s\",\"nameDirector\":\"%s\",\"nameDirectSupervisorPic\":\"%s\",\"nameProjectInCharge\":\"%s\",\"nameCommercialInCharge\":\"%s\",\"nameTempWorkController\":\"%s\",\"nameSafetyEnvRep\":\"%s\",\"nameAuthorizedPerson\":\"%s\",\"nameSiteAdmin1\":\"%s\",\"nameSiteAdmin2\":\"%s\",\"nameSiteManagement1\":\"%s\",\"nameSiteManagement2\":\"%s\",\"nameSiteManagement3\":\"%s\",\"nameSiteManagement4\":\"%s\",\"nameSiteSupervision1\":\"%s\",\"nameSiteSupervision2\":\"%s\",\"nameSiteSupervision3\":\"%s\",\"nameSiteSupervision4\":\"%s\"}",
+				jobNumber, description, company, employer, contractType, division, department, internalJob, soloJV,
+				completionStatus, insuranceCAR, insuranceECI, insuranceTPL, clientContractNo, parentJobNo, jvPartnerNo,
+				jvPercentage, originalContractValue, projectedContractValue, orginalNominatedSCContractValue, tenderGP,
+				forecastEndYear, forecastEndPeriod, maxRetentionPercentage, interimRetentionPercentage,
+				mosRetentionPercentage, valueOfBSWork, grossFloorArea, grossFloorAreaUnit, billingCurrency,
+				paymentTermsForNominatedSC, defectProvisionPercentage, cpfApplicable, cpfIndexName, cpfBaseYear,
+				cpfBasePeriod, levyApplicable, levyCITAPercentage, levyPCFBPercentage, expectedPCCDate, actualPCCDate,
+				expectedMakingGoodDate, actualMakingGoodDate, defectLiabilityPeriod, defectListIssuedDate,
+				financialEndDate, dateFinalACSettlement, yearOfCompletion, bqFinalizedFlag, allowManualInputSCWorkDone,
+				legacyJob, conversionStatus, repackagingType, budgetPosted, finQS0Review, eotApplied, eotAwarded,
+				ldExposureAmount, residualAfterEot, nameExecutiveDirector, nameDirector, nameDirectSupervisorPic,
+				nameProjectInCharge, nameCommercialInCharge, nameTempWorkController, nameSafetyEnvRep,
+				nameAuthorizedPerson, nameSiteAdmin1, nameSiteAdmin2, nameSiteManagement1, nameSiteManagement2,
+				nameSiteManagement3, nameSiteManagement4, nameSiteSupervision1, nameSiteSupervision2,
+				nameSiteSupervision3, nameSiteSupervision4);
 	}
 
 }
