@@ -1591,7 +1591,7 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 		controller: 'AdminRevisionsAddendumCtrl'
 	})
 	.state('admin.Revisions.AddendumDetail',{
-		url: '/Addendum',
+		url: '/AddendumDetail',
 		templateUrl: 'view/admin/admin-Revisions-AddendumDetail.html',
 		controller: 'AdminRevisionsAddendumDetailCtrl'
 	})

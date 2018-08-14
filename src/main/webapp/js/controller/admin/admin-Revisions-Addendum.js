@@ -35,7 +35,7 @@ mainApp.controller('AdminRevisionsAddendumCtrl', ['$scope', 'modalService', 'Glo
 		new Field('noSubcontractor', 'Subcontractor No.', 'number'),
 		new Field('remarks', 'Remarks', 'textarea'),
 		new Field('status', 'Status', 'select').setOptions([{id:'SUBMITTED', value:'Submitted'}, {id:'PENDING', value:'Pending'}, {id:'APPROVED', value:'Approved'}]),
-		new Field('statusApproval', 'Approval Status', 'select').setOptions([{id:'NA', value:'N/A'}, {id:'APPROVED', value: 'Approved'}]),
+		new Field('statusApproval', 'Approval Status', 'select').setOptions([{id:'NA', value:'N/A'}, {id:'APPROVED', value: 'Approved'}, {id:'REJECTED', value: 'Rejected'}]),
 		new Field('title', 'Title'),
 		new Field('usernameCreated', 'Created User').setReadOnly(true).hide(),
 		new Field('usernameLastModified', 'Last Modified User').setReadOnly(true).hide(),

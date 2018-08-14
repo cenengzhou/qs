@@ -162,7 +162,7 @@ public class AddendumService{
 		String error = "";
 		try {
 			addendum.setUsernamePreparedBy(securityService.getCurrentUser().getFullname());
-			addendum.setStatus(Addendum.STATUS.PENDING.toString());
+//			addendum.setStatus(Addendum.STATUS.PENDING.toString());
 			addendumHBDao.update(addendum);
 		} catch (DataAccessException e) {
 			error = "Addendum failed to be updated.";
