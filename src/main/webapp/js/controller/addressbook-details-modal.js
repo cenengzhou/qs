@@ -63,6 +63,10 @@ mainApp.controller('AddressbookDetailsModalCtrl', ['$scope', '$uibModalInstance'
 		return result;
 	}
 	
+	$scope.getEffectiveDate = function(address){
+		return address.dateBeginningEffective ? moment(address.dateBeginningEffective).utcOffset('+0800').format('YYYY-MM-DD') : '';
+	}
+	
 	$scope.gridOptions = {
 			enableFiltering: true,
 			enableColumnResizing : true,

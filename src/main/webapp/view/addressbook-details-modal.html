@@ -55,9 +55,25 @@
 								<td>Mobile</td>
 								<td><div ng-repeat="phone in vendor.vendorPhoneNumber | filter: {phoneNumberType: 'MOB'}">{{phone.phoneNumber}}</div></td>
 							</tr>
-							<tr>
-								<td>Address</td>
-								<td><div ng-repeat="address in vendor.vendorAddress "><div ng-repeat="(property, value) in addressLineField(address)">{{value}}</div></div></td>
+							<tr ng-repeat="address in vendor.vendorAddress">
+								<td colspan="2">
+									<table class="table col-md-12">
+										<tr ng-if="$index==0">
+											<td class="col-md-8">Address</td>
+											<td class="col-md-4">Beginning Effective</td>
+										</tr>
+										<tr>
+											<td class="col-md-8">
+												<table>
+													<tr ng-repeat="(property, value) in addressLineField(address)">
+														<td>{{value}}</td>
+													</tr>
+												</table>
+											</td>
+											<td class="col-md-4">{{getEffectiveDate(address)}}</td>
+										</tr>
+									</table>
+								</td>
 							</tr>
 							</tbody>
 						</table>
