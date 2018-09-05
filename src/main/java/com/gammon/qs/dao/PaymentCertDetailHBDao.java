@@ -1,5 +1,6 @@
 package com.gammon.qs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -52,18 +53,20 @@ public class PaymentCertDetailHBDao extends BaseHibernateDao<PaymentCertDetail> 
 			throw new NullPointerException("Job No. / Package No. / Payment Certificate No. is Null");
 
 		PaymentCert paymentCert = paymentCertDao.obtainPaymentCertificate(jobNumber, packageNo, paymentCertNo);
-		if (paymentCert == null)
-			throw new NullPointerException("Payment Certificate is Null");
-
+//		if (paymentCert == null)
+//			throw new NullPointerException("Payment Certificate is Null");
+		List<PaymentCertDetail> paymentCertDetailList = new ArrayList<>();
+		if(paymentCert != null)
 		try {
 			Criteria criteria = getSession().createCriteria(this.getType());
 			criteria.add(Restrictions.sqlRestriction("Payment_Cert_ID = '" + (paymentCert.getId() + "'")));
-			return (List<PaymentCertDetail>) criteria.list();
+			paymentCertDetailList = (List<PaymentCertDetail>) criteria.list();
 
 		} catch (HibernateException he) {
 			logger.info("Fail: getPaymentDetail(String jobNumber, String packageNo, Integer paymentCertNo)");
 			throw new DatabaseOperationException(he);
 		}
+		return paymentCertDetailList;
 	}
 
 	public Double getCertCpfAmount(PaymentCert paymentCert) throws DatabaseOperationException {
