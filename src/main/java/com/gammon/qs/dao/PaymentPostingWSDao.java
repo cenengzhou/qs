@@ -169,7 +169,13 @@ public class PaymentPostingWSDao {
 			periodYear = new GetPeriodYearResponseObj();
 			periodYear.setCurrencyCodeFrom(job.getBillingCurrency());
 		}
+		/**
+		 * Bug Fix 
+		 * @author koeyyeung
+		 * reviewed on October 09, 2018 11:35:26 AM
+		 */
 		currencyMode = scPackage.getPaymentCurrency().equals(periodYear.getCurrencyCodeFrom().trim()) ? "D" : "F";
+		
 		postingDate = new Date();
 		Calendar cal = Calendar.getInstance();
 		timeLastUpdated = cal.get(Calendar.HOUR_OF_DAY)*10000 + cal.get(Calendar.MINUTE)*100 + cal.get(Calendar.SECOND);
@@ -452,7 +458,18 @@ public class PaymentPostingWSDao {
 		voucher.setTaxExplanationCode1(taxExplanationCode);
 		voucher.setCurrencyMode(currencyMode);
 		voucher.setCurrencyCodeFrom(scPackage.getPaymentCurrency());
-		voucher.setCurrencyConverRateOv(currencyMode.equals("D") ? Double.valueOf(1.0) : scPackage.getExchangeRate());
+		/**
+		 * Temporary Bug Fix
+		 * Should refer to F0015 (Currency Exchange Rate) to get the Conversion Method (Multiplier/Divisor)
+		 * @author koeyyeung
+		 * 11 Oct 2018
+		 * **/
+		if((job.getDivision().equals("SGP") || job.getJobNumber().startsWith("14")) && "HKD".equals(scPackage.getPaymentCurrency())){
+			double forex = 1/scPackage.getExchangeRate();
+			voucher.setCurrencyConverRateOv(forex);
+		}
+		else
+			voucher.setCurrencyConverRateOv(currencyMode.equals("D") ? Double.valueOf(1.0) : scPackage.getExchangeRate());
 		voucher.setGlClass(scPackage.getSubcontractorNature().equals("NSC") ? "NSC" : "SC");
 		voucher.setAccountModeGL(accountMode);
 		voucher.setCostCenter(job.getJobNumber());
