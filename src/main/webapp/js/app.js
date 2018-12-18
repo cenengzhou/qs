@@ -1,7 +1,7 @@
 var mainApp = angular.module('app', ['ui.router', 'chart.js',  'ngAnimate', 'ui.bootstrap', 'ngCookies', 'oc.lazyLoad', 'moment-picker', 'angular.vertilize', 'blockUI', 'ngSanitize', 'ngMaterial', 'ngJoyRide',
                                      'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.rowEdit', 'NgSwitchery', 'ui.tinymce',
 									 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.importer', 'ui.grid.grouping', 'ui.grid.validate', 'ui.grid.saveState', 'angular-js-xlsx',
-									 'ng-currency']);  
+									 'ng-currency', 'angular.filter']);  
 
 // configure our routes    
 mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalParameter', 
@@ -199,15 +199,16 @@ mainApp.config(['$stateProvider', '$urlRouterProvider', '$httpProvider','GlobalP
 	})
 	.state('job.personnel', {
 		url: "/personnel",
-		templateUrl: "view/job/job-personnel.html",
-		controller: "JobPersonnelCtrl as ctrl",
+		templateUrl: "view/job/job-personnel2.html",
+		controller: "JobPersonnel2Ctrl as ctrl",
 		resolve: {
 			service: ['$ocLazyLoad', function($ocLazyLoad) {//lazy
                 return $ocLazyLoad.load({
                	 name: 'app',
                	 files: [
                		 		'js/service/job-service.js',
-               		 		'js/controller/job/job-personnel.js'
+               		 		'js/service/personnel-service.js',
+               		 		'js/controller/job/job-personnel2.js'
                     ] 
                 });
             }]

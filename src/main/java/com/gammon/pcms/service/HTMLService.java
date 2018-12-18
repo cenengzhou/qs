@@ -1,9 +1,11 @@
 package com.gammon.pcms.service;
 
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +18,17 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.config.FreemarkerConfig;
 import com.gammon.pcms.config.ServletConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.FreeMarkerHelper;
 import com.gammon.pcms.model.Addendum;
 import com.gammon.pcms.model.AddendumDetail;
+import com.gammon.pcms.model.Personnel;
+import com.gammon.pcms.model.PersonnelMap;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.model.adl.AddressBook;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -49,11 +55,26 @@ import com.gammon.qs.domain.SubcontractDetail;
 import com.gammon.qs.domain.SubcontractDetailBQ;
 import com.gammon.qs.domain.SubcontractDetailVO;
 import com.gammon.qs.domain.Tender;
+import com.gammon.qs.service.JobInfoService;
 import com.gammon.qs.service.PaymentService;
 import com.gammon.qs.shared.GlobalParameter;
 import com.gammon.qs.shared.util.CalculationUtil;
 import com.gammon.qs.wrapper.UDC;
 import com.gammon.qs.wrapper.paymentCertView.PaymentCertViewWrapper;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.LineSeparator;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -100,6 +121,12 @@ public class HTMLService implements Serializable{
 	private ServletConfig servletConfig;
 	@Autowired
 	private ADLService adlService;
+	@Autowired
+	private AttachmentConfig attachmentConfig;
+	@Autowired
+	private JobInfoService jobInfoService;
+	@Autowired
+	private PersonnelService personnelService;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -409,4 +436,146 @@ public class HTMLService implements Serializable{
 		return masterListDao.getVendorNameList(addressNumber).get(0).getVendorName();
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public String eformEmailTemplate(String formCode, String jobNo, List objectList) throws Exception {
+		MasterListVendor masterList = null;
+		JobInfo job = null;
+		job = jobInfoHBDao.obtainJobInfo(jobNo);
+		masterList = masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()) == null ?
+		new MasterListVendor() :
+		masterListDao.getVendorDetailsList((new Integer(job.getCompany())).toString().trim()).get(0);
+		String strHTMLCodingContent = "";
+		Map<String, Object> data = new HashMap<String, Object>();
+		String template = freemarkerConfig.getTemplates().get(formCode);
+		data.put("template", template);
+		data.put("logo", freemarkerConfig.getPaths("logo"));
+		data.put("baseUrl", servletConfig.getBaseUrl());
+		data.put("job", job != null ? job : new JobInfo());
+		data.put("companyName", masterList != null ? masterList.getVendorName() : "");
+		data.put("objectList", objectList);
+		strHTMLCodingContent = FreeMarkerHelper.returnHtmlString(template, data);
+			
+		return strHTMLCodingContent;
+	}
+	
+	public void generateHtmlPdf(String formCode, String jobNo, Long refNo) throws Exception {
+		String emailContext = getEmailContext(formCode, jobNo, refNo);
+		String basePathString = attachmentConfig.getAttachmentServer("PATH") + 
+											attachmentConfig.getEformDirectory() + 
+											refNo;
+		String emailPathString = basePathString + "\\email.html";
+		String attachemntDirString =  basePathString + "\\Attachment";
+		String pdfDest = attachemntDirString + "\\" + refNo + ".pdf";
+		
+		FileHelper.writeStringToFile(emailPathString, emailContext);
+		File attachemntDir = new File(attachemntDirString);
+		attachemntDir.mkdirs();
+		
+    	ConverterProperties properties = new ConverterProperties();
+    	PdfWriter writer = new PdfWriter(pdfDest);
+    	PdfDocument pdf = new PdfDocument(writer);
+    	pdf.setDefaultPageSize(new PageSize(400, 14400));
+    	Document document = HtmlConverter.convertToDocument(new FileInputStream(emailPathString), pdf, properties);
+
+    	String logoUrl = freemarkerConfig.getPaths("template") +  "img_logo.gif";
+        Image image = new Image(ImageDataFactory.create(logoUrl));
+        image.scaleAbsolute(154, 41);
+        image.setFixedPosition(30, 14345);
+        document.add(image);
+        
+        EndPosition endPosition = new EndPosition();
+    	LineSeparator separator = new LineSeparator(endPosition);
+    	document.add(separator);
+    	document.getRenderer().close();
+    	PdfPage page = pdf.getPage(1);
+    	float y = endPosition.getY() - 36;
+    	page.setMediaBox(new Rectangle(0, y, 595, 14400 - y));
+
+    	document.close();
+    	writer.close();
+	}
+	
+	public String getEmailContext(String formCode, String jobNo, Long refNo) throws Exception {
+		JobInfo jobInfo = jobNo != null ? jobInfoService.obtainJob(jobNo) : jobInfoService.getByRefNo(refNo);
+		List<Personnel> personnelListByJob = personnelService.getActivePersonnel(jobInfo.getJobNumber());
+		List<PersonnelMap> allPersonnelMap = personnelService.getAllPersonnelMap();
+		Map<BigDecimal, List<Personnel>> map = new HashMap<>();
+		personnelListByJob.forEach(personnel -> {
+			List<Personnel> list = map.get(personnel.getPersonnelMap().getUserSequence());
+			if(list == null) list = new ArrayList<>();
+			list.add(personnel);
+			map.put(personnel.getPersonnelMap().getUserSequence(), list);
+		});
+		allPersonnelMap.forEach(personnelMap -> {
+			if(map.get(personnelMap.getUserSequence()) == null) {
+				Personnel personnel = new Personnel();
+				personnel.setPersonnelMap(personnelMap);
+				map.put(personnelMap.getUserSequence(), Arrays.asList(new Personnel[] {personnel}));
+			}
+		});
+		List<Personnel> listForReport = new ArrayList<>();
+		map.forEach((key, value) -> {
+			listForReport.addAll(value);
+		});
+		String emailContext = eformEmailTemplate(formCode, jobInfo.getJobNumber(), listForReport);
+		return emailContext;
+	}
+	
+    /**
+     * Implementation of the ILineDrawer interface that won't draw a line,
+     * but that will allow us to get the Y-position at the end of the file.
+     */
+    class EndPosition implements ILineDrawer {
+
+    	/** A Y-position. */
+	    protected float y;
+    	
+    	/**
+	     * Gets the Y-position.
+	     *
+	     * @return the Y-position
+	     */
+	    public float getY() {
+    		return y;
+    	}
+    	
+		/* (non-Javadoc)
+		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#draw(com.itextpdf.kernel.pdf.canvas.PdfCanvas, com.itextpdf.kernel.geom.Rectangle)
+		 */
+		@Override
+		public void draw(PdfCanvas pdfCanvas, Rectangle rect) {
+			this.y = rect.getY();
+		}
+
+		/* (non-Javadoc)
+		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#getColor()
+		 */
+		@Override
+		public Color getColor() {
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#getLineWidth()
+		 */
+		@Override
+		public float getLineWidth() {
+			return 0;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#setColor(com.itextpdf.kernel.color.Color)
+		 */
+		@Override
+		public void setColor(Color color) {
+		}
+
+		/* (non-Javadoc)
+		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#setLineWidth(float)
+		 */
+		@Override
+		public void setLineWidth(float lineWidth) {
+		}
+    	
+    }
 }

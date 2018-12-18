@@ -1,0 +1,208 @@
+<div id="content" class="content personnel">
+<main flex>
+	<div class="row">
+		<div style="border-radius: 15px; padding: 0px; padding-bottom: 20px"
+			ng-repeat="m in ctrl.personnelMapList | orderBy: 'requiredApproval':false"
+			ng-class="{'panel-danger' : m[0].requiredApproval == 'Y' && m.mode == 'W', 'panel-warning' : m[0].requiredApproval != 'Y' || m.mode == 'R' }"
+			class="col-md-12 panel">
+			<div class="panel-heading" style="border-top-left-radius: 15px; border-top-right-radius: 15px; margin-bottom: 20px; padding-bottom:25px">
+				<h3 class="panel-title">
+					{{m[0].userGroup}} <span style="font-size: 10px" ng-if="m.mode=='W' && m[0].requiredApproval=='Y'">(Change require approval)</span>
+					<span style="float: right" ng-if="m[0].requiredApproval=='Y'">
+						<md-switch ng-init="m.mode='R'" ng-model="m.mode" ng-true-value="'W'" ng-false-value="'R'" 
+						class="md-accent md-hue-1" md-whiteframe="4" ng-class="{'panel-danger' : m.mode == 'W', 'panel-warning' : m.mode == 'R' }"
+						style="margin-top:0px; border-radius:15px; padding:5px;border: 1px solid rgba(240,240,240,0.35)">
+    						{{m.mode == 'R' ? 'Approved Personnel' : 'Waiting for Approval'}}
+						</md-switch>
+					</span>
+					<span style="float: right; margin-right: 20px" class="row" ng-if="m[0].requiredApproval == 'Y' && ['SUBMITTED', 'REJECTED'].includes(ctrl.job.statusApproval)">
+						Reference: {{ctrl.job.noReference}} Status: {{ctrl.job.statusApproval}}
+				       	<md-button ng-click="ctrl.cancelApproval()" class="md-raised md-warn" style="margin-top: 0px" id="cancel-{{m[0].id}}">Cancel</md-button>
+				       	<md-button ng-click="ctrl.showApproval('cancel-'+m[0].id)" class="md-raised md-primary" style="margin-top: 0px">Show Approval Route</md-button>
+					</span>
+				</h3>
+			</div>
+			<span ng-include src="'job-personnel-template'"></span>
+		</div>
+	</div>
+</main>
+<footer ng-if="ctrl.modified || (ctrl.requiredApproval && [null, '', 'PENDING', 'REJECTED', 'CANCELLED'].includes(ctrl.job.statusApproval))" style="position:fixed;top:92vh;width:92%">
+     <md-toolbar class="md-scroll-shrink" style="background-color:rgba(63,81,181, 0.5)">
+       <div layout="row" layout-align="center center" flex>
+       		<md-button ng-if="ctrl.modified" ng-click="ctrl.getActivePersonnel()" class="md-raised md-warn">Cancel</md-button>
+			<md-button ng-if="ctrl.modified" ng-click="ctrl.save()" class="md-raised md-primary">Save</md-button>
+			<md-button ng-if="ctrl.requiredApproval && [null, '', 'PENDING', 'REJECTED', 'CANCELLED'].includes(ctrl.job.statusApproval)" ng-click="ctrl.submitForApproval()" class="md-raised md-accent">Submit for Approval</md-button>
+       </div>
+     </md-toolbar>
+</footer>
+</div>
+
+<script type="text/ng-template" id="job-personnel-template">
+<div ng-repeat="personList in ctrl.site | filter: m[0].userGroup : true">
+	<span ng-repeat="person in personList" class="col-md-2" ng-if="m.mode=='W' || m[0].requiredApproval!='Y'">
+		<span ng-include src="'job-person-template'"></span>
+	</span>
+	<span ng-repeat="person in personList | filter: {action: '!ADD'}" class="col-md-2" ng-if="m.mode=='R'">
+		<span ng-include src="'job-person-template'"></span>
+	</span>
+</div>
+	<span ng-include src="'add-personnel-template'" ng-if="([null, '', 'PENDING', 'REJECTED', 'CANCELLED'].includes(ctrl.job.statusApproval) && m.mode=='W') || m[0].requiredApproval!='Y'"></span>
+</script>
+
+<script type="text/ng-template" id="job-person-template">
+<div class="p-card" md-whiteframe="4"
+	ng-class="{
+		'modified': [null, 'NONE', 'LOAD', 'TEMP'].indexOf(person.modified) < 0,
+		'requiredApproval': (
+			(
+				person.userAdToBeApproved != null &&
+				person.userAd != person.userAdToBeApproved && 
+				person.personnelMap.requiredApproval == 'Y' && 
+				m.mode=='W'
+			) ||
+			(	m.mode=='W' && ['NONE'].indexOf(person.action) < 0 && ['ISAPPROVER'].indexOf(person.modified) < 0) 
+		)
+	}" >
+	<div class="p-card-title" font-size: 12px">{{person.personnelMap.title}}</div>
+	<span ng-if="m[0].requiredApproval == 'Y' && person.action!='NONE'">
+	<small ng-if="m.mode=='W'"><span style="color:red">*</span>Not yet approved</small>
+	</span><br>
+
+	<span ng-if="m.mode=='W' || m[0].requiredApproval!='Y'">
+		<img class="img-circle"
+			style="border: 3px solid white; width: 90px; height: 90px; margin: 10px"
+			data-ng-src="{{person.selectedItem ? person.selectedItem.image : 'resources/images/profile.png'}}"
+			alt="" imageonload roll-back-image="resources/images/profile.png" /><br>
+		<span ng-include src="'user-template'"></span>
+		<md-checkbox ng-if="person.selectedItem" ng-model="person.isApprover" ng-click="ctrl.modifyIsApprover(person)" aria-label="Is Approver"
+			ng-true-value="'Y'" ng-false-value="'N'" style="margin-bottom:0px"
+			class="md-warn md-align-top-left" flex>{{person.isApprover=='Y' ? 'Approver' : 'Not Approver'}} </md-checkbox>
+	</span>
+
+	<span ng-if="m.mode=='R' && m[0].requiredApproval=='Y'">
+		<img class="img-circle"
+			style="border: 3px solid white; width: 90px; height: 90px; margin: 10px"
+			data-ng-src="{{person.currentUser ? person.currentUser.image : 'resources/images/profile.png'}}"
+			alt="" imageonload roll-back-image="resources/images/profile.png" /><br>
+		<span>{{person.currentUser.fullName}}</span><br>
+		{{person.currentUser ? (person.isApprover=='Y' ? 'Approver' : 'Not Approver') : ''}}<br>
+		<md-button ng-click="m.mode='W'"><i class="fa fa-2x fa-edit" style="color:lightgray"></i></md-button>
+	</span>
+</div>
+</script>
+
+<script type="text/ng-template" id="add-personnel-template">
+<div class="col-md-2 add-button"
+	ng-click="person = {};m.showForm = true"
+	ng-if="!m.showForm">
+	<i class="fa fa-plus"></i>
+</div>
+<div class="p-card col-md-2" ng-if="m.showForm" style="display:table">
+	<md-input-container style="display:table-row">
+		<label style="text-align:left">Title</label>
+		<md-select style="align:left" ng-model="person.TITLE">
+			<md-option><em>None</em></md-option>
+			<md-option ng-repeat="g in m" ng-value="g.id">{{g.title}}</md-option>
+		</md-select>
+	</md-input-container>
+
+	<md-switch ng-init="person.ISAPPROVER= m[0].requiredApproval" ng-model="person.ISAPPROVER" aria-label="Is Approver" ng-true-value="'Y'" ng-false-value="'N'" class="md-warn">
+    	{{person.ISAPPROVER == 'Y' ? 'Approver' : 'Not Approver'}}
+	</md-switch>
+
+	<span ng-include src="'user-template'"></span>
+
+	<div layout="row" style="display:table-row">
+		<div layout="column">
+			<md-button ng-click="m.showForm = false"><i class="fa fa-2x fa-undo"></i></md-button>
+		</div>
+		<div layout="column">
+			<md-button class="md-raised md-primary"
+				ng-click="m.showForm = false; ctrl.add(person)"
+				ng-disabled="(!person.TITLE || person.TITLE=='None') || person.selectedItem == null"><i class="fa fa-2x fa-address-card"></i></md-button>
+		</div>
+	</div>
+</div>
+</script>
+
+<script type="text/ng-template" id="user-template">
+<md-autocomplete style="text-align:center" class="personnel-user-template"
+	md-require-match="true" 
+	md-delay="300" 
+	md-autoselect="true"
+	md-clear-button="!person.disabled"
+	ng-disabled="person.disabled"
+	md-selected-item="person.selectedItem"
+	md-search-text-change="ctrl.searchTextChange(person.searchText, person)"
+	md-search-text="person.searchText"
+	md-selected-item-change="ctrl.selectedItemChange(item, person)"
+	md-items="item in ctrl.querySearch(person.searchText)"
+	md-item-text="item.fullName" 
+	md-min-length="3"
+    placeholder="Enter Approver..."
+	md-menu-class="autocomplete-custom-template"
+	md-menu-container-class="custom-container"> 
+	<md-item-template>
+		<span class="item-title">
+			<span><strong>{{item.fullName}}</strong></span>
+		</span>
+		<span class="item-metadata">
+			<span>
+				<small style="font-weight: 300 !important; position: relative; top: -10px">{{item.email}}</small>
+			</span>
+		</span>
+	</md-item-template>
+</md-autocomplete>
+</script>
+
+<script type="text/ng-template" id="show-approval-route.html">
+<md-dialog aria-label="List dialog">
+	<md-dialog-content style="padding:20px">
+		<div ng-repeat="levelDecision in decisionMap.childDecision">
+<div ng-if="$index>0 && $index < decisionMap.childDecision.length" style="text-align:center"><i class="fa fa-3x fa-arrow-down"></i></div>
+		<div class="panel panel-default" style="border: 1px solid lightgray">
+			<div class="panel-heading">{{levelDecision.processName}}</div><br>
+			<div ng-repeat="nodeDecision in levelDecision.childDecision" style="display:inline-block">
+
+<span style="text-align:right;position:relative;top:60px;" ng-if="$index > 0 && $index<levelDecision.childDecision.length"><i class="fa fa-3x fa-plus"></i></span>
+			<div class="panel-body" style="display:inline-block">
+				<div class="badge primary" style="top:10px;position:relative">{{nodeDecision.processName}}</div><br>
+				<div ng-repeat="decisionList in nodeDecision.childDecision" style="display:inline-block">
+					<span ng-repeat="decision in decisionList" style="text-align:center;box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.55); display: inline-block; padding: 5px; border-radius:15px">
+					<img class="img-circle" 
+						style="border: 3px solid white; width: 90px; height: 90px; margin: 10px" 
+						data-ng-src="resources/images/profile.png" alt="" 
+						imageonload="" 
+						roll-back-image="resources/images/profile.png" 
+						src="resources/images/profile.png">						
+<table>
+	<tr>
+		<td align="right">User:</td>
+		<td align="left">{{decision.userName}}</td>
+	</tr>
+	<tr>
+		<td align="right">Date:</td>
+		<td align="left">{{decision.timestamp | date : 'yyyy-MM-dd HH:mm'}}</td>
+	</tr>
+	<tr>
+		<td align="right">Decision:</td>
+		<td align="left">{{decision.decision}}</td>
+	</tr>
+	<tr>
+		<td colspan="2"><textarea disabled>{{decision.comment}}</textarea></td>
+	</tr>
+</table>						
+					</span>
+				</div>
+			</div>
+			</div>
+		</div>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions>
+		<md-button ng-click="closeDialog()" class="md-primary">
+			Close Dialog
+		</md-button>
+	</md-dialog-actions>
+</md-dialog>
+</script>
