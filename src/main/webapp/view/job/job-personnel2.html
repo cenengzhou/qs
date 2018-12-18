@@ -157,52 +157,112 @@
 
 <script type="text/ng-template" id="show-approval-route.html">
 <md-dialog aria-label="List dialog">
-	<md-dialog-content style="padding:20px">
-		<div ng-repeat="levelDecision in decisionMap.childDecision">
-<div ng-if="$index>0 && $index < decisionMap.childDecision.length" style="text-align:center"><i class="fa fa-3x fa-arrow-down"></i></div>
-		<div class="panel panel-default" style="border: 1px solid lightgray">
-			<div class="panel-heading">{{levelDecision.processName}}</div><br>
-			<div ng-repeat="nodeDecision in levelDecision.childDecision" style="display:inline-block">
+  <md-dialog-content style="padding:20px">
+    <style>
+      .decision-card {}
 
-<span style="text-align:right;position:relative;top:60px;" ng-if="$index > 0 && $index<levelDecision.childDecision.length"><i class="fa fa-3x fa-plus"></i></span>
-			<div class="panel-body" style="display:inline-block">
-				<div class="badge primary" style="top:10px;position:relative">{{nodeDecision.processName}}</div><br>
-				<div ng-repeat="decisionList in nodeDecision.childDecision" style="display:inline-block">
-					<span ng-repeat="decision in decisionList" style="text-align:center;box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.55); display: inline-block; padding: 5px; border-radius:15px">
-					<img class="img-circle" 
-						style="border: 3px solid white; width: 90px; height: 90px; margin: 10px" 
-						data-ng-src="resources/images/profile.png" alt="" 
-						imageonload="" 
-						roll-back-image="resources/images/profile.png" 
-						src="resources/images/profile.png">						
-<table>
-	<tr>
-		<td align="right">User:</td>
-		<td align="left">{{decision.userName}}</td>
-	</tr>
-	<tr>
-		<td align="right">Date:</td>
-		<td align="left">{{decision.timestamp | date : 'yyyy-MM-dd HH:mm'}}</td>
-	</tr>
-	<tr>
-		<td align="right">Decision:</td>
-		<td align="left">{{decision.decision}}</td>
-	</tr>
-	<tr>
-		<td colspan="2"><textarea disabled>{{decision.comment}}</textarea></td>
-	</tr>
-</table>						
-					</span>
-				</div>
-			</div>
-			</div>
-		</div>
-		</div>
-	</md-dialog-content>
-	<md-dialog-actions>
-		<md-button ng-click="closeDialog()" class="md-primary">
-			Close Dialog
-		</md-button>
-	</md-dialog-actions>
+      .decision-card .BYPASSED {
+        border: 1px solid black;
+        border-color: gray
+      }
+
+      .decision-card .PENDING {
+        border: 1px solid black;
+        border-color: blue
+      }
+
+      .decision-card .REJECTED {
+        border: 1px solid black;
+        border-color: red
+      }
+
+      .decision-card .APPROVED {
+        border: 1px solid black;
+        border-color: green
+      }
+
+      .decision-card .BYPASSED .decisionText {
+        font-weight: 700; 
+		color: gray
+      }
+
+      .decision-card .PENDING .decisionText {
+        font-weight: 700; 
+		color: blue
+      }
+
+      .decision-card .REJECTED .decisionText {
+        font-weight: 700; 
+		color: red
+      }
+
+      .decision-card .APPROVED .decisionText {
+        font-weight: 700; 
+		color: green
+      }
+
+      .decision-card .badge.BYPASSED {
+        background: gray
+      }
+
+      .decision-card .badge.PENDING {
+        background: blue
+      }
+
+      .decision-card .badge.REJECTED {
+        background: red
+      }
+
+      .decision-card .badge.APPROVED {
+        background: green
+      }
+
+      .decision-card .arrow {
+        color: lightgray
+      }
+    </style>
+
+    <div ng-repeat="levelDecision in decisionMap.childDecision" class="decision-card">
+      <div ng-if="$index>0 && $index < decisionMap.childDecision.length" style="text-align:center"><i class="fa fa-3x fa-arrow-down arrow"></i></div>
+      <div class="panel panel-default" style="border: 1px solid lightgray">
+        <div class="panel-heading">{{levelDecision.processName}}</div><br>
+        <div ng-repeat="nodeDecision in levelDecision.childDecision" style="display:inline-block">
+
+          <span style="text-align:right;position:relative;top:60px;" ng-if="$index > 0 && $index<levelDecision.childDecision.length"><i class="fa fa-3x fa-plus arrow"></i></span>
+          <div class="panel-body" style="display:inline-block">
+            <div ng-repeat="decisionList in nodeDecision.childDecision" style="display:inline-block">
+              <span class="{{decision.decision}}" ng-repeat="decision in decisionList" style="text-align:center;box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.55); display: inline-block; padding: 5px; border-radius:15px">
+                <div class="badge {{decision.decision}}" style="margin:10px">{{nodeDecision.processName}}</div><br>
+                <img class="img-circle" style="border: 3px solid white; width: 90px; height: 90px; margin: 10px" data-ng-src="resources/images/profile.png" alt="" imageonload="" roll-back-image="resources/images/profile.png" src="resources/images/profile.png">
+                <table>
+                  <tr>
+                    <td align="right">User:</td>
+                    <td align="left">{{decision.userName}}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">Date:</td>
+                    <td align="left">{{decision.timestamp | date : 'yyyy-MM-dd HH:mm'}}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">Decision:</td>
+                    <td align="left" class="decisionText">{{decision.decision}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><textarea disabled>{{decision.comment}}</textarea></td>
+                  </tr>
+                </table>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </md-dialog-content>
+  <md-dialog-actions>
+    <md-button ng-click="closeDialog()" class="md-primary">
+      Close Dialog
+    </md-button>
+  </md-dialog-actions>
 </md-dialog>
 </script>
