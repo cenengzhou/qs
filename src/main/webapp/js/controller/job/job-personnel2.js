@@ -17,6 +17,18 @@ mainApp.controller('JobPersonnel2Ctrl', [
 			self.searchTextChange = searchTextChange;
 			self.jobNo = $cookies.get("jobNo");
 			
+			if (!Array.prototype.includes) {
+				  Object.defineProperty(Array.prototype, "includes", {
+				    enumerable: false,
+				    value: function(obj) {
+				        var newArr = this.filter(function(el) {
+				          return el == obj;
+				        });
+				        return newArr.length > 0;
+				      }
+				  });
+				}
+			
 			function init() {
 				getAllUser()
 				.then(getAllPersonnelMap)
@@ -231,6 +243,7 @@ mainApp.controller('JobPersonnel2Ctrl', [
 				$timeout(function() {
     	        	var el = $('md-dialog');
     	        	el.css('position', 'fixed');
+    	        	el.css('left', "280px");
     	        	el.css('top', '100px');
     	        	el.css('width', '1050px');
     	        	el.css('max-height', '600px');
