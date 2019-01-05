@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 @Configuration
-@PropertySource("file:${attachment.properties}")
+@PropertySource("${attachment.properties}")
 public class AttachmentConfig {
 	
 	/**

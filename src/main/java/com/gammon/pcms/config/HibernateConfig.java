@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
-@PropertySource("file:${hibernate.properties}")
+@PropertySource("${hibernate.properties}")
 @EnableJpaAuditing(auditorAwareRef = "securityServiceSpringImpl")
 @EnableJpaRepositories(
 		basePackages = {"com.gammon.pcms.dao" }, 

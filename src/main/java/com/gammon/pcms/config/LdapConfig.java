@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${ldap.properties}")
+@PropertySource("${ldap.properties}")
 public class LdapConfig {
 
 	@Autowired

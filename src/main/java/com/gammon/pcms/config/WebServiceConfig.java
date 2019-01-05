@@ -33,7 +33,7 @@ import com.gammon.qs.webservice.WSConfig;
 //@EnableWs
 @Configuration
 @ComponentScan(basePackages = {"com.gammon.qs.webservice"})
-@PropertySource("file:${webservice.properties}")
+@PropertySource("${webservice.properties}")
 public class WebServiceConfig implements InitializingBean {//extends WsConfigurerAdapter {
 
 	@Autowired

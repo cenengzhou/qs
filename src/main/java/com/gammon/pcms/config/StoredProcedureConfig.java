@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${stored_procedure.properties}")
+@PropertySource("${stored_procedure.properties}")
 public class StoredProcedureConfig {
 
 	@Value("${stored.procedure.generatepackagesnapshot}")

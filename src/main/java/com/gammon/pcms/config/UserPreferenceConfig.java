@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${userPreference.properties}")
+@PropertySource("${userPreference.properties}")
 public class UserPreferenceConfig {
 	
 	@Value("#{${UserPreference.GridSetting}}")

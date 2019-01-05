@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${link.properties}")
+@PropertySource("${link.properties}")
 public class LinkConfig {
 
 	@Autowired

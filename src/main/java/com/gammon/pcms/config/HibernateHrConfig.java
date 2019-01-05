@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
-@PropertySource("file:${hibernate_hr.properties}")
+@PropertySource("${hibernate_hr.properties}")
 @EnableJpaRepositories(
 						basePackages = { "com.gammon.pcms.dao.hr" },
 						entityManagerFactoryRef = "hrEntityManagerFactory",

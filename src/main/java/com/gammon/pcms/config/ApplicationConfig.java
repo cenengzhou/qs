@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @ComponentScan(scopedProxy = ScopedProxyMode.TARGET_CLASS, basePackages = {"com.gammon"})
 @EnableAspectJAutoProxy(proxyTargetClass=true)
-@PropertySources({@PropertySource("classpath:application.properties"), @PropertySource("file:${variable.properties}")})
+@PropertySources({@PropertySource("classpath:application.properties"), @PropertySource("${variable.properties}")})
 public class ApplicationConfig implements InitializingBean{
 	
 	@Value("${configDirectory}")

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${exception.properties}")
+@PropertySource("${exception.properties}")
 public class ExceptionConfig {
 	
 	@Value("#{${exception.messages}}")

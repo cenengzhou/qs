@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableSpringDataWebSupport
 @EnableTransactionManagement
-@PropertySource("file:${adl_hibernate.properties}")
+@PropertySource("${adl_hibernate.properties}")
 @EnableJpaRepositories(
 		basePackages = {"com.gammon.pcms.dao.adl"}, 
 		entityManagerFactoryRef = "adlEntityManagerFactory",

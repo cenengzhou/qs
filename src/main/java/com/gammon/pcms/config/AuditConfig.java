@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${audit.properties}")
+@PropertySource("${audit.properties}")
 public class AuditConfig {
 
 	@Value("${org.hibernate.envers.audit_table_suffix}")

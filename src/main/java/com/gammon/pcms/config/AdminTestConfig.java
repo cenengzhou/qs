@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${admin_test.properties}")
+@PropertySource("${admin_test.properties}")
 public class AdminTestConfig {
 	
 	@Value("#{${admin.test.items}}")

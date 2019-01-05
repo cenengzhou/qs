@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
@@ -40,7 +41,7 @@ import com.gammon.pcms.scheduler.job.PaymentPostingJob;
 import com.gammon.pcms.scheduler.job.ProvisionPostingJob;
 
 @Configuration
-@PropertySource(value = "file:${quartz.properties}")
+@PropertySource("${quartz.properties}")
 public class QuartzConfig {
 
 	@Value("${org.quartz.scheduler.instanceName}")
@@ -412,7 +413,14 @@ public class QuartzConfig {
 	 */
 	private Properties quartzProperties() {
 		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-		propertiesFactoryBean.setLocation(new PathResource(applicationConfig.getQuartzProperties()));
+		String quartzPropertiesPath = applicationConfig.getQuartzProperties();
+		if(quartzPropertiesPath.indexOf("classpath:") > -1) {
+			quartzPropertiesPath = quartzPropertiesPath.split("classpath:/")[1];
+			propertiesFactoryBean.setLocation(new ClassPathResource(quartzPropertiesPath));
+		} else {
+			quartzPropertiesPath = quartzPropertiesPath.split("file:/")[1];
+			propertiesFactoryBean.setLocation(new PathResource(quartzPropertiesPath));
+		}
 		Properties prop = new Properties();
 
 		try {

@@ -15,7 +15,7 @@ import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.helper.FreeMarkerHelper;
 
 @Configuration
-@PropertySource("file:${freemarker.properties}") 
+@PropertySource("${freemarker.properties}") 
 public class FreemarkerConfig {
 
 	@Value("#{${freemarker.template}}")

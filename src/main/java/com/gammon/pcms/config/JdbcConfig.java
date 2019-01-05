@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:${jdbc.properties}")
+@PropertySource("${jdbc.properties}")
 public class JdbcConfig {
 
 	@Autowired

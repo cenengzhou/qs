@@ -55,7 +55,7 @@ import com.gammon.qs.service.security.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-@PropertySource("file:${security.properties}")
+@PropertySource("${security.properties}")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
