@@ -110,6 +110,111 @@
 								<div ng-repeat="sc in parentSubcontractList">{{sc.jobInfo.jobNo}}-{{sc.packageNo}}<br></div>
 							</div>
 						</div>
+						
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Project Full Description</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.projectFullDescription}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Project Location</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.projectLocation}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Nature of Work (Balfour Beauty)</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.natureOfWorkBB}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Nature of Work (Gammon)</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.natureOfWorkGammon}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Tender Number</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.tenderNumber}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Immediate Parent Job Number</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.immediateParentJobNumber}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Ultimate Parent Job Number</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.ultimateParentJobNumber}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Immediate Client</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.immediateClient}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Ultimate Client</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.ultimateClient}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Immediate Client Business Sector</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.immediateClientBusinessSector}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Ultimate Client Business Sector</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.ultimateClientBusinessSector}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Client Type</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.clientType}}</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-md-6">
+								<label>Engineer / Architect</label>
+							</div>
+							<div class="col-md-6">
+								<label>{{job.engineerArchitect}}</label>
+							</div>
+						</div>
 					</div>
 
 					<br>
@@ -731,7 +836,49 @@
 								</div>
 							</div>
 						</div>
-					</div>		
+					</div>
+					
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4"></label>
+								<div class="row col-md-8">
+									<div class="form-group col-md-6">
+										<label>BEAM</label>
+										<div class="input-group col-md-12">
+											<select 
+												class="form-control"
+												ng-model="job.beam" 
+												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
+											</select>
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>BEAM PLUS</label>
+										<div class="input-group col-md-12">
+											<select 
+												class="form-control"
+												ng-model="job.beamPlus" 
+												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
+											</select>
+
+										</div>
+									</div>
+									<div class="form-group col-md-6">
+										<label>LEED</label>
+										<div class="input-group col-md-12">
+											<select 
+												class="form-control"
+												ng-model="job.leed" 
+												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
+											</select>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>	
 				</div>
 	</div>
 	</div>
