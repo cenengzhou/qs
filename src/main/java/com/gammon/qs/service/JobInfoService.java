@@ -82,10 +82,6 @@ public class JobInfoService {
 		return jobHBDao.obtainJobInfo(jobNumber);
 	}
 
-	public void saveOrUpdate(JobInfo jobInfo) {
-		jobHBDao.saveOrUpdate(jobInfo);
-	}
-	
 	public Boolean updateJob(JobInfo job) throws DatabaseOperationException, ValidateBusinessLogicException {
 		if (job.getGrossFloorAreaUnit()!=null && job.getGrossFloorAreaUnit().length()>2) {
 			if (job.getGrossFloorAreaUnit().trim().length()>2) 
@@ -253,9 +249,6 @@ public class JobInfoService {
 		
 		return companyName;
 	}
-	
-	public JobInfo getByRefNo(Long refNo) {
-		return jobHBDao.getByRefNo(refNo);
-	}
+		
 	/*************************************** FUNCTIONS FOR PCMS - END**************************************************************/
 }

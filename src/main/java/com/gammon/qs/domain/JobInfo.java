@@ -1,7 +1,6 @@
 package com.gammon.qs.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -9,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,25 +16,18 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
-import com.gammon.pcms.model.Personnel;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+@Audited
 @AuditOverride(forClass = BasePersistedAuditObject.class)
 @Entity
 @DynamicUpdate
@@ -54,35 +45,6 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public static final String REPACKAGING_TYPE_2 = "2"; /* Repackaging - BQ & Resource, IV - Resource Summary */
 	public static final String REPACKAGING_TYPE_3 = "3"; /* Repackaging - BQ & Resource, IV - BQ & Resource */
 
-	public static enum APPROVAL_STATUS {
-		PENDING, SUBMITTED, APPROVED, REJECTED, CANCELLED
-	}
-	
-	@Transient
-	public void approvalPending() {
-		this.statusApproval = APPROVAL_STATUS.PENDING.name();
-	}
-	@Transient
-	public void approvalSubmitted() {
-		this.statusApproval = APPROVAL_STATUS.SUBMITTED.name();
-	}
-	@Transient
-	public void approvalApproved() {
-		this.statusApproval = APPROVAL_STATUS.APPROVED.name();
-	}
-	@Transient
-	public void approvalRejected() {
-		this.statusApproval = APPROVAL_STATUS.REJECTED.name();
-	}
-	@Transient
-	public void approvalCancelled() {
-		this.statusApproval = APPROVAL_STATUS.CANCELLED.name();
-	}
-	@Transient
-	public void approvalNull() {
-		this.statusApproval = null;
-	}
-	
 	private static final long serialVersionUID = 4305414438779476211L;
 
 	@JsonView(JobInfoView.NameAndDescription.class)
@@ -169,20 +131,8 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String nameSiteSupervision3;
 	private String nameSiteSupervision4;
 	
-	private Long noReference;
-	private String statusApproval;
-	
-	private List<Personnel> personnelList;
-	
 	public JobInfo() {}
-	
-	public JobInfo(Long id) {this.setId(id);}
-	
-	public JobInfo(String jobNumber) {
-		super();
-		this.jobNumber = jobNumber;
-	}
-	
+
 	@Transient
 	public String getBudgetPosted() {
 		return budgetPosted;
@@ -211,7 +161,6 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		this.legacyJob = legacyJob;
 	}
 
-	@NaturalId
 	@JsonProperty("jobNo")
 	@Column(name = "jobNo",
 			length = 12)
@@ -978,44 +927,26 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public void setNameSiteSupervision4(String nameSiteSupervision4) {
 		this.nameSiteSupervision4 = nameSiteSupervision4;
 	}
-	
-	@Column(name = "NO_REFERENCE")
-	public Long getNoReference() {
-		return noReference != null ? noReference : new Long(0);
-	}
 
-	public void setNoReference(Long noReference) {
-		this.noReference = noReference != null ? noReference : new Long(0);
-	}
-
-	@Column(name = "STATUS_APPROVAL")
-	public String getStatusApproval() {
-		return statusApproval;
-	}
-
-	public void setStatusApproval(String statusApproval) {
-		this.statusApproval = statusApproval;
-	}
-	
-	@NotAudited
-	@JsonIgnore
-//	@JsonIgnoreProperties({"jobInfo"})
-	@OneToMany(mappedBy="jobInfo")
-	public List<Personnel> getPersonnelList() {
-		return this.personnelList;
-	}
-
-	public void setPersonnelList(List<Personnel> personnelList) {
-		this.personnelList = personnelList;
-	}
-	
 	@Override
 	public String toString() {
-	    try {
-	        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	    }
-	    return null;
+		return String.format(
+				" {\"jobNumber\":\"%s\",\"description\":\"%s\",\"company\":\"%s\",\"employer\":\"%s\",\"contractType\":\"%s\",\"division\":\"%s\",\"department\":\"%s\",\"internalJob\":\"%s\",\"soloJV\":\"%s\",\"completionStatus\":\"%s\",\"insuranceCAR\":\"%s\",\"insuranceECI\":\"%s\",\"insuranceTPL\":\"%s\",\"clientContractNo\":\"%s\",\"parentJobNo\":\"%s\",\"jvPartnerNo\":\"%s\",\"jvPercentage\":\"%s\",\"originalContractValue\":\"%s\",\"projectedContractValue\":\"%s\",\"orginalNominatedSCContractValue\":\"%s\",\"tenderGP\":\"%s\",\"forecastEndYear\":\"%s\",\"forecastEndPeriod\":\"%s\",\"maxRetentionPercentage\":\"%s\",\"interimRetentionPercentage\":\"%s\",\"mosRetentionPercentage\":\"%s\",\"valueOfBSWork\":\"%s\",\"grossFloorArea\":\"%s\",\"grossFloorAreaUnit\":\"%s\",\"billingCurrency\":\"%s\",\"paymentTermsForNominatedSC\":\"%s\",\"defectProvisionPercentage\":\"%s\",\"cpfApplicable\":\"%s\",\"cpfIndexName\":\"%s\",\"cpfBaseYear\":\"%s\",\"cpfBasePeriod\":\"%s\",\"levyApplicable\":\"%s\",\"levyCITAPercentage\":\"%s\",\"levyPCFBPercentage\":\"%s\",\"expectedPCCDate\":\"%s\",\"actualPCCDate\":\"%s\",\"expectedMakingGoodDate\":\"%s\",\"actualMakingGoodDate\":\"%s\",\"defectLiabilityPeriod\":\"%s\",\"defectListIssuedDate\":\"%s\",\"financialEndDate\":\"%s\",\"dateFinalACSettlement\":\"%s\",\"yearOfCompletion\":\"%s\",\"bqFinalizedFlag\":\"%s\",\"allowManualInputSCWorkDone\":\"%s\",\"legacyJob\":\"%s\",\"conversionStatus\":\"%s\",\"repackagingType\":\"%s\",\"budgetPosted\":\"%s\",\"finQS0Review\":\"%s\",\"eotApplied\":\"%s\",\"eotAwarded\":\"%s\",\"ldExposureAmount\":\"%s\",\"residualAfterEot\":\"%s\",\"nameExecutiveDirector\":\"%s\",\"nameDirector\":\"%s\",\"nameDirectSupervisorPic\":\"%s\",\"nameProjectInCharge\":\"%s\",\"nameCommercialInCharge\":\"%s\",\"nameTempWorkController\":\"%s\",\"nameSafetyEnvRep\":\"%s\",\"nameAuthorizedPerson\":\"%s\",\"nameSiteAdmin1\":\"%s\",\"nameSiteAdmin2\":\"%s\",\"nameSiteManagement1\":\"%s\",\"nameSiteManagement2\":\"%s\",\"nameSiteManagement3\":\"%s\",\"nameSiteManagement4\":\"%s\",\"nameSiteSupervision1\":\"%s\",\"nameSiteSupervision2\":\"%s\",\"nameSiteSupervision3\":\"%s\",\"nameSiteSupervision4\":\"%s\"}",
+				jobNumber, description, company, employer, contractType, division, department, internalJob, soloJV,
+				completionStatus, insuranceCAR, insuranceECI, insuranceTPL, clientContractNo, parentJobNo, jvPartnerNo,
+				jvPercentage, originalContractValue, projectedContractValue, orginalNominatedSCContractValue, tenderGP,
+				forecastEndYear, forecastEndPeriod, maxRetentionPercentage, interimRetentionPercentage,
+				mosRetentionPercentage, valueOfBSWork, grossFloorArea, grossFloorAreaUnit, billingCurrency,
+				paymentTermsForNominatedSC, defectProvisionPercentage, cpfApplicable, cpfIndexName, cpfBaseYear,
+				cpfBasePeriod, levyApplicable, levyCITAPercentage, levyPCFBPercentage, expectedPCCDate, actualPCCDate,
+				expectedMakingGoodDate, actualMakingGoodDate, defectLiabilityPeriod, defectListIssuedDate,
+				financialEndDate, dateFinalACSettlement, yearOfCompletion, bqFinalizedFlag, allowManualInputSCWorkDone,
+				legacyJob, conversionStatus, repackagingType, budgetPosted, finQS0Review, eotApplied, eotAwarded,
+				ldExposureAmount, residualAfterEot, nameExecutiveDirector, nameDirector, nameDirectSupervisorPic,
+				nameProjectInCharge, nameCommercialInCharge, nameTempWorkController, nameSafetyEnvRep,
+				nameAuthorizedPerson, nameSiteAdmin1, nameSiteAdmin2, nameSiteManagement1, nameSiteManagement2,
+				nameSiteManagement3, nameSiteManagement4, nameSiteSupervision1, nameSiteSupervision2,
+				nameSiteSupervision3, nameSiteSupervision4);
 	}
+
 }

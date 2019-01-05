@@ -42,8 +42,6 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 	private Map<String, Object> wsJde;
 	@Value("#{${ws.ap}}")
 	private Map<String, Object> wsAp;
-	@Value("#{${ws.wf}}")
-	private Map<String, Map<String, Object>> wsWf;
 	@Value("#{${ws.gsf}}")
 	private Map<String, Object> wsGsf;
 	@Value("#{${pcms.api}}")
@@ -189,33 +187,6 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		return getWsAp().get(key);
 	}
 
-	/**
-	 * @return the wsAp
-	 */
-	public Map<String, Object> getWsWf() {
-		return this.wsWf.get(applicationConfig.getDeployEnvironment());
-	}
-	
-	public String getWsWf(String key){
-		return (String) getWsWf().get(key);
-	}
-
-	public Map<String, Object> getWsWfParams() {
-		return this.wsWf.get("PARAMS");
-	}
-	
-	public String getWsWfParam(String key) {
-		return (String) getWsWfParams().get(key);
-	}
-	
-	public Map<String, Object> getWsWfApi() {
-		return this.wsWf.get("API");
-	}
-	
-	public String getWsWfApi(String key) {
-		return (String) getWsWfApi().get(key);
-	}
-	
 	/**
 	 * @return the wsGsf
 	 */
