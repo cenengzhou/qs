@@ -12,9 +12,6 @@ mainApp.controller('JobPersonnelCtrl', [
 			    this.sort=0;
 			    return this;
 			}
-			Person.prototype.setId = function(id){;
-				return this.setId(id);
-			}
 			Person.prototype.setId = function(id){
 				this.id = id;
 				return this;

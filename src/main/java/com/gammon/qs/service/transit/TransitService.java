@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.dto.rs.provider.response.resourceSummary.ResourceSummayDashboardDTO;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.qs.application.exception.DatabaseOperationException;
 import com.gammon.qs.application.exception.ValidateBusinessLogicException;
 import com.gammon.qs.dao.AppTransitUomHBDao;
@@ -1048,12 +1049,12 @@ public class TransitService implements Serializable {
 		
 		
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
 		
 		//return outputStream;
 		try {
 			return JasperReportHelper.get()	
-					.setCurrentReport(reportWrapperList, jasperConfig.getTemplatePath() + templateName, parameters)
+					.setCurrentReport(reportWrapperList, FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + templateName, parameters)
 					.compileAndAddReport().exportAsPDF();		} catch (IOException e) {
 			logger.info(e.getMessage());
 			throw e;
@@ -1070,12 +1071,12 @@ public class TransitService implements Serializable {
 		UpdateTransitBQMasterReportReocrdField(jobNumber, reportWrapperList);
 		
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
 		
 		JRBeanCollectionDataSource beanDataSource = new JRBeanCollectionDataSource(reportWrapperList);
 		
 		// Locate the jasper report template and import here
-		FileInputStream jrInputStream = new FileInputStream(jasperConfig.getTemplatePath() + templateName + ".jasper");
+		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + templateName + ".jasper");
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		

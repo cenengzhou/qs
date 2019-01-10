@@ -34,6 +34,7 @@ import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractDashboardDTO;
 import com.gammon.pcms.dto.rs.provider.response.subcontract.SubcontractSnapshotDTO;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.model.TenderVariance;
 import com.gammon.pcms.scheduler.service.ProvisionPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
@@ -2577,7 +2578,7 @@ public class SubcontractService {
 	public ByteArrayOutputStream downloadSubcontractEnquiryReportPDFFile(String company, String division, String jobNumber, String subcontractNo,
 			String subcontractorNumber, String subcontractorNature,String paymentStatus, String workScope, String clientNo, Boolean includeJobCompletionDate,
 			String splitTerminateStatus, String month, String year, String jasperReportName)throws Exception {
-		String fileFullPath = jasperConfig.getTemplatePath()+jasperReportName;
+		String fileFullPath = FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + jasperReportName;
 		Date asOfDate = null;
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
 		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());

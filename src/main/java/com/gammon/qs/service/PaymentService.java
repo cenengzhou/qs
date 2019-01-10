@@ -30,6 +30,7 @@ import com.gammon.pcms.aspect.CanAccessJobChecking.CanAccessJobCheckingType;
 import com.gammon.pcms.config.JasperConfig;
 import com.gammon.pcms.config.MessageConfig;
 import com.gammon.pcms.helper.DateHelper;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.scheduler.service.PaymentPostingService;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.exception.DatabaseOperationException;
@@ -579,12 +580,12 @@ public class PaymentService{
 	@SuppressWarnings("rawtypes")
 	private ByteArrayOutputStream callJasperReport(List wrapperList, String templateName) throws JRException, FileNotFoundException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
 
 		JRBeanCollectionDataSource beanDataSource = new JRBeanCollectionDataSource(wrapperList);
 		// parameters.put("ReportTitle", "Address Report");
 		// InputStream jrInputStream = this.getClass().getResourceAsStream(templatePath);
-		FileInputStream jrInputStream = new FileInputStream(jasperConfig.getTemplatePath() + templateName + ".jasper");
+		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + templateName + ".jasper");
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

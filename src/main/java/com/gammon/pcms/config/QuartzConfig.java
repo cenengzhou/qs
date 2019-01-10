@@ -1,6 +1,7 @@
 package com.gammon.pcms.config;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
@@ -32,6 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.gammon.factory.AutowiringSpringBeanJobFactory;
+import com.gammon.pcms.helper.FileHelper;
 import com.gammon.pcms.scheduler.job.AuditHousekeepJob;
 import com.gammon.pcms.scheduler.job.JDEF58001SynchronizationQuartzJob;
 import com.gammon.pcms.scheduler.job.JDEF58011SynchronizationJob;
@@ -414,13 +415,9 @@ public class QuartzConfig {
 	private Properties quartzProperties() {
 		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
 		String quartzPropertiesPath = applicationConfig.getQuartzProperties();
-		if(quartzPropertiesPath.indexOf("classpath:") > -1) {
-			quartzPropertiesPath = quartzPropertiesPath.split("classpath:/")[1];
-			propertiesFactoryBean.setLocation(new ClassPathResource(quartzPropertiesPath));
-		} else {
-			quartzPropertiesPath = quartzPropertiesPath.split("file:/")[1];
-			propertiesFactoryBean.setLocation(new PathResource(quartzPropertiesPath));
-		}
+		Path path = FileHelper.getConfigFilePath(quartzPropertiesPath);
+		propertiesFactoryBean.setLocation(new PathResource(path.toUri()));
+
 		Properties prop = new Properties();
 
 		try {

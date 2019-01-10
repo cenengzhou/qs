@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.gammon.pcms.helper.FileHelper;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(scopedProxy = ScopedProxyMode.TARGET_CLASS, basePackages = {"com.gammon"})
@@ -172,7 +174,7 @@ public class ApplicationConfig implements InitializingBean{
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		PropertyConfigurator.configureAndWatch(getLog4jProperties());
+		PropertyConfigurator.configureAndWatch(FileHelper.getConfigFilePath(getLog4jProperties()).toUri().getPath());
 	}
 
 }

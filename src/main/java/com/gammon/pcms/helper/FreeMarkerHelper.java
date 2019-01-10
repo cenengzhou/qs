@@ -1,8 +1,9 @@
 package com.gammon.pcms.helper;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import freemarker.ext.beans.BeansWrapper;
@@ -51,12 +52,14 @@ public class FreeMarkerHelper {
 			 * then return the string 
 			 * return null when fail
 			 */
-			cfg.setDirectoryForTemplateLoading(new File(getFtlTemplatePath()));
+			String templatePath = getFtlTemplatePath();
+			Path path = FileHelper.getConfigFilePath(templatePath);
+			cfg.setDirectoryForTemplateLoading(path.toFile());
 			Template template = cfg.getTemplate(templateFile);
 			String result = FreeMarkerTemplateUtils.processTemplateIntoString(template, propertiesMap);
 			return result;
-		} catch (java.io.IOException e) { e.printStackTrace();
-		} catch (TemplateException e) { e.printStackTrace();
+		} catch (java.io.IOException | TemplateException e) { 
+			LoggerFactory.getLogger(FreeMarkerHelper.class).error(e.getMessage(), e);
 		}
 		return null;
 	}
