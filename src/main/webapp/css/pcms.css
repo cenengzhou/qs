@@ -30,7 +30,6 @@ md-autocomplete-wrap input{
 .custom-container {
   min-width: 350px !important;
 }
-
 animate-show,
 .animate-hide {
   -webkit-transition:all linear 5s;
@@ -404,4 +403,65 @@ button.enquiryInfoBtn {
 
 .modal-1000px {
   width: 1000px;
+}
+
+.personnel .add-button {
+	border-radius:15px;
+	margin:15px;
+	text-align:center;
+	font-size:150px;
+	color:#eee;
+	background-color:white;
+	user-select: none
+}
+.personnel .add-button:hover{
+	font-size:150px;
+	margin:10px;
+	color:white;
+	border:3px solid #ccc;
+	background-color:#eee
+}
+.personnel .add-button:active{
+  box-shadow: 5px 5px #aaa;
+}
+.personnel div {
+    outline:none;
+}
+.personnel .p-card {
+	text-align:center;
+	border-radius:15px;
+	height: 260px;
+	padding:0px;
+	margin:0px;
+	margin-bottom:30px;
+}
+.personnel .p-card-title {
+	font-weight: 700;
+}
+
+.personnel .modified {
+	border: 3px dashed rgb(57,73,171);
+}
+
+.personnel .requiredApproval {
+	border: 3px dashed red;
+}
+
+md-autocomplete.personnel-user-template {
+  min-width: auto;
+  margin-bottom: 15px;
+  background: linear-gradient(to bottom, rgba(240,240,240,0) 0%,rgba(240,240,240,0.65) 100%);
+}
+md-autocomplete.personnel-user-template input:not(.md-input){
+	padding-left:15px;
+	padding-right:0px;
+}
+
+md-autocomplete.personnel-user-template md-autocomplete-wrap {
+  box-shadow: inherit;
+  border-bottom: 2px solid lightgray;
+}
+
+.fa-2x {
+	padding-top:10px;
 }

@@ -43,7 +43,7 @@ public class SecurityServiceSpringImpl implements SecurityService, AuditorAware<
 		if(user != null){
 			return getCurrentUser().getUsername();
 		}
-		return webServiceConfig.getWsAp("USERNAME");
+		return "SYSTEM";
 	}
 	
 	public static String MD5(String value) throws NoSuchAlgorithmException{

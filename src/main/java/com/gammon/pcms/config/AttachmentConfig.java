@@ -20,6 +20,8 @@ public class AttachmentConfig {
 	private String jobAttachmentsDirectory;
 	@Value("${messageboard.directory}")
 	private String messageBoardDirectory;
+	@Value("${eform.directory}")
+	private String eformDirectory;
 	@Value("#{${attachment.server}}")
 	private Map<String, Object> attachmentServer;
 	
@@ -34,6 +36,9 @@ public class AttachmentConfig {
 	}
 	public String getMessageBoardDirectory() {
 		return messageBoardDirectory;
+	}
+	public String getEformDirectory() {
+		return eformDirectory;
 	}
 	/**
 	 * @return the attachmentServer

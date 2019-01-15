@@ -1,6 +1,7 @@
 package com.gammon.qs.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,13 +24,16 @@ import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gammon.pcms.dto.rs.provider.response.view.JobInfoView;
+import com.gammon.pcms.model.Personnel;
 import com.gammon.qs.application.BasePersistedAuditObject;
 import com.gammon.qs.application.BasePersistedObject;
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -167,7 +172,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private Long noReference;
 	private String statusApproval;
 	
-//	private List<Personnel> personnelList;
+	private List<Personnel> personnelList;
 	
 	private String projectFullDescription;
 	private String projectLocation;
@@ -1009,16 +1014,16 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		this.statusApproval = statusApproval;
 	}
 	
-//	@NotAudited
-//	@JsonIgnore
-//	@OneToMany(mappedBy="jobInfo")
-//	public List<Personnel> getPersonnelList() {
-//		return this.personnelList;
-//	}
-//
-//	public void setPersonnelList(List<Personnel> personnelList) {
-//		this.personnelList = personnelList;
-//	}
+	@NotAudited
+	@JsonIgnore
+	@OneToMany(mappedBy="jobInfo")
+	public List<Personnel> getPersonnelList() {
+		return this.personnelList;
+	}
+
+	public void setPersonnelList(List<Personnel> personnelList) {
+		this.personnelList = personnelList;
+	}
 	
 	@Column(name = "PROJECT_FULL_DESCRIPTION")
 	public String getProjectFullDescription() {
@@ -1158,5 +1163,4 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	    }
 	    return null;
 	}
-
 }

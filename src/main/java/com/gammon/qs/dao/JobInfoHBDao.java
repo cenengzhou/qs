@@ -174,4 +174,10 @@ public class JobInfoHBDao extends BaseHibernateDao<JobInfo> {
 		return lastModifiedDate;
 	}
 
+	public JobInfo getByRefNo(Long refNo) {
+		Criteria criteria = getSession().createCriteria(this.getType());
+		criteria.add(Restrictions.eq("noReference", refNo));
+		return (JobInfo) criteria.uniqueResult();
+	}
+	
 }

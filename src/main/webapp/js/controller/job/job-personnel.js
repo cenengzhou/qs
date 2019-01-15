@@ -63,6 +63,9 @@ mainApp.controller('JobPersonnelCtrl', [
 			self.querySearch = querySearch;
 			self.selectedItemChange = selectedItemChange;
 			self.searchTextChange = searchTextChange;
+			self.editRequest = editRequest;
+			self.cancelRequest = cancelRequest;
+			self.submitForApproval = submitForApproval;
 			self.saveJobInfo = saveJobInfo;
 			self.checkDisable = checkDisable;
 			self.jobNo = $cookies.get("jobNo");
@@ -97,10 +100,17 @@ mainApp.controller('JobPersonnelCtrl', [
 					
 					self.personData.forEach(function(p){
 						var person = new Person(p.id).setPlaceHolder(p.description).setSort(p.sort);
-						querySearch(self.job[p.id])
+						var pendingPerson = new Person(p.id).setPlaceHolder(p.description).setSort(p.sort);
+						var attr = self.job[p.id];
+						var approverArray = attr ? attr.split('|') : [];
+						var approvedApprover = approverArray[0];
+						var pendingApprover = approverArray[1] ? approverArray[1] : approvedApprover;
+						var refNo = approverArray[2];
+						
+						querySearch(approvedApprover)
 						.then(function(data){
 							if(data && data.length == 1 && createFilterFor(self.job[p.id])(data[0])) {
-								if(self.job[p.id] == data[0].username)
+								if(approvedApprover == data[0].username)
 								person.setSelectedItem(data[0]);
 							}
 							person.setDisabled(p.isDisabled);
@@ -112,12 +122,24 @@ mainApp.controller('JobPersonnelCtrl', [
 							if(!self.site[p.store].store) self.site[p.store].store = [];
 							self.site[p.store].store.push(person);
 						});
+						
+						querySearch(pendingApprover)
+						.then(function(data){
+							if(data && data.length == 1 && createFilterFor(self.job[p.id])(data[0])) {
+								if(pendingApprover == data[0].username)
+									pendingPerson.setSelectedItem(data[0]);
+							}
+							pendingPerson.setDisabled(refNo == null);
+							pendingPerson.setSearchText(self.job[p.id]);
+							if(!self.site[p.store].pending) self.site[p.store].pending = [];
+							self.site[p.store].pending.push(pendingApprover);
+						});
+
 					});
 				});
 
 			});			
 
-			
 			function checkDisable(type){
 				switch(type){
 				case 'dloa':
@@ -175,5 +197,17 @@ mainApp.controller('JobPersonnelCtrl', [
 				    	$state.reload();
 					}
 				});
+			}
+			
+			function editRequest(key, personnels) {
+				self.personnelPendingModal = personnels;
+			}
+			
+			function cancelRequest() {
+				
+			}
+			
+			function submitForApproval() {
+				
 			}
 } ]);
