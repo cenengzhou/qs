@@ -429,11 +429,11 @@ public class SubcontractDetail extends BasePersistedObject {
 			precision = 19,
 			scale = 2)
 	public BigDecimal getAmountSubcontractNew() {
-		return amountSubcontractNew;
+		return amountSubcontractNew != null ? amountSubcontractNew : new BigDecimal(0);
 	}
 
 	public void setAmountSubcontractNew(BigDecimal amountSubcontractNew) {
-		this.amountSubcontractNew = amountSubcontractNew;
+		this.amountSubcontractNew = amountSubcontractNew != null ? amountSubcontractNew : new BigDecimal(0);
 	}
 
 	@Column(name = "AMT_BUDGET",
