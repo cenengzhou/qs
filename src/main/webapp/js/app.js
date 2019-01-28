@@ -1817,7 +1817,12 @@ mainApp.config(function(blockUIConfig) {
 //		}
 		var bypassBlockUI = [
 			'service/mainCert/getCertificateDashboardData', 
-			'service/adl/getJobDashboardData'
+			'service/adl/getJobDashboardData',
+			'service/job/getJobDates',
+			'service/subcontract/getSubcontractDashboardData',
+			'service/subcontract/getSubcontractDetailsDashboardData',
+			'service/payment/getPaymentResourceDistribution',
+			'service/payment/getPaymentCertSummary'
 			];
 		bypassBlockUI.forEach(function(addr){
 			if(config.url == addr) {
