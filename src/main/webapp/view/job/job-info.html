@@ -167,6 +167,7 @@
 								<label>{{job.ultimateParentJobNumber}}</label>
 							</div>
 						</div>
+						<!-- 
 						<div class="col-md-6">
 							<div class="col-md-6">
 								<label>Immediate Client</label>
@@ -175,6 +176,7 @@
 								<label>{{job.immediateClient}}</label>
 							</div>
 						</div>
+						-->
 						<div class="col-md-6">
 							<div class="col-md-6">
 								<label>Ultimate Client</label>
@@ -846,33 +848,40 @@
 									<div class="form-group col-md-6">
 										<label>BEAM</label>
 										<div class="input-group col-md-12">
+										<!--
 											<select 
 												class="form-control"
 												ng-model="job.beam" 
 												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
 											</select>
+										-->
+										<input type="text" maxlength="50" class="form-control" ng-model="job.beam">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>BEAM PLUS</label>
 										<div class="input-group col-md-12">
+										<!-- 
 											<select 
 												class="form-control"
 												ng-model="job.beamPlus" 
 												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
 											</select>
-
+										-->
+										<input type="text" maxlength="50" class="form-control" ng-model="job.beamPlus">
 										</div>
 									</div>
 									<div class="form-group col-md-6">
 										<label>LEED</label>
 										<div class="input-group col-md-12">
+										<!-- 
 											<select 
 												class="form-control"
 												ng-model="job.leed" 
 												ng-options="v.key as v.value for v in [{'key': 'Y', 'value':'Yes'}, {'key': 'N', 'value':'No'}]">
 											</select>
-
+										-->
+										<input type="text" maxlength="50" class="form-control" ng-model="job.leed">
 										</div>
 									</div>
 								</div>

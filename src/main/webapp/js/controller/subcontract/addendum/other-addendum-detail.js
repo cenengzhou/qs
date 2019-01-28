@@ -34,6 +34,7 @@ mainApp.controller('OtherAddendumDetailCtrl', ['$scope' , 'modalService', 'subco
 		if($scope.lineType == 'C1' && $scope.subcontractDetail.objectCode.substring(4, 6) !='88'){
 			modalService.open('md', 'view/message-modal.html', 'MessageModalCtrl', 'Warn', "Object code should be ended with '88'.");
 			$scope.disableButton = false;
+			return;
 		}
 		
 		if(scDetailID == null || scDetailID.length==0){

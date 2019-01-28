@@ -181,7 +181,7 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String tenderNumber;
 	private String immediateParentJobNumber;
 	private String ultimateParentJobNumber;
-	private String immediateClient;
+	//private String immediateClient;
 	private String ultimateClient;
 	private String immediateClientBusinessSector;
 	private String ultimateClientBusinessSector;
@@ -1081,13 +1081,13 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 		this.ultimateParentJobNumber = ultimateParentJobNumber;
 	}
 	 
-	@Column(name = "CLIENT_IMME")
-	public String getImmediateClient() {
-		return immediateClient;
-	}
-	public void setImmediateClient(String immediateClient) {
-		this.immediateClient = immediateClient;
-	}
+//	@Column(name = "CLIENT_IMME")
+//	public String getImmediateClient() {
+//		return immediateClient;
+//	}
+//	public void setImmediateClient(String immediateClient) {
+//		this.immediateClient = immediateClient;
+//	}
 
 	@Column(name = "CLIENT_ULT")
 	public String getUltimateClient() {
