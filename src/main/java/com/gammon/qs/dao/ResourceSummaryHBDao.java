@@ -541,7 +541,8 @@ public class ResourceSummaryHBDao extends BaseHibernateDao<ResourceSummary> {
 			criteria.add(Restrictions.eq("jobInfo", jobInfo));
 			criteria.add(Restrictions.eq("packageNo", packageNo));
 			criteria.add(Restrictions.like("objectCode", "14%"));
-			criteria.setProjection(Projections.sqlProjection("sum({alias}.QUANTITY * {alias}.RATE) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}));
+			criteria.setProjection(Projections.sum("amountBudget"));
+			//criteria.setProjection(Projections.sqlProjection("sum({alias}.QUANTITY * {alias}.RATE) as amount", new String[]{"amount"}, new Type[]{DoubleType.INSTANCE}));
 			return (Double)criteria.uniqueResult();
 		}catch (Exception he){
 			logger.info("Fail: getBudgetForPackage(Job job, String packageNo)");
