@@ -111,14 +111,21 @@
 							</div>
 						</div>
 						
-						<div class="col-md-6">
-							<div class="col-md-6">
+						<div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px; " ng-click="changeDivHeight('jobDesc')" id="jobDesc">
+							<style>
+								div:focus {
+								    outline: none;
+								}
+							</style>
+							<div class="col-md-12">
 								<label>Project Full Description</label>
 							</div>
-							<div class="col-md-6">
-								<label>{{job.projectFullDescription}}</label>
+							<div class="col-md-12">
+								<span ng-bind-html="trustAsHtml(job.projectFullDescription)"></span>
 							</div>
 						</div>
+						<div ng-show="divHeight['jobDesc'].preview" style="margin-left:15px;padding:10px;font-weight:700" ng-click="changeDivHeight('jobDesc')">...</div>
+						
 						<div class="col-md-6">
 							<div class="col-md-6">
 								<label>Project Location</label>

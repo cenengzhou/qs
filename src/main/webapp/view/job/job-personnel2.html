@@ -13,11 +13,13 @@
         >
           <h3 class="panel-title">
             {{ m[0].userGroup }}
+            <!-- 
             <span
               style="font-size: 10px"
               ng-if="m.mode=='W' && m[0].requiredApproval=='Y'"
               >(Change require approval)</span
             >
+             -->
             <span style="float: right" ng-if="m[0].requiredApproval=='Y'">
               <md-switch
                 ng-init="m.mode='R'"
@@ -132,7 +134,7 @@
   			data-ng-src="{{person.selectedItem ? person.selectedItem.image : 'resources/images/profile.png'}}"
   			alt="" imageonload roll-back-image="resources/images/profile.png" /><br>
   		<span ng-include src="'user-template'"></span>
-  		<md-checkbox ng-if="person.selectedItem" ng-model="person.isApprover" ng-click="ctrl.modifyIsApprover(person)" aria-label="Is Approver"
+  		<md-checkbox ng-if="person.selectedItem && m[0].requiredApproval=='Y'" ng-model="person.isApprover" ng-click="ctrl.modifyIsApprover(person)" aria-label="Is Approver"
   			ng-true-value="'Y'" ng-false-value="'N'" style="margin-bottom:0px"
   			class="md-warn md-align-top-left" flex>{{person.isApprover=='Y' ? 'Approver' : 'Not Approver'}} </md-checkbox>
   	</span>
@@ -197,7 +199,7 @@
   	md-items="item in ctrl.querySearch(person.searchText)"
   	md-item-text="item.fullName"
   	md-min-length="3"
-    placeholder="Enter Approver..."
+    placeholder="Input Username..."
   	md-menu-class="autocomplete-custom-template"
   	md-menu-container-class="custom-container">
   	<md-item-template>

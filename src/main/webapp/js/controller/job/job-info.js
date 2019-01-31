@@ -1,5 +1,5 @@
-mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$state', 'GlobalParameter', 'rootscopeService', 'subcontractService', '$timeout',
-                                   function($scope, jobService, modalService, $state, GlobalParameter, rootscopeService, subcontractService, $timeout) {
+mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce','$state', 'GlobalParameter', 'rootscopeService', 'subcontractService', '$timeout',
+                                   function($scope, jobService, modalService, $sce,$state, GlobalParameter, rootscopeService, subcontractService, $timeout) {
 	rootscopeService.setSelectedTips('');
 	$scope.GlobalParameter = GlobalParameter;
 	loadJobInfo();
@@ -23,7 +23,7 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
-					
+					$scope.job.projectFullDescription = $scope.job.projectFullDescription.split("\n").join("<br>")
 					subcontractService.getParentSubcontractList($scope.jobNo)
 					.then(function(data){
 						$scope.parentSubcontractList = data;
@@ -35,7 +35,36 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$stat
 					$scope.jobDates = data;
 				});
 	}
+	
+	$scope.trustAsHtml = function(string) {
+	    return $sce.trustAsHtml(string);
+	};
+	
+	$scope.divHeight = {'jobDesc': {'preview': false, 'minHeight': 90, 'offsetHeight': 0}};
 
+	$scope.changeDivHeight = function(id){
+		var div = $('#'+id)[0];
+		var item = $scope.divHeight[id];
+		if(item && !item.offsetHeight) {
+			item.offsetHeight = div.offsetHeight
+		}
+		
+		var needCollapse = item.offsetHeight > item.minHeight;
+		
+		if(item.preview) {
+			if(needCollapse) item.preview = false;
+			$(div).animate({'height' : item.offsetHeight}, 500);		
+		} else {	
+			if(needCollapse) item.preview = true;
+			var minHeight = item.offsetHeight > item.minHeight ? item.minHeight : item.offsetHeight;
+			$(div).animate({'height' : minHeight}, 500);
+		}
+	}
+	
+	$timeout(function(){
+		$scope.changeDivHeight('jobDesc');
+	}, 500);
+	
 	$scope.syncEotAndRevisedDate = function(item){
 		if($scope.loaded)
 		$timeout(function(){
