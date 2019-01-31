@@ -8,10 +8,10 @@
 	<packaging>war</packaging>
 
 	<scm>
-		<connection>scm:svn:https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</connection>
-		<developerConnection>scm:svn:https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</developerConnection>
+		<connection>scm:git:http://gamrepo.gamska.com:3000/Gammon/QS</connection>	
+		<developerConnection>scm:git:[fetch=]http://gamrepo.gamska.com:3000/Gammon/QS.git[push=]http://gamrepo.gamska.com:3000/Gammon/QS.git</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://erp74hqhk:8443/svn/QS_System/PCMS/PCMS-TC/</url>
+		<url>http://gamrepo.gamska.com:3000/Gammon/QS</url>
 	</scm>
 
 	<!-- ========================================== REPOSITORIES ================================================ -->
