@@ -708,7 +708,7 @@ Project.: ${job.jobNumber!""} - ${job.description!""}
 							</tr>
 						</thead>
 <#if objectList??>
-<#list objectList?sort_by(['personnelMap', 'userSequence'])?reverse as object>
+<#list objectList?sort_by(['personnelMap', 'userSequence']) as object>
 <#if object.action?has_content && object.action != 'NONE'>
 						<tr style="background-color: lightcyan">
 <#else>

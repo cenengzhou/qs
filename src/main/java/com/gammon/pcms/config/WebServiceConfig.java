@@ -204,6 +204,10 @@ public class WebServiceConfig implements InitializingBean {//extends WsConfigure
 		return this.wsWf.get("PARAMS");
 	}
 	
+	public Map<String, Object> getWsWfFileName() {
+		return this.wsWf.get("FILENAME");
+	}
+	
 	public String getWsWfParam(String key) {
 		return (String) getWsWfParams().get(key);
 	}

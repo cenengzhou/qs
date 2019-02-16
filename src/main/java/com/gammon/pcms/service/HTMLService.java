@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.apache.commons.validator.GenericValidator;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gammon.pcms.config.AttachmentConfig;
 import com.gammon.pcms.config.FreemarkerConfig;
 import com.gammon.pcms.config.ServletConfig;
+import com.gammon.pcms.config.WebServiceConfig;
 import com.gammon.pcms.dao.TenderVarianceHBDao;
 import com.gammon.pcms.helper.DateHelper;
 import com.gammon.pcms.helper.FileHelper;
@@ -127,6 +129,8 @@ public class HTMLService implements Serializable{
 	private JobInfoService jobInfoService;
 	@Autowired
 	private PersonnelService personnelService;
+	@Autowired
+	private WebServiceConfig webServiceConfig;
 	
 	public String makeHTMLStringForSCPaymentCert(String jobNumber, String subcontractNumber, String paymentNo, String htmlVersion) throws Exception{
 		String strHTMLCodingContent = "";
@@ -458,29 +462,28 @@ public class HTMLService implements Serializable{
 		return strHTMLCodingContent;
 	}
 	
-	public String getEformBasePath(Long refNo) {
+	public String getEformBasePath() {
 		return attachmentConfig.getAttachmentServer("PATH") + 
-				attachmentConfig.getEformDirectory() + 
-				refNo;
+				attachmentConfig.getEformDirectory();
 	}
 	
-	public String getEformAttachmentPath(Long refNo) {
-		return getEformBasePath(refNo) + "\\Attachment";
+	public String getEformAttachmentPath(String formCode, Long refNo) {
+		return getEformBasePath() + "\\Attachment\\" + formCode + "\\" + refNo;
 	}
 	
-	public String getEformEmailPath(Long refNo) {
-		return getEformBasePath(refNo) + "\\email.html";
+	public String getEformEmailPath(String formCode, Long refNo) {
+		return getEformBasePath() + "\\Email\\" + formCode + "\\" + refNo + ".html";
 	}
 	
-	public String getEformPdfPath(String formCode, Long refNo) {
-		return getEformAttachmentPath(refNo) + "\\" + formCode + "-" + refNo + ".pdf";
+	public String getEformPdfPath(String formCode, Long refNo, String jobNo) {
+		return getEformAttachmentPath(formCode, refNo) + "\\" + jobNo + " " + webServiceConfig.getWsWfFileName().get(formCode) + " (" + refNo + ").pdf";
 	}
 	
 	public void generateHtmlPdf(String formCode, String jobNo, Long refNo) throws Exception {
 		String emailContext = getEmailContext(formCode, jobNo, refNo);
-		String emailPathString = getEformEmailPath(refNo);
-		String attachemntDirString = getEformAttachmentPath(refNo);
-		String pdfDest = getEformPdfPath(formCode, refNo);
+		String emailPathString = getEformEmailPath(formCode, refNo);
+		String attachemntDirString = getEformAttachmentPath(formCode, refNo);
+		String pdfDest = getEformPdfPath(formCode, refNo, jobNo);
 		
 		FileHelper.writeStringToFile(emailPathString, emailContext);
 		File attachemntDir = new File(attachemntDirString);
@@ -514,7 +517,7 @@ public class HTMLService implements Serializable{
 		JobInfo jobInfo = jobNo != null ? jobInfoService.obtainJob(jobNo) : jobInfoService.getByRefNo(refNo);
 		List<Personnel> personnelListByJob = personnelService.getActivePersonnel(jobInfo.getJobNumber());
 		List<PersonnelMap> allPersonnelMap = personnelService.getAllPersonnelMap();
-		Map<BigDecimal, List<Personnel>> map = new HashMap<>();
+		Map<BigDecimal, List<Personnel>> map = new TreeMap<>();
 		personnelListByJob.forEach(personnel -> {
 			List<Personnel> list = map.get(personnel.getPersonnelMap().getUserSequence());
 			if(list == null) list = new ArrayList<>();

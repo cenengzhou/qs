@@ -207,7 +207,8 @@ public class SystemController {
 		propertiesMap.put("revision", 			applicationConfig.getRevision());
 		propertiesMap.put("apUrl",				webServiceConfig.getWsAp("URL"));
 		propertiesMap.put("jdeUrl",				webServiceConfig.getWsJde("URL"));
-		propertiesMap.put("gsfUrl",				webServiceConfig.getWsGsf("URL"));		
+		propertiesMap.put("gsfUrl",				webServiceConfig.getWsGsf("URL"));
+		propertiesMap.put("wfUrl",				webServiceConfig.getWsWf("URL"));
 		propertiesMap.put("HELPDESK",			linkConfig.getPcmsLink("HELPDESK"));
 		propertiesMap.put("GUIDE_LINES",		linkConfig.getPcmsLink("GUIDE_LINES"));
 		propertiesMap.put("ANNOUNCEMENT",		linkConfig.getPcmsLink("ANNOUNCEMENT"));
@@ -232,6 +233,7 @@ public class SystemController {
 		propertiesMap.put("Spring Environment.url.ap", env.getProperty("ws.ap.server.url"));
 		propertiesMap.put("Spring Environment.url.jde", env.getProperty("ws.jde.server.url"));
 		propertiesMap.put("Spring Environment.url.gsf", webServiceConfig.getWsGsf("URL"));
+		propertiesMap.put("Spring Environment.url.wf", webServiceConfig.getWsWf("URL"));
 		propertiesMap.put("Spring Environment.javaHome", env.getProperty("java.home"));
 		propertiesMap.put("Spring Environment.REVIEWER_JSON", linkConfig.getPcmsLink("REVIEWER_JSON"));
 		return propertiesMap;

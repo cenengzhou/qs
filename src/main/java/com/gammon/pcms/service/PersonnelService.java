@@ -242,7 +242,7 @@ public class PersonnelService {
 						}
 					});
 					jobInfo.approvalApproved();
-					String pdfPathString = htmlService.getEformPdfPath((String) returnDecisionMap.get("processName"), refNo);
+					String pdfPathString = htmlService.getEformPdfPath((String) returnDecisionMap.get("processName"), refNo, jobInfo.getJobNumber());
 					File pdfFile = new File(pdfPathString);
 					FileInputStream fis = new FileInputStream(pdfFile);
 					attachmentService.uploadAttachment(Attachment.JobInfoNameObject, jobInfo.getJobNumber(), new BigDecimal(refNo), pdfFile.getName(), IOUtils.toByteArray(fis), "SYSTEM");
