@@ -464,7 +464,7 @@ public class HTMLService implements Serializable{
 	
 	public String getEformBasePath() {
 		return attachmentConfig.getAttachmentServer("PATH") + 
-				attachmentConfig.getEformDirectory();
+				attachmentConfig.getPersonnelDirectory();
 	}
 	
 	public String getEformAttachmentPath(String formCode, Long refNo) {
