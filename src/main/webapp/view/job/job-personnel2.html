@@ -87,7 +87,7 @@
           >Save</md-button
         >
         <md-button
-          ng-if="ctrl.requiredApproval && [null, '', 'PENDING', 'REJECTED', 'CANCELLED', 'APPROVED'].includes(ctrl.job.statusApproval)"
+          ng-if="false && ctrl.requiredApproval && [null, '', 'PENDING', 'REJECTED', 'CANCELLED', 'APPROVED'].includes(ctrl.job.statusApproval)"
           ng-click="ctrl.submitForApproval()"
           class="md-raised md-accent"
           >Submit for Approval</md-button
