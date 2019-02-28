@@ -580,12 +580,12 @@ public class PaymentService{
 	@SuppressWarnings("rawtypes")
 	private ByteArrayOutputStream callJasperReport(List wrapperList, String templateName) throws JRException, FileNotFoundException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath());
 
 		JRBeanCollectionDataSource beanDataSource = new JRBeanCollectionDataSource(wrapperList);
 		// parameters.put("ReportTitle", "Address Report");
 		// InputStream jrInputStream = this.getClass().getResourceAsStream(templatePath);
-		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + templateName + ".jasper");
+		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + templateName + ".jasper");
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

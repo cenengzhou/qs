@@ -2578,10 +2578,10 @@ public class SubcontractService {
 	public ByteArrayOutputStream downloadSubcontractEnquiryReportPDFFile(String company, String division, String jobNumber, String subcontractNo,
 			String subcontractorNumber, String subcontractorNature,String paymentStatus, String workScope, String clientNo, Boolean includeJobCompletionDate,
 			String splitTerminateStatus, String month, String year, String jasperReportName)throws Exception {
-		String fileFullPath = FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + jasperReportName;
+		String fileFullPath = FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + jasperReportName;
 		Date asOfDate = null;
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", jasperConfig.getTemplatePath());
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath());
 		
 		SubcontractListWrapper searchWrapper= new SubcontractListWrapper();
 		searchWrapper.setCompany(company);
