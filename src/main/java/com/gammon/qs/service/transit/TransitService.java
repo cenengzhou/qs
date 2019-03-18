@@ -1049,12 +1049,12 @@ public class TransitService implements Serializable {
 		
 		
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath());
 		
 		//return outputStream;
 		try {
 			return JasperReportHelper.get()	
-					.setCurrentReport(reportWrapperList, FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + "\\" + templateName, parameters)
+					.setCurrentReport(reportWrapperList, FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + templateName, parameters)
 					.compileAndAddReport().exportAsPDF();		} catch (IOException e) {
 			logger.info(e.getMessage());
 			throw e;
@@ -1071,12 +1071,12 @@ public class TransitService implements Serializable {
 		UpdateTransitBQMasterReportReocrdField(jobNumber, reportWrapperList);
 		
 		HashMap<String,Object> parameters = new HashMap<String, Object>();
-		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()));
+		parameters.put("IMAGE_PATH", FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath());
 		
 		JRBeanCollectionDataSource beanDataSource = new JRBeanCollectionDataSource(reportWrapperList);
 		
 		// Locate the jasper report template and import here
-		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()) + templateName + ".jasper");
+		FileInputStream jrInputStream = new FileInputStream(FileHelper.getConfigFilePath(jasperConfig.getTemplatePath()).toUri().getPath() + templateName + ".jasper");
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
