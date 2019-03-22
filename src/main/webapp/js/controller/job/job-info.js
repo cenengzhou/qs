@@ -20,6 +20,11 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 					else
 						$scope.job.levyApplicable = false;
 					
+					if($scope.job.innovationApplicable == "1")
+						$scope.job.innovationApplicable = true;
+					else
+						$scope.job.innovationApplicable = false;
+					
 					$scope.insuranceCARDesc = data.insuranceCAR + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceCAR);
 					$scope.insuranceECIDesc = data.insuranceECI + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceECI);
 					$scope.insuranceTPLDesc = data.insuranceTPL + ' - ' + GlobalParameter.getValueById(GlobalParameter.insuranceStatus, data.insuranceTPL);
@@ -122,6 +127,12 @@ mainApp.controller('JobInfoCtrl', ['$scope','jobService', 'modalService', '$sce'
 			$scope.job.levyApplicable = "0";
 			$scope.job.levyCITAPercent = 0;
 			$scope.job.levyPCFBPercent = 0;
+		}
+		
+		if($scope.job.innovationApplicable == true)
+			$scope.job.innovationApplicable = "1";
+		else{
+			$scope.job.innovationApplicable = "0";
 		}
 		
 		updateJobInfoAndDates($scope.job, $scope.jobDates)

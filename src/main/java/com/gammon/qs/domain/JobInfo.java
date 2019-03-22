@@ -191,6 +191,10 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	private String beamPlus;
 	private String leed;
 	
+	private String innovationApplicable;//1: applicable, 0: not applicable
+	private Double innovationPercent;
+	
+	
 	public JobInfo() {}
 	
 	public JobInfo(Long id) {this.setId(id);}
@@ -1153,6 +1157,22 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public void setLeed(String leed) {
 		this.leed = leed;
 	}	
+	
+	@Column(name = "INNOVATION_APPLICABLE")
+	public String getInnovationApplicable() {
+		return innovationApplicable;
+	}
+	public void setInnovationApplicable(String innovationApplicable) {
+		this.innovationApplicable = innovationApplicable;
+	}
+	
+	@Column(name = "INNOVATION_PERCENT")
+	public Double getInnovationPercent() {
+		return innovationPercent;
+	}
+	public void setInnovationPercent(Double innovationPercent) {
+		this.innovationPercent = innovationPercent;
+	}
 	
 	@Override
 	public String toString() {
