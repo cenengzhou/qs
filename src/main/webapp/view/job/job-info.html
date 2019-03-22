@@ -270,7 +270,7 @@
 										</div>
 									</div>
 
-									<div class="form-group col-md-6" ng-if="showEditParentJob">
+									<div class="form-group col-md-6" ng-if="isQsAdmin">
 										<label>Parent Job Number</label>
 										<div class="input-group col-md-12">
 											<input type="text" class="form-control"
@@ -423,6 +423,46 @@
 						<!-- /.box-body -->
 					</div>
 					<!-- /.box -->
+
+					<!-- Innovation -->
+					<div class="box box-default">
+						<div class="box-body">
+							<div class="row">
+								<label class="col-md-4">Innovation Charge</label>
+
+								<div class="row col-md-8">
+									<div class="col-md-6">
+										<input type="checkbox" data-ios-toggle="toggle"
+											data-style="ios" data-onstyle="primary"
+											data-offstyle="warning" data-on="Applicable"
+											data-off="Not-Applicable" ng-model="job.innovationApplicable">
+									</div>
+
+									<form name="innovationForm" id="innovationForm"
+										class="ng-pristine ng-valid">
+										<div class="col-md-6">
+											<div class="form-group" 
+												ng-if="isQsAdmin"
+												ng-show="job.innovationApplicable == true">
+												<label>Innovation Charge %</label>
+												<div class="input-group col-md-12">
+													<input data-parsley-type="number" class="form-control"
+														name="innovationPercent" 
+														data-parsley-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+														data-parsley-error-message="Max. 2 d.p."
+														ng-model="job.innovationPercent"
+														data-ng-required="job.innovationApplicable == true">
+												</div>
+											</div>
+										</div>
+
+									</form>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
 
 					<!-- Retention -->
 					<div class="box box-default">

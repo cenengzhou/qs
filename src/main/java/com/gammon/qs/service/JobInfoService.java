@@ -152,6 +152,13 @@ public class JobInfoService {
 		JobInfo job = jobWSDao.obtainJob(jobNumber);
 		if(job != null){
 			job.setFinQS0Review(JobInfo.FINQS0REVIEW_D);
+			/**
+			 * @author koeyyeung
+			 * modified on 21 Mar, 2019
+			 * Innovation Charge for Turnover 
+			 * Set default value for new job**/
+			job.setInnovationApplicable("1");
+			job.setInnovationPercent(0.1);
 			jobHBDao.saveOrUpdate(job);
 		}
 		return job;
