@@ -234,12 +234,22 @@ mainApp.controller('SubcontractWorkdoneCtrl', ['$scope', 'subcontractService', '
 		gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
 			if(newValue != oldValue && newValue.trim().length >0){
 				if(colDef.name == "cumWorkDoneQuantity"){
-					rowEntity.cumWorkDoneQuantity = roundUtil.round(newValue, 4);
-					rowEntity.amountCumulativeWD = roundUtil.round(rowEntity.cumWorkDoneQuantity * rowEntity.scRate, 2);
+					if(newValue == rowEntity.quantity){
+						rowEntity.cumWorkDoneQuantity = rowEntity.quantity;
+						rowEntity.amountCumulativeWD = rowEntity.amountSubcontract;
+					}else{
+						rowEntity.cumWorkDoneQuantity = roundUtil.round(newValue, 4);
+						rowEntity.amountCumulativeWD = roundUtil.round(rowEntity.cumWorkDoneQuantity * rowEntity.scRate, 2);
+					}
 				}
 				if(colDef.name == "amountCumulativeWD"){
-					rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
-					rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
+					if(newValue == rowEntity.amountSubcontract){
+						rowEntity.cumWorkDoneQuantity = rowEntity.quantity;
+						rowEntity.amountCumulativeWD = rowEntity.amountSubcontract;
+					}else{
+						rowEntity.amountCumulativeWD = roundUtil.round(newValue, 2);
+						rowEntity.cumWorkDoneQuantity = roundUtil.round(rowEntity.amountCumulativeWD / rowEntity.scRate, 4);
+					}
 				}
 				rowEntity.movement = roundUtil.round(rowEntity.amountCumulativeWD - rowEntity.amountPostedWD, 2);
 				rowEntity.projectedProvision = roundUtil.round(rowEntity.amountCumulativeWD - rowEntity.amountCumulativeCert, 2);

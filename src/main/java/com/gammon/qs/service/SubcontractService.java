@@ -2271,12 +2271,23 @@ public class SubcontractService {
 			List<SubcontractDetail> subcontractDetailList = subcontractDetailHBDao.getSubcontractDetailsForWD(jobNo, subcontractNo);
 
 			try {
-				for (SubcontractDetail scDetail: subcontractDetailList) {
-					if(!filteredIds.contains(scDetail.getId())) continue;
-					double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
-					double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
-					//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
-					message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+				if(percent == 100){
+					for (SubcontractDetail scDetail: subcontractDetailList) {
+						if(!filteredIds.contains(scDetail.getId())) continue;
+						double cumWorkDoneQty = scDetail.getQuantity();
+						double cumWorkDoneAmt = scDetail.getAmountSubcontract().doubleValue();
+						message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+					}
+					
+				}else{
+					for (SubcontractDetail scDetail: subcontractDetailList) {
+						if(!filteredIds.contains(scDetail.getId())) continue;
+						double cumWorkDoneQty = CalculationUtil.round(scDetail.getQuantity()*(percent/100), 4);
+						double cumWorkDoneAmt = CalculationUtil.round(cumWorkDoneQty * scDetail.getScRate(), 2);
+						//double cumWorkDoneAmt = CalculationUtil.round(scDetail.getAmountSubcontract().doubleValue()*(percent/100), 2);
+						message = calculateWDandIV((SubcontractDetailOA)scDetail, subcontract, cumWorkDoneQty, cumWorkDoneAmt);
+					}
+
 				}
 			} finally {
 				// Update the SCPackage in DB after updating all the SCDetails
