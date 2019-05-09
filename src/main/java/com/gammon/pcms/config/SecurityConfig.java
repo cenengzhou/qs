@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -309,7 +310,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
 		SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
 		ticketValidator.setServicePrincipal(getKerberosServicePrincipal());
-		ticketValidator.setKeyTabLocation(new FileSystemResource(getKerberosKeytabLocation()));
+		String keyTabPath = getKerberosKeytabLocation().replace("file:/", ""); 
+		LoggerFactory.getLogger(getClass()).info(keyTabPath);
+		ticketValidator.setKeyTabLocation(new FileSystemResource(keyTabPath));
 		ticketValidator.setDebug(getKerberosDebug());
 		return ticketValidator;
 	}
