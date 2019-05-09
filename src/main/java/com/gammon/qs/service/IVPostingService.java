@@ -463,7 +463,7 @@ public class IVPostingService  {
 			 * modified on 21 Mar, 2019
 			 * Innovation Charge for Turnover **/
 			//STEP 5: Create Journal Entry for Innovation Charge
-			if(job.getInnovationApplicable() == "1")
+			if(job.getInnovationApplicable() == JobInfo.INNOVATION_APPLICABLE)
 			{
 				logger.info("Innovation Charge %: "+job.getInnovationPercent());
 				//workDoneAmount 

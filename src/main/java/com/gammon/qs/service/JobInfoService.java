@@ -157,8 +157,12 @@ public class JobInfoService {
 			 * modified on 21 Mar, 2019
 			 * Innovation Charge for Turnover 
 			 * Set default value for new job**/
-			job.setInnovationApplicable("1");
-			job.setInnovationPercent(0.1);
+			if(!job.getEmployer().equals(JobInfo.INTERNAL_JOB)){
+				logger.info("Initialize Innovation Recharge setting for Job: "+jobNumber);
+				//not internal job
+				job.setInnovationApplicable(JobInfo.INNOVATION_APPLICABLE);
+				job.setInnovationPercent(0.1);
+			}
 			jobHBDao.saveOrUpdate(job);
 		}
 		return job;

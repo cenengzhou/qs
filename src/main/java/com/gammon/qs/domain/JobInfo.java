@@ -53,6 +53,9 @@ public class JobInfo extends BasePersistedObject implements Comparable<JobInfo> 
 	public static final String REPACKAGING_TYPE_1 = "1"; /* Repackaging - Resource Summary, IV - Resource Summary */
 	public static final String REPACKAGING_TYPE_2 = "2"; /* Repackaging - BQ & Resource, IV - Resource Summary */
 	public static final String REPACKAGING_TYPE_3 = "3"; /* Repackaging - BQ & Resource, IV - BQ & Resource */
+	
+	public static final String INNOVATION_APPLICABLE = "1"; /*Apply Innovation Recharge*/
+	public static final String INTERNAL_JOB = "33540";
 
 	public static enum APPROVAL_STATUS {
 		PENDING, SUBMITTED, APPROVED, REJECTED, CANCELLED
