@@ -174,7 +174,9 @@ public class Subcontract extends BasePersistedObject {
 	private Date scDocLegalDate;
 	private Date workCommenceDate;
 	private Date onSiteStartDate;
-
+	private Date scFinalAccDraftDate;
+	private Date scFinalAccSignoffDate;
+	
 	@Transient
 	public boolean isAwarded() {
 		return (subcontractStatus == null ? false : (subcontractStatus >= 500));
@@ -817,6 +819,26 @@ public class Subcontract extends BasePersistedObject {
 
 	public void setOnSiteStartDate(Date onSiteStartDate) {
 		this.onSiteStartDate = onSiteStartDate;
+	}
+
+	@Column(name = "SC_FINAL_ACC_DRAFT_DATE")
+	@Temporal(value = TemporalType.DATE)
+	public Date getScFinalAccDraftDate() {
+		return scFinalAccDraftDate;
+	}
+
+	public void setScFinalAccDraftDate(Date scFinalAccDraftDate) {
+		this.scFinalAccDraftDate = scFinalAccDraftDate;
+	}
+	
+	@Column(name = "SC_FINAL_ACC_SIGNOFF_DATE")
+	@Temporal(value = TemporalType.DATE)
+	public Date getScFinalAccSignoffDate() {
+		return scFinalAccSignoffDate;
+	}
+
+	public void setScFinalAccSignoffDate(Date scFinalAccSignoffDate) {
+		this.scFinalAccSignoffDate = scFinalAccSignoffDate;
 	}
 
 	@Column(name = "NOTES",

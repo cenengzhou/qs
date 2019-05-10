@@ -2113,7 +2113,8 @@ public class SubcontractService {
 				subcontractInDB.setScDocLegalDate(subcontract.getScDocLegalDate());
 				subcontractInDB.setWorkCommenceDate(subcontract.getWorkCommenceDate());
 				subcontractInDB.setOnSiteStartDate(subcontract.getOnSiteStartDate());
-
+				subcontractInDB.setScFinalAccDraftDate(subcontract.getScFinalAccDraftDate());
+				subcontractInDB.setScFinalAccSignoffDate(subcontract.getScFinalAccSignoffDate());
 
 				subcontractHBDao.update(subcontractInDB);
 			}
